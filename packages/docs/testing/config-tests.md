@@ -407,11 +407,15 @@ The report is written to `.lowdefy/test/mutation.json`: each mutant with the jou
 
 `lowdefy journeys variants <file>` writes edge-case candidates of a journey to `tests/journeys/_candidates/variants/<file>-<kind>.yaml` and replays each three times. The same journey always gives the same files.
 
-| Kind            | The variant                                                                                                                                                                       | Passes when                           |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| `negative`      | For each `fill` before the submit click on a block with `required` or a `validate` rule: the field left empty (or a placeholder to fill, for a `validate` rule), then the submit. | The message shows and nothing is sent |
-| `interrupt`     | A full reload of the start page just before the submit click, then the flow again.                                                                                                | The flow writes exactly once          |
-| `double-submit` | The submit click as a double click (`count: 2`).                                                                                                                                  | The write happens once                |
+| Kind            | The variant                                                                                                                                                                                                                                                                        | Passes when                                                                                                      |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `role`          | Granted: for each other role set (the page's role matrix from `journeys coverage`, else each data set user's role set), the same steps as a data set user with exactly that set. Refused: when the page has `auth.roles` and a data set user holds none, that user opens the page. | Granted: that role can do the flow. Refused: the user lands on `/404` and does not see the journey's first block |
+| `tenant`        | A user of another organization (with the same roles when one exists) walks to the first step that uses a fixture value, waits for their own organization's row there, then checks each of this organization's fixture values is hidden.                                            | The other organization sees its own rows and none of this one's                                                  |
+| `empty`         | The journey's user, by name, on the `--empty-data` data set, up to the first step that uses data, then that step's block is visible.                                                                                                                                               | The page renders its empty state                                                                                 |
+| `volume`        | The same steps, as the journey's user by name, on the `--volume-data` data set.                                                                                                                                                                                                    | The flow completes within its timeouts                                                                           |
+| `negative`      | For each `fill` before the submit click on a block with `required` or a `validate` rule: the field left empty (or a placeholder to fill, for a `validate` rule), then the submit.                                                                                                  | The message shows and nothing is sent                                                                            |
+| `interrupt`     | A full reload of the start page just before the submit click, then the flow again.                                                                                                                                                                                                 | The flow writes exactly once                                                                                     |
+| `double-submit` | The submit click as a double click (`count: 2`).                                                                                                                                                                                                                                   | The write happens once                                                                                           |
 
 The **submit click** is the last `click` followed by a `wait: { request }` for a request that writes. Each variant is named `<journey> — <kind>: <detail>` and carries a `variant` key naming the journey it came from:
 
@@ -426,10 +430,12 @@ steps:
   # ...
 ```
 
-A variant that passes is a candidate to keep; one that fails is a finding, a bug or a behaviour to assert as expected; a flaky one has a cause to fix. Variants for other roles, another organisation, empty and large data need data sets and are listed as skipped.
+A variant that passes is a candidate to keep; one that fails is a finding, a bug or a behaviour to assert as expected; a flaky one has a cause to fix. The `role` and `tenant` kinds read the journey's data set file; a variant whose input is missing (no user with a role set, no fixture for the other organization, no `--empty-data`) is listed as skipped with what to add.
 
 - `--name <journey>`: The journey to vary, when the file holds several.
 - `--kinds <list>`: Only these kinds, comma separated.
+- `--empty-data <name>`: The data set the `empty` variant runs on. It needs a user with the journey user's name.
+- `--volume-data <name>`: The data set the `volume` variant runs on. It needs a user with the journey user's name.
 - `--no-run`: Write the variants without replaying them.
 - `--url`, `--port`, `--config-directory`, `--dev-directory`, `--log-level`, `--disable-telemetry`: As for `lowdefy test`.
 

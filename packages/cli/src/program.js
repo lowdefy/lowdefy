@@ -417,7 +417,7 @@ journeys
 journeys
   .command('variants')
   .description(
-    'Write edge-case candidates of a journey (bad input, a reload mid-flow, a double click) to tests/journeys/_candidates/variants/ and replay each three times.'
+    'Write edge-case candidates of a journey (other roles, another organization, empty and large data, bad input, a reload mid-flow, a double click) to tests/journeys/_candidates/variants/ and replay each three times.'
   )
   .usage('[options] <file>')
   .argument('<file>', 'The journey file to vary.')
@@ -428,7 +428,7 @@ journeys
   .addOption(
     new Option(
       '--kinds <kinds>',
-      'Only these kinds, comma separated: role, tenant, empty, volume, negative, interrupt, double-submit. The data-set kinds need data sets.'
+      'Only these kinds, comma separated: role, tenant, empty, volume, negative, interrupt, double-submit.'
     )
   )
   .addOption(new Option('--empty-data <name>', 'The data set an empty variant runs on.'))

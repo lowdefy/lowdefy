@@ -15,18 +15,27 @@
 */
 
 import doubleSubmit from './doubleSubmit.js';
+import empty from './empty.js';
 import interrupt from './interrupt.js';
 import negative from './negative.js';
+import roleGranted from './roleGranted.js';
+import roleRefused from './roleRefused.js';
+import tenant from './tenant.js';
+import volume from './volume.js';
 
-// The variant kinds, in the order they are written. The data-set kinds
-// (role, tenant, empty, volume) have no generator until journeys gain data
-// sets, and are listed as skipped.
+// The variant kinds, in the order they are written, each with its generators.
+// A generator returns its variants, or { skipped } with a note, or both as
+// { variants, skipped: [notes] }.
 const KINDS = ['role', 'tenant', 'empty', 'volume', 'negative', 'interrupt', 'double-submit'];
 
 const generators = {
-  negative,
-  interrupt,
-  'double-submit': doubleSubmit,
+  role: [roleGranted, roleRefused],
+  tenant: [tenant],
+  empty: [empty],
+  volume: [volume],
+  negative: [negative],
+  interrupt: [interrupt],
+  'double-submit': [doubleSubmit],
 };
 
 export { KINDS };

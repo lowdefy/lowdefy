@@ -79,7 +79,9 @@ afterEach(() => {
 
 function writeAll() {
   const variants = ['negative', 'interrupt', 'double-submit'].flatMap((kind) =>
-    generators[kind]({ journey, exercised, pageConfigs, i18n: {} })
+    generators[kind].flatMap((generator) =>
+      generator({ journey, exercised, pageConfigs, i18n: {} })
+    )
   );
   const directories = { config: directory, journeys: path.join(directory, 'tests', 'journeys') };
   return writeVariantFiles({

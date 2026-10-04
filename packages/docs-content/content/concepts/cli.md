@@ -209,11 +209,13 @@ The `journeys harden` command measures whether journeys fail when the feature th
 
 ## journeys variants
 
-The `journeys variants` command writes edge-case candidates of one journey — bad input (`negative`), a reload mid-flow (`interrupt`) and a double click (`double-submit`) — to `tests/journeys/_candidates/variants/`, and replays each three times. See [Variants](/config-tests#variants-lowdefy-journeys-variants).
+The `journeys variants` command writes edge-case candidates of one journey — other roles (`role`), another organization (`tenant`), empty and large data (`empty`, `volume`), bad input (`negative`), a reload mid-flow (`interrupt`) and a double click (`double-submit`) — to `tests/journeys/_candidates/variants/`, and replays each three times. See [Variants](/config-tests#variants-lowdefy-journeys-variants).
 
 - `<file>`: The journey file to vary.
 - `--name <journey>`: The journey to vary, when the file holds several.
-- `--kinds <list>`: Only these kinds, comma separated. The kinds for roles, another organisation, empty and large data need data sets and are skipped.
+- `--kinds <list>`: Only these kinds, comma separated. The `role` and `tenant` kinds read the users and fixtures of the journey's data set.
+- `--empty-data <name>`: The data set the `empty` variant runs on: one with no rows, and a user with the journey user's name.
+- `--volume-data <name>`: The data set the `volume` variant runs on: one with many rows, and a user with the journey user's name.
 - `--no-run`: Write the variants without replaying them.
 - `--url <url>`, `--port <port>`, `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `test`.
 

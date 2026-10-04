@@ -23,6 +23,7 @@ import fetchVariantInputs from './fetchVariantInputs.js';
 import formatJourneyResult from '../../test/formatJourneyResult.js';
 import generators, { KINDS } from './generators/index.js';
 import readExercised from '../../test/readExercised.js';
+import readVariantDataSets from './readVariantDataSets.js';
 import resolveJourneyPaths from '../../test/resolveJourneyPaths.js';
 import resolveServer from '../../test/resolveServer.js';
 import runJourney from '../../test/runJourney.js';
@@ -115,20 +116,22 @@ async function readOrMeasure({ context, item, url }) {
   return { exercised: result.exercised };
 }
 
+// Runs each kind's generators. A generator returns its variants, or
+// { skipped } with a note, or { variants, skipped: [notes] } when it wrote
+// some and skipped others.
 function generate({ context, kinds, journey, exercised, inputs }) {
   const variants = [];
   kinds.forEach((kind) => {
-    const generator = generators[kind];
-    if (type.isUndefined(generator)) {
-      context.logger.info(`SKIPPED  ${kind}: needs data sets`);
-      return;
-    }
-    const generated = generator({ journey, exercised, ...inputs });
-    if (!type.isArray(generated)) {
-      context.logger.info(`SKIPPED  ${kind}: ${generated.skipped}`);
-      return;
-    }
-    variants.push(...generated);
+    generators[kind].forEach((generator) => {
+      const generated = generator({ journey, exercised, ...inputs });
+      if (type.isArray(generated)) {
+        variants.push(...generated);
+        return;
+      }
+      variants.push(...(generated.variants ?? []));
+      const notes = type.isArray(generated.skipped) ? generated.skipped : [generated.skipped];
+      notes.forEach((note) => context.logger.info(`SKIPPED  ${kind}: ${note}`));
+    });
   });
   return variants;
 }
@@ -154,7 +157,8 @@ async function replay({ context, written, url }) {
 }
 
 // lowdefy journeys variants <file>: writes edge-case candidates of one
-// journey (bad input, a reload mid-flow, a double click) deterministically to
+// journey (other roles, another organization, empty and large data, bad
+// input, a reload mid-flow, a double click) deterministically to
 // tests/journeys/_candidates/variants/, and replays each three times unless
 // --no-run. It never changes the original journey.
 async function journeysVariants({ context }) {
@@ -166,6 +170,13 @@ async function journeysVariants({ context }) {
   const { item, error } = selectJourney({ context });
   if (error) {
     refuse({ context, message: error });
+    return;
+  }
+  let dataSets;
+  try {
+    dataSets = await readVariantDataSets({ context, journey: item.journey });
+  } catch (dataSetError) {
+    refuse({ context, message: dataSetError.message });
     return;
   }
   const server = await resolveServer({ context });
@@ -185,7 +196,7 @@ async function journeysVariants({ context }) {
       kinds,
       journey: item.journey,
       exercised: measured.exercised,
-      inputs,
+      inputs: { ...inputs, ...dataSets },
     });
     const written = writeVariantFiles({
       directories: context.directories,
