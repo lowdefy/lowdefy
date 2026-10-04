@@ -470,6 +470,12 @@
       "path": "content/testing/journey-data-sets.md"
     },
     {
+      "slug": "testing/explore-pull-request",
+      "title": "Exploring a Pull Request",
+      "section": "Testing",
+      "path": "content/testing/explore-pull-request.md"
+    },
+    {
       "slug": "testing/e2e-introduction",
       "title": "E2E Testing",
       "section": "Testing",
@@ -3254,7 +3260,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "85f25e525e418a5abe592def0d73ef26662bb2746caf9c53d27864b6bd963eb4"
+      "hash": "3f36dac8d18d77be8e6398c37f6aa62ca6f96bc1dd0a1809eed7cb75dd904552"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3318,7 +3324,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "3da89164a62b6b82e016b3e2da2c736b332c3232efa038ce5f951321c844445e"
+      "hash": "8a8fc030245c9f4a81946bf55aaad001ded822f8d529d8b0c073c631bede19bb"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3902,6 +3908,21 @@
         "version.yaml"
       ],
       "hash": "7ca281622351b481a3c7bf7f56dae303f4adeb6d009332dca3f303ebb4f35082"
+    },
+    "testing/explore-pull-request": {
+      "files": [
+        "requests/discord_message.yaml.njk",
+        "requests/insert_feedback.yaml",
+        "requests/insert_newsletter.yaml",
+        "templates/footer.yaml.njk",
+        "templates/general.yaml.njk",
+        "templates/header.yaml",
+        "templates/validate_email.yaml",
+        "testing/explore-pull-request.md",
+        "testing/explore-pull-request.yaml",
+        "version.yaml"
+      ],
+      "hash": "bab7fee77701309ec3a9180872179803c311da49d7179d1cd698421d403dd648"
     },
     "testing/e2e-introduction": {
       "files": [
