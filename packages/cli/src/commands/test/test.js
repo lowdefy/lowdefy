@@ -81,7 +81,8 @@ async function test({ context }) {
   }
 
   if (context.options.lint === true) {
-    if (lintJourneys({ context, items: selected.map(({ item }) => item) }).failed) {
+    const linted = await lintJourneys({ context, items: selected.map(({ item }) => item) });
+    if (linted.failed) {
       process.exitCode = 1;
     }
     context.sendTelemetry();
