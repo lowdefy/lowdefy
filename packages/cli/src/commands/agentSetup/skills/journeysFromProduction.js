@@ -79,8 +79,9 @@ Run, with your window:
 3. \`${cd}lowdefy journeys coverage --source production --since 30d\`: what no journey covers
    yet, in \`.lowdefy/test/coverage.json\`.
 
-Compile and coverage build the app once to collect its config text (cached until the config
-changes): if they say to run \`lowdefy dev\` first, or list config errors, tell the developer.
+Compile, coverage and evidence build the app once to collect its config text (cached until the
+config changes): if they say to run \`lowdefy dev\` first, or list config errors, tell the
+developer.
 
 If the pull stops on a missing variable, tell the developer which one and where it comes from,
 then wait:

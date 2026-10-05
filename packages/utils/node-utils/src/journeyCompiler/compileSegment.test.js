@@ -473,9 +473,9 @@ test('T26 also adds no step, and a failure in also is the interaction failure', 
 
 test('a production click left with neither block nor text gives a comment and the unresolved-target flag', () => {
   // The label is not config text, and the control sits outside every block.
-  const thresholded = traceRecord({ at: 1, source: 'production', text: 'Settings' });
-  thresholded.target = { ...thresholded.target, text: null };
-  const { journey, footer, flags } = compile([prodEntry, thresholded]);
+  const unlabelled = traceRecord({ at: 1, source: 'production', text: 'Settings' });
+  unlabelled.target = { ...unlabelled.target, text: null };
+  const { journey, footer, flags } = compile([prodEntry, unlabelled]);
   expect(journey.steps).toEqual([]);
   expect(footer).toBe(
     'click on a control known neither by block nor by kept text: write the step by hand'
