@@ -486,8 +486,8 @@ async function runBack({ page, timeout }) {
 
 // Loads an app page the way a typed URL does. The page shown may not be the
 // one asked for - a protected page redirects a signed-out actor to sign in -
-// so the runner settles whichever page the app mounts (isPageReady with a
-// null pageId, as openPage does) and lets the next step assert where it
+// so the runner settles whichever page the app mounts (isPageReady reads the
+// instance on screen, as in openPage) and lets the next step assert where it
 // landed.
 async function runGoto({ page, step, origin, timeout }) {
   const { pageId, pathParams, urlQuery } = type.isString(step.goto)
@@ -516,7 +516,7 @@ async function runGoto({ page, step, origin, timeout }) {
       actual: cleanMessage(error),
     });
   }
-  await page.waitForFunction(isPageReady, null, { timeout }).catch(() => {});
+  await page.waitForFunction(isPageReady, undefined, { timeout }).catch(() => {});
 }
 
 // Polls a page read until it satisfies `check`, or fails once `timeout` has
@@ -823,7 +823,7 @@ async function settlePage({ page, timeout }) {
   if (type.isNone(pageId)) {
     return;
   }
-  await page.waitForFunction(isPageReady, null, { timeout }).catch(() => {});
+  await page.waitForFunction(isPageReady, undefined, { timeout }).catch(() => {});
 }
 
 const INTERACTION_STEPS = ['click', 'open', 'fill', 'select', 'press', 'back'];

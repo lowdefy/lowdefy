@@ -1262,7 +1262,7 @@ test('runJourney goes back one page and settles it', async () => {
 
   expect(result.passed).toBe(true);
   expect(page.goBack).toHaveBeenCalledWith({ timeout: 5000 });
-  expect(page.waitForFunction).toHaveBeenLastCalledWith(expect.any(Function), null, {
+  expect(page.waitForFunction).toHaveBeenLastCalledWith(expect.any(Function), undefined, {
     timeout: 5000,
   });
 });
@@ -1434,7 +1434,7 @@ test('runJourney settles the page after an interaction before the next step', as
 
   // openPage owns the readiness wait; the runner waits once after the click.
   expect(page.waitForFunction).toHaveBeenCalledTimes(1);
-  expect(page.waitForFunction.mock.calls[0][1]).toBeNull();
+  expect(page.waitForFunction.mock.calls[0][1]).toBeUndefined();
 });
 
 test('runJourney opens pages with the journey timeout when it is longer than 15000 ms', async () => {
@@ -1603,9 +1603,9 @@ test('runJourney goto loads the page and settles on the page the app shows', asy
     ['http://localhost:3227/dashboard', { waitUntil: 'load', timeout: 15000 }],
     ['http://localhost:3227/invoice', { waitUntil: 'load', timeout: 15000 }],
   ]);
-  // null: the runner settles the page the app shows, which after a redirect
-  // is the sign-in page rather than the one asked for.
-  expect(page.waitForFunction.mock.calls.map((call) => call[1])).toEqual([null, null]);
+  // No argument: isPageReady settles the page the app shows, which after a
+  // redirect is the sign-in page rather than the one asked for.
+  expect(page.waitForFunction.mock.calls.map((call) => call[1])).toEqual([undefined, undefined]);
 });
 
 const ROUTES = { ticket: 'tickets/{space}/{ticket_id}' };

@@ -15,22 +15,20 @@
 */
 
 // Serialized into the browser by page.waitForFunction, so this function must
-// be pure: it may reference nothing but `window` and its own argument. An
-// import or a closed-over binding would be undefined once the source is
-// evaluated inside the page.
+// be pure: it may reference nothing but `window`. An import or a closed-over
+// binding would be undefined once the source is evaluated inside the page.
 //
 // Checks are ordered cheapest-first and return false on the first failure.
 // A missing key always means "not configured", never "not finished" —
 // iterating only the entries that exist gives that for free.
 //
-// The argument is the instance key of the page instance to wait for (its
-// context in window.lowdefy.contexts, see pageInstanceKey). A null key means the
-// instance the app is showing, the most recently rendered instance of the shown
-// page, so a caller waits out a redirect (a protected page sending a signed-out
-// caller to sign in) instead of waiting for a page that will never mount.
-function isPageReady(instanceKey) {
+// It reads the instance the app is showing, the most recently rendered
+// instance of the shown page, so a caller waits out a redirect (a protected
+// page sending a signed-out caller to sign in) instead of waiting for a page
+// that will never mount.
+function isPageReady() {
   const lowdefy = window.lowdefy;
-  const shownKey = instanceKey ?? lowdefy?.pageInstances?.[lowdefy?.pageId]?.at(-1);
+  const shownKey = lowdefy?.pageInstances?.[lowdefy?.pageId]?.at(-1);
   const context = lowdefy?.contexts?.[shownKey];
   if (!context) return false;
 

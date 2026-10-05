@@ -163,13 +163,13 @@ async function openPage({
     // after the bundle loads — 'load' fires before that. Every caller
     // (screenshot, inspect, eval, checkpoint load, journeys) needs the app's
     // async lifecycle to have settled, not just the bundle to have loaded, so
-    // wait on isPageReady - for the instance the app shows (a null instance
-    // key), which is not the one asked for when the app redirects, as a
-    // protected page does for a signed-out caller. Tolerant: on timeout proceed with ready:
+    // wait on isPageReady - for the instance the app shows, which is not the
+    // one asked for when the app redirects, as a protected page does for a
+    // signed-out caller. Tolerant: on timeout proceed with ready:
     // false and let the caller surface what it finds — a snapshot of a hung
     // page is still useful signal, and a far better answer than a tool failure.
     let ready = true;
-    await page.waitForFunction(isPageReady, null, { timeout }).catch(() => {
+    await page.waitForFunction(isPageReady, undefined, { timeout }).catch(() => {
       ready = false;
     });
     // Images blocks render start loading only once the page is ready; a

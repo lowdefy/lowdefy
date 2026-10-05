@@ -268,8 +268,10 @@ test('openPage loads the page and waits on isPageReady for the page the app show
     waitUntil: 'load',
     timeout: 15000,
   });
-  // null: the page shown, so a redirect to the sign-in page settles too.
-  expect(opened.page.waitForFunction).toHaveBeenCalledWith(isPageReady, null, { timeout: 15000 });
+  // The page shown, so a redirect to the sign-in page settles too.
+  expect(opened.page.waitForFunction).toHaveBeenCalledWith(isPageReady, undefined, {
+    timeout: 15000,
+  });
   expect(opened.ready).toBe(true);
 });
 
