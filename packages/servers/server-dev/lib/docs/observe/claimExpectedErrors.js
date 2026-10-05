@@ -53,8 +53,8 @@ function claimExpectedErrors({ step, index, held, findings }) {
       expected: `an app error containing "${text}"`,
       actual,
       message: `Expected an app error containing "${text}" but found ${
-        seen.length === 0 ? 'no app error' : actual.join('; ')
-      }.`,
+        seen.length === 0 ? 'no app error.' : actual.join('; ')
+      }`,
     };
   }
   const unclaimed = seen.filter((finding) => !claimed.includes(finding));
