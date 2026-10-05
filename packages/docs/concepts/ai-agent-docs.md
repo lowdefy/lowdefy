@@ -331,6 +331,8 @@ A radio, checkbox or segmented option is reached through its label: `{ "click": 
 
 `text` without a `blockId` searches the page, front-most layer first — an open dropdown menu (`[role="menu"]`), then an open dialog (`[role="dialog"]`), then the page — so `{ "click": { "text": "Delete" } }` with a confirm dialog open clicks the dialog's Delete and not the grid's, without counting buttons. `fill`, `select` and `expect.text` always need a `blockId`. Unknown target keys are rejected before a browser opens.
 
+A `click`, `open`, `fill` or `select` whose `text` or `containing` matches more than one visible element fails with `Matched <n> controls with text "<text>" in <scope>; add nth: 0..<n-1>, or a blockId/row to narrow it.` Add `nth` or narrow the scope. Expectations accept any match: `expect.visible` passes when one is visible, `expect.hidden` when none is.
+
 ```json
 [
   { "click": { "blockId": "controls_grid", "row": 1, "text": "Delete" } },
