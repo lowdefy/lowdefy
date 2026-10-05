@@ -228,9 +228,10 @@ async function locateMatches({ page, target }) {
   return { matches: controlsWithText({ root: scope, text: target.text }), where };
 }
 
-// The element a step asserts about, or acts on once resolveActionTarget has
-// checked it is the only match. A `text` or `containing` target is its nth
-// match, the first when no `nth` is given: an expectation holds for any match.
+// The element an expectation asserts about, or an action acts on when its
+// target needs no single-match check (it gives `nth`, or names no `text` or
+// `containing`). A `text` or `containing` target is its nth match, the first
+// when no `nth` is given: an expectation holds for any match.
 // With `nth` alone it is the nth interactive control in the scope. Otherwise
 // it is the scope itself, and a click resolves its inner control the way a
 // plain blockId click does.

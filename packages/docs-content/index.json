@@ -3324,7 +3324,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "9f0d92ec0b379bd238c8a9f88685486e149424c6b5eb7d0f6ce1c15d492333a1"
+      "hash": "732dd4455bdb3154862031f85459e642e76b3e1ab5b94b57a43f6a29320d6d34"
     },
     "agents/agents-introduction": {
       "files": [

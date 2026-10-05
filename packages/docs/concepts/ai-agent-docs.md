@@ -325,7 +325,7 @@ A **target** is a `blockId` string, or an object that narrows the search to a co
 | `row`      | A grid row, zero-based as displayed (`AgGrid*` blocks, `.ag-row[row-index]`); needs `blockId`                                        |
 | `column`   | A grid cell in that row, by the column's `field` or `colId` (`.ag-cell[col-id]`); needs `blockId`                                    |
 | `text`     | The visible interactive control whose text is exactly this — a button label, a tab, a menu item (`"Cat"` never matches `"Category"`) |
-| `nth`      | When several controls match, the zero-based one to use                                                                               |
+| `nth`      | When several elements match, the zero-based one to use                                                                               |
 
 A radio, checkbox or segmented option is reached through its label: `{ "click": { "blockId": "period", "text": "Month" } }` clicks the Month option of a `SegmentedSelector`, whose own radio input has no size.
 

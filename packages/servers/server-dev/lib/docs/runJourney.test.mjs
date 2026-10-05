@@ -547,23 +547,21 @@ test('runJourney accepts any of several matches in an expectation', async () => 
 
 test('runJourney finds a page-wide text target in the open dialog before the page', async () => {
   const page = createPage();
-  page.nths = [];
   openWith(page);
-  trackFilters(page);
-  // A dialog is open and it holds a control with the text; the grid behind it
-  // holds one too, but the dialog wins.
+  // A dialog is open and it holds one control with the text; the grid behind
+  // it holds three, but only the dialog's is counted, so the click is not
+  // ambiguous.
   page.locator.mockImplementation((selector) => {
     const locator = createLocator({ selector, page });
+    if (selector === CONTROLS) {
+      locator.count.mockResolvedValue(3);
+    }
     if (selector === '[role="dialog"]') {
       locator.count.mockResolvedValue(1);
       locator.last.mockImplementation(() => locator);
       locator.locator.mockImplementation((child) => {
         const inner = createLocator({ selector: `${selector} ${child}`, page });
         inner.count.mockResolvedValue(1);
-        inner.nth.mockImplementation((index) => {
-          page.nths.push({ selector: inner.selector, index });
-          return inner;
-        });
         return inner;
       });
     }
