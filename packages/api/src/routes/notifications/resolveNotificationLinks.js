@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import { serializer, type, urlQuery } from '@lowdefy/helpers';
+import { buildPagePath, serializer, type, urlQuery } from '@lowdefy/helpers';
 
-function resolveLinkValue({ link, option, serverUrl, basePath, landingPage, recordId }) {
+function resolveLinkValue({ link, option, serverUrl, basePath, landingPage, recordId, routes }) {
   // Absolute URLs pass through — links into other apps or external destinations.
   // They skip any landing page, so they carry no mark-as-read.
   if (type.isString(link)) {
@@ -25,8 +25,14 @@ function resolveLinkValue({ link, option, serverUrl, basePath, landingPage, reco
   if (type.isObject(link) && !type.isNone(link.pageId)) {
     if (type.isNone(landingPage)) {
       // No landing page configured — link straight to the target page.
+      const route = routes.find((candidate) => candidate.pageId === link.pageId);
+      const pagePath = buildPagePath({
+        pageId: link.pageId,
+        path: route?.path,
+        pathParams: link.pathParams,
+      });
       const query = urlQuery.stringify(link.urlQuery ?? {});
-      return `${serverUrl}${basePath}/${link.pageId}${query ? `?${query}` : ''}`;
+      return `${serverUrl}${basePath}/${pagePath}${query ? `?${query}` : ''}`;
     }
     // The option query param is the dot-path of the link inside the record's
     // data — the landing page reads the original target back with
@@ -38,11 +44,20 @@ function resolveLinkValue({ link, option, serverUrl, basePath, landingPage, reco
 }
 
 // Resolves link values in a copy of the data item to URLs; the stored record
-// keeps the original { pageId, urlQuery } objects for in-app navigation.
+// keeps the original { pageId, urlQuery, pathParams } objects for in-app navigation.
 // data.links is the framework convention; link fields inside arrays are
 // resolved for the data keys the template declares (Template.dataKeys), so
 // custom templates get the same treatment as the built-in ones.
-function resolveNotificationLinks({ item, dataKeys, serverUrl, basePath, landingPage, recordId }) {
+// routes is the build's routes.json; a link's page path is its pattern there.
+function resolveNotificationLinks({
+  item,
+  dataKeys,
+  serverUrl,
+  basePath,
+  landingPage,
+  recordId,
+  routes,
+}) {
   const resolved = serializer.copy(item);
 
   Object.keys(resolved.links ?? {}).forEach((key) => {
@@ -53,6 +68,7 @@ function resolveNotificationLinks({ item, dataKeys, serverUrl, basePath, landing
       basePath,
       landingPage,
       recordId,
+      routes,
     });
   });
 
@@ -67,6 +83,7 @@ function resolveNotificationLinks({ item, dataKeys, serverUrl, basePath, landing
         basePath,
         landingPage,
         recordId,
+        routes,
       });
     });
   });

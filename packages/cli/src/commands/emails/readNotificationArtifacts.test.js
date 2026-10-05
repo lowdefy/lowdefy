@@ -34,6 +34,10 @@ const context = {
 };
 
 const buildFiles = {
+  [path.join(buildDirectory, 'routes.json')]: [
+    { pageId: 'home', path: 'home', auth: {} },
+    { pageId: 'ticket', path: 'tickets/{space}/{ticket_id}', auth: {} },
+  ],
   [path.join(buildDirectory, 'app.json')]: { email: { companyName: 'MyApp' } },
   [path.join(buildDirectory, 'types.json')]: {
     notifications: { NotificationEmail: { package: '@lowdefy/email-templates' } },

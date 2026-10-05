@@ -19,7 +19,7 @@ import { serializer, type } from '@lowdefy/helpers';
 import interpolateProperties from './interpolate/interpolateProperties.js';
 import resolveLink from './resolveLink.js';
 
-function buildPreviewProps({ Template, config }) {
+function buildPreviewProps({ Template, config, paths }) {
   const testData = config.testData ?? {};
   const properties = interpolateProperties({
     properties: config.properties,
@@ -28,13 +28,13 @@ function buildPreviewProps({ Template, config }) {
   });
   const links = {};
   Object.keys(testData.links ?? {}).forEach((key) => {
-    links[key] = resolveLink(testData.links[key]);
+    links[key] = resolveLink({ link: testData.links[key], paths });
   });
   const data = serializer.copy(testData);
   (Template.dataKeys ?? []).forEach((key) => {
     (type.isArray(data[key]) ? data[key] : []).forEach((item) => {
       if (type.isObject(item) && !type.isNone(item.link)) {
-        item.link = resolveLink(item.link);
+        item.link = resolveLink({ link: item.link, paths });
       }
     });
   });

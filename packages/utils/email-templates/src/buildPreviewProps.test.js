@@ -58,6 +58,35 @@ test('buildPreviewProps resolves pageId links to relative urls', () => {
   expect(result.links.plain).toEqual('/home');
 });
 
+test('buildPreviewProps builds patterned page links from paths', () => {
+  const result = buildPreviewProps({
+    Template: NotificationEmail,
+    paths: { ticket: 'tickets/{space}/{ticket_id}' },
+    config: {
+      properties: { subject: 'Hello' },
+      testData: {
+        links: {
+          button: { pageId: 'ticket', pathParams: { space: 's', ticket_id: '1' } },
+        },
+      },
+    },
+  });
+  expect(result.links.button).toEqual('/tickets/s/1');
+});
+
+test('buildPreviewProps throws for a missing path placeholder value', () => {
+  expect(() =>
+    buildPreviewProps({
+      Template: NotificationEmail,
+      paths: { ticket: 'tickets/{space}/{ticket_id}' },
+      config: {
+        properties: { subject: 'Hello' },
+        testData: { links: { button: { pageId: 'ticket', pathParams: { space: 's' } } } },
+      },
+    })
+  ).toThrow('Link to page "ticket" is missing a value for path placeholder "ticket_id".');
+});
+
 test('buildPreviewProps passes absolute urls through', () => {
   const result = buildPreviewProps({
     Template: NotificationEmail,

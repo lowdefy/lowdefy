@@ -47,8 +47,16 @@ function createNotificationConfig(overrides = {}) {
   };
 }
 
+const routes = [
+  { pageId: 'task-view', path: 'task-view', auth: {} },
+  { pageId: 'ticket', path: 'tickets/{space}/{ticket_id}', auth: {} },
+];
+
 function createMockReadConfigFile({ notificationConfig, app = {} }) {
   return jest.fn((path) => {
+    if (path === 'routes.json') {
+      return routes;
+    }
     if (notificationConfig && path === `notifications/${notificationConfig.notificationId}.json`) {
       return notificationConfig;
     }
@@ -244,6 +252,56 @@ test('RenderNotification resolves pageId links directly when landingPage is unse
   expect(renderArgs.links.button).toBe('https://myapp.com/task-view?_id=T-1');
   expect(renderArgs.links.plain).toBe('https://myapp.com/home');
   expect(renderArgs.links.external).toBe('https://other.example/page');
+});
+
+test('RenderNotification builds patterned page links from pathParams', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+
+  const data = {
+    contact,
+    links: {
+      button: {
+        pageId: 'ticket',
+        pathParams: { space: 's', ticket_id: '1' },
+        urlQuery: { tab: 'a' },
+      },
+    },
+  };
+  await runRoutine(context, routineContext, {
+    routine: createStep({ data, serverUrl: 'https://myapp.com' }),
+  });
+  expect(mockRenderEmail.mock.calls[0][0].links.button).toBe('https://myapp.com/tickets/s/1?tab=a');
+
+  jest.clearAllMocks();
+  await runRoutine(context, routineContext, {
+    routine: createStep({
+      data,
+      serverUrl: 'https://myapp.com',
+      landingPage: '/notifications/link',
+      recordId: 'rec-1',
+    }),
+  });
+  expect(mockRenderEmail.mock.calls[0][0].links.button).toContain(
+    'https://myapp.com/notifications/link?'
+  );
+  expect(data.links.button.pathParams).toEqual({ space: 's', ticket_id: '1' });
+});
+
+test('RenderNotification fails for a link missing a path value', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+  const data = {
+    contact,
+    links: { button: { pageId: 'ticket', pathParams: { space: 's' } } },
+  };
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data, serverUrl: 'https://myapp.com' }),
+  });
+  expect(res.status).toBe('error');
+  expect(res.error.message).toBe(
+    'Link to page "ticket" is missing a value for path placeholder "ticket_id".'
+  );
 });
 
 test('RenderNotification resolves array link fields for the data keys the template declares', async () => {

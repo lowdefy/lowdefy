@@ -43,7 +43,7 @@ async function emails({ context }) {
   await runLowdefyBuild({ context, directory });
   await installServer({ context, directory });
 
-  const { notifications, appEmail, notificationTypes } = await readNotificationArtifacts({
+  const { notifications, appEmail, notificationTypes, paths } = await readNotificationArtifacts({
     context,
   });
   if (notifications.length === 0) {
@@ -54,7 +54,7 @@ async function emails({ context }) {
   }
 
   await installReactEmail({ context, directory });
-  await generateEmailShims({ context, notifications, appEmail, notificationTypes });
+  await generateEmailShims({ context, notifications, appEmail, notificationTypes, paths });
   await warnMissingDataKeys({ context, notifications, notificationTypes });
   context.logger.info(
     'Preview shims generated. Config changes (properties, testData) need a rerun of "lowdefy emails"; template code changes hot-reload.'

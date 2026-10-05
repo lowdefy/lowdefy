@@ -103,6 +103,7 @@ test('generateEmailShims writes a wrapper shim with merged theme and testData', 
   const config = JSON.parse(content.match(/const config = ([\s\S]*?);\n\nfunction/)[1]);
   expect(config.theme).toEqual({ companyName: 'MyApp', logo: 'https://cdn/override.png' });
   expect(config.testData).toEqual({ contact: { _id: 'UC-1' } });
+  expect(content).toContain('buildPreviewProps({ Template, config, paths })');
 });
 
 test('generateEmailShims drops a relative logo from the preview theme', async () => {
