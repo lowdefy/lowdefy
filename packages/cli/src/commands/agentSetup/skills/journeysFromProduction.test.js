@@ -111,3 +111,26 @@ test('journeys-from-production runs commands from the app directory in a monorep
     'cd apps/crm && lowdefy journeys pull posthog'
   );
 });
+
+test('journeys-from-production captures the usage report on either side of the evidence refresh', () => {
+  const skill = journeysFromProduction({ appPath: '' });
+  const usage = 'lowdefy journeys usage --json';
+  const before = skill.indexOf(usage);
+  const refresh = skill.indexOf('lowdefy journeys evidence --refresh');
+  const after = skill.indexOf(usage, refresh);
+  expect(before).toBeGreaterThan(skill.indexOf('lowdefy test --repeat 3'));
+  expect(before).toBeLessThan(refresh);
+  expect(after).toBeGreaterThan(refresh);
+  expect(skill.indexOf('## 7. Report')).toBeGreaterThan(after);
+});
+
+test('journeys-from-production reports deprecated flows still in use and how the tiers moved', () => {
+  const skill = journeysFromProduction({ appPath: '' });
+  const report = skill.slice(skill.indexOf('## 7. Report'));
+  expect(report).toContain('the deprecated flows still in use');
+  expect(report).toContain('naming the journey whose current steps\n  replaced it');
+  expect(report).toContain('how the tiers moved');
+  expect(report).toContain('`unranked`');
+  expect(report).toContain('you may suggest that, and leave it to the developer');
+  expect(skill).toContain("Nothing in it deletes a journey's deprecated flows either.");
+});

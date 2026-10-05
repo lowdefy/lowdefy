@@ -21,6 +21,10 @@
 // production text: the pull stores clicked text as tokens, and the CLI turns a
 // token back into text only when it is the app's config text. It never
 // deletes a journey, or proposes deleting one, for lack of production use.
+// After refreshing evidence it compares the usage report before and after,
+// and reports the old flows users still follow and how the tiers moved; it
+// may suggest the developer delete an old flow that shows no use, and never
+// deletes one itself.
 function journeysFromProduction({ appPath }) {
   const cd = appPath === '' ? '' : `cd ${appPath} && `;
   return `---
@@ -38,7 +42,7 @@ command below from the app directory (\`${cd}…\`).
 Interaction steps come only from the compiler: you edit candidates within what was recorded, and
 never write a step the routine did not record. Nothing in this loop deletes a journey,
 and you never propose deleting one because production does not use it: a 30-day window cannot
-see quarterly or yearly work.
+see quarterly or yearly work. Nothing in it deletes a journey's deprecated flows either.
 
 ## What you read, and what you never read
 
@@ -153,7 +157,20 @@ journeys already in \`tests/journeys/\`.)
 If \`${cd}lowdefy journeys --help\` lists \`variants\`, run
 \`${cd}lowdefy journeys variants <file>\` on each promoted journey.
 
-Then run \`${cd}lowdefy journeys evidence --refresh\`.
+Then refresh evidence, with the usage report on either side of it:
+
+1. \`${cd}lowdefy journeys usage --json\`: keep its \`rows\` as the tiers before the refresh.
+2. \`${cd}lowdefy journeys evidence --refresh\`: counts each journey's production use by
+   calendar month. When a journey's steps changed what it matches, its counted months move to a
+   deprecated flow under \`evidence.production.deprecated\`, which is never run and is still
+   counted.
+3. \`${cd}lowdefy journeys usage --json\` again: the tiers after it.
+
+Compare the two by \`file\` and \`journeyIndex\`. Each row has the journey's \`tier\`, \`rank\`,
+\`rate\` (sessions a day over the usage window, the last \`windowMonths\`), \`unranked\` (no counts
+for its current steps yet) and \`deprecatedFlows\`, each with \`replaced\`, \`counted\` and, when
+counted, its \`rate\` and \`sessions\` over the same window. The report holds config text and
+tokens only, like the rest of what you read.
 
 ## 7. Report
 
@@ -164,6 +181,14 @@ Tell the developer:
 - what you skipped and why;
 - the findings: failures that reproduce, behaviour changes, and dead clicks. A dead click on a
   block that should do nothing is a finding for the developer, not a test to write;
+- the deprecated flows still in use: each counted one with \`sessions\` above 0 in the window,
+  with its \`rate\` and when it was \`replaced\`, naming the journey whose current steps
+  replaced it (its row). Users still following an old flow after the change shipped is worth the
+  developer's attention. A deprecated flow with no sessions in the window may be deleted by hand
+  from the journey's evidence; you may suggest that, and leave it to the developer;
+- how the tiers moved: the journeys whose \`tier\` changed, before and after (a journey unranked
+  before the refresh and ranked after it counts), and the journeys still \`unranked\` after it,
+  which have no counts for their current steps yet (the cache held no final day for them);
 - the journeys with no production backing exactly as \`journeys evidence\` prints them.
   Make no recommendation to delete any of them.
 
