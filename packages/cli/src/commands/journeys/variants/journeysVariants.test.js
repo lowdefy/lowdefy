@@ -403,3 +403,25 @@ test('journeysVariants measures a journey with a list of users as its first user
   expect(logs.info).toContainEqual(expect.stringMatching(/^PASS .*\[member\]/));
   expect(logs.info).toContainEqual(expect.stringMatching(/^PASS .*\[admin\]/));
 });
+
+test('journeysVariants replays a granted role variant, whose comment is no placeholder', async () => {
+  writeDataSet(
+    'tickets',
+    [
+      'users:',
+      '  member: { id: u_1, roles: [member] }',
+      '  admin: { id: u_2, roles: [admin] }',
+      '',
+    ].join('\n')
+  );
+  fs.writeFileSync(
+    journeysPath('tickets.yaml'),
+    JSON.stringify({ ...journey, data: 'tickets', user: 'member' })
+  );
+  await variants({ kinds: 'role' });
+  const bodies = mockPost.mock.calls.map(([, body]) => body);
+  // One baseline run as member, then the granted variant three times as admin.
+  expect(bodies.map((body) => body.user)).toEqual(['member', 'admin', 'admin', 'admin']);
+  expect(logs.warn.filter((line) => line.startsWith('NOT RUN'))).toEqual([]);
+  expect(logs.info).toContainEqual(expect.stringMatching(/^PASS .*granted to admin/));
+});

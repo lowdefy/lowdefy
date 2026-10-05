@@ -225,6 +225,29 @@ test('writeVariantFiles keeps a filled-in placeholder on a rerun and rewrites un
   expect(fs.readFileSync(interruptPath, 'utf8')).toBe(generatedInterrupt);
 });
 
+test('writeVariantFiles reports a commented variant with no from: shape value as no placeholder', () => {
+  const directories = { config: directory, journeys: path.join(directory, 'tests', 'journeys') };
+  const [written] = writeVariantFiles({
+    directories,
+    filePath: path.join(directories.journeys, 'assign.yaml'),
+    journey,
+    variants: [
+      {
+        kind: 'role',
+        detail: 'granted to admin [admin]',
+        overrides: { user: 'admin' },
+        steps: journey.steps,
+        comments: { 0: 'Passes? Keep admin as a persona of the journey.' },
+      },
+    ],
+    kinds: ['role'],
+  });
+  expect(fs.readFileSync(written.path, 'utf8')).toContain(
+    '# Passes? Keep admin as a persona of the journey.'
+  );
+  expect(written.placeholder).toBe(false);
+});
+
 test('writeVariantFiles leaves a file with no generated header alone as a conflict', () => {
   writeAll();
   const handWritten = 'name: by hand\npageId: tickets\nsteps:\n  - expect: { visible: a }\n';
