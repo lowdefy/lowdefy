@@ -89,6 +89,13 @@ test('readProductionTrace names a missing middle day and the pull that fills it'
   );
 });
 
+test('readProductionTrace names a pull the mining cap accepts when an uncapped window misses more than 30 days', async () => {
+  writeDay('2026-10-03', []);
+  await expect(read({ from: '2026-08-01', to: '2026-10-03' })).rejects.toThrow(
+    'Run "lowdefy journeys pull posthog --from 2026-08-01 --to 2026-08-30" first, then pull the rest of 2026-08-01/2026-10-02 the same way, at most 30 days at a time.'
+  );
+});
+
 test('readProductionTrace treats a day without its manifest as missing', async () => {
   writeDay('2026-10-01', []);
   fs.rmSync(path.join(traces, 'production', '2026-10-01.manifest.json'));
