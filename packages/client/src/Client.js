@@ -124,21 +124,16 @@ const Client = ({
           {(context) => {
             if (!context._internal.onInitDone) return '';
             return (
-              <>
-                <Head
-                  Component={Components.Head}
-                  properties={
-                    context._internal.RootSlots.map[config.pageConfig.blockId].eval.properties
-                  }
-                />
-                <Block
-                  block={context._internal.RootSlots.map[config.pageConfig.blockId]}
-                  Blocks={context._internal.RootSlots}
-                  context={context}
-                  lowdefy={lowdefy}
-                  parentLoading={false}
-                />
-              </>
+              <Block
+                block={context._internal.RootSlots.map[config.pageConfig.blockId]}
+                Blocks={context._internal.RootSlots}
+                context={context}
+                lowdefy={lowdefy}
+                parentLoading={false}
+                renderHead={({ properties }) => (
+                  <Head Component={Components.Head} properties={properties} />
+                )}
+              />
             );
           }}
         </Context>
