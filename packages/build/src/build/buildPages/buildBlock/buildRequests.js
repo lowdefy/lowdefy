@@ -19,6 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 
 import validateId from '../../../utils/validateId.js';
 import validateSharedPipelineWrite from '../../validateSharedPipelineWrite.js';
+import validateTenantNoneRead from '../../validateTenantNoneRead.js';
 import validateTenantPipelineEntry from '../../validateTenantPipelineEntry.js';
 
 function buildRequest(request, pageContext) {
@@ -76,6 +77,13 @@ function buildRequest(request, pageContext) {
     );
   }
 
+  validateTenantNoneRead({
+    config: request,
+    location: `Request "${request.id}" at page "${pageId}"`,
+    requestMetas: context.typesMap?.requestMetas,
+    tenantConnectionIds: context.tenantConnectionIds,
+    configKey,
+  });
   // Best-effort (literal pipelines only): a walled pipeline the wall can not
   // scope mechanically must declare tenant: authored. Runtime re-checks.
   validateTenantPipelineEntry({

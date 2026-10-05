@@ -18,6 +18,7 @@ import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 async function MongodbFind({ request, connection, tenant }) {
@@ -39,9 +40,6 @@ async function MongodbFind({ request, connection, tenant }) {
 }
 
 MongodbFind.schema = schema;
-MongodbFind.meta = {
-  checkRead: true,
-  checkWrite: false,
-};
+MongodbFind.meta = requestMetas.MongoDBFind;
 
 export default MongodbFind;

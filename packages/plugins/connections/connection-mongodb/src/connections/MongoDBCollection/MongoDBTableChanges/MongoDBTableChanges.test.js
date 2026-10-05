@@ -747,9 +747,9 @@ describe('tenant connections', () => {
     ]);
   });
 
-  test('tenant: none refuses new rows without an organization id, and accepts it from insertDefaults', async () => {
+  test('the write guard of a shared connection refuses new rows without an organization id, and accepts it from insertDefaults', async () => {
     const { collection, connection } = await setup(tenantRows());
-    const tenantGuard = { field: 'organization_id', stampChangeLog: false };
+    const tenantGuard = { field: 'organization_id', readOnly: false };
     await expect(
       save({
         connection,
@@ -796,43 +796,20 @@ describe('change log', () => {
     });
   });
 
-  test('tenant: none on a change-logged connection needs a filter that pins one organization', async () => {
-    const { collection, connection } = await setup([
-      { _id: 'a1', organization_id: 'org_a', item: 'A', qty: 1 },
-    ]);
+  test('tenant: none refuses a save on a change-logged connection and writes no record', async () => {
+    const rows = [{ _id: 'a1', organization_id: 'org_a', item: 'A', qty: 1 }];
+    const { collection, connection } = await setup(rows);
     const logCollection = `${collection}Log`;
     await populateTestMongoDb({ collection: logCollection, documents: [{ _id: 'marker' }] });
-    const logged = { ...connection, changeLog: { collection: logCollection } };
-    const tenantGuard = { field: 'organization_id', stampChangeLog: true };
     await expect(
       save({
-        connection: logged,
-        tenantGuard,
-        filter: {},
+        connection: { ...connection, changeLog: { collection: logCollection } },
+        tenantGuard: { field: 'organization_id', readOnly: true },
+        filter: { organization_id: 'org_a' },
         changes: { updated: { a1: { qty: 2 } } },
       })
-    ).rejects.toThrow(
-      'the filter does not match "organization_id" by equality to one organization id'
-    );
-    await expect(
-      save({
-        connection: logged,
-        tenantGuard,
-        filter: { organization_id: 'org_a' },
-        insertDefaults: { organization_id: 'org_b' },
-        changes: { updated: { a1: { qty: 2 } }, added: [{ rowKey: 't', item: 'B' }] },
-      })
-    ).rejects.toThrow(
-      'MongoDBTableChanges "insertDefaults" sets "organization_id" to "org_b", but "filter" matches "organization_id" to "org_a"'
-    );
-    await save({
-      connection: logged,
-      tenantGuard,
-      filter: { organization_id: 'org_a' },
-      insertDefaults: { organization_id: 'org_a' },
-      changes: { updated: { a1: { qty: 2 } }, added: [{ rowKey: 't', item: 'B' }] },
-    });
-    const records = (await readAll(logCollection)).filter((record) => record._id !== 'marker');
-    expect(records.map((record) => record.organization_id)).toEqual(['org_a']);
+    ).rejects.toThrow('MongoDBTableChanges writes, and a request with tenant: none may only read');
+    expect(await readAll(collection)).toEqual(rows);
+    expect(await readAll(logCollection)).toEqual([{ _id: 'marker' }]);
   });
 });

@@ -42,6 +42,7 @@ async function generateDefaultTypesMap() {
       client: {},
       server: {},
     },
+    requestMetas: {},
     requests: {},
     steps: {},
     websockets: {},

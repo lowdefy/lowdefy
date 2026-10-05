@@ -14,17 +14,16 @@
   limitations under the License.
 */
 
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import applyTenantToUpdate from '../tenant/applyTenantToUpdate.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
-import {
-  assertUnscopedUpdate,
-  changeLogOrganizationOfFilter,
-} from '../tenant/guardUnscopedWrite.js';
+import { assertUnscopedUpdate } from '../tenant/guardUnscopedWrite.js';
 import getCollection from '../getCollection.js';
 import verifyStoredTenant from '../tenant/verifyStoredTenant.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 async function MongodbUpdateMany({
@@ -39,6 +38,7 @@ async function MongodbUpdateMany({
   tenant,
   tenantGuard,
 }) {
+  assertTenantWritable({ tenantGuard, requestType: 'MongoDBUpdateMany' });
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { filter, update } = deserializedRequest;
@@ -55,10 +55,6 @@ async function MongodbUpdateMany({
     });
   }
   const { collection, logCollection } = await getCollection({ connection });
-  let logOrganizationId = null;
-  if (tenantGuard?.stampChangeLog && logCollection) {
-    logOrganizationId = changeLogOrganizationOfFilter({ filter, update, field: tenantGuard.field });
-  }
   let response;
   try {
     response = await collection.updateMany(filter, update, options);
@@ -78,8 +74,6 @@ async function MongodbUpdateMany({
             meta: connection.changeLog?.meta,
           },
           tenant,
-          tenantGuard,
-          organizationId: logOrganizationId,
         })
       );
     }
@@ -101,9 +95,6 @@ async function MongodbUpdateMany({
 }
 
 MongodbUpdateMany.schema = schema;
-MongodbUpdateMany.meta = {
-  checkRead: false,
-  checkWrite: true,
-};
+MongodbUpdateMany.meta = requestMetas.MongoDBUpdateMany;
 
 export default MongodbUpdateMany;

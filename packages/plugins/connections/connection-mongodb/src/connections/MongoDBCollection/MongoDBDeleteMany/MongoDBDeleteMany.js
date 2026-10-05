@@ -14,12 +14,13 @@
   limitations under the License.
 */
 
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
-import { changeLogOrganizationOfFilter } from '../tenant/guardUnscopedWrite.js';
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 async function MongodbDeleteMany({
@@ -33,6 +34,7 @@ async function MongodbDeleteMany({
   tenant,
   tenantGuard,
 }) {
+  assertTenantWritable({ tenantGuard, requestType: 'MongoDBDeleteMany' });
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { filter } = deserializedRequest;
@@ -40,10 +42,6 @@ async function MongodbDeleteMany({
     filter = applyTenantToFilter({ filter, tenant, position: 'a filter' });
   }
   const { collection, logCollection } = await getCollection({ connection });
-  let logOrganizationId = null;
-  if (tenantGuard?.stampChangeLog && logCollection) {
-    logOrganizationId = changeLogOrganizationOfFilter({ filter, field: tenantGuard.field });
-  }
   let response;
   try {
     response = await collection.deleteMany(filter, options);
@@ -63,8 +61,6 @@ async function MongodbDeleteMany({
             meta: connection.changeLog?.meta,
           },
           tenant,
-          tenantGuard,
-          organizationId: logOrganizationId,
         })
       );
     }
@@ -76,9 +72,6 @@ async function MongodbDeleteMany({
 }
 
 MongodbDeleteMany.schema = schema;
-MongodbDeleteMany.meta = {
-  checkRead: false,
-  checkWrite: true,
-};
+MongodbDeleteMany.meta = requestMetas.MongoDBDeleteMany;
 
 export default MongodbDeleteMany;

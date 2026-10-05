@@ -38,6 +38,7 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId, env
     dynamicPolicies: context.dynamicPolicies,
     typeCounters: context.typeCounters,
     stepTypes: context.typesMap?.steps ?? {},
+    requestMetas: context.typesMap?.requestMetas ?? {},
     tenantConnectionIds: context.tenantConnectionIds,
     sharedTargets: context.sharedTargets,
     walledTargets: context.walledTargets,

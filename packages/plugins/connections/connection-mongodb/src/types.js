@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import requestMetas from './connections/MongoDBCollection/requestMetas.js';
+
 export default {
   connections: ['MongoDBCollection'],
   // MongoDBCollection implements the tenant scoping contract: under
@@ -36,6 +38,9 @@ export default {
       },
     },
   },
+  // Whether each request type reads and writes. The build refuses a write
+  // request type under tenant: none on a scoped connection.
+  requestMetas,
   requests: [
     'MongoDBAggregation',
     'MongoDBBulkWrite',
