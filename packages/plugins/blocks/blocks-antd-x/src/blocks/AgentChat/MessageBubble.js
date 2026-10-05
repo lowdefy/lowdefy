@@ -176,13 +176,13 @@ function linkText(children) {
 // route rather than a reload that drops the conversation. Anything with a scheme opens in a
 // new tab for the same reason. Both still report the click, so an app that handles
 // onLinkClick can show the target in place instead.
-function MarkdownLink({ Link, lookupPath, onLinkClick }) {
+function MarkdownLink({ Link, onLinkClick }) {
   return function MarkdownAnchor({ href, children, ...props }) {
     if (!href) return <span {...props}>{children}</span>;
     const text = linkText(children);
     const handleClick = (domEvent) => onLinkClick?.({ href, text, domEvent });
     const external = /^[a-z][a-z0-9+.-]*:/i.test(href) || href.startsWith('//');
-    // A fragment cannot be expressed as a pageId link, so it keeps the anchor.
+    // A fragment moves within the document, which the router cannot do, so it keeps the anchor.
     const inApp = !external && href.startsWith('/') && !href.includes('#');
     if (!inApp || !Link) {
       return (
@@ -197,18 +197,10 @@ function MarkdownLink({ Link, lookupPath, onLinkClick }) {
         </a>
       );
     }
-    // `pageId`, not `href`: Link renders a plain anchor for href and url — its new-origin form —
-    // and only routes client-side for a pageId. Passing the path as href therefore went through
-    // Link and still reloaded the page, dropping the conversation this exists to preserve.
-    // The path becomes the page it belongs to and that page's path values, from the path memory.
-    const [path, search = ''] = href.slice(1).split('?');
-    const { pageId, pathParams } = lookupPath({ path });
     return (
       <Link
         {...props}
-        pageId={pageId}
-        pathParams={pathParams}
-        urlQuery={Object.fromEntries(new URLSearchParams(search))}
+        url={href}
         onClick={handleClick}
       >
         {children}
@@ -321,7 +313,6 @@ function MessageBubble({
   feedbackValue,
   onLinkClick,
   Link,
-  lookupPath,
   onRegenerate,
   onDelete,
   translate,
@@ -340,8 +331,8 @@ function MessageBubble({
       !renderMermaid && !codeHighlighter
         ? PlainCodeBlock
         : RichCodeBlock({ renderMermaid, codeHighlighter });
-    return { code, a: MarkdownLink({ Link, lookupPath, onLinkClick }) };
-  }, [renderMermaid, codeHighlighter, Link, lookupPath, onLinkClick]);
+    return { code, a: MarkdownLink({ Link, onLinkClick }) };
+  }, [renderMermaid, codeHighlighter, Link, onLinkClick]);
 
   const normalizedActions = normalizeActions(actions);
   const showActions = Object.values(normalizedActions).some(Boolean) && !isStreaming;

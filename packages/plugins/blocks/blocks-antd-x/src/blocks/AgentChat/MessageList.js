@@ -64,7 +64,6 @@ const MessageList = React.forwardRef(function MessageList(
     onFeedback,
     onLinkClick,
     Link,
-    lookupPath,
     feedbackValues,
     onRegenerate,
     onDelete,
@@ -248,7 +247,6 @@ const MessageList = React.forwardRef(function MessageList(
                 onFeedback={onFeedback}
                 onLinkClick={onLinkClick}
                 Link={Link}
-                lookupPath={lookupPath}
                 feedbackValue={feedbackValues?.[info.key]}
                 onRegenerate={onRegenerate}
                 onDelete={onDelete}

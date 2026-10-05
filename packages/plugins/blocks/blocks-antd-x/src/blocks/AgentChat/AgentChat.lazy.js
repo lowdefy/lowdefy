@@ -39,7 +39,7 @@ import WelcomeScreen from './WelcomeScreen.js';
 
 function AgentChat({
   blockId,
-  components: { Icon, Link, lookupPath },
+  components: { Icon, Link },
   drawerOpenRequested,
   events,
   methods,
@@ -740,7 +740,6 @@ function AgentChat({
             onFeedback={handleFeedback}
             onLinkClick={handleLinkClick}
             Link={Link}
-            lookupPath={lookupPath}
             feedbackValues={effectiveFeedbackValues}
             onRegenerate={handleRegenerate}
             onDelete={handleDelete}
