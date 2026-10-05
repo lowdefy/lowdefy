@@ -18,6 +18,7 @@ import { parsePageId, targetFromElementsChain, type } from '@lowdefy/helpers';
 
 import hashId from './hashId.js';
 import normalisePostHogRow from './normalisePostHogRow.js';
+import tokenText from '../tokenText.js';
 
 const INTERACTION_KINDS = { click: 'click', change: 'change' };
 const FRUSTRATIONS = { $rageclick: 'rage', $dead_click: 'dead' };
@@ -59,8 +60,10 @@ function resolvePage({ values, pathname }) {
 
 // Lowdefy's own properties when P0's enrichment ran, else the target read
 // from the elements chain, whose blocks have no type. `block_ids` feeds the
-// pairing rule and never goes into the record.
-function resolveTarget({ values }) {
+// pairing rule and never goes into the record. Clicked text is never kept:
+// it is stored as a salted token, which readers resolve only to config text.
+function resolveTarget({ values, salt }) {
+  const textToken = tokenText({ salt, text: values.elText });
   if (!type.isNone(values.blockId)) {
     return {
       chainFallback: false,
@@ -70,7 +73,7 @@ function resolveTarget({ values }) {
         block_type: values.blockType,
         row: values.row,
         column: values.column,
-        text: values.elText,
+        text_token: textToken,
         nth: null,
         option: values.option,
       },
@@ -85,7 +88,7 @@ function resolveTarget({ values }) {
       block_type: null,
       row: chain.row,
       column: chain.column,
-      text: values.elText,
+      text_token: textToken,
       nth: null,
       option: chain.option,
     },
@@ -93,7 +96,7 @@ function resolveTarget({ values }) {
 }
 
 function hasTarget({ target }) {
-  return !type.isNone(target.block_id) || !type.isNone(target.text);
+  return !type.isNone(target.block_id) || !type.isNone(target.text_token);
 }
 
 function buildFailureEvent({ values }) {
@@ -187,7 +190,7 @@ function postHogRowToRecord({ row, salt }) {
     };
   }
 
-  const { target, blockIds, chainFallback } = resolveTarget({ values });
+  const { target, blockIds, chainFallback } = resolveTarget({ values, salt });
   if (!hasTarget({ target })) return { dropped: 'no_target' };
   const record = { ...base, kind };
   if (!type.isNone(url)) record.url = url;

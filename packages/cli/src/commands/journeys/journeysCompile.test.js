@@ -117,6 +117,7 @@ beforeEach(() => {
       build: path.join(configDirectory, '.lowdefy', 'server', 'build'),
       config: configDirectory,
       dev: path.join(configDirectory, '.lowdefy', 'dev'),
+      test: path.join(configDirectory, '.lowdefy', 'test'),
       traces: path.join(configDirectory, '.lowdefy', 'traces'),
     },
     logger: {
@@ -404,7 +405,10 @@ function writeProductionDay(day, records) {
     path.join(directory, `${day}.jsonl`),
     records.map((entry) => JSON.stringify(entry)).join('\n')
   );
-  fs.writeFileSync(path.join(directory, `${day}.manifest.json`), JSON.stringify({ day }));
+  fs.writeFileSync(
+    path.join(directory, `${day}.manifest.json`),
+    JSON.stringify({ day, text_rule: 'token' })
+  );
 }
 
 function utcDay(time) {
@@ -427,6 +431,58 @@ test('journeys compile --source production with no files compiles the pulled cac
   const { segments } = await journeysCompile({ context, params: [[]] });
   expect(segments).toHaveLength(2);
   expect(candidates('production')).toHaveLength(1);
+});
+
+test('journeys compile --source production removes old-rule days, production candidates and coverage.json', async () => {
+  const today = Date.parse(`${utcDay(now)}T10:00:00.000Z`);
+  writeProductionDay(utcDay(today), session({ id: 'a', start: today, source: 'production' }));
+  const directory = path.join(configDirectory, '.lowdefy', 'traces', 'production');
+  const oldDay = utcDay(today - 40 * DAY);
+  fs.writeFileSync(path.join(directory, `${oldDay}.jsonl`), '');
+  fs.writeFileSync(
+    path.join(directory, `${oldDay}.manifest.json`),
+    JSON.stringify({ day: oldDay })
+  );
+  fs.writeFileSync(path.join(directory, 'salt'), Buffer.alloc(32, 1));
+  const productionCandidates = path.join(
+    configDirectory,
+    'tests',
+    'journeys',
+    '_candidates',
+    'production'
+  );
+  fs.mkdirSync(productionCandidates, { recursive: true });
+  fs.writeFileSync(path.join(productionCandidates, 'stale.yaml'), 'name: stale\n');
+  fs.writeFileSync(
+    path.join(configDirectory, 'tests', 'journeys', 'orders.yaml'),
+    'name: orders\n'
+  );
+  fs.mkdirSync(path.join(configDirectory, '.lowdefy', 'test'), { recursive: true });
+  fs.writeFileSync(path.join(configDirectory, '.lowdefy', 'test', 'coverage.json'), '{}');
+  context.options.source = 'production';
+  context.options.since = '1d';
+  await journeysCompile({ context, params: [[]] });
+  expect(fs.existsSync(path.join(directory, `${oldDay}.manifest.json`))).toBe(false);
+  expect(fs.existsSync(path.join(directory, `${utcDay(today)}.manifest.json`))).toBe(true);
+  expect(fs.existsSync(path.join(directory, 'salt'))).toBe(true);
+  expect(candidates('production')).not.toContain('stale.yaml');
+  expect(fs.existsSync(path.join(configDirectory, '.lowdefy', 'test', 'coverage.json'))).toBe(
+    false
+  );
+  expect(
+    fs.readFileSync(path.join(configDirectory, 'tests', 'journeys', 'orders.yaml'), 'utf8')
+  ).toEqual('name: orders\n');
+  logged = [];
+  await journeysCompile({ context, params: [[]] });
+  expect(logged.filter((line) => line.startsWith('Removed'))).toEqual([]);
+});
+
+test('journeys compile --source production refuses a window over 30 days', async () => {
+  context.options.source = 'production';
+  context.options.since = '45d';
+  await expect(journeysCompile({ context, params: [[]] })).rejects.toThrow(
+    'is 45 days long; a mining window is at most 30 days'
+  );
 });
 
 test('journeys compile --source production names the pull for a day missing from the cache', async () => {

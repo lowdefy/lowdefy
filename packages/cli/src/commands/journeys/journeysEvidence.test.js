@@ -75,7 +75,10 @@ function writeDay(day, records) {
     path.join(directory, `${day}.jsonl`),
     records.map((entry) => JSON.stringify(entry)).join('\n')
   );
-  fs.writeFileSync(path.join(directory, `${day}.manifest.json`), JSON.stringify({ day }));
+  fs.writeFileSync(
+    path.join(directory, `${day}.manifest.json`),
+    JSON.stringify({ day, text_rule: 'token' })
+  );
 }
 
 function writeJourney(name, text) {
@@ -226,6 +229,15 @@ test('journeys evidence names the pull for a day missing from the window', async
   context.options.since = '5d';
   await expect(journeysEvidence({ context })).rejects.toThrow(
     'lowdefy journeys pull posthog --from 2026-09-29'
+  );
+});
+
+test('journeys evidence --refresh is not capped at a 30-day mining window', async () => {
+  writeJourney('saves.yaml', SAVES);
+  context.options.since = '90d';
+  context.options.refresh = true;
+  await expect(journeysEvidence({ context })).rejects.toThrow(
+    'missing 88 day(s) of 2026-07-06/2026-10-03'
   );
 });
 

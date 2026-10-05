@@ -21,6 +21,7 @@ import computeCoverage from './coverageReport/computeCoverage.js';
 import readCommittedJourneys from './readCommittedJourneys.js';
 import readMeasuredRun from './readMeasuredRun.js';
 import readMutationReport from './readMutationReport.js';
+import MINING_WINDOW_MAX_DAYS from './miningWindowMaxDays.js';
 import readProductionSegments from './readProductionSegments.js';
 import writeCoverageReport from './coverageReport/writeCoverageReport.js';
 
@@ -87,7 +88,10 @@ async function journeysCoverage({ context }) {
     sequence: journeySequence({ pageId: journey.pageId, steps: journey.steps }),
     journey,
   }));
-  const { segments, window } = readProductionSegments({ context });
+  const { segments, window } = readProductionSegments({
+    context,
+    maxDays: MINING_WINDOW_MAX_DAYS,
+  });
   const profile = profileProduction({ segments });
   const measures = computeCoverage({
     journeys,

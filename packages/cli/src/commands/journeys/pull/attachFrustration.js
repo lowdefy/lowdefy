@@ -23,7 +23,7 @@ function sameTarget({ a, b }) {
   if (!type.isNone(a.block_id) || !type.isNone(b.block_id)) {
     return a.block_id === b.block_id && a.row === b.row && a.column === b.column;
   }
-  return a.text === b.text;
+  return a.text_token === b.text_token;
 }
 
 // A $rageclick or $dead_click marks the latest click on the same target in

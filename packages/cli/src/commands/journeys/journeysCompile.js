@@ -20,6 +20,7 @@ import { compileTrace, readRecordings } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import loadBlockMetas from './loadBlockMetas.js';
+import MINING_WINDOW_MAX_DAYS from './miningWindowMaxDays.js';
 import readProductionTrace from './readProductionTrace.js';
 import readTraceFiles from './readTraceFiles.js';
 import resolveBuildDirectory from './resolveBuildDirectory.js';
@@ -71,6 +72,8 @@ function readRecords({ context, traceFiles, source, now }) {
   if (source === 'production') {
     const { records, unparsable, window } = readProductionTrace({
       directories: context.directories,
+      logger: context.logger,
+      maxDays: MINING_WINDOW_MAX_DAYS,
       since: options.since,
       from: options.from,
       to: options.to,

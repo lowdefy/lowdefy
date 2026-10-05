@@ -30,7 +30,10 @@ function writeDay(day, records) {
     path.join(directory, `${day}.jsonl`),
     records.map((record) => JSON.stringify(record)).join('\n')
   );
-  fs.writeFileSync(path.join(directory, `${day}.manifest.json`), JSON.stringify({ day }));
+  fs.writeFileSync(
+    path.join(directory, `${day}.manifest.json`),
+    JSON.stringify({ day, text_rule: 'token' })
+  );
 }
 
 beforeEach(() => {

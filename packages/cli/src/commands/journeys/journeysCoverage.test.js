@@ -75,7 +75,10 @@ function writeDay(day, records) {
     path.join(directory, `${day}.jsonl`),
     records.map((entry) => JSON.stringify(entry)).join('\n')
   );
-  fs.writeFileSync(path.join(directory, `${day}.manifest.json`), JSON.stringify({ day }));
+  fs.writeFileSync(
+    path.join(directory, `${day}.manifest.json`),
+    JSON.stringify({ day, text_rule: 'token' })
+  );
 }
 
 function writeJourney(name, text) {
@@ -179,6 +182,13 @@ test('journeys coverage names the pull for a missing day', async () => {
   context.options.since = '4d';
   await expect(journeysCoverage({ context })).rejects.toThrow(
     'lowdefy journeys pull posthog --from 2026-09-30'
+  );
+});
+
+test('journeys coverage refuses a window over 30 days', async () => {
+  context.options.since = '60d';
+  await expect(journeysCoverage({ context })).rejects.toThrow(
+    'is 60 days long; a mining window is at most 30 days'
   );
 });
 

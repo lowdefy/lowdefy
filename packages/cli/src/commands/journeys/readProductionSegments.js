@@ -21,11 +21,14 @@ import readProductionTrace from './readProductionTrace.js';
 import resolveBuildDirectory from './resolveBuildDirectory.js';
 
 // The production window's segments, compiled the way `journeys compile
-// --source production` compiles them, for evidence and coverage.
-function readProductionSegments({ context }) {
+// --source production` compiles them, for evidence and coverage. Coverage
+// passes maxDays, the mining cap; evidence does not.
+function readProductionSegments({ context, maxDays }) {
   const { options } = context;
   const { records, window } = readProductionTrace({
     directories: context.directories,
+    logger: context.logger,
+    maxDays,
     since: options.since,
     from: options.from,
     to: options.to,

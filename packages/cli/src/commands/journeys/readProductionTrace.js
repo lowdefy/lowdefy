@@ -20,14 +20,18 @@ import { parseTraceLines } from '@lowdefy/node-utils';
 
 import listWindowDays from './listWindowDays.js';
 import parseTraceWindow from './parseTraceWindow.js';
+import removeUntokenisedTraces from './removeUntokenisedTraces.js';
 
 // The production records of a window, read from the per-day cache that
 // `lowdefy journeys pull posthog` writes: days in order, records in file
 // order, with each day's manifest. A day is in the cache once its manifest is
 // written (the pull writes it last). A missing day is an error naming the
-// pull that fills it, never a silent gap.
-function readProductionTrace({ directories, since, from, to, now = Date.now() }) {
-  const window = parseTraceWindow({ since, from, to, now });
+// pull that fills it, never a silent gap. Days pulled before clicked text was
+// stored as tokens are removed first, so they read as missing. maxDays caps
+// the window for the mining commands.
+function readProductionTrace({ directories, logger, since, from, to, now = Date.now(), maxDays }) {
+  const window = parseTraceWindow({ since, from, to, now, maxDays });
+  removeUntokenisedTraces({ directories, logger });
   const directory = path.join(directories.traces, 'production');
   const days = listWindowDays(window);
   const missing = days.filter(
