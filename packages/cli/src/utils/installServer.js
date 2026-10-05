@@ -16,10 +16,13 @@
 
 import { installIfPackageJsonChanged, spawnProcess } from '@lowdefy/node-utils';
 
+import installWorkspacePlugins from './installWorkspacePlugins.js';
+
 async function installServer({ context, directory }) {
   const installed = await installIfPackageJsonChanged({
     directory,
     install: async () => {
+      await installWorkspacePlugins({ context, directory });
       context.logger.info({ spin: 'start' }, 'Installing dependencies.');
       try {
         await spawnProcess({
