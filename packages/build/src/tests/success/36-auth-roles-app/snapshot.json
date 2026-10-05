@@ -2480,6 +2480,10 @@
                     "type": "string",
                     "description": "The URL to land on. An absolute URL is not basePath-prefixed, so it can be an external landing page."
                   },
+                  "pathParams": {
+                    "description": "Values for the placeholders in the destination page's path, by placeholder name.",
+                    "type": "object"
+                  },
                   "urlQuery": {
                     "type": "object",
                     "description": "The urlQuery to set on the destination."
@@ -2510,6 +2514,10 @@
                 "type": "string",
                 "description": "The URL to land on. An absolute URL is not basePath-prefixed, so it can be an external landing page."
               },
+              "pathParams": {
+                "description": "Values for the placeholders in the destination page's path, by placeholder name.",
+                "type": "object"
+              },
               "urlQuery": {
                 "type": "object",
                 "description": "The urlQuery to set on the destination."
@@ -2531,6 +2539,10 @@
               "url": {
                 "type": "string",
                 "description": "The URL to land on. An absolute URL is not basePath-prefixed, so it can be an external landing page."
+              },
+              "pathParams": {
+                "description": "Values for the placeholders in the destination page's path, by placeholder name.",
+                "type": "object"
               },
               "urlQuery": {
                 "type": "object",
@@ -2568,6 +2580,10 @@
               "newWindow": {
                 "type": "boolean",
                 "description": "Open the link in a new window."
+              },
+              "pathParams": {
+                "description": "Values for the placeholders in the page's path, by placeholder name.",
+                "type": "object"
               },
               "urlQuery": {
                 "type": "object",

@@ -34,6 +34,7 @@ function js(operatorContext) {
       location: (p) => operators._location({ ...operatorContext, params: p }),
       lowdefyApp: (p) => operators._app({ ...operatorContext, params: p }),
       lowdefyGlobal: (p) => operators._global({ ...operatorContext, params: p }),
+      pathParams: (p) => operators._path_params({ ...operatorContext, params: p }),
       request: (p) => operators._request({ ...operatorContext, params: p }),
       state: (p) => operators._state({ ...operatorContext, params: p }),
       urlQuery: (p) => operators._url_query({ ...operatorContext, params: p }),

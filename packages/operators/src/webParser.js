@@ -150,6 +150,7 @@ class WebParser {
           pageId,
           params,
           parser,
+          pathParams: this.context.pathParams,
           requests: this.context.requests,
           runtime: 'browser',
           state: this.context.state,

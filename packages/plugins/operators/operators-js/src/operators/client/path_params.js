@@ -14,24 +14,21 @@
   limitations under the License.
 */
 
-// The _js operator hands its function accessors (state(), payload(), ...) that
-// call these operators through the operator registry, so config that runs _js
-// needs them whether or not it names them.
-const jsAccessorOperators = {
-  client: [
-    '_actions',
-    '_app',
-    '_event',
-    '_global',
-    '_input',
-    '_location',
-    '_path_params',
-    '_request',
-    '_state',
-    '_url_query',
-    '_user',
-  ],
-  server: ['_app', '_item', '_payload', '_secret', '_state', '_step', '_user'],
-};
+import { getFromObject } from '@lowdefy/operators';
 
-export default jsAccessorOperators;
+function _path_params({ arrayIndices, location, params, pathParams }) {
+  return getFromObject({
+    arrayIndices,
+    location,
+    object: pathParams,
+    operator: '_path_params',
+    params,
+  });
+}
+
+_path_params.dynamic = true;
+// A page instance's path values are fixed for the instance's context: a different value is a
+// different instance.
+_path_params.tracking = { kind: 'pure' };
+
+export default _path_params;

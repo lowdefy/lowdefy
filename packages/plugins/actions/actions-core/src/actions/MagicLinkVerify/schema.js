@@ -32,6 +32,10 @@ const callbackTargetProperties = {
     type: 'object',
     description: 'The urlQuery to set on the destination.',
   },
+  pathParams: {
+    type: 'object',
+    description: "Values for the placeholders in the destination page's path, by placeholder name.",
+  },
 };
 
 export default {

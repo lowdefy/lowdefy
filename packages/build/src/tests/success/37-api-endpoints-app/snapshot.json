@@ -1305,6 +1305,10 @@
                 "type": "boolean",
                 "description": "Open the link in a new window."
               },
+              "pathParams": {
+                "description": "Values for the placeholders in the page's path, by placeholder name.",
+                "type": "object"
+              },
               "urlQuery": {
                 "type": "object",
                 "description": "URL query parameters."
