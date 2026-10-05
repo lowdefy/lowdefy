@@ -59,6 +59,7 @@ import watchOwner from './watchOwner.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
 import compileTrace from './journeyCompiler/compileTrace.js';
 import collectKnownText from './journeyText/collectKnownText.js';
+import normaliseClickText from './journeyText/normaliseClickText.js';
 import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
 import failurePathKey from './journeyEvidence/failurePathKey.js';
 import isBackedBy from './journeyEvidence/isBackedBy.js';
@@ -115,6 +116,7 @@ export {
   listFailurePaths,
   listRecordingFiles,
   normaliseBlockId,
+  normaliseClickText,
   parseIpRange,
   parsePsStartTime,
   parseTraceLines,

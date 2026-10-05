@@ -153,6 +153,11 @@ test('runConfigTreeBuild builds base and head into scratch directories and write
   expect(
     fs.lstatSync(path.join(root, 'builds', 'head', 'server', 'node_modules')).isSymbolicLink()
   ).toBe(true);
+  const configText = JSON.parse(
+    fs.readFileSync(path.join(root, 'builds', 'head', 'configText.json'), 'utf8')
+  );
+  expect(configText).toEqual(expect.arrayContaining(['Head', 'OK', 'Cancel']));
+  expect(configText).not.toContain('Base');
 });
 
 test('runConfigTreeBuild reports a plugin the dev directory does not install as a build error', async () => {
@@ -193,4 +198,5 @@ test('runConfigTreeBuild reports the config errors of a tree that does not build
 
   expect(result.status).toEqual('error');
   expect(result.errors.map((error) => error.message).join('\n')).toContain('Buton');
+  expect(fs.existsSync(path.join(root, 'builds', 'head', 'configText.json'))).toBe(false);
 });
