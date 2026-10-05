@@ -16,13 +16,25 @@
 
 import React, { useEffect, useRef } from 'react';
 import Client from '@lowdefy/client';
+import { pageInstanceKey } from '@lowdefy/helpers';
 
 import BuildErrorPage from '../lib/client/BuildErrorPage.jsx';
 import InstallingPluginsPage from '../lib/client/InstallingPluginsPage.jsx';
 import RedirectingPage from '../lib/client/RedirectingPage.jsx';
 import usePageConfig from '../lib/client/utils/usePageConfig.js';
 
-const Page = ({ auth, Components, config, jsMap, lowdefy, path, resetContext, router, types }) => {
+const Page = ({
+  auth,
+  Components,
+  config,
+  jsMap,
+  lowdefy,
+  onPageShown,
+  path,
+  resetContext,
+  router,
+  types,
+}) => {
   const { data } = usePageConfig(path, router.basePath);
   const pageConfig = data?.pageConfig;
 
@@ -44,6 +56,21 @@ const Page = ({ auth, Components, config, jsMap, lowdefy, path, resetContext, ro
       lowdefy._devPageRendered?.({ pageId: data.pageId, buildId: pageConfig._buildId ?? null });
     }
   }, [pageConfig, data?.pageId, lowdefy]);
+
+  // Tells the in-page dev tools which page instance is on screen, from the fetched page.
+  useEffect(() => {
+    if (pageConfig) {
+      onPageShown({
+        pageId: data.pageId,
+        pathParams: data.pathParams,
+        instanceKey: pageInstanceKey({
+          pageId: data.pageId,
+          path: pageConfig.path,
+          pathParams: data.pathParams,
+        }),
+      });
+    }
+  }, [pageConfig, data?.pageId, data?.pathParams, onPageShown]);
 
   // Full load to the sign-in page so it can return here after sign-in — an
   // effect, not a fetcher side effect, so the redirect re-fires if the same

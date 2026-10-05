@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
 
 import Head from '@lowdefy/client/adapters/Head.js';
 import createLinkComponent from '@lowdefy/client/adapters/Link.js';
@@ -59,6 +59,13 @@ function Routing({ auth, lowdefy, recording, router }) {
 
   const [Link] = useState(() => createLinkComponent({ router }));
 
+  // The page instance on screen, { pageId, pathParams, instanceKey }, as the fetched page names
+  // it. null until the first page renders; it names the previous page while the next one fetches.
+  const [shownPage, setShownPage] = useState(null);
+  const onPageShown = useCallback((page) => {
+    setShownPage((current) => (current?.instanceKey === page.instanceKey ? current : page));
+  }, []);
+
   if (rootConfig?.theme) {
     lowdefy.theme = rootConfig.theme;
   }
@@ -73,25 +80,25 @@ function Routing({ auth, lowdefy, recording, router }) {
   if (redirect) {
     return '';
   }
-  // The dev tools name the page the path memory holds for this path. The memory
-  // is created when the first page renders; until then the path is read as a
-  // page id, as lookupPath reads a path it has not seen.
-  const pageId = lowdefy.pathMemory ? lookupPath({ lowdefy, path }).pageId : path;
+  // The journey recorder names the page the path memory holds for this path. The memory is
+  // created when the first page renders; until then the path is read as a page id, as lookupPath
+  // reads a path it has not seen.
+  const recorderPageId = lowdefy.pathMemory ? lookupPath({ lowdefy, path }).pageId : path;
 
   return (
     <>
-      <FeedbackMount basePath={router.basePath} lowdefy={lowdefy} pageId={pageId} />
-      <OpenInEditorListener basePath={router.basePath} pageId={pageId} />
+      <FeedbackMount basePath={router.basePath} lowdefy={lowdefy} page={shownPage} />
+      <OpenInEditorListener basePath={router.basePath} pageId={shownPage?.pageId} />
       <Reload basePath={router.basePath} lowdefy={lowdefy}>
         {(resetContext) => (
           <>
             {/* Inside Reload so it can share Reload's event stream (DevStreamContext). */}
-            <Inspector basePath={router.basePath} lowdefy={lowdefy} pageId={pageId} />
+            <Inspector basePath={router.basePath} lowdefy={lowdefy} page={shownPage} />
             <JourneyObserver lowdefy={lowdefy} />
             <Recorder
               basePath={router.basePath}
               lowdefy={lowdefy}
-              pageId={pageId}
+              pageId={recorderPageId}
               recording={recording}
             />
             {/* Rendered here, not in Page — Page sits below the Suspense boundary
@@ -109,6 +116,7 @@ function Routing({ auth, lowdefy, recording, router }) {
                   }}
                   jsMap={staticJsMap}
                   lowdefy={lowdefy}
+                  onPageShown={onPageShown}
                   path={path}
                   resetContext={resetContext}
                   router={router}

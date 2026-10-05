@@ -28,10 +28,31 @@ function formatFeedback({ items }) {
   return items.map(formatBatch).join('\n\n---\n\n');
 }
 
+// A page with placeholders in its path names the instance by its values.
+function hasPathParams(batch) {
+  return Object.keys(batch.pathParams ?? {}).length > 0;
+}
+
+function describePage(batch) {
+  if (!hasPathParams(batch)) {
+    return `page "${batch.pageId}"`;
+  }
+  return `page "${batch.pageId}" with pathParams ${JSON.stringify(batch.pathParams)}`;
+}
+
+function inspectStateCall(batch) {
+  if (!hasPathParams(batch)) {
+    return `lowdefy_inspect_state({ pageId: "${batch.pageId}" })`;
+  }
+  return `lowdefy_inspect_state({ pageId: "${batch.pageId}", pathParams: ${JSON.stringify(
+    batch.pathParams
+  )} })`;
+}
+
 function formatBatch(batch) {
   const viewport = batch.viewport ?? {};
   const lines = [
-    `Feedback: ${batch.annotations?.length ?? 0} annotation(s) on page "${batch.pageId}" ` +
+    `Feedback: ${batch.annotations?.length ?? 0} annotation(s) on ${describePage(batch)} ` +
       `(${batch.url ?? 'unknown url'}) — viewport ${viewport.width}x${viewport.height} ` +
       `@${viewport.dpr ?? 1}x, scrollY ${viewport.scrollY ?? 0}`,
     '',
@@ -43,13 +64,13 @@ function formatBatch(batch) {
 
   if (batch.screenshotPath) {
     lines.push('');
-    lines.push(`Annotated screenshot: ${batch.screenshotPath} (read this image to see the drawings)`);
+    lines.push(
+      `Annotated screenshot: ${batch.screenshotPath} (read this image to see the drawings)`
+    );
   }
 
   lines.push('');
-  lines.push(
-    `For the page's live state call lowdefy_inspect_state({ pageId: "${batch.pageId}" }).`
-  );
+  lines.push(`For the page's live state call ${inspectStateCall(batch)}.`);
 
   return lines.join('\n');
 }

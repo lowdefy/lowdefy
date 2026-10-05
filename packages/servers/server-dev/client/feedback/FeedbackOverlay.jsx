@@ -188,12 +188,15 @@ function buildAnnotation(state) {
   };
 }
 
-function buildBatch({ annotations, includeScreenshot, pageId }) {
+function buildBatch({ annotations, includeScreenshot, page }) {
+  const pageId = page?.pageId;
+  const pathParams = page?.pathParams ?? {};
   return {
     batchId: generateId(),
     timestamp: new Date().toISOString(),
     pageId,
     url: `${window.location.pathname}${window.location.search}`,
+    pathParams,
     urlQuery: window.location.search,
     viewport: {
       width: window.innerWidth,
@@ -204,7 +207,7 @@ function buildBatch({ annotations, includeScreenshot, pageId }) {
     },
     annotations,
     includeScreenshot,
-    stateRef: { captured: true, pageId },
+    stateRef: { captured: true, pageId, pathParams },
   };
 }
 
@@ -288,7 +291,7 @@ function renderShape(shape, key) {
 // app down with it — event handlers are individually try/caught, and the
 // whole render is wrapped so a bad state shape returns null rather than
 // throwing into the app's React tree.
-function FeedbackOverlay({ basePath, pageId, onClose }) {
+function FeedbackOverlay({ basePath, page, onClose }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const primarySendRef = useRef(null);
   const stateRef = useRef(state);
@@ -624,7 +627,7 @@ function FeedbackOverlay({ basePath, pageId, onClose }) {
       const batch = buildBatch({
         annotations,
         includeScreenshot: current.includeScreenshot,
-        pageId,
+        page,
       });
       // Capture the annotated screenshot in THIS tab — the pixels the
       // developer is actually looking at (theme, loaded data) — and ship it

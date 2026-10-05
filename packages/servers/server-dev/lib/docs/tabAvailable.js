@@ -16,14 +16,14 @@
 
 import { type } from '@lowdefy/helpers';
 
-import { listTabs } from './tabChannel.js';
+import { findPageInstance } from './tabChannel.js';
 
 // Shared by inspectState.js and evalOperator.js to decide, when no explicit
-// `source` is requested, whether a live browser tab exists to prefer over a
-// fresh headless one. A tab the dev server's own headless browser opened is
-// not one to prefer (findTab never picks it).
-function tabAvailable({ pageId }) {
-  return listTabs().some((tab) => !tab.automated && (type.isNone(pageId) || tab.pageId === pageId));
+// `source` is requested, whether a live browser tab holds the requested page
+// instance, to prefer over a fresh headless one. A tab the dev server's own
+// headless browser opened is not one to prefer (findPageInstance never picks it).
+function tabAvailable({ pageId, pathParams }) {
+  return !type.isNone(findPageInstance({ pageId, pathParams }));
 }
 
 export default tabAvailable;

@@ -16,8 +16,15 @@
 
 import { jest } from '@jest/globals';
 
-const { listTabs, registerTab, requestFromTab, resolveTabRequest, unregisterTab, updateTabPage } =
-  await import('./tabChannel.js');
+const {
+  findPageInstance,
+  listTabs,
+  registerTab,
+  requestFromTab,
+  resolveTabRequest,
+  unregisterTab,
+  updateTabPage,
+} = await import('./tabChannel.js');
 
 // tabChannel keeps its registries at module scope, so clear connected tabs
 // between tests to keep them independent.
@@ -25,43 +32,139 @@ afterEach(() => {
   listTabs().forEach((tab) => unregisterTab({ id: tab.id }));
 });
 
-test('registerTab adds a tab visible via listTabs', () => {
-  registerTab({ id: 'tab-1', pageId: 'home', send: jest.fn() });
+function ticket({ space = 's', ticketId }) {
+  return {
+    pageId: 'ticket',
+    pathParams: { space, ticket_id: ticketId },
+    instanceKey: `page:ticket#tickets/${space}/${ticketId}`,
+  };
+}
+
+function connectTab({ id, pageId, send = jest.fn(), ...origin }) {
+  registerTab({ id, send, ...origin });
+  if (pageId) {
+    updateTabPage({ id, pageId, pathParams: {}, instanceKey: `page:${pageId}` });
+  }
+  return send;
+}
+
+test('registerTab adds a tab visible via listTabs, on no page until its first page renders', () => {
+  registerTab({ id: 'tab-1', send: jest.fn() });
   const tabs = listTabs();
   expect(tabs).toHaveLength(1);
-  expect(tabs[0]).toMatchObject({ id: 'tab-1', pageId: 'home' });
+  expect(tabs[0]).toMatchObject({ id: 'tab-1', pageId: null, pathParams: null, instanceKey: null });
   expect(tabs[0].connectedAt).toBeInstanceOf(Date);
 });
 
 test('registerTab throws when id is missing', () => {
-  expect(() => registerTab({ pageId: 'home', send: jest.fn() })).toThrow('registerTab requires');
+  expect(() => registerTab({ send: jest.fn() })).toThrow('registerTab requires');
 });
 
 test('registerTab throws when send is not a function', () => {
-  expect(() => registerTab({ id: 'tab-1', pageId: 'home' })).toThrow(
-    'registerTab requires a "send" function'
-  );
+  expect(() => registerTab({ id: 'tab-1' })).toThrow('registerTab requires a "send" function');
 });
 
 test('unregisterTab removes a tab from the registry', () => {
-  registerTab({ id: 'tab-1', pageId: 'home', send: jest.fn() });
+  connectTab({ id: 'tab-1', pageId: 'home' });
   unregisterTab({ id: 'tab-1' });
   expect(listTabs()).toHaveLength(0);
 });
 
-test('updateTabPage changes the pageId of a registered tab', () => {
-  registerTab({ id: 'tab-1', pageId: 'home', send: jest.fn() });
-  updateTabPage({ id: 'tab-1', pageId: 'about' });
-  expect(listTabs()[0].pageId).toEqual('about');
+test('updateTabPage records the page instance a tab shows', () => {
+  connectTab({ id: 'tab-1', pageId: 'home' });
+  updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '2' }) });
+  expect(listTabs()[0]).toMatchObject({
+    id: 'tab-1',
+    pageId: 'ticket',
+    pathParams: { space: 's', ticket_id: '2' },
+    instanceKey: 'page:ticket#tickets/s/2',
+  });
 });
 
 test('updateTabPage on an unknown tab id does not throw', () => {
-  expect(() => updateTabPage({ id: 'missing', pageId: 'about' })).not.toThrow();
+  expect(() =>
+    updateTabPage({ id: 'missing', pageId: 'about', instanceKey: 'page:about' })
+  ).not.toThrow();
+});
+
+test('updateTabPage throws when the instance key is missing', () => {
+  registerTab({ id: 'tab-1', send: jest.fn() });
+  expect(() => updateTabPage({ id: 'tab-1', pageId: 'about' })).toThrow(
+    'updateTabPage requires "pageId" and "instanceKey" strings'
+  );
+});
+
+test('findPageInstance reads the instance on screen when the tab is on the page', () => {
+  registerTab({ id: 'tab-1', send: jest.fn() });
+  updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '1' }) });
+  updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '2' }) });
+  const { tab, ...instance } = findPageInstance({ pageId: 'ticket' });
+  expect(tab.id).toEqual('tab-1');
+  expect(instance).toEqual(ticket({ ticketId: '2' }));
+});
+
+test('findPageInstance reads the most recently rendered instance when no tab is on the page', () => {
+  registerTab({ id: 'tab-1', send: jest.fn() });
+  registerTab({ id: 'tab-2', send: jest.fn() });
+  updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '1' }) });
+  updateTabPage({ id: 'tab-2', ...ticket({ ticketId: '2' }) });
+  updateTabPage({ id: 'tab-1', pageId: 'home', instanceKey: 'page:home' });
+  updateTabPage({ id: 'tab-2', pageId: 'home', instanceKey: 'page:home' });
+  const { tab, ...instance } = findPageInstance({ pageId: 'ticket' });
+  expect(tab.id).toEqual('tab-2');
+  expect(instance).toEqual(ticket({ ticketId: '2' }));
+});
+
+test('findPageInstance prefers a tab showing the page over a later render elsewhere', () => {
+  registerTab({ id: 'tab-1', send: jest.fn() });
+  registerTab({ id: 'tab-2', send: jest.fn() });
+  updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '1' }) });
+  updateTabPage({ id: 'tab-2', ...ticket({ ticketId: '2' }) });
+  updateTabPage({ id: 'tab-2', pageId: 'home', instanceKey: 'page:home' });
+  const { tab, ...instance } = findPageInstance({ pageId: 'ticket' });
+  expect(tab.id).toEqual('tab-1');
+  expect(instance).toEqual(ticket({ ticketId: '1' }));
+});
+
+test('findPageInstance with pathParams reads that instance, comparing values as strings', () => {
+  registerTab({ id: 'tab-1', send: jest.fn() });
+  updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '1' }) });
+  updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '2' }) });
+  const { tab, ...instance } = findPageInstance({
+    pageId: 'ticket',
+    pathParams: { space: 's', ticket_id: 1 },
+  });
+  expect(tab.id).toEqual('tab-1');
+  expect(instance).toEqual(ticket({ ticketId: '1' }));
+});
+
+test('findPageInstance returns undefined for values no tab has rendered', () => {
+  registerTab({ id: 'tab-1', send: jest.fn() });
+  updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '1' }) });
+  expect(
+    findPageInstance({ pageId: 'ticket', pathParams: { space: 's', ticket_id: '3' } })
+  ).toBeUndefined();
+  expect(findPageInstance({ pageId: 'ticket', pathParams: { space: 's' } })).toBeUndefined();
+});
+
+test('findPageInstance without a pageId reads the most recently connected tab on screen', () => {
+  connectTab({ id: 'tab-1', pageId: 'home' });
+  connectTab({ id: 'tab-2', pageId: 'about' });
+  registerTab({ id: 'tab-3', send: jest.fn() });
+  const { tab, ...instance } = findPageInstance();
+  expect(tab.id).toEqual('tab-2');
+  expect(instance).toEqual({ pageId: 'about', pathParams: {}, instanceKey: 'page:about' });
+});
+
+test('findPageInstance forgets the instances of a tab that disconnected', () => {
+  registerTab({ id: 'tab-1', send: jest.fn() });
+  updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '1' }) });
+  unregisterTab({ id: 'tab-1' });
+  expect(findPageInstance({ pageId: 'ticket' })).toBeUndefined();
 });
 
 test('requestFromTab sends the event to the matching tab and resolves via resolveTabRequest', async () => {
-  const send = jest.fn();
-  registerTab({ id: 'tab-1', pageId: 'home', send });
+  const send = connectTab({ id: 'tab-1', pageId: 'home' });
   const promise = requestFromTab({ pageId: 'home', event: 'inspect-request' });
 
   expect(send).toHaveBeenCalledTimes(1);
@@ -74,11 +177,28 @@ test('requestFromTab sends the event to the matching tab and resolves via resolv
   await expect(promise).resolves.toEqual('snapshot');
 });
 
-test('requestFromTab targets the tab registered for the given pageId', async () => {
-  const sendHome = jest.fn();
-  const sendAbout = jest.fn();
-  registerTab({ id: 'tab-home', pageId: 'home', send: sendHome });
-  registerTab({ id: 'tab-about', pageId: 'about', send: sendAbout });
+test('requestFromTab names the instance to read in the event it sends', async () => {
+  const send = jest.fn();
+  registerTab({ id: 'tab-1', send });
+  updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '1' }) });
+  updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '2' }) });
+  requestFromTab({
+    pageId: 'ticket',
+    pathParams: { space: 's', ticket_id: '1' },
+    event: 'eval-request',
+    payload: { expression: { _state: 'a' } },
+    timeout: 10,
+  });
+  expect(send.mock.calls[0][1]).toEqual({
+    requestId: expect.any(String),
+    ...ticket({ ticketId: '1' }),
+    expression: { _state: 'a' },
+  });
+});
+
+test('requestFromTab targets the tab on the given pageId', async () => {
+  const sendHome = connectTab({ id: 'tab-home', pageId: 'home' });
+  const sendAbout = connectTab({ id: 'tab-about', pageId: 'about' });
 
   const promise = requestFromTab({ pageId: 'about', event: 'eval-request' });
   expect(sendAbout).toHaveBeenCalledTimes(1);
@@ -90,9 +210,8 @@ test('requestFromTab targets the tab registered for the given pageId', async () 
 });
 
 test('requestFromTab picks the most recently registered tab when pageId is omitted', async () => {
-  registerTab({ id: 'tab-1', pageId: 'home', send: jest.fn() });
-  const sendLatest = jest.fn();
-  registerTab({ id: 'tab-2', pageId: 'about', send: sendLatest });
+  connectTab({ id: 'tab-1', pageId: 'home' });
+  const sendLatest = connectTab({ id: 'tab-2', pageId: 'about' });
 
   const promise = requestFromTab({ event: 'inspect-request' });
   expect(sendLatest).toHaveBeenCalledTimes(1);
@@ -103,13 +222,25 @@ test('requestFromTab picks the most recently registered tab when pageId is omitt
 });
 
 test('requestFromTab resolves with an error when no tab matches the pageId', async () => {
-  registerTab({ id: 'tab-1', pageId: 'home', send: jest.fn() });
+  connectTab({ id: 'tab-1', pageId: 'home' });
   const response = await requestFromTab({ pageId: 'missing-page', event: 'inspect-request' });
   expect(response.error).toContain('No browser tab connected');
 });
 
+test('requestFromTab names the pathParams in its error when no tab has that instance', async () => {
+  connectTab({ id: 'tab-1', pageId: 'home' });
+  const response = await requestFromTab({
+    pageId: 'ticket',
+    pathParams: { space: 's', ticket_id: '1' },
+    event: 'inspect-request',
+  });
+  expect(response.error).toEqual(
+    'No browser tab connected on page "ticket" with pathParams {"space":"s","ticket_id":"1"}. Ask the developer to open the page, or use source: "headless".'
+  );
+});
+
 test('requestFromTab resolves with a timeout error when no response arrives in time', async () => {
-  registerTab({ id: 'tab-1', pageId: 'home', send: jest.fn() });
+  connectTab({ id: 'tab-1', pageId: 'home' });
   const response = await requestFromTab({ pageId: 'home', event: 'inspect-request', timeout: 10 });
   expect(response.error).toContain('Timed out');
 });
@@ -119,8 +250,7 @@ test('resolveTabRequest returns false for an unknown requestId', () => {
 });
 
 test('resolveTabRequest returns false when called again for an already-settled requestId', async () => {
-  const send = jest.fn();
-  registerTab({ id: 'tab-1', pageId: 'home', send });
+  const send = connectTab({ id: 'tab-1', pageId: 'home' });
   const promise = requestFromTab({ pageId: 'home', event: 'inspect-request' });
   const requestId = send.mock.calls[0][1].requestId;
 
@@ -130,13 +260,10 @@ test('resolveTabRequest returns false when called again for an already-settled r
 });
 
 test('requestFromTab skips an automated walk tab for the developer tab on the same page', async () => {
-  const developerSend = jest.fn();
-  const walkSend = jest.fn();
-  registerTab({ id: 'developer', pageId: 'tickets', send: developerSend });
-  registerTab({
+  const developerSend = connectTab({ id: 'developer', pageId: 'tickets' });
+  const walkSend = connectTab({
     id: 'walk',
     pageId: 'tickets',
-    send: walkSend,
     source: 'explorer',
     automated: true,
   });
@@ -153,13 +280,7 @@ test('requestFromTab skips an automated walk tab for the developer tab on the sa
 });
 
 test('requestFromTab finds no tab when only an automated tab is on the page', async () => {
-  registerTab({
-    id: 'walk',
-    pageId: 'tickets',
-    send: jest.fn(),
-    source: 'explorer',
-    automated: true,
-  });
+  connectTab({ id: 'walk', pageId: 'tickets', source: 'explorer', automated: true });
   await expect(requestFromTab({ pageId: 'tickets', event: 'inspect-request' })).resolves.toEqual({
     error:
       'No browser tab connected on page "tickets". Ask the developer to open the page, or use source: "headless".',

@@ -15,7 +15,7 @@
 */
 
 import { parseRequestBody } from '@lowdefy/api';
-import { serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 import { readCheckpoint } from '../../lib/docs/checkpointStore.js';
 import { loadMocks } from '../../lib/docs/devMockRegistry.js';
@@ -63,15 +63,21 @@ function handleCheckpointBootstrap(c, { name }) {
   );
 }
 
-// Inspector.jsx posts { tabId, pageId } here whenever its tab navigates, so
-// the tab registry (lib/docs/tabChannel.js) knows which page each connected
-// tab is on without the tab reconnecting its event stream.
+// Inspector.jsx posts { tabId, pageId, pathParams, instanceKey } here whenever
+// the page instance on screen in its tab changes, so the tab registry
+// (lib/docs/tabChannel.js) knows which instance each connected tab shows, and
+// which it has rendered, without the tab reconnecting its event stream.
 async function handleTabPage(c) {
-  const { tabId, pageId } = parseRequestBody({ text: await c.req.text() });
+  const { tabId, pageId, pathParams, instanceKey } = parseRequestBody({
+    text: await c.req.text(),
+  });
   if (!tabId) {
     return c.json({ error: 'Missing "tabId".' }, 400);
   }
-  updateTabPage({ id: tabId, pageId });
+  if (!type.isString(pageId) || !type.isString(instanceKey)) {
+    return c.json({ error: 'Missing "pageId" or "instanceKey".' }, 400);
+  }
+  updateTabPage({ id: tabId, pageId, pathParams, instanceKey });
   return c.json({ ok: true });
 }
 
