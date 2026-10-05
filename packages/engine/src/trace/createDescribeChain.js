@@ -19,15 +19,15 @@ import { targetFromElementsChain } from '@lowdefy/helpers';
 // The journey target a posthog-js `$elements_chain` describes as, for the PostHog before_send
 // hook, which holds the chain but not the element. The chain carries no sibling text, so nth is
 // always null.
-function createDescribeChain({ findBlockType, pageIdOf }) {
+function createDescribeChain({ findBlockType, pathEntryOf }) {
   return function describeChain(elementsChain) {
     const { block_id, row, column, text, option, block_ids } =
       targetFromElementsChain(elementsChain);
-    const pageId = pageIdOf(window.location.href);
+    const entry = pathEntryOf(window.location.href);
     return {
-      page_id: pageId,
+      page_id: entry?.pageId ?? null,
       block_id,
-      block_type: findBlockType({ blockId: block_id, pageId }),
+      block_type: findBlockType({ blockId: block_id, instanceKey: entry?.instanceKey }),
       row,
       column,
       text,

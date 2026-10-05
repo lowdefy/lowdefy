@@ -18,6 +18,7 @@ import createDescribeChain from './createDescribeChain.js';
 import createDescribeElement from './createDescribeElement.js';
 import createFindBlockType from './createFindBlockType.js';
 import createPageIdOf from './createPageIdOf.js';
+import createPathEntryOf from './createPathEntryOf.js';
 
 // Failures emitted before the first replay subscriber, kept for it. PostHog starts in the app's
 // onInitAsync, after app onInit has finished, so without these its failures would be lost.
@@ -88,19 +89,21 @@ function createTraceRegistry({ lowdefy }) {
   }
 
   const findBlockType = createFindBlockType({ lowdefy });
-  const pageIdOf = createPageIdOf({ lowdefy });
-  const describeElement = createDescribeElement({ findBlockType, pageIdOf });
-  const describeChain = createDescribeChain({ findBlockType, pageIdOf });
+  const pathEntryOf = createPathEntryOf({ lowdefy });
+  const pageIdOf = createPageIdOf({ pathEntryOf });
+  const describeElement = createDescribeElement({ findBlockType, pathEntryOf });
+  const describeChain = createDescribeChain({ findBlockType, pathEntryOf });
 
   return {
     describeChain,
     describeElement,
     emit,
     pageIdOf,
+    pathEntryOf,
     subscribe,
     wantsPayload,
     wantsState,
-    actionView: { describeChain, describeElement, pageIdOf, subscribe },
+    actionView: { describeChain, describeElement, pageIdOf, pathEntryOf, subscribe },
   };
 }
 

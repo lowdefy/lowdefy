@@ -88,7 +88,7 @@ _ref:
             Autocapture records the DOM: which element was clicked, and its text. The plugin adds what that element means in the Lowdefy app, so analysis can work in pages, blocks and events instead of CSS selectors:
 
             - __Autocaptured clicks, rage clicks and dead clicks__ get `lowdefy_page_id`, `lowdefy_block_id` (the block clicked), `lowdefy_block_type` (for example `Button`), `lowdefy_block_ids` (every enclosing block, innermost first, so a click on a title inside a clickable card also names the card), `lowdefy_option: true` when a dropdown option was picked and, inside a grid, `lowdefy_row` (the displayed row index) and `lowdefy_column` (the column id).
-            - __Every other event__, pageviews and [`PostHogCapture`](/PostHogCapture) events included, gets `lowdefy_page_id`, read from the URL it was captured on.
+            - __Every other event__, pageviews and [`PostHogCapture`](/PostHogCapture) events included, gets `lowdefy_page_id`, read from the URL it was captured on, and `lowdefy_path_params`, the path values of a page with a `path` pattern (`{}` otherwise).
             - __Super properties__: `lowdefy_build_id` and `lowdefy_app_version` (the app's `version`) on every event, beside `environment`.
 
             Null, false and empty values are left out. The enrichment adds properties, never events, so it costs nothing in billing, and it has no switch. A block with the `ph-no-capture` class is not autocaptured, so it is never enriched.
@@ -101,6 +101,7 @@ _ref:
             | --- | --- |
             | `lowdefy_event_scope` | `page`, or `app` for the app's root events |
             | `lowdefy_page_id` | the page the event ran on |
+            | `lowdefy_path_params` | the path values of the page the event ran on |
             | `lowdefy_block_id` | the block, or `app` for an app event |
             | `lowdefy_block_type` | the block type, left out for an app event |
             | `lowdefy_event_name` | for example `onClick` or `onInit` |

@@ -17,9 +17,9 @@
 import { jest } from '@jest/globals';
 
 // A stand-in for the engine's trace registry (the `trace` action argument): emit plays the
-// engine, describeChain and pageIdOf return what the test gives them. Like the engine, it holds
+// engine, describeChain and pathEntryOf return what the test gives them. Like the engine, it holds
 // failures emitted before the first replay subscriber and hands them to it inside subscribe.
-function createFakeTrace({ describeChain = () => null, pageIdOf = () => null } = {}) {
+function createFakeTrace({ describeChain = () => null, pathEntryOf = () => null } = {}) {
   const listeners = [];
   let heldFailures = [];
   let holding = true;
@@ -32,7 +32,7 @@ function createFakeTrace({ describeChain = () => null, pageIdOf = () => null } =
       [...listeners].forEach((listener) => listener(payload));
     },
     listeners,
-    pageIdOf: jest.fn(pageIdOf),
+    pathEntryOf: jest.fn(pathEntryOf),
     subscribe: jest.fn((listener, { replay = false } = {}) => {
       listeners.push(listener);
       if (replay === true && holding) {

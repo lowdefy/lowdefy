@@ -209,12 +209,14 @@ test('trace actionView has subscribe and the describe functions and no engine-on
     'describeChain',
     'describeElement',
     'pageIdOf',
+    'pathEntryOf',
     'subscribe',
   ]);
   expect(trace.actionView.subscribe).toBe(trace.subscribe);
   expect(trace.actionView.describeElement).toBe(trace.describeElement);
   expect(trace.actionView.describeChain).toBe(trace.describeChain);
   expect(trace.actionView.pageIdOf).toBe(trace.pageIdOf);
+  expect(trace.actionView.pathEntryOf).toBe(trace.pathEntryOf);
   expect(trace.actionView.emit).toBeUndefined();
   expect(trace.actionView.wantsState).toBeUndefined();
   expect(trace.actionView.wantsPayload).toBeUndefined();

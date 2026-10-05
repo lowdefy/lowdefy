@@ -76,7 +76,7 @@ function nthOf({ control, root, text }) {
 // interactive control inside the scope (cell, row, block, else page); a dropdown option stands
 // in for one and folds into a select step. An element that reached no control has no text: its
 // block alone targets it.
-function createDescribeElement({ findBlockType, pageIdOf }) {
+function createDescribeElement({ findBlockType, pathEntryOf }) {
   return function describeElement(element) {
     const document = element.ownerDocument;
     const path = ancestorsOf(element);
@@ -100,12 +100,12 @@ function createDescribeElement({ findBlockType, pageIdOf }) {
       control === null
         ? null
         : nthOf({ control, root: scope ?? pageWideRoot({ document, text }), text });
-    const pageId = pageIdOf(document.location.href);
+    const entry = pathEntryOf(document.location.href);
     const blockId = blockIds[0] ?? null;
     return {
-      page_id: pageId,
+      page_id: entry?.pageId ?? null,
       block_id: blockId,
-      block_type: findBlockType({ blockId, pageId }),
+      block_type: findBlockType({ blockId, instanceKey: entry?.instanceKey }),
       row: rowElement === null ? null : parseRowIndex(rowElement.getAttribute(rowAttribute)),
       column: cellElement === null ? null : cellElement.getAttribute(cellAttribute),
       text,

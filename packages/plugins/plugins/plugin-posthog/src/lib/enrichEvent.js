@@ -43,7 +43,7 @@ function targetProperties(target) {
 
 // posthog-js before_send: stamps Lowdefy semantics onto events, from the trace registry the last
 // PostHogInit stored. Clicks get the block they hit; every event gets the page it was captured
-// on. It adds no event and always returns the event it was given.
+// on and that page's path values. It adds no event and always returns the event it was given.
 function enrichEvent(event) {
   const { trace } = postHogState;
   const { properties } = event;
@@ -51,10 +51,15 @@ function enrichEvent(event) {
     Object.assign(properties, targetProperties(trace.describeChain(properties.$elements_chain)));
   }
   // Some events, such as session recording snapshots, carry no URL.
-  if (type.isNone(properties.lowdefy_page_id) && type.isString(properties.$current_url)) {
-    const pageId = trace.pageIdOf(properties.$current_url);
-    if (!type.isNull(pageId)) {
-      properties.lowdefy_page_id = pageId;
+  const entry = type.isString(properties.$current_url)
+    ? trace.pathEntryOf(properties.$current_url)
+    : null;
+  if (!type.isNone(entry)) {
+    if (type.isNone(properties.lowdefy_page_id)) {
+      properties.lowdefy_page_id = entry.pageId;
+    }
+    if (properties.lowdefy_page_id === entry.pageId) {
+      properties.lowdefy_path_params = entry.pathParams;
     }
   }
   return event;
