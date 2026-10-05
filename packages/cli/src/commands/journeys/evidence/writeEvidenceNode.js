@@ -29,9 +29,20 @@ function columnOf({ text, offset }) {
 
 // `evidence:` and its map as block YAML, its first line unindented and the
 // rest indented to the journey's key column, so it can be spliced in where a
-// key starts. Lines end the way the file's lines do.
+// key starts. Each month of production evidence is one flow-style line, so a
+// refresh adds one line per month per flow. Lines end the way the file's lines
+// do.
 function renderEvidence({ evidence, column, eol }) {
-  const lines = YAML.stringify({ evidence }, { lineWidth: 0 }).trimEnd().split('\n');
+  const document = new YAML.Document({ evidence });
+  YAML.visit(document, {
+    Pair(_, pair) {
+      if (pair.key?.value !== 'months' || !YAML.isSeq(pair.value)) return;
+      pair.value.items.forEach((item) => {
+        item.flow = true;
+      });
+    },
+  });
+  const lines = document.toString({ lineWidth: 0 }).trimEnd().split('\n');
   const indent = ' '.repeat(column);
   return lines.map((line, index) => (index === 0 ? line : `${indent}${line}`)).join(eol);
 }

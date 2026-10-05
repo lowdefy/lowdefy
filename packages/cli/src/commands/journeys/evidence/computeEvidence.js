@@ -18,40 +18,82 @@ import { isBackedBy, journeySequence } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import measuredJourney from '../../test/measuredJourney.js';
+import isCountedFlow from './isCountedFlow.js';
+import mergeMonths from './mergeMonths.js';
+import parseFlowLines from './parseFlowLines.js';
+import reconcileFlows from './reconcileFlows.js';
 
 const SUBKEYS = ['production', 'dev', 'explorer', 'mutation'];
-
-function round2(value) {
-  return Math.round(value * 100) / 100;
-}
 
 function distinctCount(values) {
   return new Set(values.filter((value) => !type.isNone(value))).size;
 }
 
-function backingSegments({ journey, segments }) {
-  const sequence = journeySequence({ pageId: journey.pageId, steps: journey.steps });
+function backingSegments({ pageId, sequence, segments }) {
   return segments.filter((segment) =>
     isBackedBy({
       journeySequence: sequence,
       segmentSequence: segment.sequence,
-      pageId: journey.pageId,
+      pageId,
     })
   );
 }
 
-function productionEvidence({ journey, segments, window }) {
-  const backing = backingSegments({ journey, segments });
-  const entering = segments.filter((segment) => segment.page_id === journey.pageId);
-  const backingEntering = backing.filter((segment) => segment.page_id === journey.pageId);
-  return {
-    sessions: backing.length,
-    persons: distinctCount(backing.flatMap((segment) => segment.persons)),
-    orgs: distinctCount(backing.flatMap((segment) => segment.orgs)),
-    share: entering.length === 0 ? 0 : round2(backingEntering.length / entering.length),
-    failures: backing.filter((segment) => !type.isUndefined(segment.failure)).length,
-    window: `${window.from}/${window.to}`,
+function segmentMonth({ segment }) {
+  return new Date(segment.first_seen).toISOString().slice(0, 7);
+}
+
+// The segments of each month read, by the UTC month each one started in, so a
+// segment that crosses midnight at a month boundary counts once, whole.
+// Segments that started in a month not read (the neighbouring days read for
+// context) are dropped. Every month read has an entry, empty or not.
+function bucketByMonth({ months, segments }) {
+  const byMonth = new Map(months.map((month) => [month, []]));
+  segments.forEach((segment) => {
+    byMonth.get(segmentMonth({ segment }))?.push(segment);
+  });
+  return byMonth;
+}
+
+// One month entry per month read, written even when nothing backed the flow,
+// so a month pulled and unused reads differently from one never pulled.
+function countMonths({ entry, segmentsByMonth, dayCounts }) {
+  const sequence = parseFlowLines({ flow: entry.flow });
+  return [...segmentsByMonth.entries()].map(([month, segments]) => {
+    const backing = backingSegments({ pageId: entry.pageId, sequence, segments });
+    return {
+      month,
+      days: dayCounts[month],
+      sessions: backing.length,
+      persons: distinctCount(backing.flatMap((segment) => segment.persons)),
+      orgs: distinctCount(backing.flatMap((segment) => segment.orgs)),
+      failures: backing.filter((segment) => !type.isUndefined(segment.failure)).length,
+    };
+  });
+}
+
+function countFlow({ entry, segmentsByMonth, dayCounts }) {
+  return mergeMonths({
+    committed: entry.months,
+    counted: countMonths({ entry, segmentsByMonth, dayCounts }),
+  });
+}
+
+function productionEvidence({ journey, segmentsByMonth, dayCounts, today }) {
+  const { live, deprecated } = reconcileFlows({ journey, today });
+  const production = {
+    sequence: live.sequence,
+    pageId: live.pageId,
+    flow: live.flow,
+    months: countFlow({ entry: live, segmentsByMonth, dayCounts }),
   };
+  if (deprecated.length > 0) {
+    production.deprecated = deprecated.map((entry) => {
+      if (!isCountedFlow({ entry })) return entry;
+      return { ...entry, months: countFlow({ entry, segmentsByMonth, dayCounts }) };
+    });
+  }
+  return production;
 }
 
 function isEqual(a, b) {
@@ -65,20 +107,34 @@ function isEqual(a, b) {
 // some subkey changed, so a no-op refresh changes no file.
 //
 // - journeys: [{ filePath, journeyIndex, journey }]
-// - sources: { production?: { segments, window }, dev?: { segments },
+// - sources: { production?: { dayCounts, months, segments }, dev?: { segments },
 //   mutation?: readMutationReport's result }
+//   `production.dayCounts` is { 'YYYY-MM': final days cached }, `months` the
+//   months read (selectMonthsToRead) and `segments` their compiled segments.
 //   `dev.recordings` counts the dev segments that back the journey. A
 //   mutation report sets `mutation` for the journeys it names only.
 function computeEvidence({ journeys, sources, today }) {
+  const segmentsByMonth = type.isNone(sources.production)
+    ? undefined
+    : bucketByMonth(sources.production);
   return journeys.map(({ filePath, file, journeyIndex, journey }) => {
     const before = journey.evidence;
     const computed = {};
     if (!type.isNone(sources.production)) {
-      computed.production = productionEvidence({ journey, ...sources.production });
+      computed.production = productionEvidence({
+        journey,
+        segmentsByMonth,
+        dayCounts: sources.production.dayCounts,
+        today,
+      });
     }
     if (!type.isNone(sources.dev)) {
       computed.dev = {
-        recordings: backingSegments({ journey, segments: sources.dev.segments }).length,
+        recordings: backingSegments({
+          pageId: journey.pageId,
+          sequence: journeySequence({ pageId: journey.pageId, steps: journey.steps }),
+          segments: sources.dev.segments,
+        }).length,
       };
     }
     const mutation = sources.mutation?.byJourney.get(

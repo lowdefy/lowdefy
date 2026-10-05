@@ -283,13 +283,24 @@ When PostHog rate limits the pull for longer than a minute, or the project's hou
 
 ## journeys evidence
 
-The `journeys evidence` command works out how much production use backs each journey in `tests/journeys/`: the sessions that did what the journey does, the people and organisations behind them, its share of the sessions entering on its page, and how many of them failed. It also counts the dev recordings of the last 7 days that back each journey. See [Evidence](/config-tests#evidence).
+The `journeys evidence` command works out how much production use backs each journey in `tests/journeys/`, by calendar month: the sessions that did what the journey does, the people and organisations behind them, and how many of them failed. It reads every final day of the production cache (today and yesterday are not final until a later pull), not a window, and gaps in the cache are fine. A month already counted from at least as many final days is not read again, so a routine refresh reads the current month. It also counts the dev recordings of the last 7 days that back each journey. See [Evidence](/config-tests#evidence).
 
-Without `--refresh` it prints what would change and writes nothing. With `--refresh` it rewrites the `evidence` key of each journey whose numbers changed, and nothing else in the file. It is the only command that writes `evidence`. Afterwards it lists the journeys no production session backs, beside their mutation numbers. It never removes a journey.
+Without `--refresh` it prints what would change and writes nothing. With `--refresh` it rewrites the `evidence` key of each journey whose numbers changed, and nothing else in the file. It is the only command that writes `evidence`. When a journey's steps change what it matches in production, its counted months move to a deprecated flow that is still counted, and the new flow is counted from the cache. Afterwards it lists the journeys no production session backs over the last 3 months, beside their mutation numbers. It never removes a journey.
 
 - `--refresh`: Write the changed `evidence` keys.
 - `--source <source>`: Where use is read from. Only `production` for now, the default.
-- `--since <since>`, `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: The production window, as for [`journeys pull posthog`](#journeys-pull-posthog). A day of the window missing from the cache is an error naming the pull to run.
+- `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys compile`](#journeys-compile).
+
+## journeys usage
+
+The `journeys usage` command reports which journeys real use leans on most. It ranks the journeys in `tests/journeys/` by their recent rate: their production sessions over the final days their months hold in the usage window, the last 3 calendar months ending at the newest month any selected journey has. Each journey shows its popularity tier, its sessions and failures over the window and all time, a line per month with that month's persons and organisations, and its deprecated flows with their recent use. Below that it lists the production flows no journey covers, from the report [`journeys coverage`](#journeys-coverage) writes, ranked by their sessions in coverage's window and not tiered. See [Usage and tiers](/config-tests#usage-and-tiers).
+
+A tier is a cut through the selected journeys, ranked by rate, most first: `common` holds the shortest run of journeys reaching 50% of the summed rates, `wide` 80% and `edge` 95%, and `full` holds every journey. Tiers nest and never split journeys with equal rates. A journey edited since the last refresh, or never refreshed, is `unranked` and in every tier. A journey with `deprecated: true` is in no tier. Fewer than 100 journey matches in the window refuses every tier but `full`.
+
+- `[paths...]`, `--filter <name>`, `--tag <tag>`: The journeys to report on, selected as [`test`](#test) selects them. Tiers are cut over this selection alone.
+- `--tier <tier>`: Only the journeys in `common`, `wide`, `edge` or `full` (the default, every journey).
+- `--usage-window <months>`: The calendar months recent use is ranked over, such as `3m`, the default.
+- `--json`: Print the report as JSON, for agents.
 - `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys compile`](#journeys-compile).
 
 ## journeys coverage
