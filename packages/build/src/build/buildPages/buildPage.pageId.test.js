@@ -17,11 +17,14 @@
 import buildPages from '../full/buildPages.js';
 import testContext from '../../test-utils/testContext.js';
 
-test.each(['foo/', '/foo', 'a//b'])('buildPages refuses page id "%s" with an empty segment', (id) => {
-  const context = testContext({ logger: { warn: () => {}, log: () => {} } });
-  const components = { pages: [{ id, type: 'Box', auth: { public: true } }] };
-  expect(() => buildPages({ components, context })).toThrow('contains an empty segment');
-});
+test.each(['foo/', '/foo', 'a//b'])(
+  'buildPages refuses page id "%s" with an empty segment',
+  (id) => {
+    const context = testContext({ logger: { warn: () => {}, log: () => {} } });
+    const components = { pages: [{ id, type: 'Box', auth: { public: true } }] };
+    expect(() => buildPages({ components, context })).toThrow('contains an empty segment');
+  }
+);
 
 test('buildPages accepts a nested page id', () => {
   const context = testContext({ logger: { warn: () => {}, log: () => {} } });
