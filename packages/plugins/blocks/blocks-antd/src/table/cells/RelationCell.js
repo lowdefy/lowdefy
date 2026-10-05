@@ -24,8 +24,16 @@ import CellLink from './CellLink.js';
 import EmptyCell from './EmptyCell.js';
 
 // Related records as chips. With `pageId` (or `href`) each chip links to its
-// record; `urlQuery` values are paths in the related record, and default to
-// `{ _id: _id }` when a `pageId` is given.
+// record; `urlQuery` and `pathParams` values are paths in the related record,
+// and `urlQuery` defaults to `{ _id: _id }` when a `pageId` is given with
+// neither.
+function getUrlQuery(cell) {
+  if (!type.isNone(cell.urlQuery) || !type.isNone(cell.pathParams)) {
+    return cell.urlQuery;
+  }
+  return type.isString(cell.pageId) ? { _id: '_id' } : undefined;
+}
+
 function RelationCell({ value, row, column, components, onEvent }) {
   const { cell } = column;
   const items = (type.isArray(value) ? value : [value]).filter((item) => !isEmptyValue(item));
@@ -35,7 +43,8 @@ function RelationCell({ value, row, column, components, onEvent }) {
     pageId: cell.pageId,
     href: cell.href,
     newTab: cell.newTab,
-    urlQuery: cell.urlQuery ?? (type.isString(cell.pageId) ? { _id: '_id' } : undefined),
+    pathParams: cell.pathParams,
+    urlQuery: getUrlQuery(cell),
   };
   return (
     <span className="lf-table-chips">

@@ -55,6 +55,15 @@ test.describe('Anchor Block', () => {
     await expect(anchor).toHaveAttribute('href', 'https://lowdefy.com');
   });
 
+  test('pathParams fill the target page path', async ({ page }) => {
+    const anchor = getAnchor(page, 'anchor_path_params');
+    await expect(anchor).toHaveAttribute('href', '/anchor-tickets/support/1234');
+    await Promise.all([
+      page.waitForURL(/\/anchor-tickets\/support\/1234$/, { waitUntil: 'commit' }),
+      anchor.click(),
+    ]);
+  });
+
   test('newTab sets target="_blank"', async ({ page }) => {
     const anchor = getAnchor(page, 'anchor_newtab');
     await expect(anchor).toHaveAttribute('target', '_blank');

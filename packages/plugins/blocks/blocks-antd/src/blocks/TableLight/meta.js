@@ -59,7 +59,7 @@ const column = {
     cell: {
       type: 'object',
       description:
-        'Options for the cell type, using the AgGrid `cell` keys where they overlap. number, currency, percent: `format`, `locale`, `currency`, `decimals`, `minDecimals`, `maxDecimals`, `notation`, `useGrouping`, `negative`, `prefix`, `suffix`, `signColor`, `positiveColor`, `negativeColor`, `zeroColor`, `color`, `thresholds`, `colors`. date, datetime: `format` (dayjs), `relative`. boolean: `trueLabel`, `falseLabel`, `trueColor`, `falseColor`, `trueIcon`, `falseIcon`. tag, tags, status: `colorMap`, `colorFrom`, `default`, `max` (tags). avatar: `nameField`, `srcField`, `idField`, `shape`, `link`. people: `nameField`, `srcField`, `idField` (paths in each person), `max`, `shape`. link: `pageId`, `href`, `urlQuery` (row paths), `newTab`, `home`, `back`, `input`, `labelField`. url: `label`, `labelField`, `newTab`. relation: `labelField`, `pageId`, `href`, `urlQuery` (paths in the related record, default `{ _id: _id }`), `newTab`. progress: `max`, `suffix`, `color`, `thresholds`, `colors`, `showValue`, `nullLabel`. rating: `max`, `color`. image: `width`, `height`, `shape`, `alt`, `altField`. html: `template` (nunjucks with `value` and `row`, autoescaped). buttons: `buttons`, `showOn`. menu: `items`, `icon`, `title`, `placement`.',
+        'Options for the cell type, using the AgGrid `cell` keys where they overlap. number, currency, percent: `format`, `locale`, `currency`, `decimals`, `minDecimals`, `maxDecimals`, `notation`, `useGrouping`, `negative`, `prefix`, `suffix`, `signColor`, `positiveColor`, `negativeColor`, `zeroColor`, `color`, `thresholds`, `colors`. date, datetime: `format` (dayjs), `relative`. boolean: `trueLabel`, `falseLabel`, `trueColor`, `falseColor`, `trueIcon`, `falseIcon`. tag, tags, status: `colorMap`, `colorFrom`, `default`, `max` (tags). avatar: `nameField`, `srcField`, `idField`, `shape`, `link`. people: `nameField`, `srcField`, `idField` (paths in each person), `max`, `shape`. link: `pageId`, `href`, `urlQuery` and `pathParams` (row paths), `newTab`, `home`, `back`, `input`, `labelField`. url: `label`, `labelField`, `newTab`. relation: `labelField`, `pageId`, `href`, `urlQuery` and `pathParams` (paths in the related record; `urlQuery` defaults to `{ _id: _id }` when neither is set), `newTab`. progress: `max`, `suffix`, `color`, `thresholds`, `colors`, `showValue`, `nullLabel`. rating: `max`, `color`. image: `width`, `height`, `shape`, `alt`, `altField`. html: `template` (nunjucks with `value` and `row`, autoescaped). buttons: `buttons`, `showOn`. menu: `items`, `icon`, `title`, `placement`.',
       docs: { displayType: 'yaml' },
     },
     width: { type: 'number', description: 'The column width in pixels.' },
@@ -162,7 +162,7 @@ export default {
       description:
         'Triggered when a link, avatar link or relation cell is clicked. The link navigates by itself; this event is for anything else to do.',
       event: {
-        link: 'The resolved link: { pageId, href, urlQuery, newTab, ... }.',
+        link: 'The resolved link: { pageId, href, urlQuery, pathParams, newTab, ... }.',
         row: 'The row data.',
         value: 'The cell value (the related record for relation cells).',
       },
@@ -249,13 +249,19 @@ export default {
       rowLink: {
         type: 'object',
         description:
-          'Make rows links. A plain click navigates, Cmd/Ctrl or middle click opens a new tab. Values in `urlQuery` are row paths.',
+          'Make rows links. A plain click navigates, Cmd/Ctrl or middle click opens a new tab. Values in `urlQuery` and `pathParams` are row paths.',
         properties: {
           pageId: { type: 'string', description: 'The page to open.' },
           href: { type: 'string', description: 'A URL to open instead of a page.' },
           urlQuery: {
             type: 'object',
             description: 'Query parameters; each value is a path in the row, like `{ _id: _id }`.',
+            docs: { displayType: 'yaml' },
+          },
+          pathParams: {
+            type: 'object',
+            description:
+              "Values for the page path's placeholders; each value is a path in the row, like `{ ticket_id: _id }`.",
             docs: { displayType: 'yaml' },
           },
           input: {

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import isOn from './isOn.js';
 
 // The page id pattern the build enforces (validateId).
@@ -26,10 +28,32 @@ function isSameOrigin(href) {
   return new URL(href, window.location.origin).origin === window.location.origin;
 }
 
+// data-path-params holds a JSON object of the page's path values. null when it is
+// not one.
+function readPathParams(element) {
+  const attribute = element.getAttribute('data-path-params');
+  if (attribute === null) {
+    return {};
+  }
+  try {
+    const pathParams = JSON.parse(attribute);
+    return type.isObject(pathParams) ? pathParams : null;
+  } catch (error) {
+    return null;
+  }
+}
+
 function preparePageLink({ element, registration, targets }) {
   const pageId = element.getAttribute('data-page-id');
   if (!PAGE_ID_PATTERN.test(pageId)) {
     console.warn(`data-page-id="${pageId}" is not a valid page id, so the link was not set.`);
+    return;
+  }
+  const pathParams = readPathParams(element);
+  if (pathParams === null) {
+    console.warn(
+      `data-path-params on data-page-id="${pageId}" is not a JSON object, so the link was not set.`
+    );
     return;
   }
   // One object for both the href and the click, so a middle click and a plain
@@ -37,13 +61,13 @@ function preparePageLink({ element, registration, targets }) {
   const urlQuery = Object.fromEntries(
     new URLSearchParams(element.getAttribute('data-url-query') ?? '')
   );
-  const href = registration.createHref({ pathname: `/${pageId}`, query: urlQuery });
+  const href = registration.createPageHref({ pageId, pathParams, urlQuery });
   if (!isSameOrigin(href)) {
     console.warn(`data-page-id="${pageId}" links to another site, so the link was not set.`);
     return;
   }
   element.setAttribute('href', href);
-  targets.set(element, { pageId, urlQuery });
+  targets.set(element, { pageId, pathParams, urlQuery });
 }
 
 // An app-relative href: it starts with "/" and resolves to this origin. Parsing

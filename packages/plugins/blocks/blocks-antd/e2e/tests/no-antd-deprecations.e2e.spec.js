@@ -32,16 +32,20 @@ const ANTD_MESSAGE = /\[antd[:\]]/;
 const appDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const lowdefyYamlPath = path.join(appDir, 'app', 'lowdefy.yaml');
 
+// A page with a path is not served at its id, so only pages without one are opened here.
 function readPageIds() {
   const lowdefyYaml = fs.readFileSync(lowdefyYamlPath, 'utf8');
   const refs = [...lowdefyYaml.matchAll(/^\s*-\s*_ref:\s*(\S+)\s*$/gm)].map((match) => match[1]);
-  return refs.map((ref) => {
+  return refs.flatMap((ref) => {
     const pageYaml = fs.readFileSync(path.resolve(appDir, 'app', ref), 'utf8');
+    if (/^path:/m.test(pageYaml)) {
+      return [];
+    }
     const idMatch = pageYaml.match(/^id:\s*(\S+)\s*$/m);
     if (!idMatch) {
       throw new Error(`No page id found in "${ref}".`);
     }
-    return idMatch[1];
+    return [idMatch[1]];
   });
 }
 

@@ -377,6 +377,33 @@ blocks:
         - { _id: l1, name: Linked one }
         - { _id: l2, name: Linked two }
 
+  - id: tl_path_params
+    type: TableLight
+    properties:
+      rowLink:
+        pageId: tablelight-path-target
+        pathParams:
+          space: space
+          ticket_id: _id
+      columns:
+        - name
+        - key: link
+          type: link
+          cell:
+            pageId: tablelight-path-target
+            pathParams: { space: space, ticket_id: _id }
+        - key: relation
+          type: relation
+          cell:
+            pageId: tablelight-path-target
+            pathParams: { space: space, ticket_id: _id }
+      data:
+        - _id: t1
+          space: support
+          name: First ticket
+          link: Open ticket
+          relation: { _id: rel1, space: sales, name: Related ticket }
+
   - id: tl_row_link_click
     type: TableLight
     properties:

@@ -96,6 +96,19 @@ test.describe('Html Block', () => {
     expect(await page.evaluate(() => window.sameDocument)).toBe(true);
   });
 
+  test('data-path-params fills the target page path and navigates in-app', async ({ page }) => {
+    const link = page.locator('#enh_path_link');
+    await expect(link).toHaveAttribute('href', '/anchor-tickets/s/1');
+    await page.evaluate(() => {
+      window.sameDocument = true;
+    });
+    await Promise.all([
+      page.waitForURL(/\/anchor-tickets\/s\/1$/, { waitUntil: 'commit' }),
+      link.click(),
+    ]);
+    expect(await page.evaluate(() => window.sameDocument)).toBe(true);
+  });
+
   test('a data-copy value that differs from the text is shown in full in the label', async ({
     page,
   }) => {

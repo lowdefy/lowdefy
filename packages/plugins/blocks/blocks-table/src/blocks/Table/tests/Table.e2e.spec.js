@@ -392,6 +392,12 @@ test.describe('Table Block', () => {
     await expect(page).toHaveURL(/\/table$/);
   });
 
+  test('a row click follows rowLink to the path its pathParams fill', async ({ page }) => {
+    const navigation = page.waitForURL(/\/table-tickets\/Blue\/1$/, { waitUntil: 'commit' });
+    await cell(page, 'table_path_link', 1, 'name').click();
+    await expect(navigation).resolves.toBeUndefined();
+  });
+
   test('selecting text by drag never follows rowLink', async ({ page }) => {
     await cell(page, 'table_link', 1, 'city').scrollIntoViewIfNeeded();
     const box = await cell(page, 'table_link', 1, 'city').boundingBox();

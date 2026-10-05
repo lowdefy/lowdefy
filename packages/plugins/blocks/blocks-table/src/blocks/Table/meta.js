@@ -120,7 +120,7 @@ const column = {
     cell: {
       type: 'object',
       description:
-        'Options for the cell type, the same keys as TableLight (and the AgGrid `cell` keys where they overlap), for example `format`, `currency`, `relative`, `pageId`/`urlQuery` (link), `template` (html), `buttons` and `showOn` (buttons), `items` (menu). Row buttons (`buttons`) and menu items (`items`) also accept `key`, a single key that fires the item when its row is focused, for example `key: a` (no editor open, no modifier).',
+        'Options for the cell type, the same keys as TableLight (and the AgGrid `cell` keys where they overlap), for example `format`, `currency`, `relative`, `pageId`/`urlQuery`/`pathParams` (link), `template` (html), `buttons` and `showOn` (buttons), `items` (menu). Row buttons (`buttons`) and menu items (`items`) also accept `key`, a single key that fires the item when its row is focused, for example `key: a` (no editor open, no modifier).',
       docs: { displayType: 'yaml' },
     },
     ...widthProperties,
@@ -511,7 +511,7 @@ export default {
       description:
         'Triggered when a link, avatar link or relation cell is clicked. The link navigates by itself; this event is for anything else to do.',
       event: {
-        link: 'The resolved link: { pageId, href, urlQuery, newTab, ... }.',
+        link: 'The resolved link: { pageId, href, urlQuery, pathParams, newTab, ... }.',
         row: 'The row data.',
         value: 'The cell value (the related record for relation cells).',
       },
@@ -803,13 +803,19 @@ export default {
         type: 'object',
         additionalProperties: false,
         description:
-          'Make rows links. A plain click navigates, Cmd/Ctrl or middle click opens a new tab, and Enter on a focused row follows it. Values in `urlQuery` are row paths.',
+          'Make rows links. A plain click navigates, Cmd/Ctrl or middle click opens a new tab, and Enter on a focused row follows it. Values in `urlQuery` and `pathParams` are row paths.',
         properties: {
           pageId: { type: 'string', description: 'The page to open.' },
           href: { type: 'string', description: 'A URL to open instead of a page.' },
           urlQuery: {
             type: 'object',
             description: 'Query parameters; each value is a path in the row, like `{ _id: _id }`.',
+            docs: { displayType: 'yaml' },
+          },
+          pathParams: {
+            type: 'object',
+            description:
+              "Values for the page path's placeholders; each value is a path in the row, like `{ ticket_id: _id }`.",
             docs: { displayType: 'yaml' },
           },
           input: {

@@ -68,6 +68,27 @@ test('initLowdefyContext registers HTML links that build hrefs with basePath and
   expect(registration.link).toBe(result._internal.link);
 });
 
+test('initLowdefyContext registers HTML page links that fill the page path from pathParams', () => {
+  const args = baseArgs({ pagePaths: { ticket: 'tickets/{space}/{ticket_id}' } });
+  args.config.pageConfig.linkPaths = {};
+  args.router.basePath = '/app';
+  initLowdefyContext(args);
+  const registration = getHtmlEnhancements();
+  expect(
+    registration.createPageHref({
+      pageId: 'ticket',
+      pathParams: { space: 'support', ticket_id: '12' },
+      urlQuery: { tab: 'notes' },
+    })
+  ).toBe('/app/tickets/support/12?tab=notes');
+  expect(registration.createPageHref({ pageId: 'contacts', pathParams: {}, urlQuery: {} })).toBe(
+    '/app/contacts'
+  );
+  expect(() =>
+    registration.createPageHref({ pageId: 'ticket', pathParams: { space: 's' }, urlQuery: {} })
+  ).toThrow('Link to page "ticket" is missing a value for path placeholder "ticket_id".');
+});
+
 test('initLowdefyContext registers the app locale and translate for HTML formatting', () => {
   const args = baseArgs();
   args.window.__lowdefy_locale = 'de-DE';

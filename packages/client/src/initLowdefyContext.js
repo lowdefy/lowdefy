@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { registerHtmlEnhancements } from '@lowdefy/block-utils';
-import { lookupPath } from '@lowdefy/engine';
+import { lookupPath, resolveTarget } from '@lowdefy/engine';
 import { translate } from '@lowdefy/helpers';
 
 import createCallAPI from './createCallAPI.js';
@@ -101,10 +101,19 @@ function initLowdefyContext({
     // HtmlComponent (block-utils) gives data-* attributes meaning in every
     // sanitised HTML string. The overlay pulls in antd Tooltip and Popover, so
     // it loads the first time HTML needs one. Links build hrefs with createUrl,
-    // the one place basePath is applied, and navigate like the Link action.
+    // the one place basePath is applied, and navigate like the Link action. A
+    // page link's pathname comes from resolveTarget, as the Link action's does.
     registerHtmlEnhancements({
       createHref: ({ pathname, query }) =>
         createUrl({ basePath: lowdefy.basePath, pathname, query }),
+      createPageHref: ({ pageId, pathParams, urlQuery }) => {
+        const target = resolveTarget({ lowdefy, target: { pageId, pathParams, urlQuery } });
+        return createUrl({
+          basePath: lowdefy.basePath,
+          pathname: target.pathname,
+          query: target.query,
+        });
+      },
       getLocale: () => getActiveLocale(window),
       // The overlay is lazy, so the app's Icon is bound in when it loads.
       HtmlOverlay: React.lazy(async () => {

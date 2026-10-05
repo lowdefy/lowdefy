@@ -24,6 +24,7 @@ function CellLink({ link, components, className, onClick, children }) {
   return (
     <Link
       pageId={link.pageId}
+      pathParams={link.pathParams}
       urlQuery={link.urlQuery}
       href={link.href}
       home={link.home}
