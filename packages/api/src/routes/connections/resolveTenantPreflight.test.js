@@ -15,8 +15,9 @@
 */
 
 import { jest } from '@jest/globals';
-import { TenantIntegrityError } from '@lowdefy/errors';
+import { ConfigError, TenantIntegrityError } from '@lowdefy/errors';
 
+import getConnectionConfig from './getConnectionConfig.js';
 import resolveTenantPreflight, { getTenantIntegrityStatus } from './resolveTenantPreflight.js';
 import testContext from '../../test/testContext.js';
 
@@ -315,6 +316,9 @@ function unwalledConfig({ unwalled }) {
 }
 
 function withUnwalled(unwalled) {
+  Object.values(unwalled).forEach((connection) => {
+    connection.tenantCapability = false;
+  });
   const read = unwalledConfig({ unwalled });
   mockReadConfigFile.mockImplementation((path) =>
     path === 'unwalledConnections.json'
@@ -324,24 +328,81 @@ function withUnwalled(unwalled) {
   mockProbe.mockResolvedValue({ ok: true });
 }
 
-test('warns when an unwalled connection holds a URI to the walled database', async () => {
+const pluginReach = {
+  plugin: {
+    connectionId: 'plugin',
+    type: 'Plugin',
+    '~k': 'k-plugin',
+    properties: {
+      nested: { uri: 'mongodb://other:secret@host-b:27017,host-a:27017/app?authSource=admin' },
+    },
+  },
+};
+
+const pluginReachMessage =
+  'Connection "plugin" (Plugin) holds a URI to the database of walled connection "walled". Unwalled connections must not reach walled data: give the plugin a mongoConnectionId and use the walled MongoDB client (@lowdefy/connection-mongodb/walled). Requests on this connection are refused.';
+
+test('logs an error at start when an unwalled connection holds a URI to the walled database', async () => {
+  withUnwalled(pluginReach);
+  await resolveTenantPreflight(createTestContext());
+  expect(logger.error).toHaveBeenCalledTimes(1);
+  expect(logger.error.mock.calls[0][0]).toMatchObject({
+    event: 'unwalled_reach',
+    connectionId: 'plugin',
+  });
+  expect(logger.error.mock.calls[0][0].err).toBeInstanceOf(ConfigError);
+  expect(logger.error.mock.calls[0][1]).toBe(pluginReachMessage);
+  expect(logger.warn).not.toHaveBeenCalled();
+});
+
+test("refuses the reaching connection's requests with a ConfigError, and serves the rest", async () => {
   withUnwalled({
-    plugin: {
-      connectionId: 'plugin',
-      type: 'Plugin',
-      properties: {
-        nested: { uri: 'mongodb://other:secret@host-b:27017,host-a:27017/app?authSource=admin' },
-      },
+    ...pluginReach,
+    mail: {
+      connectionId: 'mail',
+      type: 'Smtp',
+      properties: { host: 'smtp.example.com', user: 'u' },
     },
   });
-  await resolveTenantPreflight(createTestContext());
-  expect(logger.warn).toHaveBeenCalledTimes(1);
-  expect(logger.warn.mock.calls[0][0]).toBe(
-    'Connection "plugin" (Plugin) holds a URI to the database of walled connection "walled". Unwalled connections must not reach walled data: give the plugin a mongoConnectionId and use the walled MongoDB client (@lowdefy/connection-mongodb/walled). This becomes a build error in the next release.'
+  const context = createTestContext();
+  await resolveTenantPreflight(context);
+  const refusal = getConnectionConfig(context, { connectionId: 'plugin' });
+  await expect(refusal).rejects.toThrow(ConfigError);
+  await expect(refusal).rejects.toThrow(pluginReachMessage);
+  await expect(refusal).rejects.toMatchObject({ configKey: 'k-plugin' });
+  await expect(getConnectionConfig(context, { connectionId: 'mail' })).resolves.toMatchObject({
+    connectionId: 'mail',
+  });
+  await expect(getConnectionConfig(context, { connectionId: 'walled' })).resolves.toMatchObject({
+    connectionId: 'walled',
+  });
+});
+
+test('refuses the reaching connection on every request, not only the first', async () => {
+  withUnwalled(pluginReach);
+  const context = createTestContext();
+  await expect(getConnectionConfig(context, { connectionId: 'plugin' })).rejects.toThrow(
+    pluginReachMessage
+  );
+  await expect(getConnectionConfig(context, { connectionId: 'plugin' })).rejects.toThrow(
+    pluginReachMessage
+  );
+  expect(logger.error).toHaveBeenCalledTimes(1);
+});
+
+test('refuses the reaching connection when the preflight has not run or its probe failed', async () => {
+  withUnwalled(pluginReach);
+  mockProbe.mockRejectedValue(new Error('connect ECONNREFUSED'));
+  const context = createTestContext();
+  const refusal = getConnectionConfig(context, { connectionId: 'plugin' });
+  await expect(refusal).rejects.toThrow(pluginReachMessage);
+  await resolveTenantPreflight(context);
+  await expect(getConnectionConfig(context, { connectionId: 'plugin' })).rejects.toThrow(
+    pluginReachMessage
   );
 });
 
-test('does not warn for SMTP, a different database, or a different host', async () => {
+test('does not refuse SMTP, a different database, or a different host', async () => {
   withUnwalled({
     mail: {
       connectionId: 'mail',
@@ -359,6 +420,22 @@ test('does not warn for SMTP, a different database, or a different host', async 
       properties: { uri: 'mongodb://user:pw@host-z:27017/app' },
     },
   });
-  await resolveTenantPreflight(createTestContext());
+  const context = createTestContext();
+  await resolveTenantPreflight(context);
+  expect(logger.error).not.toHaveBeenCalled();
   expect(logger.warn).not.toHaveBeenCalled();
+  for (const connectionId of ['mail', 'other_db', 'other_host']) {
+    await expect(getConnectionConfig(context, { connectionId })).resolves.toMatchObject({
+      connectionId,
+    });
+  }
+});
+
+test('does not check unwalled reach under the pinned policy', async () => {
+  withUnwalled(pluginReach);
+  const context = createTestContext({ organization: { policy: 'pinned' } });
+  await expect(getConnectionConfig(context, { connectionId: 'plugin' })).resolves.toMatchObject({
+    connectionId: 'plugin',
+  });
+  expect(mockReadConfigFile).not.toHaveBeenCalledWith('unwalledConnections.json');
 });
