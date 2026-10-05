@@ -61,10 +61,11 @@ async function fromRef({ against, cwd }) {
 // this checkout, uncommitted changes included (dirty). The base is the merge
 // base with the PR's base branch (--pr) or with a ref (--against), and the
 // context is the text a policy reads about the change: the PR's title and
-// body, or the commit messages since the base.
+// body, or the commit messages since the base. With neither (a charter run)
+// there is no base and no context: the run builds the head alone.
 async function resolveRevisions({ pr, against, cwd }) {
-  if (type.isNone(pr) === type.isNone(against)) {
-    throw new Error('Pass one of --pr <number> or --against <ref>.');
+  if (!type.isNone(pr) && !type.isNone(against)) {
+    throw new Error('Pass one of --pr <number> or --against <ref>, not both.');
   }
   // gh pr view also takes a branch, a URL or its own flags; only a number is a PR here.
   if (!type.isNone(pr) && !/^[1-9][0-9]*$/.test(String(pr))) {
@@ -73,6 +74,9 @@ async function resolveRevisions({ pr, against, cwd }) {
   const root = await runGit({ args: ['rev-parse', '--show-toplevel'], cwd });
   const head = await runGit({ args: ['rev-parse', 'HEAD'], cwd });
   const status = await runGit({ args: ['status', '--porcelain'], cwd: root });
+  if (type.isNone(pr) && type.isNone(against)) {
+    return { root, head, dirty: status !== '', base: null, pr: null, context: null };
+  }
   const resolved = type.isNone(pr)
     ? await fromRef({ against, cwd })
     : await fromPullRequest({ number: Number(pr), cwd, head });

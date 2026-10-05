@@ -24,6 +24,15 @@ const RELEVANCE_QUESTION = {
   score: 'How closely did the last step exercise what this change added or changed?',
   levels: ['unrelated to the change', 'near the change', 'exercises the change'],
 };
+// Under a charter (state.charter) the model serves the charter instead.
+// A charter can only steer through the options the walk generates, so the
+// question names the two stances those options can express.
+const CHARTER_NEXT_QUESTION =
+  'Which interaction best serves the charter in the state, and has not been tried from this screen? For edge input, prefer the generated edge fill values (empty, long, invalid and the like); for error paths, prefer cancel, delete and submitting incomplete forms.';
+const CHARTER_RELEVANCE_QUESTION = {
+  score: 'How closely did the last step serve the charter?',
+  levels: ['unrelated to the charter', 'near the charter', 'serves the charter'],
+};
 const MAX_FAILED_CALLS = 3;
 const REFUSED_MODEL_ERRORS = ['GatewayModelNotFoundError', 'GatewayForbiddenError'];
 
@@ -47,8 +56,10 @@ function isOverLimit(error) {
 
 // The model-guided policy: one decide() call per step, choosing the next
 // option, and on every step but a walk's first scoring how closely the last
-// step exercised the change. The model only chooses among generated options;
-// it never writes a value or decides a finding. One option is taken without
+// step exercised the change, or, with a charter, served the charter. The
+// model only chooses among generated options; it never writes a value or
+// decides a finding, so a charter changes which option is taken and never
+// what counts as a finding. One option is taken without
 // asking; none ends the walk (optionId null). An answer outside the options,
 // or a call that failed after the backend's retries, falls back to the seeded
 // choice and says so; three failed calls in a row throw the Gateway's error.
@@ -64,6 +75,7 @@ function isOverLimit(error) {
 // them. The base URL is the Gateway's default: AI_GATEWAY_BASE_URL is never
 // read.
 async function createModelPolicy({
+  charter = null,
   backend,
   modelId,
   fallbackModelId,
@@ -75,6 +87,8 @@ async function createModelPolicy({
     import('@lowdefy/ai-utils'),
     import('@ai-sdk/gateway'),
   ]);
+  const nextQuestion = type.isNone(charter) ? NEXT_QUESTION : CHARTER_NEXT_QUESTION;
+  const relevanceQuestion = type.isNone(charter) ? RELEVANCE_QUESTION : CHARTER_RELEVANCE_QUESTION;
   const gateway = createGateway({ apiKey });
   let current = {
     backend,
@@ -116,8 +130,8 @@ async function createModelPolicy({
     const optionIds = Object.keys(options);
     if (optionIds.length === 0) return { optionId: null, asked: false };
     if (optionIds.length === 1) return { optionId: optionIds[0], asked: false };
-    const questions = { next: { choice: NEXT_QUESTION, options } };
-    if (!firstStep) questions.relevance = RELEVANCE_QUESTION;
+    const questions = { next: { choice: nextQuestion, options } };
+    if (!firstStep) questions.relevance = relevanceQuestion;
     let result;
     let fellBack;
     try {
@@ -162,7 +176,7 @@ async function createModelPolicy({
     backend,
     modelId,
     fallbackModelId: fallback?.modelId ?? null,
-    lowestRelevance: RELEVANCE_QUESTION.levels[0],
+    lowestRelevance: relevanceQuestion.levels[0],
     switched: () => switched,
     choose,
   };

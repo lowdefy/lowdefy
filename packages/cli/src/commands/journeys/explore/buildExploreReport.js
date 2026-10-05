@@ -35,14 +35,16 @@ function groupByReason(findings) {
   return groups;
 }
 
-// report.json: what the run compared, what it walked and what that cost, the
-// targets it did not walk and why, its findings (proven ones first, then the
-// not-proven ones grouped by reason), how long the proofs took, the candidates
-// it kept, and its trace file. findings comes from applyProof, in report
-// order. readExploreRuns reads run, pr, base, head and finishedAt from it.
+// report.json: what the run compared, the charter that steered it (null
+// without one), what it walked and what that cost, the targets it did not walk
+// and why, its findings (proven ones first, then the not-proven ones grouped
+// by reason), how long the proofs took, the candidates it kept, and its trace
+// file. findings comes from applyProof, in report order. readExploreRuns
+// reads run, pr, base, head and finishedAt from it.
 function buildExploreReport({
   run,
   revisions,
+  charter = null,
   scope,
   walked,
   findings,
@@ -62,6 +64,7 @@ function buildExploreReport({
     base: revisions.base,
     head: revisions.head,
     dirty: revisions.dirty,
+    charter,
     startedAt,
     finishedAt,
     policy: {

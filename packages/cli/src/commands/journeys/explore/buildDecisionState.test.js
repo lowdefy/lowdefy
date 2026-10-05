@@ -42,9 +42,12 @@ function decisionState({
   blockDiff = [],
   knownText = everything,
   shape,
+  context = { title: 'Tickets page', body: 'Adds assigning.' },
+  charter,
 }) {
   return buildDecisionState({
-    context: { title: 'Tickets page', body: 'Adds assigning.' },
+    context,
+    charter,
     pageId: 'tickets',
     role: 'member',
     url: '/tickets?id=t-1&tab=open',
@@ -100,6 +103,40 @@ test('buildDecisionState sends the page, path with query keys only, the block di
   expect(optionToStep.o0.step).toEqual({ click: { blockId: 'assign', text: 'Assign' } });
   expect(optionToStep.o1.step).toEqual({ select: { blockId: 'assignee', value: 'Grace Hopper' } });
   expect(truncated).toEqual(0);
+});
+
+test('buildDecisionState adds the charter beside the PR text, never in place of it', () => {
+  const progress = createWalkProgress();
+  progress.startWalk();
+  const { state } = decisionState({
+    progress,
+    candidates: [click('save', 'Save')],
+    charter: { goal: 'Try edge input on the invoice form.' },
+  });
+  expect(state.change).toEqual({ title: 'Tickets page', body: 'Adds assigning.' });
+  expect(state.charter).toEqual({ goal: 'Try edge input on the invoice form.' });
+});
+
+test('buildDecisionState sends no change for a head-only charter run, and no charter without one', () => {
+  const progress = createWalkProgress();
+  progress.startWalk();
+  const headOnly = decisionState({
+    progress,
+    candidates: [click('save', 'Save')],
+    context: null,
+    charter: { goal: 'Try error paths.' },
+  });
+  expect(headOnly.state.change).toBeUndefined();
+  expect(headOnly.state.charter).toEqual({ goal: 'Try error paths.' });
+  const plain = decisionState({ progress, candidates: [click('save', 'Save')] });
+  expect(plain.state.charter).toBeUndefined();
+  expect(Object.keys(plain.state)).toEqual([
+    'change',
+    'page',
+    'blockDiff',
+    'visibleBlocks',
+    'lastSteps',
+  ]);
 });
 
 test('an action taken from a shape is not offered from it again in the walk, but is from another shape', () => {

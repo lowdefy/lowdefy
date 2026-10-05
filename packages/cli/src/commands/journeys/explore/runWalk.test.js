@@ -80,6 +80,8 @@ function walk({
   steps = 3,
   shouldStop = () => null,
   scopePage,
+  decisionContext = { title: 'Add ticket assignment', body: '' },
+  charter,
 }) {
   return runWalk({
     client,
@@ -91,7 +93,8 @@ function walk({
     options: { steps, data: 'staging', liveData: false, allowExternal: [] },
     policy,
     progress: createWalkProgress(),
-    decisionContext: { title: 'Add ticket assignment', body: '' },
+    decisionContext,
+    charter,
     knownTextFor: () => knownText,
     fixtures: {},
     shouldStop,
@@ -126,6 +129,32 @@ test('a walk stops at its step limit and closes', async () => {
       durations: expect.objectContaining({ actMs: 40 }),
     })
   );
+});
+
+test('a charter walk sends the charter in the policy state, with no change on a head-only run', async () => {
+  const states = [];
+  const policy = {
+    name: 'model',
+    modelId: 'test/model',
+    lowestRelevance: 'unrelated to the charter',
+    choose: async ({ state, options }) => {
+      states.push(state);
+      return { asked: true, optionId: Object.keys(options)[0], relevance: 'serves the charter' };
+    },
+  };
+  const log = await walk({
+    client: createClient(),
+    policy,
+    steps: 2,
+    decisionContext: null,
+    charter: { goal: 'Try error paths on the ticket form.' },
+  });
+  expect(log.stopReason).toBe('steps');
+  expect(states).toHaveLength(2);
+  states.forEach((state) => {
+    expect(state.charter).toEqual({ goal: 'Try error paths on the ticket form.' });
+    expect(state.change).toBeUndefined();
+  });
 });
 
 test('a walk is exhausted when no candidate is left after the within-walk rule', async () => {

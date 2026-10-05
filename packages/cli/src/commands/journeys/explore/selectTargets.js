@@ -65,13 +65,44 @@ function authChanged({ baseBuild, headBuild, pageId }) {
   return JSON.stringify(baseAuth) !== JSON.stringify(headAuth);
 }
 
+function checkManualPages({ manualPages, headBuild }) {
+  manualPages.forEach((pageId) => {
+    if (!(pageId in headBuild.pages)) {
+      throw new Error(`--page "${pageId}" is not a page in the head build.`);
+    }
+  });
+}
+
+// A head-only run (a charter with no PR) has no diff: its targets are the
+// --page pages, else the entry pages. Every block on a target page is in
+// scope, so no block is listed as changed and no option is ranked by it.
+function selectHeadOnlyTargets({ headBuild, coverage, manualPages }) {
+  checkManualPages({ manualPages, headBuild });
+  const pageIds =
+    manualPages.length > 0 ? [...new Set(manualPages)] : entryPages({ coverage, headBuild });
+  const reason = manualPages.length > 0 ? 'manual' : 'entry';
+  return {
+    pages: pageIds.sort().map((pageId) => ({
+      pageId,
+      reasons: [reason],
+      authChanged: false,
+      blocks: [],
+    })),
+    appWide: [],
+    uncompared: [],
+    removedPages: [],
+    warnings: [],
+  };
+}
+
 // The head pages a PR changed, each with why: its own artifact (page), one of
 // its requests (request:<id>), an endpoint it calls (endpoint:<id>), a
 // connection its requests or endpoints use (connection:<id>), a websocket it
 // subscribes to (websocket:<id>), an app-wide artifact (app-wide: the entry
 // pages), or --page (manual). With no base build every head page is a target
 // (base-not-built) and the base error is a warning. Removed pages are
-// reported, not targeted.
+// reported, not targeted. A head-only run (headOnly) has no base at all and
+// takes the --page pages, else the entry pages (entry).
 function selectTargets({
   diff,
   baseBuild,
@@ -79,7 +110,9 @@ function selectTargets({
   coverage = null,
   manualPages = [],
   baseError,
+  headOnly = false,
 }) {
+  if (headOnly) return selectHeadOnlyTargets({ headBuild, coverage, manualPages });
   const reasonsByPage = new Map();
   function addReasons(pageId, reasons) {
     if (reasons.length === 0) return;
@@ -99,12 +132,8 @@ function selectTargets({
       entryPages({ coverage, headBuild }).forEach((pageId) => addReasons(pageId, ['app-wide']));
     }
   }
-  manualPages.forEach((pageId) => {
-    if (!(pageId in headBuild.pages)) {
-      throw new Error(`--page "${pageId}" is not a page in the head build.`);
-    }
-    addReasons(pageId, ['manual']);
-  });
+  checkManualPages({ manualPages, headBuild });
+  manualPages.forEach((pageId) => addReasons(pageId, ['manual']));
 
   const pages = [...reasonsByPage.keys()].sort().map((pageId) => ({
     pageId,

@@ -18,19 +18,27 @@ function shortSha(sha) {
   return sha.slice(0, 7);
 }
 
-// The scope as the run prints it: the revisions compared and how long the
-// builds took, then the target pages with why, the app-wide artifacts that
-// changed, the plugins the base was built without or at another version, and
-// the removed pages.
-function formatScopeLines({ scope, cached }) {
-  const lines = [];
+// The revisions compared, or, on a head-only run (a charter with no PR), the
+// head alone.
+function revisionLine({ scope, cached }) {
   const pr = scope.pr === null ? '' : `PR #${scope.pr.number}  `;
+  const head = `head ${shortSha(scope.head)} (${
+    scope.dirty ? 'uncommitted changes included' : 'clean'
+  })`;
   const buildSeconds = Math.round(((scope.buildMs.base ?? 0) + (scope.buildMs.head ?? 0)) / 1000);
-  lines.push(
-    `${pr}base ${shortSha(scope.base)}  head ${shortSha(scope.head)} (${
-      scope.dirty ? 'uncommitted changes included' : 'clean'
-    })   builds ${buildSeconds}s${cached?.base ? ' (base cached)' : ''}`
-  );
+  if (scope.base === null) {
+    return `${pr}${head}, no diff   build ${buildSeconds}s${cached?.head ? ' (cached)' : ''}`;
+  }
+  return `${pr}base ${shortSha(scope.base)}  ${head}   builds ${buildSeconds}s${
+    cached?.base ? ' (base cached)' : ''
+  }`;
+}
+
+// The scope as the run prints it: the revision line, then the target pages
+// with why, the app-wide artifacts that changed, the plugins the base was
+// built without or at another version, and the removed pages.
+function formatScopeLines({ scope, cached }) {
+  const lines = [revisionLine({ scope, cached })];
   const pages = scope.pages.map((page) => `${page.pageId} (${page.reasons.join(', ')})`);
   lines.push(`Scope     ${scope.pages.length} pages: ${pages.join(', ') || 'none'}`);
   if (scope.appWide.length > 0) {

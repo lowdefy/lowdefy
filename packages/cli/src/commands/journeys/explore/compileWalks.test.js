@@ -413,3 +413,25 @@ test('on a snapshot data set, an expectation holding a snapshot value is dropped
     expect(fs.readFileSync(file, 'utf8')).not.toContain('Staging Customer Ltd');
   });
 });
+
+test('a head-only run (no base) keeps every coverage candidate, since every block is in scope', () => {
+  mockReadRecordings.mockReturnValue([
+    record({ walk: 'walk-1', t: at(1), step: { click: 'assign_submit' } }),
+    record({ walk: 'walk-2', t: at(2), step: { click: 'help' } }),
+    record({ walk: 'walk-3', t: at(3), step: { click: 'old' } }),
+  ]);
+  const result = compile({
+    pr: null,
+    scope: { base: null, pages: [{ pageId: 'ticket', blocks: [] }] },
+    logs: [
+      walkLog({ walk: 'walk-1', findings: [errorFinding] }),
+      walkLog({ walk: 'walk-2' }),
+      walkLog({ walk: 'walk-3' }),
+    ],
+  });
+  expect(result.finding.map((entry) => entry.key)).toEqual([errorFinding.key]);
+  expect(result.coverage).toEqual([
+    path.join(runDirectory(), 'ticket-session-walk-2-0-1.yaml'),
+    path.join(runDirectory(), 'ticket-session-walk-3-0-1.yaml'),
+  ]);
+});
