@@ -120,7 +120,59 @@ test('readConfigText reuses the cached set when the config has not changed', asy
         path.join(context.directories.config, '.lowdefy', 'journeys', 'config-text', entry)
       )
       .sort()
-  ).toEqual(['configText.json', 'result.json']);
+  ).toEqual(['configText.json']);
+});
+
+test('readConfigText started twice together with an empty cache returns one set and leaves no scratch', async () => {
+  const [first, second] = await Promise.all([
+    readConfigText({ context }),
+    readConfigText({ context }),
+  ]);
+  expect([...first.texts]).toEqual(['Assign', 'Delete']);
+  expect([...second.texts]).toEqual(['Assign', 'Delete']);
+  const entries = cacheEntries();
+  expect(entries).toHaveLength(1);
+  expect(entries[0]).toMatch(/^[0-9a-f]{16}$/);
+  expect(
+    fs.readdirSync(
+      path.join(context.directories.config, '.lowdefy', 'journeys', 'config-text', entries[0])
+    )
+  ).toEqual(['configText.json']);
+});
+
+test('readConfigText never deletes a set another read wrote when its own build fails', async () => {
+  await readConfigText({ context });
+  const [written] = cacheEntries();
+  fs.writeFileSync(path.join(context.directories.config, 'lowdefy.yaml'), 'BROKEN\n');
+  await expect(readConfigText({ context })).rejects.toThrow('does not build');
+  expect(cacheEntries()).toEqual([written]);
+});
+
+test('readConfigText removes a scratch directory a stopped build left, and not one still building', async () => {
+  const cacheDirectory = path.join(
+    context.directories.config,
+    '.lowdefy',
+    'journeys',
+    'config-text'
+  );
+  const stopped = path.join(cacheDirectory, '0123456789abcdef.111-aaaaaaaa');
+  const building = path.join(cacheDirectory, '0123456789abcdef.222-bbbbbbbb');
+  fs.mkdirSync(stopped, { recursive: true });
+  fs.mkdirSync(building, { recursive: true });
+  const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
+  fs.utimesSync(stopped, twoHoursAgo, twoHoursAgo);
+  await readConfigText({ context });
+  const entries = cacheEntries();
+  expect(entries).not.toContain('0123456789abcdef.111-aaaaaaaa');
+  expect(entries).toContain('0123456789abcdef.222-bbbbbbbb');
+  expect(entries).toHaveLength(2);
+});
+
+test('readConfigText rebuilds when the ref resolver changes', async () => {
+  await readConfigText({ context });
+  context.options.refResolver = 'resolvers/refs.js';
+  await readConfigText({ context });
+  expect(calls()).toHaveLength(2);
 });
 
 test('readConfigText rebuilds when a page changes and keeps only the newest set', async () => {

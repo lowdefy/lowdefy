@@ -48,11 +48,16 @@ function hashDirectory({ hash, root, directory }) {
     });
 }
 
-// A hash of the app's config files' paths and contents and the builder
-// version: the key of a cached config text set.
-function hashConfigTree({ configDirectory, builderVersion }) {
+// A hash of the app's config files' paths and contents, the builder version
+// and the --ref-resolver option: the key of a cached config text set. Inputs
+// to the build that live elsewhere are accepted as gaps in the key: `_build.env`
+// values set in the shell rather than in the app's .env, and `_ref` files
+// outside the config directory. Changing one of those without a config file
+// change reuses the old set until .lowdefy/journeys/config-text/ is removed.
+function hashConfigTree({ configDirectory, builderVersion, refResolver }) {
   const hash = crypto.createHash('sha256');
   hash.update(`builder:${builderVersion}\0`);
+  hash.update(`ref-resolver:${refResolver ?? ''}\0`);
   hashDirectory({ hash, root: configDirectory, directory: configDirectory });
   return hash.digest('hex').slice(0, 16);
 }
