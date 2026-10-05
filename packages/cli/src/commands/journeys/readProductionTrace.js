@@ -86,7 +86,7 @@ function describeOtherSalt({ otherSalt, traceSalt }) {
 async function readProductionTrace({ context, since, from, to, now = Date.now(), maxDays }) {
   const { directories, logger } = context;
   const window = parseTraceWindow({ since, from, to, now, maxDays });
-  removeUntokenisedTraces({ directories, logger });
+  removeUntokenisedTraces({ directories, logger, now });
 
   const directory = path.join(directories.traces, 'production');
   const traceSalt = readTraceSalt({ directories });

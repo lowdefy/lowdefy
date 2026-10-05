@@ -32,17 +32,52 @@ function listOldRuleDays({ directory }) {
     .sort();
 }
 
+// A pull stopped mid-write leaves `.tmp` files, or a day's records renamed
+// without its manifest; neither is in the cache, and one written by a pull
+// before clicked text was stored as tokens can hold production text. A file
+// this young may be a pull writing now, which renames it within moments.
+const LEFTOVER_MIN_AGE_MS = 10 * 60 * 1000;
+const RECORDS_FILE = /^\d{4}-\d{2}-\d{2}\.jsonl$/;
+
+function isLeftover({ name, names }) {
+  if (name.endsWith('.tmp')) return true;
+  if (!RECORDS_FILE.test(name)) return false;
+  return !names.has(`${name.slice(0, -'.jsonl'.length)}${MANIFEST_SUFFIX}`);
+}
+
+function removeLeftovers({ directory, now }) {
+  if (!fs.existsSync(directory)) return [];
+  const names = new Set(fs.readdirSync(directory));
+  const leftovers = [...names]
+    .filter((name) => isLeftover({ name, names }))
+    .filter((name) => {
+      const stats = fs.statSync(path.join(directory, name), { throwIfNoEntry: false });
+      return stats !== undefined && now - stats.mtimeMs >= LEFTOVER_MIN_AGE_MS;
+    })
+    .sort();
+  leftovers.forEach((name) => fs.rmSync(path.join(directory, name), { force: true }));
+  return leftovers;
+}
+
 // Day files pulled before clicked text was stored as tokens can hold
 // production text, and so can the production candidates and coverage.json
 // compiled from them. When any day manifest lacks `text_rule: 'token'`, those
 // days, tests/journeys/_candidates/production/ and .lowdefy/test/coverage.json
-// are deleted; the next pull, compile and coverage write them again. The
-// salt, committed journeys and dev and explorer recordings are left alone.
-// Runs at the start of every pull and before every production read.
-function removeUntokenisedTraces({ directories, logger }) {
+// are deleted; the next pull, compile and coverage write them again. Files a
+// stopped pull left outside the cache (`.tmp` files, records without a
+// manifest) are deleted too, on their own. The salt, committed journeys and
+// dev and explorer recordings are left alone. Runs at the start of every pull
+// and before every production read.
+function removeUntokenisedTraces({ directories, logger, now = Date.now() }) {
   const directory = path.join(directories.traces, 'production');
+  const leftovers = removeLeftovers({ directory, now });
+  if (leftovers.length > 0) {
+    logger.warn(
+      `Removed ${leftovers.length} production trace files a stopped pull left unfinished.`
+    );
+  }
   const days = listOldRuleDays({ directory });
-  if (days.length === 0) return { days: [] };
+  if (days.length === 0) return { days: [], leftovers };
   days.forEach((day) => {
     fs.rmSync(path.join(directory, `${day}.jsonl`), { force: true });
     fs.rmSync(path.join(directory, `${day}${MANIFEST_SUFFIX}`), { force: true });
@@ -67,7 +102,7 @@ function removeUntokenisedTraces({ directories, logger }) {
       ', '
     )}, written before clicked text was stored as tokens. Pull the days again with lowdefy journeys pull posthog.`
   );
-  return { days };
+  return { days, leftovers };
 }
 
 export default removeUntokenisedTraces;

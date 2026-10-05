@@ -136,7 +136,7 @@ async function journeysPullPosthog({ context, params }) {
   });
   const credentials = readPostHogCredentials({ env: process.env });
 
-  removeUntokenisedTraces({ directories, logger });
+  removeUntokenisedTraces({ directories, logger, now });
   const pruned = pruneDayFiles({ directories, now });
   if (pruned.length > 0) {
     logger.info(`Pruned ${pruned.length} production trace files older than 400 days.`);
