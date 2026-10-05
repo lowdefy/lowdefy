@@ -25,6 +25,7 @@ import { getStepKey } from '@lowdefy/node-utils';
 
 import createLeftOriginError from './createLeftOriginError.js';
 import { buildPageUrl } from './getBrowser.js';
+import hasNoEffect from './observe/hasNoEffect.js';
 import isPageReady from './isPageReady.js';
 import JourneyStepError from './JourneyStepError.js';
 import openJourneyEmail from './openJourneyEmail.js';
@@ -758,6 +759,30 @@ async function expectUrl({ page, params, timeout }) {
   }
 }
 
+// Fails when the interaction just before it did nothing, the explorer's
+// dead-click invariant inverted (see observe/hasNoEffect). It reads that
+// interaction's window, which the runner closed once the page settled, so it
+// does not wait. Only a run that watches its steps' windows (a journey run,
+// not a screenshot's steps) has one to read.
+function expectEffect({ journey }) {
+  const window = journey.appErrors?.previousWindow();
+  if (type.isNone(window)) {
+    throw new JourneyStepError(
+      'expect.effect can only be checked in a journey run, which watches what each step does.',
+      { expected: 'the previous step to have an effect', actual: null }
+    );
+  }
+  if (hasNoEffect({ window })) {
+    throw new JourneyStepError(
+      'Expected the previous step to have an effect, but it ran no event, changed nothing on the page, sent no app request and left the URL unchanged.',
+      {
+        expected: 'the previous step to have an effect',
+        actual: 'no event, no DOM change, no app request, URL unchanged',
+      }
+    );
+  }
+}
+
 async function runExpect({ journey, page, step, timeout }) {
   const expectation = step.expect;
   const key = getStepKey(expectation);
@@ -786,6 +811,9 @@ async function runExpect({ journey, page, step, timeout }) {
       return;
     case 'error':
       // Claimed when the step's window closes (see observe/claimExpectedErrors).
+      return;
+    case 'effect':
+      expectEffect({ journey });
       return;
     default:
       return;

@@ -107,8 +107,11 @@ Blocks are addressed by their `blockId`. A step that does not complete within th
 | `expect: { url: { contains } }`           | The browser URL contains the string.                                                                                                                              |
 | `expect: { title: { equals } }`           | The document title (the browser tab's text) is exactly the string; `{ contains }` checks part of it.                                                              |
 | `expect: { error: text }`                 | The interaction just before it raised an [app error](#app-errors) whose message contains `text`. Must directly follow a click, open, fill, select, press or back. |
+| `expect: { effect: true }`                | The interaction just before it did something. Must directly follow a click, open, fill, select, press or back.                                                    |
 
 `expect.calls` takes `{ request: requestId, pageId, count }`: request ids are scoped to a page, and two pages often share one such as `save`, so `pageId` names the page; it defaults to the page the person is on when the step runs. It compares once, without waiting for the count to change, because "not called" can only be judged after the moment has passed.
+
+`expect.effect` fails when the interaction before it ran no event, changed nothing on the page, called no request or endpoint and left the URL as it was. It reads what the runner saw during that interaction, so it does not wait. The journey explorer writes it after a click that did nothing, so the journey fails until the control does something.
 
 ### App errors
 

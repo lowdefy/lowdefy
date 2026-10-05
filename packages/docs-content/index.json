@@ -3892,7 +3892,7 @@
         "testing/config-tests.yaml",
         "version.yaml"
       ],
-      "hash": "0055f8f6451a0bd8373a1183ff6a780291a44d6550ceecae2c5851a785f1262a"
+      "hash": "c870347a4832fd0c5c920ee4162b715993b2491f825f9ee886fafe7d93e4f5a1"
     },
     "testing/journey-data-sets": {
       "files": [

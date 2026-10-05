@@ -470,3 +470,45 @@ test('validateJourneySteps rejects an expect.error that does not follow an inter
     'Step 0: Step "expect.error" must directly follow an interaction step (click, open, fill, select, press, back), whose app errors it claims. Received it after the start of the journey.'
   );
 });
+
+test('validateJourneySteps accepts expect.effect straight after an interaction step', () => {
+  expect(
+    validateJourneySteps({
+      steps: [{ click: 'save' }, { expect: { effect: true } }],
+    })
+  ).toEqual({});
+  expect(
+    validateJourneySteps({
+      steps: [{ fill: { blockId: 'name', value: 'x' } }, { expect: { effect: true } }],
+    })
+  ).toEqual({});
+});
+
+test.each([
+  [{ effect: false }, 'Received false.'],
+  [{ effect: 'yes' }, 'Received "yes".'],
+  [{ effect: { blockId: 'save' } }, 'Received {"blockId":"save"}.'],
+])('validateJourneySteps rejects expect %j', (expectation, message) => {
+  const result = validateJourneySteps({ steps: [{ click: 'save' }, { expect: expectation }] });
+  expect(result.error).toBe(
+    `Step 1: Step "expect.effect" takes only true: write { "expect": { "effect": true } }. ${message}`
+  );
+});
+
+test('validateJourneySteps rejects an expect.effect that does not follow an interaction step', () => {
+  expect(validateJourneySteps({ steps: [{ expect: { effect: true } }] }).error).toEqual(
+    'Step 0: Step "expect.effect" must directly follow an interaction step (click, open, fill, select, press, back), whose effect it checks. Received it after the start of the journey.'
+  );
+  expect(
+    validateJourneySteps({
+      steps: [{ click: 'save' }, { expect: { visible: 'saved' } }, { expect: { effect: true } }],
+    }).error
+  ).toEqual(
+    'Step 2: Step "expect.effect" must directly follow an interaction step (click, open, fill, select, press, back), whose effect it checks. Received it after a "expect" step.'
+  );
+  expect(
+    validateJourneySteps({
+      steps: [{ click: 'save' }, { screenshot: true }, { expect: { effect: true } }],
+    }).error
+  ).toContain('Received it after a "screenshot" step.');
+});

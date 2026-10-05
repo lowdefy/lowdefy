@@ -18,6 +18,7 @@ import { expectedErrorNames } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import findingKey from './findingKey.js';
+import hasNoEffect from '../observe/hasNoEffect.js';
 import parseAppApiUrl from './parseAppApiUrl.js';
 import relativeSource from './relativeSource.js';
 
@@ -49,14 +50,7 @@ function isExplained({ response, serverEntries, basePath }) {
 }
 
 function isDeadClick({ step, result, window }) {
-  return (
-    !type.isUndefined(step.click) &&
-    result.status === 'ok' &&
-    window.mutationCount === 0 &&
-    window.emits.length === 0 &&
-    window.requests.length === 0 &&
-    window.urlBefore === window.urlAfter
-  );
+  return !type.isUndefined(step.click) && result.status === 'ok' && hasNoEffect({ window });
 }
 
 // The fixed checks that decide whether a walk step broke something, over what
