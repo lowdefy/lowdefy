@@ -36,6 +36,7 @@ function segment({
   return {
     session,
     page_id: page,
+    steps: steps.map((blockId) => ({ click: blockId })),
     sequence: steps.map((blockId) => ({ page, identity: identity('click', blockId) })),
     persons,
     orgs,
@@ -363,4 +364,53 @@ test('computeEvidence writes dev.recordings 0 when dev recordings exist but none
     dev: { segments: [segment({ session: 'd1', steps: ['close'] })] },
   });
   expect(result.after.dev).toEqual({ recordings: 0 });
+});
+
+test('computeEvidence reads dev text by the config text rule on both sides', () => {
+  const isConfigText = (text) => text === 'Assign';
+  const devSegment = {
+    session: 'd1',
+    page_id: 'tickets',
+    steps: [{ click: { blockId: 'grid', text: 'Sample customer' } }],
+    sequence: [
+      { page: 'tickets', identity: JSON.stringify(['click', 'grid', null, 'Sample customer']) },
+    ],
+    persons: [],
+    orgs: [],
+  };
+  const entry = {
+    name: 'opens a customer',
+    pageId: 'tickets',
+    steps: [{ click: { blockId: 'grid', text: 'Sample customer' } }],
+  };
+  const [result] = computeEvidence({
+    journeys: [{ filePath: '/app/t.yaml', file: 't.yaml', journeyIndex: 0, journey: entry }],
+    sources: { dev: { segments: [devSegment] } },
+    today,
+    isConfigText,
+  });
+  expect(result.after.dev).toEqual({ recordings: 1 });
+});
+
+test('computeEvidence reads journey click text by the config text rule in the sequence id, flow and counts', () => {
+  const isConfigText = (text) => text === 'Save';
+  const guessed = {
+    name: 'saves a ticket',
+    pageId: 'tickets',
+    steps: [{ click: 'edit' }, { click: { blockId: 'save', text: 'Sample value' } }],
+  };
+  const [result] = computeEvidence({
+    journeys: [{ filePath: '/app/t.yaml', file: 't.yaml', journeyIndex: 0, journey: guessed }],
+    sources: { production: production() },
+    today,
+    isConfigText,
+  });
+  expect(result.after.production.sequence).toBe(live.sequence);
+  expect(result.after.production.flow).toEqual(live.flow);
+  expect(result.after.production.months).toEqual(compute(journey).after.production.months);
+  const labelled = {
+    ...guessed,
+    steps: [{ click: 'edit' }, { click: { blockId: 'save', text: 'Save' } }],
+  };
+  expect(sequenceId({ ...labelled, isConfigText })).not.toBe(live.sequence);
 });

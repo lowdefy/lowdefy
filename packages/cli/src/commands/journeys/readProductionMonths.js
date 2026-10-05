@@ -18,6 +18,8 @@ import fs from 'fs';
 import path from 'path';
 import { parseTraceLines } from '@lowdefy/node-utils';
 
+import resolveRecordText from './resolveRecordText.js';
+
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 function shiftDay({ day, by }) {
@@ -29,11 +31,15 @@ function shiftDay({ day, by }) {
 // it has (unlike readProductionTrace, which refuses a gap in its window). The
 // final day just outside a month is read too, so a session that crosses
 // midnight at a month boundary compiles whole; the caller buckets segments by
-// the month they started in and drops the ones that started outside.
+// the month they started in and drops the ones that started outside. Every
+// clicked-text token is resolved as readProductionTrace resolves it, so the
+// records hold config text and tokens only.
 //
 // - finalDays: listFinalDays's result.
 // - months: the `YYYY-MM` months to read.
-function readProductionMonths({ directories, finalDays, months }) {
+// - resolve: createTokenResolver's resolver for this machine's salt and the
+//   app's config text set.
+function readProductionMonths({ directories, finalDays, months, resolve }) {
   const directory = path.join(directories.traces, 'production');
   const final = new Set(finalDays);
   const days = finalDays.filter((day) => months.includes(day.slice(0, 7)));
@@ -51,7 +57,7 @@ function readProductionMonths({ directories, finalDays, months }) {
     const parsed = parseTraceLines({
       text: fs.readFileSync(path.join(directory, `${day}.jsonl`), 'utf8'),
     });
-    records.push(...parsed.records);
+    records.push(...parsed.records.map((record) => resolveRecordText({ record, resolve })));
     unparsable += parsed.unparsable;
   });
   return { records, unparsable, days };

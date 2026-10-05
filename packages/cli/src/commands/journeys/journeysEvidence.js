@@ -19,6 +19,7 @@ import { compileTrace } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import computeEvidence from './evidence/computeEvidence.js';
+import createTokenResolver from './createTokenResolver.js';
 import formatEvidence from '../test/formatEvidence.js';
 import formatZeroBacked from './evidence/formatZeroBacked.js';
 import listFinalDays from './listFinalDays.js';
@@ -26,7 +27,10 @@ import loadBlockMetas from './loadBlockMetas.js';
 import readCommittedJourneys from './readCommittedJourneys.js';
 import readDevSegments from './readDevSegments.js';
 import readMutationReport from './readMutationReport.js';
+import readConfigText from './configText/readConfigText.js';
 import readProductionMonths from './readProductionMonths.js';
+import readTraceSalt from './pull/readTraceSalt.js';
+import removeUntokenisedTraces from './removeUntokenisedTraces.js';
 import resolveBuildDirectory from './resolveBuildDirectory.js';
 import selectMonthsToRead from './evidence/selectMonthsToRead.js';
 import writeEvidenceNode from './evidence/writeEvidenceNode.js';
@@ -55,22 +59,31 @@ function countDaysByMonth({ days }) {
 
 // The production source of a refresh: how many final days the cache holds of
 // each month, and the segments of the months some journey's counts can still
-// change in, compiled in one pass. Undefined when the cache holds no final
-// day, so the committed production evidence is kept.
-function readProduction({ context, journeys, today }) {
-  const finalDays = listFinalDays({ directories: context.directories });
+// change in, compiled in one pass. Days pulled before clicked text was stored
+// as tokens are removed first, as every production read removes them. Only
+// days hashed under this machine's salt are read, with their tokens resolved
+// to config text. Undefined when the cache holds no such final day, so the
+// committed production evidence is kept.
+function readProduction({ context, journeys, today, now, configText }) {
+  const { directories, logger } = context;
+  removeUntokenisedTraces({ directories, logger, now });
+  const traceSalt = readTraceSalt({ directories });
+  if (type.isNone(traceSalt)) return undefined;
+  const finalDays = listFinalDays({ directories, saltId: traceSalt.saltId });
   if (finalDays.length === 0) return undefined;
   const dayCounts = countDaysByMonth({ days: finalDays });
   const months = selectMonthsToRead({
     journeys: journeys.map((entry) => entry.journey),
     dayCounts,
     today,
+    isConfigText: configText.isConfigText,
   });
   if (months.length === 0) return { dayCounts, months, segments: [], days: [] };
   const { records, days } = readProductionMonths({
-    directories: context.directories,
+    directories,
     finalDays,
     months,
+    resolve: createTokenResolver({ salt: traceSalt.salt, texts: configText.texts }),
   });
   const { segments } = compileTrace({
     records,
@@ -127,7 +140,9 @@ function writeChanged({ changed, logger }) {
 // change; with it, it rewrites only the `evidence` node of the journeys whose
 // numbers moved - the only command that writes that key. It reads every final
 // day of the production cache, not a window, and then lists the journeys
-// nothing backs over the usage window, and removes none of them.
+// nothing backs over the usage window, and removes none of them. A journey's
+// click text counts only when it is config text, in its counts, its sequence
+// id and its flow lines alike.
 async function journeysEvidence({ context }) {
   const { options, logger } = context;
   const source = options.source ?? 'production';
@@ -138,7 +153,8 @@ async function journeysEvidence({ context }) {
   skipped.forEach((line) => logger.warn(`Skipped ${line}`));
   const now = Date.now();
   const today = new Date(now).toISOString().slice(0, 10);
-  const production = readProduction({ context, journeys, today });
+  const configText = await readConfigText({ context });
+  const production = readProduction({ context, journeys, today, now, configText });
   if (type.isUndefined(production)) {
     logger.warn(
       'The production trace cache holds no final day. Run "lowdefy journeys pull posthog" first to count production use.'
@@ -152,6 +168,7 @@ async function journeysEvidence({ context }) {
       mutation: readMutationReport({ directories: context.directories }),
     },
     today,
+    isConfigText: configText.isConfigText,
   });
 
   const changed = results.filter((result) => result.changed);

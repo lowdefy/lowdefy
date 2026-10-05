@@ -16,7 +16,6 @@
 
 import { type } from '@lowdefy/helpers';
 
-import applyTextThreshold from './applyTextThreshold.js';
 import foldInteractions from './foldInteractions.js';
 import normaliseRecords from './normaliseRecords.js';
 import recordTime from './recordTime.js';
@@ -42,9 +41,11 @@ function inWindow({ record, since, until }) {
 }
 
 // Section 3.1, steps 1 to 6: validate and group the records, keep the
-// requested source and time window, cut segments, fold them, and - for
-// production - apply the text threshold over every record left in the window.
-// Returns the folded segments, each an array of records, and what was dropped.
+// requested source and time window, cut segments and fold them. Production
+// text needs no pass of its own: the readers resolve a clicked-text token to
+// text only when it is config text, so a production record arrives holding
+// config text or a token. Returns the folded segments, each an array of
+// records, and what was dropped.
 function prepareSegments({ records, source, filters = {} }) {
   const { sessions, dropped } = normaliseRecords({ records });
   const since = toTime(filters.since);
@@ -62,18 +63,7 @@ function prepareSegments({ records, source, filters = {} }) {
     });
   });
 
-  if (source !== 'production') return { segments, dropped };
-
-  // The threshold counts over the whole window, then each record goes back to
-  // its segment: applyTextThreshold returns the records in the order given.
-  const thresholded = applyTextThreshold({ records: segments.flat() });
-  let offset = 0;
-  const regrouped = segments.map((segment) => {
-    const slice = thresholded.slice(offset, offset + segment.length);
-    offset += segment.length;
-    return slice;
-  });
-  return { segments: regrouped, dropped };
+  return { segments, dropped };
 }
 
 export default prepareSegments;

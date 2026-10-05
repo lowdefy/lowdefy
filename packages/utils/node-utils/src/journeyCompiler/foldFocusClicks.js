@@ -14,13 +14,12 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
+import hasClickedText from './hasClickedText.js';
 import isSameBlock from './isSameBlock.js';
 
 function isUnlabelledClick(record) {
   if (record.kind !== 'click' || record.target?.option === true) return false;
-  return !type.isString(record.target?.text) || record.target.text === '';
+  return !hasClickedText({ target: record.target });
 }
 
 // `fill` focuses the input itself, so the click that focused it before typing

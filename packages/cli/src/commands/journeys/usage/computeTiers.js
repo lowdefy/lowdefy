@@ -32,10 +32,15 @@ function compareRows(a, b) {
 // A journey has no counts for the flow its steps walk now when it was never
 // refreshed (or holds the legacy window shape), or its steps changed what is
 // matched since the last refresh. Comparing ids is static, so it costs a hash.
-function isUnranked({ journey }) {
+// The stored id reads click text by the config text rule; when the id read
+// with every click text equals it, the steps match what they matched at the
+// refresh, so only a journey whose ids differ needs isConfigText to tell an
+// edit from text that is not config text (readTierConfigText reads it then).
+function isUnranked({ journey, isConfigText }) {
   const stored = journey.evidence?.production?.sequence;
   if (type.isUndefined(stored)) return true;
-  return sequenceId({ pageId: journey.pageId, steps: journey.steps }) !== stored;
+  if (sequenceId({ pageId: journey.pageId, steps: journey.steps }) === stored) return false;
+  return sequenceId({ pageId: journey.pageId, steps: journey.steps, isConfigText }) !== stored;
 }
 
 // How many journeys, from the top, tier pX holds: the shortest prefix whose
@@ -85,6 +90,7 @@ function refusal({ ranked, matches, windowMonths }) {
 //
 // - journeys: [{ file, journeyIndex, name, journey }], one per journey.
 // - usageWindow: the `--usage-window` value (`<n>m`, default 3m).
+// - isConfigText: the app's config text rule, from readTierConfigText.
 //
 // Returns { windowMonths, anchor, matches, refused, rows }. A row is
 // { file, journeyIndex, name, tier, rank, rate, sessions, failures, days, unranked,
@@ -93,7 +99,7 @@ function refusal({ ranked, matches, windowMonths }) {
 // rank or rate. A `deprecated: true` journey is in no tier: tier and rank are
 // null, its usage is still shown. `refused` says why tiers other than `full`
 // cannot be cut: fewer than 100 matches, or no evidence at all.
-function computeTiers({ journeys, usageWindow }) {
+function computeTiers({ journeys, usageWindow, isConfigText }) {
   // Deprecated journeys anchor the window too, so one named on its own still
   // shows its recent use.
   const anchor = newestMonth({ journeys: journeys.map(({ journey }) => journey) });
@@ -101,7 +107,7 @@ function computeTiers({ journeys, usageWindow }) {
 
   const rows = journeys.map(({ file, journeyIndex, name, journey }) => {
     const deprecated = journey.deprecated === true;
-    const unranked = !deprecated && isUnranked({ journey });
+    const unranked = !deprecated && isUnranked({ journey, isConfigText });
     const row = { file, journeyIndex, name, tier: null, rank: null, unranked, deprecated };
     if (unranked) {
       return { ...row, tier: 'common', rate: null, sessions: null, failures: null, days: null };

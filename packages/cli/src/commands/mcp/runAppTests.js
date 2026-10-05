@@ -89,7 +89,7 @@ async function runAppTests({
       results: [],
     };
   }
-  const tiered = selectTier({ context, selected, tier, usageWindow });
+  const tiered = await selectTier({ context, selected, tier, usageWindow });
   if (!type.isUndefined(tiered.refused)) {
     return { summary: tiered.refused, results: [] };
   }

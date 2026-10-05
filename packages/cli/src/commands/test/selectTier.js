@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import committedJourneys from '../journeys/committedJourneys.js';
 import computeTiers from '../journeys/usage/computeTiers.js';
 import inTier from '../journeys/usage/inTier.js';
+import readTierConfigText from '../journeys/usage/readTierConfigText.js';
 
 function journeyKey({ file, journeyIndex }) {
   return `${file}#${journeyIndex}`;
@@ -58,16 +59,21 @@ function describeUsage({ row, journey, usageWindow }) {
 // the journey's tier; `skipped` the deprecated journeys as { name, filePath,
 // rate, usageWindow }; `refused` why a tier other than full cannot be cut (nothing is
 // selected then); `tierRows` the computeTiers rows.
-function selectTier({ context, selected, tier, usageWindow }) {
-  const { journeys } = committedJourneys({ context, items: selected.map(({ item }) => item) });
+async function selectTier({ context, selected, tier, usageWindow }) {
+  const { journeys: committed } = committedJourneys({
+    context,
+    items: selected.map(({ item }) => item),
+  });
+  const journeys = committed.map(({ file, journeyIndex, journey }) => ({
+    file,
+    journeyIndex,
+    name: journey.name,
+    journey,
+  }));
   const tiers = computeTiers({
-    journeys: journeys.map(({ file, journeyIndex, journey }) => ({
-      file,
-      journeyIndex,
-      name: journey.name,
-      journey,
-    })),
+    journeys,
     usageWindow,
+    isConfigText: await readTierConfigText({ context, journeys }),
   });
   if (tier !== 'full' && !type.isUndefined(tiers.refused)) {
     return { selected: [], skipped: [], refused: tiers.refused, tierRows: tiers.rows };

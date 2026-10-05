@@ -180,3 +180,38 @@ test('computeTiers reads --usage-window', () => {
   expect(result.windowMonths).toEqual(['2026-06', '2026-07', '2026-08', '2026-09', '2026-10']);
   expect(result.rows.find((row) => row.name === 'old').rate).toBe(10);
 });
+
+// A journey clicking a grid cell by a data value: refresh stored its id with
+// that text read as none, since it is not config text.
+function valueJourney({ name, text }) {
+  const isConfigText = (value) => value === 'Save';
+  const refreshed = [{ click: { blockId: 'grid', column: 'name', text: 'Sample customer' } }];
+  const entry = journey({ name, rate: 10 });
+  return {
+    ...entry,
+    journey: {
+      ...entry.journey,
+      steps: [{ click: { blockId: 'grid', column: 'name', text } }],
+      evidence: {
+        production: {
+          ...entry.journey.evidence.production,
+          sequence: sequenceId({ pageId: 'tickets', steps: refreshed, isConfigText }),
+          flow: flowLines({ pageId: 'tickets', steps: refreshed, isConfigText }),
+        },
+      },
+    },
+    isConfigText,
+  };
+}
+
+test('computeTiers reads click text by the config text rule when it tells an edit from a data value', () => {
+  const same = valueJourney({ name: 'same', text: 'Sample customer' });
+  const otherValue = valueJourney({ name: 'other value', text: 'Another customer' });
+  const label = valueJourney({ name: 'label', text: 'Save' });
+  const result = computeTiers({
+    journeys: [same, otherValue, label],
+    isConfigText: same.isConfigText,
+  });
+  const unranked = Object.fromEntries(result.rows.map((row) => [row.name, row.unranked]));
+  expect(unranked).toEqual({ same: false, 'other value': false, label: true });
+});

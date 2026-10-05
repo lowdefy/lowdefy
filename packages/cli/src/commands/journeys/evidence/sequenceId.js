@@ -24,11 +24,13 @@ const SEQUENCE_VERSION = 1;
 // The id of the flow a journey's production evidence was counted for:
 // `v<SEQUENCE_VERSION>-` and the hash of its entry page and its interactions
 // as production segments are matched against them. Waits, other expectations,
-// typed or picked values, rows and `nth` leave it unchanged.
-function sequenceId({ pageId, steps }) {
+// typed or picked values, rows and `nth` leave it unchanged. A click's text
+// enters it only when isConfigText says it is config text, as evidence reads
+// journeys, so the id changes exactly when what is matched changes.
+function sequenceId({ pageId, steps, isConfigText }) {
   return `v${SEQUENCE_VERSION}-${hashSequence({
     pageId,
-    sequence: journeySequence({ pageId, steps }),
+    sequence: journeySequence({ pageId, steps, isConfigText }),
   })}`;
 }
 

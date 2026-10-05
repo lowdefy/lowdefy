@@ -23,11 +23,23 @@ import readProductionMonths from './readProductionMonths.js';
 
 let directories;
 
-function writeDay(day, { final = true } = {}) {
+const SALT_ID = 'a1b2c3d4';
+
+function resolve(token) {
+  return token === 't_config' ? 'Save' : null;
+}
+
+function writeDay(day, { final = true, saltId = SALT_ID, records = [{ day }] } = {}) {
   const directory = path.join(directories.traces, 'production');
   fs.mkdirSync(directory, { recursive: true });
-  fs.writeFileSync(path.join(directory, `${day}.jsonl`), `${JSON.stringify({ day })}\n`);
-  fs.writeFileSync(path.join(directory, `${day}.manifest.json`), JSON.stringify({ day, final }));
+  fs.writeFileSync(
+    path.join(directory, `${day}.jsonl`),
+    records.map((record) => `${JSON.stringify(record)}\n`).join('')
+  );
+  fs.writeFileSync(
+    path.join(directory, `${day}.manifest.json`),
+    JSON.stringify({ day, final, salt_id: saltId, text_rule: 'token' })
+  );
 }
 
 beforeEach(() => {
@@ -44,11 +56,21 @@ test('listFinalDays lists the final days of the cache oldest first, gaps and all
   writeDay('2026-10-03', { final: false });
   writeDay('2026-10-04', { final: false });
   fs.rmSync(path.join(directories.traces, 'production', '2026-09-30.manifest.json'));
-  expect(listFinalDays({ directories })).toEqual(['2026-09-29', '2026-10-01', '2026-10-02']);
+  expect(listFinalDays({ directories, saltId: SALT_ID })).toEqual([
+    '2026-09-29',
+    '2026-10-01',
+    '2026-10-02',
+  ]);
+});
+
+test('listFinalDays leaves out days pulled under another salt', () => {
+  writeDay('2026-10-01');
+  writeDay('2026-10-02', { saltId: 'e5f6a7b8' });
+  expect(listFinalDays({ directories, saltId: SALT_ID })).toEqual(['2026-10-01']);
 });
 
 test('listFinalDays is empty without a production cache', () => {
-  expect(listFinalDays({ directories })).toEqual([]);
+  expect(listFinalDays({ directories, saltId: SALT_ID })).toEqual([]);
 });
 
 test('readProductionMonths reads the final days of the months asked for and their final neighbours', () => {
@@ -56,8 +78,8 @@ test('readProductionMonths reads the final days of the months asked for and thei
     (day) => writeDay(day)
   );
   writeDay('2026-10-03', { final: false });
-  const finalDays = listFinalDays({ directories });
-  const result = readProductionMonths({ directories, finalDays, months: ['2026-09'] });
+  const finalDays = listFinalDays({ directories, saltId: SALT_ID });
+  const result = readProductionMonths({ directories, finalDays, months: ['2026-09'], resolve });
   expect(result.days).toEqual(['2026-09-01', '2026-09-15', '2026-09-30']);
   expect(result.records.map((record) => record.day)).toEqual([
     '2026-08-31',
@@ -71,7 +93,23 @@ test('readProductionMonths reads the final days of the months asked for and thei
 
 test('readProductionMonths reads a month with a missing day without error', () => {
   ['2026-10-01', '2026-10-03'].forEach((day) => writeDay(day));
-  const finalDays = listFinalDays({ directories });
-  const result = readProductionMonths({ directories, finalDays, months: ['2026-10'] });
+  const finalDays = listFinalDays({ directories, saltId: SALT_ID });
+  const result = readProductionMonths({ directories, finalDays, months: ['2026-10'], resolve });
   expect(result.days).toEqual(['2026-10-01', '2026-10-03']);
+});
+
+test('readProductionMonths resolves clicked-text tokens to config text only', () => {
+  const target = { block_id: 'save', text: 'stored text' };
+  writeDay('2026-10-01', {
+    records: [
+      { day: '2026-10-01', target: { ...target, text_token: 't_config' } },
+      { day: '2026-10-01', target: { ...target, text_token: 't_other' } },
+    ],
+  });
+  const finalDays = listFinalDays({ directories, saltId: SALT_ID });
+  const result = readProductionMonths({ directories, finalDays, months: ['2026-10'], resolve });
+  expect(result.records.map((record) => record.target)).toEqual([
+    { block_id: 'save', text: 'Save', text_token: 't_config' },
+    { block_id: 'save', text_token: 't_other' },
+  ]);
 });
