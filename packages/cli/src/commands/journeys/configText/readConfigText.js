@@ -52,7 +52,8 @@ function pruneOtherSets({ cacheDirectory, keep, now }) {
 // Builds into a scratch directory of this run's own, so readers started
 // together never build into or clean up each other's directory, and moves
 // only the finished configText.json into <hash>/ with a rename: a reader sees
-// a whole set or none.
+// a whole set or none. The set is read before the rename, since a run for
+// another config state may prune <hash>/ as soon as it lands.
 async function buildConfigText({ context, script, cacheDirectory, hash }) {
   const scratchDirectory = path.join(
     cacheDirectory,
@@ -81,6 +82,9 @@ async function buildConfigText({ context, script, cacheDirectory, hash }) {
         `The dev server installed in ${context.directories.dev} is older than this CLI and writes no config text. Stop the running dev server and start it again to update it.`
       );
     }
+    const configText = JSON.parse(
+      fs.readFileSync(path.join(scratchDirectory, CONFIG_TEXT_FILE), 'utf8')
+    );
     // Only the text set is kept: the build and its scratch server are large
     // and nothing else reads them.
     fs.mkdirSync(path.join(cacheDirectory, hash), { recursive: true });
@@ -88,10 +92,11 @@ async function buildConfigText({ context, script, cacheDirectory, hash }) {
       path.join(scratchDirectory, CONFIG_TEXT_FILE),
       path.join(cacheDirectory, hash, CONFIG_TEXT_FILE)
     );
+    pruneOtherSets({ cacheDirectory, keep: hash, now: Date.now() });
+    return configText;
   } finally {
     fs.rmSync(scratchDirectory, { recursive: true, force: true });
   }
-  pruneOtherSets({ cacheDirectory, keep: hash, now: Date.now() });
 }
 
 // The app's config text set: every string its built config can show (page
@@ -117,10 +122,10 @@ async function readConfigText({ context }) {
     'config-text'
   );
   const textPath = path.join(cacheDirectory, hash, CONFIG_TEXT_FILE);
-  if (!fs.existsSync(textPath)) {
-    await buildConfigText({ context, script, cacheDirectory, hash });
-  }
-  const texts = new Set(JSON.parse(fs.readFileSync(textPath, 'utf8')));
+  const configText = fs.existsSync(textPath)
+    ? JSON.parse(fs.readFileSync(textPath, 'utf8'))
+    : await buildConfigText({ context, script, cacheDirectory, hash });
+  const texts = new Set(configText);
 
   function isConfigText(text) {
     const normalised = normaliseClickText(text);
