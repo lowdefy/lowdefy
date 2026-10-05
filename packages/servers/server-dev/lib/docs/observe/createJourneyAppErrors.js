@@ -65,6 +65,9 @@ function createJourneyAppErrors({ origin, basePath, recording, configDirectory }
   const events = { pageErrors: [], requests: [], responses: [], pendingClientErrors: new Set() };
   let since = 0;
   let current = null;
+  // The window the last step closed, which an expect.effect step reads for
+  // the interaction just before it.
+  let closed = null;
 
   function onContext({ context }) {
     watchJourneyContext({ context, events, origin, basePath });
@@ -142,7 +145,14 @@ function createJourneyAppErrors({ origin, basePath, recording, configDirectory }
           .evaluate(readStepObserver, { transientSelector: TRANSIENT_SELECTOR })
           .catch(() => null);
     const window = takeWindow({ page: journey.actors.current().page, observed, urlBefore });
+    closed = window;
     return findAppErrors({ step, result, window, pageId });
+  }
+
+  // The window of the step before the one running now: an expect step opens
+  // its own window, so the last one closed is the interaction's before it.
+  function previousWindow() {
+    return closed;
   }
 
   // After the last step: what its effects reported late (a client error
@@ -206,7 +216,16 @@ function createJourneyAppErrors({ origin, basePath, recording, configDirectory }
     return withAppErrors({ findings, index, step });
   }
 
-  return { onContext, judgeOpen, openWindow, judgeStep, judgeDrain, closeWindow, drain };
+  return {
+    onContext,
+    judgeOpen,
+    openWindow,
+    judgeStep,
+    judgeDrain,
+    closeWindow,
+    drain,
+    previousWindow,
+  };
 }
 
 export default createJourneyAppErrors;

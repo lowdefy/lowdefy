@@ -33,7 +33,17 @@ const STEP_KEYS = [
 // The steps a person does to the page. An app error one causes can be
 // asserted by an expect.error step straight after it.
 const INTERACTION_STEP_KEYS = ['click', 'open', 'fill', 'select', 'press', 'back'];
-const EXPECT_KEYS = ['state', 'visible', 'hidden', 'text', 'url', 'title', 'calls', 'error'];
+const EXPECT_KEYS = [
+  'state',
+  'visible',
+  'hidden',
+  'text',
+  'url',
+  'title',
+  'calls',
+  'error',
+  'effect',
+];
 const WAIT_KEYS = ['ms', 'request', 'state'];
 // `from` marks where a fill, select or expect.state value came from:
 // `recorded` was observed in a trace and runs normally; `shape` is a
@@ -400,7 +410,7 @@ function validateExpectState(value) {
 
 function validateExpect(params) {
   if (!type.isObject(params)) {
-    return `Step "expect" requires one of { state }, { visible }, { hidden }, { text }, { url }, { title }, { calls }, { error }. Received ${describe(
+    return `Step "expect" requires one of { state }, { visible }, { hidden }, { text }, { url }, { title }, { calls }, { error }, { effect }. Received ${describe(
       params
     )}.`;
   }
@@ -451,22 +461,41 @@ function validateExpect(params) {
         )}.`;
       }
       return undefined;
+    case 'effect':
+      if (value !== true) {
+        return `Step "expect.effect" takes only true: write { "expect": { "effect": true } }. Received ${describe(
+          value
+        )}.`;
+      }
+      return undefined;
     default:
       return undefined;
   }
 }
 
-// expect.error claims the app errors of the interaction just before it, so it
-// must follow one.
-function validateErrorPlacement({ step, previous }) {
-  if (getStepKey(step) !== 'expect' || getStepKey(step.expect) !== 'error') {
+// What an expectation that reads the interaction just before it does with
+// that interaction, for the placement message.
+const FOLLOWS_INTERACTION = {
+  error: 'whose app errors it claims',
+  effect: 'whose effect it checks',
+};
+
+// expect.error claims the app errors of the interaction just before it, and
+// expect.effect checks that interaction did something, so each must follow
+// one.
+function validatePlacement({ step, previous }) {
+  if (getStepKey(step) !== 'expect') {
+    return undefined;
+  }
+  const expectKey = getStepKey(step.expect);
+  if (type.isUndefined(FOLLOWS_INTERACTION[expectKey])) {
     return undefined;
   }
   const previousKey = type.isUndefined(previous) ? undefined : getStepKey(previous);
   if (!INTERACTION_STEP_KEYS.includes(previousKey)) {
-    return `Step "expect.error" must directly follow an interaction step (${INTERACTION_STEP_KEYS.join(
+    return `Step "expect.${expectKey}" must directly follow an interaction step (${INTERACTION_STEP_KEYS.join(
       ', '
-    )}), whose app errors it claims. Received it after ${
+    )}), ${FOLLOWS_INTERACTION[expectKey]}. Received it after ${
       type.isUndefined(previousKey) ? 'the start of the journey' : `a "${previousKey}" step`
     }.`;
   }
@@ -541,7 +570,7 @@ function validateJourneySteps({ steps }) {
   for (let index = 0; index < steps.length; index += 1) {
     const message =
       validateStep(steps[index]) ??
-      validateErrorPlacement({ step: steps[index], previous: steps[index - 1] });
+      validatePlacement({ step: steps[index], previous: steps[index - 1] });
     if (!type.isUndefined(message)) {
       return { error: `Step ${index}: ${message}` };
     }
