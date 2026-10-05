@@ -125,3 +125,21 @@ test('parsePathPattern throws on fixed segments with characters page ids do not 
     'Page path "tickets.list" segment "tickets.list" contains invalid characters.'
   );
 });
+
+test('parsePathPattern returns the same frozen segments for the same pattern', () => {
+  const first = parsePathPattern('cached/{space}/{ticket_id}');
+  const second = parsePathPattern('cached/{space}/{ticket_id}');
+  expect(second).toBe(first);
+  expect(Object.isFrozen(first)).toBe(true);
+  first.forEach((segment) => expect(Object.isFrozen(segment)).toBe(true));
+  expect(() => first.push({ fixed: 'x' })).toThrow();
+});
+
+test('parsePathPattern throws on every call for an invalid pattern', () => {
+  expect(() => parsePathPattern('cached/{id?}')).toThrow(
+    'Page path "cached/{id?}" has an optional placeholder "{id?}".'
+  );
+  expect(() => parsePathPattern('cached/{id?}')).toThrow(
+    'Page path "cached/{id?}" has an optional placeholder "{id?}".'
+  );
+});

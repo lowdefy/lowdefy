@@ -91,6 +91,28 @@ test('buildPagePath throws when a value is empty', () => {
   ).toThrow('Link to page "ticket" is missing a value for path placeholder "space".');
 });
 
+test('buildPagePath throws when a value is a dot segment', () => {
+  expect(() =>
+    buildPagePath({ pageId: 'ticket', path, pathParams: { space: '..', ticket_id: '1' } })
+  ).toThrow(
+    'Link to page "ticket" has the value ".." for path placeholder "space". A path value cannot be "." or "..".'
+  );
+  expect(() =>
+    buildPagePath({ pageId: 'ticket', path, pathParams: { space: '.', ticket_id: '1' } })
+  ).toThrow(
+    'Link to page "ticket" has the value "." for path placeholder "space". A path value cannot be "." or "..".'
+  );
+});
+
+test('buildPagePath builds values that contain dots', () => {
+  const build = (space) =>
+    buildPagePath({ pageId: 'ticket', path, pathParams: { space, ticket_id: '1' } });
+  expect(build('v1.2')).toBe('tickets/v1.2/1');
+  expect(build('a..b')).toBe('tickets/a..b/1');
+  expect(build('.hidden')).toBe('tickets/.hidden/1');
+  expect(build('...')).toBe('tickets/.../1');
+});
+
 test('buildPagePath ignores keys the pattern does not use', () => {
   expect(
     buildPagePath({

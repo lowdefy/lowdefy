@@ -34,7 +34,14 @@ function buildPagePath({ pageId, path, pathParams }) {
           `Link to page "${pageId}" is missing a value for path placeholder "${segment.name}".`
         );
       }
-      return encodeURIComponent(String(value));
+      const text = String(value);
+      // The URL parser removes a "." or ".." segment, in any encoding, before the request is sent.
+      if (text === '.' || text === '..') {
+        throw new Error(
+          `Link to page "${pageId}" has the value "${text}" for path placeholder "${segment.name}". A path value cannot be "." or "..".`
+        );
+      }
+      return encodeURIComponent(text);
     })
     .join('/');
 }

@@ -72,3 +72,9 @@ test('pageInstanceKey throws when a value is missing', () => {
     pageInstanceKey({ pageId: 'tickets', path, pathParams: { space: 'support' } })
   ).toThrow('Link to page "tickets" is missing a value for path placeholder "ticket_id".');
 });
+
+test('pageInstanceKey throws when a value is a dot segment', () => {
+  expect(() =>
+    pageInstanceKey({ pageId: 'tickets', path, pathParams: { space: '..', ticket_id: '1' } })
+  ).toThrow('Link to page "tickets" has the value ".." for path placeholder "space".');
+});

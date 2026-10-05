@@ -60,11 +60,7 @@ function parseSegment({ path, segment }) {
   return { fixed: segment };
 }
 
-// Splits a page path pattern into segments, each { fixed } or { name }.
-function parsePathPattern(path) {
-  if (!type.isString(path)) {
-    throw new Error(`Page path must be a string. Received ${JSON.stringify(path)}.`);
-  }
+function parseSegments(path) {
   if (path.startsWith('/') || path.endsWith('/')) {
     throw new Error(`Page path "${path}" must not start or end with "/".`);
   }
@@ -77,8 +73,25 @@ function parsePathPattern(path) {
       }
       names.add(parsed.name);
     }
-    return parsed;
+    return Object.freeze(parsed);
   });
+}
+
+// Patterns come from build config, so the cache holds at most one entry per page path.
+const cache = new Map();
+
+// Splits a page path pattern into segments, each { fixed } or { name }. The result is shared
+// between callers and frozen.
+function parsePathPattern(path) {
+  if (!type.isString(path)) {
+    throw new Error(`Page path must be a string. Received ${JSON.stringify(path)}.`);
+  }
+  if (cache.has(path)) {
+    return cache.get(path);
+  }
+  const segments = Object.freeze(parseSegments(path));
+  cache.set(path, segments);
+  return segments;
 }
 
 export default parsePathPattern;
