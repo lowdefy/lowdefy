@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": ["Link action \"go\" on page \"home\"", "data-page-id=\"ticket\" on page \"home\""],
+      "errorContains": [
+        "Link action \"go\" on page \"home\" links to page \"ticket\" without path params \"ticket_id\".",
+        "data-page-id=\"ticket\" on page \"home\" links without path params \"space\", \"ticket_id\".",
+        "lowdefy.yaml:21",
+        "lowdefy.yaml:35"
+      ]
+    }
+  ]
+}

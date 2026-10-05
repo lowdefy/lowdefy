@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": ["without path params"],
+      "errorContains": [
+        "Menu link \"ticket\" on menu \"main\" links to page \"ticket\" without path params \"ticket_id\".",
+        "lowdefy.yaml:17"
+      ]
+    }
+  ]
+}

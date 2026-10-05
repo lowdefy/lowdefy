@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 import buildBlock from './buildBlock/buildBlock.js';
+import buildLinkPaths from './buildLinkPaths.js';
 import buildSubscriptions from './buildSubscriptions.js';
 import collectExceptions from '../../utils/collectExceptions.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
@@ -63,6 +64,8 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     typeCounters: context.typeCounters,
   });
   context.pageTypeCounters.set(page.pageId, pageCounters);
+  // The link refs this page adds, for its linkPaths.
+  const linkRefsStart = context.linkActionRefs.length;
   const pageContext = {
     auth: page.auth,
     blockIdCounter: createCounter(),
@@ -107,6 +110,12 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     shortcutRefs,
     typeCounters,
     websocketActionRefs: context.websocketActionRefs ?? [],
+  });
+
+  buildLinkPaths({
+    page,
+    linkRefs: context.linkActionRefs.slice(linkRefsStart),
+    context,
   });
 
   countImpliedClientTypes({ blockMetas: context.blockMetas, pageCounters, typeCounters });

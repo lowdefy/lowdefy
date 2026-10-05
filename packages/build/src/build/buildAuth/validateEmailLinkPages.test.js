@@ -20,6 +20,7 @@ import testContext from '../../test-utils/testContext.js';
 function run({ auth, pages }) {
   const context = testContext();
   context.warnings = [];
+  context.routes = pages.map((page) => ({ pageId: page.id, path: page.path ?? page.id }));
   validateEmailLinkPages({ components: { auth, pages }, context });
   return context.warnings.map((warning) => warning.message);
 }
@@ -32,8 +33,8 @@ const emailAuth = {
 
 test('validateEmailLinkPages warns for each emailed link page the app is missing', () => {
   expect(run({ auth: emailAuth, pages: [{ id: 'home' }] })).toEqual([
-    'Auth "authPages.verifyEmail" is "/verify-email", but the app has no page "verify-email". Email verification links land there unless the SignUp or SendVerificationEmail action sets a callbackUrl. Add the page, or set authPages.verifyEmail to an existing one.',
-    'Auth "authPages.resetPassword" is "/reset-password", but the app has no page "reset-password". Password reset links land there unless the RequestPasswordReset action sets redirectTo. Add the page, or set authPages.resetPassword to an existing one.',
+    'Auth "authPages.verifyEmail" is "/verify-email", but the app has no page with path or id "verify-email". Email verification links land there unless the SignUp or SendVerificationEmail action sets a callbackUrl. Add the page, or set authPages.verifyEmail to an existing one.',
+    'Auth "authPages.resetPassword" is "/reset-password", but the app has no page with path or id "reset-password". Password reset links land there unless the RequestPasswordReset action sets redirectTo. Add the page, or set authPages.resetPassword to an existing one.',
   ]);
 });
 
@@ -52,6 +53,14 @@ test.each([
       authPages: { verifyEmail: '/crm/verify?from=email', resetPassword: '/crm/reset#form' },
     },
     [{ id: 'crm/verify' }, { id: 'crm/reset' }],
+  ],
+  [
+    'the pages are served at their paths',
+    emailAuth,
+    [
+      { id: 'verify', path: 'verify-email' },
+      { id: 'reset', path: 'reset-password' },
+    ],
   ],
   ['no auth email is configured', { ...emailAuth, email: undefined }, []],
   ['email and password is off', { ...emailAuth, emailAndPassword: { enabled: false } }, []],

@@ -76,6 +76,7 @@ test('getRootConfig', async () => {
     home: {
       configured: false,
       pageId: 'page',
+      pathParams: {},
     },
     i18n: {},
     lowdefyApp: { slug: 'my-app', name: 'My App' },

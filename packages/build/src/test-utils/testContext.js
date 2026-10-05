@@ -65,6 +65,8 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     walledTargets: new Map(),
     sharedTargets: new Map(),
     websocketIds: new Set(),
+    linkActionRefs: [],
+    routes: [],
   };
 
   context.importAppCode = createImportAppCode({ directories: context.directories });

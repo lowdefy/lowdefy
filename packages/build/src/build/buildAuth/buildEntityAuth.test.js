@@ -16,6 +16,11 @@
 
 import buildEntityAuth from './buildEntityAuth.js';
 
+// Each page served at its id, as buildRoutes sets the route table.
+function routesContext(components) {
+  return { routes: (components.pages ?? []).map((page) => ({ pageId: page.id, path: page.id })) };
+}
+
 test('buildEntityAuth websockets: returns components when no websockets defined', () => {
   const components = {
     auth: {
@@ -183,7 +188,7 @@ test('buildEntityAuth pages: the 404 page is always public even when all pages a
       { id: '404', type: 'Context' },
     ],
   };
-  const res = buildEntityAuth({ components, context: {}, entity: 'pages' });
+  const res = buildEntityAuth({ components, context: routesContext(components), entity: 'pages' });
   expect(res.pages).toEqual([
     { id: 'home', type: 'Context', auth: { public: false } },
     { id: '404', type: 'Context', auth: { public: true } },
@@ -212,7 +217,7 @@ test('buildEntityAuth pages: pages holding an authPages role are public under pr
       { id: 'verify-email', type: 'Context' },
     ],
   };
-  const res = buildEntityAuth({ components, context: {}, entity: 'pages' });
+  const res = buildEntityAuth({ components, context: routesContext(components), entity: 'pages' });
   expect(res.pages).toEqual([
     { id: 'home', type: 'Context', auth: { public: false } },
     { id: 'login', type: 'Context', auth: { public: true } },
@@ -237,7 +242,7 @@ test('buildEntityAuth pages: pages holding an authPages role are public without 
       { id: 'dashboard', type: 'Context' },
     ],
   };
-  const res = buildEntityAuth({ components, context: {}, entity: 'pages' });
+  const res = buildEntityAuth({ components, context: routesContext(components), entity: 'pages' });
   expect(res.pages).toEqual([
     { id: 'home', type: 'Context', auth: { public: true } },
     { id: 'crm/login', type: 'Context', auth: { public: true } },
@@ -261,7 +266,7 @@ test('buildEntityAuth pages: pages holding an authPages role never join a protec
       { id: 'dashboard', type: 'Context' },
     ],
   };
-  const res = buildEntityAuth({ components, context: {}, entity: 'pages' });
+  const res = buildEntityAuth({ components, context: routesContext(components), entity: 'pages' });
   expect(res.pages).toEqual([
     { id: 'login', type: 'Context', auth: { public: true } },
     { id: 'dashboard', type: 'Context', auth: { public: false } },
@@ -285,7 +290,7 @@ test('buildEntityAuth pages: the page holding twoFactorEnrol is protected under 
       { id: 'two-factor-enrol', type: 'Context' },
     ],
   };
-  const res = buildEntityAuth({ components, context: {}, entity: 'pages' });
+  const res = buildEntityAuth({ components, context: routesContext(components), entity: 'pages' });
   expect(res.pages).toEqual([
     { id: 'login', type: 'Context', auth: { public: true } },
     { id: 'two-factor-enrol', type: 'Context', auth: { public: false } },
@@ -310,7 +315,7 @@ test('buildEntityAuth pages: the page holding twoFactorEnrol is protected under 
       { id: 'two-factor-enrol', type: 'Context' },
     ],
   };
-  const res = buildEntityAuth({ components, context: {}, entity: 'pages' });
+  const res = buildEntityAuth({ components, context: routesContext(components), entity: 'pages' });
   expect(res.pages).toEqual([
     { id: 'home', type: 'Context', auth: { public: true } },
     { id: 'login', type: 'Context', auth: { public: true } },
@@ -331,7 +336,10 @@ test('buildEntityAuth pages: module-contributed public pages stay public under p
       { id: 'crm/accept-invitation', type: 'Context' },
     ],
   };
-  const context = { moduleAuthPublicPages: ['crm/accept-invitation'] };
+  const context = {
+    ...routesContext(components),
+    moduleAuthPublicPages: ['crm/accept-invitation'],
+  };
   const res = buildEntityAuth({ components, context, entity: 'pages' });
   expect(res.pages).toEqual([
     { id: 'home', type: 'Context', auth: { public: false } },
@@ -352,7 +360,10 @@ test('buildEntityAuth pages: module-contributed public pages never join a protec
       { id: 'dashboard', type: 'Context' },
     ],
   };
-  const context = { moduleAuthPublicPages: ['crm/accept-invitation'] };
+  const context = {
+    ...routesContext(components),
+    moduleAuthPublicPages: ['crm/accept-invitation'],
+  };
   const res = buildEntityAuth({ components, context, entity: 'pages' });
   expect(res.pages).toEqual([
     { id: 'crm/accept-invitation', type: 'Context', auth: { public: true } },

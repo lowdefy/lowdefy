@@ -3083,6 +3083,18 @@ export default {
             type: 'MenuLink "urlQuery" should be an object.',
           },
         },
+        pathParams: {
+          type: 'object',
+          additionalProperties: {
+            type: 'string',
+            errorMessage: {
+              type: 'MenuLink "pathParams" values should be strings.',
+            },
+          },
+          errorMessage: {
+            type: 'MenuLink "pathParams" should be an object.',
+          },
+        },
         input: {
           type: 'object',
           errorMessage: {

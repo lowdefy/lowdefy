@@ -14,18 +14,10 @@
   limitations under the License.
 */
 
-// data-page-id attribute values inside HTML strings or JS sources: any case,
-// optional whitespace around =, quoted or unquoted. In JSON text a double quote
-// inside a string is escaped (data-page-id=\"home\"). The value must end at a
-// quote, whitespace or >, so a templated value ("tasks-{{ id }}") is skipped.
-const dataPageIdRegex = /data-page-id\s*=\s*(?:\\?["'])?([A-Za-z0-9\-_/:]+)(?=\\?["']|[\s>]|$)/gi;
+import collectHtmlPageLinks from './collectHtmlPageLinks.js';
 
 function collectHtmlPageIds({ json }) {
-  const pageIds = new Set();
-  for (const match of json.matchAll(dataPageIdRegex)) {
-    pageIds.add(match[1]);
-  }
-  return pageIds;
+  return new Set(collectHtmlPageLinks({ json }).map((link) => link.pageId));
 }
 
 export default collectHtmlPageIds;

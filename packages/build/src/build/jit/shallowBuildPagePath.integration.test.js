@@ -49,6 +49,7 @@ jest.unstable_mockModule('../copyAgentFileSystems.js', () => ({
 const { default: shallowBuild } = await import('./shallowBuild.js');
 const { default: buildPageJit } = await import('./buildPageJit.js');
 const { default: resolvePagePath } = await import('./resolvePagePath.js');
+const { default: prepareJitContext } = await import('./prepareJitContext.js');
 const { snapshotTypesMap } = await import('../../test-utils/runBuildForSnapshots.js');
 
 const logger = {
@@ -102,6 +103,7 @@ pages:
         id: item
         path: 'items/{item_id}'
   - _ref: pages/about.yaml
+  - _ref: pages/links.yaml
 `
   );
   write('pages/home.yaml', 'id: home\ntype: Box\n');
@@ -137,6 +139,32 @@ path:
 `
   );
   write('pages/about.yaml', 'id: about\ntype: Box\npath: company/about-us\n');
+  write(
+    'pages/links.yaml',
+    `id: links
+type: Box
+blocks:
+  - id: go
+    type: Button
+    events:
+      onClick:
+        - id: ticket
+          type: Link
+          params:
+            pageId: ticket
+            pathParams:
+              space: support
+              ticket_id:
+                _state: ticket_id
+        - id: home
+          type: Link
+          params: home
+  - id: html
+    type: Html
+    properties:
+      html: <a data-page-id="about">About</a>
+`
+  );
   write(
     'modules/support/module.lowdefy.yaml',
     `name: Support
@@ -190,6 +218,7 @@ test('the skeleton build writes routes.json with each page path resolved and mod
     { pageId: 'docs', path: 'docs/{slug}' },
     { pageId: 'item', path: 'items/{item_id}' },
     { pageId: 'about', path: 'company/about-us' },
+    { pageId: 'links', path: 'links' },
     { pageId: 'support/ticket', path: 'support/{space}/tickets/{ticket_id}' },
     { pageId: 'support/board', path: 'support/boards/{board_id}' },
     { pageId: '404', path: '404' },
@@ -220,6 +249,37 @@ test('a JIT-built page artifact keeps its scoped path', async () => {
     context: result.context,
   });
   expect(unpatterned.path).toBeUndefined();
+});
+
+test('a JIT-built page artifact carries the paths of the pages it links to', async () => {
+  const page = await buildPageJit({
+    pageId: 'links',
+    pageRegistry: result.pageRegistry,
+    context: result.context,
+  });
+  expect(page.linkPaths).toEqual({
+    ticket: 'tickets/{space}/{ticket_id}',
+    about: 'company/about-us',
+  });
+});
+
+test('prepareJitContext reads the route table from routes.json', () => {
+  const context = prepareJitContext({
+    directories: { build: buildDir },
+    keyMap: {},
+    refMap: {},
+  });
+  const routes = context.routes.map(({ pageId, path: routePath, segments }) => ({
+    pageId,
+    path: routePath,
+    segments,
+  }));
+  expect(routes).toContainEqual({
+    pageId: 'ticket',
+    path: 'tickets/{space}/{ticket_id}',
+    segments: [{ fixed: 'tickets' }, { name: 'space' }, { name: 'ticket_id' }],
+  });
+  expect(routes).toContainEqual({ pageId: 'home', path: 'home', segments: [{ fixed: 'home' }] });
 });
 
 test('resolvePagePath reads the path a page file declares now', async () => {
