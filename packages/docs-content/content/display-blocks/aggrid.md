@@ -1341,7 +1341,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.tooltipValueGetter` | object | - | Provide a function (using the `_function` operator) that returns the tooltip value for a cell. Overrides `tooltipField`. |
 | `columnDefs.$.tooltipComponent` | object | - | Provide a custom tooltip component. See AG Grid tooltip component docs (https://www.ag-grid.com/react-data-grid/component-tooltip/). |
 | `columnDefs.$.ellipsis` | number | - | Line-clamp count for long text. Automatically enables `wrapText` and `autoHeight` and applies the `.lf-ellipsis-N` class (1–6). |
-| `columnDefs.$.cell` | object | - | Built-in cell renderer. Takes precedence over `cellRenderer` when `type` is set. Field-valued keys (e.g. `nameField`, `srcField`, `urlQuery.*`) are row-data paths. |
+| `columnDefs.$.cell` | object | - | Built-in cell renderer. Takes precedence over `cellRenderer` when `type` is set. Field-valued keys (e.g. `nameField`, `srcField`, `urlQuery.*`, `pathParams.*`) are row-data paths. |
 | `columnDefs.$.cell.type` | string | - | The built-in renderer to use. Enum: `tag`, `avatar`, `link`, `date`, `boolean`, `progress`, `number`, `buttons`, `menu`, `selector`, `multipleSelector`, `switch`, `textInput`, `paragraphInput`. |
 | `columnDefs.$.cell.colorMap` | object | - | Tag: map of cell value → color (antd tag color name or hex). Used when `cell.type: tag`. The cell value may be a single string or an array of strings; arrays render one tag per item. If neither `colorMap`, `colorFrom`, nor `default` is set, tag values are auto-coloured from a stable hash for consistency across rows. |
 | `columnDefs.$.cell.colorFrom` | string | - | Tag: row-data path to a color value. Takes precedence over `colorMap`. |
@@ -1350,13 +1350,14 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.srcField` | string | - | Avatar: row-data path for the image src (optional). |
 | `columnDefs.$.cell.idField` | string | - | Avatar: row-data path for an id used to seed initials colour. |
 | `columnDefs.$.cell.shape` | string | - | Avatar shape. Defaults to `circle`. Enum: `circle`, `square`. |
-| `columnDefs.$.cell.link` | object | - | Avatar/Link: navigation config. Emits `onCellLink` on click. `pageId`/`href`/`back`/`home`/`newTab` are literal; `urlQuery` values are row-data paths. |
+| `columnDefs.$.cell.link` | object | - | Avatar/Link: navigation config. Emits `onCellLink` on click. `pageId`/`href`/`back`/`home`/`newTab` are literal; `urlQuery` and `pathParams` values are row-data paths. |
 | `columnDefs.$.cell.pageId` | string | - | Link: target page id (literal). |
 | `columnDefs.$.cell.href` | string | - | Link: literal href (overrides `pageId`). |
 | `columnDefs.$.cell.back` | boolean | - | Link: navigate back. |
 | `columnDefs.$.cell.home` | boolean | - | Link: navigate home. |
 | `columnDefs.$.cell.newTab` | boolean | - | Link: open in a new tab. |
 | `columnDefs.$.cell.urlQuery` | object | - | Link: query params. Each value is a row-data path. |
+| `columnDefs.$.cell.pathParams` | object | - | Link: values for the page path's placeholders. Each value is a row-data path. |
 | `columnDefs.$.cell.labelField` | string | - | Link: row-data path for the visible label (falls back to cell value). |
 | `columnDefs.$.cell.format` | string | - | Number: `number` (default), `currency`, `percent`, or `compact` (K/M/B). Date: dayjs format string (default `YYYY-MM-DD HH:mm`). |
 | `columnDefs.$.cell.relative` | boolean | - | Date: render as relative time (e.g. "3 hours ago"). |

@@ -57,7 +57,7 @@ The hook endpoint receives the full turn in `_payload`:
 | `finishReason` | string | Why the agent stopped (e.g. `'stop'`, `'tool-calls'`, `'length'`). |
 | `isAborted` | boolean | `true` if the client cancelled the request. |
 | `usage` | object | Token usage for the turn: `inputTokens`, `outputTokens`, `totalTokens`, `reasoningTokens`, `cacheReadTokens`, `cacheWriteTokens`. |
-| `pageId`, `agentId`, `conversationId`, `userId`, `urlQuery`, `sharedState` | | Context values mirrored from the request, **at the top level** of the payload. |
+| `pageId`, `agentId`, `conversationId`, `userId`, `urlQuery`, `pathParams`, `sharedState` | | Context values mirrored from the request, **at the top level** of the payload. |
 
 Read these fields at the **top level** of `_payload` (e.g. `_payload: conversationId`, `_payload: usage`) — they are not nested under an `agentContext` key.
 

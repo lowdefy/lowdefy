@@ -145,15 +145,16 @@ Navigate to another page:
 
 ### Link Parameters
 
-| Param      | Purpose          |
-| ---------- | ---------------- |
-| `pageId`   | Target page ID   |
-| `url`      | External URL     |
-| `input`    | Data to pass     |
-| `urlQuery` | Query parameters |
-| `newTab`   | Open in new tab  |
-| `home`     | Go to home page  |
-| `back`     | Go back          |
+| Param        | Purpose                                        |
+| ------------ | ---------------------------------------------- |
+| `pageId`     | Target page ID                                 |
+| `url`        | External URL                                   |
+| `input`      | Data to pass                                   |
+| `urlQuery`   | Query parameters                               |
+| `pathParams` | Values for the target page's path placeholders |
+| `newTab`     | Open in new tab                                |
+| `home`       | Go to home page                                |
+| `back`       | Go back                                        |
 
 ## Login / Logout
 

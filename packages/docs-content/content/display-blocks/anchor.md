@@ -312,6 +312,7 @@ Hyperlink anchor for navigation.
 | `home` | boolean | - | When the link is clicked, route to the home page. |
 | `input` | object | - | When the link is clicked, pass data as the input object to the next Lowdefy page.  Can only be used with pageId link and newTab false. |
 | `urlQuery` | object | - | When the link is clicked, pass data as a url query to the next page. |
+| `pathParams` | object | - | Values for the placeholders in the path of the page given by pageId, like `{ ticket_id: '1234' }` for `tickets/{ticket_id}`. |
 | `disabled` | boolean | `false` | Disable the anchor if true. |
 | `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block for anchor icon. |
 | `pageId` | string | - | When the link is clicked, route to the provided Lowdefy page. |

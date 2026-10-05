@@ -141,6 +141,14 @@ _ref:
 
             Lowdefy sets the `href` (including the app's `basePath`), and a plain click opens the page without reloading the app, the same as a [`Link`](/Link) action with `pageId` and `urlQuery`. Middle-click, Ctrl or Cmd-click, "copy link" and hover preview work as for any link. `data-url-query` is a query string (`a=1&b=2`); its values reach the page's `_url_query` the same way the `Link` action's `urlQuery` does.
 
+            For a page with a [`path`](/page-paths), give the values of its placeholders in `data-path-params`, a JSON object, the same as the `Link` action's `pathParams`:
+
+            ```html
+            <a data-page-id="ticket" data-path-params='{"space":"support","ticket_id":"{{ _id }}"}'>{{ title }}</a>
+            ```
+
+            Lowdefy builds the page's URL from its path, so this link opens `/tickets/support/1234` for a page with `path: tickets/{space}/{ticket_id}`. The page reads the values with [`_path_params`](/_path_params). Use single quotes around the attribute so the JSON can use double quotes. When `data-path-params` is not a JSON object, the link is not set and a warning is logged to the browser console. When `data-path-params` is a JSON object as written in your config, the build checks that it gives every placeholder of the page a value. An attribute that only becomes JSON when the HTML renders is checked when the link is set, and a missing value fails with an error naming the page and the placeholder.
+
             The build checks every `data-page-id` it can read in your config, including HTML built by API endpoints, and warns when a page does not exist, with a suggestion for a likely typo. Values built from templates, such as `data-page-id="{{ page }}"`, are not checked. Inside a module, build the page id with `_module.pageId` (for example in a `_string.concat`); the build checks the resolved id.
 
             Use `data-page-id` to write a link. When you already have a whole URL, for example a notification's stored `link` field, `data-link` opens it without reloading the app. The path is relative to the app, like the `Link` action's `url`, so Lowdefy adds the `basePath`. The build does not check `data-link` paths.

@@ -15,10 +15,10 @@
 _ref:
   path: templates/general.yaml.njk
   vars:
-    pageId: lowdefy-api
-    pageTitle: Lowdefy APIs
+    pageId: page-paths
+    pageTitle: Page Paths
     section: Concepts
-    filePath: concepts/api.yaml
+    filePath: concepts/page-paths.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -31,12 +31,12 @@ _ref:
                 version:
                   _ref: version.yaml
               template:
-                _ref: concepts/api.md
+                _ref: concepts/page-paths.md
 
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Page Paths
-            previous_page_id: page-paths
-            next_page_title: Notifications
-            next_page_id: notifications
+            previous_page_title: Page and App State
+            previous_page_id: page-and-app-state
+            next_page_title: APIs
+            next_page_id: lowdefy-api

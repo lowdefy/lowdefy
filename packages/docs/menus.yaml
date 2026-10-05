@@ -103,6 +103,11 @@
           pageId: page-and-app-state
           properties:
             title: Page and App State
+        - id: page-paths
+          type: MenuLink
+          pageId: page-paths
+          properties:
+            title: Page Paths
         - id: selectors
           type: MenuLink
           pageId: selectors
@@ -1293,6 +1298,9 @@
         - id: _or
           type: MenuLink
           pageId: _or
+        - id: _path_params
+          type: MenuLink
+          pageId: _path_params
         - id: _product
           type: MenuLink
           pageId: _product

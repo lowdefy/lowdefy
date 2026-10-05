@@ -380,19 +380,26 @@ function createAuthorize({ session }) {
 
 **File:** `packages/api/src/routes/page/getPageConfig.js`
 
+`getPageConfig(context, { path, urlQuery })` takes the request path, not a page id. It matches the path to a page with `matchPagePath` over `routes.json`, reads `pages/${pageId}.json`, and returns a status object the page route forks on:
+
 ```javascript
-async function getPageConfig({ authorize, readConfigFile }, { pageId }) {
-  const pageConfig = await readConfigFile(`pages/${pageId}.json`);
-
-  if (pageConfig && authorize(pageConfig)) {
-    const { auth, ...rest } = pageConfig; // Remove auth metadata
-    // serializer.serialize re-enumerates ~k keys for JSON transfer to client
-    return serializer.serialize(rest);
-  }
-
-  return null; // 404 for unauthorized
+const match = matchPagePath({ routes, path });
+if (match === null) {
+  // In a pagesProtectedByDefault app a logged-out caller cannot tell a miss from a protected page.
+  return {
+    status: type.isNone(context.user) && pagesProtectedByDefault ? 'unauthenticated' : 'not_found',
+  };
 }
+const { pageId, pathParams } = match;
+const pageConfig = await context.readConfigFile(`pages/${pageId}.json`);
+const outcome = context.authorizeOutcome(pageConfig, { pageId });
+// allow → { status: 'ok', pageId, pathParams, pageConfig } (auth stripped, serialized)
+// enrol_required → { status: 'enrol_required', pageId, pathParams }
+// deny, logged out → { status: 'unauthenticated', pageId, pathParams }
+// deny, logged in → { status: 'unauthorized', pageId, pathParams } (an opaque /404)
 ```
+
+Auth is checked on the matched page id: matching a path authorises nothing.
 
 ### API Authorization
 
@@ -569,7 +576,7 @@ apiContext middleware
     └→ createApiContext() → createAuthorize(session)
     ↓
 /api/auth/* → authHandler()    Page/API routes
-                                └→ getPageConfig() → authorize(pageConfig)
+                                └→ getPageConfig() → matchPagePath → authorize(pageConfig)
     ↓
 renderPage embeds session in __LOWDEFY_CONFIG__
     ↓
@@ -712,7 +719,7 @@ function e2eNotSupported() {
 
 ### Unauthorized Pages
 
-Protected pages follow the production flow: `getPageConfig` returns `null` for unauthorized pages, and `renderPage` redirects to `/404` (302).
+Protected pages follow the production flow: `getPageConfig` matches the path and returns `unauthorized` (or `unauthenticated`) for a page the caller may not open, and `renderPage` redirects to `/404` (or sign-in) (302).
 
 ### Key Files
 

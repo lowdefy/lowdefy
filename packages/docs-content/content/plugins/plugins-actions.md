@@ -18,6 +18,7 @@ The Lowdefy engine provides a context object to the action with the following pa
   - `getInput: function`: Get data from the Lowdefy input object.
   - `getLocale: function`: Return the active i18n locale code (or undefined when `config.i18n` is not configured).
   - `getPageId: function`: Get the pageId of the block that the action is defined on.
+  - `getPathParams: function`: Get data from the page's path parameters, the values of the placeholders in its [`path`](/page-paths).
   - `getRequestDetails: function`: Get data from Lowdefy requests.
   - `getState: function`: Get data from the Lowdefy state object.
   - `getUrlQuery: function`: Get data from the Lowdefy urlQuery object.

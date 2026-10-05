@@ -48,7 +48,9 @@ async function build(options) {
   buildApp({ components, context });                     // Process app config
   validateConfig({ components, context });               // Business rule validation
   addDefaultPages({ components, context });              // Add 404, etc.
+  buildRoutes({ components, context });                  // Route table from page paths, tie checks
   buildAuth({ components, context });                    // Auth providers/adapters (wildcard matching)
+  validateAuthPagePaths({ components, context });        // Auth pages have no placeholders
   buildConnections({ components, context });             // Connection configs
   buildApi({ components, context });                     // API endpoints
   buildPages({ components, context });                   // Page definitions

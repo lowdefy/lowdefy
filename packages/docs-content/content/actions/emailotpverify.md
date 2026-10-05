@@ -9,6 +9,7 @@
     pageId?: string
     url?: string
     urlQuery?: object
+    pathParams?: object
   } | false
 }): void
 ```
@@ -37,6 +38,7 @@ An expired, mistyped or already-used code is the auth server rejecting the attem
   - `pageId: string`: The pageId to land on.
   - `url: string`: The URL to land on. An absolute URL is not `basePath`-prefixed, so it can be an external landing page.
   - `urlQuery: object`: The urlQuery to set on the destination.
+  - `pathParams: object`: Values for the placeholders in the destination page's [`path`](/page-paths), by placeholder name.
 
 #### Examples
 

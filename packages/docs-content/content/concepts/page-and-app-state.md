@@ -1,6 +1,6 @@
 # Page and App State
 
-A Lowdefy app has a few different data objects which can be accessed and modified. The app wide objects are the `global`, `media` and `user` objects. Then there are page specific objects like the `state`, `urlQuery` and `input` objects.
+A Lowdefy app has a few different data objects which can be accessed and modified. The app wide objects are the `global`, `media` and `user` objects. Then there are page specific objects like the `state`, `urlQuery`, `pathParams` and `input` objects.
 
 ## State
 
@@ -161,6 +161,14 @@ events:
           _url_query: document-id ## Returns 'ABC123'
 ```
 
+## Path parameters
+
+A page with a [`path`](/page-paths), like `tickets/{space}/{ticket_id}`, is opened at a URL that holds the values of its placeholders, like `/tickets/support/1234`. The `pathParams` object holds these values, `{ space: 'support', ticket_id: '1234' }`. They are set with the `pathParams` field of the [`Link`](/Link) action and read with the [`_path_params`](/_path_params) operator. Unlike `urlQuery` values, path parameters are always strings, and every placeholder always has one.
+
+A page with placeholders has one instance for each set of values, each with its own `state`, `input` and request results, so ticket 1's state never shows on ticket 2. See [Page instances](/page-paths#page-instances).
+
+> Note that path parameters, like `urlQuery` values, are visible to users of the app and can be changed by them.
+
 ## Input
 
 The `input` object is unique to a page, and works similar to the `urlQuery` object. The `input` object is used to pass information between page transitions. Variables set to the `input` object are not written to the URL, so they are not visible to app users but also cannot be used to share the data in a link since a `input` object is only consistent between one page and the next to which it links. A `input` object is set using the `input` param of the [`Link`](/Link) action or the `input` property of an [`Anchor`](/Anchor) block when linking from a page to another page in the app and can be read using the [`_input`](/_input) operator.
@@ -238,7 +246,7 @@ blocks:
 #### TLDR
   - There are app wide and page specific data objects.
   - App wide are `global`, `media` and `user`.
-  - Page specific are `state`, `urlQuery` and `input`.
+  - Page specific are `state`, `urlQuery`, `pathParams` and `input`.
   - All input blocks write their value to `state`, with the their `id` as the key in the `state` object.
   - Input blocks which are not visible are removed from `state`.
   - The `SetState` action can also modify the `state` object.

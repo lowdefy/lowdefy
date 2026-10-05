@@ -155,13 +155,13 @@ c.set('lowdefyContext', context);
 
 ## Page Rendering
 
-**Files:** `src/html/renderPage.js`, `src/html/template.js`, `src/routes/page.js` (routes `GET /`, `GET /404`, `GET /:rest{.+}`)
+**Files:** `src/html/renderPage.js`, `src/html/template.js`, `src/routes/mountPageRoutes.js` (routes `GET /`, `GET /404`, `GET /:rest{.*}`)
 
-`renderPage`:
+`renderPage` takes the request path (basePath and the leading `/` removed, still encoded), not a page id:
 
-1. Reads root config; `pageId === ''` → if no home page configured, 302 to `/${home.pageId}`.
-2. `getPageConfig` — missing page → 302 to `/404`; `GET /404` renders the 404 page config **with HTTP 404 status**.
-3. Renders the HTML template and returns `c.html(html, status)`.
+1. Reads root config. An empty path is the app root: `getHomePath` builds the home page's path with `buildPagePath` (the home link's `pathParams` from `getHomeAndMenus` when home is the first menu link), and when no `homePageId` is configured it 302s there.
+2. `getPageConfig(context, { path, urlQuery })` matches the path against `routes.json` with `matchPagePath` and loads `pages/${pageId}.json` for the match. No match, or a page the user may not open, 302s to `/404` (or to sign-in, with a `callbackUrl` of the requested path and query, for a logged-out user). `GET /404` is a fixed route ahead of the matcher and renders the 404 page config **with HTTP 404 status**.
+3. Renders the HTML template, embedding `pageId`, `pathParams` and `matchedPath` with `pageConfig`, and returns `c.html(html, status)`.
 
 The template embeds everything the client needs in one response:
 

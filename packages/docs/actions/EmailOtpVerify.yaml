@@ -28,6 +28,7 @@ _ref:
           pageId?: string
           url?: string
           urlQuery?: object
+          pathParams?: object
         } | false
       }): void
       ```
@@ -55,6 +56,7 @@ _ref:
         - `pageId: string`: The pageId to land on.
         - `url: string`: The URL to land on. An absolute URL is not `basePath`-prefixed, so it can be an external landing page.
         - `urlQuery: object`: The urlQuery to set on the destination.
+        - `pathParams: object`: Values for the placeholders in the destination page's [`path`](/page-paths), by placeholder name.
 
     examples: |
       ###### Sign in with the code and land on the home page (or the page the user was bounced from):
