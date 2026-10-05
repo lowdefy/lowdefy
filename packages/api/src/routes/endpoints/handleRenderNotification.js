@@ -164,7 +164,7 @@ async function handleRenderNotification(context, routineContext, { step }) {
       );
     }
   }
-  const routes = (await context.readConfigFile('routes.json')) ?? [];
+  const routes = await context.readConfigFile('routes.json');
   const resolvedItem = resolveNotificationLinks({
     item: data,
     dataKeys: Template.dataKeys ?? [],

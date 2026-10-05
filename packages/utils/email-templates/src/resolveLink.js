@@ -25,7 +25,7 @@ function resolveLink({ link, paths }) {
     const query = type.isNone(link.urlQuery) ? '' : `?${new URLSearchParams(link.urlQuery)}`;
     const pagePath = buildPagePath({
       pageId: link.pageId,
-      path: paths?.[link.pageId],
+      path: paths[link.pageId],
       pathParams: link.pathParams,
     });
     return `/${pagePath}${query}`;
