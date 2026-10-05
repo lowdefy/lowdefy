@@ -73,7 +73,7 @@ const lifecycleTools = [
   {
     name: 'lowdefy_run_tests',
     description:
-      'Run this app\'s tests (as `lowdefy test` does) against its dev server, starting it if needed. Choose all, a folder or glob, or a tag: no arguments runs every journey under tests/journeys/, sub-folders included, except folders starting with "_" (such as _candidates); `paths` runs journey files, folders or globs (`tests/journeys/review/**`); `tags` runs the journeys carrying any of the tags. `filter` narrows by name; paths, tags and filter combine. A journey whose `user` is a list of data set users runs once as each, named "<name> [<user>]" (filter "[admin]" picks one). Returns a summary and one result per journey run: passed, or the failing step with expected and actual. Run it before saying a change is done, and add a journey (the steps you verified with lowdefy_run_journey) for behaviour you fixed.',
+      'Run this app\'s tests (as `lowdefy test` does) against its dev server, starting it if needed. Choose all, a folder or glob, or a tag: no arguments runs every journey under tests/journeys/, sub-folders included, except folders starting with "_" (such as _candidates); `paths` runs journey files, folders or globs (`tests/journeys/review/**`); `tags` runs the journeys carrying any of the tags. `filter` narrows by name; paths, tags and filter combine. A journey whose `user` is a list of data set users runs once as each, named "<name> [<user>]" (filter "[admin]" picks one). `tier` then runs only the most-used journeys of that selection, by their production use: run tier "common" first for the happy paths, and widen to tier "edge" before calling a change done. Journeys marked `deprecated: true` are skipped. Returns a summary and one result per journey run: passed, or the failing step with expected and actual; each report line carries the journey\'s tier, rank, rate and failures. Add a journey (the steps you verified with lowdefy_run_journey) for behaviour you fixed.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -101,6 +101,18 @@ const lifecycleTools = [
           maximum: 10,
           description:
             'Run each journey this many times and classify it PASS, FLAKY or FAIL (each result carries `class`). A candidate is committed only after repeat: 3 gives PASS. Default 1.',
+        },
+        tier: {
+          type: 'string',
+          enum: ['common', 'wide', 'edge', 'full'],
+          description:
+            'Only run the journeys in this popularity tier of the selection, ranked by recent production use: common (the most-used journeys making up half of use, the happy paths), wide (80%), edge (95%, the edge cases real users still reach) or full (every journey, the default). Journeys with no counts for their current steps run in every tier. Refused when the selection has fewer than 100 production matches in the usage window.',
+        },
+        usageWindow: {
+          type: 'string',
+          pattern: '^[1-9][0-9]*m$',
+          description:
+            'The calendar months recent production use is ranked over, ending at the newest month any selected journey holds, e.g. "6m". Default "3m".',
         },
       },
     },

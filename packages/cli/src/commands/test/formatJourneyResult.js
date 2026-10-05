@@ -69,8 +69,8 @@ function failureLines({ failure, message }) {
   return lines;
 }
 
-function withEvidence({ line, evidence }) {
-  const formatted = formatEvidence({ evidence });
+function withEvidence({ line, evidence, usage }) {
+  const formatted = formatEvidence({ evidence, usage });
   return formatted === '' ? line : `${line}  ${formatted}`;
 }
 
@@ -80,6 +80,7 @@ function formatSingle({ result, seen }) {
       withEvidence({
         line: `PASS  ${result.name}  (${result.stepCount} steps, ${result.durationMs}ms)`,
         evidence: result.evidence,
+        usage: result.usage,
       }),
       ...formatJourneyDataSet({ result, seen }),
     ];
@@ -99,6 +100,7 @@ function formatRepeated({ result, seen }) {
       withEvidence({
         line: `PASS   ${result.name}   (${result.stepCount} steps, ${result.passedRuns}/${result.runs}, ${seconds}s each)`,
         evidence: result.evidence,
+        usage: result.usage,
       }),
       ...formatJourneyDataSet({ result, seen }),
     ];
@@ -128,10 +130,11 @@ function formatRepeated({ result, seen }) {
 }
 
 // Returns the lines to print for one journey result. Run once, a single PASS
-// line, or a FAIL line followed by an indented explanation of what went
-// wrong. Replayed (--repeat above 1), the class - PASS, FLAKY or FAIL - with
-// the runs that passed, and each failing run's step. A data set and its
-// warnings are printed once per run: `seen` is shared across the run's results.
+// line (with the journey's tier and evidence when it has them), or a FAIL
+// line followed by an indented explanation of what went wrong. Replayed
+// (--repeat above 1), the class - PASS, FLAKY or FAIL - with the runs that
+// passed, and each failing run's step. A data set and its warnings are
+// printed once per run: `seen` is shared across the run's results.
 function formatJourneyResult({ result, seen = new Set() }) {
   if ((result.repeat ?? 1) === 1 || result.refused === true) {
     return formatSingle({ result, seen });

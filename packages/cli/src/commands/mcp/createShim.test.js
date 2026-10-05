@@ -303,6 +303,33 @@ test('lowdefy_run_tests passes tags and a list of filters through to the selecti
   expect(result.summary).toEqual('No tests matched tag "smoke" and filter "orders" or "refunds".');
 });
 
+test('lowdefy_run_tests offers tier and usageWindow and passes them through to the selection', async () => {
+  const app = makeApp('.');
+  fs.mkdirSync(path.join(app, '.lowdefy'));
+  fs.writeFileSync(
+    path.join(app, '.lowdefy', 'instance.json'),
+    JSON.stringify({
+      pid: process.pid,
+      configDirectory: app,
+      owner: 'terminal',
+      state: 'ready',
+      url: 'http://localhost:3999',
+    })
+  );
+  await connect({ cwd: root });
+  const { tools } = await client.listTools();
+  const runTests = tools.find((tool) => tool.name === 'lowdefy_run_tests');
+  expect(runTests.inputSchema.properties.tier.enum).toEqual(['common', 'wide', 'edge', 'full']);
+  expect(runTests.inputSchema.properties.usageWindow.pattern).toBe('^[1-9][0-9]*m$');
+  expect(runTests.description).toContain('run tier "common" first');
+  const result = await client.callTool({
+    name: 'lowdefy_run_tests',
+    arguments: { usageWindow: '6d' },
+  });
+  expect(result.isError).toBe(true);
+  expect(text(result)).toContain('Received "6d".');
+});
+
 test('lowdefy_dev_stop refuses a dev server the user runs in a terminal', async () => {
   const app = makeApp('.');
   fs.mkdirSync(path.join(app, '.lowdefy'));

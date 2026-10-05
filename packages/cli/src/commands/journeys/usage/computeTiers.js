@@ -94,8 +94,9 @@ function refusal({ ranked, matches, windowMonths }) {
 // null, its usage is still shown. `refused` says why tiers other than `full`
 // cannot be cut: fewer than 100 matches, or no evidence at all.
 function computeTiers({ journeys, usageWindow }) {
-  const live = journeys.filter(({ journey }) => journey.deprecated !== true);
-  const anchor = newestMonth({ journeys: live.map(({ journey }) => journey) });
+  // Deprecated journeys anchor the window too, so one named on its own still
+  // shows its recent use.
+  const anchor = newestMonth({ journeys: journeys.map(({ journey }) => journey) });
   const windowMonths = usageWindowMonths({ anchor, months: parseUsageWindow(usageWindow) });
 
   const rows = journeys.map(({ file, journeyIndex, name, journey }) => {

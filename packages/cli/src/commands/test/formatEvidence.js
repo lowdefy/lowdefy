@@ -16,10 +16,21 @@
 
 import { type } from '@lowdefy/helpers';
 
-// The production part of the line. Monthly evidence shows its all-time
-// sessions: persons and orgs are per month and do not add up across months.
-// The legacy window shape, accepted for one minor release, shows its window's
-// sessions and orgs as before.
+// The journey's place in its run's ranking, over the usage window:
+// `common #2 · 13.7/day · 14 failed (3m)`, or `unranked` for a journey with
+// no counts for its current flow. Persons and orgs are left out: they do not
+// add up across months.
+function formatUsage({ usage }) {
+  if (usage.unranked) return 'unranked';
+  return `${usage.tier} #${usage.rank} · ${usage.rate.toFixed(1)}/day · ${usage.failures} failed (${
+    usage.usageWindow
+  })`;
+}
+
+// The production part of the line without a ranking. Monthly evidence shows
+// its all-time sessions: persons and orgs are per month and do not add up
+// across months. The legacy window shape, accepted for one minor release,
+// shows its window's sessions and orgs.
 function formatProduction({ production }) {
   if (type.isArray(production.months)) {
     const sessions = production.months.reduce((sum, entry) => sum + entry.sessions, 0);
@@ -37,14 +48,19 @@ function formatProduction({ production }) {
   return parts;
 }
 
-// The evidence a PASS line carries: `412 sessions · 11/12 mutants`. Mutants
-// are left out when no mutation report has been refreshed into the journey.
-// Empty when there is nothing to show.
-function formatEvidence({ evidence }) {
+// The evidence a PASS line carries. With `usage` (the journey's tier, rank,
+// rate and failures, from selectTier) the production part is its ranking:
+// `common #2 · 13.7/day · 14 failed (3m) · 11/12 mutants`. Without it, as in
+// the evidence refresh's change log, the production part is its sessions.
+// Mutants are left out when no mutation report has been refreshed into the
+// journey. Empty when there is nothing to show.
+function formatEvidence({ evidence, usage }) {
   if (!type.isObject(evidence)) return '';
   const parts = [];
   const { production, mutation } = evidence;
-  if (type.isObject(production)) {
+  if (type.isObject(usage)) {
+    parts.push(formatUsage({ usage }));
+  } else if (type.isObject(production)) {
     parts.push(...formatProduction({ production }));
   }
   if (type.isObject(mutation)) {

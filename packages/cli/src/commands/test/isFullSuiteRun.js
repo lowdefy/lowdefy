@@ -17,13 +17,15 @@
 import asList from './asList.js';
 
 // Only a run of the whole suite, once, records as the suite's journey run: a
-// replay of one candidate, a filtered or a tagged run must never become what
-// the suite is read to drive. `filter` is one string or a list.
-function isFullSuiteRun({ paths, filter, tags, repetition }) {
+// replay of one candidate, a filtered, a tagged or a tiered run must never
+// become what the suite is read to drive. `filter` is one string or a list.
+// Skipping `deprecated: true` journeys keeps a run whole: they are not part of
+// the suite.
+function isFullSuiteRun({ paths, filter, tags, tier, repetition }) {
   const noPaths = asList(paths).length === 0;
   const noFilter = asList(filter).every((value) => value === '');
   const noTags = asList(tags).length === 0;
-  return noPaths && noFilter && noTags && repetition === 1;
+  return noPaths && noFilter && noTags && tier === 'full' && repetition === 1;
 }
 
 export default isFullSuiteRun;

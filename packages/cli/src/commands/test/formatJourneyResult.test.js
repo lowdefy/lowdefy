@@ -276,3 +276,56 @@ test('formatJourneyResult puts no evidence on a FAIL line', () => {
   });
   expect(lines.join('\n')).not.toContain('sessions');
 });
+
+const monthlyEvidence = {
+  production: {
+    sequence: 'v1-3f9a12c0',
+    pageId: 'tickets',
+    flow: [],
+    months: [{ month: '2026-09', days: 30, sessions: 411, persons: 37, orgs: 9, failures: 14 }],
+  },
+  mutation: { killed: 11, total: 12 },
+};
+
+test('formatJourneyResult shows the tier, rank, rate and failures on the PASS line', () => {
+  expect(
+    formatJourneyResult({
+      result: {
+        name: 'member assigns an open ticket',
+        passed: true,
+        stepCount: 5,
+        durationMs: 2100,
+        evidence: monthlyEvidence,
+        usage: {
+          tier: 'common',
+          rank: 2,
+          rate: 13.7,
+          failures: 14,
+          unranked: false,
+          usageWindow: '3m',
+        },
+      },
+    })
+  ).toEqual([
+    'PASS  member assigns an open ticket  (5 steps, 2100ms)  common #2 · 13.7/day · 14 failed (3m) · 11/12 mutants',
+  ]);
+});
+
+test('formatJourneyResult marks an unranked journey on the PASS line of a repeated run', () => {
+  expect(
+    formatJourneyResult({
+      result: {
+        name: 'new flow',
+        passed: true,
+        class: 'PASS',
+        repeat: 3,
+        runs: 3,
+        passedRuns: 3,
+        stepCount: 2,
+        durationMs: 1500,
+        evidence: monthlyEvidence,
+        usage: { tier: 'common', rank: null, rate: null, failures: null, unranked: true },
+      },
+    })
+  ).toEqual(['PASS   new flow   (2 steps, 3/3, 1.5s each)  unranked · 11/12 mutants']);
+});

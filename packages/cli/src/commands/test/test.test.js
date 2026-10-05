@@ -18,6 +18,10 @@ import { jest } from '@jest/globals';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import YAML from 'yaml';
+
+import flowLines from '../journeys/evidence/flowLines.js';
+import sequenceId from '../journeys/evidence/sequenceId.js';
 
 const mockPost = jest.fn();
 const mockGet = jest.fn();
@@ -757,4 +761,187 @@ test('test --lint lints a journey with a list of users once', async () => {
   expect([...logs.info, ...logs.error]).toContainEqual(
     expect.stringMatching(/^Linted 1 journeys:/)
   );
+});
+
+// A journey refreshed with production evidence: `sessions` over the 30 days of
+// September, or the `months` given. No evidence when neither is given.
+function rankedJourneyYaml({ name, sessions, months, failures = 0, ...rest }) {
+  const steps = [{ click: name.replace(/\W/g, '_') }];
+  const journey = { name, pageId: 'form', ...rest, steps };
+  const monthList =
+    months ??
+    (sessions === undefined
+      ? undefined
+      : [{ month: '2026-09', days: 30, sessions, persons: 1, orgs: 1, failures }]);
+  if (monthList !== undefined) {
+    journey.evidence = {
+      production: {
+        sequence: sequenceId({ pageId: 'form', steps }),
+        pageId: 'form',
+        flow: flowLines({ pageId: 'form', steps }),
+        months: monthList,
+      },
+    };
+  }
+  return YAML.stringify(journey);
+}
+
+test('test --tier common runs the common journeys and the unranked ones, and records nothing', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', rankedJourneyYaml({ name: 'top', sessions: 300, failures: 4 }));
+  writeJourneyFile('b.yaml', rankedJourneyYaml({ name: 'middle', sessions: 60 }));
+  writeJourneyFile('c.yaml', rankedJourneyYaml({ name: 'low', sessions: 30 }));
+  writeJourneyFile('d.yaml', rankedJourneyYaml({ name: 'new' }));
+  context.options.tier = 'common';
+  await test({ context });
+  const bodies = mockPost.mock.calls.map(([, body]) => body);
+  expect(bodies).toHaveLength(2);
+  bodies.forEach((body) => expect(body).not.toHaveProperty('recording'));
+  expect(logs.info.filter((line) => line.startsWith('PASS'))).toEqual([
+    expect.stringMatching(
+      /^PASS {2}top {2}\(1 steps, \d+ms\) {2}common #1 · 10\.0\/day · 4 failed \(3m\)$/
+    ),
+    expect.stringMatching(/^PASS {2}new {2}\(1 steps, \d+ms\)$/),
+  ]);
+  expect(logs.info.some((line) => line.startsWith('Recorded this run'))).toBe(false);
+  expect(logs.info[logs.info.length - 1]).toEqual('2 passed, 0 failed of 2 journeys');
+});
+
+test("test without --tier runs every journey and shows each one's tier on its PASS line", async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', rankedJourneyYaml({ name: 'top', sessions: 300 }));
+  writeJourneyFile('b.yaml', rankedJourneyYaml({ name: 'low', sessions: 30 }));
+  await test({ context });
+  expect(mockPost).toHaveBeenCalledTimes(2);
+  const passLines = logs.info.filter((line) => line.startsWith('PASS'));
+  expect(passLines[0]).toContain('common #1 · 10.0/day · 0 failed (3m)');
+  expect(passLines[1]).toContain('edge #2 · 1.0/day · 0 failed (3m)');
+  expect(logs.info.some((line) => line.startsWith('Recorded this run'))).toBe(true);
+});
+
+test('test --tier tiers over the selected folder and tag only', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', rankedJourneyYaml({ name: 'busiest', sessions: 3000 }));
+  writeJourneyFile(
+    path.join('review', 'b.yaml'),
+    rankedJourneyYaml({ name: 'review top', sessions: 300, tags: ['smoke'] })
+  );
+  writeJourneyFile(
+    path.join('review', 'c.yaml'),
+    rankedJourneyYaml({ name: 'review low', sessions: 30, tags: ['smoke'] })
+  );
+  context.options.paths = [path.join(configDirectory, 'tests', 'journeys', 'review')];
+  context.options.tier = 'common';
+  await test({ context });
+  expect(logs.info.filter((line) => line.startsWith('PASS'))).toEqual([
+    expect.stringContaining('PASS  review top'),
+  ]);
+  delete context.options.paths;
+  context.options.tag = ['smoke'];
+  logs.info = [];
+  await test({ context });
+  expect(logs.info.filter((line) => line.startsWith('PASS'))).toEqual([
+    expect.stringMatching(/^PASS {2}review top .* common #1 · 10\.0\/day/),
+  ]);
+});
+
+test('test --tier common runs every user of a journey with a list of users in the tier', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile(
+    'a.yaml',
+    rankedJourneyYaml({
+      name: 'edits a ticket',
+      sessions: 300,
+      data: 'tickets',
+      user: ['admin', 'member'],
+    })
+  );
+  writeJourneyFile('b.yaml', rankedJourneyYaml({ name: 'low', sessions: 30 }));
+  context.options.tier = 'common';
+  await test({ context });
+  const bodies = mockPost.mock.calls.map(([, body]) => body);
+  expect(bodies.map((body) => body.user)).toEqual(['admin', 'member']);
+  expect(logs.info.filter((line) => line.startsWith('PASS'))).toEqual([
+    expect.stringMatching(/^PASS {2}edits a ticket \[admin\] .* common #1 · 10\.0\/day/),
+    expect.stringMatching(/^PASS {2}edits a ticket \[member\] .* common #1 · 10\.0\/day/),
+  ]);
+});
+
+test('test --tier refuses below 100 matches, and says to refresh with no evidence', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', rankedJourneyYaml({ name: 'top', sessions: 30 }));
+  context.options.tier = 'common';
+  await test({ context });
+  expect(process.exitCode).toBe(1);
+  expect(logs.error).toEqual([
+    'The selection has 30 journey matches in 2026-07 to 2026-09, fewer than the 100 tiers need. Use --tier full, or pull more production use.',
+  ]);
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  writeJourneyFile('a.yaml', rankedJourneyYaml({ name: 'top' }));
+  logs.error = [];
+  await test({ context });
+  expect(logs.error).toEqual([
+    'No selected journey has production evidence to rank by. Pull production use with "lowdefy journeys pull posthog", then run "lowdefy journeys evidence --refresh".',
+  ]);
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+});
+
+test('test --usage-window 6m changes the rates and the cut, and 6 or 6d is refused', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile(
+    'a.yaml',
+    rankedJourneyYaml({
+      name: 'older',
+      months: [
+        { month: '2026-04', days: 30, sessions: 300, persons: 1, orgs: 1, failures: 0 },
+        { month: '2026-09', days: 30, sessions: 30, persons: 1, orgs: 1, failures: 0 },
+      ],
+    })
+  );
+  writeJourneyFile('b.yaml', rankedJourneyYaml({ name: 'steady', sessions: 90 }));
+  context.options.tier = 'common';
+  await test({ context });
+  expect(logs.info.filter((line) => line.startsWith('PASS'))).toEqual([
+    expect.stringMatching(/^PASS {2}steady .* common #1 · 3\.0\/day · 0 failed \(3m\)$/),
+  ]);
+  logs.info = [];
+  context.options.usageWindow = '6m';
+  await test({ context });
+  expect(logs.info.filter((line) => line.startsWith('PASS'))).toEqual([
+    expect.stringMatching(/^PASS {2}older .* common #1 · 5\.5\/day · 0 failed \(6m\)$/),
+  ]);
+  context.options.usageWindow = '6';
+  await expect(test({ context })).rejects.toThrow('Received "6".');
+  context.options.usageWindow = '6d';
+  await expect(test({ context })).rejects.toThrow('Received "6d".');
+});
+
+test('test skips a deprecated journey in every run, named or not, and a plain run still records', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile(
+    'a.yaml',
+    rankedJourneyYaml({ name: 'retired', sessions: 30, deprecated: true })
+  );
+  writeJourneyFile('b.yaml', rankedJourneyYaml({ name: 'live', sessions: 300 }));
+  await test({ context });
+  const bodies = mockPost.mock.calls.map(([, body]) => body);
+  expect(bodies).toHaveLength(1);
+  expect(bodies[0].recording).toEqual(
+    expect.objectContaining({ journey: 'tests/journeys/b.yaml#live' })
+  );
+  expect(logs.info).toContain('SKIP deprecated  retired  1.0/day (3m)');
+  expect(logs.info.some((line) => line.startsWith('Recorded this run'))).toBe(true);
+  expect(logs.info[logs.info.length - 1]).toEqual(
+    '1 passed, 0 failed of 1 journeys, 1 deprecated skipped'
+  );
+  logs.info = [];
+  context.options.paths = [path.join(configDirectory, 'tests', 'journeys', 'a.yaml')];
+  await test({ context });
+  expect(mockPost).toHaveBeenCalledTimes(1);
+  expect(mockStartDevServer).toHaveBeenCalledTimes(1);
+  expect(logs.info).toEqual([
+    'SKIP deprecated  retired  1.0/day (3m)',
+    '0 passed, 0 failed of 0 journeys, 1 deprecated skipped',
+  ]);
+  expect(process.exitCode).toBeUndefined();
 });

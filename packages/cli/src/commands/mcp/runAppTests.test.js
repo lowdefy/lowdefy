@@ -19,7 +19,9 @@ import http from 'http';
 import os from 'os';
 import path from 'path';
 
+import flowLines from '../journeys/evidence/flowLines.js';
 import runAppTests from './runAppTests.js';
+import sequenceId from '../journeys/evidence/sequenceId.js';
 
 let configDirectory;
 let server;
@@ -210,28 +212,88 @@ test('runAppTests records a full-suite run and leaves a paths or filter run unre
   });
 });
 
-test('runAppTests returns journey evidence and the PASS line that shows it', async () => {
-  writeJourney('orders.yaml', {
-    name: 'orders list',
-    pageId: 'orders',
-    evidence: {
+// A journey on the orders page, which the stand-in server passes, refreshed
+// with `sessions` over the 30 days of September. No evidence without them.
+function rankedJourney({ name, sessions, failures = 0, ...rest }) {
+  const steps = [{ click: name.replace(/\W/g, '_') }];
+  const journey = { name, pageId: 'orders', ...rest, steps };
+  if (sessions !== undefined) {
+    journey.evidence = {
       production: {
-        sessions: 412,
-        persons: 37,
-        orgs: 9,
-        share: 0.31,
-        failures: 14,
-        window: '2026-09-03/2026-10-02',
+        sequence: sequenceId({ pageId: 'orders', steps }),
+        pageId: 'orders',
+        flow: flowLines({ pageId: 'orders', steps }),
+        months: [{ month: '2026-09', days: 30, sessions, persons: 37, orgs: 9, failures }],
       },
       refreshed: '2026-10-03',
-    },
-    steps: [{ wait: { ms: 1 } }],
-  });
+    };
+  }
+  return journey;
+}
+
+test('runAppTests returns journey evidence and the PASS line that shows its tier', async () => {
+  writeJourney('orders.yaml', rankedJourney({ name: 'orders list', sessions: 411, failures: 14 }));
 
   const { results } = await runAppTests({ configDirectory, url });
 
-  expect(results[0].evidence.production.sessions).toBe(412);
-  expect(results[0].report).toContain('412 sessions · 9 orgs');
+  expect(results[0].evidence.production.months[0].sessions).toBe(411);
+  expect(results[0].usage).toEqual({
+    tier: 'common',
+    rank: 1,
+    rate: 13.7,
+    failures: 14,
+    unranked: false,
+    usageWindow: '3m',
+  });
+  expect(results[0].report).toContain('common #1 · 13.7/day · 14 failed (3m)');
+});
+
+test('runAppTests tier common runs the common and unranked journeys and skips deprecated ones', async () => {
+  const bodies = [];
+  server.removeAllListeners('request');
+  server.on('request', (req, res) => {
+    let body = '';
+    req.on('data', (chunk) => {
+      body += chunk;
+    });
+    req.on('end', () => {
+      res.setHeader('Content-Type', 'application/json');
+      if (req.url === '/lowdefy-docs/build-status') {
+        res.end(JSON.stringify({ buildId: 'build-1' }));
+        return;
+      }
+      bodies.push(JSON.parse(body));
+      res.end(JSON.stringify({ passed: true }));
+    });
+  });
+  writeJourney('a.yaml', rankedJourney({ name: 'top', sessions: 300 }));
+  writeJourney('b.yaml', rankedJourney({ name: 'middle', sessions: 60 }));
+  writeJourney('c.yaml', rankedJourney({ name: 'new' }));
+  writeJourney('d.yaml', rankedJourney({ name: 'retired', sessions: 30, deprecated: true }));
+
+  const { summary, results } = await runAppTests({ configDirectory, url, tier: 'common' });
+
+  expect(results.map((result) => result.name)).toEqual(['top', 'new', 'retired']);
+  expect(results[2]).toEqual({
+    name: 'retired',
+    filePath: path.join('tests', 'journeys', 'd.yaml'),
+    skipped: 'deprecated',
+    report: 'SKIP deprecated  retired  1.0/day (3m)',
+  });
+  expect(summary).toBe('2 passed, 0 failed of 2 journeys, 1 deprecated skipped');
+  bodies.forEach((body) => expect(body).not.toHaveProperty('recording'));
+});
+
+test('runAppTests refuses a tier below 100 matches without running anything', async () => {
+  writeJourney('a.yaml', rankedJourney({ name: 'top', sessions: 30 }));
+
+  const result = await runAppTests({ configDirectory, url, tier: 'wide', usageWindow: '6m' });
+
+  expect(result).toEqual({
+    summary:
+      'The selection has 30 journey matches in 2026-04 to 2026-09, fewer than the 100 tiers need. Use --tier full, or pull more production use.',
+    results: [],
+  });
 });
 
 function writeNestedJourney(relativePath, journey) {
