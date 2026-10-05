@@ -42,6 +42,16 @@ test.describe('Anchor Block', () => {
     await expect(svg).toBeAttached();
   });
 
+  test('an icon in an Anchor logs no unknown prop warning', async ({ page }) => {
+    const errors = [];
+    page.on('console', (message) => {
+      if (message.type() === 'error') errors.push(message.text());
+    });
+    await page.reload();
+    await expect(getAnchor(page, 'anchor_with_icon').locator('svg')).toBeAttached();
+    expect(errors.filter((text) => text.includes('pathParams'))).toEqual([]);
+  });
+
   test('applies disabled styling', async ({ page }) => {
     const anchor = getAnchor(page, 'anchor_disabled');
     await expect(anchor).toBeVisible();

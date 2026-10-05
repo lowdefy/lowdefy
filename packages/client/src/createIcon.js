@@ -35,6 +35,7 @@ const lowdefyProps = [
   'loading',
   'menus',
   'pageId',
+  'pathParams',
   'registerEvent',
   'registerMethod',
   'schemaErrors',
