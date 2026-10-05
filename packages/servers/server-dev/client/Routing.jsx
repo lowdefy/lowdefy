@@ -47,6 +47,12 @@ function Routing({ auth, lowdefy, recording, router }) {
 
   useEffect(() => {
     return router.subscribe((location) => {
+      // The URL already names the next page, but window.lowdefy.pageId and
+      // its context stay the previous page's until Page renders the next
+      // one. Marked here, synchronously inside the navigation (a Link in
+      // onInit included), so a headless caller waiting on isPageReady does
+      // not settle on the page being left. Page.jsx clears it.
+      lowdefy._devNavigating = true;
       // Dynamic pages re-resolve per navigation — bump before setLocation so
       // the page config SWR key changes with the navigation. The router
       // notifies with a fresh location object per event, so same-URL
@@ -54,7 +60,7 @@ function Routing({ auth, lowdefy, recording, router }) {
       bumpNavVersion();
       setLocation(location);
     });
-  }, [router]);
+  }, [lowdefy, router]);
 
   const [Link] = useState(() => createLinkComponent({ router }));
 
