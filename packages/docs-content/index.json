@@ -3324,7 +3324,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "a12c94fbb3fd6c2f9c5aa63dad84f3219a514f47b2d29a0d96512cb7cc5bb291"
+      "hash": "ec65f451a5bfade3b31c801f253d4437e4a3023448ce268fdfa864d021760cc9"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3892,7 +3892,7 @@
         "testing/config-tests.yaml",
         "version.yaml"
       ],
-      "hash": "a43e4c23ee5ed8a63a99da7690294d7c81d189bf171ddbea30fa214fc3f4e0a9"
+      "hash": "0055f8f6451a0bd8373a1183ff6a780291a44d6550ceecae2c5851a785f1262a"
     },
     "testing/journey-data-sets": {
       "files": [
