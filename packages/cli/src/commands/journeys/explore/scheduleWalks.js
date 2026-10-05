@@ -29,21 +29,13 @@ function targetKey(target) {
 // is dropped. The run stops when shouldStop() says budget or cost (the walk
 // in flight finishes its step and closes), or when a walk finds the dev
 // server restarted under a changed build (buildChanged()); after a restart
-// on the same build, the walk is retried once. afterWalk(log) runs after each
-// walk (confirmation replays run there and count against the budget).
+// on the same build, the walk is retried once.
 // runOne({ target, walkId, walkIndex, progress }) runs one walk and returns
 // its log; a walk that throws (the policy's model failing three times in a
 // row, a step the dev server refused) stops the run with reason error, and
 // the walks before it are kept. Returns { logs, notRun: [{ pageId, user,
 // reason }], stopped }.
-async function scheduleWalks({
-  targets,
-  walks,
-  runOne,
-  shouldStop,
-  buildChanged,
-  afterWalk = async () => {},
-}) {
+async function scheduleWalks({ targets, walks, runOne, shouldStop, buildChanged }) {
   const progressByTarget = new Map(
     targets.map((target) => [targetKey(target), createWalkProgress()])
   );
@@ -87,7 +79,6 @@ async function scheduleWalks({
           log = await walkOnce({ target, walkIndex });
         }
         logs.push(log);
-        await afterWalk(log);
       } catch (error) {
         stopped = { reason: 'error', message: error.message };
         break;

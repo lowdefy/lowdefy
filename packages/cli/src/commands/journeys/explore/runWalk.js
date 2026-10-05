@@ -68,7 +68,7 @@ async function runWalk({
     closeMs: null,
   };
   const openStart = now();
-  const opened = await client.open(buildOpenBody({ target, run, walkId, options, record: true }));
+  const opened = await client.open(buildOpenBody({ target, run, walkId, options }));
   if (opened.status === 400) {
     throw new Error(`The dev server refused the walk on "${target.pageId}": ${opened.body.error}`);
   }
