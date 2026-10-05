@@ -316,6 +316,7 @@ Every step is an object with exactly one key:
 | `{ "expect": { "url": { contains } } }`                  | The page url contains the string                                                                                                                                                                                                                |
 | `{ "expect": { "title": { equals } } }`                  | The document title (the browser tab's text) is exactly the string; `{ contains }` checks part of it                                                                                                                                             |
 | `{ "expect": { "calls": { request, pageId?, count } } }` | This actor's browser called the request (on `pageId`, default the current page) exactly `count` times since the journey started, compared once after the page settles; `{ endpoint, count }` counts an endpoint. Counts survive full page loads |
+| `{ "expect": { "error": text } }`                        | The interaction step just before it raised an app error whose message contains `text` (below); must directly follow a click, open, fill, select, press or back                                                                                  |
 
 A **target** is a `blockId` string, or an object that narrows the search to a control that is not itself a block — a grid row's cell buttons, a confirm dialog's OK, a dropdown menu's items:
 
@@ -396,6 +397,30 @@ A step that fails **stops the journey and comes back as data**, never as a tool 
 | `["form.name", "rows"]` | `state: { "form.name": …, "rows": … }`, `null` for a path not defined |
 | `true`                  | The whole state, however large                                        |
 | `false`                 | No state                                                              |
+
+A journey also fails at the step that causes an **app error**, even when every expectation holds: an action that fails with an error that is not a user error, an uncaught page exception or a client error report, a server error from a request or endpoint, or a 5xx from one. Only errors the journey's own browsers cause count, and they are reported in its result, not in `build-status` or the event stream. A failed `Validate`, a `Throw` action and 401/403 refusals never count. The failure carries each error with its kind, its config `source` and a `key` (the explorer's finding key):
+
+```json
+{
+  "index": 1,
+  "step": { "click": "save" },
+  "kind": "app-error",
+  "message": "Step 1 (click) caused an app error: server-error: MongoDB: MongoDB rejected the MongoDBInsertOne command.",
+  "expected": "no app error",
+  "actual": ["server-error: MongoDB: MongoDB rejected the MongoDBInsertOne command."],
+  "errors": [
+    {
+      "kind": "server-error",
+      "message": "MongoDB: MongoDB rejected the MongoDBInsertOne command.",
+      "source": "pages/tickets.yaml:42",
+      "configKey": null,
+      "key": "server-error|tickets|pages/tickets.yaml:42"
+    }
+  ]
+}
+```
+
+The kinds are `action-error`, `client-error`, `server-error`, `request-failed` (a 5xx no server error explains) and `environment` (a `$search` stage the journey's data set cannot run). An error raised while the first page opens fails with `"phase": "open"` in place of `index` and `step`, every step skipped. When the step failed on its own too, the app error leads `message` and the step's own message is kept as `stepMessage`. Where an error is the intended outcome, `{ "expect": { "error": text } }` straight after the interaction claims the errors whose message contains `text`, with the failed action that reported them; any other error from that interaction still fails it.
 
 Screenshots taken before the failure are kept: over MCP they arrive as image content after the JSON (with the JSON listing only their names); over HTTP they are base64 in the JSON body.
 

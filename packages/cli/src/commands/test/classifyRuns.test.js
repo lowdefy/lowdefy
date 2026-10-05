@@ -70,3 +70,23 @@ test.each([
 ])('isFullSuiteRun(%j) is %s', (options, expected) => {
   expect(isFullSuiteRun(options)).toBe(expected);
 });
+
+test('classifyRuns marks a run that failed on opening its page, with no step', () => {
+  const openFailure = {
+    passed: false,
+    failure: { phase: 'open', kind: 'app-error', message: 'Opening the page caused an app error' },
+    message: 'Opening the page caused an app error',
+  };
+  expect(classifyRuns({ runs: [openFailure, openFailure] })).toEqual({
+    class: 'FAIL',
+    passed: 0,
+    total: 2,
+    failures: [1, 2].map((run) => ({
+      run,
+      step: null,
+      phase: 'open',
+      message: 'Opening the page caused an app error',
+    })),
+  });
+  expect(classifyRuns({ runs: [openFailure, pass] }).class).toEqual('FLAKY');
+});

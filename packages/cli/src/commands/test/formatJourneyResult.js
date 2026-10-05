@@ -17,6 +17,7 @@
 import YAML from 'yaml';
 import { type } from '@lowdefy/helpers';
 
+import formatAppErrors from './formatAppErrors.js';
 import formatEvidence from './formatEvidence.js';
 import formatJourneyDataSet from './formatJourneyDataSet.js';
 
@@ -44,14 +45,35 @@ function describeStep(step) {
 }
 
 function failureDetail({ failure, message }) {
+  if (failure?.phase === 'open') {
+    return `on open: ${failure.message}`;
+  }
   if (type.isObject(failure)) {
     return `step ${failure.index} (${describeStep(failure.step)}): ${failure.message ?? ''}`;
   }
   return message ?? '';
 }
 
+// An app error failure names the step (or the page open) and then each
+// error, with what the step itself found when it failed too.
+function appErrorLines({ failure }) {
+  const lines = [
+    failure.phase === 'open'
+      ? '      on open'
+      : `      step ${failure.index}: ${toCompactYaml(failure.step)}`,
+    ...formatAppErrors({ errors: failure.errors }),
+  ];
+  if (type.isString(failure.stepMessage)) {
+    lines.push(`      ${failure.stepMessage}`);
+  }
+  return lines;
+}
+
 function failureLines({ failure, message }) {
   const lines = [];
+  if (failure?.kind === 'app-error') {
+    return appErrorLines({ failure });
+  }
   if (type.isObject(failure)) {
     lines.push(`      step ${failure.index}: ${toCompactYaml(failure.step)}`);
     if (!type.isUndefined(failure.expected) || !type.isUndefined(failure.actual)) {
@@ -61,6 +83,7 @@ function failureLines({ failure, message }) {
     if (type.isString(failure.message) && failure.message !== '') {
       lines.push(`      ${failure.message}`);
     }
+    lines.push(...formatAppErrors({ errors: failure.errors }));
     return lines;
   }
   if (type.isString(message) && message !== '') {
@@ -108,12 +131,15 @@ function formatRepeated({ result, seen }) {
     return [
       `FLAKY  ${result.name}   (${result.passedRuns}/${result.runs} passed) run ${
         first.run
-      } failed at ${failureDetail(result)}`,
+      } failed ${result.failure?.phase === 'open' ? '' : 'at '}${failureDetail(result)}`,
       ...formatJourneyDataSet({ result, seen }),
       `      file: ${result.filePath}`,
       ...failureLines({ failure: result.failure, message: result.message }),
       ...others.map(
-        (failure) => `      run ${failure.run} failed at step ${failure.step}: ${failure.message}`
+        (failure) =>
+          `      run ${failure.run} failed ${
+            failure.phase === 'open' ? 'on open' : `at step ${failure.step}`
+          }: ${failure.message}`
       ),
     ];
   }
