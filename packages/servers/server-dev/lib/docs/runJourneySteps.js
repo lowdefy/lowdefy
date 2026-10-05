@@ -784,6 +784,9 @@ async function runExpect({ journey, page, step, timeout }) {
     case 'title':
       await expectTitle({ page, params, timeout });
       return;
+    case 'error':
+      // Claimed when the step's window closes (see observe/claimExpectedErrors).
+      return;
     default:
       return;
   }
@@ -888,11 +891,17 @@ function toFailure({ error, index, step }) {
 // Runs the steps in order, stopping at the first failure. Returns the step
 // log, the failure (if any) and the screenshots taken — never throws for a
 // step that fails, because a failed journey is a result an agent reads, not
-// an error it recovers from.
+// an error it recovers from. A journey run that watches for app errors
+// (journey.appErrors, see createJourneyAppErrors) also fails at the step
+// whose window held one, or on open when opening the page caused one.
 async function runJourneySteps({ journey, steps }) {
   const results = [];
   const screenshots = [];
+  const { appErrors } = journey;
   let failure;
+  if (!type.isUndefined(appErrors)) {
+    failure = await appErrors.judgeOpen({ page: journey.actors.current().page });
+  }
   for (let index = 0; index < steps.length; index += 1) {
     const step = steps[index];
     if (!type.isUndefined(failure)) {
@@ -900,6 +909,7 @@ async function runJourneySteps({ journey, steps }) {
       continue;
     }
     const started = Date.now();
+    await appErrors?.openWindow({ page: journey.actors.current().page });
     try {
       await runStep({ journey, step, index, screenshots });
       if (INTERACTION_STEPS.includes(getStepKey(step))) {
@@ -925,6 +935,19 @@ async function runJourneySteps({ journey, steps }) {
       });
       results[results.length - 1].status = 'failed';
     }
+    if (!type.isUndefined(appErrors)) {
+      failure = await appErrors.judgeStep({
+        journey,
+        steps,
+        index,
+        results,
+        failure,
+        leftOrigin: !type.isUndefined(departure),
+      });
+    }
+  }
+  if (!type.isUndefined(appErrors) && type.isUndefined(failure) && steps.length > 0) {
+    failure = await appErrors.judgeDrain({ journey, steps, results });
   }
   return { results, screenshots, failure };
 }

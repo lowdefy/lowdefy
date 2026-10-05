@@ -1,0 +1,23 @@
+# An expected outcome stops an action without being an app error: a journey
+# that clicks this passes (appErrors.test.mjs in
+# packages/servers/server-dev/test/journeyFixture).
+id: app_errors
+type: Box
+blocks:
+  - id: app_errors_title
+    type: Title
+    properties:
+      content: App errors
+      level: 2
+  # Throw raises a UserError, the app saying no on purpose.
+  - id: throw_button
+    type: Button
+    properties:
+      title: Throw
+    events:
+      onClick:
+        - id: throw_expected
+          type: Throw
+          params:
+            throw: true
+            message: Expected outcome

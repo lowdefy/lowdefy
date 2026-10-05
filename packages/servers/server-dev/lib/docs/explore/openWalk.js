@@ -32,7 +32,7 @@ import openJourney from '../openJourney.js';
 import readDevAuthMode from '../readDevAuthMode.js';
 import resolveJourneyDataSet from '../dataSets/resolveJourneyDataSet.js';
 import validateOpenWalkBody from './validateOpenWalkBody.js';
-import watchWalkContext from './watchWalkContext.js';
+import watchJourneyContext from '../observe/watchJourneyContext.js';
 import { listWalks, registerWalk } from './walkSessions.js';
 
 const MAX_OPEN_WALKS = 2;
@@ -187,7 +187,7 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
       users: dataSet?.users,
       recording,
       onContext: ({ context }) =>
-        watchWalkContext({ context, events: walk.events, origin, basePath }),
+        watchJourneyContext({ context, events: walk.events, origin, basePath }),
     });
     walk.runner = journey;
     walk.observation = await observeWalkPage({ walk, open: true });

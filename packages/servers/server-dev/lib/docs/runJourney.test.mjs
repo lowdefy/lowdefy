@@ -42,6 +42,12 @@ jest.unstable_mockModule('./readJourneyEmailMatch.js', () => ({
   default: mockReadJourneyEmailMatch,
 }));
 
+// No client error report is ever in flight here; the real wait's grace would
+// only slow every test down.
+jest.unstable_mockModule('./observe/waitForClientErrorReports.js', () => ({
+  default: async () => {},
+}));
+
 const { default: runJourney } = await import('./runJourney.js');
 const { recordRunError } = await import('./runErrorBuffers.js');
 
@@ -137,6 +143,7 @@ function createPage({ window = createLowdefyWindow(), url = 'http://localhost:32
       }
     }),
     url: jest.fn(() => url),
+    isClosed: jest.fn(() => false),
     documentTitle: '',
     title: jest.fn(async () => page.documentTitle),
     goBack: jest.fn(async () => null),
@@ -1799,12 +1806,14 @@ function openActorsWithNetwork(actors) {
   const listeners = [];
   actors.forEach(({ page, opening }) => {
     mockOpenPage.mockImplementationOnce(async ({ onContext }) => {
-      let listener;
+      // The network counter and the app error watch both listen for requests.
+      const requestCallbacks = [];
+      const listener = (request) => requestCallbacks.forEach((callback) => callback(request));
       const context = {
         close: jest.fn(async () => {}),
         exposeBinding: jest.fn(async () => {}),
         on: jest.fn((event, callback) => {
-          if (event === 'request') listener = callback;
+          if (event === 'request') requestCallbacks.push(callback);
         }),
       };
       await onContext(context);

@@ -20,6 +20,7 @@ import { getState } from '@lowdefy/e2e-utils/runtime';
 import { findPlaceholderStep, validateJourneySteps } from '@lowdefy/node-utils';
 
 import collectExercised from './collectExercised.js';
+import createJourneyAppErrors from './observe/createJourneyAppErrors.js';
 import describeDataSetResult from './dataSets/describeDataSetResult.js';
 import getDataStore from './dataSets/getDataStore.js';
 import journeyRunRecording from './journeyRunRecording.js';
@@ -210,6 +211,12 @@ async function runJourneyInBrowser({
   const runRecording = journeyRunRecording({ recording, by });
   const runBuffer = { run: runRecording.run.id, journey: runRecording.run.journey };
   registerRunBuffer(runBuffer);
+  const appErrors = createJourneyAppErrors({
+    origin,
+    basePath,
+    recording: runRecording,
+    configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd(),
+  });
   let journey;
   try {
     const opened = await openJourney({
@@ -227,9 +234,11 @@ async function runJourneyInBrowser({
       mutantCookie,
       users: dataSet?.users,
       recording: runRecording,
+      onContext: appErrors.onContext,
     });
     journey = opened.journey;
     journey.recording = runRecording;
+    journey.appErrors = appErrors;
     const { results, screenshots, failure } = await runJourneySteps({ journey, steps });
     const state = await readFinalState({ page: journey.actors.current().page });
     const exercised = await collectExercised({

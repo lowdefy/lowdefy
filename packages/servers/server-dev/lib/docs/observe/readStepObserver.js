@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-// Serialized into the walk's page by page.evaluate, so this function must be
+// Serialized into the journey's or walk's page by page.evaluate, so this function must be
 // pure: it may reference nothing but `window`, `document` and its argument.
 //
 // Closes the step's window opened by installStepObserver and reads it: the
@@ -24,7 +24,7 @@
 // motion ends, which a headless page may not reach within the step. Returns
 // null when the document that opened the window is gone (a full page load).
 function readStepObserver({ transientSelector }) {
-  const observer = window.__lowdefyWalkStep;
+  const observer = window.__lowdefyStepObserver;
   if (!observer || !observer.open) return null;
   observer.open = false;
   function isTransient(node) {

@@ -16,13 +16,13 @@
 
 import isAppApiUrl from './isAppApiUrl.js';
 
-// Buffers, with timestamps, what a walk's browser context does that the
+// Buffers, with timestamps, what a journey's or walk's browser context does that the
 // invariants read over a step's window: uncaught page errors, and the
 // requests to and responses from the app's request and endpoint API routes.
 // Hooked in before the context's first request, so the first page load is
 // watched too. Client error reports still in flight are counted, so a step's
 // window waits for them before it closes.
-function watchWalkContext({ context, events, origin, basePath }) {
+function watchJourneyContext({ context, events, origin, basePath }) {
   const clientErrorPath = `${basePath}/api/client-error`;
   function isClientErrorPost(request) {
     try {
@@ -62,4 +62,4 @@ function watchWalkContext({ context, events, origin, basePath }) {
   });
 }
 
-export default watchWalkContext;
+export default watchJourneyContext;

@@ -14,20 +14,8 @@
   limitations under the License.
 */
 
-const APP_API_PREFIXES = ['/api/request/', '/api/endpoints/'];
+// antd's click wave: inserted into a clicked Button and removed when its
+// motion ends, so a step window's mutation count never counts it.
+const TRANSIENT_SELECTOR = '.ant-wave';
 
-// Whether a URL is one of the app's request or endpoint API routes on this
-// dev server: what a walk step counts as the app doing work, and where a 5xx
-// is a failed request.
-function isAppApiUrl({ url, origin, basePath = '' }) {
-  let parsed;
-  try {
-    parsed = new URL(url);
-  } catch {
-    return false;
-  }
-  if (parsed.origin !== origin) return false;
-  return APP_API_PREFIXES.some((prefix) => parsed.pathname.startsWith(`${basePath}${prefix}`));
-}
-
-export default isAppApiUrl;
+export default TRANSIENT_SELECTOR;
