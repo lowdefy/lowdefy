@@ -51,7 +51,10 @@ function changedBlocks({ scope, pageId }) {
   );
 }
 
+// A head-only run (a charter with no PR, scope.base null) has no diff, so
+// every block on a target page is in scope.
 function touchesChange({ journey, scope }) {
+  if (type.isNone(scope.base)) return true;
   const changed = changedBlocks({ scope, pageId: journey.pageId });
   return journey.steps.some((step) => changed.has(stepBlockId(step)));
 }
@@ -71,7 +74,7 @@ function writeCandidates({ outDirectory, candidates }) {
 // compiled into its own directory, tests/journeys/_candidates/explorer/
 // findings/ and tests/journeys/_candidates/explorer/. A coverage candidate is
 // kept only when it interacts with a block the page's diff lists as added or
-// changed. On a snapshot data set, expectations holding snapshot values are
+// changed, or always on a head-only run. On a snapshot data set, expectations holding snapshot values are
 // dropped. Each origin gains explorer: { run, pr, walks, finding? }.
 // Returns { finding: [paths], coverage: [paths], droppedExpectations }.
 function compileWalks({

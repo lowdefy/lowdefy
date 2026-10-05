@@ -64,8 +64,14 @@ async function touch(directory) {
   await fs.promises.utimes(directory, now, now).catch(() => {});
 }
 
-// Builds base and head, diffs them and writes scope.json.
-async function scopeRun({ context, revisions, exploreDirectory, runDirectory, options }) {
+const NO_PLUGIN_CHANGES = { missingFromHead: [], versionChanged: [] };
+
+// The base config tree and the plugin sets it is built with. A head-only run
+// (a charter with no PR) has no base to materialise or compare plugins with.
+async function prepareBase({ context, revisions, exploreDirectory }) {
+  if (type.isNone(revisions.base)) {
+    return { baseConfigDirectory: null, pluginSets: NO_PLUGIN_CHANGES };
+  }
   const tree = await materialiseTree({
     root: revisions.root,
     sha: revisions.base,
@@ -77,12 +83,24 @@ async function scopeRun({ context, revisions, exploreDirectory, runDirectory, op
     baseConfigDirectory: tree.configDirectory,
     headConfigDirectory: context.directories.config,
   });
+  return { baseConfigDirectory: tree.configDirectory, pluginSets };
+}
+
+// Builds base and head, diffs them and writes scope.json. A head-only run
+// builds the head alone and targets --page, else the entry pages.
+async function scopeRun({ context, revisions, exploreDirectory, runDirectory, options }) {
+  const headOnly = type.isNone(revisions.base);
+  const { baseConfigDirectory, pluginSets } = await prepareBase({
+    context,
+    revisions,
+    exploreDirectory,
+  });
   let builds;
   try {
     builds = await buildConfigTrees({
       context,
       revisions,
-      baseConfigDirectory: tree.configDirectory,
+      baseConfigDirectory,
       runDirectory,
       pluginSets,
     });
@@ -101,6 +119,7 @@ async function scopeRun({ context, revisions, exploreDirectory, runDirectory, op
     coverage: readCoverage({ directories: context.directories }),
     manualPages: options.pages,
     baseError: builds.baseError,
+    headOnly,
   });
   const scope = await writeScope({
     runDirectory,
@@ -131,10 +150,11 @@ function resolveTargets({ scope, coverage, dataSet, options }) {
   return { targets: orderTargets({ scopePages: scope.pages, targets }), notRun };
 }
 
-async function createPolicy({ context, policyConfig, seed }) {
+async function createPolicy({ context, policyConfig, seed, charter }) {
   const seeded = createSeededPolicy({ seed });
   if (policyConfig.policy === 'seeded') return seeded;
   return createModelPolicy({
+    charter,
     backend: policyConfig.backend,
     modelId: policyConfig.modelId,
     fallbackModelId: policyConfig.fallbackModelId,
@@ -184,7 +204,12 @@ async function walkRun({
   if (!type.isUndefined(liveRule.warning)) context.logger.warn(liveRule.warning);
   const coverage = readCoverage({ directories: context.directories });
   const { targets, notRun } = resolveTargets({ scope, coverage, dataSet, options });
-  const policy = await createPolicy({ context, policyConfig, seed: options.seed });
+  const policy = await createPolicy({
+    context,
+    policyConfig,
+    seed: options.seed,
+    charter: options.charter,
+  });
   const costs = createCostTracker({
     maxCost: policyConfig.maxCost,
     onFirstEstimate: () =>
@@ -237,6 +262,7 @@ async function walkRun({
         policy,
         progress,
         decisionContext: revisions.context,
+        charter: options.charter,
         knownTextFor: ({ pageIds, typed }) =>
           collectKnownText({ buildDirectory: builds.headBuild, pageIds, dataSet, typed }),
         fixtures: dataSet?.fixtures ?? {},
@@ -312,12 +338,14 @@ async function exploreOnServer({ context, options, policyConfig, revisions, serv
   return { run, runDirectory, scope: scoped.scope, walked, report };
 }
 
-// lowdefy journeys explore (--pr <n> | --against <ref>): finds the pages a
-// pull request changed by comparing full config builds of its base and head,
-// walks each changed page as each role on a journey data set, with a policy
-// choosing each step from generated options and fixed invariants deciding
-// findings, and keeps the run in .lowdefy/explore/<run>/. Not a gate: exit 0
-// when the run completes, with or without findings; 1 when it cannot run.
+// lowdefy journeys explore (--pr <n> | --against <ref> | --charter <text>):
+// finds the pages a pull request changed by comparing full config builds of
+// its base and head, walks each changed page as each role on a journey data
+// set, with a policy choosing each step from generated options and fixed
+// invariants deciding findings, and keeps the run in .lowdefy/explore/<run>/.
+// A charter steers the model's choices; with no PR it walks the head alone
+// (--page, else the entry pages). Not a gate: exit 0 when the run completes,
+// with or without findings; 1 when it cannot run.
 async function journeysExplore({ context }) {
   let server = null;
   try {

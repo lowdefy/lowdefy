@@ -31,6 +31,7 @@ const { default: compileWalks } = await import('./compileWalks.js');
 
 const run = '20261004T120000Z-ab12cd';
 const scope = {
+  base: 'base-sha',
   pages: [
     {
       pageId: 'ticket',
@@ -130,4 +131,23 @@ test('on a snapshot data set, an expectation holding a snapshot value is dropped
   result.coverage.forEach((file) => {
     expect(fs.readFileSync(file, 'utf8')).not.toContain('Staging Customer Ltd');
   });
+});
+
+test('a head-only run (no base) keeps every coverage candidate, since every block is in scope', () => {
+  const result = compileWalks({
+    configDirectory,
+    run,
+    pr: null,
+    scope: { base: null, pages: [{ pageId: 'ticket', blocks: [] }] },
+    buildDirectory: undefined,
+    findingsByWalk: new Map([['walk-1', finding]]),
+    snapshot: false,
+    knownTextFor: () => ({ has: () => false }),
+  });
+  const base = path.join(configDirectory, 'tests', 'journeys', '_candidates', 'explorer');
+  expect(result.finding).toEqual([path.join(base, 'findings', 'ticket-s1.yaml')]);
+  expect(result.coverage).toEqual([
+    path.join(base, 'ticket-s2.yaml'),
+    path.join(base, 'ticket-s3.yaml'),
+  ]);
 });

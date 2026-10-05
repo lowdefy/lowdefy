@@ -30,10 +30,10 @@ function formatFinding(finding) {
   }  (${walks}, ${finding.users.join(', ')})`;
 }
 
-// The run summary printed after the walks: what ran and what it cost, what
-// did not run and why, the findings (confirmed first, then unconfirmed, dead
-// clicks and errors this data set cannot avoid), access the PR changed, the
-// candidates written and the trace file's size.
+// The run summary printed after the walks: the charter, if any, what ran
+// and what it cost, what did not run and why, the findings (confirmed first,
+// then unconfirmed, dead clicks and errors this data set cannot avoid),
+// access the PR changed, the candidates written and the trace file's size.
 function formatExploreReport({ report, findings }) {
   const { ran, timings, model } = report;
   const lines = [];
@@ -42,6 +42,9 @@ function formatExploreReport({ report, findings }) {
       report.policy.modelId ? ` ${report.policy.modelId}` : ''
     }   data ${report.data ?? 'none'}`
   );
+  if (report.charter !== null) {
+    lines.push(`Charter   ${report.charter.goal}`);
+  }
   const { switched } = report.policy;
   if (switched !== null) {
     lines.push(

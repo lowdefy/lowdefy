@@ -24,13 +24,15 @@ function countBy(values) {
   return counts;
 }
 
-// report.json: what the run compared, what it walked and what that cost, the
+// report.json: what the run compared, the charter that steered it (null
+// without one), what it walked and what that cost, the
 // targets it did not walk and why, its findings by status, the candidates it
 // wrote, and its trace file. readExploreRuns reads run, pr, base, head and
 // finishedAt from it.
 function buildExploreReport({
   run,
   revisions,
+  charter = null,
   scope,
   walked,
   findings,
@@ -49,6 +51,7 @@ function buildExploreReport({
     base: revisions.base,
     head: revisions.head,
     dirty: revisions.dirty,
+    charter,
     startedAt,
     finishedAt,
     policy: {

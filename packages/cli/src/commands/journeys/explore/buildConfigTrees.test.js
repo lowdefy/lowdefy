@@ -161,6 +161,18 @@ test('buildConfigTrees names the plugins the head does not install when the base
   );
 });
 
+test('buildConfigTrees builds only the head for a head-only run', async () => {
+  const result = await build({ base: null, head: 'head-sha', dirty: false });
+  const buildsDirectory = path.join(context.directories.config, '.lowdefy', 'explore', 'builds');
+  expect(result).toEqual({
+    baseBuild: null,
+    headBuild: path.join(buildsDirectory, 'head-sha-6.1.0', 'build'),
+    buildMs: { base: null, head: expect.any(Number) },
+    cached: { base: false, head: false },
+  });
+  expect(calls().map((call) => call.config)).toEqual([context.directories.config]);
+});
+
 test('buildConfigTrees asks for a dev server update when the builder is missing', async () => {
   fs.rmSync(path.join(context.directories.dev, 'lib'), { recursive: true });
   await expect(build()).rejects.toThrow(
