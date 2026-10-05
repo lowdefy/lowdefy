@@ -131,3 +131,26 @@ test('passes through anchor attributes', () => {
   expect(a.rel).toBe('nofollow');
   expect(a.getAttribute('aria-label')).toBe('lbl');
 });
+
+test('navigation target props do not reach the anchor', () => {
+  const { Link } = setup();
+  const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const { container } = render(
+    <Link
+      href={{ pathname: '/page-1' }}
+      id="link-1"
+      pageId="page-1"
+      pathParams={{ id: '1' }}
+      urlQuery={{ a: 1 }}
+      input={{ a: 1 }}
+      newTab={false}
+    >
+      Go
+    </Link>
+  );
+  const a = container.querySelector('a');
+  expect(a.getAttribute('id')).toBe('link-1');
+  expect(a.getAttributeNames().sort()).toEqual(['href', 'id']);
+  expect(errorSpy).not.toHaveBeenCalled();
+  errorSpy.mockRestore();
+});

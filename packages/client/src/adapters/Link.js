@@ -19,12 +19,20 @@ import { type } from '@lowdefy/helpers';
 
 import { createUrl } from './url.js';
 
+// Navigation-target props that describe where a link goes; none is a DOM attribute.
+const targetProps = ['back', 'home', 'input', 'newTab', 'pageId', 'pathParams', 'urlQuery', 'url'];
+
+function omitTargetProps(props) {
+  return Object.fromEntries(Object.entries(props).filter(([key]) => !targetProps.includes(key)));
+}
+
 // Replaces next/link for the contract used by @lowdefy/client's
 // createLinkComponent: href as { pathname, query } or string, replace,
 // scroll, onClick fired before navigation. Modified clicks (new tab,
 // middle click, download) fall through to native browser handling.
 function createLinkComponent({ router }) {
-  function Link({ children, href, onClick, replace, scroll, ...props }) {
+  function Link({ children, href, onClick, replace, scroll, ...restProps }) {
+    const props = omitTargetProps(restProps);
     const hrefObject = type.isString(href) ? { pathname: href } : (href ?? {});
     const { pathname, query } = hrefObject;
     const url = createUrl({ basePath: router.basePath, pathname, query });
