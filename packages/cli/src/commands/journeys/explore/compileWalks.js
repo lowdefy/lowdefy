@@ -74,8 +74,9 @@ function writeCandidates({ outDirectory, candidates }) {
 // compiled into its own directory, tests/journeys/_candidates/explorer/
 // findings/ and tests/journeys/_candidates/explorer/. A coverage candidate is
 // kept only when it interacts with a block the page's diff lists as added or
-// changed, or always on a head-only run. On a snapshot data set, expectations holding snapshot values are
-// dropped. Each origin gains explorer: { run, pr, walks, finding? }.
+// changed, or always on a head-only run. On a snapshot data set, expectations
+// holding snapshot values are dropped. Each origin gains explorer: { run, pr,
+// walks, finding? }.
 // Returns { finding: [paths], coverage: [paths], droppedExpectations }.
 function compileWalks({
   configDirectory,

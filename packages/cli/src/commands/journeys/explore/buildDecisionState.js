@@ -100,18 +100,17 @@ function changedBlockIds(blockDiff) {
   );
 }
 
-// What a policy reads for one step, and the options it chooses from. The
-// state carries the PR text (or commit messages) when the run has a change to
-// read, the charter's goal when the run has one (beside the PR text, never in
-// place of it), the page, role and URL path
-// with query keys only, the page's block diff, the visible blocks and the
-// last ten steps; every label passes the known-text gate and no state value
-// or request response is included. Each option maps back to the grammar
-// step it runs. Progress rules apply first: an action taken from this shape
-// in this walk is not offered, an earlier walk's is marked [tried], and a
-// walk's first step is an untried action while one remains. Past 255
-// options, options in changed blocks come first, then document order, and
-// the cut is counted.
+// What a policy reads for one step, and the options it chooses from. The state
+// carries the PR text (or commit messages) when the run has a change to read,
+// the charter's goal when the run has one (beside the PR text, never in place
+// of it), the page, role and URL path with query keys only, the page's block
+// diff, the visible blocks and the last ten steps; every label passes the
+// known-text gate and no state value or request response is included. Each
+// option maps back to the grammar step it runs. Progress rules apply first: an
+// action taken from this shape in this walk is not offered, an earlier walk's
+// is marked [tried], and a walk's first step is an untried action while one
+// remains. Past 255 options, options in changed blocks come first, then
+// document order, and the cut is counted.
 function buildDecisionState({
   context,
   charter = null,
