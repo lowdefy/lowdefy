@@ -1,4 +1,4 @@
-`lowdefy journeys explore` walks the pages a pull request changed, as each role, on a [journey data set](/journey-data-sets). It reports what broke, with each finding confirmed by a replay, and it turns the walks into candidate [journeys](/config-tests). Use it before a pull request merges, to catch errors nobody wrote a journey for and to propose journeys for what the pull request added.
+`lowdefy journeys explore` walks the pages a pull request changed, as each role, on a [journey data set](/journey-data-sets). It reports what broke, each finding proven by a [journey](/config-tests) that fails with it, and it turns the walks into candidate journeys. Use it before a pull request merges, to catch errors nobody wrote a journey for and to propose journeys for what the pull request added.
 
 ```bash
 # From the app directory of a checkout at the pull request's head
@@ -78,14 +78,39 @@ Fixed checks, not the model, decide what broke after each step:
 
 Errors are attributed to the walk that caused them: an error in your own browser tab, open beside the run, is never a walk's finding, and walk errors never show up in your build status. A redirect your config intends is not a finding: if the pull request changed the page's auth, it is listed as "access changed in this PR". An Atlas Search stage, which the data set's in-memory database cannot run, is listed as "not runnable on this data set".
 
-An error finding stops its walk, and the walk is replayed straight away on a fresh copy of the data set. The finding is **confirmed** only if the replay reproduces it. Unconfirmed findings are listed separately and get no candidate.
+An error finding stops its walk. Every finding is then proven by a failing journey, as below.
+
+## Proof
+
+A finding is reported only once a journey written for it fails. When the walks are done, the explorer compiles each walk that found something into a candidate journey, one per finding, on the walk's data set (`data:`) and as its data set user. It then runs each candidate twice, one at a time, against the dev server the walks used, recording nothing. Each run starts on a fresh copy of the data set. The finding is **proven** when both runs fail with it:
+
+- an app error (`action-error`, `client-error`, `server-error` or `request-failed`) fails with the same [app error](/config-tests#app-errors) at any step, or when the page opens;
+- a dead click fails at `expect: { effect: true }`, the one assertion the explorer adds after the click: the control did nothing;
+- a role refused at open fails at `expect: { visible: <pageId> }`, a one-step journey on the refused page.
+
+These two expectations are the only steps the explorer writes, each by a fixed rule from the check that raised the finding. Whether a proven dead click should do something is still your call.
+
+Every other finding is listed as **not proven**, with one reason, and its candidate is deleted. The walk log and screenshots stay in the run directory.
+
+| Reason           | Why                                                                                               |
+| ---------------- | ------------------------------------------------------------------------------------------------- |
+| `not-reproduced` | the journey did not fail with the finding on both runs                                            |
+| `environment`    | an Atlas Search stage the data set's in-memory database cannot run, in the walk or in a proof run |
+| `no-candidate`   | no journey could be compiled for it, such as a dead click whose click left no record              |
+| `live-writes`    | the run used `--live-data` or `--allow-external`                                                  |
+
+A run with `--live-data` or `--allow-external` proves nothing, because a proof would replay writes on live connections. Its findings are all `live-writes`, and the summary says to rerun on a data set.
+
+Proofs run after the walks, outside `--budget` and `--max-cost` (they make no model calls), so running out of budget never leaves a finding unproven. The summary gives their time on a line of its own.
+
+If a walk's recording splits in two (a page load nobody's click caused, or five idle minutes), only the part with the finding is compiled. That part may lack the steps that set up the page, and the finding then comes back `not-reproduced`.
 
 ## Candidates
 
-The walks are recorded by the dev server's recorder and compiled by the same compiler as `lowdefy journeys compile`. The explorer never writes a step itself.
+The walks are recorded by the dev server's recorder and compiled by the same compiler as `lowdefy journeys compile`. Apart from the two proof expectations above, the explorer never writes a step itself. Each run writes its candidates to a directory of its own, `tests/journeys/_candidates/explorer/<run>/`, and never touches another run's.
 
-- `tests/journeys/_candidates/explorer/findings/`: one candidate per confirmed finding, with the exact steps to the error. Its origin block names the error. A finding candidate is a reproduction: `lowdefy test` passes it today. Once the bug is fixed, keep it as a journey by adding an assertion of the fixed outcome.
-- `tests/journeys/_candidates/explorer/`: coverage candidates, kept only when they interact with a block the pull request added or changed. On a data set with a snapshot, recorded `expect.state` lines that hold snapshot values are dropped.
+- `findings/`: one journey per proven finding, the one that proved it. Its origin block names the finding's key, kind, message and source. It fails under `lowdefy test` until the bug is fixed. Then it is the regression test: once `lowdefy test --repeat 3 <path>` passes, move it into `tests/journeys/`.
+- The run directory itself: coverage candidates, kept only when they interact with a block the pull request added or changed. On a data set with a snapshot, recorded `expect.state` lines that hold snapshot values are dropped.
 
 `lowdefy test` does not run `_candidates/`. Check a candidate with `lowdefy test --lint <path>`, prove it with `lowdefy test --repeat 3 <path>`, and move it into `tests/journeys/` when it passes. See [Replaying candidates](/config-tests#replaying-candidates).
 
@@ -93,10 +118,10 @@ The walks are recorded by the dev server's recorder and compiled by the same com
 
 Each (page, role) gets `--walks` walks (default 5) of up to `--steps` interactions (default 15), within a wall-clock `--budget` for the run (default `20m`). Walks run breadth-first: every target gets its first walk before any target gets a second. When the budget runs out, the step in progress finishes and its walk closes. The run then compiles and reports. Before it starts, the run prints its plan and a time estimate.
 
-Each run keeps its files in `.lowdefy/explore/<run>/`: `scope.json`, `walks.jsonl` (every step, the options offered and the answer), `findings.json`, `report.json` and `screenshots/`. The summary gives the targets walked, seconds per step and per walk, model calls, tokens and cost, what did not run and why, the findings and the candidates. `--json` prints `report.json` instead. Run directories older than 14 days are removed at the start of a run.
+Each run keeps its files in `.lowdefy/explore/<run>/`: `scope.json`, `walks.jsonl` (every step, the options offered and the answer), `findings.json`, `report.json` and `screenshots/`. The summary gives the targets walked, seconds per step and per walk, model calls, tokens and cost, what did not run and why, the proven findings with their journeys, the findings not proven by reason, the proof time and the candidates. `report.json` lists the proven findings first (errors, then dead clicks, then role refusals), then the rest grouped by reason. `--json` prints `report.json` instead. Run directories older than 14 days are removed at the start of a run.
 
 The explorer runs against the app's dev server. If one is running or starting, it waits for it to be ready; otherwise it starts a headless one. `--url` names a running dev server instead.
 
 ## With a coding agent
 
-`lowdefy agent-setup` installs a `journeys-from-pr` skill. It makes a worktree for the pull request, starts its dev server, runs the explorer, then takes you through the confirmed findings, one at a time, and then the candidates. For a bug, it drafts a pull request comment and posts it only once you approve the text. On a snapshot data set the comment carries no snapshot data. It never writes a step the compiler did not produce, and it commits nothing.
+`lowdefy agent-setup` installs a `journeys-from-pr` skill. It makes a worktree for the pull request, starts its dev server, runs the explorer, then takes you through the proven findings, one at a time, and then the candidates. For a bug, it drafts a pull request comment, naming the journey that fails as the regression test, and posts it only once you approve the text. On a snapshot data set the comment carries no snapshot data. It never writes a step the compiler did not produce, and it commits nothing.

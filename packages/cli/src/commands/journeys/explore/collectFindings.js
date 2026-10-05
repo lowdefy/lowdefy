@@ -14,14 +14,11 @@
   limitations under the License.
 */
 
-const STATUS_BY_SEVERITY = { warning: 'warning', info: 'environment' };
-
-// The run's findings, one per key across walks and roles: each with the walks
-// and data set users that hit it, its first occurrence's step and screenshot,
-// and its status: confirmed or unconfirmed for an error (from the
-// confirmation replays, by key), warning for a dead click, environment for an
-// error the data set's store cannot avoid.
-function collectFindings({ logs, confirmations }) {
+// The run's findings, one per key across walks and roles, in the order the
+// walks hit them: each with the walks and data set users that hit it, and its
+// first occurrence's step and screenshot. Whether a finding is proven is the
+// proof's to say (applyProof).
+function collectFindings({ logs }) {
   const byKey = new Map();
   logs.forEach((log) => {
     log.findings.forEach((finding) => {
@@ -38,7 +35,6 @@ function collectFindings({ logs, confirmations }) {
           screenshot: occurrence?.screenshot ?? null,
           walks: [],
           users: [],
-          status: STATUS_BY_SEVERITY[finding.severity] ?? 'unconfirmed',
         });
       }
       const entry = byKey.get(finding.key);
@@ -46,12 +42,6 @@ function collectFindings({ logs, confirmations }) {
       const user = log.user ?? 'default';
       if (!entry.users.includes(user)) entry.users.push(user);
     });
-  });
-  confirmations.forEach(({ key, status }) => {
-    const entry = byKey.get(key);
-    if (entry !== undefined && entry.severity === 'error' && status === 'confirmed') {
-      entry.status = 'confirmed';
-    }
   });
   return [...byKey.values()];
 }
