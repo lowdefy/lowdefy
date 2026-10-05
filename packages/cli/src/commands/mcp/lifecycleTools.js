@@ -73,7 +73,7 @@ const lifecycleTools = [
   {
     name: 'lowdefy_run_tests',
     description:
-      'Run this app\'s tests (as `lowdefy test` does) against its dev server, starting it if needed. Choose all, a folder or glob, or a tag: no arguments runs every journey under tests/journeys/, sub-folders included, except folders starting with "_" (such as _candidates); `paths` runs journey files, folders or globs (`tests/journeys/review/**`); `tags` runs the journeys carrying any of the tags. `filter` narrows by name; paths, tags and filter combine. Returns a summary and one result per journey: passed, or the failing step with expected and actual. Run it before saying a change is done, and add a journey (the steps you verified with lowdefy_run_journey) for behaviour you fixed.',
+      'Run this app\'s tests (as `lowdefy test` does) against its dev server, starting it if needed. Choose all, a folder or glob, or a tag: no arguments runs every journey under tests/journeys/, sub-folders included, except folders starting with "_" (such as _candidates); `paths` runs journey files, folders or globs (`tests/journeys/review/**`); `tags` runs the journeys carrying any of the tags. `filter` narrows by name; paths, tags and filter combine. A journey whose `user` is a list of data set users runs once as each, named "<name> [<user>]" (filter "[admin]" picks one). Returns a summary and one result per journey run: passed, or the failing step with expected and actual. Run it before saying a change is done, and add a journey (the steps you verified with lowdefy_run_journey) for behaviour you fixed.',
     inputSchema: {
       type: 'object',
       properties: {

@@ -17,6 +17,8 @@
 import { isBackedBy, journeySequence } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
+import measuredJourney from '../../test/measuredJourney.js';
+
 const SUBKEYS = ['production', 'dev', 'explorer', 'mutation'];
 
 function round2(value) {
@@ -79,7 +81,9 @@ function computeEvidence({ journeys, sources, today }) {
         recordings: backingSegments({ journey, segments: sources.dev.segments }).length,
       };
     }
-    const mutation = sources.mutation?.byJourney.get(`${file}#${journey.name}`);
+    const mutation = sources.mutation?.byJourney.get(
+      `${file}#${measuredJourney({ journey }).name}`
+    );
     if (!type.isUndefined(mutation)) {
       computed.mutation = mutation;
     }

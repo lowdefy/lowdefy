@@ -16,6 +16,7 @@
 
 import asList from './asList.js';
 import discoverJourneys from './discoverJourneys.js';
+import expandPersonas from './expandPersonas.js';
 import formatJourneyResult from './formatJourneyResult.js';
 import runJourney from './runJourney.js';
 
@@ -53,12 +54,19 @@ function matchesTags({ item, tags }) {
 // The tests `lowdefy test` and the lowdefy_run_tests MCP tool run: every
 // suite's items (from `paths` when given) whose name contains any of the
 // filters (case-insensitive) and that carry any of the tags. `filter` is one
-// string or a list; paths, filters and tags combine with AND.
+// string or a list; paths, filters and tags combine with AND. A journey with a
+// list of users is one item per user, named `<name> [<user>]`, so a filter can
+// pick one persona run.
 function selectTests({ context, filter, tags, paths }) {
   const filters = asList(filter);
   const tagList = asList(tags);
   return suites
-    .flatMap((suite) => suite.discover({ context, paths }).map((item) => ({ suite, item })))
+    .flatMap((suite) =>
+      suite
+        .discover({ context, paths })
+        .flatMap((item) => expandPersonas({ item }))
+        .map((item) => ({ suite, item }))
+    )
     .filter(({ item }) => matchesFilters({ item, filters }))
     .filter(({ item }) => matchesTags({ item, tags: tagList }));
 }

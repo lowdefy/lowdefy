@@ -21,6 +21,7 @@ import { parseDataSet } from '@lowdefy/node-utils';
 import buildL7Pages from './buildL7Pages.js';
 import getL7PageIds from './getL7PageIds.js';
 import lintJourney from './lintJourney.js';
+import measuredJourney from '../measuredJourney.js';
 import readExercised from '../readExercised.js';
 import readSnapshotStrings from './readSnapshotStrings.js';
 import validateJourney from '../validateJourney.js';
@@ -88,7 +89,7 @@ async function lintJourneys({ context, items }) {
       exercisedEntry: readExercised({
         directories: context.directories,
         file: path.relative(context.directories.config, item.filePath),
-        journey: item.journey,
+        journey: measuredJourney({ journey: item.journey }),
       }),
     });
   });

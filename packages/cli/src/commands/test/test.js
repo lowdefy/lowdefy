@@ -17,6 +17,7 @@
 import path from 'path';
 import { createTraceId, traceIdDate, type } from '@lowdefy/helpers';
 
+import collapsePersonas from './collapsePersonas.js';
 import fetchBuildId from './fetchBuildId.js';
 import formatNoTestsMatched from './formatNoTestsMatched.js';
 import isFullSuiteRun from './isFullSuiteRun.js';
@@ -88,7 +89,12 @@ async function test({ context }) {
   }
 
   if (context.options.lint === true) {
-    const linted = await lintJourneys({ context, items: selected.map(({ item }) => item) });
+    // Lints read a journey, not a run of it: a journey with a list of users
+    // is linted once.
+    const linted = await lintJourneys({
+      context,
+      items: collapsePersonas({ items: selected.map(({ item }) => item) }),
+    });
     if (linted.failed) {
       process.exitCode = 1;
     }
