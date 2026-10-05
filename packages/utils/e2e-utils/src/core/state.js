@@ -14,12 +14,10 @@
   limitations under the License.
 */
 
+import pageContextExpression from './instanceKey.js';
+
 async function getState(page) {
-  return page.evaluate(() => {
-    const lowdefy = window.lowdefy;
-    const pageId = lowdefy?.pageId;
-    return lowdefy?.contexts?.[`page:${pageId}`]?.state;
-  });
+  return page.evaluate(`${pageContextExpression}?.state`);
 }
 
 async function getBlockState(page, { blockId }) {
@@ -32,14 +30,12 @@ async function setState(page, { key, value }) {
   // action layer (see createSetState.js) writes state via State.set() and then
   // triggers a re-render via context._internal.update().
   await page.evaluate(
-    ({ k, v }) => {
-      const lowdefy = window.lowdefy;
-      const pageId = lowdefy?.pageId;
-      const context = lowdefy?.contexts?.[`page:${pageId}`];
+    ({ k, v, getContext }) => {
+      const context = new Function(`return ${getContext}`)();
       context._internal.State.set(k, v);
       context._internal.update();
     },
-    { k: key, v: value }
+    { k: key, v: value, getContext: pageContextExpression }
   );
 }
 

@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import pageContextExpression from './instanceKey.js';
 import { waitForReady } from './navigation.js';
 
 // The client router's createUrl prepends basePath, so the pathname handed to it
@@ -40,7 +41,7 @@ function createTargetLocation({ basePath = '', href, key, value }) {
 // resolved from the previous urlQuery. Routing through the router is what a
 // Link or SetUrlQuery action in the app does.
 async function setUrlQuery(page, { key, value }) {
-  const { basePath, dynamic, href } = await page.evaluate(() => {
+  const { basePath, dynamic, href } = await page.evaluate((getContext) => {
     const lowdefy = window.lowdefy;
     const router = lowdefy?._internal?.router;
     if (!router) {
@@ -48,10 +49,10 @@ async function setUrlQuery(page, { key, value }) {
     }
     return {
       basePath: router.basePath ?? '',
-      dynamic: lowdefy.contexts[`page:${lowdefy.pageId}`]?._internal?.pageConfig?.dynamic === true,
+      dynamic: new Function(`return ${getContext}`)()?._internal?.pageConfig?.dynamic === true,
       href: window.location.href,
     };
-  });
+  }, pageContextExpression);
 
   // A query change re-fetches the page config only on a Dynamic page; a static
   // page re-renders on the config it has. Listening starts before the
@@ -72,9 +73,7 @@ async function setUrlQuery(page, { key, value }) {
   // place; the response arriving only proves it is on its way. Static pages keep
   // a memoized context, so there is no identity change to wait for.
   const previousPageConfig = dynamic
-    ? await page.evaluateHandle(
-        () => window.lowdefy.contexts[`page:${window.lowdefy.pageId}`]._internal.pageConfig
-      )
+    ? await page.evaluateHandle(`${pageContextExpression}._internal.pageConfig`)
     : null;
 
   await page.evaluate(({ pathname, query }) => {
@@ -87,10 +86,9 @@ async function setUrlQuery(page, { key, value }) {
 
   if (previousPageConfig) {
     await page.waitForFunction(
-      (previous) =>
-        window.lowdefy.contexts[`page:${window.lowdefy.pageId}`]?._internal?.pageConfig !==
-        previous,
-      previousPageConfig,
+      ({ previous, getContext }) =>
+        new Function(`return ${getContext}`)()?._internal?.pageConfig !== previous,
+      { previous: previousPageConfig, getContext: pageContextExpression },
       { timeout: 30000 }
     );
     await previousPageConfig.dispose();

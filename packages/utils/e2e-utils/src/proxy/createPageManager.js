@@ -15,7 +15,7 @@
 */
 
 import { getBlock } from '../core/locators.js';
-import { waitForReady, waitForPage } from '../core/navigation.js';
+import { createPageUrl, waitForReady, waitForPage } from '../core/navigation.js';
 import { getState, getBlockState, setState } from '../core/state.js';
 import { getRequestState, getRequestResponse } from '../core/requests.js';
 import { getApiState, getApiResponse } from '../core/api.js';
@@ -47,6 +47,14 @@ function createPageManager({ page, manifest, helperRegistry, mockManager, assert
 
   let currentBlockMap = null;
   let currentPageId = null;
+
+  // A { pageId, pathParams, urlQuery } target gets the page's path pattern from the manifest.
+  function withPagePath(target) {
+    if (type.isString(target)) {
+      return target;
+    }
+    return { path: manifest.paths?.[target.pageId], ...target };
+  }
 
   function ensurePageLoaded() {
     if (!currentBlockMap) {
@@ -149,8 +157,8 @@ function createPageManager({ page, manifest, helperRegistry, mockManager, assert
     },
 
     // Navigation (control flow)
-    async goto(path) {
-      await page.goto(path);
+    async goto(target) {
+      await page.goto(createPageUrl(withPagePath(target)));
       await waitForReady(page);
       currentPageId = await page.evaluate(() => window.lowdefy?.pageId);
       currentBlockMap = manifest.pages[currentPageId];
@@ -162,8 +170,8 @@ function createPageManager({ page, manifest, helperRegistry, mockManager, assert
       }
     },
 
-    async waitForPage(path) {
-      await waitForPage(page, path);
+    async waitForPage(target) {
+      await waitForPage(page, withPagePath(target));
       currentPageId = await page.evaluate(() => window.lowdefy?.pageId);
       currentBlockMap = manifest.pages[currentPageId];
     },
