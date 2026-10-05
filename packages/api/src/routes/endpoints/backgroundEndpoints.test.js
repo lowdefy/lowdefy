@@ -881,12 +881,12 @@ test('webhook verifier on a walled connection with tenant none opts out, carries
   });
   expect(result.success).toBe(true);
   expect(result.response).toEqual({ child: 'child_ran' });
-  // Unscoped like any tenant: none request, so a verifier that writes (a
-  // replay nonce, say) must be held to the same organization-id guard.
+  // Read-only like any tenant: none request: the connection refuses a write
+  // from the verifier.
   expect(walledStubVerify).toHaveBeenCalledWith(
     expect.objectContaining({
       tenant: null,
-      tenantGuard: { field: 'organization_id', stampChangeLog: true },
+      tenantGuard: { field: 'organization_id', readOnly: true },
     })
   );
 });

@@ -96,10 +96,11 @@ async function callRequestResolver(
       // resolveTenancy - connection types implementing the scoping contract
       // enforce it (stamp writes, merge filters, inject pipeline matches).
       tenant: tenant ?? null,
-      // The unscoped write guard ({ field, stampChangeLog } or null) computed
-      // by resolveTenancy for tenant: none requests and for shared connections
-      // over a walled collection - scoping connection types assert every row
-      // the request writes still carries a real organization id.
+      // The unscoped guard ({ field, readOnly } or null) computed by
+      // resolveTenancy: readOnly for tenant: none requests, which scoping
+      // connection types refuse to write under, and the write guard for shared
+      // connections over a walled collection, under which they assert every
+      // row the request writes still carries a real organization id.
       tenantGuard: tenantGuard ?? null,
     });
     return response;

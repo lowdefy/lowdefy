@@ -15,6 +15,7 @@
 */
 import { ObjectId } from 'mongodb';
 
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import applyTenantToBulkOperations from '../tenant/applyTenantToBulkOperations.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import { assertUnscopedBulkOperations } from '../tenant/guardUnscopedWrite.js';
@@ -23,9 +24,9 @@ import verifyStoredTenant, { idsOfMap } from '../tenant/verifyStoredTenant.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import compileTableChanges from './compileTableChanges.js';
-import getChangeLogOrganization from './getChangeLogOrganization.js';
 import readChangesResult from './readChangesResult.js';
 import runChanges from './runChanges.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 function generateId() {
@@ -48,6 +49,7 @@ async function MongoDBTableChanges({
   tenant,
   tenantGuard,
 }) {
+  assertTenantWritable({ tenantGuard, requestType: 'MongoDBTableChanges' });
   const properties = deserialize(request);
   const compiled = compileTableChanges({
     properties,
@@ -63,14 +65,6 @@ async function MongoDBTableChanges({
     assertUnscopedBulkOperations({ operations, field: tenantGuard.field });
   }
   const { collection, logCollection } = await getCollection({ connection });
-  let logOrganizationId = null;
-  if (tenantGuard?.stampChangeLog && logCollection) {
-    logOrganizationId = getChangeLogOrganization({
-      filter: compiled.filter,
-      operations,
-      field: tenantGuard.field,
-    });
-  }
   let run;
   try {
     run = await runChanges({ collection, compiled, operations });
@@ -105,8 +99,6 @@ async function MongoDBTableChanges({
             meta: connection.changeLog?.meta,
           },
           tenant,
-          tenantGuard,
-          organizationId: logOrganizationId,
         })
       );
     } catch (error) {
@@ -117,9 +109,6 @@ async function MongoDBTableChanges({
 }
 
 MongoDBTableChanges.schema = schema;
-MongoDBTableChanges.meta = {
-  checkRead: false,
-  checkWrite: true,
-};
+MongoDBTableChanges.meta = requestMetas.MongoDBTableChanges;
 
 export default MongoDBTableChanges;

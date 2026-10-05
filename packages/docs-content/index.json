@@ -3751,7 +3751,7 @@
         "users/organizations.yaml",
         "version.yaml"
       ],
-      "hash": "cb4398ed118b141c2f32fc36fdec0c3c77b9f210ff495d21b0b13979e70352ab"
+      "hash": "1a6c79bd7cf5dcdebdb4dae1b56001eaf7741c0a438dfb291b20c910a3defb9e"
     },
     "user-authentication/auth-steps": {
       "files": [

@@ -15,14 +15,15 @@
 */
 
 import getCollection from '../getCollection.js';
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
-import getEnrichmentLogOrganization from '../enrichment/getEnrichmentLogOrganization.js';
 import runBulkWriteBatches from '../enrichment/runBulkWriteBatches.js';
 import scopeWriteOperations from '../enrichment/scopeWriteOperations.js';
 import writeEnrichmentLog from '../enrichment/writeEnrichmentLog.js';
 import compileEnrichmentEnqueue from './compileEnrichmentEnqueue.js';
 import planEnqueue from './planEnqueue.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 const requestType = 'MongoDBEnrichmentEnqueue';
@@ -33,6 +34,7 @@ const requestType = 'MongoDBEnrichmentEnqueue';
 // of 1000 cells, and nothing is written when more than `maxCells` cells would be.
 async function MongoDBEnrichmentEnqueue(context) {
   const { connection, request, tenant, tenantGuard } = context;
+  assertTenantWritable({ tenantGuard, requestType });
   const properties = deserialize(request);
   const compiled = compileEnrichmentEnqueue({
     properties,
@@ -42,7 +44,6 @@ async function MongoDBEnrichmentEnqueue(context) {
   const { collection, logCollection } = await getCollection({ connection });
   let response;
   let operations;
-  let organizationId;
   try {
     const plan = await planEnqueue({ collection, compiled, tenant });
     const queueOperations = scopeWriteOperations({
@@ -56,12 +57,6 @@ async function MongoDBEnrichmentEnqueue(context) {
       tenantGuard,
     });
     operations = [...queueOperations, ...missingOperations];
-    organizationId = getEnrichmentLogOrganization({
-      filter: compiled.filter,
-      logCollection,
-      operations,
-      tenantGuard,
-    });
     const queued = await runBulkWriteBatches({ collection, operations: queueOperations });
     const missing = await runBulkWriteBatches({ collection, operations: missingOperations });
     response = {
@@ -84,7 +79,6 @@ async function MongoDBEnrichmentEnqueue(context) {
         },
         context,
         logCollection,
-        organizationId,
         response,
         type: requestType,
       });
@@ -96,9 +90,6 @@ async function MongoDBEnrichmentEnqueue(context) {
 }
 
 MongoDBEnrichmentEnqueue.schema = schema;
-MongoDBEnrichmentEnqueue.meta = {
-  checkRead: false,
-  checkWrite: true,
-};
+MongoDBEnrichmentEnqueue.meta = requestMetas.MongoDBEnrichmentEnqueue;
 
 export default MongoDBEnrichmentEnqueue;

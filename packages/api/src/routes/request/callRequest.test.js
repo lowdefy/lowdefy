@@ -80,6 +80,7 @@ const connections = {
     schema: {},
     requests: {
       TestRequest: mockTestRequest,
+      TestRequestCheckWrite: mockTestRequestCheckWrite,
     },
   },
 };
@@ -489,6 +490,44 @@ test('tenant connection without a caller organization throws AuthenticationError
   await expect(callRequest(orglessTenantContext, defaultParams)).rejects.toThrow(
     'Request "requestId" reads tenant connection "testConnection" but no caller organization resolved.'
   );
+});
+
+test('a write request with tenant none on a tenant connection is refused before the resolver runs', async () => {
+  const organizationContext = testContext({
+    connections,
+    readConfigFile: mockReadConfigFile,
+    operators,
+    organization: { policy: 'tenant' },
+    secrets,
+    user: { id: 'id', organization_id: 'org-1' },
+  });
+  mockReadConfigFile.mockImplementation(
+    defaultReadConfigImp({
+      connectionConfig: {
+        id: 'connection:testConnection',
+        type: 'TestTenantConnection',
+        connectionId: 'testConnection',
+        properties: { write: true },
+      },
+      requestConfig: {
+        id: 'request:pageId:requestId',
+        type: 'TestRequestCheckWrite',
+        requestId: 'requestId',
+        pageId: 'pageId',
+        connectionId: 'testConnection',
+        tenant: 'none',
+        auth: { public: true },
+        properties: {},
+      },
+    })
+  );
+  mockTestRequestCheckWrite.mockImplementation(defaultResolverImp);
+
+  await expect(callRequest(organizationContext, defaultParams)).rejects.toThrow(ConfigError);
+  await expect(callRequest(organizationContext, defaultParams)).rejects.toThrow(
+    'Request "requestId" is a TestRequestCheckWrite request on tenant connection "testConnection" with tenant: none, but tenant: none may only read.'
+  );
+  expect(mockTestRequestCheckWrite).not.toHaveBeenCalled();
 });
 
 test('tenant connection resolves a null verdict under the pinned policy', async () => {

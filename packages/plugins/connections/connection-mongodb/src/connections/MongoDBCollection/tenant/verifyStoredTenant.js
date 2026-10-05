@@ -30,9 +30,9 @@ import { TenantIntegrityError } from '@lowdefy/errors';
 // organisation.
 //
 // Under a scoped request (tenant = { field, value }) the stored value must
-// equal the caller's organisation. Under tenant: none or a tenantGuard
-// (tenant = null) the app authors the value, so it must at least be a
-// non-empty string. With neither, the request is not walled and this is a
+// equal the caller's organisation. Under the write guard of a tenant: shared
+// connection (tenant = null) the app authors the value, so it must at least be
+// a non-empty string. With neither, the request is not walled and this is a
 // no-op.
 
 function isOrganizationId(value) {

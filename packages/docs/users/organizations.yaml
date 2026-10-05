@@ -133,9 +133,9 @@ _ref:
 
             **A shared connection's change log must not write into a walled collection.** A `tenant: shared` connection's writes belong to no organization, so its `changeLog` records carry no `organization_id`. In a collection a scoped connection reads, those records would be invisible to every walled read and would make the tenant preflight refuse to serve the app, so the build rejects a shared connection whose `changeLog.collection` is the collection of a scoped connection in the same database. Give shared connections their own change-log collection.
 
-            **A shared connection over a walled collection has its writes checked.** When a `tenant: shared` connection names the same collection, in the same database, as a scoped connection, the build marks it, and every row it inserts, replaces, upserts or updates must keep a non-empty `organization_id` — the same check a [`tenant: none` write](#writing-with-tenant-none) gets. Its reads stay unscoped, which is what `shared` is for. A collection name resolved at runtime (`_secret`, `_payload`) can not be compared at build time, so such a connection is not marked.
+            **A shared connection over a walled collection has its writes checked.** When a `tenant: shared` connection names the same collection, in the same database, as a scoped connection, the build marks it, and every row it inserts, replaces, upserts or updates must keep a non-empty `organization_id`: inserted and replacement documents must carry it, upserts must author it (`$set` / `$setOnInsert`, or an equality match in the filter), and updates may not null, unset, rename or otherwise overwrite it with a value the wall can not verify. Its reads stay unscoped, which is what `shared` is for. A collection name resolved at runtime (`_secret`, `_payload`) can not be compared at build time, so such a connection is not marked.
 
-            **A shared connection's aggregation may not `$out` or `$merge` into a walled collection.** The rows an aggregation writes are not checked, so the build rejects a request or step on a `tenant: shared` connection whose literal pipeline writes, with `$out` or `$merge`, into a collection a scoped connection reads in the same database. Write the rows with a checked request instead (see the rollup example below). A target named by an operator, or in another database, is not checked at build time.
+            **A shared connection's aggregation may not `$out` or `$merge` into a walled collection.** The rows an aggregation writes are not checked, so the build rejects a request or step on a `tenant: shared` connection whose literal pipeline writes, with `$out` or `$merge`, into a collection a scoped connection reads in the same database. Return the documents and write them with `MongoDBInsertMany` or `MongoDBBulkWrite`, which check every row. A target named by an operator, or in another database, is not checked at build time.
 
             **Under `tenant` policy every connection type must declare its capability.** A connection whose type does not declare tenant support (`connectionMetas.tenant`) fails the build — no connection is ever *silently* unscoped. Connection plugins declare this in their `types.js`; you do not set it.
 
@@ -145,9 +145,9 @@ _ref:
 
             | Surface | Allowed values | Meaning |
             | ------- | -------------- | ------- |
-            | Request | `none` | Opt this request out of scoping entirely. |
+            | Request | `none` | Read rows of every organization. The request may only read (see below). |
             | Request | `authored` | The request authors its own tenant clause (audited at runtime). |
-            | Websocket | `none` | Opt out. `authored` is not allowed — change streams are always scoped mechanically. |
+            | Websocket | `none` | Watch rows of every organization. `authored` is not allowed — change streams are always scoped mechanically. |
 
             An aggregation stage the wall cannot scope mechanically — `$search`, `$searchMeta`, `$vectorSearch`, `$geoNear`, `$graphLookup` — must declare `tenant: authored` and author the organization clause *inside the stage*. The runtime audits that clause against the caller's active organization; it does not trust the declaration alone.
 
@@ -174,27 +174,16 @@ _ref:
                             path: title
             ```
 
-            ### Writing with `tenant: none`
+            ### `tenant: none` only reads
 
-            `tenant: none` lifts the filter and the stamp, not the rule that every row in a walled collection belongs to an organization. A row without `organization_id` is invisible to every walled read, and the tenant preflight refuses to serve the app while one exists, so a `tenant: none` write on a scoped connection is checked instead of stamped:
+            `tenant: none` lifts the filter, so a request can read rows of every organization: enumerate the organizations to fan out over, or count across tenants. It never writes. A request or step with `tenant: none` whose type writes (`MongoDBInsertOne`, `MongoDBUpdateMany`, `MongoDBBulkWrite`, the table and enrichment writes, and the rest) fails the build on a scoped connection, and the same write is refused at runtime. An aggregation under `tenant: none` may not contain `$out` or `$merge`, since they write its output into a collection.
 
-            - Inserted and replacement documents must carry a non-empty `organization_id`, and upserts must author it (`$set` / `$setOnInsert`, or an equality match in the filter).
-            - Updates may not null, unset, rename or otherwise overwrite it with a value the wall can not verify.
-            - An aggregation may not contain `$out` or `$merge`: the rows they write can not be checked. Return the documents and write them with `MongoDBInsertMany` or `MongoDBBulkWrite`, which check every row (see the example below).
+            To write, do the work as one organization: call an endpoint with a `CallApi` step that names the `organization` (see [Background work in one organization](#background-work-in-one-organization)). Its requests run with the wall on, so every write is filtered and stamped with that organization.
 
-            **Change logs.** On a connection with a `changeLog`, the change-log record of a `tenant: none` write carries the `organization_id` of the rows it records, so the log collection can itself be read through a scoped connection. A single-document write takes it from the row it inserted, updated (the row as the update left it) or deleted; a write that matched no row writes no record. A multi-document write must be held to one organization before it runs:
-
-            | Request | Allowed on a change-logged connection when |
-            | ------- | ------------------------------------------ |
-            | `MongoDBInsertMany`, `MongoDBInsertManyConsecutiveIds` | every document carries the same `organization_id` |
-            | `MongoDBUpdateMany` | the filter matches `organization_id` by equality (`{ organization_id: <id> }` or `{ $eq: <id> }`) and the update does not write it |
-            | `MongoDBDeleteMany` | the filter matches `organization_id` by equality |
-
-            Anything else is refused before it writes, with an error naming the fix — usually running the write once per organization. Connections without a `changeLog` are not affected. (A [shared connection](#declaring-scope-on-a-connection) writes no organization into its change-log records; its change log can not point into a walled collection.)
-
-            **Rollups across organizations** — group walled rows by organization and save the totals, typically from a scheduled endpoint — read with `tenant: none` and write the rows with a checked request instead of `$merge`:
+            **Rollups across organizations** — group walled rows by organization and save the totals, typically from a scheduled endpoint — read with `tenant: none`, then save each organization's totals as that organization:
 
             ```yaml
+            # The scheduled endpoint: one read across organizations, one call per organization.
             routine:
               - id: rollup
                 type: MongoDBAggregation
@@ -211,24 +200,41 @@ _ref:
                               date: $created_at
                         total:
                           $sum: $amount
-                    - $project:
-                        _id: 0
-                        organization_id: $_id.organization_id
-                        month: $_id.month
-                        total: 1
-              - id: save_rollup
+                    - $group:
+                        _id: $_id.organization_id
+                        totals:
+                          $push:
+                            month: $_id.month
+                            total: $total
+              - :for: organization
+                :in:
+                  _step: rollup
+                :do:
+                  - id: save
+                    type: CallApi
+                    properties:
+                      endpointId: save_monthly_totals
+                      organization:
+                        _item: organization._id
+                      payload:
+                        totals:
+                          _item: organization.totals
+            ```
+
+            ```yaml
+            # save_monthly_totals: runs bound to one organization, so the scoped
+            # monthly_totals connection filters and stamps every write with it.
+            routine:
+              - id: save_totals
                 type: MongoDBBulkWrite
                 connectionId: monthly_totals
-                tenant: none
                 properties:
                   operations:
                     _array.map:
-                      - _step: rollup
+                      - _payload: totals
                       - _function:
                           replaceOne:
                             filter:
-                              organization_id:
-                                __args: 0.organization_id
                               month:
                                 __args: 0.month
                             replacement:
@@ -236,7 +242,7 @@ _ref:
                             upsert: true
             ```
 
-            Every replacement carries the `organization_id` the group produced, so the bulk write passes the check, and each organization reads its own totals through the scoped `monthly_totals` connection.
+            Each organization reads its own totals through the scoped `monthly_totals` connection.
 
             ### Background work in one organization
 
@@ -254,7 +260,7 @@ _ref:
                   name: Reminders
             ```
 
-            The called endpoint runs bound to that organization: its walled requests are filtered and stamped with it, with the wall on, and `_user` is `{ id, name, organization_id, system: true }` (or null without `caller`), so routines that stamp writes with the caller run unchanged. This replaces `tenant: none` writes in caller-less runs. Only a trusted system run may bind; a signed-in caller can not name another organization. See [Running in One Organization](/lowdefy-api#running-in-one-organization).
+            The called endpoint runs bound to that organization: its walled requests are filtered and stamped with it, with the wall on, and `_user` is `{ id, name, organization_id, system: true }` (or null without `caller`), so routines that stamp writes with the caller run unchanged. This is how a caller-less run writes: `tenant: none` only reads. Only a trusted system run may bind; a signed-in caller can not name another organization. See [Running in One Organization](/lowdefy-api#running-in-one-organization).
 
             ### Why the wall lives on the connection
 
