@@ -68,9 +68,7 @@ function createLowdefyWindow({
       pageId,
       pageInstances: { [pageId]: [`page:${pageId}`] },
       // The e2e-utils helpers read the context of the instance on screen through the path memory.
-      _internal: {
-        components: { lookupPath: ({ path }) => ({ pageId: path, instanceKey: `page:${path}` }) },
-      },
+      pathMemory: new Map([[pageId, { pageId, pathParams: {}, instanceKey: `page:${pageId}` }]]),
       contexts: {
         [`page:${pageId}`]: {
           state,

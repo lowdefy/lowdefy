@@ -14,18 +14,22 @@
   limitations under the License.
 */
 
-// Browser-side expression: the context of the page instance on screen. The URL path is mapped to
-// its instance through the client's path memory, so two instances of one patterned page are told
-// apart.
+// Browser-side expression: the context of the page instance on screen. The URL path, without the
+// basePath and one leading and one trailing slash (the form the client's path memory is keyed
+// by), is mapped to its instance through window.lowdefy.pathMemory, so two instances of one
+// patterned page are told apart. As the engine's lookupPath reads it, a path the memory has not
+// seen is the id of a page without a pattern; the app root shows the home page.
 const pageContextExpression = `(() => {
   const lowdefy = window.lowdefy;
   if (!lowdefy) return undefined;
   const basePath = lowdefy.basePath ?? '';
   let path = window.location.pathname;
   if (basePath && path.startsWith(basePath)) path = path.slice(basePath.length);
-  path = path.replace(/^\\/+|\\/+$/g, '');
-  const entry = lowdefy._internal.components.lookupPath({ path });
-  return lowdefy.contexts[entry.instanceKey];
+  path = path.replace(/^\\//, '').replace(/\\/$/, '');
+  const entry = lowdefy.pathMemory.get(path);
+  if (entry) return lowdefy.contexts[entry.instanceKey];
+  const pageId = path === '' ? lowdefy.home?.pageId : path;
+  return lowdefy.contexts['page:' + pageId];
 })()`;
 
 export default pageContextExpression;
