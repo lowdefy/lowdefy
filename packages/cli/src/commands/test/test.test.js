@@ -720,6 +720,24 @@ test('test --filter picks one persona run of a journey by its user', async () =>
   expect(mockPost.mock.calls[0][1].recording).toBeUndefined();
 });
 
+test('test posts a persona run as its user with its as: steps unchanged', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile(
+    'a.yaml',
+    'name: reviews a ticket\npageId: form\ndata: tickets\nuser: [admin, member]\nsteps:\n  - click: submit\n  - as: reviewer\n  - expect: { visible: submit }\n'
+  );
+  await test({ context });
+  const bodies = mockPost.mock.calls.map(([, body]) => body);
+  expect(bodies.map((body) => body.user)).toEqual(['admin', 'member']);
+  bodies.forEach((body) => {
+    expect(body.steps).toEqual([
+      { click: 'submit' },
+      { as: 'reviewer' },
+      { expect: { visible: 'submit' } },
+    ]);
+  });
+});
+
 test('test --repeat repeats each persona run', async () => {
   const { default: test } = await import('./test.js');
   writeJourneyFile('a.yaml', personaJourneyYaml({}));
