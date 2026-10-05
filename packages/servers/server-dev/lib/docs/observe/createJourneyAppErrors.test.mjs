@@ -132,7 +132,30 @@ test('an unexplained 5xx from an app API route fails the step as request-failed'
   expect(findings.map((finding) => finding.kind)).toEqual(['request-failed']);
 });
 
-test('a 403 refusal, a UserError and a dead click are not app errors', async () => {
+test.each([
+  ['AuthorizationError', 403],
+  ['AuthenticationError', 401],
+  ['TwoFactorEnrolmentRequiredError', 403],
+])(
+  'a CallAPI an auth gate refused (%s, %i) is not an app error: the refusal and its emit both pass',
+  async (errorName, status) => {
+    emits = [
+      {
+        blockId: 'admin_button',
+        eventName: 'onClick',
+        success: false,
+        failure: { errorName, actionId: 'call_admin', actionType: 'CallAPI', configKey: 'k1' },
+      },
+    ];
+    const findings = await runStepWindow({
+      step: { click: 'admin_button' },
+      during: () => context.respond({ url: `${origin}/api/endpoints/admin_only`, status }),
+    });
+    expect(findings).toEqual([]);
+  }
+);
+
+test('a UserError and a dead click are not app errors', async () => {
   emits = [
     {
       blockId: 'throw_button',
@@ -141,11 +164,8 @@ test('a 403 refusal, a UserError and a dead click are not app errors', async () 
       failure: { errorName: 'UserError', actionId: 'throw', actionType: 'Throw' },
     },
   ];
-  const refused = await runStepWindow({
-    step: { click: 'throw_button' },
-    during: () => context.respond({ url: `${origin}/api/request/explore/admin`, status: 403 }),
-  });
-  expect(refused).toEqual([]);
+  const thrown = await runStepWindow({ step: { click: 'throw_button' } });
+  expect(thrown).toEqual([]);
   emits = [];
   page.evaluate.mockImplementation(async (fn) => {
     if (fn === readStepObserver) return { emits: [], mutationCount: 0 };

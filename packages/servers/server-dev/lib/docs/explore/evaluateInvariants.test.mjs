@@ -81,6 +81,26 @@ test('a failed Validate (a UserError) is not a finding, and its click is not dea
   expect(findings).toEqual([]);
 });
 
+test.each(['AuthenticationError', 'AuthorizationError', 'TwoFactorEnrolmentRequiredError'])(
+  'a CallAPI an auth gate refused (%s) is not a finding, and its click is not dead',
+  async (errorName) => {
+    const findings = await evaluate({
+      window: quietWindow({
+        emits: [failedEmit(errorName)],
+        requests: [{ method: 'POST', url: `${origin}/api/endpoints/assign` }],
+        responses: [
+          {
+            method: 'POST',
+            url: `${origin}/api/endpoints/assign`,
+            status: errorName === 'AuthenticationError' ? 401 : 403,
+          },
+        ],
+      }),
+    });
+    expect(findings).toEqual([]);
+  }
+);
+
 test('client error entries and uncaught page errors are client-errors; a page error the entry already reports is not repeated', async () => {
   const findings = await evaluate({
     window: quietWindow({

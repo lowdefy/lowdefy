@@ -16,7 +16,14 @@
 
 import { jest } from '@jest/globals';
 import { decodeServerError } from '@lowdefy/engine';
-import { ConfigError, LowdefyInternalError, UserError } from '@lowdefy/errors';
+import {
+  AuthenticationError,
+  AuthorizationError,
+  ConfigError,
+  LowdefyInternalError,
+  TwoFactorEnrolmentRequiredError,
+  UserError,
+} from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 import createHandleError from './createHandleError.js';
@@ -153,6 +160,28 @@ test('handleError logs a UserError to the console and never sends it to the serv
   expect(lowdefy._internal.logger.error).toHaveBeenCalledWith(error);
   expect(lowdefy._runtimeErrorCallback).not.toHaveBeenCalled();
 });
+
+test.each([
+  ['AuthenticationError', new AuthenticationError('Authentication required for request "save".')],
+  ['AuthorizationError', new AuthorizationError('Request "save" does not exist.')],
+  [
+    'TwoFactorEnrolmentRequiredError',
+    new TwoFactorEnrolmentRequiredError('Two-factor enrolment required for request "save".'),
+  ],
+])(
+  'handleError logs an auth gate refusal (%s) to the console only: no POST, no error bar',
+  async (name, error) => {
+    const lowdefy = createLowdefy();
+    const handleError = createHandleError(lowdefy);
+
+    await handleError(error);
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(lowdefy._internal.logger.error).toHaveBeenCalledTimes(1);
+    expect(lowdefy._internal.logger.error).toHaveBeenCalledWith(error);
+    expect(lowdefy._runtimeErrorCallback).not.toHaveBeenCalled();
+  }
+);
 
 test('handleError logs a plain non-Lowdefy error locally only', async () => {
   const lowdefy = createLowdefy();

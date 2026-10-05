@@ -1,0 +1,9 @@
+# Gated to the auditor role (auth.api.roles in lowdefy.yaml): a CallAPI to it
+# from any other caller is refused by the endpoint's auth gate, 403 with
+# roles and 401 signed out (appErrors.test.mjs in
+# packages/servers/server-dev/test/journeyFixture).
+id: auditor_only
+type: Api
+routine:
+  - ':return':
+      admitted: true

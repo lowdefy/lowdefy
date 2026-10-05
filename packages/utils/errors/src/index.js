@@ -75,6 +75,7 @@
  *   shouldSuppressBuildCheck   - Check ~ignoreBuildChecks in parent chain
  *
  * Error Field Utilities:
+ *   expectedErrorNames        - Set of error class names that are expected outcomes, not faults
  *   readErrorCodes            - {code, statusCode} from one error node's own fields
  *   lowdefyErrorNames         - Set of Lowdefy error class names
  *   lowdefyErrorTypes         - Lowdefy error class by name, for reviving and reshaping errors
@@ -88,6 +89,7 @@ import BuildError from './BuildError.js';
 import ConfigError from './ConfigError.js';
 import ConfigWarning from './ConfigWarning.js';
 import errorToDisplayString from './errorToDisplayString.js';
+import expectedErrorNames from './expectedErrorNames.js';
 import LowdefyInternalError from './LowdefyInternalError.js';
 import lowdefyErrorNames from './lowdefyErrorNames.js';
 import lowdefyErrorTypes from './lowdefyErrorTypes.js';
@@ -113,6 +115,7 @@ export {
   ConfigError,
   ConfigWarning,
   errorToDisplayString,
+  expectedErrorNames,
   LowdefyInternalError,
   lowdefyErrorNames,
   lowdefyErrorTypes,
