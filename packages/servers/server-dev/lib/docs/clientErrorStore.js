@@ -15,8 +15,9 @@
 */
 
 import { publish } from './devEventBus.js';
-import { recordError } from './explore/walkSessions.js';
 import getBuildId from './getBuildId.js';
+import isRunErrorEntry from './isRunErrorEntry.js';
+import { recordRunError } from './runErrorBuffers.js';
 
 // Module-level ring buffer of recent client-reported errors — feeds the
 // getBuildStatus feedback endpoint so agents can see browser errors without
@@ -27,14 +28,15 @@ const MAX_ENTRIES = 50;
 const entries = [];
 
 // Each entry is stamped with the build it happened under (see getBuildId).
-// An entry an explorer walk caused goes to that walk's own buffer only: kept
-// out of this ring and the event bus, it never reaches build-status or an
-// agent's event stream, and a run that trips many errors cannot evict the
-// developer's own.
+// An entry a journey run or an explorer walk caused goes to that run's own
+// buffer only (see runErrorBuffers), or is dropped when the run has ended:
+// kept out of this ring and the event bus, it never reaches build-status or
+// an agent's event stream, and a run that trips many errors cannot evict the
+// developer's own. The run reports its errors in its own result.
 function push(entry) {
   const stamped = { ...entry, buildId: getBuildId() };
-  if (stamped.recording?.source === 'explorer') {
-    recordError({ ...stamped, store: 'client' });
+  if (isRunErrorEntry(stamped)) {
+    recordRunError({ ...stamped, store: 'client' });
     return;
   }
   entries.push(stamped);
