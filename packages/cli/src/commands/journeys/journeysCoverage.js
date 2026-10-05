@@ -81,23 +81,26 @@ async function journeysCoverage({ context }) {
   }
   const { journeys: committed, skipped } = readCommittedJourneys({ context });
   skipped.forEach((line) => logger.warn(`Skipped ${line}`));
+  const { segments, window, isConfigText } = await readProductionSegments({
+    context,
+    maxDays: MINING_WINDOW_MAX_DAYS,
+  });
+  // A journey's click text counts only when it is config text, as production
+  // segments hold, so no report confirms a guessed production value.
   const journeys = committed.map(({ file, journey }) => ({
     file,
     name: journey.name,
     pageId: journey.pageId,
-    sequence: journeySequence({ pageId: journey.pageId, steps: journey.steps }),
+    sequence: journeySequence({ pageId: journey.pageId, steps: journey.steps, isConfigText }),
     journey,
   }));
-  const { segments, window } = await readProductionSegments({
-    context,
-    maxDays: MINING_WINDOW_MAX_DAYS,
-  });
   const profile = profileProduction({ segments });
   const measures = computeCoverage({
     journeys,
     segments,
     profile,
     measuredRun: readMeasuredRun({ context }),
+    isConfigText,
   });
   const mutation = scoreMutation({
     report: readMutationReport({ directories: context.directories }),

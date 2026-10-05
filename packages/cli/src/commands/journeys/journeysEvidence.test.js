@@ -24,11 +24,13 @@ import validateJourney from '../test/validateJourney.js';
 
 // The config text set comes from a full build by the dev server's builder;
 // these tests hold it fixed.
+const CONFIG_TEXTS = new Set(['Assign', 'Delete']);
 jest.unstable_mockModule('./configText/readConfigText.js', () => ({
-  default: async () => ({ texts: new Set(), isConfigText: () => false }),
+  default: async () => ({ texts: CONFIG_TEXTS, isConfigText: (text) => CONFIG_TEXTS.has(text) }),
 }));
 
 const { default: journeysEvidence } = await import('./journeysEvidence.js');
+const { default: tokenText } = await import('./tokenText.js');
 
 let configDirectory;
 let context;
@@ -347,4 +349,87 @@ test('journeys evidence keeps the committed dev.recordings when this machine has
   await journeysEvidence({ context });
   const journey = YAML.parse(fs.readFileSync(savesPath, 'utf8'));
   expect(journey.evidence.dev).toEqual({ recordings: 5 });
+});
+
+// Production clicks as the pull stores them: a token under the machine's
+// salt, never the text.
+function writeTokenisedDays() {
+  const directory = path.join(configDirectory, '.lowdefy', 'traces', 'production');
+  fs.mkdirSync(directory, { recursive: true });
+  const salt = Buffer.alloc(32, 6);
+  fs.writeFileSync(path.join(directory, 'salt'), salt);
+  const click = ({ session, t, block, column = null, text }) => {
+    const entry = record({ session, t, block });
+    entry.target = { ...entry.target, column, text_token: tokenText({ salt, text }) };
+    delete entry.target.text;
+    return entry;
+  };
+  const start = Date.parse('2026-10-02T09:00:00Z');
+  writeDay('2026-10-02', [
+    record({ session: 's1', t: start, kind: 'pageview' }),
+    click({ session: 's1', t: start + 1000, block: 'assign_button', text: 'Assign' }),
+    record({ session: 's2', t: start + 5000, kind: 'pageview' }),
+    click({ session: 's2', t: start + 6000, block: 'grid', column: 'name', text: 'Acme Ltd' }),
+    record({ session: 's3', t: start + 9000, kind: 'pageview' }),
+    click({ session: 's3', t: start + 10000, block: 'open_button', text: 'Open (3)' }),
+  ]);
+  writeDay('2026-10-03', []);
+}
+
+function journeyFile(steps) {
+  return `name: picks
+pageId: tickets
+steps:
+  - click: ${JSON.stringify(steps)}
+`;
+}
+
+async function productionFor(steps) {
+  writeJourney('picks.yaml', journeyFile(steps));
+  const { results } = await journeysEvidence({ context });
+  return results[0].after.production;
+}
+
+test('journeys evidence backs a config label only by clicks that resolved to it', async () => {
+  writeTokenisedDays();
+  expect((await productionFor({ blockId: 'assign_button', text: 'Assign' })).sessions).toBe(1);
+  expect((await productionFor({ blockId: 'assign_button', text: 'Delete' })).sessions).toBe(0);
+});
+
+test('journeys evidence backs a guessed data value exactly as a click with no text', async () => {
+  writeTokenisedDays();
+  const shown = await productionFor({ blockId: 'grid', column: 'name', text: 'Acme Ltd' });
+  const shownLog = logged.join('\n');
+  logged.length = 0;
+  const neverShown = await productionFor({ blockId: 'grid', column: 'name', text: 'Initech' });
+  const neverShownLog = logged.join('\n');
+  logged.length = 0;
+  const none = await productionFor({ blockId: 'grid', column: 'name' });
+  expect(shown.sessions).toBe(1);
+  expect(shown).toEqual(neverShown);
+  expect(shown).toEqual(none);
+  expect(shownLog).toEqual(neverShownLog);
+  expect(shownLog).not.toContain('Acme');
+});
+
+test('journeys evidence backs a label built from values by its block', async () => {
+  writeTokenisedDays();
+  expect((await productionFor({ blockId: 'open_button', text: 'Open (3)' })).sessions).toBe(1);
+  expect((await productionFor({ blockId: 'open_button', text: 'Open (4)' })).sessions).toBe(1);
+});
+
+test('journeys evidence --refresh writes the same evidence for a guessed value and no text', async () => {
+  writeTokenisedDays();
+  context.options.refresh = true;
+  const guessed = writeJourney(
+    'guessed.yaml',
+    journeyFile({ blockId: 'grid', column: 'name', text: 'Initech' })
+  );
+  await journeysEvidence({ context });
+  const written = YAML.parse(fs.readFileSync(guessed, 'utf8')).evidence;
+  fs.rmSync(guessed);
+  const plain = writeJourney('plain.yaml', journeyFile({ blockId: 'grid', column: 'name' }));
+  await journeysEvidence({ context });
+  expect(YAML.parse(fs.readFileSync(plain, 'utf8')).evidence).toEqual(written);
+  expect(written.production.sessions).toBe(1);
 });

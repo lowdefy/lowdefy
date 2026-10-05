@@ -27,8 +27,15 @@ function distinctCount(values) {
   return new Set(values.filter((value) => !type.isNone(value))).size;
 }
 
-function backingSegments({ journey, segments }) {
-  const sequence = journeySequence({ pageId: journey.pageId, steps: journey.steps });
+// A journey's click text enters its sequence only when it is config text, so
+// a journey holding a guessed production value is backed exactly as one with
+// no text, and no refresh confirms a value that is not in the repository.
+function backingSegments({ journey, segments, isConfigText }) {
+  const sequence = journeySequence({
+    pageId: journey.pageId,
+    steps: journey.steps,
+    isConfigText,
+  });
   return segments.filter((segment) =>
     isBackedBy({
       journeySequence: sequence,
@@ -38,8 +45,18 @@ function backingSegments({ journey, segments }) {
   );
 }
 
-function productionEvidence({ journey, segments, window }) {
-  const backing = backingSegments({ journey, segments });
+// Dev segments hold the developer's own text: they are read by the same rule
+// as the journeys they back, so non-config text on both sides reads as none.
+function readDevSequences({ segments, isConfigText }) {
+  if (type.isUndefined(isConfigText)) return segments;
+  return segments.map((segment) => ({
+    ...segment,
+    sequence: journeySequence({ pageId: segment.page_id, steps: segment.steps, isConfigText }),
+  }));
+}
+
+function productionEvidence({ journey, segments, window, isConfigText }) {
+  const backing = backingSegments({ journey, segments, isConfigText });
   const entering = segments.filter((segment) => segment.page_id === journey.pageId);
   const backingEntering = backing.filter((segment) => segment.page_id === journey.pageId);
   return {
@@ -67,16 +84,26 @@ function isEqual(a, b) {
 //   mutation?: readMutationReport's result }
 //   `dev.recordings` counts the dev segments that back the journey. A
 //   mutation report sets `mutation` for the journeys it names only.
-function computeEvidence({ journeys, sources, today }) {
+// - isConfigText: the app's config text rule; journey click text, and dev
+//   segment text, count only when it is config text.
+function computeEvidence({ journeys, sources, today, isConfigText }) {
+  const devSegments = type.isNone(sources.dev)
+    ? null
+    : readDevSequences({ segments: sources.dev.segments, isConfigText });
   return journeys.map(({ filePath, file, journeyIndex, journey }) => {
     const before = journey.evidence;
     const computed = {};
     if (!type.isNone(sources.production)) {
-      computed.production = productionEvidence({ journey, ...sources.production });
+      computed.production = productionEvidence({
+        journey,
+        segments: sources.production.segments,
+        window: sources.production.window,
+        isConfigText,
+      });
     }
-    if (!type.isNone(sources.dev)) {
+    if (!type.isNone(devSegments)) {
       computed.dev = {
-        recordings: backingSegments({ journey, segments: sources.dev.segments }).length,
+        recordings: backingSegments({ journey, segments: devSegments, isConfigText }).length,
       };
     }
     const mutation = sources.mutation?.byJourney.get(`${file}#${journey.name}`);

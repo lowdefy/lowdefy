@@ -24,11 +24,13 @@ import coverageReportSchema from './coverageReport/coverageReportSchema.js';
 
 // The config text set comes from a full build by the dev server's builder;
 // these tests hold it fixed.
+const CONFIG_TEXTS = new Set(['Help']);
 jest.unstable_mockModule('./configText/readConfigText.js', () => ({
-  default: async () => ({ texts: new Set(), isConfigText: () => false }),
+  default: async () => ({ texts: CONFIG_TEXTS, isConfigText: (text) => CONFIG_TEXTS.has(text) }),
 }));
 
 const { default: journeysCoverage } = await import('./journeysCoverage.js');
+const { default: tokenText } = await import('./tokenText.js');
 
 let configDirectory;
 let context;
@@ -317,4 +319,82 @@ test('journeys coverage without journey runs reports no measured share and reach
   const report = await journeysCoverage({ context });
   expect(report.measures.interaction).not.toHaveProperty('measured');
   expect(report.measures.failure.mode).toBe('reached');
+});
+
+// Production clicks as the pull stores them: a token, never the text. Two
+// blockless rage clicks on different elements, one on config text, and grid
+// cells showing customers' names.
+function writeTokenisedDay() {
+  const directory = path.join(configDirectory, '.lowdefy', 'traces', 'production');
+  fs.mkdirSync(directory, { recursive: true });
+  const salt = Buffer.alloc(32, 7);
+  fs.writeFileSync(path.join(directory, 'salt'), salt);
+  const click = ({ session, t, block = null, column = null, text, frustration, person }) => {
+    const entry = record({ session, t, block: block ?? 'placeholder', person });
+    entry.target = {
+      ...entry.target,
+      block_id: block,
+      column,
+      text_token: tokenText({ salt, text }),
+    };
+    delete entry.target.text;
+    if (frustration) entry.frustration = frustration;
+    return entry;
+  };
+  const start = Date.parse('2026-10-03T09:00:00Z');
+  writeDay('2026-10-03', [
+    record({ session: 's9', t: start, kind: 'pageview' }),
+    click({ session: 's9', t: start + 1000, text: 'Acme Ltd', frustration: 'rage' }),
+    click({ session: 's9', t: start + 3000, text: 'Globex', frustration: 'rage' }),
+    click({ session: 's9', t: start + 5000, text: 'Help', frustration: 'dead' }),
+    click({ session: 's9', t: start + 7000, block: 'grid', column: 'name', text: 'Acme Ltd' }),
+    click({
+      session: 's9',
+      t: start + 9000,
+      block: 'grid',
+      column: 'name',
+      text: 'Globex',
+      person: 'p_2',
+    }),
+  ]);
+}
+
+test('journeys coverage writes token counts and frustration by token, and no data text', async () => {
+  writeTokenisedDay();
+  const report = await journeysCoverage({ context });
+  expect(validate({ schema: coverageReportSchema, data: report })).toEqual({ valid: true });
+  const { frustration, textTokens } = report.production;
+  const blockless = frustration.filter((entry) => entry.block_id === null);
+  expect(blockless).toHaveLength(3);
+  expect(blockless.filter((entry) => entry.text === 'Help')).toHaveLength(1);
+  expect(new Set(blockless.map((entry) => entry.key)).size).toBe(3);
+  const grid = textTokens.find((row) => row.block_id === 'grid');
+  expect(grid).toMatchObject({ page: 'tickets', column: 'name', clicks: 2, tokens: 2 });
+  expect(grid.top).toHaveLength(2);
+  const written = fs.readFileSync(
+    path.join(configDirectory, '.lowdefy', 'test', 'coverage.json'),
+    'utf8'
+  );
+  expect(written).not.toContain('Acme');
+  expect(written).not.toContain('Globex');
+});
+
+test('journeys coverage never matches a token-only frustration by a journey click text', async () => {
+  writeTokenisedDay();
+  writeJourney(
+    'guess.yaml',
+    `name: guesses
+pageId: tickets
+steps:
+  - click: { text: Acme Ltd }
+  - expect: { url: { contains: /tickets } }
+  - click: { text: Help }
+  - expect: { url: { contains: /tickets } }
+`
+  );
+  const report = await journeysCoverage({ context });
+  const uncovered = report.measures.frustration.uncovered.map((entry) => entry.text);
+  expect(uncovered.filter((text) => text === 'Help')).toEqual([]);
+  expect(uncovered.filter((text) => text === null)).toHaveLength(2);
+  expect(JSON.stringify(report)).not.toContain('Acme');
 });

@@ -47,7 +47,8 @@ function resolveRecordText({ record, resolve }) {
 // stored as tokens are removed first, so they read as missing. maxDays caps
 // the window for the mining commands. Every token is resolved against the
 // app's config text set, so compile, coverage and evidence see config text
-// and tokens only.
+// and tokens only; isConfigText comes back with the records for readers that
+// match journeys against them.
 async function readProductionTrace({ context, since, from, to, now = Date.now(), maxDays }) {
   const { directories, logger } = context;
   const window = parseTraceWindow({ since, from, to, now, maxDays });
@@ -82,13 +83,14 @@ async function readProductionTrace({ context, since, from, to, now = Date.now(),
     unparsable += parsed.unparsable;
   });
   const { salt } = readTraceSalt({ directories });
-  const { texts } = await readConfigText({ context });
+  const { texts, isConfigText } = await readConfigText({ context });
   const resolve = createTokenResolver({ salt, texts });
   return {
     records: records.map((record) => resolveRecordText({ record, resolve })),
     unparsable,
     window,
     manifests,
+    isConfigText,
   };
 }
 

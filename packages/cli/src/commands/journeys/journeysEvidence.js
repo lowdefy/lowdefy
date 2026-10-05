@@ -94,6 +94,7 @@ async function journeysEvidence({ context }) {
       mutation: readMutationReport({ directories: context.directories }),
     },
     today: new Date(now).toISOString().slice(0, 10),
+    isConfigText: production.isConfigText,
   });
 
   const changed = results.filter((result) => result.changed);
