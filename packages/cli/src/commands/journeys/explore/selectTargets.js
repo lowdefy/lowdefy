@@ -74,17 +74,32 @@ function checkManualPages({ manualPages, headBuild }) {
 }
 
 // A head-only run (a charter with no PR) has no diff: its targets are the
-// --page pages, else the entry pages. Every block on a target page is in
-// scope, so no block is listed as changed and no option is ranked by it.
-function selectHeadOnlyTargets({ headBuild, coverage, manualPages }) {
+// --page pages, else the entry pages, and the pages a --charters file names.
+// The --page or entry pages are left out when every charter names its own
+// (withDefaultPages false). Every block on a target page is in scope, so no
+// block is listed as changed and no option is ranked by it.
+function selectHeadOnlyTargets({
+  headBuild,
+  coverage,
+  manualPages,
+  charterPages,
+  withDefaultPages,
+}) {
   checkManualPages({ manualPages, headBuild });
-  const pageIds =
-    manualPages.length > 0 ? [...new Set(manualPages)] : entryPages({ coverage, headBuild });
-  const reason = manualPages.length > 0 ? 'manual' : 'entry';
+  const reasonsByPage = new Map();
+  function addReason(pageId, reason) {
+    reasonsByPage.set(pageId, [...new Set([...(reasonsByPage.get(pageId) ?? []), reason])]);
+  }
+  if (withDefaultPages) {
+    const reason = manualPages.length > 0 ? 'manual' : 'entry';
+    const pageIds = manualPages.length > 0 ? manualPages : entryPages({ coverage, headBuild });
+    pageIds.forEach((pageId) => addReason(pageId, reason));
+  }
+  charterPages.forEach((pageId) => addReason(pageId, 'charter'));
   return {
-    pages: pageIds.sort().map((pageId) => ({
+    pages: [...reasonsByPage.keys()].sort().map((pageId) => ({
       pageId,
-      reasons: [reason],
+      reasons: reasonsByPage.get(pageId),
       authChanged: false,
       blocks: [],
     })),
@@ -99,20 +114,32 @@ function selectHeadOnlyTargets({ headBuild, coverage, manualPages }) {
 // its requests (request:<id>), an endpoint it calls (endpoint:<id>), a
 // connection its requests or endpoints use (connection:<id>), a websocket it
 // subscribes to (websocket:<id>), an app-wide artifact (app-wide: the entry
-// pages), or --page (manual). With no base build every head page is a target
+// pages), --page (manual), or a --charters file (charter: charterPages,
+// already checked). With no base build every head page is a target
 // (base-not-built) and the base error is a warning. Removed pages are
 // reported, not targeted. A head-only run (headOnly) has no base at all and
-// takes the --page pages, else the entry pages (entry).
+// takes the --page pages, else the entry pages (entry), and the charter
+// pages.
 function selectTargets({
   diff,
   baseBuild,
   headBuild,
   coverage = null,
   manualPages = [],
+  charterPages = [],
+  withDefaultPages = true,
   baseError,
   headOnly = false,
 }) {
-  if (headOnly) return selectHeadOnlyTargets({ headBuild, coverage, manualPages });
+  if (headOnly) {
+    return selectHeadOnlyTargets({
+      headBuild,
+      coverage,
+      manualPages,
+      charterPages,
+      withDefaultPages,
+    });
+  }
   const reasonsByPage = new Map();
   function addReasons(pageId, reasons) {
     if (reasons.length === 0) return;
@@ -134,6 +161,7 @@ function selectTargets({
   }
   checkManualPages({ manualPages, headBuild });
   manualPages.forEach((pageId) => addReasons(pageId, ['manual']));
+  charterPages.forEach((pageId) => addReasons(pageId, ['charter']));
 
   const pages = [...reasonsByPage.keys()].sort().map((pageId) => ({
     pageId,

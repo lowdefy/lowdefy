@@ -123,6 +123,21 @@ test('resolvePolicy refuses --charter with --policy seeded', () => {
   );
 });
 
+test('resolvePolicy refuses --charters without AI_GATEWAY_API_KEY, naming the flag', () => {
+  expect(() => resolvePolicy({ options: { charters: 'bash.yaml' }, env: {} })).toThrow(
+    '--charters needs a model to steer, and without AI_GATEWAY_API_KEY the seeded policy runs'
+  );
+  expect(() =>
+    resolvePolicy({
+      options: { charters: 'bash.yaml', policy: 'seeded' },
+      env: { AI_GATEWAY_API_KEY: 'k' },
+    })
+  ).toThrow('--charters needs a model to steer, and --policy seeded never reads the charter.');
+  expect(
+    resolvePolicy({ options: { charters: 'bash.yaml' }, env: { AI_GATEWAY_API_KEY: 'k' } }).policy
+  ).toBe('jev');
+});
+
 test('resolvePolicy takes --charter with a key', () => {
   expect(
     resolvePolicy({ options: { charter: 'try edge input' }, env: { AI_GATEWAY_API_KEY: 'k' } })

@@ -40,6 +40,10 @@ function walkedRun() {
     walkMs: 12000,
     stopped: null,
     notRun: [{ pageId: 'invoices', user: 'member', reason: 'budget', walks: 2 }],
+    targets: [
+      { pageId: 'ticket', user: 'admin', roles: ['admin'] },
+      { pageId: 'tickets', user: 'member', roles: ['member'] },
+    ],
     logs: [
       {
         walk: 'walk-1',
@@ -155,4 +159,89 @@ test('the report records the charter that steered the run, and the summary print
   expect(report.base).toBeNull();
   const lines = formatExploreReport({ report });
   expect(lines[1]).toEqual('Charter   Try edge input on the invoice form.');
+});
+
+test('a --charters run reports each charter with its pages, roles and walks, and the summary names the charters that hit each finding', () => {
+  const walked = walkedRun();
+  walked.targets = [
+    { pageId: 'ticket', user: 'admin', roles: ['admin'], charter: 0 },
+    { pageId: 'ticket', user: 'admin', roles: ['admin'], charter: 1 },
+    { pageId: 'tickets', user: 'member', roles: ['member'], charter: 1 },
+    { pageId: 'tickets', user: null, roles: [], charter: 2 },
+  ];
+  walked.logs = walked.logs.map((log, index) => ({ ...log, charter: index }));
+  walked.notRun = [{ pageId: 'tickets', user: 'guest', charter: 2, reason: 'budget', walks: 5 }];
+  const charters = [
+    { goal: 'Try edge input on the ticket form.', pages: ['ticket'] },
+    { goal: 'Try error paths.' },
+    { goal: 'Try the ticket list as a guest.', pages: ['tickets'] },
+  ];
+  const findings = [
+    {
+      key: 'k',
+      kind: 'action-error',
+      severity: 'error',
+      status: 'proven',
+      candidate: 'f.yaml',
+      message: 'CallAPI failed',
+      pageId: 'ticket',
+      source: 'pages/ticket.yaml:88',
+      walks: ['walk-1', 'walk-2'],
+      users: ['admin'],
+      charters: [charters[0].goal, charters[1].goal],
+    },
+    {
+      key: 'd',
+      kind: 'dead-click',
+      severity: 'warning',
+      status: 'not-proven',
+      reason: 'not-reproduced',
+      message: 'Clicking help did nothing.',
+      pageId: 'tickets',
+      source: null,
+      walks: ['walk-2'],
+      users: ['member'],
+      charters: [charters[1].goal],
+    },
+  ];
+  const report = buildExploreReport({
+    run: '20261004T120000Z-ab12cd',
+    revisions: { pr: null, base: null, head: 'bbb', dirty: false },
+    charters,
+    scope: { pages: [{ pageId: 'ticket' }], appWide: [], uncompared: [], removedPages: [] },
+    walked,
+    findings,
+    proof: { ms: 2000, live: false },
+    candidates: { finding: ['f.yaml'], coverage: [], droppedExpectations: 0 },
+    trace: null,
+    startedAt: '2026-10-04T12:00:00.000Z',
+    finishedAt: '2026-10-04T12:05:00.000Z',
+    budgetMs: 1200000,
+  });
+  expect(report.charter).toBeNull();
+  expect(report.charters).toEqual([
+    { goal: charters[0].goal, pages: ['ticket'], roles: ['admin'], walks: 1 },
+    { goal: charters[1].goal, pages: ['ticket', 'tickets'], roles: ['admin', 'member'], walks: 1 },
+    { goal: charters[2].goal, pages: ['tickets'], roles: ['default'], walks: 0 },
+  ]);
+  expect(report.findings.proven.map((finding) => finding.key)).toEqual(['k']);
+  expect(Object.keys(report.findings.notProven)).toEqual(['not-reproduced']);
+  const lines = formatExploreReport({ report });
+  expect(lines.slice(1, 5)).toEqual([
+    'Charters  3, one run',
+    '  1. Try edge input on the ticket form.  (ticket × admin; 1 walk)',
+    '  2. Try error paths.  (ticket, tickets × admin, member; 1 walk)',
+    '  3. Try the ticket list as a guest.  (tickets × default; 0 walks)',
+  ]);
+  const findingsAt = lines.findIndex((line) => line.startsWith('Findings'));
+  expect(lines.slice(findingsAt, findingsAt + 7)).toEqual([
+    'Findings  1 proven, 1 not proven',
+    '  ERROR action-error  ticket  CallAPI failed  pages/ticket.yaml:88  (2 walks, admin)  → f.yaml',
+    '      charter: Try edge input on the ticket form.',
+    '      charter: Try error paths.',
+    'Not proven, its journey did not fail with it twice: 1 finding',
+    '  WARNING dead-click  tickets  Clicking help did nothing.    (1 walk, member)',
+    '      charter: Try error paths.',
+  ]);
+  expect(lines).toContain('Not run   tickets × guest (charter 3): budget');
 });

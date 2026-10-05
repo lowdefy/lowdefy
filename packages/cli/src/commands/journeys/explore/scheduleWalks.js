@@ -14,18 +14,40 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import createWalkProgress from './createWalkProgress.js';
 
 const DROP_REASONS = ['refused', 'access-changed'];
 const RUN_STOP_REASONS = ['budget', 'cost'];
 
+// A (page, role) target, and under a --charters file the charter it walks
+// for: two charters on one page and role are two targets.
 function targetKey(target) {
-  return `${target.pageId}\u0000${target.user ?? ''}`;
+  return `${target.pageId}\u0000${target.user ?? ''}\u0000${target.charter ?? ''}`;
 }
 
-// Runs the walks breadth-first: round r walks every target once, in order,
-// before round r + 1 starts, so every target gets its first walk before any
-// gets a second. A target the head config refuses (refused, access changed)
+function isWalkOf({ log, target }) {
+  return (
+    log.pageId === target.pageId &&
+    log.user === target.user &&
+    (log.charter ?? null) === (target.charter ?? null)
+  );
+}
+
+// How a not-run entry names its target: page and user, and the charter's
+// index when it has one.
+function targetRef(target) {
+  const ref = { pageId: target.pageId, user: target.user };
+  if (!type.isUndefined(target.charter)) ref.charter = target.charter;
+  return ref;
+}
+
+// Runs the walks breadth-first, one at a time: round r walks every target
+// once, in order, before round r + 1 starts, so every target gets its first
+// walk before any gets a second. The charters of a --charters run share the
+// rounds and the one budget, so the run never holds more than one open walk
+// and stays within the dev server's cap. A target the head config refuses (refused, access changed)
 // is dropped. The run stops when shouldStop() says budget or cost (the walk
 // in flight finishes its step and closes), or when a walk finds the dev
 // server restarted under a changed build (buildChanged()); after a restart
@@ -34,7 +56,7 @@ function targetKey(target) {
 // its log; a walk that throws (the policy's model failing three times in a
 // row, a step the dev server refused) stops the run with reason error, and
 // the walks before it are kept. Returns { logs, notRun: [{ pageId, user,
-// reason }], stopped }.
+// charter?, reason }], stopped }.
 async function scheduleWalks({ targets, walks, runOne, shouldStop, buildChanged }) {
   const progressByTarget = new Map(
     targets.map((target) => [targetKey(target), createWalkProgress()])
@@ -94,22 +116,11 @@ async function scheduleWalks({ targets, walks, runOne, shouldStop, buildChanged 
   }
 
   targets.forEach((target) => {
-    const walked = logs.filter(
-      (log) => log.pageId === target.pageId && log.user === target.user
-    ).length;
+    const walked = logs.filter((log) => isWalkOf({ log, target })).length;
     if (dropped.has(targetKey(target))) {
-      notRun.push({
-        pageId: target.pageId,
-        user: target.user,
-        reason: dropped.get(targetKey(target)),
-      });
+      notRun.push({ ...targetRef(target), reason: dropped.get(targetKey(target)) });
     } else if (walked < walks && stopped !== null) {
-      notRun.push({
-        pageId: target.pageId,
-        user: target.user,
-        reason: stopped.reason,
-        walks: walks - walked,
-      });
+      notRun.push({ ...targetRef(target), reason: stopped.reason, walks: walks - walked });
     }
   });
   return { logs, notRun, stopped };

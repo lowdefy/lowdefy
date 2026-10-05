@@ -69,7 +69,7 @@ async function finishRun({
   startedAt,
 }) {
   const configDirectory = context.directories.config;
-  const collected = collectFindings({ logs: walked.logs });
+  const collected = collectFindings({ logs: walked.logs, charters: options.charters });
   const candidates = compileWalks({
     configDirectory,
     run,
@@ -90,6 +90,7 @@ async function finishRun({
     run,
     revisions,
     charter: options.charter,
+    charters: options.charters,
     scope,
     walked,
     findings,

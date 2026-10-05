@@ -251,6 +251,7 @@ _ref:
             - `--pr <n>`: The pull request to explore, read with the GitHub CLI (`gh`). The checkout must be at its head.
             - `--against <ref>`: Explore the changes since the merge base with this branch or commit, instead of `--pr`.
             - `--charter <text>`: A one-sentence goal that steers which options the model picks, such as `"try edge input on the invoice form"`. It needs a model (`AI_GATEWAY_API_KEY`). Without `--pr` or `--against`, the run builds only the head and walks the `--page` pages, else the entry pages. See [Charters](/explore-pull-request#charters).
+            - `--charters <file>`: A bug bash: a YAML list of charters, each `{ goal, pages?, roles? }`, run as one run under one budget with one report. Each finding names the charters that hit it and is proven once. It needs a model, and cannot be combined with `--charter`. See [Bug bash](/explore-pull-request#bug-bash).
             - `--data <name>`: The data set walks run on. The default is `tests/data/default.yaml`, else the only data set.
             - `--live-data`: Run without a data set, writing to what the app's connections point at. Needs `cli.agentTools.allowWriteRequests: true`.
             - `--page <pageId...>`: Also walk these pages.

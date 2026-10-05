@@ -35,16 +35,34 @@ function groupByReason(findings) {
   return groups;
 }
 
-// report.json: what the run compared, the charter that steered it (null
-// without one), what it walked and what that cost, the targets it did not walk
-// and why, its findings (proven ones first, then the not-proven ones grouped
-// by reason), how long the proofs took, the candidates it kept, and its trace
-// file. findings comes from applyProof, in report order. readExploreRuns
-// reads run, pr, base, head and finishedAt from it.
+// Each charter of the run with the pages and data set users its targets
+// cover and how many walks it had. Walk logs and targets name a charter by
+// its index.
+function describeCharters({ charters, targets, logs }) {
+  return charters.map((charter, index) => {
+    const own = targets.filter((target) => target.charter === index);
+    return {
+      goal: charter.goal,
+      pages: [...new Set(own.map((target) => target.pageId))],
+      roles: [...new Set(own.map((target) => target.user ?? 'default'))],
+      walks: logs.filter((log) => log.charter === index).length,
+    };
+  });
+}
+
+// report.json: what the run compared, the --charter that steered it (null
+// without one), every charter it walked for (a --charter run's one, or a
+// --charters file's, each with its pages, roles and walks), what it walked
+// and what that cost, the targets it did not walk and why, its findings
+// (proven ones first, then the not-proven ones grouped by reason, each naming
+// the charters that hit it), how long the proofs took, the candidates it
+// kept, and its trace file. findings comes from applyProof, in report order.
+// readExploreRuns reads run, pr, base, head and finishedAt from it.
 function buildExploreReport({
   run,
   revisions,
   charter = null,
+  charters = [],
   scope,
   walked,
   findings,
@@ -65,6 +83,7 @@ function buildExploreReport({
     head: revisions.head,
     dirty: revisions.dirty,
     charter,
+    charters: describeCharters({ charters, targets: walked.targets, logs }),
     startedAt,
     finishedAt,
     policy: {

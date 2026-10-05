@@ -48,22 +48,45 @@ function parseCharter(value) {
   return { goal: value.trim() };
 }
 
+function parseChartersFile(value) {
+  if (type.isNone(value)) return null;
+  if (!type.isString(value) || value.trim() === '') {
+    throw new Error(
+      `--charters should be the path to a YAML list of charters. Received ${JSON.stringify(value)}.`
+    );
+  }
+  return value;
+}
+
 // The explore command's flags, checked and defaulted. The policy flags
-// (--policy, --model, --max-cost) are resolvePolicy's. A run explores a pull
-// request (--pr), the changes since a ref (--against), or, with --charter
-// and neither, the head alone.
+// (--policy, --model, --max-cost) are resolvePolicy's, and the --charters
+// file is read by readChartersFile. A run explores a pull request (--pr), the
+// changes since a ref (--against), or, with --charter or --charters and
+// neither, the head alone.
 function parseExploreOptions(options) {
   if (!type.isNone(options.pr) && !type.isNone(options.against)) {
     throw new Error('Pass one of --pr <number> or --against <ref>, not both.');
   }
   const charter = parseCharter(options.charter);
-  if (type.isNone(options.pr) && type.isNone(options.against) && charter === null) {
-    throw new Error('Pass one of --pr <number>, --against <ref> or --charter <text>.');
+  const chartersFile = parseChartersFile(options.charters);
+  if (charter !== null && chartersFile !== null) {
+    throw new Error('Pass one of --charter <text> or --charters <file>, not both.');
+  }
+  if (
+    type.isNone(options.pr) &&
+    type.isNone(options.against) &&
+    charter === null &&
+    chartersFile === null
+  ) {
+    throw new Error(
+      'Pass one of --pr <number>, --against <ref>, --charter <text> or --charters <file>.'
+    );
   }
   return {
     pr: options.pr ?? null,
     against: options.against ?? null,
     charter,
+    chartersFile,
     data: options.data ?? null,
     liveData: options.liveData === true,
     pages: asList(options.page),

@@ -14,11 +14,15 @@
   limitations under the License.
 */
 
-// The run's findings, one per key across walks and roles, in the order the
-// walks hit them: each with the walks and data set users that hit it, and its
-// first occurrence's step and screenshot. Whether a finding is proven is the
+import { type } from '@lowdefy/helpers';
+
+// The run's findings, one per key across walks, roles and charters, in the
+// order the walks hit them: each with the walks and data set users that hit
+// it, the goals of the charters whose walks hit it (charters lists the run's
+// charters, which walk logs name by index; empty without any), and its first
+// occurrence's step and screenshot. Whether a finding is proven is the
 // proof's to say (applyProof).
-function collectFindings({ logs }) {
+function collectFindings({ logs, charters = [] }) {
   const byKey = new Map();
   logs.forEach((log) => {
     log.findings.forEach((finding) => {
@@ -35,12 +39,16 @@ function collectFindings({ logs }) {
           screenshot: occurrence?.screenshot ?? null,
           walks: [],
           users: [],
+          charters: [],
         });
       }
       const entry = byKey.get(finding.key);
       if (!entry.walks.includes(log.walk)) entry.walks.push(log.walk);
       const user = log.user ?? 'default';
       if (!entry.users.includes(user)) entry.users.push(user);
+      if (type.isNone(log.charter)) return;
+      const { goal } = charters[log.charter];
+      if (!entry.charters.includes(goal)) entry.charters.push(goal);
     });
   });
   return [...byKey.values()];

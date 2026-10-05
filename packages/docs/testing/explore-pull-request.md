@@ -51,6 +51,33 @@ Without `--pr` or `--against`, a charter run builds only your working tree, with
 
 A charter needs a model. `--charter` without `AI_GATEWAY_API_KEY`, or with `--policy seeded`, is refused before anything is built, because the seeded policy never reads the charter. The charter is recorded in `report.json` and printed at the top of the summary.
 
+## Bug bash
+
+A bug bash runs several charters as **one** run. Write them to a YAML file, each with a goal and, optionally, the pages and data set users it walks:
+
+```yaml
+# charters.yaml
+- goal: Try edge input on the invoice form.
+  pages: [invoice]
+- goal: Try error paths on tickets, cancel, delete and incomplete submits.
+  pages: [tickets, ticket]
+  roles: [member_max]
+- goal: Try edge input on the contact forms.
+```
+
+```bash
+lowdefy journeys explore --charters charters.yaml
+lowdefy journeys explore --charters charters.yaml --pr 2531
+```
+
+A charter without `pages` walks the run's other targets: the pages the pull request changed, or `--page`, or else the entry pages. A charter without `roles` walks as `--role`, or else every role the page has. An unknown page or data set user, or a charter with no goal, is refused before any walk, naming the charter. `--charters` cannot be combined with `--charter`, and needs a model just as `--charter` does.
+
+Every charter's (page, role) targets share one set of breadth-first rounds and the one `--budget`: the first target of each charter is walked before any charter's second. The run holds one walk open at a time, so it stays within the dev server's limit of two open walks. Findings merge by key across charters, and each finding lists the charters whose walks hit it. Each finding is proven once, however many charters hit it.
+
+`report.json` gains `charters`, each with its goal, pages, roles and number of walks. Its findings keep their order: proven first, then not proven by reason. The summary lists the charters, and under each finding the charters that hit it.
+
+`lowdefy agent-setup` installs a `journeys-bug-bash` skill that writes 3 to 6 charters from your app's pages (and the diff, on a branch) to a file outside the repository, runs the one command, and reports the proven findings first. It runs unattended through to the report, never writes an expectation, and never runs two explore processes at once.
+
 ## Data and roles
 
 Walks click Save and Delete, so each walk runs on a fresh copy of a data set:

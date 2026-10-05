@@ -36,7 +36,8 @@ function refusalReason({ opened, scopePage }) {
 // two steps running), finding (an error finding), left-app, step-failed,
 // budget, cost (from shouldStop), server-restarted (the walk is gone: a 404),
 // and at open refused or access-changed (the head config refuses the role).
-// Returns the walk's log, the record walks.jsonl keeps.
+// Returns the walk's log, the record walks.jsonl keeps, which names the
+// target's charter by its index (null without one).
 async function runWalk({
   client,
   run,
@@ -61,6 +62,7 @@ async function runWalk({
     pageId: target.pageId,
     user: target.user,
     roles: target.roles,
+    charter: target.charter ?? null,
     startedAt: new Date(now()).toISOString(),
     open: null,
     steps: [],
