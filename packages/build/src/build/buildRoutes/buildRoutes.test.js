@@ -155,3 +155,31 @@ test('buildRoutes skips a page without a string id, which buildPage refuses', ()
   expect(errors).toEqual([]);
   expect(routePaths(routes)).toEqual([{ pageId: 'home', path: 'home' }]);
 });
+
+test.each(['foo/', '/foo', 'a//b'])(
+  'buildRoutes refuses page id "%s" with an empty segment for a page without a path',
+  (id) => {
+    const { routes, errors } = run({ pages: [{ id, type: 'Box' }] });
+    expect(errors).toEqual([
+      `Page id "${id}" contains an empty segment. Page ids cannot start or end with "/" or contain "//".`,
+    ]);
+    expect(routes).toEqual([]);
+  }
+);
+
+test.each(['a.b', '{slug}'])(
+  'buildRoutes refuses page id "%s" with invalid characters for a page without a path',
+  (id) => {
+    const { routes, errors } = run({ pages: [{ id, type: 'Box' }] });
+    expect(errors).toEqual([
+      `Page id "${id}" contains invalid characters. IDs must only contain A-Z, a-z, 0-9, "-", "_", "/", and ":".`,
+    ]);
+    expect(routes).toEqual([]);
+  }
+);
+
+test('buildRoutes accepts a nested page id for a page without a path', () => {
+  const { routes, errors } = run({ pages: [{ id: 'a/b', type: 'Box' }] });
+  expect(errors).toEqual([]);
+  expect(routePaths(routes)).toEqual([{ pageId: 'a/b', path: 'a/b' }]);
+});

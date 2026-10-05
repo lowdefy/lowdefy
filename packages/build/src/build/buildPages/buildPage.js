@@ -45,12 +45,6 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     return { failed: true };
   }
   validateId({ id: page.id, field: 'Page id', configKey });
-  if (page.id.split('/').some((segment) => segment === '')) {
-    throw new ConfigError(
-      `Page id "${page.id}" contains an empty segment. Page ids cannot start or end with "/" or contain "//".`,
-      { configKey }
-    );
-  }
   if (checkDuplicatePageId) {
     checkDuplicatePageId({ id: page.id, configKey });
   }

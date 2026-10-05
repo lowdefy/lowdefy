@@ -17,11 +17,22 @@
 import { parsePathPattern, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import validateId from '../../utils/validateId.js';
+
 // A page's route: its path pattern, or its id as an all-fixed pattern when it
-// declares no path.
+// declares no path. The id is checked here, not only in buildPage, because the
+// JIT skeleton writes routes.json without building pages that have a source
+// file, and the server matcher parses every route.
 function parsePageRoute({ page }) {
   const configKey = page['~k'];
   if (type.isUndefined(page.path)) {
+    validateId({ id: page.id, field: 'Page id', configKey });
+    if (page.id.split('/').some((segment) => segment === '')) {
+      throw new ConfigError(
+        `Page id "${page.id}" contains an empty segment. Page ids cannot start or end with "/" or contain "//".`,
+        { configKey }
+      );
+    }
     return {
       pageId: page.id,
       path: page.id,
