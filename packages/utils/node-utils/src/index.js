@@ -63,6 +63,7 @@ import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
 import failurePathKey from './journeyEvidence/failurePathKey.js';
 import isBackedBy from './journeyEvidence/isBackedBy.js';
 import normaliseBlockId from './journeyGrammar/normaliseBlockId.js';
+import hashSequence from './journeyCompiler/hashSequence.js';
 import journeySequence from './journeyCompiler/journeySequence.js';
 import listFailurePaths from './journeyCompiler/listFailurePaths.js';
 import parseTraceLines from './journeyCompiler/parseTraceLines.js';
@@ -101,6 +102,7 @@ export {
   getProcessStartTime,
   getSecretsFromEnv,
   hashDataSetSpec,
+  hashSequence,
   installIfPackageJsonChanged,
   isBackedBy,
   isPidAlive,

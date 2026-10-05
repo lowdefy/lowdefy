@@ -605,7 +605,7 @@ const productionWindowOptions = [
 const journeysEvidenceCommand = journeys
   .command('evidence')
   .description(
-    "Report how much production use backs each journey in tests/journeys/; --refresh writes it into each journey's evidence key."
+    "Report how much production use backs each journey in tests/journeys/, by calendar month, from every final day of the production cache; --refresh writes it into each journey's evidence key."
   )
   .usage('[options]')
   .addOption(options.configDirectory)
@@ -619,7 +619,6 @@ const journeysEvidenceCommand = journeys
       'Write the evidence key of every journey whose numbers changed, and nothing else in the file.'
     )
   );
-productionWindowOptions.forEach((option) => journeysEvidenceCommand.addOption(option));
 journeysEvidenceCommand.action(runCommand({ cliVersion, handler: journeysEvidence }));
 
 const journeysCoverageCommand = journeys

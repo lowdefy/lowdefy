@@ -64,3 +64,28 @@ test('formatEvidence is empty with nothing to show', () => {
     ''
   );
 });
+
+test('formatEvidence shows the all-time sessions of monthly evidence and leaves orgs out', () => {
+  const monthly = {
+    sequence: 'v1-3f9a12c0',
+    pageId: 'tickets',
+    flow: [],
+    months: [
+      { month: '2026-09', days: 30, sessions: 412, persons: 37, orgs: 9, failures: 14 },
+      { month: '2026-10', days: 3, sessions: 38, persons: 11, orgs: 5, failures: 1 },
+    ],
+  };
+  expect(
+    formatEvidence({ evidence: { production: monthly, mutation: { killed: 11, total: 12 } } })
+  ).toBe('450 sessions · 11/12 mutants');
+});
+
+test('formatEvidence shows 0 sessions for monthly evidence with no backing', () => {
+  const monthly = {
+    sequence: 'v1-3f9a12c0',
+    pageId: 'tickets',
+    flow: [],
+    months: [{ month: '2026-10', days: 3, sessions: 0, persons: 0, orgs: 0, failures: 0 }],
+  };
+  expect(formatEvidence({ evidence: { production: monthly } })).toBe('0 sessions');
+});
