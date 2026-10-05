@@ -76,6 +76,7 @@ const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
         loading={loading}
         menus={lowdefy.menus}
         pageId={lowdefy.pageId}
+        pathParams={context.pathParams}
         properties={block.eval.properties}
         required={block.eval.required}
         styles={block.eval.style ?? {}}

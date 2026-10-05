@@ -40,6 +40,7 @@ const builtinMessages = {
   'agent.runtime.invalidPath': 'Invalid agent path',
   'agent.runtime.messagesMustBeArray': 'messages must be an array',
   'agent.runtime.urlQueryMustBeObject': 'urlQuery must be an object',
+  'agent.runtime.pathParamsMustBeObject': 'pathParams must be an object',
   'agent.runtime.sharedStateMustBeObject': 'sharedState must be an object',
   'agent.runtime.sharedStateReadOnlyMustBeBoolean': 'sharedStateReadOnly must be a boolean',
   'agent.runtime.agentNotFound': 'Agent "{agentId}" does not exist.',

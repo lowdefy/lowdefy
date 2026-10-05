@@ -176,7 +176,7 @@ function linkText(children) {
 // route rather than a reload that drops the conversation. Anything with a scheme opens in a
 // new tab for the same reason. Both still report the click, so an app that handles
 // onLinkClick can show the target in place instead.
-function MarkdownLink({ Link, onLinkClick }) {
+function MarkdownLink({ Link, lookupPath, onLinkClick }) {
   return function MarkdownAnchor({ href, children, ...props }) {
     if (!href) return <span {...props}>{children}</span>;
     const text = linkText(children);
@@ -200,11 +200,14 @@ function MarkdownLink({ Link, onLinkClick }) {
     // `pageId`, not `href`: Link renders a plain anchor for href and url — its new-origin form —
     // and only routes client-side for a pageId. Passing the path as href therefore went through
     // Link and still reloaded the page, dropping the conversation this exists to preserve.
-    const [pathname, search = ''] = href.slice(1).split('?');
+    // The path becomes the page it belongs to and that page's path values, from the path memory.
+    const [path, search = ''] = href.slice(1).split('?');
+    const { pageId, pathParams } = lookupPath({ path });
     return (
       <Link
         {...props}
-        pageId={pathname}
+        pageId={pageId}
+        pathParams={pathParams}
         urlQuery={Object.fromEntries(new URLSearchParams(search))}
         onClick={handleClick}
       >
@@ -318,6 +321,7 @@ function MessageBubble({
   feedbackValue,
   onLinkClick,
   Link,
+  lookupPath,
   onRegenerate,
   onDelete,
   translate,
@@ -336,8 +340,8 @@ function MessageBubble({
       !renderMermaid && !codeHighlighter
         ? PlainCodeBlock
         : RichCodeBlock({ renderMermaid, codeHighlighter });
-    return { code, a: MarkdownLink({ Link, onLinkClick }) };
-  }, [renderMermaid, codeHighlighter, Link, onLinkClick]);
+    return { code, a: MarkdownLink({ Link, lookupPath, onLinkClick }) };
+  }, [renderMermaid, codeHighlighter, Link, lookupPath, onLinkClick]);
 
   const normalizedActions = normalizeActions(actions);
   const showActions = Object.values(normalizedActions).some(Boolean) && !isStreaming;

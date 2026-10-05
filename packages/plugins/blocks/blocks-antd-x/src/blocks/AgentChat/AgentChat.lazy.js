@@ -39,11 +39,12 @@ import WelcomeScreen from './WelcomeScreen.js';
 
 function AgentChat({
   blockId,
-  components: { Icon, Link },
+  components: { Icon, Link, lookupPath },
   drawerOpenRequested,
   events,
   methods,
   pageId,
+  pathParams,
   properties,
 }) {
   const {
@@ -101,6 +102,7 @@ function AgentChat({
   const effectiveConversationId = conversationId ?? mintedIdRef.current;
 
   const urlQueryKey = JSON.stringify(urlQuery ?? null);
+  const pathParamsKey = JSON.stringify(pathParams ?? null);
   const transport = useMemo(
     () =>
       createLowdefyChatTransport({
@@ -108,10 +110,11 @@ function AgentChat({
         agentId,
         conversationId: effectiveConversationId,
         urlQuery,
+        pathParams,
         sharedStateRef,
         sharedStateReadOnlyRef,
       }),
-    [pageId, agentId, effectiveConversationId, urlQueryKey]
+    [pageId, agentId, effectiveConversationId, urlQueryKey, pathParamsKey]
   );
 
   const bubbleListRef = useRef(null);
@@ -737,6 +740,7 @@ function AgentChat({
             onFeedback={handleFeedback}
             onLinkClick={handleLinkClick}
             Link={Link}
+            lookupPath={lookupPath}
             feedbackValues={effectiveFeedbackValues}
             onRegenerate={handleRegenerate}
             onDelete={handleDelete}

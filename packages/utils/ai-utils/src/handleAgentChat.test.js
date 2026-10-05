@@ -1772,6 +1772,7 @@ test('pageContext true prepends context block to instructions', async () => {
         userId: 'user_abc',
         conversationId: 'conv_123',
         urlQuery: { principle_id: 'P3' },
+        pathParams: { ticket_id: '1' },
       },
     },
   });
@@ -1782,6 +1783,7 @@ test('pageContext true prepends context block to instructions', async () => {
       '  userId: user_abc\n' +
       '  conversationId: conv_123\n' +
       '  urlQuery: {"principle_id":"P3"}\n' +
+      '  pathParams: {"ticket_id":"1"}\n' +
       '</context>\n' +
       '\n' +
       'You are a governance advisor.'
@@ -1838,11 +1840,12 @@ test('pageContext omits empty urlQuery from context block', async () => {
     context: {
       callEndpoint: jest.fn(),
       getEndpointConfig: jest.fn(),
-      agentContext: { pageId: 'my-page', userId: 'user_1', urlQuery: {} },
+      agentContext: { pageId: 'my-page', userId: 'user_1', urlQuery: {}, pathParams: {} },
     },
   });
 
   expect(lastAgentConfig.instructions).not.toContain('urlQuery');
+  expect(lastAgentConfig.instructions).not.toContain('pathParams');
   expect(lastAgentConfig.instructions).toContain('<context>');
   expect(lastAgentConfig.instructions).toContain('pageId: my-page');
 });

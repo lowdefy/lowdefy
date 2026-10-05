@@ -19,7 +19,16 @@ import prepareAgent from './prepareAgent.js';
 
 async function callAgent(
   context,
-  { agentId, pageId, messages, conversationId, urlQuery, sharedState, sharedStateReadOnly }
+  {
+    agentId,
+    pageId,
+    messages,
+    conversationId,
+    pathParams,
+    urlQuery,
+    sharedState,
+    sharedStateReadOnly,
+  }
 ) {
   const { logger } = context;
 
@@ -35,6 +44,7 @@ async function callAgent(
   const agentContext = {
     conversationId: conversationId ?? undefined,
     pageId,
+    pathParams: pathParams ?? {},
     sharedState: sharedState ?? {},
     sharedStateReadOnly: sharedStateReadOnly ?? false,
     urlQuery: urlQuery ?? {},

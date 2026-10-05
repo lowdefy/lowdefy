@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { registerHtmlEnhancements } from '@lowdefy/block-utils';
+import { lookupPath } from '@lowdefy/engine';
 import { translate } from '@lowdefy/helpers';
 
 import createCallAPI from './createCallAPI.js';
@@ -91,6 +92,7 @@ function initLowdefyContext({
     lowdefy._internal.callRequest = createCallRequest(lowdefy);
     lowdefy._internal.websocketClient = createWebSocketClient(lowdefy);
     lowdefy._internal.components.Link = createLinkComponent(lowdefy, Components.Link);
+    lowdefy._internal.components.lookupPath = ({ path }) => lookupPath({ lowdefy, path });
     lowdefy._internal.link = setupLink(lowdefy);
     lowdefy._internal.translate = (key, values) => translate({ key, values, i18n: lowdefy.i18n });
     lowdefy._internal.logger = createBrowserLogger();

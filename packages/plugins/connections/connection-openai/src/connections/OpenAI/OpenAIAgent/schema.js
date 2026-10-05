@@ -87,7 +87,7 @@ export default {
     pageContext: {
       type: 'boolean',
       description:
-        'When true, prepend page context (pageId, userId, conversationId, urlQuery) to instructions.',
+        'When true, prepend page context (pageId, userId, conversationId, urlQuery, pathParams) to instructions.',
       errorMessage: {
         type: 'OpenAIAgent agent property "pageContext" should be a boolean.',
       },

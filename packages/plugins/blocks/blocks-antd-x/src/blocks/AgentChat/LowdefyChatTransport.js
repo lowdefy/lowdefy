@@ -21,6 +21,7 @@ function createLowdefyChatTransport({
   agentId,
   conversationId,
   urlQuery,
+  pathParams,
   sharedStateRef,
   sharedStateReadOnlyRef,
 }) {
@@ -37,6 +38,7 @@ function createLowdefyChatTransport({
       const sharedState = sharedStateRef?.current;
       return {
         ...(urlQuery ? { urlQuery } : {}),
+        ...(pathParams ? { pathParams } : {}),
         ...(sharedState ? { sharedState } : {}),
         ...(sharedStateReadOnlyRef?.current ? { sharedStateReadOnly: true } : {}),
       };

@@ -59,6 +59,7 @@ async function handleAgentCall(context, routineContext, { step }) {
   const agentContext = {
     conversationId: null,
     pageId: null,
+    pathParams: {},
     sharedState: undefined,
     urlQuery: {},
     userId: context.user?.sub ?? context.user?.id ?? null,
