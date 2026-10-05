@@ -27,17 +27,23 @@ jest.unstable_mockModule('../../lib/docs/getBuildId.js', () => ({
   default: () => mockBuildId,
 }));
 
+const { default: matchPagePath } = await import('@lowdefy/api/routes/page/matchPagePath.js');
 const mockGetPageConfig = jest.fn();
 jest.unstable_mockModule('@lowdefy/api', () => ({
   getPageConfig: mockGetPageConfig,
+  matchPagePath,
 }));
 
 // No JIT build work in these tests — the route's build branch is exercised
 // elsewhere; here we only drive the getPageConfig status fork.
 const mockGetPageJitEnrichment = jest.fn(() => ({}));
 const mockBuildContext = { jsMap: { client: {} } };
+const mockBuildPageWithContext = jest.fn(async () => ({
+  result: true,
+  buildContext: mockBuildContext,
+}));
 jest.unstable_mockModule('../../lib/server/jitPageBuilder.js', () => ({
-  buildPageWithContext: jest.fn(async () => ({ result: true, buildContext: mockBuildContext })),
+  buildPageWithContext: mockBuildPageWithContext,
   getPageJitEnrichment: mockGetPageJitEnrichment,
 }));
 
@@ -53,12 +59,18 @@ const { default: jitPageHandler } = await import('./jitPage.js');
 const { default: devRecordingHandler } = await import('./devRecording.js');
 const { default: servedBuilds } = await import('../../lib/server/recording/servedBuilds.js');
 
+const routes = [
+  { pageId: 'dashboard', path: 'dashboard' },
+  { pageId: 'ticket', path: '{space}/tickets/{ticket_id}' },
+];
+
 function createApp() {
   const app = new Hono();
   app.use('*', async (c, next) => {
     c.set('lowdefyContext', {
       buildDirectory: '/build',
       configDirectory: '/config',
+      readConfigFile: async (file) => (file === 'routes.json' ? routes : null),
       logger: { debug: jest.fn(), info: jest.fn(), error: jest.fn() },
       handleError: jest.fn(),
     });
@@ -71,6 +83,7 @@ function createApp() {
 
 afterEach(() => {
   mockGetPageConfig.mockReset();
+  mockBuildPageWithContext.mockClear();
   mockBuildId = BUILD_A;
 });
 
@@ -98,11 +111,64 @@ test('jitPageHandler still returns a 404 when the page is not found', async () =
 });
 
 test('jitPageHandler returns the pageConfig when status is ok', async () => {
-  mockGetPageConfig.mockResolvedValue({ status: 'ok', pageConfig: { id: 'dashboard' } });
+  mockGetPageConfig.mockResolvedValue({
+    status: 'ok',
+    pageId: 'dashboard',
+    pathParams: {},
+    pageConfig: { id: 'dashboard' },
+  });
   const res = await createApp().request('/api/page/dashboard');
   expect(res.status).toEqual(200);
   const body = await res.json();
-  expect(body).toEqual({ id: 'dashboard', _buildId: BUILD_A });
+  expect(body).toEqual({
+    pageId: 'dashboard',
+    pathParams: {},
+    matchedPath: 'dashboard',
+    pageConfig: { id: 'dashboard', _buildId: BUILD_A },
+  });
+});
+
+test('jitPageHandler builds the page a patterned path matches and returns its path values', async () => {
+  mockGetPageConfig.mockResolvedValue({
+    status: 'ok',
+    pageId: 'ticket',
+    pathParams: { space: 'support', ticket_id: '1234' },
+    pageConfig: { id: 'ticket' },
+  });
+  const res = await createApp().request('/api/page/support/tickets/1234/?tab=2');
+  expect(mockBuildPageWithContext).toHaveBeenCalledWith({
+    pageId: 'ticket',
+    buildDirectory: '/build',
+    configDirectory: '/config',
+  });
+  expect(mockGetPageConfig.mock.calls[0][1]).toEqual({
+    path: 'support/tickets/1234/',
+    urlQuery: { tab: '2' },
+  });
+  expect(res.status).toEqual(200);
+  const body = await res.json();
+  expect(body).toEqual({
+    pageId: 'ticket',
+    pathParams: { space: 'support', ticket_id: '1234' },
+    matchedPath: 'support/tickets/1234',
+    pageConfig: { id: 'ticket', _buildId: BUILD_A },
+  });
+});
+
+test('jitPageHandler builds nothing for a path no page matches', async () => {
+  mockGetPageConfig.mockResolvedValue({ status: 'not_found' });
+  const res = await createApp().request('/api/page/support/tickets');
+  expect(mockBuildPageWithContext).not.toHaveBeenCalled();
+  expect(res.status).toEqual(404);
+});
+
+test('jitPageHandler sign-in redirect carries the request path and query on callbackUrl', async () => {
+  mockGetPageConfig.mockResolvedValue({ status: 'unauthenticated' });
+  const res = await createApp().request('/api/page/support/tickets?tab=2');
+  expect(res.status).toEqual(401);
+  expect(await res.json()).toEqual({
+    redirect: `/auth/login?callbackUrl=${encodeURIComponent('/support/tickets?tab=2')}`,
+  });
 });
 
 test('jitPageHandler folds _jsEntries and _dynamicIcons onto the ok response', async () => {
@@ -114,7 +180,7 @@ test('jitPageHandler folds _jsEntries and _dynamicIcons onto the ok response', a
   const res = await createApp().request('/api/page/dashboard');
   expect(res.status).toEqual(200);
   const body = await res.json();
-  expect(body).toEqual({
+  expect(body.pageConfig).toEqual({
     id: 'dashboard',
     _buildId: BUILD_A,
     _jsEntries: 'export default {};',
@@ -138,7 +204,7 @@ test('jitPageHandler names the build it served, and the recording route keeps th
   try {
     mockGetPageConfig.mockResolvedValue({ status: 'ok', pageConfig: { id: 'dashboard' } });
     const app = createApp();
-    const page = await (await app.request('/api/page/dashboard')).json();
+    const { pageConfig: page } = await (await app.request('/api/page/dashboard')).json();
     expect(page._buildId).toBe(BUILD_A);
     expect(servedBuilds.has(BUILD_A)).toBe(true);
 

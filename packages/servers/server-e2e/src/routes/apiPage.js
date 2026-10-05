@@ -16,22 +16,27 @@
 
 import { getPageConfig } from '@lowdefy/api';
 
-import getPathSegments from '../lib/getPathSegments.js';
+import lowdefyConfig from '../../lib/build/config.js';
+import getRequestPath from '../lib/getRequestPath.js';
 
-// Page config as JSON for client-side SPA navigation. The first page load is
-// served embedded in the HTML; subsequent navigations fetch from here.
+const basePath = lowdefyConfig.basePath ?? '';
+
+// Page config as JSON for client-side SPA navigation, by the page's path (for a
+// page without a path, its id). The first page load is served embedded in the
+// HTML; subsequent navigations fetch from here.
 async function apiPageHandler(c) {
   const context = c.get('lowdefyContext');
-  const pageId = getPathSegments(c, '/api/page/').join('/');
+  const { path, matchedPath } = getRequestPath({ c, basePath, prefix: '/api/page/' });
   // The client forwards its current query string on the fetch so Dynamic block
   // resolution sees the same urlQuery as an initial HTML load.
-  const result = await getPageConfig(context, { pageId, urlQuery: c.req.query() });
+  const result = await getPageConfig(context, { path, urlQuery: c.req.query() });
+  const { pageId, pathParams } = result;
   if (result.status !== 'ok') {
-    context.logger.info({ event: 'api_page_not_found', pageId });
+    context.logger.info({ event: 'api_page_not_found', pageId, path });
     return c.json({ pageConfig: null }, 404);
   }
-  context.logger.info({ event: 'api_page_view', pageId });
-  return c.json({ pageConfig: result.pageConfig });
+  context.logger.info({ event: 'api_page_view', pageId, path });
+  return c.json({ pageId, pathParams, matchedPath, pageConfig: result.pageConfig });
 }
 
 export default apiPageHandler;

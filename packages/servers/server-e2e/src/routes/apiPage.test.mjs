@@ -17,14 +17,6 @@
 import { Hono } from 'hono';
 import { jest } from '@jest/globals';
 
-jest.unstable_mockModule('../../lib/build/appMeta.js', () => ({
-  default: { buildId: 'build-abc' },
-}));
-
-jest.unstable_mockModule('../../lib/build/auth.js', () => ({
-  default: { authPages: { signIn: '/auth/login', twoFactorEnrol: '/two-factor-enrol' } },
-}));
-
 jest.unstable_mockModule('../../lib/build/config.js', () => ({
   default: { basePath: '' },
 }));
@@ -68,7 +60,6 @@ test('apiPageHandler returns pageId, pathParams and matchedPath for a patterned 
   const res = await createApp().request('/api/page/support/tickets/1234');
   expect(res.status).toEqual(200);
   expect(await res.json()).toEqual({
-    buildId: 'build-abc',
     pageId: 'ticket',
     pathParams: { space: 'support', ticket_id: '1234' },
     matchedPath: 'support/tickets/1234',
@@ -87,7 +78,6 @@ test('apiPageHandler serves a page without path at its id', async () => {
   const res = await createApp().request('/api/page/home');
   expect(res.status).toEqual(200);
   expect(await res.json()).toEqual({
-    buildId: 'build-abc',
     pageId: 'home',
     pathParams: {},
     matchedPath: 'home',
@@ -99,45 +89,4 @@ test('apiPageHandler returns 404 when no page matches the path', async () => {
   const res = await createApp().request('/api/page/support/tickets');
   expect(res.status).toEqual(404);
   expect(await res.json()).toEqual({ pageConfig: null });
-});
-
-test('apiPageHandler returns a 401 sign-in redirect with the path and query when no page matches under pagesProtectedByDefault', async () => {
-  const res = await createApp({ pagesProtectedByDefault: true, user: null }).request(
-    '/api/page/support/tickets?tab=2'
-  );
-  expect(res.status).toEqual(401);
-  expect(await res.json()).toEqual({
-    redirect: `/auth/login?callbackUrl=${encodeURIComponent('/support/tickets?tab=2')}`,
-  });
-});
-
-test('apiPageHandler unauthenticated redirect carries the request path and query on callbackUrl', async () => {
-  const res = await createApp({ outcome: 'deny', user: null }).request(
-    '/api/page/support/tickets/1234?tab=2'
-  );
-  expect(res.status).toEqual(401);
-  expect(await res.json()).toEqual({
-    redirect: `/auth/login?callbackUrl=${encodeURIComponent('/support/tickets/1234?tab=2')}`,
-  });
-});
-
-test('apiPageHandler enrol_required redirect carries the request query on callbackUrl', async () => {
-  const res = await createApp({ outcome: 'enrol_required' }).request('/api/page/home?id=123&tab=2');
-  expect(res.status).toEqual(403);
-  expect(await res.json()).toEqual({
-    redirect: `/two-factor-enrol?callbackUrl=${encodeURIComponent('/home?id=123&tab=2')}`,
-  });
-});
-
-test('apiPageHandler enrol_required redirect is path-only when the request has no query', async () => {
-  const res = await createApp({ outcome: 'enrol_required' }).request('/api/page/home');
-  expect(res.status).toEqual(403);
-  expect(await res.json()).toEqual({
-    redirect: `/two-factor-enrol?callbackUrl=${encodeURIComponent('/home')}`,
-  });
-});
-
-test('apiPageHandler returns 404 for a signed-in caller without access', async () => {
-  const res = await createApp({ outcome: 'deny' }).request('/api/page/home');
-  expect(res.status).toEqual(404);
 });

@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { getPageConfig } from '@lowdefy/api';
+import { getPageConfig, matchPagePath } from '@lowdefy/api';
 
 import authJson from '../../lib/build/auth.js';
 import { buildPageWithContext, getPageJitEnrichment } from '../../lib/server/jitPageBuilder.js';
 import getBuildId from '../../lib/docs/getBuildId.js';
-import getPathSegments from '../lib/getPathSegments.js';
+import getRequestPath from '../lib/getRequestPath.js';
 import lowdefyConfig from '../../lib/build/config.js';
 import servedBuilds from '../../lib/server/recording/servedBuilds.js';
 
@@ -32,41 +32,51 @@ const basePath = lowdefyConfig.basePath ?? '';
 //   401 { redirect }  — logged-out navigation to a protected page
 //   403 { redirect }  — authorised but second factor not yet enrolled
 //   404 'Page not found.'
-//   200 pageConfig (+ _buildId, + _warnings, + _jsEntries module text, + _dynamicIcons data)
+//   200 { pageId, pathParams, matchedPath, pageConfig } (pageConfig + _buildId,
+//       + _warnings, + _jsEntries module text, + _dynamicIcons data)
+//
+// The request path is matched against the skeleton build's route table, and
+// the matched page is built before getPageConfig reads its file.
 async function jitPageHandler(c) {
   const context = c.get('lowdefyContext');
-  const pageId = getPathSegments(c, '/api/page/').join('/');
+  const { path, matchedPath } = getRequestPath({ c, basePath, prefix: '/api/page/' });
+  // The callbackUrl of the sign-in and enrolment redirects: the requested page,
+  // query included.
+  const callbackUrl = `${basePath}/${path}${new URL(c.req.url).search}`;
+  const match = matchPagePath({ routes: await context.readConfigFile('routes.json'), path });
 
   let buildResult;
   let buildContext;
-  try {
-    ({ result: buildResult, buildContext } = await buildPageWithContext({
-      pageId,
-      buildDirectory: context.buildDirectory,
-      configDirectory: context.configDirectory,
-    }));
-  } catch (error) {
-    const rawErrors = error.buildErrors ?? [error];
-    const errors = [];
-    for (const err of rawErrors) {
-      await context.handleError(err);
-      errors.push({
-        type: err.name ?? 'Error',
-        message: err.message,
-        source: err.source ?? null,
-        stack: err.stack ?? null,
-      });
+  if (match !== null) {
+    try {
+      ({ result: buildResult, buildContext } = await buildPageWithContext({
+        pageId: match.pageId,
+        buildDirectory: context.buildDirectory,
+        configDirectory: context.configDirectory,
+      }));
+    } catch (error) {
+      const rawErrors = error.buildErrors ?? [error];
+      const errors = [];
+      for (const err of rawErrors) {
+        await context.handleError(err);
+        errors.push({
+          type: err.name ?? 'Error',
+          message: err.message,
+          source: err.source ?? null,
+          stack: err.stack ?? null,
+        });
+      }
+      return c.json(
+        {
+          buildError: true,
+          errors,
+          // Keep top-level message/source for backward compatibility
+          message: error.message,
+          source: error.source ?? null,
+        },
+        500
+      );
     }
-    return c.json(
-      {
-        buildError: true,
-        errors,
-        // Keep top-level message/source for backward compatibility
-        message: error.message,
-        source: error.source ?? null,
-      },
-      500
-    );
   }
 
   if (buildResult && buildResult.installing) {
@@ -76,13 +86,12 @@ async function jitPageHandler(c) {
     });
   }
 
-  const result = await getPageConfig(context, { pageId, urlQuery: c.req.query() });
+  const result = await getPageConfig(context, { path, urlQuery: c.req.query() });
   if (result.status === 'unauthenticated') {
     // The client follows this redirect with a full page load, so the login
     // page can return to the requested page after sign-in.
-    const callbackUrl = `${basePath}/${pageId}`;
     context.logger.debug(
-      `Page config request for "${pageId}" resolved unauthenticated - returning a sign-in redirect.`
+      `Page config request for "/${path}" resolved unauthenticated - returning a sign-in redirect.`
     );
     return c.json(
       {
@@ -97,9 +106,8 @@ async function jitPageHandler(c) {
     // 403, not the 401 the signed-out branch above uses: a 401 is the client's
     // dead-session signal and would bounce the user to sign-in, which is the loop
     // the enrolment gate exists to avoid.
-    const callbackUrl = `${basePath}/${pageId}`;
     context.logger.debug(
-      `Page config request for "${pageId}" resolved enrol_required - returning a two-factor enrolment redirect.`
+      `Page config request for "/${path}" resolved enrol_required - returning a two-factor enrolment redirect.`
     );
     return c.json(
       {
@@ -130,7 +138,12 @@ async function jitPageHandler(c) {
   const { jsEntries, dynamicIcons } = getPageJitEnrichment({ pageConfig, buildContext });
   if (jsEntries) pageConfig._jsEntries = jsEntries;
   if (dynamicIcons) pageConfig._dynamicIcons = dynamicIcons;
-  return c.json(pageConfig);
+  return c.json({
+    pageId: result.pageId,
+    pathParams: result.pathParams,
+    matchedPath,
+    pageConfig,
+  });
 }
 
 export default jitPageHandler;

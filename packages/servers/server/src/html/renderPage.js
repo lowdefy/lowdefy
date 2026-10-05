@@ -21,33 +21,37 @@ import authJson from '../../lib/build/auth.js';
 import lowdefyConfig from '../../lib/build/config.js';
 import themeConfig from '../../lib/build/theme.js';
 import getAssets from './getAssets.js';
+import getHomePath from './getHomePath.js';
 import getPageAssets from './getPageAssets.js';
 import template from './template.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
 
-// Replaces pages/[[...pageId]].js getServerSideProps and pages/404.js
-// getStaticProps. The home redirect logic lives here, not at the route level.
-async function renderPage(c, { pageId, status = 200 }) {
+// Renders the page a request path matches. path (basePath and the leading "/"
+// removed, still encoded) is empty for the app root, which serves the home
+// page: the configured homePageId, else a redirect to the first menu link the
+// user may see.
+async function renderPage(c, { path, matchedPath, status = 200 }) {
   const context = c.get('lowdefyContext');
   const { logger, user } = context;
 
-  let resolvedPageId = pageId;
   const rootConfig = await getRootConfig(context);
 
-  if (!resolvedPageId) {
+  let pagePath = path;
+  if (path === '') {
     const { home } = rootConfig;
+    pagePath = await getHomePath({ context, home });
     if (home.configured === false) {
-      logger.info({ event: 'redirect_to_homepage', pageId: home.pageId });
-      return c.redirect(`${basePath}/${home.pageId}`, 302);
+      logger.info({ event: 'redirect_to_homepage', pageId: home.pageId, path: pagePath });
+      return c.redirect(`${basePath}/${pagePath}`, 302);
     }
-    resolvedPageId = home.pageId;
   }
 
   const result = await getPageConfig(context, {
-    pageId: resolvedPageId,
+    path: pagePath,
     urlQuery: c.req.query(),
   });
+  const { pageId, pathParams } = result;
 
   // A logged-out human gets a login screen with a callbackUrl back to the
   // requested page; not-found and wrong-roles both stay opaque (/404), so
@@ -55,7 +59,7 @@ async function renderPage(c, { pageId, status = 200 }) {
   if (result.status === 'unauthenticated') {
     const url = new URL(c.req.url);
     const callbackUrl = `${url.pathname}${url.search}`;
-    logger.info({ event: 'redirect_unauthenticated', pageId: resolvedPageId });
+    logger.info({ event: 'redirect_unauthenticated', pageId, path: pagePath });
     return c.redirect(
       `${basePath}${authJson.authPages.signIn}?callbackUrl=${encodeURIComponent(callbackUrl)}`,
       302
@@ -70,7 +74,7 @@ async function renderPage(c, { pageId, status = 200 }) {
   if (result.status === 'enrol_required') {
     const url = new URL(c.req.url);
     const callbackUrl = `${url.pathname}${url.search}`;
-    logger.info({ event: 'redirect_two_factor_enrol', pageId: resolvedPageId });
+    logger.info({ event: 'redirect_two_factor_enrol', pageId, path: pagePath });
     return c.redirect(
       `${basePath}${authJson.authPages.twoFactorEnrol}?callbackUrl=${encodeURIComponent(
         callbackUrl
@@ -80,17 +84,17 @@ async function renderPage(c, { pageId, status = 200 }) {
   }
 
   if (result.status !== 'ok') {
-    if (resolvedPageId === '404') {
+    if (pagePath === '404') {
       // No 404 page in the build — return a plain 404 rather than redirecting in a loop.
       return c.text('Page not found.', 404);
     }
-    logger.info({ event: 'redirect_page_not_found', pageId: resolvedPageId });
+    logger.info({ event: 'redirect_page_not_found', pageId, path: pagePath });
     return c.redirect(`${basePath}/404`, 302);
   }
 
   const { pageConfig } = result;
 
-  logger.info({ event: 'page_view', pageId: resolvedPageId });
+  logger.info({ event: 'page_view', pageId, path: pagePath });
 
   const assets = getAssets();
   const html = template({
@@ -101,13 +105,16 @@ async function renderPage(c, { pageId, status = 200 }) {
     basePath,
     config: {
       basePath,
+      matchedPath,
       pageConfig,
+      pageId,
+      pathParams,
       rootConfig,
       sentryDsn: process.env.SENTRY_DSN ?? null,
       user: user ?? null,
     },
     themeConfig,
-    title: pageConfig.properties?.title ?? resolvedPageId,
+    title: pageConfig.properties?.title ?? pageId,
   });
 
   return c.html(html, status);

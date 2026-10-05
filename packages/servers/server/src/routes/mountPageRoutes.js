@@ -14,13 +14,16 @@
   limitations under the License.
 */
 
-// Every page path renders the app shell with its page id. `.*`, not `.+`: under
-// a basePath, `<basePath>/` arrives with an empty rest, and is the app root
-// like `<basePath>` itself.
-function mountPageRoutes({ app, renderPage }) {
-  app.get('/', (c) => renderPage(c, { pageId: '' }));
-  app.get('/404', (c) => renderPage(c, { pageId: '404', status: 404 }));
-  app.get('/:rest{.*}', (c) => renderPage(c, { pageId: c.req.param('rest') }));
+import getRequestPath from '../lib/getRequestPath.js';
+
+// `/` (home) and `/404` are fixed routes ahead of the page matcher; every other
+// path renders the page it matches. `.*`, not `.+`: under a basePath,
+// `<basePath>/` arrives with an empty rest, and is the app root like
+// `<basePath>` itself.
+function mountPageRoutes({ app, basePath, renderPage }) {
+  app.get('/', (c) => renderPage(c, { path: '', matchedPath: '' }));
+  app.get('/404', (c) => renderPage(c, { path: '404', matchedPath: '404', status: 404 }));
+  app.get('/:rest{.*}', (c) => renderPage(c, getRequestPath({ c, basePath, prefix: '/' })));
 }
 
 export default mountPageRoutes;

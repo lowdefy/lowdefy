@@ -70,7 +70,7 @@ function createApp() {
   );
 
   app.use('/*', apiContext());
-  mountPageRoutes({ app, renderPage });
+  mountPageRoutes({ app, basePath, renderPage });
 
   app.onError(createErrorHandler({ basePath, logger }));
 
