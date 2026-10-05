@@ -16,28 +16,16 @@
 
 import { type } from '@lowdefy/helpers';
 
-import asList from '../test/asList.js';
 import buildUsageRows from './usage/buildUsageRows.js';
+import committedJourneys from './committedJourneys.js';
 import computeTiers from './usage/computeTiers.js';
 import formatUsageReport from './usage/formatUsageReport.js';
 import inTier from './usage/inTier.js';
 import parseTestSelection from '../test/parseTestSelection.js';
 import parseTier from './usage/parseTier.js';
-import readCommittedJourneys from './readCommittedJourneys.js';
 import readUncoveredFlows from './usage/readUncoveredFlows.js';
 import resolveJourneyPaths from '../test/resolveJourneyPaths.js';
-
-// The same narrowing `lowdefy test` applies: a name containing any filter
-// (case-insensitive) and any of the tags, paths, filters and tags combined
-// with AND.
-function isSelected({ journey, filters, tags }) {
-  const name = journey.name.toLowerCase();
-  if (filters.length > 0 && !filters.some((filter) => name.includes(filter.toLowerCase()))) {
-    return false;
-  }
-  const journeyTags = asList(journey.tags);
-  return tags.length === 0 || tags.some((tag) => journeyTags.includes(tag));
-}
+import selectTests from '../test/selectTests.js';
 
 function resolvePaths({ context }) {
   const given = context.options.paths ?? [];
@@ -61,14 +49,24 @@ async function journeysUsage({ context }) {
   const tier = parseTier(options.tier);
   const selection = parseTestSelection({ filter: options.filter, tags: options.tag });
   if (!type.isUndefined(selection.error)) throw new Error(selection.error);
-  const { journeys: committed, skipped } = readCommittedJourneys({
+  // The selection `lowdefy test` runs, read back to the journeys behind it.
+  const selected = selectTests({
     context,
+    filter: selection.filters,
+    tags: selection.tags,
     paths: resolvePaths({ context }),
   });
+  const { journeys: committed, skipped } = committedJourneys({
+    context,
+    items: selected.map(({ item }) => item),
+  });
   skipped.forEach((line) => logger.warn(`Skipped ${line}`));
-  const journeys = committed
-    .filter(({ journey }) => isSelected({ journey, ...selection }))
-    .map(({ file, journey }) => ({ file, name: journey.name, journey }));
+  const journeys = committed.map(({ file, journeyIndex, journey }) => ({
+    file,
+    journeyIndex,
+    name: journey.name,
+    journey,
+  }));
 
   const tiers = computeTiers({ journeys, usageWindow: options.usageWindow });
   if (tier !== 'full' && !type.isUndefined(tiers.refused)) {

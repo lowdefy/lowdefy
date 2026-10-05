@@ -27,9 +27,11 @@ function sum({ months, key }) {
 // deprecated flows with their use over the window. A deprecated flow hashed
 // under an older matcher is no longer counted, and says so.
 function buildUsageRows({ tiers, journeys }) {
-  const byKey = new Map(journeys.map((entry) => [`${entry.file}#${entry.name}`, entry.journey]));
+  const byKey = new Map(
+    journeys.map((entry) => [`${entry.file}#${entry.journeyIndex}`, entry.journey])
+  );
   return tiers.rows.map((row) => {
-    const production = byKey.get(`${row.file}#${row.name}`).evidence?.production;
+    const production = byKey.get(`${row.file}#${row.journeyIndex}`).evidence?.production;
     const months = production?.months ?? [];
     return {
       ...row,

@@ -216,6 +216,21 @@ test('journeys usage computes tiers over the paths, tags and filters selected', 
   expect(filtered.rows.map((row) => row.name)).toEqual(['member assigns a ticket']);
 });
 
+test('journeys usage selects as lowdefy test does, a persona run filter included', async () => {
+  writeJourney({
+    file: 'edit.yaml',
+    name: 'edits a ticket',
+    blockId: 'edit',
+    months: [month('2026-09', 30, 90)],
+    extra: { data: 'tickets', user: ['admin', 'member'] },
+  });
+  context.options.filter = ['[admin]'];
+  const report = await journeysUsage({ context });
+  expect(report.rows.map((row) => [row.name, row.file, row.journeyIndex])).toEqual([
+    ['edits a ticket', path.join('tests', 'journeys', 'edit.yaml'), 0],
+  ]);
+});
+
 test('journeys usage refuses a tier below 100 journey matches, prints the count and exits non-zero', async () => {
   context.options.paths = [path.join(configDirectory, 'tests', 'journeys', 'review')];
   context.options.tier = 'common';

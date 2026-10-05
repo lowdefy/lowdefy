@@ -83,11 +83,11 @@ function refusal({ ranked, matches, windowMonths }) {
 // several journeys counts for each, so a tier's share is a share of journey
 // matches, not of sessions.
 //
-// - journeys: [{ file, name, journey }], one per journey.
+// - journeys: [{ file, journeyIndex, name, journey }], one per journey.
 // - usageWindow: the `--usage-window` value (`<n>m`, default 3m).
 //
 // Returns { windowMonths, anchor, matches, refused, rows }. A row is
-// { file, name, tier, rank, rate, sessions, failures, days, unranked,
+// { file, journeyIndex, name, tier, rank, rate, sessions, failures, days, unranked,
 // deprecated }. An unranked journey (no counts for its current flow) is in
 // every tier, outside the ranking and the total, with tier `common` and no
 // rank or rate. A `deprecated: true` journey is in no tier: tier and rank are
@@ -98,10 +98,10 @@ function computeTiers({ journeys, usageWindow }) {
   const anchor = newestMonth({ journeys: live.map(({ journey }) => journey) });
   const windowMonths = usageWindowMonths({ anchor, months: parseUsageWindow(usageWindow) });
 
-  const rows = journeys.map(({ file, name, journey }) => {
+  const rows = journeys.map(({ file, journeyIndex, name, journey }) => {
     const deprecated = journey.deprecated === true;
     const unranked = !deprecated && isUnranked({ journey });
-    const row = { file, name, tier: null, rank: null, unranked, deprecated };
+    const row = { file, journeyIndex, name, tier: null, rank: null, unranked, deprecated };
     if (unranked) {
       return { ...row, tier: 'common', rate: null, sessions: null, failures: null, days: null };
     }
