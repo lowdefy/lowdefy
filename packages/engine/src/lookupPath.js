@@ -14,18 +14,14 @@
   limitations under the License.
 */
 
-import getFromObject from './getFromObject.js';
-
-function createGetInput({ arrayIndices, blockId, context }) {
-  return function getInput(params) {
-    return getFromObject({
-      arrayIndices,
-      location: blockId,
-      object: context._internal.lowdefy.inputs[context.instanceKey],
-      method: 'getInput',
-      params,
-    });
-  };
+// The page a URL path (no leading "/", no basePath) belongs to, from the paths this session built
+// or was told by the server. A path it has not seen is read as the id of a page without a pattern.
+function lookupPath({ lowdefy, path }) {
+  const entry = lowdefy.pathMemory.get(path);
+  if (entry) {
+    return entry;
+  }
+  return { pageId: path, pathParams: {}, instanceKey: `page:${path}` };
 }
 
-export default createGetInput;
+export default lookupPath;

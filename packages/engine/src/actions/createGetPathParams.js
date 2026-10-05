@@ -16,16 +16,16 @@
 
 import getFromObject from './getFromObject.js';
 
-function createGetInput({ arrayIndices, blockId, context }) {
-  return function getInput(params) {
+function createGetPathParams({ arrayIndices, blockId, context }) {
+  return function getPathParams(params) {
     return getFromObject({
       arrayIndices,
       location: blockId,
-      object: context._internal.lowdefy.inputs[context.instanceKey],
-      method: 'getInput',
+      object: context.pathParams,
+      method: 'getPathParams',
       params,
     });
   };
 }
 
-export default createGetInput;
+export default createGetPathParams;

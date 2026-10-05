@@ -23,6 +23,8 @@ import getAppContext from './getAppContext.js';
 import getContext from './getContext.js';
 import getHomePathname from './getHomePathname.js';
 import getTrace from './trace/getTrace.js';
+import lookupPath from './lookupPath.js';
+import rememberPath from './rememberPath.js';
 import Requests from './Requests.js';
 import resolveTarget from './resolveTarget.js';
 import State from './State.js';
@@ -38,6 +40,8 @@ export {
   getDevError,
   getHomePathname,
   getTrace,
+  lookupPath,
+  rememberPath,
   Requests,
   resolveTarget,
   State,

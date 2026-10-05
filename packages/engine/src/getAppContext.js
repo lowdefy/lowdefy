@@ -25,8 +25,10 @@ function getAppContext({ events, jsMap = {}, lowdefy }) {
   }
   const ctx = createContext({
     config: { id: 'app', blockId: 'app', type: 'Box', events },
+    instanceKey: 'app',
     jsMap,
     lowdefy,
+    pathParams: {},
   });
   const _internal = ctx._internal;
   // Global and API responses are app-wide: a change an app event makes must

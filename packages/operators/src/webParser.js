@@ -138,7 +138,7 @@ class WebParser {
           globals: _internal.globals,
           home,
           i18n,
-          input: inputs[this.context.id],
+          input: inputs[this.context.instanceKey],
           jsMap: this.context.jsMap,
           location: operatorLocation,
           lowdefyApp,

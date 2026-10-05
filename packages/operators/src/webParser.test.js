@@ -62,6 +62,7 @@ const context = {
   },
   eventLog: [{ eventLog: true }],
   id: 'id',
+  instanceKey: 'id',
   requests: [{ requests: true }],
   state: { state: true },
 };

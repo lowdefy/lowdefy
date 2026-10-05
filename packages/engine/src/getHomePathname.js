@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { buildPagePath, type } from '@lowdefy/helpers';
 
 // The single reading of `lowdefy.home` for every 'home' target - the Link
 // grammar in createLink and the post-auth callbackUrl ladder in the client both
@@ -30,7 +30,8 @@ function getHomePathname({ lowdefy }) {
     return '/';
   }
   if (type.isString(lowdefy.home?.pageId)) {
-    return `/${lowdefy.home.pageId}`;
+    const { pageId, pathParams } = lowdefy.home;
+    return `/${buildPagePath({ pageId, path: lowdefy.pagePaths[pageId], pathParams })}`;
   }
   return undefined;
 }

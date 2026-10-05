@@ -14,18 +14,21 @@
   limitations under the License.
 */
 
-import getFromObject from './getFromObject.js';
+import { parsePathPattern, type } from '@lowdefy/helpers';
 
-function createGetInput({ arrayIndices, blockId, context }) {
-  return function getInput(params) {
-    return getFromObject({
-      arrayIndices,
-      location: blockId,
-      object: context._internal.lowdefy.inputs[context.instanceKey],
-      method: 'getInput',
-      params,
-    });
-  };
+// The values a page's URL carries: one string per placeholder in its pattern, as the server
+// returns them for a matched path. Keys the pattern does not use are dropped.
+function pickPathParams({ path, pathParams }) {
+  if (type.isUndefined(path)) {
+    return {};
+  }
+  const values = {};
+  parsePathPattern(path).forEach((segment) => {
+    if (type.isString(segment.name)) {
+      values[segment.name] = String(pathParams[segment.name]);
+    }
+  });
+  return values;
 }
 
-export default createGetInput;
+export default pickPathParams;

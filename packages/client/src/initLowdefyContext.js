@@ -80,6 +80,8 @@ function initLowdefyContext({
     lowdefy.basePath = router.basePath;
     lowdefy.contexts = {};
     lowdefy.inputs = {};
+    lowdefy.pageInstances = {};
+    lowdefy.pathMemory = new Map();
     lowdefy.lowdefyApp = config.rootConfig.lowdefyApp;
     lowdefy.lowdefyGlobal = config.rootConfig.lowdefyGlobal;
     lowdefy.theme = config.rootConfig.theme ?? {};
@@ -124,8 +126,10 @@ function initLowdefyContext({
   }
 
   lowdefy.home = config.rootConfig.home || {};
+  lowdefy.linkPaths = config.pageConfig.linkPaths;
   lowdefy.menus = config.rootConfig.menus;
   lowdefy.pageId = config.pageConfig.pageId;
+  lowdefy.pagePaths = config.rootConfig.pagePaths;
   lowdefy.user = auth?.user ?? null;
 
   return lowdefy;
