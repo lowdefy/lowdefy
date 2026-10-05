@@ -76,7 +76,7 @@ function validateSharedPipelineWrite({
       return;
     }
     throw new ConfigError(
-      `${location} writes into collection "${write.collection}" with "${write.operator}" on tenant: shared connection "${config.connectionId}", but scoped connection "${walled.connectionId}" reads that collection. Rows an aggregation writes are not checked for a non-empty "${walled.field}", and a row without it is invisible to every walled read and makes the tenant preflight refuse to serve the app. Return the documents and write them with MongoDBInsertMany or MongoDBBulkWrite on connection "${walled.connectionId}" (with tenant: none when rows of several organizations are written), which checks every row.`,
+      `${location} writes into collection "${write.collection}" with "${write.operator}" on tenant: shared connection "${config.connectionId}", but scoped connection "${walled.connectionId}" reads that collection. Rows an aggregation writes are not checked for a non-empty "${walled.field}", and a row without it is invisible to every walled read and makes the tenant preflight refuse to serve the app. Return the documents and write them with MongoDBInsertMany or MongoDBBulkWrite on connection "${walled.connectionId}", which stamps every row with the caller's organization (from a system run, call an endpoint with a CallApi step that names the "organization").`,
       { configKey }
     );
   });

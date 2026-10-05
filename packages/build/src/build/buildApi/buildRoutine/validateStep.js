@@ -20,11 +20,20 @@ import { ConfigError } from '@lowdefy/errors';
 import validateCallBinding from './validateCallBinding.js';
 import validateId from '../../../utils/validateId.js';
 import validateSharedPipelineWrite from '../../validateSharedPipelineWrite.js';
+import validateTenantNoneRead from '../../validateTenantNoneRead.js';
 import validateTenantPipelineEntry from '../../validateTenantPipelineEntry.js';
 
 function validateStep(
   step,
-  { dynamicPolicies, endpointId, sharedTargets, stepTypes, tenantConnectionIds, walledTargets }
+  {
+    dynamicPolicies,
+    endpointId,
+    requestMetas,
+    sharedTargets,
+    stepTypes,
+    tenantConnectionIds,
+    walledTargets,
+  }
 ) {
   const configKey = step['~k'];
   if (Object.keys(step).length === 0) {
@@ -244,6 +253,13 @@ function validateStep(
     );
   }
 
+  validateTenantNoneRead({
+    config: step,
+    location: `Step "${step.id}" at endpoint "${endpointId}"`,
+    requestMetas,
+    tenantConnectionIds,
+    configKey,
+  });
   // Best-effort (literal pipelines only): a walled pipeline the wall can not
   // scope mechanically must declare tenant: authored. Runtime re-checks.
   validateTenantPipelineEntry({

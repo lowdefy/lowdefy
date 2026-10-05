@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import getEnrichmentLogOrganization from '../enrichment/getEnrichmentLogOrganization.js';
 import runBulkWriteBatches from '../enrichment/runBulkWriteBatches.js';
 import planReleaseWaiting from '../enrichment/planReleaseWaiting.js';
 import scopeWriteOperations from '../enrichment/scopeWriteOperations.js';
@@ -29,7 +28,7 @@ import readClaimedRows from './readClaimedRows.js';
 // all of them; otherwise the written cells are read back. Then the cells of the same rows that
 // were waiting for the finished cells are released, and the autoRun columns the ok cells feed
 // are queued (`downstream` names them).
-async function runComplete({ collection, compiled, logCollection, now, tenant, tenantGuard }) {
+async function runComplete({ collection, compiled, now, tenant, tenantGuard }) {
   const { dependentsByColumn, downstreamByColumn, filter, results } = compiled;
   const docs = await readClaimedRows({ collection, compiled, tenant });
   const cells = [];
@@ -41,12 +40,6 @@ async function runComplete({ collection, compiled, logCollection, now, tenant, t
   const operations = scopeWriteOperations({
     operations: cells.map((cell) => cell.operation),
     tenant,
-    tenantGuard,
-  });
-  const organizationId = getEnrichmentLogOrganization({
-    filter,
-    logCollection,
-    operations,
     tenantGuard,
   });
   const written = await runBulkWriteBatches({ collection, operations });
@@ -74,7 +67,6 @@ async function runComplete({ collection, compiled, logCollection, now, tenant, t
   });
   await runBulkWriteBatches({ collection, operations: downstreamOperations });
   return {
-    organizationId,
     applied,
     response: {
       applied: applied.length,

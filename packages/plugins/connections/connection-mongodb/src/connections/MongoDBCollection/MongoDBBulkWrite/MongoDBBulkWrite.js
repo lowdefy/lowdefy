@@ -14,12 +14,14 @@
   limitations under the License.
 */
 
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import applyTenantToBulkOperations from '../tenant/applyTenantToBulkOperations.js';
 import { assertUnscopedBulkOperations } from '../tenant/guardUnscopedWrite.js';
 import getCollection from '../getCollection.js';
 import verifyStoredTenant, { idsOfMap } from '../tenant/verifyStoredTenant.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 async function MongodbBulkWrite({
@@ -31,6 +33,7 @@ async function MongodbBulkWrite({
   tenant,
   tenantGuard,
 }) {
+  assertTenantWritable({ tenantGuard, requestType: 'MongoDBBulkWrite' });
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { operations } = deserializedRequest;
@@ -61,9 +64,6 @@ async function MongodbBulkWrite({
 }
 
 MongodbBulkWrite.schema = schema;
-MongodbBulkWrite.meta = {
-  checkRead: false,
-  checkWrite: true,
-};
+MongodbBulkWrite.meta = requestMetas.MongoDBBulkWrite;
 
 export default MongodbBulkWrite;

@@ -18,6 +18,7 @@ import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 async function MongodbFindOne({ request, connection, tenant }) {
@@ -38,9 +39,6 @@ async function MongodbFindOne({ request, connection, tenant }) {
 }
 
 MongodbFindOne.schema = schema;
-MongodbFindOne.meta = {
-  checkRead: true,
-  checkWrite: false,
-};
+MongodbFindOne.meta = requestMetas.MongoDBFindOne;
 
 export default MongodbFindOne;

@@ -95,6 +95,28 @@ test('createPluginTypesMap initializes and merges connectionMetas into the types
   });
 });
 
+test('createPluginTypesMap initializes and merges requestMetas into the typesMap with the typePrefix', () => {
+  const typesMap = createEmptyTypesMap();
+  expect(typesMap.requestMetas).toBe(undefined);
+  createPluginTypesMap({
+    packageName: '@lowdefy/connection-mongodb',
+    packageTypes: {
+      requests: ['MongoDBFind', 'MongoDBInsertOne'],
+      requestMetas: {
+        MongoDBFind: { checkRead: true, checkWrite: false },
+        MongoDBInsertOne: { checkRead: false, checkWrite: true },
+      },
+    },
+    typePrefix: 'MyPrefix_',
+    typesMap,
+    version: '1.0.0',
+  });
+  expect(typesMap.requestMetas).toEqual({
+    MyPrefix_MongoDBFind: { checkRead: true, checkWrite: false },
+    MyPrefix_MongoDBInsertOne: { checkRead: false, checkWrite: true },
+  });
+});
+
 test('createPluginTypesMap applies typePrefix to connectionMetas type names', () => {
   const typesMap = createEmptyTypesMap();
   createPluginTypesMap({

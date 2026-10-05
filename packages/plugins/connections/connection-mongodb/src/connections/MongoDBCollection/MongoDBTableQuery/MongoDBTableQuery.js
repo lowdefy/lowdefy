@@ -21,6 +21,7 @@ import { assertUnscopedPipeline } from '../tenant/guardUnscopedWrite.js';
 import { serialize, deserialize } from '../serialize.js';
 import compileTableQuery from './compileTableQuery.js';
 import readTableResult from './readTableResult.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 // Server mode for the Table block: the view the browser sends is validated against the
@@ -34,7 +35,7 @@ async function MongoDBTableQuery({ request, connection, tenant, tenantGuard }) {
     pipeline = injectTenantIntoPipeline({ pipeline, tenant });
   }
   if (tenantGuard) {
-    assertUnscopedPipeline({ pipeline, field: tenantGuard.field });
+    assertUnscopedPipeline({ pipeline, field: tenantGuard.field, readOnly: tenantGuard.readOnly });
   }
   const { collection } = await getCollection({ connection });
   let result;
@@ -48,9 +49,6 @@ async function MongoDBTableQuery({ request, connection, tenant, tenantGuard }) {
 }
 
 MongoDBTableQuery.schema = schema;
-MongoDBTableQuery.meta = {
-  checkRead: true,
-  checkWrite: false,
-};
+MongoDBTableQuery.meta = requestMetas.MongoDBTableQuery;
 
 export default MongoDBTableQuery;

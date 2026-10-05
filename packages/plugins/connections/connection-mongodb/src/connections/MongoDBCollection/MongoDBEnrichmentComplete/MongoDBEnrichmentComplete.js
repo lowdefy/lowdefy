@@ -15,11 +15,13 @@
 */
 
 import getCollection from '../getCollection.js';
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import writeEnrichmentLog from '../enrichment/writeEnrichmentLog.js';
 import compileEnrichmentComplete from './compileEnrichmentComplete.js';
 import runComplete from './runComplete.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 const requestType = 'MongoDBEnrichmentComplete';
@@ -31,6 +33,7 @@ const requestType = 'MongoDBEnrichmentComplete';
 // and names them in the response.
 async function MongoDBEnrichmentComplete(context) {
   const { connection, request, tenant, tenantGuard } = context;
+  assertTenantWritable({ tenantGuard, requestType });
   const properties = deserialize(request);
   const compiled = compileEnrichmentComplete({ properties, tenantScoped: Boolean(tenant) });
   if (compiled.results.length === 0) {
@@ -42,7 +45,6 @@ async function MongoDBEnrichmentComplete(context) {
     run = await runComplete({
       collection,
       compiled,
-      logCollection,
       now: new Date(),
       tenant,
       tenantGuard,
@@ -64,7 +66,6 @@ async function MongoDBEnrichmentComplete(context) {
         },
         context,
         logCollection,
-        organizationId: run.organizationId,
         response: run.response,
         type: requestType,
       });
@@ -76,9 +77,6 @@ async function MongoDBEnrichmentComplete(context) {
 }
 
 MongoDBEnrichmentComplete.schema = schema;
-MongoDBEnrichmentComplete.meta = {
-  checkRead: false,
-  checkWrite: true,
-};
+MongoDBEnrichmentComplete.meta = requestMetas.MongoDBEnrichmentComplete;
 
 export default MongoDBEnrichmentComplete;

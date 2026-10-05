@@ -14,27 +14,23 @@
   limitations under the License.
 */
 
-// Change logs under the unscoped write guard, against the real server. A
-// tenant: none write on a change-logged connection writes a log record that
-// is usually read through a walled connection, so every record must carry the
-// organization of the rows it records - the log collection must pass the
-// tenant preflight after any write the guard lets through. A write that can
-// reach rows of several organizations has no organization to stamp and is
-// refused before it writes anything.
+// Change logs of unscoped writes, against the real server. A log record is
+// usually read through a walled connection, so on a scoped connection every
+// record carries the organization of the caller's verdict. A tenant: shared
+// connection over a walled collection writes records that belong to no
+// organization (its change log can not point into a walled collection - the
+// build refuses it), so they stay unstamped. A tenant: none request only
+// reads, so it writes neither a row nor a log record.
 
-import MongoDBDeleteMany from './MongoDBDeleteMany/MongoDBDeleteMany.js';
 import MongoDBDeleteOne from './MongoDBDeleteOne/MongoDBDeleteOne.js';
 import MongoDBEnrichmentClaim from './MongoDBEnrichmentClaim/MongoDBEnrichmentClaim.js';
 import MongoDBEnrichmentComplete from './MongoDBEnrichmentComplete/MongoDBEnrichmentComplete.js';
 import MongoDBEnrichmentEnqueue from './MongoDBEnrichmentEnqueue/MongoDBEnrichmentEnqueue.js';
-import MongoDBInsertConsecutiveId from './MongoDBInsertConsecutiveId/MongoDBInsertConsecutiveId.js';
 import MongoDBInsertMany from './MongoDBInsertMany/MongoDBInsertMany.js';
-import MongoDBInsertManyConsecutiveIds from './MongoDBInsertManyConsecutiveIds/MongoDBInsertManyConsecutiveIds.js';
 import MongoDBInsertOne from './MongoDBInsertOne/MongoDBInsertOne.js';
 import MongoDBTableChanges from './MongoDBTableChanges/MongoDBTableChanges.js';
 import MongoDBUpdateMany from './MongoDBUpdateMany/MongoDBUpdateMany.js';
 import MongoDBUpdateOne from './MongoDBUpdateOne/MongoDBUpdateOne.js';
-import MongoDBVersionedUpdateOne from './MongoDBVersionedUpdateOne/MongoDBVersionedUpdateOne.js';
 import tenantPreflight from './tenant/tenantPreflight.js';
 import { columnDefs, fields } from '../../../test/enrichmentTable.js';
 import getTestCollection from '../../../test/getTestCollection.js';
@@ -43,15 +39,13 @@ import populateTestMongoDb from '../../../test/populateTestMongoDb.js';
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
 const field = 'organization_id';
-const noneGuard = { field, stampChangeLog: true };
-const sharedGuard = { field, stampChangeLog: false };
+const noneGuard = { field, readOnly: true };
+const sharedGuard = { field, readOnly: false };
 const seed = [
   { _id: 'a1', organization_id: 'org_a', v: 'before' },
   { _id: 'a2', organization_id: 'org_a', v: 'before' },
   { _id: 'b1', organization_id: 'org_b', v: 'before' },
 ];
-const refusal =
-  'Unscoped write (tenant: none) on a change-logged tenant connection must write rows of one organization';
 
 let run = 0;
 
@@ -87,153 +81,25 @@ async function logRecords(logCollection) {
 }
 
 test.each([
-  ['an insert', MongoDBInsertOne, { doc: { _id: 'c1', organization_id: 'org_c' } }, 'org_c'],
+  ['an insert', MongoDBInsertOne, { doc: { _id: 'c1', organization_id: 'org_c' } }],
+  ['an update', MongoDBUpdateOne, { filter: { _id: 'b1' }, update: { $set: { v: 'after' } } }],
   [
-    'a consecutive id insert',
-    MongoDBInsertConsecutiveId,
-    { doc: { organization_id: 'org_c' }, prefix: 'C', length: 3 },
-    'org_c',
-  ],
-  [
-    'an insert of many documents of one organization',
-    MongoDBInsertMany,
-    { docs: [{ organization_id: 'org_c' }, { organization_id: 'org_c' }] },
-    'org_c',
-  ],
-  [
-    'a consecutive ids insert of one organization',
-    MongoDBInsertManyConsecutiveIds,
-    { docs: [{ organization_id: 'org_c' }, { organization_id: 'org_c' }], prefix: 'C', length: 3 },
-    'org_c',
-  ],
-  [
-    'an update',
-    MongoDBUpdateOne,
-    { filter: { _id: 'b1' }, update: { $set: { v: 'after' } } },
-    'org_b',
-  ],
-  [
-    'an update that moves the row to another organization',
-    MongoDBUpdateOne,
-    { filter: { _id: 'b1' }, update: { $set: { organization_id: 'org_c' } } },
-    'org_c',
-  ],
-  [
-    'an upsert',
-    MongoDBUpdateOne,
-    {
-      filter: { _id: 'c1' },
-      update: { $set: { organization_id: 'org_c' } },
-      options: { upsert: true },
-    },
-    'org_c',
-  ],
-  [
-    'a versioned update',
-    MongoDBVersionedUpdateOne,
-    { filter: { _id: 'b1' }, update: { $set: { v: 'after' } } },
-    'org_b',
-  ],
-  ['a delete', MongoDBDeleteOne, { filter: { _id: 'b1' } }, 'org_b'],
-  [
-    'an update of many rows matched to one organization',
+    'an update of many rows',
     MongoDBUpdateMany,
     { filter: { organization_id: 'org_a' }, update: { $set: { v: 'after' } } },
-    'org_a',
   ],
-  [
-    'a delete of many rows matched to one organization by $eq',
-    MongoDBDeleteMany,
-    { filter: { organization_id: { $eq: 'org_a' } } },
-    'org_a',
-  ],
+  ['a delete', MongoDBDeleteOne, { filter: { _id: 'b1' } }],
 ])(
-  'tenant: none stamps the change-log record of %s with the organization of its rows',
-  async (_, resolver, request, organizationId) => {
-    const { logCollection, connection } = await setup();
-    await resolver({ request, connection, tenant: null, tenantGuard: noneGuard });
-    const records = await logRecords(logCollection);
-    expect(records.map((record) => record[field])).toEqual([organizationId]);
-    await expect(
-      tenantPreflight({ connection: { ...connection, collection: logCollection }, field })
-    ).resolves.toEqual({ ok: true });
-  }
-);
-
-test.each([
-  [
-    'an update',
-    MongoDBUpdateOne,
-    { filter: { _id: 'none' }, update: { $set: { v: 'after' } }, disableNoMatchError: true },
-  ],
-  [
-    'a versioned update',
-    MongoDBVersionedUpdateOne,
-    { filter: { _id: 'none' }, update: { $set: { v: 'after' } }, disableNoMatchError: true },
-  ],
-  ['a delete', MongoDBDeleteOne, { filter: { _id: 'none' } }],
-])(
-  'tenant: none writes no change-log record for %s that matched no row',
+  'tenant: none refuses %s on a change-logged connection and writes no log record',
   async (_, resolver, request) => {
-    const { logCollection, connection } = await setup();
-    await resolver({ request, connection, tenant: null, tenantGuard: noneGuard });
-    expect(await logRecords(logCollection)).toEqual([]);
-  }
-);
-
-test.each([
-  [
-    'an insert of documents of two organizations',
-    MongoDBInsertMany,
-    { docs: [{ organization_id: 'org_a' }, { organization_id: 'org_b' }] },
-    'the documents carry ["org_a","org_b"]',
-  ],
-  [
-    'a consecutive ids insert of two organizations',
-    MongoDBInsertManyConsecutiveIds,
-    { docs: [{ organization_id: 'org_a' }, { organization_id: 'org_b' }], prefix: 'C', length: 3 },
-    'the documents carry ["org_a","org_b"]',
-  ],
-  [
-    'an update of many rows the filter does not hold to one organization',
-    MongoDBUpdateMany,
-    { filter: {}, update: { $set: { v: 'after' } } },
-    'the filter does not match "organization_id" by equality to one organization id',
-  ],
-  [
-    'an update of many rows that moves them to another organization',
-    MongoDBUpdateMany,
-    { filter: { organization_id: 'org_a' }, update: { $set: { organization_id: 'org_b' } } },
-    'the update writes "organization_id"',
-  ],
-  [
-    'a delete of many rows the filter matches by $in',
-    MongoDBDeleteMany,
-    { filter: { organization_id: { $in: ['org_a', 'org_b'] } } },
-    'the filter does not match "organization_id" by equality to one organization id',
-  ],
-])(
-  'tenant: none refuses %s on a change-logged connection before it writes',
-  async (_, resolver, request, detail) => {
     const { collection, logCollection, connection } = await setup();
     await expect(
       resolver({ request, connection, tenant: null, tenantGuard: noneGuard })
-    ).rejects.toThrow(`${refusal} - ${detail}`);
+    ).rejects.toThrow('writes, and a request with tenant: none may only read');
     expect(await readAll(collection)).toEqual(seed);
     expect(await logRecords(logCollection)).toEqual([]);
   }
 );
-
-test('tenant: none writes many rows of several organizations when the connection has no change log', async () => {
-  const { collection, connection } = await setup();
-  await MongoDBUpdateMany({
-    request: { filter: {}, update: { $set: { v: 'after' } } },
-    connection: { ...connection, changeLog: undefined },
-    tenant: null,
-    tenantGuard: noneGuard,
-  });
-  expect((await readAll(collection)).map((doc) => doc.v)).toEqual(['after', 'after', 'after']);
-});
 
 test('a shared connection over a walled collection writes many organizations and leaves its change log unstamped', async () => {
   const { collection, logCollection, connection } = await setup();
@@ -276,9 +142,8 @@ test('a shared connection over a walled collection refuses a row without an orga
 });
 
 // The table and enrichment writes on one leads table that two organizations share. Each
-// request is called as a scoped connection (the caller's organization verdict), as a
-// tenant: none request held to one organization by its filter, and as a shared connection
-// over a walled collection.
+// request is called as a scoped connection (the caller's organization verdict) and as a
+// shared connection over a walled collection.
 const leads = [
   { _id: 'a1', organization_id: 'org_a', name: 'Acme', domain: 'acme.test' },
   { _id: 'a2', organization_id: 'org_a', name: 'Arch', domain: 'arch.test' },
@@ -287,7 +152,6 @@ const leads = [
 ];
 const leadFields = { name: { type: 'text' } };
 const scopedA = { tenant: { field, value: 'org_a' }, tenantGuard: null };
-const noneB = { tenant: null, tenantGuard: noneGuard, filter: { organization_id: 'org_b' } };
 const sharedB = { tenant: null, tenantGuard: sharedGuard, filter: { organization_id: 'org_b' } };
 
 function enqueueEmail({ connection, tenant, tenantGuard, filter }) {
@@ -347,60 +211,42 @@ function recordsByType(records) {
   return records.map((record) => [record.type, record[field]]);
 }
 
-test.each([
-  ['a scoped connection', scopedA, 'org_a', ['a1', 'a2']],
-  ['tenant: none held to one organization', noneB, 'org_b', ['b1', 'b2']],
-])(
-  'enrichment writes on %s stamp each change-log record with the organization they ran for',
-  async (_, context, organizationId, rowKeys) => {
-    const { collection, logCollection, connection } = await setup(leads);
-    const claims = await runEnrichment({ ...context, connection });
-    expect(claims.map((claim) => claim.rowKey).sort()).toEqual(rowKeys);
-    expect(recordsByType(await logRecords(logCollection))).toEqual([
-      ['MongoDBEnrichmentEnqueue', organizationId],
-      ['MongoDBEnrichmentClaim', organizationId],
-      ['MongoDBEnrichmentComplete', organizationId],
-    ]);
-    const docs = await readAll(collection);
-    docs
-      .filter((doc) => !rowKeys.includes(doc._id))
-      .forEach((doc) => expect(doc._enrich).toBeUndefined());
-    await expect(
-      tenantPreflight({ connection: { ...connection, collection: logCollection }, field })
-    ).resolves.toEqual({ ok: true });
-  }
-);
+test('enrichment writes on a scoped connection stamp each change-log record with the organization they ran for', async () => {
+  const { collection, logCollection, connection } = await setup(leads);
+  const claims = await runEnrichment({ ...scopedA, connection });
+  expect(claims.map((claim) => claim.rowKey).sort()).toEqual(['a1', 'a2']);
+  expect(recordsByType(await logRecords(logCollection))).toEqual([
+    ['MongoDBEnrichmentEnqueue', 'org_a'],
+    ['MongoDBEnrichmentClaim', 'org_a'],
+    ['MongoDBEnrichmentComplete', 'org_a'],
+  ]);
+  const docs = await readAll(collection);
+  docs
+    .filter((doc) => !['a1', 'a2'].includes(doc._id))
+    .forEach((doc) => expect(doc._enrich).toBeUndefined());
+  await expect(
+    tenantPreflight({ connection: { ...connection, collection: logCollection }, field })
+  ).resolves.toEqual({ ok: true });
+});
 
-test.each([
-  [
-    'a scoped connection',
-    scopedA,
-    'org_a',
-    { updated: { a1: { name: 'Acme 2' } }, added: [{ rowKey: 'new', name: 'Ajax' }] },
-  ],
-  [
-    'tenant: none held to one organization',
-    { ...noneB, insertDefaults: { organization_id: 'org_b' } },
-    'org_b',
-    { updated: { b1: { name: 'Bolt 2' } }, added: [{ rowKey: 'new', name: 'Brio' }] },
-  ],
-])(
-  'a table save on %s stamps its change-log record with the organization it ran for',
-  async (_, context, organizationId, changes) => {
-    const { collection, logCollection, connection } = await setup(leads);
-    const saved = await saveTable({ ...context, connection, changes });
-    expect(recordsByType(await logRecords(logCollection))).toEqual([
-      ['MongoDBTableChanges', organizationId],
-    ]);
-    const added = (await readAll(collection)).find(
-      (doc) => String(doc._id) === saved.insertedKeys.new._oid
-    );
-    expect(added[field]).toBe(organizationId);
-    await expect(
-      tenantPreflight({ connection: { ...connection, collection: logCollection }, field })
-    ).resolves.toEqual({ ok: true });
-  }
-);
+test('a table save on a scoped connection stamps its change-log record with the organization it ran for', async () => {
+  const { collection, logCollection, connection } = await setup(leads);
+  const saved = await saveTable({
+    ...scopedA,
+    connection,
+    changes: { updated: { a1: { name: 'Acme 2' } }, added: [{ rowKey: 'new', name: 'Ajax' }] },
+  });
+  expect(recordsByType(await logRecords(logCollection))).toEqual([
+    ['MongoDBTableChanges', 'org_a'],
+  ]);
+  const added = (await readAll(collection)).find(
+    (doc) => String(doc._id) === saved.insertedKeys.new._oid
+  );
+  expect(added[field]).toBe('org_a');
+  await expect(
+    tenantPreflight({ connection: { ...connection, collection: logCollection }, field })
+  ).resolves.toEqual({ ok: true });
+});
 
 test('table and enrichment writes on a shared connection over a walled collection leave their change-log records unstamped', async () => {
   const { collection, logCollection, connection } = await setup(leads);
@@ -422,51 +268,4 @@ test('table and enrichment writes on a shared connection over a walled collectio
   const docs = await readAll(collection);
   expect(docs.filter((doc) => doc._enrich).map((doc) => doc._id)).toEqual(['b1', 'b2']);
   expect(docs.every((doc) => doc[field] !== undefined)).toBe(true);
-});
-
-const unscopedFilter =
-  'the filter does not match "organization_id" by equality to one organization id';
-
-test.each([
-  ['an enrichment enqueue', (context) => enqueueEmail(context)],
-  [
-    'a table save',
-    (context) => saveTable({ ...context, changes: { updated: { a1: { name: 'X' } } } }),
-  ],
-])(
-  'tenant: none refuses %s whose filter does not hold it to one organization on a change-logged connection before it writes',
-  async (_, write) => {
-    const { collection, logCollection, connection } = await setup(leads);
-    await expect(
-      write({ connection, tenant: null, tenantGuard: noneGuard, filter: {} })
-    ).rejects.toThrow(`${refusal} - ${unscopedFilter}`);
-    expect(await readAll(collection)).toEqual(leads);
-    expect(await logRecords(logCollection)).toEqual([]);
-  }
-);
-
-test('tenant: none refuses an enrichment claim whose filter does not hold it to one organization on a change-logged connection before it writes', async () => {
-  const { collection, logCollection, connection } = await setup(leads);
-  await enqueueEmail({ connection, ...scopedA });
-  await enqueueEmail({ connection, ...scopedA, tenant: { field, value: 'org_b' } });
-  const queued = await readAll(collection);
-  const before = await logRecords(logCollection);
-  await expect(
-    claimEmail({ connection, tenant: null, tenantGuard: noneGuard, filter: {} })
-  ).rejects.toThrow(`${refusal} - ${unscopedFilter}`);
-  expect(await readAll(collection)).toEqual(queued);
-  expect(await logRecords(logCollection)).toEqual(before);
-});
-
-test('tenant: none refuses an enrichment complete whose filter does not hold it to one organization on a change-logged connection before it writes', async () => {
-  const { collection, logCollection, connection } = await setup(leads);
-  await enqueueEmail({ connection, ...scopedA });
-  const claims = await claimEmail({ connection, ...scopedA });
-  const claimed = await readAll(collection);
-  const before = await logRecords(logCollection);
-  await expect(
-    completeClaims({ connection, tenant: null, tenantGuard: noneGuard, filter: {}, claims })
-  ).rejects.toThrow(`${refusal} - ${unscopedFilter}`);
-  expect(await readAll(collection)).toEqual(claimed);
-  expect(await logRecords(logCollection)).toEqual(before);
 });

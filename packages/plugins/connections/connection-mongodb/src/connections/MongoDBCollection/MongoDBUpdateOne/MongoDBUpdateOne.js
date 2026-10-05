@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import applyTenantToUpdate from '../tenant/applyTenantToUpdate.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
@@ -22,6 +23,7 @@ import getCollection from '../getCollection.js';
 import verifyStoredTenant from '../tenant/verifyStoredTenant.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 async function MongodbUpdateOne({
@@ -36,6 +38,7 @@ async function MongodbUpdateOne({
   tenant,
   tenantGuard,
 }) {
+  assertTenantWritable({ tenantGuard, requestType: 'MongoDBUpdateOne' });
   const deserializedRequest = deserialize(request);
   const { options, disableNoMatchError } = deserializedRequest;
   let { filter, update } = deserializedRequest;
@@ -84,33 +87,27 @@ async function MongodbUpdateOne({
     if (!disableNoMatchError && !options?.upsert && matched === 0 && !upsertedId) {
       throw new Error('No matching record to update.');
     }
-    // An unscoped record belongs to the organization of the row the update
-    // left behind; an update that matched no row has none, and records nothing.
-    if (!(tenantGuard?.stampChangeLog && after === null)) {
-      try {
-        await logCollection.insertOne(
-          stampTenantOnLogRecord({
-            record: {
-              args: { filter, update, options },
-              blockId,
-              connectionId,
-              pageId,
-              payload,
-              requestId,
-              before,
-              after,
-              timestamp: new Date(),
-              type: 'MongoDBUpdateOne',
-              meta: connection.changeLog?.meta,
-            },
-            tenant,
-            tenantGuard,
-            organizationId: tenantGuard && after?.[tenantGuard.field],
-          })
-        );
-      } catch (error) {
-        throw mapMongoError(error, { connection, requestType: 'MongoDBUpdateOne' });
-      }
+    try {
+      await logCollection.insertOne(
+        stampTenantOnLogRecord({
+          record: {
+            args: { filter, update, options },
+            blockId,
+            connectionId,
+            pageId,
+            payload,
+            requestId,
+            before,
+            after,
+            timestamp: new Date(),
+            type: 'MongoDBUpdateOne',
+            meta: connection.changeLog?.meta,
+          },
+          tenant,
+        })
+      );
+    } catch (error) {
+      throw mapMongoError(error, { connection, requestType: 'MongoDBUpdateOne' });
     }
   } else {
     try {
@@ -137,9 +134,6 @@ async function MongodbUpdateOne({
 }
 
 MongodbUpdateOne.schema = schema;
-MongodbUpdateOne.meta = {
-  checkRead: false,
-  checkWrite: true,
-};
+MongodbUpdateOne.meta = requestMetas.MongoDBUpdateOne;
 
 export default MongodbUpdateOne;

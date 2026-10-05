@@ -143,7 +143,7 @@ test('an upsert that only matched an existing row does not verify or delete anyt
   expect(await readAll(collection)).toEqual([{ _id: 'existing', v: 1 }]);
 });
 
-test('under tenant: none a well-formed authored upsert is kept, nothing extra happens', async () => {
+test('under the write guard of a shared connection a well-formed authored upsert is kept, nothing extra happens', async () => {
   const collection = 'writeVerifyGuard';
   await populateTestMongoDb({ collection, documents: seeded });
   await MongoDBBulkWrite({
@@ -160,7 +160,7 @@ test('under tenant: none a well-formed authored upsert is kept, nothing extra ha
       ],
     },
     connection: makeConnection(collection),
-    tenantGuard: { field: 'organization_id' },
+    tenantGuard: { field: 'organization_id', readOnly: false },
   });
   expect((await readAll(collection)).map((d) => d._id)).toEqual(['existing', 'g1']);
 });

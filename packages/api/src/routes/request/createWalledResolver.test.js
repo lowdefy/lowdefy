@@ -91,13 +91,13 @@ test('the resolver receives a walled seam bound to the request tenant', async ()
   });
 });
 
-test('tenant: none on the request yields the write guard, not a verdict', async () => {
+test('tenant: none on the request yields the read-only guard, not a verdict', async () => {
   const bound = await walledFor(createContext({ user: null }), 'mongo', {
     ...requestConfig,
     tenant: 'none',
   });
   expect(bound.tenant).toBe(null);
-  expect(bound.tenantGuard).toEqual({ field: 'organization_id', stampChangeLog: true });
+  expect(bound.tenantGuard).toEqual({ field: 'organization_id', readOnly: true });
 });
 
 test('a caller with no organization fails closed', async () => {
@@ -109,7 +109,7 @@ test('a caller with no organization fails closed', async () => {
 test('a shared connection over a walled collection gets the write guard', async () => {
   const bound = await walledFor(createContext(), 'shared_mongo');
   expect(bound.tenant).toBe(null);
-  expect(bound.tenantGuard).toEqual({ field: 'organization_id', stampChangeLog: false });
+  expect(bound.tenantGuard).toEqual({ field: 'organization_id', readOnly: false });
 });
 
 test('a non-scoping connection type can not be named', async () => {

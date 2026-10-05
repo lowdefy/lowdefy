@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import getEnrichmentLogOrganization from '../enrichment/getEnrichmentLogOrganization.js';
 import planReleaseWaiting from '../enrichment/planReleaseWaiting.js';
 import runBulkWriteBatches from '../enrichment/runBulkWriteBatches.js';
 import scopeWriteOperations from '../enrichment/scopeWriteOperations.js';
@@ -40,20 +39,11 @@ const FINISHING_KINDS = new Set(['expired', 'missing']);
 // worker won some of them, or some candidates only needed a status (missing input, lease
 // out of attempts, deferred), the next round reads further candidates, so a worker that lost
 // a race does not stop while cells are still queued.
-async function runClaim({
-  collection,
-  compiled,
-  generateToken,
-  logCollection,
-  now,
-  tenant,
-  tenantGuard,
-}) {
+async function runClaim({ collection, compiled, generateToken, now, tenant, tenantGuard }) {
   const { dependentsByColumn, filter, limit } = compiled;
   const claims = [];
   const tried = new Map();
   let written = 0;
-  let organizationId = null;
   for (let round = 0; round < maxRounds && claims.length < limit; round += 1) {
     const candidates = await readClaimCandidates({
       collection,
@@ -73,9 +63,6 @@ async function runClaim({
       tenant,
       tenantGuard,
     });
-    organizationId =
-      getEnrichmentLogOrganization({ filter, logCollection, operations, tenantGuard }) ??
-      organizationId;
     const result = await runBulkWriteBatches({ collection, operations });
     written += result.modifiedCount;
     // A cell this claim finished (a lease out of attempts, a missing input) releases the cells
@@ -105,7 +92,7 @@ async function runClaim({
     const lost = claimCells.length - won.length;
     if (lost === 0 && claimCells.length === cells.length) break;
   }
-  return { claims, organizationId, written };
+  return { claims, written };
 }
 
 export default runClaim;
