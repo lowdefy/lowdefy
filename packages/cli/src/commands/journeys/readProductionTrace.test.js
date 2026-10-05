@@ -14,13 +14,21 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import readProductionTrace from './readProductionTrace.js';
+const mockReadConfigText = jest.fn();
+jest.unstable_mockModule('./configText/readConfigText.js', () => ({
+  default: mockReadConfigText,
+}));
+
+const { default: readProductionTrace } = await import('./readProductionTrace.js');
+const { default: tokenText } = await import('./tokenText.js');
 
 let traces;
+let root;
 const now = Date.parse('2026-10-03T12:00:00.000Z');
 
 function writeDay(day, records) {
@@ -36,19 +44,33 @@ function writeDay(day, records) {
   );
 }
 
+function read(options) {
+  const context = {
+    directories: { config: root, test: path.join(root, '.lowdefy', 'test'), traces },
+    logger: { warn: jest.fn() },
+  };
+  return readProductionTrace({ context, now, ...options });
+}
+
 beforeEach(() => {
-  traces = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-production-trace-'));
+  root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-production-trace-'));
+  traces = path.join(root, '.lowdefy', 'traces');
+  mockReadConfigText.mockReset();
+  mockReadConfigText.mockResolvedValue({
+    texts: new Set(['Assign']),
+    isConfigText: (text) => text === 'Assign',
+  });
 });
 
 afterEach(() => {
-  fs.rmSync(traces, { recursive: true, force: true });
+  fs.rmSync(root, { recursive: true, force: true });
 });
 
-test('readProductionTrace returns the window records in day order with each manifest', () => {
+test('readProductionTrace returns the window records in day order with each manifest', async () => {
   writeDay('2026-10-03', [{ id: 5 }]);
   writeDay('2026-10-01', [{ id: 1 }, { id: 2 }]);
   writeDay('2026-10-02', [{ id: 3 }, { id: 4 }]);
-  const result = readProductionTrace({ directories: { traces }, since: '3d', now });
+  const result = await read({ since: '3d' });
   expect(result.records.map((record) => record.id)).toEqual([1, 2, 3, 4, 5]);
   expect(result.window).toEqual({ from: '2026-10-01', to: '2026-10-03' });
   expect(result.manifests.map((manifest) => manifest.day)).toEqual([
@@ -59,26 +81,54 @@ test('readProductionTrace returns the window records in day order with each mani
   expect(result.unparsable).toBe(0);
 });
 
-test('readProductionTrace names a missing middle day and the pull that fills it', () => {
+test('readProductionTrace names a missing middle day and the pull that fills it', async () => {
   writeDay('2026-10-01', []);
   writeDay('2026-10-03', []);
-  expect(() => readProductionTrace({ directories: { traces }, since: '3d', now })).toThrow(
+  await expect(read({ since: '3d' })).rejects.toThrow(
     'The production trace cache is missing 1 day(s) of 2026-10-01/2026-10-03 (2026-10-02). Run "lowdefy journeys pull posthog --from 2026-10-02 --to 2026-10-02" first.'
   );
 });
 
-test('readProductionTrace treats a day without its manifest as missing', () => {
+test('readProductionTrace treats a day without its manifest as missing', async () => {
   writeDay('2026-10-01', []);
   fs.rmSync(path.join(traces, 'production', '2026-10-01.manifest.json'));
-  expect(() =>
-    readProductionTrace({ directories: { traces }, from: '2026-10-01', to: '2026-10-01', now })
-  ).toThrow('lowdefy journeys pull posthog --from 2026-10-01 --to 2026-10-01');
+  await expect(read({ from: '2026-10-01', to: '2026-10-01' })).rejects.toThrow(
+    'lowdefy journeys pull posthog --from 2026-10-01 --to 2026-10-01'
+  );
 });
 
-test('readProductionTrace counts unparsable lines', () => {
+test('readProductionTrace counts unparsable lines', async () => {
   writeDay('2026-10-03', [{ id: 1 }]);
   fs.appendFileSync(path.join(traces, 'production', '2026-10-03.jsonl'), '\nnot json');
-  const result = readProductionTrace({ directories: { traces }, since: '1d', now });
+  const result = await read({ since: '1d' });
   expect(result.records).toHaveLength(1);
   expect(result.unparsable).toBe(1);
+});
+
+test('readProductionTrace resolves a token only to config text', async () => {
+  fs.mkdirSync(path.join(traces, 'production'), { recursive: true });
+  const salt = Buffer.alloc(32, 4);
+  fs.writeFileSync(path.join(traces, 'production', 'salt'), salt);
+  const assign = tokenText({ salt, text: 'Assign' });
+  const acme = tokenText({ salt, text: 'Acme Ltd' });
+  writeDay('2026-10-03', [
+    { id: 1, target: { block_id: 'assign_button', text_token: assign } },
+    { id: 2, target: { block_id: 'grid', text_token: acme } },
+    { id: 3, target: { block_id: 'grid', text: 'Acme Ltd', text_token: acme } },
+    { id: 4, target: null },
+  ]);
+  const { records } = await read({ since: '1d' });
+  expect(records.map((record) => record.target)).toEqual([
+    { block_id: 'assign_button', text_token: assign, text: 'Assign' },
+    { block_id: 'grid', text_token: acme },
+    { block_id: 'grid', text_token: acme },
+    null,
+  ]);
+  expect(JSON.stringify(records)).not.toContain('Acme');
+});
+
+test('readProductionTrace refuses a window over maxDays', async () => {
+  await expect(read({ since: '31d', maxDays: 30 })).rejects.toThrow(
+    'a mining window is at most 30 days'
+  );
 });

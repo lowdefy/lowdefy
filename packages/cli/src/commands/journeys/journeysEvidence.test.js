@@ -20,8 +20,15 @@ import os from 'os';
 import path from 'path';
 import YAML from 'yaml';
 
-import journeysEvidence from './journeysEvidence.js';
 import validateJourney from '../test/validateJourney.js';
+
+// The config text set comes from a full build by the dev server's builder;
+// these tests hold it fixed.
+jest.unstable_mockModule('./configText/readConfigText.js', () => ({
+  default: async () => ({ texts: new Set(), isConfigText: () => false }),
+}));
+
+const { default: journeysEvidence } = await import('./journeysEvidence.js');
 
 let configDirectory;
 let context;

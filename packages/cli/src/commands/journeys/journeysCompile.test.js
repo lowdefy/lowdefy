@@ -22,6 +22,12 @@ import YAML from 'yaml';
 
 const mockGet = jest.fn();
 jest.unstable_mockModule('axios', () => ({ default: { get: mockGet } }));
+// The config text set comes from a full build by the dev server's builder;
+// these tests hold it fixed.
+const mockReadConfigText = jest.fn();
+jest.unstable_mockModule('./configText/readConfigText.js', () => ({
+  default: mockReadConfigText,
+}));
 
 const { validateJourneySteps } = await import('@lowdefy/node-utils');
 const { default: journeysCompile } = await import('./journeysCompile.js');
@@ -128,6 +134,8 @@ beforeEach(() => {
     sendTelemetry: async () => {},
   };
   mockGet.mockReset();
+  mockReadConfigText.mockReset();
+  mockReadConfigText.mockResolvedValue({ texts: new Set(), isConfigText: () => false });
 });
 
 afterEach(() => {
@@ -483,6 +491,49 @@ test('journeys compile --source production refuses a window over 30 days', async
   await expect(journeysCompile({ context, params: [[]] })).rejects.toThrow(
     'is 45 days long; a mining window is at most 30 days'
   );
+});
+
+test('journeys compile --source production writes config text and tokens only', async () => {
+  const { default: tokenText } = await import('./tokenText.js');
+  const today = Date.parse(`${utcDay(now)}T10:00:00.000Z`);
+  const directory = path.join(configDirectory, '.lowdefy', 'traces', 'production');
+  fs.mkdirSync(directory, { recursive: true });
+  const salt = Buffer.alloc(32, 5);
+  fs.writeFileSync(path.join(directory, 'salt'), salt);
+  mockReadConfigText.mockResolvedValue({
+    texts: new Set(['Assign']),
+    isConfigText: (text) => text === 'Assign',
+  });
+  const visit = record({
+    session: 'a',
+    t: today,
+    kind: 'pageview',
+    source: 'production',
+  });
+  const assign = record({
+    session: 'a',
+    t: today + 1000,
+    block: 'assign_button',
+    source: 'production',
+  });
+  assign.target = { ...assign.target, text: null, text_token: tokenText({ salt, text: 'Assign' }) };
+  const cell = record({ session: 'a', t: today + 2000, block: 'grid', source: 'production' });
+  const acme = tokenText({ salt, text: 'Acme Ltd' });
+  cell.target = { ...cell.target, row: 2, column: 'name', text: null, text_token: acme };
+  writeProductionDay(utcDay(today), [visit, assign, cell]);
+  context.options.source = 'production';
+  context.options.since = '1d';
+  await journeysCompile({ context, params: [[]] });
+  const [fileName] = candidates('production');
+  const contents = fs.readFileSync(
+    path.join(configDirectory, 'tests', 'journeys', '_candidates', 'production', fileName),
+    'utf8'
+  );
+  expect(contents).toContain('text: Assign');
+  expect(contents).toContain(`# clicked text not in config: ${acme}`);
+  expect(contents).toContain('- tokenised-text');
+  expect(contents).not.toContain('Acme');
+  expect(logged.join('\n')).not.toContain('Acme');
 });
 
 test('journeys compile --source production names the pull for a day missing from the cache', async () => {

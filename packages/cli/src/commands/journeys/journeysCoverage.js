@@ -88,7 +88,7 @@ async function journeysCoverage({ context }) {
     sequence: journeySequence({ pageId: journey.pageId, steps: journey.steps }),
     journey,
   }));
-  const { segments, window } = readProductionSegments({
+  const { segments, window } = await readProductionSegments({
     context,
     maxDays: MINING_WINDOW_MAX_DAYS,
   });

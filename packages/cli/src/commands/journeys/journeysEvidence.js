@@ -84,7 +84,7 @@ async function journeysEvidence({ context }) {
   }
   const { journeys, skipped } = readCommittedJourneys({ context });
   skipped.forEach((line) => logger.warn(`Skipped ${line}`));
-  const production = readProductionSegments({ context });
+  const production = await readProductionSegments({ context });
   const now = Date.now();
   const results = computeEvidence({
     journeys,

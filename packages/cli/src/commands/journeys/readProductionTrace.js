@@ -17,10 +17,27 @@
 import fs from 'fs';
 import path from 'path';
 import { parseTraceLines } from '@lowdefy/node-utils';
+import { type } from '@lowdefy/helpers';
 
+import createTokenResolver from './createTokenResolver.js';
 import listWindowDays from './listWindowDays.js';
 import parseTraceWindow from './parseTraceWindow.js';
+import readConfigText from './configText/readConfigText.js';
+import readTraceSalt from './pull/readTraceSalt.js';
 import removeUntokenisedTraces from './removeUntokenisedTraces.js';
+
+// A record as the compiler may see it: a clicked-text token that is the
+// token of a config string sets `target.text` to that string and keeps the
+// token; any other token leaves the target without text. No other text from a
+// day file reaches a reader.
+function resolveRecordText({ record, resolve }) {
+  if (!type.isObject(record?.target)) return record;
+  const target = { ...record.target };
+  delete target.text;
+  const resolved = type.isString(target.text_token) ? resolve(target.text_token) : null;
+  if (!type.isNone(resolved)) target.text = resolved;
+  return { ...record, target };
+}
 
 // The production records of a window, read from the per-day cache that
 // `lowdefy journeys pull posthog` writes: days in order, records in file
@@ -28,10 +45,14 @@ import removeUntokenisedTraces from './removeUntokenisedTraces.js';
 // written (the pull writes it last). A missing day is an error naming the
 // pull that fills it, never a silent gap. Days pulled before clicked text was
 // stored as tokens are removed first, so they read as missing. maxDays caps
-// the window for the mining commands.
-function readProductionTrace({ directories, logger, since, from, to, now = Date.now(), maxDays }) {
+// the window for the mining commands. Every token is resolved against the
+// app's config text set, so compile, coverage and evidence see config text
+// and tokens only.
+async function readProductionTrace({ context, since, from, to, now = Date.now(), maxDays }) {
+  const { directories, logger } = context;
   const window = parseTraceWindow({ since, from, to, now, maxDays });
   removeUntokenisedTraces({ directories, logger });
+
   const directory = path.join(directories.traces, 'production');
   const days = listWindowDays(window);
   const missing = days.filter(
@@ -60,7 +81,15 @@ function readProductionTrace({ directories, logger, since, from, to, now = Date.
     records.push(...parsed.records);
     unparsable += parsed.unparsable;
   });
-  return { records, unparsable, window, manifests };
+  const { salt } = readTraceSalt({ directories });
+  const { texts } = await readConfigText({ context });
+  const resolve = createTokenResolver({ salt, texts });
+  return {
+    records: records.map((record) => resolveRecordText({ record, resolve })),
+    unparsable,
+    window,
+    manifests,
+  };
 }
 
 export default readProductionTrace;

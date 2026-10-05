@@ -58,6 +58,7 @@ import writeFileAtomic from './writeFileAtomic.js';
 import watchOwner from './watchOwner.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
 import compileTrace from './journeyCompiler/compileTrace.js';
+import countTextTokens from './journeyEvidence/countTextTokens.js';
 import collectKnownText from './journeyText/collectKnownText.js';
 import normaliseClickText from './journeyText/normaliseClickText.js';
 import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
@@ -86,6 +87,7 @@ export {
   compareProcessStartTimes,
   compileTrace,
   copyFileOrDirectory,
+  countTextTokens,
   createClientAddressResolver,
   createSecretScrubber,
   devPassiveHeader,

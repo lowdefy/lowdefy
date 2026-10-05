@@ -59,7 +59,7 @@ function checkSourceOption({ source }) {
 // Without them, `--source production` reads the pulled cache over whole UTC
 // days, and dev and explorer read the recordings the dev server wrote,
 // through readRecordings, so the compile never knows the layout.
-function readRecords({ context, traceFiles, source, now }) {
+async function readRecords({ context, traceFiles, source, now }) {
   const { options } = context;
   if (traceFiles.length > 0) {
     return readTraceFiles({ paths: traceFiles.map((file) => path.resolve(file)) });
@@ -70,9 +70,8 @@ function readRecords({ context, traceFiles, source, now }) {
     );
   }
   if (source === 'production') {
-    const { records, unparsable, window } = readProductionTrace({
-      directories: context.directories,
-      logger: context.logger,
+    const { records, unparsable, window } = await readProductionTrace({
+      context,
       maxDays: MINING_WINDOW_MAX_DAYS,
       since: options.since,
       from: options.from,
@@ -165,7 +164,7 @@ async function journeysCompile({ context, params }) {
   const { options } = context;
   checkSourceOption({ source: options.source });
   const now = Date.now();
-  const read = readRecords({ context, traceFiles, source: options.source, now });
+  const read = await readRecords({ context, traceFiles, source: options.source, now });
   const { records, unparsable } = read;
   const source = options.source ?? sourceFromRecords({ records });
   const { since, until } = type.isUndefined(read.since)

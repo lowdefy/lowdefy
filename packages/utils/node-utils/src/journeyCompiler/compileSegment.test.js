@@ -158,10 +158,27 @@ test('T10 an option click gives a select with the option text', () => {
   ).toEqual([{ select: { blockId: 'owner', value: 'Grace' } }]);
 });
 
-test('T11 a production option click below the text threshold gives a select placeholder', () => {
+test('T11 a production option click with no config text gives a select placeholder', () => {
   expect(
     steps([prodEntry, traceRecord({ at: 1, block: 'owner', option: true, source: 'production' })])
   ).toEqual([{ select: { blockId: 'owner', value: null, from: 'shape' } }]);
+});
+
+test('a production click whose token is not config text compiles without text and is flagged', () => {
+  const { journey, comments, flags } = compile([
+    prodEntry,
+    traceRecord({
+      at: 1,
+      block: 'grid',
+      row: 4,
+      column: 'name',
+      token: 't_00000000000000c1',
+      source: 'production',
+    }),
+  ]);
+  expect(journey.steps).toEqual([{ click: { blockId: 'grid', row: 4, column: 'name' } }]);
+  expect(comments.get(0)).toBe('clicked text not in config: t_00000000000000c1');
+  expect(flags).toEqual(['tokenised-text']);
 });
 
 test('T12 a change gives a fill with the recorded value, else the state write for the block', () => {
@@ -455,8 +472,7 @@ test('T26 also adds no step, and a failure in also is the interaction failure', 
 });
 
 test('a production click left with neither block nor text gives a comment and the unresolved-target flag', () => {
-  // The label failed the production text threshold, and the control sits
-  // outside every block.
+  // The label is not config text, and the control sits outside every block.
   const thresholded = traceRecord({ at: 1, source: 'production', text: 'Settings' });
   thresholded.target = { ...thresholded.target, text: null };
   const { journey, footer, flags } = compile([prodEntry, thresholded]);

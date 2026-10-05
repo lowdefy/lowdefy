@@ -21,7 +21,14 @@ import path from 'path';
 import { validate } from '@lowdefy/ajv';
 
 import coverageReportSchema from './coverageReport/coverageReportSchema.js';
-import journeysCoverage from './journeysCoverage.js';
+
+// The config text set comes from a full build by the dev server's builder;
+// these tests hold it fixed.
+jest.unstable_mockModule('./configText/readConfigText.js', () => ({
+  default: async () => ({ texts: new Set(), isConfigText: () => false }),
+}));
+
+const { default: journeysCoverage } = await import('./journeysCoverage.js');
 
 let configDirectory;
 let context;
