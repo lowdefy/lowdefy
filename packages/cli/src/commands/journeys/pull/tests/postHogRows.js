@@ -19,6 +19,8 @@
 // antd radio click (three rows), a menu link, a portal dropdown item with no
 // block ids in its chain, and a list-indexed button. Each interaction comes
 // enriched (P0's lowdefy_* properties) and chain-only (before enrichment).
+// Every event names its page: the enrichment stamps lowdefy_page_id on all of
+// them, not only on clicks.
 
 const PERSON_ID = '0192f3a4-5b6c-7d8e-9f00-aabbccddeeff';
 const ORG_ID = 'org-7f3e2a91';
@@ -80,7 +82,8 @@ function row({
     event_type: eventType,
     el_text: elText,
     lowdefy_build_id: 'build-2026-10-01T09:00:00.000Z',
-    lowdefy_page_id: null,
+    lowdefy_page_id: 'tickets',
+    lowdefy_path_params: null,
     lowdefy_block_id: null,
     lowdefy_block_ids: null,
     lowdefy_block_type: null,

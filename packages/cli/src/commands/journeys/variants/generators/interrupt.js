@@ -23,6 +23,17 @@ import writeCall from '../writeCall.js';
 
 const INTERACTION_STEPS = ['click', 'open', 'press', 'back', 'goto', 'fill', 'select'];
 
+// A full load of the start page, with its path values and query.
+function reloadStep({ journey }) {
+  if (type.isNone(journey.pathParams) && type.isNone(journey.urlQuery)) {
+    return { goto: journey.pageId };
+  }
+  const goto = { pageId: journey.pageId };
+  if (!type.isNone(journey.pathParams)) goto.pathParams = journey.pathParams;
+  if (!type.isNone(journey.urlQuery)) goto.urlQuery = journey.urlQuery;
+  return { goto };
+}
+
 // Interrupt: when the submit click is on the start page, the steps before
 // it, a full load of the start page (page state reset, app events run
 // again), the start page's steps again from its first interaction to the
@@ -36,9 +47,7 @@ function interrupt({ journey, exercised, pageConfigs }) {
     return { skipped: 'the submit click is not on the start page' };
   }
   const first = journey.steps.findIndex((step) => INTERACTION_STEPS.includes(getStepKey(step)));
-  const reload = type.isNone(journey.urlQuery)
-    ? { goto: journey.pageId }
-    : { goto: { pageId: journey.pageId, urlQuery: journey.urlQuery } };
+  const reload = reloadStep({ journey });
   const steps = [
     ...journey.steps.slice(0, submit.index),
     reload,

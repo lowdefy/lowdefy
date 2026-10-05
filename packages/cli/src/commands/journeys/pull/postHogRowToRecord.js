@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { parsePageId, targetFromElementsChain, type } from '@lowdefy/helpers';
+import { targetFromElementsChain, type } from '@lowdefy/helpers';
 
 import hashId from './hashId.js';
 import normalisePostHogRow from './normalisePostHogRow.js';
@@ -46,15 +46,6 @@ function pathnameOf({ values }) {
   } catch {
     return null;
   }
-}
-
-// Lowdefy routes are `/<pageId>`: `/` is the redirect to the home page (the
-// next pageview names the page) and a path with a further `/` is not a page.
-function resolvePage({ values, pathname }) {
-  const pageId = values.pageId ?? (type.isNone(pathname) ? null : parsePageId(pathname));
-  if (type.isNone(pageId)) return { reason: 'home_redirect' };
-  if (pageId.includes('/')) return { reason: 'not_a_page' };
-  return { pageId };
 }
 
 // Lowdefy's own properties when P0's enrichment ran, else the target read
@@ -134,11 +125,11 @@ function postHogRowToRecord({ row, salt }) {
     return { dropped: values.event === '$autocapture' ? 'event_type' : 'event' };
   }
 
+  // The page is the one PostHogInit's enrichment named, never one read from the
+  // path: a path with placeholders names no page without the route table, and
+  // `/` is the redirect to the home page, whose own pageview names it.
+  if (type.isNone(values.pageId)) return { dropped: 'no_page' };
   const pathname = pathnameOf({ values });
-  const page = resolvePage({ values, pathname });
-  if (type.isUndefined(page.pageId)) {
-    return { dropped: values.event === '$pageview' ? page.reason : 'no_page' };
-  }
 
   const base = {
     v: 1,
@@ -151,18 +142,18 @@ function postHogRowToRecord({ row, salt }) {
     roles: values.roles,
     t: new Date(values.time).toISOString(),
     build: values.buildId,
-    page_id: page.pageId,
+    page_id: values.pageId,
     scope: 'page',
   };
   const url = urlWithQueryNames({ currentUrl: values.currentUrl, pathname });
 
   if (isPageEvent) {
-    const record = {
-      ...base,
-      kind: values.event === '$pageview' ? 'pageview' : 'pageleave',
-      url: url ?? `/${page.pageId}`,
-      target: null,
-    };
+    if (type.isNone(url)) return { dropped: 'no_url' };
+    const pageKind = values.event === '$pageview' ? 'pageview' : 'pageleave';
+    const record = { ...base, kind: pageKind, url, target: null };
+    if (pageKind === 'pageview' && !type.isNone(values.pathParams)) {
+      record.path_params = values.pathParams;
+    }
     return { record, id: values.uuid };
   }
 

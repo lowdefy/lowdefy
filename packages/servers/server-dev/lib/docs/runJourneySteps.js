@@ -29,6 +29,7 @@ import isPageReady from './isPageReady.js';
 import JourneyStepError from './JourneyStepError.js';
 import openJourneyEmail from './openJourneyEmail.js';
 import readJourneyEmailMatch from './readJourneyEmailMatch.js';
+import readPagePath from './readPagePath.js';
 
 // Structural equality over values that have already been through the JSON
 // round-trip getState performs in the page (no undefined, no Dates, no
@@ -489,8 +490,24 @@ async function runBack({ page, timeout }) {
 // null pageId, as openPage does) and lets the next step assert where it
 // landed.
 async function runGoto({ page, step, origin, timeout }) {
-  const { pageId, urlQuery } = type.isString(step.goto) ? { pageId: step.goto } : step.goto;
-  const url = buildPageUrl({ origin, pageId, urlQuery });
+  const { pageId, pathParams, urlQuery } = type.isString(step.goto)
+    ? { pageId: step.goto }
+    : step.goto;
+  let url;
+  try {
+    url = buildPageUrl({
+      origin,
+      pageId,
+      path: readPagePath({ pageId }),
+      pathParams,
+      urlQuery,
+    });
+  } catch (error) {
+    throw new JourneyStepError(`Could not open page "${pageId}": ${error.message}`, {
+      expected: `page "${pageId}" to load`,
+      actual: error.message,
+    });
+  }
   try {
     await page.goto(url, { waitUntil: 'load', timeout });
   } catch (error) {

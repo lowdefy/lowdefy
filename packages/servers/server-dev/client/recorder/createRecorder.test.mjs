@@ -57,6 +57,11 @@ function start(recording = { enabled: true }, lowdefy = { user: { roles: ['admin
   });
 }
 
+// The page instance on screen, as Routing hands it to the Recorder.
+function page(pageId, pathParams = {}) {
+  return { pageId, pathParams, instanceKey: `page:${pageId}:${JSON.stringify(pathParams)}` };
+}
+
 function sentBodies() {
   return fetch.mock.calls.map(([, init]) => JSON.parse(init.body));
 }
@@ -88,8 +93,8 @@ test('createRecorder subscribes once with state and posts records as keepalive f
   recorder = start();
   expect(registry.subscribe).toHaveBeenCalledTimes(1);
   expect(registry.listeners[0].options).toEqual({ state: true });
-  recorder.pageview('tickets');
-  recorder.pageRendered({ pageId: 'tickets', buildId: null });
+  recorder.pageview({ path: 'tickets' });
+  recorder.pageShown(page('tickets'));
   document.getElementById('save').click();
   await window.__lowdefyRecorder.flush();
   expect(fetch).toHaveBeenCalledTimes(1);
@@ -130,8 +135,8 @@ test('an interaction whose hold closes after a config reload keeps the build it 
   recorder = start({ enabled: true }, lowdefy);
   const source = new EventTarget();
   recorder.attachStream(source);
-  recorder.pageview('tickets');
-  lowdefy._devPageRendered({ pageId: 'tickets', buildId: '2026-10-03T14:02:00.000Z' });
+  recorder.pageview({ path: 'tickets' });
+  recorder.pageShown(page('tickets'));
   document.getElementById('save').click();
   lowdefy._devBuildId = '2026-10-03T14:05:00.000Z';
   source.dispatchEvent(new Event('reload'));
@@ -227,11 +232,9 @@ test('a failed send is dropped silently', async () => {
 test('stop unsubscribes, removes listeners and the flush hook', () => {
   const lowdefy = { user: { roles: ['admin'] } };
   recorder = start({ enabled: true }, lowdefy);
-  expect(lowdefy._devPageRendered).toEqual(expect.any(Function));
   recorder.stop();
   expect(registry.listeners).toHaveLength(0);
   expect(window.__lowdefyRecorder).toBeUndefined();
-  expect(lowdefy._devPageRendered).toBeUndefined();
   document.getElementById('save').click();
   recorder = null;
   expect(fetch).not.toHaveBeenCalled();
@@ -240,45 +243,76 @@ test('stop unsubscribes, removes listeners and the flush hook', () => {
 const BUILD_A = '2026-10-03T14:02:00.000Z';
 const BUILD_B = '2026-10-03T14:05:00.000Z';
 
-test('a pageview recorded before its page config renders carries the build that config rendered under', async () => {
+test('a pageview waits for its page to be shown and carries the build that page rendered under', async () => {
   const lowdefy = { user: { roles: ['admin'] } };
   recorder = start({ enabled: true }, lowdefy);
-  recorder.pageview('tickets');
+  recorder.pageview({ path: 'tickets' });
   await window.__lowdefyRecorder.flush();
   expect(fetch).not.toHaveBeenCalled();
   lowdefy._devBuildId = BUILD_A;
-  lowdefy._devPageRendered({ pageId: 'tickets', buildId: BUILD_A });
+  recorder.pageShown(page('tickets'));
   await window.__lowdefyRecorder.flush();
   const [record] = sentBodies()[0].records;
-  expect(record).toMatchObject({ kind: 'pageview', build: BUILD_A });
+  expect(record).toMatchObject({ kind: 'pageview', page_id: 'tickets', build: BUILD_A });
 });
 
 test('a navigation carries the build of the new page config, not the one the previous page ran on', async () => {
   const lowdefy = { user: { roles: ['admin'] }, _devBuildId: BUILD_A };
   recorder = start({ enabled: true }, lowdefy);
-  recorder.pageview('tickets');
-  lowdefy._devPageRendered({ pageId: 'tickets', buildId: BUILD_A });
-  recorder.pageview('orders');
+  recorder.pageview({ path: 'tickets' });
+  recorder.pageShown(page('tickets'));
+  recorder.pageview({ path: 'orders' });
   lowdefy._devBuildId = BUILD_B;
-  lowdefy._devPageRendered({ pageId: 'orders', buildId: BUILD_B });
+  recorder.pageShown(page('orders'));
   await window.__lowdefyRecorder.flush();
   expect(sentBodies()[0].records.map((record) => record.build)).toEqual([BUILD_A, BUILD_B]);
 });
 
-test('a config reload re-render adds no pageview, and a page left before it rendered carries build null', async () => {
-  const lowdefy = { user: { roles: ['admin'] } };
+test('a path left before its page was shown is not recorded', async () => {
+  const lowdefy = { user: { roles: ['admin'] }, _devBuildId: BUILD_A };
   recorder = start({ enabled: true }, lowdefy);
-  recorder.pageview('tickets');
-  lowdefy._devPageRendered({ pageId: 'tickets', buildId: BUILD_A });
-  lowdefy._devPageRendered({ pageId: 'tickets', buildId: BUILD_B });
-  recorder.pageview('orders');
-  lowdefy._devPageRendered({ pageId: 'tickets', buildId: BUILD_B });
-  recorder.pageview('settings');
+  recorder.pageview({ path: 'tickets' });
+  recorder.pageShown(page('tickets'));
+  recorder.pageview({ path: 'orders' });
+  recorder.pageview({ path: 'settings' });
   window.dispatchEvent(new Event('pagehide'));
   await Promise.resolve();
-  expect(sentBodies()[0].records.map((record) => [record.kind, record.build])).toEqual([
-    ['pageview', BUILD_A],
-    ['pageview', null],
-    ['pageview', null],
+  expect(sentBodies()[0].records.map((record) => record.page_id)).toEqual(['tickets']);
+});
+
+test('coming back to the page still on screen is its visit at once', async () => {
+  const lowdefy = { user: { roles: ['admin'] }, _devBuildId: BUILD_A };
+  recorder = start({ enabled: true }, lowdefy);
+  recorder.pageview({ path: 'tickets' });
+  recorder.pageShown(page('tickets'));
+  recorder.pageview({ path: 'broken' });
+  recorder.pageview({ path: 'tickets' });
+  await window.__lowdefyRecorder.flush();
+  expect(sentBodies()[0].records.map((record) => [record.kind, record.page_id])).toEqual([
+    ['pageview', 'tickets'],
+    ['pageview', 'tickets'],
   ]);
+});
+
+test('a visit to a patterned page records the page and path values of the page shown', async () => {
+  const lowdefy = { user: { roles: ['admin'] }, _devBuildId: BUILD_A };
+  recorder = start({ enabled: true }, lowdefy);
+  recorder.pageview({ path: 'tickets/s/1' });
+  recorder.pageShown(page('ticket', { space: 's', ticket_id: '1' }));
+  recorder.pageview({ path: 'tickets/s/2' });
+  recorder.pageShown(page('ticket', { space: 's', ticket_id: '2' }));
+  await window.__lowdefyRecorder.flush();
+  expect(
+    sentBodies()[0].records.map((record) => [record.kind, record.page_id, record.path_params])
+  ).toEqual([
+    ['pageview', 'ticket', { space: 's', ticket_id: '1' }],
+    ['pageview', 'ticket', { space: 's', ticket_id: '2' }],
+  ]);
+});
+
+test('a page shown with no pageview pending records nothing', async () => {
+  recorder = start();
+  recorder.pageShown(page('tickets'));
+  await window.__lowdefyRecorder.flush();
+  expect(fetch).not.toHaveBeenCalled();
 });

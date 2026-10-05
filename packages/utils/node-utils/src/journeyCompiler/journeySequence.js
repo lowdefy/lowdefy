@@ -14,38 +14,26 @@
   limitations under the License.
 */
 
-import { parsePageId, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
 import { getStepKey } from '../journeyGrammar/validateJourneySteps.js';
 import stepIdentity from './stepIdentity.js';
 
 const INTERACTION_VERBS = ['click', 'select', 'fill', 'press', 'back', 'open'];
 
-// The page a goto, or an expect.url whose path names a page, moves the journey
-// to; null for every other step.
+// The page a goto moves the journey to; null for every other step.
 function pageNamedBy({ step }) {
-  const verb = getStepKey(step);
-  const params = step[verb];
-  if (verb === 'goto') {
-    if (type.isString(params)) return params;
-    return type.isString(params?.pageId) ? params.pageId : null;
-  }
-  // Only a contains that starts with a slash is an app path; anything else is a
-  // fragment of a URL (a query, part of a path) and names no page.
-  if (
-    verb === 'expect' &&
-    type.isString(params?.url?.contains) &&
-    params.url.contains.startsWith('/')
-  ) {
-    return parsePageId(params.url.contains) ?? null;
-  }
-  return null;
+  if (getStepKey(step) !== 'goto') return null;
+  const params = step.goto;
+  if (type.isString(params)) return params;
+  return type.isString(params?.pageId) ? params.pageId : null;
 }
 
 // What a journey does, step by step: one { page, identity } per interaction,
 // read statically from any journey (a compiled segment, a candidate, a
-// committed journey). The page starts at pageId and moves on at a goto and at
-// an expect.url whose path names a page. Expectations and waits add nothing,
+// committed journey). The page starts at pageId and moves on at a goto. An
+// expect.url names no page: its path may hold path values, and only the route
+// table could say which page it is. Expectations and waits add nothing,
 // so a production segment (no expectations) and a dev segment of the same flow
 // read the same sequence. Clustering hashes it, and coverage matches journeys
 // to recorded segments with it.
@@ -54,8 +42,8 @@ function pageNamedBy({ step }) {
 // on its target (stepIdentity), and is not folded into a select with the
 // option click after it. An `email` leaves the app for the message, so the
 // steps after it act on the email, which no recording sees: they add nothing
-// until a goto or expect.url names a page again, and with no such step the
-// journey is read no further. A fill with fromEmail types into the app, so it
+// until a goto names a page again, and with no such step the journey is read
+// no further. A fill with fromEmail types into the app, so it
 // reads as any fill.
 function journeySequence({ pageId, steps }) {
   const sequence = [];

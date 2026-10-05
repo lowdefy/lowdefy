@@ -48,6 +48,9 @@ function buildInteractionRecord({ interaction, paired = [], session, roles }) {
   }
   if (interaction.kind === 'pageview') {
     record.url = interaction.url;
+    if (!type.isNone(interaction.pathParams)) {
+      record.path_params = interaction.pathParams;
+    }
   }
   if (interaction.kind === 'change') {
     record.value = interaction.value ?? null;

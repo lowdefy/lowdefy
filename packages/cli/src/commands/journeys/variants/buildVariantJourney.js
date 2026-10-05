@@ -22,7 +22,7 @@ import { type } from '@lowdefy/helpers';
 function buildVariantJourney({ journey, variant }) {
   const result = { name: `${journey.name} — ${variant.kind}: ${variant.detail}` };
   const settings = { ...journey, ...variant.overrides };
-  ['pageId', 'user', 'urlQuery', 'timeout', 'data'].forEach((key) => {
+  ['pageId', 'pathParams', 'user', 'urlQuery', 'timeout', 'data'].forEach((key) => {
     if (!type.isUndefined(settings[key])) {
       result[key] = settings[key];
     }

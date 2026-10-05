@@ -29,7 +29,10 @@ import DevStreamContext from './DevStreamContext.js';
 // It listens for `reload` on the tab's one shared stream and flushes there,
 // only to send promptly: each record carries the build of the page config it
 // was made on (lowdefy._devBuildId, set by Page.jsx).
-function Recorder({ basePath, lowdefy, pageId, recording }) {
+// `path` is the path Page fetches, so a navigation starts a pageview; `page`
+// is the page instance on screen, { pageId, pathParams, instanceKey }, as the
+// fetched page names it, which completes it.
+function Recorder({ basePath, lowdefy, page, path, recording }) {
   const { source } = useContext(DevStreamContext);
   const recorderRef = useRef(null);
 
@@ -53,8 +56,12 @@ function Recorder({ basePath, lowdefy, pageId, recording }) {
   }, [recording?.enabled]);
 
   useEffect(() => {
-    recorderRef.current?.pageview(pageId);
-  }, [pageId, recording?.enabled]);
+    recorderRef.current?.pageview({ path });
+  }, [path, recording?.enabled]);
+
+  useEffect(() => {
+    if (page !== null) recorderRef.current?.pageShown(page);
+  }, [page?.instanceKey, recording?.enabled]);
 
   useEffect(() => {
     return recorderRef.current?.attachStream(source);

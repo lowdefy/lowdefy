@@ -31,6 +31,7 @@ const EVENTS = [
 const LOWDEFY_PROPERTIES = [
   'lowdefy_build_id',
   'lowdefy_page_id',
+  'lowdefy_path_params',
   'lowdefy_block_id',
   'lowdefy_block_ids',
   'lowdefy_block_type',

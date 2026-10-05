@@ -28,6 +28,7 @@ import openDataSession from './dataSets/openDataSession.js';
 import openJourney from './openJourney.js';
 import readBuildArtifact from './readBuildArtifact.js';
 import readDevAuthMode from './readDevAuthMode.js';
+import readPagePath from './readPagePath.js';
 import resolveJourneyDataSet from './dataSets/resolveJourneyDataSet.js';
 import runJourneySteps from './runJourneySteps.js';
 import selectFinalState from './selectFinalState.js';
@@ -68,10 +69,12 @@ function defaultReadConfigFile(name) {
 // decides who each actor is. `data` names a data set: the journey runs on a
 // fresh database of its own, loaded with it, and a string `user` (or an `as`
 // name) names one of its users. Its problems come back as { error, refused }
-// before any browser opens.
+// before any browser opens. `pathParams` fill the placeholders of the page's
+// path; one left without a value is an error before any browser opens.
 async function runJourney({
   origin,
   pageId,
+  pathParams,
   steps,
   user,
   urlQuery,
@@ -94,6 +97,16 @@ async function runJourney({
   if (type.isNone(pageId) || !type.isString(pageId)) {
     return {
       error: `runJourney requires a "pageId" string. Received ${JSON.stringify(pageId)}.`,
+    };
+  }
+  if (
+    !type.isNone(pathParams) &&
+    (!type.isObject(pathParams) || !Object.values(pathParams).every(type.isString))
+  ) {
+    return {
+      error: `runJourney requires "pathParams" to be an object of strings, one per path placeholder. Received ${JSON.stringify(
+        pathParams
+      )}.`,
     };
   }
   if (!type.isNone(urlQuery) && !type.isObject(urlQuery)) {
@@ -123,6 +136,13 @@ async function runJourney({
   if (!type.isUndefined(mailError)) {
     return { error: mailError };
   }
+  const pagePath = readPagePath({ pageId });
+  let url;
+  try {
+    url = buildPageUrl({ origin, pageId, path: pagePath, pathParams, urlQuery });
+  } catch (error) {
+    return { error: error.message, refused: true };
+  }
   const resolved = await resolveJourneyDataSet({
     data,
     user,
@@ -141,6 +161,9 @@ async function runJourney({
         origin,
         basePath,
         pageId,
+        pagePath,
+        pathParams,
+        url,
         user: resolved.user,
         dataSet,
         urlQuery,
@@ -162,6 +185,9 @@ async function runJourneyInBrowser({
   origin,
   basePath,
   pageId,
+  pagePath,
+  pathParams,
+  url,
   user,
   dataSet,
   urlQuery,
@@ -199,7 +225,6 @@ async function runJourneyInBrowser({
     loadMs = Date.now() - loadStart;
   }
 
-  const url = buildPageUrl({ origin, pageId, urlQuery });
   let journey;
   try {
     const opened = await openJourney({
@@ -207,6 +232,8 @@ async function runJourneyInBrowser({
       origin,
       basePath,
       pageId,
+      path: pagePath,
+      pathParams,
       user,
       urlQuery,
       width,

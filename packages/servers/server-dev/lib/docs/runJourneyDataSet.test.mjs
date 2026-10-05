@@ -15,14 +15,19 @@
 */
 
 import { jest } from '@jest/globals';
+import { buildPagePath } from '@lowdefy/helpers';
 
 const mockOpenPage = jest.fn();
 const mockGetBrowser = jest.fn();
 jest.unstable_mockModule('./getBrowser.js', () => ({
   getBrowser: mockGetBrowser,
   openPage: mockOpenPage,
-  buildPageUrl: ({ origin, pageId }) => `${origin}/${pageId}`,
+  buildPageUrl: ({ origin, pageId, path, pathParams }) =>
+    `${origin}/${buildPagePath({ pageId, path, pathParams })}`,
 }));
+// The route table the skeleton build writes; a page it does not hold has no pattern.
+const mockReadPagePath = jest.fn(() => undefined);
+jest.unstable_mockModule('./readPagePath.js', () => ({ default: mockReadPagePath }));
 const mockResolveJourneyDataSet = jest.fn();
 jest.unstable_mockModule('./dataSets/resolveJourneyDataSet.js', () => ({
   default: mockResolveJourneyDataSet,

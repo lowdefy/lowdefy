@@ -150,6 +150,14 @@ const journeySchema = {
       errorMessage:
         'Journey "user" should be an inline user object, e.g. {roles: [admin]}, "none" to sign in through the app, or the name of a user in the journey\'s data set.',
     },
+    pathParams: {
+      type: 'object',
+      additionalProperties: { type: 'string' },
+      description:
+        "Values for the placeholders of the page's path, one string per placeholder, read by _path_params.",
+      errorMessage:
+        'Journey "pathParams" should be an object of strings, one per placeholder of the page\'s path.',
+    },
     urlQuery: {
       type: 'object',
       errorMessage: { type: 'Journey "urlQuery" should be an object.' },

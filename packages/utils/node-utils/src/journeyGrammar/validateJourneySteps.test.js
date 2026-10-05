@@ -31,6 +31,7 @@ test('validateJourneySteps accepts every step of the grammar', () => {
       { goto: 'dashboard' },
       { goto: { pageId: 'invoice' } },
       { goto: { pageId: 'invoice', urlQuery: { id: 'inv-1' } } },
+      { goto: { pageId: 'ticket', pathParams: { space: 's', ticket_id: '1' } } },
       { email: { to: 'ada@example.test' } },
       { email: { to: 'ada@example.test', subject: 'Verify' } },
       { fill: { blockId: 'otp', fromEmail: { to: 'ada@example.test', match: '\\b\\d{6}\\b' } } },
@@ -207,16 +208,30 @@ test.each([
   ],
   [{ expect: { title: { equals: 7 } } }, /Step "expect.title" requires .* Received \{"equals":7\}/],
   [{ expect: { title: { is: 'Tasks' } } }, /Step "expect.title" requires/],
-  [{ goto: '' }, /Step "goto" requires a pageId string or \{ pageId, urlQuery \}. Received ""/],
-  [{ goto: 7 }, /Step "goto" requires a pageId string or \{ pageId, urlQuery \}. Received 7/],
+  [
+    { goto: '' },
+    /Step "goto" requires a pageId string or \{ pageId, pathParams, urlQuery \}. Received ""/,
+  ],
+  [
+    { goto: 7 },
+    /Step "goto" requires a pageId string or \{ pageId, pathParams, urlQuery \}. Received 7/,
+  ],
   [{ goto: { urlQuery: { id: 1 } } }, /Step "goto" requires a "pageId" string. Received undefined/],
   [
     { goto: { pageId: 'invoice', urlQuery: 'id=1' } },
     /Step "goto" requires "urlQuery" to be an object. Received "id=1"/,
   ],
   [
+    { goto: { pageId: 'ticket', pathParams: 'tickets/s/1' } },
+    /Step "goto" requires "pathParams" to be an object of strings, one per path placeholder. Received "tickets\/s\/1"/,
+  ],
+  [
+    { goto: { pageId: 'ticket', pathParams: { ticket_id: 1 } } },
+    /Step "goto" requires "pathParams" to be an object of strings, one per path placeholder. Received \{"ticket_id":1\}/,
+  ],
+  [
     { goto: { pageId: 'invoice', url: '/invoice' } },
-    /Step "goto" has unknown key "url". Keys are: pageId, urlQuery/,
+    /Step "goto" has unknown key "url". Keys are: pageId, pathParams, urlQuery/,
   ],
   [{ email: 'ada@example.test' }, /Step "email" requires \{ to, subject \}/],
   [{ email: { subject: 'Verify' } }, /Step "email" requires a "to" address string/],

@@ -285,13 +285,14 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
 
   registerDevTool(
     'lowdefy_run_journey',
-    async ({ pageId, steps, user, urlQuery, state, timeout, data }) => {
+    async ({ pageId, pathParams, steps, user, urlQuery, state, timeout, data }) => {
       if (!origin) {
         return notFoundResult('Journey unavailable: server origin unknown for this transport.');
       }
       const result = await runJourney({
         origin,
         pageId,
+        pathParams,
         steps,
         user,
         urlQuery,

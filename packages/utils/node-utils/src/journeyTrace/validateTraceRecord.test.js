@@ -126,6 +126,25 @@ test('validateTraceRecord requires a url on a pageview', () => {
   expect(check(pageview)).toBeUndefined();
 });
 
+test('validateTraceRecord accepts path_params of strings on a pageview only', () => {
+  const pageview = {
+    ...sample,
+    kind: 'pageview',
+    page_id: 'ticket',
+    url: '/tickets/s/1',
+    path_params: { space: 's', ticket_id: '1' },
+    target: null,
+    event: null,
+  };
+  expect(check(pageview)).toBeUndefined();
+  expect(check({ ...pageview, path_params: { ticket_id: 1 } })).toBe(
+    'Trace record "path_params" should be an object of strings, one per path placeholder. Received {"ticket_id":1}.'
+  );
+  expect(check({ ...sample, path_params: { ticket_id: '1' } })).toBe(
+    'Trace record "path_params" appears only on "pageview" records. Received {"ticket_id":"1"} on a click record.'
+  );
+});
+
 test('validateTraceRecord requires a target on click and change', () => {
   expect(check({ ...sample, target: null })).toBe(
     'Trace record "target" should be an object. Received null.'

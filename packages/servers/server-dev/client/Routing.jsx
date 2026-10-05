@@ -18,7 +18,6 @@ import React, { Suspense, useCallback, useEffect, useState } from 'react';
 
 import Head from '@lowdefy/client/adapters/Head.js';
 import createLinkComponent from '@lowdefy/client/adapters/Link.js';
-import { lookupPath } from '@lowdefy/engine';
 
 import BuildingPage from '../lib/client/BuildingPage.jsx';
 import RestartingPage from '../lib/client/RestartingPage.jsx';
@@ -80,11 +79,6 @@ function Routing({ auth, lowdefy, recording, router }) {
   if (redirect) {
     return '';
   }
-  // The journey recorder names the page the path memory holds for this path. The memory is
-  // created when the first page renders; until then the path is read as a page id, as lookupPath
-  // reads a path it has not seen.
-  const recorderPageId = lowdefy.pathMemory ? lookupPath({ lowdefy, path }).pageId : path;
-
   return (
     <>
       <FeedbackMount basePath={router.basePath} lowdefy={lowdefy} page={shownPage} />
@@ -98,7 +92,8 @@ function Routing({ auth, lowdefy, recording, router }) {
             <Recorder
               basePath={router.basePath}
               lowdefy={lowdefy}
-              pageId={recorderPageId}
+              page={shownPage}
+              path={path}
               recording={recording}
             />
             {/* Rendered here, not in Page — Page sits below the Suspense boundary

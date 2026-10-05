@@ -49,14 +49,6 @@ const Page = ({
     }
   }, [pageConfig?._warnings, lowdefy]);
 
-  // Tells the recorder which build this page's config was served under, so the
-  // pageview it holds for this route change carries it (recorder/createRecorder.js).
-  useEffect(() => {
-    if (pageConfig) {
-      lowdefy._devPageRendered?.({ pageId: data.pageId, buildId: pageConfig._buildId ?? null });
-    }
-  }, [pageConfig, data?.pageId, lowdefy]);
-
   // Tells the in-page dev tools which page instance is on screen, from the fetched page.
   useEffect(() => {
     if (pageConfig) {

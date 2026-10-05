@@ -28,12 +28,12 @@ import validateRecordingParam from '../../../lib/docs/validateRecordingParam.js'
 import validateStateSelection from '../../../lib/docs/validateStateSelection.js';
 
 // A failed journey is a 200 with passed: false — it is the result the caller
-// asked for. Malformed input (pageId, steps, user, data) is a 400 before any browser
+// asked for. Malformed input (pageId, pathParams, steps, user, data) is a 400 before any browser
 // opens; only a render that could not run at all is a 502, so it is not
 // mistaken for a journey that failed on an assertion.
 async function docsJourneyHandler(c) {
   const body = await c.req.json().catch(() => ({}));
-  const { pageId, steps, urlQuery, state, timeout } = body;
+  const { pageId, pathParams, steps, urlQuery, state, timeout } = body;
   if (type.isNone(pageId) || !type.isString(pageId)) {
     return c.json(
       {
@@ -47,6 +47,19 @@ async function docsJourneyHandler(c) {
   const { error: stepsError } = validateJourneySteps({ steps });
   if (stepsError) {
     return c.json({ error: stepsError }, 400);
+  }
+  if (
+    !type.isNone(pathParams) &&
+    (!type.isObject(pathParams) || !Object.values(pathParams).every(type.isString))
+  ) {
+    return c.json(
+      {
+        error: `The "pathParams" param must be an object of strings, one per path placeholder. Received ${JSON.stringify(
+          pathParams
+        )}.`,
+      },
+      400
+    );
   }
   if (!type.isNone(urlQuery) && !type.isObject(urlQuery)) {
     return c.json(
@@ -124,6 +137,7 @@ async function docsJourneyHandler(c) {
     result = await runJourney({
       origin,
       pageId,
+      pathParams,
       steps,
       user,
       urlQuery,

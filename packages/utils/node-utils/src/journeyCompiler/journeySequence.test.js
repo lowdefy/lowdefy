@@ -76,7 +76,7 @@ test('journeySequence lists only interaction steps, on the page they happen on',
   ]);
 });
 
-test('journeySequence moves pages at a goto and at an expect.url naming a page', () => {
+test('journeySequence moves pages at a goto and never at an expect.url', () => {
   const sequence = journeySequence({
     pageId: 'home',
     steps: [
@@ -89,7 +89,7 @@ test('journeySequence moves pages at a goto and at an expect.url naming a page',
       { back: true },
     ],
   });
-  expect(sequence.map((entry) => entry.page)).toEqual(['home', 'orders', 'settings', 'home']);
+  expect(sequence.map((entry) => entry.page)).toEqual(['home', 'home', 'settings', 'home']);
 });
 
 test('journeySequence reads a production-style and a dev-style segment of one flow the same', () => {
@@ -142,7 +142,7 @@ test('journeySequence does not fold an open and the option click after it into a
   ).toEqual(['click', 'click']);
 });
 
-test('journeySequence skips the steps on an email and moves to the page the link opened', () => {
+test('journeySequence skips the steps on an email until a goto opens a page', () => {
   expect(
     journeySequence({
       pageId: 'home',
@@ -152,7 +152,7 @@ test('journeySequence skips the steps on an email and moves to the page the link
         { click: 'submit' },
         { email: { to: 'ada@example.com', subject: 'Verify your email' } },
         { click: { text: 'Verify' } },
-        { expect: { url: { contains: '/welcome' } } },
+        { goto: 'welcome' },
         { click: 'start' },
       ],
     })
@@ -171,7 +171,7 @@ test('journeySequence reads no further after an email with no later page move', 
         { click: 'submit' },
         { email: { to: 'ada@example.com' } },
         { click: { text: 'Verify' } },
-        { expect: { text: 'Welcome' } },
+        { expect: { url: { contains: '/welcome' } } },
         { click: 'start' },
       ],
     })
@@ -194,7 +194,7 @@ test('journeySequence reads a fill with fromEmail as a fill', () => {
   ).toEqual([{ page: 'verify', identity: '["fill","code",null,null]' }]);
 });
 
-test('journeySequence moves the page only at an expect.url contains that is an app path', () => {
+test('journeySequence reads no page from an expect.url path, which may hold path values', () => {
   const sequence = journeySequence({
     pageId: 'orders',
     steps: [
@@ -202,9 +202,9 @@ test('journeySequence moves the page only at an expect.url contains that is an a
       { click: 'a' },
       { expect: { url: { contains: '/' } } },
       { click: 'b' },
-      { expect: { url: { contains: '/settings/?tab=items' } } },
+      { expect: { url: { contains: '/tickets/s/1' } } },
       { click: 'c' },
     ],
   });
-  expect(sequence.map((entry) => entry.page)).toEqual(['orders', 'orders', 'settings']);
+  expect(sequence.map((entry) => entry.page)).toEqual(['orders', 'orders', 'orders']);
 });
