@@ -58,7 +58,7 @@ test('validateAuthPagePaths accepts auth pages with fixed paths, absolute URLs a
   const errors = run({
     auth: {
       authPages: {
-        signIn: '/login',
+        signIn: '/sign-in',
         signUp: '/signup',
         error: 'https://example.com/auth-error',
       },
@@ -67,6 +67,27 @@ test('validateAuthPagePaths accepts auth pages with fixed paths, absolute URLs a
       { id: 'login', type: 'Box', path: 'sign-in' },
       { id: 'signup', type: 'Box' },
       { id: 'ticket', type: 'Box', path: 'tickets/{id}' },
+    ],
+  });
+  expect(errors).toEqual([]);
+});
+
+test('validateAuthPagePaths refuses an auth page URL that names a page served at its path', () => {
+  const errors = run({
+    auth: { authPages: { signIn: '/login?next=home' } },
+    pages: [{ id: 'login', type: 'Box', path: 'sign-in' }],
+  });
+  expect(errors).toEqual([
+    'Auth "authPages.signIn" is "/login?next=home", but page "login" is served at its path "/sign-in", and no page is served at "/login?next=home". Set authPages.signIn to "/sign-in".',
+  ]);
+});
+
+test('validateAuthPagePaths accepts an auth page URL that a page path matches over another page id', () => {
+  const errors = run({
+    auth: { authPages: { signIn: '/login' } },
+    pages: [
+      { id: 'login', type: 'Box', path: 'old-login' },
+      { id: 'sign-in', type: 'Box', path: 'login' },
     ],
   });
   expect(errors).toEqual([]);

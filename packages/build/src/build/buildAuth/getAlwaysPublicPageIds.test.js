@@ -16,12 +16,16 @@
 
 import getAlwaysPublicPageIds from './getAlwaysPublicPageIds.js';
 
-// The app's routes: each page at its id, except the sign-in page, which has a
+// The app's routes: each page at its id, except the account page, which has a
 // path of its own.
-const routes = ['verify-email', 'two-factor-challenge', 'two-factor-enrol', 'module-page'].map(
-  (pageId) => ({ pageId, path: pageId })
-);
-routes.push({ pageId: 'login', path: 'sign-in' });
+const routes = [
+  'login',
+  'verify-email',
+  'two-factor-challenge',
+  'two-factor-enrol',
+  'module-page',
+].map((pageId) => ({ pageId, path: pageId }));
+routes.push({ pageId: 'account', path: 'sign-in' });
 
 test('getAlwaysPublicPageIds derives page ids from authPages role values', () => {
   const components = {
@@ -79,7 +83,13 @@ test('getAlwaysPublicPageIds unions module-contributed public pages with role pa
 test('getAlwaysPublicPageIds maps an authPages URL to the page whose path it is', () => {
   const components = { auth: { authPages: { signIn: '/sign-in' } } };
   const res = getAlwaysPublicPageIds({ components, context: { routes } });
-  expect(res).toEqual(['login']);
+  expect(res).toEqual(['account']);
+});
+
+test('getAlwaysPublicPageIds lists no page for an authPages URL naming a page served at its path', () => {
+  const components = { auth: { authPages: { signIn: '/account' } } };
+  const res = getAlwaysPublicPageIds({ components, context: { routes } });
+  expect(res).toEqual([]);
 });
 
 test('getAlwaysPublicPageIds lists no page for an authPages URL no page is served at', () => {

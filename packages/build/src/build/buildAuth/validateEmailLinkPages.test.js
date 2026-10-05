@@ -33,8 +33,8 @@ const emailAuth = {
 
 test('validateEmailLinkPages warns for each emailed link page the app is missing', () => {
   expect(run({ auth: emailAuth, pages: [{ id: 'home' }] })).toEqual([
-    'Auth "authPages.verifyEmail" is "/verify-email", but the app has no page with path or id "verify-email". Email verification links land there unless the SignUp or SendVerificationEmail action sets a callbackUrl. Add the page, or set authPages.verifyEmail to an existing one.',
-    'Auth "authPages.resetPassword" is "/reset-password", but the app has no page with path or id "reset-password". Password reset links land there unless the RequestPasswordReset action sets redirectTo. Add the page, or set authPages.resetPassword to an existing one.',
+    'Auth "authPages.verifyEmail" is "/verify-email", but no page is served at "/verify-email". Email verification links land there unless the SignUp or SendVerificationEmail action sets a callbackUrl. Add the page, or set authPages.verifyEmail to an existing one.',
+    'Auth "authPages.resetPassword" is "/reset-password", but no page is served at "/reset-password". Password reset links land there unless the RequestPasswordReset action sets redirectTo. Add the page, or set authPages.resetPassword to an existing one.',
   ]);
 });
 
@@ -42,6 +42,15 @@ test('validateEmailLinkPages warns only for the missing reset password page', ()
   expect(run({ auth: emailAuth, pages: [{ id: 'verify-email' }] })).toEqual([
     expect.stringContaining('Auth "authPages.resetPassword" is "/reset-password"'),
   ]);
+});
+
+test('validateEmailLinkPages warns when the URL names a page served at a path of its own', () => {
+  expect(
+    run({
+      auth: emailAuth,
+      pages: [{ id: 'verify-email', path: 'verify' }, { id: 'reset-password' }],
+    })
+  ).toEqual([expect.stringContaining('but no page is served at "/verify-email"')]);
 });
 
 test.each([

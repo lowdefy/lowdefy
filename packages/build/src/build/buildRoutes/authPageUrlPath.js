@@ -16,18 +16,14 @@
 
 import { type } from '@lowdefy/helpers';
 
-import authPageUrlPath from './authPageUrlPath.js';
-
-// The route an auth page URL ("/login", "/crm/login?next=x") is served by: the
-// route whose path is the URL's path, as the server matches it. A page without
-// a path has its id as its route path. Returns null for an absolute URL, which
-// points outside the app, and for a URL no page is served at.
-function findAuthPageRoute({ routes, url }) {
-  const urlPath = authPageUrlPath({ url });
-  if (type.isNull(urlPath)) {
+// The app path an auth page URL names, without the leading "/", query or hash
+// ("/crm/login?next=x" is "crm/login"). Null for an absolute URL, which points
+// outside the app.
+function authPageUrlPath({ url }) {
+  if (!type.isString(url) || !/^\/[^/]/.test(url)) {
     return null;
   }
-  return routes.find((route) => route.path === urlPath) ?? null;
+  return url.slice(1).split(/[?#]/)[0];
 }
 
-export default findAuthPageRoute;
+export default authPageUrlPath;

@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigWarning } from '@lowdefy/errors';
 
+import authPageUrlPath from '../buildRoutes/authPageUrlPath.js';
 import findAuthPageRoute from '../buildRoutes/findAuthPageRoute.js';
 
 // The auth pages an emailed link lands on when the action that sends it names
@@ -44,18 +45,17 @@ function validateEmailLinkPages({ components, context }) {
     return;
   }
   EMAIL_LINK_PAGES.forEach(({ role, flow, override }) => {
-    const path = auth.authPages[role];
+    const url = auth.authPages[role];
     // An absolute URL points outside the app, so there is no page to look for.
-    if (!type.isString(path) || !/^\/[^/]/.test(path)) {
+    if (type.isNull(authPageUrlPath({ url }))) {
       return;
     }
-    if (!type.isNone(findAuthPageRoute({ routes: context.routes, url: path }))) {
+    if (!type.isNull(findAuthPageRoute({ routes: context.routes, url }))) {
       return;
     }
-    const urlPath = path.slice(1).split(/[?#]/)[0];
     context.handleWarning(
       new ConfigWarning(
-        `Auth "authPages.${role}" is "${path}", but the app has no page with path or id "${urlPath}". ${flow} links land there unless ${override}. Add the page, or set authPages.${role} to an existing one.`,
+        `Auth "authPages.${role}" is "${url}", but no page is served at "${url}". ${flow} links land there unless ${override}. Add the page, or set authPages.${role} to an existing one.`,
         { configKey: auth.authPages['~k'] ?? auth['~k'] }
       )
     );
