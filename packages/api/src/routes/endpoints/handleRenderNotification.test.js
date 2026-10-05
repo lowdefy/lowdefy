@@ -50,6 +50,7 @@ function createNotificationConfig(overrides = {}) {
 const routes = [
   { pageId: 'task-view', path: 'task-view', auth: {} },
   { pageId: 'ticket', path: 'tickets/{space}/{ticket_id}', auth: {} },
+  { pageId: 'notifications-link', path: 'notifications-link', auth: {} },
 ];
 
 function createMockReadConfigFile({ notificationConfig, app = {} }) {
@@ -683,4 +684,21 @@ test('RenderNotification errors when landingPage is not a page id', async () => 
   });
   expect(res.status).toBe('error');
   expect(res.error.message).toContain('properties.landingPage must evaluate to a page id');
+});
+
+test('RenderNotification errors when landingPage is a URL path rather than a page id', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const res = await runRoutine(context, createRoutineContext(), {
+    routine: createStep({
+      data: { contact, links: { button: { pageId: 'task-view' } } },
+      serverUrl: 'https://myapp.com',
+      landingPage: '/notifications-link',
+      recordId: 'rec-1',
+    }),
+  });
+  expect(res.status).toBe('error');
+  expect(res.error.message).toContain(
+    'properties.landingPage "/notifications-link" is not a page id. Pass the landing page\'s id, not its URL path.'
+  );
+  expect(mockRenderEmail).not.toHaveBeenCalled();
 });

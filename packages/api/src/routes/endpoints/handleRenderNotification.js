@@ -169,6 +169,15 @@ async function handleRenderNotification(context, routineContext, { step }) {
     }
   }
   const routes = await context.readConfigFile('routes.json');
+  if (!type.isNone(landingPage)) {
+    const landingPageId = type.isString(landingPage) ? landingPage : landingPage.pageId;
+    if (!routes.some((route) => route.pageId === landingPageId)) {
+      throw new ConfigError(
+        `RenderNotification step "${step.stepId}" properties.landingPage "${landingPageId}" is not a page id. Pass the landing page's id, not its URL path.`,
+        { configKey: step['~k'] }
+      );
+    }
+  }
   const resolvedItem = resolveNotificationLinks({
     item: data,
     dataKeys: Template.dataKeys ?? [],
