@@ -16,6 +16,8 @@
 
 import lookupPath from '../src/lookupPath.js';
 import rememberPath from '../src/rememberPath.js';
+import rememberTarget from '../src/rememberTarget.js';
+import resolveTarget from '../src/resolveTarget.js';
 
 const pattern = 'tickets/{space}/{ticket_id}';
 
@@ -57,4 +59,56 @@ test('lookupPath reads an unknown path as a page id', () => {
 test('lookupPath does not read inherited object keys as remembered paths', () => {
   const lowdefy = { pathMemory: new Map() };
   expect(lookupPath({ lowdefy, path: 'constructor' }).pageId).toEqual('constructor');
+});
+
+function createLowdefy() {
+  return {
+    home: { configured: false, pageId: 'ticket', pathParams: { space: 's', ticket_id: 9 } },
+    linkPaths: {},
+    pagePaths: { ticket: pattern },
+    pathMemory: new Map(),
+  };
+}
+
+test('rememberTarget records the page a resolved page target names under its path', () => {
+  const lowdefy = createLowdefy();
+  const target = resolveTarget({
+    lowdefy,
+    target: {
+      pageId: 'ticket',
+      pathParams: { space: 'support', ticket_id: 1 },
+      urlQuery: { a: 1 },
+    },
+  });
+  rememberTarget({ lowdefy, target });
+  expect([...lowdefy.pathMemory.entries()]).toEqual([
+    [
+      'tickets/support/1',
+      {
+        pageId: 'ticket',
+        pathParams: { space: 'support', ticket_id: '1' },
+        instanceKey: 'page:ticket#tickets/support/1',
+      },
+    ],
+  ]);
+  expect(lookupPath({ lowdefy, path: 'tickets/support/1' }).instanceKey).toEqual(
+    target.instanceKey
+  );
+});
+
+test('rememberTarget records a home target', () => {
+  const lowdefy = createLowdefy();
+  rememberTarget({ lowdefy, target: resolveTarget({ lowdefy, target: { home: true } }) });
+  expect(lowdefy.pathMemory.get('tickets/s/9')).toEqual({
+    pageId: 'ticket',
+    pathParams: { space: 's', ticket_id: '9' },
+    instanceKey: 'page:ticket#tickets/s/9',
+  });
+});
+
+test('rememberTarget writes nothing for a url target', () => {
+  const lowdefy = createLowdefy();
+  rememberTarget({ lowdefy, target: resolveTarget({ lowdefy, target: { url: '/tickets/s/1' } }) });
+  rememberTarget({ lowdefy, target: { kind: 'external', href: 'https://example.com/' } });
+  expect(lowdefy.pathMemory.size).toBe(0);
 });

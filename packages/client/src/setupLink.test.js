@@ -170,9 +170,14 @@ test('newTab wins over replace and scroll', () => {
   expect(lowdefy.calls.replace).toEqual([]);
 });
 
-test('a pageId link to a patterned page pushes the built path, remembers it and seeds its instance input', () => {
+test('a pageId link to a patterned page remembers it before the push and seeds its instance input', () => {
   const lowdefy = createFakeLowdefy();
   lowdefy.pagePaths = { ticket: 'tickets/{space}/{ticket_id}' };
+  const memoryAtPush = [];
+  lowdefy._internal.router.push = (args) => {
+    memoryAtPush.push([...lowdefy.pathMemory.keys()]);
+    lowdefy.calls.push.push(args);
+  };
 
   setupLink(lowdefy)({
     pageId: 'ticket',
@@ -183,10 +188,31 @@ test('a pageId link to a patterned page pushes the built path, remembers it and 
   expect(lowdefy.calls.push).toEqual([
     { pathname: '/tickets/support/1234', query: '', scroll: undefined },
   ]);
+  expect(memoryAtPush).toEqual([['tickets/support/1234']]);
+  expect(lowdefy.pathMemory.size).toBe(1);
   expect(lowdefy.pathMemory.get('tickets/support/1234')).toEqual({
     pageId: 'ticket',
     pathParams: { space: 'support', ticket_id: '1234' },
     instanceKey: 'page:ticket#tickets/support/1234',
   });
   expect(lowdefy.inputs['page:ticket#tickets/support/1234']).toEqual({ from: 'list' });
+});
+
+test('a newTab pageId link writes no path memory', () => {
+  const lowdefy = createFakeLowdefy();
+  lowdefy.pagePaths = { ticket: 'tickets/{space}/{ticket_id}' };
+
+  setupLink(lowdefy)({ pageId: 'ticket', pathParams: { space: 's', ticket_id: 1 }, newTab: true });
+
+  expect(lowdefy.calls.open).toEqual([['http://localhost/tickets/s/1', '_blank']]);
+  expect(lowdefy.pathMemory.size).toBe(0);
+});
+
+test('a url link writes no path memory', () => {
+  const lowdefy = createFakeLowdefy();
+
+  setupLink(lowdefy)({ url: '/tickets/s/1' });
+
+  expect(lowdefy.calls.push).toEqual([{ pathname: '/tickets/s/1', query: '', scroll: undefined }]);
+  expect(lowdefy.pathMemory.size).toBe(0);
 });

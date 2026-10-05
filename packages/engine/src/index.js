@@ -25,6 +25,7 @@ import getHomePathname from './getHomePathname.js';
 import getTrace from './trace/getTrace.js';
 import lookupPath from './lookupPath.js';
 import rememberPath from './rememberPath.js';
+import rememberTarget from './rememberTarget.js';
 import Requests from './Requests.js';
 import resolveTarget from './resolveTarget.js';
 import State from './State.js';
@@ -42,6 +43,7 @@ export {
   getTrace,
   lookupPath,
   rememberPath,
+  rememberTarget,
   Requests,
   resolveTarget,
   State,

@@ -396,7 +396,7 @@ function createPathsLowdefy({ linkPaths = {}, pagePaths = {} } = {}) {
   return lowdefy;
 }
 
-test('resolveTarget builds a patterned page path from pagePaths and remembers it', () => {
+test('resolveTarget builds a patterned page path from pagePaths without remembering it', () => {
   const lowdefy = createPathsLowdefy({ pagePaths: { ticket: 'tickets/{space}/{ticket_id}' } });
   const target = resolveTarget({
     lowdefy,
@@ -410,11 +410,23 @@ test('resolveTarget builds a patterned page path from pagePaths and remembers it
     pathParams: { space: 's', ticket_id: '1' },
     instanceKey: 'page:ticket#tickets/s/1',
   });
-  expect(lowdefy.pathMemory.get('tickets/s/1')).toEqual({
-    pageId: 'ticket',
-    pathParams: { space: 's', ticket_id: '1' },
-    instanceKey: 'page:ticket#tickets/s/1',
-  });
+  expect(lowdefy.pathMemory.size).toBe(0);
+});
+
+test('resolveTarget writes no path memory however often a page target is resolved', () => {
+  const lowdefy = createPathsLowdefy({ pagePaths: { ticket: 'tickets/{space}/{ticket_id}' } });
+  for (let ticketId = 0; ticketId < 50; ticketId += 1) {
+    resolveTarget({
+      lowdefy,
+      target: { pageId: 'ticket', pathParams: { space: 's', ticket_id: ticketId } },
+    });
+    resolveTarget({
+      lowdefy,
+      target: { pageId: 'ticket', pathParams: { space: 's', ticket_id: ticketId } },
+    });
+  }
+  resolveTarget({ lowdefy, target: { home: true } });
+  expect(lowdefy.pathMemory.size).toBe(0);
 });
 
 test('resolveTarget builds a page in neither paths list at its id', () => {
@@ -426,7 +438,6 @@ test('resolveTarget builds a page in neither paths list at its id', () => {
   expect(target.pathname).toEqual('/ticket');
   expect(target.pathParams).toEqual({});
   expect(target.instanceKey).toEqual('page:ticket');
-  expect(lowdefy.pathMemory.get('ticket').pageId).toEqual('ticket');
 });
 
 test('resolveTarget prefers the page linkPaths over pagePaths', () => {

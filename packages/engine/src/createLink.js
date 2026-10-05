@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import rememberTarget from './rememberTarget.js';
 import resolveTarget from './resolveTarget.js';
 
 function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sameOriginLink }) {
@@ -60,14 +61,16 @@ function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sa
   return link;
 }
 
-// A page-kind url names no page, so it seeds no input - writing
-// inputs['page:undefined'] is the bug family a no-op setInput avoids. Home and
-// pageId targets carry the instance key their values open.
+// Both callers run setInput only when the link is followed, before the router pushes it, so this is
+// where the path memory learns the path. A page-kind url names no page, so it seeds no input and
+// writes no memory - writing inputs['page:undefined'] is the bug family a no-op setInput avoids.
+// Home and pageId targets carry the instance key their values open.
 function getSetInput({ lowdefy, props, target }) {
   if (type.isNone(target.instanceKey)) {
     return () => {};
   }
   return () => {
+    rememberTarget({ lowdefy, target });
     lowdefy.inputs[target.instanceKey] = props.input ?? {};
   };
 }

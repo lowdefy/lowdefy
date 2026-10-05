@@ -14,20 +14,14 @@
   limitations under the License.
 */
 
-import { pageInstanceKey } from '@lowdefy/helpers';
+import getPathEntry from './getPathEntry.js';
 
-import pickPathParams from './pickPathParams.js';
-
-// Records which page a URL path belongs to. `path` is the page's URL path without the leading "/"
-// and basePath, as buildPagePath writes it; `pattern` is the page's `path` config, undefined for a
-// page served at its id. Call it with the values of a URL already built for the page, so every
-// placeholder has one.
+// Records which page a URL path belongs to, for a page response or the first-load payload. `path`
+// is the page's URL path without the leading "/" and basePath, as buildPagePath writes it;
+// `pattern` is the page's `path` config, undefined for a page served at its id. Call it with the
+// values of a URL already built for the page, so every placeholder has one.
 function rememberPath({ lowdefy, path, pageId, pathParams, pattern }) {
-  const entry = {
-    pageId,
-    pathParams: pickPathParams({ path: pattern, pathParams }),
-    instanceKey: pageInstanceKey({ pageId, path: pattern, pathParams }),
-  };
+  const entry = getPathEntry({ pageId, pathParams, pattern });
   lowdefy.pathMemory.set(path, entry);
   return entry;
 }

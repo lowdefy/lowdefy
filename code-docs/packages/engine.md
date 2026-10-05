@@ -23,6 +23,7 @@ import getContext, {
   Events,
   lookupPath,
   rememberPath,
+  rememberTarget,
   Requests,
   resolveTarget,
   State,
@@ -101,11 +102,16 @@ when empty, so the engine reads them without checks.
 
 The client never matches a URL to a page. It remembers instead: `lowdefy.pathMemory` is a session
 `Map` from path (no leading `/`, no `basePath`) to `{ pageId, pathParams, instanceKey }`.
-`rememberPath({ lowdefy, path, pageId, pathParams, pattern })` writes an entry, and
-`resolveTarget` calls it for every page target, before any router push. Page responses and the
-embedded first-load payload write entries too (the client's job). `lookupPath({ lowdefy, path })`
-reads one; a path it has not seen is read as a page id without a pattern
-(`{ pageId: path, pathParams: {}, instanceKey: 'page:' + path }`). Both are exported.
+An entry is written only on navigation, never when a link is resolved or drawn, so the memory grows
+by one entry per page visited and needs no cap. `rememberTarget({ lowdefy, target })` writes the
+entry for a resolved page target that names a page (a `url` target writes nothing); `createLink`
+calls it in the `setInput` callback it hands to `sameOriginLink`, which the client runs only when a
+link is followed, before the router push (a `newTab` link writes nothing: the new tab's first load
+does). The client's auth callbacks call it before their push. Page responses and the embedded
+first-load payload write entries with `rememberPath({ lowdefy, path, pageId, pathParams, pattern })`
+(the client's job). `lookupPath({ lowdefy, path })` reads one; a path it has not seen is read as a
+page id without a pattern (`{ pageId: path, pathParams: {}, instanceKey: 'page:' + path }`). All
+three are exported.
 
 ## Architecture
 

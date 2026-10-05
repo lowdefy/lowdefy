@@ -18,7 +18,7 @@ import { ConfigError } from '@lowdefy/errors';
 import { buildPagePath, type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 import getHomePathname from './getHomePathname.js';
-import rememberPath from './rememberPath.js';
+import getPathEntry from './getPathEntry.js';
 
 // The target's own urlQuery combines with any query the url string already
 // carries, matching the grammar semantics createLink resolved before.
@@ -145,17 +145,11 @@ function getPagePattern({ lowdefy, pageId }) {
   return lowdefy.linkPaths[pageId] ?? lowdefy.pagePaths[pageId];
 }
 
-// A page target names the page, its values and the instance they open, and the path memory learns
-// the path before any router push.
-function pageTarget({ lowdefy, pathname, pageId, pathParams, pattern, query }) {
-  const { instanceKey, pathParams: values } = rememberPath({
-    lowdefy,
-    path: pathname.slice(1),
-    pageId,
-    pathParams,
-    pattern,
-  });
-  return { kind: 'page', pathname, query, pageId, pathParams: values, instanceKey };
+// A page target names the page, its values and the instance they open. Resolving writes nothing:
+// a link is resolved on every render, and rememberTarget records it only when it is followed.
+function pageTarget({ pathname, pageId, pathParams, pattern, query }) {
+  const entry = getPathEntry({ pageId, pathParams, pattern });
+  return { kind: 'page', pathname, query, ...entry };
 }
 
 function buildPathname({ pageId, pathParams, pattern }) {
@@ -190,7 +184,6 @@ function resolveTarget({ lowdefy, target, name = 'Link' }) {
       return undefined;
     }
     return pageTarget({
-      lowdefy,
       pathname,
       pageId: lowdefy.home.pageId,
       pathParams: lowdefy.home.pathParams,
@@ -201,7 +194,6 @@ function resolveTarget({ lowdefy, target, name = 'Link' }) {
   if (type.isString(pageId)) {
     const pattern = getPagePattern({ lowdefy, pageId });
     return pageTarget({
-      lowdefy,
       pathname: buildPathname({ pageId, pathParams, pattern }),
       pageId,
       pathParams,

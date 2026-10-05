@@ -765,6 +765,36 @@ test('createLink seeds the input of the page instance a pageId link opens', () =
   expect(lowdefy.inputs).toEqual({ 'page:ticket#tickets/7': { from: 'list' } });
 });
 
+test('createLink remembers a page link only when it is followed', () => {
+  const lowdefy = createLowdefy();
+  lowdefy.pagePaths = { ticket: 'tickets/{space}/{ticket_id}' };
+  const link = createLink({
+    backLink: mockBackLink,
+    disabledLink: mockDisabledLink,
+    lowdefy,
+    newOriginLink: mockNewOriginLink,
+    noLink: mockNoLink,
+    sameOriginLink: mockSameOriginLink,
+  });
+  const props = { pageId: 'ticket', pathParams: { space: 's', ticket_id: 7 }, input: { a: 1 } };
+  link(props);
+  link(props);
+  link(props);
+  expect(lowdefy.pathMemory.size).toBe(0);
+  mockSameOriginLink.mock.calls[0][0].setInput();
+  expect([...lowdefy.pathMemory.entries()]).toEqual([
+    [
+      'tickets/s/7',
+      {
+        pageId: 'ticket',
+        pathParams: { space: 's', ticket_id: '7' },
+        instanceKey: 'page:ticket#tickets/s/7',
+      },
+    ],
+  ]);
+  expect(lowdefy.inputs).toEqual({ 'page:ticket#tickets/s/7': { a: 1 } });
+});
+
 test('createLink seeds no input for a url link', () => {
   const lowdefy = createLowdefy();
   const link = createLink({
@@ -778,4 +808,5 @@ test('createLink seeds no input for a url link', () => {
   link({ url: '/tickets/7', input: { from: 'list' } });
   mockSameOriginLink.mock.calls[0][0].setInput();
   expect(lowdefy.inputs).toEqual({});
+  expect(lowdefy.pathMemory.size).toBe(0);
 });
