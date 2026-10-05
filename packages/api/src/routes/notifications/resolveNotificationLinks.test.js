@@ -20,6 +20,7 @@ const routes = [
   { pageId: 'users', path: 'admin/users', auth: { public: false } },
   { pageId: 'ticket', path: 'tickets/{space}/{ticket_id}', auth: { public: false } },
   { pageId: 'home', path: 'home', auth: { public: true } },
+  { pageId: 'org-landing', path: 'orgs/{org}/notifications/link', auth: { public: false } },
 ];
 
 const ticketLink = {
@@ -86,12 +87,39 @@ test('resolveNotificationLinks routes through the landing page and keeps pathPar
     item,
     serverUrl: 'https://myapp.com',
     basePath: '',
-    landingPage: '/notifications/link',
+    landingPage: 'notifications-link',
     recordId: 'rec-1',
     routes,
   });
   expect(resolved.links.button).toBe(
-    'https://myapp.com/notifications/link?_id=rec-1&option=links.button'
+    'https://myapp.com/notifications-link?_id=rec-1&option=links.button'
   );
   expect(item.links.button).toEqual(ticketLink);
+});
+
+test('resolveNotificationLinks builds a landing page path from { pageId, pathParams }', () => {
+  const resolved = resolveNotificationLinks({
+    item: { links: { button: ticketLink } },
+    serverUrl: 'https://myapp.com',
+    basePath: '/app',
+    landingPage: { pageId: 'org-landing', pathParams: { org: 'acme' } },
+    recordId: 'rec-1',
+    routes,
+  });
+  expect(resolved.links.button).toBe(
+    'https://myapp.com/app/orgs/acme/notifications/link?_id=rec-1&option=links.button'
+  );
+});
+
+test('resolveNotificationLinks throws for a landing page missing a path value', () => {
+  expect(() =>
+    resolveNotificationLinks({
+      item: { links: { button: ticketLink } },
+      serverUrl: 'https://myapp.com',
+      basePath: '',
+      landingPage: 'org-landing',
+      recordId: 'rec-1',
+      routes,
+    })
+  ).toThrow('Link to page "org-landing" is missing a value for path placeholder "org".');
 });

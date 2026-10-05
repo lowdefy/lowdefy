@@ -818,7 +818,7 @@ A `RenderNotification` step has:
 - `properties.notificationId: string`: **Required** - The id of the notification in the `notifications:` section to render. **Operators are evaluated**.
 - `properties.data: object`: **Required** - The data for **one** notification (the recipient and template data). Must be a single object — to render a batch, iterate with a [`:for`](/for) control and render one item per step. **Operators are evaluated**.
 - `properties.serverUrl: string`: The absolute origin used to build link URLs (for example `https://myapp.com`). Defaults to the `url` of the current environment in [`config.environments`](/lowdefy-schema), and on the dev server (`lowdefy dev`) to the request origin. Required when the item carries page links and neither is available.
-- `properties.landingPage: string`: A page path to route email links through (for example `/notifications/link`), so a landing page can mark the notification read before redirecting. When unset, links go directly to their target pages.
+- `properties.landingPage: string | object`: The page to route email links through, by page id (for example `notifications-link`) or `{ pageId, pathParams }` when its path has parameters. Its URL path is built from the page's path like any other link, so a landing page with a `path` works. It lets a landing page mark the notification read before redirecting. When unset, links go directly to their target pages.
 - `properties.recordId: string`: The record id embedded in landing-page link URLs. Required when `landingPage` is set and the item has links — usually a `_uuid` minted earlier in the routine.
 
 The step result contains:

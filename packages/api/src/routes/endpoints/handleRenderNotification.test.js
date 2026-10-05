@@ -210,14 +210,14 @@ test('RenderNotification resolves pageId links to landing URLs when landingPage 
     routine: createStep({
       data,
       serverUrl: 'https://myapp.com',
-      landingPage: '/notifications/link',
+      landingPage: 'notifications-link',
       recordId: 'rec-1',
     }),
   });
 
   expect(res.status).toBe('continue');
   const renderArgs = mockRenderEmail.mock.calls[0][0];
-  expect(renderArgs.links.button).toContain('https://myapp.com/notifications/link?');
+  expect(renderArgs.links.button).toContain('https://myapp.com/notifications-link?');
   expect(renderArgs.links.button).toContain('_id=rec-1');
   expect(renderArgs.links.button).toContain('option=links.button');
   const query = new URLSearchParams(renderArgs.links.button.split('?')[1]);
@@ -278,12 +278,12 @@ test('RenderNotification builds patterned page links from pathParams', async () 
     routine: createStep({
       data,
       serverUrl: 'https://myapp.com',
-      landingPage: '/notifications/link',
+      landingPage: 'notifications-link',
       recordId: 'rec-1',
     }),
   });
   expect(mockRenderEmail.mock.calls[0][0].links.button).toContain(
-    'https://myapp.com/notifications/link?'
+    'https://myapp.com/notifications-link?'
   );
   expect(data.links.button.pathParams).toEqual({ space: 's', ticket_id: '1' });
 });
@@ -319,7 +319,7 @@ test('RenderNotification resolves array link fields for the data keys the templa
     routine: createStep({
       data,
       serverUrl: 'https://myapp.com',
-      landingPage: '/notifications/link',
+      landingPage: 'notifications-link',
       recordId: 'rec-2',
     }),
   });
@@ -449,7 +449,7 @@ test('RenderNotification errors when landingPage is set without recordId and lin
     routine: createStep({
       data: { contact, links: { button: { pageId: 'home' } } },
       serverUrl: 'https://myapp.com',
-      landingPage: '/notifications/link',
+      landingPage: 'notifications-link',
     }),
   });
 
@@ -653,4 +653,34 @@ test('RenderNotification trims trailing serverUrl slash before resolving a relat
   });
 
   expect(mockRenderEmail.mock.calls[0][0].theme.logo).toBe('https://myapp.com/logo-light.png');
+});
+
+test('RenderNotification builds the landing URL from a landing page with a path', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({
+      data: { contact, links: { button: { pageId: 'task-view' } } },
+      serverUrl: 'https://myapp.com',
+      landingPage: { pageId: 'ticket', pathParams: { space: 's', ticket_id: '9' } },
+      recordId: 'rec-1',
+    }),
+  });
+  expect(res.status).toBe('continue');
+  expect(mockRenderEmail.mock.calls[0][0].links.button).toBe(
+    'https://myapp.com/tickets/s/9?_id=rec-1&option=links.button'
+  );
+});
+
+test('RenderNotification errors when landingPage is not a page id', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const res = await runRoutine(context, createRoutineContext(), {
+    routine: createStep({
+      data: { contact },
+      serverUrl: 'https://myapp.com',
+      landingPage: { pathParams: {} },
+    }),
+  });
+  expect(res.status).toBe('error');
+  expect(res.error.message).toContain('properties.landingPage must evaluate to a page id');
 });
