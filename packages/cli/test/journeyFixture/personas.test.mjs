@@ -21,22 +21,23 @@ import { fileURLToPath } from 'node:url';
 
 // A journey with a list of users, run by the built CLI over the fixture app:
 // once per user, each in its own data session, reported as "<name> [<user>]".
-// The page shows its panel to admin only, so the admin run passes and the
-// member run fails. The journey written here is removed afterwards, so the
-// fixture's tests/journeys stays as the other fixture tests expect it.
+// Each run posts its own user, which the dev server looks up in the data set:
+// admin and member pass, and "ghost", a name the data set does not have, is
+// refused for that run alone. The journey written here is removed
+// afterwards, so the fixture's tests/journeys stays as the other fixture
+// tests expect it.
 
 const fixtureUrl = process.env.LOWDEFY_JOURNEY_FIXTURE_URL;
 const configDirectory = process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY;
 const fixtureTest = fixtureUrl === undefined ? test.skip : test;
 const CLI = fileURLToPath(new URL('../../dist/index.js', import.meta.url));
 
-const PERSONAS = `name: sees the admin panel
-pageId: personas
+const PERSONAS = `name: sees the save button
+pageId: home
 data: personas
-user: [admin, member]
+user: [admin, member, ghost]
 steps:
-  - expect: { visible: personas_title }
-  - expect: { visible: admin_panel }
+  - expect: { visible: save_button }
 `;
 
 function journeysPath(...segments) {
@@ -75,16 +76,19 @@ afterAll(() => {
 
 fixtureTest('test runs a journey once as each listed user and reports each run', async () => {
   const { code, output } = await runTest(['tests/journeys/personas']);
-  expect(output).toMatch(/PASS {2}sees the admin panel \[admin\] {2}\(/);
-  expect(output).toContain('FAIL  sees the admin panel [member]');
-  expect(output).toContain('1 passed, 1 failed of 2 journeys');
+  expect(output).toMatch(/PASS {2}sees the save button \[admin\] {2}\(/);
+  expect(output).toMatch(/PASS {2}sees the save button \[member\] {2}\(/);
+  expect(output).toContain('FAIL  sees the save button [ghost]');
+  expect(output).toContain('declares no user');
+  expect(output).toContain('2 passed, 1 failed of 3 journeys');
   expect(code).toBe(1);
 });
 
 fixtureTest('test --filter runs one persona of the journey', async () => {
-  const { code, output } = await runTest(['tests/journeys/personas', '--filter', '[admin]']);
-  expect(output).toMatch(/PASS {2}sees the admin panel \[admin\] {2}\(/);
-  expect(output).not.toContain('[member]');
+  const { code, output } = await runTest(['tests/journeys/personas', '--filter', '[member]']);
+  expect(output).toMatch(/PASS {2}sees the save button \[member\] {2}\(/);
+  expect(output).not.toContain('[admin]');
+  expect(output).not.toContain('[ghost]');
   expect(output).toContain('1 passed, 0 failed of 1 journeys');
   expect(code).toBe(0);
 });

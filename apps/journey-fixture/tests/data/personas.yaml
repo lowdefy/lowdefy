@@ -1,8 +1,8 @@
 # The data set the persona run fixture test runs one journey on, once as each
-# user (packages/cli/test/journeyFixture/personas.test.mjs).
+# listed user (packages/cli/test/journeyFixture/personas.test.mjs).
 fixtures:
   fixture_db:
-    - { _id: persona-item, kind: item, page: personas, name: Persona item }
+    - { _id: persona-item, kind: item, page: home, name: Persona item }
 users:
   admin: { id: u_admin, roles: [admin] }
   member: { id: u_member, roles: [member] }
