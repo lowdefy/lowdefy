@@ -27,6 +27,7 @@ import blockMetas from '../build/plugins/blockMetas.json';
 import jsMap from '../build/plugins/operators/clientJsMap.js';
 import appMeta from '../build/appMeta.json';
 
+import getShownPage from './getShownPage.js';
 import loadAllIcons from './loadAllIcons.js';
 import loadPageTypes from './loadPageTypes.js';
 import shouldReloadForBuild from './shouldReloadForBuild.js';
@@ -113,10 +114,14 @@ function Page({ auth, config, lowdefy }) {
           }
           return;
         }
-        const { buildId, matchedPath, pageConfig, pathParams } = await res.json();
+        const response = await res.json();
         if (token !== latestNavRef.current) return;
         if (
-          shouldReloadForBuild({ bundleBuildId: appMeta.buildId, serverBuildId: buildId, window })
+          shouldReloadForBuild({
+            bundleBuildId: appMeta.buildId,
+            serverBuildId: response.buildId,
+            window,
+          })
         ) {
           // The app was redeployed after this bundle loaded, so the config may
           // reference _js functions and plugins this bundle does not carry.
@@ -126,15 +131,17 @@ function Page({ auth, config, lowdefy }) {
           return;
         }
         // A failed chunk load falls to the catch below: a full page load.
-        await loadPageTypes({ pageConfig });
+        await loadPageTypes({ pageConfig: response.pageConfig });
         if (token !== latestNavRef.current) return;
-        const nextPage = { matchedPath, pageConfig, pathParams };
+        const nextPage = getShownPage({ path, response });
         pageRef.current = nextPage;
         setPage(nextPage);
       } catch (error) {
         // Network failure on SPA navigation — fall back to a full page load.
         if (token !== latestNavRef.current) return;
-        window.location.assign(createUrl({ basePath: router.basePath, pathname: `/${path}` }));
+        window.location.assign(
+          createUrl({ basePath: router.basePath, pathname: `/${path}`, query: search.slice(1) })
+        );
       }
     });
     return unsubscribe;

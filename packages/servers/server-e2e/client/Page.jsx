@@ -30,6 +30,8 @@ import icons from '../build/plugins/icons.js';
 import operators from '../build/plugins/operators/client.js';
 import jsMap from '../build/plugins/operators/clientJsMap.js';
 
+import getShownPage from './getShownPage.js';
+
 // The path to fetch for a navigation. The app root shows the home page, and
 // /api/page/ with an empty path matches no page, so it fetches the home page's
 // own path.
@@ -100,15 +102,17 @@ function Page({ auth, config, lowdefy }) {
           }
           return;
         }
-        const { matchedPath, pageConfig, pathParams } = await res.json();
+        const response = await res.json();
         if (token !== latestNavRef.current) return;
-        const nextPage = { matchedPath, pageConfig, pathParams };
+        const nextPage = getShownPage({ path, response });
         pageRef.current = nextPage;
         setPage(nextPage);
       } catch (error) {
         // Network failure on SPA navigation — fall back to a full page load.
         if (token !== latestNavRef.current) return;
-        window.location.assign(createUrl({ basePath: router.basePath, pathname: `/${path}` }));
+        window.location.assign(
+          createUrl({ basePath: router.basePath, pathname: `/${path}`, query: search.slice(1) })
+        );
       }
     });
     return unsubscribe;
