@@ -36,9 +36,10 @@ function readJourneyFile({ filePath }) {
 }
 
 // Each item is { filePath, journeyIndex, journey }: the journey's place in its
-// file names it where its name may not be unique. With `paths` (journey files already resolved by resolveJourneyPaths), the
-// named files are read; otherwise every file under tests/journeys, sub-folders
-// included, except those in a folder whose name starts with "_".
+// file names it where its name may not be unique. With `paths` (journey files
+// already resolved by resolveJourneyPaths), the named files are read;
+// otherwise every file under tests/journeys, sub-folders included, except
+// those in a folder whose name starts with "_".
 function discoverJourneys({ context, paths }) {
   if (!type.isUndefined(paths)) {
     return paths.flatMap((filePath) => readJourneyFile({ filePath }));
