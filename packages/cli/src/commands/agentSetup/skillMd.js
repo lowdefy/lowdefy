@@ -15,6 +15,7 @@
 */
 
 import devServerRules from './devServerRules.js';
+import TESTING_RULES from './testingRules.js';
 
 function skillMd({ appPath }) {
   return `---
@@ -58,6 +59,10 @@ Never guess type names or properties. Before writing config:
 - \`data-truncate="2"\` clamps block text (full text in a tooltip when cut off), \`data-tone="secondary"\`
   mutes text (never inline grey hex colours), and in ClickableHtml a destructive event is listed as
   \`{ name: onDelete, confirm: "Delete this row?" }\` in \`dataEvents\` so every click asks first. See the \`concepts/html-attributes\` doc.
+
+## Testing a change
+
+${TESTING_RULES}
 
 ## Visual feedback
 
