@@ -55,50 +55,69 @@ function describeMissingPull({ missing }) {
   }" first, then pull the rest of ${from}/${to} the same way, at most ${MINING_WINDOW_MAX_DAYS} days at a time.`;
 }
 
+function readManifest({ directory, day }) {
+  const manifestPath = path.join(directory, `${day}.manifest.json`);
+  if (!fs.existsSync(manifestPath)) return null;
+  return JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+}
+
+// A day hashed under another salt resolves none of its tokens, so it reads as
+// missing rather than as a window of unresolved clicks. Pulling it again
+// hashes it under this machine's salt; with no salt, the pull writes a new one.
+function describeOtherSalt({ otherSalt, traceSalt }) {
+  if (otherSalt.length === 0) return '';
+  if (traceSalt === null) {
+    return ` There is no trace salt in .lowdefy/traces/production/, so ${otherSalt.length} pulled day(s) cannot be read; pulling them again hashes them under a new salt.`;
+  }
+  return ` ${otherSalt.length} of them were pulled under another trace salt; pulling them again hashes them under this machine's salt.`;
+}
+
 // The production records of a window, read from the per-day cache that
 // `lowdefy journeys pull posthog` writes: days in order, records in file
 // order, with each day's manifest. A day is in the cache once its manifest is
-// written (the pull writes it last). A missing day is an error naming the
-// pull that fills it, never a silent gap. Days pulled before clicked text was
-// stored as tokens are removed first, so they read as missing. maxDays caps
-// the window for the mining commands. Every token is resolved against the
-// app's config text set, so compile, coverage and evidence see config text
-// and tokens only; isConfigText comes back with the records for readers that
-// match journeys against them.
+// written (the pull writes it last) under this machine's salt. A missing day
+// is an error naming the pull that fills it, never a silent gap. Days pulled
+// before clicked text was stored as tokens are removed first, so they read as
+// missing. maxDays caps the window for the mining commands. Every token is
+// resolved against the app's config text set, so compile, coverage and
+// evidence see config text and tokens only; isConfigText comes back with the
+// records for readers that match journeys against them. A reader never writes
+// a salt.
 async function readProductionTrace({ context, since, from, to, now = Date.now(), maxDays }) {
   const { directories, logger } = context;
   const window = parseTraceWindow({ since, from, to, now, maxDays });
   removeUntokenisedTraces({ directories, logger });
 
   const directory = path.join(directories.traces, 'production');
+  const traceSalt = readTraceSalt({ directories });
+  const saltId = traceSalt === null ? null : traceSalt.saltId;
   const days = listWindowDays(window);
-  const missing = days.filter(
-    (day) => !fs.existsSync(path.join(directory, `${day}.manifest.json`))
+  const manifests = days.map((day) => readManifest({ directory, day }));
+  const otherSalt = days.filter(
+    (day, index) => manifests[index] !== null && manifests[index].salt_id !== saltId
   );
+  const missing = days.filter((day, index) => manifests[index] === null || otherSalt.includes(day));
   if (missing.length > 0) {
     const shown = missing.length > 5 ? `${missing.slice(0, 5).join(', ')}, …` : missing.join(', ');
     throw new Error(
       `The production trace cache is missing ${missing.length} day(s) of ${window.from}/${
         window.to
-      } (${shown}). ${describeMissingPull({ missing })}`
+      } (${shown}).${describeOtherSalt({ otherSalt, traceSalt })} ${describeMissingPull({
+        missing,
+      })}`
     );
   }
   const records = [];
-  const manifests = [];
   let unparsable = 0;
   days.forEach((day) => {
-    manifests.push(
-      JSON.parse(fs.readFileSync(path.join(directory, `${day}.manifest.json`), 'utf8'))
-    );
     const parsed = parseTraceLines({
       text: fs.readFileSync(path.join(directory, `${day}.jsonl`), 'utf8'),
     });
     records.push(...parsed.records);
     unparsable += parsed.unparsable;
   });
-  const { salt } = readTraceSalt({ directories });
   const { texts, isConfigText } = await readConfigText({ context });
-  const resolve = createTokenResolver({ salt, texts });
+  const resolve = createTokenResolver({ salt: traceSalt.salt, texts });
   return {
     records: records.map((record) => resolveRecordText({ record, resolve })),
     unparsable,

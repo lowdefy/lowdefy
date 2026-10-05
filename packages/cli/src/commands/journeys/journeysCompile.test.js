@@ -20,6 +20,8 @@ import os from 'os';
 import path from 'path';
 import YAML from 'yaml';
 
+import readTraceSalt from './pull/readTraceSalt.js';
+
 const mockGet = jest.fn();
 jest.unstable_mockModule('axios', () => ({ default: { get: mockGet } }));
 // The config text set comes from a full build by the dev server's builder;
@@ -406,16 +408,24 @@ test('journeys compile without trace files needs a source', async () => {
   );
 });
 
+// A day as the pull writes it: under the machine's salt, which the first
+// day written here creates when a test has not written its own.
 function writeProductionDay(day, records) {
   const directory = path.join(configDirectory, '.lowdefy', 'traces', 'production');
   fs.mkdirSync(directory, { recursive: true });
+  if (!fs.existsSync(path.join(directory, 'salt'))) {
+    fs.writeFileSync(path.join(directory, 'salt'), Buffer.alloc(32, 2));
+  }
+  const { saltId } = readTraceSalt({
+    directories: { traces: path.join(configDirectory, '.lowdefy', 'traces') },
+  });
   fs.writeFileSync(
     path.join(directory, `${day}.jsonl`),
     records.map((entry) => JSON.stringify(entry)).join('\n')
   );
   fs.writeFileSync(
     path.join(directory, `${day}.manifest.json`),
-    JSON.stringify({ day, text_rule: 'token' })
+    JSON.stringify({ day, salt_id: saltId, text_rule: 'token' })
   );
 }
 
@@ -451,7 +461,6 @@ test('journeys compile --source production removes old-rule days, production can
     path.join(directory, `${oldDay}.manifest.json`),
     JSON.stringify({ day: oldDay })
   );
-  fs.writeFileSync(path.join(directory, 'salt'), Buffer.alloc(32, 1));
   const productionCandidates = path.join(
     configDirectory,
     'tests',

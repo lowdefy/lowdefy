@@ -21,6 +21,7 @@ import path from 'path';
 import YAML from 'yaml';
 
 import validateJourney from '../test/validateJourney.js';
+import readTraceSalt from './pull/readTraceSalt.js';
 
 // The config text set comes from a full build by the dev server's builder;
 // these tests hold it fixed.
@@ -77,16 +78,24 @@ function visit({ session, start, blocks, person, org }) {
   ];
 }
 
+// A day as the pull writes it: under the machine's salt, which the first
+// day written here creates when a test has not written its own.
 function writeDay(day, records) {
   const directory = path.join(configDirectory, '.lowdefy', 'traces', 'production');
   fs.mkdirSync(directory, { recursive: true });
+  if (!fs.existsSync(path.join(directory, 'salt'))) {
+    fs.writeFileSync(path.join(directory, 'salt'), Buffer.alloc(32, 2));
+  }
+  const { saltId } = readTraceSalt({
+    directories: { traces: path.join(configDirectory, '.lowdefy', 'traces') },
+  });
   fs.writeFileSync(
     path.join(directory, `${day}.jsonl`),
     records.map((entry) => JSON.stringify(entry)).join('\n')
   );
   fs.writeFileSync(
     path.join(directory, `${day}.manifest.json`),
-    JSON.stringify({ day, text_rule: 'token' })
+    JSON.stringify({ day, salt_id: saltId, text_rule: 'token' })
   );
 }
 

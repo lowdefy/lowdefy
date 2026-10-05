@@ -26,21 +26,28 @@ jest.unstable_mockModule('./configText/readConfigText.js', () => ({
 
 const { default: readProductionTrace } = await import('./readProductionTrace.js');
 const { default: tokenText } = await import('./tokenText.js');
+const { default: readTraceSalt } = await import('./pull/readTraceSalt.js');
 
 let traces;
 let root;
 const now = Date.parse('2026-10-03T12:00:00.000Z');
 
+// A day as the pull writes it: under the machine's salt, which the first
+// day written here creates when a test has not written its own.
 function writeDay(day, records) {
   const directory = path.join(traces, 'production');
   fs.mkdirSync(directory, { recursive: true });
+  if (!fs.existsSync(path.join(directory, 'salt'))) {
+    fs.writeFileSync(path.join(directory, 'salt'), Buffer.alloc(32, 2));
+  }
+  const { saltId } = readTraceSalt({ directories: { traces } });
   fs.writeFileSync(
     path.join(directory, `${day}.jsonl`),
     records.map((record) => JSON.stringify(record)).join('\n')
   );
   fs.writeFileSync(
     path.join(directory, `${day}.manifest.json`),
-    JSON.stringify({ day, text_rule: 'token' })
+    JSON.stringify({ day, salt_id: saltId, text_rule: 'token' })
   );
 }
 
@@ -102,6 +109,45 @@ test('readProductionTrace treats a day without its manifest as missing', async (
   await expect(read({ from: '2026-10-01', to: '2026-10-01' })).rejects.toThrow(
     'lowdefy journeys pull posthog --from 2026-10-01 --to 2026-10-01'
   );
+});
+
+test('readProductionTrace refuses a day pulled under another salt and names the pull that hashes it again', async () => {
+  writeDay('2026-10-01', [{ id: 1 }]);
+  writeDay('2026-10-02', [{ id: 2 }]);
+  writeDay('2026-10-03', [{ id: 3 }]);
+  const manifestPath = path.join(traces, 'production', '2026-10-02.manifest.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  fs.writeFileSync(manifestPath, JSON.stringify({ ...manifest, salt_id: '00000000' }));
+  await expect(read({ since: '3d' })).rejects.toThrow(
+    'The production trace cache is missing 1 day(s) of 2026-10-01/2026-10-03 (2026-10-02). 1 of them were pulled under another trace salt; pulling them again hashes them under this machine\'s salt. Run "lowdefy journeys pull posthog --from 2026-10-02 --to 2026-10-02" first.'
+  );
+});
+
+test('readProductionTrace reads days whose salt id matches the machine salt', async () => {
+  writeDay('2026-10-02', [{ id: 1 }]);
+  writeDay('2026-10-03', [{ id: 2 }]);
+  const { saltId } = readTraceSalt({ directories: { traces } });
+  const result = await read({ since: '2d' });
+  expect(result.manifests.map((manifest) => manifest.salt_id)).toEqual([saltId, saltId]);
+  expect(result.records.map((record) => record.id)).toEqual([1, 2]);
+});
+
+test('readProductionTrace refuses day files with no salt and writes none', async () => {
+  writeDay('2026-10-02', [{ id: 1 }]);
+  writeDay('2026-10-03', [{ id: 2 }]);
+  const saltPath = path.join(traces, 'production', 'salt');
+  fs.rmSync(saltPath);
+  await expect(read({ since: '2d' })).rejects.toThrow(
+    'The production trace cache is missing 2 day(s) of 2026-10-02/2026-10-03 (2026-10-02, 2026-10-03). There is no trace salt in .lowdefy/traces/production/, so 2 pulled day(s) cannot be read; pulling them again hashes them under a new salt. Run "lowdefy journeys pull posthog --from 2026-10-02 --to 2026-10-03" first.'
+  );
+  expect(fs.existsSync(saltPath)).toBe(false);
+});
+
+test('readProductionTrace with no cache at all writes no salt', async () => {
+  await expect(read({ since: '1d' })).rejects.toThrow(
+    'Run "lowdefy journeys pull posthog --from 2026-10-03 --to 2026-10-03" first.'
+  );
+  expect(fs.existsSync(path.join(traces, 'production', 'salt'))).toBe(false);
 });
 
 test('readProductionTrace counts unparsable lines', async () => {

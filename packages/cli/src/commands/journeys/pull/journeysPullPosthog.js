@@ -27,8 +27,8 @@ import parseTraceWindow from '../parseTraceWindow.js';
 import pruneDayFiles from './pruneDayFiles.js';
 import pullDay from './pullDay.js';
 import PullStoppedError from './PullStoppedError.js';
+import readOrCreateTraceSalt from './readOrCreateTraceSalt.js';
 import readPostHogCredentials from './readPostHogCredentials.js';
-import readTraceSalt from './readTraceSalt.js';
 import removeUntokenisedTraces from '../removeUntokenisedTraces.js';
 import writeDayFile from './writeDayFile.js';
 
@@ -141,7 +141,7 @@ async function journeysPullPosthog({ context, params }) {
   if (pruned.length > 0) {
     logger.info(`Pruned ${pruned.length} production trace files older than 400 days.`);
   }
-  const { salt, saltId } = readTraceSalt({ directories });
+  const { salt, saltId } = readOrCreateTraceSalt({ directories });
   const client = createPostHogQueryClient({ ...credentials, logger });
   const today = new Date(now).toISOString().slice(0, 10);
   const totals = { rows: 0, records: 0, dropped: 0, bytesRead: 0, days: 0 };

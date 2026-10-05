@@ -21,6 +21,7 @@ import path from 'path';
 import { validate } from '@lowdefy/ajv';
 
 import coverageReportSchema from './coverageReport/coverageReportSchema.js';
+import readTraceSalt from './pull/readTraceSalt.js';
 
 // The config text set comes from a full build by the dev server's builder;
 // these tests hold it fixed.
@@ -77,16 +78,24 @@ function visit({ session, start, blocks, person, org }) {
   ];
 }
 
+// A day as the pull writes it: under the machine's salt, which the first
+// day written here creates when a test has not written its own.
 function writeDay(day, records) {
   const directory = path.join(configDirectory, '.lowdefy', 'traces', 'production');
   fs.mkdirSync(directory, { recursive: true });
+  if (!fs.existsSync(path.join(directory, 'salt'))) {
+    fs.writeFileSync(path.join(directory, 'salt'), Buffer.alloc(32, 2));
+  }
+  const { saltId } = readTraceSalt({
+    directories: { traces: path.join(configDirectory, '.lowdefy', 'traces') },
+  });
   fs.writeFileSync(
     path.join(directory, `${day}.jsonl`),
     records.map((entry) => JSON.stringify(entry)).join('\n')
   );
   fs.writeFileSync(
     path.join(directory, `${day}.manifest.json`),
-    JSON.stringify({ day, text_rule: 'token' })
+    JSON.stringify({ day, salt_id: saltId, text_rule: 'token' })
   );
 }
 
@@ -323,12 +332,17 @@ test('journeys coverage without journey runs reports no measured share and reach
 
 // Production clicks as the pull stores them: a token, never the text. Two
 // blockless rage clicks on different elements, one on config text, and grid
-// cells showing customers' names.
+// cells showing customers' names, tokenised under the salt the days already
+// in the cache were pulled with.
 function writeTokenisedDay() {
   const directory = path.join(configDirectory, '.lowdefy', 'traces', 'production');
   fs.mkdirSync(directory, { recursive: true });
-  const salt = Buffer.alloc(32, 7);
-  fs.writeFileSync(path.join(directory, 'salt'), salt);
+  if (!fs.existsSync(path.join(directory, 'salt'))) {
+    fs.writeFileSync(path.join(directory, 'salt'), Buffer.alloc(32, 7));
+  }
+  const { salt } = readTraceSalt({
+    directories: { traces: path.join(configDirectory, '.lowdefy', 'traces') },
+  });
   const click = ({ session, t, block = null, column = null, text, frustration, person }) => {
     const entry = record({ session, t, block: block ?? 'placeholder', person });
     entry.target = {
