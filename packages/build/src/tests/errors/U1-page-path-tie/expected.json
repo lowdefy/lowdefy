@@ -1,0 +1,15 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "match the same URLs"
+      ],
+      "errorContains": [
+        "Pages \"ticket\" and \"ticket-copy\" match the same URLs, with paths \"Tickets/{id}\" and \"tickets/{ticket_id}\".",
+        "Page \"ticket\" is at {{fixturesDir}}/U1-page-path-tie/lowdefy.yaml:14",
+        "lowdefy.yaml:17"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "is the home page"
+      ],
+      "errorContains": [
+        "Page \"dashboard\" is the home page (\"config.homePageId\"), so its path \"{space}/dashboard\" cannot have placeholders.",
+        "lowdefy.yaml:14"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Page \"404\" cannot have a path."
+      ],
+      "errorContains": [
+        "lowdefy.yaml:11"
+      ]
+    }
+  ]
+}

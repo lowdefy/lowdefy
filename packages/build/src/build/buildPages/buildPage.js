@@ -56,6 +56,9 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   // subscriptions key on nested blocks, so the page root must not carry it.
   const subscriptions = page.subscriptions;
   delete page.subscriptions;
+  // The same holds for path, which only a page may declare.
+  const pagePath = page.path;
+  delete page.path;
   const { pageCounters, typeCounters } = createPageTypeCounters({
     typeCounters: context.typeCounters,
   });
@@ -82,6 +85,9 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   buildBlock(page, pageContext);
   // set page.id since buildBlock sets id as well.
   page.id = `page:${page.pageId}`;
+  if (!type.isUndefined(pagePath)) {
+    page.path = pagePath;
+  }
 
   // Flag pages with Dynamic blocks so the server can skip resolution
   // (and the deep copy it requires) for static pages with one property read.

@@ -1933,6 +1933,12 @@ export default {
             type: 'Block "id" should be a string.',
           },
         },
+        path: {
+          type: 'string',
+          errorMessage: {
+            type: 'Page "path" should be a string. A path that starts with a placeholder must be quoted in YAML, like path: \'{space}/tickets/{ticket_id}\'.',
+          },
+        },
         type: {
           type: 'string',
           errorMessage: {

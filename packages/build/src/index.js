@@ -50,6 +50,8 @@ import buildNotifications from './build/buildNotifications.js';
 import precomputeRuntimeOperators from './build/buildRefs/precomputeRuntimeOperators.js';
 import buildPageTypes from './build/full/buildPageTypes.js';
 import buildPages from './build/full/buildPages.js';
+import buildRoutes from './build/buildRoutes/buildRoutes.js';
+import validateAuthPagePaths from './build/buildRoutes/validateAuthPagePaths.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
 import resolveAuthConfigProjection from './build/buildAuth/resolveAuthConfigProjection.js';
 import buildWebsockets from './build/buildWebsockets.js';
@@ -85,6 +87,7 @@ import writeJs from './build/buildJs/writeJs.js';
 import writeLogger from './build/writeLogger.js';
 import writeMaps from './build/writeMaps.js';
 import writeMenus from './build/writeMenus.js';
+import writeRoutes from './build/writeRoutes.js';
 import writeNotifications from './build/writeNotifications.js';
 import writePages from './build/full/writePages.js';
 import writePageTypes from './build/full/writePageTypes.js';
@@ -174,7 +177,9 @@ async function build(options) {
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
     // addKeys runs again to add keys to any new objects created by earlier build steps
     tryBuildStep(addKeys, 'addKeys', { components, context });
+    tryBuildStep(buildRoutes, 'buildRoutes', { components, context });
     tryBuildStep(buildAuth, 'buildAuth', { components, context });
+    tryBuildStep(validateAuthPagePaths, 'validateAuthPagePaths', { components, context });
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
     tryBuildStep(buildDynamicPolicies, 'buildDynamicPolicies', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
@@ -250,6 +255,7 @@ async function build(options) {
     await writeLogger({ components, context });
     await writeMaps({ components, context });
     await writeMenus({ components, context });
+    await writeRoutes({ components, context });
     await writeTypes({ components, context });
     await writePluginImports({ components, context });
     await writePageTypes({ components, context });

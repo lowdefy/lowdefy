@@ -6816,6 +6816,24 @@
       "parent": null
     }
   },
+  "routes.json": [
+    {
+      "pageId": "home",
+      "path": "home",
+      "auth": {
+        "public": true,
+        "~k": "1i"
+      }
+    },
+    {
+      "pageId": "404",
+      "path": "404",
+      "auth": {
+        "public": true,
+        "~k": "1q"
+      }
+    }
+  ],
   "schedules.json": [
     {
       "endpointId": "purge-stale",

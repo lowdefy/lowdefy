@@ -6707,6 +6707,24 @@
       "parent": null
     }
   },
+  "routes.json": [
+    {
+      "pageId": "home",
+      "path": "home",
+      "auth": {
+        "public": true,
+        "~k": "17"
+      }
+    },
+    {
+      "pageId": "404",
+      "path": "404",
+      "auth": {
+        "public": true,
+        "~k": "1f"
+      }
+    }
+  ],
   "schedules.json": [
     {
       "endpointId": "purge-stale",

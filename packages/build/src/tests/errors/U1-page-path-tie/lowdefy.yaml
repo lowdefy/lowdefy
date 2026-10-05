@@ -1,0 +1,25 @@
+# U1: Page Path Tie
+# ==================
+# Tests that two page paths matching the same URLs fail the build, comparing
+# fixed segments ignoring case, while overlapping paths that rank apart build.
+#
+# Expected error:
+#   [Config Error] Pages "ticket" and "ticket-copy" match the same URLs ...
+#
+# The error points to the second page, and names where the first is defined.
+
+lowdefy: local
+
+pages:
+  - id: ticket
+    type: Box
+    path: Tickets/{id}
+  - id: ticket-copy
+    type: Box
+    path: tickets/{ticket_id}
+  - id: space-tickets
+    type: Box
+    path: '{space}/tickets'
+  - id: admin-section
+    type: Box
+    path: admin/{section}

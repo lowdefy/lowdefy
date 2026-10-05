@@ -19,8 +19,6 @@ import path from 'path';
 import { serializer, type } from '@lowdefy/helpers';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
-import operators from '@lowdefy/operators-js/operators/build';
-
 import addKeys from '../addKeys.js';
 import buildPage from '../buildPages/buildPage.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
@@ -31,20 +29,12 @@ import validateServerStateReferences from '../buildPages/validateServerStateRefe
 import validateOrgClientActionRefs from '../buildPages/validateOrgClientActionRefs.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
 import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
-import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import collectPageContent from '../collectPageContent.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createContext from '../../createContext.js';
-import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.js';
-import getRefContent from '../buildRefs/getRefContent.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import lowdefySchema from '../../lowdefySchema.js';
-import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
-import rebaseModuleRefPaths from '../buildRefs/rebaseModuleRefPaths.js';
-import runTransformer from '../buildRefs/runTransformer.js';
-import { resolve, WalkContext, tagRefDeep } from '../buildRefs/walker.js';
-import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
-import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
+import { tagRefDeep } from '../buildRefs/walker.js';
 import testSchema from '../testSchema.js';
 import validateIconNames from '../icons/validateIconNames.js';
 import createPageBuildContext from './createPageBuildContext.js';
@@ -52,15 +42,13 @@ import detectMissingIcons from './detectMissingIcons.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
 import getJitIconContext from './getJitIconContext.js';
 import prepareJitContext from './prepareJitContext.js';
+import resolvePageSource from './resolvePageSource.js';
 import updateIconImportsJit from './updateIconImportsJit.js';
 import updateServerPackageJsonJit from './updateServerPackageJsonJit.js';
 import scanJitMaps from './scanJitMaps.js';
 import validatePageTypes from './validatePageTypes.js';
 import writeJitMaps from './writeJitMaps.js';
 import writePageJit from './writePageJit.js';
-
-validateOperatorsDynamic({ operators });
-const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
 // A page is a block, so its content is checked against the block definition -
 // the part of the app schema the skeleton build skips, since it strips page
@@ -133,136 +121,11 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       }
     }
 
-    // If this is a module page, set up module context
-    let moduleDependencies = null;
-    let moduleEntry = null;
-    if (pageEntry.moduleEntryId) {
-      moduleEntry = buildContext.modules[pageEntry.moduleEntryId];
-      moduleDependencies = moduleEntry?.moduleDependencies ?? null;
-    }
-
-    // Resolve the page file from scratch using the source file path determined
-    // by createPageRegistry's parent chain walk.
-    if (!pageEntry.refPath && !pageEntry.resolverOriginal) {
-      throw new ConfigError(
-        `Page "${pageId}" has no source file reference. Cannot resolve page content.`
-      );
-    }
-
-    // Resolve unresolved vars (which may contain inner _ref objects) fresh from disk.
-    // For resolver pages, unresolved vars live in resolverOriginal.vars (single source).
-    // For file-backed pages, they're stored separately in unresolvedVars.
-    const unresolvedVars = pageEntry.unresolvedVars ?? pageEntry.resolverOriginal?.vars;
-    let resolvedVars = null;
-    if (unresolvedVars) {
-      const varRefDef = makeRefDefinition({}, null, buildContext.refMap);
-      const varCtx = new WalkContext({
-        buildContext,
-        refId: varRefDef.id,
-        sourceRefId: null,
-        vars: {},
-        moduleDependencies,
-        moduleEntry: moduleEntry ?? null,
-        moduleRoot: moduleEntry?.moduleRoot ?? null,
-        packageRoot: moduleEntry?.packageRoot ?? null,
-        path: '',
-        currentFile: pageEntry.refPath ?? pageEntry.resolverOriginal?.resolver ?? '',
-        refChain: new Set(),
-        operators,
-        env: process.env,
-        lowdefyApp: buildContext.appMeta,
-        dynamicIdentifiers,
-        shouldStop: null,
-      });
-      resolvedVars = await resolve(cloneWithMarkers(unresolvedVars), varCtx);
-    }
-
-    let refDef;
-    if (pageEntry.resolverOriginal) {
-      const resolverDefinition = resolvedVars
-        ? { ...pageEntry.resolverOriginal, vars: resolvedVars }
-        : pageEntry.resolverOriginal;
-      refDef = makeRefDefinition(resolverDefinition, null, buildContext.refMap);
-      buildContext.refMap[refDef.id].path = null;
-    } else {
-      const refDefinition = { path: pageEntry.refPath };
-      if (resolvedVars) {
-        refDefinition.vars = resolvedVars;
-      }
-      if (pageEntry.transformer) {
-        refDefinition.transformer = pageEntry.transformer;
-      }
-      refDef = makeRefDefinition(refDefinition, null, buildContext.refMap);
-      buildContext.refMap[refDef.id].path = refDef.path;
-    }
-
-    // Module path resolution: resolve relative path/resolver/transformer from the
-    // module root. The full build does this in walker.js step 4 when an _ref node
-    // is encountered, but the JIT path builds the page refDef directly from
-    // resolverOriginal (the un-rebased authored _ref) and calls getRefContent
-    // without going through the walker — so a module resolver like
-    // "resolvers/makeActionPages.js" would otherwise resolve against the app
-    // config dir instead of the module root. (File-based module pages are
-    // unaffected: their paths are stored already-rebased in refMap.)
-    if (moduleEntry?.moduleRoot) {
-      rebaseModuleRefPaths({ refDef, moduleRoot: moduleEntry.moduleRoot });
-      if (type.isString(refDef.path)) {
-        buildContext.refMap[refDef.id].path = refDef.path;
-      }
-    }
-
-    const pageContent = await getRefContent({
-      context: buildContext,
-      refDef,
-      referencedFrom: null,
-    });
-    const pageCtx = new WalkContext({
+    const { page: processed, refDef } = await resolvePageSource({
+      pageId,
+      pageEntry,
       buildContext,
-      refId: refDef.id,
-      sourceRefId: null,
-      vars: refDef.vars ?? {},
-      moduleDependencies,
-      moduleEntry: moduleEntry ?? null,
-      moduleRoot: moduleEntry?.moduleRoot ?? null,
-      packageRoot: moduleEntry?.packageRoot ?? null,
-      path: '',
-      currentFile: refDef.path ?? '',
-      refChain: new Set(),
-      operators,
-      env: process.env,
-      lowdefyApp: buildContext.appMeta,
-      dynamicIdentifiers,
-      shouldStop: null,
     });
-    let processed = await resolve(pageContent, pageCtx);
-    // The walker runs a ref's transformer after walking its content; the page's
-    // own ref is not walked here, so its transformer runs here.
-    processed = await runTransformer({
-      context: buildContext,
-      input: processed,
-      refDef,
-      referencedFrom: null,
-    });
-    processed = precomputeRuntimeOperators({
-      context: buildContext,
-      input: processed,
-      refDef,
-    });
-
-    // When resolving from a collection file (with vars), the result is an array of pages.
-    // Find the specific page by ID. For module pages, source IDs are unscoped.
-    if (type.isArray(processed)) {
-      const unscopedId = moduleEntry ? pageId.slice(`${moduleEntry.id}/`.length) : pageId;
-      processed = processed.find((p) => type.isObject(p) && p.id === unscopedId);
-      if (!processed) {
-        throw new ConfigError(`Page "${pageId}" not found in resolved page source file.`);
-      }
-    }
-
-    // JIT builds resolve from source YAML — the page ID is unscoped for module pages
-    if (moduleEntry && type.isObject(processed) && processed.id) {
-      processed.id = `${moduleEntry.id}/${processed.id}`;
-    }
 
     // Tag all objects with ~r for ref provenance (normally done inside _ref
     // resolution by the walker; JIT resolves the page file directly).
@@ -275,8 +138,10 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // build's testSchema does. Before auth is attached: it is not page config.
     testSchema({ components: processed, context: buildContext, schema: pageSchema });
 
-    // Apply skeleton-computed auth (buildAuth ran during skeleton build)
+    // Apply skeleton-computed auth and path (buildAuth ran during skeleton
+    // build, and buildModules scoped a module page's path to its entry).
     processed.auth = pageEntry.auth;
+    processed.path = pageEntry.path;
 
     // Build the page (validation, block processing)
     const checkDuplicatePageId = createCheckDuplicateId({
