@@ -18,6 +18,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 
 import Head from '@lowdefy/client/adapters/Head.js';
 import createLinkComponent from '@lowdefy/client/adapters/Link.js';
+import { lookupPath } from '@lowdefy/engine';
 
 import BuildingPage from '../lib/client/BuildingPage.jsx';
 import RestartingPage from '../lib/client/RestartingPage.jsx';
@@ -28,7 +29,7 @@ import OpenInEditorListener from './openInEditor/OpenInEditorListener.jsx';
 import Recorder from './Recorder.jsx';
 import Reload from './Reload.jsx';
 import Page from './Page.jsx';
-import setPageId from '../lib/client/setPageId.js';
+import getPagePath from '../lib/client/getPagePath.js';
 import { bumpNavVersion, getReloadVersion } from '../lib/client/utils/useMutateCache.js';
 import useRootConfig from '../lib/client/utils/useRootConfig.js';
 
@@ -62,15 +63,20 @@ function Routing({ auth, lowdefy, recording, router }) {
     lowdefy.theme = rootConfig.theme;
   }
 
-  const { redirect, pageId } = setPageId(location, rootConfig);
+  // The page is fetched by path; the server says which page it is.
+  const { redirect, path } = getPagePath(location, rootConfig);
   useEffect(() => {
     if (redirect) {
-      router.replace({ pathname: `/${pageId}` });
+      router.replace({ pathname: `/${path}` });
     }
-  }, [redirect, pageId, router]);
+  }, [redirect, path, router]);
   if (redirect) {
     return '';
   }
+  // The dev tools name the page the path memory holds for this path. The memory
+  // is created when the first page renders; until then the path is read as a
+  // page id, as lookupPath reads a path it has not seen.
+  const pageId = lowdefy.pathMemory ? lookupPath({ lowdefy, path }).pageId : path;
 
   return (
     <>
@@ -94,7 +100,7 @@ function Routing({ auth, lowdefy, recording, router }) {
             {resetContext.restarting ? (
               <RestartingPage />
             ) : (
-              <Suspense key={`${pageId}_${getReloadVersion()}`} fallback={<BuildingPage />}>
+              <Suspense key={`${path}_${getReloadVersion()}`} fallback={<BuildingPage />}>
                 <Page
                   auth={auth}
                   Components={{ Head, Link }}
@@ -103,7 +109,7 @@ function Routing({ auth, lowdefy, recording, router }) {
                   }}
                   jsMap={staticJsMap}
                   lowdefy={lowdefy}
-                  pageId={pageId}
+                  path={path}
                   resetContext={resetContext}
                   router={router}
                   types={{

@@ -65,6 +65,20 @@ import Client from '@lowdefy/client';
 | `ProgressBarController.js` | Loading progress indicator                        |
 | `useDarkMode.js`           | Dark mode hook (config → localStorage → OS pref)  |
 
+### Page Instances and Navigation
+
+The server shells (prod, e2e, dev) fetch pages by path and pass `Client` the server's match of the
+shown page: `matchedPath` (no basePath, no outer slashes, still encoded) and `pathParams`, next to
+`pageConfig`. `Client.js` keys the page tree by the instance key (`pageInstanceKey` from
+`@lowdefy/helpers`, `{instanceKey}:{build}` for a dynamic page), so a new set of path values
+remounts the tree, and `Context.js` hands `pathParams` to `getContext`. `initLowdefyContext` writes
+the shown page to the path memory (`rememberPath`) on every render, before the page context is
+built, so the first load's entry is there before any plugin runs; the memory itself lasts the
+session, across a dev config reload. The router's location (`createRouter`) is
+`{ path, pathname, search }` and names no page: the page comes from the server, and is read back
+from the path memory. The auth callbacks resolve their targets with `resolveTarget` (so they take
+`pathParams`) and write a page target to the path memory (`rememberTarget`) before the push.
+
 ### Block Rendering (`/block/`)
 
 | Module      | Purpose                                         |

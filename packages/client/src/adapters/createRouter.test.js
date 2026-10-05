@@ -81,7 +81,7 @@ test('push updates the url, notifies subscribers, and scrolls to top', async () 
   await router.push({ pathname: '/page-1', query: 'a=1' });
   expect(window.calls.pushState).toEqual(['/page-1?a=1']);
   expect(listener).toHaveBeenCalledWith({
-    pageId: 'page-1',
+    path: 'page-1',
     pathname: '/page-1',
     search: '?a=1',
   });
@@ -93,7 +93,7 @@ test('push prefixes basePath and getLocation strips it', async () => {
   const router = createRouter({ basePath: '/admin', window });
   await router.push({ pathname: '/page-1' });
   expect(window.calls.pushState).toEqual(['/admin/page-1']);
-  expect(router.getLocation().pageId).toBe('page-1');
+  expect(router.getLocation().path).toBe('page-1');
 });
 
 test('replace uses replaceState instead of pushState', async () => {
@@ -129,7 +129,7 @@ test('popstate notifies subscribers with the new location', async () => {
   window.location = new URL('http://localhost/page-0');
   window.dispatchPopstate({ lowdefyKey: 'k0' });
   expect(listener).toHaveBeenCalledWith({
-    pageId: 'page-0',
+    path: 'page-0',
     pathname: '/page-0',
     search: '',
   });
@@ -162,6 +162,22 @@ test('unsubscribe removes the listener', async () => {
   unsubscribe();
   await router.push({ pathname: '/page-1' });
   expect(listener).not.toHaveBeenCalled();
+});
+
+test('getLocation gives the encoded path without basePath and one trailing slash', () => {
+  const window = createFakeWindow({ url: 'http://localhost/admin/tickets/a%2Bb/1/?x=1' });
+  const router = createRouter({ basePath: '/admin', window });
+  expect(router.getLocation()).toEqual({
+    path: 'tickets/a%2Bb/1',
+    pathname: '/admin/tickets/a%2Bb/1/',
+    search: '?x=1',
+  });
+});
+
+test('getLocation gives an empty path at the app root', () => {
+  const window = createFakeWindow({ url: 'http://localhost/admin' });
+  const router = createRouter({ basePath: '/admin', window });
+  expect(router.getLocation().path).toBe('');
 });
 
 test('basePath is exposed on the router', () => {

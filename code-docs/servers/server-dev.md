@@ -106,7 +106,7 @@ server-dev/
 │   │   └── log/              # createLogger, createHandleError, logRequest
 │   └── client/               # Dev pages + utilities
 │       ├── BuildErrorPage.jsx / BuildingPage.jsx / InstallingPluginsPage.jsx
-│       ├── RestartingPage.jsx / ErrorBar.jsx / setPageId.js
+│       ├── RestartingPage.jsx / ErrorBar.jsx / getPagePath.js
 │       ├── auth/             # Auth.jsx, AuthConfigured.jsx (@hono/auth-js/react)
 │       └── utils/
 │           ├── usePageConfig.js       # SWR hook with versioned keys
@@ -428,13 +428,13 @@ A single instance lives in the server process (`jitPageBuilder.js`). The manager
 
 When a file changes, the watcher classifies it using the `skeletonSourceFiles.json` artifact (produced by the build's `collectSkeletonSourceFiles`):
 
-| Condition                         | Action                                                           |
-| --------------------------------- | ---------------------------------------------------------------- |
-| `lowdefy.yaml` changed            | Full skeleton rebuild                                            |
-| A `module.lowdefy.yaml` changed   | Full skeleton rebuild                                            |
-| File in `skeletonSourceFiles`     | Full skeleton rebuild                                            |
-| The last config build failed      | Full skeleton rebuild                                            |
-| File not in `skeletonSourceFiles` | Page-only change: refresh Tailwind candidates                    |
+| Condition                         | Action                                        |
+| --------------------------------- | --------------------------------------------- |
+| `lowdefy.yaml` changed            | Full skeleton rebuild                         |
+| A `module.lowdefy.yaml` changed   | Full skeleton rebuild                         |
+| File in `skeletonSourceFiles`     | Full skeleton rebuild                         |
+| The last config build failed      | Full skeleton rebuild                         |
+| File not in `skeletonSourceFiles` | Page-only change: refresh Tailwind candidates |
 
 After every batch, whichever branch ran (and whether the config build succeeded or failed),
 the watcher writes the `invalidatePages` change signal (`createChangeSignal`: the value is
@@ -945,13 +945,13 @@ Sets up the provider tree (`StyleProvider`, `XProvider`/antd theme, `AntdApp`, `
 
 **File:** `client/Routing.jsx`
 
-Replaces the old `lib/client/App.js` — page resolution is driven by the custom router from `@lowdefy/client/adapters` instead of `next/router`, everything else preserved. It subscribes to router location changes, resolves `pageId` via `setPageId(location, rootConfig)` (location shape: `{ pageId, pathname, search }`; `pageId` is null at the root path, which resolves/redirects to the home page), and renders `<Reload>` → `<Suspense>` → `<Page>` keyed on `${pageId}_${reloadVersion}`.
+Replaces the old `lib/client/App.js` — page resolution is driven by the custom router from `@lowdefy/client/adapters` instead of `next/router`, everything else preserved. It subscribes to router location changes (`{ path, pathname, search }`, `path` without basePath and the outer slashes, `''` at the root) and resolves the path to fetch with `getPagePath(location, rootConfig)`: the root fetches the home page's own path, built with `buildPagePath` from `home` and `pagePaths`, and redirects there when `homePageId` is unset. It never derives a page id before the fetch; the server's response names the page. It renders `<Reload>` → `<Suspense>` → `<Page>` keyed on `${path}_${reloadVersion}`. The in-page tools get the page id the path memory holds for the path (`lookupPath`), the path itself before the first page renders.
 
 ### Page
 
 **File:** `client/Page.jsx`
 
-Fetches page config via `usePageConfig` and renders `@lowdefy/client`'s `Client`. Handles the JIT response contract: `buildError` → `BuildErrorPage`, `installing` → `InstallingPluginsPage`, `restarting` → `RestartingPage`, `null` → replace to `/404`. Merges `_jsEntries` into the static `jsMap`, and merges `_dynamicIcons` into the static icons object with `Object.assign(types.icons, _dynamicIcons)`, so JIT-discovered icons render immediately. `createIcon` looks up `Icons[name]` on every render from the object it captured, so mutating that object is enough. The values are `IconData` (plain data), so nothing is rebuilt on the client.
+Fetches the page by path via `usePageConfig` and renders `@lowdefy/client`'s `Client` with the response's `pageConfig`, `matchedPath` and `pathParams`. Handles the JIT response contract: `buildError` → `BuildErrorPage`, `installing` → `InstallingPluginsPage`, `restarting` → `RestartingPage`, `null` → replace to `/404`. Merges `_jsEntries` into the static `jsMap`, and merges `_dynamicIcons` into the static icons object with `Object.assign(types.icons, _dynamicIcons)`, so JIT-discovered icons render immediately. `createIcon` looks up `Icons[name]` on every render from the object it captured, so mutating that object is enough. The values are `IconData` (plain data), so nothing is rebuilt on the client.
 
 ### ErrorBar
 
@@ -963,7 +963,7 @@ Fixed bottom bar that displays build errors and warnings in the browser. Build w
 
 **File:** `lib/client/utils/usePageConfig.js`
 
-Uses SWR with a versioned key to support cache busting on hot reload. `fetchPageConfig` fetches `/api/page/:pageId` (which runs the JIT build), returns the `buildError` / `installing` / auth-redirect shapes as they are, compiles `_jsEntries` module text into functions, and leaves `_dynamicIcons` as data for `Page.jsx`. The fetch always forwards the current query string. The SWR key comes from `getPageConfigKey`: a static page keys on `[pageUrl, reloadVersion]`, without the query string, so a Link that only changes the query reuses the cached config and never suspends behind the Building page fallback. A page learned to be dynamic (from the fetched config's `dynamic` flag, recorded by `recordDynamicPage`) keys on `[pageUrl, reloadVersion, search, navVersion]`, so it re-resolves on every navigation. The navigation whose fetch first finds a page dynamic keeps the static key, so that fetch is not repeated. `reloadVersion` changes on hot reload and orphans old cache entries.
+Uses SWR with a versioned key to support cache busting on hot reload. `fetchPageConfig` fetches `/api/page/<path>` (which matches the path and runs the JIT build), returns the `buildError` / `installing` / auth-redirect shapes as they are, returns a page as `{ pageId, pathParams, matchedPath, pageConfig }`, compiles `pageConfig._jsEntries` module text into functions, and leaves `_dynamicIcons` as data for `Page.jsx`. The fetch always forwards the current query string. The SWR key comes from `getPageConfigKey`: a static page keys on `[pageUrl, reloadVersion]`, without the query string, so a Link that only changes the query reuses the cached config and never suspends behind the Building page fallback. A page learned to be dynamic (from the fetched `pageConfig.dynamic` flag, recorded by `recordDynamicPage`) keys on `[pageUrl, reloadVersion, search, navVersion]`, so it re-resolves on every navigation. The navigation whose fetch first finds a page dynamic keeps the static key, so that fetch is not repeated. `reloadVersion` changes on hot reload and orphans old cache entries.
 
 **File:** `lib/client/utils/useMutateCache.js`
 

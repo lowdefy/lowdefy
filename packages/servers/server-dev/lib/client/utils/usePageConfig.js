@@ -81,17 +81,20 @@ export async function fetchPageConfig(url) {
     throw new Error(data.message || 'Request error');
   }
 
-  // The JIT build folds this page's _js entries and dynamic icons into the
-  // response, so first paint needs no secondary fetch. _jsEntries arrives as
-  // module text — compile it to the { hash: fn } object Page expects.
+  // A page response is { pageId, pathParams, matchedPath, pageConfig }: the page
+  // the server matched the path to, the values it carries and the path it was
+  // matched on. The JIT build folds this page's _js entries and dynamic icons
+  // into pageConfig, so first paint needs no secondary fetch. _jsEntries arrives
+  // as module text — compile it to the { hash: fn } object Page expects.
   // _dynamicIcons is already plain data — leave it for Page to inject.
-  if (data._jsEntries) data._jsEntries = parseJsModule(data._jsEntries);
+  const { pageConfig } = data;
+  if (pageConfig._jsEntries) pageConfig._jsEntries = parseJsModule(pageConfig._jsEntries);
 
   return data;
 }
 
 export function recordDynamicPage({ data, pageUrl }) {
-  if (data?.dynamic !== true) {
+  if (data?.pageConfig?.dynamic !== true) {
     dynamicPages.delete(pageUrl);
     return;
   }
@@ -120,17 +123,19 @@ export function getPageConfigKey({ pageUrl, search }) {
   return [pageUrl, getReloadVersion(), search, navVersion];
 }
 
-function usePageConfig(pageId, basePath) {
-  const pageUrl = `${basePath}/api/page/${pageId}`;
+// path is the page's URL path without basePath and the leading "/", still
+// encoded; the server matches it to a page.
+function usePageConfig(path, basePath) {
+  const pageUrl = `${basePath}/api/page/${path}`;
   const search = window.location.search;
   // The fetch always forwards the current query string, so server-side Dynamic
   // block resolution sees the same urlQuery as an initial HTML load.
   const { data } = useSWR(
     getPageConfigKey({ pageUrl, search }),
     async () => {
-      const pageConfig = await fetchPageConfig(`${pageUrl}${search}`);
-      recordDynamicPage({ data: pageConfig, pageUrl });
-      return pageConfig;
+      const data = await fetchPageConfig(`${pageUrl}${search}`);
+      recordDynamicPage({ data, pageUrl });
+      return data;
     },
     {
       suspense: true,

@@ -16,8 +16,8 @@
 
 import React from 'react';
 import { registerHtmlEnhancements } from '@lowdefy/block-utils';
-import { lookupPath, resolveTarget } from '@lowdefy/engine';
-import { translate } from '@lowdefy/helpers';
+import { lookupPath, rememberPath, resolveTarget } from '@lowdefy/engine';
+import { translate, type } from '@lowdefy/helpers';
 
 import createCallAPI from './createCallAPI.js';
 import createAuthMethods from './auth/createAuthMethods.js';
@@ -35,17 +35,29 @@ import { createUrl } from './adapters/url.js';
 // loadAllIcons (production server only) loads every icon the app bundles into
 // types.icons; a page loads only its own icons, so a name that arrives at
 // runtime may need it. Dev and e2e bundle every icon.
+//
+// matchedPath and pathParams are the server's match of the shown page: the
+// path it was matched on (no basePath, no leading "/") and the values it
+// carries.
 function initLowdefyContext({
   auth,
   Components,
   config,
   loadAllIcons,
   lowdefy,
+  matchedPath,
+  pathParams,
   router,
   stage,
   types,
   window,
 }) {
+  // The path memory lasts the session. A dev config reload clears initialised
+  // to rebuild the page contexts, but the paths this tab followed still name
+  // the same pages, and the page response it fetches next rewrites its own.
+  if (type.isUndefined(lowdefy.pathMemory)) {
+    lowdefy.pathMemory = new Map();
+  }
   if (!lowdefy._internal?.initialised) {
     lowdefy._internal = {
       actions: types.actions,
@@ -82,7 +94,6 @@ function initLowdefyContext({
     lowdefy.contexts = {};
     lowdefy.inputs = {};
     lowdefy.pageInstances = {};
-    lowdefy.pathMemory = new Map();
     lowdefy.lowdefyApp = config.rootConfig.lowdefyApp;
     lowdefy.lowdefyGlobal = config.rootConfig.lowdefyGlobal;
     lowdefy.theme = config.rootConfig.theme ?? {};
@@ -142,6 +153,16 @@ function initLowdefyContext({
   lowdefy.pageId = config.pageConfig.pageId;
   lowdefy.pagePaths = config.rootConfig.pagePaths;
   lowdefy.user = auth?.user ?? null;
+
+  // The shown page's path joins the path memory before its context is built,
+  // so the first load's page is known before any plugin reads the memory.
+  rememberPath({
+    lowdefy,
+    path: matchedPath,
+    pageId: config.pageConfig.pageId,
+    pathParams,
+    pattern: config.pageConfig.path,
+  });
 
   return lowdefy;
 }

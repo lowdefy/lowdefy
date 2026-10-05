@@ -22,18 +22,9 @@ import InstallingPluginsPage from '../lib/client/InstallingPluginsPage.jsx';
 import RedirectingPage from '../lib/client/RedirectingPage.jsx';
 import usePageConfig from '../lib/client/utils/usePageConfig.js';
 
-const Page = ({
-  auth,
-  Components,
-  config,
-  jsMap,
-  lowdefy,
-  pageId,
-  resetContext,
-  router,
-  types,
-}) => {
-  const { data: pageConfig } = usePageConfig(pageId, router.basePath);
+const Page = ({ auth, Components, config, jsMap, lowdefy, path, resetContext, router, types }) => {
+  const { data } = usePageConfig(path, router.basePath);
+  const pageConfig = data?.pageConfig;
 
   // Push build warnings to ErrorBar via runtime error callback
   const pushedWarningsRef = useRef(null);
@@ -50,37 +41,31 @@ const Page = ({
   // pageview it holds for this route change carries it (recorder/createRecorder.js).
   useEffect(() => {
     if (pageConfig) {
-      lowdefy._devPageRendered?.({ pageId, buildId: pageConfig._buildId ?? null });
+      lowdefy._devPageRendered?.({ pageId: data.pageId, buildId: pageConfig._buildId ?? null });
     }
-  }, [pageConfig, pageId, lowdefy]);
+  }, [pageConfig, data?.pageId, lowdefy]);
 
   // Full load to the sign-in page so it can return here after sign-in — an
   // effect, not a fetcher side effect, so the redirect re-fires if the same
   // cached result renders again.
   useEffect(() => {
-    if (pageConfig?.authRedirect) {
-      window.location.assign(pageConfig.authRedirect);
+    if (data?.authRedirect) {
+      window.location.assign(data.authRedirect);
     }
-  }, [pageConfig?.authRedirect]);
+  }, [data?.authRedirect]);
 
-  if (!pageConfig) {
+  if (!data) {
     router.replace({ pathname: '/404' });
     return '';
   }
-  if (pageConfig.authRedirect) {
-    return <RedirectingPage redirect={pageConfig.authRedirect} />;
+  if (data.authRedirect) {
+    return <RedirectingPage redirect={data.authRedirect} />;
   }
-  if (pageConfig.buildError) {
-    return (
-      <BuildErrorPage
-        errors={pageConfig.errors}
-        message={pageConfig.message}
-        source={pageConfig.source}
-      />
-    );
+  if (data.buildError) {
+    return <BuildErrorPage errors={data.errors} message={data.message} source={data.source} />;
   }
-  if (pageConfig.installing) {
-    return <InstallingPluginsPage packages={pageConfig.packages} />;
+  if (data.installing) {
+    return <InstallingPluginsPage packages={data.packages} />;
   }
 
   // Merge dynamic JS entries fetched after JIT build with the static jsMap
@@ -109,6 +94,8 @@ const Page = ({
       }}
       jsMap={mergedJsMap}
       lowdefy={lowdefy}
+      matchedPath={data.matchedPath}
+      pathParams={data.pathParams}
       resetContext={resetContext}
       router={router}
       stage="dev"

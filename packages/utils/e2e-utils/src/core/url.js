@@ -53,16 +53,18 @@ async function setUrlQuery(page, { key, value }) {
     };
   });
 
-  // A router navigation always re-fetches the page config, and blocks reading
-  // _url_query re-render only once that config is applied. Listening starts
-  // before the navigation so the response cannot be missed.
-  const pageConfigFetched = page
-    .waitForResponse((response) => response.url().includes('/api/page/'), { timeout: 30000 })
-    .catch((error) => {
-      // A response that never arrives must not hang the suite — fall through and
-      // let the test's own assertion report it. Anything else is a real fault.
-      if (error.name !== 'TimeoutError') throw error;
-    });
+  // A query change re-fetches the page config only on a Dynamic page; a static
+  // page re-renders on the config it has. Listening starts before the
+  // navigation so the response cannot be missed.
+  const pageConfigFetched = dynamic
+    ? page
+        .waitForResponse((response) => response.url().includes('/api/page/'), { timeout: 30000 })
+        .catch((error) => {
+          // A response that never arrives must not hang the suite — fall through and
+          // let the test's own assertion report it. Anything else is a real fault.
+          if (error.name !== 'TimeoutError') throw error;
+        })
+    : null;
 
   // A Dynamic page's content is resolved server-side from urlQuery, and the
   // engine rebuilds its context whenever a new config object arrives (see

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { resolveTarget, stopChain } from '@lowdefy/engine';
+import { rememberTarget, resolveTarget, stopChain } from '@lowdefy/engine';
 import { ConfigError, UserError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
@@ -173,7 +173,8 @@ function createAuthMethods(lowdefy, auth) {
   // member row the client session does not carry, so a soft push would leave it
   // half-applied. An external target leaves the app, so it cannot route through
   // the in-app router. A resolved page target is un-prefixed; the router
-  // re-applies basePath, so nothing double-prefixes.
+  // re-applies basePath, so nothing double-prefixes. A page target that names a
+  // page joins the path memory before the push, as a followed link does.
   function navigateToTarget(target) {
     if (type.isNone(target)) {
       return;
@@ -182,6 +183,7 @@ function createAuthMethods(lowdefy, auth) {
       lowdefy._internal.globals.window.location.assign(target.href);
       return;
     }
+    rememberTarget({ lowdefy, target });
     router.push({ pathname: target.pathname, query: target.query, forceReload: true });
   }
 

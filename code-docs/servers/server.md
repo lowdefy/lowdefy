@@ -120,15 +120,24 @@ Mounted on `/api/*` and (guarded against double-build) on the page routes. Build
 ```javascript
 const context = {
   rid: uuid(),
-  agents, appMeta, buildDirectory, config, connections, fileCache,
+  agents,
+  appMeta,
+  buildDirectory,
+  config,
+  connections,
+  fileCache,
   headers: c.req.header(),
-  i18n, jsMap, logger, operators, secrets,
+  i18n,
+  jsMap,
+  logger,
+  operators,
+  secrets,
   req: { url: c.req.path, method: c.req.method, hostname: c.req.header('host') },
 };
 context.logger = createLogger({ rid: context.rid });
 context.handleError = createHandleError({ context });
 context.session = await getSession(c); // skipped for /api/auth/* paths
-createApiContext(context);             // adds user + authorize
+createApiContext(context); // adds user + authorize
 c.set('lowdefyContext', context);
 ```
 
@@ -168,7 +177,7 @@ The production client does not import the app-wide plugin barrels. The full buil
 
 Icons are the fourth category of a page's type set, inlined as data in its module. `build/full/createGetPageIcons.js` restricts the app's icons (`components.imports.icons`, from the whole-app scan in `buildIconImports`) to what the page can reach: the same text scan over the built page, the `_js` sources whose hashes the page references, its blocks' `meta.icons`, the always-bundled client icons, and the names in `menus` and `global` (every page renders or reads them). Names that only arrive at runtime (`theme.icons.include`, endpoints, server `_js`, other pages, state) stay in the app-wide `plugins/icons.js`.
 
-`client/loadPageTypes.js` loads a page's chunk and merges it in place into the long-lived registries in `client/types.js`, which `initLowdefyContext` holds by reference. `main.jsx` awaits the first page's types before rendering (reloading once on failure, `shouldReloadForTypes.js`); `Page.jsx` awaits them on navigation before `setPageConfig`. `client/loadAllIcons.js` loads the app-wide icons chunk into `types.icons` once per tab (a failed load clears itself so the next miss retries); `Page.jsx` passes it to `Client`, and `createIcon` and the `data-icon` enhancer call it the first time a name is missing, drawing an empty icon of the same size (or nothing, for `data-icon`) until it settles. After one load, a missing name is unknown and draws `icon-missing`.
+`client/loadPageTypes.js` loads a page's chunk and merges it in place into the long-lived registries in `client/types.js`, which `initLowdefyContext` holds by reference. `main.jsx` awaits the first page's types before rendering (reloading once on failure, `shouldReloadForTypes.js`); `Page.jsx` awaits them on navigation before it swaps the page. `client/loadAllIcons.js` loads the app-wide icons chunk into `types.icons` once per tab (a failed load clears itself so the next miss retries); `Page.jsx` passes it to `Client`, and `createIcon` and the `data-icon` enhancer call it the first time a name is missing, drawing an empty icon of the same size (or nothing, for `data-icon`) until it settles. After one load, a missing name is unknown and draws `icon-missing`.
 
 `_operator` calls an operator by name at runtime. `countOperators` counts the names its config fixes (a literal, the literal branches of an `_if` or `_switch`); a name read at runtime must come with an `operators` list, which is counted instead (the build fails without one) and which `_operator` enforces when it runs, so a page never calls an operator its chunk does not hold.
 
@@ -180,7 +189,7 @@ Plugin packages declare `"sideEffects": ["**/*.css"]` so a page importing one bl
 
 ## SPA Navigation
 
-First load renders from the embedded config. Navigation is client-side: `client/Page.jsx` subscribes to the custom router (`@lowdefy/client/adapters/createRouter.js` — History API, scroll restoration, `forceReload` escape hatch) and fetches `GET /api/page/:pageId` (`src/routes/apiPage.js`) to swap `pageConfig`. A navigation that stays on the shown static page (only the query changes) skips the fetch and re-renders, so the page context picks up the new URL; dynamic pages refetch on every navigation. Missing pages replace to `/404`.
+First load renders from the embedded config. Navigation is client-side: `client/Page.jsx` subscribes to the custom router (`@lowdefy/client/adapters/createRouter.js` — History API, scroll restoration, `forceReload` escape hatch) and fetches `GET /api/page/<path>` (`src/routes/apiPage.js`) by the pathname without basePath, still encoded, to swap the page; the root fetches the home page's own path. The response's `pageId`, `pathParams` and `matchedPath` go to `Client` with `pageConfig`. A navigation whose path (basePath and one trailing `/` stripped) equals the shown page's `matchedPath` (only the query changes) skips the fetch and re-renders, so the page context picks up the new URL; another spelling of the same values fetches and lands on the same instance, and dynamic pages refetch on every navigation. Missing pages replace to `/404`; a network failure full-loads the path.
 
 **Stale bundle after a deploy.** The response also carries `buildId` from `build/appMeta.json`, and the client bundle imports the same file at Vite build time. When the two differ the server was redeployed after the tab loaded, and the new config may reference `_js` functions or plugins the running bundle never shipped, so `client/shouldReloadForBuild.js` triggers one `window.location.reload()` (the router has already pushed the target URL). It reloads at most once per server build, recorded in `sessionStorage`, so a rolling deploy answering from mixed versions cannot loop.
 
@@ -219,26 +228,26 @@ The Hono server runs as plain Node ESM — server-side imports from `build/plugi
 
 ## Key Files
 
-| File                              | Purpose                                       |
-| --------------------------------- | --------------------------------------------- |
-| `src/app.js`                      | Hono app assembly (routes, middleware, static) |
-| `src/middleware/apiContext.js`    | Request context setup                          |
-| `src/middleware/errorHandler.js`  | `app.onError` — serialized error contract      |
-| `src/html/renderPage.js`          | Page render, home redirect, 404 flow           |
-| `src/html/template.js`            | HTML shell + pre-hydration scripts             |
-| `src/routes/agent.js`             | Agent streaming route                          |
-| `client/main.jsx`                 | Client entry (CSS order, config parse)         |
-| `lib/server/auth/getAuthConfig.js`| Auth configuration                             |
-| `lowdefy/build.mjs`               | Build orchestration                            |
-| `vite.config.js`                  | Client build config                            |
+| File                               | Purpose                                        |
+| ---------------------------------- | ---------------------------------------------- |
+| `src/app.js`                       | Hono app assembly (routes, middleware, static) |
+| `src/middleware/apiContext.js`     | Request context setup                          |
+| `src/middleware/errorHandler.js`   | `app.onError` — serialized error contract      |
+| `src/html/renderPage.js`           | Page render, home redirect, 404 flow           |
+| `src/html/template.js`             | HTML shell + pre-hydration scripts             |
+| `src/routes/agent.js`              | Agent streaming route                          |
+| `client/main.jsx`                  | Client entry (CSS order, config parse)         |
+| `lib/server/auth/getAuthConfig.js` | Auth configuration                             |
+| `lowdefy/build.mjs`                | Build orchestration                            |
+| `vite.config.js`                   | Client build config                            |
 
 ## Environment Variables
 
-| Variable             | Purpose                                                       |
-| -------------------- | ------------------------------------------------------------- |
-| `PORT`               | Server port (default: 3000)                                   |
-| `LOWDEFY_LOG_LEVEL`  | Logging level (default: info)                                 |
-| `AUTH_SECRET`        | Session encryption key (`NEXTAUTH_SECRET` still honored)      |
-| `AUTH_URL`           | App URL for OAuth (`NEXTAUTH_URL` still honored; usually auto-detected via `trustHost`) |
-| `SENTRY_DSN`         | Sentry DSN — used server-side and passed to the client at runtime via the embedded config |
-| `SENTRY_AUTH_TOKEN`  | Enables source map upload during `vite build`                 |
+| Variable            | Purpose                                                                                   |
+| ------------------- | ----------------------------------------------------------------------------------------- |
+| `PORT`              | Server port (default: 3000)                                                               |
+| `LOWDEFY_LOG_LEVEL` | Logging level (default: info)                                                             |
+| `AUTH_SECRET`       | Session encryption key (`NEXTAUTH_SECRET` still honored)                                  |
+| `AUTH_URL`          | App URL for OAuth (`NEXTAUTH_URL` still honored; usually auto-detected via `trustHost`)   |
+| `SENTRY_DSN`        | Sentry DSN — used server-side and passed to the client at runtime via the embedded config |
+| `SENTRY_AUTH_TOKEN` | Enables source map upload during `vite build`                                             |
