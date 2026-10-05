@@ -41,6 +41,9 @@ function createFakeLowdefy({ popupBlocked = false } = {}) {
     basePath: '',
     inputs: {},
     home: { pageId: 'home', configured: false },
+    linkPaths: {},
+    pagePaths: {},
+    pathMemory: new Map(),
     _internal: {
       globals: { window },
       router: {
@@ -165,4 +168,25 @@ test('newTab wins over replace and scroll', () => {
   expect(lowdefy.calls.open).toEqual([['http://localhost/reports', '_blank']]);
   expect(lowdefy.calls.push).toEqual([]);
   expect(lowdefy.calls.replace).toEqual([]);
+});
+
+test('a pageId link to a patterned page pushes the built path, remembers it and seeds its instance input', () => {
+  const lowdefy = createFakeLowdefy();
+  lowdefy.pagePaths = { ticket: 'tickets/{space}/{ticket_id}' };
+
+  setupLink(lowdefy)({
+    pageId: 'ticket',
+    pathParams: { space: 'support', ticket_id: 1234 },
+    input: { from: 'list' },
+  });
+
+  expect(lowdefy.calls.push).toEqual([
+    { pathname: '/tickets/support/1234', query: '', scroll: undefined },
+  ]);
+  expect(lowdefy.pathMemory.get('tickets/support/1234')).toEqual({
+    pageId: 'ticket',
+    pathParams: { space: 'support', ticket_id: '1234' },
+    instanceKey: 'page:ticket#tickets/support/1234',
+  });
+  expect(lowdefy.inputs['page:ticket#tickets/support/1234']).toEqual({ from: 'list' });
 });

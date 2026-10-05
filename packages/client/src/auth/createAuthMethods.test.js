@@ -29,6 +29,9 @@ function setup({ signInResult, signUpResult } = {}) {
       },
     },
     home: { configured: false, pageId: 'home-page' },
+    linkPaths: {},
+    pagePaths: {},
+    pathMemory: new Map(),
   };
   // A page-kind navigation goes through router.push, which is where basePath is
   // applied (once, through createUrl) and the auth hard-reload happens. The fake

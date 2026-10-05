@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { pageInstanceKey } from '@lowdefy/helpers';
+
 // The page a URL path (no leading "/", no basePath) belongs to, from the paths this session built
 // or was told by the server. A path it has not seen is read as the id of a page without a pattern.
 function lookupPath({ lowdefy, path }) {
@@ -21,7 +23,7 @@ function lookupPath({ lowdefy, path }) {
   if (entry) {
     return entry;
   }
-  return { pageId: path, pathParams: {}, instanceKey: `page:${path}` };
+  return { pageId: path, pathParams: {}, instanceKey: pageInstanceKey({ pageId: path }) };
 }
 
 export default lookupPath;

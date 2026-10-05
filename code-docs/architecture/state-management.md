@@ -13,12 +13,12 @@ Lowdefy state management is:
 
 ## State Types
 
-| Operator     | Source                      | Scope   | Mutable   |
-| ------------ | --------------------------- | ------- | --------- |
-| `_state`     | `context.state`             | Page    | Yes       |
-| `_input`     | `lowdefy.inputs[contextId]` | Page    | Read-only |
-| `_global`    | `lowdefy.lowdefyGlobal`     | App     | Read-only |
-| `_url_query` | `window.location.search`    | Browser | External  |
+| Operator     | Source                        | Scope         | Mutable   |
+| ------------ | ----------------------------- | ------------- | --------- |
+| `_state`     | `context.state`               | Page          | Yes       |
+| `_input`     | `lowdefy.inputs[instanceKey]` | Page instance | Read-only |
+| `_global`    | `lowdefy.lowdefyGlobal`       | App           | Read-only |
+| `_url_query` | `window.location.search`      | Browser       | External  |
 
 ## State Class
 
@@ -76,7 +76,9 @@ class State {
 ```javascript
 const ctx = {
   id,
+  instanceKey,            // pageInstanceKey({ pageId, path, pathParams }), see code-docs/packages/engine.md
   pageId: config.pageId,
+  pathParams,             // the page instance's path values
   eventLog: [],
   jsMap,
   requests: {},

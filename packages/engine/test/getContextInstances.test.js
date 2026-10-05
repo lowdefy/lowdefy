@@ -86,6 +86,19 @@ test('returning to a page instance reuses its context without rerunning onInit',
   expect(again.state).toEqual({ title: 'First' });
 });
 
+test('a query change on the same values reuses the page instance', async () => {
+  const lowdefy = getLowdefy();
+  lowdefy._internal.globals = { window: { location: { search: '?tab=1' } } };
+  const config = ticketConfig();
+  const one = await visit({ lowdefy, config, ticket_id: '1' });
+  one.state.title = 'First';
+  lowdefy._internal.globals.window.location.search = '?tab=2';
+  const again = await visit({ lowdefy, config, ticket_id: '1' });
+  expect(again).toBe(one);
+  expect(again.state).toEqual({ title: 'First' });
+  expect(lowdefy.pageInstances.ticket).toEqual(['page:ticket#tickets/support/1']);
+});
+
 test('a page keeps its 10 most recently rendered instances', async () => {
   const lowdefy = getLowdefy();
   const config = ticketConfig();
