@@ -18,7 +18,7 @@ import { TenantIntegrityError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
-import warnUnwalledReach from './warnUnwalledReach.js';
+import resolveUnwalledReach from './resolveUnwalledReach.js';
 
 // The tenant preflight: under policy: tenant, find walled collections that
 // hold rows without the tenant field and report them. The wall filters every
@@ -171,17 +171,18 @@ async function runPreflight(context, { captureError }) {
     );
     return [];
   }
+  // Logs each unwalled connection that reaches a walled database at start;
+  // checkUnwalledReach refuses that connection's requests.
+  const unwalledReach = resolveUnwalledReach(context).catch((error) => {
+    context.logger.warn({ err: error }, 'Tenant preflight could not check unwalled connections.');
+  });
   const targets = await collectTargets(context, { tenantConnections });
   const results = await probeTargets(context, { targets });
+  await unwalledReach;
   const failures = results.filter((result) => result.error);
   if (failures.length > 0) {
     // A probe that could not reach the datastore is an outage, not a verdict.
     throw failures[0].error;
-  }
-  try {
-    await warnUnwalledReach(context, { targets });
-  } catch (error) {
-    context.logger.warn({ err: error }, 'Tenant preflight could not check unwalled connections.');
   }
   const offenders = results.filter((result) => result.ok === false);
   offenders.forEach((result) => reportOffender(context, { captureError, target: result.target }));

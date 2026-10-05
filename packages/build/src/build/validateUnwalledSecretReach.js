@@ -14,18 +14,16 @@
   limitations under the License.
 */
 
-import { ConfigWarning } from '@lowdefy/errors';
+import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
-// The wall has no way around it: a plugin that opens its own MongoDB handle
-// from the same secret as a walled connection reads and writes the walled
-// database outside the wall. A connection whose type is non-scopable
-// (meta.tenant: false, e.g. SMTP or a plugin's own connection type) that
-// references the secret a walled connection's databaseUri names is exactly
-// that. It should name the walled connection (mongoConnectionId) and use the
-// walled client (@lowdefy/connection-mongodb/walled) instead.
-//
-// A warning in this release, a build error in the next.
+// A plugin that opens its own MongoDB handle from the same secret as a walled
+// connection reads and writes the walled database outside the wall. A
+// connection whose type is non-scopable (meta.tenant: false, e.g. SMTP or a
+// plugin's own connection type) that references the secret a walled
+// connection's databaseUri names is exactly that. It should name the walled
+// connection (mongoConnectionId) and use the walled client
+// (@lowdefy/connection-mongodb/walled) instead.
 function collectSecretNames(value, names) {
   if (type.isArray(value)) {
     value.forEach((item) => collectSecretNames(item, names));
@@ -41,7 +39,16 @@ function collectSecretNames(value, names) {
   return names;
 }
 
-function warnUnwalledSecretReach({ connections, context }) {
+// The errors go straight onto context.errors rather than through
+// collectExceptions: ~ignoreBuildChecks must not be a way around the wall.
+function reportError(context, error) {
+  if (!context.errors) {
+    throw error;
+  }
+  context.errors.push(error);
+}
+
+function validateUnwalledSecretReach({ connections, context }) {
   const connectionMetas = context.typesMap?.connectionMetas ?? {};
   // secret name -> first walled connection whose databaseUri reads it
   const walledSecrets = new Map();
@@ -56,13 +63,14 @@ function warnUnwalledSecretReach({ connections, context }) {
     if (connectionMetas[connection.type]?.tenant !== false) return;
     collectSecretNames(connection.properties, new Set()).forEach((name) => {
       if (!walledSecrets.has(name)) return;
-      context.handleWarning(
-        new ConfigWarning(
+      reportError(
+        context,
+        new ConfigError(
           `Connection "${connection.connectionId}" (${
             connection.type
           }) reads secret "${name}", the database of walled connection "${walledSecrets.get(
             name
-          )}". Unwalled connections must not reach walled data: give the plugin a mongoConnectionId and use the walled MongoDB client (@lowdefy/connection-mongodb/walled). This becomes a build error in the next release.`,
+          )}". Unwalled connections must not reach walled data: give the plugin a mongoConnectionId and use the walled MongoDB client (@lowdefy/connection-mongodb/walled).`,
           { configKey: connection['~k'] }
         )
       );
@@ -70,4 +78,4 @@ function warnUnwalledSecretReach({ connections, context }) {
   });
 }
 
-export default warnUnwalledSecretReach;
+export default validateUnwalledSecretReach;

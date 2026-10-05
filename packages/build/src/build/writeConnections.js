@@ -53,8 +53,8 @@ async function writeConnections({ components, context }) {
       serializer.serializeToString(tenantConnections)
     )
   );
-  // The non-scopable connections (meta.tenant: false): the server start warns when
-  // one of them holds a URI to a walled database (warnUnwalledReach). Only written when there are some.
+  // The non-scopable connections (meta.tenant: false): the server refuses the requests of
+  // one that holds a URI to a walled database (resolveUnwalledReach). Only written when there are some.
   const unwalledConnections = components.connections
     .filter((connection) => connectionMetas[connection.type]?.tenant === false)
     .map((connection) => ({ connectionId: connection.connectionId, type: connection.type }));
