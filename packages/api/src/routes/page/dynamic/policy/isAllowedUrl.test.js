@@ -16,10 +16,16 @@
 
 import isAllowedUrl from './isAllowedUrl.js';
 
-const policy = { links: { pages: ['thanks'], origins: ['https://example.com'] } };
+const policy = { links: { pages: ['thanks', 'ticket'], origins: ['https://example.com'] } };
+const routes = [
+  { pageId: 'thanks', path: 'thanks' },
+  { pageId: 'admin', path: 'admin' },
+  { pageId: 'ticket', path: '{space}/tickets/{ticket_id}' },
+  { pageId: 'admin-ticket', path: 'admin/tickets/{ticket_id}' },
+];
 
 function allowed(value, options = {}) {
-  return isAllowedUrl({ value, policy, navigation: false, schemeless: false, ...options });
+  return isAllowedUrl({ value, policy, navigation: false, schemeless: false, routes, ...options });
 }
 
 test('isAllowedUrl allows listed origins and same-origin loads', () => {
@@ -40,6 +46,27 @@ test('isAllowedUrl rejects other origins, non-http schemes and off-app relative 
 test('isAllowedUrl limits same-origin navigation to listed pages', () => {
   expect(allowed('/thanks?x=1#top', { navigation: true })).toBe(true);
   expect(allowed('/admin', { navigation: true })).toBe(false);
+  expect(allowed('/missing', { navigation: true })).toBe(false);
+});
+
+test('isAllowedUrl checks same-origin navigation on the page the path matches', () => {
+  expect(allowed('/support/tickets/1', { navigation: true })).toBe(true);
+  expect(allowed('/support/tickets/1?tab=notes', { navigation: true })).toBe(true);
+  expect(allowed('/admin/tickets/1', { navigation: true })).toBe(false);
+  expect(allowed('/support/tickets', { navigation: true })).toBe(false);
+});
+
+test('isAllowedUrl refuses same-origin navigation to a policy page id that is not its path', () => {
+  const listed = { links: { pages: ['ticket'], origins: [] } };
+  expect(
+    isAllowedUrl({
+      value: '/ticket',
+      policy: listed,
+      navigation: true,
+      schemeless: false,
+      routes,
+    })
+  ).toBe(false);
 });
 
 test('isAllowedUrl reads a colon-less url as an https host, as Link does', () => {

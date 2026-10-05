@@ -46,6 +46,7 @@ import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import isSameOriginRequest from './context/isSameOriginRequest.js';
 import isWebSocketOriginAllowed from './context/isWebSocketOriginAllowed.js';
 import logClientError from './routes/log/logClientError.js';
+import matchPagePath from './routes/page/matchPagePath.js';
 import normalizeInjectedCaller from './context/normalizeInjectedCaller.js';
 import parseRequestBody from './context/parseRequestBody.js';
 import redactErrorResponse from './response/redactErrorResponse.js';
@@ -91,6 +92,7 @@ export {
   isSameOriginRequest,
   isWebSocketOriginAllowed,
   logClientError,
+  matchPagePath,
   normalizeInjectedCaller,
   parseRequestBody,
   redactErrorResponse,

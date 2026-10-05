@@ -169,8 +169,9 @@ function checkBlockList({ blocks, path, depth, walk }) {
 // Applies a dynamic blocks policy to content as submitted (before buildBlock renames
 // ids or moves areas to slots), so every error's path indexes that content.
 // clientOperators is the app's set of client operator names: a key that names
-// none of them is data to the client.
-function checkPolicy({ blocks, policy, blockMetas, blockSchemas, clientOperators = null }) {
+// none of them is data to the client. routes is the app's route table, which a
+// same-origin navigation URL is matched against to find its page.
+function checkPolicy({ blocks, policy, blockMetas, blockSchemas, clientOperators = null, routes }) {
   // The rules walk content by recursion, so content nested deeper than any
   // Dynamic data may be is refused first, before it can exhaust the stack.
   if (isNestedDeeperThan({ value: blocks, limit: MAX_DATA_DEPTH })) {
@@ -204,6 +205,7 @@ function checkPolicy({ blocks, policy, blockMetas, blockSchemas, clientOperators
     errors: [],
     ids: new Set(),
     policy,
+    routes,
   };
   checkBlockList({ blocks: content, path: 'blocks', depth: 1, walk });
   findSerializerKeys({ value: content, path: 'blocks' }).forEach((path) => {

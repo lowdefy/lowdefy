@@ -85,6 +85,7 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
         blockId: block.blockId,
         pageId: shared.pageId,
         params: params ?? {},
+        pathParams: shared.pathParams ?? {},
         urlQuery: shared.urlQuery ?? {},
       },
       endpointDepth: 0,
@@ -172,7 +173,7 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
   }
 }
 
-async function resolveDynamicContent(context, { pageConfig, urlQuery }) {
+async function resolveDynamicContent(context, { pageConfig, pathParams, urlQuery }) {
   const [artifacts, pageTypeSets, iconImports, { default: collectIconNames }] = await Promise.all([
     loadDynamicArtifacts(context),
     context.readConfigFile('pageTypeSets.json'),
@@ -184,6 +185,7 @@ async function resolveDynamicContent(context, { pageConfig, urlQuery }) {
     artifacts,
     pageId: pageConfig.pageId,
     pageRequests: pageConfig.requests ?? [],
+    pathParams,
     urlQuery,
     usedTypes: { actions: new Set(), blocks: new Set(), operators: new Set() },
   };

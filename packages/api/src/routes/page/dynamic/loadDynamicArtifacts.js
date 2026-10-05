@@ -39,6 +39,7 @@ async function loadDynamicArtifacts(context) {
     blockSchemas,
     clientOperators,
     dynamicPolicies,
+    routes,
   ] = await Promise.all([
     import('@lowdefy/build/dynamic'),
     context.readConfigFile('types.json'),
@@ -46,6 +47,7 @@ async function loadDynamicArtifacts(context) {
     context.readConfigFile('plugins/blockSchemas.json'),
     context.readConfigFile('plugins/clientOperators.json'),
     context.readConfigFile('dynamicPolicies.json'),
+    context.readConfigFile('routes.json'),
   ]);
   return {
     blockMetas: blockMetas ?? {},
@@ -55,6 +57,7 @@ async function loadDynamicArtifacts(context) {
     // run count as operators. Without the list every operator-shaped key counts.
     clientOperators: getClientOperatorSet(clientOperators),
     dynamicPolicies: dynamicPolicies ?? {},
+    routes,
     types: types ?? {},
   };
 }
