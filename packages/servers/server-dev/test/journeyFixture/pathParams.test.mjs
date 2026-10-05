@@ -16,7 +16,13 @@
 
 import { getState, goto, setState, waitForPage } from '@lowdefy/e2e-utils/runtime';
 
-import { fixtureTest, fixtureUrl, launchChromium, postJourney } from './fixtureClient.mjs';
+import {
+  fixtureTest,
+  fixtureUrl,
+  launchChromium,
+  listMutants,
+  postJourney,
+} from './fixtureClient.mjs';
 
 // A patterned page (ticket, at tickets/{ticket_id}) has one instance per ticket id. The e2e-utils
 // helpers and journey replay read the state of the instance on screen.
@@ -66,4 +72,12 @@ fixtureTest('journey replay reads the state of each ticket it opens', async () =
   });
   expect(result.failure).toBeUndefined();
   expect(result.passed).toBe(true);
+  expect(result.exercised.pages).toEqual(['ticket']);
+  const listing = await listMutants({
+    pages: result.exercised.pages,
+    requests: [],
+    endpoints: [],
+    appEvents: false,
+  });
+  expect(listing.mutants.some(({ artifact }) => artifact === 'pages/ticket.json')).toBe(true);
 });

@@ -29,6 +29,10 @@ function callApi({ id, endpointId, detached }) {
 }
 
 const artifacts = {
+  'routes.json': [
+    { pageId: 'tickets', path: 'tickets' },
+    { pageId: 'ticket', path: 'tickets/{ticket_id}' },
+  ],
   'plugins/requestSchemas.json': {
     MongoDBFind: { meta: { checkRead: true, checkWrite: false } },
     MongoDBInsertOne: { meta: { checkRead: false, checkWrite: true } },
@@ -142,7 +146,7 @@ test('collectExercised merges actors, adds nested endpoints and writes, and pass
   const exercised = await collectExercised({
     snapshots: [
       {
-        pages: ['tickets'],
+        pagePaths: ['tickets', 'tickets/7'],
         appEvents: true,
         requests: [{ pageId: 'tickets', requestId: 'save', calls: 1 }],
         endpoints: [{ endpointId: 'notify', calls: 1 }],
@@ -164,7 +168,7 @@ test('collectExercised merges actors, adds nested endpoints and writes, and pass
     requestSchemas: artifacts['plugins/requestSchemas.json'],
   });
   expect(exercised).toEqual({
-    pages: ['tickets'],
+    pages: ['ticket', 'tickets'],
     appEvents: true,
     requests: [{ pageId: 'tickets', requestId: 'save', calls: 1, write: true }],
     endpoints: [

@@ -1846,7 +1846,8 @@ test('runJourney reports the exercised network path merged across actors, with n
     {
       page: memberPage,
       opening: [
-        { url: `${origin}/api/page/ticket` },
+        { url: `${origin}/api/page/tickets/s/2` },
+        { url: `${origin}/api/page/tickets/s/5` },
         { url: `${origin}/api/request/tickets/assign`, method: 'POST' },
         // Another origin, and a route the counter does not track.
         { url: 'http://elsewhere.test/api/page/other' },
@@ -1855,6 +1856,10 @@ test('runJourney reports the exercised network path merged across actors, with n
     },
   ]);
   const artifacts = {
+    'routes.json': [
+      { pageId: 'tickets', path: 'tickets' },
+      { pageId: 'ticket', path: 'tickets/{space}/{ticket_id}' },
+    ],
     'plugins/requestSchemas.json': {
       MongoDBFind: { meta: { checkWrite: false } },
       MongoDBInsertOne: { meta: { checkWrite: true } },
