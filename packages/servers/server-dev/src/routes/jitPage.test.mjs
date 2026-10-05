@@ -27,11 +27,9 @@ jest.unstable_mockModule('../../lib/docs/getBuildId.js', () => ({
   default: () => mockBuildId,
 }));
 
-const { default: matchPagePath } = await import('@lowdefy/api/routes/page/matchPagePath.js');
 const mockGetPageConfig = jest.fn();
 jest.unstable_mockModule('@lowdefy/api', () => ({
   getPageConfig: mockGetPageConfig,
-  matchPagePath,
 }));
 
 // No JIT build work in these tests — the route's build branch is exercised

@@ -18,8 +18,10 @@ import { readRecordings } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import formatSessionLine from './formatSessionLine.js';
+import loadRouteTable from './loadRouteTable.js';
 import parseSince from './parseSince.js';
 import readTestRunKeys from './readTestRunKeys.js';
+import resolveBuildDirectory from './resolveBuildDirectory.js';
 import resolveCurrentBuild from './resolveCurrentBuild.js';
 import summariseSessions from './summariseSessions.js';
 
@@ -51,8 +53,14 @@ async function journeysRecordings({ context }) {
   }).filter((record) => type.isUndefined(since) || Date.parse(record?.t) >= since);
 
   const build = await resolveBuild({ context, records, build: options.build });
-  const { testRun, keys } = readTestRunKeys({ configDirectory });
-  const sessions = summariseSessions({ records, testKeys: keys, hasTestRun: testRun !== null })
+  const routeTable = loadRouteTable({ buildDirectory: resolveBuildDirectory({ context }) });
+  const { testRun, keys } = readTestRunKeys({ configDirectory, routeTable });
+  const sessions = summariseSessions({
+    records,
+    routeTable,
+    testKeys: keys,
+    hasTestRun: testRun !== null,
+  })
     .filter((session) => type.isNone(options.page) || session.pages.includes(options.page))
     .filter((session) => type.isUndefined(build) || session.builds.includes(build));
 

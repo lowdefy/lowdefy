@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import matchPagePath from '../../matchPagePath.js';
+import { matchPagePath } from '@lowdefy/node-utils';
+
 import normalizeUrlText from './normalizeUrlText.js';
 
 // A reserved origin: a URL that resolves to it stays on the app.

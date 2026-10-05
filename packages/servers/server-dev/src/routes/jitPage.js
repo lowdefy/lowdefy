@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import { getPageConfig, matchPagePath } from '@lowdefy/api';
+import { getPageConfig } from '@lowdefy/api';
+import { matchPagePath } from '@lowdefy/node-utils';
 
 import authJson from '../../lib/build/auth.js';
 import { buildPageWithContext, getPageJitEnrichment } from '../../lib/server/jitPageBuilder.js';

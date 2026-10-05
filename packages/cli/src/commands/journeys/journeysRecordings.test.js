@@ -219,7 +219,11 @@ beforeEach(() => {
   configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-recordings-command-'));
   logs = [];
   context = {
-    directories: { config: configDirectory },
+    directories: {
+      config: configDirectory,
+      dev: path.join(configDirectory, '.lowdefy', 'dev'),
+      build: path.join(configDirectory, '.lowdefy', 'server', 'build'),
+    },
     options: {},
     logger: { info: (line) => logs.push(line) },
     sendTelemetry: jest.fn(),

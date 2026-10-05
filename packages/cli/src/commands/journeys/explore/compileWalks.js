@@ -21,6 +21,7 @@ import { type } from '@lowdefy/helpers';
 
 import filterSnapshotExpectations from './filterSnapshotExpectations.js';
 import loadBlockMetas from '../loadBlockMetas.js';
+import loadRouteTable from '../loadRouteTable.js';
 
 const CANDIDATES_DIRECTORY = path.join('tests', 'journeys', '_candidates', 'explorer');
 const INTERACTIONS = ['click', 'fill', 'select', 'open'];
@@ -91,12 +92,14 @@ function compileWalks({
       .map((record) => [record.session, record.run.journey])
   );
   const blockMetas = loadBlockMetas({ buildDirectory });
+  const routeTable = loadRouteTable({ buildDirectory });
   let droppedExpectations = 0;
 
   function compilePartition({ partition, outDirectory, isFinding }) {
     const { candidates } = compileTrace({
       records: partition,
       blockMetas,
+      routeTable,
       existingCandidates: readExistingCandidates({ outDirectory }),
       source: 'explorer',
       prepareCandidate: ({ journey, origin, comments, sessions }) => {

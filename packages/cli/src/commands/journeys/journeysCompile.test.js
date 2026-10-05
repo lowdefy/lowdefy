@@ -91,9 +91,18 @@ function writeTrace(name, records) {
   return path.join(configDirectory, name);
 }
 
-function writeBlockMetas() {
-  const plugins = path.join(configDirectory, '.lowdefy', 'dev', 'build', 'plugins');
+function writeBuild() {
+  const build = path.join(configDirectory, '.lowdefy', 'dev', 'build');
+  const plugins = path.join(build, 'plugins');
   fs.mkdirSync(plugins, { recursive: true });
+  fs.writeFileSync(
+    path.join(build, 'routes.json'),
+    JSON.stringify([
+      { pageId: 'orders', path: 'orders' },
+      { pageId: 'tickets', path: 'tickets' },
+    ])
+  );
+  fs.writeFileSync(path.join(build, 'config.json'), JSON.stringify({}));
   fs.writeFileSync(
     path.join(plugins, 'blockMetas.json'),
     JSON.stringify({
@@ -136,7 +145,7 @@ afterEach(() => {
 const now = Date.now();
 
 test('journeys compile reads the trace files given and writes candidates that validate', async () => {
-  writeBlockMetas();
+  writeBuild();
   const file = writeTrace('trace.jsonl', [
     ...session({ id: 's-1', start: now - 3 * 60 * 60 * 1000 }),
     ...session({ id: 's-2', start: now - 2 * 60 * 60 * 1000, value: 'hats' }),
@@ -175,7 +184,7 @@ test('journeys compile reads the trace files given and writes candidates that va
 });
 
 test('journeys compile filters records within the given files by --source', async () => {
-  writeBlockMetas();
+  writeBuild();
   const file = writeTrace('trace.jsonl', [
     ...session({ id: 's-1', start: now - 60000 }),
     ...session({ id: 's-2', start: now - 50000, source: 'explorer' }),
@@ -197,7 +206,7 @@ test('journeys compile refuses files holding several sources without --source', 
 });
 
 test('journeys compile filters records by --since', async () => {
-  writeBlockMetas();
+  writeBuild();
   const file = writeTrace('trace.jsonl', [
     ...session({ id: 'old', start: now - 3 * DAY }),
     ...session({ id: 'new', start: now - 60 * 60 * 1000 }),
@@ -339,7 +348,7 @@ function traceId(time, suffix) {
 }
 
 test('journeys compile --source dev reads the dev recordings and writes dev candidates', async () => {
-  writeBlockMetas();
+  writeBuild();
   const start = now - 60 * 60 * 1000;
   writeRecording({
     source: 'dev',

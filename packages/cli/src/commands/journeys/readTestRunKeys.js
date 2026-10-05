@@ -23,13 +23,13 @@ function sequenceKey({ page, identity }) {
 }
 
 // The interactions the newest test run drove, as sequence keys. No test run:
-// testRun null.
-function readTestRunKeys({ configDirectory }) {
+// testRun null. `routeTable` is the build's routes (loadRouteTable).
+function readTestRunKeys({ configDirectory, routeTable }) {
   const newest = readNewestTestRun({ configDirectory });
   if (newest === null) {
     return { testRun: null, keys: new Set() };
   }
-  const { segments } = compileTrace({ records: newest.records, source: 'journey' });
+  const { segments } = compileTrace({ records: newest.records, routeTable, source: 'journey' });
   const keys = new Set(segments.flatMap((segment) => segment.sequence.map(sequenceKey)));
   return { testRun: { id: newest.id }, keys };
 }

@@ -27,8 +27,8 @@ function distinctCount(values) {
   return new Set(values.filter((value) => !type.isNone(value))).size;
 }
 
-function backingSegments({ journey, segments }) {
-  const sequence = journeySequence({ pageId: journey.pageId, steps: journey.steps });
+function backingSegments({ journey, segments, routeTable }) {
+  const sequence = journeySequence({ pageId: journey.pageId, steps: journey.steps, routeTable });
   return segments.filter((segment) =>
     isBackedBy({
       journeySequence: sequence,
@@ -38,8 +38,8 @@ function backingSegments({ journey, segments }) {
   );
 }
 
-function productionEvidence({ journey, segments, window }) {
-  const backing = backingSegments({ journey, segments });
+function productionEvidence({ journey, segments, window, routeTable }) {
+  const backing = backingSegments({ journey, segments, routeTable });
   const entering = segments.filter((segment) => segment.page_id === journey.pageId);
   const backingEntering = backing.filter((segment) => segment.page_id === journey.pageId);
   return {
@@ -65,18 +65,19 @@ function isEqual(a, b) {
 // - journeys: [{ filePath, journeyIndex, journey }]
 // - sources: { production?: { segments, window }, dev?: { segments },
 //   mutation?: readMutationReport's result }
+// - routeTable: the build's routes the segments' sequences were read with
 //   `dev.recordings` counts the dev segments that back the journey. A
 //   mutation report sets `mutation` for the journeys it names only.
-function computeEvidence({ journeys, sources, today }) {
+function computeEvidence({ journeys, sources, routeTable, today }) {
   return journeys.map(({ filePath, file, journeyIndex, journey }) => {
     const before = journey.evidence;
     const computed = {};
     if (!type.isNone(sources.production)) {
-      computed.production = productionEvidence({ journey, ...sources.production });
+      computed.production = productionEvidence({ journey, ...sources.production, routeTable });
     }
     if (!type.isNone(sources.dev)) {
       computed.dev = {
-        recordings: backingSegments({ journey, segments: sources.dev.segments }).length,
+        recordings: backingSegments({ journey, segments: sources.dev.segments, routeTable }).length,
       };
     }
     const mutation = sources.mutation?.byJourney.get(`${file}#${journey.name}`);

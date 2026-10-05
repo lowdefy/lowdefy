@@ -142,7 +142,7 @@ buildMenu()         // Build navigation structure
 
 Auth matching now supports wildcard glob patterns (`team-users/*`) for module page access rules.
 
-`buildRoutes` parses each page's `path` (`parsePathPattern` from `@lowdefy/helpers`) or takes its id as an all-fixed pattern, refuses ties (`checkRouteTies`: same length, placeholders in the same positions, fixed segments equal ignoring case) and placeholders on the `homePageId` page or any `path` on the `404` page, and keeps the table on `context.routes`. `writeRoutes` writes it as `routes.json` (`[{ pageId, path, auth }]`), which the server matcher (`matchPagePath` in `@lowdefy/api`) and the server-side URL builders read. `buildPages` writes each page's `linkPaths` (the paths of the pages its collected links target) and checks those links' `pathParams`; `buildMenu` checks menu links' `pathParams`.
+`buildRoutes` parses each page's `path` (`parsePathPattern` from `@lowdefy/helpers`) or takes its id as an all-fixed pattern, refuses ties (`checkRouteTies`: same length, placeholders in the same positions, fixed segments equal ignoring case) and placeholders on the `homePageId` page or any `path` on the `404` page, and keeps the table on `context.routes`. `writeRoutes` writes it as `routes.json` (`[{ pageId, path, auth }]`), which the server matcher (`matchPagePath` in `@lowdefy/node-utils`) and the server-side URL builders read. `buildPages` writes each page's `linkPaths` (the paths of the pages its collected links target) and checks those links' `pathParams`; `buildMenu` checks menu links' `pathParams`.
 
 ### Phase 6: Finalization
 

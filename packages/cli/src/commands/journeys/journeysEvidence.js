@@ -20,10 +20,12 @@ import { type } from '@lowdefy/helpers';
 import computeEvidence from './evidence/computeEvidence.js';
 import formatEvidence from '../test/formatEvidence.js';
 import formatZeroBacked from './evidence/formatZeroBacked.js';
+import loadRouteTable from './loadRouteTable.js';
 import readCommittedJourneys from './readCommittedJourneys.js';
 import readDevSegments from './readDevSegments.js';
 import readMutationReport from './readMutationReport.js';
 import readProductionSegments from './readProductionSegments.js';
+import resolveBuildDirectory from './resolveBuildDirectory.js';
 import writeEvidenceNode from './evidence/writeEvidenceNode.js';
 
 const SOURCES = ['production'];
@@ -93,6 +95,7 @@ async function journeysEvidence({ context }) {
       dev: readDevSegments({ context, now }),
       mutation: readMutationReport({ directories: context.directories }),
     },
+    routeTable: loadRouteTable({ buildDirectory: resolveBuildDirectory({ context }) }),
     today: new Date(now).toISOString().slice(0, 10),
   });
 

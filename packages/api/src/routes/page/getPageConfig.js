@@ -15,9 +15,9 @@
 */
 
 import { serializer, type } from '@lowdefy/helpers';
+import { matchPagePath } from '@lowdefy/node-utils';
 
 import resolveDynamicContent from './dynamic/resolveDynamicContent.js';
-import matchPagePath from './matchPagePath.js';
 
 // Matches the request path (basePath and the leading "/" removed) to a page,
 // then returns a status object so the page route can fork on the auth outcome.

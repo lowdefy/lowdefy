@@ -191,13 +191,14 @@ function measureFailure({ profile, segments, journeys, journeyKeys, measuredRun 
 }
 
 // Clicks with the page each one runs on and whether an `expect` follows it.
-function readClicks({ journey }) {
+function readClicks({ journey, routeTable }) {
   const clicks = [];
   journey.steps.forEach((step, index) => {
     if (getStepKey(step) !== 'click') return;
     const sequence = journeySequence({
       pageId: journey.pageId,
       steps: journey.steps.slice(0, index + 1),
+      routeTable,
     });
     const page = sequence[sequence.length - 1]?.page ?? journey.pageId;
     const [, blockId, , text] = JSON.parse(stepIdentity({ step }));
@@ -212,8 +213,10 @@ function readClicks({ journey }) {
   return clicks;
 }
 
-function measureFrustration({ profile, journeys }) {
-  const clicks = journeys.flatMap((journey) => readClicks({ journey: journey.journey }));
+function measureFrustration({ profile, journeys, routeTable }) {
+  const clicks = journeys.flatMap((journey) =>
+    readClicks({ journey: journey.journey, routeTable })
+  );
   const uncovered = [];
   let covered = 0;
   profile.frustration.forEach((pair) => {
@@ -267,16 +270,17 @@ function measureRole({ profile, journeys }) {
 
 // Which real use no committed journey covers yet, measured five ways over the
 // production window, each with its uncovered list ranked by use (count, then
-// key). `journeys` are [{ file, name, pageId, sequence, journey }].
+// key). `journeys` are [{ file, name, pageId, sequence, journey }], and
+// `routeTable` the build's routes the sequences were read with.
 // `measuredRun` is readMeasuredRun's result, null without a test run: it adds
 // the measured interaction share and makes failure coverage measured.
-function computeCoverage({ journeys, segments, profile, measuredRun = null }) {
+function computeCoverage({ journeys, segments, profile, routeTable, measuredRun = null }) {
   const journeyKeys = new Set(journeys.flatMap((journey) => journey.sequence.map(entryKey)));
   return {
     interaction: measureInteraction({ segments, journeyKeys, measuredRun }),
     flow: measureFlow({ segments, journeys }),
     failure: measureFailure({ profile, segments, journeys, journeyKeys, measuredRun }),
-    frustration: measureFrustration({ profile, journeys }),
+    frustration: measureFrustration({ profile, journeys, routeTable }),
     role: measureRole({ profile, journeys }),
   };
 }

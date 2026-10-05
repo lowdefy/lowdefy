@@ -16,9 +16,11 @@
 
 import { compileTrace, listFailurePaths } from '@lowdefy/node-utils';
 
+import loadRouteTable from './loadRouteTable.js';
 import readNewestTestRun from './readNewestTestRun.js';
 import readTestRunResults from './readTestRunResults.js';
 import { sequenceKey } from './readTestRunKeys.js';
+import resolveBuildDirectory from './resolveBuildDirectory.js';
 
 // What the newest test run measured, for coverage: the interactions the suite
 // drove, as sequence keys, and the failed events the journeys that passed
@@ -29,7 +31,11 @@ function readMeasuredRun({ context }) {
   if (newest === null) {
     return null;
   }
-  const { segments } = compileTrace({ records: newest.records, source: 'journey' });
+  const { segments } = compileTrace({
+    records: newest.records,
+    routeTable: loadRouteTable({ buildDirectory: resolveBuildDirectory({ context }) }),
+    source: 'journey',
+  });
   const keys = new Set(segments.flatMap((segment) => segment.sequence.map(sequenceKey)));
   const results = readTestRunResults({ directories: context.directories, run: newest.id });
   if (results === null) {

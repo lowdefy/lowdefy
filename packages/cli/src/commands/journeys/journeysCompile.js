@@ -20,6 +20,7 @@ import { compileTrace, readRecordings } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import loadBlockMetas from './loadBlockMetas.js';
+import loadRouteTable from './loadRouteTable.js';
 import readProductionTrace from './readProductionTrace.js';
 import readTraceFiles from './readTraceFiles.js';
 import resolveBuildDirectory from './resolveBuildDirectory.js';
@@ -185,6 +186,7 @@ async function journeysCompile({ context, params }) {
   const { candidates, segments, dropped } = compileTrace({
     records,
     blockMetas: loadBlockMetas({ buildDirectory }),
+    routeTable: loadRouteTable({ buildDirectory }),
     existingCandidates: readExistingCandidates({ outDirectory }),
     source,
     filters: { since, until, build, page: options.page },

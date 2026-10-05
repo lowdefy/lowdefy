@@ -23,7 +23,6 @@ import {
   getPageConfig, // Fetch page configuration
   getRootConfig, // Fetch app root configuration
   logClientError, // Process client errors with schema validation
-  matchPagePath, // Match a URL path to { pageId, pathParams }
   ConfigurationError,
   RequestError,
   ServerError,
@@ -246,7 +245,7 @@ Handles Auth.js configuration retrieval.
 
 Serves page configuration to the client.
 
-**Matching a path to a page.** `matchPagePath({ routes, path })` is the one matcher from a request path (`basePath` and the leading `/` removed) to `{ pageId, pathParams }`, or `null`. `routes` is the build's `routes.json`, `[{ pageId, path, auth }]`, where `path` is the page's pattern or, for a page without one, its id. The matcher strips one trailing `/`; any other empty segment, a segment that fails `decodeURIComponent`, and a segment that decodes to `.` or `..` match nothing. Each segment is decoded once, so a `%2F` inside a value survives as `/`, and callers pass the path still encoded. Candidates are the patterns with the same segment count whose fixed segments equal the decoded segments (case-sensitive); walking left to right, at the first position where they differ a fixed segment beats a placeholder. The build refuses ties, so one candidate is left. The routes are grouped by segment count once per `routes` array.
+**Matching a path to a page.** `matchPagePath({ routes, path })` (in `@lowdefy/node-utils`, so the server-dev page route and the journey tools share it) is the one matcher from a request path (`basePath` and the leading `/` removed) to `{ pageId, pathParams }`, or `null`. `routes` is the build's `routes.json`, `[{ pageId, path, auth }]`, where `path` is the page's pattern or, for a page without one, its id. The matcher strips one trailing `/`; any other empty segment, a segment that fails `decodeURIComponent`, and a segment that decodes to `.` or `..` match nothing. Each segment is decoded once, so a `%2F` inside a value survives as `/`, and callers pass the path still encoded. Candidates are the patterns with the same segment count whose fixed segments equal the decoded segments (case-sensitive); walking left to right, at the first position where they differ a fixed segment beats a placeholder. The build refuses ties, so one candidate is left. The routes are grouped by segment count once per `routes` array.
 
 `getPageConfig(context, { path, urlQuery })` matches the path, then reads `pages/${pageId}.json` by the matched id and authorises it. It returns `{ status, pageId, pathParams, pageConfig }`: `pageConfig` on `ok` only, `pageId` and `pathParams` whenever the path matched. An unmatched path answers as an unknown page id did: `unauthenticated` under `pagesProtectedByDefault` for a signed-out caller, else `not_found`. A dynamic page's `resolveDynamicContent` gets `pathParams`, and each `Dynamic` endpoint's payload carries it next to `urlQuery`.
 

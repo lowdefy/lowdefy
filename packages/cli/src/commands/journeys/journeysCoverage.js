@@ -18,10 +18,12 @@ import { journeySequence, profileProduction } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import computeCoverage from './coverageReport/computeCoverage.js';
+import loadRouteTable from './loadRouteTable.js';
 import readCommittedJourneys from './readCommittedJourneys.js';
 import readMeasuredRun from './readMeasuredRun.js';
 import readMutationReport from './readMutationReport.js';
 import readProductionSegments from './readProductionSegments.js';
+import resolveBuildDirectory from './resolveBuildDirectory.js';
 import writeCoverageReport from './coverageReport/writeCoverageReport.js';
 
 const SOURCES = ['production'];
@@ -80,11 +82,12 @@ async function journeysCoverage({ context }) {
   }
   const { journeys: committed, skipped } = readCommittedJourneys({ context });
   skipped.forEach((line) => logger.warn(`Skipped ${line}`));
+  const routeTable = loadRouteTable({ buildDirectory: resolveBuildDirectory({ context }) });
   const journeys = committed.map(({ file, journey }) => ({
     file,
     name: journey.name,
     pageId: journey.pageId,
-    sequence: journeySequence({ pageId: journey.pageId, steps: journey.steps }),
+    sequence: journeySequence({ pageId: journey.pageId, steps: journey.steps, routeTable }),
     journey,
   }));
   const { segments, window } = readProductionSegments({ context });
@@ -93,6 +96,7 @@ async function journeysCoverage({ context }) {
     journeys,
     segments,
     profile,
+    routeTable,
     measuredRun: readMeasuredRun({ context }),
   });
   const mutation = scoreMutation({
