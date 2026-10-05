@@ -29,10 +29,9 @@ function readRoles({ records }) {
 
 // One segment of folded records compiled to one journey. A segment that enters
 // on a page view opens where that view did: its page, path values and query.
-// The steps are the
-// interactions in the order the user made them; what produced no step becomes
-// a comment above the step that follows it, or the file's footer when nothing
-// follows. A failing interaction ends the journey at its own step: what a
+// The steps are the interactions in the order the user made them; what
+// produced no step becomes a comment above the step that follows it, or the
+// file's footer when nothing follows. A failing interaction ends the journey at its own step: what a
 // failed chain left behind is not worth asserting, and the candidate is a
 // failing test until the bug is fixed.
 function compileSegment({ records, blockMetas = {}, source, name }) {

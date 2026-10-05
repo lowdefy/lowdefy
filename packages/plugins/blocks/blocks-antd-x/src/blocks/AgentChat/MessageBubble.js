@@ -198,11 +198,7 @@ function MarkdownLink({ Link, onLinkClick }) {
       );
     }
     return (
-      <Link
-        {...props}
-        url={href}
-        onClick={handleClick}
-      >
+      <Link {...props} url={href} onClick={handleClick}>
         {children}
       </Link>
     );

@@ -39,15 +39,13 @@ function generateManifest({ buildDir = '.lowdefy' }) {
 
   const manifest = { pages: {}, paths: {} };
 
-  // Path patterns of the pages that have placeholders, for building their URLs from path params.
-  const routesPath = path.join(buildDir, 'routes.json');
-  if (fs.existsSync(routesPath)) {
-    JSON.parse(fs.readFileSync(routesPath, 'utf-8')).forEach((route) => {
-      if (route.path !== route.pageId) {
-        manifest.paths[route.pageId] = route.path;
-      }
-    });
-  }
+  // The path of every page served at a path other than its id, for building its URL.
+  const routes = JSON.parse(fs.readFileSync(path.join(buildDir, 'routes.json'), 'utf-8'));
+  routes.forEach((route) => {
+    if (route.path !== route.pageId) {
+      manifest.paths[route.pageId] = route.path;
+    }
+  });
 
   if (fs.existsSync(pagesDir)) {
     // Recursively find all .json page config files under pages/

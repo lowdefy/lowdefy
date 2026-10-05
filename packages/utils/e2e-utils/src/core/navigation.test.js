@@ -35,6 +35,12 @@ test('createPageUrl fills the placeholders and adds the query', () => {
   ).toBe('/tickets/s/a%20b?tab=a');
 });
 
+test('createPageUrl writes non-string query values as the app serialises them', () => {
+  expect(createPageUrl({ pageId: 'items', urlQuery: { page: 2, filter: { open: true } } })).toBe(
+    '/items?page=2&filter=%7B%22open%22%3Atrue%7D'
+  );
+});
+
 test('createPageUrl throws for a missing placeholder value', () => {
   expect(() =>
     createPageUrl({

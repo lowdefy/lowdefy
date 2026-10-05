@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { buildPagePath, type } from '@lowdefy/helpers';
+import { buildPagePath, type, urlQuery } from '@lowdefy/helpers';
 
 import pageContextExpression from './instanceKey.js';
 
@@ -24,15 +24,16 @@ async function waitForReady(page) {
 }
 
 // A target is a URL path, or { pageId, path, pathParams, urlQuery } where `path` is the page's
-// path pattern (omit it for a page without placeholders).
+// path pattern (omit it for a page served at its id). The query is written as the app's links
+// write it, so `_url_query` reads back numbers, booleans and objects.
 function createPageUrl(target) {
   if (type.isString(target)) {
     return target;
   }
-  const { pageId, path, pathParams, urlQuery } = target;
+  const { pageId, path, pathParams, urlQuery: query } = target;
   const pathname = `/${buildPagePath({ pageId, path, pathParams })}`;
-  const query = new URLSearchParams(urlQuery ?? {}).toString();
-  return query ? `${pathname}?${query}` : pathname;
+  const search = urlQuery.stringify(query);
+  return search ? `${pathname}?${search}` : pathname;
 }
 
 async function goto(page, target) {
