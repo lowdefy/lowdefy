@@ -558,6 +558,29 @@ A journey can also be retired as a whole with `deprecated: true` at its top leve
 
 No command removes a journey for lack of production use. Three months cannot see yearly work, and a journey that is the only one to catch a mutant matters whatever its traffic. `journeys evidence` lists the journeys nothing backs over the last 3 months, beside their mutation numbers, and leaves the decision to you.
 
+### Usage and tiers
+
+[`lowdefy journeys usage`](/cli#journeys-usage) ranks the journeys by how much real use leans on them now:
+
+```
+pnpx lowdefy@5 journeys usage
+pnpx lowdefy@5 journeys usage tests/journeys/review --tier common
+pnpx lowdefy@5 journeys usage --json
+```
+
+A journey's rate is its production sessions over the final days its months hold in the usage window: the last 3 calendar months (`--usage-window 3m`), ending at the newest month any selected journey has, so every journey is ranked over the same calendar and a flow that launched last month is not buried under years of history. The report lists the journeys by rate with their tier, their sessions and failures over the window and all time, one line per month with that month's people and organisations, and their deprecated flows with their recent use. Below that come the production flows no journey covers, from the coverage report, ranked by their sessions in coverage's window.
+
+A tier is a cut through the selected journeys, ranked by rate, most first:
+
+| Tier     | Cut | Reads as                              |
+| -------- | --- | ------------------------------------- |
+| `common` | p50 | the happy paths                       |
+| `wide`   | p80 | the usual variations                  |
+| `edge`   | p95 | the edge cases real users still reach |
+| `full`   | p0  | every journey                         |
+
+Tier pX holds the shortest run of journeys, from the top, whose summed rates reach X% of the total. Tiers nest, and journeys with equal rates are never split across a boundary. Tiers are cut over the selection after paths, `--tag` and `--filter`, so `tests/journeys/review --tier common` is the happy paths of the review area. A session counts for every journey it backs, so a tier's share is a share of journey matches, not of sessions. A journey edited since the last refresh, or never refreshed, has no counts for its current flow: it is `unranked` and in every tier, since a new or changed journey is what a change needs tested. A `deprecated: true` journey is in no tier. With fewer than 100 journey matches in the window, tiers are noise, and every tier but `full` is refused.
+
 ### Coverage
 
 [`lowdefy journeys coverage --source production`](/cli#journeys-coverage) reports five measures, each as covered out of total with the uncovered items ranked by use:

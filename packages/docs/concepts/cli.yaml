@@ -315,6 +315,18 @@ _ref:
             - `--source <source>`: Where use is read from. Only `production` for now, the default.
             - `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys compile`](#journeys-compile).
 
+            ## journeys usage
+
+            The `journeys usage` command reports which journeys real use leans on most. It ranks the journeys in `tests/journeys/` by their recent rate: their production sessions over the final days their months hold in the usage window, the last 3 calendar months ending at the newest month any selected journey has. Each journey shows its popularity tier, its sessions and failures over the window and all time, a line per month with that month's persons and organisations, and its deprecated flows with their recent use. Below that it lists the production flows no journey covers, from the report [`journeys coverage`](#journeys-coverage) writes, ranked by their sessions in coverage's window and not tiered. See [Usage and tiers](/config-tests#usage-and-tiers).
+
+            A tier is a cut through the selected journeys, ranked by rate, most first: `common` holds the shortest run of journeys reaching 50% of the summed rates, `wide` 80% and `edge` 95%, and `full` holds every journey. Tiers nest and never split journeys with equal rates. A journey edited since the last refresh, or never refreshed, is `unranked` and in every tier. A journey with `deprecated: true` is in no tier. Fewer than 100 journey matches in the window refuses every tier but `full`.
+
+            - `[paths...]`, `--filter <name>`, `--tag <tag>`: The journeys to report on, selected as [`test`](#test) selects them. Tiers are cut over this selection alone.
+            - `--tier <tier>`: Only the journeys in `common`, `wide`, `edge` or `full` (the default, every journey).
+            - `--usage-window <months>`: The calendar months recent use is ranked over, such as `3m`, the default.
+            - `--json`: Print the report as JSON, for agents.
+            - `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys compile`](#journeys-compile).
+
             ## journeys coverage
 
             The `journeys coverage` command reports what real use no journey in `tests/journeys/` covers yet, five ways, each with its uncovered items ranked by use, and writes the report with the production profile to `.lowdefy/test/coverage.json`. When the development server recorded a full test run, the interaction measure adds the share that run drove, and failure coverage counts only failures a passing journey produced. See [Coverage](/config-tests#coverage).

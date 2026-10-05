@@ -44,6 +44,7 @@ import journeysVariants from './commands/journeys/variants/journeysVariants.js';
 import journeysRecordings from './commands/journeys/journeysRecordings.js';
 import journeysCoverage from './commands/journeys/journeysCoverage.js';
 import journeysEvidence from './commands/journeys/journeysEvidence.js';
+import journeysUsage from './commands/journeys/journeysUsage.js';
 import journeysExplore from './commands/journeys/explore/journeysExplore.js';
 import journeysPullPosthog from './commands/journeys/pull/journeysPullPosthog.js';
 import mcp from './commands/mcp/mcp.js';
@@ -620,6 +621,49 @@ const journeysEvidenceCommand = journeys
     )
   );
 journeysEvidenceCommand.action(runCommand({ cliVersion, handler: journeysEvidence }));
+
+journeys
+  .command('usage')
+  .description(
+    "Rank the journeys in tests/journeys/ by their recent production use, with each one's popularity tier, months and old flows, then list the production flows no journey covers."
+  )
+  .usage('[options] [paths...]')
+  .argument(
+    '[paths...]',
+    'Journey files, directories or quoted globs to report on instead of the whole suite, as for lowdefy test.'
+  )
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(
+    new Option(
+      '--filter <name>',
+      'Only journeys whose name contains this string (case-insensitive). Repeat it to match any of the strings.'
+    ).argParser(collectValues)
+  )
+  .addOption(
+    new Option(
+      '--tag <tag>',
+      'Only journeys whose tags include this tag. Repeat it to match any of the tags.'
+    ).argParser(collectValues)
+  )
+  .addOption(
+    new Option(
+      '--tier <tier>',
+      'Only the journeys in this popularity tier of the selection: common (p50), wide (p80), edge (p95) or full (every journey, the default).'
+    )
+  )
+  .addOption(
+    new Option(
+      '--usage-window <months>',
+      'The calendar months recent use is ranked over, ending at the newest month any selected journey holds, such as 3m (the default).'
+    )
+  )
+  .addOption(new Option('--json', 'Print the report as JSON instead of text.'))
+  .action((paths, commandOptions, command) =>
+    runCommand({ cliVersion, handler: journeysUsage })({ ...commandOptions, paths }, command)
+  );
 
 const journeysCoverageCommand = journeys
   .command('coverage')
