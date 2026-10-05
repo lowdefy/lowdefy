@@ -66,7 +66,7 @@ function readManifest({ directory, day }) {
 // hashes it under this machine's salt; with no salt, the pull writes a new one.
 function describeOtherSalt({ otherSalt, traceSalt }) {
   if (otherSalt.length === 0) return '';
-  if (traceSalt === null) {
+  if (type.isNone(traceSalt)) {
     return ` There is no trace salt in .lowdefy/traces/production/, so ${otherSalt.length} pulled day(s) cannot be read; pulling them again hashes them under a new salt.`;
   }
   return ` ${otherSalt.length} of them were pulled under another trace salt; pulling them again hashes them under this machine's salt.`;
@@ -90,13 +90,15 @@ async function readProductionTrace({ context, since, from, to, now = Date.now(),
 
   const directory = path.join(directories.traces, 'production');
   const traceSalt = readTraceSalt({ directories });
-  const saltId = traceSalt === null ? null : traceSalt.saltId;
+  const saltId = type.isNone(traceSalt) ? null : traceSalt.saltId;
   const days = listWindowDays(window);
   const manifests = days.map((day) => readManifest({ directory, day }));
   const otherSalt = days.filter(
-    (day, index) => manifests[index] !== null && manifests[index].salt_id !== saltId
+    (day, index) => !type.isNone(manifests[index]) && manifests[index].salt_id !== saltId
   );
-  const missing = days.filter((day, index) => manifests[index] === null || otherSalt.includes(day));
+  const missing = days.filter(
+    (day, index) => type.isNone(manifests[index]) || otherSalt.includes(day)
+  );
   if (missing.length > 0) {
     const shown = missing.length > 5 ? `${missing.slice(0, 5).join(', ')}, …` : missing.join(', ');
     throw new Error(

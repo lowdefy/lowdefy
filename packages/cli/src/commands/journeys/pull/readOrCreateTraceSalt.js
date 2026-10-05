@@ -17,6 +17,7 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
+import { type } from '@lowdefy/helpers';
 
 import readTraceSalt from './readTraceSalt.js';
 
@@ -27,7 +28,7 @@ const SALT_BYTES = 32;
 // would leave every day already pulled unresolvable.
 function readOrCreateTraceSalt({ directories }) {
   const existing = readTraceSalt({ directories });
-  if (existing !== null) return existing;
+  if (!type.isNone(existing)) return existing;
   const directory = path.join(directories.traces, 'production');
   fs.mkdirSync(directory, { recursive: true });
   fs.writeFileSync(path.join(directory, 'salt'), crypto.randomBytes(SALT_BYTES), { mode: 0o600 });

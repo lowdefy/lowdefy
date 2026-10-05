@@ -16,6 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import { type } from '@lowdefy/helpers';
 
 const MANIFEST_SUFFIX = '.manifest.json';
 
@@ -52,7 +53,7 @@ function removeLeftovers({ directory, now }) {
     .filter((name) => isLeftover({ name, names }))
     .filter((name) => {
       const stats = fs.statSync(path.join(directory, name), { throwIfNoEntry: false });
-      return stats !== undefined && now - stats.mtimeMs >= LEFTOVER_MIN_AGE_MS;
+      return !type.isNone(stats) && now - stats.mtimeMs >= LEFTOVER_MIN_AGE_MS;
     })
     .sort();
   leftovers.forEach((name) => fs.rmSync(path.join(directory, name), { force: true }));
