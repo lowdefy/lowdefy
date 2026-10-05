@@ -271,7 +271,7 @@ FAIL  guest sees the empty state
 
 A failing journey stops at its first failing step and prints the step's index, the step itself, and the `expected` and `actual` values. Steps after the failure are not run.
 
-A journey with an [`evidence`](#evidence) key prints it after its `PASS` line: `PASS  member creates a control  (5 steps, 1840ms)  412 sessions · 9 orgs · 11/12 mutants`. The organisations part is left out when the app sends none, the mutants part when there is no mutation report, and a journey nothing backs shows `0 sessions in window`. `FAIL` lines carry no evidence.
+A journey with an [`evidence`](#evidence) key prints it after its `PASS` line: `PASS  member creates a control  (5 steps, 1840ms)  412 sessions · 11/12 mutants`. The sessions are the journey's production sessions summed over all its months; the mutants part is left out when there is no mutation report. `FAIL` lines carry no evidence.
 
 ### Options
 
