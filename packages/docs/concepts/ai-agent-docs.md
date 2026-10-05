@@ -202,10 +202,10 @@ A page whose [`path`](/page-paths) has placeholders, such as `tickets/{space}/{t
 { "pageId": "ticket", "pathParams": { "space": "support", "ticket_id": "1234" } }
 ```
 
-- **Headless** (`lowdefy_screenshot_page`, `lowdefy_inspect_state`, `lowdefy_eval_operator`, `lowdefy_snapshot_state`, `lowdefy_load_state`, `lowdefy_run_journey`): `pathParams` is required to open a page that has placeholders. A missing placeholder is an error that names it, returned before a browser opens.
-- **Your open tab** (`lowdefy_inspect_state`, `lowdefy_eval_operator`): with `pathParams`, the tool reads that instance. With only a `pageId`, it reads the instance your tab shows for that page, or the instance of that page most recently shown when no tab is on it.
+- **Headless** (`lowdefy_screenshot_page`, `lowdefy_inspect_state`, `lowdefy_eval_operator`, `lowdefy_snapshot_state`, `lowdefy_run_journey`): `pathParams` is required to open a page that has placeholders. A missing placeholder is an error that names it, returned before a browser opens.
+- **Your open tab** (`lowdefy_inspect_state`, `lowdefy_eval_operator`, `lowdefy_snapshot_state`): with `pathParams`, the tool reads that instance. With only a `pageId`, it reads the instance your tab shows for that page, or the instance of that page most recently shown when no tab is on it.
 - **Checkpoints**: `lowdefy_snapshot_state` keeps the instance's `pathParams` next to `urlQuery`, and `lowdefy_load_state` opens that instance.
-- **Plain HTTP routes**: the screenshot, page-config and inspect-state routes take a page id with several segments, and the routes that take query params take `pathParams` as JSON.
+- **Plain HTTP routes**: the screenshot, page-config and inspect-state routes take a page id with several segments, the GET routes take `pathParams` as JSON in the query (`?pathParams={"ticket_id":"1"}`), and the POST routes as an object in the body.
 - **Annotations** from the in-page feedback overlay carry the `pathParams` of the instance they were made on.
 
 A headless capture waits for the page's full async lifecycle before it reads anything: `onInit`, `onInitAsync`, `onMount` and `onMountAsync`, every in-flight request, and the first message on each websocket subscription. A page whose data arrives through an `onMountAsync` `Request` action is therefore captured with its data, not empty. If a page has not settled within 15 seconds the result is still returned, carrying `ready: false` and a note — read that result as a snapshot of a page that was still loading, not as the page's settled state. One case escapes the wait: an event with a `debounce` is not yet marked loading during its delay, so a debounced `onMountAsync` can be captured before it runs.
@@ -235,7 +235,7 @@ checkpoints/broken-refund-flow/
   checkpoint.json        # manifest
   state.json
   urlQuery.json
-  pathParams.json       # only for a page with path placeholders
+  pathParams.json       # the instance's path values, {} for a page without placeholders
   requests/
     get_order.json       # one file per request — easy to review and edit
 ```

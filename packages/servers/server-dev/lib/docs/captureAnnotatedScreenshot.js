@@ -25,12 +25,12 @@ import noBrowserError from './noBrowserError.js';
 import readPagePath from './readPagePath.js';
 import withBrowserSlot from './withBrowserSlot.js';
 
-// Renders the batch's page instance (pageId, pathParams, urlQuery) headless at the batch's recorded viewport/scroll, injects
-// the developer's drawn shapes and element outlines as an SVG layer inside
-// the page, screenshots the composite, and saves it under the config dir's
-// .lowdefy/annotations/ (gitignored). The saved path goes into the formatted
-// feedback text so an agent can read the image. Never throws — returns
-// { path } or { error }.
+// Renders the batch's page instance (pageId, pathParams, urlQuery) headless at
+// the batch's recorded viewport/scroll, injects the developer's drawn shapes
+// and element outlines as an SVG layer inside the page, screenshots the
+// composite, and saves it under the config dir's .lowdefy/annotations/
+// (gitignored). The saved path goes into the formatted feedback text so an
+// agent can read the image. Never throws — returns { path } or { error }.
 async function captureInBrowser({ origin, batch, fileName }) {
   let browser;
   try {

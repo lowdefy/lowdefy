@@ -19,11 +19,11 @@ import { buildPagePath, pageInstanceKey, type } from '@lowdefy/helpers';
 import readPagePath from './readPagePath.js';
 
 // The page instance a dev tool names by `pageId` and `pathParams`: the page's
-// path pattern (readPagePath, undefined for a page without one) and the key its
-// context and input are stored under. Returns { path, instanceKey }, or
-// { error } for pathParams that are not an object or that miss a placeholder of
-// the pattern, as data for the tool to return to the agent before it opens a
-// browser.
+// path pattern (readPagePath, undefined for a page the route table does not
+// list) and the key its context and input are stored under. Returns
+// { path, instanceKey }, or { error } for pathParams that are not an object or
+// that miss a placeholder of the pattern, as data for the tool to return to the
+// agent before it opens a browser.
 function resolvePageInstance({ pageId, pathParams }) {
   if (!type.isNone(pathParams) && !type.isObject(pathParams)) {
     return {
