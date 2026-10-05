@@ -3354,7 +3354,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "a12c94fbb3fd6c2f9c5aa63dad84f3219a514f47b2d29a0d96512cb7cc5bb291"
+      "hash": "38ea8d7814112f913625a22f7b60455c17faf5d0115a0115fbef3a58bde5f117"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3922,7 +3922,7 @@
         "testing/config-tests.yaml",
         "version.yaml"
       ],
-      "hash": "078e5a18975f2295d836a988a7b43a484ecf62e53af246fa61b10bdd7f25ff07"
+      "hash": "65aa671eea5fed60ff714134029829b35e1d86eb45061e343cf97083626eadde"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -3937,7 +3937,7 @@
         "testing/journey-data-sets.yaml",
         "version.yaml"
       ],
-      "hash": "7ca281622351b481a3c7bf7f56dae303f4adeb6d009332dca3f303ebb4f35082"
+      "hash": "e6a012d87b40abfe2862a1a38ba9b256fd1dae03baa9b356591c26680491c36a"
     },
     "testing/explore-pull-request": {
       "files": [
@@ -3997,7 +3997,7 @@
         "testing/e2e-writing-tests.yaml",
         "version.yaml"
       ],
-      "hash": "8228d29027e632a56bb6db1b075fa58a7070af1077acfa3a1d5157066b4cea62"
+      "hash": "720ac4477bd812375fc026e84821478bff2fecc31e1798b6062b5fe4e5789246"
     },
     "testing/e2e-mocking": {
       "files": [

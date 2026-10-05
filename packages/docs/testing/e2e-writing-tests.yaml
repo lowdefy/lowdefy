@@ -41,6 +41,17 @@ _ref:
             await ldf.waitForPage('/next-page');
             ```
 
+            A page whose [`path`](/page-paths) has placeholders has one instance per set of values. `goto` and `waitForPage` also take a target object, and build the URL from the page's path:
+
+            ```javascript
+            await ldf.goto({ pageId: 'ticket', pathParams: { space: 'support', ticket_id: '1234' } });
+
+            await ldf.block('next_btn').do.click();
+            await ldf.waitForPage({ pageId: 'ticket', pathParams: { space: 'support', ticket_id: '1235' } });
+            ```
+
+            The target is `{ pageId, pathParams, urlQuery }`: `pathParams` gives one string per placeholder, and `urlQuery` adds a query string. A missing placeholder value is an error that names it. Block, state, request and validation helpers always read the page instance on screen, so after `waitForPage` they read the new instance and not the one before it.
+
             You can also access the current page ID and the raw Playwright page object:
 
             ```javascript
@@ -187,7 +198,7 @@ _ref:
 
             ## URL
 
-            Use `ldf.url()` and `ldf.urlQuery('key')` for URL assertions.
+            Use `ldf.url()` and `ldf.urlQuery('key')` for URL assertions. The URL of a page with a [`path`](/page-paths) holds the values of its placeholders, so assert it with `ldf.url()`; there is no separate accessor for them.
 
             ### Assert the current URL
 
