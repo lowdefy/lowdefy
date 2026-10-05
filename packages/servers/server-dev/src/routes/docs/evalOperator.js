@@ -15,6 +15,7 @@
 */
 
 import evalOperator from '../../../lib/docs/evalOperator.js';
+import parsePathParamsParam from './parsePathParamsParam.js';
 import parseUserParam from './parseUserParam.js';
 
 async function docsEvalOperatorHandler(c) {
@@ -42,7 +43,12 @@ async function docsEvalOperatorHandler(c) {
     return c.json({ error: userError }, 400);
   }
 
-  const result = await evalOperator({ origin, pageId, expression, source, user });
+  const { pathParams, error: pathParamsError } = parsePathParamsParam({ value: body.pathParams });
+  if (pathParamsError) {
+    return c.json({ error: pathParamsError }, 400);
+  }
+
+  const result = await evalOperator({ origin, pageId, pathParams, expression, source, user });
   if (result.error) {
     // A contradictory call (`user` with `source: 'tab'`) is the caller's
     // mistake, not a failed render — 502 would read as "the renderer broke" and

@@ -37,6 +37,7 @@ const originalCwd = process.cwd();
 const fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-eval-operator-test-'));
 fs.mkdirSync(path.join(fixtureDir, 'build'), { recursive: true });
 fs.writeFileSync(path.join(fixtureDir, 'build', 'config.json'), JSON.stringify({ basePath: '' }));
+fs.writeFileSync(path.join(fixtureDir, 'build', 'routes.json'), JSON.stringify([]));
 process.chdir(fixtureDir);
 
 const { default: evalOperatorHeadless } = await import('./evalOperatorHeadless.js');

@@ -565,6 +565,20 @@ state loads share one browser per child:
   (`killTaggedBrowser`), because system Chrome runs in its own process group and outlives a
   SIGKILLed child. The headless shell exits with its parent anyway.
 
+**Page instances in the headless tools.** Screenshot, inspect state, eval operator, snapshot and
+load state, journeys and explorer walks take `pathParams` next to `pageId` and `urlQuery`.
+`resolvePageInstance` reads the page's pattern from `routes.json` (`readPagePath`) and returns
+`{ path, instanceKey }`, or the URL builder's error for a missing placeholder, which the tool
+returns to the agent before a browser opens. `openPage` and `buildPageUrl` take the pattern as
+`path`; the tools read `lowdefy.contexts[instanceKey]` and `lowdefy.inputs[instanceKey]`.
+`isPageReady(instanceKey)` waits for that instance, or with `null` for the one on screen, the last
+key in `lowdefy.pageInstances[lowdefy.pageId]`. A request naming only a `pageId` reads a live tab
+through `findPageInstance`; headless it needs `pathParams` for a patterned page. State
+checkpoints keep `pathParams.json` next to `urlQuery.json`, and `loadState` opens that instance.
+`/lowdefy-docs/screenshot`, `/inspect-state` and `/page-config` take multi-segment page ids;
+the GET routes take `pathParams` as JSON in the query. `getAppMap` lists each page's `path`, and
+the overview lists the patterned pages.
+
 **Connection schemas.** The skeleton build's `writeConnectionSchemaMap` (`@lowdefy/build`) reads
 connection and request schemas in a worker thread (`collectConnectionSchemas`), cached per package
 name, version and directory, so database drivers never load into the manager.

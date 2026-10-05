@@ -163,6 +163,7 @@ function pageScript() {
     window.lowdefy = {
       pageId: 'tickets',
       basePath: '',
+      pageInstances: { tickets: ['page:tickets'] },
       contexts: {
         'page:tickets': {
           pageId: 'tickets',

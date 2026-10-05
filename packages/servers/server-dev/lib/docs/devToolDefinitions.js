@@ -59,6 +59,15 @@ const userSchema = z
     'Act as this caller instead of the default roleless headless user, e.g. {"roles":["user-admin"]} to render a role-gated page. Merged over the default, so include email/profile/attributes fields too if the page reads them — no auth engine runs for an injected caller, so nothing derives them. Headless only: it is never applied to a page the developer opens in their own browser, so combining it with source "tab" or load_state mode "registry-only" is an error rather than a silently dropped role, and on lowdefy_run_request / lowdefy_run_endpoint it sets the caller the request or routine runs as.'
   );
 
+// Shared by every tool that names a page instance: a page whose `path` has
+// placeholders has one instance per set of values.
+const pathParamsSchema = z
+  .record(z.union([z.string(), z.number()]))
+  .optional()
+  .describe(
+    'Values for the placeholders of a page whose path has them, read by _path_params, e.g. {"space": "support", "ticket_id": "1234"} for path "tickets/{space}/{ticket_id}" (lowdefy_app_map shows each page\'s path). Required to open such a page headless; a missing placeholder is an error naming it.'
+  );
+
 // Shared by the request and endpoint runners.
 const saveResponseSchema = z
   .boolean()
@@ -73,6 +82,9 @@ const devToolDefinitions = {
       "Read the LIVE state of a running page: state, request results, event log (recent actions fired), global, user, input, and urlQuery. If the developer has the page open in a browser it reads their actual tab (ask them to interact first, then inspect); otherwise it runs the page headless. Use this to see what the app's data model really looks like.",
     inputSchema: {
       pageId: z.string().describe('The page id to inspect.'),
+      pathParams: pathParamsSchema.describe(
+        'The page instance to inspect, for a page whose path has placeholders, e.g. {"ticket_id": "1"}. Without it a live tab is read at the instance it shows (or that page\'s most recently shown one); headless needs it to open the page.'
+      ),
       source: z
         .enum(['tab', 'headless'])
         .optional()
@@ -86,6 +98,9 @@ const devToolDefinitions = {
       'Evaluate a Lowdefy operator expression against the live state of a running page — a REPL for config. Pass the operator object in the "expression" argument — any JSON value, e.g. {"_state": "customer.name"} or {"_if": {...}}. Evaluates in the real browser runtime (live tab if connected, else headless).',
     inputSchema: {
       pageId: z.string().describe('The page id whose context to evaluate against.'),
+      pathParams: pathParamsSchema.describe(
+        "The page instance to evaluate against, for a page whose path has placeholders. Without it a live tab is read at the instance it shows (or that page's most recently shown one); headless needs it to open the page."
+      ),
       expression: z
         .any()
         .describe('The operator expression — any JSON value, e.g. {"_state": "key"}.'),
@@ -142,6 +157,9 @@ const devToolDefinitions = {
       "Capture the live state AND recorded request/api responses of a running page into a checkpoint folder (.lowdefy/state-checkpoints/<name>/, one file per part; gitignored — checkpoints contain user/session data). Snapshot the developer's open tab after they reproduce a scenario, or a headless run. Use for building test fixtures and reproducible app states.",
     inputSchema: {
       pageId: z.string().describe('The page to snapshot.'),
+      pathParams: pathParamsSchema.describe(
+        "The page instance to snapshot, for a page whose path has placeholders. The checkpoint keeps the instance's pathParams, and lowdefy_load_state opens that instance."
+      ),
       name: z.string().describe('Checkpoint name (letters, numbers, - and _).'),
       notes: z.string().optional().describe('What this checkpoint captures.'),
       source: z.enum(['tab', 'headless']).optional(),
@@ -232,9 +250,10 @@ const devToolDefinitions = {
 
   lowdefy_screenshot_page: {
     description:
-      'Screenshot a page of the running dev server (headless Chromium) to visually verify layout and rendering. Returns a PNG image. Set width (and height) to check a narrow or phone layout, e.g. width 390, and colorScheme "dark" to check dark mode. To capture a state beyond the page as it loads — an OPEN Selector / MultipleSelector / AutoComplete / DateSelector (calendar) / Cascader / TreeSelector dropdown, a modal a button opens — pass steps, e.g. [{"open": "status"}]: they run after the page settles and before the capture. Popups antd renders in a portal are included, also with fullPage. Pass urlQuery for a page that reads _url_query.',
+      'Screenshot a page of the running dev server (headless Chromium) to visually verify layout and rendering. Returns a PNG image. Set width (and height) to check a narrow or phone layout, e.g. width 390, and colorScheme "dark" to check dark mode. To capture a state beyond the page as it loads — an OPEN Selector / MultipleSelector / AutoComplete / DateSelector (calendar) / Cascader / TreeSelector dropdown, a modal a button opens — pass steps, e.g. [{"open": "status"}]: they run after the page settles and before the capture. Popups antd renders in a portal are included, also with fullPage. Pass urlQuery for a page that reads _url_query, and pathParams for a page whose path has placeholders.',
     inputSchema: {
       pageId: z.string().describe('The page id to screenshot.'),
+      pathParams: pathParamsSchema,
       urlQuery: z
         .record(z.any())
         .optional()

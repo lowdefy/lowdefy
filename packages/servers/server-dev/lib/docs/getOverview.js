@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { parsePathPattern } from '@lowdefy/helpers';
+
 import getDocsManifest from './getDocsManifest.js';
 import lowdefyConfig from '../build/config.js';
 import listPlugins from './listPlugins.js';
@@ -43,6 +45,24 @@ function basePathLines() {
   ];
 }
 
+// A page whose path has placeholders has one instance per set of values, so
+// the page tools need pathParams to open it.
+function patternedPageLines() {
+  const routes = readBuildArtifact({ name: 'routes.json', deserialize: true });
+  const patterned = routes.filter((route) =>
+    parsePathPattern(route.path).some((segment) => segment.name !== undefined)
+  );
+  if (patterned.length === 0) return [];
+  return [
+    '## Pages with path parameters',
+    '',
+    'These pages are served at a URL pattern with placeholders. Pass `pathParams` with a value for each placeholder (e.g. `{"ticket_id": "1"}`) to `lowdefy_screenshot_page`, `lowdefy_inspect_state`, `lowdefy_eval_operator`, `lowdefy_snapshot_state` and `lowdefy_run_journey`, or as `?pathParams=` JSON on the GET routes. A live tab is read at the instance it shows without them.',
+    '',
+    ...patterned.map((route) => `- \`${route.pageId}\`: \`${route.path}\``),
+    '',
+  ];
+}
+
 function getOverview() {
   const availableTypes = readBuildArtifact({ name: 'plugins/availableTypes.json' }) ?? {};
   const counts = countKinds({ availableTypes });
@@ -58,6 +78,7 @@ function getOverview() {
     'This server describes everything installed in THIS project — never guess type names or properties, look them up here first.',
     '',
     ...basePathLines(),
+    ...patternedPageLines(),
     '## What is available',
     '',
     `- ${counts.blocks} block types, ${counts.operators} operators, ${counts.actions} actions, ${counts.connections} connections, ${counts.requests} request types (from ${plugins.length} plugin packages, including this project's local plugins).`,

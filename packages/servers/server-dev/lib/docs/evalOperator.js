@@ -22,10 +22,11 @@ import resolveSource from './resolveSource.js';
 // headless-only. Falls back to headless whenever the tab path isn't usable
 // (no tab connected, or `source: 'tab'` was requested but it errored) so
 // agents always get an answer.
-async function evalOperator({ origin, pageId, expression, source, user }) {
+async function evalOperator({ origin, pageId, pathParams, expression, source, user }) {
   const { tryTab, error, invalidInput } = resolveSource({
     name: 'evalOperator',
     pageId,
+    pathParams,
     source,
     user,
   });
@@ -34,13 +35,13 @@ async function evalOperator({ origin, pageId, expression, source, user }) {
   }
 
   if (tryTab) {
-    const result = await evalOperatorInTab({ pageId, expression });
+    const result = await evalOperatorInTab({ pageId, pathParams, expression });
     if (!result?.error) {
       return { ...result, source: 'tab' };
     }
   }
 
-  const result = await evalOperatorHeadless({ origin, pageId, expression, user });
+  const result = await evalOperatorHeadless({ origin, pageId, pathParams, expression, user });
   return { ...result, source: 'headless' };
 }
 

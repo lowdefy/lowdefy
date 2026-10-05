@@ -15,6 +15,7 @@
 */
 
 import inspectState from '../../../lib/docs/inspectState.js';
+import parsePathParamsParam from './parsePathParamsParam.js';
 import parseUserParam from './parseUserParam.js';
 
 async function docsInspectStateHandler(c) {
@@ -30,7 +31,14 @@ async function docsInspectStateHandler(c) {
     return c.json({ error: userError }, 400);
   }
 
-  const result = await inspectState({ origin, pageId, source, user });
+  const { pathParams, error: pathParamsError } = parsePathParamsParam({
+    value: c.req.query('pathParams'),
+  });
+  if (pathParamsError) {
+    return c.json({ error: pathParamsError }, 400);
+  }
+
+  const result = await inspectState({ origin, pageId, pathParams, source, user });
   if (result.error) {
     // A contradictory call (`user` with `source=tab`) is the caller's mistake,
     // not a failed render — 502 would read as "the renderer broke" and invite a

@@ -31,6 +31,7 @@ import openDataSession from '../dataSets/openDataSession.js';
 import openJourney from '../openJourney.js';
 import readDevAuthMode from '../readDevAuthMode.js';
 import resolveJourneyDataSet from '../dataSets/resolveJourneyDataSet.js';
+import resolvePageInstance from '../resolvePageInstance.js';
 import validateOpenWalkBody from './validateOpenWalkBody.js';
 import watchWalkContext from './watchWalkContext.js';
 import { listWalks, registerWalk } from './walkSessions.js';
@@ -86,7 +87,11 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
   if (!type.isUndefined(bodyError)) {
     return { status: 400, body: { error: bodyError } };
   }
-  const { pageId, urlQuery, user, data, liveData, run, walk: walkName, record } = body;
+  const { pageId, pathParams, urlQuery, user, data, liveData, run, walk: walkName, record } = body;
+  const instance = resolvePageInstance({ pageId, pathParams });
+  if (!type.isUndefined(instance.error)) {
+    return { status: 400, body: { error: instance.error } };
+  }
   const roles = body.roles ?? [];
   const allowExternal = body.allowExternal ?? [];
   const refusedEarly = refuseOpen({ run, walkName });
@@ -177,6 +182,8 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
       origin,
       basePath,
       pageId,
+      path: instance.path,
+      pathParams,
       user: resolved.user,
       urlQuery,
       width: WALK_WIDTH,

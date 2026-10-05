@@ -25,6 +25,10 @@ const mockReadConnectionArtifacts = jest.fn();
 const mockObserveWalkPage = jest.fn();
 const mockRunObservedStep = jest.fn();
 
+// The route table is a build artifact these tests have none of: every page is served at its id.
+jest.unstable_mockModule('../resolvePageInstance.js', () => ({
+  default: ({ pageId }) => ({ path: pageId, instanceKey: `page:${pageId}` }),
+}));
 jest.unstable_mockModule('../getBrowser.js', () => ({ getBrowser: mockGetBrowser }));
 jest.unstable_mockModule('../acquireBrowserSlot.js', () => ({
   default: mockAcquireBrowserSlot,

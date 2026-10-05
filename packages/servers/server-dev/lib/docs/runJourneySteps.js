@@ -811,8 +811,8 @@ async function runExpect({ journey, page, step, timeout }) {
 // readiness check openPage uses, so the next step asserts against the
 // outcome rather than racing it. Tolerant: a page that never settles (a
 // hung request) simply moves on and lets the next expect report what it
-// finds. Reads the current pageId from the page because a click may have
-// navigated to another page.
+// finds. Waits for the instance on screen, since a click may have navigated
+// to another page or instance.
 //
 // Never longer than SETTLE_TIMEOUT_MS, however long the steps may wait: an
 // event that ends in a Wait (a sign-in link's resend cooldown) keeps the page
@@ -823,7 +823,7 @@ async function settlePage({ page, timeout }) {
   if (type.isNone(pageId)) {
     return;
   }
-  await page.waitForFunction(isPageReady, pageId, { timeout }).catch(() => {});
+  await page.waitForFunction(isPageReady, null, { timeout }).catch(() => {});
 }
 
 const INTERACTION_STEPS = ['click', 'open', 'fill', 'select', 'press', 'back'];

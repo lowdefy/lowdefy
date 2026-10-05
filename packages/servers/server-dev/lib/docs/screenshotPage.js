@@ -20,6 +20,7 @@ import { validateJourneySteps } from '@lowdefy/node-utils';
 import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
 import noBrowserError from './noBrowserError.js';
 import openJourney from './openJourney.js';
+import resolvePageInstance from './resolvePageInstance.js';
 import runJourneySteps from './runJourneySteps.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneyMail from './validateJourneyMail.js';
@@ -87,8 +88,9 @@ async function openAndRunSteps({ browser, steps, stepTimeout, ...pageOptions }) 
 }
 
 // screenshotPage lets an agent visually verify a page rendered by the
-// running dev server, at a given viewport size and colour scheme. `urlQuery`
-// opens the page at a query string, and `steps` (see validateJourneySteps)
+// running dev server, at a given viewport size and colour scheme. `pathParams`
+// fill a patterned page's placeholders, `urlQuery` opens the page at a query
+// string, and `steps` (see validateJourneySteps)
 // drive it first — open a dropdown, click a button — so the capture shows
 // that state; captures `screenshot` steps take come back as `screenshots`.
 // Popups antd renders in a portal at the end of <body> are part of the
@@ -96,6 +98,7 @@ async function openAndRunSteps({ browser, steps, stepTimeout, ...pageOptions }) 
 async function screenshotPage({
   origin,
   pageId,
+  pathParams,
   urlQuery,
   steps = [],
   stepTimeout = 5000,
@@ -126,6 +129,10 @@ async function screenshotPage({
       )}.`,
     };
   }
+  const instance = resolvePageInstance({ pageId, pathParams });
+  if (!type.isUndefined(instance.error)) {
+    return { error: instance.error, invalidInput: true };
+  }
   const { error: stepsError } = validateJourneySteps({ steps });
   if (!type.isUndefined(stepsError)) {
     return { error: stepsError };
@@ -144,6 +151,8 @@ async function screenshotPage({
       screenshotInBrowser({
         origin,
         pageId,
+        path: instance.path,
+        pathParams,
         urlQuery,
         user,
         width,
@@ -164,6 +173,8 @@ async function screenshotPage({
 async function screenshotInBrowser({
   origin,
   pageId,
+  path,
+  pathParams,
   urlQuery,
   user,
   width,
@@ -184,7 +195,7 @@ async function screenshotInBrowser({
     return { error: noBrowserError(error) };
   }
 
-  const url = buildPageUrl({ origin, pageId, urlQuery });
+  const url = buildPageUrl({ origin, pageId, path, pathParams, urlQuery });
 
   let close;
   try {
@@ -192,6 +203,8 @@ async function screenshotInBrowser({
       browser,
       origin,
       pageId,
+      path,
+      pathParams,
       urlQuery,
       user,
       width,

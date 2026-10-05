@@ -37,6 +37,10 @@ const originalCwd = process.cwd();
 const fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-inspect-state-test-'));
 fs.mkdirSync(path.join(fixtureDir, 'build'), { recursive: true });
 fs.writeFileSync(path.join(fixtureDir, 'build', 'config.json'), JSON.stringify({ basePath: '' }));
+fs.writeFileSync(
+  path.join(fixtureDir, 'build', 'routes.json'),
+  JSON.stringify([{ pageId: 'ticket', path: 'tickets/{space}/{ticket_id}' }])
+);
 process.chdir(fixtureDir);
 
 const { default: inspectStateHeadless } = await import('./inspectStateHeadless.js');
@@ -61,4 +65,14 @@ test('inspectStateHeadless returns an actionable error when no browser is availa
   expect(result.error).toMatch(
     /No Chromium available. Run: npx playwright install chromium-headless-shell/
   );
+});
+
+test('inspectStateHeadless returns the error naming a missing placeholder before opening a browser', async () => {
+  const result = await inspectStateHeadless({
+    origin: 'http://localhost:3001',
+    pageId: 'ticket',
+    pathParams: { space: 's' },
+  });
+  expect(result.invalidInput).toBe(true);
+  expect(result.error).toMatch(/missing a value for path placeholder "ticket_id"/);
 });

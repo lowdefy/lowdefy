@@ -23,12 +23,15 @@
 // A missing key always means "not configured", never "not finished" —
 // iterating only the entries that exist gives that for free.
 //
-// A null pageId means the page the app is showing, so a caller waits out a
-// redirect (a protected page sending a signed-out caller to sign in) instead
-// of waiting for a page that will never mount.
-function isPageReady(pageId) {
-  const shownPageId = pageId ?? window.lowdefy?.pageId;
-  const context = window.lowdefy?.contexts?.['page:' + shownPageId];
+// The argument is the instance key of the page instance to wait for (its
+// context in window.lowdefy.contexts, see pageInstanceKey). A null key means the
+// instance the app is showing, the most recently rendered instance of the shown
+// page, so a caller waits out a redirect (a protected page sending a signed-out
+// caller to sign in) instead of waiting for a page that will never mount.
+function isPageReady(instanceKey) {
+  const lowdefy = window.lowdefy;
+  const shownKey = instanceKey ?? lowdefy?.pageInstances?.[lowdefy?.pageId]?.at(-1);
+  const context = lowdefy?.contexts?.[shownKey];
   if (!context) return false;
 
   if (context._internal?.onInitDone !== true) return false;
@@ -36,7 +39,7 @@ function isPageReady(pageId) {
   // even for a page that declares no onInitAsync event.
   if (context._internal?.onInitAsyncDone !== true) return false;
   // The app onInitAsync runs once per app load, alongside the first page's events.
-  const appContext = window.lowdefy?.appContext;
+  const appContext = lowdefy?.appContext;
   if (appContext && appContext._internal?.onInitAsyncDone !== true) return false;
 
   // Covers onMountAsync (fired without await by Block.js) and any other event

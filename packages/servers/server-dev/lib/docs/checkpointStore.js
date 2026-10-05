@@ -139,6 +139,8 @@ function writeCheckpoint({ name, snapshot, notes, overwrite }) {
   parts.push('state.json');
   writeJsonFile(path.join(dir, 'urlQuery.json'), snapshot.urlQuery ?? '');
   parts.push('urlQuery.json');
+  writeJsonFile(path.join(dir, 'pathParams.json'), snapshot.pathParams ?? {});
+  parts.push('pathParams.json');
   writeJsonFile(path.join(dir, 'inputs.json'), snapshot.input ?? {});
   parts.push('inputs.json');
   writeJsonFile(path.join(dir, 'user.json'), snapshot.user ?? null);
@@ -177,6 +179,7 @@ function readCheckpoint({ name }) {
     checkpoint,
     state: readJsonFile(path.join(dir, 'state.json'), {}),
     urlQuery: readJsonFile(path.join(dir, 'urlQuery.json'), ''),
+    pathParams: readJsonFile(path.join(dir, 'pathParams.json'), {}),
     input: readJsonFile(path.join(dir, 'inputs.json'), {}),
     user: readJsonFile(path.join(dir, 'user.json'), null),
     global: readJsonFile(path.join(dir, 'global.json'), {}),

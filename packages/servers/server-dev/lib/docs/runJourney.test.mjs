@@ -66,6 +66,7 @@ function createLowdefyWindow({
     location: { pathname: `/${pageId}` },
     lowdefy: {
       pageId,
+      pageInstances: { [pageId]: [`page:${pageId}`] },
       // The e2e-utils helpers read the context of the instance on screen through the path memory.
       _internal: {
         components: { lookupPath: ({ path }) => ({ pageId: path, instanceKey: `page:${path}` }) },
@@ -1263,7 +1264,7 @@ test('runJourney goes back one page and settles it', async () => {
 
   expect(result.passed).toBe(true);
   expect(page.goBack).toHaveBeenCalledWith({ timeout: 5000 });
-  expect(page.waitForFunction).toHaveBeenLastCalledWith(expect.any(Function), 'form', {
+  expect(page.waitForFunction).toHaveBeenLastCalledWith(expect.any(Function), null, {
     timeout: 5000,
   });
 });
@@ -1435,7 +1436,7 @@ test('runJourney settles the page after an interaction before the next step', as
 
   // openPage owns the readiness wait; the runner waits once after the click.
   expect(page.waitForFunction).toHaveBeenCalledTimes(1);
-  expect(page.waitForFunction.mock.calls[0][1]).toEqual('form');
+  expect(page.waitForFunction.mock.calls[0][1]).toBeNull();
 });
 
 test('runJourney opens pages with the journey timeout when it is longer than 15000 ms', async () => {
