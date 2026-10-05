@@ -257,7 +257,6 @@ async function walkRun({
     walkMs: Date.now() - walkStarted,
     logs: result.logs,
     confirmations: confirmations.list(),
-    findingsByWalk: confirmations.findingsByWalk,
     notRun: [...notRun, ...result.notRun],
     stopped: result.stopped,
   };

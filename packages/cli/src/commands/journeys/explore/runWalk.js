@@ -180,6 +180,7 @@ async function runWalk({
       history.push(offered[answer.optionId]);
       log.steps.push({
         index: stepIndex,
+        startedAt: new Date(stepStart).toISOString(),
         shape: observation.shape,
         url: observation.url,
         step: chosen.step,

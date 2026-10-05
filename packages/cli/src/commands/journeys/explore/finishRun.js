@@ -56,7 +56,8 @@ async function finishRun({
     pr: revisions.pr,
     scope,
     buildDirectory,
-    findingsByWalk: walked.findingsByWalk,
+    logs: walked.logs,
+    dataName: walked.dataName,
     snapshot: !type.isNone(walked.dataSet?.snapshot),
     knownTextFor: ({ pageIds, typed }) =>
       collectKnownText({ buildDirectory, pageIds, dataSet: walked.dataSet, typed }),
@@ -68,7 +69,7 @@ async function finishRun({
     walked,
     findings,
     candidates: {
-      finding: candidates.finding.map((file) => path.relative(configDirectory, file)),
+      finding: candidates.finding.map((entry) => path.relative(configDirectory, entry.path)),
       coverage: candidates.coverage.map((file) => path.relative(configDirectory, file)),
       droppedExpectations: candidates.droppedExpectations,
     },
