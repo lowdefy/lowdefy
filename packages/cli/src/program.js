@@ -768,6 +768,18 @@ program
   )
   .addOption(
     new Option(
+      '--tier <tier>',
+      'Only run the journeys in this popularity tier of the selection, ranked by recent production use: common (p50, the happy paths), wide (p80), edge (p95) or full (every journey, the default). Journeys with no counts for their current steps run in every tier.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--usage-window <months>',
+      'The calendar months recent use is ranked over for --tier and the PASS line, ending at the newest month any selected journey holds, such as 6m. Default 3m.'
+    )
+  )
+  .addOption(
+    new Option(
       '--lint',
       'Lint the journeys (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L5 named data set users, L6 final assertion, L7 no snapshot values) and run nothing.'
     )

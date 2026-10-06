@@ -32,6 +32,7 @@ function expandPersonas({ item }) {
   }
   return item.journey.user.map((user) => ({
     filePath: item.filePath,
+    journeyIndex: item.journeyIndex,
     journey: personaJourney({ journey: item.journey, user }),
     persona: user,
     personaOf: item.journey,

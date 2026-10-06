@@ -15,15 +15,19 @@
 */
 
 import path from 'path';
-import { createTraceId } from '@lowdefy/helpers';
+import { createTraceId, type } from '@lowdefy/helpers';
 
 import getDirectories from '../../utils/getDirectories.js';
 import formatNoTestsMatched from '../test/formatNoTestsMatched.js';
+import formatSkippedJourney from '../test/formatSkippedJourney.js';
 import parseRepeat from '../test/parseRepeat.js';
 import parseTestSelection from '../test/parseTestSelection.js';
+import parseTier from '../journeys/usage/parseTier.js';
+import parseUsageWindow from '../journeys/usage/parseUsageWindow.js';
 import resolveJourneyPaths from '../test/resolveJourneyPaths.js';
 import runRepeated from '../test/runRepeated.js';
 import selectTests from '../test/selectTests.js';
+import selectTier from '../test/selectTier.js';
 import summariseResults from '../test/summariseResults.js';
 import writeExercised from '../test/writeExercised.js';
 import writeTestRun from '../test/writeTestRun.js';
@@ -31,17 +35,30 @@ import fetchBuildId from '../test/fetchBuildId.js';
 
 // Runs the app's tests (every journey under tests/journeys outside "_"
 // folders, or the journey files and globs `paths` names relative to the app
-// directory, narrowed by `filter` and `tags`) against its running dev server - the
+// directory, narrowed by `filter` and `tags`, then to a popularity `tier` of
+// that selection over `usageWindow`) against its running dev server - the
 // same selection, replay and runner as `lowdefy test` - and returns the
-// results as data: a failing journey is an answer, not a tool error. Always
-// the default directory: journeys an app keeps elsewhere (--journeys-directory)
+// results as data: a failing journey is an answer, not a tool error, and a
+// skipped `deprecated: true` journey is a result marked skipped. Always the
+// default directory: journeys an app keeps elsewhere (--journeys-directory)
 // may need a server set up for them, which the running dev server is not.
-async function runAppTests({ configDirectory, url, filter, tags, paths, repeat: repeatValue }) {
+async function runAppTests({
+  configDirectory,
+  url,
+  filter,
+  tags,
+  paths,
+  repeat: repeatValue,
+  tier: tierValue,
+  usageWindow: usageWindowValue,
+}) {
   const context = { directories: getDirectories({ configDirectory, options: {} }) };
   const { repeat, error: repeatError } = parseRepeat(repeatValue);
   if (repeatError) {
     return { summary: repeatError, results: [] };
   }
+  const tier = parseTier(tierValue);
+  const usageWindow = `${parseUsageWindow(usageWindowValue)}m`;
   const selection = parseTestSelection({ filter, tags });
   if (selection.error) {
     return { summary: selection.error, results: [] };
@@ -72,16 +89,24 @@ async function runAppTests({ configDirectory, url, filter, tags, paths, repeat: 
       results: [],
     };
   }
+  const tiered = selectTier({ context, selected, tier, usageWindow });
+  if (!type.isUndefined(tiered.refused)) {
+    return { summary: tiered.refused, results: [] };
+  }
   // One run id per tool call; only a full-suite run records (see runRepeated).
   const recording = {
     run: createTraceId(),
     paths: files,
     filter: selection.filters,
     tags: selection.tags,
+    tier,
   };
   const runs = [];
-  for (const { suite, item } of selected) {
-    const result = await runRepeated({ suite, context, item, url, repeat, recording });
+  for (const { suite, item, usage } of tiered.selected) {
+    const result = {
+      ...(await runRepeated({ suite, context, item, url, repeat, recording })),
+      usage,
+    };
     runs.push({ suite, result });
   }
   const results = runs.map(({ result }) => result);
@@ -93,15 +118,23 @@ async function runAppTests({ configDirectory, url, filter, tags, paths, repeat: 
   writeTestRun({ directories: context.directories, results });
   const seen = new Set();
   return {
-    summary: summariseResults({ results }).text,
-    results: runs.map(({ suite, result }) => {
-      const { journey, newestPassed, recorded, ...rest } = result;
-      return {
-        ...rest,
-        filePath: path.relative(configDirectory, result.filePath),
-        report: suite.format({ result, seen }).join('\n'),
-      };
-    }),
+    summary: summariseResults({ results, skipped: tiered.skipped.length }).text,
+    results: [
+      ...runs.map(({ suite, result }) => {
+        const { journey, newestPassed, recorded, ...rest } = result;
+        return {
+          ...rest,
+          filePath: path.relative(configDirectory, result.filePath),
+          report: suite.format({ result, seen }).join('\n'),
+        };
+      }),
+      ...tiered.skipped.map((skipped) => ({
+        name: skipped.name,
+        filePath: path.relative(configDirectory, skipped.filePath),
+        skipped: 'deprecated',
+        report: formatSkippedJourney({ skipped }),
+      })),
+    ],
   };
 }
 

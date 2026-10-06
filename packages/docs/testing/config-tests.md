@@ -284,9 +284,12 @@ lowdefy test tests/journeys/review             # a folder, with its sub-folders
 lowdefy test 'tests/journeys/**/review-*.yaml' # a glob, quoted so the CLI expands it
 lowdefy test --tag smoke --tag review          # the journeys tagged smoke or review
 lowdefy test --filter approve                  # the journeys whose name contains "approve"
+lowdefy test --tier common                     # the most-used journeys, by production use
 ```
 
-Paths, tags and filters combine: `lowdefy test tests/journeys/review --tag smoke` runs the smoke journeys in the review folder. Put the selections you use often in `package.json` scripts, such as `"test:smoke": "lowdefy test --tag smoke"`. The `lowdefy_run_tests` agent tool takes the same selections as `paths`, `tags` and `filter`.
+Paths, tags and filters combine: `lowdefy test tests/journeys/review --tag smoke` runs the smoke journeys in the review folder. Put the selections you use often in `package.json` scripts, such as `"test:smoke": "lowdefy test --tag smoke"`. The `lowdefy_run_tests` agent tool takes the same selections as `paths`, `tags`, `filter` and `tier`.
+
+Once the journeys carry production [evidence](#evidence), `--tier` narrows the selection further to its most-used journeys, cut over that selection as described in [Usage and tiers](#usage-and-tiers): `lowdefy test --tier common` checks the happy paths in a fraction of the time, and `--tier edge` adds the edge cases real users still reach. Run `common` while you work on a change and `edge` before you call it done. `lowdefy test tests/journeys/review --tier common` is the happy paths of the review folder. A journey with a list of users is tiered once and runs as each of its users. Journeys with no counts for their current steps run in every tier, so a new or edited journey is always tested. A tiered run is refused when the selection has fewer than 100 journey matches in the usage window, or no evidence at all.
 
 ```
 PASS  member creates a control  (5 steps, 1840ms)
@@ -300,13 +303,28 @@ FAIL  guest sees the empty state
 
 A failing journey stops at its first failing step and prints the step's index, the step itself, and the `expected` and `actual` values. Steps after the failure are not run.
 
-A journey with an [`evidence`](#evidence) key prints it after its `PASS` line: `PASS  member creates a control  (5 steps, 1840ms)  412 sessions · 11/12 mutants`. The sessions are the journey's production sessions summed over all its months; the mutants part is left out when there is no mutation report. `FAIL` lines carry no evidence.
+A journey with production [evidence](#evidence) prints its tier, its rank in the run's selection, its rate and its failures over the usage window after its `PASS` line, then its mutants:
+
+```
+PASS  member assigns an open ticket  (5 steps, 2100ms)  common #2 · 13.7/day · 14 failed (3m) · 11/12 mutants
+PASS  member reopens a ticket  (4 steps, 1650ms)  unranked
+```
+
+`unranked` marks a journey with no counts for its current steps yet. Persons and organisations are left out, since they do not add up across months; [`lowdefy journeys usage`](/cli#journeys-usage) shows them month by month. The mutants part is left out when there is no mutation report. `FAIL` lines carry no evidence.
+
+A journey with `deprecated: true` is never run, even when named by path or `--filter`. It is listed with its recent rate, and the closing line counts it:
+
+```
+SKIP deprecated  member prints a ticket  0.4/day (3m)
+```
 
 ### Options
 
 - `[paths...]`: Journey files, directories or globs to run instead of the whole suite, anywhere under the config directory, including the candidates in `tests/journeys/_candidates/`. A directory is read with all its sub-folders: `lowdefy test tests/journeys/_candidates/dev` runs every dev candidate. A path containing `*`, `?` or `[` (including `**`) is a glob the CLI expands itself, so quote it: `lowdefy test 'tests/journeys/review/*.yaml'`. A glob that matches nothing is refused, like a path that does not exist. `--tag` and `--filter` apply on top.
 - `--tag <tag>`: Only run journeys whose `tags` include the tag. Repeat it to run the journeys carrying any of the tags: `lowdefy test --tag smoke --tag review`.
 - `--filter <name>`: Only run journeys whose `name` contains the string (case-insensitive). `lowdefy test --filter control` runs every journey with "control" in its name. Repeat it to run the journeys matching any of the strings.
+- `--tier <tier>`: Only run the journeys in this popularity tier of the selection: `common` (p50), `wide` (p80), `edge` (p95) or `full` (every journey, the default). See [Usage and tiers](#usage-and-tiers).
+- `--usage-window <months>`: The calendar months recent use is ranked over, for `--tier` and the `PASS` line, such as `6m`. The default is `3m`.
 - `--repeat <n>`: Run each journey `n` times in a row (1 to 10) and classify it, as described in [Replaying candidates](#replaying-candidates).
 - `--lint`: Check the journeys for the [lint rules](#lint) and run nothing.
 - `--journeys-directory <path>`: Read journeys from this directory instead of `tests/journeys/`, for journeys that need a server set up for them, such as [auth journeys](#the-database). A relative path is resolved from the current directory. The run fails when the directory holds no journeys.
@@ -316,10 +334,10 @@ A journey with an [`evidence`](#evidence) key prints it after its `PASS` line: `
 
 ### Exit codes
 
-| Exit code | Meaning                                                                                                                                                                                                                                                 |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `0`       | Every journey passed, or `tests/journeys/` has no journeys (a note is printed).                                                                                                                                                                         |
-| `1`       | At least one journey failed, a journey file was invalid, a path, glob, `--tag` or `--filter` matched no journey, or a `--journeys-directory` held no journeys. With `--repeat`, a journey was `FLAKY` or `FAIL`; with `--lint`, a lint error was found. |
+| Exit code | Meaning                                                                                                                                                                                                                                                                                                                           |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `0`       | Every journey passed, or `tests/journeys/` has no journeys (a note is printed).                                                                                                                                                                                                                                                   |
+| `1`       | At least one journey failed, a journey file was invalid, a path, glob, `--tag` or `--filter` matched no journey, or a `--journeys-directory` held no journeys. With `--repeat`, a journey was `FLAKY` or `FAIL`; with `--lint`, a lint error was found; with `--tier`, the selection had too little production use to cut a tier. |
 
 A journey file that is not valid YAML, or does not match the journey format (a missing `name`, a step with two keys, an unknown step key, a step the grammar refuses, named by its index) is reported as a failed journey with the validation message and the file path. It never aborts the run, so one broken file cannot hide the results of the others.
 
@@ -501,7 +519,7 @@ Each file starts with a header line naming the journey file it came from and hol
 - Recordings are kept for 7 days or 200 MB, whichever comes first. The development server deletes older ones at start and then every hour.
 - Set `LOWDEFY_DEV_RECORD=false` in your shell or in the app's `.env` to turn recording off. Old recordings are still pruned.
 
-`lowdefy test` records too, as `journey` traces under `.lowdefy/traces/journey/`, but only when it runs the whole suite once: no journey paths, no `--tag`, no `--filter`, and only the first of `--repeat` runs. Those traces show what the suite actually drives. Screenshots, state inspection and other agent tools never record.
+`lowdefy test` records too, as `journey` traces under `.lowdefy/traces/journey/`, but only when it runs the whole suite once: no journey paths, no `--tag`, no `--filter`, no `--tier` but `full`, and only the first of `--repeat` runs. Skipping `deprecated: true` journeys still counts as the whole suite. Those traces show what the suite actually drives. Screenshots, state inspection and other agent tools never record.
 
 `lowdefy journeys recordings` lists what was recorded, newest first: when each session ran, against which build, the pages it visited, how many attempts ended in an error, and how many of its interactions the newest test run already drove.
 
@@ -589,7 +607,7 @@ production:
 
 A deprecated flow is never run, and every refresh keeps counting it, so you can see whether users still follow the old way. Undo the edit and it becomes live again with its months. No command deletes one; delete it by hand once it shows no use. A `production` block in the older window shape (`sessions`, `share`, `window`) still validates, and the next refresh replaces it with months.
 
-A journey can also be retired as a whole with `deprecated: true` at its top level, while you watch its flow drain from production: refresh keeps counting it.
+A journey can also be retired as a whole with `deprecated: true` at its top level, while you watch its flow drain from production: `lowdefy test` skips it in every run, and refresh keeps counting it. Remove the flag to run it again.
 
 No command removes a journey for lack of production use. Three months cannot see yearly work, and a journey that is the only one to catch a mutant matters whatever its traffic. `journeys evidence` lists the journeys nothing backs over the last 3 months, beside their mutation numbers, and leaves the decision to you.
 
@@ -628,7 +646,7 @@ Tier pX holds the shortest run of journeys, from the top, whose summed rates rea
 | Frustration | rage- and dead-clicked blocks                                     | a journey clicks the block and asserts with an `expect` right after   |
 | Role        | (page, role set) pairs seen in production                         | a journey visiting the page runs as a user with exactly that role set |
 
-Coverage also reads the newest full test run that the development server recorded (a plain `lowdefy test`, or `lowdefy_run_tests` with no paths, tags or filter). The interaction measure then adds a measured share beside the static one: the production interactions that run actually drove. Failure coverage becomes measured: a failure counts as covered when a journey that passed in that run produced the same failed event, because a journey that reaches a failure and still passes asserts it. The test runner keeps which journeys passed in `.lowdefy/test/run.json`. Without a recorded run, failure coverage is reported as reached: a journey does the interaction that failed, which does not show it checks the outcome.
+Coverage also reads the newest full test run that the development server recorded (a plain `lowdefy test`, or `lowdefy_run_tests` with no paths, tags, filter or tier). The interaction measure then adds a measured share beside the static one: the production interactions that run actually drove. Failure coverage becomes measured: a failure counts as covered when a journey that passed in that run produced the same failed event, because a journey that reaches a failure and still passes asserts it. The test runner keeps which journeys passed in `.lowdefy/test/run.json`. Without a recorded run, failure coverage is reported as reached: a journey does the interaction that failed, which does not show it checks the outcome.
 
 It writes the measures, a production profile (the top flows per entry page, failure paths, frustrated blocks, role sets per page, entry pages, and per block and column the clicks, distinct clicked-text tokens and most-clicked tokens) and each journey's interactions to `.lowdefy/test/coverage.json`, which is rewritten on every run and not committed. With a mutation report, the suite's mutation score is added as a sixth number.
 

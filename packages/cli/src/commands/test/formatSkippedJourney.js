@@ -14,14 +14,12 @@
   limitations under the License.
 */
 
-import committedJourneys from './committedJourneys.js';
-import discoverJourneys from '../test/discoverJourneys.js';
-
-// The committed journeys evidence and coverage read: every journey under
-// tests/journeys, or only those in `paths` (resolved by resolveJourneyPaths).
-// See committedJourneys for what each one carries and what is skipped.
-function readCommittedJourneys({ context, paths }) {
-  return committedJourneys({ context, items: discoverJourneys({ context, paths }) });
+// The line for a `deprecated: true` journey a run skipped, with its recent
+// use: `SKIP deprecated  member assigns a ticket  0.4/day (3m)`.
+function formatSkippedJourney({ skipped }) {
+  return `SKIP deprecated  ${skipped.name}  ${skipped.rate.toFixed(1)}/day (${
+    skipped.usageWindow
+  })`;
 }
 
-export default readCommittedJourneys;
+export default formatSkippedJourney;

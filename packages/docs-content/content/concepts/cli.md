@@ -161,7 +161,7 @@ The `init-vercel` command initializes the installation scripts needed to deploy 
 
 ## test
 
-The `test` command runs the app's config tests — every journey in `tests/journeys/`, sub-folders included, except folders whose name starts with `_` (such as `_candidates/`). It starts the development server headless on a free port, runs every journey through the dev server's journey route, prints `PASS`/`FAIL` per journey with the failing step, stops the server, and exits with code `1` if any journey failed. See [Config Tests](/config-tests).
+The `test` command runs the app's config tests — every journey in `tests/journeys/`, sub-folders included, except folders whose name starts with `_` (such as `_candidates/`). It starts the development server headless on a free port, runs every journey through the dev server's journey route, prints `PASS`/`FAIL` per journey with the failing step, stops the server, and exits with code `1` if any journey failed. A `PASS` line shows the journey's tier, rank, rate and failures over the usage window when it has production evidence. A journey with `deprecated: true` is skipped and listed as `SKIP deprecated`. See [Config Tests](/config-tests).
 
 - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
 - `--dev-directory <dev-directory>`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
@@ -169,6 +169,8 @@ The `test` command runs the app's config tests — every journey in `tests/journ
 - `[paths...]`: Journey files, directories (read with their sub-folders) or quoted globs such as `'tests/journeys/review/**'` to run instead of the whole suite, anywhere under the config directory, candidates in `tests/journeys/_candidates/` included. A glob that matches nothing exits with code `1`.
 - `--tag <tag>`: Only run journeys whose `tags` include this tag. Repeat it to run the journeys carrying any of the tags. Exits with code `1` if no journey matches.
 - `--filter <name>`: Only run journeys whose `name` contains this string (case-insensitive). Repeat it to run the journeys matching any of the strings. Exits with code `1` if no journey matches.
+- `--tier <tier>`: Only run the journeys in this popularity tier of the selection, ranked by recent production use: `common` (p50, the happy paths), `wide` (p80), `edge` (p95) or `full` (every journey, the default). Journeys with no counts for their current steps run in every tier. A tiered run never records as the suite's run. Exits with code `1` when the selection has fewer than 100 journey matches in the usage window, or no evidence. See [Usage and tiers](/config-tests#usage-and-tiers).
+- `--usage-window <months>`: The calendar months recent use is ranked over, for `--tier` and the `PASS` line, such as `6m`. The default is `3m`.
 - `--lint`: Check the journeys for the lint rules (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L5 named data set users, L6 final assertion, L7 no snapshot values) and run nothing. Exits with code `1` on any lint error. See [Lint](/config-tests#lint).
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 - `--port <port>`: The port to start the development server on. If it is in use, the next free port is used. The default is `3000`.
