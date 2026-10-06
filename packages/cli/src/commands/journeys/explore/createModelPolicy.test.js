@@ -228,6 +228,74 @@ test('a success resets the failed-call count', async () => {
   expect(mockDecide).toHaveBeenCalledTimes(4);
 });
 
+function structuredPolicy() {
+  return createModelPolicy({
+    backend: 'structured-output',
+    modelId: 'm',
+    apiKey: 'k',
+    seeded: createSeededPolicy(),
+  });
+}
+
+function retried(lastError) {
+  return Object.assign(new Error(`Failed after 3 attempts. Last error: ${lastError.message}`), {
+    name: 'AI_RetryError',
+    lastError,
+    errors: [lastError, lastError, lastError],
+  });
+}
+
+test('a failed call that may have been billed is charged an estimate, so the cap counts it', async () => {
+  const policy = await structuredPolicy();
+  const unparsed = Object.assign(new Error('No object generated: response did not match schema.'), {
+    name: 'AI_NoObjectGeneratedError',
+  });
+  mockDecide.mockRejectedValueOnce(retried(unparsed));
+  const answer = await policy.choose(step({ candidates: three }));
+  expect(answer.fallback).toEqual('failed');
+  expect(answer.cost.estimated).toBe(true);
+  expect(answer.cost.usd).toBeGreaterThan(0);
+  expect(answer.usage).toEqual({ inputTokens: 0, outputTokens: 0 });
+});
+
+test('a failed call that carries its usage is charged from those tokens', async () => {
+  const policy = await structuredPolicy();
+  const unparsed = Object.assign(new Error('No object generated.'), {
+    name: 'AI_NoObjectGeneratedError',
+    usage: { inputTokens: 1_000_000, outputTokens: 0 },
+  });
+  mockDecide.mockRejectedValueOnce(unparsed);
+  const answer = await policy.choose(step({ candidates: three }));
+  expect(answer.usage).toEqual({ inputTokens: 1_000_000, outputTokens: 0 });
+  expect(answer.cost).toEqual({ usd: 1, estimated: true });
+});
+
+test('a refused model, a network failure or an abort adds no cost', async () => {
+  const policy = await structuredPolicy();
+  const unreachable = Object.assign(new Error('Gateway request failed'), {
+    name: 'GatewayResponseError',
+    statusCode: 500,
+    cause: Object.assign(new Error('Cannot connect to API: fetch failed'), {
+      name: 'AI_APICallError',
+      cause: new TypeError('fetch failed'),
+    }),
+  });
+  const aborted = Object.assign(new Error('This operation was aborted'), { name: 'AbortError' });
+  mockDecide
+    .mockRejectedValueOnce(refused)
+    .mockRejectedValueOnce(retried(unreachable))
+    .mockResolvedValueOnce(answers({ choice: 'o0' }))
+    .mockRejectedValueOnce(aborted);
+  const first = await policy.choose(step({ candidates: three }));
+  const second = await policy.choose(step({ candidates: three }));
+  await policy.choose(step({ candidates: three }));
+  const fourth = await policy.choose(step({ candidates: three }));
+  for (const answer of [first, second, fourth]) {
+    expect(answer.fallback).toEqual('failed');
+    expect(answer.cost).toBeUndefined();
+  }
+});
+
 function jevPolicy(onSwitch = () => {}) {
   return createModelPolicy({
     backend: 'evaluation',
@@ -258,6 +326,47 @@ test('jev uses the evaluation model, with the structured-output model standing b
     model: { kind: 'evaluation', modelId: 'typesafe-ai/jev' },
   });
   expect(policy.switched()).toBe(null);
+});
+
+test('under a charter the model policy asks which option serves the charter and how closely the last step served it', async () => {
+  const policy = await createModelPolicy({
+    charter: { goal: 'Try edge input on the invoice form.' },
+    backend: 'structured-output',
+    modelId: 'google/gemini-2.5-flash-lite',
+    apiKey: 'test-key',
+    seeded: createSeededPolicy({ seed: 0 }),
+  });
+  mockDecide.mockResolvedValue(answers({ choice: 'o1', level: 'near the charter' }));
+  const result = await policy.choose(step({ candidates: three }));
+  const [{ questions }] = mockDecide.mock.calls[0];
+  expect(questions.next.choice).toEqual(
+    'Which interaction best serves the charter in the state, and has not been tried from this screen? For edge input, prefer the generated edge fill values (empty, long, invalid and the like); for error paths, prefer cancel, delete and submitting incomplete forms.'
+  );
+  expect(questions.relevance).toEqual({
+    score: 'How closely did the last step serve the charter?',
+    levels: ['unrelated to the charter', 'near the charter', 'serves the charter'],
+  });
+  expect(policy.lowestRelevance).toEqual('unrelated to the charter');
+  expect(result).toMatchObject({ optionId: 'o1', relevance: 'near the charter' });
+});
+
+test('without a charter the model policy asks about the change, as before', async () => {
+  const policy = await createModelPolicy({
+    backend: 'structured-output',
+    modelId: 'google/gemini-2.5-flash-lite',
+    apiKey: 'test-key',
+    seeded: createSeededPolicy({ seed: 0 }),
+  });
+  mockDecide.mockResolvedValue(answers({ choice: 'o1' }));
+  await policy.choose(step({ candidates: three }));
+  const [{ questions }] = mockDecide.mock.calls[0];
+  expect(questions.next.choice).toEqual(
+    'Which interaction most directly exercises what this change added or changed on this page, and has not been tried from this screen?'
+  );
+  expect(questions.relevance.score).toEqual(
+    'How closely did the last step exercise what this change added or changed?'
+  );
+  expect(policy.lowestRelevance).toEqual('unrelated to the change');
 });
 
 test('jev refused at any call switches to the fallback for the rest of the run, and says so', async () => {

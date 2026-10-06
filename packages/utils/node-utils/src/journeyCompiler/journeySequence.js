@@ -74,8 +74,9 @@ function pageMovedTo({ step, routeTable }) {
 // steps after it act on the email, which no recording sees: they add nothing
 // until a step moves the journey to a page again, and with no such step the
 // journey is read no further. A fill with fromEmail types into the app, so it
-// reads as any fill.
-function journeySequence({ pageId, steps, routeTable = EMPTY_ROUTE_TABLE }) {
+// reads as any fill. `isConfigText`, when given, is passed to stepIdentity so
+// only config text enters a click's identity.
+function journeySequence({ pageId, steps, routeTable = EMPTY_ROUTE_TABLE, isConfigText }) {
   const sequence = [];
   let page = pageId;
   let inEmail = false;
@@ -87,7 +88,7 @@ function journeySequence({ pageId, steps, routeTable = EMPTY_ROUTE_TABLE }) {
     }
     if (INTERACTION_VERBS.includes(verb)) {
       if (!inEmail) {
-        sequence.push({ page, identity: stepIdentity({ step }) });
+        sequence.push({ page, identity: stepIdentity({ step, isConfigText }) });
       }
       return;
     }

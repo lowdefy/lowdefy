@@ -38,7 +38,8 @@ test('L5 warns on an inline user object and on no user', () => {
   expect(L5({ journey: journey(), dataSet: null })).toEqual([
     {
       severity: 'warning',
-      message: 'has no user: name a user from its data set, or write user: none for signed out.',
+      message:
+        'has no user: name a user from its data set (or a list of them), or write user: none for signed out.',
     },
   ]);
 });
@@ -58,4 +59,27 @@ test('L5 warns on a user name with no data set, and leaves an unreadable data se
     'names user "member" but declares no data: set to find it in.'
   );
   expect(L5({ journey: journey({ data: 'missing', user: 'member' }), dataSet: null })).toEqual([]);
+});
+
+test('L5 passes a list of users the data set has', () => {
+  expect(L5({ journey: journey({ data: 'tickets', user: ['member', 'owner'] }), dataSet })).toEqual(
+    []
+  );
+});
+
+test('L5 warns once per listed user the data set does not have', () => {
+  expect(
+    L5({ journey: journey({ data: 'tickets', user: ['admin', 'member', 'auditor'] }), dataSet })
+  ).toEqual([
+    {
+      severity: 'warning',
+      message:
+        'names user "admin", which data set "tickets" does not have. Its users: member, owner.',
+    },
+    {
+      severity: 'warning',
+      message:
+        'names user "auditor", which data set "tickets" does not have. Its users: member, owner.',
+    },
+  ]);
 });

@@ -145,6 +145,7 @@ async function createMcpServer({ context }) {
       const { error, response, success } = await callEndpoint(context, {
         blockId: '_mcp',
         endpointId: endpoint.id,
+        outsideCaller: true,
         pageId: '_mcp',
         payload,
       });

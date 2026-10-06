@@ -131,6 +131,10 @@ function listCandidates({ interactiveControl, layers, popupTrigger, popupContain
   [...root.querySelectorAll(interactiveControl)].forEach((control) => {
     if (!isVisible(control) || !isEnabled(control)) return;
     const description = lowdefy._trace.describeElement(control);
+    // The runner finds a control through its block or its text, so one with
+    // neither (an icon button outside every block) is no target a step can
+    // name.
+    if (description.block_id === null && description.text === null) return;
     const key = JSON.stringify([
       description.block_id,
       description.row,

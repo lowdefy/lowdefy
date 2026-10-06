@@ -21,9 +21,11 @@ import { createTraceId, type } from '@lowdefy/helpers';
 
 import appendWalkLog from './appendWalkLog.js';
 import buildConfigTrees from './buildConfigTrees.js';
+import checkCharterPages from './checkCharterPages.js';
+import checkCharterRoles from './checkCharterRoles.js';
 import checkLiveDataRule from './checkLiveDataRule.js';
+import checkManualPagesWalked from './checkManualPagesWalked.js';
 import checkWriteOptIn from './checkWriteOptIn.js';
-import createConfirmations from './createConfirmations.js';
 import createCostTracker from './createCostTracker.js';
 import createModelPolicy from './createModelPolicy.js';
 import createSeededPolicy from './createSeededPolicy.js';
@@ -35,9 +37,10 @@ import formatScopeLines from './formatScopeLines.js';
 import formatWalkPlan from './formatWalkPlan.js';
 import listLiveDataConnections from './listLiveDataConnections.js';
 import materialiseTree from './materialiseTree.js';
-import orderTargets from './orderTargets.js';
 import parseExploreOptions from './parseExploreOptions.js';
+import pruneCandidateDirectory from './pruneCandidateDirectory.js';
 import pruneExploreDirectory from './pruneExploreDirectory.js';
+import readChartersFile from './readChartersFile.js';
 import readBuildArtifacts from './readBuildArtifacts.js';
 import readCoverage from './readCoverage.js';
 import readPluginSets from './readPluginSets.js';
@@ -45,7 +48,7 @@ import resolveExploreDataSet from './resolveExploreDataSet.js';
 import resolveExploreServer from './resolveExploreServer.js';
 import resolvePolicy from './resolvePolicy.js';
 import resolveRevisions from './resolveRevisions.js';
-import resolveRoles from './resolveRoles.js';
+import resolveWalkTargets from './resolveWalkTargets.js';
 import runWalk from './runWalk.js';
 import scheduleWalks from './scheduleWalks.js';
 import selectTargets from './selectTargets.js';
@@ -64,8 +67,22 @@ async function touch(directory) {
   await fs.promises.utimes(directory, now, now).catch(() => {});
 }
 
-// Builds base and head, diffs them and writes scope.json.
-async function scopeRun({ context, revisions, exploreDirectory, runDirectory, options }) {
+// The charters a run walks for: a --charters file's, a --charter's one, or
+// none. Walk targets and logs name a charter by its index in this list.
+function listRunCharters(options) {
+  if (options.chartersFile !== null) return readChartersFile({ filePath: options.chartersFile });
+  if (options.charter !== null) return [options.charter];
+  return [];
+}
+
+const NO_PLUGIN_CHANGES = { missingFromHead: [], versionChanged: [] };
+
+// The base config tree and the plugin sets it is built with. A head-only run
+// (a charter with no PR) has no base to materialise or compare plugins with.
+async function prepareBase({ context, revisions, exploreDirectory }) {
+  if (type.isNone(revisions.base)) {
+    return { baseConfigDirectory: null, pluginSets: NO_PLUGIN_CHANGES };
+  }
   const tree = await materialiseTree({
     root: revisions.root,
     sha: revisions.base,
@@ -77,12 +94,26 @@ async function scopeRun({ context, revisions, exploreDirectory, runDirectory, op
     baseConfigDirectory: tree.configDirectory,
     headConfigDirectory: context.directories.config,
   });
+  return { baseConfigDirectory: tree.configDirectory, pluginSets };
+}
+
+// Builds base and head, diffs them and writes scope.json. A head-only run
+// builds the head alone and targets --page, else the entry pages. The pages a
+// --charters file names are targets too; the --page or entry pages are left
+// out of a head-only run when every charter names its own.
+async function scopeRun({ context, revisions, exploreDirectory, runDirectory, options }) {
+  const headOnly = type.isNone(revisions.base);
+  const { baseConfigDirectory, pluginSets } = await prepareBase({
+    context,
+    revisions,
+    exploreDirectory,
+  });
   let builds;
   try {
     builds = await buildConfigTrees({
       context,
       revisions,
-      baseConfigDirectory: tree.configDirectory,
+      baseConfigDirectory,
       runDirectory,
       pluginSets,
     });
@@ -92,6 +123,7 @@ async function scopeRun({ context, revisions, exploreDirectory, runDirectory, op
   await touch(path.dirname(builds.headBuild));
   if (builds.baseBuild !== null) await touch(path.dirname(builds.baseBuild));
   const headBuild = readBuildArtifacts({ buildDirectory: builds.headBuild });
+  checkCharterPages({ charters: options.charters, headBuild });
   const baseBuild =
     builds.baseBuild === null ? null : readBuildArtifacts({ buildDirectory: builds.baseBuild });
   const targets = selectTargets({
@@ -100,7 +132,12 @@ async function scopeRun({ context, revisions, exploreDirectory, runDirectory, op
     headBuild,
     coverage: readCoverage({ directories: context.directories }),
     manualPages: options.pages,
+    charterPages: [...new Set(options.charters.flatMap((charter) => charter.pages ?? []))],
+    withDefaultPages:
+      options.charters.length === 0 ||
+      options.charters.some((charter) => type.isUndefined(charter.pages)),
     baseError: builds.baseError,
+    headOnly,
   });
   const scope = await writeScope({
     runDirectory,
@@ -112,29 +149,11 @@ async function scopeRun({ context, revisions, exploreDirectory, runDirectory, op
   return { scope, warnings: targets.warnings, builds, headBuild };
 }
 
-function resolveTargets({ scope, coverage, dataSet, options }) {
-  if (options.roles.length > 0 && type.isNone(dataSet)) {
-    refuse('--role names data set users, but no data set resolved. Name one with --data.');
-  }
-  const targets = [];
-  const notRun = [];
-  scope.pages.forEach((page) => {
-    const resolved = resolveRoles({
-      pageId: page.pageId,
-      coverage,
-      dataSet,
-      onlyUsers: options.roles,
-    });
-    targets.push(...resolved.targets);
-    notRun.push(...resolved.notRun);
-  });
-  return { targets: orderTargets({ scopePages: scope.pages, targets }), notRun };
-}
-
-async function createPolicy({ context, policyConfig, seed }) {
+async function createPolicy({ context, policyConfig, seed, charter }) {
   const seeded = createSeededPolicy({ seed });
   if (policyConfig.policy === 'seeded') return seeded;
   return createModelPolicy({
+    charter,
     backend: policyConfig.backend,
     modelId: policyConfig.modelId,
     fallbackModelId: policyConfig.fallbackModelId,
@@ -182,9 +201,22 @@ async function walkRun({
   });
   if (!type.isUndefined(liveRule.error)) refuse(liveRule.error);
   if (!type.isUndefined(liveRule.warning)) context.logger.warn(liveRule.warning);
-  const coverage = readCoverage({ directories: context.directories });
-  const { targets, notRun } = resolveTargets({ scope, coverage, dataSet, options });
-  const policy = await createPolicy({ context, policyConfig, seed: options.seed });
+  checkCharterRoles({ charters: options.charters, dataSet });
+  const { targets, notRun } = resolveWalkTargets({
+    scope,
+    coverage: readCoverage({ directories: context.directories }),
+    dataSet,
+    roles: options.roles,
+    charters: options.charters,
+  });
+  // A run's walks are all chartered or none, so any charter picks the
+  // charter questions; each walk's own charter goes in its state.
+  const policy = await createPolicy({
+    context,
+    policyConfig,
+    seed: options.seed,
+    charter: options.charters[0] ?? null,
+  });
   const costs = createCostTracker({
     maxCost: policyConfig.maxCost,
     onFirstEstimate: () =>
@@ -215,17 +247,13 @@ async function walkRun({
     liveData: options.liveData,
     allowExternal: options.allowExternal,
   };
-  const confirmations = createConfirmations({ client, run, options: walkOptions, shouldStop });
-  const targetsByWalk = new Map();
   const walkStarted = Date.now();
   const result = await scheduleWalks({
     targets,
     walks: options.walks,
     shouldStop,
     buildChanged: async () => (await client.buildId()) !== startBuildId,
-    afterWalk: (log) => confirmations.afterWalk({ log, target: targetsByWalk.get(log.walk) }),
     runOne: async ({ target, walkId, walkIndex, progress }) => {
-      targetsByWalk.set(walkId, target);
       const log = await runWalk({
         client,
         run,
@@ -237,6 +265,7 @@ async function walkRun({
         policy,
         progress,
         decisionContext: revisions.context,
+        charter: type.isUndefined(target.charter) ? null : options.charters[target.charter],
         knownTextFor: ({ pageIds, typed }) =>
           collectKnownText({ buildDirectory: builds.headBuild, pageIds, dataSet, typed }),
         fixtures: dataSet?.fixtures ?? {},
@@ -256,14 +285,12 @@ async function walkRun({
     costs: costs.totals(),
     walkMs: Date.now() - walkStarted,
     logs: result.logs,
-    confirmations: confirmations.list(),
-    findingsByWalk: confirmations.findingsByWalk,
     notRun: [...notRun, ...result.notRun],
     stopped: result.stopped,
   };
 }
 
-async function exploreOnServer({ context, options, policyConfig, revisions, server }) {
+async function exploreOnServer({ context, options, policyConfig, revisions, server, pruned }) {
   const startedAt = new Date().toISOString();
   const exploreDirectory = path.join(context.directories.config, '.lowdefy', 'explore');
   const run = createTraceId();
@@ -307,24 +334,34 @@ async function exploreOnServer({ context, options, policyConfig, revisions, serv
     scope: scoped.scope,
     walked,
     buildDirectory: scoped.builds.headBuild,
+    url: server.url,
     startedAt,
+    pruned,
   });
   return { run, runDirectory, scope: scoped.scope, walked, report };
 }
 
-// lowdefy journeys explore (--pr <n> | --against <ref>): finds the pages a
-// pull request changed by comparing full config builds of its base and head,
-// walks each changed page as each role on a journey data set, with a policy
-// choosing each step from generated options and fixed invariants deciding
-// findings, and keeps the run in .lowdefy/explore/<run>/. Not a gate: exit 0
-// when the run completes, with or without findings; 1 when it cannot run.
+// lowdefy journeys explore (--pr <n> | --against <ref> | --charter <text> |
+// --charters <file>): finds the pages a pull request changed by comparing
+// full config builds of its base and head, walks each changed page as each
+// role on a journey data set, with a policy choosing each step from generated
+// options and fixed invariants deciding findings, and keeps the run in
+// .lowdefy/explore/<run>/. A charter steers the model's choices; with no PR
+// it walks the head alone (--page, else the entry pages). A --charters file
+// runs several charters as one run, a bug bash: their targets share the
+// rounds and the budget, and the findings merge by key, each proven once.
+// Not a gate: exit 0 when the run completes, with or without findings; 1
+// when it cannot run.
 async function journeysExplore({ context }) {
   let server = null;
   try {
-    const options = parseExploreOptions(context.options);
+    const parsed = parseExploreOptions(context.options);
+    const options = { ...parsed, charters: listRunCharters(parsed) };
+    checkManualPagesWalked({ charters: options.charters, manualPages: options.pages });
     await pruneExploreDirectory({
       exploreDirectory: path.join(context.directories.config, '.lowdefy', 'explore'),
     });
+    const pruned = await pruneCandidateDirectory({ configDirectory: context.directories.config });
     const policyConfig = resolvePolicy({ options: context.options });
     const optInError = checkWriteOptIn({
       cliConfig: context.cliConfig,
@@ -338,7 +375,14 @@ async function journeysExplore({ context }) {
       cwd: context.directories.config,
     });
     server = await resolveExploreServer({ context, url: options.url });
-    const explored = await exploreOnServer({ context, options, policyConfig, revisions, server });
+    const explored = await exploreOnServer({
+      context,
+      options,
+      policyConfig,
+      revisions,
+      server,
+      pruned,
+    });
     return explored;
   } catch (error) {
     context.logger.error(error.message);

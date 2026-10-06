@@ -18,7 +18,7 @@ import skills from './index.js';
 import journeysFromPr from './journeysFromPr.js';
 
 const DESCRIPTION =
-  'Use when the developer wants a pull request explored before it merges, or wants journeys for what a PR changed. Walks the changed pages as each role on a data set, reports confirmed findings first, then proposes journeys and proves each before suggesting it.';
+  'Use when the developer wants a pull request explored before it merges, or wants journeys for what a PR changed. Walks the changed pages as each role on a data set, reports findings proven by failing journeys first, then proposes journeys and proves each before suggesting it.';
 
 test('the skill list includes journeys-from-pr with its renderer and AGENTS.md line', () => {
   const entry = skills.find((skill) => skill.name === 'journeys-from-pr');
@@ -50,7 +50,7 @@ test('journeys-from-pr names the explore, lint and three-run commands and the hu
 test('journeys-from-pr posts comments only after approval and with no snapshot data', () => {
   const skill = journeysFromPr({ appPath: '' });
   expect(skill).toContain('gh pr comment <n> --body-file <file>');
-  expect(skill).toContain('only\n  once they approve the text');
+  expect(skill).toContain('only once they approve the text');
   expect(skill).toContain('the comment carries no snapshot data');
   expect(skill).toContain('no screenshot is attached');
 });
@@ -73,4 +73,16 @@ test('journeys-from-pr gives no instruction to delete a journey', () => {
 
 test('journeys-from-pr names the app directory in a monorepo', () => {
   expect(journeysFromPr({ appPath: 'apps/crm' })).toContain('`apps/crm` in the worktree');
+});
+
+test('journeys-from-pr shows proven findings with the journey that fails, as the regression test', () => {
+  const skill = journeysFromPr({ appPath: '' });
+  expect(skill).toContain('## 5. Proven findings first, one at a time');
+  expect(skill).toContain('errors first, then dead clicks');
+  expect(skill).toContain('The journey fails under `lowdefy test` today');
+  expect(skill).toContain('the journey is the\n  regression test');
+  expect(skill).toContain('`tests/journeys/_candidates/explorer/<run>/`');
+  expect(skill).toContain('Ask the developer whether it should do something.');
+  expect(skill).not.toContain('do not run it three');
+  expect(skill).not.toContain('confirmed');
 });

@@ -24,17 +24,53 @@ function countBy(values) {
   return counts;
 }
 
-// report.json: what the run compared, what it walked and what that cost, the
-// targets it did not walk and why, its findings by status, the candidates it
-// wrote, and its trace file. readExploreRuns reads run, pr, base, head and
-// finishedAt from it.
+// Groups the not-proven findings by reason, in the order applyProof gives.
+function groupByReason(findings) {
+  const groups = {};
+  findings
+    .filter((finding) => finding.status === 'not-proven')
+    .forEach((finding) => {
+      groups[finding.reason] = [...(groups[finding.reason] ?? []), finding];
+    });
+  return groups;
+}
+
+// Each charter of the run with the pages and data set users its targets
+// cover and how many walks it had. Walk logs and targets name a charter by
+// its index.
+function describeCharters({ charters, targets, logs }) {
+  return charters.map((charter, index) => {
+    const own = targets.filter((target) => target.charter === index);
+    return {
+      goal: charter.goal,
+      pages: [...new Set(own.map((target) => target.pageId))],
+      roles: [...new Set(own.map((target) => target.user ?? 'default'))],
+      walks: logs.filter((log) => log.charter === index).length,
+    };
+  });
+}
+
+// report.json: what the run compared, the --charter that steered it (null
+// without one), every charter it walked for (a --charter run's one, or a
+// --charters file's, each with its pages, roles and walks), what it walked
+// and what that cost, the targets it did not walk and why, its findings
+// (proven ones first, then the not-proven ones grouped by reason, each naming
+// the charters that hit it), how long the proofs took, the candidates it
+// kept, the old candidate folders its start pruned (and those kept because a
+// file in them was edited), and its trace file. findings comes from
+// applyProof, in report order.
+// readExploreRuns reads run, pr, base, head and finishedAt from it.
 function buildExploreReport({
   run,
   revisions,
+  charter = null,
+  charters = [],
   scope,
   walked,
   findings,
+  proof,
   candidates,
+  pruned = { pruned: [], keptEdited: [] },
   trace,
   startedAt,
   finishedAt,
@@ -49,6 +85,8 @@ function buildExploreReport({
     base: revisions.base,
     head: revisions.head,
     dirty: revisions.dirty,
+    charter,
+    charters: describeCharters({ charters, targets: walked.targets, logs }),
     startedAt,
     finishedAt,
     policy: {
@@ -70,7 +108,6 @@ function buildExploreReport({
       pages: new Set(logs.map((log) => log.pageId)).size,
       targets: new Set(logs.map((log) => `${log.pageId}\u0000${log.user ?? ''}`)).size,
       walks: logs.length,
-      confirmations: walked.confirmations.length,
       steps,
     },
     stopReasons: countBy(logs.map((log) => log.stopReason)),
@@ -85,12 +122,12 @@ function buildExploreReport({
       .filter((log) => log.stopReason === 'access-changed')
       .map((log) => ({ pageId: log.pageId, user: log.user })),
     findings: {
-      confirmed: findings.filter((finding) => finding.status === 'confirmed').length,
-      unconfirmed: findings.filter((finding) => finding.status === 'unconfirmed').length,
-      deadClicks: findings.filter((finding) => finding.kind === 'dead-click').length,
-      environment: findings.filter((finding) => finding.status === 'environment').length,
+      proven: findings.filter((finding) => finding.status === 'proven'),
+      notProven: groupByReason(findings),
     },
+    proof,
     candidates,
+    pruned,
     trace,
   };
 }

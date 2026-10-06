@@ -18,8 +18,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 // Saves the walk's page as .lowdefy/explore/<run>/screenshots/<walk>-<index>.png
-// when an error finding fires, and returns its path relative to the config
-// directory, or null when the page cannot be captured.
+// when an error finding fires (index is the step's, or 'open' for a finding
+// at open), and returns its path relative to the config directory, or null
+// when the page cannot be captured.
 async function saveWalkScreenshot({ walk, index, configDirectory }) {
   const page = walk.runner.actors.current().page;
   if (page.isClosed()) return null;

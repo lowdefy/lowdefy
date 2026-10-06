@@ -85,6 +85,19 @@ async function docsJourneyHandler(c) {
       400
     );
   }
+  // One POST is one run. A journey with a list of users runs once per user:
+  // lowdefy test and lowdefy_run_journey expand the list, posting or running
+  // each user on its own.
+  if (type.isArray(body.user)) {
+    return c.json(
+      {
+        error: `POST /lowdefy-docs/journey runs one user. For a list of data set users, post once per user, or use lowdefy test or lowdefy_run_journey, which run the journey once as each. Received ${JSON.stringify(
+          body.user
+        )}.`,
+      },
+      400
+    );
+  }
   // A string is a journey's own: `none` injects no caller, so the app's auth
   // decides who the journey is, and any other string names a user of the
   // journey's data set (runJourney looks it up). An object is a headless caller.
@@ -146,6 +159,7 @@ async function docsJourneyHandler(c) {
       basePath: lowdefyConfig.basePath ?? '',
       mutantCookie: mutantRun?.cookiePayload,
       data: body.data,
+      by: 'test',
       // Journeys posted here come from `lowdefy test` and lowdefy_run_tests.
       recording: type.isNone(body.recording)
         ? undefined

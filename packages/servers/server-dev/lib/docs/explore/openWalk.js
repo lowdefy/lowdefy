@@ -23,6 +23,7 @@ import armIdleClose from './armIdleClose.js';
 import checkWalkWriteRules from './checkWalkWriteRules.js';
 import closeWalkSession from './closeWalkSession.js';
 import evaluateAccess from './evaluateAccess.js';
+import evaluateWalkOpen from './evaluateWalkOpen.js';
 import getDataStore from '../dataSets/getDataStore.js';
 import { getBrowser } from '../getBrowser.js';
 import noBrowserError from '../noBrowserError.js';
@@ -32,8 +33,9 @@ import openJourney from '../openJourney.js';
 import readDevAuthMode from '../readDevAuthMode.js';
 import resolveJourneyDataSet from '../dataSets/resolveJourneyDataSet.js';
 import resolvePageInstance from '../resolvePageInstance.js';
+import saveWalkScreenshot from './saveWalkScreenshot.js';
 import validateOpenWalkBody from './validateOpenWalkBody.js';
-import watchWalkContext from './watchWalkContext.js';
+import watchJourneyContext from '../observe/watchJourneyContext.js';
 import { listWalks, registerWalk } from './walkSessions.js';
 
 const MAX_OPEN_WALKS = 2;
@@ -71,14 +73,15 @@ function refuseOpen({ run, walkName }) {
 
 // POST /lowdefy-docs/explore/walks: opens an explorer walk, a journey's
 // actors on a fresh data session, recorded as source explorer under the
-// run's id with the walk's name as run.journey (record: false records
-// nothing, but its errors still reach the walk). The walk is registered
-// before its page opens, so errors the first page load causes reach it. It
+// run's id with the walk's name as run.journey. The walk is registered
+// before its page opens, so errors the first page load causes reach it, and
+// they are judged by the fixed invariants as findings at open (no step). It
 // holds a browser slot until it closes. roles (the walking user's role set)
 // and roleMatrixListed (production use shows that role set on the page)
-// decide whether a redirect at open is a role-refused finding. Returns
+// decide whether a redirect at open is a role-refused finding. When an error
+// finding fires at open, the page is saved as a screenshot. Returns
 // { status, body }: 200 with { walkId, observation, admitted, findings,
-// timings: { dataMs, pageMs } },
+// timings: { dataMs, pageMs }, screenshot? },
 // 400 for a bad body or a refused data rule, 409
 // when two walks are open (or this run's walk already is), 502 when no
 // browser can launch.
@@ -87,7 +90,7 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
   if (!type.isUndefined(bodyError)) {
     return { status: 400, body: { error: bodyError } };
   }
-  const { pageId, pathParams, urlQuery, user, data, liveData, run, walk: walkName, record } = body;
+  const { pageId, pathParams, urlQuery, user, data, liveData, run, walk: walkName } = body;
   const instance = resolvePageInstance({ pageId, pathParams });
   if (!type.isUndefined(instance.error)) {
     return { status: 400, body: { error: instance.error } };
@@ -141,7 +144,6 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
     run,
     journey: walkName,
     pageId,
-    record,
     allowExternal,
     dataSet,
     snapshot: !type.isNone(dataSet?.snapshot),
@@ -164,6 +166,7 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
     openedAt: Date.now(),
   });
   const timings = { dataMs: 0, pageMs: 0 };
+  let openFindings;
   try {
     const dataStart = Date.now();
     if (dataSet !== null) {
@@ -176,7 +179,6 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
       source: 'explorer',
       run: { id: run, by: 'explorer', journey: walkName },
     };
-    if (!record) recording.record = false;
     const { journey } = await openJourney({
       browser,
       origin,
@@ -194,10 +196,11 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
       users: dataSet?.users,
       recording,
       onContext: ({ context }) =>
-        watchWalkContext({ context, events: walk.events, origin, basePath }),
+        watchJourneyContext({ context, events: walk.events, origin, basePath }),
     });
     walk.runner = journey;
     walk.observation = await observeWalkPage({ walk, open: true });
+    openFindings = await evaluateWalkOpen({ walk });
     timings.pageMs = Date.now() - pageStart;
   } catch (error) {
     await closeWalkSession(walk).catch(() => {});
@@ -213,17 +216,20 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
     roles,
     roleMatrixListed: body.roleMatrixListed,
   });
-  armIdleClose({ walk, idleMs });
-  return {
-    status: 200,
-    body: {
-      walkId: walk.walkId,
-      observation: walk.observation,
-      admitted: access.admitted,
-      findings: access.finding === null ? [] : [access.finding],
-      timings,
-    },
+  const findings = access.finding === null ? openFindings : [access.finding, ...openFindings];
+  const opened = {
+    walkId: walk.walkId,
+    observation: walk.observation,
+    admitted: access.admitted,
+    findings,
+    timings,
   };
+  if (findings.some((finding) => finding.severity === 'error')) {
+    const screenshot = await saveWalkScreenshot({ walk, index: 'open', configDirectory });
+    if (screenshot !== null) opened.screenshot = screenshot;
+  }
+  armIdleClose({ walk, idleMs });
+  return { status: 200, body: opened };
 }
 
 export default openWalk;

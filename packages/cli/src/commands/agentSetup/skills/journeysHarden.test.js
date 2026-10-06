@@ -74,3 +74,12 @@ test('journeys-harden runs commands from the app directory in a monorepo', () =>
     'cd apps/crm && lowdefy journeys harden --list'
   );
 });
+
+test('journeys-harden folds a kept role-granted variant into the user list and keeps refused roles apart', () => {
+  const skill = journeysHarden({ appPath: '' });
+  expect(skill).toContain(
+    "Add its user to the original journey's\n  `user` list (`user: member` becomes `user: [member, admin]`"
+  );
+  expect(skill).toContain('a **role, refused** one included');
+  expect(skill).toContain('runs once as each, reported as `<name> [<user>]`');
+});

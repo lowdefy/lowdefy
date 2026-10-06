@@ -20,8 +20,10 @@ import { getState } from '@lowdefy/e2e-utils/runtime';
 import { findPlaceholderStep, validateJourneySteps } from '@lowdefy/node-utils';
 
 import collectExercised from './collectExercised.js';
+import createJourneyAppErrors from './observe/createJourneyAppErrors.js';
 import describeDataSetResult from './dataSets/describeDataSetResult.js';
 import getDataStore from './dataSets/getDataStore.js';
+import journeyRunRecording from './journeyRunRecording.js';
 import { getBrowser, buildPageUrl } from './getBrowser.js';
 import noBrowserError from './noBrowserError.js';
 import openDataSession from './dataSets/openDataSession.js';
@@ -29,6 +31,7 @@ import openJourney from './openJourney.js';
 import readBuildArtifact from './readBuildArtifact.js';
 import readDevAuthMode from './readDevAuthMode.js';
 import readPagePath from './readPagePath.js';
+import { registerRunBuffer, releaseRunBuffer } from './runErrorBuffers.js';
 import resolveJourneyDataSet from './dataSets/resolveJourneyDataSet.js';
 import runJourneySteps from './runJourneySteps.js';
 import selectFinalState from './selectFinalState.js';
@@ -88,6 +91,7 @@ async function runJourney({
   mutantCookie,
   data,
   recording,
+  by,
 }) {
   if (type.isNone(origin) || !type.isString(origin)) {
     return {
@@ -173,6 +177,7 @@ async function runJourney({
         stepTimeout,
         mutantCookie,
         recording,
+        by,
         steps,
         stateSelection,
         readConfigFile,
@@ -197,6 +202,7 @@ async function runJourneyInBrowser({
   stepTimeout,
   mutantCookie,
   recording,
+  by,
   steps,
   stateSelection,
   readConfigFile,
@@ -225,6 +231,17 @@ async function runJourneyInBrowser({
     loadMs = Date.now() - loadStart;
   }
 
+  // Every run carries an identity, recorded or not, so the errors it causes
+  // collect in its own buffer from its first request (see runErrorBuffers).
+  const runRecording = journeyRunRecording({ recording, by });
+  const runBuffer = { run: runRecording.run.id, journey: runRecording.run.journey };
+  registerRunBuffer(runBuffer);
+  const appErrors = createJourneyAppErrors({
+    origin,
+    basePath,
+    recording: runRecording,
+    configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd(),
+  });
   let journey;
   try {
     const opened = await openJourney({
@@ -243,9 +260,12 @@ async function runJourneyInBrowser({
       dataCookie: session?.cookie,
       mutantCookie,
       users: dataSet?.users,
-      recording,
+      recording: runRecording,
+      onContext: appErrors.onContext,
     });
     journey = opened.journey;
+    journey.recording = runRecording;
+    journey.appErrors = appErrors;
     const { results, screenshots, failure } = await runJourneySteps({ journey, steps });
     const state = await readFinalState({ page: journey.actors.current().page });
     const exercised = await collectExercised({
@@ -283,11 +303,12 @@ async function runJourneyInBrowser({
     return { error: `Failed to run journey at "${url}": ${error.message}` };
   } finally {
     if (!type.isUndefined(journey)) {
-      if (!type.isUndefined(recording)) {
+      if (runRecording.record !== false) {
         await journey.actors.flushRecordings();
       }
       await journey.actors.closeAll();
     }
+    releaseRunBuffer(runBuffer);
     // After the actors: no browser request still carries the data cookie. close() then waits for
     // the session's background work before it drops the database. openJourney closed its own
     // actors when the first page failed to open.

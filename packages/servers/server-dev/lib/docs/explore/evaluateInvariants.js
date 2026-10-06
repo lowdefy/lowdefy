@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import { expectedErrorNames } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import findingKey from './findingKey.js';
+import hasNoEffect from '../observe/hasNoEffect.js';
 import parseAppApiUrl from './parseAppApiUrl.js';
 import relativeSource from './relativeSource.js';
 
@@ -48,20 +50,14 @@ function isExplained({ response, serverEntries, basePath }) {
 }
 
 function isDeadClick({ step, result, window }) {
-  return (
-    !type.isUndefined(step.click) &&
-    result.status === 'ok' &&
-    window.mutationCount === 0 &&
-    window.emits.length === 0 &&
-    window.requests.length === 0 &&
-    window.urlBefore === window.urlAfter
-  );
+  return !type.isUndefined(step.click) && result.status === 'ok' && hasNoEffect({ window });
 }
 
 // The fixed checks that decide whether a walk step broke something, over what
 // the step's window produced for this walk only (never the model):
-//   action-error    an event failed with an error that is not a UserError (a
-//                   failed Validate is the app doing its job)
+//   action-error    an event failed with an error that is not an expected
+//                   outcome: a failed Validate (a UserError) or an auth gate's
+//                   401 or 403 refusal is the app doing its job
 //   client-error    an uncaught page error, or a client error entry this walk
 //                   caused
 //   server-error    a server error entry this walk caused
@@ -101,7 +97,7 @@ async function evaluateInvariants({
   }
 
   for (const emit of window.emits) {
-    if (emit.success !== false || emit.failure?.errorName === 'UserError') continue;
+    if (emit.success !== false || expectedErrorNames.has(emit.failure?.errorName)) continue;
     const { actionId, actionType, configKey, errorName } = emit.failure ?? {};
     add({
       kind: 'action-error',

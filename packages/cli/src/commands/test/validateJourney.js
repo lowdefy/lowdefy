@@ -16,7 +16,11 @@
 
 import { validate } from '@lowdefy/ajv';
 import { type } from '@lowdefy/helpers';
-import { validateJourneySteps, validateJourneyTags } from '@lowdefy/node-utils';
+import {
+  validateJourneySteps,
+  validateJourneyTags,
+  validateJourneyUser,
+} from '@lowdefy/node-utils';
 
 import journeySchema from './journeySchema.js';
 
@@ -37,6 +41,10 @@ function validateJourney({ journey }) {
   const mutationError = checkMutationCounts({ evidence: journey.evidence });
   if (!type.isUndefined(mutationError)) {
     return { valid: false, message: mutationError };
+  }
+  const { error: userError } = validateJourneyUser({ user: journey.user, data: journey.data });
+  if (!type.isUndefined(userError)) {
+    return { valid: false, message: userError };
   }
   if (!type.isUndefined(journey.tags)) {
     const { error: tagsError } = validateJourneyTags({ tags: journey.tags });

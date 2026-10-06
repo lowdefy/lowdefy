@@ -80,6 +80,8 @@ function walk({
   steps = 3,
   shouldStop = () => null,
   scopePage,
+  decisionContext = { title: 'Add ticket assignment', body: '' },
+  charter,
 }) {
   return runWalk({
     client,
@@ -91,7 +93,8 @@ function walk({
     options: { steps, data: 'staging', liveData: false, allowExternal: [] },
     policy,
     progress: createWalkProgress(),
-    decisionContext: { title: 'Add ticket assignment', body: '' },
+    decisionContext,
+    charter,
     knownTextFor: () => knownText,
     fixtures: {},
     shouldStop,
@@ -108,7 +111,6 @@ test('a walk stops at its step limit and closes', async () => {
     pageId: 'tickets',
     run,
     walk: 'walk-1',
-    record: true,
     roles: ['member'],
     roleMatrixListed: false,
     user: 'member',
@@ -119,12 +121,39 @@ test('a walk stops at its step limit and closes', async () => {
   expect(log.steps[0]).toEqual(
     expect.objectContaining({
       index: 0,
+      startedAt: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T/),
       shape: 's1',
       step: { click: expect.any(Object) },
       result: { status: 'ok', durationMs: 40 },
       durations: expect.objectContaining({ actMs: 40 }),
     })
   );
+});
+
+test('a charter walk sends the charter in the policy state, with no change on a head-only run', async () => {
+  const states = [];
+  const policy = {
+    name: 'model',
+    modelId: 'test/model',
+    lowestRelevance: 'unrelated to the charter',
+    choose: async ({ state, options }) => {
+      states.push(state);
+      return { asked: true, optionId: Object.keys(options)[0], relevance: 'serves the charter' };
+    },
+  };
+  const log = await walk({
+    client: createClient(),
+    policy,
+    steps: 2,
+    decisionContext: null,
+    charter: { goal: 'Try error paths on the ticket form.' },
+  });
+  expect(log.stopReason).toBe('steps');
+  expect(states).toHaveLength(2);
+  states.forEach((state) => {
+    expect(state.charter).toEqual({ goal: 'Try error paths on the ticket form.' });
+    expect(state.change).toBeUndefined();
+  });
 });
 
 test('a walk is exhausted when no candidate is left after the within-walk rule', async () => {
@@ -260,6 +289,47 @@ test('a role-refused finding at open stops the walk as a finding', async () => {
   const log = await walk({ client });
   expect(log.stopReason).toBe('finding');
   expect(log.findings).toEqual([finding]);
+});
+
+test('an app error at open stops the walk as a finding, with the open screenshot, and takes no step', async () => {
+  const finding = {
+    kind: 'server-error',
+    severity: 'error',
+    key: 'server-error|tickets|pages/tickets.yaml:4',
+  };
+  const client = createClient({
+    open: {
+      status: 200,
+      body: {
+        walkId: 'w',
+        observation: observation(),
+        admitted: true,
+        findings: [finding],
+        screenshot: '.lowdefy/explore/run/screenshots/walk-1-open.png',
+      },
+    },
+  });
+  const log = await walk({ client });
+  expect(log.stopReason).toBe('finding');
+  expect(log.findings).toEqual([finding]);
+  expect(log.open.screenshot).toBe('.lowdefy/explore/run/screenshots/walk-1-open.png');
+  expect(client.step).not.toHaveBeenCalled();
+  expect(client.close).toHaveBeenCalledTimes(1);
+});
+
+test('an environment finding at open stops the walk as environment, not as a finding', async () => {
+  const finding = { kind: 'environment', severity: 'info', key: 'environment|tickets|x' };
+  const client = createClient({
+    open: {
+      status: 200,
+      body: { walkId: 'w', observation: observation(), admitted: true, findings: [finding] },
+    },
+  });
+  const log = await walk({ client });
+  expect(log.stopReason).toBe('environment');
+  expect(log.findings).toEqual([finding]);
+  expect(log.open.screenshot).toBeNull();
+  expect(client.step).not.toHaveBeenCalled();
 });
 
 test('a walk the dev server refuses to open throws, so the run stops', async () => {

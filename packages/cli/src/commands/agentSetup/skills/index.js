@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import journeysBugBash from './journeysBugBash.js';
 import journeysFromDev from './journeysFromDev.js';
 import journeysFromPr from './journeysFromPr.js';
 import journeysFromProduction from './journeysFromProduction.js';
@@ -39,13 +40,19 @@ const skills = [
     name: 'journeys-from-production',
     render: journeysFromProduction,
     agentsMdLine:
-      '`journeys-from-production`: turning what real users do in production into proven journeys, uncovered failures and flows first.',
+      '`journeys-from-production`: reading what real users do in production with the app config and turning the routines that matter into proven journeys, failures first.',
   },
   {
     name: 'journeys-from-pr',
     render: journeysFromPr,
     agentsMdLine:
-      '`journeys-from-pr`: exploring a pull request before it merges, confirmed findings first, then proven journeys for what it changed.',
+      '`journeys-from-pr`: exploring a pull request before it merges, findings proven by failing journeys first, then proven journeys for what it changed.',
+  },
+  {
+    name: 'journeys-bug-bash',
+    render: journeysBugBash,
+    agentsMdLine:
+      '`journeys-bug-bash`: a bug bash: 3 to 6 charters run as one explore run, unattended, proven findings first.',
   },
   {
     name: 'journeys-harden',

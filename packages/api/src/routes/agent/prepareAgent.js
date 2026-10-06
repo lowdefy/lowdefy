@@ -96,12 +96,15 @@ async function prepareAgent(context, { agentId, agentContext, endpointDepth = 0,
         state: {},
         steps: {},
       }),
-    callEndpoint: async (endpointId, { payload }) => {
+    // outsideCaller marks a tool call, whose input the model built; a hook's
+    // payload is built by Lowdefy for the hook endpoint the config names.
+    callEndpoint: async (endpointId, { payload, outsideCaller = false }) => {
       const { error, response, status } = await invokeEndpoint(context, {
         agent,
         endpointId,
         payload,
         endpointDepth,
+        outsideCaller,
       });
       return buildEndpointResult(context, { error, response, status });
     },

@@ -82,6 +82,28 @@ test('isPageReady reads the most recently rendered instance of the shown page', 
   expect(isPageReady()).toBe(true);
 });
 
+test('isPageReady returns false while a client navigation has not rendered the next page', () => {
+  // A Link in onInit pushed the next URL; the page being left is still the
+  // one window.lowdefy names, and its context has settled.
+  global.window = {
+    lowdefy: {
+      pageId: 'guarded',
+      pageInstances: { guarded: ['page:guarded'] },
+      contexts: { 'page:guarded': settledContext() },
+      _devNavigating: true,
+    },
+  };
+  expect(isPageReady()).toBe(false);
+
+  // The next page rendered: window.lowdefy names it and waits on its context.
+  global.window.lowdefy._devNavigating = false;
+  global.window.lowdefy.pageId = 'home';
+  global.window.lowdefy.pageInstances.home = ['page:home'];
+  expect(isPageReady()).toBe(false);
+  global.window.lowdefy.contexts['page:home'] = settledContext();
+  expect(isPageReady()).toBe(true);
+});
+
 test('isPageReady returns false when window.lowdefy is not defined', () => {
   global.window = {};
 

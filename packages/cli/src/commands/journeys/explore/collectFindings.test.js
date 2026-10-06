@@ -15,7 +15,6 @@
 */
 
 import collectFindings from './collectFindings.js';
-import createConfirmations from './createConfirmations.js';
 import filterSnapshotExpectations from './filterSnapshotExpectations.js';
 
 const actionError = {
@@ -36,7 +35,7 @@ const deadClick = {
   step: 0,
 };
 
-test('findings are one per key with the walks and users that hit them, and confirmed by key', () => {
+test('findings are one per key with the walks and users that hit them, in the order walks hit them', () => {
   const logs = [
     {
       walk: 'walk-1',
@@ -45,67 +44,68 @@ test('findings are one per key with the walks and users that hit them, and confi
       findings: [actionError],
     },
     { walk: 'walk-2', user: 'member', steps: [], findings: [deadClick, actionError] },
-    { walk: 'walk-3', user: 'member', steps: [], findings: [{ ...actionError, key: 'other' }] },
+    { walk: 'walk-3', user: null, steps: [], findings: [{ ...actionError, key: 'other' }] },
   ];
-  const findings = collectFindings({
-    logs,
-    confirmations: [
-      { key: actionError.key, status: 'confirmed' },
-      { key: 'other', status: 'unconfirmed' },
-    ],
-  });
-  expect(findings.map(({ key, status, walks, users }) => [key, status, walks, users])).toEqual([
-    [actionError.key, 'confirmed', ['walk-1', 'walk-2'], ['admin', 'member']],
-    ['dead', 'warning', ['walk-2'], ['member']],
-    ['other', 'unconfirmed', ['walk-3'], ['member']],
+  const findings = collectFindings({ logs });
+  expect(findings.map(({ key, walks, users }) => [key, walks, users])).toEqual([
+    [actionError.key, ['walk-1', 'walk-2'], ['admin', 'member']],
+    ['dead', ['walk-2'], ['member']],
+    ['other', ['walk-3'], ['default']],
   ]);
   expect(findings[0].screenshot).toBe('shot.png');
+  expect(findings[0].step).toBe(1);
+  findings.forEach((finding) => expect(finding).not.toHaveProperty('status'));
 });
 
-test('confirmations replay a key once, and skip the replay when the budget is out', async () => {
-  let opens = 0;
-  const client = {
-    open: async () => {
-      opens += 1;
-      return { status: 200, body: { walkId: 'r', findings: [] } };
-    },
-    step: async () => ({ status: 200, body: { findings: [actionError] } }),
-    close: async () => ({ status: 200 }),
+test('a finding at open has no step and carries the screenshot the walk took at open', () => {
+  const openError = {
+    kind: 'server-error',
+    severity: 'error',
+    message: 'Unrecognized pipeline stage name',
+    pageId: 'ticket',
+    source: 'pages/ticket.yaml:4',
+    key: 'server-error|ticket|pages/ticket.yaml:4',
   };
-  let stop = null;
-  const confirmations = createConfirmations({
-    client,
-    run: '20261004T120000Z-ab12cd',
-    options: { data: null, liveData: false, allowExternal: [] },
-    shouldStop: () => stop,
+  const logs = [
+    {
+      walk: 'walk-1',
+      user: 'member',
+      open: { screenshot: 'open.png' },
+      steps: [{ index: 0, screenshot: 'step.png' }],
+      findings: [openError],
+    },
+  ];
+  const [finding] = collectFindings({ logs });
+  expect(finding.step).toBeNull();
+  expect(finding.screenshot).toBe('open.png');
+});
+
+test('one key hit by two charters is one finding listing both charters, in the order they hit it', () => {
+  const charters = [
+    { goal: 'Try edge input on the ticket form.' },
+    { goal: 'Try error paths on the ticket form.' },
+    { goal: 'Try the settings page.' },
+  ];
+  const logs = [
+    { walk: 'walk-1', user: 'admin', charter: 1, steps: [], findings: [actionError] },
+    { walk: 'walk-2', user: 'admin', charter: 2, steps: [], findings: [deadClick] },
+    { walk: 'walk-3', user: 'member', charter: 0, steps: [], findings: [actionError] },
+    { walk: 'walk-4', user: 'member', charter: 1, steps: [], findings: [actionError] },
+  ];
+  const findings = collectFindings({ logs, charters });
+  expect(findings).toHaveLength(2);
+  expect(findings[0]).toMatchObject({
+    key: actionError.key,
+    walks: ['walk-1', 'walk-3', 'walk-4'],
+    users: ['admin', 'member'],
+    charters: ['Try error paths on the ticket form.', 'Try edge input on the ticket form.'],
   });
-  const target = { pageId: 'ticket', user: null, roles: [], matrixListed: false };
-  const log = (walk) => ({
-    walk,
-    steps: [
-      { index: 0, step: { click: { blockId: 'a' } } },
-      { index: 1, step: { click: { blockId: 'b' } } },
-    ],
-    findings: [actionError],
-  });
-  await confirmations.afterWalk({ log: log('walk-1'), target });
-  await confirmations.afterWalk({ log: log('walk-2'), target });
-  stop = 'budget';
-  await confirmations.afterWalk({
-    log: { ...log('walk-3'), findings: [{ ...actionError, key: 'new' }] },
-    target,
-  });
-  await confirmations.afterWalk({
-    log: { walk: 'walk-4', steps: [], findings: [deadClick] },
-    target,
-  });
-  expect(opens).toBe(1);
-  expect(confirmations.list().map(({ walk, status }) => [walk, status])).toEqual([
-    ['walk-1', 'confirmed'],
-    ['walk-2', 'confirmed'],
-    ['walk-3', 'unconfirmed'],
-  ]);
-  expect([...confirmations.findingsByWalk.keys()]).toEqual(['walk-1', 'walk-2']);
+  expect(findings[1]).toMatchObject({ key: 'dead', charters: ['Try the settings page.'] });
+});
+
+test('a run without charters lists none on its findings', () => {
+  const logs = [{ walk: 'walk-1', user: 'admin', charter: null, steps: [], findings: [deadClick] }];
+  expect(collectFindings({ logs })[0].charters).toEqual([]);
 });
 
 test('on a snapshot data set an expect.state holding a snapshot value is dropped; fixture, typed, boolean and null values are kept', () => {

@@ -59,11 +59,14 @@ import writeFileAtomic from './writeFileAtomic.js';
 import watchOwner from './watchOwner.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
 import compileTrace from './journeyCompiler/compileTrace.js';
+import countTextTokens from './journeyEvidence/countTextTokens.js';
 import collectKnownText from './journeyText/collectKnownText.js';
+import normaliseClickText from './journeyText/normaliseClickText.js';
 import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
 import failurePathKey from './journeyEvidence/failurePathKey.js';
 import isBackedBy from './journeyEvidence/isBackedBy.js';
 import normaliseBlockId from './journeyGrammar/normaliseBlockId.js';
+import hashSequence from './journeyCompiler/hashSequence.js';
 import journeySequence from './journeyCompiler/journeySequence.js';
 import listFailurePaths from './journeyCompiler/listFailurePaths.js';
 import parseTraceLines from './journeyCompiler/parseTraceLines.js';
@@ -71,10 +74,12 @@ import profileProduction from './journeyEvidence/profileProduction.js';
 import stepIdentity from './journeyCompiler/stepIdentity.js';
 import validateJourneySteps, {
   getStepKey,
+  INTERACTION_STEP_KEYS,
   STEP_KEYS,
   TARGET_KEYS,
 } from './journeyGrammar/validateJourneySteps.js';
 import validateJourneyTags, { JOURNEY_TAG_PATTERN } from './journeyGrammar/validateJourneyTags.js';
+import validateJourneyUser from './journeyGrammar/validateJourneyUser.js';
 import validateTraceRecord from './journeyTrace/validateTraceRecord.js';
 
 export {
@@ -86,6 +91,7 @@ export {
   compareProcessStartTimes,
   compileTrace,
   copyFileOrDirectory,
+  countTextTokens,
   createClientAddressResolver,
   createSecretScrubber,
   devPassiveHeader,
@@ -102,6 +108,7 @@ export {
   getProcessStartTime,
   getSecretsFromEnv,
   hashDataSetSpec,
+  hashSequence,
   installIfPackageJsonChanged,
   isBackedBy,
   isPidAlive,
@@ -117,6 +124,7 @@ export {
   listRecordingFiles,
   matchPagePath,
   normaliseBlockId,
+  normaliseClickText,
   parseIpRange,
   parsePsStartTime,
   parseTraceLines,
@@ -136,10 +144,12 @@ export {
   watchOwner,
   writeFileIfChanged,
   getStepKey,
+  INTERACTION_STEP_KEYS,
   STEP_KEYS,
   TARGET_KEYS,
   validateJourneySteps,
   validateTraceRecord,
   JOURNEY_TAG_PATTERN,
   validateJourneyTags,
+  validateJourneyUser,
 };

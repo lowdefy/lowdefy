@@ -31,7 +31,9 @@ const DEFAULT_MAX_COST_USD = 1;
 // LOWDEFY_EXPLORER_MODEL, else the default) when the Gateway refuses it or a
 // request is over its limits. model asks that structured-output model only;
 // it is the choice for an app that needs zero data retention, which Jev's
-// only endpoint does not offer.
+// only endpoint does not offer. A charter steers the model through the
+// state it reads, which the seeded policy never reads, so --charter or
+// --charters with the seeded policy is refused.
 function resolvePolicy({ options = {}, env = process.env }) {
   const apiKey = env.AI_GATEWAY_API_KEY;
   const policy = options.policy ?? (type.isNone(apiKey) || apiKey === '' ? 'seeded' : 'jev');
@@ -42,6 +44,14 @@ function resolvePolicy({ options = {}, env = process.env }) {
   if (!Number.isFinite(maxCost) || maxCost <= 0) {
     throw new Error(
       `--max-cost should be a number of US dollars above 0. Received "${options.maxCost}".`
+    );
+  }
+  const charterFlag = type.isNone(options.charters) ? '--charter' : '--charters';
+  if (policy === 'seeded' && (!type.isNone(options.charter) || !type.isNone(options.charters))) {
+    throw new Error(
+      options.policy === 'seeded'
+        ? `${charterFlag} needs a model to steer, and --policy seeded never reads the charter. Use --policy jev or model.`
+        : `${charterFlag} needs a model to steer, and without AI_GATEWAY_API_KEY the seeded policy runs, which never reads the charter. Set AI_GATEWAY_API_KEY in the shell or the app's .env.`
     );
   }
   if (policy === 'seeded') {

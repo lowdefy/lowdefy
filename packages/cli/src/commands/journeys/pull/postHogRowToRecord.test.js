@@ -17,6 +17,7 @@
 import { validateTraceRecord } from '@lowdefy/node-utils';
 
 import postHogRowToRecord from './postHogRowToRecord.js';
+import tokenText from '../tokenText.js';
 import { chains, row } from './tests/postHogRows.js';
 
 const salt = Buffer.alloc(32, 1);
@@ -117,7 +118,7 @@ test('postHogRowToRecord builds an enriched click target from lowdefy properties
     block_type: 'Button',
     row: null,
     column: null,
-    text: 'Review',
+    text_token: tokenText({ salt, text: 'Review' }),
     nth: null,
     option: false,
   });
@@ -134,7 +135,7 @@ test('postHogRowToRecord reads a chain-only click target with no block type', ()
     block_type: null,
     row: null,
     column: null,
-    text: 'Review',
+    text_token: tokenText({ salt, text: 'Review' }),
     nth: null,
     option: false,
   });
@@ -143,14 +144,37 @@ test('postHogRowToRecord reads a chain-only click target with no block type', ()
   expect(JSON.stringify(result.record)).not.toContain('bl-');
 });
 
-test('postHogRowToRecord keeps a portal dropdown item by its text', () => {
+test('postHogRowToRecord keeps a portal dropdown item by its text token', () => {
   const { record } = map({
     eventType: 'click',
     elText: 'Alice',
     elementsChain: chains.portalOption,
   });
-  expect(record.target).toMatchObject({ block_id: null, text: 'Alice', option: true });
+  expect(record.target).toMatchObject({
+    block_id: null,
+    text_token: tokenText({ salt, text: 'Alice' }),
+    option: true,
+  });
+  expect(record.target).not.toHaveProperty('text');
+  expect(JSON.stringify(record)).not.toContain('Alice');
   expect(validateTraceRecord({ record })).toEqual({});
+});
+
+test('postHogRowToRecord tokenises the text whitespace-collapsed, the same on two rows', () => {
+  const first = map({ eventType: 'click', elText: 'Acme  Ltd\n', lowdefy_block_id: 'grid' });
+  const second = map({ eventType: 'click', elText: 'Acme Ltd', lowdefy_block_id: 'grid' });
+  expect(first.record.target.text_token).toEqual(second.record.target.text_token);
+  const other = postHogRowToRecord({
+    row: row({
+      uuid: 'u1',
+      timestamp: T,
+      eventType: 'click',
+      elText: 'Acme Ltd',
+      lowdefy_block_id: 'grid',
+    }),
+    salt: Buffer.alloc(32, 2),
+  });
+  expect(other.record.target.text_token).not.toEqual(first.record.target.text_token);
 });
 
 test('postHogRowToRecord maps an autocapture change to a change record without a value', () => {

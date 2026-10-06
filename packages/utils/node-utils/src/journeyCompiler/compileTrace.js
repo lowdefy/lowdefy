@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import clusterSegments from './clusterSegments.js';
+import countTextTokens from '../journeyEvidence/countTextTokens.js';
 import describeSegment from './describeSegment.js';
 import mergeOrigin from './mergeOrigin.js';
 import parseCandidateOrigin from './parseCandidateOrigin.js';
@@ -37,7 +38,23 @@ function keepSegment({ segment, filters }) {
   return type.isNone(filters.page) || segment.pages.includes(filters.page);
 }
 
-function buildOrigin({ cluster, source }) {
+function placeKey({ page, block_id: blockId, column }) {
+  return JSON.stringify([page, blockId ?? null, column ?? null]);
+}
+
+// The window's token counts for the places the representative clicked with a
+// token that resolved to no config text, so the agent can tell a label built
+// from values from a data row without the text.
+function tokenisedPlaces({ segment, textTokens }) {
+  const places = new Set(
+    segment.text_clicks
+      .filter((click) => !click.config_text && !type.isNone(click.text_token))
+      .map(placeKey)
+  );
+  return textTokens.filter((row) => places.has(placeKey(row)));
+}
+
+function buildOrigin({ cluster, source, textTokens }) {
   const { compiled } = cluster.representative;
   const origin = {
     source,
@@ -53,6 +70,8 @@ function buildOrigin({ cluster, source }) {
   origin.rank = cluster.rank;
   if (source === 'dev') origin.builds = cluster.builds;
   if (compiled.flags.length > 0) origin.flags = compiled.flags;
+  const tokenised = tokenisedPlaces({ segment: cluster.representative, textTokens });
+  if (tokenised.length > 0) origin.text_tokens = tokenised;
   origin.sample_sessions = cluster.sample_sessions;
   return origin;
 }
@@ -75,6 +94,7 @@ function publicSegment(segment) {
     pages: segment.pages,
     failure_path: segment.failure_path,
     frustrations: segment.frustrations,
+    text_clicks: segment.text_clicks,
   };
 }
 
@@ -90,8 +110,10 @@ function publicSegment(segment) {
 // `existingCandidates` is { fileName: contents } of the output directory. A
 // known sequence hash keeps its file and gets a new origin block; a new one
 // gets a new file. `filters` ({ since, until, build, page }) is how the CLI's
-// flags reach the compile: since/until bound the window the text threshold
-// counts over, build and page select segments.
+// flags reach the compile: since/until bound the window, build and page select
+// segments. Production records hold config text or a clicked-text token; the
+// counts the agent reads a tokenised step by (countTextTokens) are over every
+// kept segment of the window.
 //
 // `prepareCandidate({ journey, origin, comments, sessions })`, when given,
 // sees each candidate before it is rendered, with the sessions its cluster
@@ -121,6 +143,7 @@ function compileTrace({
     .map((segment) => describeSegment({ records: segment, blockMetas, routeTable, source }))
     .filter((segment) => !type.isUndefined(segment) && keepSegment({ segment, filters }));
   const clusters = clusterSegments({ segments });
+  const textTokens = countTextTokens({ segments });
 
   const candidates = clusters
     .map((cluster) => {
@@ -132,7 +155,7 @@ function compileTrace({
         comments: compiled.comments,
         origin: mergeOrigin({
           existing: parseCandidateOrigin({ contents: existing }),
-          origin: buildOrigin({ cluster, source }),
+          origin: buildOrigin({ cluster, source, textTokens }),
         }),
       };
       if (!type.isUndefined(prepareCandidate)) {

@@ -29,7 +29,23 @@ function readFrustrations({ records }) {
       page: record.page_id,
       block_id: record.target?.block_id ?? null,
       text: record.target?.text ?? null,
+      text_token: record.target?.text_token ?? null,
       kind: record.frustration,
+    }));
+}
+
+// Every click of a segment by page, block and column, with its clicked-text
+// token and whether the token resolved to config text, for countTextTokens.
+function readTextClicks({ records }) {
+  return records
+    .filter((record) => record.kind === 'click')
+    .map((record) => ({
+      page: record.page_id,
+      block_id: record.target?.block_id ?? null,
+      column: record.target?.column ?? null,
+      text_token: record.target?.text_token ?? null,
+      config_text: type.isString(record.target?.text) && record.target.text !== '',
+      person: record.person ?? null,
     }));
 }
 
@@ -58,6 +74,7 @@ function describeSegment({ records, blockMetas, routeTable, source }) {
     failure: compiled.failure,
     failure_path: readFailurePath({ records }),
     frustrations: readFrustrations({ records }),
+    text_clicks: readTextClicks({ records }),
     page_id: journey.pageId,
     session: records[0].session,
     first_seen: records[0].t,

@@ -15,7 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { UserError } from '@lowdefy/errors';
+import { ConfigError, UserError } from '@lowdefy/errors';
 
 import prepareAgent from './prepareAgent.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
@@ -137,7 +137,35 @@ test('prepareAgent callEndpoint enforces the endpoint depth cap', async () => {
   );
 });
 
-test('prepareAgent callEndpoint refuses a tool payload that violates the payloadSchema', async () => {
+test('prepareAgent callEndpoint refuses a tool payload that violates the payloadSchema as a UserError the model can correct', async () => {
+  const context = createContext();
+  const { resolverContext } = await prepareAgent(context, {
+    agentId: 'my-agent',
+    agentContext,
+    endpointDepth: 0,
+  });
+  await expect(
+    resolverContext.callEndpoint('typed-endpoint', {
+      payload: { status: 'pending' },
+      outsideCaller: true,
+    })
+  ).rejects.toThrow(UserError);
+  await expect(
+    resolverContext.callEndpoint('typed-endpoint', {
+      payload: { status: 'pending' },
+      outsideCaller: true,
+    })
+  ).rejects.toThrow(
+    'Payload for endpoint "typed-endpoint" does not match its payloadSchema at /status: must be equal to one of the allowed values (open, closed).'
+  );
+  const result = await resolverContext.callEndpoint('typed-endpoint', {
+    payload: { status: 'open' },
+    outsideCaller: true,
+  });
+  expect(result.success).toBe(true);
+});
+
+test('prepareAgent callEndpoint refuses a hook payload that violates the payloadSchema as a ConfigError', async () => {
   const context = createContext();
   const { resolverContext } = await prepareAgent(context, {
     agentId: 'my-agent',
@@ -146,16 +174,7 @@ test('prepareAgent callEndpoint refuses a tool payload that violates the payload
   });
   await expect(
     resolverContext.callEndpoint('typed-endpoint', { payload: { status: 'pending' } })
-  ).rejects.toThrow(UserError);
-  await expect(
-    resolverContext.callEndpoint('typed-endpoint', { payload: { status: 'pending' } })
-  ).rejects.toThrow(
-    'Payload for endpoint "typed-endpoint" does not match its payloadSchema at /status: must be equal to one of the allowed values (open, closed).'
-  );
-  const result = await resolverContext.callEndpoint('typed-endpoint', {
-    payload: { status: 'open' },
-  });
-  expect(result.success).toBe(true);
+  ).rejects.toThrow(ConfigError);
 });
 
 // The agent stream's error text reaches the end user and AgentChat config, which see the

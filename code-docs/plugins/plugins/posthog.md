@@ -33,6 +33,8 @@ The production journey miner reads these names; changing one is a breaking chang
 
 None carries a message, a typed value or text autocapture does not already send.
 
+`$el_text` stays in PostHog (posthog-js's default) but never reaches the developer's disk: `lowdefy journeys pull posthog` stores it as `target.text_token`, an HMAC under the machine's trace salt, and the journey readers resolve a token only to a string in the app's config text set (see `packages/cli/src/commands/journeys/configText/`).
+
 ## Tests
 
 - Unit: `src/actions/*.test.js` and `src/lib/*.test.js` with a fake trace (`src/test/createFakeTrace.js`).

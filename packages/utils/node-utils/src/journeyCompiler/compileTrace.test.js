@@ -306,25 +306,6 @@ test('compileTrace keeps only records inside the since and until window', () => 
   expect(segments.map((segment) => segment.session)).toEqual(['s-2']);
 });
 
-test('compileTrace counts the text threshold only over the window', () => {
-  const click = ({ session, at, person }) =>
-    traceRecord({ at, session, block: 'menu', text: 'Export', source: 'production', person });
-  const records = [
-    ...['p1', 'p2', 'p3', 'p4'].map((person, index) =>
-      click({ session: `old-${index}`, at: index, person })
-    ),
-    click({ session: 'new', at: 1000, person: 'p5' }),
-  ];
-  const everything = compile({ records, source: 'production' });
-  const windowed = compile({
-    records,
-    source: 'production',
-    filters: { since: '2026-09-28T14:10:00.000Z' },
-  });
-  expect(everything.segments[4].steps).toEqual([{ click: { blockId: 'menu', text: 'Export' } }]);
-  expect(windowed.segments[0].steps).toEqual([{ click: 'menu' }]);
-});
-
 test('compileTrace keeps only segments whose records all ran on the build filter', () => {
   const records = [
     ...shortFlow({ session: 's-1', at: 0, value: 'a', build: 'b1' }),
@@ -346,36 +327,179 @@ test('compileTrace keeps only segments that visit the page filter', () => {
   expect(segments.map((segment) => segment.session)).toEqual(['s-2']);
 });
 
-test('compileTrace applies the production text threshold before hashing', () => {
-  const flow = ({ session, at, text }) => [
+const ASSIGN = 't_00000000000000a1';
+const DELETE = 't_00000000000000d1';
+
+// A production visit to tickets, then the given clicks. Each click is
+// { block, text, token, row, column, option }: text is config text a reader
+// resolved, a token alone resolved to nothing.
+function productionVisit({ session, at = 0, clicks }) {
+  return [
     traceRecord({
       at,
       session,
       kind: 'pageview',
       url: '/tickets',
       source: 'production',
-      person: session,
+      person: `p-${session}`,
     }),
-    traceRecord({
-      at: at + 1,
-      session,
-      block: 'grid',
-      row: 0,
-      text,
-      source: 'production',
-      person: session,
-    }),
+    ...clicks.map((click, index) =>
+      traceRecord({
+        at: at + index + 1,
+        session,
+        source: 'production',
+        person: `p-${session}`,
+        ...click,
+      })
+    ),
   ];
+}
+
+test('compileTrace compiles config text as text and a data-row token without text', () => {
+  const { candidates } = compile({
+    records: productionVisit({
+      session: 's1',
+      clicks: [
+        { block: 'assign_button', text: 'Assign', token: ASSIGN },
+        { block: 'grid', row: 2, column: 'name', token: 't_0000000000a0c0e1' },
+      ],
+    }),
+    source: 'production',
+  });
+  expect(candidates).toHaveLength(1);
+  const [candidate] = candidates;
+  expect(candidate.journey.steps).toEqual([
+    { click: { blockId: 'assign_button', text: 'Assign' } },
+    { click: { blockId: 'grid', row: 2, column: 'name' } },
+  ]);
+  expect(candidate.origin.flags).toEqual(['tokenised-text']);
+  expect(candidate.contents).toContain(
+    '# clicked text not in config: t_0000000000a0c0e1\n  - click:\n      blockId: grid'
+  );
+  expect(candidate.origin.text_tokens).toEqual([
+    {
+      page: 'tickets',
+      block_id: 'grid',
+      column: 'name',
+      clicks: 1,
+      tokens: 1,
+      top: [{ token: 't_0000000000a0c0e1', clicks: 1, persons: 1 }],
+    },
+  ]);
+  expect(parseCandidateOrigin({ contents: candidate.contents }).text_tokens).toEqual(
+    candidate.origin.text_tokens
+  );
+});
+
+test('compileTrace keeps two config labels in one block apart', () => {
   const { candidates, segments } = compile({
     records: [
-      ...flow({ session: 'p1', at: 0, text: 'Acme Ltd' }),
-      ...flow({ session: 'p2', at: 100, text: 'Globex' }),
+      ...productionVisit({
+        session: 's1',
+        clicks: [{ block: 'grid', row: 0, text: 'Assign', token: ASSIGN }],
+      }),
+      ...productionVisit({
+        session: 's2',
+        at: 100,
+        clicks: [{ block: 'grid', row: 0, text: 'Delete', token: DELETE }],
+      }),
+    ],
+    source: 'production',
+  });
+  expect(segments[0].hash).not.toBe(segments[1].hash);
+  expect(candidates.map((candidate) => candidate.journey.steps)).toEqual(
+    expect.arrayContaining([
+      [{ click: { blockId: 'grid', row: 0, text: 'Assign' } }],
+      [{ click: { blockId: 'grid', row: 0, text: 'Delete' } }],
+    ])
+  );
+});
+
+test('compileTrace picks a config option label and leaves a tokenised option as a placeholder', () => {
+  const { candidates } = compile({
+    records: productionVisit({
+      session: 's1',
+      clicks: [
+        { block: 'status', option: true, text: 'Open', token: 't_000000000000e000' },
+        { block: 'customer', option: true, token: 't_0000000000a0c0e1' },
+      ],
+    }),
+    source: 'production',
+  });
+  const [candidate] = candidates;
+  expect(candidate.journey.steps).toEqual([
+    { select: { blockId: 'status', value: 'Open' } },
+    { select: { blockId: 'customer', value: null, from: 'shape' } },
+  ]);
+  expect(candidate.origin.flags).toEqual(['tokenised-text']);
+  expect(candidate.contents).toContain('# clicked text not in config: t_0000000000a0c0e1');
+});
+
+test('compileTrace clusters labels built from values by block and counts their tokens', () => {
+  const { candidates, segments } = compile({
+    records: [
+      ...productionVisit({
+        session: 's1',
+        clicks: [{ block: 'open_button', token: 't_000000000000e003' }],
+      }),
+      ...productionVisit({
+        session: 's2',
+        at: 100,
+        clicks: [{ block: 'open_button', token: 't_000000000000e004' }],
+      }),
     ],
     source: 'production',
   });
   expect(segments[0].hash).toBe(segments[1].hash);
   expect(candidates).toHaveLength(1);
-  expect(candidates[0].journey.steps).toEqual([{ click: { blockId: 'grid', row: 0 } }]);
+  expect(candidates[0].journey.steps).toEqual([{ click: 'open_button' }]);
+  expect(candidates[0].origin.text_tokens).toEqual([
+    {
+      page: 'tickets',
+      block_id: 'open_button',
+      column: null,
+      clicks: 2,
+      tokens: 2,
+      top: [
+        { token: 't_000000000000e003', clicks: 1, persons: 1 },
+        { token: 't_000000000000e004', clicks: 1, persons: 1 },
+      ],
+    },
+  ]);
+});
+
+test('compileTrace leaves a blockless click known only by a token for a person to write', () => {
+  const { candidates } = compile({
+    records: productionVisit({
+      session: 's1',
+      clicks: [
+        { block: 'save', text: 'Save', token: 't_000000000000005a' },
+        { token: 't_0000000000a0c0e1' },
+      ],
+    }),
+    source: 'production',
+  });
+  expect(candidates[0].origin.flags).toEqual(['unresolved-target']);
+  expect(candidates[0].contents).toContain(
+    'click on a control known neither by block nor by kept text (clicked text not in config: t_0000000000a0c0e1): write the step by hand'
+  );
+});
+
+test('compileTrace gives byte-identical production candidates when compiled twice', () => {
+  const records = [
+    ...productionVisit({
+      session: 's1',
+      clicks: [{ block: 'grid', row: 1, column: 'name', token: 't_0000000000a0c0e1' }],
+    }),
+    ...productionVisit({
+      session: 's2',
+      at: 100,
+      clicks: [{ block: 'grid', row: 3, column: 'name', token: 't_00000000000b10be' }],
+    }),
+  ];
+  expect(candidatesByName(compile({ records, source: 'production' }))).toEqual(
+    candidatesByName(compile({ records, source: 'production' }))
+  );
 });
 
 test('compileTrace gives byte-identical contents when the same records are compiled twice', () => {

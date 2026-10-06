@@ -65,6 +65,7 @@ steps:
   expect(discoverJourneys({ context })).toEqual([
     {
       filePath,
+      journeyIndex: 0,
       journey: { name: 'submits the form', pageId: 'form', steps: [{ click: 'submit' }] },
     },
   ]);
@@ -85,6 +86,7 @@ test('discoverJourneys expands an array file to one entry per journey with the s
   );
   const journeys = discoverJourneys({ context });
   expect(journeys.map((item) => item.journey.name)).toEqual(['first', 'second']);
+  expect(journeys.map((item) => item.journeyIndex)).toEqual([0, 1]);
   expect(journeys.every((item) => item.filePath === filePath)).toBe(true);
 });
 
@@ -119,6 +121,7 @@ test('discoverJourneys reads the journeys directory and not tests/journeys when 
   expect(discoverJourneys({ context })).toEqual([
     {
       filePath: path.join(directory, 'sign-up.yaml'),
+      journeyIndex: 0,
       journey: { name: 'sign up', pageId: 'p', steps: [{ click: 'x' }] },
     },
   ]);

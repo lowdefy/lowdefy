@@ -19,8 +19,8 @@ import { type } from '@lowdefy/helpers';
 // The recording cookie's payload for a headless context: 'off' when the
 // context is a tool looking at a page (screenshots, inspection, operator
 // evaluation, state loads), else the run it records as. A run with
-// record: false (an explorer confirmation replay) records nothing, but its
-// errors still carry its run and walk, so the replay claims its own.
+// record: false (a journey run its caller does not record) records nothing,
+// but its errors still carry its run, so the run claims its own.
 function recordingCookiePayload({ recording }) {
   if (type.isUndefined(recording)) {
     return 'off';

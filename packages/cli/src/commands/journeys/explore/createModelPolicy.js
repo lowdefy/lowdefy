@@ -24,6 +24,15 @@ const RELEVANCE_QUESTION = {
   score: 'How closely did the last step exercise what this change added or changed?',
   levels: ['unrelated to the change', 'near the change', 'exercises the change'],
 };
+// Under a charter (state.charter) the model serves the charter instead.
+// A charter can only steer through the options the walk generates, so the
+// question names the two stances those options can express.
+const CHARTER_NEXT_QUESTION =
+  'Which interaction best serves the charter in the state, and has not been tried from this screen? For edge input, prefer the generated edge fill values (empty, long, invalid and the like); for error paths, prefer cancel, delete and submitting incomplete forms.';
+const CHARTER_RELEVANCE_QUESTION = {
+  score: 'How closely did the last step serve the charter?',
+  levels: ['unrelated to the charter', 'near the charter', 'serves the charter'],
+};
 const MAX_FAILED_CALLS = 3;
 const REFUSED_MODEL_ERRORS = ['GatewayModelNotFoundError', 'GatewayForbiddenError'];
 
@@ -33,6 +42,33 @@ function isRefusedModel(error) {
     error?.statusCode === 403 ||
     error?.statusCode === 404
   );
+}
+
+// Errors raised before a request reaches the model, or while the caller
+// stops waiting for it: an abort or timeout, or a fetch that got no response
+// (an API call error with no status code, which the Gateway wraps as a 500).
+const UNSENT_ERRORS = ['AbortError', 'TimeoutError', 'GatewayTimeoutError'];
+
+function isUnsent(error) {
+  for (let cause = error; !type.isNone(cause); cause = cause.cause) {
+    if (UNSENT_ERRORS.includes(cause.name)) return true;
+    if (cause.name === 'AI_APICallError' && type.isNone(cause.statusCode)) return true;
+  }
+  return false;
+}
+
+// The error of a call's last attempt: the AI SDK wraps retried attempts in a
+// RetryError.
+function lastAttemptError(error) {
+  return error?.name === 'AI_RetryError' ? error.lastError : error;
+}
+
+// A failed call may still have been billed: the model can answer and the
+// structured output then fail validation, on every attempt. Only a refused
+// model and a request that never got an answer are known to cost nothing.
+function mayHaveBeenBilled(error) {
+  const last = lastAttemptError(error);
+  return !isRefusedModel(last) && !isUnsent(last);
 }
 
 // A request the model rejects as too big (Jev takes 32k tokens of state and
@@ -47,11 +83,15 @@ function isOverLimit(error) {
 
 // The model-guided policy: one decide() call per step, choosing the next
 // option, and on every step but a walk's first scoring how closely the last
-// step exercised the change. The model only chooses among generated options;
-// it never writes a value or decides a finding. One option is taken without
+// step exercised the change, or, with a charter, served the charter. The
+// model only chooses among generated options; it never writes a value or
+// decides a finding, so a charter changes which option is taken and never
+// what counts as a finding. One option is taken without
 // asking; none ends the walk (optionId null). An answer outside the options,
 // or a call that failed after the backend's retries, falls back to the seeded
 // choice and says so; three failed calls in a row throw the Gateway's error.
+// A failed call that may have been billed carries an estimated cost, so the
+// spending cap counts it.
 //
 // With the evaluation backend (Jev), a structured-output model
 // (fallbackModelId) stands by. When the Gateway refuses Jev, at any call, or
@@ -64,6 +104,7 @@ function isOverLimit(error) {
 // them. The base URL is the Gateway's default: AI_GATEWAY_BASE_URL is never
 // read.
 async function createModelPolicy({
+  charter = null,
   backend,
   modelId,
   fallbackModelId,
@@ -75,6 +116,8 @@ async function createModelPolicy({
     import('@lowdefy/ai-utils'),
     import('@ai-sdk/gateway'),
   ]);
+  const nextQuestion = type.isNone(charter) ? NEXT_QUESTION : CHARTER_NEXT_QUESTION;
+  const relevanceQuestion = type.isNone(charter) ? RELEVANCE_QUESTION : CHARTER_RELEVANCE_QUESTION;
   const gateway = createGateway({ apiKey });
   let current = {
     backend,
@@ -116,8 +159,8 @@ async function createModelPolicy({
     const optionIds = Object.keys(options);
     if (optionIds.length === 0) return { optionId: null, asked: false };
     if (optionIds.length === 1) return { optionId: optionIds[0], asked: false };
-    const questions = { next: { choice: NEXT_QUESTION, options } };
-    if (!firstStep) questions.relevance = RELEVANCE_QUESTION;
+    const questions = { next: { choice: nextQuestion, options } };
+    if (!firstStep) questions.relevance = relevanceQuestion;
     let result;
     let fellBack;
     try {
@@ -127,11 +170,27 @@ async function createModelPolicy({
       if (failedCalls >= MAX_FAILED_CALLS) {
         throw error;
       }
-      return {
+      const failed = {
         optionId: seeded.choose(step),
         asked: true,
         fallback: 'failed',
         error: error.message,
+      };
+      if (!mayHaveBeenBilled(error)) {
+        return failed;
+      }
+      // Gateway cost is reported only on a result, so a failed call is always
+      // charged at the estimate, from the tokens the error carries if any.
+      const { inputTokens, outputTokens, usd } = readCallCost({
+        usage: lastAttemptError(error).usage,
+        state,
+        questions,
+        modelId: current.modelId,
+      });
+      return {
+        ...failed,
+        usage: { inputTokens, outputTokens },
+        cost: { usd, estimated: true },
       };
     }
     failedCalls = 0;
@@ -162,7 +221,7 @@ async function createModelPolicy({
     backend,
     modelId,
     fallbackModelId: fallback?.modelId ?? null,
-    lowestRelevance: RELEVANCE_QUESTION.levels[0],
+    lowestRelevance: relevanceQuestion.levels[0],
     switched: () => switched,
     choose,
   };

@@ -43,6 +43,10 @@ jest.unstable_mockModule('./readDevAuthMode.js', () => ({
 }));
 jest.unstable_mockModule('./collectExercised.js', () => ({ default: async () => ({}) }));
 
+jest.unstable_mockModule('./observe/waitForClientErrorReports.js', () => ({
+  default: async () => {},
+}));
+
 const { default: runJourney } = await import('./runJourney.js');
 
 const origin = 'http://localhost:3227';
@@ -78,6 +82,7 @@ function createPage() {
     waitForFunction: jest.fn(async () => {}),
     waitForTimeout: jest.fn(async () => {}),
     url: () => `${origin}/tickets`,
+    isClosed: () => false,
   };
 }
 

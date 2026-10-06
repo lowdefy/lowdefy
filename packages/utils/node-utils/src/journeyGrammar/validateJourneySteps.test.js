@@ -177,7 +177,7 @@ test.each([
   ],
   [
     { expect: { count: 1 } },
-    /Step "expect" requires exactly one of "state", "visible", "hidden", "text", "url", "title", "calls"/,
+    /Step "expect" requires exactly one of "state", "visible", "hidden", "text", "url", "title", "calls", "error"/,
   ],
   [{ expect: { state: { path: 'a' } } }, /Step "expect.state" requires \{ path, equals \}/],
   [{ expect: { state: 'a' } }, /Step "expect.state" requires \{ path, equals \}/],
@@ -449,4 +449,81 @@ test('validateJourneySteps accepts path, equals and from on expect.state', () =>
       ],
     })
   ).toEqual({});
+});
+
+test('validateJourneySteps accepts expect.error straight after an interaction step', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { fill: { blockId: 'email', value: 'taken@example.com' } },
+        { click: 'save' },
+        { expect: { error: 'duplicate key' } },
+        { expect: { visible: 'already_exists' } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test.each([
+  [{ error: '' }, 'Step 1: Step "expect.error" requires a non-empty string'],
+  [{ error: 7 }, 'Received 7.'],
+  [{ error: { contains: 'x' } }, 'Received {"contains":"x"}.'],
+])('validateJourneySteps rejects expect %j', (expectation, message) => {
+  const result = validateJourneySteps({ steps: [{ click: 'save' }, { expect: expectation }] });
+  expect(result.error).toContain(message);
+});
+
+test('validateJourneySteps rejects an expect.error that does not follow an interaction step', () => {
+  expect(
+    validateJourneySteps({
+      steps: [{ click: 'save' }, { wait: { ms: 10 } }, { expect: { error: 'x' } }],
+    }).error
+  ).toEqual(
+    'Step 2: Step "expect.error" must directly follow an interaction step (click, open, fill, select, press, back), whose app errors it claims. Received it after a "wait" step.'
+  );
+  expect(validateJourneySteps({ steps: [{ expect: { error: 'x' } }] }).error).toEqual(
+    'Step 0: Step "expect.error" must directly follow an interaction step (click, open, fill, select, press, back), whose app errors it claims. Received it after the start of the journey.'
+  );
+});
+
+test('validateJourneySteps accepts expect.effect straight after an interaction step', () => {
+  expect(
+    validateJourneySteps({
+      steps: [{ click: 'save' }, { expect: { effect: true } }],
+    })
+  ).toEqual({});
+  expect(
+    validateJourneySteps({
+      steps: [{ fill: { blockId: 'name', value: 'x' } }, { expect: { effect: true } }],
+    })
+  ).toEqual({});
+});
+
+test.each([
+  [{ effect: false }, 'Received false.'],
+  [{ effect: 'yes' }, 'Received "yes".'],
+  [{ effect: { blockId: 'save' } }, 'Received {"blockId":"save"}.'],
+])('validateJourneySteps rejects expect %j', (expectation, message) => {
+  const result = validateJourneySteps({ steps: [{ click: 'save' }, { expect: expectation }] });
+  expect(result.error).toBe(
+    `Step 1: Step "expect.effect" takes only true: write { "expect": { "effect": true } }. ${message}`
+  );
+});
+
+test('validateJourneySteps rejects an expect.effect that does not follow an interaction step', () => {
+  expect(validateJourneySteps({ steps: [{ expect: { effect: true } }] }).error).toEqual(
+    'Step 0: Step "expect.effect" must directly follow an interaction step (click, open, fill, select, press, back), whose effect it checks. Received it after the start of the journey.'
+  );
+  expect(
+    validateJourneySteps({
+      steps: [{ click: 'save' }, { expect: { visible: 'saved' } }, { expect: { effect: true } }],
+    }).error
+  ).toEqual(
+    'Step 2: Step "expect.effect" must directly follow an interaction step (click, open, fill, select, press, back), whose effect it checks. Received it after a "expect" step.'
+  );
+  expect(
+    validateJourneySteps({
+      steps: [{ click: 'save' }, { screenshot: true }, { expect: { effect: true } }],
+    }).error
+  ).toContain('Received it after a "screenshot" step.');
 });

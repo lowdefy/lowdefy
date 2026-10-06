@@ -18,15 +18,14 @@ import { isTraceId, type } from '@lowdefy/helpers';
 
 // The open route's JSON body, checked before anything opens:
 // { pageId, pathParams?, urlQuery?, user?, data?, liveData?, allowExternal?, run, walk,
-// record, roles?, roleMatrixListed? }. run is the explorer run's trace id and walk the walk's name in
-// it (the recording cookie's run.id and run.journey). Returns an error
+// roles?, roleMatrixListed? }. run is the explorer run's trace id and walk the
+// walk's name in it (the recording cookie's run.id and run.journey). Returns an error
 // message, or undefined when the body is valid.
 function validateOpenWalkBody(body) {
   if (!type.isObject(body)) {
     return `The walk route expects a JSON object body. Received ${JSON.stringify(body)}.`;
   }
-  const { pageId, pathParams, urlQuery, user, data, liveData, allowExternal, run, walk, record } =
-    body;
+  const { pageId, pathParams, urlQuery, user, data, liveData, allowExternal, run, walk } = body;
   const { roles, roleMatrixListed } = body;
   if (!type.isString(pageId) || pageId === '') {
     return `The walk's "pageId" must be a page id string. Received ${JSON.stringify(pageId)}.`;
@@ -40,9 +39,6 @@ function validateOpenWalkBody(body) {
     return `The walk's "walk" must be a non-empty string naming the walk in its run. Received ${JSON.stringify(
       walk
     )}.`;
-  }
-  if (!type.isBoolean(record)) {
-    return `The walk's "record" must be true or false. Received ${JSON.stringify(record)}.`;
   }
   if (!type.isNone(pathParams) && !type.isObject(pathParams)) {
     return `The walk's "pathParams" must be an object of path values. Received ${JSON.stringify(

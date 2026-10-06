@@ -259,3 +259,29 @@ test('pageIdOf works before the client initialises lowdefy', () => {
   expect(getTrace({}).pageIdOf('https://example.com/orders')).toBe('orders');
   expect(getTrace({}).pageIdOf('https://example.com/')).toBeNull();
 });
+
+test('a text target with no nth resolves to nothing when several controls match, as the runner refuses it', () => {
+  document.body.innerHTML = `
+<div id="bl-toolbar">
+  <button type="button"><span>Delete</span></button>
+  <button type="button"><span>Delete</span></button>
+</div>`;
+  expect(
+    resolveTargetInDocument({ document, target: { block_id: 'toolbar', text: 'Delete' } })
+  ).toBeNull();
+  expect(resolveTargetInDocument({ document, target: { text: 'Delete' } })).toBeNull();
+  expect(
+    resolveTargetInDocument({ document, target: { block_id: 'toolbar', text: 'Delete', nth: 1 } })
+  ).toBe(select('#bl-toolbar button:nth-of-type(2)'));
+});
+
+test('describeElement gives nth null for a control that is the only match in its scope', () => {
+  document.body.innerHTML = `
+<div id="bl-toolbar">
+  <button type="button"><span>Save</span></button>
+  <button type="button"><span>Delete</span></button>
+</div>`;
+  const { describeElement } = getTrace(createLowdefy());
+  expect(describeElement(select('#bl-toolbar button:nth-of-type(1)')).nth).toBeNull();
+  expect(describeElement(select('#bl-toolbar button:nth-of-type(2)')).nth).toBeNull();
+});

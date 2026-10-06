@@ -37,6 +37,10 @@ const Page = ({
 }) => {
   const { data } = usePageConfig(path, router.basePath);
   const pageConfig = data?.pageConfig;
+  // Past the config fetch (which suspends), this render shows the page the
+  // URL names, so a navigation Routing marked has landed. Set during render,
+  // like lowdefy.pageId (initLowdefyContext), so the two change together.
+  lowdefy._devNavigating = false;
 
   // Push build warnings to ErrorBar via runtime error callback
   const pushedWarningsRef = useRef(null);

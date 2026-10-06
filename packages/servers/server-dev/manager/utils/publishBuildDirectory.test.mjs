@@ -22,6 +22,12 @@ import { jest } from '@jest/globals';
 
 import publishBuildDirectory from './publishBuildDirectory.mjs';
 
+// The publish-window tests move 200 files through several thread pool fs calls
+// each while a poller runs on every loop turn, and the locked-rename test waits
+// out the full 3.3 s retry schedule. On a loaded machine they pass jest's 5 s
+// default, and a timed-out poller then fails the next test.
+jest.setTimeout(30000);
+
 let root;
 let buildDirectory;
 let stagingDirectory;

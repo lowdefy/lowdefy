@@ -21,6 +21,8 @@ test('parseExploreOptions defaults 5 walks, 15 steps and a 20 minute budget', ()
   expect(parseExploreOptions({ against: 'origin/main' })).toEqual({
     pr: null,
     against: 'origin/main',
+    charter: null,
+    chartersFile: null,
     data: null,
     liveData: false,
     pages: [],
@@ -36,14 +38,61 @@ test('parseExploreOptions defaults 5 walks, 15 steps and a 20 minute budget', ()
   });
 });
 
-test('parseExploreOptions needs exactly one of --pr and --against, and whole counts', () => {
-  expect(() => parseExploreOptions({})).toThrow('Pass one of --pr <number> or --against <ref>.');
-  expect(() => parseExploreOptions({ pr: '1', against: 'x' })).toThrow('Pass one of');
+test('parseExploreOptions needs one of --pr, --against, --charter or --charters, and whole counts', () => {
+  expect(() => parseExploreOptions({})).toThrow(
+    'Pass one of --pr <number>, --against <ref>, --charter <text> or --charters <file>.'
+  );
+  expect(() => parseExploreOptions({ pr: '1', against: 'x' })).toThrow(
+    'Pass one of --pr <number> or --against <ref>, not both.'
+  );
+  expect(() => parseExploreOptions({ pr: '1', against: 'x', charter: 'try edge input' })).toThrow(
+    'not both'
+  );
   expect(() => parseExploreOptions({ pr: '1', walks: '0' })).toThrow(
     '--walks should be a whole number of at least 1. Received "0".'
   );
   expect(parseExploreOptions({ pr: '7', page: ['a', 'b'], seed: '3' })).toEqual(
     expect.objectContaining({ pr: '7', pages: ['a', 'b'], seed: 3 })
+  );
+});
+
+test('parseExploreOptions takes --charter alone as a head-only run', () => {
+  expect(parseExploreOptions({ charter: '  try edge input on the invoice form ' })).toEqual(
+    expect.objectContaining({
+      pr: null,
+      against: null,
+      charter: { goal: 'try edge input on the invoice form' },
+    })
+  );
+});
+
+test('parseExploreOptions takes --charter with --pr or --against', () => {
+  expect(parseExploreOptions({ pr: '7', charter: 'try error paths' })).toEqual(
+    expect.objectContaining({ pr: '7', charter: { goal: 'try error paths' } })
+  );
+  expect(parseExploreOptions({ against: 'origin/v7', charter: 'try error paths' })).toEqual(
+    expect.objectContaining({ against: 'origin/v7', charter: { goal: 'try error paths' } })
+  );
+});
+
+test('parseExploreOptions refuses an empty --charter', () => {
+  expect(() => parseExploreOptions({ charter: '   ' })).toThrow(
+    '--charter should be a sentence saying what to try. Received "   ".'
+  );
+});
+
+test('parseExploreOptions takes --charters alone, or with --pr, as the path to read', () => {
+  expect(parseExploreOptions({ charters: 'bash.yaml' })).toEqual(
+    expect.objectContaining({ pr: null, against: null, charter: null, chartersFile: 'bash.yaml' })
+  );
+  expect(parseExploreOptions({ pr: '7', charters: 'bash.yaml' })).toEqual(
+    expect.objectContaining({ pr: '7', chartersFile: 'bash.yaml' })
+  );
+});
+
+test('parseExploreOptions refuses --charter with --charters', () => {
+  expect(() => parseExploreOptions({ charter: 'try edge input', charters: 'bash.yaml' })).toThrow(
+    'Pass one of --charter <text> or --charters <file>, not both.'
   );
 });
 

@@ -71,3 +71,29 @@ test('answers that asked nothing cost nothing, and failed calls are counted apar
   costs.add({ asked: true, fallback: 'failed', optionId: 'o1' });
   expect(costs.totals()).toEqual(expect.objectContaining({ calls: 0, failedCalls: 1, usd: 0 }));
 });
+
+test('a failed call with an estimated cost counts toward the cap and warns once', () => {
+  const onFirstEstimate = jest.fn();
+  const costs = createCostTracker({ maxCost: 0.01, onFirstEstimate });
+  costs.add({
+    asked: true,
+    fallback: 'failed',
+    optionId: 'o1',
+    usage: { inputTokens: 0, outputTokens: 0 },
+    cost: { usd: 0.006, estimated: true },
+  });
+  expect(costs.exceeded()).toBe(false);
+  costs.add({ asked: true, fallback: 'failed', optionId: 'o2' });
+  costs.add({
+    asked: true,
+    fallback: 'failed',
+    optionId: 'o0',
+    usage: { inputTokens: 0, outputTokens: 0 },
+    cost: { usd: 0.006, estimated: true },
+  });
+  expect(costs.exceeded()).toBe(true);
+  expect(onFirstEstimate).toHaveBeenCalledTimes(1);
+  expect(costs.totals()).toEqual(
+    expect.objectContaining({ calls: 0, failedCalls: 3, usd: 0.012, estimatedUsd: 0.012 })
+  );
+});

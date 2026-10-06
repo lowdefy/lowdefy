@@ -16,19 +16,26 @@
 
 import { type } from '@lowdefy/helpers';
 
-// L5: the journey names who it runs as: a user from its data set, or `none`
-// for signed out. An inline user object, or no user, still runs, so it is a
-// warning until the journey moves onto a data set. User names are read from
-// the data set file (parseDataSet), so L5 needs no server. `dataSet` is null
-// when the journey declares no data set or its data set could not be read
-// (lintJourneys reports that itself).
+function describeUsers(dataSet) {
+  const names = Object.keys(dataSet.users);
+  return names.length === 0 ? 'It has no users.' : `Its users: ${names.join(', ')}.`;
+}
+
+// L5: the journey names who it runs as: a user from its data set, a list of
+// them (one persona run each), or `none` for signed out. An inline user
+// object, or no user, still runs, so it is a warning until the journey moves
+// onto a data set. User names are read from the data set file (parseDataSet),
+// so L5 needs no server. `dataSet` is null when the journey declares no data
+// set or its data set could not be read (lintJourneys reports that itself). A
+// list without data never reaches L5: validateJourney refuses it.
 function L5({ journey, dataSet }) {
   const { user } = journey;
   if (type.isUndefined(user)) {
     return [
       {
         severity: 'warning',
-        message: 'has no user: name a user from its data set, or write user: none for signed out.',
+        message:
+          'has no user: name a user from its data set (or a list of them), or write user: none for signed out.',
       },
     ];
   }
@@ -52,18 +59,18 @@ function L5({ journey, dataSet }) {
       },
     ];
   }
-  if (type.isNone(dataSet) || Object.prototype.hasOwnProperty.call(dataSet.users, user)) {
+  if (type.isNone(dataSet)) {
     return [];
   }
-  const names = Object.keys(dataSet.users);
-  return [
-    {
+  const names = type.isArray(user) ? user : [user];
+  return names
+    .filter((name) => !Object.prototype.hasOwnProperty.call(dataSet.users, name))
+    .map((name) => ({
       severity: 'warning',
-      message: `names user "${user}", which data set "${dataSet.name}" does not have. ${
-        names.length === 0 ? 'It has no users.' : `Its users: ${names.join(', ')}.`
-      }`,
-    },
-  ];
+      message: `names user "${name}", which data set "${
+        dataSet.name
+      }" does not have. ${describeUsers(dataSet)}`,
+    }));
 }
 
 export default L5;

@@ -25,7 +25,10 @@ jest.unstable_mockModule('../getPageBuildStatus.js', () => ({ default: () => [] 
 const { default: clientErrorStore } = await import('../clientErrorStore.js');
 const { default: serverErrorStore } = await import('../serverErrorStore.js');
 const { default: getBuildStatus } = await import('../getBuildStatus.js');
-const { getWalk, registerWalk, removeWalk } = await import('./walkSessions.js');
+const { registerWalk, removeWalk, takeErrors } = await import('./walkSessions.js');
+const { registerRunBuffer, releaseRunBuffer, takeRunErrors } = await import(
+  '../runErrorBuffers.js'
+);
 
 const run = '20261003T151200Z-p0d4rm';
 const walkRecording = { source: 'explorer', run, journey: 'walk-1' };
@@ -50,7 +53,7 @@ test.each([
     });
     store.push({ timestamp: '2026-10-03T15:12:01.500Z', message: 'developer', recording: null });
 
-    expect(getWalk('walk-1').errors).toEqual([
+    expect(takeErrors({ walkId: 'walk-1', since: 0, until: Number.MAX_SAFE_INTEGER })).toEqual([
       {
         timestamp: '2026-10-03T15:12:01.000Z',
         message: 'walk',
@@ -80,11 +83,33 @@ test('an error stamped for a closed walk is dropped, not stored', () => {
   expect(mockPublish).not.toHaveBeenCalledWith(expect.objectContaining({ message: 'late' }));
 });
 
-test('an error from a journey run, not an explorer walk, stays in the shared store', () => {
+test('an error from a journey run goes to its run buffer, not the shared store', () => {
+  const journeyRun = { run, journey: 'tests/journeys/a.yaml#A' };
+  registerRunBuffer(journeyRun);
   serverErrorStore.push({
     timestamp: '2026-10-03T15:12:02.000Z',
     message: 'journey',
-    recording: { source: 'journey', run, journey: 'tests/journeys/a.yaml#A' },
+    recording: { source: 'journey', ...journeyRun },
   });
-  expect(serverErrorStore.list().map((entry) => entry.message)).toContain('journey');
+  expect(serverErrorStore.list().map((entry) => entry.message)).not.toContain('journey');
+  expect(mockPublish).not.toHaveBeenCalledWith(expect.objectContaining({ message: 'journey' }));
+  expect(
+    takeRunErrors({ ...journeyRun, since: 0, until: Number.MAX_SAFE_INTEGER }).map((entry) => [
+      entry.message,
+      entry.store,
+    ])
+  ).toEqual([['journey', 'server']]);
+  releaseRunBuffer(journeyRun);
+});
+
+test('an error stamped for a journey run that has ended is dropped, not stored', () => {
+  clientErrorStore.push({
+    timestamp: '2026-10-03T15:12:02.000Z',
+    message: 'ended journey',
+    recording: { source: 'journey', run, journey: null },
+  });
+  expect(clientErrorStore.list().map((entry) => entry.message)).not.toContain('ended journey');
+  expect(mockPublish).not.toHaveBeenCalledWith(
+    expect.objectContaining({ message: 'ended journey' })
+  );
 });

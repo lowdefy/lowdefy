@@ -15,7 +15,7 @@
 */
 
 import { compile } from '@lowdefy/ajv';
-import { UserError } from '@lowdefy/errors';
+import { ConfigError, UserError } from '@lowdefy/errors';
 import { cleanBuildArtifact, type } from '@lowdefy/helpers';
 
 // Compiled validators keyed by the payloadSchema object: a dev rebuild re-reads
@@ -123,7 +123,16 @@ function buildErrorMessage({ endpointConfig, errors }) {
 
 // A declared payloadSchema is enforced on every caller; the only way to not
 // enforce it is to not declare one.
-function validatePayload({ endpointConfig, payload }) {
+//
+// Who built the payload decides whose mistake a refusal is. The app's own
+// config (a page's CallAPI, a CallApi step, a schedule, a hook) building a
+// payload its own endpoint refuses is a config fault: a ConfigError, logged as
+// one, which fails a journey that hits it. An outside caller (an API client, an
+// MCP client's model, an agent's model) sending the wrong shape is an expected
+// outcome of its own request: a UserError, answered with the message it needs
+// to correct the call and never logged at error level. The ajv error array
+// survives as cause either way.
+function validatePayload({ endpointConfig, payload, outsideCaller = false }) {
   if (type.isNone(endpointConfig.payloadSchema)) {
     return;
   }
@@ -132,11 +141,11 @@ function validatePayload({ endpointConfig, payload }) {
   if (valid) {
     return;
   }
-  // UserError: a caller sending the wrong shape is an expected outcome of the
-  // caller's own request, not a config or system fault - the same class the
-  // ValidateSchema step uses. It is never logged at error level or sent to
-  // Sentry, and the ajv error array survives as cause.
-  throw new UserError(buildErrorMessage({ endpointConfig, errors }), { cause: errors });
+  const message = buildErrorMessage({ endpointConfig, errors });
+  if (outsideCaller) {
+    throw new UserError(message, { cause: errors });
+  }
+  throw new ConfigError(message, { cause: errors, configKey: endpointConfig['~k'] });
 }
 
 export default validatePayload;

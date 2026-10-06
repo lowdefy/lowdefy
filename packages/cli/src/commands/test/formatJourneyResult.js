@@ -17,6 +17,7 @@
 import YAML from 'yaml';
 import { type } from '@lowdefy/helpers';
 
+import formatAppErrors from './formatAppErrors.js';
 import formatEvidence from './formatEvidence.js';
 import formatJourneyDataSet from './formatJourneyDataSet.js';
 
@@ -44,14 +45,35 @@ function describeStep(step) {
 }
 
 function failureDetail({ failure, message }) {
+  if (failure?.phase === 'open') {
+    return `on open: ${failure.message}`;
+  }
   if (type.isObject(failure)) {
     return `step ${failure.index} (${describeStep(failure.step)}): ${failure.message ?? ''}`;
   }
   return message ?? '';
 }
 
+// An app error failure names the step (or the page open) and then each
+// error, with what the step itself found when it failed too.
+function appErrorLines({ failure }) {
+  const lines = [
+    failure.phase === 'open'
+      ? '      on open'
+      : `      step ${failure.index}: ${toCompactYaml(failure.step)}`,
+    ...formatAppErrors({ errors: failure.errors }),
+  ];
+  if (type.isString(failure.stepMessage)) {
+    lines.push(`      ${failure.stepMessage}`);
+  }
+  return lines;
+}
+
 function failureLines({ failure, message }) {
   const lines = [];
+  if (failure?.kind === 'app-error') {
+    return appErrorLines({ failure });
+  }
   if (type.isObject(failure)) {
     lines.push(`      step ${failure.index}: ${toCompactYaml(failure.step)}`);
     if (!type.isUndefined(failure.expected) || !type.isUndefined(failure.actual)) {
@@ -61,6 +83,7 @@ function failureLines({ failure, message }) {
     if (type.isString(failure.message) && failure.message !== '') {
       lines.push(`      ${failure.message}`);
     }
+    lines.push(...formatAppErrors({ errors: failure.errors }));
     return lines;
   }
   if (type.isString(message) && message !== '') {
@@ -69,8 +92,8 @@ function failureLines({ failure, message }) {
   return lines;
 }
 
-function withEvidence({ line, evidence }) {
-  const formatted = formatEvidence({ evidence });
+function withEvidence({ line, evidence, usage }) {
+  const formatted = formatEvidence({ evidence, usage });
   return formatted === '' ? line : `${line}  ${formatted}`;
 }
 
@@ -80,6 +103,7 @@ function formatSingle({ result, seen }) {
       withEvidence({
         line: `PASS  ${result.name}  (${result.stepCount} steps, ${result.durationMs}ms)`,
         evidence: result.evidence,
+        usage: result.usage,
       }),
       ...formatJourneyDataSet({ result, seen }),
     ];
@@ -99,6 +123,7 @@ function formatRepeated({ result, seen }) {
       withEvidence({
         line: `PASS   ${result.name}   (${result.stepCount} steps, ${result.passedRuns}/${result.runs}, ${seconds}s each)`,
         evidence: result.evidence,
+        usage: result.usage,
       }),
       ...formatJourneyDataSet({ result, seen }),
     ];
@@ -108,12 +133,15 @@ function formatRepeated({ result, seen }) {
     return [
       `FLAKY  ${result.name}   (${result.passedRuns}/${result.runs} passed) run ${
         first.run
-      } failed at ${failureDetail(result)}`,
+      } failed ${result.failure?.phase === 'open' ? '' : 'at '}${failureDetail(result)}`,
       ...formatJourneyDataSet({ result, seen }),
       `      file: ${result.filePath}`,
       ...failureLines({ failure: result.failure, message: result.message }),
       ...others.map(
-        (failure) => `      run ${failure.run} failed at step ${failure.step}: ${failure.message}`
+        (failure) =>
+          `      run ${failure.run} failed ${
+            failure.phase === 'open' ? 'on open' : `at step ${failure.step}`
+          }: ${failure.message}`
       ),
     ];
   }
@@ -128,10 +156,11 @@ function formatRepeated({ result, seen }) {
 }
 
 // Returns the lines to print for one journey result. Run once, a single PASS
-// line, or a FAIL line followed by an indented explanation of what went
-// wrong. Replayed (--repeat above 1), the class - PASS, FLAKY or FAIL - with
-// the runs that passed, and each failing run's step. A data set and its
-// warnings are printed once per run: `seen` is shared across the run's results.
+// line (with the journey's tier and evidence when it has them), or a FAIL
+// line followed by an indented explanation of what went wrong. Replayed
+// (--repeat above 1), the class - PASS, FLAKY or FAIL - with the runs that
+// passed, and each failing run's step. A data set and its warnings are
+// printed once per run: `seen` is shared across the run's results.
 function formatJourneyResult({ result, seen = new Set() }) {
   if ((result.repeat ?? 1) === 1 || result.refused === true) {
     return formatSingle({ result, seen });

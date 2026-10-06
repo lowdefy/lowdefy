@@ -18,9 +18,11 @@ import { type } from '@lowdefy/helpers';
 
 // Who the journey runs as: { name, user }. name is the data set user's name
 // when the journey names one, else null; user is that user, or the journey's
-// inline user object, or null when it runs signed out.
+// inline user object, or null when it runs signed out. A journey with a list
+// of users runs as its first user here, the persona run that stands for it
+// (measuredJourney); roleGranted reads the whole list itself.
 function journeyUser({ journey, dataSet }) {
-  const { user } = journey;
+  const user = type.isArray(journey.user) ? journey.user[0] : journey.user;
   if (type.isObject(user)) {
     return { name: null, user };
   }

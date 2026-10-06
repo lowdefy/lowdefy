@@ -171,11 +171,24 @@ test('validateTraceRecord refuses a target on pageview, back, pageleave and engi
   );
 });
 
-test('validateTraceRecord requires a block_id or a text on a target', () => {
+test('validateTraceRecord requires a block_id, a text or a text_token on a target', () => {
   expect(check({ ...sample, target: { row: 1 } })).toBe(
-    'Trace record "target" requires a "block_id" or a "text". Received {"row":1}.'
+    'Trace record "target" requires a "block_id", a "text" or a "text_token". Received {"row":1}.'
   );
   expect(check({ ...sample, target: { text: 'Save' } })).toBeUndefined();
+  expect(check({ ...sample, target: { text_token: 't_0123456789abcdef' } })).toBeUndefined();
+});
+
+test('validateTraceRecord requires a text_token to be t_ and 16 hex characters', () => {
+  expect(
+    check({ ...sample, target: { ...sample.target, text_token: 't_0123456789abcdef' } })
+  ).toBeUndefined();
+  expect(check({ ...sample, target: { ...sample.target, text_token: 'Acme Ltd' } })).toBe(
+    'Trace record "target.text_token" should be "t_" and 16 hex characters, or null. Received "Acme Ltd".'
+  );
+  expect(
+    check({ ...sample, target: { block_id: 'grid', text_token: 'p_0123456789abcdef' } })
+  ).toContain('"target.text_token" should be');
 });
 
 test('validateTraceRecord requires zero-based integers or null for row and nth', () => {

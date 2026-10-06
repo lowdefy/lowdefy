@@ -16,7 +16,10 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
-async function getConnectionConfig({ logger, readConfigFile }, { connectionId, configKey }) {
+import checkUnwalledReach from './checkUnwalledReach.js';
+
+async function getConnectionConfig(context, { connectionId, configKey }) {
+  const { logger, readConfigFile } = context;
   let err;
 
   if (!connectionId) {
@@ -32,6 +35,7 @@ async function getConnectionConfig({ logger, readConfigFile }, { connectionId, c
     logger.debug({ params: { connectionId }, err }, err.message);
     throw err;
   }
+  await checkUnwalledReach(context, { connectionConfig: connection });
   return connection;
 }
 

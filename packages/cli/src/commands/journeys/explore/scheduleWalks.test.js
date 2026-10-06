@@ -23,7 +23,14 @@ const targets = [
 ];
 
 function logFor({ target, walkId, walkIndex }, stopReason = 'steps') {
-  return { walk: walkId, walkIndex, pageId: target.pageId, user: target.user, stopReason };
+  return {
+    walk: walkId,
+    walkIndex,
+    pageId: target.pageId,
+    user: target.user,
+    charter: target.charter ?? null,
+    stopReason,
+  };
 }
 
 test('walks run breadth-first: every target gets its first walk before any gets a second', async () => {
@@ -150,15 +157,51 @@ test('a walk that throws stops the run with its error and keeps the earlier walk
   expect(stopped).toEqual({ reason: 'error', message: 'Gateway down' });
 });
 
-test('afterWalk runs after each walk, so confirmation replays count against the budget', async () => {
-  const seen = [];
-  await scheduleWalks({
-    targets: [targets[0]],
-    walks: 2,
-    shouldStop: () => null,
+test('three charters share the rounds under one budget, one walk open at a time', async () => {
+  // resolveWalkTargets' order: one target from each charter in turn. Two
+  // charters on the same page and role are two targets.
+  const charterTargets = [
+    { pageId: 'invoice', user: 'admin', charter: 0 },
+    { pageId: 'invoice', user: 'admin', charter: 1 },
+    { pageId: 'tickets', user: 'member', charter: 2 },
+    { pageId: 'invoice', user: 'member', charter: 0 },
+  ];
+  const order = [];
+  let open = 0;
+  let mostOpen = 0;
+  let walked = 0;
+  const { logs, notRun, stopped } = await scheduleWalks({
+    targets: charterTargets,
+    walks: 3,
+    shouldStop: () => (walked >= 6 ? 'budget' : null),
     buildChanged: async () => false,
-    runOne: async (walk) => logFor(walk),
-    afterWalk: async (log) => seen.push(log.walk),
+    runOne: async (walk) => {
+      open += 1;
+      mostOpen = Math.max(mostOpen, open);
+      await new Promise((resolve) => setTimeout(resolve, 1));
+      order.push(
+        `${walk.target.charter}:${walk.target.pageId}/${walk.target.user}/${walk.walkIndex}`
+      );
+      walked += 1;
+      open -= 1;
+      return logFor(walk);
+    },
   });
-  expect(seen).toEqual(['walk-1', 'walk-2']);
+  expect(mostOpen).toBe(1);
+  expect(order).toEqual([
+    '0:invoice/admin/0',
+    '1:invoice/admin/0',
+    '2:tickets/member/0',
+    '0:invoice/member/0',
+    '0:invoice/admin/1',
+    '1:invoice/admin/1',
+  ]);
+  expect(logs).toHaveLength(6);
+  expect(stopped).toEqual({ reason: 'budget' });
+  expect(notRun).toEqual([
+    { pageId: 'invoice', user: 'admin', charter: 0, reason: 'budget', walks: 1 },
+    { pageId: 'invoice', user: 'admin', charter: 1, reason: 'budget', walks: 1 },
+    { pageId: 'tickets', user: 'member', charter: 2, reason: 'budget', walks: 2 },
+    { pageId: 'invoice', user: 'member', charter: 0, reason: 'budget', walks: 2 },
+  ]);
 });

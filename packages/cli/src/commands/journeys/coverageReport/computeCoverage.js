@@ -191,7 +191,8 @@ function measureFailure({ profile, segments, journeys, journeyKeys, measuredRun 
 }
 
 // Clicks with the page each one runs on and whether an `expect` follows it.
-function readClicks({ journey, routeTable }) {
+// A click's text is read only when it is config text.
+function readClicks({ journey, routeTable, isConfigText }) {
   const clicks = [];
   journey.steps.forEach((step, index) => {
     if (getStepKey(step) !== 'click') return;
@@ -199,9 +200,10 @@ function readClicks({ journey, routeTable }) {
       pageId: journey.pageId,
       steps: journey.steps.slice(0, index + 1),
       routeTable,
+      isConfigText,
     });
     const page = sequence[sequence.length - 1]?.page ?? journey.pageId;
-    const [, blockId, , text] = JSON.parse(stepIdentity({ step }));
+    const [, blockId, , text] = JSON.parse(stepIdentity({ step, isConfigText }));
     const next = journey.steps[index + 1];
     clicks.push({
       page,
@@ -213,9 +215,17 @@ function readClicks({ journey, routeTable }) {
   return clicks;
 }
 
-function measureFrustration({ profile, journeys, routeTable }) {
+// A blockless frustrated element is matched by its config text only: one
+// known by a token alone is never matched by a journey's text.
+function isFrustrationHit({ click, pair, blockId }) {
+  if (!click.asserted || click.page !== pair.page) return false;
+  if (!type.isNone(blockId)) return click.blockId === blockId;
+  return !type.isNone(pair.text) && click.text === pair.text;
+}
+
+function measureFrustration({ profile, journeys, routeTable, isConfigText }) {
   const clicks = journeys.flatMap((journey) =>
-    readClicks({ journey: journey.journey, routeTable })
+    readClicks({ journey: journey.journey, routeTable, isConfigText })
   );
   const uncovered = [];
   let covered = 0;
@@ -223,12 +233,7 @@ function measureFrustration({ profile, journeys, routeTable }) {
     const blockId = type.isNone(pair.block_id)
       ? null
       : normaliseBlockId({ blockId: pair.block_id });
-    const hit = clicks.some(
-      (click) =>
-        click.asserted &&
-        click.page === pair.page &&
-        (type.isNone(blockId) ? click.text === pair.text : click.blockId === blockId)
-    );
+    const hit = clicks.some((click) => isFrustrationHit({ click, pair, blockId }));
     if (hit) {
       covered += 1;
       return;
@@ -274,13 +279,22 @@ function measureRole({ profile, journeys }) {
 // `routeTable` the build's routes the sequences were read with.
 // `measuredRun` is readMeasuredRun's result, null without a test run: it adds
 // the measured interaction share and makes failure coverage measured.
-function computeCoverage({ journeys, segments, profile, routeTable, measuredRun = null }) {
+// `isConfigText` reads journey click text by the config text rule, as the
+// journeys' sequences were read.
+function computeCoverage({
+  journeys,
+  segments,
+  profile,
+  routeTable,
+  measuredRun = null,
+  isConfigText,
+}) {
   const journeyKeys = new Set(journeys.flatMap((journey) => journey.sequence.map(entryKey)));
   return {
     interaction: measureInteraction({ segments, journeyKeys, measuredRun }),
     flow: measureFlow({ segments, journeys }),
     failure: measureFailure({ profile, segments, journeys, journeyKeys, measuredRun }),
-    frustration: measureFrustration({ profile, journeys, routeTable }),
+    frustration: measureFrustration({ profile, journeys, routeTable, isConfigText }),
     role: measureRole({ profile, journeys }),
   };
 }

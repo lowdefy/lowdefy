@@ -24,14 +24,19 @@
 
 import MongoDBDeleteMany from './MongoDBDeleteMany/MongoDBDeleteMany.js';
 import MongoDBDeleteOne from './MongoDBDeleteOne/MongoDBDeleteOne.js';
+import MongoDBEnrichmentClaim from './MongoDBEnrichmentClaim/MongoDBEnrichmentClaim.js';
+import MongoDBEnrichmentComplete from './MongoDBEnrichmentComplete/MongoDBEnrichmentComplete.js';
+import MongoDBEnrichmentEnqueue from './MongoDBEnrichmentEnqueue/MongoDBEnrichmentEnqueue.js';
 import MongoDBInsertConsecutiveId from './MongoDBInsertConsecutiveId/MongoDBInsertConsecutiveId.js';
 import MongoDBInsertMany from './MongoDBInsertMany/MongoDBInsertMany.js';
 import MongoDBInsertManyConsecutiveIds from './MongoDBInsertManyConsecutiveIds/MongoDBInsertManyConsecutiveIds.js';
 import MongoDBInsertOne from './MongoDBInsertOne/MongoDBInsertOne.js';
+import MongoDBTableChanges from './MongoDBTableChanges/MongoDBTableChanges.js';
 import MongoDBUpdateMany from './MongoDBUpdateMany/MongoDBUpdateMany.js';
 import MongoDBUpdateOne from './MongoDBUpdateOne/MongoDBUpdateOne.js';
 import MongoDBVersionedUpdateOne from './MongoDBVersionedUpdateOne/MongoDBVersionedUpdateOne.js';
 import tenantPreflight from './tenant/tenantPreflight.js';
+import { columnDefs, fields } from '../../../test/enrichmentTable.js';
 import getTestCollection from '../../../test/getTestCollection.js';
 import populateTestMongoDb from '../../../test/populateTestMongoDb.js';
 
@@ -50,11 +55,11 @@ const refusal =
 
 let run = 0;
 
-async function setup() {
+async function setup(documents = seed) {
   run += 1;
   const collection = `tenantChangeLog${run}`;
   const logCollection = `${collection}Log`;
-  await populateTestMongoDb({ collection, documents: seed });
+  await populateTestMongoDb({ collection, documents });
   await populateTestMongoDb({
     collection: logCollection,
     documents: [{ _id: 'marker', [field]: 'org_x' }],
@@ -268,4 +273,200 @@ test('a shared connection over a walled collection refuses a row without an orga
     'must leave "organization_id" a non-empty organization id on every row it writes'
   );
   expect(await readAll(collection)).toEqual(seed);
+});
+
+// The table and enrichment writes on one leads table that two organizations share. Each
+// request is called as a scoped connection (the caller's organization verdict), as a
+// tenant: none request held to one organization by its filter, and as a shared connection
+// over a walled collection.
+const leads = [
+  { _id: 'a1', organization_id: 'org_a', name: 'Acme', domain: 'acme.test' },
+  { _id: 'a2', organization_id: 'org_a', name: 'Arch', domain: 'arch.test' },
+  { _id: 'b1', organization_id: 'org_b', name: 'Bolt', domain: 'bolt.test' },
+  { _id: 'b2', organization_id: 'org_b', name: 'Bore', domain: 'bore.test' },
+];
+const leadFields = { name: { type: 'text' } };
+const scopedA = { tenant: { field, value: 'org_a' }, tenantGuard: null };
+const noneB = { tenant: null, tenantGuard: noneGuard, filter: { organization_id: 'org_b' } };
+const sharedB = { tenant: null, tenantGuard: sharedGuard, filter: { organization_id: 'org_b' } };
+
+function enqueueEmail({ connection, tenant, tenantGuard, filter }) {
+  return MongoDBEnrichmentEnqueue({
+    request: { fields, columnDefs, columns: ['email'], filter },
+    connection: { ...connection, read: true },
+    tenant,
+    tenantGuard,
+  });
+}
+
+function claimEmail({ connection, tenant, tenantGuard, filter }) {
+  return MongoDBEnrichmentClaim({
+    request: { fields, columnDefs, columns: ['email'], limit: 10, filter },
+    connection: { ...connection, read: true },
+    tenant,
+    tenantGuard,
+  });
+}
+
+function completeClaims({ connection, tenant, tenantGuard, filter, claims }) {
+  return MongoDBEnrichmentComplete({
+    request: {
+      columnDefs,
+      filter,
+      results: claims.map(({ rowKey, columnKey, claimToken }) => ({
+        rowKey,
+        columnKey,
+        claimToken,
+        status: 'ok',
+        value: `${rowKey}@found.test`,
+      })),
+    },
+    connection,
+    tenant,
+    tenantGuard,
+  });
+}
+
+function saveTable({ connection, tenant, tenantGuard, filter, insertDefaults, changes }) {
+  return MongoDBTableChanges({
+    request: { fields: leadFields, filter, insertDefaults, changes },
+    connection,
+    tenant,
+    tenantGuard,
+  });
+}
+
+async function runEnrichment(context) {
+  await enqueueEmail(context);
+  const claims = await claimEmail(context);
+  await completeClaims({ ...context, claims });
+  return claims;
+}
+
+function recordsByType(records) {
+  return records.map((record) => [record.type, record[field]]);
+}
+
+test.each([
+  ['a scoped connection', scopedA, 'org_a', ['a1', 'a2']],
+  ['tenant: none held to one organization', noneB, 'org_b', ['b1', 'b2']],
+])(
+  'enrichment writes on %s stamp each change-log record with the organization they ran for',
+  async (_, context, organizationId, rowKeys) => {
+    const { collection, logCollection, connection } = await setup(leads);
+    const claims = await runEnrichment({ ...context, connection });
+    expect(claims.map((claim) => claim.rowKey).sort()).toEqual(rowKeys);
+    expect(recordsByType(await logRecords(logCollection))).toEqual([
+      ['MongoDBEnrichmentEnqueue', organizationId],
+      ['MongoDBEnrichmentClaim', organizationId],
+      ['MongoDBEnrichmentComplete', organizationId],
+    ]);
+    const docs = await readAll(collection);
+    docs
+      .filter((doc) => !rowKeys.includes(doc._id))
+      .forEach((doc) => expect(doc._enrich).toBeUndefined());
+    await expect(
+      tenantPreflight({ connection: { ...connection, collection: logCollection }, field })
+    ).resolves.toEqual({ ok: true });
+  }
+);
+
+test.each([
+  [
+    'a scoped connection',
+    scopedA,
+    'org_a',
+    { updated: { a1: { name: 'Acme 2' } }, added: [{ rowKey: 'new', name: 'Ajax' }] },
+  ],
+  [
+    'tenant: none held to one organization',
+    { ...noneB, insertDefaults: { organization_id: 'org_b' } },
+    'org_b',
+    { updated: { b1: { name: 'Bolt 2' } }, added: [{ rowKey: 'new', name: 'Brio' }] },
+  ],
+])(
+  'a table save on %s stamps its change-log record with the organization it ran for',
+  async (_, context, organizationId, changes) => {
+    const { collection, logCollection, connection } = await setup(leads);
+    const saved = await saveTable({ ...context, connection, changes });
+    expect(recordsByType(await logRecords(logCollection))).toEqual([
+      ['MongoDBTableChanges', organizationId],
+    ]);
+    const added = (await readAll(collection)).find(
+      (doc) => String(doc._id) === saved.insertedKeys.new._oid
+    );
+    expect(added[field]).toBe(organizationId);
+    await expect(
+      tenantPreflight({ connection: { ...connection, collection: logCollection }, field })
+    ).resolves.toEqual({ ok: true });
+  }
+);
+
+test('table and enrichment writes on a shared connection over a walled collection leave their change-log records unstamped', async () => {
+  const { collection, logCollection, connection } = await setup(leads);
+  await runEnrichment({ ...sharedB, connection });
+  await saveTable({
+    ...sharedB,
+    connection,
+    insertDefaults: { organization_id: 'org_b' },
+    changes: { updated: { b1: { name: 'Bolt 2' } }, added: [{ rowKey: 'new', name: 'Brio' }] },
+  });
+  const records = await logRecords(logCollection);
+  expect(records.map((record) => record.type)).toEqual([
+    'MongoDBEnrichmentEnqueue',
+    'MongoDBEnrichmentClaim',
+    'MongoDBEnrichmentComplete',
+    'MongoDBTableChanges',
+  ]);
+  records.forEach((record) => expect(record).not.toHaveProperty(field));
+  const docs = await readAll(collection);
+  expect(docs.filter((doc) => doc._enrich).map((doc) => doc._id)).toEqual(['b1', 'b2']);
+  expect(docs.every((doc) => doc[field] !== undefined)).toBe(true);
+});
+
+const unscopedFilter =
+  'the filter does not match "organization_id" by equality to one organization id';
+
+test.each([
+  ['an enrichment enqueue', (context) => enqueueEmail(context)],
+  [
+    'a table save',
+    (context) => saveTable({ ...context, changes: { updated: { a1: { name: 'X' } } } }),
+  ],
+])(
+  'tenant: none refuses %s whose filter does not hold it to one organization on a change-logged connection before it writes',
+  async (_, write) => {
+    const { collection, logCollection, connection } = await setup(leads);
+    await expect(
+      write({ connection, tenant: null, tenantGuard: noneGuard, filter: {} })
+    ).rejects.toThrow(`${refusal} - ${unscopedFilter}`);
+    expect(await readAll(collection)).toEqual(leads);
+    expect(await logRecords(logCollection)).toEqual([]);
+  }
+);
+
+test('tenant: none refuses an enrichment claim whose filter does not hold it to one organization on a change-logged connection before it writes', async () => {
+  const { collection, logCollection, connection } = await setup(leads);
+  await enqueueEmail({ connection, ...scopedA });
+  await enqueueEmail({ connection, ...scopedA, tenant: { field, value: 'org_b' } });
+  const queued = await readAll(collection);
+  const before = await logRecords(logCollection);
+  await expect(
+    claimEmail({ connection, tenant: null, tenantGuard: noneGuard, filter: {} })
+  ).rejects.toThrow(`${refusal} - ${unscopedFilter}`);
+  expect(await readAll(collection)).toEqual(queued);
+  expect(await logRecords(logCollection)).toEqual(before);
+});
+
+test('tenant: none refuses an enrichment complete whose filter does not hold it to one organization on a change-logged connection before it writes', async () => {
+  const { collection, logCollection, connection } = await setup(leads);
+  await enqueueEmail({ connection, ...scopedA });
+  const claims = await claimEmail({ connection, ...scopedA });
+  const claimed = await readAll(collection);
+  const before = await logRecords(logCollection);
+  await expect(
+    completeClaims({ connection, tenant: null, tenantGuard: noneGuard, filter: {}, claims })
+  ).rejects.toThrow(`${refusal} - ${unscopedFilter}`);
+  expect(await readAll(collection)).toEqual(claimed);
+  expect(await logRecords(logCollection)).toEqual(before);
 });

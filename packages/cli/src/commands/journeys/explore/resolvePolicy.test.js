@@ -105,3 +105,41 @@ test('resolvePolicy refuses a model policy without a key, an unknown policy and 
     '--max-cost should be a number of US dollars above 0. Received "0".'
   );
 });
+
+test('resolvePolicy refuses --charter without AI_GATEWAY_API_KEY, saying the seeded policy never reads it', () => {
+  expect(() => resolvePolicy({ options: { charter: 'try edge input' }, env: {} })).toThrow(
+    "--charter needs a model to steer, and without AI_GATEWAY_API_KEY the seeded policy runs, which never reads the charter. Set AI_GATEWAY_API_KEY in the shell or the app's .env."
+  );
+});
+
+test('resolvePolicy refuses --charter with --policy seeded', () => {
+  expect(() =>
+    resolvePolicy({
+      options: { charter: 'try edge input', policy: 'seeded' },
+      env: { AI_GATEWAY_API_KEY: 'k' },
+    })
+  ).toThrow(
+    '--charter needs a model to steer, and --policy seeded never reads the charter. Use --policy jev or model.'
+  );
+});
+
+test('resolvePolicy refuses --charters without AI_GATEWAY_API_KEY, naming the flag', () => {
+  expect(() => resolvePolicy({ options: { charters: 'bash.yaml' }, env: {} })).toThrow(
+    '--charters needs a model to steer, and without AI_GATEWAY_API_KEY the seeded policy runs'
+  );
+  expect(() =>
+    resolvePolicy({
+      options: { charters: 'bash.yaml', policy: 'seeded' },
+      env: { AI_GATEWAY_API_KEY: 'k' },
+    })
+  ).toThrow('--charters needs a model to steer, and --policy seeded never reads the charter.');
+  expect(
+    resolvePolicy({ options: { charters: 'bash.yaml' }, env: { AI_GATEWAY_API_KEY: 'k' } }).policy
+  ).toBe('jev');
+});
+
+test('resolvePolicy takes --charter with a key', () => {
+  expect(
+    resolvePolicy({ options: { charter: 'try edge input' }, env: { AI_GATEWAY_API_KEY: 'k' } })
+  ).toMatchObject({ policy: 'jev' });
+});

@@ -243,7 +243,7 @@ test('child routine sees fresh state — caller state not visible', async () => 
   expect(result.response).toBe(1);
 });
 
-test('invokeEndpoint rejects a payload that violates the target payloadSchema with a UserError', async () => {
+test('invokeEndpoint rejects a payload the calling config built that violates the target payloadSchema with a ConfigError', async () => {
   const context = createTestContext({
     endpointConfigs: {
       target: {
@@ -260,6 +260,14 @@ test('invokeEndpoint rejects a payload that violates the target payloadSchema wi
   });
   await expect(
     invokeEndpoint(context, { endpointId: 'target', payload: { key: 1 }, endpointDepth: 0 })
+  ).rejects.toThrow(ConfigError);
+  await expect(
+    invokeEndpoint(context, {
+      endpointId: 'target',
+      payload: { key: 1 },
+      endpointDepth: 0,
+      outsideCaller: true,
+    })
   ).rejects.toThrow(UserError);
   // A missing payload is validated as {}, the value the routine would receive.
   await expect(invokeEndpoint(context, { endpointId: 'target', endpointDepth: 0 })).rejects.toThrow(

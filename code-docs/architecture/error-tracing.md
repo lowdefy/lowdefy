@@ -110,6 +110,10 @@ Every error is one of two things, and the class says which:
 
 The test when classifying: _would a developer need to change config to stop this from happening?_ If not, it is not an `ActionError`/`RequestError`/`ConfigError`.
 
+`expectedErrorNames` (`@lowdefy/errors`) is the set of these four names, and every consumer that tells the two apart reads it: the client `handleError` (console only, no POST, no dev error bar) and the dev server's `evaluateInvariants` (never an `action-error` for a journey or an explorer walk). The servers' error handlers answer an expected outcome themselves as `{ name, message }` with a 400, 401 or 403 and no `~e` marker, so `client/src/request.js` rebuilds its class from `name`; without that the client threw a plain `Error`, the action runner wrapped it as an `ActionError`, and a role refusal was reported and failed journeys as a fault.
+
+**A refused endpoint payload is classified by who built it.** `validatePayload` (`packages/api/src/routes/endpoints/`) throws a `ConfigError` carrying the endpoint's `configKey` when the app's own config built the payload: a page's `CallAPI` (a call that names its page), a `CallApi` step, a detached target, a Dynamic block's endpoint, an auth or agent hook, a `schedule.payload`. Only an outside caller's payload (`outsideCaller`: an API client that names no page, an MCP tool call, an agent tool call, whose model wrote the input) is refused with a `UserError`. A page sending a payload its own endpoint refuses is a config fault, so it is logged as one and fails a journey.
+
 **Auth server rejections are expected outcomes.** BetterAuth's client resolves `{ data, error }`; `unwrap` in `packages/client/src/auth/createAuthMethods.js` rethrows an `error.status` in the 4xx range as a `UserError` (with `metaData: { code, status }` for page config to branch on) and anything else — a 5xx or network failure — as a plain `Error`, which the action runner wraps as an `ActionError` and reports. Server-side, `options.onAPIError.onError` (`packages/api/src/routes/auth/createOnAPIError.js`) owns BetterAuth's API-error logging: a 4xx `APIError` is one warn line, everything else is `logger.error(error)`. Without it BetterAuth's router logged every 4xx at error level whenever the logger level was `warn` or `debug`, so a wrong password or an expired magic link produced an `ERROR [Better Auth]` line on every attempt.
 
 **Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches all errors and adds `configKey` for location resolution.
@@ -815,6 +819,8 @@ Errors cross the HTTP boundary in both directions using the `~e` serialization f
 `redactErrorResponse` / `buildEndpointResult` serialize the error through the wire projection, and in dev add `devError` beside it — see [Wire](#wire-end-user-and-app-config) and [Dev tools](#dev-tools). This covers every status, not only 500: the hono error handlers (500), endpoint result bodies (200), cron, webhook and detached routes, and websocket reply frames.
 
 The client `request.js` checks for `body['~e']` and decodes it with `decodeServerError`, reconstructing the Lowdefy error class by name (e.g., `RequestError`) and recording `devError` in its `WeakMap`. Server-originated errors keep their class name across the boundary, and the wire's `isLowdefyError: true` makes the engine pass them through without wrapping in `ActionError`.
+
+A body without `~e` whose `name` is in `expectedErrorNames` is an expected outcome the error handler answered itself (a 400, 401 or 403 `{ name, message }`); `request.js` rebuilds it with `lowdefyErrorTypes[name]`, so it too keeps its class and passes through unwrapped. Any other body becomes a plain `Error`.
 
 **Browser → Server (client-error API):**
 
