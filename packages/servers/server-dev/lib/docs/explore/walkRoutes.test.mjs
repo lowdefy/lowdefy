@@ -111,7 +111,6 @@ function openBody(overrides = {}) {
     data: 'explore',
     run,
     walk: 'walk-1',
-    record: true,
     ...overrides,
   };
 }
@@ -191,15 +190,6 @@ test('openWalk returns an app error its page open caused as a finding with no st
   expect(body.screenshot).toBe(`.lowdefy/explore/${run}/screenshots/walk-1-open.png`);
 });
 
-test('openWalk with record false marks the recording to record nothing, so the walk still claims its errors', async () => {
-  await openWalk({ body: openBody({ record: false, walk: 'walk-1-confirm' }), origin });
-  expect(mockOpenJourney.mock.calls[0][0].recording).toEqual({
-    source: 'explorer',
-    run: { id: run, by: 'explorer', journey: 'walk-1-confirm' },
-    record: false,
-  });
-});
-
 test('openWalk answers 409 for a third concurrent walk and for a walk of the run that is already open', async () => {
   expect((await openWalk({ body: openBody({ walk: 'walk-1' }), origin })).status).toBe(200);
   expect((await openWalk({ body: openBody({ walk: 'walk-1' }), origin })).status).toBe(409);
@@ -263,7 +253,6 @@ test('openWalk refuses a non-empty allowExternal unless the app opted in to writ
 
 test('openWalk answers 400 for a malformed body before anything opens', async () => {
   expect((await openWalk({ body: openBody({ run: 'nope' }), origin })).status).toBe(400);
-  expect((await openWalk({ body: openBody({ record: 'yes' }), origin })).status).toBe(400);
   expect((await openWalk({ body: null, origin })).status).toBe(400);
   expect(mockGetBrowser).not.toHaveBeenCalled();
 });
@@ -384,13 +373,6 @@ test('closeWalk flushes the recorder, closes the actors and the data session and
   });
   expect(step.status).toBe(404);
   expect((await closeWalk({ walkId: opened.walkId })).status).toBe(404);
-});
-
-test('closeWalk does not flush a walk that records nothing', async () => {
-  const { body: opened } = await openWalk({ body: openBody({ record: false }), origin });
-  await closeWalk({ walkId: opened.walkId });
-  expect(actors.flushRecordings).not.toHaveBeenCalled();
-  expect(actors.closeAll).toHaveBeenCalledTimes(1);
 });
 
 test('a walk idle past its idle time closes itself', async () => {

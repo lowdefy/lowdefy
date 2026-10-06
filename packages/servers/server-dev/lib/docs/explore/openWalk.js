@@ -72,8 +72,7 @@ function refuseOpen({ run, walkName }) {
 
 // POST /lowdefy-docs/explore/walks: opens an explorer walk, a journey's
 // actors on a fresh data session, recorded as source explorer under the
-// run's id with the walk's name as run.journey (record: false records
-// nothing, but its errors still reach the walk). The walk is registered
+// run's id with the walk's name as run.journey. The walk is registered
 // before its page opens, so errors the first page load causes reach it, and
 // they are judged by the fixed invariants as findings at open (no step). It
 // holds a browser slot until it closes. roles (the walking user's role set)
@@ -90,7 +89,7 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
   if (!type.isUndefined(bodyError)) {
     return { status: 400, body: { error: bodyError } };
   }
-  const { pageId, urlQuery, user, data, liveData, run, walk: walkName, record } = body;
+  const { pageId, urlQuery, user, data, liveData, run, walk: walkName } = body;
   const roles = body.roles ?? [];
   const allowExternal = body.allowExternal ?? [];
   const refusedEarly = refuseOpen({ run, walkName });
@@ -140,7 +139,6 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
     run,
     journey: walkName,
     pageId,
-    record,
     allowExternal,
     dataSet,
     snapshot: !type.isNone(dataSet?.snapshot),
@@ -176,7 +174,6 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
       source: 'explorer',
       run: { id: run, by: 'explorer', journey: walkName },
     };
-    if (!record) recording.record = false;
     const { journey } = await openJourney({
       browser,
       origin,

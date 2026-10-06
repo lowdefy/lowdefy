@@ -21,10 +21,8 @@ const FLUSH_CAP_MS = 2000;
 async function teardown(walk) {
   clearTimeout(walk.idleTimer);
   try {
-    if (walk.record && walk.runner !== null) {
-      await walk.runner.actors.flushRecordings({ capMs: FLUSH_CAP_MS });
-    }
     if (walk.runner !== null) {
+      await walk.runner.actors.flushRecordings({ capMs: FLUSH_CAP_MS });
       await walk.runner.actors.closeAll();
     }
     // After the actors: no browser request still carries the data cookie.
@@ -38,8 +36,7 @@ async function teardown(walk) {
 }
 
 // Closes a walk once, however many callers ask (the close route, the idle
-// timer): flushes each actor's recorder (2 s cap) when the walk records,
-// closes its browser contexts, then its data session, frees its browser slot
+// timer): flushes each actor's recorder (2 s cap), closes its browser contexts, then its data session, frees its browser slot
 // and unregisters it, so errors stamped for it from here on are dropped.
 function closeWalkSession(walk) {
   walk.closing ??= teardown(walk);

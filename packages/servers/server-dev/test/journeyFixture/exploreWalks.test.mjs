@@ -68,7 +68,6 @@ fixtureTest(
       pageId: 'home',
       run: newRunId(),
       walk: 'walk-1',
-      record: false,
       liveData: true,
     });
     expect(status).toBe(400);
@@ -86,7 +85,6 @@ fixtureTest(
       data: 'explore',
       run,
       walk: 'walk-1',
-      record: true,
     });
     expect(opened.status).toBe(200);
     const { walkId, observation } = opened.body;
@@ -135,32 +133,13 @@ fixtureTest(
   }
 );
 
-fixtureTest('a walk with record false leaves no recording', async () => {
-  const run = newRunId();
-  const opened = await openWalk({
-    pageId: 'home',
-    user: 'member',
-    data: 'explore',
-    run,
-    walk: 'walk-1-confirm',
-    record: false,
-  });
-  expect(opened.status).toBe(200);
-  const { walkId, observation } = opened.body;
-  const count = findCandidate({ observation, kind: 'click', blockId: 'count_button' });
-  expect((await stepWalk({ walkId, step: { click: count.target } })).status).toBe(200);
-  expect((await closeWalk({ walkId })).status).toBe(200);
-  expect(readRecordings({ configDirectory, source: 'explorer', run })).toEqual([]);
-});
-
-async function openExploreWalk({ walk, record = true, pageId = 'explore', ...rest }) {
+async function openExploreWalk({ walk, pageId = 'explore', ...rest }) {
   const opened = await openWalk({
     pageId,
     user: 'member',
     data: 'explore',
     run: newRunId(),
     walk,
-    record,
     ...rest,
   });
   if (opened.status !== 200) {
@@ -169,8 +148,8 @@ async function openExploreWalk({ walk, record = true, pageId = 'explore', ...res
   return opened.body;
 }
 
-async function clickOnce({ blockId, walk, record }) {
-  const { walkId, observation } = await openExploreWalk({ walk, record });
+async function clickOnce({ blockId, walk }) {
+  const { walkId, observation } = await openExploreWalk({ walk });
   try {
     const candidate = findCandidate({ observation, kind: 'click', blockId });
     const stepped = await stepWalk({ walkId, step: { click: candidate.target } });
@@ -229,15 +208,6 @@ fixtureTest('a CallAPI that throws gives an action-error', async () => {
 fixtureTest('a failed Validate is not a finding', async () => {
   const { findings } = await clickOnce({ blockId: 'validate_button', walk: 'validate' });
   expect(findings).toEqual([]);
-});
-
-fixtureTest('a walk with record false still claims the errors it causes', async () => {
-  const { findings } = await clickOnce({
-    blockId: 'broken_request_button',
-    walk: 'broken-confirm',
-    record: false,
-  });
-  expect(kinds(findings)).toContain('server-error');
 });
 
 fixtureTest(

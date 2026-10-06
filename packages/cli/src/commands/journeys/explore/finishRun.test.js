@@ -154,7 +154,6 @@ beforeEach(() => {
       { key: errorFinding.key, path: writeCandidate('error', [{ click: 'assign' }]) },
       { key: flakyFinding.key, path: writeCandidate('flaky', [{ click: 'save' }]) },
     ],
-    notCompiled: [{ key: deadClick.key, reason: 'no-candidate' }],
     coverage: [],
     droppedExpectations: 0,
   }));

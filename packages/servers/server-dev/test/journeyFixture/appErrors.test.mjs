@@ -49,7 +49,6 @@ async function walkClick({ blockId, walk, pageId = 'explore' }) {
       data: 'explore',
       run: newRunId(),
       walk,
-      record: false,
     },
   });
   if (opened.status !== 200) {
@@ -242,7 +241,6 @@ fixtureTest(
         data: 'explore',
         run: newRunId(),
         walk: 'open-error',
-        record: false,
       },
     });
     expect(opened.status).toBe(200);

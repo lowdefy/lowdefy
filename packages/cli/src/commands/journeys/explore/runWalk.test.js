@@ -111,7 +111,6 @@ test('a walk stops at its step limit and closes', async () => {
     pageId: 'tickets',
     run,
     walk: 'walk-1',
-    record: true,
     roles: ['member'],
     roleMatrixListed: false,
     user: 'member',
