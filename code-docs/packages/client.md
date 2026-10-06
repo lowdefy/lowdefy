@@ -42,12 +42,9 @@ import Client from '@lowdefy/client';
 │  └─────────────────┘  └─────────────────┘  └────────┬────────┘  │
 │                                                      │          │
 │                                              ┌───────▼───────┐  │
-│                                              │     Head      │  │
-│                                              │ (meta tags)   │  │
-│                                              └───────────────┘  │
-│                                              ┌───────▼───────┐  │
 │                                              │     Block     │  │
-│                                              │ (root block)  │  │
+│                                              │ (root block,  │  │
+│                                              │  renders Head)│  │
 │                                              └───────────────┘  │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -224,10 +221,9 @@ context = {
 6. Wait for onInitDone
          │
          ▼
-7. Render Head (meta tags)
-         │
-         ▼
-8. Render root Block
+7. Render root Block
+   - Renders Head (the page title) from the root block's properties, so the
+     title follows every update of the page block
    - Recursively renders block tree
    - Each block gets its component and props
 ```

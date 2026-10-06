@@ -15,6 +15,7 @@
 */
 
 import { getPageConfig, getRootConfig } from '@lowdefy/api';
+import { type } from '@lowdefy/helpers';
 
 import appJson from '../../lib/build/app.js';
 import authJson from '../../lib/build/auth.js';
@@ -114,7 +115,8 @@ async function renderPage(c, { path, matchedPath, status = 200 }) {
       user: user ?? null,
     },
     themeConfig,
-    title: pageConfig.properties?.title ?? pageId,
+    // A title written as an operator is evaluated on the client, which replaces this one.
+    title: type.isString(pageConfig.properties?.title) ? pageConfig.properties.title : pageId,
   });
 
   return c.html(html, status);

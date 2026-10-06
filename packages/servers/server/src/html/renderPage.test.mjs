@@ -43,6 +43,7 @@ const { default: mountPageRoutes } = await import('../routes/mountPageRoutes.js'
 const routes = [
   { pageId: '404', path: '404' },
   { pageId: 'home', path: 'home' },
+  { pageId: 'state-title', path: 'state-title' },
   { pageId: 'ticket', path: '{space}/tickets/{ticket_id}' },
   { pageId: 'section', path: '{section}' },
 ];
@@ -50,6 +51,7 @@ const routes = [
 const pages = {
   404: { id: '404' },
   home: { id: 'home' },
+  'state-title': { id: 'state-title', properties: { title: { _state: 'title' } } },
   ticket: { id: 'ticket', properties: { title: 'Ticket' } },
   section: { id: 'section' },
 };
@@ -170,4 +172,14 @@ test('renderPage returns a plain 404 when the build has no 404 page', async () =
   const res = await createApp({ routeTable: [{ pageId: 'home', path: 'home' }] }).request('/404');
   expect(res.status).toEqual(404);
   expect(await res.text()).toEqual('Page not found.');
+});
+
+test('renderPage serves the page title written as a string', async () => {
+  const res = await createApp().request('/support/tickets/1234');
+  expect(JSON.parse(await res.text()).title).toEqual('Ticket');
+});
+
+test('renderPage serves the page id as the title when the title is an operator', async () => {
+  const res = await createApp().request('/state-title');
+  expect(JSON.parse(await res.text()).title).toEqual('state-title');
 });
