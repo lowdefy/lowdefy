@@ -205,7 +205,7 @@ function readCandidates(directory) {
 }
 
 fixtureTest(
-  'explore confirms the failing click, writes a finding candidate that reaches it and a coverage candidate that passes three runs, and seeded runs repeat',
+  'explore proves the failing click by a journey that fails under lowdefy test, writes a coverage candidate that passes three runs, and seeded runs repeat',
   async () => {
     const first = await runCli(exploreArgs(['--json']));
     expect(first.stderr).toBe('');
@@ -223,24 +223,42 @@ fixtureTest(
     const findings = JSON.parse(fs.readFileSync(path.join(runDirectory, 'findings.json'), 'utf8'));
     const actionErrors = findings.filter((finding) => finding.kind === 'action-error');
     expect(actionErrors).toHaveLength(1);
-    expect(actionErrors[0].status).toBe('confirmed');
+    expect(actionErrors[0].status).toBe('proven');
     expect(actionErrors[0].source).toMatch(/\.yaml:\d+$/);
-    expect(report.findings.confirmed).toBeGreaterThanOrEqual(1);
-    expect(report.ran.confirmations).toBeGreaterThanOrEqual(1);
+    expect(report.findings.proven.map((finding) => finding.key)).toContain(actionErrors[0].key);
+    expect(report.proof.live).toBe(false);
 
     const candidatesDirectory = path.join(
       appDirectory,
       'tests',
       'journeys',
       '_candidates',
-      'explorer'
+      'explorer',
+      report.run
     );
-    const findingCandidates = readCandidates(path.join(candidatesDirectory, 'findings'));
-    expect(findingCandidates.length).toBeGreaterThanOrEqual(1);
-    const findingContents = fs.readFileSync(findingCandidates[0], 'utf8');
+    const findingCandidate = path.join(appDirectory, actionErrors[0].candidate);
+    expect(path.dirname(findingCandidate)).toBe(path.join(candidatesDirectory, 'findings'));
+    expect(readCandidates(path.join(candidatesDirectory, 'findings'))).toHaveLength(
+      report.findings.proven.length
+    );
+    const findingContents = fs.readFileSync(findingCandidate, 'utf8');
     expect(findingContents).toContain('assign_submit');
+    expect(findingContents).toContain('data: explore');
+    expect(findingContents).toContain('user: member');
     expect(findingContents).toMatch(/explorer:\n#\s+run: /);
     expect(findingContents).toMatch(/kind: action-error/);
+    // The proof is a journey that fails: lowdefy test runs it and fails.
+    const proofRun = await runCli([
+      'test',
+      findingCandidate,
+      '--config-directory',
+      appDirectory,
+      '--url',
+      fixtureUrl,
+      '--log-level',
+      'error',
+    ]);
+    expect(proofRun.code).toBe(1);
 
     const coverageCandidates = readCandidates(candidatesDirectory);
     expect(coverageCandidates.length).toBeGreaterThanOrEqual(1);

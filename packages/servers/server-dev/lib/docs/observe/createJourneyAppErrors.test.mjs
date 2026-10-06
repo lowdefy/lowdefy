@@ -332,3 +332,18 @@ test('expect.error claims the failed action that reported the error it matched',
   });
   expect(failure).toBeUndefined();
 });
+
+test('previousWindow is the window the last step closed, for expect.effect to read', async () => {
+  expect(appErrors.previousWindow()).toBeNull();
+  emits = [{ blockId: 'save', eventName: 'onClick', success: true }];
+  await runStepWindow({ step: { click: 'save' } });
+  expect(appErrors.previousWindow()).toEqual(
+    expect.objectContaining({
+      emits,
+      mutationCount: 1,
+      requests: [],
+      urlBefore: `${origin}/explore`,
+      urlAfter: `${origin}/explore`,
+    })
+  );
+});

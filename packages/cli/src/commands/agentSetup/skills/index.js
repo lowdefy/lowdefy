@@ -45,7 +45,7 @@ const skills = [
     name: 'journeys-from-pr',
     render: journeysFromPr,
     agentsMdLine:
-      '`journeys-from-pr`: exploring a pull request before it merges, confirmed findings first, then proven journeys for what it changed.',
+      '`journeys-from-pr`: exploring a pull request before it merges, findings proven by failing journeys first, then proven journeys for what it changed.',
   },
   {
     name: 'journeys-harden',

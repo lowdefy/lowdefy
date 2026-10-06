@@ -119,6 +119,7 @@ test('a walk stops at its step limit and closes', async () => {
   expect(log.steps[0]).toEqual(
     expect.objectContaining({
       index: 0,
+      startedAt: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T/),
       shape: 's1',
       step: { click: expect.any(Object) },
       result: { status: 'ok', durationMs: 40 },

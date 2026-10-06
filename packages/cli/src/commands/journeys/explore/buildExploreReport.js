@@ -24,16 +24,29 @@ function countBy(values) {
   return counts;
 }
 
+// Groups the not-proven findings by reason, in the order applyProof gives.
+function groupByReason(findings) {
+  const groups = {};
+  findings
+    .filter((finding) => finding.status === 'not-proven')
+    .forEach((finding) => {
+      groups[finding.reason] = [...(groups[finding.reason] ?? []), finding];
+    });
+  return groups;
+}
+
 // report.json: what the run compared, what it walked and what that cost, the
-// targets it did not walk and why, its findings by status, the candidates it
-// wrote, and its trace file. readExploreRuns reads run, pr, base, head and
-// finishedAt from it.
+// targets it did not walk and why, its findings (proven ones first, then the
+// not-proven ones grouped by reason), how long the proofs took, the candidates
+// it kept, and its trace file. findings comes from applyProof, in report
+// order. readExploreRuns reads run, pr, base, head and finishedAt from it.
 function buildExploreReport({
   run,
   revisions,
   scope,
   walked,
   findings,
+  proof,
   candidates,
   trace,
   startedAt,
@@ -70,7 +83,6 @@ function buildExploreReport({
       pages: new Set(logs.map((log) => log.pageId)).size,
       targets: new Set(logs.map((log) => `${log.pageId}\u0000${log.user ?? ''}`)).size,
       walks: logs.length,
-      confirmations: walked.confirmations.length,
       steps,
     },
     stopReasons: countBy(logs.map((log) => log.stopReason)),
@@ -85,11 +97,10 @@ function buildExploreReport({
       .filter((log) => log.stopReason === 'access-changed')
       .map((log) => ({ pageId: log.pageId, user: log.user })),
     findings: {
-      confirmed: findings.filter((finding) => finding.status === 'confirmed').length,
-      unconfirmed: findings.filter((finding) => finding.status === 'unconfirmed').length,
-      deadClicks: findings.filter((finding) => finding.kind === 'dead-click').length,
-      environment: findings.filter((finding) => finding.status === 'environment').length,
+      proven: findings.filter((finding) => finding.status === 'proven'),
+      notProven: groupByReason(findings),
     },
+    proof,
     candidates,
     trace,
   };

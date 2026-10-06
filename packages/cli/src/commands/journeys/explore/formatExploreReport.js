@@ -30,11 +30,22 @@ function formatFinding(finding) {
   }  (${walks}, ${finding.users.join(', ')})`;
 }
 
+const REASON_TEXT = {
+  'not-reproduced': 'its journey did not fail with it twice',
+  environment: 'this data set cannot run a $search stage',
+  'no-candidate': 'no journey could be compiled for it',
+  'live-writes': 'the run wrote to live connections',
+};
+
+function plural({ count, word }) {
+  return `${count} ${word}${count === 1 ? '' : 's'}`;
+}
+
 // The run summary printed after the walks: what ran and what it cost, what
-// did not run and why, the findings (confirmed first, then unconfirmed, dead
-// clicks and errors this data set cannot avoid), access the PR changed, the
-// candidates written and the trace file's size.
-function formatExploreReport({ report, findings }) {
+// did not run and why, access the PR changed, the findings (proven ones, each
+// with the journey that fails with it, then the not-proven ones by reason),
+// how long the proofs took, the candidates kept and the trace file's size.
+function formatExploreReport({ report }) {
   const { ran, timings, model } = report;
   const lines = [];
   lines.push(
@@ -51,9 +62,9 @@ function formatExploreReport({ report, findings }) {
     );
   }
   lines.push(
-    `Ran       ${ran.pages} pages, ${ran.targets} (page, role) targets; ${ran.walks} walks, ${
-      ran.confirmations
-    } replays; ${ran.steps} steps; ${seconds(timings.step.meanMs)} s/step, p90 ${seconds(
+    `Ran       ${ran.pages} pages, ${ran.targets} (page, role) targets; ${ran.walks} walks; ${
+      ran.steps
+    } steps; ${seconds(timings.step.meanMs)} s/step, p90 ${seconds(
       timings.step.p90Ms
     )} (act ${seconds(timings.step.actMs)}, observe ${seconds(
       timings.step.observeMs
@@ -91,21 +102,25 @@ function formatExploreReport({ report, findings }) {
   report.accessChanged.forEach(({ pageId, user }) => {
     lines.push(`Access    changed in this PR: ${pageId} no longer admits ${user}`);
   });
-  const { confirmed, unconfirmed, deadClicks, environment } = report.findings;
-  lines.push(
-    `Findings  ${confirmed} confirmed, ${unconfirmed} unconfirmed, ${deadClicks} dead clicks${
-      environment > 0 ? `, ${environment} not runnable on this data set` : ''
-    }`
-  );
-  ['confirmed', 'unconfirmed', 'warning', 'environment'].forEach((status) => {
-    findings
-      .filter((finding) => finding.status === status)
-      .forEach((finding) =>
-        lines.push(`${formatFinding(finding)}${status === 'unconfirmed' ? '  unconfirmed' : ''}`)
-      );
+  const { proven, notProven } = report.findings;
+  const notProvenCount = Object.values(notProven).reduce((total, group) => total + group.length, 0);
+  lines.push(`Findings  ${proven.length} proven, ${notProvenCount} not proven`);
+  proven.forEach((finding) => lines.push(`${formatFinding(finding)}  → ${finding.candidate}`));
+  Object.entries(notProven).forEach(([reason, group]) => {
+    lines.push(
+      `Not proven, ${REASON_TEXT[reason]}: ${plural({ count: group.length, word: 'finding' })}`
+    );
+    group.forEach((finding) => lines.push(formatFinding(finding)));
   });
+  if (report.proof.live) {
+    lines.push(
+      'Proofs    none: a run on live connections proves nothing. Rerun on a data set (--data <name>) to prove its findings.'
+    );
+  } else {
+    lines.push(`Proofs    ${seconds(report.proof.ms)} s, outside the budget`);
+  }
   lines.push(
-    `Candidates  ${report.candidates.finding.length} finding · ${report.candidates.coverage.length} coverage → tests/journeys/_candidates/explorer/`
+    `Candidates  ${report.candidates.finding.length} finding · ${report.candidates.coverage.length} coverage → tests/journeys/_candidates/explorer/${report.run}/`
   );
   if (report.trace !== null) {
     lines.push(`Trace     ${report.trace.path} (${Math.ceil(report.trace.bytes / 1024)} KB)`);

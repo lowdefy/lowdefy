@@ -17,22 +17,23 @@
 // The journeys-from-pr skill: a thin workflow over the CLI and the hub's dev
 // tools that explores a pull request before it merges. It makes a worktree
 // for the PR, starts its dev server through the hub, runs the explorer, then
-// takes the developer through confirmed findings and then candidate
-// journeys. It never writes a step the compiler did not produce, never
+// takes the developer through proven findings and then candidate journeys.
+// It never writes a step the compiler did not produce, never
 // overrules an invariant, and posts a PR comment only with text the developer
 // approved that carries no snapshot data.
 function journeysFromPr({ appPath }) {
   const appDirectory = appPath === '' ? 'the worktree root' : `\`${appPath}\` in the worktree`;
   return `---
 name: journeys-from-pr
-description: Use when the developer wants a pull request explored before it merges, or wants journeys for what a PR changed. Walks the changed pages as each role on a data set, reports confirmed findings first, then proposes journeys and proves each before suggesting it.
+description: Use when the developer wants a pull request explored before it merges, or wants journeys for what a PR changed. Walks the changed pages as each role on a data set, reports findings proven by failing journeys first, then proposes journeys and proves each before suggesting it.
 ---
 
 # Journeys from a pull request
 
 \`lowdefy journeys explore\` finds the pages a pull request changed, walks each as each role on a
-journey data set, reports what broke (each finding confirmed by a replay), and compiles the walks
-into candidate journeys. This skill runs it with the developer, findings first, then candidates.
+journey data set, and compiles the walks into candidate journeys. It reports a finding only once
+a journey written for it fails twice: that journey is the proof, and it becomes the regression test
+once the bug is fixed. This skill runs it with the developer, findings first, then candidates.
 
 You edit candidates; you never write a step the compiler did not produce. You never overrule an
 invariant with your own judgement that something looks broken or looks fine: a finding is what the
@@ -67,30 +68,44 @@ Run \`lowdefy journeys explore --pr <n>\` from the worktree's app directory.
   pointed, and that a Gateway key makes it model-guided.
 
 The run prints its plan, then a summary. Its files are in \`.lowdefy/explore/<run>/\`:
-\`findings.json\`, \`walks.jsonl\`, \`report.json\` and \`screenshots/\`.
+\`findings.json\`, \`walks.jsonl\`, \`report.json\` and \`screenshots/\`. Its candidates are in
+\`tests/journeys/_candidates/explorer/<run>/\`, with each proven finding's journey under
+\`findings/\`.
 
-## 5. Findings first, one at a time
+A run on \`--live-data\` or \`--allow-external\` proves nothing, since a proof would replay writes on
+live connections. Its findings are all listed as not proven; offer to rerun on a data set.
 
-Show each confirmed finding: its kind, its source location, the walk's steps up to it (from
-\`walks.jsonl\`) and its screenshot. Then the developer decides.
+## 5. Proven findings first, one at a time
+
+Show each proven finding, errors first, then dead clicks: its kind, its source location, the walk's
+steps up to it (from \`walks.jsonl\`), its screenshot, and its journey (the finding's
+\`candidate\` in \`findings.json\`). The journey fails under \`lowdefy test\` today, and it is
+the finding's proof: the run ran it twice and it failed with the finding both times. Then the
+developer decides.
 
 - **A bug:** draft a PR comment saying what broke, where (the source location), the steps to
-  reproduce, and the finding candidate's path under \`tests/journeys/_candidates/explorer/findings/\`.
-  Show the draft to the developer, and post it with \`gh pr comment <n> --body-file <file>\` only
-  once they approve the text. On a snapshot data set, the comment carries no snapshot data: its
-  steps and message keep only config, fixture and typed text, every other value is written
-  \`<data>\`, and no screenshot is attached.
-- **Expected:** leave that finding candidate out of what you keep.
+  reproduce, and the path of the journey that fails with it. Say that the journey is the
+  regression test: once the fix lands and \`lowdefy test --repeat 3 <path>\` passes, it moves into
+  \`tests/journeys/\`. Show the draft to the developer, and post it with
+  \`gh pr comment <n> --body-file <file>\` only once they approve the text. On a snapshot data set,
+  the comment carries no snapshot data: its steps and message keep only config, fixture and typed
+  text, every other value is written \`<data>\`, and no screenshot is attached.
+- **Expected:** leave that finding's journey out of what you keep.
 
-List dead clicks after the errors, and ask the developer which ones should do something.
+A proven dead click ends in \`expect: { effect: true }\`, which the explorer adds by a fixed rule:
+it shows the control did nothing. Ask the developer whether it should do something. If it should,
+treat it as a bug; if not, leave its journey out.
 
-A finding candidate is a reproduction: \`lowdefy test\` passes it today, so do not run it three
-times. Once the bug is fixed, the developer may keep it as a journey by adding an assertion of the
-fixed outcome.
+When the bug is fixed, run \`lowdefy test --repeat 3 <path>\` on its journey. On three passes, move
+the file into \`tests/journeys/\` and name it after what it checks.
+
+Findings that are not proven are listed in \`report.json\` by reason (\`not-reproduced\`,
+\`environment\`, \`no-candidate\`, \`live-writes\`). Mention each in one line: nothing proves
+them, and they have no journey.
 
 ## 6. Coverage candidates, one at a time
 
-For each candidate in \`tests/journeys/_candidates/explorer/\`:
+For each coverage candidate in \`tests/journeys/_candidates/explorer/<run>/\`:
 
 - Name it after what it does.
 - On a snapshot data set, retarget each \`row: N\` click to \`containing: <value>\`, the row's

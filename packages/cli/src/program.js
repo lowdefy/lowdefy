@@ -528,7 +528,7 @@ journeys
 journeys
   .command('explore')
   .description(
-    'Walk the pages a pull request changed as each role on a journey data set, report what broke, and write candidate journeys to tests/journeys/_candidates/explorer/.'
+    'Walk the pages a pull request changed as each role on a journey data set, report what broke, and write candidate journeys to tests/journeys/_candidates/explorer/<run>/.'
   )
   .usage('(--pr <n> | --against <ref>) [options]')
   .addOption(

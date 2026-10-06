@@ -248,7 +248,7 @@ _ref:
 
             ## journeys explore
 
-            The `journeys explore` command walks the pages a pull request changed, as each role on a journey data set, and reports what broke. Each finding is confirmed by a replay. The walks become candidate journeys under `tests/journeys/_candidates/explorer/`. It finds the changed pages by comparing full config builds of the base and the head. It exits with code `0` when the run completes, with or without findings. See [Exploring a pull request](/explore-pull-request).
+            The `journeys explore` command walks the pages a pull request changed, as each role on a journey data set, and reports what broke. A finding is reported only once a journey written for it fails twice. The walks become candidate journeys under `tests/journeys/_candidates/explorer/<run>/`. It finds the changed pages by comparing full config builds of the base and the head. It exits with code `0` when the run completes, with or without findings. See [Exploring a pull request](/explore-pull-request).
 
             - `--pr <n>`: The pull request to explore, read with the GitHub CLI (`gh`). The checkout must be at its head.
             - `--against <ref>`: Explore the changes since the merge base with this branch or commit, instead of `--pr`.

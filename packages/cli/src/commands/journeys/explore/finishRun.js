@@ -19,10 +19,12 @@ import path from 'path';
 import { collectKnownText, listRecordingFiles } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
+import applyProof from './applyProof.js';
 import buildExploreReport from './buildExploreReport.js';
 import collectFindings from './collectFindings.js';
 import compileWalks from './compileWalks.js';
 import formatExploreReport from './formatExploreReport.js';
+import proveFindings from './proveFindings.js';
 import writeExploreReport from './writeExploreReport.js';
 
 function readTrace({ configDirectory, run }) {
@@ -34,9 +36,26 @@ function readTrace({ configDirectory, run }) {
   };
 }
 
+// A candidate that proves nothing is not kept: the walk log and its
+// screenshots in the run directory still show what happened. Its directory
+// goes too once it is empty.
+function deleteUnproven({ candidates, proof }) {
+  const provenPaths = new Set(proof.proven.map((entry) => entry.path));
+  const unproven = candidates.finding.filter((entry) => !provenPaths.has(entry.path));
+  unproven.forEach((entry) => fs.rmSync(entry.path, { force: true }));
+  new Set(unproven.map((entry) => path.dirname(entry.path))).forEach((directory) => {
+    if (fs.existsSync(directory) && fs.readdirSync(directory).length === 0) {
+      fs.rmdirSync(directory);
+    }
+  });
+}
+
 // After the walks: de-duplicates the findings, compiles the recorded walks
-// into candidates, writes report.json and findings.json, and prints the
-// summary (or report.json with --json). Returns the report.
+// into candidates, proves each finding by running its candidate (outside the
+// budget: proofs make no model calls), deletes the candidates that proved
+// nothing, writes report.json and findings.json, and prints the summary (or
+// report.json with --json). Proofs run on the server the walks used. Returns
+// the report.
 async function finishRun({
   context,
   options,
@@ -46,29 +65,36 @@ async function finishRun({
   scope,
   walked,
   buildDirectory,
+  url,
   startedAt,
 }) {
   const configDirectory = context.directories.config;
-  const findings = collectFindings({ logs: walked.logs, confirmations: walked.confirmations });
+  const collected = collectFindings({ logs: walked.logs });
   const candidates = compileWalks({
     configDirectory,
     run,
     pr: revisions.pr,
     scope,
     buildDirectory,
-    findingsByWalk: walked.findingsByWalk,
+    logs: walked.logs,
+    dataName: walked.dataName,
     snapshot: !type.isNone(walked.dataSet?.snapshot),
     knownTextFor: ({ pageIds, typed }) =>
       collectKnownText({ buildDirectory, pageIds, dataSet: walked.dataSet, typed }),
   });
+  const live = options.liveData === true || options.allowExternal.length > 0;
+  const proof = await proveFindings({ context, url, findings: collected, candidates, live });
+  deleteUnproven({ candidates, proof });
+  const findings = applyProof({ findings: collected, proof, configDirectory });
   const report = buildExploreReport({
     run,
     revisions,
     scope,
     walked,
     findings,
+    proof: { ms: proof.ms, live },
     candidates: {
-      finding: candidates.finding.map((file) => path.relative(configDirectory, file)),
+      finding: proof.proven.map((entry) => path.relative(configDirectory, entry.path)),
       coverage: candidates.coverage.map((file) => path.relative(configDirectory, file)),
       droppedExpectations: candidates.droppedExpectations,
     },
@@ -81,7 +107,7 @@ async function finishRun({
   if (options.json) {
     process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
   } else {
-    formatExploreReport({ report, findings }).forEach((line) => context.logger.info(line));
+    formatExploreReport({ report }).forEach((line) => context.logger.info(line));
   }
   return report;
 }
