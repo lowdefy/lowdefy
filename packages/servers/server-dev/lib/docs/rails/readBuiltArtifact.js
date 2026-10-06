@@ -19,7 +19,7 @@ import path from 'node:path';
 import { serializer } from '@lowdefy/helpers';
 
 // A build artifact, deserialized, or null when the build wrote none.
-function readExploreArtifact({ buildDirectory, name }) {
+function readBuiltArtifact({ buildDirectory, name }) {
   const filePath = path.join(buildDirectory, name);
   if (!fs.existsSync(filePath)) {
     return null;
@@ -27,4 +27,4 @@ function readExploreArtifact({ buildDirectory, name }) {
   return serializer.deserialize(JSON.parse(fs.readFileSync(filePath, 'utf8')));
 }
 
-export default readExploreArtifact;
+export default readBuiltArtifact;

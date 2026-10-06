@@ -18,6 +18,13 @@ connections:
         _secret: FIXTURE_DATABASE_URI
       collection: items
       write: true
+  # A connection no journey data set redirects: the data-set rails test
+  # (packages/servers/server-dev/test/journeyFixture/rails.test.mjs) clicks a
+  # button whose request uses it and is refused. Nothing listens at the URL.
+  - id: rails_external
+    type: AxiosHttp
+    properties:
+      baseURL: http://127.0.0.1:9
 
 # Auth exists only to gate auditor_only, so a journey can be refused by a real
 # auth gate. An API key strategy is the one auth mechanism that needs no
@@ -60,3 +67,4 @@ pages:
   - _ref: pages/app_errors_open.yaml
   - _ref: pages/timing.yaml
   - _ref: pages/targets.yaml
+  - _ref: pages/rails.yaml

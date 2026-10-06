@@ -62,6 +62,7 @@ const FIXTURE_USERS = [
   { dataSet: 'explore', user: 'member', roles: ['member'] },
   { dataSet: 'personas', user: 'admin', roles: ['admin'] },
   { dataSet: 'personas', user: 'member', roles: ['member'] },
+  { dataSet: 'rails', user: 'member', roles: ['member'] },
 ];
 
 let repository;
@@ -222,7 +223,7 @@ fixtureTest(
     expect(output).toContain('uncommitted changes included');
     expect(output).toContain('scope_a (page)');
     expect(output).toContain(
-      'scope_a: public; users explore/member, personas/admin, personas/member'
+      'scope_a: public; users explore/member, personas/admin, personas/member, rails/member'
     );
     git(['checkout', '--', '.']);
   }

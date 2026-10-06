@@ -16,19 +16,27 @@
 
 import authEngineActions from './authEngineActions.js';
 import pageBlocks from '../pageBlocks.js';
-import readExploreArtifact from './readExploreArtifact.js';
+import readBuiltArtifact from './readBuiltArtifact.js';
 
-// The blocks of a page whose events run an action that calls the auth engine.
-// A walk offers no control on them: its injected caller has no auth engine
-// session, so they fail every time.
+// The blocks of a page whose events run an action that calls the auth engine,
+// with those action types: { [blockId]: [actionType] }. A data-set journey may
+// not click them (see createDataSetRails): its callers are injected, with no
+// auth engine session, so they would fail for a harness reason.
 function findAuthActionBlocks({ buildDirectory, pageId }) {
-  const page = readExploreArtifact({ buildDirectory, name: `pages/${pageId}.json` });
+  const page = readBuiltArtifact({ buildDirectory, name: `pages/${pageId}.json` });
   if (page === null) {
     throw new Error(`Page "${pageId}" has no build artifact in ${buildDirectory}.`);
   }
-  return pageBlocks(page)
-    .filter(({ actions }) => actions.some((action) => authEngineActions.has(action.type)))
-    .map(({ blockId }) => blockId);
+  const blocks = {};
+  pageBlocks(page).forEach(({ blockId, actions }) => {
+    const authActions = [
+      ...new Set(
+        actions.filter((action) => authEngineActions.has(action.type)).map((action) => action.type)
+      ),
+    ];
+    if (authActions.length > 0) blocks[blockId] = authActions;
+  });
+  return blocks;
 }
 
 export default findAuthActionBlocks;

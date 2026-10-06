@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import findAuthActionBlocks from './findAuthActionBlocks.js';
-import findExternalBlocks from './findExternalBlocks.js';
+import findAuthActionBlocks from '../rails/findAuthActionBlocks.js';
+import findExternalBlocks from '../rails/findExternalBlocks.js';
 
 // The blocks of a page a walk leaves out: those reaching a connection no data
 // set redirects, and those running an auth-engine action. Worked out once per
@@ -25,8 +25,15 @@ function readWalkPageExclusions({ walk, pageId }) {
   if (!walk.exclusions.has(pageId)) {
     const { buildDirectory } = walk;
     walk.exclusions.set(pageId, {
-      externalBlocks: findExternalBlocks({ buildDirectory, pageId }).blocks,
-      authActionBlocks: findAuthActionBlocks({ buildDirectory, pageId }),
+      externalBlocks: Object.fromEntries(
+        Object.entries(findExternalBlocks({ buildDirectory, pageId }).blocks).map(
+          ([blockId, connections]) => [
+            blockId,
+            connections.map((connection) => connection.connectionId),
+          ]
+        )
+      ),
+      authActionBlocks: Object.keys(findAuthActionBlocks({ buildDirectory, pageId })),
     });
   }
   return walk.exclusions.get(pageId);

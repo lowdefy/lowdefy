@@ -45,7 +45,7 @@ function block(blockId, events, blocks) {
 }
 
 beforeEach(() => {
-  buildDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-explore-external-'));
+  buildDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-rails-external-'));
   write('pages/tickets.json', {
     id: 'page:tickets',
     pageId: 'tickets',
@@ -162,10 +162,13 @@ afterEach(() => {
 test('findExternalBlocks lists blocks whose events reach a connection a data set does not redirect', () => {
   expect(findExternalBlocks({ buildDirectory, pageId: 'tickets' })).toEqual({
     blocks: {
-      invite: ['mailer'],
-      hook: ['webhook'],
-      all: ['mailer', 'webhook'],
-      assign: ['mailer'],
+      invite: [{ connectionId: 'mailer', type: 'AxiosHttp' }],
+      hook: [{ connectionId: 'webhook', type: 'AxiosHttp' }],
+      all: [
+        { connectionId: 'mailer', type: 'AxiosHttp' },
+        { connectionId: 'webhook', type: 'AxiosHttp' },
+      ],
+      assign: [{ connectionId: 'mailer', type: 'AxiosHttp' }],
     },
   });
 });
@@ -177,8 +180,8 @@ test('findExternalBlocks throws for a page with no build artifact', () => {
 });
 
 test('findAuthActionBlocks lists blocks whose events run an auth-engine action', () => {
-  expect(findAuthActionBlocks({ buildDirectory, pageId: 'tickets' })).toEqual([
-    'sign_out',
-    'change_password',
-  ]);
+  expect(findAuthActionBlocks({ buildDirectory, pageId: 'tickets' })).toEqual({
+    sign_out: ['Logout'],
+    change_password: ['ChangePassword'],
+  });
 });

@@ -208,6 +208,15 @@ export default {
 
 Declare `redirect` only when the type takes its database from `properties.databaseUri` and `properties.databaseName` and nothing else. It must honour `databaseName`, as `MongoDBCollection` does, and key any client it keeps between requests by the URI it is given, never by connection id alone: a client cached by connection id keeps the database it first opened, which can be your real one. Declare `external` only for a type that reaches an outside service and holds none of your app's data. Leave it undeclared for any other data store: data set journeys that use it are refused rather than run against your real data.
 
+## Clicks a data set journey refuses
+
+A data set journey refuses two kinds of click, so that it never reaches a real service and never fails for a reason that is not the app's. The step fails before the click acts, naming the block and why:
+
+- A click on a block whose events reach a connection that is not a `MongoDBCollection`, through a `Request` action or a `CallAPI` into an endpoint routine. That connection is not redirected (an `external` HTTP API, email or payment service), so the click would reach it for real: `Block "send_invoice" reaches connection "billing_api" (AxiosHttp), which a journey data set does not redirect, so a data-set journey cannot click it.`
+- A click on a block whose events run an action that calls the auth engine (`Logout`, `Login`, `ChangePassword` and the other auth actions). Data set users are injected and have no auth session, so these fail every time.
+
+The block is the one the click lands on: the target's block, or for a `text` or `containing` target, the nearest block around the element it matched. Request and endpoint ids computed by operators are not followed. Journeys without `data:` click anything. Cover such controls with a journey that runs off data sets, against a test database.
+
 ## Auth journeys stay on their harness
 
 Data set users are injected callers. A journey that signs up or signs in through the app's own auth is an auth journey, and stays off data sets: run it against a test database as described under [The database](/config-tests#the-database). Two combinations are refused rather than run silently wrong:

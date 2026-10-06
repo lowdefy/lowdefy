@@ -17,11 +17,11 @@
 import { type } from '@lowdefy/helpers';
 
 import pageBlocks from '../pageBlocks.js';
-import readExploreArtifact from './readExploreArtifact.js';
+import readBuiltArtifact from './readBuiltArtifact.js';
 import readRoutineSteps from '../readRoutineSteps.js';
 
-// The one connection type a walk's data set redirects; every other type would
-// be reached for real.
+// The one connection type a journey data set redirects; every other type
+// would be reached for real.
 const DATA_SET_CONNECTION_TYPE = 'MongoDBCollection';
 
 function requestedIds({ params, pageRequestIds }) {
@@ -38,7 +38,7 @@ function createConnectionReader({ buildDirectory }) {
   const types = new Map();
   return function connectionType(connectionId) {
     if (!types.has(connectionId)) {
-      const connection = readExploreArtifact({
+      const connection = readBuiltArtifact({
         buildDirectory,
         name: `connections/${connectionId}.json`,
       });
@@ -59,7 +59,7 @@ function endpointConnections({ buildDirectory, endpointId }) {
     const id = queue.shift();
     if (seen.has(id)) continue;
     seen.add(id);
-    const endpoint = readExploreArtifact({ buildDirectory, name: `api/${id}.json` });
+    const endpoint = readBuiltArtifact({ buildDirectory, name: `api/${id}.json` });
     if (endpoint === null) continue;
     readRoutineSteps({ routine: endpoint.routine }).forEach((step) => {
       if (type.isString(step.connectionId)) connections.add(step.connectionId);
@@ -73,11 +73,12 @@ function endpointConnections({ buildDirectory, endpointId }) {
 
 // The blocks of a page whose events reach a connection a data set does not
 // redirect (any type but MongoDBCollection), through a Request action or a
-// CallAPI into endpoint routines, with the connections each reaches. A walk
-// offers no control on these blocks unless the run allows every connection.
-// Ids computed by operators are not followed.
+// CallAPI into endpoint routines, with the connections each reaches as
+// { connectionId, type } (type null for a connection with no artifact). A
+// data-set journey may not click them (see createDataSetRails). Ids computed
+// by operators are not followed.
 function findExternalBlocks({ buildDirectory, pageId }) {
-  const page = readExploreArtifact({ buildDirectory, name: `pages/${pageId}.json` });
+  const page = readBuiltArtifact({ buildDirectory, name: `pages/${pageId}.json` });
   if (page === null) {
     throw new Error(`Page "${pageId}" has no build artifact in ${buildDirectory}.`);
   }
@@ -89,7 +90,7 @@ function findExternalBlocks({ buildDirectory, pageId }) {
     actions.forEach((action) => {
       if (action.type === 'Request') {
         requestedIds({ params: action.params, pageRequestIds }).forEach((requestId) => {
-          const request = readExploreArtifact({
+          const request = readBuiltArtifact({
             buildDirectory,
             name: `pages/${pageId}/requests/${requestId}.json`,
           });
@@ -103,8 +104,9 @@ function findExternalBlocks({ buildDirectory, pageId }) {
       }
     });
     const external = [...connections]
-      .filter((connectionId) => connectionType(connectionId) !== DATA_SET_CONNECTION_TYPE)
-      .sort();
+      .sort()
+      .map((connectionId) => ({ connectionId, type: connectionType(connectionId) }))
+      .filter((connection) => connection.type !== DATA_SET_CONNECTION_TYPE);
     if (external.length > 0) blocks[blockId] = external;
   });
   return { blocks };

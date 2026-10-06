@@ -16,7 +16,7 @@
 
 import admitsRoles from './admitsRoles.js';
 import findingKey from './findingKey.js';
-import readExploreArtifact from './readExploreArtifact.js';
+import readBuiltArtifact from '../rails/readBuiltArtifact.js';
 
 // The walk's access at open. A redirect away from the asked-for page is a
 // role-refused finding only when the head build's page auth admits the
@@ -28,7 +28,7 @@ function evaluateAccess({ buildDirectory, pageId, observation, roles, roleMatrix
   if (observation.redirected !== true) {
     return { admitted: true, finding: null };
   }
-  const page = readExploreArtifact({ buildDirectory, name: `pages/${pageId}.json` });
+  const page = readBuiltArtifact({ buildDirectory, name: `pages/${pageId}.json` });
   const admitted = page !== null && admitsRoles({ auth: page.auth, roles });
   if (!admitted || roleMatrixListed !== true) {
     return { admitted, finding: null };
