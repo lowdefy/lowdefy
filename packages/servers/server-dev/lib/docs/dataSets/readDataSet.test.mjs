@@ -183,3 +183,38 @@ test('readDataSet passes the size advice of a large data set on as a warning', a
     'Data set "big" loads 1,200 documents for connection "tickets". More than 1,000 per collection is not advised: every journey on it loads slower, and journeys target fixture values, not volume.',
   ]);
 });
+
+test('readDataSet refuses a fixture on another connection of the same collection sharing a generated _id', async () => {
+  writeConnection('tickets', mongo({ collection: 'tickets' }));
+  writeConnection('tickets-archive', mongo({ collection: 'tickets' }));
+  writeDataSet(
+    'alpha',
+    'fixtures:\n  tickets-archive: [{ _id: tickets-2 }]\ngenerate:\n  seed: 1\n  tickets:\n    count: 2\n'
+  );
+  await expect(readDataSet({ configDirectory, buildDirectory, name: 'alpha' })).rejects.toThrow(
+    'Data set "alpha" generate.tickets[1] _id "tickets-2" is also the _id of fixture tickets-archive[0]; connections "tickets" and "tickets-archive" both load collection "tickets".'
+  );
+});
+
+test('readDataSet refuses two connections of the same collection generating one _id', async () => {
+  writeConnection('tickets', mongo({ collection: 'tickets' }));
+  writeConnection('tickets-archive', mongo({ collection: 'tickets' }));
+  writeDataSet(
+    'alpha',
+    'generate:\n  seed: 1\n  tickets:\n    count: 1\n    fields:\n      _id: { sequence: { prefix: t-, start: 1 } }\n  tickets-archive:\n    count: 1\n    fields:\n      _id: { sequence: { prefix: t-, start: 1 } }\n'
+  );
+  await expect(readDataSet({ configDirectory, buildDirectory, name: 'alpha' })).rejects.toThrow(
+    'Data set "alpha" generate.tickets-archive[0] _id "t-1" is also the _id of generate.tickets[0]; connections "tickets-archive" and "tickets" both load collection "tickets".'
+  );
+});
+
+test('readDataSet accepts the same _id on connections of different collections', async () => {
+  writeConnection('tickets', mongo({ collection: 'tickets' }));
+  writeConnection('invoices', mongo({ collection: 'invoices' }));
+  writeDataSet(
+    'alpha',
+    'fixtures:\n  invoices: [{ _id: tickets-1 }]\ngenerate:\n  seed: 1\n  tickets:\n    count: 1\n'
+  );
+  const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'alpha' });
+  expect(dataSet.generated.tickets.map(({ _id }) => _id)).toEqual(['tickets-1']);
+});

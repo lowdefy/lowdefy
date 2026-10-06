@@ -522,7 +522,7 @@ function writeDevRecording({ id, start, blocks }) {
   );
 }
 
-test('journeys evidence --refresh counts no dev recordings: agents read them as session logs', async () => {
+test('journeys evidence --refresh counts no dev sessions: agents read them as session logs', async () => {
   const savesPath = writeJourney('saves.yaml', SAVES);
   writeDevRecording({
     id: '20261003T080000Z-dev001',
@@ -533,19 +533,21 @@ test('journeys evidence --refresh counts no dev recordings: agents read them as 
   await journeysEvidence({ context });
   const journey = YAML.parse(fs.readFileSync(savesPath, 'utf8'));
   expect(journey.evidence?.dev).toBeUndefined();
-  expect(logged.some((line) => line.includes('dev recordings'))).toBe(false);
+  expect(logged.join('\n')).not.toMatch(/recording/);
 });
 
-test('journeys evidence --refresh removes a committed dev count', async () => {
-  const savesPath = writeJourney(
-    'saves.yaml',
-    SAVES.replace('steps:', 'evidence:\n  dev: { recordings: 5 }\n  refreshed: 2026-09-01\nsteps:')
+test('journeys evidence --refresh skips a journey with a committed dev count and says to delete it', async () => {
+  const text = SAVES.replace(
+    'steps:',
+    'evidence:\n  dev: { recordings: 5 }\n  refreshed: 2026-09-01\nsteps:'
   );
+  const savesPath = writeJourney('saves.yaml', text);
   context.options.refresh = true;
   await journeysEvidence({ context });
-  const journey = YAML.parse(fs.readFileSync(savesPath, 'utf8'));
-  expect(journey.evidence).not.toHaveProperty('dev');
-  expect(validateJourney({ journey })).toEqual({ valid: true });
+  expect(fs.readFileSync(savesPath, 'utf8')).toBe(text);
+  expect(
+    logged.some((line) => line.includes('has a "dev" key, which nothing reads. Delete it'))
+  ).toBe(true);
 });
 
 // Production clicks as the pull stores them: a token under the machine's

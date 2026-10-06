@@ -16,6 +16,7 @@
 
 import { parseDataSet } from '@lowdefy/node-utils';
 
+import checkSharedCollectionIds from './checkSharedCollectionIds.js';
 import findCollectionCollisions from './findCollectionCollisions.js';
 import readConnectionArtifacts from './readConnectionArtifacts.js';
 import resolveDataSetCollection from './resolveDataSetCollection.js';
@@ -33,7 +34,8 @@ function getKeyedConnectionIds({ dataSet }) {
 // The data set checks only the dev build can make, on top of parseDataSet's: every connection the
 // data set names is a MongoDBCollection with a literal collection, and connections that would merge
 // into one collection under the one-database redirect are refused (when the data set names one of
-// them) or reported. Runs before any browser opens.
+// them) or reported, and a generated _id that another connection on the same collection also holds
+// is refused. Runs before any browser opens.
 async function readDataSet({ configDirectory, buildDirectory, name }) {
   const dataSet = await parseDataSet({ configDirectory, name });
   const warnings = [...dataSet.warnings];
@@ -57,6 +59,8 @@ async function readDataSet({ configDirectory, buildDirectory, name }) {
     }
     warnings.push(message);
   });
+
+  checkSharedCollectionIds({ dataSetName: name, dataSet: { ...dataSet, collections } });
 
   return { ...dataSet, collections, warnings };
 }
