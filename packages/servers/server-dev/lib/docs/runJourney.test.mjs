@@ -19,6 +19,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { jest } from '@jest/globals';
+import { isTraceId } from '@lowdefy/helpers';
 import { acquireMachineSlot } from '@lowdefy/node-utils';
 
 // getBrowser.js is mocked so no Chromium is needed; the fake page below stands
@@ -41,7 +42,14 @@ jest.unstable_mockModule('./readJourneyEmailMatch.js', () => ({
   default: mockReadJourneyEmailMatch,
 }));
 
+// No client error report is ever in flight here; the real wait's grace would
+// only slow every test down.
+jest.unstable_mockModule('./observe/waitForClientErrorReports.js', () => ({
+  default: async () => {},
+}));
+
 const { default: runJourney } = await import('./runJourney.js');
+const { recordRunError } = await import('./runErrorBuffers.js');
 
 // Node ships a read-only navigator; the page's platform decides Mod, so it is
 // replaced with a Mac one for the Mod+k test.
@@ -135,6 +143,7 @@ function createPage({ window = createLowdefyWindow(), url = 'http://localhost:32
       }
     }),
     url: jest.fn(() => url),
+    isClosed: jest.fn(() => false),
     documentTitle: '',
     title: jest.fn(async () => page.documentTitle),
     goBack: jest.fn(async () => null),
@@ -244,9 +253,75 @@ test('runJourney passes user, urlQuery and viewport through to openPage', async 
     width: 800,
     height: 600,
     clientAddress: expect.stringMatching(/^203\.0\.113\.\d+$/),
+    recording: {
+      source: 'journey',
+      run: { id: expect.any(String), by: null, journey: null, actor: 'main' },
+      record: false,
+    },
     onContext: expect.any(Function),
     timeout: 15000,
   });
+});
+
+test('runJourney gives an unrecorded run an identity of its own that records nothing', async () => {
+  const page = createPage();
+  page.evaluate.mockClear();
+  openWith(page);
+  const result = await runJourney({ origin, pageId: 'form', steps: [], by: 'test' });
+  expect(result.passed).toBe(true);
+  const { recording } = mockOpenPage.mock.calls[0][0];
+  expect(recording).toEqual({
+    source: 'journey',
+    run: { id: expect.any(String), by: 'test', journey: null, actor: 'main' },
+    record: false,
+  });
+  expect(isTraceId(recording.run.id)).toBe(true);
+  // No recorder flush: the run records nothing.
+  expect(page.evaluate.mock.calls.map(([fn]) => String(fn))).not.toContainEqual(
+    expect.stringContaining('__lowdefyRecorder')
+  );
+});
+
+test('runJourney keeps the identity of a run its caller records', async () => {
+  const page = createPage();
+  openWith(page);
+  const recording = {
+    source: 'journey',
+    run: { id: '20261003T151200Z-p0d4rm', by: 'test', journey: 'tests/journeys/a.yaml#A' },
+  };
+  await runJourney({ origin, pageId: 'form', steps: [], recording, by: 'test' });
+  expect(mockOpenPage.mock.calls[0][0].recording).toEqual({
+    ...recording,
+    run: { ...recording.run, actor: 'main' },
+  });
+  expect(page.evaluate.mock.calls.map(([fn]) => String(fn))).toContainEqual(
+    expect.stringContaining('__lowdefyRecorder')
+  );
+});
+
+test('runJourney claims the errors its run causes while it runs and releases its buffer after', async () => {
+  const page = createPage();
+  const context = { close: jest.fn(async () => {}) };
+  let recording;
+  let claimedDuringRun;
+  mockOpenPage.mockImplementationOnce(async (options) => {
+    recording = options.recording;
+    claimedDuringRun = recordRunError({
+      timestamp: new Date().toISOString(),
+      message: 'during',
+      recording: { source: 'journey', run: recording.run.id, journey: recording.run.journey },
+    });
+    return { context, page, ready: true, url: page.url(), leftOrigin: [] };
+  });
+  await runJourney({ origin, pageId: 'form', steps: [] });
+  expect(claimedDuringRun).toBe(true);
+  expect(
+    recordRunError({
+      timestamp: new Date().toISOString(),
+      message: 'late',
+      recording: { source: 'journey', run: recording.run.id, journey: recording.run.journey },
+    })
+  ).toBe(false);
 });
 
 test('runJourney fills, clicks and asserts state, returning passed with the final state', async () => {
@@ -1577,6 +1652,7 @@ test('runJourney opens each actor the first time an as step names it and returns
     ...mainOpen,
     clientAddress: inviteeOpen.clientAddress,
     onContext: inviteeOpen.onContext,
+    recording: { ...mainOpen.recording, run: { ...mainOpen.recording.run, actor: 'invitee' } },
   });
   expect(inviteeOpen).toMatchObject({ pageId: 'signup', user: 'none' });
   // Two people, two clients: rate limits count each actor's attempts apart.
@@ -1803,12 +1879,14 @@ function openActorsWithNetwork(actors) {
   const listeners = [];
   actors.forEach(({ page, opening }) => {
     mockOpenPage.mockImplementationOnce(async ({ onContext }) => {
-      let listener;
+      // The network counter and the app error watch both listen for requests.
+      const requestCallbacks = [];
+      const listener = (request) => requestCallbacks.forEach((callback) => callback(request));
       const context = {
         close: jest.fn(async () => {}),
         exposeBinding: jest.fn(async () => {}),
         on: jest.fn((event, callback) => {
-          if (event === 'request') listener = callback;
+          if (event === 'request') requestCallbacks.push(callback);
         }),
       };
       await onContext(context);

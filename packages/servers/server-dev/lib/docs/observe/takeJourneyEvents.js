@@ -22,9 +22,9 @@ function take(list, { since, until }) {
 }
 
 // Removes and returns the page errors, app requests and app responses a
-// walk's context buffered in [since, until] (milliseconds), dropping older
+// journey's or walk's contexts buffered in [since, until] (milliseconds), dropping older
 // ones: what one step's window produced.
-function takeWalkEvents({ events, since, until }) {
+function takeJourneyEvents({ events, since, until }) {
   return {
     pageErrors: take(events.pageErrors, { since, until }),
     requests: take(events.requests, { since, until }),
@@ -32,4 +32,4 @@ function takeWalkEvents({ events, since, until }) {
   };
 }
 
-export default takeWalkEvents;
+export default takeJourneyEvents;

@@ -14,20 +14,18 @@
   limitations under the License.
 */
 
-import {
-  getWalk,
-  listWalks,
-  recordError,
-  registerWalk,
-  removeWalk,
-  takeErrors,
-} from './walkSessions.js';
+import { recordRunError as recordError } from '../runErrorBuffers.js';
+import { getWalk, listWalks, registerWalk, removeWalk, takeErrors } from './walkSessions.js';
 
 const run = '20261003T151200Z-p0d4rm';
 
 afterEach(() => {
   listWalks().forEach((walk) => removeWalk(walk.walkId));
 });
+
+function walkErrors(walkId) {
+  return takeErrors({ walkId, since: 0, until: Number.MAX_SAFE_INTEGER });
+}
 
 function entry({ journey = 'walk-1', timestamp, message = 'boom' }) {
   return { timestamp, message, recording: { source: 'explorer', run, journey } };
@@ -37,9 +35,9 @@ test('recordError puts an entry in the buffer of the walk whose run and walk id 
   registerWalk({ walkId: 'walk-1', run, journey: 'walk-1', pageId: 'tickets' });
   registerWalk({ walkId: 'walk-2', run, journey: 'walk-2' });
   expect(recordError(entry({ timestamp: '2026-10-03T15:12:01.000Z' }))).toBe(true);
-  expect(getWalk('walk-1').errors).toHaveLength(1);
   expect(getWalk('walk-1').pageId).toEqual('tickets');
-  expect(getWalk('walk-2').errors).toEqual([]);
+  expect(walkErrors('walk-1')).toHaveLength(1);
+  expect(walkErrors('walk-2')).toEqual([]);
 });
 
 test('recordError drops an entry for a walk that is not open', () => {
@@ -62,7 +60,7 @@ test('takeErrors removes and returns the errors inside the step window', () => {
     until: Date.parse('2026-10-03T15:12:05.000Z'),
   });
   expect(taken.map((error) => error.message)).toEqual(['during']);
-  expect(getWalk('walk-1').errors.map((error) => error.message)).toEqual(['before', 'after']);
+  expect(walkErrors('walk-1').map((error) => error.message)).toEqual(['before', 'after']);
   expect(takeErrors({ walkId: 'gone', since: 0, until: Date.now() })).toEqual([]);
 });
 
