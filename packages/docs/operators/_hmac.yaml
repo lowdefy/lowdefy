@@ -25,6 +25,8 @@ _ref:
       The `_hmac` operator computes an [HMAC](https://en.wikipedia.org/wiki/HMAC) of a string under a key, returned as lower-case hex. Use it to sign what a routine sends (a webhook signature header, for example) or to derive a secret from a root secret. The key is usually a [`_secret`](/_secret), so `_hmac` runs only on the server and never reaches the browser.
 
       The output of one call works as the `key` of the next, so one root secret can derive a secret per app, and that secret can sign a message.
+
+      To check a signature a sender sent, do not compare it to an `_hmac` output with `_eq`: a plain comparison stops at the first character that differs, so its timing tells a caller how much of a forged signature is right. Check it in a webhook endpoint's `verify` plugin with `crypto.timingSafeEqual` instead (see [Webhook Endpoints](/lowdefy-api)).
     methods:
       - name: sha256
         types: |

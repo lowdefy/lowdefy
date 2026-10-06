@@ -4,6 +4,8 @@ The `_hmac` operator computes an [HMAC](https://en.wikipedia.org/wiki/HMAC) of a
 
 The output of one call works as the `key` of the next, so one root secret can derive a secret per app, and that secret can sign a message.
 
+To check a signature a sender sent, do not compare it to an `_hmac` output with `_eq`: a plain comparison stops at the first character that differs, so its timing tells a caller how much of a forged signature is right. Check it in a webhook endpoint's `verify` plugin with `crypto.timingSafeEqual` instead (see [Webhook Endpoints](/lowdefy-api)).
+
 > This operator can be used as a [`_build`](/_build) operator method.
 
 # Operator methods:
