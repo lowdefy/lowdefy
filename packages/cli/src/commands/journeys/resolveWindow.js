@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
+import { parseSince } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
-
-import parseSince from './parseSince.js';
 
 const DAY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const PRODUCTION_DEFAULT_SINCE = '30d';

@@ -14,12 +14,11 @@
   limitations under the License.
 */
 
-import { readRecordings } from '@lowdefy/node-utils';
+import { parseSince, readRecordings } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import formatSessionLine from './formatSessionLine.js';
 import loadRouteTable from './loadRouteTable.js';
-import parseSince from './parseSince.js';
 import readTestRunKeys from './readTestRunKeys.js';
 import resolveBuildDirectory from './resolveBuildDirectory.js';
 import resolveCurrentBuild from './resolveCurrentBuild.js';

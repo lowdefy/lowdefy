@@ -14,16 +14,14 @@
   limitations under the License.
 */
 
-import callAPIHandler from '../callAPIHandler.js';
+const MAX_LENGTH = 60;
 
-function createCallAPI({ actionId, blockId, context }) {
-  return function callAPI(params) {
-    return callAPIHandler(context, {
-      actionId,
-      blockId,
-      params,
-    });
-  };
+// A recorded value as JSON, cut short so a pasted document or a long list
+// cannot push the rest of the line off the screen.
+function describeLogValue(value) {
+  const text = JSON.stringify(value) ?? 'undefined';
+  if (text.length <= MAX_LENGTH) return text;
+  return `${text.slice(0, MAX_LENGTH - 1)}…`;
 }
 
-export default createCallAPI;
+export default describeLogValue;

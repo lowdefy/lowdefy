@@ -282,6 +282,14 @@ _ref:
             - `--disable-telemetry`: Disable telemetry.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 
+            ## journeys session
+
+            The `journeys session [<id>]` command reads the sessions the development server recorded in `.lowdefy/traces/dev/`. Without an id it lists them, newest first: the session id, its time span, the pages visited, and how many interactions it holds and how many failed. With an id it prints that session as a log, one line per interaction with what the app did in response, such as `click save → Validate failed [priority]`, to write journeys from. An id not in the window exits with code `1`, naming the newest sessions. Agents connected to the development server read the same with the `lowdefy_journey_session` tool. See [Session logs](/config-tests#session-logs).
+
+            - `--since <since>`: Only sessions with records at or after this time: a duration back from now (`30m`, `2h`, `7d`) or an ISO date.
+            - `--json`: Print the list or the log as JSON on stdout.
+            - `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys recordings`](#journeys-recordings).
+
             ## journeys pull posthog
 
             The `journeys pull posthog` command reads the app's production analytics from its PostHog project, one UTC day at a time, and writes them as interaction traces to `.lowdefy/traces/production/<YYYY-MM-DD>.jsonl`, with a `<YYYY-MM-DD>.manifest.json` beside each day. `journeys compile`, `journeys evidence` and `journeys coverage` read that cache with `--source production`. See [Production journeys](/config-tests#production-journeys).

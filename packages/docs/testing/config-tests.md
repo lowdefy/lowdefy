@@ -546,6 +546,27 @@ Each file starts with a header line naming the journey file it came from and hol
 - `--build <id|current>`: Only sessions recorded against this build. `current` is the build the running development server serves.
 - `--json`: Print the sessions as JSON, for agents.
 
+### Session logs
+
+`lowdefy journeys session` lists the recorded dev sessions, newest first, one line each: its id, when it ran, the pages it visited, how many interactions it holds and how many failed. Give it a session id and it prints that session as a log, one line per interaction with what the app did in response:
+
+```
+Session 20261003T140300Z-bbbbbb, 2026-10-03T14:03:00.000Z to 2026-10-03T14:21:40.000Z:
+page ticket-new
+fill title "Quarterly"
+click save → Validate failed [priority]
+fill priority "high"
+click save → ran Validate, Link, request createTicket ok
+page tickets
+```
+
+A failed attempt and its retry both show, values typed in dev show as typed, and ids the app generated show as values. The log asserts nothing: it is what you, or an agent, read to decide what a journey should prove, then write it and run it with `lowdefy test --repeat 3 <file>`. A `(config rebuilt)` line marks where a config edit reloaded the page.
+
+- `--since <since>`: Only sessions with records at or after this time, as a duration back from now (`30m`, `2h`, `7d`) or an ISO date.
+- `--json`: Print the list or the log as JSON.
+
+Agents connected to the development server read the same list and logs with the `lowdefy_journey_session` tool (optional `id` and `since`), which reads the app's own `.lowdefy/traces/dev/`.
+
 `lowdefy agent-setup` installs a `journeys-from-dev` skill that uses these commands: it compiles the session you pick with `lowdefy journeys compile --source dev`, runs each candidate three times with `lowdefy test --repeat 3`, and leaves the candidates that pass for you to keep.
 
 ## Production journeys

@@ -26,6 +26,7 @@ import findConfig from './findConfig.js';
 import getAppMap from './getAppMap.js';
 import getBuildStatus from './getBuildStatus.js';
 import getBuildStatusAfterEdits from './getBuildStatusAfterEdits.js';
+import readJourneySession from './readJourneySession.js';
 import readProxyBuildWait from './readProxyBuildWait.js';
 import getCoreDoc from './getCoreDoc.js';
 import getExamples from './getExamples.js';
@@ -433,6 +434,14 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       );
     }
     return textResult(doc.markdown);
+  });
+
+  registerDevTool('lowdefy_journey_session', ({ id, since }) => {
+    const result = readJourneySession({ id, since });
+    if (!type.isUndefined(result.error)) {
+      return notFoundResult(result.error);
+    }
+    return textResult(result.text);
   });
 
   const unregistered = Object.keys(devToolDefinitions).filter((name) => !registered.has(name));

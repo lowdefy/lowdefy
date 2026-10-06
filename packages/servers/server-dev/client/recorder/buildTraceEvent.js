@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import collectEventActions from './collectEventActions.js';
+import collectEventEndpoints from './collectEventEndpoints.js';
 import collectEventRequests from './collectEventRequests.js';
 import diffStateWrites from './diffStateWrites.js';
 
@@ -25,11 +27,14 @@ import diffStateWrites from './diffStateWrites.js';
 // and the state now, which later events would change.
 function buildTraceEvent({ payload, urlAfter }) {
   const { context, failure, record } = payload;
+  const responses = record?.responses ?? {};
   const event = {
     name: payload.eventName,
     block_id: payload.blockId,
     success: payload.success,
-    requests: collectEventRequests({ context, responses: record?.responses ?? {} }),
+    actions: collectEventActions({ responses }),
+    requests: collectEventRequests({ context, responses }),
+    endpoints: collectEventEndpoints({ context, responses }),
     state_writes: diffStateWrites({
       before: payload.stateBefore,
       after: context?.state,

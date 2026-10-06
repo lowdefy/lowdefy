@@ -14,16 +14,17 @@
   limitations under the License.
 */
 
-import callAPIHandler from '../callAPIHandler.js';
+import { type } from '@lowdefy/helpers';
 
-function createCallAPI({ actionId, blockId, context }) {
-  return function callAPI(params) {
-    return callAPIHandler(context, {
-      actionId,
-      blockId,
-      params,
-    });
-  };
+// The types of the actions this event ran, in the order they ran: every
+// response entry the engine kept, without the actions a skip or a control
+// passed over.
+function collectEventActions({ responses }) {
+  return Object.values(responses)
+    .filter((response) => type.isObject(response) && response.skipped !== true)
+    .filter((response) => type.isString(response.type))
+    .sort((a, b) => (a.index ?? 0) - (b.index ?? 0))
+    .map((response) => response.type);
 }
 
-export default createCallAPI;
+export default collectEventActions;

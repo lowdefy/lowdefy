@@ -42,6 +42,7 @@ import journeysCompile from './commands/journeys/journeysCompile.js';
 import journeysHarden from './commands/journeys/harden/journeysHarden.js';
 import journeysVariants from './commands/journeys/variants/journeysVariants.js';
 import journeysRecordings from './commands/journeys/journeysRecordings.js';
+import journeysSession from './commands/journeys/session/journeysSession.js';
 import journeysCoverage from './commands/journeys/journeysCoverage.js';
 import journeysEvidence from './commands/journeys/journeysEvidence.js';
 import journeysUsage from './commands/journeys/journeysUsage.js';
@@ -478,6 +479,26 @@ journeys
   )
   .addOption(new Option('--json', 'Print the sessions as JSON on stdout.'))
   .action(runCommand({ cliVersion, handler: journeysRecordings }));
+
+journeys
+  .command('session')
+  .description(
+    'Print a recorded dev session as a log, one line per interaction with what the app did in response, to write journeys from. Without an id, list the recent sessions, newest first.'
+  )
+  .usage('[id] [options]')
+  .argument('[id]', 'The session to print, as the list names it.')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(
+    new Option(
+      '--since <since>',
+      'Sessions with records at or after this time: a duration back from now (30m, 2h, 7d) or an ISO date.'
+    )
+  )
+  .addOption(new Option('--json', 'Print the list or the log as JSON on stdout.'))
+  .action(runCommand({ cliVersion, handler: journeysSession }));
 
 journeys
   .command('pull')

@@ -38,17 +38,26 @@ function validateError({ label, error }) {
   return undefined;
 }
 
-function validateRequests({ label, requests }) {
-  if (type.isUndefined(requests)) return undefined;
-  if (!type.isArray(requests)) {
-    return `Trace record "${label}.requests" should be an array. Received ${JSON.stringify(
-      requests
+// `requests` and `endpoints` are the calls the event's actions made, each { id, ok, ms }.
+function validateCalls({ label, key, calls }) {
+  if (type.isUndefined(calls)) return undefined;
+  if (!type.isArray(calls)) {
+    return `Trace record "${label}.${key}" should be an array. Received ${JSON.stringify(calls)}.`;
+  }
+  const bad = calls.find((call) => !type.isObject(call) || !type.isString(call.id));
+  if (!type.isUndefined(bad)) {
+    return `Trace record "${label}.${key}" entries should be objects with an "id" string. Received ${JSON.stringify(
+      bad
     )}.`;
   }
-  const bad = requests.find((request) => !type.isObject(request) || !type.isString(request.id));
-  if (!type.isUndefined(bad)) {
-    return `Trace record "${label}.requests" entries should be objects with an "id" string. Received ${JSON.stringify(
-      bad
+  return undefined;
+}
+
+function validateActions({ label, actions }) {
+  if (type.isUndefined(actions)) return undefined;
+  if (!type.isArray(actions) || !actions.every(type.isString)) {
+    return `Trace record "${label}.actions" should be an array of action types. Received ${JSON.stringify(
+      actions
     )}.`;
   }
   return undefined;
@@ -133,7 +142,9 @@ function validateTraceEvent({ event, label, production }) {
   }
   return (
     validateError({ label, error: event.error }) ??
-    validateRequests({ label, requests: event.requests }) ??
+    validateActions({ label, actions: event.actions }) ??
+    validateCalls({ label, key: 'requests', calls: event.requests }) ??
+    validateCalls({ label, key: 'endpoints', calls: event.endpoints }) ??
     validateStateWrites({ label, production, stateWrites: event.state_writes })
   );
 }
