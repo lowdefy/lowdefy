@@ -10,4 +10,4 @@ fix(cli): Journey tier and production review fixes
 - With fewer than 100 journey matches in the usage window, the `PASS` line shows the rate and failures with no tier or rank.
 - The refusal of a tier below 100 matches says `--tier full` on the command line and `tier "full"` over MCP.
 - `lowdefy journeys evidence` names the final days it leaves out because they were pulled under another trace salt, or because there is no salt, with the pull that fetches them again. It no longer says the cache holds no final day when it holds days it cannot read.
-- The `journeys-from-production` skill narrows a candidate's click on one of several controls with the same label by `blockId`, `row` or `containing` before it promotes the candidate, since a production click carries no `nth`. The production journeys docs say so too.
+- The `journeys-from-production` skill narrows a journey's click on one of several controls with the same label by `blockId`, `row` or `containing`, since a production click carries no `nth`. The production journeys docs say so too.

@@ -15,6 +15,5 @@ fix(cli): Journey hardening and evidence counts no longer give wrong answers
 
 - Keeps a renamed label's history. Clicks resolve to any click text a committed flow already holds, so the old flow is not recounted to 0.
 - Replaces a committed month only when the cache holds more final days of it. Two machines holding the same days no longer overwrite each other.
-- No longer writes `evidence.dev`. The dev recordings count is printed but not written, and a refresh removes an existing `dev` key.
 
 `journeys evidence`, `journeys coverage` and `journeys usage` refuse a production cache whose days were pulled with different filters (project, `--environment`, `--include-test-accounts`). The error names each set of filters with its days and gives the `--refetch` pull that makes them one set. `journeys pull posthog` warns about cached days pulled with other filters.

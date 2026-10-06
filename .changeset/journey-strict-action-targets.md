@@ -15,5 +15,3 @@ Matched 3 controls with text "Delete" in the page; add nth: 0..2, or a blockId/r
 ```
 
 Add `nth`, or narrow the target with `blockId`, `row` or `column`. A page-wide `text` still searches only the front-most open layer, so a confirm dialog's button over a grid of same-label buttons is one match. Expectations are unchanged: `expect.visible` passes when any match is visible and `expect.hidden` when none is.
-
-Recorded journeys always name their match: a recorded click on the first of several same-text controls compiles with `nth: 0`.
