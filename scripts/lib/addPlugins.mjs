@@ -148,5 +148,5 @@ function addPlugins({ configDirectory, targetDir, logger }) {
   }
 }
 
-export { readLowdefyYaml };
+export { findPnpmWorkspaceRoot, readLowdefyYaml };
 export default addPlugins;

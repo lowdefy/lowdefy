@@ -156,6 +156,51 @@ The dev server log is `apps/journey-fixture/.lowdefy/fixture-dev-server.log`. CI
 the complete path, before every release (see [CI](#ci)). Run it when
 changing the journey runner, journey cookies or mutants.
 
+## An app from another repository
+
+To run an app that lives in another repository (Pelican, a modules-mongodb demo app) on this
+checkout's packages, for example to try an unreleased branch, use the same scripts as
+`pnpm app:dev`, from this checkout's root, with the app's config directory and a server
+directory of its own:
+
+```bash
+pnpm build   # once; or leave out --skip-build and let the script build
+
+# dev server
+node scripts/dev.mjs --skip-build --no-open --port <free port> \
+  --config-directory /path/to/repo/apps/my-app --dev-directory _server/dev-my-app
+
+# production build, then serve it
+node scripts/build.mjs --skip-build \
+  --config-directory /path/to/repo/apps/my-app --server-directory _server/prod-my-app
+node scripts/start.mjs --server-directory _server/prod-my-app --port <free port>
+```
+
+Wrap any of them in the app's secrets command when it has one, as its own scripts do, for
+example `infisical run --env=local --path=/apps/my-app -- node scripts/dev.mjs ...`.
+
+- **No overrides or copied servers.** The scripts copy `server-dev` (or `server`) into the
+  `_server/` directory you name and link every `@lowdefy/*` package to this checkout, the
+  app's `@lowdefy/*` plugins included, whatever versions the app pins.
+- **The app's repository must be installed** (`pnpm install` there). Plugins in
+  `lowdefy.yaml` with a `workspace:` version are linked from the app's pnpm workspace as they
+  are, so they need their `node_modules` and a built `dist`. Other plugins install from npm
+  into the server copy.
+- **Build scripts.** pnpm 11 fails an install on a dependency build script that is neither
+  allowed nor ignored. The server copy's `pnpm-workspace.yaml` carries the build approvals
+  (`allowBuilds`, `onlyBuiltDependencies`, `ignoredBuiltDependencies`) of the app's own
+  `pnpm-workspace.yaml`, so approve a plugin's build script there.
+- **Modules** with `file:` and `github:` sources resolve from the app's config directory, as
+  under `lowdefy dev`.
+- **Environment.** The dev server reads the app's `.env` and the shell environment. A
+  production server reads only the environment, so set what the app's deploy sets (for
+  example `BETTER_AUTH_URL` for an app with auth email links).
+- **Several at once.** Each app needs its own `--dev-directory` or `--server-directory` and its
+  own `--port`; the dev server picks a free internal Vite port. One config directory runs one
+  dev server at a time (the server records itself in `<app>/.lowdefy/instance.json` and
+  refuses a second), so to run a second copy of an app, or to keep the app's own checkout
+  untouched, point the scripts at a separate git worktree of the app's repository.
+
 ## Ports
 
 Port 3000 is the default for a developer's own dev server; tests and agents never bind it.
@@ -165,7 +210,8 @@ Port 3000 is the default for a developer's own dev server; tests and agents neve
 - A dev app for manual or agent checks: `pnpm app:dev --no-open --port <free port>`.
 - A production build of any app (per-page plugin chunks, preloads and cache headers only
   exist there): `node scripts/build.mjs --skip-build --config-directory <app>`, then
-  `node scripts/start.mjs --port <free port>`. It builds into the worktree's `_server/prod`.
+  `node scripts/start.mjs --port <free port>`. It builds into the worktree's `_server/prod`;
+  `--server-directory` on both names another.
   Load pages cold (a fresh browser page per URL) as well as by navigation: a type missing
   from a page's chunk only fails on a cold load.
 - Block e2e (`pnpm --filter=@lowdefy/blocks-basic e2e`) builds and starts the app from
