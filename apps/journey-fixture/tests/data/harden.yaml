@@ -1,0 +1,8 @@
+# The data set save.yaml runs on, so lowdefy journeys harden (which refuses a
+# journey without one) can run its mutants in the cli fixture tests
+# (packages/cli/test/journeyFixture/harden.test.mjs).
+fixtures:
+  fixture_db:
+    - { _id: harden-item, kind: item, page: home, name: Harden item }
+users:
+  member: { id: u_member, roles: [member] }

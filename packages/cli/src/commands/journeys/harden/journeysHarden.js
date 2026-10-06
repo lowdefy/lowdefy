@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import path from 'path';
 import { type } from '@lowdefy/helpers';
 
 import buildMutationReport from './buildMutationReport.js';
@@ -57,7 +58,42 @@ function selectJourneys({ context }) {
   if (items.length === 0) {
     return { error: 'No journeys to harden. Add journeys to tests/journeys/.' };
   }
-  return { items };
+  // A mutant run writes through the app's connections, from parallel workers:
+  // without a data set that is the developer's own database. A file with no
+  // journey object to read is left to its baseline run, which reports it.
+  const withoutDataSet = items.filter(
+    (item) => type.isObject(item.journey) && type.isNone(item.journey.data)
+  );
+  const refusals = [
+    ...new Set(
+      withoutDataSet.map(
+        (item) =>
+          `Left out "${(item.personaOf ?? item.journey).name}" (${path.relative(
+            context.directories.config,
+            item.filePath
+          )}): it has no data set, so its mutant runs would write to your database. Give it a data set (data:) to harden it.`
+      )
+    ),
+  ];
+  const kept = items.filter((item) => !withoutDataSet.includes(item));
+  if (kept.length === 0) {
+    return { error: ['No journey to harden has a data set.', ...refusals].join('\n') };
+  }
+  return { items: kept, refusals };
+}
+
+// Every journey's `file#name` as it is now, persona runs by their own names:
+// the mutation report keeps an earlier run's entry only while its journey
+// still exists.
+function currentJourneyKeys({ context }) {
+  return new Set(
+    selectTests({ context })
+      .filter(({ item }) => type.isObject(item.journey))
+      .map(
+        ({ item }) =>
+          `${path.relative(context.directories.config, item.filePath)}#${item.journey.name}`
+      )
+  );
 }
 
 function listedOperators({ options, listing }) {
@@ -133,9 +169,13 @@ async function hardenOnServer({ context, options, items, url }) {
     operators: listedOperators({ options, listing }),
     now: new Date(),
   });
-  // A --mutant run confirms one kill; it must not replace the full report.
+  // A --mutant run confirms one kill; it must not change the report.
   if (type.isNone(options.mutant)) {
-    writeMutationReport({ directories: context.directories, report });
+    writeMutationReport({
+      directories: context.directories,
+      report,
+      journeyKeys: currentJourneyKeys({ context }),
+    });
   }
   if (options.json) {
     // Plain stdout, so the report can be piped to a JSON reader.
@@ -169,6 +209,7 @@ async function journeysHarden({ context }) {
     refuse({ context, message: selected.error });
     return;
   }
+  selected.refusals.forEach((line) => context.logger.error(line));
   const server = await resolveServer({ context });
   let interrupted = false;
   async function onSigint() {
