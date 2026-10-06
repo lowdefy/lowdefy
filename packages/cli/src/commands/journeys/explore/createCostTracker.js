@@ -16,9 +16,11 @@
 
 // The run's model spend: calls, tokens and cost, reported and estimated
 // (a call the Gateway reports no cost for is charged at readCallCost's
-// conservative rate). onFirstEstimate runs once, the first time the cap is
-// working from an estimate. exceeded() is true once the spend reaches
-// maxCost, so the cap always bounds spend.
+// conservative rate). A failed call is counted apart, and its cost, when the
+// policy estimated one because the call may have been billed, counts toward
+// the cap. onFirstEstimate runs once, the first time the cap is working from
+// an estimate. exceeded() is true once the spend reaches maxCost, so the cap
+// always bounds spend.
 function createCostTracker({ maxCost, onFirstEstimate = () => {} }) {
   const totals = {
     calls: 0,
@@ -33,9 +35,9 @@ function createCostTracker({ maxCost, onFirstEstimate = () => {} }) {
     if (answer?.asked !== true) return;
     if (answer.fallback === 'failed') {
       totals.failedCalls += 1;
-      return;
+    } else {
+      totals.calls += 1;
     }
-    totals.calls += 1;
     totals.inputTokens += answer.usage?.inputTokens ?? 0;
     totals.outputTokens += answer.usage?.outputTokens ?? 0;
     const usd = answer.cost?.usd ?? 0;

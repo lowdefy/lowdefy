@@ -1,0 +1,91 @@
+id: targets
+type: Box
+# Several controls and texts that share a label, for the rule that an action
+# step's text or containing target names exactly one element
+# (packages/servers/server-dev/test/journeyFixture/targets.test.mjs).
+blocks:
+  - id: targets_title
+    type: Title
+    properties:
+      content: Targets
+      level: 2
+  - id: delete_buttons
+    type: Box
+    blocks:
+      - id: delete_a
+        type: Button
+        properties:
+          title: Delete
+        events:
+          onClick:
+            - id: set_deleted_a
+              type: SetState
+              params:
+                deleted: a
+      - id: delete_b
+        type: Button
+        properties:
+          title: Delete
+        events:
+          onClick:
+            - id: set_deleted_b
+              type: SetState
+              params:
+                deleted: b
+      - id: delete_c
+        type: Button
+        properties:
+          title: Delete
+        events:
+          onClick:
+            - id: set_deleted_c
+              type: SetState
+              params:
+                deleted: c
+  - id: open_confirm_button
+    type: Button
+    properties:
+      title: Open confirm
+    events:
+      onClick:
+        - id: open_confirm
+          type: CallMethod
+          params:
+            blockId: confirm_delete
+            method: setOpen
+            args:
+              - open: true
+  - id: confirm_delete
+    type: Modal
+    properties:
+      title: Delete everything?
+      footer: false
+    blocks:
+      - id: confirm_delete_button
+        type: Button
+        properties:
+          title: Delete
+        events:
+          onClick:
+            - id: set_confirmed
+              type: SetState
+              params:
+                deleted: all
+            - id: close_confirm
+              type: CallMethod
+              params:
+                blockId: confirm_delete
+                method: setOpen
+                args:
+                  - open: false
+  - id: notes
+    type: Box
+    blocks:
+      - id: note_one
+        type: Paragraph
+        properties:
+          content: Shared note one
+      - id: note_two
+        type: Paragraph
+        properties:
+          content: Shared note two

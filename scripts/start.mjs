@@ -19,8 +19,9 @@
   Start a previously built Lowdefy production server from _server/prod/.
 
   Usage:
-    pnpm app:start                    # default port 3000
-    pnpm app:start --port 8080        # custom port
+    pnpm app:start                                        # default port 3000
+    pnpm app:start --port 8080                            # custom port
+    pnpm app:start --server-directory _server/prod-other  # the copy build.mjs wrote there
 */
 
 import { parseArgs } from 'node:util';
@@ -31,7 +32,6 @@ import path from 'node:path';
 import ownedServerEnv from './lib/ownedServerEnv.mjs';
 
 const REPO_ROOT = path.resolve(import.meta.dirname, '..');
-const prodDir = path.join(REPO_ROOT, '_server/prod');
 
 // -- Arg parsing --
 
@@ -39,18 +39,20 @@ const { values: args } = parseArgs({
   options: {
     port: { type: 'string', default: '3000' },
     'log-level': { type: 'string', default: 'info' },
+    'server-directory': { type: 'string', default: '_server/prod' },
   },
   strict: false,
 });
 
 const port = args['port'];
 const logLevel = args['log-level'];
+const prodDir = path.resolve(REPO_ROOT, args['server-directory']);
 
 // -- Check build exists --
 
 if (!fs.existsSync(path.join(prodDir, 'dist/client'))) {
-  console.error('Error: No production build found at _server/prod/dist/client');
-  console.error('Run `pnpm app:build` first.');
+  console.error(`Error: No production build found at ${path.join(prodDir, 'dist/client')}`);
+  console.error('Run `node scripts/build.mjs` with the same --server-directory first.');
   process.exit(1);
 }
 

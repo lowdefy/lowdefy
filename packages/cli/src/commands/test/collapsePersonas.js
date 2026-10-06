@@ -29,7 +29,11 @@ function collapsePersonas({ items }) {
     }
     if (seen.has(item.personaOf)) return;
     seen.add(item.personaOf);
-    collapsed.push({ filePath: item.filePath, journey: item.personaOf });
+    collapsed.push({
+      filePath: item.filePath,
+      journeyIndex: item.journeyIndex,
+      journey: item.personaOf,
+    });
   });
   return collapsed;
 }

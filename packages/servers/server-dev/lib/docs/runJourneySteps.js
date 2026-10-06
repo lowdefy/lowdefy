@@ -63,6 +63,9 @@ async function actOnTarget({ target, action }) {
   try {
     await action();
   } catch (error) {
+    if (error instanceof JourneyStepError) {
+      throw error;
+    }
     const actual = cleanMessage(error);
     const description = describeTarget(target);
     throw new JourneyStepError(`${capitalise(description)} was not actionable: ${actual}`, {
@@ -119,9 +122,8 @@ function normaliseTarget(target) {
   return target;
 }
 
-// Reads back the way an author thinks of it — `block "grid" row 1 control
-// "Edit"` — for the expected/actual pair of a failed step.
-function describeTarget(target) {
+// The block, row and column a target is narrowed to, as describeTarget reads them.
+function describeScopeParts(target) {
   const parts = [];
   if (!type.isUndefined(target.blockId)) {
     parts.push(`block "${target.blockId}"`);
@@ -132,6 +134,13 @@ function describeTarget(target) {
   if (!type.isUndefined(target.column)) {
     parts.push(`column "${target.column}"`);
   }
+  return parts;
+}
+
+// Reads back the way an author thinks of it — `block "grid" row 1 control
+// "Edit"` — for the expected/actual pair of a failed step.
+function describeTarget(target) {
+  const parts = describeScopeParts(target);
   if (!type.isUndefined(target.text)) {
     parts.push(`control "${target.text}"`);
   }
@@ -167,12 +176,11 @@ function resolveScope({ page, target }) {
   return scope;
 }
 
-function controlsWithText({ root, text, nth }) {
+function controlsWithText({ root, text }) {
   return root
     .locator(INTERACTIVE_CONTROL)
     .filter({ hasText: exactText(text) })
-    .filter({ visible: true })
-    .nth(nth ?? 0);
+    .filter({ visible: true });
 }
 
 // LAYERS are the portal layers, front-most first. A control found by text alone is looked
@@ -180,47 +188,100 @@ function controlsWithText({ root, text, nth }) {
 // screen: an open dropdown menu covers a dialog, a dialog covers the page. A
 // confirm dialog's "Delete" is then found over the grid's "Delete" cell
 // buttons behind its mask, without the author counting buttons.
-async function resolvePageWideText({ page, target }) {
+async function locatePageWideText({ page, target }) {
   for (const layer of LAYERS) {
     const open = page.locator(layer).filter({ visible: true });
     if ((await open.count()) > 0) {
       const inLayer = controlsWithText({ root: open.last(), text: target.text });
       if ((await inLayer.count()) > 0) {
-        return controlsWithText({ root: open.last(), text: target.text, nth: target.nth });
+        return { matches: inLayer, where: 'the front-most open layer' };
       }
     }
   }
-  return controlsWithText({ root: page, text: target.text, nth: target.nth });
+  return { matches: controlsWithText({ root: page, text: target.text }), where: 'the page' };
 }
 
-// The element a step acts on or asserts about. With `containing` it is the
-// visible element whose text contains the string, inside the scope or on the
-// page: a list row a person picks by the name or address it shows, which is
-// neither a block nor an interactive control. With `text` it is the visible
-// interactive control with exactly that text (a cell button, a confirm
-// dialog's OK, a menu item) inside the scope, or in the front-most open layer
-// of the page when there is no blockId — portal-rendered controls live
-// outside every block. With `nth` alone it is the nth interactive control in
-// the scope. Otherwise it is the scope itself, and a click resolves its inner
-// control the way a plain blockId click does.
-async function resolveTarget({ page, target }) {
+function namesMatches(target) {
+  return !type.isUndefined(target.text) || !type.isUndefined(target.containing);
+}
+
+// Every visible element a `text` or `containing` target matches, before `nth`
+// picks one, and where they were looked for. With `containing` they are the
+// elements whose text contains the string, inside the scope or on the page: a
+// list row a person picks by the name or address it shows, which is neither a
+// block nor an interactive control. With `text` they are the interactive
+// controls with exactly that text (a cell button, a confirm dialog's OK, a
+// menu item) inside the scope, or in the front-most open layer of the page
+// when there is no blockId — portal-rendered controls live outside every
+// block.
+async function locateMatches({ page, target }) {
   const scope = resolveScope({ page, target });
+  const where = type.isUndefined(scope) ? 'the page' : describeScopeParts(target).join(' ');
   if (!type.isUndefined(target.containing)) {
-    return (scope ?? page)
-      .getByText(target.containing)
-      .filter({ visible: true })
-      .nth(target.nth ?? 0);
+    return {
+      matches: (scope ?? page).getByText(target.containing).filter({ visible: true }),
+      where,
+    };
   }
-  if (!type.isUndefined(target.text)) {
-    if (type.isUndefined(scope)) {
-      return resolvePageWideText({ page, target });
-    }
-    return controlsWithText({ root: scope, text: target.text, nth: target.nth });
+  if (type.isUndefined(scope)) {
+    return locatePageWideText({ page, target });
   }
+  return { matches: controlsWithText({ root: scope, text: target.text }), where };
+}
+
+// The element an expectation asserts about, or an action acts on when its
+// target needs no single-match check (it gives `nth`, or names no `text` or
+// `containing`). A `text` or `containing` target is its nth match, the first
+// when no `nth` is given: an expectation holds for any match.
+// With `nth` alone it is the nth interactive control in the scope. Otherwise
+// it is the scope itself, and a click resolves its inner control the way a
+// plain blockId click does.
+async function resolveTarget({ page, target }) {
+  if (namesMatches(target)) {
+    const { matches } = await locateMatches({ page, target });
+    return matches.nth(target.nth ?? 0);
+  }
+  const scope = resolveScope({ page, target });
   if (!type.isUndefined(target.nth)) {
     return scope.locator(INTERACTIVE_CONTROL).nth(target.nth);
   }
   return scope;
+}
+
+function plural({ count, word }) {
+  return `${count} ${word}${count === 1 ? '' : 's'}`;
+}
+
+// The element an action step (click, open, fill, select) acts on. A `text` or
+// `containing` target with no `nth` must name exactly one visible element:
+// acting on the first of several is a guess, and a guess that happens to pass
+// hides a journey that clicks the wrong row. Waits for a first match to show,
+// then looks again (a dialog may have opened over the page in the meantime) and
+// counts. When none shows, the wait's own error reports it.
+async function resolveActionTarget({ page, target, timeout }) {
+  if (!namesMatches(target) || !type.isUndefined(target.nth)) {
+    return resolveTarget({ page, target });
+  }
+  const first = (await locateMatches({ page, target })).matches.first();
+  await first.waitFor({ state: 'visible', timeout });
+  const { matches, where } = await locateMatches({ page, target });
+  const count = await matches.count();
+  if (count > 1) {
+    const noun = type.isUndefined(target.text) ? 'element' : 'control';
+    const named = type.isUndefined(target.text)
+      ? `containing "${target.containing}"`
+      : `with text "${target.text}"`;
+    throw new JourneyStepError(
+      `Matched ${plural({ count, word: noun })} ${named} in ${where}; add nth: 0..${
+        count - 1
+      }, or a blockId/row to narrow it.`,
+      {
+        expected: `exactly one ${noun} ${named} in ${where}`,
+        actual: plural({ count, word: noun }),
+      }
+    );
+  }
+  return matches.first();
 }
 
 // A target that names a control (`text`, `nth`) or the words shown
@@ -228,13 +289,8 @@ async function resolveTarget({ page, target }) {
 // row's own click handler, the way a person clicks the row; a target that
 // names a container (block, row, cell) is clicked on the first control inside
 // it, or on itself when it has none.
-async function resolveClickLocator({ page, target }) {
-  const located = await resolveTarget({ page, target });
-  if (
-    !type.isUndefined(target.text) ||
-    !type.isUndefined(target.containing) ||
-    !type.isUndefined(target.nth)
-  ) {
+async function resolveClickLocator({ located, target }) {
+  if (namesMatches(target) || !type.isUndefined(target.nth)) {
     return located;
   }
   return resolveClickTarget(located);
@@ -306,12 +362,12 @@ async function runOpen({ page, step, timeout }) {
     await actOnTarget({
       target,
       action: async () => {
-        const scope = await resolveTarget({ page, target });
-        const trigger = scope.locator(POPUP_TRIGGER).first();
+        const located = await resolveActionTarget({ page, target, timeout });
+        const trigger = located.locator(POPUP_TRIGGER).first();
         if ((await trigger.count()) > 0) {
           await trigger.click({ timeout });
         } else {
-          await (await resolveClickLocator({ page, target })).click({ timeout });
+          await (await resolveClickLocator({ located, target })).click({ timeout });
         }
       },
     });
@@ -340,7 +396,8 @@ async function runClick({ page, step, timeout }) {
   await actOnTarget({
     target,
     action: async () => {
-      const locator = await resolveClickLocator({ page, target });
+      const located = await resolveActionTarget({ page, target, timeout });
+      const locator = await resolveClickLocator({ located, target });
       await locator.click({ timeout, clickCount: count });
     },
   });
@@ -363,8 +420,8 @@ async function runFill({ journey, page, step, timeout }) {
   await actOnTarget({
     target,
     action: async () => {
-      const scope = await resolveTarget({ page, target });
-      await scope.locator('input, textarea').first().fill(String(value), { timeout });
+      const located = await resolveActionTarget({ page, target, timeout });
+      await located.locator('input, textarea').first().fill(String(value), { timeout });
     },
   });
 }
@@ -396,7 +453,13 @@ async function selectRadioOption({ options, target, text, timeout }) {
 async function runSelect({ page, step, timeout }) {
   const { value, ...target } = step.select;
   const text = String(value);
-  const scope = await resolveTarget({ page, target });
+  let scope;
+  await actOnTarget({
+    target,
+    action: async () => {
+      scope = await resolveActionTarget({ page, target, timeout });
+    },
+  });
   const native = scope.locator('select');
   if ((await native.count()) > 0) {
     await actOnTarget({
@@ -413,7 +476,7 @@ async function runSelect({ page, step, timeout }) {
   await actOnTarget({
     target,
     action: async () => {
-      const locator = await resolveClickLocator({ page, target });
+      const locator = await resolveClickLocator({ located: scope, target });
       await locator.click({ timeout });
     },
   });
@@ -624,10 +687,6 @@ async function expectHidden({ page, params, timeout }) {
       actual: cleanMessage(error),
     });
   }
-}
-
-function plural({ count, word }) {
-  return `${count} ${word}${count === 1 ? '' : 's'}`;
 }
 
 // Counts the calls the current actor's browser made to one request or

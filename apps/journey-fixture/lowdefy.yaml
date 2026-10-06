@@ -56,3 +56,4 @@ pages:
   - _ref: pages/explore_pr.yaml
   - _ref: pages/app_errors.yaml
   - _ref: pages/app_errors_open.yaml
+  - _ref: pages/targets.yaml
