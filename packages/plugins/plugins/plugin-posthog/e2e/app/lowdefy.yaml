@@ -64,6 +64,32 @@ events:
             - null
         message: App check failed.
 
+# Customer records the customers page loads at runtime. These strings are data: none of them
+# appears in any page's config, so PostHog must never receive them.
+api:
+  - id: customers
+    type: Api
+    routine:
+      - ':return':
+          names:
+            - Amara Okonkwo
+            - Bertil Lindqvist
+            - Chidi Nwosu
+          rows:
+            - name: Amara Okonkwo
+              city: Lagos
+            - name: Bertil Lindqvist
+              city: Uppsala
+          links:
+            - id: customer_amara
+              type: MenuLink
+              properties:
+                title: Amara Okonkwo
+            - id: customer_bertil
+              type: MenuLink
+              properties:
+                title: Bertil Lindqvist
+
 pages:
   - id: home
     type: Box
@@ -141,3 +167,50 @@ pages:
         type: Title
         properties:
           content: Second page
+  # Blocks filled from the customers endpoint, beside literal config text: the clicks here check
+  # that data text is masked and config text is kept.
+  - id: customers
+    type: Box
+    events:
+      onInit:
+        - id: load_customers
+          type: CallAPI
+          params:
+            endpointId: customers
+    blocks:
+      - id: customers_grid
+        type: AgGridLowdefy
+        properties:
+          columnDefs:
+            - headerName: Customer name
+              field: name
+              sortable: true
+              cellStyle:
+                cursor: pointer
+            - headerName: City
+              field: city
+          rowData:
+            _if_none:
+              - _api: customers.response.rows
+              - []
+      - id: customer_select
+        type: Selector
+        properties:
+          title: Customer
+          options:
+            _if_none:
+              - _api: customers.response.names
+              - []
+      - id: customer_menu
+        type: DropdownMenu
+        properties:
+          trigger: click
+          links:
+            _if_none:
+              - _api: customers.response.links
+              - []
+        blocks:
+          - id: customer_menu_button
+            type: Button
+            properties:
+              title: Pick customer

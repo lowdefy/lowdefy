@@ -231,3 +231,132 @@ test.describe('PostHog events carry Lowdefy semantics', () => {
     });
   });
 });
+
+// The strings the customers endpoint returns. None is in the app's config.
+const DATA_TEXTS = ['Amara Okonkwo', 'Bertil Lindqvist', 'Chidi Nwosu', 'Okonkwo', 'Lindqvist'];
+
+function expectNoDataText(value) {
+  const serialised = JSON.stringify(value);
+  DATA_TEXTS.forEach((text) => expect(serialised).not.toContain(text));
+}
+
+async function openCustomers(page, events) {
+  await navigateToTestPage(page, 'customers');
+  await waitForPostHog(events);
+  await expect(
+    getBlock(page, 'customers_grid').locator('.ag-row[row-index="0"] .ag-cell[col-id="name"]')
+  ).toHaveText('Amara Okonkwo');
+}
+
+test.describe('PostHog events carry no data text', () => {
+  test('a click on a grid cell showing data sends no cell text but keeps row and column', async ({
+    page,
+  }) => {
+    const events = await recordPostHog(page);
+    await openCustomers(page, events);
+    // Each click lands on the element holding the text, so posthog-js would record it unmasked.
+    await getBlock(page, 'customers_grid')
+      .locator('.ag-row[row-index="0"] .ag-cell[col-id="name"]')
+      .getByText('Amara Okonkwo', { exact: true })
+      .click();
+    const click = await waitFor(
+      events,
+      (event) =>
+        event.event === '$autocapture' &&
+        event.properties.lowdefy_block_id === 'customers_grid' &&
+        event.properties.lowdefy_column === 'name'
+    );
+    expect(click.properties.lowdefy_row).toBe(0);
+    expect(click.properties.lowdefy_page_id).toBe('customers');
+    expect(click.properties.$el_text).toBeUndefined();
+    expect(click.properties.$elements_chain).not.toContain('text=');
+    expect(click.properties.$elements_chain).toContain('attr__row-index="0"');
+    expectNoDataText(click);
+  });
+
+  test('picking a Selector option filled by a request sends no label text or title', async ({
+    page,
+  }) => {
+    const events = await recordPostHog(page);
+    await openCustomers(page, events);
+    await getBlock(page, 'customer_select').locator('.ant-select').click();
+    await getBlock(page, 'customer_select')
+      .locator('.ant-select-item-option-content')
+      .getByText('Bertil Lindqvist', { exact: true })
+      .click();
+    const pick = await waitFor(
+      events,
+      (event) =>
+        event.event === '$autocapture' &&
+        event.properties.lowdefy_option === true &&
+        event.properties.lowdefy_block_id === 'customer_select'
+    );
+    expect(pick.properties.$el_text).toBeUndefined();
+    expect(pick.properties.$elements_chain).not.toContain('attr__title=');
+    expectNoDataText(pick);
+  });
+
+  test('a DropdownMenu item built from a request, portaled to the body, sends no label text', async ({
+    page,
+  }) => {
+    const events = await recordPostHog(page);
+    await openCustomers(page, events);
+    await getBlock(page, 'customer_menu').locator('button').click();
+    await page
+      .locator('.ant-dropdown-menu-item')
+      .getByText('Amara Okonkwo', { exact: true })
+      .click();
+    const pick = await waitFor(
+      events,
+      (event) =>
+        event.event === '$autocapture' &&
+        event.properties.$elements_chain.includes('ant-dropdown-menu-item')
+    );
+    expect(pick.properties.$el_text).toBeUndefined();
+    expectNoDataText(pick);
+    await page.waitForTimeout(500);
+    expectNoDataText(events);
+  });
+
+  test('a literal Button title and a literal Selector option keep their text', async ({ page }) => {
+    const events = await recordPostHog(page);
+    await navigateToTestPage(page, 'home');
+    await waitForPostHog(events);
+    await getBlock(page, 'save_button').locator('button').click();
+    const click = await waitFor(
+      events,
+      (event) =>
+        event.event === '$autocapture' && event.properties.lowdefy_block_id === 'save_button'
+    );
+    expect(click.properties.$el_text).toBe('Save');
+    expect(click.properties.$elements_chain).toContain('text="Save"');
+    await getBlock(page, 'country').locator('.ant-select').click();
+    await getBlock(page, 'country')
+      .locator('.ant-select-item-option-content')
+      .getByText('Kenya', { exact: true })
+      .click();
+    const pick = await waitFor(
+      events,
+      (event) => event.event === '$autocapture' && event.properties.lowdefy_option === true
+    );
+    expect(pick.properties.$el_text).toBe('Kenya');
+    expect(pick.properties.$elements_chain).toContain('text="Kenya"');
+  });
+
+  test('an AgGrid column header keeps its headerName text', async ({ page }) => {
+    const events = await recordPostHog(page);
+    await openCustomers(page, events);
+    await getBlock(page, 'customers_grid')
+      .locator('.ag-header-cell[col-id="name"] .ag-header-cell-text')
+      .click();
+    const click = await waitFor(
+      events,
+      (event) =>
+        event.event === '$autocapture' &&
+        event.properties.lowdefy_block_id === 'customers_grid' &&
+        event.properties.$elements_chain.includes('ag-header-cell')
+    );
+    expect(click.properties.$el_text).toBe('Customer name');
+    expect(click.properties.$elements_chain).toContain('text="Customer name"');
+  });
+});
