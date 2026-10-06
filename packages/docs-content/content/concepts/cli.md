@@ -313,7 +313,7 @@ A tier is a cut through the selected journeys, ranked by rate, most first: `comm
 
 ## journeys coverage
 
-The `journeys coverage` command reports what real use no journey in `tests/journeys/` covers yet, five ways, each with its uncovered items ranked by use, and writes the report with the production profile to `.lowdefy/test/coverage.json`. A journey's click text counts only when it is text from the app's config; any other text in a journey reads as no text, so the click matches that block and column's clicks. When the development server recorded a full test run, the interaction measure adds the share that run drove, and failure coverage counts only failures a passing journey produced. See [Coverage](/config-tests#coverage).
+The `journeys coverage` command reports what real use no journey in `tests/journeys/` covers yet, five ways, each with its uncovered items ranked by use, and writes the report with the production profile to `.lowdefy/test/coverage.json`. A journey's click text counts only when it is text from the app's config; any other text in a journey reads as no text, so the click matches that block and column's clicks. A journey with `deprecated: true` is never run, so it covers nothing and is left out. When the development server recorded a full test run, the interaction measure adds the share that run drove, and failure coverage counts only failures a passing journey produced. See [Coverage](/config-tests#coverage).
 
 - `--json`: Print the report as JSON instead of the summary.
 - `--source <source>`: Where use is read from. Only `production` for now, the default.

@@ -432,6 +432,35 @@ test('journeys evidence leaves out final days pulled under another salt', async 
     month('2026-09', 1, 0),
     month('2026-10', 1, 2, 2, 2),
   ]);
+  expect(logged).toContain(
+    'Left out 1 final day(s) of the production cache pulled under another trace salt (2026-10-01). Pulling them again hashes them under this machine\'s salt. Run "lowdefy journeys pull posthog --from 2026-10-01 --to 2026-10-01" first.'
+  );
+});
+
+function setOtherSalt(day) {
+  const manifestPath = path.join(context.directories.traces, 'production', `${day}.manifest.json`);
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  fs.writeFileSync(manifestPath, JSON.stringify({ ...manifest, salt_id: 'other000' }));
+}
+
+test('journeys evidence names the pull when every final day is under another salt, not an empty cache', async () => {
+  ['2026-09-30', '2026-10-01', '2026-10-02'].forEach(setOtherSalt);
+  writeJourney('saves.yaml', SAVES);
+  await journeysEvidence({ context });
+  expect(logged).toContain(
+    'Left out 3 final day(s) of the production cache pulled under another trace salt (2026-09-30, 2026-10-01, 2026-10-02). Pulling them again hashes them under this machine\'s salt. Run "lowdefy journeys pull posthog --from 2026-09-30 --to 2026-10-02" first.'
+  );
+  expect(logged.some((line) => line.includes('holds no final day'))).toBe(false);
+});
+
+test('journeys evidence says there is no trace salt when the cache has days but no salt', async () => {
+  fs.rmSync(path.join(context.directories.traces, 'production', 'salt'));
+  writeJourney('saves.yaml', SAVES);
+  await journeysEvidence({ context });
+  expect(logged).toContain(
+    'There is no trace salt in .lowdefy/traces/production/, so 3 final day(s) of the production cache cannot be read (2026-09-30, 2026-10-01, 2026-10-02). Pulling them again hashes them under a new salt. Run "lowdefy journeys pull posthog --from 2026-09-30 --to 2026-10-02" first.'
+  );
+  expect(logged.some((line) => line.includes('holds no final day'))).toBe(false);
 });
 
 test('journeys evidence refuses a source other than production', async () => {

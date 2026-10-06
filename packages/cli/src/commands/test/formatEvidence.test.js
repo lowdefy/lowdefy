@@ -117,6 +117,15 @@ test('formatEvidence shows the tier, rank, rate and failures over the window in 
   );
 });
 
+test('formatEvidence shows the rate and failures alone when the selection is too thin to rank', () => {
+  expect(
+    formatEvidence({
+      evidence: { production, mutation: { killed: 4, total: 5 } },
+      usage: { ...usage, tier: null, rank: null },
+    })
+  ).toBe('13.7/day · 14 failed (3m) · 4/5 mutants');
+});
+
 test('formatEvidence shows unranked for a journey with no counts for its current flow', () => {
   expect(
     formatEvidence({

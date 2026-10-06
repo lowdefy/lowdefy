@@ -179,6 +179,18 @@ test('journeys coverage writes coverage.json with the measures, profile and jour
   expect(logged.some((line) => line.startsWith('flow'))).toBe(true);
 });
 
+test('journeys coverage leaves a deprecated journey out, so the flow only it walked is uncovered', async () => {
+  const savesPath = writeJourney('saves.yaml', SAVES.replace('steps:', 'deprecated: true\nsteps:'));
+  const deprecated = await journeysCoverage({ context });
+  expect(deprecated.measures.flow).toMatchObject({ covered: 0, total: 2 });
+  expect(deprecated.measures.flow.uncovered.map((item) => item.sequence.length)).toEqual([2, 1]);
+  expect(deprecated.journeys).toEqual([]);
+  fs.writeFileSync(savesPath, SAVES);
+  const live = await journeysCoverage({ context });
+  expect(live.measures.flow).toMatchObject({ covered: 1, total: 2 });
+  expect(live.journeys.map((journey) => journey.name)).toEqual(['member saves a ticket']);
+});
+
 test('journeys coverage --json prints the report', async () => {
   const write = jest.spyOn(process.stdout, 'write').mockImplementation(() => true);
   context.options.json = true;

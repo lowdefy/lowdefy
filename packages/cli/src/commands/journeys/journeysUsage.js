@@ -23,7 +23,7 @@ import formatUsageReport from './usage/formatUsageReport.js';
 import inTier from './usage/inTier.js';
 import parseTestSelection from '../test/parseTestSelection.js';
 import parseTier from './usage/parseTier.js';
-import readConfigText from './configText/readConfigText.js';
+import readTierConfigText from './usage/readTierConfigText.js';
 import readUncoveredFlows from './usage/readUncoveredFlows.js';
 import resolveJourneyPaths from '../test/resolveJourneyPaths.js';
 import selectTests from '../test/selectTests.js';
@@ -69,8 +69,12 @@ async function journeysUsage({ context }) {
     journey,
   }));
 
-  const { isConfigText } = await readConfigText({ context });
-  const tiers = computeTiers({ journeys, usageWindow: options.usageWindow, isConfigText });
+  const tiers = computeTiers({
+    journeys,
+    usageWindow: options.usageWindow,
+    isConfigText: await readTierConfigText({ context, journeys }),
+    fullTierOption: '--tier full',
+  });
   if (tier !== 'full' && !type.isUndefined(tiers.refused)) {
     logger.error(tiers.refused);
     process.exitCode = 1;

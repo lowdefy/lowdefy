@@ -72,7 +72,9 @@ function logSummary({ logger, measures, mutation, reportPath }) {
 // interactions, failures, frustrated clicks and (page, role set) pairs no
 // committed journey covers yet, ranked by use. It writes
 // .lowdefy/test/coverage.json with the production profile, which the explorer
-// and variants read instead of profiling production again.
+// and variants read instead of profiling production again. A `deprecated:
+// true` journey is never run, so it covers nothing: it is left out of every
+// measure, as the measured run leaves it out.
 async function journeysCoverage({ context }) {
   const { options, logger } = context;
   const source = options.source ?? 'production';
@@ -87,13 +89,15 @@ async function journeysCoverage({ context }) {
   });
   // A journey's click text counts only when it is config text, as production
   // segments hold, so no report confirms a guessed production value.
-  const journeys = committed.map(({ file, journey }) => ({
-    file,
-    name: journey.name,
-    pageId: journey.pageId,
-    sequence: journeySequence({ pageId: journey.pageId, steps: journey.steps, isConfigText }),
-    journey,
-  }));
+  const journeys = committed
+    .filter(({ journey }) => journey.deprecated !== true)
+    .map(({ file, journey }) => ({
+      file,
+      name: journey.name,
+      pageId: journey.pageId,
+      sequence: journeySequence({ pageId: journey.pageId, steps: journey.steps, isConfigText }),
+      journey,
+    }));
   const profile = profileProduction({ segments });
   const measures = computeCoverage({
     journeys,

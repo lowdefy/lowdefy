@@ -20,28 +20,13 @@ import { parseTraceLines } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import createTokenResolver from './createTokenResolver.js';
+import describeMissingPull from './describeMissingPull.js';
 import listWindowDays from './listWindowDays.js';
-import MINING_WINDOW_MAX_DAYS from './miningWindowMaxDays.js';
 import parseTraceWindow from './parseTraceWindow.js';
 import readConfigText from './configText/readConfigText.js';
 import readTraceSalt from './pull/readTraceSalt.js';
 import removeUntokenisedTraces from './removeUntokenisedTraces.js';
 import resolveRecordText from './resolveRecordText.js';
-
-// The pull refuses a window longer than the mining cap, while evidence reads
-// longer windows, so a longer gap names a pull the cap accepts and says to
-// fill the rest the same way.
-function describeMissingPull({ missing }) {
-  const from = missing[0];
-  const to = missing[missing.length - 1];
-  const span = listWindowDays({ from, to });
-  if (span.length <= MINING_WINDOW_MAX_DAYS) {
-    return `Run "lowdefy journeys pull posthog --from ${from} --to ${to}" first.`;
-  }
-  return `Run "lowdefy journeys pull posthog --from ${from} --to ${
-    span[MINING_WINDOW_MAX_DAYS - 1]
-  }" first, then pull the rest of ${from}/${to} the same way, at most ${MINING_WINDOW_MAX_DAYS} days at a time.`;
-}
 
 function readManifest({ directory, day }) {
   const manifestPath = path.join(directory, `${day}.manifest.json`);

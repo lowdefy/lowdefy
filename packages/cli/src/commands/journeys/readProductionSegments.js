@@ -22,8 +22,9 @@ import resolveBuildDirectory from './resolveBuildDirectory.js';
 
 // The production window's segments, compiled the way `journeys compile
 // --source production` compiles them, for evidence and coverage, with the
-// app's isConfigText to read journeys by the same text rule. Coverage passes
-// maxDays, the mining cap; evidence does not.
+// app's isConfigText to read journeys by the same text rule, for coverage,
+// which passes maxDays, the mining cap. Evidence refresh reads whole months
+// through readProductionMonths instead.
 async function readProductionSegments({ context, maxDays }) {
   const { options } = context;
   const { records, window, isConfigText } = await readProductionTrace({

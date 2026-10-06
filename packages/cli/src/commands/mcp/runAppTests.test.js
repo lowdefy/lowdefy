@@ -291,7 +291,7 @@ test('runAppTests refuses a tier below 100 matches without running anything', as
 
   expect(result).toEqual({
     summary:
-      'The selection has 30 journey matches in 2026-04 to 2026-09, fewer than the 100 tiers need. Use --tier full, or pull more production use.',
+      'The selection has 30 journey matches in 2026-04 to 2026-09, fewer than the 100 tiers need. Use tier "full", or pull more production use.',
     results: [],
   });
 });

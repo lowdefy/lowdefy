@@ -25,7 +25,7 @@ import reconcileFlows from './reconcileFlows.js';
 //
 // - journeys: the committed journeys.
 // - dayCounts: { 'YYYY-MM': final days cached }.
-// - isConfigText: the app's config text rule, as computeEvidence reads it.
+// - isConfigText: the app's config text rule, as reconcileFlows reads it.
 function selectMonthsToRead({ journeys, dayCounts, today, isConfigText }) {
   const months = new Set();
   journeys.forEach((journey) => {

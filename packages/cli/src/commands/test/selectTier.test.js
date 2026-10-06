@@ -65,7 +65,7 @@ function names(result) {
   return result.selected.map((entry) => entry.item.journey.name);
 }
 
-test('selectTier common keeps the common and unranked journeys and skips deprecated ones', () => {
+test('selectTier common keeps the common and unranked journeys and skips deprecated ones', async () => {
   const selected = entries(
     item({ file: 'a.yaml', name: 'top', sessions: 300 }),
     item({ file: 'b.yaml', name: 'middle', sessions: 60 }),
@@ -73,7 +73,7 @@ test('selectTier common keeps the common and unranked journeys and skips depreca
     item({ file: 'd.yaml', name: 'new' }),
     item({ file: 'e.yaml', name: 'retired', sessions: 90, deprecated: true })
   );
-  const result = selectTier({ context, selected, tier: 'common', usageWindow: '3m' });
+  const result = await selectTier({ context, selected, tier: 'common', usageWindow: '3m' });
   expect(result.refused).toBeUndefined();
   expect(names(result)).toEqual(['top', 'new']);
   expect(result.selected[0].usage).toEqual({
@@ -98,14 +98,13 @@ test('selectTier common keeps the common and unranked journeys and skips depreca
   ]);
 });
 
-test('selectTier full keeps every journey but the deprecated ones, with each ranking', () => {
+test('selectTier full keeps every journey but the deprecated ones, with each ranking', async () => {
   const selected = entries(
-    item({ file: 'a.yaml', name: 'top', sessions: 30 }),
-    item({ file: 'b.yaml', name: 'low', sessions: 3 }),
-    item({ file: 'c.yaml', name: 'retired', sessions: 3, deprecated: true })
+    item({ file: 'a.yaml', name: 'top', sessions: 300 }),
+    item({ file: 'b.yaml', name: 'low', sessions: 30 }),
+    item({ file: 'c.yaml', name: 'retired', sessions: 30, deprecated: true })
   );
-  const result = selectTier({ context, selected, tier: 'full', usageWindow: '3m' });
-  // Too few matches to cut a tier, but a full run needs no cut.
+  const result = await selectTier({ context, selected, tier: 'full', usageWindow: '3m' });
   expect(result.refused).toBeUndefined();
   expect(names(result)).toEqual(['top', 'low']);
   expect(result.selected.map((entry) => [entry.usage.tier, entry.usage.rank])).toEqual([
@@ -115,7 +114,22 @@ test('selectTier full keeps every journey but the deprecated ones, with each ran
   expect(result.skipped.map((skipped) => skipped.name)).toEqual(['retired']);
 });
 
-test('selectTier tiers a journey with a list of users once and keeps every persona run', () => {
+test('selectTier full below 100 matches runs every journey with no tier or rank', async () => {
+  const selected = entries(
+    item({ file: 'a.yaml', name: 'top', sessions: 30 }),
+    item({ file: 'b.yaml', name: 'low', sessions: 3 })
+  );
+  const result = await selectTier({ context, selected, tier: 'full', usageWindow: '3m' });
+  // Too few matches to cut a tier, but a full run needs no cut.
+  expect(result.refused).toBeUndefined();
+  expect(names(result)).toEqual(['top', 'low']);
+  expect(result.selected.map((entry) => entry.usage)).toEqual([
+    { tier: null, rank: null, rate: 1, failures: 2, unranked: false, usageWindow: '3m' },
+    { tier: null, rank: null, rate: 0.1, failures: 2, unranked: false, usageWindow: '3m' },
+  ]);
+});
+
+test('selectTier tiers a journey with a list of users once and keeps every persona run', async () => {
   const selected = entries(
     item({
       file: 'a.yaml',
@@ -126,33 +140,42 @@ test('selectTier tiers a journey with a list of users once and keeps every perso
     }),
     item({ file: 'b.yaml', name: 'low', sessions: 30 })
   );
-  const result = selectTier({ context, selected, tier: 'common', usageWindow: '3m' });
+  const result = await selectTier({ context, selected, tier: 'common', usageWindow: '3m' });
   expect(names(result)).toEqual(['edits a ticket [admin]', 'edits a ticket [member]']);
   expect(result.selected.map((entry) => entry.usage.rank)).toEqual([1, 1]);
   expect(result.tierRows.map((row) => row.name)).toEqual(['edits a ticket', 'low']);
 });
 
-test('selectTier tells two journeys of one file apart by their place in it', () => {
+test('selectTier tells two journeys of one file apart by their place in it', async () => {
   const selected = entries(
     item({ file: 'a.yaml', journeyIndex: 0, name: 'same name', sessions: 300 }),
     item({ file: 'a.yaml', journeyIndex: 1, name: 'same name', blockId: 'other', sessions: 30 })
   );
-  const result = selectTier({ context, selected, tier: 'common', usageWindow: '3m' });
+  const result = await selectTier({ context, selected, tier: 'common', usageWindow: '3m' });
   expect(result.selected.map((entry) => entry.item.journeyIndex)).toEqual([0]);
 });
 
-test('selectTier refuses a tier below 100 matches, and names the refresh with no evidence', () => {
-  const thin = selectTier({
+test('selectTier refuses a tier below 100 matches, and names the refresh with no evidence', async () => {
+  const thin = await selectTier({
     context,
     selected: entries(item({ file: 'a.yaml', name: 'top', sessions: 30 })),
     tier: 'common',
     usageWindow: '3m',
+    fullTierOption: '--tier full',
   });
   expect(thin.selected).toEqual([]);
   expect(thin.refused).toBe(
     'The selection has 30 journey matches in 2026-07 to 2026-09, fewer than the 100 tiers need. Use --tier full, or pull more production use.'
   );
-  const none = selectTier({
+  const overMcp = await selectTier({
+    context,
+    selected: entries(item({ file: 'a.yaml', name: 'top', sessions: 30 })),
+    tier: 'common',
+    usageWindow: '3m',
+    fullTierOption: 'tier "full"',
+  });
+  expect(overMcp.refused).toContain('Use tier "full", or pull more production use.');
+  const none = await selectTier({
     context,
     selected: entries(item({ file: 'a.yaml', name: 'top' })),
     tier: 'edge',
@@ -161,7 +184,7 @@ test('selectTier refuses a tier below 100 matches, and names the refresh with no
   expect(none.refused).toContain('lowdefy journeys evidence --refresh');
 });
 
-test('selectTier cuts over the usage window it is given', () => {
+test('selectTier cuts over the usage window it is given', async () => {
   const selected = entries(
     item({
       file: 'a.yaml',
@@ -173,21 +196,21 @@ test('selectTier cuts over the usage window it is given', () => {
     }),
     item({ file: 'b.yaml', name: 'steady', sessions: 90 })
   );
-  const threeMonths = selectTier({ context, selected, tier: 'common', usageWindow: '3m' });
+  const threeMonths = await selectTier({ context, selected, tier: 'common', usageWindow: '3m' });
   expect(names(threeMonths)).toEqual(['steady']);
-  const sixMonths = selectTier({ context, selected, tier: 'common', usageWindow: '6m' });
+  const sixMonths = await selectTier({ context, selected, tier: 'common', usageWindow: '6m' });
   expect(names(sixMonths)).toEqual(['older']);
   expect(sixMonths.selected[0].usage).toMatchObject({ rate: 5.5, usageWindow: '6m' });
 });
 
-test('selectTier keeps an item the runner will refuse in every tier', () => {
+test('selectTier keeps an item the runner will refuse in every tier', async () => {
   const broken = { filePath: filePath('broken.yaml'), journeyIndex: 0, error: 'Invalid YAML: x' };
   const selected = entries(
     item({ file: 'a.yaml', name: 'top', sessions: 300 }),
     item({ file: 'b.yaml', name: 'low', sessions: 30 }),
     broken
   );
-  const result = selectTier({ context, selected, tier: 'common', usageWindow: '3m' });
+  const result = await selectTier({ context, selected, tier: 'common', usageWindow: '3m' });
   expect(result.selected.map((entry) => entry.item)).toEqual([
     expect.objectContaining({ journey: expect.objectContaining({ name: 'top' }) }),
     broken,

@@ -36,6 +36,7 @@ function segment({
   return {
     session,
     page_id: page,
+    steps: steps.map((blockId) => ({ click: blockId })),
     sequence: steps.map((blockId) => ({ page, identity: identity('click', blockId) })),
     persons,
     orgs,
@@ -389,4 +390,27 @@ test('computeEvidence reads dev text by the config text rule on both sides', () 
     isConfigText,
   });
   expect(result.after.dev).toEqual({ recordings: 1 });
+});
+
+test('computeEvidence reads journey click text by the config text rule in the sequence id, flow and counts', () => {
+  const isConfigText = (text) => text === 'Save';
+  const guessed = {
+    name: 'saves a ticket',
+    pageId: 'tickets',
+    steps: [{ click: 'edit' }, { click: { blockId: 'save', text: 'Sample value' } }],
+  };
+  const [result] = computeEvidence({
+    journeys: [{ filePath: '/app/t.yaml', file: 't.yaml', journeyIndex: 0, journey: guessed }],
+    sources: { production: production() },
+    today,
+    isConfigText,
+  });
+  expect(result.after.production.sequence).toBe(live.sequence);
+  expect(result.after.production.flow).toEqual(live.flow);
+  expect(result.after.production.months).toEqual(compute(journey).after.production.months);
+  const labelled = {
+    ...guessed,
+    steps: [{ click: 'edit' }, { click: { blockId: 'save', text: 'Save' } }],
+  };
+  expect(sequenceId({ ...labelled, isConfigText })).not.toBe(live.sequence);
 });

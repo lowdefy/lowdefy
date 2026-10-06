@@ -32,9 +32,14 @@ function compareRows(a, b) {
 // A journey has no counts for the flow its steps walk now when it was never
 // refreshed (or holds the legacy window shape), or its steps changed what is
 // matched since the last refresh. Comparing ids is static, so it costs a hash.
+// The stored id reads click text by the config text rule; when the id read
+// with every click text equals it, the steps match what they matched at the
+// refresh, so only a journey whose ids differ needs isConfigText to tell an
+// edit from text that is not config text (readTierConfigText reads it then).
 function isUnranked({ journey, isConfigText }) {
   const stored = journey.evidence?.production?.sequence;
   if (type.isUndefined(stored)) return true;
+  if (sequenceId({ pageId: journey.pageId, steps: journey.steps }) === stored) return false;
   return sequenceId({ pageId: journey.pageId, steps: journey.steps, isConfigText }) !== stored;
 }
 
@@ -58,7 +63,7 @@ function cutLength({ rows, percent, total }) {
   return length;
 }
 
-function refusal({ ranked, matches, windowMonths }) {
+function refusal({ ranked, matches, windowMonths, fullTierOption }) {
   const hasEvidence = ranked.some((row) => row.days > 0);
   if (!hasEvidence) {
     return 'No selected journey has production evidence to rank by. Pull production use with "lowdefy journeys pull posthog", then run "lowdefy journeys evidence --refresh".';
@@ -66,7 +71,7 @@ function refusal({ ranked, matches, windowMonths }) {
   if (matches < MIN_MATCHES) {
     return `The selection has ${matches} journey matches in ${windowMonths[0]} to ${
       windowMonths[windowMonths.length - 1]
-    }, fewer than the ${MIN_MATCHES} tiers need. Use --tier full, or pull more production use.`;
+    }, fewer than the ${MIN_MATCHES} tiers need. Use ${fullTierOption}, or pull more production use.`;
   }
   return undefined;
 }
@@ -85,6 +90,11 @@ function refusal({ ranked, matches, windowMonths }) {
 //
 // - journeys: [{ file, journeyIndex, name, journey }], one per journey.
 // - usageWindow: the `--usage-window` value (`<n>m`, default 3m).
+// - isConfigText: the app's config text rule, from readTierConfigText.
+//   Undefined reads every click text as config text, so a journey whose id
+//   differs from its stored one is unranked.
+// - fullTierOption: how the caller asks for every journey, named in the
+//   refusal: `--tier full` on the command line, `tier "full"` over MCP.
 //
 // Returns { windowMonths, anchor, matches, refused, rows }. A row is
 // { file, journeyIndex, name, tier, rank, rate, sessions, failures, days, unranked,
@@ -92,9 +102,8 @@ function refusal({ ranked, matches, windowMonths }) {
 // every tier, outside the ranking and the total, with tier `common` and no
 // rank or rate. A `deprecated: true` journey is in no tier: tier and rank are
 // null, its usage is still shown. `refused` says why tiers other than `full`
-// cannot be cut: fewer than 100 matches, or no evidence at all. isConfigText
-// is the app's config text rule, read as the evidence refresh reads it.
-function computeTiers({ journeys, usageWindow, isConfigText }) {
+// cannot be cut: fewer than 100 matches, or no evidence at all.
+function computeTiers({ journeys, usageWindow, isConfigText, fullTierOption }) {
   // Deprecated journeys anchor the window too, so one named on its own still
   // shows its recent use.
   const anchor = newestMonth({ journeys: journeys.map(({ journey }) => journey) });
@@ -127,7 +136,7 @@ function computeTiers({ journeys, usageWindow, isConfigText }) {
     windowMonths,
     anchor,
     matches,
-    refused: refusal({ ranked, matches, windowMonths }),
+    refused: refusal({ ranked, matches, windowMonths, fullTierOption }),
     rows: [
       ...ranked,
       ...rows.filter((row) => row.unranked),

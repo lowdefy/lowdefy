@@ -84,7 +84,6 @@ function countFlow({ entry, segmentsByMonth, dayCounts }) {
 // Dev segments hold the developer's own text: they are read by the same rule
 // as the journeys they back, so non-config text on both sides reads as none.
 function readDevSequences({ segments, isConfigText }) {
-  if (type.isUndefined(isConfigText)) return segments;
   return segments.map((segment) => ({
     ...segment,
     sequence: journeySequence({ pageId: segment.page_id, steps: segment.steps, isConfigText }),

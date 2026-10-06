@@ -108,7 +108,13 @@ async function test({ context }) {
     return;
   }
 
-  const tiered = selectTier({ context, selected, tier, usageWindow });
+  const tiered = await selectTier({
+    context,
+    selected,
+    tier,
+    usageWindow,
+    fullTierOption: '--tier full',
+  });
   if (!type.isUndefined(tiered.refused)) {
     refuse({ context, message: tiered.refused });
     return;

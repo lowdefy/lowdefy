@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
 import { type } from '@lowdefy/helpers';
 
 // A record as the compiler may see it: a clicked-text token that is the
