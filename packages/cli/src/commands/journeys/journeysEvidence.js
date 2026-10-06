@@ -18,6 +18,7 @@ import fs from 'fs';
 import { compileTrace } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
+import committedFlowTexts from './evidence/committedFlowTexts.js';
 import computeEvidence from './evidence/computeEvidence.js';
 import createTokenResolver from './createTokenResolver.js';
 import describeMissingPull from './describeMissingPull.js';
@@ -39,11 +40,10 @@ import writeEvidenceNode from './evidence/writeEvidenceNode.js';
 
 const SOURCES = ['production'];
 
-// The PASS line's evidence, plus the dev recordings, which the PASS line
-// leaves out but a refresh can change.
-function summarise({ evidence }) {
+// The PASS line's evidence, plus this machine's dev recordings, which are
+// printed but never written: a rolling count that differs by machine.
+function summarise({ evidence, recordings }) {
   const parts = [formatEvidence({ evidence })].filter((part) => part !== '');
-  const recordings = evidence?.dev?.recordings;
   if (!type.isUndefined(recordings)) {
     parts.push(`${recordings} dev recordings`);
   }
@@ -84,7 +84,9 @@ function warnUnreadDays({ logger, otherSalt, traceSalt }) {
 // change in, compiled in one pass. Days pulled before clicked text was stored
 // as tokens are removed first, as every production read removes them. Only
 // days hashed under this machine's salt are read, with their tokens resolved
-// to config text; the rest are named with the pull that fetches them again.
+// to config text or to a click text a committed flow already holds, so a
+// renamed label's old clicks still back the flow that clicked them; the rest
+// are named with the pull that fetches them again.
 // Undefined when the cache holds no such final day, so the committed
 // production evidence is kept.
 function readProduction({ context, journeys, today, now, configText, routeTable }) {
@@ -117,7 +119,10 @@ function readProduction({ context, journeys, today, now, configText, routeTable 
     directories,
     finalDays,
     months,
-    resolve: createTokenResolver({ salt: traceSalt.salt, texts: configText.texts }),
+    resolve: createTokenResolver({
+      salt: traceSalt.salt,
+      texts: new Set([...configText.texts, ...committedFlowTexts({ journeys })]),
+    }),
   });
   const { segments } = compileTrace({
     records,
@@ -206,9 +211,10 @@ async function journeysEvidence({ context }) {
   const changed = results.filter((result) => result.changed);
   changed.forEach((result) => {
     logger.info(
-      `${result.file}#${result.name}: ${summarise({ evidence: result.before })} -> ${summarise({
-        evidence: result.after,
-      })}`
+      `${result.file}#${result.name}: ${summarise({
+        evidence: result.before,
+        recordings: result.before?.dev?.recordings,
+      })} -> ${summarise({ evidence: result.after, recordings: result.devRecordings })}`
     );
   });
   const read = describeRead({ production });

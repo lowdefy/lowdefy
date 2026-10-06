@@ -424,3 +424,27 @@ steps:
   expect(uncovered.filter((text) => text === null)).toHaveLength(2);
   expect(JSON.stringify(report)).not.toContain('Acme');
 });
+
+// Sets one cached day's pull filters as the pull records them.
+function setPullFilters({ day, environment }) {
+  const manifestPath = path.join(
+    configDirectory,
+    '.lowdefy',
+    'traces',
+    'production',
+    `${day}.manifest.json`
+  );
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  fs.writeFileSync(
+    manifestPath,
+    JSON.stringify({ ...manifest, project_id: '1', environment, filter_test_accounts: true })
+  );
+}
+
+test('journeys coverage refuses a window whose days were pulled with different environments', async () => {
+  setPullFilters({ day: '2026-10-02', environment: 'production' });
+  setPullFilters({ day: '2026-10-03', environment: 'staging' });
+  await expect(journeysCoverage({ context })).rejects.toThrow(
+    'The production trace cache holds days pulled with different filters, which cannot be counted together: 2026-10-02 (project 1, environment "production", test accounts filtered out); 2026-10-03 (project 1, environment "staging", test accounts filtered out). Pull them again with one set of filters (the same --environment and --include-test-accounts for every day): run "lowdefy journeys pull posthog --refetch --from 2026-10-02 --to 2026-10-03".'
+  );
+});

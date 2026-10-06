@@ -291,7 +291,7 @@ When PostHog rate limits the pull for longer than a minute, or the project's hou
 
 ## journeys evidence
 
-The `journeys evidence` command works out how much production use backs each journey in `tests/journeys/`, by calendar month: the sessions that did what the journey does, the people and organisations behind them, and how many of them failed. It reads every final day of the production cache (today and yesterday are not final until a later pull), not a window, and gaps in the cache are fine. A month already counted from at least as many final days is not read again, so a routine refresh reads the current month. It also counts the dev recordings of the last 7 days that back each journey. See [Evidence](/config-tests#evidence).
+The `journeys evidence` command works out how much production use backs each journey in `tests/journeys/`, by calendar month: the sessions that did what the journey does, the people and organisations behind them, and how many of them failed. It reads every final day of the production cache (today and yesterday are not final until a later pull), not a window, and gaps in the cache are fine. A month already counted from at least as many final days is not read again, so a routine refresh reads the current month. It also prints how many dev recordings of the last 7 days back each journey, but never writes that count. Days pulled with different filters (project, environment, test accounts) are refused. See [Evidence](/config-tests#evidence).
 
 A journey's click text counts only when it is text from the app's config, as production text is read: a journey clicking a grid cell by a customer's name is backed exactly as one clicking it with no text, so no command confirms whether production showed a value.
 
