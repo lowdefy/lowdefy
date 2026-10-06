@@ -15,7 +15,7 @@
 */
 
 import authEngineActions from './authEngineActions.js';
-import pageBlocks from './pageBlocks.js';
+import pageBlocks from '../pageBlocks.js';
 import readExploreArtifact from './readExploreArtifact.js';
 
 // The blocks of a page whose events run an action that calls the auth engine.

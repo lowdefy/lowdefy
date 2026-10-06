@@ -23,11 +23,13 @@ import {
 } from '@lowdefy/e2e-utils/runtime';
 import { getStepKey } from '@lowdefy/node-utils';
 
+import checkStepReferences from './checkStepReferences.js';
 import createLeftOriginError from './createLeftOriginError.js';
 import { buildPageUrl } from './getBrowser.js';
 import hasNoEffect from './observe/hasNoEffect.js';
 import isPageReady from './isPageReady.js';
 import JourneyStepError from './JourneyStepError.js';
+import nextJourneySequence from './nextJourneySequence.js';
 import openJourneyEmail from './openJourneyEmail.js';
 import readJourneyEmailMatch from './readJourneyEmailMatch.js';
 import readPagePath from './readPagePath.js';
@@ -100,8 +102,12 @@ const {
   rowAttribute: ROW_ATTRIBUTE,
 } = journeyTargetSelectors;
 
-async function resolveClickTarget(scope) {
+// Waits for the block (or its control) to show before counting, so a block
+// that renders a moment after the step starts is clicked through its control,
+// not at its wrapper's centre. A block that never shows fails the wait.
+async function resolveClickTarget({ scope, timeout }) {
   const control = scope.locator(INTERACTIVE_CONTROL).first();
+  await control.or(scope).first().waitFor({ state: 'visible', timeout });
   if ((await control.count()) > 0) {
     return control;
   }
@@ -259,12 +265,19 @@ function plural({ count, word }) {
 // hides a journey that clicks the wrong row. Waits for a first match to show,
 // then looks again (a dialog may have opened over the page in the meantime) and
 // counts. When none shows, the wait's own error reports it.
+//
+// A target with `nth` also waits for a first match before it is resolved, so
+// the front-most open layer is chosen (locatePageWideText) once the control is
+// showing, not before a dialog the previous step opened has rendered.
 async function resolveActionTarget({ page, target, timeout }) {
-  if (!namesMatches(target) || !type.isUndefined(target.nth)) {
+  if (!namesMatches(target)) {
     return resolveTarget({ page, target });
   }
   const first = (await locateMatches({ page, target })).matches.first();
   await first.waitFor({ state: 'visible', timeout });
+  if (!type.isUndefined(target.nth)) {
+    return resolveTarget({ page, target });
+  }
   const { matches, where } = await locateMatches({ page, target });
   const count = await matches.count();
   if (count > 1) {
@@ -290,11 +303,11 @@ async function resolveActionTarget({ page, target, timeout }) {
 // row's own click handler, the way a person clicks the row; a target that
 // names a container (block, row, cell) is clicked on the first control inside
 // it, or on itself when it has none.
-async function resolveClickLocator({ located, target }) {
+async function resolveClickLocator({ located, target, timeout }) {
   if (namesMatches(target) || !type.isUndefined(target.nth)) {
     return located;
   }
-  return resolveClickTarget(located);
+  return resolveClickTarget({ scope: located, timeout });
 }
 
 // The element a person clicks to open an input's popup: the trigger antd draws
@@ -365,10 +378,12 @@ async function runOpen({ page, step, timeout }) {
       action: async () => {
         const located = await resolveActionTarget({ page, target, timeout });
         const trigger = located.locator(POPUP_TRIGGER).first();
+        // The input renders its trigger with the block; counted once either shows.
+        await trigger.or(located).first().waitFor({ state: 'visible', timeout });
         if ((await trigger.count()) > 0) {
           await trigger.click({ timeout });
         } else {
-          await (await resolveClickLocator({ located, target })).click({ timeout });
+          await (await resolveClickLocator({ located, target, timeout })).click({ timeout });
         }
       },
     });
@@ -398,7 +413,7 @@ async function runClick({ page, step, timeout }) {
     target,
     action: async () => {
       const located = await resolveActionTarget({ page, target, timeout });
-      const locator = await resolveClickLocator({ located, target });
+      const locator = await resolveClickLocator({ located, target, timeout });
       await locator.click({ timeout, clickCount: count });
     },
   });
@@ -459,6 +474,9 @@ async function runSelect({ page, step, timeout }) {
     target,
     action: async () => {
       scope = await resolveActionTarget({ page, target, timeout });
+      // A native select or the radio options render with the block; counted
+      // once it shows, so a late block does not fall through to the dropdown.
+      await scope.first().waitFor({ state: 'visible', timeout });
     },
   });
   const native = scope.locator('select');
@@ -477,7 +495,7 @@ async function runSelect({ page, step, timeout }) {
   await actOnTarget({
     target,
     action: async () => {
-      const locator = await resolveClickLocator({ located: scope, target });
+      const locator = await resolveClickLocator({ located: scope, target, timeout });
       await locator.click({ timeout });
     },
   });
@@ -601,7 +619,20 @@ async function pollUntil({ page, read, check, timeout, expected }) {
   }
 }
 
-async function runWait({ page, step, timeout }) {
+// A request the page made before the step's window (the call on page load,
+// when a click was meant to call it again) does not satisfy wait.request: the
+// actor's network counter must show a call started inside the window, and the
+// page must have that request no longer loading.
+async function readRequestWait({ journey, page, requestId, since }) {
+  const state = await getRequestState(page, requestId);
+  const pageId = await page.evaluate(() => window.lowdefy?.pageId);
+  return {
+    calledSinceLastInteraction: journey.actors.calledSince({ request: requestId, pageId, since }),
+    state: state ?? null,
+  };
+}
+
+async function runWait({ journey, page, step, timeout, requestWindowStart }) {
   const wait = step.wait;
   switch (getStepKey(wait)) {
     case 'ms':
@@ -610,10 +641,12 @@ async function runWait({ page, step, timeout }) {
     case 'request':
       await pollUntil({
         page,
-        read: () => getRequestState(page, wait.request),
-        check: (request) => !type.isNone(request) && request.loading !== true,
+        read: () =>
+          readRequestWait({ journey, page, requestId: wait.request, since: requestWindowStart }),
+        check: ({ calledSinceLastInteraction, state }) =>
+          calledSinceLastInteraction && !type.isNone(state) && state.loading !== true,
         timeout,
-        expected: `request "${wait.request}" to have finished loading`,
+        expected: `request "${wait.request}" to have been called since the last interaction and finished loading`,
       });
       return;
     case 'state':
@@ -918,11 +951,17 @@ async function settlePage({ page, timeout }) {
 
 const INTERACTION_STEPS = ['click', 'open', 'fill', 'select', 'press', 'back'];
 
+// The steps that open a new window for wait.request: an interaction, or a step
+// that loads or switches to a page. Before the first of them the window is the
+// page open.
+const REQUEST_WINDOW_STEPS = [...INTERACTION_STEPS, 'goto', 'as'];
+
 const SETTLE_TIMEOUT_MS = 5000;
 
-async function runStep({ journey, step, index, screenshots }) {
+async function runStep({ journey, step, index, screenshots, requestWindowStart }) {
   const page = journey.actors.current().page;
   const timeout = journey.stepTimeout;
+  await checkStepReferences({ journey, page, step });
   switch (getStepKey(step)) {
     case 'click':
       await runClick({ page, step, timeout });
@@ -958,7 +997,7 @@ async function runStep({ journey, step, index, screenshots }) {
       await journey.actors.switchTo(step.as);
       return;
     case 'wait':
-      await runWait({ page, step, timeout });
+      await runWait({ journey, page, step, timeout, requestWindowStart });
       return;
     case 'screenshot':
       await runScreenshot({ page, step, index, screenshots });
@@ -1003,6 +1042,8 @@ async function runJourneySteps({ journey, steps }) {
   const screenshots = [];
   const { appErrors } = journey;
   let failure;
+  // In nextJourneySequence's order; 0 takes in every call since the page opened.
+  let requestWindowStart = 0;
   if (!type.isUndefined(appErrors)) {
     failure = await appErrors.judgeOpen({ page: journey.actors.current().page });
   }
@@ -1013,9 +1054,12 @@ async function runJourneySteps({ journey, steps }) {
       continue;
     }
     const started = Date.now();
+    if (REQUEST_WINDOW_STEPS.includes(getStepKey(step))) {
+      requestWindowStart = nextJourneySequence();
+    }
     await appErrors?.openWindow({ page: journey.actors.current().page });
     try {
-      await runStep({ journey, step, index, screenshots });
+      await runStep({ journey, step, index, screenshots, requestWindowStart });
       if (INTERACTION_STEPS.includes(getStepKey(step))) {
         await settlePage({
           page: journey.actors.current().page,

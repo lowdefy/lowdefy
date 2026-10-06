@@ -15,24 +15,24 @@
 */
 
 import insertFixture from './insertFixture.js';
+import insertGeneratedDocuments from './insertGeneratedDocuments.js';
 import mergeCollectionIndexes from './mergeCollectionIndexes.js';
 
 // Loads one collection into a fresh session database: indexes first, on the empty collection, so a
-// fixture that breaks a unique index fails here instead of loading; then the snapshot's documents;
-// then the fixtures, which win over snapshot documents with the same _id.
-async function loadDataSetCollection({ db, dataSetName, collectionName, group, documents }) {
+// fixture that breaks a unique index fails here instead of loading; then the generated documents;
+// then the fixtures.
+async function loadDataSetCollection({ db, dataSetName, collectionName, group }) {
   const collection = await db.createCollection(collectionName);
   const indexes = mergeCollectionIndexes({
     dataSetName,
     collection: collectionName,
-    recorded: group.recordedIndexes,
-    declared: group.indexes,
+    indexes: group.indexes,
   });
   if (indexes.length > 0) {
     await collection.createIndexes(indexes);
   }
-  if (documents.length > 0) {
-    await collection.insertMany(documents, { ordered: false });
+  for (const batch of group.generated) {
+    await insertGeneratedDocuments({ collection, dataSetName, batch });
   }
   for (const fixture of group.fixtures) {
     await insertFixture({ collection, dataSetName, fixture });

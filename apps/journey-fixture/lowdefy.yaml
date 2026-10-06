@@ -58,4 +58,6 @@ pages:
   - _ref: pages/ticket.yaml
   - _ref: pages/app_errors.yaml
   - _ref: pages/app_errors_open.yaml
+  - _ref: pages/timing.yaml
   - _ref: pages/targets.yaml
+  - _ref: pages/generated.yaml

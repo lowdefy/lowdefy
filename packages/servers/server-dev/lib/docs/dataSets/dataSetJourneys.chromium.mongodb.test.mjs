@@ -97,6 +97,11 @@ pluginFiles.forEach((filePath) => {
   const relative = path.relative(pluginsDirectory, filePath);
   jest.unstable_mockModule(filePath, () => pluginModules[relative] ?? { default: {} });
 });
+// The journeys run on a stand-in page, not a built Lowdefy page, so there is no page build to
+// check their step references against; the fixture suite covers the checks.
+jest.unstable_mockModule('../checkStepReferences.js', () => ({
+  default: async () => {},
+}));
 
 // The fixture app's build, in a temporary server directory: lib/build/*.js read build/*.json from
 // the working directory when they are imported.
@@ -150,6 +155,9 @@ function pageHtml() {
 <script>
 window.lowdefy = {
   pageId: 'tickets',
+  pageInstances: { tickets: ['page:tickets'] },
+  // The e2e-utils state helpers read the instance on screen through the path memory.
+  pathMemory: new Map([['tickets', { pageId: 'tickets', pathParams: {}, instanceKey: 'page:tickets' }]]),
   contexts: {
     'page:tickets': {
       state: { changes: [] },
@@ -388,7 +396,7 @@ chromiumTest(
     });
     expect(first.status).toBe(200);
     expect(first.result.passed).toBe(true);
-    expect(first.result.data).toEqual({ name: 'shop', loadMs: expect.any(Number), snapshot: null });
+    expect(first.result.data).toEqual({ name: 'shop', loadMs: expect.any(Number), documents: 3 });
 
     const second = await runJourney({
       data: 'shop',

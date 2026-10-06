@@ -1,0 +1,23 @@
+# The data set the generate fixture test runs on
+# (packages/servers/server-dev/test/journeyFixture/dataSetGenerate.test.mjs):
+# one fixture the journey targets, and seeded generated neighbours. Change it
+# only together with that test.
+fixtures:
+  fixture_db:
+    - { _id: invoice-fixture, kind: invoice, status: paid, customer: Fixture customer }
+generate:
+  seed: 7
+  fixture_db:
+    count: 40
+    fields:
+      _id: { sequence: { prefix: invoice-, start: 1 } }
+      kind: invoice
+      status: { oneOf: [draft, sent, paid], weights: [1, 2, 5] }
+      amount: { number: { min: 10, max: 5000, decimals: 2 } }
+      issued: { date: { from: 2026-01-01, to: 2026-09-30 } }
+      note: { text: { words: [3, 8] } }
+      customer: { company: true }
+      contact: { name: true }
+      email: { email: true }
+users:
+  member: { id: u_member, roles: [member] }

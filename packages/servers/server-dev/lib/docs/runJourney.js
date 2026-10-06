@@ -124,9 +124,12 @@ async function runJourney({
   if (!type.isUndefined(stepsError)) {
     return { error: stepsError };
   }
+  // A placeholder step or a mail step with no sink is the caller's to fix, like
+  // a data set problem: refused, so the route answers 400 and lowdefy test does
+  // not repeat it.
   const { error: placeholderError } = findPlaceholderStep({ steps });
   if (!type.isUndefined(placeholderError)) {
-    return { error: placeholderError };
+    return { error: placeholderError, refused: true };
   }
   const stateSelectionError = validateStateSelection({ state: stateSelection });
   if (!type.isUndefined(stateSelectionError)) {
@@ -138,7 +141,7 @@ async function runJourney({
   }
   const mailError = validateJourneyMail({ steps });
   if (!type.isUndefined(mailError)) {
-    return { error: mailError };
+    return { error: mailError, refused: true };
   }
   const pagePath = readPagePath({ pageId });
   let url;
@@ -207,13 +210,8 @@ async function runJourneyInBrowser({
   stateSelection,
   readConfigFile,
 }) {
-  let browser;
-  try {
-    browser = await getBrowser();
-  } catch (error) {
-    return { error: noBrowserError(error) };
-  }
-
+  // The data session opens before the browser is fetched: a data set that fails
+  // to load is refused without launching a browser for nothing.
   let session = null;
   let loadMs;
   if (!type.isUndefined(dataSet)) {
@@ -229,6 +227,16 @@ async function runJourneyInBrowser({
       return { error: error.message, refused: true };
     }
     loadMs = Date.now() - loadStart;
+  }
+
+  let browser;
+  try {
+    browser = await getBrowser();
+  } catch (error) {
+    if (session !== null) {
+      await session.close();
+    }
+    return { error: noBrowserError(error) };
   }
 
   // Every run carries an identity, recorded or not, so the errors it causes

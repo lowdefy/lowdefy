@@ -60,9 +60,7 @@ test('journeys-from-production gives no instruction to delete a journey', () => 
 
 test('journeys-from-production keeps the fixture, frustration, flake and commit rules', () => {
   const skill = journeysFromProduction({ appPath: '' });
-  expect(skill).toContain(
-    'add a\n  fixture document for the journey rather than borrowing a value'
-  );
+  expect(skill).toContain('add a\n  fixture document for the journey.');
   expect(skill).toContain('A dead click on a\n  block that should do nothing is a finding');
   expect(skill).toContain('Never add `wait: { ms }`');
   expect(skill).toContain('Commit nothing.');
@@ -93,12 +91,11 @@ test('journeys-from-production reads routines with the config and decides what d
   expect(skill).toContain('ask them only about findings and dead clicks');
 });
 
-test('journeys-from-production never reads production text, secrets, snapshots or PostHog', () => {
+test('journeys-from-production never reads production text, secrets or PostHog', () => {
   const skill = journeysFromProduction({ appPath: '' });
   expect(skill).toContain(
     "read `.lowdefy/traces/production/salt`, the app's `.env` or any credential;"
   );
-  expect(skill).toContain('read `.lowdefy/data/` snapshots;');
   expect(skill).toContain('call PostHog through its MCP, its API or a URL, or run HogQL;');
   expect(skill).toContain('add text to the config to resolve a token');
   expect(skill).not.toContain('## PostHog MCP');

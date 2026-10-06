@@ -65,7 +65,6 @@ test('journeys-harden keeps the assertion rule, unapplied mutants, dead config a
   );
   expect(skill).toContain('never an assertion to add');
   expect(skill).toContain('that is a finding about the\n  app, not about the test');
-  expect(skill).toContain('flagging any over 14\n  days');
   expect(skill).toContain('Commit nothing.');
   expect(skill).toContain('Only journeys with a data set (`data:`) can be hardened');
 });

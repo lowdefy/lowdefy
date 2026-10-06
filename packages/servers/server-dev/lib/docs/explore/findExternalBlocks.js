@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-import pageBlocks from './pageBlocks.js';
+import pageBlocks from '../pageBlocks.js';
 import readExploreArtifact from './readExploreArtifact.js';
 import readRoutineSteps from '../readRoutineSteps.js';
 

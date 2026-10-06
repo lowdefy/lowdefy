@@ -92,15 +92,6 @@ beforeEach(() => {
       '',
     ].join('\n')
   );
-  writeJson(path.join(configDirectory, '.lowdefy', 'data', 'staging-sample', 'manifest.json'), {
-    pulledAt: '2026-10-01T00:00:00.000Z',
-    from: 'staging',
-    collections: { tickets: 1 },
-  });
-  fs.writeFileSync(
-    path.join(configDirectory, '.lowdefy', 'data', 'staging-sample', 'tickets.jsonl'),
-    `${JSON.stringify({ _id: 's-1', title: 'Snapshot Customer Pty', owner: 'Jane Staging' })}\n`
-  );
 });
 
 afterEach(() => {
@@ -130,12 +121,10 @@ test('collectKnownText holds page, menu, default-locale, fixture, user and typed
   expect(known.has(' Grace Hopper ')).toBe(true);
 });
 
-test('collectKnownText leaves out snapshot values, other locales, markers and unlisted pages', async () => {
+test('collectKnownText leaves out other locales, markers and unlisted pages', async () => {
   const dataSet = await parseDataSet({ configDirectory, name: 'staging-sample' });
   const known = collectKnownText({ buildDirectory, pageIds: ['tickets'], dataSet });
 
-  expect(known.has('Snapshot Customer Pty')).toBe(false);
-  expect(known.has('Jane Staging')).toBe(false);
   expect(known.has('Geen oop kaartjies nie')).toBe(false);
   expect(known.has('x2')).toBe(false);
   expect(known.has('r7')).toBe(false);
