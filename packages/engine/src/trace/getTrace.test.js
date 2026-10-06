@@ -208,6 +208,7 @@ test('trace actionView has subscribe and the describe functions and no engine-on
   expect(Object.keys(trace.actionView).sort()).toEqual([
     'describeChain',
     'describeElement',
+    'isConfigText',
     'pageIdOf',
     'pathEntryOf',
     'subscribe',
@@ -215,6 +216,7 @@ test('trace actionView has subscribe and the describe functions and no engine-on
   expect(trace.actionView.subscribe).toBe(trace.subscribe);
   expect(trace.actionView.describeElement).toBe(trace.describeElement);
   expect(trace.actionView.describeChain).toBe(trace.describeChain);
+  expect(trace.actionView.isConfigText).toBe(trace.isConfigText);
   expect(trace.actionView.pageIdOf).toBe(trace.pageIdOf);
   expect(trace.actionView.pathEntryOf).toBe(trace.pathEntryOf);
   expect(trace.actionView.emit).toBeUndefined();

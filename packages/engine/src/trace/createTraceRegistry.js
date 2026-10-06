@@ -17,6 +17,7 @@
 import createDescribeChain from './createDescribeChain.js';
 import createDescribeElement from './createDescribeElement.js';
 import createFindBlockType from './createFindBlockType.js';
+import createIsConfigText from './createIsConfigText.js';
 import createPageIdOf from './createPageIdOf.js';
 import createPathEntryOf from './createPathEntryOf.js';
 
@@ -93,17 +94,26 @@ function createTraceRegistry({ lowdefy }) {
   const pageIdOf = createPageIdOf({ pathEntryOf });
   const describeElement = createDescribeElement({ findBlockType, pathEntryOf });
   const describeChain = createDescribeChain({ findBlockType, pathEntryOf });
+  const isConfigText = createIsConfigText({ lowdefy, pathEntryOf });
 
   return {
     describeChain,
     describeElement,
     emit,
+    isConfigText,
     pageIdOf,
     pathEntryOf,
     subscribe,
     wantsPayload,
     wantsState,
-    actionView: { describeChain, describeElement, pageIdOf, pathEntryOf, subscribe },
+    actionView: {
+      describeChain,
+      describeElement,
+      isConfigText,
+      pageIdOf,
+      pathEntryOf,
+      subscribe,
+    },
   };
 }
 
