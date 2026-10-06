@@ -100,7 +100,7 @@ Each key under `generate` other than `seed` is a connection id, with `count` (ho
 | `sequence` | `{ sequence: { prefix: inv-, start: 1 } }`           | `inv-1`, `inv-2`, …, one per document. Without `prefix` it makes numbers; `sequence: true` counts from 1.                                                                         |
 | `ref`      | `{ ref: customers_db }`                              | The `_id` of a document of another connection, from its fixtures or its generated documents. Connections are generated in the order their refs need; a cycle is refused.          |
 
-- **`_id`.** A document's `_id` is `<connection id>-1`, `<connection id>-2`, … unless `fields` sets it. A generated `_id` that is also a fixture's `_id`, or that is generated twice, is refused.
+- **`_id`.** A document's `_id` is `<connection id>-1`, `<connection id>-2`, … unless `fields` sets it. A generated `_id` that is also a fixture's `_id`, or that is generated twice, is refused, also across connections that name one collection.
 - **Stable.** Each field has its own seeded sequence, so adding a field or a connection leaves every other field's values as they were.
 - **Size advice.** A connection that loads more than 1,000 documents (fixtures and generated together) gets a warning saying it is not advised. Every journey on the data set loads that many documents, so keep the count to what a page needs. It is never refused.
 - **No dependency.** The lists are small and built in; nothing is downloaded.
