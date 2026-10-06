@@ -21,13 +21,11 @@ import path from 'path';
 import describeEmptyScope from './describeEmptyScope.js';
 import diffBuilds from './diffBuilds.js';
 import readBuildArtifacts from './readBuildArtifacts.js';
-import readCoverage from './readCoverage.js';
 import selectTargets from './selectTargets.js';
-import writeScope from './writeScope.js';
 
 let root;
 beforeEach(() => {
-  root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-explore-diff-'));
+  root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-scope-diff-'));
 });
 afterEach(() => {
   fs.rmSync(root, { recursive: true, force: true });
@@ -329,22 +327,15 @@ test('selectTargets flags a page whose auth changed', () => {
   expect(result.pages[0]).toMatchObject({ pageId: 'settings', authChanged: true });
 });
 
-test('selectTargets gives an empty scope for a notification-only change, listing it as not compared', async () => {
+test('selectTargets gives an empty scope for a notification-only change, listing it as not compared', () => {
   const result = targets({
     change: (head) => {
       head['notifications/welcome.json'] = { subject: 'Hello' };
     },
   });
   expect(result.pages).toEqual([]);
-  const scope = await writeScope({
-    runDirectory: path.join(root, 'run'),
-    revisions: { base: 'b', head: 'h', dirty: false, pr: null },
-    targets: result,
-    plugins: { missingFromHead: [], versionChanged: [] },
-    buildMs: { base: 10, head: 12 },
-  });
-  expect(describeEmptyScope({ scope, pluginDirectories: ['plugins/acme'] })).toEqual(
-    'no change in the compared artifacts; changed but not compared: notifications/welcome.json; plugin code changed under plugins/acme; pass --page to walk pages.'
+  expect(describeEmptyScope({ scope: result, pluginDirectories: ['plugins/acme'] })).toEqual(
+    'no change in the compared artifacts; changed but not compared: notifications/welcome.json; plugin code changed under plugins/acme; run without --base to list every page.'
   );
 });
 
@@ -441,47 +432,4 @@ test('selectTargets for a head-only bug bash adds the charter pages, and the ent
 test('selectTargets for a PR run adds the charter pages beside the changed ones', () => {
   const result = targets({ manualPages: ['home'], charterPages: ['home', 'tickets'] });
   expect(reasons(result)).toEqual({ home: ['manual', 'charter'], tickets: ['charter'] });
-});
-
-test('writeScope writes scope.json in the run directory', async () => {
-  const scope = await writeScope({
-    runDirectory: path.join(root, 'run'),
-    revisions: {
-      base: 'b',
-      head: 'h',
-      dirty: true,
-      pr: { number: 7, url: 'u', title: 't' },
-      root: '/x',
-    },
-    targets: {
-      pages: [],
-      appWide: ['events.json'],
-      uncompared: [],
-      removedPages: ['old'],
-      warnings: [],
-    },
-    plugins: { missingFromHead: [], versionChanged: [] },
-    buildMs: { base: 0, head: 5 },
-  });
-  expect(JSON.parse(fs.readFileSync(path.join(root, 'run', 'scope.json'), 'utf8'))).toEqual(scope);
-  expect(scope).toEqual({
-    base: 'b',
-    head: 'h',
-    dirty: true,
-    pr: { number: 7, url: 'u', title: 't' },
-    pages: [],
-    appWide: ['events.json'],
-    uncompared: [],
-    plugins: { missingFromHead: [], versionChanged: [] },
-    removedPages: ['old'],
-    buildMs: { base: 0, head: 5 },
-  });
-});
-
-test('readCoverage reads coverage.json, or null when there is none', () => {
-  const directories = { test: path.join(root, '.lowdefy', 'test') };
-  expect(readCoverage({ directories })).toBeNull();
-  fs.mkdirSync(directories.test, { recursive: true });
-  fs.writeFileSync(path.join(directories.test, 'coverage.json'), JSON.stringify({ version: 1 }));
-  expect(readCoverage({ directories })).toEqual({ version: 1 });
 });

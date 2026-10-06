@@ -41,20 +41,20 @@ async function removeOlderThan({ directory, cutoff }) {
   return removed;
 }
 
-// Keeps .lowdefy/explore/ bounded: run directories older than 14 days, and
+// Keeps .lowdefy/scope/ bounded: run directories older than 14 days, and
 // base trees and builds not used for 14 days, are removed at the start of a
 // run. A cached tree or build is touched when a run reuses it.
-async function pruneExploreDirectory({ exploreDirectory, now = Date.now() }) {
+async function pruneScopeDirectory({ scopeDirectory, now = Date.now() }) {
   const cutoff = now - RETENTION_MS;
   const removed = [];
   let entries = [];
   try {
-    entries = await fs.promises.readdir(exploreDirectory, { withFileTypes: true });
+    entries = await fs.promises.readdir(scopeDirectory, { withFileTypes: true });
   } catch (error) {
     if (error.code !== 'ENOENT') throw error;
   }
   for (const entry of entries.filter((item) => item.isDirectory())) {
-    const entryPath = path.join(exploreDirectory, entry.name);
+    const entryPath = path.join(scopeDirectory, entry.name);
     if (CACHE_DIRECTORIES.includes(entry.name)) {
       removed.push(...(await removeOlderThan({ directory: entryPath, cutoff })));
       continue;
@@ -68,4 +68,4 @@ async function pruneExploreDirectory({ exploreDirectory, now = Date.now() }) {
   return removed;
 }
 
-export default pruneExploreDirectory;
+export default pruneScopeDirectory;

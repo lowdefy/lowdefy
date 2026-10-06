@@ -158,27 +158,6 @@ function exploreArgs(extra = []) {
   ];
 }
 
-fixtureTest(
-  'explore --scope-only targets the page the commit changed and walks nothing',
-  async () => {
-    const { code, stdout, stderr } = await runCli(exploreArgs(['--scope-only', '--json']));
-    expect(stderr).toBe('');
-    expect(code).toBe(0);
-    const scope = JSON.parse(stdout);
-    expect(scope.pages.map((page) => [page.pageId, page.reasons])).toEqual([
-      ['explore_pr', ['page', 'request:save_note']],
-    ]);
-    expect(scope.pages[0].blocks.map((block) => [block.blockId, block.change])).toEqual(
-      expect.arrayContaining([
-        ['assign_submit', 'added'],
-        ['note_input', 'added'],
-        ['save_note_button', 'added'],
-      ])
-    );
-    expect(fs.existsSync(path.join(readRunDirectory(), 'walks.jsonl'))).toBe(false);
-  }
-);
-
 // What a seeded walk did, without what differs between runs (ids, times,
 // durations, screenshot paths).
 function walkShape(walk) {

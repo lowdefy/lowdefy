@@ -21,7 +21,7 @@ import path from 'path';
 import { jest } from '@jest/globals';
 
 const mockReadPullRequest = jest.fn();
-jest.unstable_mockModule('./readPullRequest.js', () => ({ default: mockReadPullRequest }));
+jest.unstable_mockModule('../explore/readPullRequest.js', () => ({ default: mockReadPullRequest }));
 
 const { default: resolveRevisions } = await import('./resolveRevisions.js');
 
@@ -52,7 +52,7 @@ function commitFile({ repo, file, content, message }) {
 }
 
 function createRepository() {
-  const repo = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-explore-git-'));
+  const repo = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-scope-git-'));
   git(['init', '-q', '-b', 'main'], repo);
   return repo;
 }

@@ -20,7 +20,7 @@ import path from 'path';
 import runGit from './runGit.js';
 
 // The base commit's whole repository, checked out into
-// <exploreDirectory>/trees/<sha>/ and kept as a cache. The whole repository,
+// <scopeDirectory>/trees/<sha>/ and kept as a cache. The whole repository,
 // not only the app, because _refs and local modules can reach outside the
 // app directory. Returns the base config directory: the same path relative
 // to the git root as the head's.
@@ -33,8 +33,8 @@ import runGit from './runGit.js';
 // that `git worktree list` (and the hub's checkout guard) would then see. A
 // temporary-index checkout writes exactly the commit's tree, runs the
 // repository's checkout filters and registers nothing.
-async function materialiseTree({ root, sha, configDirectory, exploreDirectory }) {
-  const treesDirectory = path.join(exploreDirectory, 'trees');
+async function materialiseTree({ root, sha, configDirectory, scopeDirectory }) {
+  const treesDirectory = path.join(scopeDirectory, 'trees');
   const treeDirectory = path.join(treesDirectory, sha);
   const relativeConfig = path.relative(fs.realpathSync(root), fs.realpathSync(configDirectory));
   const result = {

@@ -25,7 +25,7 @@ import runConfigTreeBuild from './runConfigTreeBuild.mjs';
 
 jest.setTimeout(120000);
 
-const serverDevDirectory = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
+const serverDevDirectory = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
 const logger = {
   debug: () => {},
@@ -103,7 +103,7 @@ function hashTree(directory) {
 
 let root;
 beforeEach(() => {
-  root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-explore-build-'));
+  root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-config-tree-build-'));
 });
 afterEach(() => {
   fs.rmSync(root, { recursive: true, force: true });

@@ -22,9 +22,9 @@ import { createNodeLogger } from '@lowdefy/logger/node';
 
 import runConfigTreeBuild from './runConfigTreeBuild.mjs';
 
-// Entry for the explorer's base and head builds and the journey readers'
-// config text set: the CLI spawns
-// `node <dev>/lib/docs/explore/buildConfigTree.mjs --config <dir> --out <dir>`
+// Entry for `lowdefy journeys scope`'s base and head builds and the journey
+// readers' config text set: the CLI spawns
+// `node <dev>/lib/configTree/buildConfigTree.mjs --config <dir> --out <dir>`
 // from the installed dev server, which holds @lowdefy/build and the app's
 // plugins. Exits 1 when the build fails; <out>/result.json says why.
 async function buildConfigTree() {
@@ -32,7 +32,7 @@ async function buildConfigTree() {
     options: { config: { type: 'string' }, out: { type: 'string' } },
   });
   const logger = createNodeLogger({
-    name: 'lowdefy explore build',
+    name: 'lowdefy config tree build',
     level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
     base: { pid: undefined, hostname: undefined },
     destination: pino.destination({ dest: 1, sync: true }),
@@ -45,7 +45,7 @@ async function buildConfigTree() {
   const result = await runConfigTreeBuild({
     configDirectory: path.resolve(values.config),
     outDirectory: path.resolve(values.out),
-    devDirectory: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..'),
+    devDirectory: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..'),
     logger,
     refResolver: process.env.LOWDEFY_BUILD_REF_RESOLVER,
   });

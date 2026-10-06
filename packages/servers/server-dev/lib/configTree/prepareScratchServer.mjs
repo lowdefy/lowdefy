@@ -20,7 +20,7 @@ import path from 'node:path';
 // A build writes into its server directory as well as its build directory:
 // it rewrites package.json, cleans and refills public/ from public_default/,
 // rewrites lowdefy-build/tailwind/ and copies agent files in. A base or head
-// build for the explorer gets a scratch server directory of its own, so the
+// build for the journeys scope gets a scratch server directory of its own, so the
 // running dev server's directory (devDirectory) is only ever read: a copy of
 // its package.json and public_default/, and a symlink to its node_modules,
 // where block source collection resolves plugin packages.

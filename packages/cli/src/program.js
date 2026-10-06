@@ -47,6 +47,7 @@ import journeysEvidence from './commands/journeys/journeysEvidence.js';
 import journeysUsage from './commands/journeys/journeysUsage.js';
 import journeysExplore from './commands/journeys/explore/journeysExplore.js';
 import journeysPullPosthog from './commands/journeys/pull/journeysPullPosthog.js';
+import journeysScope from './commands/journeys/scope/journeysScope.js';
 import mcp from './commands/mcp/mcp.js';
 import start from './commands/start/start.js';
 import test from './commands/test/test.js';
@@ -524,6 +525,26 @@ journeys
   )
   .addOption(new Option('--refetch', 'Pull final days again (days older than yesterday).'))
   .action(runCommand({ cliVersion, handler: journeysPullPosthog }));
+
+journeys
+  .command('scope')
+  .description(
+    'Build the merge base with --base and the working tree, and print the pages the change touched, with why and the roles and data set users that can open each. Without --base, every page.'
+  )
+  .usage('[--base <ref>] [options]')
+  .addOption(
+    new Option(
+      '--base <ref>',
+      'Compare with the merge base of this branch or commit, such as the pull request base branch.'
+    )
+  )
+  .addOption(new Option('--json', 'Print the scope as JSON instead of the summary.'))
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(options.refResolver)
+  .action(runCommand({ cliVersion, handler: journeysScope }));
 
 journeys
   .command('explore')

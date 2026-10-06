@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-import readPullRequest from './readPullRequest.js';
+import readPullRequest from '../explore/readPullRequest.js';
 import runGit from './runGit.js';
 
 async function hasCommit({ sha, cwd }) {

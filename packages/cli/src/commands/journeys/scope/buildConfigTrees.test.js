@@ -29,7 +29,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 const { values } = parseArgs({ options: { config: { type: 'string' }, out: { type: 'string' } } });
-const devDirectory = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
+const devDirectory = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 fs.appendFileSync(path.join(devDirectory, 'calls.log'), JSON.stringify(values) + '\\n');
 const config = fs.readFileSync(path.join(values.config, 'lowdefy.yaml'), 'utf8');
 fs.mkdirSync(path.join(values.out, 'build'), { recursive: true });
@@ -51,14 +51,14 @@ let root;
 let context;
 let baseConfigDirectory;
 beforeEach(() => {
-  root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-explore-builds-'));
+  root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-scope-builds-'));
   const config = path.join(root, 'app');
   const dev = path.join(config, '.lowdefy', 'dev');
-  fs.mkdirSync(path.join(dev, 'lib', 'docs', 'explore'), { recursive: true });
-  fs.writeFileSync(path.join(dev, 'lib', 'docs', 'explore', 'buildConfigTree.mjs'), FAKE_BUILDER);
+  fs.mkdirSync(path.join(dev, 'lib', 'configTree'), { recursive: true });
+  fs.writeFileSync(path.join(dev, 'lib', 'configTree', 'buildConfigTree.mjs'), FAKE_BUILDER);
   fs.writeFileSync(path.join(dev, 'package.json'), JSON.stringify({ version: '6.1.0' }));
   fs.writeFileSync(path.join(config, 'lowdefy.yaml'), 'lowdefy: 6.1.0\n# head\n');
-  baseConfigDirectory = path.join(config, '.lowdefy', 'explore', 'trees', 'base-sha', 'app');
+  baseConfigDirectory = path.join(config, '.lowdefy', 'scope', 'trees', 'base-sha', 'app');
   fs.mkdirSync(baseConfigDirectory, { recursive: true });
   fs.writeFileSync(path.join(baseConfigDirectory, 'lowdefy.yaml'), 'lowdefy: 6.1.0\n# base\n');
   context = {
@@ -91,14 +91,14 @@ function build(
     context,
     revisions,
     baseConfigDirectory,
-    runDirectory: path.join(context.directories.config, '.lowdefy', 'explore', 'run-1'),
+    runDirectory: path.join(context.directories.config, '.lowdefy', 'scope', 'run-1'),
     pluginSets,
   });
 }
 
 test('buildConfigTrees builds base and head with the installed builder into the build cache', async () => {
   const result = await build();
-  const buildsDirectory = path.join(context.directories.config, '.lowdefy', 'explore', 'builds');
+  const buildsDirectory = path.join(context.directories.config, '.lowdefy', 'scope', 'builds');
   expect(result.baseBuild).toEqual(path.join(buildsDirectory, 'base-sha-6.1.0', 'build'));
   expect(result.headBuild).toEqual(path.join(buildsDirectory, 'head-sha-6.1.0', 'build'));
   expect(result.cached).toEqual({ base: false, head: false });
@@ -127,7 +127,7 @@ test('buildConfigTrees builds a dirty head into the run directory every time', a
   const second = await build(dirty);
   expect(second.cached).toEqual({ base: true, head: false });
   expect(second.headBuild).toEqual(
-    path.join(context.directories.config, '.lowdefy', 'explore', 'run-1', 'head-build', 'build')
+    path.join(context.directories.config, '.lowdefy', 'scope', 'run-1', 'head-build', 'build')
   );
   expect(calls().filter((call) => call.config === context.directories.config)).toHaveLength(2);
 });
@@ -135,7 +135,7 @@ test('buildConfigTrees builds a dirty head into the run directory every time', a
 test('buildConfigTrees stops on a head that does not build, with its errors', async () => {
   fs.writeFileSync(path.join(context.directories.config, 'lowdefy.yaml'), 'BROKEN\n');
   await expect(build()).rejects.toThrow(
-    'The config at the head does not build, so there is nothing to walk:\n  pages/home.yaml:4: Block type "Buton" was used but is not defined.'
+    'The config at the head does not build, so there is nothing to compare:\n  pages/home.yaml:4: Block type "Buton" was used but is not defined.'
   );
 });
 
@@ -163,7 +163,7 @@ test('buildConfigTrees names the plugins the head does not install when the base
 
 test('buildConfigTrees builds only the head for a head-only run', async () => {
   const result = await build({ base: null, head: 'head-sha', dirty: false });
-  const buildsDirectory = path.join(context.directories.config, '.lowdefy', 'explore', 'builds');
+  const buildsDirectory = path.join(context.directories.config, '.lowdefy', 'scope', 'builds');
   expect(result).toEqual({
     baseBuild: null,
     headBuild: path.join(buildsDirectory, 'head-sha-6.1.0', 'build'),
@@ -176,6 +176,6 @@ test('buildConfigTrees builds only the head for a head-only run', async () => {
 test('buildConfigTrees asks for a dev server update when the builder is missing', async () => {
   fs.rmSync(path.join(context.directories.dev, 'lib'), { recursive: true });
   await expect(build()).rejects.toThrow(
-    `The dev server installed in ${context.directories.dev} has no explore builder. Stop the running dev server and start it again to update it.`
+    `The dev server installed in ${context.directories.dev} has no config tree builder. Stop the running dev server and start it again to update it.`
   );
 });

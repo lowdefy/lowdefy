@@ -18,24 +18,24 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import pruneExploreDirectory from './pruneExploreDirectory.js';
+import pruneScopeDirectory from './pruneScopeDirectory.js';
 
 const DAY = 24 * 60 * 60 * 1000;
-let exploreDirectory;
+let scopeDirectory;
 
 function makeDirectory(relative, ageDays) {
-  const directory = path.join(exploreDirectory, relative);
+  const directory = path.join(scopeDirectory, relative);
   fs.mkdirSync(directory, { recursive: true });
   const time = new Date(Date.now() - ageDays * DAY);
   fs.utimesSync(directory, time, time);
 }
 
 beforeEach(() => {
-  exploreDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-explore-prune-'));
+  scopeDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-scope-prune-'));
 });
 
 afterEach(() => {
-  fs.rmSync(exploreDirectory, { recursive: true, force: true });
+  fs.rmSync(scopeDirectory, { recursive: true, force: true });
 });
 
 test('runs older than 14 days and trees and builds unused for 14 days are removed', async () => {
@@ -45,19 +45,19 @@ test('runs older than 14 days and trees and builds unused for 14 days are remove
   makeDirectory('builds/fresh-7.0.0', 1);
   makeDirectory('20260901T100000Z-aaaaaa', 30);
   makeDirectory('20261003T100000Z-bbbbbb', 1);
-  fs.utimesSync(path.join(exploreDirectory, 'trees'), new Date(0), new Date(0));
-  await pruneExploreDirectory({ exploreDirectory });
-  expect(fs.readdirSync(path.join(exploreDirectory, 'trees'))).toEqual(['fresh']);
-  expect(fs.readdirSync(path.join(exploreDirectory, 'builds'))).toEqual(['fresh-7.0.0']);
-  expect(fs.readdirSync(exploreDirectory).sort()).toEqual([
+  fs.utimesSync(path.join(scopeDirectory, 'trees'), new Date(0), new Date(0));
+  await pruneScopeDirectory({ scopeDirectory });
+  expect(fs.readdirSync(path.join(scopeDirectory, 'trees'))).toEqual(['fresh']);
+  expect(fs.readdirSync(path.join(scopeDirectory, 'builds'))).toEqual(['fresh-7.0.0']);
+  expect(fs.readdirSync(scopeDirectory).sort()).toEqual([
     '20261003T100000Z-bbbbbb',
     'builds',
     'trees',
   ]);
 });
 
-test('a missing explore directory prunes nothing', async () => {
-  expect(
-    await pruneExploreDirectory({ exploreDirectory: path.join(exploreDirectory, 'none') })
-  ).toEqual([]);
+test('a missing scope directory prunes nothing', async () => {
+  expect(await pruneScopeDirectory({ scopeDirectory: path.join(scopeDirectory, 'none') })).toEqual(
+    []
+  );
 });

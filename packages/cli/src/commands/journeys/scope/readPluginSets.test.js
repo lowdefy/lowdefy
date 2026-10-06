@@ -22,7 +22,7 @@ import readPluginSets from './readPluginSets.js';
 
 let root;
 beforeEach(() => {
-  root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-explore-plugins-'));
+  root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-scope-plugins-'));
 });
 afterEach(() => {
   fs.rmSync(root, { recursive: true, force: true });

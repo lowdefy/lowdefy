@@ -23,7 +23,7 @@ function listFiles(files) {
 
 // What to say when no page is a target: the diff sees only the compared
 // artifacts, so say what else changed (uncompared build files, plugin code)
-// and how to walk pages anyway.
+// and how to list every page anyway.
 function describeEmptyScope({ scope, pluginDirectories = [] }) {
   const parts = ['no change in the compared artifacts'];
   if (scope.uncompared.length > 0) {
@@ -32,7 +32,7 @@ function describeEmptyScope({ scope, pluginDirectories = [] }) {
   pluginDirectories.forEach((directory) => {
     parts.push(`plugin code changed under ${directory}`);
   });
-  parts.push('pass --page to walk pages.');
+  parts.push('run without --base to list every page.');
   return parts.join('; ');
 }
 

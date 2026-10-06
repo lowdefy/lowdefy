@@ -20,7 +20,7 @@ import { collectKnownText } from '@lowdefy/node-utils';
 import { createTraceId, type } from '@lowdefy/helpers';
 
 import appendWalkLog from './appendWalkLog.js';
-import buildConfigTrees from './buildConfigTrees.js';
+import buildConfigTrees from '../scope/buildConfigTrees.js';
 import checkCharterPages from './checkCharterPages.js';
 import checkCharterRoles from './checkCharterRoles.js';
 import checkLiveDataRule from './checkLiveDataRule.js';
@@ -30,28 +30,28 @@ import createCostTracker from './createCostTracker.js';
 import createModelPolicy from './createModelPolicy.js';
 import createSeededPolicy from './createSeededPolicy.js';
 import createWalkClient from './createWalkClient.js';
-import describeEmptyScope from './describeEmptyScope.js';
-import diffBuilds from './diffBuilds.js';
+import describeEmptyScope from '../scope/describeEmptyScope.js';
+import diffBuilds from '../scope/diffBuilds.js';
 import finishRun from './finishRun.js';
-import formatScopeLines from './formatScopeLines.js';
+import formatScopeLines from '../scope/formatScopeLines.js';
 import formatWalkPlan from './formatWalkPlan.js';
 import listLiveDataConnections from './listLiveDataConnections.js';
-import materialiseTree from './materialiseTree.js';
+import materialiseTree from '../scope/materialiseTree.js';
 import parseExploreOptions from './parseExploreOptions.js';
 import pruneCandidateDirectory from './pruneCandidateDirectory.js';
-import pruneExploreDirectory from './pruneExploreDirectory.js';
+import pruneScopeDirectory from '../scope/pruneScopeDirectory.js';
 import readChartersFile from './readChartersFile.js';
-import readBuildArtifacts from './readBuildArtifacts.js';
-import readCoverage from './readCoverage.js';
-import readPluginSets from './readPluginSets.js';
+import readBuildArtifacts from '../scope/readBuildArtifacts.js';
+import readCoverage from '../readCoverage.js';
+import readPluginSets from '../scope/readPluginSets.js';
 import resolveExploreDataSet from './resolveExploreDataSet.js';
 import resolveExploreServer from './resolveExploreServer.js';
 import resolvePolicy from './resolvePolicy.js';
-import resolveRevisions from './resolveRevisions.js';
+import resolveRevisions from '../scope/resolveRevisions.js';
 import resolveWalkTargets from './resolveWalkTargets.js';
 import runWalk from './runWalk.js';
 import scheduleWalks from './scheduleWalks.js';
-import selectTargets from './selectTargets.js';
+import selectTargets from '../scope/selectTargets.js';
 import writeScope from './writeScope.js';
 
 // The walk overhead the plan assumes until the run's first walk measures it.
@@ -87,7 +87,7 @@ async function prepareBase({ context, revisions, exploreDirectory }) {
     root: revisions.root,
     sha: revisions.base,
     configDirectory: context.directories.config,
-    exploreDirectory,
+    scopeDirectory: exploreDirectory,
   });
   await touch(tree.treeDirectory);
   const pluginSets = await readPluginSets({
@@ -298,9 +298,11 @@ async function exploreOnServer({ context, options, policyConfig, revisions, serv
   const client = createWalkClient({ url: server.url });
   const scoped = await scopeRun({ context, revisions, exploreDirectory, runDirectory, options });
   scoped.warnings.forEach((warning) => context.logger.warn(warning));
-  formatScopeLines({ scope: scoped.scope, cached: scoped.builds.cached }).forEach((line) =>
-    context.logger.info(line)
-  );
+  formatScopeLines({
+    scope: scoped.scope,
+    buildMs: scoped.scope.buildMs,
+    cached: scoped.builds.cached,
+  }).forEach((line) => context.logger.info(line));
   if (options.scopeOnly) {
     if (options.json) process.stdout.write(`${JSON.stringify(scoped.scope, null, 2)}\n`);
     return { run, runDirectory, scope: scoped.scope, walked: null };
@@ -358,8 +360,8 @@ async function journeysExplore({ context }) {
     const parsed = parseExploreOptions(context.options);
     const options = { ...parsed, charters: listRunCharters(parsed) };
     checkManualPagesWalked({ charters: options.charters, manualPages: options.pages });
-    await pruneExploreDirectory({
-      exploreDirectory: path.join(context.directories.config, '.lowdefy', 'explore'),
+    await pruneScopeDirectory({
+      scopeDirectory: path.join(context.directories.config, '.lowdefy', 'explore'),
     });
     const pruned = await pruneCandidateDirectory({ configDirectory: context.directories.config });
     const policyConfig = resolvePolicy({ options: context.options });

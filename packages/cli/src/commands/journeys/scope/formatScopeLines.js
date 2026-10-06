@@ -18,27 +18,25 @@ function shortSha(sha) {
   return sha.slice(0, 7);
 }
 
-// The revisions compared, or, on a head-only run (a charter with no PR), the
-// head alone.
-function revisionLine({ scope, cached }) {
-  const pr = scope.pr === null ? '' : `PR #${scope.pr.number}  `;
+// The revisions compared, or, on a head-only run (no --base), the head alone.
+function revisionLine({ scope, buildMs, cached }) {
   const head = `head ${shortSha(scope.head)} (${
     scope.dirty ? 'uncommitted changes included' : 'clean'
   })`;
-  const buildSeconds = Math.round(((scope.buildMs.base ?? 0) + (scope.buildMs.head ?? 0)) / 1000);
+  const buildSeconds = Math.round(((buildMs.base ?? 0) + buildMs.head) / 1000);
   if (scope.base === null) {
-    return `${pr}${head}, no diff   build ${buildSeconds}s${cached?.head ? ' (cached)' : ''}`;
+    return `${head}, no diff   build ${buildSeconds}s${cached?.head ? ' (cached)' : ''}`;
   }
-  return `${pr}base ${shortSha(scope.base)}  ${head}   builds ${buildSeconds}s${
+  return `base ${shortSha(scope.base)}  ${head}   builds ${buildSeconds}s${
     cached?.base ? ' (base cached)' : ''
   }`;
 }
 
-// The scope as the run prints it: the revision line, then the target pages
-// with why, the app-wide artifacts that changed, the plugins the base was
+// The scope as `lowdefy journeys scope` prints it: the revision line, then
+// the pages with why, the app-wide artifacts that changed, the plugins the base was
 // built without or at another version, and the removed pages.
-function formatScopeLines({ scope, cached }) {
-  const lines = [revisionLine({ scope, cached })];
+function formatScopeLines({ scope, buildMs, cached }) {
+  const lines = [revisionLine({ scope, buildMs, cached })];
   const pages = scope.pages.map((page) => `${page.pageId} (${page.reasons.join(', ')})`);
   lines.push(`Scope     ${scope.pages.length} pages: ${pages.join(', ') || 'none'}`);
   if (scope.appWide.length > 0) {
@@ -49,11 +47,11 @@ function formatScopeLines({ scope, cached }) {
   });
   scope.plugins.versionChanged.forEach(({ name, base, head }) => {
     lines.push(
-      `Plugins   base built with the head's plugins; ${name} ${base} → ${head} is not in the diff; pass --page to walk pages that use it`
+      `Plugins   base built with the head's plugins; ${name} ${base} → ${head} is not in the diff, so pages that use it are not listed`
     );
   });
   if (scope.removedPages.length > 0) {
-    lines.push(`Removed   ${scope.removedPages.join(', ')} (not walked)`);
+    lines.push(`Removed   ${scope.removedPages.join(', ')} (gone from the head)`);
   }
   return lines;
 }

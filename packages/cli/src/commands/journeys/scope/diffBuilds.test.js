@@ -23,7 +23,7 @@ import readBuildArtifacts from './readBuildArtifacts.js';
 
 let root;
 beforeEach(() => {
-  root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-explore-diff-'));
+  root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-scope-diff-'));
 });
 afterEach(() => {
   fs.rmSync(root, { recursive: true, force: true });

@@ -48,7 +48,7 @@ function commitFile({ repo, file, content, message }) {
 }
 
 function createRepository() {
-  const repo = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-explore-git-'));
+  const repo = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-scope-git-'));
   git(['init', '-q', '-b', 'main'], repo);
   // Git for Windows checks text files out with CRLF by default (core.autocrlf); the tree must
   // come out byte for byte as committed.
@@ -73,18 +73,18 @@ test('materialiseTree extracts the whole repository at the base commit and retur
     message: 'App',
   });
   commitFile({ repo, file: 'shared/blocks.yaml', content: 'head shared', message: 'Change' });
-  const exploreDirectory = path.join(repo, 'apps', 'crm', '.lowdefy', 'explore');
+  const scopeDirectory = path.join(repo, 'apps', 'crm', '.lowdefy', 'scope');
 
   const tree = await materialiseTree({
     root: repo,
     sha: base,
     configDirectory: path.join(repo, 'apps', 'crm'),
-    exploreDirectory,
+    scopeDirectory,
   });
 
   expect(tree.cached).toBe(false);
-  expect(tree.treeDirectory).toEqual(path.join(exploreDirectory, 'trees', base));
-  expect(tree.configDirectory).toEqual(path.join(exploreDirectory, 'trees', base, 'apps', 'crm'));
+  expect(tree.treeDirectory).toEqual(path.join(scopeDirectory, 'trees', base));
+  expect(tree.configDirectory).toEqual(path.join(scopeDirectory, 'trees', base, 'apps', 'crm'));
   expect(fs.readFileSync(path.join(tree.treeDirectory, 'shared', 'blocks.yaml'), 'utf8')).toEqual(
     'base shared'
   );
@@ -92,7 +92,7 @@ test('materialiseTree extracts the whole repository at the base commit and retur
     'lowdefy: 6.0.0\n'
   );
   expect(git(['worktree', 'list'], repo).split('\n')).toHaveLength(1);
-  expect(fs.readdirSync(path.join(exploreDirectory, 'trees'))).toEqual([base]);
+  expect(fs.readdirSync(path.join(scopeDirectory, 'trees'))).toEqual([base]);
 });
 
 test('materialiseTree reuses a tree it extracted before', async () => {
@@ -102,12 +102,12 @@ test('materialiseTree reuses a tree it extracted before', async () => {
     content: 'lowdefy: 6.0.0\n',
     message: 'App',
   });
-  const exploreDirectory = path.join(repo, '.lowdefy', 'explore');
+  const scopeDirectory = path.join(repo, '.lowdefy', 'scope');
   const first = await materialiseTree({
     root: repo,
     sha: base,
     configDirectory: repo,
-    exploreDirectory,
+    scopeDirectory,
   });
   fs.writeFileSync(path.join(first.treeDirectory, 'marker'), 'kept');
 
@@ -115,7 +115,7 @@ test('materialiseTree reuses a tree it extracted before', async () => {
     root: repo,
     sha: base,
     configDirectory: repo,
-    exploreDirectory,
+    scopeDirectory,
   });
 
   expect(second.cached).toBe(true);
@@ -141,13 +141,13 @@ test('materialiseTree checks out the exact commit tree with its filters and regi
   });
   commitFile({ repo, file: 'tests/journey.yaml', content: 'head journey\n', message: 'Change' });
   const worktreesBefore = git(['worktree', 'list', '--porcelain'], repo);
-  const exploreDirectory = path.join(repo, '.lowdefy', 'explore');
+  const scopeDirectory = path.join(repo, '.lowdefy', 'scope');
 
   const tree = await materialiseTree({
     root: repo,
     sha: base,
     configDirectory: repo,
-    exploreDirectory,
+    scopeDirectory,
   });
 
   expect(fs.readFileSync(path.join(tree.treeDirectory, 'tests', 'journey.yaml'), 'utf8')).toEqual(
@@ -157,5 +157,5 @@ test('materialiseTree checks out the exact commit tree with its filters and regi
     'SMUDGED ON CHECKOUT\n'
   );
   expect(git(['worktree', 'list', '--porcelain'], repo)).toEqual(worktreesBefore);
-  expect(fs.readdirSync(path.join(exploreDirectory, 'trees'))).toEqual([base]);
+  expect(fs.readdirSync(path.join(scopeDirectory, 'trees'))).toEqual([base]);
 });

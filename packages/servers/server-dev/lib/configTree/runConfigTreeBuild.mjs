@@ -22,11 +22,11 @@ import { serializeBuildException } from '@lowdefy/build/dev';
 import { mergeObjects } from '@lowdefy/helpers';
 
 import collectConfigText from './collectConfigText.mjs';
-import createCustomPluginMessagesMap from '../../../manager/utils/createCustomPluginMessagesMap.mjs';
-import createCustomPluginTypesMap from '../../../manager/utils/createCustomPluginTypesMap.mjs';
+import createCustomPluginMessagesMap from '../../manager/utils/createCustomPluginMessagesMap.mjs';
+import createCustomPluginTypesMap from '../../manager/utils/createCustomPluginTypesMap.mjs';
 import prepareScratchServer from './prepareScratchServer.mjs';
 
-// A full config build of one tree for the explorer's scope diff: the pipeline
+// A full config build of one tree for the journeys scope diff: the pipeline
 // `lowdefy build` runs, without the Vite client build, at stage dev so a
 // prodError warning stays a warning as it does in the dev server. The plugin
 // types come from the installed dev server, so base and head are built by

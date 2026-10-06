@@ -20,11 +20,11 @@ import runGit from './runGit.js';
 
 test('runGit passes env over the process environment to git', async () => {
   const value = await runGit({
-    args: ['config', '--get', 'explore.marker'],
+    args: ['config', '--get', 'scope.marker'],
     cwd: os.tmpdir(),
     env: {
       GIT_CONFIG_COUNT: '1',
-      GIT_CONFIG_KEY_0: 'explore.marker',
+      GIT_CONFIG_KEY_0: 'scope.marker',
       GIT_CONFIG_VALUE_0: 'from-env',
     },
   });

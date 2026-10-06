@@ -17,7 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { parseDataSet } from '@lowdefy/node-utils';
 
-import readCoverage from '../explore/readCoverage.js';
+import readCoverage from '../readCoverage.js';
 
 // What the data-set kinds read, all from files, with no dev server: the
 // journey's data set, the data sets --empty-data and --volume-data name, and

@@ -39,13 +39,12 @@ async function buildOne({ context, script, configDirectory, outDirectory, cachea
 
 // Full config builds of the base tree and the head working tree, both by the
 // head's installed builder, so a Lowdefy version bump does not show as a
-// config change. Builds are cached under .lowdefy/explore/builds/
+// config change. Builds are cached under .lowdefy/scope/builds/
 // <sha>-<builderVersion>/: the base always, the head when it is clean; a
 // dirty head builds into the run directory. A head that does not build stops
 // the run. A base that does not build returns baseError naming the cause, and
-// the scope then targets every head page. A head-only run (no base revision,
-// a charter with no PR) builds the head alone and returns baseBuild null with
-// no baseError.
+// the scope then lists every head page. A head-only run (no --base) builds
+// the head alone and returns baseBuild null with no baseError.
 async function buildConfigTrees({
   context,
   revisions,
@@ -54,7 +53,7 @@ async function buildConfigTrees({
   pluginSets,
 }) {
   const { script, version } = resolveConfigBuilder({ context });
-  const buildsDirectory = path.join(context.directories.config, '.lowdefy', 'explore', 'builds');
+  const buildsDirectory = path.join(context.directories.config, '.lowdefy', 'scope', 'builds');
   const headOnly = type.isNone(revisions.base);
   const baseOut = headOnly ? null : path.join(buildsDirectory, `${revisions.base}-${version}`);
   const headOut = revisions.dirty
@@ -82,7 +81,7 @@ async function buildConfigTrees({
 
   if (head.status !== 'ok') {
     const error = new Error(
-      `The config at the head does not build, so there is nothing to walk:\n${describeBuildErrors(
+      `The config at the head does not build, so there is nothing to compare:\n${describeBuildErrors(
         head.errors
       )}`
     );
