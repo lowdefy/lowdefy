@@ -24,6 +24,7 @@
     _server/dev-journey-fixture, so a developer's `pnpm app:dev` copy in
     _server/dev is left alone.
   - CRON_SECRET, so detached CallApi steps dispatch.
+  - The auth secret and API key the app's strategies-only auth reads.
   - A warm-up journey on every page: Vite compiles the client on its first
     page load and each page builds on its first visit, either of which can
     outlast or reset a test's journey. When the dev server can launch no
@@ -80,6 +81,8 @@ function startDevServer({ ports, uri }) {
       env: {
         ...process.env,
         CRON_SECRET: crypto.randomBytes(16).toString('hex'),
+        LOWDEFY_SECRET_FIXTURE_API_KEY: crypto.randomBytes(16).toString('hex'),
+        LOWDEFY_SECRET_FIXTURE_AUTH_SECRET: crypto.randomBytes(32).toString('hex'),
         LOWDEFY_SECRET_FIXTURE_DATABASE_URI: uri,
         LOWDEFY_SERVER_DEV_INTERNAL_PORT: String(ports.internal),
         LOWDEFY_SERVER_DEV_STRICT_PORT: 'true',

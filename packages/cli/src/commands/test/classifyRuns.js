@@ -16,17 +16,24 @@
 
 // A journey replayed n times is PASS when every run passed, FAIL when every
 // run failed, and FLAKY otherwise. Each failing run keeps its step and
-// message, numbered from 1.
+// message, numbered from 1. A run that failed on opening its page (an app
+// error the page open caused) has no step and is marked phase 'open'.
 function classifyRuns({ runs }) {
   const passed = runs.filter((run) => run.passed).length;
   const failures = runs
     .map((run, index) => ({ run, number: index + 1 }))
     .filter(({ run }) => !run.passed)
-    .map(({ run, number }) => ({
-      run: number,
-      step: run.failure?.index ?? null,
-      message: run.message ?? run.failure?.message ?? null,
-    }));
+    .map(({ run, number }) => {
+      const failure = {
+        run: number,
+        step: run.failure?.index ?? null,
+        message: run.message ?? run.failure?.message ?? null,
+      };
+      if (run.failure?.phase === 'open') {
+        failure.phase = 'open';
+      }
+      return failure;
+    });
   let journeyClass = 'FLAKY';
   if (passed === runs.length) {
     journeyClass = 'PASS';

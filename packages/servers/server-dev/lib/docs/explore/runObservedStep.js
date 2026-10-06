@@ -14,16 +14,13 @@
   limitations under the License.
 */
 
-import installStepObserver from './installStepObserver.js';
-import readStepObserver from './readStepObserver.js';
+import installStepObserver from '../observe/installStepObserver.js';
+import readStepObserver from '../observe/readStepObserver.js';
 import runJourneySteps from '../runJourneySteps.js';
-import takeWalkEvents from './takeWalkEvents.js';
+import takeJourneyEvents from '../observe/takeJourneyEvents.js';
 import { takeErrors } from './walkSessions.js';
-import waitForClientErrorReports from './waitForClientErrorReports.js';
-
-// antd's click wave: inserted into a clicked Button and removed when its
-// motion ends.
-const TRANSIENT_SELECTOR = '.ant-wave';
+import TRANSIENT_SELECTOR from '../observe/TRANSIENT_SELECTOR.js';
+import waitForClientErrorReports from '../observe/waitForClientErrorReports.js';
 
 // Runs one walk step through the journey runner's own loop (settle included)
 // inside an observed window, and returns the runner's result with what the
@@ -51,7 +48,7 @@ async function runObservedStep({ walk, step }) {
     urlAfter: page.isClosed() ? null : page.url(),
     emits: observed?.emits ?? [],
     mutationCount: observed?.mutationCount ?? null,
-    ...takeWalkEvents({ events: walk.events, since, until }),
+    ...takeJourneyEvents({ events: walk.events, since, until }),
     errors: takeErrors({ walkId: walk.walkId, since, until }),
   };
   return { result: results[0], failure, window };

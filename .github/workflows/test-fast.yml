@@ -34,7 +34,7 @@ jobs:
       - name: Scope
         id: scope
         run: |
-          node --test scripts/lib/classifyChangedFiles.test.mjs
+          node --test scripts/lib/classifyChangedFiles.test.mjs scripts/lib/createWorkspace.test.mjs
           node scripts/ci-scope.mjs --base "$BASE"
         env:
           BASE: ${{ github.event_name == 'pull_request' && 'HEAD^1' || '' }}

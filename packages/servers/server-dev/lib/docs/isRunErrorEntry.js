@@ -14,20 +14,12 @@
   limitations under the License.
 */
 
-const APP_API_PREFIXES = ['/api/request/', '/api/endpoints/'];
+// The recording sources a headless run stamps its errors with. An entry
+// carrying one belongs to that run's own error buffer, not the shared stores.
+const RUN_SOURCES = ['journey', 'explorer'];
 
-// Whether a URL is one of the app's request or endpoint API routes on this
-// dev server: what a walk step counts as the app doing work, and where a 5xx
-// is a failed request.
-function isAppApiUrl({ url, origin, basePath = '' }) {
-  let parsed;
-  try {
-    parsed = new URL(url);
-  } catch {
-    return false;
-  }
-  if (parsed.origin !== origin) return false;
-  return APP_API_PREFIXES.some((prefix) => parsed.pathname.startsWith(`${basePath}${prefix}`));
+function isRunErrorEntry(entry) {
+  return RUN_SOURCES.includes(entry.recording?.source);
 }
 
-export default isAppApiUrl;
+export default isRunErrorEntry;

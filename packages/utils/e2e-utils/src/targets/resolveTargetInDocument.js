@@ -56,6 +56,15 @@ function resolveScope({ document, target }) {
   return roots;
 }
 
+// The match a text target names: the nth, or with no nth the only one. The runner fails an
+// action whose text matches several controls and gives no nth, so that resolves to nothing.
+function pickMatch({ matches, nth }) {
+  if (type.isNone(nth)) {
+    return matches.length === 1 ? matches[0] : null;
+  }
+  return matches[nth] ?? null;
+}
+
 // The front-most open layer that holds a control with the text, else the page.
 function resolvePageWideText({ document, target }) {
   for (const layer of layers) {
@@ -63,11 +72,11 @@ function resolvePageWideText({ document, target }) {
     if (open.length > 0) {
       const root = open[open.length - 1];
       if (controlsWithText([root], target.text).length > 0) {
-        return controlsWithText([root], target.text)[target.nth ?? 0] ?? null;
+        return pickMatch({ matches: controlsWithText([root], target.text), nth: target.nth });
       }
     }
   }
-  return controlsWithText([document], target.text)[target.nth ?? 0] ?? null;
+  return pickMatch({ matches: controlsWithText([document], target.text), nth: target.nth });
 }
 
 // The element a journey `click` step acts on for a target in describe form
@@ -75,14 +84,14 @@ function resolvePageWideText({ document, target }) {
 // without layout (jsdom) step for step as the journey runner resolves it with Playwright:
 // visibility is assumed. A target that names a control (`text`, `nth`) resolves to it; a target
 // that names a container (block, row, cell) resolves to its first control, or to itself when it
-// has none. Null when nothing matches.
+// has none. Null when nothing matches, or when a text with no nth matches several controls.
 function resolveTargetInDocument({ document, target }) {
   const scope = resolveScope({ document, target });
   if (!type.isNone(target.text)) {
     if (scope === null) {
       return resolvePageWideText({ document, target });
     }
-    return controlsWithText(scope, target.text)[target.nth ?? 0] ?? null;
+    return pickMatch({ matches: controlsWithText(scope, target.text), nth: target.nth });
   }
   if (scope === null) {
     return null;

@@ -14,23 +14,23 @@
   limitations under the License.
 */
 
-// Serialized into the walk's page by page.evaluate, so this function must be
+// Serialized into the journey's or walk's page by page.evaluate, so this function must be
 // pure: it may reference nothing but `window`, `document` and its argument.
 //
-// Opens a step's window in the walk's page. Installed once per document (a
+// Opens a step's window in the page. Installed once per document (a
 // full page load replaces it, so each step installs it again if needed): it
 // subscribes to the engine's trace registry and keeps each completed event's
 // value-free summary, and records the nodes DOM mutations added or changed
 // under document.body. Only what happens while a window is open is kept.
-// Throws when the page has no trace registry: a walk never guesses.
+// Throws when the page has no trace registry: a step's window never guesses.
 function installStepObserver() {
   const lowdefy = window.lowdefy;
   if (!lowdefy || !lowdefy._trace || typeof lowdefy._trace.subscribe !== 'function') {
     throw new Error(
-      'The walk page has no Lowdefy trace registry (window.lowdefy._trace), so its events cannot be observed. Restart the dev server so pages load the current client.'
+      'The page has no Lowdefy trace registry (window.lowdefy._trace), so its events cannot be observed. Restart the dev server so pages load the current client.'
     );
   }
-  let observer = window.__lowdefyWalkStep;
+  let observer = window.__lowdefyStepObserver;
   if (!observer) {
     observer = { open: false, emits: [], nodes: [] };
     lowdefy._trace.subscribe((payload) => {
@@ -61,7 +61,7 @@ function installStepObserver() {
       characterData: true,
       subtree: true,
     });
-    window.__lowdefyWalkStep = observer;
+    window.__lowdefyStepObserver = observer;
   }
   observer.emits = [];
   observer.nodes = [];

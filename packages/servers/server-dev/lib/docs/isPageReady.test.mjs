@@ -52,6 +52,27 @@ test('isPageReady with a null pageId waits for the page the app shows', () => {
   expect(isPageReady('dashboard')).toBe(false);
 });
 
+test('isPageReady returns false while a client navigation has not rendered the next page', () => {
+  // A Link in onInit pushed the next URL; the page being left is still the
+  // one window.lowdefy names, and its context has settled.
+  global.window = {
+    lowdefy: {
+      pageId: 'guarded',
+      contexts: { 'page:guarded': settledContext() },
+      _devNavigating: true,
+    },
+  };
+  expect(isPageReady(null)).toBe(false);
+  expect(isPageReady('guarded')).toBe(false);
+
+  // The next page rendered: window.lowdefy names it and waits on its context.
+  global.window.lowdefy._devNavigating = false;
+  global.window.lowdefy.pageId = 'home';
+  expect(isPageReady(null)).toBe(false);
+  global.window.lowdefy.contexts['page:home'] = settledContext();
+  expect(isPageReady(null)).toBe(true);
+});
+
 test('isPageReady returns false when window.lowdefy is not defined', () => {
   global.window = {};
 

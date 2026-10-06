@@ -80,32 +80,64 @@ The settle after an interaction lets the page's own events and requests finish b
 
 Blocks are addressed by their `blockId`. A step that does not complete within the step timeout (5 seconds, or the journey's [`timeout`](#timeouts)) fails the journey. An `expect` step waits, up to that timeout, for what it checks to become true, so a value a click leads to can arrive a moment later.
 
-| Step                                      | Meaning                                                                                                                                                     |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `click: target`                           | Click the block, or the control a [target](#targets) narrows to.                                                                                            |
-| `click: { ...target, count: 2 }`          | Click 2 (or 3) times in quick succession, as a person's double click, before the runner waits for the page to settle. `count` defaults to 1.                |
-| `fill: { blockId, value }`                | Type `value` into the input inside the block (or the grid cell a target names).                                                                             |
-| `fill: { blockId, fromEmail }`            | Type text read from an [email](#emails) instead of a fixed value, such as a one-time sign-in code. The actor stays on the page.                             |
-| `select: { blockId, value }`              | Open the selector block (or grid cell) and choose the option whose text is `value`. A radio, button or segmented selector's option is clicked by its label. |
-| `press: Enter`                            | Press a key or chord. `Mod` in a chord (`Mod+k`) resolves to Cmd on macOS and Ctrl elsewhere.                                                               |
-| `back: true`                              | Go back one page, like the browser's Back button. Fails when the journey has not navigated from an earlier page.                                            |
-| `goto: pageId`                            | Load a page the way a typed URL does; `{ pageId, urlQuery }` adds a query string. A protected page may redirect (to sign in), so assert where it landed.    |
-| `email: { to, subject }`                  | Open the newest [email](#emails) to `to` — with a subject containing `subject`, when given — that arrived during the journey, waiting for it if needed.     |
-| `as: name`                                | Act as [another person](#several-people), each in their own browser. The journey starts as `main`.                                                          |
-| `wait: { ms }`                            | Pause for `ms` milliseconds.                                                                                                                                |
-| `wait: { request: requestId }`            | Wait until the request has finished loading.                                                                                                                |
-| `wait: { state: path }`                   | Wait until the state value at `path` is defined.                                                                                                            |
-| `screenshot: name`                        | Capture a screenshot. Screenshots are returned to agents using the MCP tool; the CLI runner ignores them.                                                   |
-| `expect: { state: { path, equals } }`     | The page state at `path` deep-equals `equals`. A path that does not exist reads as `null`, so `equals: null` also passes for a misspelt path.               |
-| `expect: { visible: target }`             | The block, or the control a target narrows to, is visible.                                                                                                  |
-| `expect: { hidden: target }`              | Nothing the target names is visible: no element matches, or every match is hidden. Passes at once when nothing matches yet, so pair it with a presence.     |
-| `expect: { calls: { request, count } }`   | This person's browser called the request `count` times since the journey started, counted once the page settles. `pageId` names the request's page.         |
-| `expect: { calls: { endpoint, count } }`  | The same for an endpoint called with `CallAPI`. Counts survive full page loads, so `count: 0` after a reload checks a write was never sent.                 |
-| `expect: { text: { blockId, contains } }` | The block's rendered text (or a grid row's or cell's) contains the string.                                                                                  |
-| `expect: { url: { contains } }`           | The browser URL contains the string.                                                                                                                        |
-| `expect: { title: { equals } }`           | The document title (the browser tab's text) is exactly the string; `{ contains }` checks part of it.                                                        |
+| Step                                      | Meaning                                                                                                                                                           |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `click: target`                           | Click the block, or the control a [target](#targets) narrows to.                                                                                                  |
+| `click: { ...target, count: 2 }`          | Click 2 (or 3) times in quick succession, as a person's double click, before the runner waits for the page to settle. `count` defaults to 1.                      |
+| `fill: { blockId, value }`                | Type `value` into the input inside the block (or the grid cell a target names).                                                                                   |
+| `fill: { blockId, fromEmail }`            | Type text read from an [email](#emails) instead of a fixed value, such as a one-time sign-in code. The actor stays on the page.                                   |
+| `select: { blockId, value }`              | Open the selector block (or grid cell) and choose the option whose text is `value`. A radio, button or segmented selector's option is clicked by its label.       |
+| `press: Enter`                            | Press a key or chord. `Mod` in a chord (`Mod+k`) resolves to Cmd on macOS and Ctrl elsewhere.                                                                     |
+| `back: true`                              | Go back one page, like the browser's Back button. Fails when the journey has not navigated from an earlier page.                                                  |
+| `goto: pageId`                            | Load a page the way a typed URL does; `{ pageId, urlQuery }` adds a query string. A protected page may redirect (to sign in), so assert where it landed.          |
+| `email: { to, subject }`                  | Open the newest [email](#emails) to `to` — with a subject containing `subject`, when given — that arrived during the journey, waiting for it if needed.           |
+| `as: name`                                | Act as [another person](#several-people), each in their own browser. The journey starts as `main`.                                                                |
+| `wait: { ms }`                            | Pause for `ms` milliseconds.                                                                                                                                      |
+| `wait: { request: requestId }`            | Wait until the request has finished loading.                                                                                                                      |
+| `wait: { state: path }`                   | Wait until the state value at `path` is defined.                                                                                                                  |
+| `screenshot: name`                        | Capture a screenshot. Screenshots are returned to agents using the MCP tool; the CLI runner ignores them.                                                         |
+| `expect: { state: { path, equals } }`     | The page state at `path` deep-equals `equals`. A path that does not exist reads as `null`, so `equals: null` also passes for a misspelt path.                     |
+| `expect: { visible: target }`             | The block, or the control a target narrows to, is visible.                                                                                                        |
+| `expect: { hidden: target }`              | Nothing the target names is visible: no element matches, or every match is hidden. Passes at once when nothing matches yet, so pair it with a presence.           |
+| `expect: { calls: { request, count } }`   | This person's browser called the request `count` times since the journey started, counted once the page settles. `pageId` names the request's page.               |
+| `expect: { calls: { endpoint, count } }`  | The same for an endpoint called with `CallAPI`. Counts survive full page loads, so `count: 0` after a reload checks a write was never sent.                       |
+| `expect: { text: { blockId, contains } }` | The block's rendered text (or a grid row's or cell's) contains the string.                                                                                        |
+| `expect: { url: { contains } }`           | The browser URL contains the string.                                                                                                                              |
+| `expect: { title: { equals } }`           | The document title (the browser tab's text) is exactly the string; `{ contains }` checks part of it.                                                              |
+| `expect: { error: text }`                 | The interaction just before it raised an [app error](#app-errors) whose message contains `text`. Must directly follow a click, open, fill, select, press or back. |
+| `expect: { effect: true }`                | The interaction just before it did something. Must directly follow a click, open, fill, select, press or back.                                                    |
 
 `expect.calls` takes `{ request: requestId, pageId, count }`: request ids are scoped to a page, and two pages often share one such as `save`, so `pageId` names the page; it defaults to the page the person is on when the step runs. It compares once, without waiting for the count to change, because "not called" can only be judged after the moment has passed.
+
+`expect.effect` fails when the interaction before it ran no event, changed nothing on the page, called no request or endpoint and left the URL as it was. It reads what the runner saw during that interaction, so it does not wait. The journey explorer writes it after a click that did nothing, so the journey fails until the control does something.
+
+### App errors
+
+A journey also fails at the step that causes an app error, even when every expectation after it holds. An app error is:
+
+- an action that fails with an error, such as a `Request` or `CallAPI` whose request throws, or an operator that throws,
+- an uncaught exception in the page, or an error the page reports to the dev server,
+- a request or endpoint that throws on the server, or answers with a 5xx.
+
+Errors raised while the journey's first page opens (its `onInit` and `onMount` requests) fail the journey `on open`, before any step runs. Expected outcomes never fail a journey: a failed `Validate`, a `Throw` action or any other user error, and a 401 or 403 refusal. Only errors the journey's own browsers cause count: an error you raise in your own tab on the same dev server while journeys run does not fail them, and a journey's errors are reported in its result, not in the dev server's build status.
+
+```
+FAIL  member saves a ticket
+      file: /my-app/tests/journeys/tickets.yaml
+      step 2: { click: save }
+      server-error  MongoDB: MongoDB rejected the MongoDBInsertOne command.  pages/tickets.yaml:42
+      action-error  Request "save_ticket" failed in save.onClick with ServiceError.  pages/tickets.yaml:88
+```
+
+Each error line gives its kind, its message and the config file and line it came from, when known. Fix the app in most cases. When the error is the outcome the app means, such as a unique index violation that a `catch` action shows as "already exists", either make it a user error in config (a `Throw` action is one), or assert it with `expect: { error: text }` straight after the interaction:
+
+```yaml
+- click: save
+- expect: { error: duplicate key }
+- expect: { visible: already_exists }
+```
+
+The expectation claims the errors of that interaction whose message contains `text`, with the failed action that reported them, and fails when none matches. Any other error the interaction raised still fails it.
 
 ### Recorded values: `from`
 
@@ -129,9 +161,11 @@ A `blockId` reaches a block's own control — its button, input or link. Some co
 | `column`     | A grid cell in that row, by the column's `field` or `colId`. Needs `blockId`.                               |
 | `text`       | The interactive control whose visible text is exactly this (a button label, a tab, a menu item).            |
 | `containing` | The element whose visible text contains this: a row of a list a person picks by the name or email it shows. |
-| `nth`        | When several controls match, the zero-based one to use.                                                     |
+| `nth`        | When several elements match, the zero-based one to use.                                                     |
 
 `text` on its own, with no `blockId`, searches the whole page — front-most layer first: an open dropdown menu, then an open dialog, then the page. That is how a confirm dialog's button is clicked while the grid behind its mask has a button with the same label.
+
+A `click`, `open`, `fill` or `select` whose `text` or `containing` matches more than one visible element fails rather than guess which one you meant. The failure says how many it matched and where, for example `Matched 3 controls with text "Delete" in the page; add nth: 0..2, or a blockId/row to narrow it.` Add `nth`, or narrow the target with `blockId`, `row` or `column`, so it names one element. Expectations are not strict: `expect.visible` passes when any match is visible, and `expect.hidden` when none is.
 
 ```yaml
 - name: member deletes a control from the grid

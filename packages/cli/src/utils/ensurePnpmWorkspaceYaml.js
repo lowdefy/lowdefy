@@ -39,8 +39,11 @@ import readParentWorkspace from './readParentWorkspace.js';
 // - allowBuilds is read by pnpm >=10.29 and pnpm 11.
 // @sentry/cli (through @sentry/vite-plugin) gets its binary from a platform
 // optional dependency; its postinstall only downloads the binary when that
-// dependency is missing, so it is skipped. Ignoring it, not leaving it out,
-// keeps pnpm 11 from failing and pnpm 10 from warning.
+// dependency is missing, so it is skipped. mongodb-memory-server (through
+// @shelf/jest-mongodb, a dev dependency of @lowdefy/server-dev) only downloads
+// a MongoDB binary in its postinstall; mongodb-memory-server-core downloads it
+// when it first starts one, so it is skipped too. Ignoring them, not leaving
+// them out, keeps pnpm 11 from failing and pnpm 10 from warning.
 const pnpmWorkspaceYaml = `packages:
   - '.'
 onlyBuiltDependencies:
@@ -48,10 +51,12 @@ onlyBuiltDependencies:
   - sharp
 ignoredBuiltDependencies:
   - '@sentry/cli'
+  - mongodb-memory-server
 allowBuilds:
   better-sqlite3: true
   sharp: true
   '@sentry/cli': false
+  mongodb-memory-server: false
 `;
 
 async function writeNestedNpmrc({ context, directory, parentWorkspace, workspaceRoot }) {

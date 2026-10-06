@@ -73,6 +73,7 @@ import profileProduction from './journeyEvidence/profileProduction.js';
 import stepIdentity from './journeyCompiler/stepIdentity.js';
 import validateJourneySteps, {
   getStepKey,
+  INTERACTION_STEP_KEYS,
   STEP_KEYS,
   TARGET_KEYS,
 } from './journeyGrammar/validateJourneySteps.js';
@@ -141,6 +142,7 @@ export {
   watchOwner,
   writeFileIfChanged,
   getStepKey,
+  INTERACTION_STEP_KEYS,
   STEP_KEYS,
   TARGET_KEYS,
   validateJourneySteps,

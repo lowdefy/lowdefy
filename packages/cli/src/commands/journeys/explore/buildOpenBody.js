@@ -16,15 +16,14 @@
 
 import { type } from '@lowdefy/helpers';
 
-// The walk route's open body for a (page, role) target: recorded walks
-// record (record: true); a confirmation replay records nothing but still
-// claims its own errors (record: false).
-function buildOpenBody({ target, run, walkId, options, record }) {
+// The walk route's open body for a (page, role) target. Every walk is
+// recorded, so the run's walks compile into candidates.
+function buildOpenBody({ target, run, walkId, options }) {
   const body = {
     pageId: target.pageId,
     run,
     walk: walkId,
-    record,
+    record: true,
     roles: target.roles,
     roleMatrixListed: target.matrixListed,
   };
