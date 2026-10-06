@@ -17,8 +17,8 @@
 // Whether a step's window shows the step did nothing: no event ran, no lasting
 // DOM change (a mutationCount of null means the document was replaced), no
 // request to the app's request or endpoint routes (the window holds only
-// those) and the URL is unchanged. The explorer's dead-click invariant and
-// the journey runner's expect.effect both read it, so the two cannot drift.
+// those) and the URL is unchanged. The dead-click invariant and the journey
+// runner's expect.effect both read it, so the two cannot drift.
 function hasNoEffect({ window }) {
   return (
     window.emits.length === 0 &&

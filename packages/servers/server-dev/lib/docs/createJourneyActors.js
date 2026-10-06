@@ -111,8 +111,8 @@ function createJourneyActors({
           await context.exposeBinding(OBSERVE_BINDING, (source, message) =>
             observations.receive(message)
           );
-          // A caller that watches each actor's context (an explorer walk's
-          // error and network buffers) hooks in before its first request.
+          // A caller that watches each actor's context (a journey run's app
+          // error buffers) hooks in before its first request.
           if (!type.isUndefined(onContext)) {
             onContext({ context, name });
           }

@@ -16,7 +16,7 @@
 
 import isAppApiUrl from './isAppApiUrl.js';
 
-// Buffers, with timestamps, what a journey's or walk's browser context does that the
+// Buffers, with timestamps, what a journey's browser context does that the
 // invariants read over a step's window: uncaught page errors, and the
 // requests to and responses from the app's request and endpoint API routes.
 // Hooked in before the context's first request, so the first page load is

@@ -148,7 +148,7 @@ async function openPage({
       ]);
     }
     // Every headless context is marked for the dev recorder: 'off' unless the
-    // caller records a journey or explorer run, so screenshots and inspection
+    // caller records a journey run, so screenshots and inspection
     // never record, and a run's records are labelled by the server, not the
     // page. See lib/server/recording.
     await context.addCookies([

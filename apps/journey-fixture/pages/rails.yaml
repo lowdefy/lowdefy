@@ -1,0 +1,65 @@
+# The page the data-set rails test drives
+# (packages/servers/server-dev/test/journeyFixture/rails.test.mjs): on a
+# data-set journey a click on external_button (a request on a connection the
+# data set does not redirect) or logout_button (an auth action) is refused,
+# and save_rail_button (a request on the data set's MongoDB connection) works.
+id: rails
+type: Box
+requests:
+  - id: call_external
+    type: AxiosHttp
+    connectionId: rails_external
+    properties:
+      url: /hook
+  - id: save_rail_item
+    type: MongoDBInsertOne
+    connectionId: fixture_db
+    properties:
+      doc:
+        kind: item
+        page: rails
+blocks:
+  - id: rails_title
+    type: Title
+    properties:
+      content: Rails
+      level: 2
+  - id: external_button
+    type: Button
+    properties:
+      title: Call external
+    events:
+      onClick:
+        - id: call_external
+          type: Request
+          params: call_external
+  - id: logout_button
+    type: Button
+    properties:
+      title: Sign out
+    events:
+      onClick:
+        - id: sign_out
+          type: Logout
+  - id: save_rail_button
+    type: Button
+    properties:
+      title: Save rail item
+    events:
+      onClick:
+        - id: save_rail_item
+          type: Request
+          params: save_rail_item
+        - id: set_rail_saved
+          type: SetState
+          params:
+            rail_saved: true
+  - id: rail_saved_alert
+    type: Alert
+    visible:
+      _eq:
+        - _state: rail_saved
+        - true
+    properties:
+      type: success
+      message: Rail item saved

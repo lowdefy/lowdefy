@@ -61,7 +61,7 @@ function isValidBody(body) {
 // happened (jitPage.js serves it as `_buildId`). It is kept when this process
 // served it, else (missing, unknown, from before a restart) replaced with the
 // build served now. The cookie decides source and run, never the page: a
-// headless journey or explorer run is marked by the dev server's own browser,
+// headless journey run is marked by the dev server's own browser,
 // and everything else records as dev.
 function stampRecord({ record, currentBuild, cookie }) {
   const rest = omit({ ...record }, ['source', 'run']);
@@ -75,7 +75,7 @@ function stampRecord({ record, currentBuild, cookie }) {
 // POST /api/dev-recording: the dev recorder (client/Recorder.jsx) posts
 // batches of interaction records here. Each keeps the build its page ran on
 // (or the build served now) and is appended to the trace file of its tab
-// session (dev) or run (journey, explorer).
+// session (dev) or run (journey).
 async function devRecordingHandler(c) {
   if (!isSameOrigin(c)) {
     return c.json({ error: 'Forbidden' }, 403);

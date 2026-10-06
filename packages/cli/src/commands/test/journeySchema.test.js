@@ -208,6 +208,34 @@ test('journeySchema rejects a missing name and a non-string pageId', () => {
   ).toContain('Journey "pageId" should be a string.');
 });
 
+function words(count) {
+  return Array.from({ length: count }, (_, index) => `word${index}`).join(' ');
+}
+
+test('journeySchema accepts a name of 100 characters and refuses one of 101', () => {
+  expect(validateJourney({ journey: { ...minimalJourney, name: 'n'.repeat(100) } })).toEqual({
+    valid: true,
+  });
+  expect(
+    validateJourney({ journey: { ...minimalJourney, name: 'n'.repeat(101) } }).message
+  ).toContain('Journey "name" should be at most 100 characters.');
+});
+
+test('journeySchema accepts a description of 60 words and refuses one of 61', () => {
+  expect(
+    validateJourney({ journey: { ...minimalJourney, description: `  ${words(60)}\n` } })
+  ).toEqual({ valid: true });
+  expect(
+    validateJourney({ journey: { ...minimalJourney, description: words(61) } }).message
+  ).toContain('Journey "description" should be at most 60 words.');
+});
+
+test('journeySchema refuses a description that is not a string', () => {
+  expect(
+    validateJourney({ journey: { ...minimalJourney, description: ['a goal'] } }).message
+  ).toContain('Journey "description" should be a string.');
+});
+
 test('journeySchema rejects a non-object journey', () => {
   const result = validateJourney({ journey: 'not a journey' });
   expect(result.valid).toBe(false);
@@ -224,7 +252,6 @@ const fullEvidence = {
     window: '2026-09-03/2026-10-02',
   },
   dev: { recordings: 2 },
-  explorer: { prs: [2531] },
   mutation: { killed: 11, total: 12, unique: 2 },
   refreshed: '2026-10-03',
 };
@@ -251,11 +278,6 @@ test.each([
     'evidence.dev',
     { ...fullEvidence, dev: { recordings: 2, runs: 1 } },
     'Journey "evidence.dev" has an unknown key',
-  ],
-  [
-    'evidence.explorer',
-    { ...fullEvidence, explorer: { prs: [1], walks: 2 } },
-    'Journey "evidence.explorer" has an unknown key',
   ],
   [
     'evidence.mutation',

@@ -16,7 +16,7 @@
 
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
 
-// The one-step journey the explorer writes to prove a finding at open:
+// The one-step journey that proves a finding at open:
 // `expect: { visible: <pageId> }`, the page's root block showing. The build
 // gives the root block the page id as its blockId, and the client renders
 // every block, the root included, inside a `#bl-<blockId>` wrapper. A page
@@ -32,25 +32,21 @@ fixtureTest('expect.visible on the page id passes on a page the user may see', a
   expect(result.passed).toBe(true);
 });
 
-fixtureTest(
-  'expect.visible on the page id passes on a data set as a data set user, as an explorer proof runs',
-  async () => {
-    const result = await postJourney({
-      pageId: 'explore',
-      data: 'explore',
-      user: 'member',
-      steps: [{ expect: { visible: 'explore' } }],
-    });
-    expect(result.failure).toBeUndefined();
-    expect(result.passed).toBe(true);
-  }
-);
+fixtureTest('expect.visible on the page id passes on a data set as a data set user', async () => {
+  const result = await postJourney({
+    pageId: 'explore',
+    data: 'explore',
+    user: 'member',
+    steps: [{ expect: { visible: 'explore' } }],
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+});
 
 fixtureTest(
   'a page that redirects at open fails at the expect.visible step, not at open',
   async () => {
-    // explore_guarded admits everyone but its onInit links home: the explorer's
-    // role-refused shape.
+    // explore_guarded admits everyone but its onInit links home.
     const result = await postJourney({
       pageId: 'explore_guarded',
       timeout: 2000,

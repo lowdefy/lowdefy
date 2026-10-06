@@ -34,7 +34,7 @@ function placeKey({ page, block_id: blockId, column }) {
 // clicked each. One token clicked by many people on a button reads as a label
 // built from values; hundreds of tokens on a grid column read as data. Only
 // places with at least one unresolved token are listed. `segments` are
-// compileTrace's segments; their `text_clicks` hold every click. Sorted by
+// compileSegments' segments; their `text_clicks` hold every click. Sorted by
 // page, block and column, and top tokens by clicks, persons, then token, so
 // the same segments give the same rows.
 function countTextTokens({ segments }) {

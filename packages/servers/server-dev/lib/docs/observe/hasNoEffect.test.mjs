@@ -16,7 +16,7 @@
 
 import hasNoEffect from './hasNoEffect.js';
 
-const url = 'http://localhost:3227/explore';
+const url = 'http://localhost:3227/orders';
 
 function windowWith(overrides) {
   return { emits: [], mutationCount: 0, requests: [], urlBefore: url, urlAfter: url, ...overrides };
@@ -30,7 +30,7 @@ test.each([
   ['an event', { emits: [{ blockId: 'save', eventName: 'onClick', success: true }] }],
   ['a DOM change', { mutationCount: 2 }],
   ['a replaced document', { mutationCount: null }],
-  ['an app request', { requests: [{ url: 'http://localhost:3227/api/request/explore/load' }] }],
+  ['an app request', { requests: [{ url: 'http://localhost:3227/api/request/orders/load' }] }],
   ['a URL change', { urlAfter: 'http://localhost:3227/second' }],
 ])('hasNoEffect is false when the window holds %s', (_, overrides) => {
   expect(hasNoEffect({ window: windowWith(overrides) })).toBe(false);

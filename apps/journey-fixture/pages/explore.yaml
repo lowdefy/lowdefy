@@ -1,5 +1,5 @@
-# Each control trips one of the explorer's walk invariants
-# (packages/servers/server-dev/test/journeyFixture/exploreWalks.test.mjs).
+# Each control trips one of the app error invariants a journey fails on
+# (packages/servers/server-dev/test/journeyFixture/appErrors.test.mjs).
 id: explore
 type: Box
 requests:

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-// Serialized into the journey's or walk's page by page.evaluate, so this function must be
+// Serialized into the journey's page by page.evaluate, so this function must be
 // pure: it may reference nothing but `window`, `document` and its argument.
 //
 // Opens a step's window in the page. Installed once per document (a

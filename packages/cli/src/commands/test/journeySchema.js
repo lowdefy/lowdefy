@@ -202,23 +202,6 @@ const evidenceSchema = {
         required: 'Journey "evidence.dev" should have recordings.',
       },
     },
-    explorer: {
-      type: 'object',
-      additionalProperties: false,
-      required: ['prs'],
-      properties: {
-        prs: {
-          type: 'array',
-          items: { type: 'integer', minimum: 1 },
-          errorMessage: 'Journey "evidence.explorer.prs" should be a list of pull request numbers.',
-        },
-      },
-      errorMessage: {
-        type: 'Journey "evidence.explorer" should be an object.',
-        additionalProperties: 'Journey "evidence.explorer" has an unknown key. Keys are: prs.',
-        required: 'Journey "evidence.explorer" should have prs.',
-      },
-    },
     mutation: {
       type: 'object',
       additionalProperties: false,
@@ -244,7 +227,7 @@ const evidenceSchema = {
   errorMessage: {
     type: 'Journey "evidence" should be an object.',
     additionalProperties:
-      'Journey "evidence" has an unknown key. Keys are: production, dev, explorer, mutation, refreshed.',
+      'Journey "evidence" has an unknown key. Keys are: production, dev, mutation, refreshed.',
   },
 };
 
@@ -257,7 +240,21 @@ const journeySchema = {
   properties: {
     name: {
       type: 'string',
-      errorMessage: { type: 'Journey "name" should be a string.' },
+      maxLength: 100,
+      errorMessage: {
+        type: 'Journey "name" should be a string.',
+        maxLength: 'Journey "name" should be at most 100 characters.',
+      },
+    },
+    // What the journey proves, in at most 60 words: the pattern allows up to
+    // 60 runs of non-space characters.
+    description: {
+      type: 'string',
+      pattern: '^\\s*(?:\\S+\\s+){0,59}\\S*\\s*$',
+      errorMessage: {
+        type: 'Journey "description" should be a string.',
+        pattern: 'Journey "description" should be at most 60 words.',
+      },
     },
     pageId: {
       type: 'string',

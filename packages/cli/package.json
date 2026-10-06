@@ -40,8 +40,6 @@
     "test:fixture": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.fixture.config.js"
   },
   "dependencies": {
-    "@ai-sdk/gateway": "4.0.94",
-    "@lowdefy/ai-utils": "6.0.0",
     "@lowdefy/ajv": "6.0.0",
     "@lowdefy/errors": "6.0.0",
     "@lowdefy/helpers": "6.0.0",

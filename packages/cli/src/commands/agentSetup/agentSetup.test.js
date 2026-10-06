@@ -611,17 +611,20 @@ test('agentSetup writes the journeys-from-production skill and lists it in AGENT
   expect(read('AGENTS.md')).toContain('`journeys-from-production`');
 });
 
-test('agentSetup writes the journeys-bug-bash skill beside journeys-from-pr and lists it in AGENTS.md', async () => {
-  const skillPath = path.join('.claude', 'skills', 'journeys-bug-bash', 'SKILL.md');
+test('agentSetup writes the journeys-from-pr skill, with the bug bash folded in, and no journeys-bug-bash', async () => {
   await agentSetup({ context });
-  const written = read(skillPath);
-  expect(written).toContain('name: journeys-bug-bash');
-  expect(written).toContain('lowdefy journeys explore --charters <file>');
+  const written = read(path.join('.claude', 'skills', 'journeys-from-pr', 'SKILL.md'));
+  expect(written).toContain('name: journeys-from-pr');
+  expect(written).toContain('lowdefy journeys scope --base <base branch> --json');
+  expect(written).toContain('**A bug bash**');
   expect(written).toMatch(/lowdefy-skill-hash: [a-f0-9]{64}/);
-  expect(read(path.join('.claude', 'skills', 'journeys-from-pr', 'SKILL.md'))).toContain(
-    'name: journeys-from-pr'
+  expect(fs.existsSync(path.join(configDirectory, '.claude', 'skills', 'journeys-bug-bash'))).toBe(
+    false
   );
-  expect(read('AGENTS.md')).toContain('`journeys-bug-bash`');
+  const agentsMd = read('AGENTS.md');
+  expect(agentsMd).toContain('`journeys-from-pr`');
+  expect(agentsMd).toContain('bug bash');
+  expect(agentsMd).not.toContain('`journeys-bug-bash`');
 });
 
 test('agentSetup writes the journeys-from-dev skill, refreshes it unedited and skips it edited', async () => {

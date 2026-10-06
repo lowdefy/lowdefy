@@ -23,6 +23,7 @@ import {
 } from '@lowdefy/e2e-utils/runtime';
 import { getStepKey } from '@lowdefy/node-utils';
 
+import checkClickRails from './rails/checkClickRails.js';
 import checkStepReferences from './checkStepReferences.js';
 import createLeftOriginError from './createLeftOriginError.js';
 import { buildPageUrl } from './getBrowser.js';
@@ -407,13 +408,14 @@ async function runOpen({ page, step, timeout }) {
 // `count` clicks in quick succession through one Playwright click, as a
 // person's double click: the runner's settle comes after all of them, so a
 // double click is never turned into a second submit after the first settled.
-async function runClick({ page, step, timeout }) {
+async function runClick({ journey, page, step, timeout }) {
   const { count = 1, ...target } = normaliseTarget(step.click);
   await actOnTarget({
     target,
     action: async () => {
       const located = await resolveActionTarget({ page, target, timeout });
       const locator = await resolveClickLocator({ located, target, timeout });
+      await checkClickRails({ journey, page, locator });
       await locator.click({ timeout, clickCount: count });
     },
   });
@@ -868,8 +870,8 @@ async function expectUrl({ page, params, timeout }) {
   }
 }
 
-// Fails when the interaction just before it did nothing, the explorer's
-// dead-click invariant inverted (see observe/hasNoEffect). It reads that
+// Fails when the interaction just before it did nothing, the dead-click
+// invariant inverted (see observe/hasNoEffect). It reads that
 // interaction's window, which the runner closed once the page settled, so it
 // does not wait. Only a run that watches its steps' windows (a journey run,
 // not a screenshot's steps) has one to read.
@@ -964,7 +966,7 @@ async function runStep({ journey, step, index, screenshots, requestWindowStart }
   await checkStepReferences({ journey, page, step });
   switch (getStepKey(step)) {
     case 'click':
-      await runClick({ page, step, timeout });
+      await runClick({ journey, page, step, timeout });
       return;
     case 'open':
       await runOpen({ page, step, timeout });

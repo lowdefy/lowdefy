@@ -17,7 +17,7 @@
 const APP_API_PREFIXES = ['/api/request/', '/api/endpoints/'];
 
 // Whether a URL is one of the app's request or endpoint API routes on this
-// dev server: what a journey or walk step counts as the app doing work, and where a 5xx
+// dev server: what a journey step counts as the app doing work, and where a 5xx
 // is a failed request.
 function isAppApiUrl({ url, origin, basePath = '' }) {
   let parsed;

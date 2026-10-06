@@ -276,17 +276,15 @@ test('computeEvidence rehashes a flow stored under an older matcher and recounts
   });
 });
 
-test('computeEvidence keeps committed explorer and mutation when their sources are absent, and removes dev', () => {
+test('computeEvidence keeps committed mutation when their sources are absent, and removes dev', () => {
   const committed = {
     dev: { recordings: 2 },
-    explorer: { prs: [2531] },
     mutation: { killed: 11, total: 12, unique: 2 },
     refreshed: '2026-09-01',
   };
   const result = compute({ ...journey, evidence: committed });
   expect(result.after).toEqual({
     production: expect.any(Object),
-    explorer: { prs: [2531] },
     mutation: { killed: 11, total: 12, unique: 2 },
     refreshed: today,
   });

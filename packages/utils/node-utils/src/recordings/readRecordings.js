@@ -17,10 +17,9 @@
 import listRecordingFiles from './listRecordingFiles.js';
 import readRecordingFile from './readRecordingFile.js';
 
-// Every record the dev server recorded for one source (`dev`, `journey` or
-// `explorer`), in file then line order, as an array. `since` (a Date) skips
-// files in date directories before its UTC date that were not written to
-// since; `run` (a trace id) reads only that run's file. Callers filter records
+// Every record the dev server recorded for one source (`dev` or `journey`), in
+// file then line order, as an array. `since` (a Date) skips files in date
+// directories before its UTC date that were not written to since; `run` (a trace id) reads only that run's file. Callers filter records
 // by time themselves: a file holds a whole session, so records before `since`
 // can still be in it.
 function readRecordings({ configDirectory, source, since, run }) {

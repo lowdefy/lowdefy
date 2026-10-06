@@ -22,7 +22,7 @@ import COVERAGE_REPORT_VERSION from './coverageReportVersion.js';
 
 // Builds .lowdefy/test/coverage.json and writes it whole: whether sessions
 // were grouped into flows, the five measures, the production profile and each
-// committed journey's sequence, so the explorer, variants and the app graph
+// committed journey's sequence, so journeys scope, variants and the app graph
 // read production from one file. The same inputs give the same bytes apart
 // from `generated`.
 function writeCoverageReport({

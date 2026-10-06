@@ -93,7 +93,7 @@ test('validateTraceRecord refuses a version other than 1', () => {
 
 test('validateTraceRecord refuses a source outside the list', () => {
   expect(check({ ...sample, source: 'replay' })).toBe(
-    'Trace record "source" should be one of production, dev, explorer, journey. Received "replay".'
+    'Trace record "source" should be one of production, dev, journey. Received "replay".'
   );
 });
 
@@ -278,13 +278,12 @@ test('validateTraceRecord refuses redacted on a production record', () => {
   ).toContain('entry on a production record should carry no "redacted"');
 });
 
-test('validateTraceRecord accepts run only on journey and explorer records', () => {
-  const run = { id: 'run-1', by: 'agent', journey: 'walk-1', actor: 'main' };
+test('validateTraceRecord accepts run only on journey records', () => {
+  const run = { id: 'run-1', by: 'agent', journey: 'save-ticket', actor: 'main' };
   expect(check({ ...sample, run })).toBe(
-    'Trace record "run" appears only on journey and explorer records. Received {"id":"run-1","by":"agent","journey":"walk-1","actor":"main"} on a dev record.'
+    'Trace record "run" appears only on journey records. Received {"id":"run-1","by":"agent","journey":"save-ticket","actor":"main"} on a dev record.'
   );
   expect(check({ ...sample, source: 'journey', run })).toBeUndefined();
-  expect(check({ ...sample, source: 'explorer', run })).toBeUndefined();
 });
 
 test('validateTraceRecord requires a run id string', () => {

@@ -22,7 +22,7 @@ import path from 'path';
 // version, which keys every cached build so a Lowdefy upgrade rebuilds.
 function resolveConfigBuilder({ context }) {
   const devDirectory = context.directories.dev;
-  const script = path.join(devDirectory, 'lib', 'docs', 'explore', 'buildConfigTree.mjs');
+  const script = path.join(devDirectory, 'lib', 'configTree', 'buildConfigTree.mjs');
   if (!fs.existsSync(script)) {
     if (!fs.existsSync(path.join(devDirectory, 'package.json'))) {
       throw new Error(
@@ -30,7 +30,7 @@ function resolveConfigBuilder({ context }) {
       );
     }
     throw new Error(
-      `The dev server installed in ${devDirectory} has no explore builder. Stop the running dev server and start it again to update it.`
+      `The dev server installed in ${devDirectory} has no config tree builder. Stop the running dev server and start it again to update it.`
     );
   }
   const version = JSON.parse(

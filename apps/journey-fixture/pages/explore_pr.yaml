@@ -1,5 +1,5 @@
-# The page the explore end-to-end test's head commit adds
-# (packages/cli/test/journeyFixture/explore.test.mjs): a button whose CallAPI
+# The page the journeys scope end-to-end test's head commit fills in
+# (packages/cli/test/journeyFixture/scope.test.mjs): a button whose CallAPI
 # fails, and a note form whose save works. The test's base commit has the
 # title only.
 id: explore_pr

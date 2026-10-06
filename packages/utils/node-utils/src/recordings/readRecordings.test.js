@@ -136,7 +136,7 @@ test('readRecordings reads only the run file when run is given', () => {
 
 test('readRecordings refuses the production source and unknown sources', () => {
   expect(() => readRecordings({ configDirectory, source: 'production' })).toThrow(
-    'Recordings source should be one of dev, journey, explorer. Received "production".'
+    'Recordings source should be one of dev, journey. Received "production".'
   );
   expect(() => readRecordings({ configDirectory })).toThrow('Recordings source should be one of');
 });
@@ -166,7 +166,7 @@ test('readRecordings ignores foreign files and directories', () => {
 });
 
 test('readRecordings returns an empty list when nothing was recorded', () => {
-  expect(readRecordings({ configDirectory, source: 'explorer' })).toEqual([]);
+  expect(readRecordings({ configDirectory, source: 'journey' })).toEqual([]);
 });
 
 test('listRecordingFiles gives id, date, path and mtime per file', () => {

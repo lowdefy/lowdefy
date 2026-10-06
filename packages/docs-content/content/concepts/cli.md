@@ -197,29 +197,13 @@ The `journeys variants` command writes edge-case candidates of one journey — o
 - `--no-run`: Write the variants without replaying them.
 - `--url <url>`, `--port <port>`, `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `test`.
 
-## journeys explore
+## journeys scope
 
-The `journeys explore` command walks the pages a pull request changed, as each role on a journey data set, and reports what broke. A finding is reported only once a journey written for it fails twice. The walks become candidate journeys under `tests/journeys/_candidates/explorer/<run>/`. It finds the changed pages by comparing full config builds of the base and the head. It exits with code `0` when the run completes, with or without findings. See [Exploring a pull request](/explore-pull-request).
+The `journeys scope` command prints what a change touched, for a coding agent exploring a pull request: each page the change reached, why (its own config, a request, an endpoint, a connection or a websocket it uses, an app-wide artifact; changes that travel through `_ref` show on every page that refs them), the blocks added, changed or removed, and who can open the page, with the data set users under `tests/data/` it admits. It builds the merge base and the working tree in full with the installed dev server's builder and needs no running dev server. See [Exploring a pull request](/explore-pull-request).
 
-- `--pr <n>`: The pull request to explore, read with the GitHub CLI (`gh`). The checkout must be at its head.
-- `--against <ref>`: Explore the changes since the merge base with this branch or commit, instead of `--pr`.
-- `--charter <text>`: A one-sentence goal that steers which options the model picks, such as `"try edge input on the invoice form"`. It needs a model (`AI_GATEWAY_API_KEY`). Without `--pr` or `--against`, the run builds only the head and walks the `--page` pages, else the entry pages. See [Charters](/explore-pull-request#charters).
-- `--charters <file>`: A bug bash: a YAML list of charters, each `{ goal, pages?, roles? }`, run as one run under one budget with one report. Each finding names the charters that hit it and is proven once. It needs a model, and cannot be combined with `--charter`. See [Bug bash](/explore-pull-request#bug-bash).
-- `--data <name>`: The data set walks run on. The default is `tests/data/default.yaml`, else the only data set.
-- `--live-data`: Run without a data set, writing to what the app's connections point at. Needs `cli.agentTools.allowWriteRequests: true`.
-- `--page <pageId...>`: Also walk these pages. With `--charters`, it is refused when every charter names its own pages.
-- `--role <name...>`: Walk only as these data set users.
-- `--walks <n>`: Walks per (page, role). The default is `5`.
-- `--steps <n>`: Interactions per walk. The default is `15`.
-- `--budget <duration>`: Wall-clock budget for the walks, such as `20m`, `90s` or `1h`. The default is `20m`.
-- `--policy <policy>`: What chooses each step: `jev` (the default with `AI_GATEWAY_API_KEY` set), `model` or `seeded` (the default without a key).
-- `--model <id>`: The AI Gateway model for `--policy model`, and Jev's fallback. The default is `LOWDEFY_EXPLORER_MODEL`, else `google/gemini-2.5-flash-lite`.
-- `--max-cost <usd>`: Stop once the reported (or estimated) model cost passes this. The default is `1.00`.
-- `--allow-external <id...>`: Let walks click controls that reach these non-MongoDB connections. Needs `cli.agentTools.allowWriteRequests: true`.
-- `--seed <n>`: The seed for the seeded policy and tie-breaks. The default is `0`.
-- `--scope-only`: Build, diff and print the scope, and walk nothing.
-- `--json`: Print `report.json` instead of the summary (with `--scope-only`, the scope).
-- `--url <url>`, `--port <port>`, `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `test`.
+- `--base <ref>`: Compare with the merge base of this branch or commit and `HEAD`, such as the pull request's base branch. Without it, every page of the head is listed.
+- `--json`: Print the scope as JSON instead of the summary.
+- `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `test`.
 
 ## journeys session
 

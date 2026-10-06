@@ -26,7 +26,7 @@ import reconcileFlows from './reconcileFlows.js';
 // The subkeys a journey file commits. Dev recordings are a rolling count that
 // differs by machine, so `dev` is counted for the summary only and an existing
 // `dev` is removed on refresh.
-const SUBKEYS = ['production', 'explorer', 'mutation'];
+const SUBKEYS = ['production', 'mutation'];
 
 function distinctCount(values) {
   return new Set(values.filter((value) => !type.isNone(value))).size;
