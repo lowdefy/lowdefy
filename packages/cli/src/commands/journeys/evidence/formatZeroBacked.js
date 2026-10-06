@@ -16,6 +16,11 @@
 
 import { type } from '@lowdefy/helpers';
 
+import newestMonth from '../usage/newestMonth.js';
+import parseUsageWindow from '../usage/parseUsageWindow.js';
+import usageWindowMonths from '../usage/usageWindowMonths.js';
+import windowUsage from '../usage/windowUsage.js';
+
 function describeMutation({ mutation }) {
   if (type.isNone(mutation)) return 'no mutation report yet';
   const parts = [`${mutation.killed}/${mutation.total} mutants`];
@@ -23,24 +28,35 @@ function describeMutation({ mutation }) {
   return parts.join(' · ');
 }
 
-// The journeys no production session in the window backs, each beside its
-// mutation numbers, for the developer to judge. Nothing is removed: a 30-day
-// window cannot see quarterly or yearly work, and a journey that is the only
-// one to kill a mutant matters whatever its traffic. Empty when every journey
-// is backed.
-function formatZeroBacked({ results, window }) {
-  const unbacked = results.filter((result) => result.after.production?.sessions === 0);
+// The journeys no production session backs over the usage window (the 3
+// calendar months ending at the newest month any journey holds), each beside
+// its mutation numbers, for the developer to judge. Nothing is removed: three
+// months cannot see yearly work, and a journey that is the only one to kill a
+// mutant matters whatever its traffic. Empty when every journey is backed.
+function formatZeroBacked({ results }) {
+  const journeys = results.map((result) => ({ evidence: result.after }));
+  const windowMonths = usageWindowMonths({
+    anchor: newestMonth({ journeys }),
+    months: parseUsageWindow(),
+  });
+  const unbacked = results.filter((result) => {
+    const months = result.after.production?.months;
+    if (!type.isArray(months)) return false;
+    return windowUsage({ months, windowMonths }).sessions === 0;
+  });
   if (unbacked.length === 0) return [];
   const width = Math.max(...unbacked.map((result) => result.name.length));
   return [
-    `No production backing in ${window.from}/${window.to} (nothing is removed):`,
+    `No production backing in ${windowMonths[0]} to ${
+      windowMonths[windowMonths.length - 1]
+    } (nothing is removed):`,
     ...unbacked.map(
       (result) =>
         `  ${result.name.padEnd(width)}  0 sessions · ${describeMutation({
           mutation: result.after.mutation,
         })}`
     ),
-    'A 30-day window cannot see quarterly or yearly work. A journey that is the only one to kill a mutant is load-bearing whatever its traffic.',
+    'Three months cannot see yearly work. A journey that is the only one to kill a mutant is load-bearing whatever its traffic.',
   ];
 }
 

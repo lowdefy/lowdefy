@@ -14,38 +14,70 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import readProductionTrace from './readProductionTrace.js';
+const mockReadConfigText = jest.fn();
+jest.unstable_mockModule('./configText/readConfigText.js', () => ({
+  default: mockReadConfigText,
+}));
+
+const { default: readProductionTrace } = await import('./readProductionTrace.js');
+const { default: tokenText } = await import('./tokenText.js');
+const { default: readTraceSalt } = await import('./pull/readTraceSalt.js');
 
 let traces;
+let root;
 const now = Date.parse('2026-10-03T12:00:00.000Z');
 
+// A day as the pull writes it: under the machine's salt, which the first
+// day written here creates when a test has not written its own.
 function writeDay(day, records) {
   const directory = path.join(traces, 'production');
   fs.mkdirSync(directory, { recursive: true });
+  if (!fs.existsSync(path.join(directory, 'salt'))) {
+    fs.writeFileSync(path.join(directory, 'salt'), Buffer.alloc(32, 2));
+  }
+  const { saltId } = readTraceSalt({ directories: { traces } });
   fs.writeFileSync(
     path.join(directory, `${day}.jsonl`),
     records.map((record) => JSON.stringify(record)).join('\n')
   );
-  fs.writeFileSync(path.join(directory, `${day}.manifest.json`), JSON.stringify({ day }));
+  fs.writeFileSync(
+    path.join(directory, `${day}.manifest.json`),
+    JSON.stringify({ day, salt_id: saltId, text_rule: 'token' })
+  );
+}
+
+function read(options) {
+  const context = {
+    directories: { config: root, test: path.join(root, '.lowdefy', 'test'), traces },
+    logger: { warn: jest.fn() },
+  };
+  return readProductionTrace({ context, now, ...options });
 }
 
 beforeEach(() => {
-  traces = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-production-trace-'));
+  root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-production-trace-'));
+  traces = path.join(root, '.lowdefy', 'traces');
+  mockReadConfigText.mockReset();
+  mockReadConfigText.mockResolvedValue({
+    texts: new Set(['Assign']),
+    isConfigText: (text) => text === 'Assign',
+  });
 });
 
 afterEach(() => {
-  fs.rmSync(traces, { recursive: true, force: true });
+  fs.rmSync(root, { recursive: true, force: true });
 });
 
-test('readProductionTrace returns the window records in day order with each manifest', () => {
+test('readProductionTrace returns the window records in day order with each manifest', async () => {
   writeDay('2026-10-03', [{ id: 5 }]);
   writeDay('2026-10-01', [{ id: 1 }, { id: 2 }]);
   writeDay('2026-10-02', [{ id: 3 }, { id: 4 }]);
-  const result = readProductionTrace({ directories: { traces }, since: '3d', now });
+  const result = await read({ since: '3d' });
   expect(result.records.map((record) => record.id)).toEqual([1, 2, 3, 4, 5]);
   expect(result.window).toEqual({ from: '2026-10-01', to: '2026-10-03' });
   expect(result.manifests.map((manifest) => manifest.day)).toEqual([
@@ -56,26 +88,100 @@ test('readProductionTrace returns the window records in day order with each mani
   expect(result.unparsable).toBe(0);
 });
 
-test('readProductionTrace names a missing middle day and the pull that fills it', () => {
+test('readProductionTrace names a missing middle day and the pull that fills it', async () => {
   writeDay('2026-10-01', []);
   writeDay('2026-10-03', []);
-  expect(() => readProductionTrace({ directories: { traces }, since: '3d', now })).toThrow(
+  await expect(read({ since: '3d' })).rejects.toThrow(
     'The production trace cache is missing 1 day(s) of 2026-10-01/2026-10-03 (2026-10-02). Run "lowdefy journeys pull posthog --from 2026-10-02 --to 2026-10-02" first.'
   );
 });
 
-test('readProductionTrace treats a day without its manifest as missing', () => {
-  writeDay('2026-10-01', []);
-  fs.rmSync(path.join(traces, 'production', '2026-10-01.manifest.json'));
-  expect(() =>
-    readProductionTrace({ directories: { traces }, from: '2026-10-01', to: '2026-10-01', now })
-  ).toThrow('lowdefy journeys pull posthog --from 2026-10-01 --to 2026-10-01');
+test('readProductionTrace names a pull the mining cap accepts when an uncapped window misses more than 30 days', async () => {
+  writeDay('2026-10-03', []);
+  await expect(read({ from: '2026-08-01', to: '2026-10-03' })).rejects.toThrow(
+    'Run "lowdefy journeys pull posthog --from 2026-08-01 --to 2026-08-30" first, then pull the rest of 2026-08-01/2026-10-02 the same way, at most 30 days at a time.'
+  );
 });
 
-test('readProductionTrace counts unparsable lines', () => {
+test('readProductionTrace treats a day without its manifest as missing', async () => {
+  writeDay('2026-10-01', []);
+  fs.rmSync(path.join(traces, 'production', '2026-10-01.manifest.json'));
+  await expect(read({ from: '2026-10-01', to: '2026-10-01' })).rejects.toThrow(
+    'lowdefy journeys pull posthog --from 2026-10-01 --to 2026-10-01'
+  );
+});
+
+test('readProductionTrace refuses a day pulled under another salt and names the pull that hashes it again', async () => {
+  writeDay('2026-10-01', [{ id: 1 }]);
+  writeDay('2026-10-02', [{ id: 2 }]);
+  writeDay('2026-10-03', [{ id: 3 }]);
+  const manifestPath = path.join(traces, 'production', '2026-10-02.manifest.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  fs.writeFileSync(manifestPath, JSON.stringify({ ...manifest, salt_id: '00000000' }));
+  await expect(read({ since: '3d' })).rejects.toThrow(
+    'The production trace cache is missing 1 day(s) of 2026-10-01/2026-10-03 (2026-10-02). 1 of them were pulled under another trace salt; pulling them again hashes them under this machine\'s salt. Run "lowdefy journeys pull posthog --from 2026-10-02 --to 2026-10-02" first.'
+  );
+});
+
+test('readProductionTrace reads days whose salt id matches the machine salt', async () => {
+  writeDay('2026-10-02', [{ id: 1 }]);
+  writeDay('2026-10-03', [{ id: 2 }]);
+  const { saltId } = readTraceSalt({ directories: { traces } });
+  const result = await read({ since: '2d' });
+  expect(result.manifests.map((manifest) => manifest.salt_id)).toEqual([saltId, saltId]);
+  expect(result.records.map((record) => record.id)).toEqual([1, 2]);
+});
+
+test('readProductionTrace refuses day files with no salt and writes none', async () => {
+  writeDay('2026-10-02', [{ id: 1 }]);
+  writeDay('2026-10-03', [{ id: 2 }]);
+  const saltPath = path.join(traces, 'production', 'salt');
+  fs.rmSync(saltPath);
+  await expect(read({ since: '2d' })).rejects.toThrow(
+    'The production trace cache is missing 2 day(s) of 2026-10-02/2026-10-03 (2026-10-02, 2026-10-03). There is no trace salt in .lowdefy/traces/production/, so 2 pulled day(s) cannot be read; pulling them again hashes them under a new salt. Run "lowdefy journeys pull posthog --from 2026-10-02 --to 2026-10-03" first.'
+  );
+  expect(fs.existsSync(saltPath)).toBe(false);
+});
+
+test('readProductionTrace with no cache at all writes no salt', async () => {
+  await expect(read({ since: '1d' })).rejects.toThrow(
+    'Run "lowdefy journeys pull posthog --from 2026-10-03 --to 2026-10-03" first.'
+  );
+  expect(fs.existsSync(path.join(traces, 'production', 'salt'))).toBe(false);
+});
+
+test('readProductionTrace counts unparsable lines', async () => {
   writeDay('2026-10-03', [{ id: 1 }]);
   fs.appendFileSync(path.join(traces, 'production', '2026-10-03.jsonl'), '\nnot json');
-  const result = readProductionTrace({ directories: { traces }, since: '1d', now });
+  const result = await read({ since: '1d' });
   expect(result.records).toHaveLength(1);
   expect(result.unparsable).toBe(1);
+});
+
+test('readProductionTrace resolves a token only to config text', async () => {
+  fs.mkdirSync(path.join(traces, 'production'), { recursive: true });
+  const salt = Buffer.alloc(32, 4);
+  fs.writeFileSync(path.join(traces, 'production', 'salt'), salt);
+  const assign = tokenText({ salt, text: 'Assign' });
+  const acme = tokenText({ salt, text: 'Acme Ltd' });
+  writeDay('2026-10-03', [
+    { id: 1, target: { block_id: 'assign_button', text_token: assign } },
+    { id: 2, target: { block_id: 'grid', text_token: acme } },
+    { id: 3, target: { block_id: 'grid', text: 'Acme Ltd', text_token: acme } },
+    { id: 4, target: null },
+  ]);
+  const { records } = await read({ since: '1d' });
+  expect(records.map((record) => record.target)).toEqual([
+    { block_id: 'assign_button', text_token: assign, text: 'Assign' },
+    { block_id: 'grid', text_token: acme },
+    { block_id: 'grid', text_token: acme },
+    null,
+  ]);
+  expect(JSON.stringify(records)).not.toContain('Acme');
+});
+
+test('readProductionTrace refuses a window over maxDays', async () => {
+  await expect(read({ since: '31d', maxDays: 30 })).rejects.toThrow(
+    'a mining window is at most 30 days'
+  );
 });

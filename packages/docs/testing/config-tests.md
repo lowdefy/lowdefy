@@ -271,7 +271,7 @@ FAIL  guest sees the empty state
 
 A failing journey stops at its first failing step and prints the step's index, the step itself, and the `expected` and `actual` values. Steps after the failure are not run.
 
-A journey with an [`evidence`](#evidence) key prints it after its `PASS` line: `PASS  member creates a control  (5 steps, 1840ms)  412 sessions · 9 orgs · 11/12 mutants`. The organisations part is left out when the app sends none, the mutants part when there is no mutation report, and a journey nothing backs shows `0 sessions in window`. `FAIL` lines carry no evidence.
+A journey with an [`evidence`](#evidence) key prints it after its `PASS` line: `PASS  member creates a control  (5 steps, 1840ms)  412 sessions · 11/12 mutants`. The sessions are the journey's production sessions summed over all its months; the mutants part is left out when there is no mutation report. `FAIL` lines carry no evidence.
 
 ### Options
 
@@ -333,7 +333,7 @@ steps:
 
 Every click, fill, pick and key press becomes a step, whether or not it ran an event. An event adds what to check: a `wait` for the last request it called and, for dev and explorer traces, `expect.state` for the state it wrote. A failing event ends the candidate at its step, so the candidate is a failing test until the bug is fixed. Date and object inputs, which no journey step drives, become a comment asking you to write that step by hand.
 
-Values typed in production are never recorded, so production candidates carry `from: shape` placeholders, and a button or row label from production is kept only when at least 5 different people (in at least 2 organisations, when the traces hold several) clicked it.
+Values typed in production are never recorded, so production candidates carry `from: shape` placeholders. Clicked text from production is kept only when it is text from your app's config, such as a button label, a menu item or an option label; a click on anything else, such as a grid cell showing a customer's name or a label built from values ("Open (3)"), compiles to its block, row and column without text, with a comment naming its token and a `tokenised-text` flag. The candidate's origin lists, for each such block and column, how many clicks and distinct tokens the window holds and the most-clicked tokens, which tells a data column from a label built from values without showing the text.
 
 To promote a candidate, move it into `tests/journeys/`, give it a name, fill every `from: shape` placeholder and review the `from: recorded` values. Compiling again updates only the origin comment of a candidate that already exists, so your edits survive.
 
@@ -341,7 +341,7 @@ To promote a candidate, move it into `tests/journeys/`, give it a name, fill eve
 
 - `[traceFiles...]`: The trace files to compile, wherever they are. Without them, `dev` and `explorer` recordings are read from `.lowdefy/traces/<source>/`.
 - `--source <production|dev|explorer>`: Compile only records of this source. Required when no trace files are given; with files, the source comes from the records. `--source production` with no files reads the cache [`lowdefy journeys pull posthog`](#production-journeys) writes, and fails naming the pull to run when a day of the window is missing. Journey runs (`journey` traces) are coverage, not candidates, and are refused.
-- `--since <since>`: Only records at or after this time, as a duration back from now (`30m`, `2h`, `7d`) or an ISO date. Production traces default to the last 30 days.
+- `--since <since>`: Only records at or after this time, as a duration back from now (`30m`, `2h`, `7d`) or an ISO date. Production traces default to the last 30 days, and a production window is at most 30 days.
 - `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: Production only. An explicit window of whole UTC days instead of `--since`.
 - `--build <id|current>`: Only segments whose records all ran on this build. `current` is the build the running development server for the app serves, which changes with every config edit; with no server running, the newest build in the records is used and the command says so.
 - `--page <pageId>`: Only segments that visit this page.
@@ -504,33 +504,88 @@ pnpx lowdefy@5 journeys evidence --refresh
 - No value a user typed. PostHog never captures one, so a production candidate's `fill` steps carry `from: shape` placeholders for you to fill from your test data.
 - Person and organisation ids hashed with a salt that never leaves your machine, so counts of people and organisations are the same on every machine while no raw id is stored.
 - Page URLs with query parameter names only (`/tickets?id=&tab=`), never their values.
-- The text of the clicked element, as PostHog already holds it. It stays in `.lowdefy/`, which is not committed, and the compiler keeps a text target only when enough different people clicked it.
+- No clicked text. The text of each clicked element is stored as a token, a hash under the same salt, so the same text groups and counts without being kept. Compile, coverage and evidence turn a token back into text only when it is text from your app's config (pages, menus, i18n messages, block plugins' default messages, antd's own strings), collected with one full build of the app by the installed development server and cached until the config changes. Text that is not in the config, such as a customer's name in a grid cell, stays a token.
+
+Pull, compile and coverage read at most 30 days at a time: pick the window for the question, such as the last 30 days, the days since a deploy for a regression, or the days around a month-end for a periodic process. Evidence is not capped.
+
+Upgrading from a version that stored clicked text: the first pull or production read deletes the day files pulled that way, the production candidates in `tests/journeys/_candidates/production/` and `.lowdefy/test/coverage.json`; the next pull, compile and coverage write them again. Committed journeys are left as they are, so check any you promoted from production for text that came from your data rather than your config.
 
 ### Evidence
 
-A committed journey can carry how much production use backs it:
+A committed journey can carry how much production use backs it, by calendar month:
 
 ```yaml
 - name: member assigns an open ticket to a teammate
   pageId: tickets
   evidence:
     production:
-      sessions: 412 # sessions that did what this journey does
-      persons: 37
-      orgs: 9 # 0 when the app sends no organisation
-      share: 0.31 # of the sessions entering on pageId
-      failures: 14 # backing sessions that hit a failed event
-      window: 2026-09-03/2026-10-02
+      sequence: v1-3f9a12c0 # the flow these months were counted for
+      pageId: tickets
+      flow:
+        - tickets ["click","assign",null,"Assign"]
+        - tickets ["select","assignee",null,null]
+      months:
+        - { month: 2026-08, days: 31, sessions: 380, persons: 35, orgs: 9, failures: 12 }
+        - { month: 2026-09, days: 30, sessions: 412, persons: 37, orgs: 9, failures: 14 }
+        - { month: 2026-10, days: 3, sessions: 38, persons: 11, orgs: 5, failures: 1 }
     dev: { recordings: 2 } # dev sessions of the last 7 days that did it
     mutation: { killed: 11, total: 12, unique: 2 }
-    refreshed: 2026-10-03
+    refreshed: 2026-10-05
   steps:
-    - click: assign
+    - click: { blockId: assign, text: Assign }
+    - select: { blockId: assignee, value: Ann }
 ```
 
-A session backs a journey when it does the journey's interactions in the same order, other clicks in between allowed, starting on the journey's page. Only [`lowdefy journeys evidence --refresh`](/cli#journeys-evidence) writes the key, and it changes nothing else in the file: comments, key order and quoting stay as they are. `lowdefy test` reads it to print the PASS line and validates it strictly, so a typo in a hand edit fails before the browser opens. `dev.recordings` counts the [dev recordings](#dev-recordings) of the last 7 days that back the journey, by the same rule. `dev`, `explorer` and `mutation` subkeys whose source is not on your machine keep their committed values; `mutation` is filled from a hardening run's report in `.lowdefy/test/mutation.json` when there is one.
+A session backs a journey when it does the journey's interactions in the same order, other clicks in between allowed, starting on the journey's page. A journey's click text counts only when it is text from your app's config: any other text reads as no text, so a click on a grid cell by a customer's name is backed by that column's clicks exactly as one with no text, and no command tells whether production showed that value. Only [`lowdefy journeys evidence --refresh`](/cli#journeys-evidence) writes the key, and it changes nothing else in the file: comments, key order and quoting stay as they are. `lowdefy test` reads it to print the PASS line and validates it strictly, so a typo in a hand edit fails before the browser opens. `dev.recordings` counts the [dev recordings](#dev-recordings) of the last 7 days that back the journey, by the same rule. `dev`, `explorer` and `mutation` subkeys whose source is not on your machine keep their committed values; `mutation` is filled from a hardening run's report in `.lowdefy/test/mutation.json` when there is one.
 
-No command removes a journey for lack of production use. A 30-day window cannot see quarterly or yearly work, and a journey that is the only one to catch a mutant matters whatever its traffic. `journeys evidence` lists the journeys nothing backs, beside their mutation numbers, and leaves the decision to you.
+Each month is a UTC calendar month. `days` is how many of its final days the refresh read: the pull re-pulls today and yesterday for late events, so they count only once a later pull marks them final. `sessions` counts the backing sessions that started in that month, so a session that crosses midnight counts once; `failures` counts those that hit a failed event; `persons` and `orgs` are distinct within the month and do not add up across months. A month read with no backing session is written with `sessions: 0`, and a month never pulled is missing.
+
+Counts build up across pulls and machines without double counting. A refresh reads every final day in the cache, gaps and all, and rewrites a month only when the cache holds at least as many final days of it as the committed entry. Refreshing twice changes nothing, a colleague's fuller pull wins, and a laptop that never pulled a month, or pruned it, leaves that month as committed.
+
+`flow` is what the journey's steps are matched on: one `<page> <step>` line per click, select, fill, press, back or open, with the block, grid column and clicked text, and `sequence` names it. Waits, other expectations, typed or picked values, rows and `nth` leave it unchanged. When an edit changes it (a click's text or block, the order, a `goto`, or an `expect.url` path that moves later steps to another page), the next refresh moves the counted months to a deprecated flow and counts the new flow from the cache:
+
+```yaml
+production:
+  sequence: v1-3f9a12c0
+  # …
+  deprecated:
+    - sequence: v1-91be04d7
+      pageId: tickets
+      flow:
+        - tickets ["click","assign_button",null,"Assign"]
+      replaced: 2026-10-05
+      months:
+        - { month: 2026-09, days: 30, sessions: 40, persons: 12, orgs: 4, failures: 0 }
+```
+
+A deprecated flow is never run, and every refresh keeps counting it, so you can see whether users still follow the old way. Undo the edit and it becomes live again with its months. No command deletes one; delete it by hand once it shows no use. A `production` block in the older window shape (`sessions`, `share`, `window`) still validates, and the next refresh replaces it with months.
+
+A journey can also be retired as a whole with `deprecated: true` at its top level, while you watch its flow drain from production: refresh keeps counting it.
+
+No command removes a journey for lack of production use. Three months cannot see yearly work, and a journey that is the only one to catch a mutant matters whatever its traffic. `journeys evidence` lists the journeys nothing backs over the last 3 months, beside their mutation numbers, and leaves the decision to you.
+
+### Usage and tiers
+
+[`lowdefy journeys usage`](/cli#journeys-usage) ranks the journeys by how much real use leans on them now:
+
+```
+pnpx lowdefy@5 journeys usage
+pnpx lowdefy@5 journeys usage tests/journeys/review --tier common
+pnpx lowdefy@5 journeys usage --json
+```
+
+A journey's rate is its production sessions over the final days its months hold in the usage window: the last 3 calendar months (`--usage-window 3m`), ending at the newest month any selected journey has, so every journey is ranked over the same calendar and a flow that launched last month is not buried under years of history. The report lists the journeys by rate with their tier, their sessions and failures over the window and all time, one line per month with that month's people and organisations, and their deprecated flows with their recent use. Below that come the production flows no journey covers, from the coverage report, ranked by their sessions in coverage's window.
+
+A tier is a cut through the selected journeys, ranked by rate, most first:
+
+| Tier     | Cut | Reads as                              |
+| -------- | --- | ------------------------------------- |
+| `common` | p50 | the happy paths                       |
+| `wide`   | p80 | the usual variations                  |
+| `edge`   | p95 | the edge cases real users still reach |
+| `full`   | p0  | every journey                         |
+
+Tier pX holds the shortest run of journeys, from the top, whose summed rates reach X% of the total. Tiers nest, and journeys with equal rates are never split across a boundary. Tiers are cut over the selection after paths, `--tag` and `--filter`, so `tests/journeys/review --tier common` is the happy paths of the review area. A session counts for every journey it backs, so a tier's share is a share of journey matches, not of sessions. A journey edited since the last refresh, or never refreshed, has no counts for its current flow: it is `unranked` and in every tier, since a new or changed journey is what a change needs tested. A `deprecated: true` journey is in no tier. With fewer than 100 journey matches in the window, tiers are noise, and every tier but `full` is refused.
 
 ### Coverage
 
@@ -546,9 +601,9 @@ No command removes a journey for lack of production use. A 30-day window cannot 
 
 Coverage also reads the newest full test run that the development server recorded (a plain `lowdefy test`, or `lowdefy_run_tests` with no paths, tags or filter). The interaction measure then adds a measured share beside the static one: the production interactions that run actually drove. Failure coverage becomes measured: a failure counts as covered when a journey that passed in that run produced the same failed event, because a journey that reaches a failure and still passes asserts it. The test runner keeps which journeys passed in `.lowdefy/test/run.json`. Without a recorded run, failure coverage is reported as reached: a journey does the interaction that failed, which does not show it checks the outcome.
 
-It writes the measures, a production profile (the top flows per entry page, failure paths, frustrated blocks, role sets per page and entry pages) and each journey's interactions to `.lowdefy/test/coverage.json`, which is rewritten on every run and not committed. With a mutation report, the suite's mutation score is added as a sixth number.
+It writes the measures, a production profile (the top flows per entry page, failure paths, frustrated blocks, role sets per page, entry pages, and per block and column the clicks, distinct clicked-text tokens and most-clicked tokens) and each journey's interactions to `.lowdefy/test/coverage.json`, which is rewritten on every run and not committed. With a mutation report, the suite's mutation score is added as a sixth number.
 
-`lowdefy agent-setup` installs a `journeys-from-production` skill that runs this loop with you: it pulls, compiles and reads the coverage report, then takes uncovered failures first and flows next, one at a time. For each it shows you the flow and waits, fills typed values from your data set's fixtures, runs the candidate three times with `lowdefy test --repeat 3`, and moves it into `tests/journeys/` when all three pass. It finishes with `lowdefy journeys evidence --refresh` and commits nothing. It never deletes a journey or suggests deleting one.
+`lowdefy agent-setup` installs a `journeys-from-production` skill for your coding agent. The agent picks the window for the question and says why, pulls, compiles and measures, then reads each recorded routine with the page's config, requests, actions and plugin code to decide what the person was doing and whether it deserves a journey: failures first, then routines that write data, move money, change access or end a process, then the rest by count. It edits candidates only within what was recorded, filling typed values from your data set's fixtures and labels from your config, proves each with `lowdefy test --repeat 3`, refreshes evidence and reports what it wrote, what it skipped and why, and the findings. It reads tokens, never production text: it does not read the trace salt, your `.env` or snapshots, and never queries PostHog directly. It asks you only about findings and dead clicks, commits nothing, and never deletes a journey or suggests deleting one.
 
 ## Continuous integration
 

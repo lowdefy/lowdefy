@@ -152,3 +152,29 @@ test('writeEvidenceNode keeps CRLF line endings in a CRLF file', () => {
   expect(replaced.replace(/\r\n/g, '')).not.toContain('\n');
   expect(YAML.parse(replaced).evidence.refreshed).toBe('2026-10-04');
 });
+
+test('writeEvidenceNode writes each month of production evidence as one line', () => {
+  const monthly = {
+    production: {
+      sequence: 'v1-3f9a12c0',
+      pageId: 'tickets',
+      flow: ['tickets ["click","assign",null,null]'],
+      months: [
+        { month: '2026-09', days: 30, sessions: 412, persons: 37, orgs: 9, failures: 14 },
+        { month: '2026-10', days: 3, sessions: 38, persons: 11, orgs: 5, failures: 1 },
+      ],
+    },
+    refreshed: '2026-10-05',
+  };
+  const text = writeEvidenceNode({ text: single, journeyIndex: 0, evidence: monthly });
+  expect(text).toContain(
+    [
+      '    months:',
+      '      - { month: 2026-09, days: 30, sessions: 412, persons: 37, orgs: 9, failures: 14 }',
+      '      - { month: 2026-10, days: 3, sessions: 38, persons: 11, orgs: 5, failures: 1 }',
+    ].join('\n')
+  );
+  const journey = YAML.parse(text);
+  expect(journey.evidence).toEqual(monthly);
+  expect(validateJourney({ journey })).toEqual({ valid: true });
+});
