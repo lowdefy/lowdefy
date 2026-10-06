@@ -175,8 +175,8 @@ test('a verified webhook calls an endpoint bound to an organization as a named s
     query: { token: 'good' },
     headers: {},
   });
-  expect(result.success).toBe(true);
-  expect(result.response.result).toEqual({
+  expect(result.status).toBe(200);
+  expect(result.body.result).toEqual({
     user: standIn,
     writeTenant: orgVerdict,
     readTenant: orgVerdict,
@@ -184,7 +184,7 @@ test('a verified webhook calls an endpoint bound to an organization as a named s
     nested: { user: standIn, tenant: orgVerdict },
   });
   // The calling run carries on as itself once the bound call returns.
-  expect(result.response.after).toBe(null);
+  expect(result.body.after).toBe(null);
   expect(context.user).toBe(null);
   expect(context.boundOrganizationId).toBe(null);
 });
@@ -255,7 +255,7 @@ test('a webhook with no verifier can not bind a CallApi to an organization', asy
     query: {},
     headers: {},
   });
-  expect(result.success).toBe(false);
+  expect(result.status).toBe(500);
   expect(logger.error.mock.calls[0][0].message).toContain('accepted only in a trusted system run');
   expect(walledRequest).not.toHaveBeenCalled();
 });
@@ -268,7 +268,7 @@ test('a webhook whose verifier fails is refused before the binding CallApi runs'
     query: { token: 'forged' },
     headers: {},
   });
-  expect(result.status).toBe('unauthorized');
+  expect(result.status).toBe(401);
   expect(walledRequest).not.toHaveBeenCalled();
   expect(context.readConfigFile).not.toHaveBeenCalledWith('api/process.json');
 });
@@ -314,7 +314,7 @@ test('a bound run can restate its binding but not name another organization or c
     });
   }
   const restated = await run('restate');
-  expect(restated.response).toEqual({ user: standIn, tenant: orgVerdict });
+  expect(restated.body).toEqual({ user: standIn, tenant: orgVerdict });
   await run('other_org');
   expect(logger.error.mock.calls[0][0].message).toBe(
     'CallApi step "call" names organization "org-2", but this run is already bound to organization "org-1" and can not name another.'
@@ -345,7 +345,7 @@ test('a detached CallApi carries the binding and the stand-in caller to the deta
     query: { token: 'good' },
     headers: {},
   });
-  expect(result.response).toEqual({ user: null });
+  expect(result.body).toEqual({ user: null });
   await new Promise((resolve) => setImmediate(resolve));
   const { principal } = JSON.parse(fetchMock.mock.calls[0][1].body);
   expect(principal.system).toBe(true);

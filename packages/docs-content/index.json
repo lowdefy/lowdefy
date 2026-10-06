@@ -3306,7 +3306,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "8ba4ea74a6fe395857f49ee5d9899f6571b220fac0b27ef549ae54b6c51086c6"
+      "hash": "6c9082e35662db0cb04fc205d61be0f37c720363ffb1773d3303344a78528dfb"
     },
     "concepts/notifications": {
       "files": [
@@ -8382,7 +8382,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "baf2c826ef9e5458a8a5450d842be76778727ea728d7e8486870a59d5f7e15fd"
+      "hash": "c7094055be791e74ea2696adf505165fd346fcd50fae169b929e444218775cbe"
     },
     "controls/return": {
       "files": [

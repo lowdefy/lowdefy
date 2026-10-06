@@ -381,8 +381,8 @@ test('webhook endpoints: gated on webhook: true, payload is { body, query, heade
     query: { t: 'tok' },
     headers: {},
   });
-  expect(result.success).toBe(true);
-  expect(result.response).toEqual({ echo: 'tok' });
+  expect(result.status).toBe(200);
+  expect(result.body).toEqual({ echo: 'tok' });
 
   const context2 = testContext({ logger, readConfigFile: mockReadConfigFile });
   await expect(
@@ -422,8 +422,8 @@ test('webhook endpoint response is the :return value exactly, without build mark
     query: {},
     headers: {},
   });
-  expect(result.success).toBe(true);
-  expect(JSON.stringify(result.response)).toBe('{"validationResponse":"c-1","accepted":["a"]}');
+  expect(result.status).toBe(200);
+  expect(JSON.stringify(result.body)).toBe('{"validationResponse":"c-1","accepted":["a"]}');
 });
 
 test('webhook endpoint response sends a date as an ISO string, not the serializer form', async () => {
@@ -447,7 +447,7 @@ test('webhook endpoint response sends a date as an ISO string, not the serialize
     query: {},
     headers: {},
   });
-  expect(JSON.stringify(result.response)).toBe('{"receivedAt":"2026-01-02T03:04:05.000Z"}');
+  expect(JSON.stringify(result.body)).toBe('{"receivedAt":"2026-01-02T03:04:05.000Z"}');
 });
 
 // Nested CallApi authorization in system contexts — a routine already running was
@@ -600,8 +600,8 @@ test('webhook with no verifier fails a nested protected Api CallApi (untrusted t
   });
   // Untrusted (context.system unset): the nested protected call fails closed
   // exactly as an unauthenticated, caller-less call would - AuthenticationError.
-  expect(result.success).toBe(false);
-  expect(serializer.deserialize(result.error).message).toContain('Authentication required');
+  expect(result.status).toBe(500);
+  expect(logger.error.mock.calls[0][0].message).toContain('Authentication required');
 });
 
 test('webhook with no verifier fails a nested protected InternalApi CallApi (untrusted throughout)', async () => {
@@ -635,8 +635,8 @@ test('webhook with no verifier fails a nested protected InternalApi CallApi (unt
   // InternalApi is an HTTP-exposure choice, not a trust tier - it earns no
   // special pass in an untrusted run, so this fails closed like any protected
   // caller-less call.
-  expect(result.success).toBe(false);
-  expect(serializer.deserialize(result.error).message).toContain('Authentication required');
+  expect(result.status).toBe(500);
+  expect(logger.error.mock.calls[0][0].message).toContain('Authentication required');
 });
 
 test('webhook whose verify gate fails returns unauthorized and never runs the routine', async () => {
@@ -661,8 +661,7 @@ test('webhook whose verify gate fails returns unauthorized and never runs the ro
     query: { token: 'bad' },
     headers: {},
   });
-  expect(result.status).toBe('unauthorized');
-  expect(result.success).toBe(false);
+  expect(result.status).toBe(401);
   // The routine never ran - the child endpoint config was never read.
   expect(readConfigFile).not.toHaveBeenCalledWith('api/child_ep.json');
 });
@@ -724,8 +723,8 @@ test('webhook whose verify gate passes blanket-passes a nested protected CallApi
     query: { token: 'good' },
     headers: {},
   });
-  expect(result.success).toBe(true);
-  expect(result.response).toEqual({ child: 'child_ran' });
+  expect(result.status).toBe(200);
+  expect(result.body).toEqual({ child: 'child_ran' });
 });
 
 // A verifier that records what it was given, standing in for a signature check
@@ -786,9 +785,9 @@ test('webhook verifier reads rawBody as the exact bytes posted, which re-seriali
     alpha: 'café',
     beta: 'café',
   });
-  expect(result.success).toBe(true);
+  expect(result.status).toBe(200);
   // rawBody reaches only the verifier: the routine's payload has no such key.
-  expect(result.response).toEqual({
+  expect(result.body).toEqual({
     body: { zeta: 1, alpha: 'café', beta: 'café' },
     rawBody: null,
   });
@@ -810,8 +809,7 @@ test('webhook verifier gets a body that is not JSON as rawBody and can refuse it
   });
   expect(recordingVerify.mock.calls[0][0].request.rawBody).toBe(rawBody);
   expect(recordingVerify.mock.calls[0][0].request.body).toBe(rawBody);
-  expect(result.status).toBe('unauthorized');
-  expect(result.success).toBe(false);
+  expect(result.status).toBe(401);
 });
 
 // A verifier connection whose type implements the tenant scoping contract -
@@ -851,8 +849,7 @@ test('webhook verifier on a walled connection fails closed to unauthorized, neve
   // Webhooks run in system context with no caller organization - the tenant
   // wall refuses the verifier, and the refusal is a false verdict, not an
   // AuthenticationError surfaced to the unauthenticated sender.
-  expect(result.status).toBe('unauthorized');
-  expect(result.success).toBe(false);
+  expect(result.status).toBe(401);
   expect(readConfigFile).not.toHaveBeenCalledWith('api/child_ep.json');
 });
 
@@ -879,8 +876,8 @@ test('webhook verifier on a walled connection with tenant none opts out, carries
     query: { token: 'good' },
     headers: {},
   });
-  expect(result.success).toBe(true);
-  expect(result.response).toEqual({ child: 'child_ran' });
+  expect(result.status).toBe(200);
+  expect(result.body).toEqual({ child: 'child_ran' });
   // Unscoped like any tenant: none request, so a verifier that writes (a
   // replay nonce, say) must be held to the same organization-id guard.
   expect(walledStubVerify).toHaveBeenCalledWith(

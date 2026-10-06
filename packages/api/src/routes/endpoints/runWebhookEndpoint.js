@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { serializer, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 import applySystemTrust from '../../context/applySystemTrust.js';
-import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createAuthorizeOutcome from '../../context/createAuthorizeOutcome.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
+import createWebhookAnswer from './createWebhookAnswer.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import parseWebhookBody from './parseWebhookBody.js';
 import runRoutine from './runRoutine.js';
@@ -31,7 +31,9 @@ import runWebhookVerify from './runWebhookVerify.js';
 // but taking the request RAW: bodies are the caller's own format, not
 // Lowdefy's { payload } envelope, so the routine receives
 // { body, query, headers } as its payload and its return value is sent back
-// verbatim (handshakes require exact response shapes). Only endpoints that
+// verbatim (handshakes require exact response shapes). It returns the HTTP
+// answer, { status, body }, that the route sends (see createWebhookAnswer).
+// Only endpoints that
 // opt in are runnable here (a missing flag reads as a missing endpoint — no
 // probing).
 //
@@ -85,10 +87,8 @@ async function runWebhookEndpoint(context, { endpointId, rawBody, query, headers
     if (!verified) {
       logger.warn({ event: 'webhook_verify_failed', endpointId });
       return {
-        error: null,
-        response: null,
-        status: 'unauthorized',
-        success: false,
+        status: 401,
+        body: { error: { code: 'unauthorized', message: 'Webhook verification failed.' } },
       };
     }
     applySystemTrust(context);
@@ -108,11 +108,7 @@ async function runWebhookEndpoint(context, { endpointId, rawBody, query, headers
     routine: endpointConfig.routine,
   });
 
-  const result = buildEndpointResult(context, { error, response, status });
-  // The route sends the response to a third party, not the Lowdefy client, as
-  // plain JSON: a date arrives as an ISO string, not the serializer's
-  // { "~d": ... } form.
-  return { ...result, response: serializer.deserialize(result.response) };
+  return createWebhookAnswer(context, { error, response, status });
 }
 
 export default runWebhookEndpoint;

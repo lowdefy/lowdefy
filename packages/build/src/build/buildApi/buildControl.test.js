@@ -221,3 +221,46 @@ test.each([0, -2, 2.5, 'many', true])('parallel_for throws for :concurrency %p',
     ':concurrency in :parallel_for must be a positive integer at endpoint api_bad_concurrency.'
   );
 });
+
+test(':reject :status and :body build in a webhook endpoint and an InternalApi endpoint', () => {
+  const components = {
+    api: [
+      {
+        id: 'hook',
+        type: 'Api',
+        webhook: true,
+        routine: { ':reject': 'Not found', ':status': 404, ':body': { error: 'not_found' } },
+      },
+      {
+        id: 'worker',
+        type: 'InternalApi',
+        routine: { ':reject': 'Too large', ':status': { _if: { test: true, then: 413 } } },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test(':reject :status on an endpoint no webhook answers for is a build error', () => {
+  const components = {
+    api: [
+      {
+        id: 'plain',
+        type: 'Api',
+        routine: [{ ':reject': 'Not found', ':status': 404, ':body': {} }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    ':reject in endpoint plain sets :status and :body, which only a webhook endpoint, or an InternalApi endpoint a webhook calls, answers with.'
+  );
+});
+
+test(':reject :status outside 400 to 499 is a build error', () => {
+  const components = {
+    api: [{ id: 'hook', type: 'Api', webhook: true, routine: { ':reject': 'x', ':status': 500 } }],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    ':status in :reject must be an integer from 400 to 499 at endpoint hook.'
+  );
+});

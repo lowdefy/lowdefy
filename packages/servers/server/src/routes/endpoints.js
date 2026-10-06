@@ -48,21 +48,13 @@ async function endpointsHandler(c) {
   }
   if (endpointConfig?.webhook) {
     context.logger.info({ event: 'call_webhook_endpoint', endpointId });
-    const result = await runWebhookEndpoint(context, {
+    const { status, body } = await runWebhookEndpoint(context, {
       endpointId,
       rawBody: await c.req.text(),
       query: c.req.query(),
       headers: c.req.header(),
     });
-    // A failed verify gate is a rejected caller (401), distinct from a routine
-    // error (500).
-    if (result.status === 'unauthorized') {
-      return c.json({ error: 'Webhook verification failed.' }, 401);
-    }
-    if (!result.success) {
-      return c.json({ error: 'Webhook failed.' }, 500);
-    }
-    return c.json(result.response ?? { ok: true });
+    return c.json(body, status);
   }
 
   const { blockId, payload, pageId } = parseRequestBody({ text: await c.req.text() });

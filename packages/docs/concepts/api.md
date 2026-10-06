@@ -334,6 +334,59 @@ routine:
       received: true
 ```
 
+### Answering with a status
+
+A webhook endpoint answers with an HTTP status that says how the run ended, so the sender can tell its own mistake from an outage:
+
+| Outcome | Status | Body |
+| --- | --- | --- |
+| The routine finished | `200` | Its `:return` value, or `{ "ok": true }` when it returned nothing |
+| A [`:reject`](/:reject) with `:status` | That status (400 to 499) | `:body` as given, or the error body below |
+| A [`:reject`](/:reject) without `:status` | `400` | `{ "error": { "code": "rejected", "message": <the reject message> } }`, or `:body` when given |
+| A failed [`ValidateSchema` step](#validating-data-as-a-routine-step) (with `throwOnInvalid` on) | `400` | `{ "error": { "code": "invalid_request", "message": <names the failing path> } }` |
+| The `verify` request did not pass | `401` | `{ "error": { "code": "unauthorized", "message": "Webhook verification failed." } }` |
+| Any other uncaught error | `500` | `{ "error": { "code": "internal_error", "message": "Webhook failed." } }`, with nothing from the error itself |
+
+A `:reject` or a failed `ValidateSchema` step in an endpoint the routine calls with `CallApi` sets the answer the same way, so the work can live in an `InternalApi` endpoint the webhook calls. `:status` and `:body` are accepted only on a `:reject` in a webhook endpoint or an `InternalApi` endpoint; on any other endpoint they are a build error. An error a `:catch` handles does not change the answer. A `:reject` is never caught, so it always sets it.
+
+```yaml
+id: support-tickets
+type: Api
+webhook:
+  verify:
+    _ref: support/verify_signature.yaml
+routine:
+  - id: check_body
+    type: ValidateSchema
+    properties:
+      schema:
+        _ref: support/ticket_schema.json
+      data:
+        _payload: body
+  - id: find_ticket
+    type: MongoDBFindOne
+    connectionId: tickets
+    properties:
+      query:
+        _id:
+          _payload: body.ticket_id
+  - :if:
+      _eq:
+        - _step: find_ticket
+        - null
+    :then:
+      :reject: Ticket not found.
+      :status: 404
+      :body:
+        error:
+          code: not_found
+          ticket_id:
+            _payload: body.ticket_id
+  - :return:
+      ticket:
+        _step: find_ticket
+```
+
 Endpoints without the flag are completely unaffected — the standard CallAPI envelope, auth config, and response shape apply exactly as before.
 
 ## Routines

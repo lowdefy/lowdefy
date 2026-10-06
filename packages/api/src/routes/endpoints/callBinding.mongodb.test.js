@@ -150,15 +150,15 @@ test('a verified webhook binds a CallApi to an organization with a stand-in call
   });
   const result = await runWebhookEndpoint(context, {
     endpointId: 'hook',
-    body: { organization: 'org-1' },
+    rawBody: JSON.stringify({ organization: 'org-1' }),
     query: { token: 'good' },
     headers: {},
   });
   expect(logger.error).not.toHaveBeenCalled();
-  expect(result.success).toBe(true);
+  expect(result.status).toBe(200);
   const standIn = { id: 'github', name: 'GitHub', organization_id: 'org-1', system: true };
-  expect(result.response.user).toEqual(standIn);
-  expect(result.response.rows).toEqual([
+  expect(result.body.user).toEqual(standIn);
+  expect(result.body.rows).toEqual([
     { _id: 'a1', title: 'org 1 row', organization_id: 'org-1' },
     { _id: 'new', title: 'from GitHub', organization_id: 'org-1' },
   ]);
