@@ -76,8 +76,9 @@ function checkManualPages({ manualPages, headBuild }) {
 // A head-only run (a charter with no PR) has no diff: its targets are the
 // --page pages, else the entry pages, and the pages a --charters file names.
 // The entry pages are left out when every charter names its own
-// (withDefaultPages false); --page is refused then (checkManualPagesWalked). Every block on a target page is in scope, so no
-// block is listed as changed and no option is ranked by it.
+// (withDefaultPages false); --page is refused then (checkManualPagesWalked).
+// Every block on a target page is in scope, so no block is listed as changed
+// and no option is ranked by it.
 function selectHeadOnlyTargets({
   headBuild,
   coverage,

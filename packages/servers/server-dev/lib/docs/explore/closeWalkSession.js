@@ -36,8 +36,9 @@ async function teardown(walk) {
 }
 
 // Closes a walk once, however many callers ask (the close route, the idle
-// timer): flushes each actor's recorder (2 s cap), closes its browser contexts, then its data session, frees its browser slot
-// and unregisters it, so errors stamped for it from here on are dropped.
+// timer): flushes each actor's recorder (2 s cap), closes its browser
+// contexts, then its data session, frees its browser slot and unregisters it,
+// so errors stamped for it from here on are dropped.
 function closeWalkSession(walk) {
   walk.closing ??= teardown(walk);
   return walk.closing;
