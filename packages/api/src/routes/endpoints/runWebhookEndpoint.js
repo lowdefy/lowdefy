@@ -33,9 +33,8 @@ import runWebhookVerify from './runWebhookVerify.js';
 // { body, query, headers } as its payload and its return value is sent back
 // verbatim (handshakes require exact response shapes). It returns the HTTP
 // answer, { status, body }, that the route sends (see createWebhookAnswer).
-// Only endpoints that
-// opt in are runnable here (a missing flag reads as a missing endpoint — no
-// probing).
+// Only endpoints that opt in are runnable here (a missing flag reads as a
+// missing endpoint — no probing).
 //
 // The transport is public by design, so the run starts caller-less AND
 // UNTRUSTED (Decision 3): context.user = null, context.system unset. It earns
