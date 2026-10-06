@@ -8,6 +8,7 @@
   debug?: boolean,
   enabled?: boolean,
   captureEventFailures?: boolean,
+  maskDataText?: boolean,
 }): Promise<null>
 ```
 
@@ -18,6 +19,8 @@ The `PostHogInit` action downloads and initialises the [PostHog](https://posthog
 Every event carries the deployment environment: when the app declares [`config.environments`](/lowdefy-schema), `PostHogInit` registers the current environment's name (`LOWDEFY_ENVIRONMENT`) as the `environment` super property, so staging and production events can be told apart in one PostHog project. It also registers `lowdefy_build_id` and `lowdefy_app_version` (the app's `version`), so events can be split before and after a deploy, and a `lowdefy_config_key` can be mapped back to the config of the build that sent it.
 
 Events carry Lowdefy semantics. Autocaptured clicks, rage clicks and dead clicks get `lowdefy_page_id`, `lowdefy_block_id`, `lowdefy_block_type`, `lowdefy_block_ids` (every enclosing block, innermost first), `lowdefy_option: true` on a dropdown option and, inside a grid, `lowdefy_row` and `lowdefy_column`. Every other event gets `lowdefy_page_id`. This adds properties only, never events, and has no switch. A block with the `ph-no-capture` class is not autocaptured, so it is never enriched.
+
+Click text that shows the app's data never leaves the browser. On every event, a clicked text (`$el_text`, the `text` entries of `$elements_chain` and `$elements`, `$selected_content` and link targets) is kept only when the config of the page, the menus, the i18n messages or the antd locale spell it out, so grid and table cell values, options and menu items a request fills, labels built from records and `Dynamic` block output are removed, while button titles, menu and tab labels, column headers, literal options and modal __OK__ and __Cancel__ stay. Element attributes other than the tag, classes, `id`, `class`, `role`, `type`, `row-index`, `col-id`, `nth-child` and `nth-of-type` are removed, including `title`, `aria-label`, `value`, `placeholder`, `alt` and `data-*`. The `lowdefy_*` properties stay, so a click on data still records its block, row and column. URLs are not masked: `$current_url`, `$pathname`, query values and `lowdefy_path_params` are sent unchanged. Set `maskDataText: false` to send full click text, or `options.mask_all_text: true` to send none. A block `class` of `ph-sensitive` masks that block's config text too, but only within the block's own DOM: popups it renders into the page body (`Dropdown` and `DropdownButton` items, table and grid `MenuCell` menus, `Modal`, `Drawer`) are outside it. Session replay is not covered: set `options.session_recording.maskTextSelector: '*'` to mask all text in recordings, or give a block a `class` of `ph-mask`. See [Click text masking](/PostHog#click-text-masking).
 
 When a block or app event fails, `PostHogInit` captures a `lowdefy_event_failed` event with `lowdefy_event_scope` (`page` or `app`), `lowdefy_page_id`, `lowdefy_block_id`, `lowdefy_block_type`, `lowdefy_event_name`, `lowdefy_debounce_ms`, `lowdefy_action_id`, `lowdefy_action_type`, `lowdefy_error_name`, `lowdefy_config_key` and `lowdefy_invalid_blocks` (the blocks a `Validate` found invalid). It carries ids only, never error messages or values, and is timestamped when the event's actions started. Failures in the app's `onInit` and in the first page's `onInit` are captured too, although `PostHogInit` runs later in `onInitAsync`: Lowdefy holds up to 20 failures until PostHog starts. At most 50 are captured per app load, held failures included. Set `captureEventFailures: false` to turn it off.
 
@@ -36,6 +39,7 @@ The action is part of the [`@lowdefy/plugin-posthog`](/PostHog) plugin, which is
   - `debug: boolean`: Log everything PostHog does to the browser console.
   - `enabled: boolean`: Set to `false` to skip loading PostHog. Defaults to `true`.
   - `captureEventFailures: boolean`: Capture a `lowdefy_event_failed` event when a block or app event fails. Defaults to `true`.
+  - `maskDataText: boolean`: Mask click text that the page config, menus, i18n messages or antd locale do not spell out, and element attributes outside the structural allow-list, before events are sent. Set to `false` to send full click text. Defaults to `true`.
 
 #### Response
 
@@ -78,3 +82,15 @@ With `POSTHOG_API_KEY` unset, for example in local development, `enabled` is `fa
       _build.env: POSTHOG_API_KEY
     captureEventFailures: false
 ```
+
+###### Send full click text:
+```yaml
+- id: init_posthog
+  type: PostHogInit
+  params:
+    apiKey:
+      _build.env: POSTHOG_API_KEY
+    maskDataText: false
+```
+
+Only turn masking off when the people who use the app have agreed that PostHog may store the data they click on.
