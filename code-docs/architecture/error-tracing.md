@@ -368,6 +368,8 @@ Everything else is dropped: axios's `config`, `request` and `response`, pg's `de
 
 **Inside `received`, credential-named keys are masked.** `received` is the one kept field holding values the server fetched at runtime — a token from one step sent as `headers.Authorization` in the next — which the by-value scrub cannot recognise. `maskCredentialKeys` replaces, at any depth, the value under any key that, lower-cased with `-` and `_` removed, contains `authorization`, `token`, `secret`, `password`, `apikey` or `cookie` with `[REDACTED]`. That catches `Authorization`, `access_token`, `x-api-key` and `client_secret`, and masks a harmless `tokenCount` too, which costs a log nothing. The wire and `_error` never carry `received`, so the mask exists only in the log projection.
 
+**Credentials derived from a secret are kept out of `received` at the source.** A value derived from a secret (an HMAC of it, a presigned link's signature) is neither a known secret nor under a credential-named key, so neither layer would catch it. A request type names such properties in `meta.credentialProperties` (`AwsS3PutObject` names `url`), and `callRequestResolver` builds the `RequestError`'s `received` with their values replaced by `[REDACTED]` (`maskCredentialProperties`). An operator whose params can hold one throws its refusals as a `ConfigError`, which the server parser reports without `received`: every `_hmac` refusal does, since its `key` is often derived from a root secret.
+
 **Layer 2 — every emitted string is scrubbed by value.** The allowlist cannot make a message safe: a client library can put an API key into the URL in its message. The server knows every secret it holds, so `createSecretScrubber` (`@lowdefy/node-utils`) removes them from the finished output. Each server package builds it once at startup as `scrubSecrets` (`servers/*/lib/server/scrubSecrets.js`) and puts it on every request context and auth-hook system context beside `secrets`.
 
 - **Which values:** every string leaf of the `LOWDEFY_SECRET_*` secrets (`getSecretsFromEnv`), plus `CRON_SECRET` and `BETTER_AUTH_SECRET`. Authors JSON-encode structured secrets and pick a leaf with `_json.parse`, and the log then holds the leaf, not the whole string, so when a value parses as a JSON object or array each of its string leaves joins the set too. Values shorter than 8 characters are skipped, so a secret like `true` or a port number does not shred unrelated text.
@@ -522,7 +524,7 @@ try {
   throw new RequestError(error.message, {
     cause: error,
     typeName: requestType,
-    received: requestProperties,
+    received: maskCredentialProperties({ requestProperties, requestResolver }),
     configKey: requestConfig['~k'],
   });
 }

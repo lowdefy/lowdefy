@@ -15,6 +15,7 @@
 */
 
 import crypto from 'crypto';
+import { ConfigError } from '@lowdefy/errors';
 import { ServerParser } from '@lowdefy/operators';
 
 import hmac from './hmac.js';
@@ -91,6 +92,32 @@ test('_hmac derives and signs when nested in a server parser', () => {
   expect(output).toEqual(expected('sha256', expected('sha256', 'root', 'app:1'), 'ts.body'));
 });
 
+const derivedKey = expected('sha256', 'root', 'app:1');
+const derive = { '_hmac.sha256': { key: { _secret: 'ROOT' }, data: 'app:1' } };
+
+// The one error a refused _hmac call leaves, as the server parser reports it.
+function parseError(input) {
+  const parser = new ServerParser({
+    operators: operatorsServer,
+    payload: { body: { ticket: 'café' } },
+    secrets: { ROOT: 'root' },
+  });
+  const { errors } = parser.parse({ input, location: 'locationId' });
+  expect(errors).toHaveLength(1);
+  return errors[0];
+}
+
+test.each([
+  ['an object as data', { '_hmac.sha256': { key: derive, data: { _payload: 'body' } } }],
+  ['an unknown method', { '_hmac.sha384': { key: derive, data: 'ts.body' } }],
+])('_hmac refused for %s reports no received, so the derived key is not logged', (_, input) => {
+  const error = parseError(input);
+  expect(error).toBeInstanceOf(ConfigError);
+  expect(error.received).toBeUndefined();
+  expect(error.cause).toBeUndefined();
+  expect(JSON.stringify({ ...error, message: error.message })).not.toContain(derivedKey);
+});
+
 test.each([
   ['key', { key: 10, data: 'x' }],
   ['key', { data: 'x' }],
@@ -101,6 +128,7 @@ test.each([
   expect(() => hmac({ params, location: 'locationId', methodName: 'sha256' })).toThrow(
     `_hmac.sha256 requires "${field}" to be a string.`
   );
+  expect(() => hmac({ params, location: 'locationId', methodName: 'sha256' })).toThrow(ConfigError);
 });
 
 test('_hmac.sha512 refuses a data that is not a string', () => {

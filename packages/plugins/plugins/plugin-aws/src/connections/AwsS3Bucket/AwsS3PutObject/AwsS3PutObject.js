@@ -51,6 +51,8 @@ AwsS3PutObject.schema = schema;
 AwsS3PutObject.meta = {
   checkRead: false,
   checkWrite: true,
+  // A presigned url carries its signature.
+  credentialProperties: ['url'],
 };
 
 export default AwsS3PutObject;

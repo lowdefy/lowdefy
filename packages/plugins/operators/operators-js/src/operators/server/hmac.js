@@ -15,6 +15,7 @@
 */
 
 import crypto from 'crypto';
+import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 import { runClass } from '@lowdefy/operators';
 
@@ -40,15 +41,22 @@ const meta = {
   sha512: { validTypes: ['object'], namedArgs: ['key', 'data'] },
 };
 
+// Every refusal is thrown as a ConfigError, which the parser reports without the operator's
+// params as received: `key` is often a key derived from a secret, which the secret scrub does
+// not know.
 function _hmac({ params, location, methodName }) {
-  return runClass({
-    functions,
-    location,
-    meta,
-    methodName,
-    operator: '_hmac',
-    params,
-  });
+  try {
+    return runClass({
+      functions,
+      location,
+      meta,
+      methodName,
+      operator: '_hmac',
+      params,
+    });
+  } catch (error) {
+    throw new ConfigError(error.message);
+  }
 }
 
 _hmac.dynamic = false;

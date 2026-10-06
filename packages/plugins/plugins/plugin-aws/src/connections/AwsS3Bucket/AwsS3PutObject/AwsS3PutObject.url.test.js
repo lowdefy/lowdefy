@@ -417,6 +417,10 @@ test('AwsS3PutObject refuses an upload that outlasts timeout with code timeout',
   expect(error.code).toBe('timeout');
 });
 
+test('AwsS3PutObject names url as a credential, so a refused copy keeps it out of received', () => {
+  expect(AwsS3PutObject.meta.credentialProperties).toEqual(['url']);
+});
+
 test('AwsS3PutObject passes an S3 error through unchanged', async () => {
   mockFetch();
   mockSend.mockImplementation(async () => {
