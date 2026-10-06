@@ -18,18 +18,18 @@ import path from 'path';
 import { type } from '@lowdefy/helpers';
 import YAML from 'yaml';
 
+import adviseDataSetSize from './adviseDataSetSize.js';
 import dataSetNamePattern from './dataSetNamePattern.js';
 import findRefPath from './findRefPath.js';
-import hashDataSetSpec from './hashDataSetSpec.js';
+import generateDataSetDocuments from './generateDataSetDocuments.js';
 import listDataSetFiles from './listDataSetFiles.js';
-import readDataSetManifest from './readDataSetManifest.js';
 import readFile from './readFile.js';
 import validateDataSetFixtures from './validateDataSetFixtures.js';
+import validateDataSetGenerate from './validateDataSetGenerate.js';
 import validateDataSetIndexes from './validateDataSetIndexes.js';
-import validateDataSetSnapshot from './validateDataSetSnapshot.js';
 import validateDataSetUsers from './validateDataSetUsers.js';
 
-const topLevelKeys = ['snapshot', 'fixtures', 'users', 'indexes'];
+const topLevelKeys = ['fixtures', 'generate', 'users', 'indexes'];
 
 // Reads and checks tests/data/<name>.yaml with no build, no server and no database driver, so the
 // dev server and the CLI read data sets the same way. The checks that need the built connections
@@ -69,7 +69,12 @@ async function parseDataSet({ configDirectory, name }) {
   }
   content = content ?? {};
   if (!type.isObject(content)) {
-    fail('should be an object with fixtures, users, indexes and an optional snapshot.');
+    fail('should be an object with fixtures, generate, users and indexes.');
+  }
+  if (Object.hasOwn(content, 'snapshot')) {
+    fail(
+      'snapshot is no longer supported: data sets hold committed documents only. Move the documents journeys need into fixtures or generate.'
+    );
   }
   Object.keys(content).forEach((key) => {
     if (!topLevelKeys.includes(key)) {
@@ -84,19 +89,11 @@ async function parseDataSet({ configDirectory, name }) {
   const fixtures = validateDataSetFixtures({ fixtures: content.fixtures, fail });
   const users = validateDataSetUsers({ users: content.users, fail });
   const indexes = validateDataSetIndexes({ indexes: content.indexes, fail });
-  const snapshotSpec = validateDataSetSnapshot({ snapshot: content.snapshot, fail });
-  const snapshot = await readDataSetManifest({ configDirectory, name });
+  const generate = validateDataSetGenerate({ generate: content.generate, fixtures, fail });
+  const generated = generateDataSetDocuments({ generate, fixtures, fail });
+  const warnings = adviseDataSetSize({ name, fixtures, generated });
 
-  return {
-    name,
-    filePath,
-    fixtures,
-    users,
-    indexes,
-    snapshotSpec,
-    specHash: hashDataSetSpec({ snapshotSpec }),
-    snapshot,
-  };
+  return { name, filePath, fixtures, generated, users, indexes, warnings };
 }
 
 export default parseDataSet;

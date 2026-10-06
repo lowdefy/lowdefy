@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-// A data set loads (and a pull reads) a connection only when the built artifact names its
+// A data set loads a connection only when the built artifact names its
 // collection: an operator there is evaluated per request, so the collection cannot be known before
 // one. Returns the literal collection and databaseName (or undefined).
 function resolveDataSetCollection({ dataSetName, connectionId, artifact }) {

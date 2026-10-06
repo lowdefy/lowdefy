@@ -34,9 +34,8 @@ function readArtifact({ buildDirectory, artifact }) {
 
 // The known-text set: the strings that are safe to show outside the machine
 // (to a policy model, in a PR comment, in a compiled expect.state), because
-// they come from the app's config or the journey's own data set, never from a
-// snapshot of a pre-production database. It reads only build artifacts and a
-// parsed data set: no dev server, no snapshot files.
+// they come from the app's config or the journey's own data set. It reads
+// only build artifacts and a parsed data set: no dev server.
 //
 // Sources: the page artifacts pages/<pageId>.json for each of pageIds,
 // menus.json, the default locale's messages in i18n.json, the data set's

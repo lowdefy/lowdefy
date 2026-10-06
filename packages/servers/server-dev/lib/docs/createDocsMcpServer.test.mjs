@@ -465,7 +465,7 @@ test('MCP tools/call lowdefy_run_journey passes data and a data set user name th
     passed: true,
     steps: [],
     screenshots: [],
-    data: { name: 'staging-sample', loadMs: 12, snapshot: null },
+    data: { name: 'staging-sample', loadMs: 12, documents: 0 },
     warnings: [],
   });
   const client = await connectClient();

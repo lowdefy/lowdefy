@@ -18,7 +18,6 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import hashDataSetSpec from './hashDataSetSpec.js';
 import parseDataSet from './parseDataSet.js';
 
 let configDirectory;
@@ -36,23 +35,7 @@ function writeDataSet(fileName, content) {
   fs.writeFileSync(path.join(configDirectory, 'tests', 'data', fileName), content);
 }
 
-function writeManifest(name, manifest) {
-  const directory = path.join(configDirectory, '.lowdefy', 'data', name);
-  fs.mkdirSync(directory, { recursive: true });
-  fs.writeFileSync(path.join(directory, 'manifest.json'), JSON.stringify(manifest));
-}
-
 const sample = `
-snapshot:
-  from: staging
-  connections:
-    - tickets
-    - { id: frameworks, scope: false, limit: 20000 }
-    - { id: connections, sort: { created_at: -1 }, omit: [auth.encrypted] }
-  scope:
-    field: organizationId
-    values: [org_b]
-  limit: 5000
 fixtures:
   tickets:
     - { _id: t-empty-title, organizationId: org_a, title: '', created: { '~d': 1700000000000 } }
@@ -64,14 +47,11 @@ users:
   owner: { id: u_1, roles: [admin], organizationId: org_a }
 `;
 
-test('parseDataSet returns the data set with snapshot null before a pull, with no build present', async () => {
-  writeDataSet('staging-sample.yaml', sample);
-  const dataSet = await parseDataSet({ configDirectory, name: 'staging-sample' });
-  expect(dataSet.name).toEqual('staging-sample');
-  expect(dataSet.filePath).toEqual(
-    path.join(configDirectory, 'tests', 'data', 'staging-sample.yaml')
-  );
-  expect(dataSet.snapshot).toBe(null);
+test('parseDataSet returns fixtures, users and indexes with no build present', async () => {
+  writeDataSet('sample.yaml', sample);
+  const dataSet = await parseDataSet({ configDirectory, name: 'sample' });
+  expect(dataSet.name).toEqual('sample');
+  expect(dataSet.filePath).toEqual(path.join(configDirectory, 'tests', 'data', 'sample.yaml'));
   expect(dataSet.fixtures.tickets[0]).toEqual({
     _id: 't-empty-title',
     organizationId: 'org_a',
@@ -85,26 +65,6 @@ test('parseDataSet returns the data set with snapshot null before a pull, with n
   expect(dataSet.indexes.tickets).toEqual([
     { key: { organizationId: 1, number: 1 }, unique: true },
   ]);
-  expect(dataSet.snapshotSpec.from).toEqual('staging');
-  expect(dataSet.specHash).toEqual(hashDataSetSpec({ snapshotSpec: dataSet.snapshotSpec }));
-});
-
-test('parseDataSet returns the manifest pulledAt after a pull', async () => {
-  writeDataSet('staging-sample.yaml', sample);
-  writeManifest('staging-sample', {
-    name: 'staging-sample',
-    from: 'staging',
-    pulledAt: '2026-10-01T00:00:00.000Z',
-    specHash: 'abc',
-    collections: { tickets: { connections: ['tickets'], count: 3, indexes: [] } },
-  });
-  const dataSet = await parseDataSet({ configDirectory, name: 'staging-sample' });
-  expect(dataSet.snapshot).toEqual({
-    pulledAt: '2026-10-01T00:00:00.000Z',
-    from: 'staging',
-    specHash: 'abc',
-    collections: { tickets: { connections: ['tickets'], count: 3, indexes: [] } },
-  });
 });
 
 test('parseDataSet resolves a .yml file', async () => {
@@ -113,8 +73,6 @@ test('parseDataSet resolves a .yml file', async () => {
   expect(dataSet.users).toEqual({ owner: { id: 'u_new' } });
   expect(dataSet.fixtures).toEqual({});
   expect(dataSet.indexes).toEqual({});
-  expect(dataSet.snapshotSpec).toBe(null);
-  expect(dataSet.specHash).toBe(null);
 });
 
 test('parseDataSet refuses a traversal name', async () => {
@@ -169,54 +127,6 @@ test('parseDataSet refuses fixtures that are not arrays of objects', async () =>
   writeDataSet('alpha.yaml', 'fixtures:\n  tickets: { _id: a }\n');
   await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
     'fixtures.tickets should be an array of documents.'
-  );
-});
-
-test('parseDataSet refuses a snapshot with no connections', async () => {
-  writeDataSet('alpha.yaml', 'snapshot:\n  from: staging\n');
-  await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
-    'snapshot.connections should list the connections to copy'
-  );
-});
-
-test('parseDataSet refuses a snapshot with no from', async () => {
-  writeDataSet('alpha.yaml', 'snapshot:\n  connections: [tickets]\n');
-  await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
-    'snapshot.from should name'
-  );
-});
-
-test('parseDataSet refuses a malformed snapshot connection entry', async () => {
-  writeDataSet(
-    'alpha.yaml',
-    'snapshot:\n  from: staging\n  connections:\n    - { id: a, limit: 0 }\n'
-  );
-  await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
-    'snapshot.connections[0].limit should be a whole number above 0. Received 0.'
-  );
-  writeDataSet(
-    'alpha.yaml',
-    'snapshot:\n  from: staging\n  connections:\n    - { id: a, filter: {} }\n'
-  );
-  await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
-    'snapshot.connections[0] has unknown key "filter".'
-  );
-  writeDataSet(
-    'alpha.yaml',
-    'snapshot:\n  from: staging\n  connections:\n    - { id: a, omit: auth }\n'
-  );
-  await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
-    'snapshot.connections[0].omit should be a list of field paths.'
-  );
-});
-
-test('parseDataSet refuses a malformed snapshot scope', async () => {
-  writeDataSet(
-    'alpha.yaml',
-    'snapshot:\n  from: staging\n  connections: [a]\n  scope: { field: organizationId }\n'
-  );
-  await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
-    'snapshot.scope should be { field: <field path>, values: [...] }.'
   );
 });
 
@@ -282,11 +192,68 @@ test('parseDataSet treats an empty file as an empty data set', async () => {
   expect(dataSet.users).toEqual({});
 });
 
-test('hashDataSetSpec does not depend on key order', () => {
-  expect(hashDataSetSpec({ snapshotSpec: { from: 'staging', connections: ['a'] } })).toEqual(
-    hashDataSetSpec({ snapshotSpec: { connections: ['a'], from: 'staging' } })
+test('parseDataSet refuses a snapshot block, saying snapshots were removed', async () => {
+  writeDataSet('alpha.yaml', 'snapshot:\n  from: staging\n  connections: [tickets]\n');
+  await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
+    `Data set ${path.join(
+      'tests',
+      'data',
+      'alpha.yaml'
+    )}: snapshot is no longer supported: data sets hold committed documents only. Move the documents journeys need into fixtures or generate.`
   );
-  expect(hashDataSetSpec({ snapshotSpec: { from: 'staging', connections: ['a'] } })).not.toEqual(
-    hashDataSetSpec({ snapshotSpec: { from: 'staging', connections: ['b'] } })
+});
+
+test('parseDataSet returns generated documents beside fixtures, with no warnings for a small set', async () => {
+  writeDataSet(
+    'alpha.yaml',
+    [
+      'fixtures:',
+      '  customers_db:',
+      '    - { _id: c-1, name: Fixture customer }',
+      'generate:',
+      '  seed: 7',
+      '  invoices_db:',
+      '    count: 3',
+      '    fields:',
+      '      status: { oneOf: [draft, paid] }',
+      '      issued: { date: { from: 2026-01-01, to: 2026-01-31 } }',
+      '      customerId: { ref: customers_db }',
+      '',
+    ].join('\n')
+  );
+  const dataSet = await parseDataSet({ configDirectory, name: 'alpha' });
+  expect(dataSet.fixtures).toEqual({ customers_db: [{ _id: 'c-1', name: 'Fixture customer' }] });
+  expect(dataSet.generated.invoices_db.map(({ _id, customerId }) => [_id, customerId])).toEqual([
+    ['invoices_db-1', 'c-1'],
+    ['invoices_db-2', 'c-1'],
+    ['invoices_db-3', 'c-1'],
+  ]);
+  expect(dataSet.generated.invoices_db[0].issued['~d']).toMatch(/^2026-01-/);
+  expect(dataSet.warnings).toEqual([]);
+});
+
+test('parseDataSet warns, without refusing, when a connection loads more than 1,000 documents', async () => {
+  writeDataSet(
+    'big.yaml',
+    'fixtures:\n  tickets:\n    - { _id: t-fixture }\ngenerate:\n  seed: 1\n  tickets:\n    count: 1000\n'
+  );
+  const dataSet = await parseDataSet({ configDirectory, name: 'big' });
+  expect(dataSet.generated.tickets).toHaveLength(1000);
+  expect(dataSet.warnings).toEqual([
+    'Data set "big" loads 1,001 documents for connection "tickets". More than 1,000 per collection is not advised: every journey on it loads slower, and journeys target fixture values, not volume.',
+  ]);
+});
+
+test('parseDataSet refuses a generate field with an unknown kind, naming the file', async () => {
+  writeDataSet(
+    'alpha.yaml',
+    'generate:\n  seed: 1\n  tickets:\n    count: 1\n    fields:\n      id: { uuid: true }\n'
+  );
+  await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
+    `Data set ${path.join(
+      'tests',
+      'data',
+      'alpha.yaml'
+    )}: generate.tickets.fields.id has unknown kind "uuid".`
   );
 });
