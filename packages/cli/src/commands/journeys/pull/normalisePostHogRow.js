@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { normaliseClickText } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 const ZONE = /(Z|[+-]\d{2}:?\d{2})$/;
@@ -59,12 +60,6 @@ function readTimestamp(value) {
   return Number.isNaN(time) ? null : time;
 }
 
-function normaliseText(value) {
-  if (!type.isString(value)) return null;
-  const text = value.replace(/\s+/g, ' ').trim();
-  return text === '' ? null : text;
-}
-
 // One row of the pull query, read into the types the record mapping uses.
 function normalisePostHogRow({ row }) {
   return {
@@ -79,7 +74,7 @@ function normalisePostHogRow({ row }) {
     pathname: readString(row.pathname),
     currentUrl: readString(row.current_url),
     eventType: readString(row.event_type),
-    elText: normaliseText(row.el_text),
+    elText: normaliseClickText(row.el_text),
     buildId: readString(row.lowdefy_build_id),
     pageId: readString(row.lowdefy_page_id),
     blockId: readString(row.lowdefy_block_id),

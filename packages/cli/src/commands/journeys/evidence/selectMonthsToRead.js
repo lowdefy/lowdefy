@@ -25,10 +25,11 @@ import reconcileFlows from './reconcileFlows.js';
 //
 // - journeys: the committed journeys.
 // - dayCounts: { 'YYYY-MM': final days cached }.
-function selectMonthsToRead({ journeys, dayCounts, today }) {
+// - isConfigText: the app's config text rule, as computeEvidence reads it.
+function selectMonthsToRead({ journeys, dayCounts, today, isConfigText }) {
   const months = new Set();
   journeys.forEach((journey) => {
-    const { live, deprecated, recount } = reconcileFlows({ journey, today });
+    const { live, deprecated, recount } = reconcileFlows({ journey, today, isConfigText });
     [live, ...deprecated.filter((entry) => isCountedFlow({ entry }))].forEach((entry) => {
       const days = new Map(entry.months.map((month) => [month.month, month.days]));
       Object.keys(dayCounts).forEach((month) => {

@@ -33,7 +33,7 @@ test('journeys-from-production names the four production commands in order', () 
   const commands = [
     'lowdefy journeys pull posthog --since 30d',
     'lowdefy journeys compile --source production --since 30d',
-    'lowdefy journeys coverage --source production',
+    'lowdefy journeys coverage --source production --since 30d',
     'lowdefy journeys evidence --refresh',
   ];
   const positions = commands.map((command) => skill.indexOf(command));
@@ -63,10 +63,47 @@ test('journeys-from-production keeps the fixture, frustration, flake and commit 
   expect(skill).toContain(
     'add a\n  fixture document for the journey rather than borrowing a value'
   );
-  expect(skill).toContain('A dead click on a block that should do nothing is a finding');
+  expect(skill).toContain('A dead click on a\n  block that should do nothing is a finding');
   expect(skill).toContain('Never add `wait: { ms }`');
-  expect(skill).toContain('Never use it to read rows in bulk');
   expect(skill).toContain('Commit nothing.');
+});
+
+test('journeys-from-production has the agent pick a window of at most 30 days and say why', () => {
+  const skill = journeysFromProduction({ appPath: '' });
+  expect(skill).toContain('A mining window is at most 30 UTC days');
+  expect(skill).toContain('say which and why in your report');
+  expect(skill).toContain('the window and why you chose it');
+  const windows = [...skill.matchAll(/--since (\d+)d/g)].map((match) => Number(match[1]));
+  windows.forEach((days) => expect(days).toBeLessThanOrEqual(30));
+});
+
+test('journeys-from-production reads routines with the config and decides what deserves a journey', () => {
+  const skill = journeysFromProduction({ appPath: '' });
+  expect(skill).toContain(
+    "read the page's config, the\nrequests and actions its steps run, and the block plugins' code"
+  );
+  expect(skill).toContain('tokenised-text');
+  expect(skill).toContain('1. failures');
+  expect(skill).toContain(
+    '2. routines that write data, move money, change access or end a process;'
+  );
+  expect(skill).toContain('3. the rest, by how often production showed them');
+  expect(skill).toContain('Never add an interaction the routine did not record.');
+  expect(skill).toContain('A click on\n  a label built from values stays without text.');
+  expect(skill).toContain('ask them only about findings and dead clicks');
+});
+
+test('journeys-from-production never reads production text, secrets, snapshots or PostHog', () => {
+  const skill = journeysFromProduction({ appPath: '' });
+  expect(skill).toContain(
+    "read `.lowdefy/traces/production/salt`, the app's `.env` or any credential;"
+  );
+  expect(skill).toContain('read `.lowdefy/data/` snapshots;');
+  expect(skill).toContain('call PostHog through its MCP, its API or a URL, or run HogQL;');
+  expect(skill).toContain('add text to the config to resolve a token');
+  expect(skill).not.toContain('## PostHog MCP');
+  expect(skill).not.toMatch(/Use the PostHog MCP/);
+  expect(skill).not.toMatch(/https:\/\/(?:eu|us|app)\.posthog\.com\/(?:api|project)/);
 });
 
 test('journeys-from-production runs commands from the app directory in a monorepo', () => {

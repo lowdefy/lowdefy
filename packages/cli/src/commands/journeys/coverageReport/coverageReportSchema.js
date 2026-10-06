@@ -59,6 +59,61 @@ const measureSchema = {
 
 const listSchema = { type: 'array', items: { type: 'object' } };
 
+const TEXT_TOKEN = '^t_[0-9a-f]{16}$';
+const nullableString = { type: ['string', 'null'] };
+
+// A frustrated element: its block, else its clicked-text token, else its
+// config text. Production text that is not config text appears only as a
+// token.
+const frustrationSchema = {
+  type: 'array',
+  items: {
+    type: 'object',
+    required: ['key', 'page', 'block_id', 'text', 'text_token', 'rage', 'dead'],
+    properties: {
+      key: { type: 'string' },
+      page: { type: 'string' },
+      block_id: nullableString,
+      text: nullableString,
+      text_token: { anyOf: [{ type: 'null' }, { type: 'string', pattern: TEXT_TOKEN }] },
+      rage: { type: 'integer', minimum: 0 },
+      dead: { type: 'integer', minimum: 0 },
+    },
+  },
+};
+
+// countTextTokens' rows: per page, block and column, the clicks, the distinct
+// tokens that resolved to no config text, and the most-clicked of them.
+const textTokensSchema = {
+  type: 'array',
+  items: {
+    type: 'object',
+    additionalProperties: false,
+    required: ['page', 'block_id', 'column', 'clicks', 'tokens', 'top'],
+    properties: {
+      page: { type: 'string' },
+      block_id: nullableString,
+      column: nullableString,
+      clicks: { type: 'integer', minimum: 0 },
+      tokens: { type: 'integer', minimum: 1 },
+      top: {
+        type: 'array',
+        maxItems: 5,
+        items: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['token', 'clicks', 'persons'],
+          properties: {
+            token: { type: 'string', pattern: TEXT_TOKEN },
+            clicks: { type: 'integer', minimum: 1 },
+            persons: { type: 'integer', minimum: 0 },
+          },
+        },
+      },
+    },
+  },
+};
+
 // The shape of .lowdefy/test/coverage.json, version 1. The explorer, variants
 // and the app graph read it, so the writer's tests hold it to this schema.
 const coverageReportSchema = {
@@ -103,13 +158,14 @@ const coverageReportSchema = {
     production: {
       type: 'object',
       additionalProperties: false,
-      required: ['flows', 'failurePaths', 'frustration', 'roleMatrix', 'entryPoints'],
+      required: ['flows', 'failurePaths', 'frustration', 'roleMatrix', 'entryPoints', 'textTokens'],
       properties: {
         flows: listSchema,
         failurePaths: listSchema,
-        frustration: listSchema,
+        frustration: frustrationSchema,
         roleMatrix: listSchema,
         entryPoints: listSchema,
+        textTokens: textTokensSchema,
       },
     },
     journeys: {

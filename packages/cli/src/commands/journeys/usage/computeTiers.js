@@ -32,10 +32,10 @@ function compareRows(a, b) {
 // A journey has no counts for the flow its steps walk now when it was never
 // refreshed (or holds the legacy window shape), or its steps changed what is
 // matched since the last refresh. Comparing ids is static, so it costs a hash.
-function isUnranked({ journey }) {
+function isUnranked({ journey, isConfigText }) {
   const stored = journey.evidence?.production?.sequence;
   if (type.isUndefined(stored)) return true;
-  return sequenceId({ pageId: journey.pageId, steps: journey.steps }) !== stored;
+  return sequenceId({ pageId: journey.pageId, steps: journey.steps, isConfigText }) !== stored;
 }
 
 // How many journeys, from the top, tier pX holds: the shortest prefix whose
@@ -92,15 +92,16 @@ function refusal({ ranked, matches, windowMonths }) {
 // every tier, outside the ranking and the total, with tier `common` and no
 // rank or rate. A `deprecated: true` journey is in no tier: tier and rank are
 // null, its usage is still shown. `refused` says why tiers other than `full`
-// cannot be cut: fewer than 100 matches, or no evidence at all.
-function computeTiers({ journeys, usageWindow }) {
+// cannot be cut: fewer than 100 matches, or no evidence at all. isConfigText
+// is the app's config text rule, read as the evidence refresh reads it.
+function computeTiers({ journeys, usageWindow, isConfigText }) {
   const live = journeys.filter(({ journey }) => journey.deprecated !== true);
   const anchor = newestMonth({ journeys: live.map(({ journey }) => journey) });
   const windowMonths = usageWindowMonths({ anchor, months: parseUsageWindow(usageWindow) });
 
   const rows = journeys.map(({ file, name, journey }) => {
     const deprecated = journey.deprecated === true;
-    const unranked = !deprecated && isUnranked({ journey });
+    const unranked = !deprecated && isUnranked({ journey, isConfigText });
     const row = { file, name, tier: null, rank: null, unranked, deprecated };
     if (unranked) {
       return { ...row, tier: 'common', rate: null, sessions: null, failures: null, days: null };

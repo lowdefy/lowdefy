@@ -21,8 +21,15 @@ import path from 'path';
 import YAML from 'yaml';
 
 import flowLines from './evidence/flowLines.js';
-import journeysUsage from './journeysUsage.js';
 import sequenceId from './evidence/sequenceId.js';
+
+// The config text set comes from a full build by the dev server's builder;
+// these tests hold it empty.
+jest.unstable_mockModule('./configText/readConfigText.js', () => ({
+  default: async () => ({ texts: new Set(), isConfigText: () => false }),
+}));
+
+const { default: journeysUsage } = await import('./journeysUsage.js');
 
 let configDirectory;
 let context;

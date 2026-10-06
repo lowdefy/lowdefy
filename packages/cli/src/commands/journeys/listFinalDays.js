@@ -22,9 +22,11 @@ const MANIFEST = /^(\d{4}-\d{2}-\d{2})\.manifest\.json$/;
 // The days of the production cache that will not change again, oldest first:
 // those whose manifest says `final: true`. The pull re-pulls today and
 // yesterday for late events, so their manifests say `final: false` until a
-// later pull. Gaps are expected: a month this machine never pulled, a pruned
-// day.
-function listFinalDays({ directories }) {
+// later pull. Only days hashed under saltId (this machine's trace salt) are
+// listed, since another salt's tokens resolve to nothing. Gaps are expected: a
+// month this machine never pulled, a pruned day, a day pulled under another
+// salt.
+function listFinalDays({ directories, saltId }) {
   const directory = path.join(directories.traces, 'production');
   if (!fs.existsSync(directory)) return [];
   return fs
@@ -33,7 +35,7 @@ function listFinalDays({ directories }) {
     .filter((match) => match !== null)
     .filter((match) => {
       const manifest = JSON.parse(fs.readFileSync(path.join(directory, match[0]), 'utf8'));
-      return manifest.final === true;
+      return manifest.final === true && manifest.salt_id === saltId;
     })
     .map((match) => match[1])
     .sort();

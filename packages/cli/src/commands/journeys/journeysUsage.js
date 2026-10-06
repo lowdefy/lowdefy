@@ -24,6 +24,7 @@ import inTier from './usage/inTier.js';
 import parseTestSelection from '../test/parseTestSelection.js';
 import parseTier from './usage/parseTier.js';
 import readCommittedJourneys from './readCommittedJourneys.js';
+import readConfigText from './configText/readConfigText.js';
 import readUncoveredFlows from './usage/readUncoveredFlows.js';
 import resolveJourneyPaths from '../test/resolveJourneyPaths.js';
 
@@ -70,7 +71,8 @@ async function journeysUsage({ context }) {
     .filter(({ journey }) => isSelected({ journey, ...selection }))
     .map(({ file, journey }) => ({ file, name: journey.name, journey }));
 
-  const tiers = computeTiers({ journeys, usageWindow: options.usageWindow });
+  const { isConfigText } = await readConfigText({ context });
+  const tiers = computeTiers({ journeys, usageWindow: options.usageWindow, isConfigText });
   if (tier !== 'full' && !type.isUndefined(tiers.refused)) {
     logger.error(tiers.refused);
     process.exitCode = 1;

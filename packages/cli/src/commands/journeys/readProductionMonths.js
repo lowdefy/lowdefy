@@ -18,6 +18,8 @@ import fs from 'fs';
 import path from 'path';
 import { parseTraceLines } from '@lowdefy/node-utils';
 
+import resolveRecordText from './resolveRecordText.js';
+
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 function shiftDay({ day, by }) {
@@ -33,7 +35,9 @@ function shiftDay({ day, by }) {
 //
 // - finalDays: listFinalDays's result.
 // - months: the `YYYY-MM` months to read.
-function readProductionMonths({ directories, finalDays, months }) {
+// - resolve: createTokenResolver's result; clicked-text tokens resolve to
+//   config text only, as readProductionTrace resolves them.
+function readProductionMonths({ directories, finalDays, months, resolve }) {
   const directory = path.join(directories.traces, 'production');
   const final = new Set(finalDays);
   const days = finalDays.filter((day) => months.includes(day.slice(0, 7)));
@@ -51,7 +55,7 @@ function readProductionMonths({ directories, finalDays, months }) {
     const parsed = parseTraceLines({
       text: fs.readFileSync(path.join(directory, `${day}.jsonl`), 'utf8'),
     });
-    records.push(...parsed.records);
+    records.push(...parsed.records.map((record) => resolveRecordText({ record, resolve })));
     unparsable += parsed.unparsable;
   });
   return { records, unparsable, days };
