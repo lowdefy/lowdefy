@@ -18,7 +18,7 @@ export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
   title: 'Lowdefy Request Schema - AwsS3PutObject',
   type: 'object',
-  required: ['key', 'content'],
+  required: ['key'],
   properties: {
     acl: {
       type: 'string',
@@ -39,7 +39,7 @@ export default {
     },
     content: {
       type: 'string',
-      description: 'Object content as a base64 encoded string.',
+      description: 'Object content as a base64 encoded string. Give either content or url.',
       errorMessage: {
         type: 'AwsS3PutObject request property "content" should be a string.',
       },
@@ -51,6 +51,15 @@ export default {
         type: 'AwsS3PutObject request property "contentType" should be a string.',
       },
     },
+    contentTypes: {
+      type: 'array',
+      items: { type: 'string' },
+      description:
+        'With url, the content types the url may answer with, such as "image/png", "image/*" or "application/pdf". Any other is refused with code "content_type".',
+      errorMessage: {
+        type: 'AwsS3PutObject request property "contentTypes" should be an array of strings.',
+      },
+    },
     key: {
       type: 'string',
       description: 'Key under which the object will be stored.',
@@ -58,12 +67,57 @@ export default {
         type: 'AwsS3PutObject request property "key" should be a string.',
       },
     },
+    maxBytes: {
+      type: 'integer',
+      minimum: 1,
+      description:
+        'Required with url. The most bytes the url may answer with. A larger answer is refused with code "too_large" and nothing is stored.',
+      errorMessage: {
+        type: 'AwsS3PutObject request property "maxBytes" should be a positive integer.',
+        minimum: 'AwsS3PutObject request property "maxBytes" should be a positive integer.',
+      },
+    },
+    timeout: {
+      type: 'integer',
+      minimum: 1,
+      default: 20000,
+      description:
+        'With url, the milliseconds the whole fetch and upload may take before it is refused with code "timeout".',
+      errorMessage: {
+        type: 'AwsS3PutObject request property "timeout" should be a positive integer.',
+        minimum: 'AwsS3PutObject request property "timeout" should be a positive integer.',
+      },
+    },
+    url: {
+      type: 'string',
+      description:
+        'An https: link, such as a presigned link, whose answer is streamed into the bucket in place of content. Give either content or url.',
+      errorMessage: {
+        type: 'AwsS3PutObject request property "url" should be a string.',
+      },
+    },
+  },
+  if: { type: 'object' },
+  then: {
+    oneOf: [
+      { required: ['content'], not: { required: ['url'] } },
+      { required: ['url'], not: { required: ['content'] } },
+    ],
+  },
+  dependencies: {
+    url: ['maxBytes'],
+    maxBytes: ['url'],
+    contentTypes: ['url'],
+    timeout: ['url'],
   },
   errorMessage: {
     type: 'AwsS3PutObject request properties should be an object.',
     required: {
       key: 'AwsS3PutObject request should have required property "key".',
-      content: 'AwsS3PutObject request should have required property "content".',
     },
+    // The `then` above is the only check without a message of its own.
+    _: 'AwsS3PutObject request should have either "content" or "url", not both.',
+    dependencies:
+      'AwsS3PutObject request with "url" should have "maxBytes", and "maxBytes", "contentTypes" and "timeout" apply only with "url".',
   },
 };

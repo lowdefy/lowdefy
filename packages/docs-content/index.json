@@ -6301,7 +6301,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "51e35ab96734f02f78b928379a030c858cec7f58f1149b741f71e6bb8e011eb2"
+      "hash": "56145e5498713ae9406abe4d5e2321f914c0995b0a33a5003aa76fb109eb4b2c"
     },
     "connections/azureblobstorage": {
       "files": [

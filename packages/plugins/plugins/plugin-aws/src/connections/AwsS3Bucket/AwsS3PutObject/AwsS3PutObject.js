@@ -15,29 +15,36 @@
 */
 
 import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { type } from '@lowdefy/helpers';
 
+import copyFromUrl from './copyFromUrl.js';
 import createS3Client from '../createS3Client.js';
 import schema from './schema.js';
 
-// Server-side write: stores base64 content as an object. Used by API endpoint
-// routines that receive files as endpoint payloads (emitFileContent + CallAPI).
+// Server-side write. With `content`, stores base64 content as an object: used by API endpoint
+// routines that receive files as endpoint payloads (emitFileContent + CallAPI). With `url`,
+// streams what an https link answers into the bucket, so a file handed over as a presigned link
+// never passes through the routine.
 async function AwsS3PutObject({ request, connection }) {
   const { bucket } = connection;
-  const { acl, content, contentType, key } = request;
+  const { acl, content, contentType, key, url } = request;
   const params = {
     Bucket: bucket,
     Key: key,
-    Body: Buffer.from(content, 'base64'),
   };
-  if (contentType) {
-    params.ContentType = contentType;
-  }
   if (acl) {
     params.ACL = acl;
   }
   const s3 = createS3Client({ connection });
+  if (!type.isNone(url)) {
+    return copyFromUrl({ s3, params, request });
+  }
+  params.Body = Buffer.from(content, 'base64');
+  if (contentType) {
+    params.ContentType = contentType;
+  }
   await s3.send(new PutObjectCommand(params));
-  return { bucket, key };
+  return { bucket, key, size: params.Body.length, contentType: contentType ?? null };
 }
 
 AwsS3PutObject.schema = schema;
