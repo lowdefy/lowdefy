@@ -177,9 +177,7 @@ test('a store whose mongod died is stopped by the next data session, and the one
   const gone = new Error('Server selection timed out after 5000 ms');
   gone.name = 'MongoServerSelectionError';
   listDatabases.mockRejectedValueOnce(gone);
-  const error = await openDataSession({ dataSet: { name: 'shop', snapshot: null } }).catch(
-    (caught) => caught
-  );
+  const error = await openDataSession({ dataSet: { name: 'shop' } }).catch((caught) => caught);
   expect(error.message).toEqual(
     'The journey data store stopped responding (Server selection timed out after 5000 ms). The next journey starts a new one.'
   );
@@ -192,8 +190,6 @@ test('a data set that fails to load for another reason keeps the store', async (
   create.mockResolvedValueOnce(createReplSet());
   const store = await getDataStore();
   listDatabases.mockRejectedValueOnce(new Error('not authorized'));
-  await expect(openDataSession({ dataSet: { name: 'shop', snapshot: null } })).rejects.toThrow(
-    'not authorized'
-  );
+  await expect(openDataSession({ dataSet: { name: 'shop' } })).rejects.toThrow('not authorized');
   expect(await getDataStore()).toBe(store);
 });

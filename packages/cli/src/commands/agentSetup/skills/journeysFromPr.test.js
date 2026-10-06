@@ -47,11 +47,11 @@ test('journeys-from-pr names the explore, lint and three-run commands and the hu
   ].forEach((command) => expect(skill).toContain(command));
 });
 
-test('journeys-from-pr posts comments only after approval and with no snapshot data', () => {
+test('journeys-from-pr posts comments only after approval and with only config, fixture and typed text', () => {
   const skill = journeysFromPr({ appPath: '' });
   expect(skill).toContain('gh pr comment <n> --body-file <file>');
   expect(skill).toContain('only once they approve the text');
-  expect(skill).toContain('the comment carries no snapshot data');
+  expect(skill).toContain('keep only config, fixture and typed text');
   expect(skill).toContain('no screenshot is attached');
 });
 

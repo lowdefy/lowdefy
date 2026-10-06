@@ -15,13 +15,12 @@
 */
 
 function ensureGroup({ groups, collection }) {
-  groups[collection] = groups[collection] ?? { fixtures: [], indexes: [], recordedIndexes: [] };
+  groups[collection] = groups[collection] ?? { fixtures: [], indexes: [] };
   return groups[collection];
 }
 
 // The data set keyed by collection, the unit the store loads: fixtures and indexes are keyed by
-// connection id, and two connections that name one collection load into it together. A snapshot's
-// manifest is already keyed by collection.
+// connection id, and two connections that name one collection load into it together.
 function groupDataSetByCollection({ dataSet }) {
   const groups = {};
   Object.entries(dataSet.fixtures).forEach(([connectionId, documents]) => {
@@ -33,10 +32,6 @@ function groupDataSetByCollection({ dataSet }) {
   Object.entries(dataSet.indexes).forEach(([connectionId, indexes]) => {
     const group = ensureGroup({ groups, collection: dataSet.collections[connectionId] });
     group.indexes.push(...indexes);
-  });
-  Object.entries(dataSet.snapshot?.collections ?? {}).forEach(([collection, recorded]) => {
-    const group = ensureGroup({ groups, collection });
-    group.recordedIndexes.push(...(recorded.indexes ?? []));
   });
   return groups;
 }

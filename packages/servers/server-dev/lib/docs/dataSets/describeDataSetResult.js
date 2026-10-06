@@ -14,30 +14,14 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+function countDocuments({ fixtures }) {
+  return Object.values(fixtures).reduce((total, documents) => total + documents.length, 0);
+}
 
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-// The `data` a journey result carries: which data set it ran on, how long the load took, and the
-// snapshot's age and size (null for a fixtures-only data set), which lowdefy test prints.
-function describeDataSetResult({ dataSet, loadMs, now = Date.now() }) {
-  if (type.isNone(dataSet.snapshot)) {
-    return { name: dataSet.name, loadMs, snapshot: null };
-  }
-  const { pulledAt, collections } = dataSet.snapshot;
-  const documents = Object.values(collections ?? {}).reduce(
-    (sum, collection) => sum + (collection.count ?? 0),
-    0
-  );
-  return {
-    name: dataSet.name,
-    loadMs,
-    snapshot: {
-      pulledAt,
-      ageDays: Math.floor((now - Date.parse(pulledAt)) / DAY_MS),
-      documents,
-    },
-  };
+// The `data` a journey result carries: which data set it ran on, how many documents it loaded and
+// how long the load took, which lowdefy test prints.
+function describeDataSetResult({ dataSet, loadMs }) {
+  return { name: dataSet.name, loadMs, documents: countDocuments({ fixtures: dataSet.fixtures }) };
 }
 
 export default describeDataSetResult;

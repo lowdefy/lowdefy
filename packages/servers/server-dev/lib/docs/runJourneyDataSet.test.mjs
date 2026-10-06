@@ -51,12 +51,9 @@ const { default: runJourney } = await import('./runJourney.js');
 
 const origin = 'http://localhost:3227';
 const dataSet = {
-  name: 'staging-sample',
+  name: 'sample',
+  fixtures: { tickets: [{ _id: 't1' }, { _id: 't2' }], companies: [{ _id: 'c1' }] },
   users: { outsider: { id: 'u_9', roles: ['admin'], organizationId: 'org_b' } },
-  snapshot: {
-    pulledAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000 - 1000).toISOString(),
-    collections: { tickets: { count: 40000 }, companies: { count: 1212 } },
-  },
   warnings: ['Connections "a" and "b" both name collection "events" in different databases.'],
 };
 
@@ -123,10 +120,10 @@ test('runJourney refuses a data set problem before any browser opens', async () 
 });
 
 test('runJourney passes data, user and the auth mode to the data set resolver', async () => {
-  await runJourney({ origin, pageId: 'tickets', steps: [], data: 'staging-sample', user: 'owner' });
+  await runJourney({ origin, pageId: 'tickets', steps: [], data: 'sample', user: 'owner' });
   expect(mockResolveJourneyDataSet).toHaveBeenCalledWith(
     expect.objectContaining({
-      data: 'staging-sample',
+      data: 'sample',
       user: 'owner',
       authConfigured: true,
       mockUserActive: false,
@@ -139,7 +136,7 @@ test('runJourney opens a data session, gives every actor its cookie and data set
     origin,
     pageId: 'tickets',
     steps: [{ as: 'outsider' }],
-    data: 'staging-sample',
+    data: 'sample',
     user: 'owner',
   });
   expect(mockOpenDataSession).toHaveBeenCalledWith({ dataSet });
@@ -149,9 +146,9 @@ test('runJourney opens a data session, gives every actor its cookie and data set
   ]);
   expect(result.passed).toBe(true);
   expect(result.data).toEqual({
-    name: 'staging-sample',
+    name: 'sample',
     loadMs: expect.any(Number),
-    snapshot: { pulledAt: dataSet.snapshot.pulledAt, ageDays: 3, documents: 41212 },
+    documents: 3,
   });
   expect(result.warnings).toEqual(dataSet.warnings);
 });
@@ -175,7 +172,7 @@ test('runJourney closes the data session after every actor, even when a step thr
     origin,
     pageId: 'tickets',
     steps: [{ as: 'outsider' }],
-    data: 'staging-sample',
+    data: 'sample',
   });
   expect(result.passed).toBe(false);
   expect(order).toEqual(['context.close', 'session.close']);
@@ -183,7 +180,7 @@ test('runJourney closes the data session after every actor, even when a step thr
 
 test('runJourney closes the data session when the journey errors out', async () => {
   mockOpenPage.mockRejectedValue(new Error('navigation failed'));
-  const result = await runJourney({ origin, pageId: 'tickets', steps: [], data: 'staging-sample' });
+  const result = await runJourney({ origin, pageId: 'tickets', steps: [], data: 'sample' });
   expect(result.error).toMatch('navigation failed');
   expect(close).toHaveBeenCalledTimes(1);
 });
@@ -192,7 +189,7 @@ test('runJourney refuses a data set that fails to load, with no browser context 
   mockOpenDataSession.mockRejectedValue(
     new Error('Data set "staging-sample" fixture tickets[0] breaks unique index "number_1".')
   );
-  const result = await runJourney({ origin, pageId: 'tickets', steps: [], data: 'staging-sample' });
+  const result = await runJourney({ origin, pageId: 'tickets', steps: [], data: 'sample' });
   expect(result).toEqual({
     error: 'Data set "staging-sample" fixture tickets[0] breaks unique index "number_1".',
     refused: true,
@@ -202,7 +199,7 @@ test('runJourney refuses a data set that fails to load, with no browser context 
 
 test('runJourney reports a data store that cannot start as a run error, not a refusal', async () => {
   mockGetDataStore.mockRejectedValue(new Error('download failed'));
-  const result = await runJourney({ origin, pageId: 'tickets', steps: [], data: 'staging-sample' });
+  const result = await runJourney({ origin, pageId: 'tickets', steps: [], data: 'sample' });
   expect(result).toEqual({ error: 'Could not start the journey data store: download failed' });
 });
 
@@ -236,7 +233,7 @@ test('runJourney fails the step that sent a data set journey to another host of 
     origin,
     pageId: 'tickets',
     steps: [{ as: 'outsider' }, { as: 'main' }],
-    data: 'staging-sample',
+    data: 'sample',
   });
   expect(result.passed).toBe(false);
   expect(result.failure).toEqual({
@@ -259,13 +256,13 @@ test('runJourney opens the data session before it fetches the browser', async ()
     order.push('getBrowser');
     return {};
   });
-  await runJourney({ origin, pageId: 'tickets', steps: [], data: 'staging-sample' });
+  await runJourney({ origin, pageId: 'tickets', steps: [], data: 'sample' });
   expect(order.slice(0, 2)).toEqual(['openDataSession', 'getBrowser']);
 });
 
 test('runJourney closes the data session when no browser can be fetched', async () => {
   mockGetBrowser.mockRejectedValue(new Error("Executable doesn't exist"));
-  const result = await runJourney({ origin, pageId: 'tickets', steps: [], data: 'staging-sample' });
+  const result = await runJourney({ origin, pageId: 'tickets', steps: [], data: 'sample' });
   expect(result.error).toMatch(/No Chromium available/);
   expect(close).toHaveBeenCalledTimes(1);
   expect(mockOpenPage).not.toHaveBeenCalled();

@@ -32,7 +32,6 @@ import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
 import getLowdefyHome from './getLowdefyHome.js';
 import getProcessStartTime from './getProcessStartTime.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
-import hashDataSetSpec from './hashDataSetSpec.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 import isPidAlive from './isPidAlive.js';
 import isProcessAlive from './isProcessAlive.js';
@@ -107,7 +106,6 @@ export {
   getLowdefyHome,
   getProcessStartTime,
   getSecretsFromEnv,
-  hashDataSetSpec,
   hashSequence,
   installIfPackageJsonChanged,
   isBackedBy,

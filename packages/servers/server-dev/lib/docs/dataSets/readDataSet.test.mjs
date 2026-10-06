@@ -18,8 +18,6 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { hashDataSetSpec } from '@lowdefy/node-utils';
-
 import readDataSet from './readDataSet.js';
 
 let configDirectory;
@@ -54,12 +52,6 @@ function mongo(properties) {
     type: 'MongoDBCollection',
     properties: { databaseUri: { _secret: 'MONGODB_URI', '~k': 'k' }, ...properties },
   };
-}
-
-function writeManifest(name, manifest) {
-  const directory = path.join(configDirectory, '.lowdefy', 'data', name);
-  fs.mkdirSync(directory, { recursive: true });
-  fs.writeFileSync(path.join(directory, 'manifest.json'), JSON.stringify(manifest));
 }
 
 test('readDataSet maps each keyed connection to its collection', async () => {
@@ -127,10 +119,9 @@ test('readDataSet refuses an index keyed by a connection whose collection is an 
   );
 });
 
-test('readDataSet refuses a snapshot connection whose databaseName is an operator', async () => {
+test('readDataSet refuses an indexed connection whose databaseName is an operator', async () => {
   writeConnection('tickets', mongo({ collection: 'tickets', databaseName: { _env: 'DB' } }));
-  writeDataSet('alpha', 'snapshot:\n  from: staging\n  connections: [{ id: tickets }]\n');
-  writeManifest('alpha', { pulledAt: '2026-10-01T00:00:00.000Z', specHash: 'x' });
+  writeDataSet('alpha', 'indexes:\n  tickets:\n    - { key: { number: 1 } }\n');
   await expect(readDataSet({ configDirectory, buildDirectory, name: 'alpha' })).rejects.toThrow(
     'Data set "alpha" connection "tickets" has a computed "databaseName"'
   );
@@ -167,40 +158,4 @@ test('readDataSet warns on the same collision between two unkeyed connections', 
   expect(dataSet.warnings).toEqual([
     'Connections "a" and "b" both name collection "events" in different databases; under a data set they read one database, so they share one collection.',
   ]);
-});
-
-test('readDataSet refuses a snapshot block with no pull, naming the pull command', async () => {
-  writeConnection('tickets', mongo({ collection: 'tickets' }));
-  writeDataSet('staging-sample', 'snapshot:\n  from: staging\n  connections: [tickets]\n');
-  await expect(
-    readDataSet({ configDirectory, buildDirectory, name: 'staging-sample' })
-  ).rejects.toThrow(
-    `Data set "staging-sample" has a snapshot block but no snapshot. Run: lowdefy data pull staging-sample (with the staging environment's secrets).`
-  );
-});
-
-test('readDataSet warns when the snapshot block changed since the pull', async () => {
-  writeConnection('tickets', mongo({ collection: 'tickets' }));
-  writeDataSet('staging-sample', 'snapshot:\n  from: staging\n  connections: [tickets]\n');
-  writeManifest('staging-sample', {
-    pulledAt: '2026-10-01T00:00:00.000Z',
-    specHash: hashDataSetSpec({ snapshotSpec: { from: 'staging', connections: ['other'] } }),
-  });
-  const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'staging-sample' });
-  expect(dataSet.collections).toEqual({ tickets: 'tickets' });
-  expect(dataSet.warnings).toEqual([
-    'Data set "staging-sample" snapshot block changed since the last pull. Run: lowdefy data pull staging-sample',
-  ]);
-});
-
-test('readDataSet does not warn when the snapshot block matches the pull', async () => {
-  writeConnection('tickets', mongo({ collection: 'tickets' }));
-  writeDataSet('staging-sample', 'snapshot:\n  from: staging\n  connections: [tickets]\n');
-  writeManifest('staging-sample', {
-    pulledAt: '2026-10-01T00:00:00.000Z',
-    specHash: hashDataSetSpec({ snapshotSpec: { from: 'staging', connections: ['tickets'] } }),
-  });
-  const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'staging-sample' });
-  expect(dataSet.warnings).toEqual([]);
-  expect(dataSet.snapshot.pulledAt).toEqual('2026-10-01T00:00:00.000Z');
 });

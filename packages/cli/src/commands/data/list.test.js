@@ -19,8 +19,6 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import { hashDataSetSpec } from '@lowdefy/node-utils';
-
 import list from './list.js';
 
 let configDirectory;
@@ -29,12 +27,6 @@ let logs;
 
 function writeDataSet(name, content) {
   fs.writeFileSync(path.join(configDirectory, 'tests', 'data', `${name}.yaml`), content);
-}
-
-function writeManifest(name, manifest) {
-  const directory = path.join(configDirectory, '.lowdefy', 'data', name);
-  fs.mkdirSync(directory, { recursive: true });
-  fs.writeFileSync(path.join(directory, 'manifest.json'), JSON.stringify(manifest));
 }
 
 beforeEach(() => {
@@ -49,39 +41,21 @@ beforeEach(() => {
     },
     sendTelemetry: jest.fn(),
   };
-  jest.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-10-03T12:00:00.000Z'));
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
   fs.rmSync(configDirectory, { recursive: true, force: true });
 });
 
-test('data list prints ages and counts for pulled snapshots and fixtures-only sets', async () => {
+test('data list prints the documents and users of each data set', async () => {
   writeDataSet('empty-org', 'users:\n  owner: { id: u_new }\n');
-  writeDataSet('staging-sample', 'snapshot:\n  from: staging\n  connections: [tickets]\n');
-  writeDataSet('old-sample', 'snapshot:\n  from: staging\n  connections: [tickets]\n');
-  writeDataSet('unpulled', 'snapshot:\n  from: staging\n  connections: [tickets]\n');
-  const specHash = hashDataSetSpec({ snapshotSpec: { from: 'staging', connections: ['tickets'] } });
-  writeManifest('staging-sample', {
-    pulledAt: '2026-09-30T08:00:00.000Z',
-    specHash,
-    collections: { tickets: { connections: ['tickets'], count: 41212, indexes: [] } },
-  });
-  writeManifest('old-sample', {
-    pulledAt: '2026-09-01T08:00:00.000Z',
-    specHash: 'changed',
-    collections: { tickets: { connections: ['tickets'], count: 1, indexes: [] } },
-  });
+  writeDataSet(
+    'sample',
+    'fixtures:\n  tickets:\n    - { title: A }\n    - { title: B }\nusers:\n  owner: { id: u_1 }\n  member: { id: u_2 }\n'
+  );
   await list({ context });
-  expect(logs.info).toEqual([
-    'empty-org: fixtures only',
-    'staging-sample: snapshot from staging, pulled 2026-09-30, 3 days old, 41,212 documents',
-  ]);
-  expect(logs.warn).toEqual([
-    'old-sample: snapshot from staging, pulled 2026-09-01, 32 days old, 1 documents, spec changed: pull again',
-    'unpulled: snapshot from staging, not pulled. Run: lowdefy data pull unpulled',
-  ]);
+  expect(logs.info).toEqual(['empty-org: 0 documents, 1 user', 'sample: 2 documents, 2 users']);
+  expect(logs.warn).toEqual([]);
   expect(context.sendTelemetry).toHaveBeenCalled();
 });
 

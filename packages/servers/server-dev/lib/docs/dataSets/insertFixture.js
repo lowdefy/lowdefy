@@ -27,7 +27,7 @@ function indexNameFrom(error) {
 
 // A fixture that breaks a unique index fails the load, naming the fixture, the index, the duplicate
 // key and the document that already holds it. Loading indexes before documents is what lets this
-// catch a fixture that collides with a snapshot document.
+// catch a fixture that collides with an earlier one.
 async function describeDuplicate({ collection, dataSetName, fixture, error }) {
   const holder = type.isObject(error.keyValue)
     ? await collection.findOne(error.keyValue, { projection: { _id: 1 } })
@@ -41,7 +41,7 @@ async function describeDuplicate({ collection, dataSetName, fixture, error }) {
   );
 }
 
-// A fixture with an _id replaces any snapshot document with that _id; one without is inserted.
+// A fixture with an _id replaces any earlier document with that _id; one without is inserted.
 async function insertFixture({ collection, dataSetName, fixture }) {
   const document = deserializeFixture(fixture.document);
   try {

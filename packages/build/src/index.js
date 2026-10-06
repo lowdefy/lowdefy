@@ -73,7 +73,6 @@ import writeAppEvents from './build/writeAppEvents.js';
 import writeAppMeta from './build/writeAppMeta.js';
 import writeAuth from './build/writeAuth.js';
 import writeConfig from './build/writeConfig.js';
-import writeEnvironmentGuards from './build/writeEnvironmentGuards.js';
 import writeConnections from './build/writeConnections.js';
 import writeDynamicPolicies from './build/writeDynamicPolicies.js';
 import writeApi from './build/writeApi.js';
@@ -247,7 +246,6 @@ async function build(options) {
     await writeRequests({ components, context });
     await writePages({ components, context });
     await writeConfig({ components, context });
-    await writeEnvironmentGuards({ components, context });
     await writeGlobal({ components, context });
     await writeTheme({ components, context });
     await writeI18n({ components, context });

@@ -333,7 +333,7 @@ const devToolDefinitions = {
         .string()
         .optional()
         .describe(
-          'The name of a data set in tests/data/<name>.yaml. The journey then runs against a fresh in-memory MongoDB database of its own, loaded with the data set\'s snapshot and fixtures, while the developer\'s own tabs keep the app\'s real database: it may write freely. user and "as" step names can name the data set\'s users ("as": "outsider" opens that actor as the data set user outsider). Values the journey types, selects or asserts should come from the data set\'s fixtures or users, never from its snapshot. Refused while a dev mock user is active.'
+          'The name of a data set in tests/data/<name>.yaml. The journey then runs against a fresh in-memory MongoDB database of its own, loaded with the data set\'s fixtures, while the developer\'s own tabs keep the app\'s real database: it may write freely. user and "as" step names can name the data set\'s users ("as": "outsider" opens that actor as the data set user outsider). Values the journey types, selects or asserts should come from the data set\'s fixtures or users. Refused while a dev mock user is active.'
         ),
       pathParams: z
         .record(z.string())

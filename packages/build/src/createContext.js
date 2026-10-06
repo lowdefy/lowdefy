@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { mergeObjects, type } from '@lowdefy/helpers';
+import { mergeObjects } from '@lowdefy/helpers';
 
 import createBuildHandleError from './utils/createBuildHandleError.js';
 import createHandleWarning from './utils/createHandleWarning.js';
@@ -30,19 +30,11 @@ function createContext({
   customMessagesMap,
   customTypesMap,
   directories,
-  environmentGuards,
   logger,
   refResolver,
   stage = 'prod',
   validateOnly = false,
 }) {
-  if (!type.isUndefined(environmentGuards) && environmentGuards !== 'all') {
-    throw new Error(
-      `Build option "environmentGuards" should be "all" or not set. Received ${JSON.stringify(
-        environmentGuards
-      )}.`
-    );
-  }
   const context = {
     defaultPackageNames: new Set(defaultPackages),
     agentIds: new Set(),
@@ -50,7 +42,6 @@ function createContext({
     notificationIds: new Set(),
     websocketIds: new Set(),
     directories,
-    environmentGuards,
     // Null prototype: policy ids come from app config.
     dynamicPolicies: Object.create(null),
     errors: [],
