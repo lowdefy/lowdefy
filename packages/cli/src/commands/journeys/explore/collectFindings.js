@@ -20,14 +20,16 @@ import { type } from '@lowdefy/helpers';
 // order the walks hit them: each with the walks and data set users that hit
 // it, the goals of the charters whose walks hit it (charters lists the run's
 // charters, which walk logs name by index; empty without any), and its first
-// occurrence's step and screenshot. Whether a finding is proven is the
+// occurrence's step and screenshot (the open's, for a finding at open). Whether a finding is proven is the
 // proof's to say (applyProof).
 function collectFindings({ logs, charters = [] }) {
   const byKey = new Map();
   logs.forEach((log) => {
     log.findings.forEach((finding) => {
       if (!byKey.has(finding.key)) {
-        const occurrence = log.steps.find((step) => step.index === finding.step);
+        const occurrence = type.isNone(finding.step)
+          ? log.open
+          : log.steps.find((step) => step.index === finding.step);
         byKey.set(finding.key, {
           key: finding.key,
           kind: finding.kind,

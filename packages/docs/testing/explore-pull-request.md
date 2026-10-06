@@ -115,7 +115,7 @@ The model sees the pull request's title and description, the charter if there is
 
 ## Findings
 
-Fixed checks, not the model, decide what broke after each step:
+Fixed checks, not the model, decide what broke when the page opens and after each step:
 
 | Finding          | When                                                                                                     |
 | ---------------- | -------------------------------------------------------------------------------------------------------- |
@@ -136,7 +136,7 @@ A finding is reported only once a journey written for it fails. When the walks a
 
 - an app error (`action-error`, `client-error`, `server-error` or `request-failed`) fails with the same [app error](/config-tests#app-errors) at any step, or when the page opens;
 - a dead click fails at `expect: { effect: true }`, the one assertion the explorer adds after the click: the control did nothing;
-- a role refused at open fails at `expect: { visible: <pageId> }`, a one-step journey on the refused page.
+- a finding at open (a role refused, or an app error from the page's `onInit` or `onMount`) is proven by a one-step journey on the page, `expect: { visible: <pageId> }`: a role refusal fails at that step, an app error when the page opens.
 
 These two expectations are the only steps the explorer writes, each by a fixed rule from the check that raised the finding. Whether a proven dead click should do something is still your call.
 

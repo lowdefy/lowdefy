@@ -57,6 +57,29 @@ test('findings are one per key with the walks and users that hit them, in the or
   findings.forEach((finding) => expect(finding).not.toHaveProperty('status'));
 });
 
+test('a finding at open has no step and carries the screenshot the walk took at open', () => {
+  const openError = {
+    kind: 'server-error',
+    severity: 'error',
+    message: 'Unrecognized pipeline stage name',
+    pageId: 'ticket',
+    source: 'pages/ticket.yaml:4',
+    key: 'server-error|ticket|pages/ticket.yaml:4',
+  };
+  const logs = [
+    {
+      walk: 'walk-1',
+      user: 'member',
+      open: { screenshot: 'open.png' },
+      steps: [{ index: 0, screenshot: 'step.png' }],
+      findings: [openError],
+    },
+  ];
+  const [finding] = collectFindings({ logs });
+  expect(finding.step).toBeNull();
+  expect(finding.screenshot).toBe('open.png');
+});
+
 test('one key hit by two charters is one finding listing both charters, in the order they hit it', () => {
   const charters = [
     { goal: 'Try edge input on the ticket form.' },

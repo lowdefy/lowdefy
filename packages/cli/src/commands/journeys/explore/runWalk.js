@@ -92,11 +92,16 @@ async function runWalk({
     pageMs: opened.body.timings?.pageMs ?? null,
     redirected: first.redirected === true,
     admitted,
+    screenshot: opened.body.screenshot ?? null,
   };
   try {
-    if (openFindings.length > 0) {
-      log.findings.push(...openFindings);
+    log.findings.push(...openFindings);
+    if (openFindings.some((finding) => finding.severity === 'error')) {
       log.stopReason = 'finding';
+      return log;
+    }
+    if (openFindings.some((finding) => finding.kind === 'environment')) {
+      log.stopReason = 'environment';
       return log;
     }
     if (first.redirected === true) {
