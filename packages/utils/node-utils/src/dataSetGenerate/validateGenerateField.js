@@ -20,10 +20,20 @@ import generateKinds from './generateKinds.js';
 
 const markerKeys = ['~d', '_oid'];
 
+// A date-only ISO string is UTC and a date-time names its offset, so a bound means the same instant
+// on every machine. Date.parse reads a date-time without an offset (or any other format) in the
+// machine's time zone, which would make generated dates differ between machines.
+const dateBoundPattern =
+  /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}(:\d{2}(\.\d{1,3})?)?(Z|[+-]\d{2}:\d{2}))?$/;
+
 function parseDateBound({ value, where, fail }) {
-  const ms = value instanceof Date ? value.getTime() : Date.parse(value);
-  if (!(type.isString(value) || value instanceof Date) || Number.isNaN(ms)) {
-    fail(`${where} should be a date such as 2026-01-31. Received ${JSON.stringify(value)}.`);
+  const ms = type.isString(value) && dateBoundPattern.test(value) ? Date.parse(value) : NaN;
+  if (Number.isNaN(ms)) {
+    fail(
+      `${where} should be a date such as 2026-01-31, or a date-time with its offset such as 2026-01-31T09:00:00Z. Received ${JSON.stringify(
+        value
+      )}.`
+    );
   }
   return ms;
 }

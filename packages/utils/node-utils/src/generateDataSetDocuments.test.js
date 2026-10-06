@@ -57,6 +57,44 @@ test('generateDataSetDocuments gives byte-identical documents for the same seed 
   );
 });
 
+// Pinned output: a change to the random source, the word lists or how a kind draws changes every
+// committed data set's documents, so it must be deliberate.
+test('generateDataSetDocuments gives the pinned documents for a fixed seed', () => {
+  expect(
+    generate({
+      spec: {
+        seed: 7,
+        tickets: {
+          count: 2,
+          fields: {
+            status: { oneOf: ['open', 'closed'] },
+            amount: { number: { min: 1, max: 100, decimals: 2 } },
+            opened: { date: { from: '2026-01-01', to: '2026-01-31' } },
+            note: { text: { words: [2, 3] } },
+          },
+        },
+      },
+    })
+  ).toEqual({
+    tickets: [
+      {
+        _id: 'tickets-1',
+        status: 'closed',
+        amount: 68.73,
+        opened: { '~d': '2026-01-11T20:23:23.665Z' },
+        note: 'Help store',
+      },
+      {
+        _id: 'tickets-2',
+        status: 'open',
+        amount: 40.54,
+        opened: { '~d': '2026-01-09T19:40:14.279Z' },
+        note: 'Board contact',
+      },
+    ],
+  });
+});
+
 test('generateDataSetDocuments gives different documents for a different seed', () => {
   const other = generate({ spec: { ...invoices, seed: 8 } });
   expect(JSON.stringify(other.invoices_db)).not.toEqual(
@@ -217,7 +255,20 @@ test('validateDataSetGenerate refuses a missing seed, a bad count and bad kind o
         tickets: { count: 1, fields: { d: { date: { from: 'soon', to: 'later' } } } },
       },
     })
-  ).toThrow('generate.tickets.fields.d.date.from should be a date such as 2026-01-31.');
+  ).toThrow('generate.tickets.fields.d.date.from should be a date such as 2026-01-31');
+  expect(() =>
+    generate({
+      spec: {
+        seed: 1,
+        tickets: {
+          count: 1,
+          fields: { d: { date: { from: '2026-01-01T09:00', to: '2026-02-01' } } },
+        },
+      },
+    })
+  ).toThrow(
+    'generate.tickets.fields.d.date.from should be a date such as 2026-01-31, or a date-time with its offset such as 2026-01-31T09:00:00Z. Received "2026-01-01T09:00".'
+  );
   expect(() =>
     generate({
       spec: {
