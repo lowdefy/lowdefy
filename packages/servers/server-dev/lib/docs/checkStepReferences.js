@@ -60,11 +60,20 @@ function readTargetBlockId(step) {
   return target?.blockId;
 }
 
-// The id of the Lowdefy page the actor's tab shows, or null when none shows (an
-// opened email, a page that left the app) or the tab is navigating.
-async function readCurrentPageId({ page }) {
+// The Lowdefy page the actor's tab shows, as its id and the ids of the blocks
+// its engine holds, or null when none shows (an opened email, a page that left
+// the app) or the app is between pages (isPageReady), when the id still names
+// the page being left. The engine's ids include blocks the build cannot name: a
+// Dynamic block's content, which the server resolves when the page is fetched.
+async function readShownPage({ page }) {
   try {
-    return (await page.evaluate(() => window.lowdefy?.pageId)) ?? null;
+    return await page.evaluate(() => {
+      const lowdefy = window.lowdefy;
+      if (!lowdefy?.pageId || lowdefy._devNavigating === true) return null;
+      const shownKey = lowdefy.pageInstances?.[lowdefy.pageId]?.at(-1);
+      const blocks = lowdefy.contexts?.[shownKey]?._internal?.RootSlots?.map ?? {};
+      return { pageId: lowdefy.pageId, blockIds: Object.keys(blocks) };
+    });
   } catch {
     return null;
   }
@@ -92,9 +101,10 @@ function isBlockOfJourneyPage({ blockId, journeyPageId }) {
   return built !== null && hasBlock({ ids: builtBlockIds(built), blockId });
 }
 
-function checkBlockId({ blockId, pageId, journeyPageId }) {
+function checkBlockId({ blockId, shownPage, journeyPageId }) {
+  const { pageId } = shownPage;
   const known = builtBlockIds(readPageArtifact({ pageId }));
-  if (hasBlock({ ids: known, blockId })) {
+  if (hasBlock({ ids: [...known, ...shownPage.blockIds], blockId })) {
     return;
   }
   if (pageId !== journeyPageId && isBlockOfJourneyPage({ blockId, journeyPageId })) {
@@ -190,9 +200,9 @@ function checkActorName({ journey, name }) {
 // fails its step and names the unknown id, instead of passing a step that
 // asserts something is absent (expect.hidden, expect.calls with count 0) or
 // opening the not-found page. Ids are read from the actor's current page (a
-// block also from the page the journey opened); when no Lowdefy page shows,
-// block and request checks are skipped and the step's own wait reports what it
-// finds.
+// block also from the page the journey opened); when no Lowdefy page shows, or
+// the app is between pages, block and request checks are skipped and the
+// step's own wait reports what it finds.
 async function checkStepReferences({ journey, page, step }) {
   const key = getStepKey(step);
   if (key === 'as') {
@@ -213,9 +223,10 @@ async function checkStepReferences({ journey, page, step }) {
   if (type.isUndefined(blockId) && type.isUndefined(requestId)) {
     return;
   }
-  const currentPageId = await readCurrentPageId({ page });
-  if (!type.isUndefined(blockId) && currentPageId !== null) {
-    checkBlockId({ blockId, pageId: currentPageId, journeyPageId: journey.pageId });
+  const shownPage = await readShownPage({ page });
+  const currentPageId = shownPage?.pageId ?? null;
+  if (!type.isUndefined(blockId) && shownPage !== null) {
+    checkBlockId({ blockId, shownPage, journeyPageId: journey.pageId });
   }
   if (!type.isUndefined(requestId)) {
     const pageId = calls?.pageId ?? currentPageId;

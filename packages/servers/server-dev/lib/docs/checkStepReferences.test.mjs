@@ -67,9 +67,10 @@ afterAll(() => {
   fs.rmSync(directory, { recursive: true, force: true });
 });
 
-// The page's evaluate answers what window.lowdefy.pageId would.
-function pageShowing(pageId) {
-  return { evaluate: async () => pageId };
+// The page's evaluate answers what readShownPage reads from window.lowdefy:
+// the shown page's id and the ids of the blocks its engine holds.
+function pageShowing(pageId, { blockIds = [] } = {}) {
+  return { evaluate: async () => ({ pageId, blockIds }) };
 }
 
 function journeyWith(overrides = {}) {
@@ -133,7 +134,7 @@ test('checkStepReferences lists the known blocks of a small page', async () => {
 });
 
 test('checkStepReferences skips block and request checks when no Lowdefy page shows', async () => {
-  const page = { evaluate: async () => undefined };
+  const page = { evaluate: async () => null };
   expect(await check({ expect: { hidden: 'nosuchblock' } }, { page })).toBeUndefined();
   expect(await check({ wait: { request: 'nosuchrequest' } }, { page })).toBeUndefined();
 });
@@ -161,4 +162,12 @@ test('checkStepReferences accepts a block of the page the journey opened when th
   ).toBeUndefined();
   const error = await check({ expect: { visible: 'nosuchblock' } }, { page });
   expect(error.message).toBe('Page "second" has no block "nosuchblock". Known blocks: second.');
+});
+
+test('checkStepReferences accepts a block the shown page holds but the build does not name', async () => {
+  // A Dynamic block's content is resolved by the server when the page is fetched.
+  const page = pageShowing('home', { blockIds: ['title', 'dynamic_content', 'dynamic_save'] });
+  expect(await check({ click: 'dynamic_save' }, { page })).toBeUndefined();
+  const error = await check({ expect: { hidden: 'nosuchblock' } }, { page });
+  expect(error.actual).toBe('no block "nosuchblock"');
 });
