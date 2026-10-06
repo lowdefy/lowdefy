@@ -109,3 +109,63 @@ test('request throws a plain Error for a non-2xx body whose name is not an expec
   expect(thrown.message).toBe('Upstream failed.');
   expect(thrown.isLowdefyError).toBeUndefined();
 });
+
+describe('build check', () => {
+  const originalLocation = window.location;
+  const refusal = {
+    name: 'UserError',
+    message: 'This page is from an earlier version of the app. Reload the page to continue.',
+    buildId: 'build-2',
+  };
+
+  beforeEach(() => {
+    window.sessionStorage.clear();
+    delete window.location;
+    window.location = { reload: jest.fn() };
+  });
+
+  afterEach(() => {
+    window.location = originalLocation;
+  });
+
+  test('request sends the bundle build id in the x-lowdefy-build header', async () => {
+    mockFetchResponse({ ok: true, body: {} });
+    await request({ buildId: 'build-1', url: '/api/test', method: 'POST', body: {} });
+    expect(global.fetch.mock.calls[0][1].headers['x-lowdefy-build']).toBe('build-1');
+  });
+
+  test('request sends no x-lowdefy-build header when the bundle has no build id', async () => {
+    mockFetchResponse({ ok: true, body: {} });
+    await request({ url: '/api/test', method: 'POST', body: {} });
+    expect(global.fetch.mock.calls[0][1].headers).not.toHaveProperty('x-lowdefy-build');
+  });
+
+  test('request reloads and never settles when the server refuses a call from another build', async () => {
+    mockFetchResponse({ ok: false, status: 409, body: refusal });
+    const settled = jest.fn();
+    request({ buildId: 'build-1', url: '/api/test', method: 'POST', body: {} }).then(
+      settled,
+      settled
+    );
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(window.location.reload).toHaveBeenCalledTimes(1);
+    expect(settled).not.toHaveBeenCalled();
+  });
+
+  test('request throws the refusal as a UserError once the tab has already reloaded for that build', async () => {
+    window.sessionStorage.setItem('lowdefy.reloadedForBuild', 'build-2');
+    mockFetchResponse({ ok: false, status: 409, body: refusal });
+    await expect(
+      request({ buildId: 'build-1', url: '/api/test', method: 'POST', body: {} })
+    ).rejects.toBeInstanceOf(UserError);
+    expect(window.location.reload).not.toHaveBeenCalled();
+  });
+
+  test('request does not reload for an error response other than a build refusal', async () => {
+    mockFetchResponse({ ok: false, status: 403, body: { ...refusal, name: 'AuthorizationError' } });
+    await expect(
+      request({ buildId: 'build-1', url: '/api/test', method: 'POST', body: {} })
+    ).rejects.toBeInstanceOf(AuthorizationError);
+    expect(window.location.reload).not.toHaveBeenCalled();
+  });
+});
