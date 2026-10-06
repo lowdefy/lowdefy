@@ -104,6 +104,10 @@ function buildModules({ components, context }) {
     // Process pages
     for (const page of manifest.pages ?? []) {
       page.id = `${entry.id}/${page.id}`;
+      // A path that is not a string is refused by buildRoutes.
+      if (type.isString(page.path)) {
+        page.path = `${entry.id}/${page.path}`;
+      }
       components.pages = components.pages ?? [];
       components.pages.push(page);
     }

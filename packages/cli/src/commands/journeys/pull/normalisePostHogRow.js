@@ -42,6 +42,12 @@ function readStringArray(value) {
   return parsed.filter((entry) => type.isString(entry) && entry !== '');
 }
 
+function readStringObject(value) {
+  const parsed = readJson(value);
+  if (!type.isObject(parsed) || !Object.values(parsed).every(type.isString)) return null;
+  return parsed;
+}
+
 function readInt(value) {
   const parsed = type.isString(value) && value !== '' ? Number(value) : value;
   return type.isInt(parsed) ? parsed : null;
@@ -77,6 +83,7 @@ function normalisePostHogRow({ row }) {
     elText: normaliseClickText(row.el_text),
     buildId: readString(row.lowdefy_build_id),
     pageId: readString(row.lowdefy_page_id),
+    pathParams: readStringObject(row.lowdefy_path_params),
     blockId: readString(row.lowdefy_block_id),
     blockIds: readStringArray(row.lowdefy_block_ids),
     blockType: readString(row.lowdefy_block_type),

@@ -16,6 +16,7 @@
 
 import applyArrayIndices from './applyArrayIndices.js';
 import builtinMessages from './builtinMessages.js';
+import buildPagePath from './buildPagePath.js';
 import cachedPromises from './cachedPromises.js';
 import cleanBuildArtifact from './cleanBuildArtifact.js';
 import createTraceId from './createTraceId.js';
@@ -38,8 +39,10 @@ import mapPlainValues from './mapPlainValues.js';
 import mergeObjects from './mergeObjects.js';
 import normalizeCaller from './normalizeCaller.js';
 import omit from './omit.js';
+import pageInstanceKey from './pageInstanceKey.js';
 import pairTraceEvents from './pairTraceEvents.js';
 import parsePageId from './parsePageId.js';
+import parsePathPattern from './parsePathPattern.js';
 import parseRowIndex from './parseRowIndex.js';
 import projectCaughtError from './projectCaughtError.js';
 import serializer from './serializer.js';
@@ -59,6 +62,7 @@ import wait from './wait.js';
 
 export {
   applyArrayIndices,
+  buildPagePath,
   builtinMessages,
   cachedPromises,
   cleanBuildArtifact,
@@ -82,8 +86,10 @@ export {
   mergeObjects,
   normalizeCaller,
   omit,
+  pageInstanceKey,
   pairTraceEvents,
   parsePageId,
+  parsePathPattern,
   parseRowIndex,
   projectCaughtError,
   ReservedKeyError,

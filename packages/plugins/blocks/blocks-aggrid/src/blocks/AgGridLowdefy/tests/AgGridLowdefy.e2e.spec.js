@@ -314,6 +314,19 @@ test.describe('AgGridLowdefy Block', () => {
     await expect(display).toHaveText('Linked to: TSK-002');
   });
 
+  test('cell.type: link and avatar links fill the target page path from pathParams', async ({
+    page,
+  }) => {
+    const anchors = getBlock(page, 'aggridlowdefy_cell_path_link').locator(
+      '.ag-row[row-index="0"] a'
+    );
+    await expect(anchors.nth(0)).toHaveAttribute('href', /\/aggrid-tickets\/support\/TSK-001$/);
+    await expect(anchors.nth(1)).toHaveAttribute('href', /\/aggrid-tickets\/support\/TSK-001$/);
+    await anchors.nth(0).click();
+    await expect(getBlock(page, 'aggridlowdefy_path_link_display')).toHaveText('support/TSK-001');
+    await expect(page).toHaveURL(/\/aggridlowdefy$/);
+  });
+
   test('cell.type: date formats with default YYYY-MM-DD HH:mm', async ({ page }) => {
     const block = getBlock(page, 'aggridlowdefy_cell_date');
     const firstCell = block.locator('.ag-row[row-index="0"] .ag-cell').first();

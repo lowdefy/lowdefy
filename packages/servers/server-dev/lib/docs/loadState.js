@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
-import lowdefyConfig from '../build/config.js';
-import { getBrowser, openPage } from './getBrowser.js';
+import { buildPageUrl, getBrowser, openPage } from './getBrowser.js';
 import noBrowserError from './noBrowserError.js';
 import { loadMocks } from './devMockRegistry.js';
 import { readCheckpoint } from './checkpointStore.js';
+import resolvePageInstance from './resolvePageInstance.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import withBrowserSlot from './withBrowserSlot.js';
 
@@ -30,8 +30,9 @@ const READY_TIMEOUT = 15000;
 // Loads a state checkpoint's recorded requests into devMockRegistry (shared
 // by both modes below — src/routes/request.js consults it regardless of how
 // the page was opened), then either:
-//   - 'headless': drives a headless page to the checkpoint's pageId/urlQuery,
-//     injects its recorded state directly into the live context, and verifies
+//   - 'headless': drives a headless page to the checkpoint's page instance
+//     (pageId, pathParams) and urlQuery, injects its recorded state directly
+//     into that instance's context, and verifies
 //     a few keys round-tripped. Good for an agent verifying its own change.
 //     Takes a `user` so a checkpoint captured on a role-gated page restores
 //     into a page that actually renders (see resolveHeadlessUser.js).
@@ -66,16 +67,25 @@ async function loadState({ origin, name, mode = 'headless', user }) {
     return { error: `Checkpoint "${name}" has no recorded pageId.` };
   }
 
+  const { pathParams } = checkpoint;
+  const instance = resolvePageInstance({ pageId, pathParams });
+  if (!type.isUndefined(instance.error)) {
+    return { error: `Checkpoint "${name}" cannot open its page: ${instance.error}` };
+  }
+
   loadMocks({ pageId, mocks: checkpoint.requests });
 
-  const basePath = lowdefyConfig.basePath ?? '';
-  const urlQuery = checkpoint.urlQuery ?? '';
+  // The checkpoint keeps the query string the page was captured at.
+  const urlQuery = urlQueryFn.parse(checkpoint.urlQuery);
 
   if (mode === 'registry-only') {
-    const separator = urlQuery.includes('?') ? '&' : '?';
-    const url = `${origin}${basePath}/${pageId}${urlQuery}${separator}_checkpoint=${encodeURIComponent(
-      name
-    )}`;
+    const url = buildPageUrl({
+      origin,
+      pageId,
+      path: instance.path,
+      pathParams,
+      urlQuery: { ...urlQuery, _checkpoint: name },
+    });
     return {
       url,
       instructions:
@@ -96,12 +106,33 @@ async function loadState({ origin, name, mode = 'headless', user }) {
   }
 
   return withBrowserSlot({
-    task: () => loadStateInBrowser({ origin, name, mode, user, pageId, urlQuery, checkpoint }),
+    task: () =>
+      loadStateInBrowser({
+        origin,
+        name,
+        mode,
+        user,
+        pageId,
+        instance,
+        pathParams,
+        urlQuery,
+        checkpoint,
+      }),
   });
 }
 
 // The part of loadState that runs in the browser, inside a browser slot.
-async function loadStateInBrowser({ origin, name, mode, user, pageId, urlQuery, checkpoint }) {
+async function loadStateInBrowser({
+  origin,
+  name,
+  mode,
+  user,
+  pageId,
+  instance,
+  pathParams,
+  urlQuery,
+  checkpoint,
+}) {
   let browser;
   try {
     browser = await getBrowser();
@@ -111,47 +142,50 @@ async function loadStateInBrowser({ origin, name, mode, user, pageId, urlQuery, 
 
   let context;
   try {
-    // buildPageUrl (used internally by openPage) joins origin/basePath/pageId
-    // as a plain string, so folding the query string into the pageId segment
-    // reproduces the checkpoint's exact URL without needing a query-aware
-    // variant of openPage.
     const opened = await openPage({
       browser,
       origin,
-      pageId: `${pageId}${urlQuery}`,
+      pageId,
+      path: instance.path,
+      pathParams,
+      urlQuery,
       user,
       timeout: READY_TIMEOUT,
     });
     context = opened.context;
     const { page } = opened;
 
-    await page.waitForFunction((id) => Boolean(window.lowdefy?.contexts?.[`page:${id}`]), pageId, {
-      timeout: READY_TIMEOUT,
-    });
+    await page.waitForFunction(
+      (contextKey) => Boolean(window.lowdefy?.contexts?.[contextKey]),
+      instance.instanceKey,
+      {
+        timeout: READY_TIMEOUT,
+      }
+    );
 
     const stateEntries = Object.entries(checkpoint.state ?? {});
     await page.evaluate(
-      ({ id, entries }) => {
-        const pageContext = window.lowdefy.contexts[`page:${id}`];
+      ({ contextKey, entries }) => {
+        const pageContext = window.lowdefy.contexts[contextKey];
         entries.forEach(([key, value]) => {
           pageContext._internal.State.set(key, value);
         });
         pageContext._internal.update();
       },
-      { id: pageId, entries: stateEntries }
+      { contextKey: instance.instanceKey, entries: stateEntries }
     );
 
     const verifyKeys = stateEntries.slice(0, VERIFY_KEY_COUNT).map(([key]) => key);
     const verifiedKeys = await page.evaluate(
-      ({ id, keys }) => {
-        const pageContext = window.lowdefy.contexts[`page:${id}`];
+      ({ contextKey, keys }) => {
+        const pageContext = window.lowdefy.contexts[contextKey];
         const result = {};
         keys.forEach((key) => {
           result[key] = pageContext.state?.[key];
         });
         return result;
       },
-      { id: pageId, keys: verifyKeys }
+      { contextKey: instance.instanceKey, keys: verifyKeys }
     );
 
     const result = { loaded: true, mode, url: opened.url, verifiedKeys };

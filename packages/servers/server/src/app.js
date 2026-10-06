@@ -155,7 +155,7 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   }
 
   app.use('/*', apiContext({ clientAddressHeader }));
-  mountPageRoutes({ app, renderPage });
+  mountPageRoutes({ app, basePath, renderPage });
 
   app.onError(createErrorHandler({ basePath, logger }));
 

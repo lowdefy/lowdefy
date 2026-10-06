@@ -20,10 +20,19 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import collectExceptions from '../utils/collectExceptions.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
+import findMissingPathParams from './buildRoutes/findMissingPathParams.js';
+import routeHasPlaceholders from './buildRoutes/routeHasPlaceholders.js';
 
+// A page with placeholders in its path has no values to link to from a menu
+// built for it, so the default menu leaves it out.
 function buildDefaultMenu({ components, context }) {
   context.logger.warn('No menus found. Building default menu.');
-  const pages = type.isArray(components.pages) ? components.pages : [];
+  const patternedPageIds = new Set(
+    context.routes.filter((route) => routeHasPlaceholders({ route })).map((route) => route.pageId)
+  );
+  const pages = (type.isArray(components.pages) ? components.pages : []).filter(
+    (page) => !patternedPageIds.has(page.pageId)
+  );
   const menus = [
     {
       id: 'default',
@@ -73,24 +82,45 @@ function validateMenuItem(menuItem, menuId, context) {
   if (type.isNone(menuItem.type)) {
     collectExceptions(
       context,
-      new ConfigError(
-        `Menu item type is not defined at "${menuItem.id}" on menu "${menuId}".`,
-        { configKey }
-      )
+      new ConfigError(`Menu item type is not defined at "${menuItem.id}" on menu "${menuId}".`, {
+        configKey,
+      })
     );
     return false;
   }
   if (!type.isString(menuItem.type)) {
     collectExceptions(
       context,
-      new ConfigError(
-        `Menu item type is not a string at "${menuItem.id}" on menu "${menuId}".`,
-        { received: menuItem.type, configKey }
-      )
+      new ConfigError(`Menu item type is not a string at "${menuItem.id}" on menu "${menuId}".`, {
+        received: menuItem.type,
+        configKey,
+      })
     );
     return false;
   }
   return true;
+}
+
+// A menu link to a page with placeholders gives every placeholder a static
+// value, so the menu and a home page chosen from it have a URL to link to.
+function checkMenuLinkPathParams({ menuItem, menuId, context }) {
+  const route = context.routes.find((candidate) => candidate.pageId === menuItem.pageId);
+  if (type.isUndefined(route) || !routeHasPlaceholders({ route })) {
+    return;
+  }
+  const missing = findMissingPathParams({ route, pathParams: menuItem.pathParams });
+  if (missing.length === 0) {
+    return;
+  }
+  const { id, pageId } = menuItem;
+  const names = missing.map((name) => `"${name}"`).join(', ');
+  collectExceptions(
+    context,
+    new ConfigError(
+      `Menu link "${id}" on menu "${menuId}" links to page "${pageId}" without path params ${names}. Page "${pageId}" has path "${route.path}", so the menu link's pathParams must give every placeholder a value.`,
+      { configKey: menuItem['~k'] }
+    )
+  );
 }
 
 function loopItems({
@@ -122,6 +152,7 @@ function loopItems({
             return;
           } else {
             menuItem.auth = page.auth;
+            checkMenuLinkPathParams({ menuItem, menuId, context });
           }
         } else {
           menuItem.auth = { public: true };
@@ -164,10 +195,7 @@ function buildMenu({ components, context }) {
   components.menus.forEach((menu, menuIndex) => {
     const configKey = menu['~k'];
     if (type.isUndefined(menu.id)) {
-      collectExceptions(
-        context,
-        new ConfigError('Menu id missing.', { configKey })
-      );
+      collectExceptions(context, new ConfigError('Menu id missing.', { configKey }));
       failedMenuIndices.add(menuIndex);
       return;
     }

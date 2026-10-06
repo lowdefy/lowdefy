@@ -21,7 +21,11 @@ import getContext, {
   Slots,
   createLink,
   Events,
+  lookupPath,
+  rememberPath,
+  rememberTarget,
   Requests,
+  resolveTarget,
   State,
 } from '@lowdefy/engine';
 
@@ -51,6 +55,63 @@ events again).
 - Page-scoped actions and operators (`SetState`, `Request`, `_state`, `_input`, ...) are
   rejected by the build (`build/buildAppEvents.js`), and the app event types join every page's
   per-page type set (`buildPageTypes`), since any page can be the first to load.
+
+## Page Contexts and Instances
+
+`getContext({ config, jsMap, lowdefy, pathParams, resetContext })` returns the page's context,
+creating it on first render and memoizing it in `lowdefy.contexts` under its **instance key**,
+`pageInstanceKey({ pageId, path, pathParams })` from `@lowdefy/helpers`:
+
+- A page without placeholders in its `path` (or with no `path`) has one context, `page:{pageId}`.
+- A page with placeholders has one context per set of values, `page:{pageId}#{canonical}`, where
+  `canonical` is the path `buildPagePath` writes for those values. Two spellings of the same values
+  (`a+b`, `a%2Bb`) give the same key. `pathParams` comes from the server's match of the URL.
+
+The context carries `instanceKey` and `pathParams` (strings, one per placeholder). Its input is
+`lowdefy.inputs[instanceKey]`, read by `_input` (the WebParser) and `getInput`; `getPathParams`
+reads `context.pathParams` with the same `key` / `all` / `default` shape as `getUrlQuery`. A query
+change keeps the instance, since the query is not part of the key.
+
+**Ten instances per page.** `keepPageInstance` keeps `lowdefy.pageInstances[pageId]`, the page's
+instance keys in least-recently-rendered order. Every `getContext` call moves its key to the end;
+past 10, the oldest is dropped from `lowdefy.contexts` and `lowdefy.inputs`, so returning to it
+is a first visit (`onInit` runs again, input is empty). The limit is fixed, not config.
+
+**Dynamic pages** (`config.dynamic`) are rebuilt whenever a new config object arrives (a fresh
+fetch), under their own instance key, so going back to one starts fresh.
+
+`lowdefy.contexts`, `lowdefy.inputs`, `lowdefy.pageInstances` and `lowdefy.pathMemory` are set
+by the client's `initLowdefyContext`, with `lowdefy.pagePaths` (root config) and
+`lowdefy.linkPaths` (the current page's config). The build and api always write both lists, `{}`
+when empty, so the engine reads them without checks.
+
+## Navigation Targets and the Path Memory
+
+`resolveTarget({ lowdefy, target, name })` is the one reader of the navigation grammar
+`{ home, pageId, url, urlQuery, pathParams }`. It returns an un-prefixed, discriminated target
+(`kind: 'page'` or `'external'`); `createLink`, the client's auth callbacks and plugins consume it.
+
+- For `pageId`, the pattern is `lowdefy.linkPaths[pageId]`, then `lowdefy.pagePaths[pageId]`; a
+  page in neither is built as `/${pageId}`. The pathname comes from `buildPagePath`, whose error for
+  a missing placeholder is rethrown as a `ConfigError` naming the page and placeholder.
+- `home: true` builds from `lowdefy.home.pageId` and `lowdefy.home.pathParams`
+  (`getHomePathname`, which the client's post-auth callback ladder also reads).
+- A page result carries `pageId`, `pathParams` (the pattern's values as strings) and the target's
+  `instanceKey`. `createLink` seeds `lowdefy.inputs[instanceKey]` from a link's `input`; a `url:`
+  link seeds none.
+
+The client never matches a URL to a page. It remembers instead: `lowdefy.pathMemory` is a session
+`Map` from path (no leading `/`, no `basePath`) to `{ pageId, pathParams, instanceKey }`.
+An entry is written only on navigation, never when a link is resolved or drawn, so the memory grows
+by one entry per page visited and needs no cap. `rememberTarget({ lowdefy, target })` writes the
+entry for a resolved page target that names a page (a `url` target writes nothing); `createLink`
+calls it in the `setInput` callback it hands to `sameOriginLink`, which the client runs only when a
+link is followed, before the router push (a `newTab` link writes nothing: the new tab's first load
+does). The client's auth callbacks call it before their push. Page responses and the embedded
+first-load payload write entries with `rememberPath({ lowdefy, path, pageId, pathParams, pattern })`
+(the client's job). `lookupPath({ lowdefy, path })` reads one; a path it has not seen is read as a
+page id without a pattern (`{ pageId: path, pathParams: {}, instanceKey: 'page:' + path }`). All
+three are exported.
 
 ## Architecture
 
@@ -166,8 +227,8 @@ The `shortcut` property is read-only metadata — the Events class doesn't handl
 - **Payload.** `{ scope, pageId, blockId, blockType, eventName, success, failure, debounceMs, actions, record, context, stateBefore }`, built by `createTracePayload`. `scope` is `app` when the context is `lowdefy.appContext` (then `pageId` is `lowdefy.pageId` and `blockType` is `null`). `failure` comes from `summariseFailure`, which reads callActions' `{ error, action, index }` wrapper (or `{ error }` for a control-flow parser error) into `{ actionId, actionType, configKey, errorName, invalidBlocks }`, so consumers never see the wrapper. `invalidBlocks` travels on the `UserError` that `createValidate` throws; `projectCaughtError` does not project it.
 - **`stateBefore`** is a `serializer.copy` of the state taken before `callActions`, only while a subscriber asked `subscribe(listener, { state: true })` (`wantsState()`); others receive `undefined`. Production (PostHog) never asks, so it pays no copy.
 - **Isolation.** `emit` calls listeners in order, each in its own try/catch; a throwing listener is warned once and the rest run.
-- **Describe functions.** `describeElement(element)` reads a live element as a journey target (the runner's resolution in reverse) and `describeChain(elementsChain)` reads a posthog-js `$elements_chain` into the same `{ page_id, block_id, block_type, row, column, text, nth, option, block_ids }`, with `nth` always `null`. Both follow `journeyTargetSelectors` in `@lowdefy/helpers`, the rules `server-dev`'s `runJourney` resolves targets by; the chain parser is `targetFromElementsChain` there, pure so it runs in Node. A click that reaches no interactive control has no text, so its block alone targets it; a dropdown option stands in for a control. `pageIdOf(url)` reads the page from the URL (`parsePageId` with `lowdefy.basePath`, the configured home at `/`), never `lowdefy.pageId`, which lags posthog-js's `history_change` pageview.
-- **Action argument.** `Actions.callAction` passes `registry.actionView` as `trace`: `{ subscribe, describeElement, describeChain, pageIdOf }`, without the engine-only `emit`, `wantsPayload` and `wantsState`.
+- **Describe functions.** `describeElement(element)` reads a live element as a journey target (the runner's resolution in reverse) and `describeChain(elementsChain)` reads a posthog-js `$elements_chain` into the same `{ page_id, block_id, block_type, row, column, text, nth, option, block_ids }`, with `nth` always `null`. Both follow `journeyTargetSelectors` in `@lowdefy/helpers`, the rules `server-dev`'s `runJourney` resolves targets by; the chain parser is `targetFromElementsChain` there, pure so it runs in Node. A click that reaches no interactive control has no text, so its block alone targets it; a dropdown option stands in for a control. `pathEntryOf(url)` reads the page from the URL (`parsePageId` with `lowdefy.basePath`, the configured home at `/`), never `lowdefy.pageId`, which lags posthog-js's `history_change` pageview, and looks the path up in the path memory (`lookupPath`) for `{ pageId, pathParams, instanceKey }`; `pageIdOf(url)` is its page id. `findBlockType` reads the context stored under the entry's `instanceKey`.
+- **Action argument.** `Actions.callAction` passes `registry.actionView` as `trace`: `{ subscribe, describeElement, describeChain, pageIdOf, pathEntryOf }`, without the engine-only `emit`, `wantsPayload` and `wantsState`.
 
 Tests: `src/trace/*.test.js`, `test/EventsTrace.test.js`, and `src/trace/describeElement.test.js`, which round-trips every fixture in `@lowdefy/e2e-utils/targets` through `resolveTargetInDocument` (the runner's resolution in jsdom) and `describeElement`.
 

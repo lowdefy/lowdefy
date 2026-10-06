@@ -42,6 +42,7 @@ const jsMap = {
   readsState: ({ state }) => state('a') + state('list.$.b'),
   readsGlobalAndUser: ({ lowdefyGlobal, user }) => `${lowdefyGlobal('g')} ${user('name')}`,
   readsLocation: ({ location }) => location('href'),
+  readsPathParams: ({ pathParams }) => pathParams('ticket_id'),
   pure: ({ args }) => args.x + 1,
   clock: () => Date.now(),
   columns: ({ state }) => [{ field: 'a', valueFormatter: () => state('a') }],
@@ -78,6 +79,7 @@ function createContext() {
     eventLog: [],
     id: 'page',
     jsMap,
+    pathParams: { ticket_id: '1234' },
     requests: { req: [{ loading: false, response: { data: [1] } }] },
     state: { a: 1, field: 'text', list: [{ b: 2 }, { b: 3 }] },
     websockets: {},
@@ -145,6 +147,8 @@ test.each([
   ['_media key', { _media: { key: 'width' } }, [['read', 'media:width']]],
   ['_media all', { _media: true }, [['read', 'media:*']]],
   ['_url_query', { _url_query: 'q' }, [['volatile', '_url_query']]],
+  ['_path_params (fixed for the instance)', { _path_params: 'ticket_id' }, []],
+  ['_path_params all', { _path_params: true }, []],
   ['_event_log', { _event_log: true }, [['untracked', '_event_log']]],
   ['_websocket', { _websocket: 'channel' }, [['untracked', '_websocket']]],
   [
@@ -172,6 +176,7 @@ test.each([
     ],
   ],
   ['_js location accessor', { _js: 'readsLocation' }, [['volatile', '_location']]],
+  ['_js pathParams accessor', { _js: 'readsPathParams' }, []],
   ['_js pure', { _js: { fn: 'pure', args: { x: 1 } } }, []],
   ['_js volatile', { _js: 'clock' }, [['volatile', '_js']]],
   ['_js returning functions', { _js: 'columns' }, [['untracked', '_js returned a function']]],
@@ -200,6 +205,14 @@ test.each([
   // Every call signals the recorder, so the engine can tell a pure block from a parser that does not
   // record.
   expect(events.length + pureCalls).toBeGreaterThan(0);
+});
+
+test('_path_params reads the page instance values through the WebParser', () => {
+  const { errors, output } = record({
+    input: { ticket: { _path_params: 'ticket_id' }, all: { _path_params: true } },
+  });
+  expect(errors).toEqual([]);
+  expect(output).toEqual({ ticket: '1234', all: { ticket_id: '1234' } });
 });
 
 test('_js accessor reads are recorded on the compiled path too', () => {

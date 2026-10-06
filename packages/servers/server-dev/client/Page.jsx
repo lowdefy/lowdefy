@@ -16,6 +16,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import Client from '@lowdefy/client';
+import { pageInstanceKey } from '@lowdefy/helpers';
 
 import BuildErrorPage from '../lib/client/BuildErrorPage.jsx';
 import InstallingPluginsPage from '../lib/client/InstallingPluginsPage.jsx';
@@ -28,12 +29,14 @@ const Page = ({
   config,
   jsMap,
   lowdefy,
-  pageId,
+  onPageShown,
+  path,
   resetContext,
   router,
   types,
 }) => {
-  const { data: pageConfig } = usePageConfig(pageId, router.basePath);
+  const { data } = usePageConfig(path, router.basePath);
+  const pageConfig = data?.pageConfig;
   // Past the config fetch (which suspends), this render shows the page the
   // URL names, so a navigation Routing marked has landed. Set during render,
   // like lowdefy.pageId (initLowdefyContext), so the two change together.
@@ -50,41 +53,42 @@ const Page = ({
     }
   }, [pageConfig?._warnings, lowdefy]);
 
-  // Tells the recorder which build this page's config was served under, so the
-  // pageview it holds for this route change carries it (recorder/createRecorder.js).
+  // Tells the in-page dev tools which page instance is on screen, from the fetched page.
   useEffect(() => {
     if (pageConfig) {
-      lowdefy._devPageRendered?.({ pageId, buildId: pageConfig._buildId ?? null });
+      onPageShown({
+        pageId: data.pageId,
+        pathParams: data.pathParams,
+        instanceKey: pageInstanceKey({
+          pageId: data.pageId,
+          path: pageConfig.path,
+          pathParams: data.pathParams,
+        }),
+      });
     }
-  }, [pageConfig, pageId, lowdefy]);
+  }, [pageConfig, data?.pageId, data?.pathParams, onPageShown]);
 
   // Full load to the sign-in page so it can return here after sign-in — an
   // effect, not a fetcher side effect, so the redirect re-fires if the same
   // cached result renders again.
   useEffect(() => {
-    if (pageConfig?.authRedirect) {
-      window.location.assign(pageConfig.authRedirect);
+    if (data?.authRedirect) {
+      window.location.assign(data.authRedirect);
     }
-  }, [pageConfig?.authRedirect]);
+  }, [data?.authRedirect]);
 
-  if (!pageConfig) {
+  if (!data) {
     router.replace({ pathname: '/404' });
     return '';
   }
-  if (pageConfig.authRedirect) {
-    return <RedirectingPage redirect={pageConfig.authRedirect} />;
+  if (data.authRedirect) {
+    return <RedirectingPage redirect={data.authRedirect} />;
   }
-  if (pageConfig.buildError) {
-    return (
-      <BuildErrorPage
-        errors={pageConfig.errors}
-        message={pageConfig.message}
-        source={pageConfig.source}
-      />
-    );
+  if (data.buildError) {
+    return <BuildErrorPage errors={data.errors} message={data.message} source={data.source} />;
   }
-  if (pageConfig.installing) {
-    return <InstallingPluginsPage packages={pageConfig.packages} />;
+  if (data.installing) {
+    return <InstallingPluginsPage packages={data.packages} />;
   }
 
   // Merge dynamic JS entries fetched after JIT build with the static jsMap
@@ -113,6 +117,8 @@ const Page = ({
       }}
       jsMap={mergedJsMap}
       lowdefy={lowdefy}
+      matchedPath={data.matchedPath}
+      pathParams={data.pathParams}
       resetContext={resetContext}
       router={router}
       stage="dev"

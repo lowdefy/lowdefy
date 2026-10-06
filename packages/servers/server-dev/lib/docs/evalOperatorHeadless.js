@@ -18,14 +18,23 @@ import { type } from '@lowdefy/helpers';
 
 import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
 import noBrowserError from './noBrowserError.js';
+import resolvePageInstance from './resolvePageInstance.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import withBrowserSlot from './withBrowserSlot.js';
 
 // Evaluates an operator expression against the live client state of a
-// headless Chromium tab navigated to the page's own route, using the page's
+// headless Chromium tab navigated to the page instance's own route (`pathParams`
+// fill a patterned page's placeholders), read under the instance key, using the page's
 // own WebParser instance so results match runtime exactly. Mirrors
 // Inspector.jsx's evalExpression (the live-tab equivalent).
-async function evalOperatorHeadless({ origin, pageId, expression, user, timeout = 15000 }) {
+async function evalOperatorHeadless({
+  origin,
+  pageId,
+  pathParams,
+  expression,
+  user,
+  timeout = 15000,
+}) {
   if (type.isNone(origin) || !type.isString(origin)) {
     return {
       error: `evalOperatorHeadless requires an "origin" string. Received ${JSON.stringify(
@@ -42,13 +51,27 @@ async function evalOperatorHeadless({ origin, pageId, expression, user, timeout 
     return { error: 'evalOperatorHeadless requires an "expression".' };
   }
 
+  const instance = resolvePageInstance({ pageId, pathParams });
+  if (!type.isUndefined(instance.error)) {
+    return { error: instance.error, invalidInput: true };
+  }
+
   return withBrowserSlot({
-    task: () => evalOperatorInBrowser({ origin, pageId, expression, user, timeout }),
+    task: () =>
+      evalOperatorInBrowser({ origin, pageId, pathParams, instance, expression, user, timeout }),
   });
 }
 
 // The part of evalOperatorHeadless that runs in the browser, inside a browser slot.
-async function evalOperatorInBrowser({ origin, pageId, expression, user, timeout }) {
+async function evalOperatorInBrowser({
+  origin,
+  pageId,
+  pathParams,
+  instance,
+  expression,
+  user,
+  timeout,
+}) {
   let browser;
   try {
     browser = await getBrowser();
@@ -56,21 +79,29 @@ async function evalOperatorInBrowser({ origin, pageId, expression, user, timeout
     return { error: noBrowserError(error) };
   }
 
-  const url = buildPageUrl({ origin, pageId });
+  const url = buildPageUrl({ origin, pageId, path: instance.path, pathParams });
 
   let context;
   try {
-    const opened = await openPage({ browser, origin, pageId, user, timeout });
+    const opened = await openPage({
+      browser,
+      origin,
+      pageId,
+      path: instance.path,
+      pathParams,
+      user,
+      timeout,
+    });
     context = opened.context;
     // Passed through as JSON so the page-side parser always receives a plain
     // value, matching how it arrives at Inspector.jsx's eval-request handler.
     const expressionJson = JSON.stringify(expression);
     const result = await opened.page.evaluate(
-      ({ id, exprJson }) => {
+      ({ id, instanceKey, path, exprJson }) => {
         const lowdefy = window.lowdefy;
-        const pageContext = lowdefy?.contexts?.[`page:${id}`];
+        const pageContext = lowdefy?.contexts?.[instanceKey];
         if (!pageContext) {
-          return { error: `No live context for page "${id}".` };
+          return { error: `No live context for page "${id}" at "/${path}".` };
         }
         const input = JSON.parse(exprJson);
         const { output, errors } = pageContext._internal.parser.parse({
@@ -82,7 +113,12 @@ async function evalOperatorInBrowser({ origin, pageId, expression, user, timeout
           errors: errors.map((error) => error.message),
         };
       },
-      { id: pageId, exprJson: expressionJson }
+      {
+        id: pageId,
+        instanceKey: instance.instanceKey,
+        path: instance.path,
+        exprJson: expressionJson,
+      }
     );
     if (!opened.ready) {
       return { ...result, ready: false, note: unsettledPageNote({ timeout }) };

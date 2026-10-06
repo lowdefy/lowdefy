@@ -32,7 +32,7 @@ import tabAvailable from './tabAvailable.js';
 // `invalidInput` marks the caller's own mistake rather than a failed render, so
 // the HTTP routes can answer 400 instead of a 502 that reads as "the renderer
 // broke, retry".
-function resolveSource({ name, pageId, source, user }) {
+function resolveSource({ name, pageId, pathParams, source, user }) {
   const hasUser = !type.isNone(user);
   if (hasUser && source === 'tab') {
     return {
@@ -41,7 +41,9 @@ function resolveSource({ name, pageId, source, user }) {
     };
   }
   return {
-    tryTab: source === 'tab' || (source === undefined && !hasUser && tabAvailable({ pageId })),
+    tryTab:
+      source === 'tab' ||
+      (source === undefined && !hasUser && tabAvailable({ pageId, pathParams })),
   };
 }
 

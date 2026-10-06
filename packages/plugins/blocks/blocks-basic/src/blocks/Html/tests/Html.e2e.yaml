@@ -64,5 +64,6 @@ blocks:
         <span id="enh_popover" data-popover="more">More</span>
         <div data-popover-content="more" hidden><b class="enh-popover-body">Popover body</b></div>
         <a id="enh_page_link" data-page-id="clickablehtml" data-url-query="tab=a">Clickable</a>
+        <a id="enh_path_link" data-page-id="anchor-path-target" data-path-params='{"space":"s","ticket_id":"1"}'>Ticket</a>
         <a id="enh_dot_link" href="/.//evil.example/x" data-link>Dot link</a>
         <span id="enh_copy_long" data-copy="npm install lowdefy-package-with-a-long-name --save-dev">Install</span>

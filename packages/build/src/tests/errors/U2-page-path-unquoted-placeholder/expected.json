@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Page \"post\" path should be a string."
+      ],
+      "errorContains": [
+        "A path that starts with a placeholder must be quoted in YAML, like path: '{space}/tickets/{ticket_id}'.",
+        "lowdefy.yaml:12"
+      ]
+    }
+  ]
+}

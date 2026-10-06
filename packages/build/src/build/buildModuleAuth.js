@@ -32,6 +32,17 @@ import isAuthConfigured from './buildAuth/isAuthConfigured.js';
 //   exceptions - they join an app public list, are no-ops under public: true,
 //   and never join a protected list (buildEntityAuth keeps them public via
 //   context.moduleAuthPublicPages in the protected modes).
+// An auth page is served at its path (buildModules has scoped it to the entry)
+// or, without one, at its id. A path that is not a string is refused by
+// buildRoutes.
+function moduleAuthPageUrl({ components, scopedId }) {
+  const page = (components.pages ?? []).find((candidate) => candidate.id === scopedId);
+  if (type.isString(page?.path)) {
+    return `/${page.path}`;
+  }
+  return `/${scopedId}`;
+}
+
 function buildModuleAuth({ components, context, moduleEntries }) {
   const contributingModules = moduleEntries
     .map((entry) => context.modules[entry.id])
@@ -91,7 +102,7 @@ function buildModuleAuth({ components, context, moduleEntries }) {
         );
       }
       roleClaims[role] = entryId;
-      const pagePath = `/${entryId}/${pageId}`;
+      const pagePath = moduleAuthPageUrl({ components, scopedId: `${entryId}/${pageId}` });
       components.auth.authPages = components.auth.authPages ?? {};
       components.auth.authPages[role] = pagePath;
       context.logger.info(

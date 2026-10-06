@@ -41,6 +41,7 @@ import isPortAvailable from './isPortAvailable.js';
 import linkDependenciesToWorkspace from './linkDependenciesToWorkspace.js';
 import linkWorkspaceDependencies from './linkWorkspaceDependencies.js';
 import listDataSets from './listDataSets.js';
+import matchPagePath from './matchPagePath.js';
 import parseDataSet from './parseDataSet.js';
 import parseIpRange from './parseIpRange.js';
 import parsePsStartTime from './parsePsStartTime.js';
@@ -121,6 +122,7 @@ export {
   parseDataSet,
   listFailurePaths,
   listRecordingFiles,
+  matchPagePath,
   normaliseBlockId,
   normaliseClickText,
   parseIpRange,

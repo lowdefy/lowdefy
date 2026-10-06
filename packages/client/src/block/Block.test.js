@@ -40,13 +40,21 @@ function createBlock({ events, triggerEvent }) {
   };
 }
 
-function renderBlock({ block }) {
+function renderBlock({ block, renderHead }) {
   const progress = { dispatch: jest.fn() };
   const lowdefy = { _internal: { progress } };
   const context = { _internal: { lowdefy, updaters: {} } };
-  return render(
-    <Block block={block} Blocks={{}} context={context} lowdefy={lowdefy} parentLoading={false} />
+  const result = render(
+    <Block
+      block={block}
+      Blocks={{}}
+      context={context}
+      lowdefy={lowdefy}
+      parentLoading={false}
+      renderHead={renderHead}
+    />
   );
+  return { ...result, context };
 }
 
 beforeEach(() => {
@@ -79,4 +87,17 @@ test('Block with an onMount event renders loading until the event finishes', asy
     finishMount();
   });
   expect(container.textContent).toBe('ready');
+});
+
+test('Block renders the head again with the new properties when the block updates', async () => {
+  const block = createBlock({ events: {}, triggerEvent: jest.fn(async () => {}) });
+  block.eval = { loading: false, properties: { title: 'Task' } };
+  const renderHead = ({ properties }) => <title>{properties.title}</title>;
+  const { container, context } = renderBlock({ block, renderHead });
+  expect(container.querySelector('title').textContent).toBe('Task');
+  await act(async () => {
+    block.eval = { loading: false, properties: { title: 'Loaded task' } };
+    context._internal.updaters.button();
+  });
+  expect(container.querySelector('title').textContent).toBe('Loaded task');
 });

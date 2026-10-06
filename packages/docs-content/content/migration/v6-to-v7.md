@@ -6,17 +6,18 @@ Lowdefy v7 draws every icon with [Lucide](https://lucide.dev) instead of [react-
 
 ## Summary of breaking changes
 
-| Change                                         | Impact                                 | Action                                                                   |
-| ---------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------ |
-| react-icons names are not built in             | Almost every app                       | Run `lowdefy upgrade`, or install the compatibility set                  |
-| An unknown icon name fails the build           | Apps with old or misspelled names      | Fix the name the error names                                             |
-| `_operator` names read at runtime need a list  | Apps with a runtime `_operator` name   | List the operators it may call in `operators`                            |
-| Dynamic blocks render only written blocks      | Apps returning stored blocks as data   | Use a policy with `ValidateDynamic`                                      |
-| Block and Ant Design icons are Lucide          | All apps                               | None; check screens that depend on the old look                          |
-| `theme.icons.aliases` targets are Lucide names | Apps with aliases                      | Drop the `Lu` prefix: `LuReceipt` becomes `Receipt`                      |
-| Icon hover titles come from the new names      | Apps that show Icon block hover titles | Set `title` where the text matters                                       |
-| `react-icons` is not a server dependency       | Plugins that import `react-icons`      | Render `components.Icon` with a name, or add `react-icons` to the plugin |
-| `ClickableHtml` fires only listed data events  | Apps that use `data-event`             | Run `lowdefy upgrade`, or list the events in `dataEvents`                |
+| Change                                          | Impact                                 | Action                                                                   |
+| ----------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------ |
+| react-icons names are not built in              | Almost every app                       | Run `lowdefy upgrade`, or install the compatibility set                  |
+| An unknown icon name fails the build            | Apps with old or misspelled names      | Fix the name the error names                                             |
+| `_operator` names read at runtime need a list   | Apps with a runtime `_operator` name   | List the operators it may call in `operators`                            |
+| Dynamic blocks render only written blocks       | Apps returning stored blocks as data   | Use a policy with `ValidateDynamic`                                      |
+| Block and Ant Design icons are Lucide           | All apps                               | None; check screens that depend on the old look                          |
+| `theme.icons.aliases` targets are Lucide names  | Apps with aliases                      | Drop the `Lu` prefix: `LuReceipt` becomes `Receipt`                      |
+| Icon hover titles come from the new names       | Apps that show Icon block hover titles | Set `title` where the text matters                                       |
+| `react-icons` is not a server dependency        | Plugins that import `react-icons`      | Render `components.Icon` with a name, or add `react-icons` to the plugin |
+| `ClickableHtml` fires only listed data events   | Apps that use `data-event`             | Run `lowdefy upgrade`, or list the events in `dataEvents`                |
+| `RenderNotification` `landingPage` is a page id | Apps with a notification landing page  | Pass the landing page's id, not its path                                 |
 
 ## Icon names
 
@@ -220,3 +221,23 @@ A `ClickableHtml` block now fires only the events its `dataEvents` property list
 ```
 
 An entry is an event name, or `{ name, confirm }`: with `confirm`, every click on the event asks first, whatever the markup says. The `clickable-html-data-events` codemod in `lowdefy upgrade` adds `dataEvents` to each block and reports HTML built from data that inserts values without escaping them. It only reaches the app's files: add `dataEvents` yourself to `ClickableHtml` blocks that [dynamic page content](/dynamic-page-content) builds at page load, for example from config stored in a database. See [HTML attributes](/html-attributes).
+
+## `RenderNotification` landing page
+
+`properties.landingPage` on a `RenderNotification` step names the landing page by its id, or as `{ pageId, pathParams }` when the page's `path` has placeholders. The step builds the landing URL from the page's path like any other notification link. A value that names no page, such as the v6 path string, fails the step with an error that says to pass the page id.
+
+```yaml
+# v6
+- id: render
+  type: RenderNotification
+  properties:
+    landingPage: /notifications/link
+
+# v7
+- id: render
+  type: RenderNotification
+  properties:
+    landingPage: notifications-link
+```
+
+See [Lowdefy APIs](/lowdefy-api).

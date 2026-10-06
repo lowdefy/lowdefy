@@ -98,6 +98,7 @@ function createPageRegistry({ components, context }) {
     registry.set(page.id, {
       pageId: page.id,
       auth: page.auth,
+      path: page.path,
       refId: isInline ? null : refId,
       refPath: sourceRef?.path ?? null,
       unresolvedVars: sourceRef?.unresolvedVars ?? null,

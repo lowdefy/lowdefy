@@ -30,6 +30,7 @@ export { default as createPageBuildContext } from './build/jit/createPageBuildCo
 export { default as pageBuildOwnedFields } from './build/jit/pageBuildOwnedFields.js';
 export { default as prepareJitContext } from './build/jit/prepareJitContext.js';
 export { default as createPageRegistry } from './build/jit/createPageRegistry.js';
+export { default as resolvePagePath } from './build/jit/resolvePagePath.js';
 export { default as check } from './check.js';
 export { default as createContext } from './createContext.js';
 export { default as createReadConfigFile } from './utils/readConfigFile.js';

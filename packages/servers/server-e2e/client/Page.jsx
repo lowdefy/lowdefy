@@ -14,13 +14,14 @@
   limitations under the License.
 */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 
 import Client from '@lowdefy/client';
 import createRouter from '@lowdefy/client/adapters/createRouter.js';
 import createLinkComponent from '@lowdefy/client/adapters/Link.js';
 import { createUrl } from '@lowdefy/client/adapters/url.js';
 import Head from '@lowdefy/client/adapters/Head.js';
+import { buildPagePath } from '@lowdefy/helpers';
 
 import actions from '../build/plugins/actions.js';
 import blockMetas from '../build/plugins/blockMetas.json';
@@ -29,10 +30,39 @@ import icons from '../build/plugins/icons.js';
 import operators from '../build/plugins/operators/client.js';
 import jsMap from '../build/plugins/operators/clientJsMap.js';
 
+import getShownPage from './getShownPage.js';
+
+// The path to fetch for a navigation. The app root shows the home page, and
+// /api/page/ with an empty path matches no page, so it fetches the home page's
+// own path.
+function getFetchPath({ path, rootConfig }) {
+  if (path !== '') {
+    return path;
+  }
+  const { home, pagePaths } = rootConfig;
+  return buildPagePath({
+    pageId: home.pageId,
+    path: pagePaths[home.pageId],
+    pathParams: home.pathParams,
+  });
+}
+
 // Replaces lib/client/Page.js. The first page renders from the config
-// embedded in the HTML; SPA navigations fetch /api/page/* and swap pageConfig.
+// embedded in the HTML; SPA navigations fetch /api/page/<path> and swap the
+// page. The server matches the path and answers with the page it shows, the
+// values it carries and the path it matched.
 function Page({ auth, config, lowdefy }) {
-  const [pageConfig, setPageConfig] = useState(config.pageConfig);
+  const [page, setPage] = useState({
+    matchedPath: config.matchedPath,
+    pageConfig: config.pageConfig,
+    pathParams: config.pathParams,
+  });
+  // The navigation listener is subscribed once, so it reads the shown page
+  // through a ref rather than the state its closure captured.
+  const pageRef = useRef(page);
+  // A re-render with the same config is how the page context picks up a new
+  // URL (getContext updates a memoized context on every render).
+  const [, rerender] = useReducer((count) => count + 1, 0);
 
   const routerRef = useRef(null);
   if (!routerRef.current) {
@@ -50,33 +80,38 @@ function Page({ auth, config, lowdefy }) {
   const latestNavRef = useRef(0);
 
   useEffect(() => {
-    const unsubscribe = router.subscribe(async ({ pageId }) => {
+    const unsubscribe = router.subscribe(async ({ path, search }) => {
       const token = ++latestNavRef.current;
-      const targetPageId = pageId ?? config.rootConfig.home.pageId;
+      // The path the shown instance was matched on shows the same page and
+      // values whatever the query, so it needs no fetch. Another spelling of
+      // the same values fetches and lands on the same instance. Dynamic pages
+      // re-resolve per navigation.
+      if (path === pageRef.current.matchedPath && pageRef.current.pageConfig.dynamic !== true) {
+        rerender();
+        return;
+      }
+      const fetchPath = getFetchPath({ path, rootConfig: config.rootConfig });
       try {
         // Forward the current query string so server-side Dynamic block
         // resolution sees the same urlQuery as an initial HTML load.
-        const res = await fetch(
-          `${router.basePath}/api/page/${targetPageId}${window.location.search}`
-        );
+        const res = await fetch(`${router.basePath}/api/page/${fetchPath}${search}`);
         if (!res.ok) {
           if (token !== latestNavRef.current) return;
-          if (targetPageId !== '404') {
+          if (path !== '404') {
             router.replace({ pathname: '/404' });
           }
           return;
         }
-        const { pageConfig: nextPageConfig } = await res.json();
+        const response = await res.json();
         if (token !== latestNavRef.current) return;
-        setPageConfig(nextPageConfig);
+        const nextPage = getShownPage({ path, response });
+        pageRef.current = nextPage;
+        setPage(nextPage);
       } catch (error) {
         // Network failure on SPA navigation — fall back to a full page load.
         if (token !== latestNavRef.current) return;
         window.location.assign(
-          createUrl({
-            basePath: router.basePath,
-            pathname: targetPageId === config.rootConfig.home.pageId ? '/' : `/${targetPageId}`,
-          })
+          createUrl({ basePath: router.basePath, pathname: `/${path}`, query: search.slice(1) })
         );
       }
     });
@@ -88,11 +123,13 @@ function Page({ auth, config, lowdefy }) {
       auth={auth}
       Components={{ Head, Link }}
       config={{
-        pageConfig,
+        pageConfig: page.pageConfig,
         rootConfig: config.rootConfig,
       }}
       jsMap={jsMap}
       lowdefy={lowdefy}
+      matchedPath={page.matchedPath}
+      pathParams={page.pathParams}
       router={router}
       stage="e2e"
       types={{

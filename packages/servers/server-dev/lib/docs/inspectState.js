@@ -22,10 +22,11 @@ import resolveSource from './resolveSource.js';
 // headless-only. Falls back to headless whenever the tab path isn't usable
 // (no tab connected, or `source: 'tab'` was requested but it errored) so
 // agents always get an answer.
-async function inspectState({ origin, pageId, source, user }) {
+async function inspectState({ origin, pageId, pathParams, source, user }) {
   const { tryTab, error, invalidInput } = resolveSource({
     name: 'inspectState',
     pageId,
+    pathParams,
     source,
     user,
   });
@@ -34,13 +35,13 @@ async function inspectState({ origin, pageId, source, user }) {
   }
 
   if (tryTab) {
-    const result = await inspectStateFromTab({ pageId });
+    const result = await inspectStateFromTab({ pageId, pathParams });
     if (!result?.error) {
       return { ...result, source: 'tab' };
     }
   }
 
-  const result = await inspectStateHeadless({ origin, pageId, user });
+  const result = await inspectStateHeadless({ origin, pageId, pathParams, user });
   return { ...result, source: 'headless' };
 }
 

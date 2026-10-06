@@ -1,0 +1,16 @@
+# U3: Placeholder on the Home Page
+# =================================
+# Tests that the config.homePageId page cannot have placeholders in its path.
+#
+# Expected error:
+#   [Config Error] Page "dashboard" is the home page ("config.homePageId") ...
+
+lowdefy: local
+
+config:
+  homePageId: dashboard
+
+pages:
+  - id: dashboard
+    type: Box
+    path: '{space}/dashboard'

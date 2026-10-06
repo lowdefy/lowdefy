@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import parsePathParamsParam from './parsePathParamsParam.js';
 import parseUserParam from './parseUserParam.js';
 import screenshotPage from '../../../lib/docs/screenshotPage.js';
 import validateViewport from '../../../lib/docs/validateViewport.js';
@@ -86,9 +87,17 @@ async function docsScreenshotHandler(c) {
     return c.json({ error: userError }, 400);
   }
 
+  const { pathParams, error: pathParamsError } = parsePathParamsParam({
+    value: c.req.query('pathParams'),
+  });
+  if (pathParamsError) {
+    return c.json({ error: pathParamsError }, 400);
+  }
+
   const result = await screenshotPage({
     origin,
     pageId,
+    pathParams,
     fullPage,
     clip,
     scrollX,
@@ -99,7 +108,9 @@ async function docsScreenshotHandler(c) {
     colorScheme,
   });
   if (result.error) {
-    return c.json({ error: result.error }, 502);
+    // pathParams the page cannot be opened with are the caller's to fix, not a
+    // failed render.
+    return c.json({ error: result.error }, result.invalidInput ? 400 : 502);
   }
   const buffer = Buffer.from(result.data, 'base64');
   return c.body(buffer, 200, { 'Content-Type': result.mimeType });

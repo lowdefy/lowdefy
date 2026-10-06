@@ -23,6 +23,13 @@ import flushFsEvents from '../../test-utils/flushFsEvents.mjs';
 import spyOnChokidar from '../../test-utils/spyOnChokidar.mjs';
 import waitFor from '../../test-utils/waitFor.mjs';
 
+// The path each page file declares now, as resolvePagePath would read it. A
+// page left out declares no path, so its path is its id.
+const declaredPaths = new Map();
+jest.unstable_mockModule('@lowdefy/build/dev', () => ({
+  resolvePagePath: jest.fn(async ({ pageId }) => declaredPaths.get(pageId) ?? pageId),
+}));
+
 const watchers = spyOnChokidar();
 const { default: lowdefyBuildWatcher } = await import('./lowdefyBuildWatcher.mjs');
 
@@ -95,6 +102,11 @@ beforeEach(async () => {
     JSON.stringify(['pages.yaml', path.join(localModuleRoot, 'menus.yaml')])
   );
   write(
+    path.join(buildDir, 'routes.json'),
+    JSON.stringify([{ pageId: 'home', path: 'home', auth: { public: true } }])
+  );
+  declaredPaths.clear();
+  write(
     path.join(buildDir, 'refMap.json'),
     JSON.stringify({
       1: { parent: null },
@@ -123,6 +135,7 @@ beforeEach(async () => {
     logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
     buildActivity: { setBusy: jest.fn() },
     lowdefyBuild: jest.fn(async () => {}),
+    pageRegistry: new Map([['home', { pageId: 'home', refPath: 'pages/home.yaml' }]]),
     options: { watch: [], watchIgnore: [] },
     reloadClients: jest.fn(async () => {}),
     syncServer: jest.fn(async () => {}),
@@ -148,6 +161,17 @@ test('a page file edit in an app under a dot-folder invalidates pages', async ()
   });
   expect(context.lowdefyBuild).not.toHaveBeenCalled();
   expect(context.syncServer).not.toHaveBeenCalled();
+});
+
+test('a page file edit that changes the page path rebuilds the config', async () => {
+  await startWatcher();
+  declaredPaths.set('home', 'start');
+  fs.appendFileSync(path.join(configDir, 'pages', 'home.yaml'), 'path: start\n');
+
+  await waitFor(() => context.lowdefyBuild.mock.calls.length === 1, {
+    description: 'a config build',
+  });
+  await waitFor(invalidated, { description: 'the pages to be invalidated' });
 });
 
 test('adding a page to the pages list rebuilds the config', async () => {

@@ -44,8 +44,19 @@ const blockSchemas = {
   },
 };
 
+const routes = [
+  { pageId: 'thanks', path: 'thanks' },
+  { pageId: 'admin', path: 'admin' },
+];
+
 function check(blocks, overrides = {}) {
-  return checkPolicy({ blocks, policy: { ...policy, ...overrides }, blockMetas, blockSchemas });
+  return checkPolicy({
+    routes,
+    blocks,
+    policy: { ...policy, ...overrides },
+    blockMetas,
+    blockSchemas,
+  });
 }
 
 const wideEvents = { limits: { ...policy.limits, actionsPerEvent: 10 } };
@@ -526,6 +537,7 @@ const markedSchemas = {
 
 function checkMarked(blocks) {
   return checkPolicy({
+    routes,
     blocks,
     policy: { ...policy, blocks: ['Search', 'Tile'] },
     blockMetas,
@@ -582,6 +594,7 @@ test.each([
   'checkPolicy judges a described but unmarked URL property with %s by its key',
   (_, properties) => {
     const errors = checkPolicy({
+      routes,
       blocks: [{ id: 'a', type: 'Card', properties }],
       policy: { ...policy, blocks: ['Card'] },
       blockMetas,
@@ -600,6 +613,7 @@ test.each([
   ['a newline inside a script scheme', 'java\nscript:alert(1)'],
 ])('checkPolicy finds a URL in text with %s', (_, note) => {
   const errors = checkPolicy({
+    routes,
     blocks: [{ id: 'a', type: 'Card', properties: { note } }],
     policy: { ...policy, blocks: ['Card'] },
     blockMetas,
@@ -610,6 +624,7 @@ test.each([
 
 test('checkPolicy allows an app path with surrounding whitespace where a page is listed', () => {
   const errors = checkPolicy({
+    routes,
     blocks: [{ id: 'a', type: 'Card', properties: { href: ' /thanks\n' } }],
     policy: { ...policy, blocks: ['Card'] },
     blockMetas,
@@ -621,6 +636,7 @@ test('checkPolicy allows an app path with surrounding whitespace where a page is
 test('checkPolicy treats a key that names no client operator as data', () => {
   const clientOperators = new Set(['_state', '_if', '_user']);
   const errors = checkPolicy({
+    routes,
     blocks: [
       {
         id: 'b',

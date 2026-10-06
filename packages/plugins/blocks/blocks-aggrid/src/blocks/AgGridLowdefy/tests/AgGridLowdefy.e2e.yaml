@@ -503,6 +503,49 @@ blocks:
               - _state: aggridlowdefy_link_event
           else: ''
 
+  - id: aggridlowdefy_cell_path_link
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: ID
+          field: _id
+          cell:
+            type: link
+            pageId: aggrid-path-target
+            pathParams:
+              space: space
+              ticket_id: _id
+        - headerName: Assignee
+          field: name
+          cell:
+            type: avatar
+            nameField: name
+            link:
+              pageId: aggrid-path-target
+              pathParams:
+                space: space
+                ticket_id: _id
+      rowData:
+        - { _id: TSK-001, space: support, name: Alice Johnson }
+    events:
+      onCellLink:
+        - id: capture_path_link
+          type: SetState
+          params:
+            aggridlowdefy_path_link_event:
+              _string.concat:
+                - _event: link.pathParams.space
+                - /
+                - _event: link.pathParams.ticket_id
+
+  - id: aggridlowdefy_path_link_display
+    type: Span
+    properties:
+      content:
+        _if_none:
+          - _state: aggridlowdefy_path_link_event
+          - ''
+
   - id: aggridlowdefy_cell_date
     type: AgGridLowdefy
     properties:

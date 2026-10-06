@@ -16,6 +16,7 @@
 
 import addNestedEndpoints from './addNestedEndpoints.js';
 import addWriteFlags from './addWriteFlags.js';
+import matchExercisedPages from './matchExercisedPages.js';
 import mergeNetworkSnapshots from './mergeNetworkSnapshots.js';
 
 // What one journey run touched, across all of its actors: the network path
@@ -35,7 +36,10 @@ async function collectExercised({ snapshots, observed, readConfigFile, requestSc
     requestSchemas,
   });
   return {
-    pages: network.pages,
+    pages: matchExercisedPages({
+      routes: await readConfigFile('routes.json'),
+      pagePaths: network.pagePaths,
+    }),
     appEvents: network.appEvents,
     requests: withWrites.requests,
     endpoints: withWrites.endpoints,

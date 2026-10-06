@@ -16,9 +16,20 @@
 
 import { get, type } from '@lowdefy/helpers';
 
+// Each string value read from the row as a field path (the ag-grid link cell
+// convention), other values as written.
+function resolveRowPaths({ paths, row }) {
+  const resolved = {};
+  Object.keys(paths).forEach((key) => {
+    const path = paths[key];
+    resolved[key] = type.isString(path) ? get(row, path) : path;
+  });
+  return resolved;
+}
+
 // A Link config for one row: `pageId`, `href`, `home`, `back`, `newTab` and
-// `input` as written, and each `urlQuery` value read from the row as a field
-// path (the ag-grid link cell convention).
+// `input` as written, and each `urlQuery` and `pathParams` value read from the
+// row as a field path.
 function resolveLink({ link, row }) {
   if (!type.isObject(link)) return undefined;
   const resolved = {
@@ -30,11 +41,10 @@ function resolveLink({ link, row }) {
     input: link.input,
   };
   if (type.isObject(link.urlQuery)) {
-    resolved.urlQuery = {};
-    Object.keys(link.urlQuery).forEach((key) => {
-      const path = link.urlQuery[key];
-      resolved.urlQuery[key] = type.isString(path) ? get(row, path) : path;
-    });
+    resolved.urlQuery = resolveRowPaths({ paths: link.urlQuery, row });
+  }
+  if (type.isObject(link.pathParams)) {
+    resolved.pathParams = resolveRowPaths({ paths: link.pathParams, row });
   }
   return resolved;
 }

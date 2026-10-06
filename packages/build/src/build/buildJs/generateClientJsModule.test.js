@@ -21,7 +21,7 @@ import generateJsFile from './generateJsFile.js';
 // through generateClientJsModule. The wire format the client compiles must not
 // drift from what writeJs produced, so pin it to generateJsFile with the exact
 // client prototype writeJs used before the single-source refactor.
-const CLIENT_PROTOTYPE = `{ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user }`;
+const CLIENT_PROTOTYPE = `{ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, pathParams, request, state, urlQuery, user }`;
 
 test('generateClientJsModule matches generateJsFile with the client prototype', () => {
   const map = {
@@ -65,6 +65,14 @@ test('generateClientJsModule marks functions that reference volatile globals', (
   expect(jsMap.pure.volatile).toBeUndefined();
   expect(jsMap.pure({ state: () => 1 })).toBe(2);
   expect(typeof jsMap.clock({})).toBe('number');
+});
+
+test('generateClientJsModule gives functions a pathParams accessor', () => {
+  const jsMap = compileModule(
+    generateClientJsModule({ ticket: "return pathParams('ticket_id');" })
+  );
+  const values = { ticket_id: '1234' };
+  expect(jsMap.ticket({ pathParams: (key) => values[key] })).toBe('1234');
 });
 
 test('generateClientJsModule keeps export default as the first statement', () => {

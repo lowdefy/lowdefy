@@ -1493,6 +1493,9 @@
       "~arr": [],
       "~k": "2p"
     },
+    "linkPaths": {
+      "~k": "11"
+    },
     "requests": {
       "~arr": [],
       "~k": "2q"
@@ -1534,6 +1537,9 @@
       "~arr": [],
       "~k": "23"
     },
+    "linkPaths": {
+      "~k": "p"
+    },
     "requests": {
       "~arr": [],
       "~k": "24"
@@ -1553,6 +1559,9 @@
     "subscriptions": {
       "~arr": [],
       "~k": "27"
+    },
+    "linkPaths": {
+      "~k": "t"
     },
     "requests": {
       "~arr": [],
@@ -1595,6 +1604,9 @@
       "~arr": [],
       "~k": "2d"
     },
+    "linkPaths": {
+      "~k": "u"
+    },
     "requests": {
       "~arr": [],
       "~k": "2e"
@@ -1614,6 +1626,9 @@
     "subscriptions": {
       "~arr": [],
       "~k": "2h"
+    },
+    "linkPaths": {
+      "~k": "y"
     },
     "requests": {
       "~arr": [],
@@ -1635,6 +1650,9 @@
       "~arr": [],
       "~k": "1t"
     },
+    "linkPaths": {
+      "~k": "n"
+    },
     "requests": {
       "~arr": [],
       "~k": "1u"
@@ -1654,6 +1672,9 @@
     "subscriptions": {
       "~arr": [],
       "~k": "1x"
+    },
+    "linkPaths": {
+      "~k": "o"
     },
     "requests": {
       "~arr": [],
@@ -1690,6 +1711,10 @@
               "urlQuery": {
                 "type": "object",
                 "description": "URL query parameters."
+              },
+              "pathParams": {
+                "type": "object",
+                "description": "Values for the placeholders in the page's path, by placeholder name."
               },
               "input": {
                 "type": "object",
@@ -1799,7 +1824,7 @@
         },
         {
           "id": "html-hardcoded-links",
-          "message": "Link to app pages with <a data-page-id=\"page-id\" data-url-query=\"key=value\">, not <a href=\"/page-id?key=value\">. A hard-coded href reloads the whole app on click, ignores basePath and is not checked by the build. Use data-new-tab, not target=\"_blank\", which sanitising removes.",
+          "message": "Link to app pages with <a data-page-id=\"page-id\" data-url-query=\"key=value\"> (and data-path-params='{\"name\":\"value\"}' for a page whose path has placeholders), not <a href=\"/page-id?key=value\">. A hard-coded href reloads the whole app on click, ignores basePath and is not checked by the build. Use data-new-tab, not target=\"_blank\", which sanitising removes.",
           "see": "concepts/html-attributes"
         },
         {
@@ -2201,6 +2226,13 @@
             "urlQuery": {
               "type": "object",
               "description": "When the link is clicked, pass data as a url query to the next page.",
+              "docs": {
+                "displayType": "yaml"
+              }
+            },
+            "pathParams": {
+              "type": "object",
+              "description": "Values for the placeholders in the path of the page given by pageId, like `{ ticket_id: '1234' }` for `tickets/{ticket_id}`.",
               "docs": {
                 "displayType": "yaml"
               }
@@ -3242,7 +3274,7 @@
           "properties": {
             "html": {
               "type": "string",
-              "description": "Content to be rendered as Html. It understands these attributes: data-icon=\"edit\" renders an icon (a semantic name like edit, delete or warning, or a Lucide icon name like Pencil); data-tooltip=\"Text\" shows a tooltip on hover and focus; data-popover=\"id\" toggles a popover showing the element with data-popover-content=\"id\" (mark it hidden); <a data-page-id=\"page-id\" data-url-query=\"key=value\"> links to an app page without reloading (never hard-code href=\"/page\"); data-link opts an existing app-relative <a href=\"/path\"> into the same navigation; data-new-tab opens a link in a new tab (target is stripped by sanitising); data-tag=\"success\" renders a tinted status tag and data-status=\"success\" a status dot (tones success, processing, info, warning, error, default, an antd preset colour, a CSS colour, or any other value to seed a stable colour); <time datetime=\"ISO\" data-time=\"relative\"> renders a date as relative, date, datetime, time or a dayjs format; data-format=\"currency\" data-currency=\"USD\" formats the element's number as number, currency, percent, compact or bytes; data-avatar=\"Jane Doe\" renders initials (on an <img>, a fallback for a broken image; never use an avatar image service); data-copy adds a copy button for the element's text or the attribute's value; data-truncate=\"2\" clamps block text to 1–6 lines with the full text in a tooltip when cut off; data-tone=\"secondary\" colours text with a theme tone (secondary, tertiary, quaternary, success, warning, error, info). See the HTML attributes docs page.",
+              "description": "Content to be rendered as Html. It understands these attributes: data-icon=\"edit\" renders an icon (a semantic name like edit, delete or warning, or a Lucide icon name like Pencil); data-tooltip=\"Text\" shows a tooltip on hover and focus; data-popover=\"id\" toggles a popover showing the element with data-popover-content=\"id\" (mark it hidden); <a data-page-id=\"page-id\" data-url-query=\"key=value\"> links to an app page without reloading (never hard-code href=\"/page\"), with data-path-params='{\"name\":\"value\"}' (a JSON object) for a page whose path has placeholders; data-link opts an existing app-relative <a href=\"/path\"> into the same navigation; data-new-tab opens a link in a new tab (target is stripped by sanitising); data-tag=\"success\" renders a tinted status tag and data-status=\"success\" a status dot (tones success, processing, info, warning, error, default, an antd preset colour, a CSS colour, or any other value to seed a stable colour); <time datetime=\"ISO\" data-time=\"relative\"> renders a date as relative, date, datetime, time or a dayjs format; data-format=\"currency\" data-currency=\"USD\" formats the element's number as number, currency, percent, compact or bytes; data-avatar=\"Jane Doe\" renders initials (on an <img>, a fallback for a broken image; never use an avatar image service); data-copy adds a copy button for the element's text or the attribute's value; data-truncate=\"2\" clamps block text to 1–6 lines with the full text in a tooltip when cut off; data-tone=\"secondary\" colours text with a theme tone (secondary, tertiary, quaternary, success, warning, error, info). See the HTML attributes docs page.",
               "docs": {
                 "displayType": "text-area"
               }
@@ -7336,6 +7368,64 @@
       }
     }
   },
+  "routes.json": [
+    {
+      "pageId": "home",
+      "path": "home",
+      "auth": {
+        "public": true,
+        "~k": "1s"
+      }
+    },
+    {
+      "pageId": "nav/dashboard",
+      "path": "nav/dashboard",
+      "auth": {
+        "public": true,
+        "~k": "1w"
+      }
+    },
+    {
+      "pageId": "app-a/dashboard",
+      "path": "app-a/dashboard",
+      "auth": {
+        "public": true,
+        "~k": "20"
+      }
+    },
+    {
+      "pageId": "app-a/settings",
+      "path": "app-a/settings",
+      "auth": {
+        "public": true,
+        "~k": "26"
+      }
+    },
+    {
+      "pageId": "app-b/dashboard",
+      "path": "app-b/dashboard",
+      "auth": {
+        "public": true,
+        "~k": "2a"
+      }
+    },
+    {
+      "pageId": "app-b/reports",
+      "path": "app-b/reports",
+      "auth": {
+        "public": true,
+        "~k": "2g"
+      }
+    },
+    {
+      "pageId": "404",
+      "path": "404",
+      "auth": {
+        "public": true,
+        "~k": "2o"
+      }
+    }
+  ],
   "tailwind-candidates.css": "/* Generated by Lowdefy build — rewritten on page changes to trigger CSS recompilation */\n",
   "theme.json": {
     "darkMode": "system",

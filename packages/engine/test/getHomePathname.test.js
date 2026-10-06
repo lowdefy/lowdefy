@@ -24,7 +24,9 @@ test('getHomePathname returns the app root when a homePageId is configured', () 
 
 test('getHomePathname returns the menu-derived pageId when no homePageId is configured', () => {
   expect(
-    getHomePathname({ lowdefy: { home: { configured: false, pageId: 'first-page' } } })
+    getHomePathname({
+      lowdefy: { home: { configured: false, pageId: 'first-page' }, pagePaths: {} },
+    })
   ).toEqual('/first-page');
 });
 
@@ -42,4 +44,15 @@ test('getHomePathname returns undefined when there is no home config at all', ()
 
 test('getHomePathname ignores a non-string pageId', () => {
   expect(getHomePathname({ lowdefy: { home: { configured: false, pageId: 42 } } })).toBeUndefined();
+});
+
+test('getHomePathname builds a patterned home page with its values', () => {
+  expect(
+    getHomePathname({
+      lowdefy: {
+        home: { configured: false, pageId: 'board', pathParams: { board: 'main' } },
+        pagePaths: { board: 'boards/{board}' },
+      },
+    })
+  ).toEqual('/boards/main');
 });

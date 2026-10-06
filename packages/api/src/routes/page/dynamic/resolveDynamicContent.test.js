@@ -201,6 +201,34 @@ test('resolveDynamicContent passes pageId, blockId and urlQuery in the payload',
   expect(generated.properties.blockId).toBe('section_1');
 });
 
+test('resolveDynamicContent passes pathParams in the payload', async () => {
+  const dynamicBlock = makeDynamicBlock();
+  const pageConfig = makePageConfig(dynamicBlock);
+  const context = createTestContext({
+    files: baseFiles({
+      resolve_section: {
+        routine: {
+          ':return': {
+            blocks: [
+              {
+                id: 'generated',
+                type: 'Html',
+                properties: { html: { _payload: 'pathParams.ticket_id' } },
+              },
+            ],
+          },
+        },
+      },
+    }),
+  });
+  await resolveDynamicContent(context, {
+    pageConfig,
+    pathParams: { ticket_id: '1234' },
+    urlQuery: {},
+  });
+  expect(dynamicBlock.slots.content.blocks[0].properties.html).toBe('1234');
+});
+
 test('resolveDynamicContent unescapes double-underscore operators for client evaluation', async () => {
   const dynamicBlock = makeDynamicBlock();
   const pageConfig = makePageConfig(dynamicBlock);

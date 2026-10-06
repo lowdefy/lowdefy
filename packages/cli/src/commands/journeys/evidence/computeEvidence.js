@@ -83,15 +83,27 @@ function countFlow({ entry, segmentsByMonth, dayCounts }) {
 
 // Dev segments hold the developer's own text: they are read by the same rule
 // as the journeys they back, so non-config text on both sides reads as none.
-function readDevSequences({ segments, isConfigText }) {
+function readDevSequences({ segments, routeTable, isConfigText }) {
   return segments.map((segment) => ({
     ...segment,
-    sequence: journeySequence({ pageId: segment.page_id, steps: segment.steps, isConfigText }),
+    sequence: journeySequence({
+      pageId: segment.page_id,
+      steps: segment.steps,
+      routeTable,
+      isConfigText,
+    }),
   }));
 }
 
-function productionEvidence({ journey, segmentsByMonth, dayCounts, today, isConfigText }) {
-  const { live, deprecated } = reconcileFlows({ journey, today, isConfigText });
+function productionEvidence({
+  journey,
+  segmentsByMonth,
+  dayCounts,
+  today,
+  routeTable,
+  isConfigText,
+}) {
+  const { live, deprecated } = reconcileFlows({ journey, today, routeTable, isConfigText });
   const production = {
     sequence: live.sequence,
     pageId: live.pageId,
@@ -124,16 +136,18 @@ function isEqual(a, b) {
 //   months read (selectMonthsToRead) and `segments` their compiled segments.
 //   `dev.recordings` counts the dev segments that back the journey. A
 //   mutation report sets `mutation` for the journeys it names only.
+// - routeTable: the build's routes the segments' sequences were read with,
+//   which journeys and dev segments are read with too.
 // - isConfigText: the app's config text rule; journey click text, and dev
 //   segment text, count only when it is config text, and the sequence id and
 //   flow lines read journeys the same way.
-function computeEvidence({ journeys, sources, today, isConfigText }) {
+function computeEvidence({ journeys, sources, routeTable, today, isConfigText }) {
   const segmentsByMonth = type.isNone(sources.production)
     ? undefined
     : bucketByMonth(sources.production);
   const devSegments = type.isNone(sources.dev)
     ? null
-    : readDevSequences({ segments: sources.dev.segments, isConfigText });
+    : readDevSequences({ segments: sources.dev.segments, routeTable, isConfigText });
   return journeys.map(({ filePath, file, journeyIndex, journey }) => {
     const before = journey.evidence;
     const computed = {};
@@ -143,6 +157,7 @@ function computeEvidence({ journeys, sources, today, isConfigText }) {
         segmentsByMonth,
         dayCounts: sources.production.dayCounts,
         today,
+        routeTable,
         isConfigText,
       });
     }
@@ -153,6 +168,7 @@ function computeEvidence({ journeys, sources, today, isConfigText }) {
           sequence: journeySequence({
             pageId: journey.pageId,
             steps: journey.steps,
+            routeTable,
             isConfigText,
           }),
           segments: devSegments,

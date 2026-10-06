@@ -35,6 +35,7 @@ async function checkDynamicContent(
       blockMetas: artifacts.blockMetas,
       blockSchemas: artifacts.blockSchemas,
       clientOperators: artifacts.clientOperators,
+      routes: artifacts.routes,
     });
     if (errors.length > 0) {
       return { errors };

@@ -43,26 +43,38 @@ afterEach(() => {
 test('fetchPageConfig compiles inlined _jsEntries module text into a { hash: fn } object', async () => {
   global.fetch = jest.fn(async () =>
     mockJsonResponse({
-      id: 'p',
-      _jsEntries: "export default { 'h1': ({ args }) => { return args.x + 1; } };",
-      _dynamicIcons: { Zap: { node: [['path', { d: 'M0 0' }]] } },
+      pageId: 'p',
+      pathParams: {},
+      matchedPath: 'p',
+      pageConfig: {
+        id: 'page:p',
+        _jsEntries: "export default { 'h1': ({ args }) => { return args.x + 1; } };",
+        _dynamicIcons: { Zap: { node: [['path', { d: 'M0 0' }]] } },
+      },
+    })
+  );
+
+  const { pageConfig } = await fetchPageConfig('http://localhost/api/page/p');
+
+  expect(typeof pageConfig._jsEntries.h1).toBe('function');
+  expect(pageConfig._jsEntries.h1({ args: { x: 1 } })).toBe(2);
+  // _dynamicIcons passes through untouched.
+  expect(pageConfig._dynamicIcons).toEqual({ Zap: { node: [['path', { d: 'M0 0' }]] } });
+});
+
+test('fetchPageConfig issues only the page-config request — no /api/js or /api/icons fetch', async () => {
+  global.fetch = jest.fn(async () =>
+    mockJsonResponse({
+      pageId: 'p',
+      pathParams: {},
+      matchedPath: 'p',
+      pageConfig: { id: 'page:p' },
     })
   );
 
   const data = await fetchPageConfig('http://localhost/api/page/p');
 
-  expect(typeof data._jsEntries.h1).toBe('function');
-  expect(data._jsEntries.h1({ args: { x: 1 } })).toBe(2);
-  // _dynamicIcons passes through untouched.
-  expect(data._dynamicIcons).toEqual({ Zap: { node: [['path', { d: 'M0 0' }]] } });
-});
-
-test('fetchPageConfig issues only the page-config request — no /api/js or /api/icons fetch', async () => {
-  global.fetch = jest.fn(async () => mockJsonResponse({ id: 'p' }));
-
-  const data = await fetchPageConfig('http://localhost/api/page/p');
-
-  expect(data._jsEntries).toBeUndefined();
+  expect(data.pageConfig._jsEntries).toBeUndefined();
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch.mock.calls[0][0]).toBe('http://localhost/api/page/p');
 });
@@ -80,7 +92,7 @@ test('getPageConfigKey leaves the query string out of a page not known to be dyn
 
 test('getPageConfigKey keeps a static page keyed without the query after its fetch', () => {
   const pageUrl = '/api/page/static-fetched';
-  recordDynamicPage({ data: { id: 'page:static-fetched' }, pageUrl });
+  recordDynamicPage({ data: { pageConfig: { id: 'page:static-fetched' } }, pageUrl });
   getNavVersion.mockReturnValue(3);
 
   expect(getPageConfigKey({ pageUrl, search: '?q=1' })).toEqual([pageUrl, 0]);
@@ -90,7 +102,7 @@ test('getPageConfigKey keeps the static key for the navigation that found a page
   const pageUrl = '/api/page/dynamic-first';
   getNavVersion.mockReturnValue(4);
   const beforeFetch = getPageConfigKey({ pageUrl, search: '?q=1' });
-  recordDynamicPage({ data: { dynamic: true }, pageUrl });
+  recordDynamicPage({ data: { pageConfig: { dynamic: true } }, pageUrl });
   const afterFetch = getPageConfigKey({ pageUrl, search: '?q=1' });
 
   expect(afterFetch).toEqual(beforeFetch);
@@ -99,11 +111,11 @@ test('getPageConfigKey keeps the static key for the navigation that found a page
 test('getPageConfigKey keys a known dynamic page on the query and navigation version', () => {
   const pageUrl = '/api/page/dynamic-later';
   getNavVersion.mockReturnValue(5);
-  recordDynamicPage({ data: { dynamic: true }, pageUrl });
+  recordDynamicPage({ data: { pageConfig: { dynamic: true } }, pageUrl });
   getNavVersion.mockReturnValue(6);
   const sixth = getPageConfigKey({ pageUrl, search: '?q=1' });
   // A later fetch of the known dynamic page must not move it back to the static key.
-  recordDynamicPage({ data: { dynamic: true }, pageUrl });
+  recordDynamicPage({ data: { pageConfig: { dynamic: true } }, pageUrl });
   const sixthAfterFetch = getPageConfigKey({ pageUrl, search: '?q=1' });
   getNavVersion.mockReturnValue(7);
   const seventh = getPageConfigKey({ pageUrl, search: '?q=1' });
@@ -116,10 +128,31 @@ test('getPageConfigKey keys a known dynamic page on the query and navigation ver
 test('getPageConfigKey returns to the static key when a dynamic page is no longer dynamic', () => {
   const pageUrl = '/api/page/dynamic-removed';
   getNavVersion.mockReturnValue(8);
-  recordDynamicPage({ data: { dynamic: true }, pageUrl });
+  recordDynamicPage({ data: { pageConfig: { dynamic: true } }, pageUrl });
   getReloadVersion.mockReturnValue(1);
   getNavVersion.mockReturnValue(9);
-  recordDynamicPage({ data: { id: 'page:dynamic-removed' }, pageUrl });
+  recordDynamicPage({ data: { pageConfig: { id: 'page:dynamic-removed' } }, pageUrl });
 
   expect(getPageConfigKey({ pageUrl, search: '?q=1' })).toEqual([pageUrl, 1]);
+});
+
+test('fetchPageConfig returns the page a patterned path matched with its values', async () => {
+  global.fetch = jest.fn(async () =>
+    mockJsonResponse({
+      pageId: 'ticket',
+      pathParams: { space: 'a+b', ticket_id: '1' },
+      matchedPath: 'tickets/a%2Bb/1',
+      pageConfig: { id: 'page:ticket', path: 'tickets/{space}/{ticket_id}' },
+    })
+  );
+
+  const data = await fetchPageConfig('http://localhost/api/page/tickets/a%2Bb/1');
+
+  expect(global.fetch.mock.calls[0][0]).toBe('http://localhost/api/page/tickets/a%2Bb/1');
+  expect(data).toEqual({
+    pageId: 'ticket',
+    pathParams: { space: 'a+b', ticket_id: '1' },
+    matchedPath: 'tickets/a%2Bb/1',
+    pageConfig: { id: 'page:ticket', path: 'tickets/{space}/{ticket_id}' },
+  });
 });

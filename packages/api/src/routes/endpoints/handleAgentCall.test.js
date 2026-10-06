@@ -135,6 +135,7 @@ test('CallAgent step runs the agent in generate mode and stores the result in st
   expect(resolverArgs.context.agentContext).toEqual({
     conversationId: null,
     pageId: null,
+    pathParams: {},
     sharedState: undefined,
     urlQuery: {},
     userId: 'user_1',

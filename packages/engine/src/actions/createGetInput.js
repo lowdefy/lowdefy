@@ -21,7 +21,7 @@ function createGetInput({ arrayIndices, blockId, context }) {
     return getFromObject({
       arrayIndices,
       location: blockId,
-      object: context._internal.lowdefy.inputs[context.id],
+      object: context._internal.lowdefy.inputs[context.instanceKey],
       method: 'getInput',
       params,
     });

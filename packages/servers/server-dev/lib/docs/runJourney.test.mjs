@@ -19,7 +19,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { jest } from '@jest/globals';
-import { isTraceId } from '@lowdefy/helpers';
+import { buildPagePath, isTraceId } from '@lowdefy/helpers';
 import { acquireMachineSlot } from '@lowdefy/node-utils';
 
 // getBrowser.js is mocked so no Chromium is needed; the fake page below stands
@@ -31,8 +31,12 @@ const mockGetBrowser = jest.fn();
 jest.unstable_mockModule('./getBrowser.js', () => ({
   getBrowser: mockGetBrowser,
   openPage: mockOpenPage,
-  buildPageUrl: ({ origin, pageId }) => `${origin}/${pageId}`,
+  buildPageUrl: ({ origin, pageId, path, pathParams }) =>
+    `${origin}/${buildPagePath({ pageId, path, pathParams })}`,
 }));
+// The route table the skeleton build writes; a page it does not hold has no pattern.
+const mockReadPagePath = jest.fn(() => undefined);
+jest.unstable_mockModule('./readPagePath.js', () => ({ default: mockReadPagePath }));
 
 const mockOpenJourneyEmail = jest.fn();
 jest.unstable_mockModule('./openJourneyEmail.js', () => ({ default: mockOpenJourneyEmail }));
@@ -66,8 +70,12 @@ function createLowdefyWindow({
 } = {}) {
   return {
     navigation: { currentEntry: { index: historyIndex } },
+    location: { pathname: `/${pageId}` },
     lowdefy: {
       pageId,
+      pageInstances: { [pageId]: [`page:${pageId}`] },
+      // The e2e-utils helpers read the context of the instance on screen through the path memory.
+      pathMemory: new Map([[pageId, { pageId, pathParams: {}, instanceKey: `page:${pageId}` }]]),
       contexts: {
         [`page:${pageId}`]: {
           state,
@@ -130,7 +138,10 @@ function createPage({ window = createLowdefyWindow(), url = 'http://localhost:32
     elementsFor: () => [],
     texts: {},
     screenshotCount: 0,
-    evaluate: jest.fn(async (fn, arg) => fn(arg)),
+    // Playwright evaluates a string as an expression, as the e2e-utils state helpers pass one.
+    evaluate: jest.fn(async (fn, arg) =>
+      typeof fn === 'string' ? new Function(`return ${fn}`)() : fn(arg)
+    ),
     waitForFunction: jest.fn(async (fn, arg) => {
       if (!fn(arg)) {
         throw new Error('waitForFunction: Timeout exceeded.');
@@ -178,6 +189,7 @@ function openWith(page, { ready = true } = {}) {
 beforeEach(() => {
   jest.clearAllMocks();
   mockGetBrowser.mockResolvedValue({});
+  mockReadPagePath.mockImplementation(() => undefined);
 });
 
 const origin = 'http://localhost:3227';
@@ -1397,7 +1409,7 @@ test('runJourney goes back one page and settles it', async () => {
 
   expect(result.passed).toBe(true);
   expect(page.goBack).toHaveBeenCalledWith({ timeout: 5000 });
-  expect(page.waitForFunction).toHaveBeenLastCalledWith(expect.any(Function), 'form', {
+  expect(page.waitForFunction).toHaveBeenLastCalledWith(expect.any(Function), undefined, {
     timeout: 5000,
   });
 });
@@ -1569,7 +1581,7 @@ test('runJourney settles the page after an interaction before the next step', as
 
   // openPage owns the readiness wait; the runner waits once after the click.
   expect(page.waitForFunction).toHaveBeenCalledTimes(1);
-  expect(page.waitForFunction.mock.calls[0][1]).toEqual('form');
+  expect(page.waitForFunction.mock.calls[0][1]).toBeUndefined();
 });
 
 test('runJourney opens pages with the journey timeout when it is longer than 15000 ms', async () => {
@@ -1739,9 +1751,84 @@ test('runJourney goto loads the page and settles on the page the app shows', asy
     ['http://localhost:3227/dashboard', { waitUntil: 'load', timeout: 15000 }],
     ['http://localhost:3227/invoice', { waitUntil: 'load', timeout: 15000 }],
   ]);
-  // null: the runner settles the page the app shows, which after a redirect
-  // is the sign-in page rather than the one asked for.
-  expect(page.waitForFunction.mock.calls.map((call) => call[1])).toEqual([null, null]);
+  // No argument: isPageReady settles the page the app shows, which after a
+  // redirect is the sign-in page rather than the one asked for.
+  expect(page.waitForFunction.mock.calls.map((call) => call[1])).toEqual([undefined, undefined]);
+});
+
+const ROUTES = { ticket: 'tickets/{space}/{ticket_id}' };
+
+test('runJourney opens a patterned page at the path its pathParams build', async () => {
+  mockReadPagePath.mockImplementation(({ pageId }) => ROUTES[pageId]);
+  const page = createPage();
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'ticket',
+    pathParams: { space: 's', ticket_id: '1' },
+    steps: [],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(mockOpenPage).toHaveBeenCalledWith(
+    expect.objectContaining({
+      pageId: 'ticket',
+      path: 'tickets/{space}/{ticket_id}',
+      pathParams: { space: 's', ticket_id: '1' },
+    })
+  );
+});
+
+test('runJourney refuses a patterned page missing a path value before any browser opens', async () => {
+  mockReadPagePath.mockImplementation(({ pageId }) => ROUTES[pageId]);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'ticket',
+    pathParams: { space: 's' },
+    steps: [],
+  });
+
+  expect(result).toEqual({
+    error: 'Link to page "ticket" is missing a value for path placeholder "ticket_id".',
+    refused: true,
+  });
+  expect(mockGetBrowser).not.toHaveBeenCalled();
+});
+
+test('runJourney refuses pathParams that are not an object of strings', async () => {
+  const result = await runJourney({
+    origin,
+    pageId: 'ticket',
+    pathParams: { ticket_id: 1 },
+    steps: [],
+  });
+  expect(result.error).toBe(
+    'runJourney requires "pathParams" to be an object of strings, one per path placeholder. Received {"ticket_id":1}.'
+  );
+});
+
+test('runJourney goto builds a patterned page path from pathParams, and fails the step without one', async () => {
+  mockReadPagePath.mockImplementation(({ pageId }) => ROUTES[pageId]);
+  const page = createPage();
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { goto: { pageId: 'ticket', pathParams: { space: 's', ticket_id: '1' } } },
+      { goto: { pageId: 'ticket', pathParams: { space: 's' } } },
+    ],
+  });
+
+  expect(page.goto.mock.calls.map(([url]) => url)).toEqual(['http://localhost:3227/tickets/s/1']);
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    message:
+      'Could not open page "ticket": Link to page "ticket" is missing a value for path placeholder "ticket_id".',
+  });
 });
 
 test('runJourney reports a goto that fails to load', async () => {
@@ -1909,7 +1996,8 @@ test('runJourney reports the exercised network path merged across actors, with n
     {
       page: memberPage,
       opening: [
-        { url: `${origin}/api/page/ticket` },
+        { url: `${origin}/api/page/tickets/s/2` },
+        { url: `${origin}/api/page/tickets/s/5` },
         { url: `${origin}/api/request/tickets/assign`, method: 'POST' },
         // Another origin, and a route the counter does not track.
         { url: 'http://elsewhere.test/api/page/other' },
@@ -1918,6 +2006,10 @@ test('runJourney reports the exercised network path merged across actors, with n
     },
   ]);
   const artifacts = {
+    'routes.json': [
+      { pageId: 'tickets', path: 'tickets' },
+      { pageId: 'ticket', path: 'tickets/{space}/{ticket_id}' },
+    ],
     'plugins/requestSchemas.json': {
       MongoDBFind: { meta: { checkWrite: false } },
       MongoDBInsertOne: { meta: { checkWrite: true } },

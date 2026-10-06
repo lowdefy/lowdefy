@@ -112,7 +112,8 @@ For each coverage candidate in \`tests/journeys/_candidates/explorer/<run>/\`:
   known-text value (the walk's \`rowText\` in \`walks.jsonl\`).
 - Keep the \`expect.state\` lines that are the point of the journey.
 - Run \`lowdefy test --lint <path>\`. On a snapshot data set, fix an L7 error on a recorded
-  \`urlQuery\` value or a \`<data>\` pick by switching to a fixture-owned value.
+  \`pathParams\` or \`urlQuery\` value (on the journey or a \`goto\`) or a \`<data>\` pick by
+  switching to a fixture-owned value.
 - Run \`lowdefy test --repeat 3 <path>\`. It runs the candidate where it lies and records nothing;
   \`--filter\` cannot reach \`_candidates/\`.
   - **PASS:** move the file into \`tests/journeys/\`.

@@ -362,6 +362,19 @@ blocks:
       data:
         _ref: ../../src/blocks/Table/tests/people.yaml
 
+  - id: table_path_link
+    type: Table
+    properties:
+      rowLink:
+        pageId: table-path-target
+        pathParams:
+          space: team
+          ticket_id: id
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+
   # ============================================
   # KEYBOARD
   # ============================================

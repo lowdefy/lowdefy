@@ -76,7 +76,9 @@ function listCandidates({ interactiveControl, layers, popupTrigger, popupContain
     .map(layerName);
 
   const pageId = lowdefy.pageId ?? null;
-  const context = lowdefy.contexts?.[`page:${pageId}`];
+  // The instance on screen is the shown page's most recently rendered one.
+  const instanceKey = lowdefy.pageInstances?.[pageId]?.at(-1);
+  const context = lowdefy.contexts?.[instanceKey];
   const blockMap = context?._internal?.RootSlots?.map ?? {};
   const state = context?.state ?? {};
   const stateShape = Object.keys(state)
@@ -167,6 +169,7 @@ function listCandidates({ interactiveControl, layers, popupTrigger, popupContain
 
   return {
     pageId,
+    pathParams: context?.pathParams ?? {},
     url: `${window.location.pathname}${window.location.search}`,
     layers: openLayers,
     stateShape,

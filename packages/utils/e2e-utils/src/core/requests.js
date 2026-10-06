@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
+import pageContextExpression from './instanceKey.js';
+
 async function getRequestState(page, requestId) {
-  return page.evaluate((reqId) => {
-    const lowdefy = window.lowdefy;
-    const pageId = lowdefy?.pageId;
-    const requests = lowdefy?.contexts?.[`page:${pageId}`]?.requests?.[reqId];
-    return requests?.[0];
-  }, requestId);
+  return page.evaluate(
+    ({ reqId, getContext }) => new Function(`return ${getContext}`)()?.requests?.[reqId]?.[0],
+    { reqId: requestId, getContext: pageContextExpression }
+  );
 }
 
 async function getRequestResponse(page, { requestId }) {

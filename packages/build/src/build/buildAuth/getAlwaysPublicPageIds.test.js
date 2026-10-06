@@ -16,6 +16,17 @@
 
 import getAlwaysPublicPageIds from './getAlwaysPublicPageIds.js';
 
+// The app's routes: each page at its id, except the account page, which has a
+// path of its own.
+const routes = [
+  'login',
+  'verify-email',
+  'two-factor-challenge',
+  'two-factor-enrol',
+  'module-page',
+].map((pageId) => ({ pageId, path: pageId }));
+routes.push({ pageId: 'account', path: 'sign-in' });
+
 test('getAlwaysPublicPageIds derives page ids from authPages role values', () => {
   const components = {
     auth: {
@@ -25,7 +36,7 @@ test('getAlwaysPublicPageIds derives page ids from authPages role values', () =>
       },
     },
   };
-  const res = getAlwaysPublicPageIds({ components, context: {} });
+  const res = getAlwaysPublicPageIds({ components, context: { routes } });
   expect(res).toEqual(['login', 'verify-email']);
 });
 
@@ -38,7 +49,7 @@ test('getAlwaysPublicPageIds includes the page id held by authPages.twoFactor', 
       },
     },
   };
-  const res = getAlwaysPublicPageIds({ components, context: {} });
+  const res = getAlwaysPublicPageIds({ components, context: { routes } });
   expect(res).toEqual(['login', 'two-factor-challenge']);
 });
 
@@ -51,7 +62,7 @@ test('getAlwaysPublicPageIds excludes the page id held by authPages.twoFactorEnr
       },
     },
   };
-  const res = getAlwaysPublicPageIds({ components, context: {} });
+  const res = getAlwaysPublicPageIds({ components, context: { routes } });
   expect(res).toContain('login');
   expect(res).not.toContain('two-factor-enrol');
 });
@@ -64,9 +75,29 @@ test('getAlwaysPublicPageIds unions module-contributed public pages with role pa
       },
     },
   };
-  const context = { moduleAuthPublicPages: ['module-page'] };
+  const context = { moduleAuthPublicPages: ['module-page'], routes };
   const res = getAlwaysPublicPageIds({ components, context });
   expect(res).toEqual(['login', 'module-page']);
+});
+
+test('getAlwaysPublicPageIds maps an authPages URL to the page whose path it is', () => {
+  const components = { auth: { authPages: { signIn: '/sign-in' } } };
+  const res = getAlwaysPublicPageIds({ components, context: { routes } });
+  expect(res).toEqual(['account']);
+});
+
+test('getAlwaysPublicPageIds lists no page for an authPages URL naming a page served at its path', () => {
+  const components = { auth: { authPages: { signIn: '/account' } } };
+  const res = getAlwaysPublicPageIds({ components, context: { routes } });
+  expect(res).toEqual([]);
+});
+
+test('getAlwaysPublicPageIds lists no page for an authPages URL no page is served at', () => {
+  const components = {
+    auth: { authPages: { signIn: '/missing', error: 'https://example.com/error' } },
+  };
+  const res = getAlwaysPublicPageIds({ components, context: { routes } });
+  expect(res).toEqual([]);
 });
 
 test('getAlwaysPublicPageIds ignores non-string and internal keys', () => {
@@ -79,6 +110,6 @@ test('getAlwaysPublicPageIds ignores non-string and internal keys', () => {
       },
     },
   };
-  const res = getAlwaysPublicPageIds({ components, context: {} });
+  const res = getAlwaysPublicPageIds({ components, context: { routes } });
   expect(res).toEqual(['login']);
 });

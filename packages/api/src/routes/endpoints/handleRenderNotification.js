@@ -95,11 +95,15 @@ async function handleRenderNotification(context, routineContext, { step }) {
   if (!type.isNone(serverUrl)) {
     serverUrl = serverUrl.replace(/\/$/, '');
   }
-  if (!type.isNone(landingPage) && !type.isString(landingPage)) {
+  if (
+    !type.isNone(landingPage) &&
+    !type.isString(landingPage) &&
+    !(type.isObject(landingPage) && type.isString(landingPage.pageId))
+  ) {
     throw new ConfigError(
       `RenderNotification step "${
         step.stepId
-      }" properties.landingPage must evaluate to a string. Received ${JSON.stringify(
+      }" properties.landingPage must evaluate to a page id or an object with a pageId. Received ${JSON.stringify(
         landingPage
       )}.`,
       { configKey: step['~k'] }
@@ -164,6 +168,16 @@ async function handleRenderNotification(context, routineContext, { step }) {
       );
     }
   }
+  const routes = await context.readConfigFile('routes.json');
+  if (!type.isNone(landingPage)) {
+    const landingPageId = type.isString(landingPage) ? landingPage : landingPage.pageId;
+    if (!routes.some((route) => route.pageId === landingPageId)) {
+      throw new ConfigError(
+        `RenderNotification step "${step.stepId}" properties.landingPage "${landingPageId}" is not a page id. Pass the landing page's id, not its URL path.`,
+        { configKey: step['~k'] }
+      );
+    }
+  }
   const resolvedItem = resolveNotificationLinks({
     item: data,
     dataKeys: Template.dataKeys ?? [],
@@ -171,6 +185,7 @@ async function handleRenderNotification(context, routineContext, { step }) {
     basePath,
     landingPage,
     recordId,
+    routes,
   });
 
   let interpolated;

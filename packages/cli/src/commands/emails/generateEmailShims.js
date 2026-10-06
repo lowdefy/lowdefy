@@ -27,7 +27,7 @@ function pascalCase(id) {
     .join('');
 }
 
-function createShimContent({ notification, typeDefinition, appEmail }) {
+function createShimContent({ notification, typeDefinition, appEmail, paths }) {
   const componentName = `${pascalCase(notification.notificationId)}Preview`;
   // Shallow merge, matching the runtime theme resolution.
   const theme = { ...appEmail, ...(notification.theme ?? {}) };
@@ -53,6 +53,7 @@ import { ${typeDefinition.originalTypeName} as Template } from '${
   }/notifications';
 import { buildPreviewProps } from '@lowdefy/email-templates';
 
+const paths = ${JSON.stringify(paths, null, 2)};
 const config = ${JSON.stringify(config, null, 2)};
 
 function ${componentName}(props) {
@@ -60,13 +61,13 @@ function ${componentName}(props) {
 }
 // A wrapper component per shim — setting PreviewProps on the shared imported
 // template would clobber across notifications using the same template type.
-${componentName}.PreviewProps = buildPreviewProps({ Template, config });
+${componentName}.PreviewProps = buildPreviewProps({ Template, config, paths });
 
 export default ${componentName};
 `;
 }
 
-async function generateEmailShims({ context, notifications, appEmail, notificationTypes }) {
+async function generateEmailShims({ context, notifications, appEmail, notificationTypes, paths }) {
   const emailsDirectory = context.directories.emails;
   const serverDirectory = context.directories.server;
 
@@ -90,7 +91,7 @@ async function generateEmailShims({ context, notifications, appEmail, notificati
       );
       continue;
     }
-    const content = createShimContent({ notification, typeDefinition, appEmail });
+    const content = createShimContent({ notification, typeDefinition, appEmail, paths });
     // Module notifications have scoped ids ("invites/invite-user") — nested
     // shim paths group the preview sidebar by module entry.
     const shimPath = path.join(emailsDirectory, `${notification.notificationId}.jsx`);

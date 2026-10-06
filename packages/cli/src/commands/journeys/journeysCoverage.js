@@ -18,11 +18,13 @@ import { journeySequence, profileProduction } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import computeCoverage from './coverageReport/computeCoverage.js';
+import loadRouteTable from './loadRouteTable.js';
 import readCommittedJourneys from './readCommittedJourneys.js';
 import readMeasuredRun from './readMeasuredRun.js';
 import readMutationReport from './readMutationReport.js';
 import MINING_WINDOW_MAX_DAYS from './miningWindowMaxDays.js';
 import readProductionSegments from './readProductionSegments.js';
+import resolveBuildDirectory from './resolveBuildDirectory.js';
 import writeCoverageReport from './coverageReport/writeCoverageReport.js';
 
 const SOURCES = ['production'];
@@ -87,6 +89,7 @@ async function journeysCoverage({ context }) {
     context,
     maxDays: MINING_WINDOW_MAX_DAYS,
   });
+  const routeTable = loadRouteTable({ buildDirectory: resolveBuildDirectory({ context }) });
   // A journey's click text counts only when it is config text, as production
   // segments hold, so no report confirms a guessed production value.
   const journeys = committed
@@ -95,7 +98,12 @@ async function journeysCoverage({ context }) {
       file,
       name: journey.name,
       pageId: journey.pageId,
-      sequence: journeySequence({ pageId: journey.pageId, steps: journey.steps, isConfigText }),
+      sequence: journeySequence({
+        pageId: journey.pageId,
+        steps: journey.steps,
+        routeTable,
+        isConfigText,
+      }),
       journey,
     }));
   const profile = profileProduction({ segments });
@@ -103,6 +111,7 @@ async function journeysCoverage({ context }) {
     journeys,
     segments,
     profile,
+    routeTable,
     measuredRun: readMeasuredRun({ context }),
     isConfigText,
   });

@@ -39,6 +39,8 @@ _ref:
 
       `urlQuery` objects are serialized to JSON, allowing nested objects or arrays to be specified.
 
+      To put a value like a record id in the URL path instead, as in `/tickets/1234`, give the page a [`path`](/page-paths) with placeholders and read them with [`_path_params`](/_path_params). Path parameters never merge into `urlQuery`.
+
       Because the query string is user controlled, a key named `__proto__`, `constructor`, `prototype`, `__defineGetter__`, `__defineSetter__`, `__lookupGetter__` or `__lookupSetter__` is skipped while the rest of the query is parsed as usual — a URL of `?__proto__=1&my_key=2` gives a `urlQuery` of `{ my_key: 2 }`. A value that cannot be deserialized is kept as the raw string.
 
     arguments: |

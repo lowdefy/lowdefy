@@ -20,7 +20,9 @@ import { createUrl } from './url.js';
 
 // History-API router backing the @lowdefy/client router contract:
 // push({ pathname, query }), back(), basePath — plus subscribe() for the
-// page component and sessionStorage-backed scroll restoration.
+// page component and sessionStorage-backed scroll restoration. A location names
+// no page: the client learns a path's page from the server's page response, and
+// reads it back from the path memory.
 function createRouter({ basePath = '', window }) {
   const listeners = new Set();
   let entryKey = window.history.state?.lowdefyKey ?? `k${Date.now().toString(36)}`;
@@ -57,9 +59,12 @@ function createRouter({ basePath = '', window }) {
     });
   }
 
+  // path is the pathname without basePath, the leading "/" and one trailing "/",
+  // still encoded: the form page requests and the path memory use. It is ''
+  // at the app root.
   function getLocation() {
     return {
-      pageId: parsePageId(window.location.href, basePath),
+      path: parsePageId(window.location.href, basePath) ?? '',
       pathname: window.location.pathname,
       search: window.location.search,
     };

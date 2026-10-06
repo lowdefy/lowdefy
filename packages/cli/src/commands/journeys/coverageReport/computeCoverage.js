@@ -192,13 +192,14 @@ function measureFailure({ profile, segments, journeys, journeyKeys, measuredRun 
 
 // Clicks with the page each one runs on and whether an `expect` follows it.
 // A click's text is read only when it is config text.
-function readClicks({ journey, isConfigText }) {
+function readClicks({ journey, routeTable, isConfigText }) {
   const clicks = [];
   journey.steps.forEach((step, index) => {
     if (getStepKey(step) !== 'click') return;
     const sequence = journeySequence({
       pageId: journey.pageId,
       steps: journey.steps.slice(0, index + 1),
+      routeTable,
       isConfigText,
     });
     const page = sequence[sequence.length - 1]?.page ?? journey.pageId;
@@ -222,9 +223,9 @@ function isFrustrationHit({ click, pair, blockId }) {
   return !type.isNone(pair.text) && click.text === pair.text;
 }
 
-function measureFrustration({ profile, journeys, isConfigText }) {
+function measureFrustration({ profile, journeys, routeTable, isConfigText }) {
   const clicks = journeys.flatMap((journey) =>
-    readClicks({ journey: journey.journey, isConfigText })
+    readClicks({ journey: journey.journey, routeTable, isConfigText })
   );
   const uncovered = [];
   let covered = 0;
@@ -274,18 +275,26 @@ function measureRole({ profile, journeys }) {
 
 // Which real use no committed journey covers yet, measured five ways over the
 // production window, each with its uncovered list ranked by use (count, then
-// key). `journeys` are [{ file, name, pageId, sequence, journey }].
+// key). `journeys` are [{ file, name, pageId, sequence, journey }], and
+// `routeTable` the build's routes the sequences were read with.
 // `measuredRun` is readMeasuredRun's result, null without a test run: it adds
 // the measured interaction share and makes failure coverage measured.
 // `isConfigText` reads journey click text by the config text rule, as the
 // journeys' sequences were read.
-function computeCoverage({ journeys, segments, profile, measuredRun = null, isConfigText }) {
+function computeCoverage({
+  journeys,
+  segments,
+  profile,
+  routeTable,
+  measuredRun = null,
+  isConfigText,
+}) {
   const journeyKeys = new Set(journeys.flatMap((journey) => journey.sequence.map(entryKey)));
   return {
     interaction: measureInteraction({ segments, journeyKeys, measuredRun }),
     flow: measureFlow({ segments, journeys }),
     failure: measureFailure({ profile, segments, journeys, journeyKeys, measuredRun }),
-    frustration: measureFrustration({ profile, journeys, isConfigText }),
+    frustration: measureFrustration({ profile, journeys, routeTable, isConfigText }),
     role: measureRole({ profile, journeys }),
   };
 }

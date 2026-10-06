@@ -69,7 +69,7 @@ The `AgentChat` block renders a streaming AI chat interface. It connects to a [L
 | `conversationId` | string | | Active conversation ID. When this changes, messages are cleared. If left empty, the block auto-mints a stable id for the session and surfaces it via `onConversationStart`, so every turn posts a consistent id. App-supplied ids are always authoritative. |
 | `messages` | array | | Load messages externally. `undefined` = no sync, `null` = clear, array = load. |
 | `feedbackValues` | object | | Ratings already recorded for messages in this conversation, keyed by message id, each `like` or `dislike`. The block does not persist a rating, so without this a reload or a conversation switch shows every message unrated even where your app stored it. A rating clicked this visit takes precedence, so the thumb still responds immediately and a rating the user has just withdrawn is not re-lit by a stale value. |
-| `urlQuery` | object | | Query parameters sent with each request. Available server-side via `_payload`. |
+| `urlQuery` | object | | Query parameters sent with each request. Available server-side via `_payload`. The page's path parameters (see [Page paths](/page-paths)) are sent as `pathParams` without being set here. |
 | `sharedState` | object | | Two-way bridge between page state and the agent. See [Shared State](#shared-state). |
 | `sharedStateReadOnly` | boolean | `false` | Send `sharedState` as read-only context: the agent gets no `update-page-state` tool. See [Read-only shared state](#read-only-shared-state). |
 | `height` | string | `'calc(100dvh - 170px)'` | CSS height of the chat container. Only applies when `display` is `'inline'`. |

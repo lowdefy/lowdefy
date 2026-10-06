@@ -27,12 +27,12 @@ import sequenceId from '../evidence/sequenceId.js';
 // pays for it. A journey whose click text is not config text always differs,
 // so only runs that cut a tier call this (selectTier skips it for `full`).
 // Returns isConfigText, or undefined when it is not needed.
-async function readTierConfigText({ context, journeys }) {
+async function readTierConfigText({ context, journeys, routeTable }) {
   const needed = journeys.some(({ journey }) => {
     if (journey.deprecated === true) return false;
     const stored = journey.evidence?.production?.sequence;
     if (type.isUndefined(stored)) return false;
-    return sequenceId({ pageId: journey.pageId, steps: journey.steps }) !== stored;
+    return sequenceId({ pageId: journey.pageId, steps: journey.steps, routeTable }) !== stored;
   });
   if (!needed) return undefined;
   const { isConfigText } = await readConfigText({ context });

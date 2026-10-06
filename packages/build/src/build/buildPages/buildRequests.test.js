@@ -217,6 +217,7 @@ test('give request an id', () => {
     pages: [
       {
         id: 'page:page_1',
+        linkPaths: {},
         auth: { public: true },
         pageId: 'page_1',
         blockId: 'page_1',
@@ -264,6 +265,7 @@ test('request on a sub-block', () => {
     pages: [
       {
         id: 'page:page_1',
+        linkPaths: {},
         auth: { public: true },
         blockId: 'page_1',
         pageId: 'page_1',
@@ -320,6 +322,7 @@ test('multiple requests', () => {
     pages: [
       {
         id: 'page:page_1',
+        linkPaths: {},
         auth: { public: true },
         pageId: 'page_1',
         blockId: 'page_1',
@@ -380,6 +383,7 @@ test('set auth to request', () => {
     pages: [
       {
         id: 'page:page_1',
+        linkPaths: {},
         auth: { public: true },
         pageId: 'page_1',
         blockId: 'page_1',
@@ -398,6 +402,7 @@ test('set auth to request', () => {
       },
       {
         id: 'page:page_2',
+        linkPaths: {},
         auth: { public: false },
         pageId: 'page_2',
         blockId: 'page_2',

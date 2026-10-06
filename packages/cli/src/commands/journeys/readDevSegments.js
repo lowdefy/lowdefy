@@ -17,6 +17,7 @@
 import { compileTrace, readRecordings } from '@lowdefy/node-utils';
 
 import loadBlockMetas from './loadBlockMetas.js';
+import loadRouteTable from './loadRouteTable.js';
 import resolveBuildDirectory from './resolveBuildDirectory.js';
 
 // The dev server keeps recordings for 7 days, so evidence reads that window.
@@ -36,9 +37,11 @@ function readDevSegments({ context, now }) {
   if (records.length === 0) {
     return null;
   }
+  const buildDirectory = resolveBuildDirectory({ context });
   const { segments } = compileTrace({
     records,
-    blockMetas: loadBlockMetas({ buildDirectory: resolveBuildDirectory({ context }) }),
+    blockMetas: loadBlockMetas({ buildDirectory }),
+    routeTable: loadRouteTable({ buildDirectory }),
     source: 'dev',
     filters: { since },
   });

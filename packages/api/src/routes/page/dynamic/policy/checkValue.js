@@ -58,7 +58,7 @@ function listUrls({ value, urlKind }) {
 }
 
 function checkString({ value, key, path, walk }) {
-  const { errors, policy } = walk;
+  const { errors, policy, routes } = walk;
   if (!policy.html && HTML_TAG.test(value)) {
     errors.push({
       path,
@@ -81,6 +81,7 @@ function checkString({ value, key, path, walk }) {
         policy,
         navigation: urlKind === 'url' || urlKind === 'href',
         schemeless: urlKind === 'url',
+        routes,
       });
       if (!allowed) {
         // A URL in a list (an array item) has no key of its own.
@@ -96,7 +97,7 @@ function checkString({ value, key, path, walk }) {
   }
   // A URL value was judged whole above; other strings are searched.
   findEmbeddedUrls(value).forEach((url) => {
-    if (!isAllowedUrl({ value: url, policy, navigation: false, schemeless: false })) {
+    if (!isAllowedUrl({ value: url, policy, navigation: false, schemeless: false, routes })) {
       errors.push({
         path,
         rule: 'policy.urls',

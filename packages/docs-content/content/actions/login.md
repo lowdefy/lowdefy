@@ -10,6 +10,7 @@
     pageId?: string
     url?: string
     urlQuery?: object
+    pathParams?: object
   } | false
   providerId?: string,
 }): void
@@ -41,6 +42,7 @@ A sign-in the auth server rejects - a wrong password, an expired or already-used
   - `pageId: string`: The pageId of the page to redirect to after the login flow is complete.
   - `url: string`: The URL to redirect to after the login flow is complete. An absolute URL is not `basePath`-prefixed, so it can be an external landing page.
   - `urlQuery: object`: The urlQuery to set for the page the user is redirected to after login.
+  - `pathParams: object`: Values for the placeholders in the destination page's [`path`](/page-paths), by placeholder name.
 - `providerId: string`: The ID of the provider that should be used for login. If not set and only one provider is configured the configured provider will be used. Else the user will be redirected to a sign in page where they can choose a provider.
 
 #### Examples

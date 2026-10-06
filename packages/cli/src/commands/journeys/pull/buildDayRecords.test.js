@@ -68,7 +68,15 @@ function click({ uuid, ms, blockId = 'save', blockIds, chain, text = 'Save', ...
 
 // One morning on the tickets page, enriched and chain-only rows mixed.
 const DAY_ROWS = [
-  row({ uuid: 'r01', timestamp: at(0), event: '$pageview', pathname: '/', query: '' }),
+  // The redirect at / of an app with no configured home names no page.
+  row({
+    uuid: 'r01',
+    timestamp: at(0),
+    event: '$pageview',
+    pathname: '/',
+    query: '',
+    lowdefy_page_id: null,
+  }),
   row({ uuid: 'r02', timestamp: at(100), event: '$pageview', query: '?id=t-1&tab=open' }),
   // The antd radio click: label click, input click, input change.
   row({
@@ -113,7 +121,7 @@ test('buildDayRecords orders records by time and counts rows, drops and enrichme
     'click',
     'pageleave',
   ]);
-  expect(result.dropped).toEqual({ home_redirect: 1, event_type: 1 });
+  expect(result.dropped).toEqual({ no_page: 1, event_type: 1 });
   expect(result.rowsByEvent).toEqual({ $pageview: 2, $autocapture: 7, $pageleave: 1 });
   expect(result.interactions).toBe(7);
   expect(result.enriched).toBe(1);

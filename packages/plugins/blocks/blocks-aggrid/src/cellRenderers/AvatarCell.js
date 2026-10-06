@@ -19,9 +19,9 @@ import { Avatar } from 'antd';
 import avatarColor from '@lowdefy/block-utils/format/avatarColor.js';
 import initials from '@lowdefy/block-utils/format/initials.js';
 import { type } from '@lowdefy/helpers';
+import GridLink from './GridLink.js';
 import NullCell from './NullCell.js';
 import { resolveLink, resolvePath } from './resolveFieldRefs.js';
-import { buildHref } from './LinkCell.js';
 
 const rowStyle = {
   display: 'inline-flex',
@@ -39,7 +39,7 @@ const labelStyle = {
 const linkStyle = { ...labelStyle, color: 'var(--ant-color-link)', cursor: 'pointer' };
 
 function AvatarCell(params) {
-  const { value, data, cellConfig, methods } = params;
+  const { value, data, cellConfig, methods, components } = params;
   const name = type.isString(cellConfig?.nameField)
     ? resolvePath(cellConfig.nameField, data)
     : value;
@@ -79,28 +79,19 @@ function AvatarCell(params) {
   const link = cellConfig?.link ? resolveLink(cellConfig.link, data) : undefined;
 
   if (link) {
-    const href = buildHref(link);
-    const onClick = (event) => {
-      if (event.metaKey || event.ctrlKey || event.shiftKey || event.button === 1) return;
-      if (link.newTab) return;
-      event.preventDefault();
-      methods?.triggerEvent?.({
-        name: 'onCellLink',
-        event: { link, row: data, value },
-      });
-    };
     return (
       <span style={rowStyle}>
         {avatar}
-        <a
-          href={href ?? '#'}
+        <GridLink
+          link={link}
+          components={components}
+          methods={methods}
+          row={data}
+          value={value}
           style={linkStyle}
-          onClick={onClick}
-          target={link.newTab ? '_blank' : undefined}
-          rel={link.newTab ? 'noopener noreferrer' : undefined}
         >
           {String(name ?? '')}
-        </a>
+        </GridLink>
       </span>
     );
   }

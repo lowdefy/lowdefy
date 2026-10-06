@@ -15,6 +15,7 @@
 - _ref: concepts/modules.yaml
 - _ref: concepts/module-authoring.yaml
 - _ref: concepts/page-and-app-state.yaml
+- _ref: concepts/page-paths.yaml
 - _ref: concepts/selectors.yaml
 - _ref: concepts/blocks.yaml
 - _ref: concepts/layout-overview.yaml
@@ -343,6 +344,7 @@
 - _ref: operators/_object.yaml
 - _ref: operators/_operator.yaml
 - _ref: operators/_or.yaml
+- _ref: operators/_path_params.yaml
 - _ref: operators/_product.yaml
 - _ref: operators/_random.yaml
 - _ref: operators/_ref.yaml

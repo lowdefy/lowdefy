@@ -586,6 +586,46 @@ test('compileTrace gives each segment its entry page, pages, failure path and fr
   expect(segments[1].frustrations).toEqual([]);
 });
 
+function clickThroughFlow({ session, at, source }) {
+  return [
+    traceRecord({ at, session, kind: 'pageview', url: '/tickets', source }),
+    traceRecord({ at: at + 1, session, block: 'tickets_grid', row: 0, source }),
+    traceRecord({
+      at: at + 2,
+      session,
+      kind: 'pageview',
+      url: source === 'production' ? '/app/tickets/s/1' : '/app/tickets/s/1?tab=notes',
+      page: 'ticket',
+      path_params: { space: 's', ticket_id: '1' },
+      source,
+    }),
+    traceRecord({ at: at + 3, session, block: 'save', page: 'ticket', source }),
+  ];
+}
+
+test('compileTrace reads the page a click navigated to through the route table', () => {
+  const routeTable = {
+    routes: [
+      { pageId: 'tickets', path: 'tickets' },
+      { pageId: 'ticket', path: 'tickets/{space}/{ticket_id}' },
+    ],
+    basePath: '/app',
+  };
+  const dev = compileTrace({
+    records: clickThroughFlow({ session: 'd-1', at: 0, source: 'dev' }),
+    routeTable,
+    source: 'dev',
+  });
+  const production = compileTrace({
+    records: clickThroughFlow({ session: 'p-1', at: 0, source: 'production' }),
+    routeTable,
+    source: 'production',
+  });
+  expect(dev.segments[0].sequence.map((entry) => entry.page)).toEqual(['tickets', 'ticket']);
+  expect(production.segments[0].sequence).toEqual(dev.segments[0].sequence);
+  expect(production.segments[0].hash).toBe(dev.segments[0].hash);
+});
+
 test('compileTrace prepareCandidate can drop a candidate, drop steps and add to the origin', () => {
   const seen = [];
   const { candidates } = compileTrace({

@@ -56,10 +56,10 @@ function distinctStrings(values) {
 // One folded segment compiled and described: its journey, the sequence and
 // hash that identify it, who did it and when. Returns undefined for a segment
 // with no interaction steps, which is no journey.
-function describeSegment({ records, blockMetas, source }) {
+function describeSegment({ records, blockMetas, routeTable, source }) {
   const compiled = compileSegment({ records, blockMetas, source, name: '' });
   const { journey } = compiled;
-  const sequence = journeySequence({ pageId: journey.pageId, steps: journey.steps });
+  const sequence = journeySequence({ pageId: journey.pageId, steps: journey.steps, routeTable });
   if (sequence.length === 0) return undefined;
   const hash = hashSequence({ pageId: journey.pageId, sequence });
   journey.name = `${journey.pageId} recorded ${hash}`;

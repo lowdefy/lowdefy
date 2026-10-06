@@ -26,11 +26,12 @@ const SEQUENCE_VERSION = 1;
 // as production segments are matched against them. Waits, other expectations,
 // typed or picked values, rows and `nth` leave it unchanged. A click's text
 // enters it only when isConfigText says it is config text, as evidence reads
-// journeys, so the id changes exactly when what is matched changes.
-function sequenceId({ pageId, steps, isConfigText }) {
+// journeys, so the id changes exactly when what is matched changes. routeTable
+// is the build's route table, read as production segments are read with it.
+function sequenceId({ pageId, steps, routeTable, isConfigText }) {
   return `v${SEQUENCE_VERSION}-${hashSequence({
     pageId,
-    sequence: journeySequence({ pageId, steps, isConfigText }),
+    sequence: journeySequence({ pageId, steps, routeTable, isConfigText }),
   })}`;
 }
 

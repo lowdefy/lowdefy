@@ -1933,6 +1933,12 @@ export default {
             type: 'Block "id" should be a string.',
           },
         },
+        path: {
+          type: 'string',
+          errorMessage: {
+            type: 'Page "path" should be a string. A path that starts with a placeholder must be quoted in YAML, like path: \'{space}/tickets/{ticket_id}\'.',
+          },
+        },
         type: {
           type: 'string',
           errorMessage: {
@@ -3075,6 +3081,18 @@ export default {
           type: 'object',
           errorMessage: {
             type: 'MenuLink "urlQuery" should be an object.',
+          },
+        },
+        pathParams: {
+          type: 'object',
+          additionalProperties: {
+            type: 'string',
+            errorMessage: {
+              type: 'MenuLink "pathParams" values should be strings.',
+            },
+          },
+          errorMessage: {
+            type: 'MenuLink "pathParams" should be an object.',
           },
         },
         input: {

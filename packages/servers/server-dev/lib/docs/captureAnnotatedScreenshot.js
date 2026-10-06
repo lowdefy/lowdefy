@@ -17,17 +17,20 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { urlQuery as urlQueryFn } from '@lowdefy/helpers';
+
 import drawAnnotationsSvg from '../../client/feedback/drawAnnotationsSvg.js';
 import { getBrowser, openPage } from './getBrowser.js';
 import noBrowserError from './noBrowserError.js';
+import readPagePath from './readPagePath.js';
 import withBrowserSlot from './withBrowserSlot.js';
 
-// Renders the page headless at the batch's recorded viewport/scroll, injects
-// the developer's drawn shapes and element outlines as an SVG layer inside
-// the page, screenshots the composite, and saves it under the config dir's
-// .lowdefy/annotations/ (gitignored). The saved path goes into the formatted
-// feedback text so an agent can read the image. Never throws — returns
-// { path } or { error }.
+// Renders the batch's page instance (pageId, pathParams, urlQuery) headless at
+// the batch's recorded viewport/scroll, injects the developer's drawn shapes
+// and element outlines as an SVG layer inside the page, screenshots the
+// composite, and saves it under the config dir's .lowdefy/annotations/
+// (gitignored). The saved path goes into the formatted feedback text so an
+// agent can read the image. Never throws — returns { path } or { error }.
 async function captureInBrowser({ origin, batch, fileName }) {
   let browser;
   try {
@@ -39,14 +42,15 @@ async function captureInBrowser({ origin, batch, fileName }) {
   const viewport = batch.viewport ?? {};
   const width = viewport.width || 1280;
   const height = viewport.height || 800;
-  const urlQuery = batch.urlQuery && batch.urlQuery !== '?' ? batch.urlQuery : '';
-
   let context;
   try {
     const opened = await openPage({
       browser,
       origin,
-      pageId: `${batch.pageId}${urlQuery}`,
+      pageId: batch.pageId,
+      path: readPagePath({ pageId: batch.pageId }),
+      pathParams: batch.pathParams,
+      urlQuery: urlQueryFn.parse(batch.urlQuery ?? ''),
       width,
       height,
     });

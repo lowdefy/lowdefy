@@ -29,6 +29,13 @@ const previousConfigDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG;
 const fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-state-checkpoints-test-'));
 fs.mkdirSync(path.join(fixtureDir, 'build'), { recursive: true });
 fs.writeFileSync(path.join(fixtureDir, 'build', 'config.json'), JSON.stringify({ basePath: '' }));
+fs.writeFileSync(
+  path.join(fixtureDir, 'build', 'routes.json'),
+  JSON.stringify([
+    { pageId: 'home', path: 'home' },
+    { pageId: 'ticket', path: 'tickets/{space}/{ticket_id}' },
+  ])
+);
 process.chdir(fixtureDir);
 process.env.LOWDEFY_DIRECTORY_CONFIG = fixtureDir;
 
@@ -103,6 +110,7 @@ describe('checkpointStore', () => {
         'checkpoint.json',
         'state.json',
         'urlQuery.json',
+        'pathParams.json',
         'inputs.json',
         'user.json',
         'global.json',
@@ -120,6 +128,7 @@ describe('checkpointStore', () => {
     expect(typeof result.checkpoint.capturedAt).toBe('string');
     expect(result.state).toEqual({ count: 1 });
     expect(result.urlQuery).toBe('?a=1');
+    expect(result.pathParams).toEqual({});
     expect(result.input).toEqual({ fromInput: true });
     expect(result.user).toEqual({ id: 'u1' });
     expect(result.global).toEqual({ g: 1 });
@@ -170,6 +179,7 @@ describe('checkpointStore', () => {
     const result = readCheckpoint({ name: 'cp-partial' });
     expect(result.state).toEqual({});
     expect(result.urlQuery).toBe('');
+    expect(result.pathParams).toEqual({});
     expect(result.input).toEqual({});
     expect(result.user).toBe(null);
     expect(result.global).toEqual({});
@@ -295,6 +305,32 @@ describe('snapshotState', () => {
     expect(stored.checkpoint.url).toBe('http://localhost:3111/home');
   });
 
+  test('keeps the pathParams of the instance it snapshots', async () => {
+    mockInspectState.mockResolvedValue({
+      pageId: 'ticket',
+      pathParams: { space: 's', ticket_id: '1' },
+      state: { subject: 'One' },
+      requests: {},
+      urlQuery: '?tab=notes',
+      source: 'tab',
+    });
+
+    const result = await snapshotState({
+      origin: 'http://localhost:3111',
+      pageId: 'ticket',
+      name: 'cp-snapshot-instance',
+    });
+
+    expect(result.error).toBeUndefined();
+    expect(result.parts).toContain('pathParams.json');
+    expect(mockInspectState).toHaveBeenCalledWith(
+      expect.objectContaining({ pageId: 'ticket', pathParams: undefined })
+    );
+    const stored = readCheckpoint({ name: 'cp-snapshot-instance' });
+    expect(stored.pathParams).toEqual({ space: 's', ticket_id: '1' });
+    expect(stored.checkpoint.url).toBe('http://localhost:3111/tickets/s/1?tab=notes');
+  });
+
   test('returns the inspectState error instead of writing a checkpoint', async () => {
     mockInspectState.mockResolvedValue({ error: 'No live context for page "home".' });
 
@@ -337,6 +373,45 @@ describe('loadState', () => {
       response: { ok: true },
       error: null,
     });
+  });
+
+  test('registry-only mode opens the page instance the checkpoint names', async () => {
+    writeCheckpoint({
+      name: 'cp-load-instance',
+      snapshot: buildSnapshot({
+        pageId: 'ticket',
+        pathParams: { space: 's', ticket_id: '1' },
+        urlQuery: '?tab=notes',
+      }),
+    });
+
+    const result = await loadState({
+      origin: 'http://localhost:3111',
+      name: 'cp-load-instance',
+      mode: 'registry-only',
+    });
+
+    expect(result.error).toBeUndefined();
+    expect(result.url).toBe(
+      'http://localhost:3111/tickets/s/1?tab=notes&_checkpoint=cp-load-instance'
+    );
+  });
+
+  test('refuses a checkpoint whose pathParams miss a placeholder of its page', async () => {
+    writeCheckpoint({
+      name: 'cp-load-missing',
+      snapshot: buildSnapshot({ pageId: 'ticket', pathParams: { space: 's' }, urlQuery: '' }),
+    });
+
+    const result = await loadState({
+      origin: 'http://localhost:3111',
+      name: 'cp-load-missing',
+      mode: 'registry-only',
+    });
+
+    expect(result.error).toMatch(
+      /Checkpoint "cp-load-missing" cannot open its page: .*placeholder "ticket_id"/
+    );
   });
 
   test('returns an error when the checkpoint does not exist', async () => {

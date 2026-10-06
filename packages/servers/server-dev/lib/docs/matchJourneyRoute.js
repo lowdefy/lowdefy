@@ -22,8 +22,9 @@ function decodeSegments(text) {
 }
 
 // Names the dev server route a journey's browser request hit, from its URL
-// and method, with the app's basePath honoured. Requests to other origins and
-// to every other route are null.
+// and method, with the app's basePath honoured. A page request carries its
+// request path, which collectExercised matches to a page id through the route
+// table. Requests to other origins and to every other route are null.
 function matchJourneyRoute({ url, method, origin, basePath = '' }) {
   const parsed = new URL(url);
   if (parsed.origin !== origin) {
@@ -38,11 +39,11 @@ function matchJourneyRoute({ url, method, origin, basePath = '' }) {
     return { route: 'root' };
   }
   if (rest.startsWith('page/') && method === 'GET') {
-    const segments = decodeSegments(rest.slice('page/'.length));
-    if (segments.length === 0) {
+    const path = rest.slice('page/'.length);
+    if (path === '') {
       return null;
     }
-    return { route: 'page', pageId: segments.join('/') };
+    return { route: 'page', path };
   }
   if (rest.startsWith('request/') && method === 'POST') {
     const segments = decodeSegments(rest.slice('request/'.length));

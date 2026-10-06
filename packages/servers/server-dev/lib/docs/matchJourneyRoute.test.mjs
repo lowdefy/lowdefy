@@ -15,6 +15,7 @@
 */
 
 import createNetworkCounter from './createNetworkCounter.js';
+import matchExercisedPages from './matchExercisedPages.js';
 import matchJourneyRoute from './matchJourneyRoute.js';
 import mergeNetworkSnapshots from './mergeNetworkSnapshots.js';
 
@@ -22,8 +23,10 @@ const origin = 'http://localhost:3111';
 
 test.each([
   ['GET', '/api/root', { route: 'root' }],
-  ['GET', '/api/page/tickets', { route: 'page', pageId: 'tickets' }],
-  ['GET', '/api/page/admin/users', { route: 'page', pageId: 'admin/users' }],
+  ['GET', '/api/page/tickets', { route: 'page', path: 'tickets' }],
+  ['GET', '/api/page/admin/users', { route: 'page', path: 'admin/users' }],
+  ['GET', '/api/page/tickets/s/2', { route: 'page', path: 'tickets/s/2' }],
+  ['GET', '/api/page/', null],
   [
     'POST',
     '/api/request/tickets/assign',
@@ -48,7 +51,15 @@ test('matchJourneyRoute honours the basePath and ignores paths outside it', () =
       origin,
       basePath: '/app',
     })
-  ).toEqual({ route: 'page', pageId: 'home' });
+  ).toEqual({ route: 'page', path: 'home' });
+  expect(
+    matchJourneyRoute({
+      url: `${origin}/app/api/page/tickets/s/2?tab=notes`,
+      method: 'GET',
+      origin,
+      basePath: '/app',
+    })
+  ).toEqual({ route: 'page', path: 'tickets/s/2' });
   expect(
     matchJourneyRoute({ url: `${origin}/api/page/home`, method: 'GET', origin, basePath: '/app' })
   ).toBeNull();
@@ -68,6 +79,7 @@ test('createNetworkCounter counts request calls per page and endpoint calls', ()
   const counter = createNetworkCounter({ origin, basePath: '' });
   counter.record(request('GET', '/api/root'));
   counter.record(request('GET', '/api/page/tickets'));
+  counter.record(request('GET', '/api/page/tickets/s/2'));
   counter.record(request('POST', '/api/request/tickets/save'));
   counter.record(request('POST', '/api/request/tickets/save'));
   counter.record(request('POST', '/api/request/ticket/save'));
@@ -78,7 +90,7 @@ test('createNetworkCounter counts request calls per page and endpoint calls', ()
   expect(counter.countCalls({ endpoint: 'notify' })).toEqual(1);
   expect(counter.countCalls({ endpoint: 'other' })).toEqual(0);
   expect(counter.snapshot()).toEqual({
-    pages: ['tickets'],
+    pagePaths: ['tickets', 'tickets/s/2'],
     appEvents: true,
     requests: [
       { pageId: 'tickets', requestId: 'save', calls: 2 },
@@ -93,13 +105,13 @@ test('mergeNetworkSnapshots sums calls across actors and sorts the result', () =
     mergeNetworkSnapshots({
       snapshots: [
         {
-          pages: ['tickets'],
+          pagePaths: ['tickets/s/2'],
           appEvents: true,
           requests: [{ pageId: 'tickets', requestId: 'save', calls: 1 }],
           endpoints: [{ endpointId: 'notify', calls: 1 }],
         },
         {
-          pages: ['home', 'tickets'],
+          pagePaths: ['home', 'tickets/s/2', 'tickets/s/5'],
           appEvents: false,
           requests: [
             { pageId: 'tickets', requestId: 'save', calls: 2 },
@@ -110,7 +122,7 @@ test('mergeNetworkSnapshots sums calls across actors and sorts the result', () =
       ],
     })
   ).toEqual({
-    pages: ['home', 'tickets'],
+    pagePaths: ['home', 'tickets/s/2', 'tickets/s/5'],
     appEvents: true,
     requests: [
       { pageId: 'home', requestId: 'load', calls: 1 },
@@ -118,4 +130,37 @@ test('mergeNetworkSnapshots sums calls across actors and sorts the result', () =
     ],
     endpoints: [{ endpointId: 'notify', calls: 4 }],
   });
+});
+
+const routes = [
+  { pageId: 'home', path: 'home' },
+  { pageId: 'ticket', path: 'tickets/{space}/{ticket_id}' },
+  { pageId: 'admin/users', path: 'people' },
+];
+
+test('matchExercisedPages names a patterned page once for all of its instances', () => {
+  expect(
+    matchExercisedPages({ routes, pagePaths: ['tickets/s/2', 'tickets/s/5', 'home'] })
+  ).toEqual(['home', 'ticket']);
+});
+
+test('matchExercisedPages names a page with a fixed path by its id', () => {
+  expect(matchExercisedPages({ routes, pagePaths: ['people'] })).toEqual(['admin/users']);
+});
+
+test('matchExercisedPages drops a path no page answers', () => {
+  expect(matchExercisedPages({ routes, pagePaths: ['admin/users', 'missing'] })).toEqual([]);
+});
+
+test('a journey under a basePath reports page ids for the page paths it loaded', () => {
+  const counter = createNetworkCounter({ origin, basePath: '/app' });
+  counter.record(request('GET', '/app/api/page/tickets/s/2'));
+  counter.record(request('GET', '/app/api/page/people'));
+  counter.record(request('GET', '/api/page/home'));
+  expect(
+    matchExercisedPages({
+      routes,
+      pagePaths: mergeNetworkSnapshots({ snapshots: [counter.snapshot()] }).pagePaths,
+    })
+  ).toEqual(['admin/users', 'ticket']);
 });

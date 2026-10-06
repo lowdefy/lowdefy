@@ -16,7 +16,8 @@
 
 import React from 'react';
 import { registerHtmlEnhancements } from '@lowdefy/block-utils';
-import { translate } from '@lowdefy/helpers';
+import { rememberPath, resolveTarget } from '@lowdefy/engine';
+import { translate, type } from '@lowdefy/helpers';
 
 import createCallAPI from './createCallAPI.js';
 import createAuthMethods from './auth/createAuthMethods.js';
@@ -34,17 +35,29 @@ import { createUrl } from './adapters/url.js';
 // loadAllIcons (production server only) loads every icon the app bundles into
 // types.icons; a page loads only its own icons, so a name that arrives at
 // runtime may need it. Dev and e2e bundle every icon.
+//
+// matchedPath and pathParams are the server's match of the shown page: the
+// path it was matched on (no basePath, no leading "/") and the values it
+// carries.
 function initLowdefyContext({
   auth,
   Components,
   config,
   loadAllIcons,
   lowdefy,
+  matchedPath,
+  pathParams,
   router,
   stage,
   types,
   window,
 }) {
+  // The path memory lasts the session. A dev config reload clears initialised
+  // to rebuild the page contexts, but the paths this tab followed still name
+  // the same pages, and the page response it fetches next rewrites its own.
+  if (type.isUndefined(lowdefy.pathMemory)) {
+    lowdefy.pathMemory = new Map();
+  }
   if (!lowdefy._internal?.initialised) {
     lowdefy._internal = {
       actions: types.actions,
@@ -80,6 +93,7 @@ function initLowdefyContext({
     lowdefy.basePath = router.basePath;
     lowdefy.contexts = {};
     lowdefy.inputs = {};
+    lowdefy.pageInstances = {};
     lowdefy.lowdefyApp = config.rootConfig.lowdefyApp;
     lowdefy.lowdefyGlobal = config.rootConfig.lowdefyGlobal;
     lowdefy.theme = config.rootConfig.theme ?? {};
@@ -97,10 +111,19 @@ function initLowdefyContext({
     // HtmlComponent (block-utils) gives data-* attributes meaning in every
     // sanitised HTML string. The overlay pulls in antd Tooltip and Popover, so
     // it loads the first time HTML needs one. Links build hrefs with createUrl,
-    // the one place basePath is applied, and navigate like the Link action.
+    // the one place basePath is applied, and navigate like the Link action. A
+    // page link's pathname comes from resolveTarget, as the Link action's does.
     registerHtmlEnhancements({
       createHref: ({ pathname, query }) =>
         createUrl({ basePath: lowdefy.basePath, pathname, query }),
+      createPageHref: ({ pageId, pathParams, urlQuery }) => {
+        const target = resolveTarget({ lowdefy, target: { pageId, pathParams, urlQuery } });
+        return createUrl({
+          basePath: lowdefy.basePath,
+          pathname: target.pathname,
+          query: target.query,
+        });
+      },
       getLocale: () => getActiveLocale(window),
       // The overlay is lazy, so the app's Icon is bound in when it loads.
       HtmlOverlay: React.lazy(async () => {
@@ -124,9 +147,21 @@ function initLowdefyContext({
   }
 
   lowdefy.home = config.rootConfig.home || {};
+  lowdefy.linkPaths = config.pageConfig.linkPaths;
   lowdefy.menus = config.rootConfig.menus;
   lowdefy.pageId = config.pageConfig.pageId;
+  lowdefy.pagePaths = config.rootConfig.pagePaths;
   lowdefy.user = auth?.user ?? null;
+
+  // The shown page's path joins the path memory before its context is built,
+  // so the first load's page is known before any plugin reads the memory.
+  rememberPath({
+    lowdefy,
+    path: matchedPath,
+    pageId: config.pageConfig.pageId,
+    pathParams,
+    pattern: config.pageConfig.path,
+  });
 
   return lowdefy;
 }

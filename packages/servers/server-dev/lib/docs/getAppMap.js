@@ -58,8 +58,13 @@ function summarizeRequests({ pageId, requests }) {
   });
 }
 
+// A page's `path` is the URL pattern it is served at (its id when it declares
+// none). A pattern with placeholders, e.g. "tickets/{space}/{ticket_id}", needs
+// `pathParams` to open in the page tools.
 function getPages() {
   const registry = readBuildArtifact({ name: 'pageRegistry.json' }) ?? {};
+  const routes = readBuildArtifact({ name: 'routes.json', deserialize: true });
+  const pathByPageId = new Map(routes.map((route) => [route.pageId, route.path]));
   const pages = [];
   let unbuiltCount = 0;
 
@@ -67,6 +72,7 @@ function getPages() {
     const built = readBuildArtifact({ name: `pages/${pageId}.json`, deserialize: true });
     const page = {
       pageId,
+      path: pathByPageId.get(pageId),
       file: entry.refPath,
       auth: entry.auth,
       built: !type.isNone(built),
@@ -170,7 +176,7 @@ function getAppMap() {
   if (unbuiltCount > 0) {
     map.note =
       `${unbuiltCount} page(s) have not been built yet, so only "file" and "auth" are shown ` +
-      'for them. Visit the page in the browser, or GET /lowdefy-docs/page/{pageId}, to trigger ' +
+      'for them. Visit the page in the browser, or GET /lowdefy-docs/page-config/{pageId}, to trigger ' +
       'a build and see their blocks and requests.';
   }
 

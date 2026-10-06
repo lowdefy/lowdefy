@@ -62,6 +62,8 @@ const context = {
   },
   eventLog: [{ eventLog: true }],
   id: 'id',
+  instanceKey: 'id',
+  pathParams: { ticket_id: '1234' },
   requests: [{ requests: true }],
   state: { state: true },
 };
@@ -200,6 +202,9 @@ test('operator returns value with ~k present', () => {
           "parser": Object {
             "parse": [Function],
           },
+          "pathParams": Object {
+            "ticket_id": "1234",
+          },
           "requests": Array [
             Object {
               "requests": true,
@@ -227,6 +232,14 @@ test('forwards lowdefyApp into operator context', () => {
   parser.parse({ actions, args, arrayIndices, event, input, location });
   const lastCall = operators._test.mock.calls[operators._test.mock.calls.length - 1][0];
   expect(lastCall.lowdefyApp).toEqual({ app: true });
+});
+
+test('passes the context pathParams to operators', () => {
+  const input = { a: { _test: { params: true } } };
+  const parser = new WebParser({ context, operators });
+  parser.parse({ actions, args, arrayIndices, event, input, location });
+  const lastCall = operators._test.mock.calls[operators._test.mock.calls.length - 1][0];
+  expect(lastCall.pathParams).toEqual({ ticket_id: '1234' });
 });
 
 test('operator should be object with 1 key', () => {

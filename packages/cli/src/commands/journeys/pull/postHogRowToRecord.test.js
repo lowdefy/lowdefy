@@ -27,7 +27,7 @@ function map(fields) {
   return postHogRowToRecord({ row: row({ uuid: 'u1', timestamp: T, ...fields }), salt });
 }
 
-test('postHogRowToRecord maps a pageview to its page from the pathname', () => {
+test('postHogRowToRecord maps a pageview to the page lowdefy_page_id names', () => {
   const { record } = map({ event: '$pageview', pathname: '/tickets', query: '?id=t-1&tab=open' });
   expect(record).toEqual({
     v: 1,
@@ -47,21 +47,38 @@ test('postHogRowToRecord maps a pageview to its page from the pathname', () => {
   expect(validateTraceRecord({ record })).toEqual({});
 });
 
-test('postHogRowToRecord prefers lowdefy_page_id to the pathname', () => {
+test('postHogRowToRecord reads a patterned page and its path values from the event, not the path', () => {
   const { record } = map({
     event: '$pageview',
-    pathname: '/tickets',
-    lowdefy_page_id: 'ticket-list',
+    pathname: '/tickets/s/1',
+    lowdefy_page_id: 'ticket',
+    lowdefy_path_params: '{"space":"s","ticket_id":"1"}',
   });
-  expect(record.page_id).toBe('ticket-list');
+  expect(record).toMatchObject({
+    page_id: 'ticket',
+    url: '/tickets/s/1',
+    path_params: { space: 's', ticket_id: '1' },
+  });
+  expect(validateTraceRecord({ record })).toEqual({});
 });
 
-test('postHogRowToRecord drops the pageview at / as the home redirect', () => {
-  expect(map({ event: '$pageview', pathname: '/' })).toEqual({ dropped: 'home_redirect' });
+test('postHogRowToRecord keeps path values on pageviews only', () => {
+  const { record } = map({
+    event: '$pageleave',
+    pathname: '/tickets/s/1',
+    lowdefy_page_id: 'ticket',
+    lowdefy_path_params: '{"space":"s","ticket_id":"1"}',
+  });
+  expect(record).not.toHaveProperty('path_params');
 });
 
-test('postHogRowToRecord drops a pageview whose path is not a page', () => {
-  expect(map({ event: '$pageview', pathname: '/tickets/t-1' })).toEqual({ dropped: 'not_a_page' });
+test('postHogRowToRecord drops an event that names no page', () => {
+  expect(map({ event: '$pageview', pathname: '/', lowdefy_page_id: null })).toEqual({
+    dropped: 'no_page',
+  });
+  expect(
+    map({ eventType: 'click', elementsChain: chains.menuLink, lowdefy_page_id: null })
+  ).toEqual({ dropped: 'no_page' });
 });
 
 test('postHogRowToRecord keys the tab as <session>.<window>', () => {

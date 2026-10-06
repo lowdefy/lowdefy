@@ -1,0 +1,28 @@
+# U8: Menu Link Missing Path Params
+# =================================
+# Tests that a menu link to a page with placeholders must carry static
+# pathParams naming every placeholder.
+#
+# Expected error:
+#   [Config Error] Menu link "ticket" on menu "main" links to page "ticket" without path params "ticket_id" ...
+
+lowdefy: local
+
+menus:
+  - id: main
+    links:
+      - id: home
+        type: MenuLink
+        pageId: home
+      - id: ticket
+        type: MenuLink
+        pageId: ticket
+        pathParams:
+          space: support
+
+pages:
+  - id: home
+    type: Box
+  - id: ticket
+    type: Box
+    path: tickets/{space}/{ticket_id}

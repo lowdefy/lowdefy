@@ -245,15 +245,21 @@ Handles Auth.js configuration retrieval.
 
 Serves page configuration to the client.
 
+**Matching a path to a page.** `matchPagePath({ routes, path })` (in `@lowdefy/node-utils`, so the server-dev page route and the journey tools share it) is the one matcher from a request path (`basePath` and the leading `/` removed) to `{ pageId, pathParams }`, or `null`. `routes` is the build's `routes.json`, `[{ pageId, path, auth }]`, where `path` is the page's pattern or, for a page without one, its id. The matcher strips one trailing `/`; any other empty segment, a segment that fails `decodeURIComponent`, and a segment that decodes to `.` or `..` match nothing. Each segment is decoded once, so a `%2F` inside a value survives as `/`, and callers pass the path still encoded. Candidates are the patterns with the same segment count whose fixed segments equal the decoded segments (case-sensitive); walking left to right, at the first position where they differ a fixed segment beats a placeholder. The build refuses ties, so one candidate is left. The routes are grouped by segment count once per `routes` array.
+
+`getPageConfig(context, { path, urlQuery })` matches the path, then reads `pages/${pageId}.json` by the matched id and authorises it. It returns `{ status, pageId, pathParams, pageConfig }`: `pageConfig` on `ok` only, `pageId` and `pathParams` whenever the path matched. An unmatched path answers as an unknown page id did: `unauthenticated` under `pagesProtectedByDefault` for a signed-out caller, else `not_found`. A dynamic page's `resolveDynamicContent` gets `pathParams`, and each `Dynamic` endpoint's payload carries it next to `urlQuery`.
+
 **Dynamic content (`routes/page/dynamic/`).** `resolveDynamicContent` calls each `Dynamic` block's endpoint in-process with `literalData` (`@lowdefy/operators` `createLiteralData`: the block's policy id, the app's client operator names from `plugins/clientOperators.json`, and the data-tracking state). The endpoint's `:return` is the trust boundary between data and page config:
 
 - `ServerParser` scans every non-pass-through operator result for anything the client would run as an operator (`getPossibleOperators`, the one rule every check shares: vanishing siblings count, keys that name no client or server operator, such as `_score`, are data) and marks the result's tracked objects (a string `type` or a client operator key) as data by identity (`markDataObjects`). The copying reads carry the marks to their copies: `_get` and `_args` by position in what they read (`markCopiedData`), and a `_function` body that holds data by content digest as each call parses its copy (`indexDataShapes`, `markDataShape`). An object `_object.assign` merges data into becomes data too. Nothing else is matched by content, so an object built from `:return` config is never data, whatever it equals.
 - `controlReturn` then runs `checkLiteralContent` on the finished `:return`: without a policy, a block or action (walked through slots, areas, skeletons, events and control branches) that is data is refused; under any policy, data that the client could run as an operator after a merge is refused.
-- `checkDynamicContent` applies the policy (`policy/checkPolicy.js`) and builds the fragment. The policy judges URLs by the block schema's `urlKind` marks (`policy/collectUrlKinds.js`) (`urlKind: false` opts a URL-named property out) and falls back to key names for every value no schema marks; `_state` reads must name a literal key under `policy.state`.
+- `checkDynamicContent` applies the policy (`policy/checkPolicy.js`) and builds the fragment. The policy judges URLs by the block schema's `urlKind` marks (`policy/collectUrlKinds.js`) (`urlKind: false` opts a URL-named property out) and falls back to key names for every value no schema marks; `_state` reads must name a literal key under `policy.state`. A same-origin navigation URL is matched with `matchPagePath` against `routes.json`, and the matched `pageId` must be in the policy's `links.pages`; a `pageId` value is checked as it is.
 
 ### `/routes/rootConfig/`
 
 Serves app configuration, menus, and home page info.
+
+`getRootConfig` returns `pagePaths`, `{ [pageId]: path }` for every page with a `path` (placeholders or not) whose route auth is not `deny` for this caller, filtered as menu links are (`getPagePaths`). A page without a `path` is left out: the client builds its URL from its id.
 
 ## Design Decisions
 

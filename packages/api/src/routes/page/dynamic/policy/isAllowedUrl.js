@@ -14,18 +14,21 @@
   limitations under the License.
 */
 
+import { matchPagePath } from '@lowdefy/node-utils';
+
 import normalizeUrlText from './normalizeUrlText.js';
 
 // A reserved origin: a URL that resolves to it stays on the app.
 const SENTINEL = 'https://app.invalid';
 
 // Decides one URL. Same-origin values are allowed, except that navigation
-// (href, url, Link) may only name an app path for a page the policy lists.
+// (href, url, Link) may only name an app path that matches a page the policy
+// lists.
 // Anything else must be http(s) on an origin the policy lists. `schemeless`
 // mirrors the engine's link resolver (engine/src/resolveTarget.js,
 // classifyUrl), which reads a colon-less `url` such as `example.com` as
 // `https://example.com`.
-function isAllowedUrl({ value, policy, navigation, schemeless }) {
+function isAllowedUrl({ value, policy, navigation, schemeless, routes }) {
   const text = normalizeUrlText(value);
   if (text === '' || text.startsWith('#')) {
     return true;
@@ -39,7 +42,11 @@ function isAllowedUrl({ value, policy, navigation, schemeless }) {
     return false;
   }
   if (url.origin === SENTINEL) {
-    return !navigation || policy.links.pages.includes(url.pathname.slice(1));
+    if (!navigation) {
+      return true;
+    }
+    const match = matchPagePath({ routes, path: url.pathname.slice(1) });
+    return match !== null && policy.links.pages.includes(match.pageId);
   }
   if (url.protocol !== 'http:' && url.protocol !== 'https:') {
     return false;

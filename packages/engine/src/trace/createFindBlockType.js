@@ -16,15 +16,13 @@
 
 import { type } from '@lowdefy/helpers';
 
-// The type of a block on a page: from the context of that page, else from the app context.
+// The type of a block on a page: from the context of that page instance, else from the app context.
 function createFindBlockType({ lowdefy }) {
-  return function findBlockType({ blockId, pageId }) {
+  return function findBlockType({ blockId, instanceKey }) {
     if (type.isNull(blockId)) {
       return null;
     }
-    const pageContext = Object.values(lowdefy.contexts ?? {}).find(
-      (context) => context.pageId === pageId
-    );
+    const pageContext = lowdefy.contexts?.[instanceKey];
     const block =
       pageContext?._internal.RootSlots.map[blockId] ??
       lowdefy.appContext?._internal.RootSlots.map[blockId];

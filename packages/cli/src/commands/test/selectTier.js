@@ -20,7 +20,9 @@ import { type } from '@lowdefy/helpers';
 import committedJourneys from '../journeys/committedJourneys.js';
 import computeTiers from '../journeys/usage/computeTiers.js';
 import inTier from '../journeys/usage/inTier.js';
+import loadRouteTable from '../journeys/loadRouteTable.js';
 import readTierConfigText from '../journeys/usage/readTierConfigText.js';
+import resolveBuildDirectory from '../journeys/resolveBuildDirectory.js';
 
 function journeyKey({ file, journeyIndex }) {
   return `${file}#${journeyIndex}`;
@@ -78,11 +80,12 @@ async function selectTier({ context, selected, tier, usageWindow, fullTierOption
     name: journey.name,
     journey,
   }));
+  const routeTable = loadRouteTable({ buildDirectory: resolveBuildDirectory({ context }) });
   let isConfigText;
   if (tier !== 'full') {
-    isConfigText = await readTierConfigText({ context, journeys });
+    isConfigText = await readTierConfigText({ context, journeys, routeTable });
   }
-  const tiers = computeTiers({ journeys, usageWindow, isConfigText, fullTierOption });
+  const tiers = computeTiers({ journeys, usageWindow, routeTable, isConfigText, fullTierOption });
   const ranked = type.isUndefined(tiers.refused);
   if (tier !== 'full' && !ranked) {
     return { selected: [], skipped: [], refused: tiers.refused, tierRows: tiers.rows };

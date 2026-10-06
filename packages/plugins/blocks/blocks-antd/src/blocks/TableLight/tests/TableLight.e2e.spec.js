@@ -330,6 +330,37 @@ test.describe('TableLight Block', () => {
     await expect(page).toHaveURL(/\/button\?id=l2$/);
   });
 
+  test('link and relation cells fill the target page path from pathParams', async ({ page }) => {
+    await expect(getCell(page, 'tl_path_params', 0, 'link').locator('a')).toHaveAttribute(
+      'href',
+      /\/tablelight-tickets\/support\/t1$/
+    );
+    // A relation cell with pathParams gets no default _id query.
+    await expect(
+      getCell(page, 'tl_path_params', 0, 'relation').locator('a.lf-table-chip')
+    ).toHaveAttribute('href', /\/tablelight-tickets\/sales\/rel1$/);
+    await Promise.all([
+      page.waitForURL(/\/tablelight-tickets\/support\/t1$/, { waitUntil: 'commit' }),
+      getCell(page, 'tl_path_params', 0, 'name').click(),
+    ]);
+  });
+
+  test('a cell link missing a path placeholder fails with the page and placeholder', async ({
+    page,
+  }) => {
+    const messages = [];
+    page.on('console', (message) => messages.push(message.text()));
+    await navigateToTestPage(page, 'tablelight-path-error');
+    await expect(getBlock(page, 'tl_path_params_ok')).toBeAttached();
+    // The block error boundary renders nothing and logs the error.
+    await expect(getTable(page, 'tl_path_params_missing')).toHaveCount(0);
+    await expect
+      .poll(() => messages.join('\n'))
+      .toContain(
+        'Link to page "tablelight-path-target" is missing a value for path placeholder "ticket_id".'
+      );
+  });
+
   test('a rowLink row opens a new tab on a modified click', async ({ page, context }) => {
     const [newPage] = await Promise.all([
       context.waitForEvent('page'),

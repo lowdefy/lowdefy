@@ -15,9 +15,10 @@
 */
 
 import { ConfigError } from '@lowdefy/errors';
-import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
+import { buildPagePath, type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 import getHomePathname from './getHomePathname.js';
+import getPathEntry from './getPathEntry.js';
 
 // The target's own urlQuery combines with any query the url string already
 // carries, matching the grammar semantics createLink resolved before.
@@ -137,7 +138,29 @@ function externalTarget({ parsed, query }) {
   return { kind: 'external', href: target.href };
 }
 
-// The single resolver of the navigation grammar { home, pageId, url, urlQuery }
+// The pattern of a page the current page links to: the page's own linkPaths (patterned pages its
+// collected links target), then the patterned pages the user may open. A page in neither is served
+// at its id.
+function getPagePattern({ lowdefy, pageId }) {
+  return lowdefy.linkPaths[pageId] ?? lowdefy.pagePaths[pageId];
+}
+
+// A page target names the page, its values and the instance they open. Resolving writes nothing:
+// a link is resolved on every render, and rememberTarget records it only when it is followed.
+function pageTarget({ pathname, pageId, pathParams, pattern, query }) {
+  const entry = getPathEntry({ pageId, pathParams, pattern });
+  return { kind: 'page', pathname, query, ...entry };
+}
+
+function buildPathname({ pageId, pathParams, pattern }) {
+  try {
+    return `/${buildPagePath({ pageId, path: pattern, pathParams })}`;
+  } catch (error) {
+    throw new ConfigError(error.message, { cause: error });
+  }
+}
+
+// The single resolver of the navigation grammar { home, pageId, url, urlQuery, pathParams }
 // for every reader. Returns a discriminated, un-prefixed target - never a string,
 // never basePath-prefixed - so the page/external distinction is data the consumer
 // reads rather than a shape it guesses from a leading slash.
@@ -145,17 +168,14 @@ function resolveTarget({ lowdefy, target, name = 'Link' }) {
   if (!type.isObject(target)) {
     return undefined;
   }
-  const { home, pageId, url, urlQuery } = target;
-
+  const { home, pageId, pathParams, url, urlQuery } = target;
   const defined = [home, pageId, url].filter((value) => value);
   if (defined.length > 1) {
     throw new ConfigError(
       `Invalid ${name}: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined.`
     );
   }
-
   const query = type.isNone(urlQuery) ? '' : `${urlQueryFn.stringify(urlQuery)}`;
-
   if (home === true) {
     const pathname = getHomePathname({ lowdefy });
     // An app whose home config names no page has no resolvable home - propagate
@@ -163,10 +183,23 @@ function resolveTarget({ lowdefy, target, name = 'Link' }) {
     if (type.isNone(pathname)) {
       return undefined;
     }
-    return { kind: 'page', pathname, query };
+    return pageTarget({
+      pathname,
+      pageId: lowdefy.home.pageId,
+      pathParams: lowdefy.home.pathParams,
+      pattern: lowdefy.pagePaths[lowdefy.home.pageId],
+      query,
+    });
   }
   if (type.isString(pageId)) {
-    return { kind: 'page', pathname: `/${pageId}`, query };
+    const pattern = getPagePattern({ lowdefy, pageId });
+    return pageTarget({
+      pathname: buildPathname({ pageId, pathParams, pattern }),
+      pageId,
+      pathParams,
+      pattern,
+      query,
+    });
   }
   if (type.isString(url) && url !== '') {
     return classifyUrl({ lowdefy, url, query });

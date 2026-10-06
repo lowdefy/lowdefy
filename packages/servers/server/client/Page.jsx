@@ -21,23 +21,46 @@ import createRouter from '@lowdefy/client/adapters/createRouter.js';
 import createLinkComponent from '@lowdefy/client/adapters/Link.js';
 import { createUrl } from '@lowdefy/client/adapters/url.js';
 import Head from '@lowdefy/client/adapters/Head.js';
+import { buildPagePath } from '@lowdefy/helpers';
 
 import blockMetas from '../build/plugins/blockMetas.json';
 import jsMap from '../build/plugins/operators/clientJsMap.js';
 import appMeta from '../build/appMeta.json';
 
+import getShownPage from './getShownPage.js';
 import loadAllIcons from './loadAllIcons.js';
 import loadPageTypes from './loadPageTypes.js';
 import shouldReloadForBuild from './shouldReloadForBuild.js';
 import types from './types.js';
 
+// The path to fetch for a navigation. The app root shows the home page, and
+// /api/page/ with an empty path matches no page, so it fetches the home page's
+// own path.
+function getFetchPath({ path, rootConfig }) {
+  if (path !== '') {
+    return path;
+  }
+  const { home, pagePaths } = rootConfig;
+  return buildPagePath({
+    pageId: home.pageId,
+    path: pagePaths[home.pageId],
+    pathParams: home.pathParams,
+  });
+}
+
 // Replaces lib/client/Page.js. The first page renders from the config
-// embedded in the HTML; SPA navigations fetch /api/page/* and swap pageConfig.
+// embedded in the HTML; SPA navigations fetch /api/page/<path> and swap the
+// page. The server matches the path and answers with the page it shows, the
+// values it carries and the path it matched.
 function Page({ auth, config, lowdefy }) {
-  const [pageConfig, setPageConfig] = useState(config.pageConfig);
-  // The navigation listener is subscribed once, so it reads the shown config
+  const [page, setPage] = useState({
+    matchedPath: config.matchedPath,
+    pageConfig: config.pageConfig,
+    pathParams: config.pathParams,
+  });
+  // The navigation listener is subscribed once, so it reads the shown page
   // through a ref rather than the state its closure captured.
-  const pageConfigRef = useRef(config.pageConfig);
+  const pageRef = useRef(page);
   // A re-render with the same config is how the page context picks up a new
   // URL (getContext updates a memoized context on every render).
   const [, rerender] = useReducer((count) => count + 1, 0);
@@ -58,21 +81,21 @@ function Page({ auth, config, lowdefy }) {
   const latestNavRef = useRef(0);
 
   useEffect(() => {
-    const unsubscribe = router.subscribe(async ({ pageId }) => {
+    const unsubscribe = router.subscribe(async ({ path, search }) => {
       const token = ++latestNavRef.current;
-      const targetPageId = pageId ?? config.rootConfig.home.pageId;
-      // A static page's config is the same whatever the query, so a Link that
-      // stays on it needs no fetch. Dynamic pages re-resolve per navigation.
-      if (targetPageId === pageConfigRef.current.pageId && pageConfigRef.current.dynamic !== true) {
+      // The path the shown instance was matched on shows the same page and
+      // values whatever the query, so it needs no fetch. Another spelling of
+      // the same values fetches and lands on the same instance. Dynamic pages
+      // re-resolve per navigation.
+      if (path === pageRef.current.matchedPath && pageRef.current.pageConfig.dynamic !== true) {
         rerender();
         return;
       }
+      const fetchPath = getFetchPath({ path, rootConfig: config.rootConfig });
       try {
         // Forward the current query string so server-side Dynamic block
         // resolution sees the same urlQuery as an initial HTML load.
-        const res = await fetch(
-          `${router.basePath}/api/page/${targetPageId}${window.location.search}`
-        );
+        const res = await fetch(`${router.basePath}/api/page/${fetchPath}${search}`);
         if (res.status === 401 || res.status === 403) {
           // 401: logged-out navigation to a protected page. 403: authorised but
           // second factor not yet enrolled. Both carry a { redirect } and full
@@ -86,15 +109,19 @@ function Page({ auth, config, lowdefy }) {
         }
         if (!res.ok) {
           if (token !== latestNavRef.current) return;
-          if (targetPageId !== '404') {
+          if (path !== '404') {
             router.replace({ pathname: '/404' });
           }
           return;
         }
-        const { buildId, pageConfig: nextPageConfig } = await res.json();
+        const response = await res.json();
         if (token !== latestNavRef.current) return;
         if (
-          shouldReloadForBuild({ bundleBuildId: appMeta.buildId, serverBuildId: buildId, window })
+          shouldReloadForBuild({
+            bundleBuildId: appMeta.buildId,
+            serverBuildId: response.buildId,
+            window,
+          })
         ) {
           // The app was redeployed after this bundle loaded, so the config may
           // reference _js functions and plugins this bundle does not carry.
@@ -104,18 +131,16 @@ function Page({ auth, config, lowdefy }) {
           return;
         }
         // A failed chunk load falls to the catch below: a full page load.
-        await loadPageTypes({ pageConfig: nextPageConfig });
+        await loadPageTypes({ pageConfig: response.pageConfig });
         if (token !== latestNavRef.current) return;
-        pageConfigRef.current = nextPageConfig;
-        setPageConfig(nextPageConfig);
+        const nextPage = getShownPage({ path, response });
+        pageRef.current = nextPage;
+        setPage(nextPage);
       } catch (error) {
         // Network failure on SPA navigation — fall back to a full page load.
         if (token !== latestNavRef.current) return;
         window.location.assign(
-          createUrl({
-            basePath: router.basePath,
-            pathname: targetPageId === config.rootConfig.home.pageId ? '/' : `/${targetPageId}`,
-          })
+          createUrl({ basePath: router.basePath, pathname: `/${path}`, query: search.slice(1) })
         );
       }
     });
@@ -127,12 +152,14 @@ function Page({ auth, config, lowdefy }) {
       auth={auth}
       Components={{ Head, Link }}
       config={{
-        pageConfig,
+        pageConfig: page.pageConfig,
         rootConfig: config.rootConfig,
       }}
       jsMap={jsMap}
       loadAllIcons={loadAllIcons}
       lowdefy={lowdefy}
+      matchedPath={page.matchedPath}
+      pathParams={page.pathParams}
       router={router}
       types={{
         ...types,

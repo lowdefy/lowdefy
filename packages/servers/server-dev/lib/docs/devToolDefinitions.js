@@ -59,6 +59,15 @@ const userSchema = z
     'Act as this caller instead of the default roleless headless user, e.g. {"roles":["user-admin"]} to render a role-gated page. Merged over the default, so include email/profile/attributes fields too if the page reads them — no auth engine runs for an injected caller, so nothing derives them. Headless only: it is never applied to a page the developer opens in their own browser, so combining it with source "tab" or load_state mode "registry-only" is an error rather than a silently dropped role, and on lowdefy_run_request / lowdefy_run_endpoint it sets the caller the request or routine runs as.'
   );
 
+// Shared by every tool that names a page instance: a page whose `path` has
+// placeholders has one instance per set of values.
+const pathParamsSchema = z
+  .record(z.union([z.string(), z.number()]))
+  .optional()
+  .describe(
+    'Values for the placeholders of a page whose path has them, read by _path_params, e.g. {"space": "support", "ticket_id": "1234"} for path "tickets/{space}/{ticket_id}" (lowdefy_app_map shows each page\'s path). Required to open such a page headless; a missing placeholder is an error naming it.'
+  );
+
 // Shared by the request and endpoint runners.
 const saveResponseSchema = z
   .boolean()
@@ -73,6 +82,9 @@ const devToolDefinitions = {
       "Read the LIVE state of a running page: state, request results, event log (recent actions fired), global, user, input, and urlQuery. If the developer has the page open in a browser it reads their actual tab (ask them to interact first, then inspect); otherwise it runs the page headless. Use this to see what the app's data model really looks like.",
     inputSchema: {
       pageId: z.string().describe('The page id to inspect.'),
+      pathParams: pathParamsSchema.describe(
+        'The page instance to inspect, for a page whose path has placeholders, e.g. {"ticket_id": "1"}. Without it a live tab is read at the instance it shows (or that page\'s most recently shown one); headless needs it to open the page.'
+      ),
       source: z
         .enum(['tab', 'headless'])
         .optional()
@@ -86,6 +98,9 @@ const devToolDefinitions = {
       'Evaluate a Lowdefy operator expression against the live state of a running page — a REPL for config. Pass the operator object in the "expression" argument — any JSON value, e.g. {"_state": "customer.name"} or {"_if": {...}}. Evaluates in the real browser runtime (live tab if connected, else headless).',
     inputSchema: {
       pageId: z.string().describe('The page id whose context to evaluate against.'),
+      pathParams: pathParamsSchema.describe(
+        "The page instance to evaluate against, for a page whose path has placeholders. Without it a live tab is read at the instance it shows (or that page's most recently shown one); headless needs it to open the page."
+      ),
       expression: z
         .any()
         .describe('The operator expression — any JSON value, e.g. {"_state": "key"}.'),
@@ -142,6 +157,9 @@ const devToolDefinitions = {
       "Capture the live state AND recorded request/api responses of a running page into a checkpoint folder (.lowdefy/state-checkpoints/<name>/, one file per part; gitignored — checkpoints contain user/session data). Snapshot the developer's open tab after they reproduce a scenario, or a headless run. Use for building test fixtures and reproducible app states.",
     inputSchema: {
       pageId: z.string().describe('The page to snapshot.'),
+      pathParams: pathParamsSchema.describe(
+        "The page instance to snapshot, for a page whose path has placeholders. The checkpoint keeps the instance's pathParams, and lowdefy_load_state opens that instance."
+      ),
       name: z.string().describe('Checkpoint name (letters, numbers, - and _).'),
       notes: z.string().optional().describe('What this checkpoint captures.'),
       source: z.enum(['tab', 'headless']).optional(),
@@ -232,9 +250,10 @@ const devToolDefinitions = {
 
   lowdefy_screenshot_page: {
     description:
-      'Screenshot a page of the running dev server (headless Chromium) to visually verify layout and rendering. Returns a PNG image. Set width (and height) to check a narrow or phone layout, e.g. width 390, and colorScheme "dark" to check dark mode. To capture a state beyond the page as it loads — an OPEN Selector / MultipleSelector / AutoComplete / DateSelector (calendar) / Cascader / TreeSelector dropdown, a modal a button opens — pass steps, e.g. [{"open": "status"}]: they run after the page settles and before the capture. Popups antd renders in a portal are included, also with fullPage. Pass urlQuery for a page that reads _url_query.',
+      'Screenshot a page of the running dev server (headless Chromium) to visually verify layout and rendering. Returns a PNG image. Set width (and height) to check a narrow or phone layout, e.g. width 390, and colorScheme "dark" to check dark mode. To capture a state beyond the page as it loads — an OPEN Selector / MultipleSelector / AutoComplete / DateSelector (calendar) / Cascader / TreeSelector dropdown, a modal a button opens — pass steps, e.g. [{"open": "status"}]: they run after the page settles and before the capture. Popups antd renders in a portal are included, also with fullPage. Pass urlQuery for a page that reads _url_query, and pathParams for a page whose path has placeholders.',
     inputSchema: {
       pageId: z.string().describe('The page id to screenshot.'),
+      pathParams: pathParamsSchema,
       urlQuery: z
         .record(z.any())
         .optional()
@@ -297,7 +316,7 @@ const devToolDefinitions = {
       steps: z
         .array(z.record(z.any()))
         .describe(
-          'Ordered steps, one key each: {"click": target} (a target object may add "count": 2 or 3 for that many clicks in quick succession, a double click, before the runner settles) | {"open": target} (open an input\'s dropdown or picker popup - Selector, MultipleSelector, AutoComplete, DateSelector, Cascader... - and wait for it to show, so a following screenshot step captures it) | {"fill": {...target, "value"}} | {"fill": {...target, "fromEmail": {"to", "subject"?, "match"}}} (type text read from the newest email to that address, like the email step, without leaving the page: the first match of the regular expression "match", or its first capture group, e.g. "\\\\b\\\\d{6}\\\\b" for a one-time sign-in code) | {"select": {...target, "value"}} (option by exact text: a dropdown option, or a radio, button or segmented option in the block) | {"press": "Enter" | "Mod+k"} (Mod is Meta/Control per platform) | {"back": true} (the browser Back button) | {"goto": pageId | {"pageId", "urlQuery"}} (load an app page like a typed URL; a protected page may redirect to sign-in) | {"email": {"to", "subject"?}} (open the newest email to that address, subject containing the text, that arrived during this journey, waiting for it if needed; opening it again opens the same message; then click its links by text, e.g. {"click": {"text": "Verify email address"}}; needs the dev server started with LOWDEFY_DEV_SMTP_PORT and the app\'s SMTP connection pointed at 127.0.0.1 on that port) | {"as": name} (switch to another person, each with their own browser and cookies; the journey starts as "main", and a new name opens the journey\'s page) | {"wait": {"ms": n} | {"request": requestId} | {"state": path}} | {"screenshot": name?} | {"expect": {"state": {"path", "equals"}} | {"visible": target} | {"hidden": target} (nothing the target names is visible; passes at once when nothing matches yet, so pair it with something that must be present first) | {"text": {...target, "contains"}} | {"url": {"contains"}} | {"title": {"equals"} | {"contains"}} | {"calls": {"request", "pageId"?, "count"} | {"endpoint", "count"}} | {"error": text} | {"effect": true}} (title is the document title; calls compares, once the page settles, how many times this actor called the request - on pageId, default the current page - or the endpoint since the journey started; error must directly follow an interaction step and claims the app errors it raised whose message contains text, with the failed action that reported them; effect must directly follow an interaction step and fails when that interaction did nothing: no event ran, the page did not change, no request or endpoint was called and the URL stayed the same, which is how the explorer proves a dead click). A target is a blockId string, or an object of {"blockId", "row" (zero-based grid row as displayed), "column" (grid col-id), "text" (exact text of the interactive control to use), "containing" (text the element shows, e.g. the email a list row shows; a click on it reaches the row\'s click handler), "nth" (zero-based pick among several matches; a click, open, fill or select whose text or containing matches more than one visible element fails without it)}; "text" without "blockId" searches the whole page, which is how confirm dialog / modal footer buttons, dropdown menu items and email links are reached. fill, select and expect.text need a blockId. fill, select and expect.state take an optional "from": "recorded" (the value came from a recorded trace) or "shape" (value: null, a placeholder a trace could not hold); a journey holding a from: shape placeholder is refused until it is filled in. Each step gets 5s, or the journey\'s timeout: every wait for something to happen (a control to be actionable, an expect to match, a request, state or email to arrive) is bounded by it; page opens get at least 15s; after an interaction the runner waits at most 5s for the page\'s pending events and requests to settle, without failing; wait.ms is exact.'
+          'Ordered steps, one key each: {"click": target} (a target object may add "count": 2 or 3 for that many clicks in quick succession, a double click, before the runner settles) | {"open": target} (open an input\'s dropdown or picker popup - Selector, MultipleSelector, AutoComplete, DateSelector, Cascader... - and wait for it to show, so a following screenshot step captures it) | {"fill": {...target, "value"}} | {"fill": {...target, "fromEmail": {"to", "subject"?, "match"}}} (type text read from the newest email to that address, like the email step, without leaving the page: the first match of the regular expression "match", or its first capture group, e.g. "\\\\b\\\\d{6}\\\\b" for a one-time sign-in code) | {"select": {...target, "value"}} (option by exact text: a dropdown option, or a radio, button or segmented option in the block) | {"press": "Enter" | "Mod+k"} (Mod is Meta/Control per platform) | {"back": true} (the browser Back button) | {"goto": pageId | {"pageId", "pathParams", "urlQuery"}} (load an app page like a typed URL, its path built from pathParams, one string per placeholder of the page\'s path; a protected page may redirect to sign-in) | {"email": {"to", "subject"?}} (open the newest email to that address, subject containing the text, that arrived during this journey, waiting for it if needed; opening it again opens the same message; then click its links by text, e.g. {"click": {"text": "Verify email address"}}; needs the dev server started with LOWDEFY_DEV_SMTP_PORT and the app\'s SMTP connection pointed at 127.0.0.1 on that port) | {"as": name} (switch to another person, each with their own browser and cookies; the journey starts as "main", and a new name opens the journey\'s page) | {"wait": {"ms": n} | {"request": requestId} | {"state": path}} | {"screenshot": name?} | {"expect": {"state": {"path", "equals"}} | {"visible": target} | {"hidden": target} (nothing the target names is visible; passes at once when nothing matches yet, so pair it with something that must be present first) | {"text": {...target, "contains"}} | {"url": {"contains"}} | {"title": {"equals"} | {"contains"}} | {"calls": {"request", "pageId"?, "count"} | {"endpoint", "count"}} | {"error": text} | {"effect": true}} (title is the document title; calls compares, once the page settles, how many times this actor called the request - on pageId, default the current page - or the endpoint since the journey started; error must directly follow an interaction step and claims the app errors it raised whose message contains text, with the failed action that reported them; effect must directly follow an interaction step and fails when that interaction did nothing: no event ran, the page did not change, no request or endpoint was called and the URL stayed the same, which is how the explorer proves a dead click). A target is a blockId string, or an object of {"blockId", "row" (zero-based grid row as displayed), "column" (grid col-id), "text" (exact text of the interactive control to use), "containing" (text the element shows, e.g. the email a list row shows; a click on it reaches the row\'s click handler), "nth" (zero-based pick among several matches; a click, open, fill or select whose text or containing matches more than one visible element fails without it)}; "text" without "blockId" searches the whole page, which is how confirm dialog / modal footer buttons, dropdown menu items and email links are reached. fill, select and expect.text need a blockId. fill, select and expect.state take an optional "from": "recorded" (the value came from a recorded trace) or "shape" (value: null, a placeholder a trace could not hold); a journey holding a from: shape placeholder is refused until it is filled in. Each step gets 5s, or the journey\'s timeout: every wait for something to happen (a control to be actionable, an expect to match, a request, state or email to arrive) is bounded by it; page opens get at least 15s; after an interaction the runner waits at most 5s for the page\'s pending events and requests to settle, without failing; wait.ms is exact.'
         ),
       user: z
         .union([
@@ -315,6 +334,12 @@ const devToolDefinitions = {
         .optional()
         .describe(
           'The name of a data set in tests/data/<name>.yaml. The journey then runs against a fresh in-memory MongoDB database of its own, loaded with the data set\'s snapshot and fixtures, while the developer\'s own tabs keep the app\'s real database: it may write freely. user and "as" step names can name the data set\'s users ("as": "outsider" opens that actor as the data set user outsider). Values the journey types, selects or asserts should come from the data set\'s fixtures or users, never from its snapshot. Refused while a dev mock user is active.'
+        ),
+      pathParams: z
+        .record(z.string())
+        .optional()
+        .describe(
+          'Values for the placeholders of the page\'s path, read by _path_params, e.g. {"space": "support", "ticket_id": "1"} for path "{space}/tickets/{ticket_id}".'
         ),
       urlQuery: z
         .record(z.any())

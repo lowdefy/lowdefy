@@ -17,6 +17,19 @@
 import journeySequence from './journeySequence.js';
 import stepIdentity from './stepIdentity.js';
 
+const routeTable = {
+  routes: [
+    { pageId: 'home', path: 'home' },
+    { pageId: 'orders', path: 'orders' },
+    { pageId: 'order', path: 'orders/{order_id}' },
+    { pageId: 'settings', path: 'settings' },
+    { pageId: 'tickets', path: 'tickets' },
+    { pageId: 'ticket', path: 'tickets/{space}/{ticket_id}' },
+    { pageId: 'welcome', path: 'welcome' },
+  ],
+  basePath: '',
+};
+
 test('stepIdentity gives clicks on the same control in different rows one identity', () => {
   const row3 = stepIdentity({ step: { click: { blockId: 'grid', row: 3, text: 'Assign' } } });
   const row7 = stepIdentity({ step: { click: { blockId: 'grid', row: 7, text: 'Assign' } } });
@@ -76,9 +89,10 @@ test('journeySequence lists only interaction steps, on the page they happen on',
   ]);
 });
 
-test('journeySequence moves pages at a goto and at an expect.url naming a page', () => {
+test('journeySequence moves pages at a goto and at an expect.url that matches a route', () => {
   const sequence = journeySequence({
     pageId: 'home',
+    routeTable,
     steps: [
       { click: 'open_orders' },
       { expect: { url: { contains: '/orders' } } },
@@ -92,28 +106,96 @@ test('journeySequence moves pages at a goto and at an expect.url naming a page',
   expect(sequence.map((entry) => entry.page)).toEqual(['home', 'orders', 'settings', 'home']);
 });
 
+test('journeySequence reads the page a click navigated to on a patterned page', () => {
+  const sequence = journeySequence({
+    pageId: 'tickets',
+    routeTable,
+    steps: [
+      { click: { blockId: 'tickets_grid', row: 0, text: 'Open' } },
+      { expect: { url: { contains: '/tickets/s/1' } } },
+      { fill: { blockId: 'note', value: null, from: 'shape' } },
+      { click: 'save' },
+    ],
+  });
+  expect(sequence.map((entry) => entry.page)).toEqual(['tickets', 'ticket', 'ticket']);
+});
+
+test('journeySequence moves pages only at a goto without a route table', () => {
+  const sequence = journeySequence({
+    pageId: 'tickets',
+    steps: [
+      { click: 'open' },
+      { expect: { url: { contains: '/tickets/s/1' } } },
+      { click: 'save' },
+      { goto: 'home' },
+      { click: 'next' },
+    ],
+  });
+  expect(sequence.map((entry) => entry.page)).toEqual(['tickets', 'tickets', 'home']);
+});
+
+test('journeySequence removes the basePath from an expect.url path before matching it', () => {
+  const sequence = journeySequence({
+    pageId: 'tickets',
+    routeTable: { ...routeTable, basePath: '/app' },
+    steps: [
+      { click: 'open' },
+      { expect: { url: { contains: '/app/tickets/s/1' } } },
+      { click: 'save' },
+      { expect: { url: { contains: '/orders/o-1' } } },
+      { click: 'ship' },
+    ],
+  });
+  expect(sequence.map((entry) => entry.page)).toEqual(['tickets', 'ticket', 'order']);
+});
+
 test('journeySequence reads a production-style and a dev-style segment of one flow the same', () => {
   const production = journeySequence({
     pageId: 'orders',
+    routeTable,
     steps: [
       { fill: { blockId: 'search', value: null, from: 'shape' } },
       { click: 'submit' },
-      { expect: { url: { contains: '/orders/detail' } } },
+      { expect: { url: { contains: '/orders/o-1' } } },
       { click: { blockId: 'items.3.remove' } },
     ],
   });
   const dev = journeySequence({
     pageId: 'orders',
+    routeTable,
     steps: [
       { fill: { blockId: 'search', value: 'shoes', from: 'recorded' } },
       { expect: { state: { path: 'search', equals: 'shoes', from: 'recorded' } } },
       { click: 'submit' },
       { wait: { request: 'save_order' } },
-      { expect: { url: { contains: '/orders/detail?id=o-1' } } },
+      { expect: { url: { contains: '/orders/o-1?tab=items' } } },
       { click: { blockId: 'items.0.remove' } },
     ],
   });
   expect(dev).toEqual(production);
+  expect(dev.map((entry) => entry.page)).toEqual(['orders', 'orders', 'order']);
+});
+
+test('journeySequence reads a committed journey with a goto like a segment that clicked there', () => {
+  const committed = journeySequence({
+    pageId: 'orders',
+    routeTable,
+    steps: [
+      { click: 'submit' },
+      { goto: { pageId: 'order', pathParams: { order_id: 'o-1' } } },
+      { click: 'ship' },
+    ],
+  });
+  const segment = journeySequence({
+    pageId: 'orders',
+    routeTable,
+    steps: [
+      { click: 'submit' },
+      { expect: { url: { contains: '/orders/o-1' } } },
+      { click: 'ship' },
+    ],
+  });
+  expect(committed).toEqual(segment);
 });
 
 test('journeySequence reads open: x the same as click: x', () => {
@@ -142,7 +224,7 @@ test('journeySequence does not fold an open and the option click after it into a
   ).toEqual(['click', 'click']);
 });
 
-test('journeySequence skips the steps on an email and moves to the page the link opened', () => {
+test('journeySequence skips the steps on an email until a goto opens a page', () => {
   expect(
     journeySequence({
       pageId: 'home',
@@ -152,7 +234,7 @@ test('journeySequence skips the steps on an email and moves to the page the link
         { click: 'submit' },
         { email: { to: 'ada@example.com', subject: 'Verify your email' } },
         { click: { text: 'Verify' } },
-        { expect: { url: { contains: '/welcome' } } },
+        { goto: 'welcome' },
         { click: 'start' },
       ],
     })
@@ -163,15 +245,35 @@ test('journeySequence skips the steps on an email and moves to the page the link
   ]);
 });
 
-test('journeySequence reads no further after an email with no later page move', () => {
+test('journeySequence reads on after an email whose link lands on a page', () => {
   expect(
     journeySequence({
       pageId: 'signup',
+      routeTable,
       steps: [
         { click: 'submit' },
         { email: { to: 'ada@example.com' } },
         { click: { text: 'Verify' } },
-        { expect: { text: 'Welcome' } },
+        { expect: { url: { contains: '/welcome' } } },
+        { click: 'start' },
+      ],
+    })
+  ).toEqual([
+    { page: 'signup', identity: '["click","submit",null,null]' },
+    { page: 'welcome', identity: '["click","start",null,null]' },
+  ]);
+});
+
+test('journeySequence reads no further after an email with no later page move', () => {
+  expect(
+    journeySequence({
+      pageId: 'signup',
+      routeTable,
+      steps: [
+        { click: 'submit' },
+        { email: { to: 'ada@example.com' } },
+        { click: { text: 'Verify' } },
+        { expect: { url: { contains: '/verified' } } },
         { click: 'start' },
       ],
     })
@@ -194,19 +296,22 @@ test('journeySequence reads a fill with fromEmail as a fill', () => {
   ).toEqual([{ page: 'verify', identity: '["fill","code",null,null]' }]);
 });
 
-test('journeySequence moves the page only at an expect.url contains that is an app path', () => {
+test('journeySequence reads no page from an expect.url that is no path of a page', () => {
   const sequence = journeySequence({
     pageId: 'orders',
+    routeTable,
     steps: [
       { expect: { url: { contains: 'tab=items' } } },
       { click: 'a' },
       { expect: { url: { contains: '/' } } },
       { click: 'b' },
-      { expect: { url: { contains: '/settings/?tab=items' } } },
+      { expect: { url: { contains: 'tickets/s/1' } } },
       { click: 'c' },
+      { expect: { url: { contains: '/tickets/s' } } },
+      { click: 'd' },
     ],
   });
-  expect(sequence.map((entry) => entry.page)).toEqual(['orders', 'orders', 'settings']);
+  expect(sequence.map((entry) => entry.page)).toEqual(['orders', 'orders', 'orders', 'orders']);
 });
 
 test('stepIdentity with isConfigText keeps config text and reads any other text as none', () => {

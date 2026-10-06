@@ -591,7 +591,7 @@ test('callAgent resolver context getEndpointConfig throws for missing endpoint',
   ).rejects.toThrow();
 });
 
-test('callAgent passes agentContext with conversationId, pageId, urlQuery, userId to resolver context', async () => {
+test('callAgent passes agentContext with conversationId, pageId, pathParams, urlQuery, userId to resolver context', async () => {
   const mockResolver = jest.fn().mockResolvedValue({ response: {} });
   const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
 
@@ -627,6 +627,7 @@ test('callAgent passes agentContext with conversationId, pageId, urlQuery, userI
     pageId: 'principle-view',
     messages: [],
     conversationId: 'conv_123',
+    pathParams: { ticket_id: '1' },
     urlQuery: { principle_id: 'P3' },
   });
 
@@ -634,6 +635,7 @@ test('callAgent passes agentContext with conversationId, pageId, urlQuery, userI
   expect(resolverContext.agentContext).toEqual({
     conversationId: 'conv_123',
     pageId: 'principle-view',
+    pathParams: { ticket_id: '1' },
     sharedState: {},
     sharedStateReadOnly: false,
     urlQuery: { principle_id: 'P3' },
@@ -686,6 +688,7 @@ test('callAgent passes sharedState and sharedStateReadOnly to agentContext', asy
   expect(resolverContext.agentContext).toEqual({
     conversationId: 'conv_123',
     pageId: 'principle-view',
+    pathParams: {},
     sharedState: { space: 'PEL' },
     sharedStateReadOnly: true,
     urlQuery: { principle_id: 'P3' },
@@ -972,6 +975,7 @@ test('callAgent provides agentContext as payload for operator evaluation', async
   expect(capturedPayload).toEqual({
     conversationId: 'conv_abc',
     pageId: 'principle-view',
+    pathParams: {},
     sharedState: {},
     sharedStateReadOnly: false,
     urlQuery: { principle_id: 'P3' },

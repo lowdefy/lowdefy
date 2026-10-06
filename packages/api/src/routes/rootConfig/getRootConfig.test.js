@@ -46,6 +46,13 @@ test('getRootConfig', async () => {
         global: true,
       };
     }
+    if (path === 'routes.json') {
+      return [
+        { pageId: 'page', path: 'page', auth: { public: true } },
+        { pageId: 'users', path: 'admin/users', auth: { public: true } },
+        { pageId: 'ticket', path: '{space}/tickets/{ticket_id}', auth: { public: false } },
+      ];
+    }
     if (path === 'theme.json') {
       return {
         antd: { token: { colorPrimary: '#00b96b' } },
@@ -76,11 +83,15 @@ test('getRootConfig', async () => {
     home: {
       configured: false,
       pageId: 'page',
+      pathParams: {},
     },
     i18n: {},
     lowdefyApp: { slug: 'my-app', name: 'My App' },
     lowdefyGlobal: {
       global: true,
+    },
+    pagePaths: {
+      users: 'admin/users',
     },
     theme: {
       antd: { token: { colorPrimary: '#00b96b' } },

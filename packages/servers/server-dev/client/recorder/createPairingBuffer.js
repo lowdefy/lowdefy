@@ -41,7 +41,7 @@ function hasTargetIdentity(target) {
 // the build getBuild() named when its interaction was captured or its event
 // arrived, never when its hold closes: a hold can outlast a config reload.
 //
-// - addInteraction({ t, kind, element, target, pageId, value, key, url, build }):
+// - addInteraction({ t, kind, element, target, pageId, pathParams, value, key, url, build }):
 //   pageview and back are recorded at once; click, change and key wait until
 //   their hold ends, collecting the events the rule pairs with them. `build`
 //   is given only by a caller that knows it better than getBuild() does now
@@ -107,13 +107,24 @@ function createPairingBuffer({
     schedule();
   }
 
-  function addInteraction({ t, kind, element, target, pageId, value, key, url, build: named }) {
+  function addInteraction({
+    t,
+    kind,
+    element,
+    target,
+    pageId,
+    pathParams,
+    value,
+    key,
+    url,
+    build: named,
+  }) {
     const time = t ?? now();
     const build = type.isUndefined(named) ? getBuild() : named;
     if (!PAIRED_KINDS.includes(kind)) {
       emit(
         buildInteractionRecord({
-          interaction: { t: time, kind, pageId, url, target: null, build },
+          interaction: { t: time, kind, pageId, pathParams, url, target: null, build },
           session: getSession(),
           roles: getRoles(),
         })

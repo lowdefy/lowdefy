@@ -102,6 +102,9 @@ async function createToolLoopAgent({ connection, agent, context, autoApprove = f
     if (ctx.urlQuery && Object.keys(ctx.urlQuery).length > 0) {
       contextLines.push(`  urlQuery: ${JSON.stringify(ctx.urlQuery)}`);
     }
+    if (ctx.pathParams && Object.keys(ctx.pathParams).length > 0) {
+      contextLines.push(`  pathParams: ${JSON.stringify(ctx.pathParams)}`);
+    }
     if (ctx.sharedState && Object.keys(ctx.sharedState).length > 0) {
       contextLines.push(`  sharedState: ${JSON.stringify(ctx.sharedState)}`);
     }

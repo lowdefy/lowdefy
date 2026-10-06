@@ -117,7 +117,7 @@ FAIL  edits a ticket [member]
 
 A snapshot is pulled by each developer at a different time, from a database others keep editing. A journey that selects a snapshot record by its name passes on one pull and fails on the next. So, on a data set with a snapshot:
 
-- Every value a journey types, selects, clicks by text, puts in `urlQuery` or asserts comes from the data set's `fixtures` or `users`, or is UI text from the app's config (labels, titles, options). The snapshot supplies volume, realistic shapes and neighbouring records, never a value a journey depends on.
+- Every value a journey types, selects, clicks by text, puts in `urlQuery` or `pathParams` (the values of a [page path](/page-paths)'s placeholders) or asserts comes from the data set's `fixtures` or `users`, or is UI text from the app's config (labels, titles, options). The snapshot supplies volume, realistic shapes and neighbouring records, never a value a journey depends on.
 - Target grid rows with `containing: <fixture value>`, never a bare `row: N`. A state path with an array index, such as `locations.0.path`, has the same problem: assert it only on a list the fixtures own outright, or assert by text.
 - Scope the snapshot away from the fixture tenant. Let the fixtures own one organization completely, and let the snapshot bring other organizations plus the shared content the app reads across them.
 

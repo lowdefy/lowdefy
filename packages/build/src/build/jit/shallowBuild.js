@@ -48,6 +48,8 @@ import { resolveModuleManifests } from '../registerModules.js';
 import buildModules from '../buildModules.js';
 import buildNotifications from '../buildNotifications.js';
 import buildRefs from '../buildRefs/buildRefs.js';
+import buildRoutes from '../buildRoutes/buildRoutes.js';
+import validateAuthPagePaths from '../buildRoutes/validateAuthPagePaths.js';
 import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.js';
 import resolveAuthConfigProjection from '../buildAuth/resolveAuthConfigProjection.js';
 import { serializeRegistry } from '../buildRefs/deferredRegistry.js';
@@ -83,6 +85,7 @@ import writeTheme from '../writeTheme.js';
 import writeMaps from '../writeMaps.js';
 import updateServerPackageJson from '../full/updateServerPackageJson.js';
 import writeMenus from '../writeMenus.js';
+import writeRoutes from '../writeRoutes.js';
 import writeTypes from '../full/writeTypes.js';
 import writePageRegistry from './writePageRegistry.js';
 import writePluginImports from '../writePluginImports/writePluginImports.js';
@@ -182,7 +185,9 @@ async function shallowBuild(options) {
     tryBuildStep(buildLogger, 'buildLogger', { components, context });
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
     tryBuildStep(addKeys, 'addKeys', { components, context });
+    tryBuildStep(buildRoutes, 'buildRoutes', { components, context });
     tryBuildStep(buildAuth, 'buildAuth', { components, context });
+    tryBuildStep(validateAuthPagePaths, 'validateAuthPagePaths', { components, context });
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
     tryBuildStep(buildDynamicPolicies, 'buildDynamicPolicies', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
@@ -262,6 +267,7 @@ async function shallowBuild(options) {
       JSON.stringify([...skeletonSourceFiles].sort())
     );
     await writeMenus({ components, context });
+    await writeRoutes({ components, context });
     // The dev client bundle imports every installed type (addInstalledTypes),
     // so types.json here describes that full bundle — dynamic page content
     // resolution validates fragment types against it at page get.

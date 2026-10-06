@@ -19,6 +19,7 @@ The schema for a `MenuLink` is:
 - `id: string`: __Required__ - A identifier for the link unique to the menu.
 - `type: string`: __Required__ - The type should be `MenuLink`.
 - `pageId: string`: The id of the page to link to. Used as the menu item title if no title is provided.
+- `pathParams: object`: Values for the placeholders in the linked page's [`path`](/page-paths), by placeholder name. The values must be strings written in the config, since menus are built once for the app, and the build fails when a placeholder has no value. A menu link to a page with a path is highlighted on every instance of the page, whatever its values.
 - `url: string`: An external url to link to.
 - `class: string | array | object`: CSS classes (including Tailwind utilities) for the item. Flat applies to the item wrapper; use an object with dot-prefixed slot keys (`.element`, `.icon`, `.label`) to target specific parts.
 - `style: object`: CSS styles for the item. Flat applies to the wrapper; use dot-prefixed slot keys (`.element`, `.icon`, `.label`) to target specific parts.

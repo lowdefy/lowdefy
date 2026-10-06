@@ -21,6 +21,7 @@ import NotificationEmail from './notifications/NotificationEmail/NotificationEma
 test('buildPreviewProps interpolates properties with testData', () => {
   const result = buildPreviewProps({
     Template: NotificationEmail,
+    paths: {},
     config: {
       properties: { subject: 'Hello {{ name }}', message: 'From {{ name }}' },
       testData: { name: 'Jane' },
@@ -32,6 +33,7 @@ test('buildPreviewProps interpolates properties with testData', () => {
 test('buildPreviewProps escapes markdown fields using Template.markdownProperties', () => {
   const result = buildPreviewProps({
     Template: NotificationEmail,
+    paths: {},
     config: {
       properties: { subject: '{{ comment }}', message: '{{ comment }}' },
       testData: { comment: '[click](https://evil.example)' },
@@ -44,6 +46,7 @@ test('buildPreviewProps escapes markdown fields using Template.markdownPropertie
 test('buildPreviewProps resolves pageId links to relative urls', () => {
   const result = buildPreviewProps({
     Template: NotificationEmail,
+    paths: {},
     config: {
       properties: { subject: 'Hello' },
       testData: {
@@ -58,9 +61,39 @@ test('buildPreviewProps resolves pageId links to relative urls', () => {
   expect(result.links.plain).toEqual('/home');
 });
 
+test('buildPreviewProps builds patterned page links from paths', () => {
+  const result = buildPreviewProps({
+    Template: NotificationEmail,
+    paths: { ticket: 'tickets/{space}/{ticket_id}' },
+    config: {
+      properties: { subject: 'Hello' },
+      testData: {
+        links: {
+          button: { pageId: 'ticket', pathParams: { space: 's', ticket_id: '1' } },
+        },
+      },
+    },
+  });
+  expect(result.links.button).toEqual('/tickets/s/1');
+});
+
+test('buildPreviewProps throws for a missing path placeholder value', () => {
+  expect(() =>
+    buildPreviewProps({
+      Template: NotificationEmail,
+      paths: { ticket: 'tickets/{space}/{ticket_id}' },
+      config: {
+        properties: { subject: 'Hello' },
+        testData: { links: { button: { pageId: 'ticket', pathParams: { space: 's' } } } },
+      },
+    })
+  ).toThrow('Link to page "ticket" is missing a value for path placeholder "ticket_id".');
+});
+
 test('buildPreviewProps passes absolute urls through', () => {
   const result = buildPreviewProps({
     Template: NotificationEmail,
+    paths: {},
     config: {
       properties: { subject: 'Hello' },
       testData: { links: { button: 'https://example.com/item' } },
@@ -72,6 +105,7 @@ test('buildPreviewProps passes absolute urls through', () => {
 test('buildPreviewProps resolves item links inside dataKeys arrays', () => {
   const result = buildPreviewProps({
     Template: DigestEmail,
+    paths: {},
     config: {
       properties: { subject: 'Digest' },
       testData: {
@@ -92,6 +126,7 @@ test('buildPreviewProps does not mutate testData when resolving item links', () 
   };
   buildPreviewProps({
     Template: DigestEmail,
+    paths: {},
     config: { properties: { subject: 'Digest' }, testData },
   });
   expect(testData.items[0].link).toEqual({ pageId: 'item' });
@@ -100,6 +135,7 @@ test('buildPreviewProps does not mutate testData when resolving item links', () 
 test('buildPreviewProps passes theme through', () => {
   const result = buildPreviewProps({
     Template: NotificationEmail,
+    paths: {},
     config: {
       properties: { subject: 'Hello' },
       testData: {},

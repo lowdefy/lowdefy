@@ -42,6 +42,16 @@ test.describe('Anchor Block', () => {
     await expect(svg).toBeAttached();
   });
 
+  test('an icon in an Anchor logs no unknown prop warning', async ({ page }) => {
+    const errors = [];
+    page.on('console', (message) => {
+      if (message.type() === 'error') errors.push(message.text());
+    });
+    await page.reload();
+    await expect(getAnchor(page, 'anchor_with_icon').locator('svg')).toBeAttached();
+    expect(errors.filter((text) => text.includes('pathParams'))).toEqual([]);
+  });
+
   test('applies disabled styling', async ({ page }) => {
     const anchor = getAnchor(page, 'anchor_disabled');
     await expect(anchor).toBeVisible();
@@ -53,6 +63,15 @@ test.describe('Anchor Block', () => {
   test('href attribute is set correctly', async ({ page }) => {
     const anchor = getAnchor(page, 'anchor_href');
     await expect(anchor).toHaveAttribute('href', 'https://lowdefy.com');
+  });
+
+  test('pathParams fill the target page path', async ({ page }) => {
+    const anchor = getAnchor(page, 'anchor_path_params');
+    await expect(anchor).toHaveAttribute('href', '/anchor-tickets/support/1234');
+    await Promise.all([
+      page.waitForURL(/\/anchor-tickets\/support\/1234$/, { waitUntil: 'commit' }),
+      anchor.click(),
+    ]);
   });
 
   test('newTab sets target="_blank"', async ({ page }) => {

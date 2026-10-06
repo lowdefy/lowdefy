@@ -21,7 +21,13 @@ import createLink from '../src/createLink.js';
 // resolveTarget's url origin classification reads the window origin and basePath,
 // so url cases need a fixture that provides them (matching resolveTarget.test.js).
 function createLowdefy({ inputs = {}, home, basePath, origin = 'https://app.lowdefy.test' } = {}) {
-  const lowdefy = { inputs, _internal: { globals: { window: { location: { origin } } } } };
+  const lowdefy = {
+    inputs,
+    linkPaths: {},
+    pagePaths: {},
+    pathMemory: new Map(),
+    _internal: { globals: { window: { location: { origin } } } },
+  };
   if (home !== undefined) {
     lowdefy.home = home;
   }
@@ -46,7 +52,7 @@ beforeEach(() => {
 });
 
 test('createLink, link with pageId', () => {
-  const lowdefy = { inputs: {} };
+  const lowdefy = { inputs: {}, linkPaths: {}, pagePaths: {}, pathMemory: new Map() };
   const link = createLink({
     backLink: mockBackLink,
     disabledLink: mockDisabledLink,
@@ -95,7 +101,7 @@ test('createLink, link with pageId', () => {
 });
 
 test('createLink, link with pageId new tab', () => {
-  const lowdefy = { inputs: {} };
+  const lowdefy = { inputs: {}, linkPaths: {}, pagePaths: {}, pathMemory: new Map() };
   const link = createLink({
     backLink: mockBackLink,
     disabledLink: mockDisabledLink,
@@ -138,7 +144,7 @@ test('createLink, link with pageId new tab', () => {
 });
 
 test('createLink, link with pageId with inputs', () => {
-  const lowdefy = { inputs: {} };
+  const lowdefy = { inputs: {}, linkPaths: {}, pagePaths: {}, pathMemory: new Map() };
   const link = createLink({
     backLink: mockBackLink,
     disabledLink: mockDisabledLink,
@@ -393,7 +399,13 @@ test('createLink, link with off-origin url is an external navigation', () => {
 });
 
 test('createLink, link with home, not configured', () => {
-  const lowdefy = { inputs: {}, home: { pageId: 'home', configured: false } };
+  const lowdefy = {
+    inputs: {},
+    home: { pageId: 'home', configured: false },
+    linkPaths: {},
+    pagePaths: {},
+    pathMemory: new Map(),
+  };
   const link = createLink({
     backLink: mockBackLink,
     disabledLink: mockDisabledLink,
@@ -442,7 +454,13 @@ test('createLink, link with home, not configured', () => {
 });
 
 test('createLink, link with home, configured', () => {
-  const lowdefy = { inputs: {}, home: { pageId: 'home', configured: true } };
+  const lowdefy = {
+    inputs: {},
+    home: { pageId: 'home', configured: true },
+    linkPaths: {},
+    pagePaths: {},
+    pathMemory: new Map(),
+  };
   const link = createLink({
     backLink: mockBackLink,
     disabledLink: mockDisabledLink,
@@ -483,7 +501,13 @@ test('createLink, link with home, configured', () => {
 });
 
 test('createLink, link with home new tab, not configured', () => {
-  const lowdefy = { inputs: {}, home: { pageId: 'home' } };
+  const lowdefy = {
+    inputs: {},
+    home: { pageId: 'home' },
+    linkPaths: {},
+    pagePaths: {},
+    pathMemory: new Map(),
+  };
   const link = createLink({
     backLink: mockBackLink,
     disabledLink: mockDisabledLink,
@@ -526,7 +550,13 @@ test('createLink, link with home new tab, not configured', () => {
 });
 
 test('createLink, link with home with inputs, not configured', () => {
-  const lowdefy = { inputs: {}, home: { pageId: 'home' } };
+  const lowdefy = {
+    inputs: {},
+    home: { pageId: 'home' },
+    linkPaths: {},
+    pagePaths: {},
+    pathMemory: new Map(),
+  };
   const link = createLink({
     backLink: mockBackLink,
     disabledLink: mockDisabledLink,
@@ -564,7 +594,13 @@ test('createLink, link with home with inputs, not configured', () => {
 test('createLink, link with home calls noLink when the home config names no page', () => {
   // What getHomeAndMenus returns for an app with no homePageId and no menu link
   // to fall back on. Unguarded this pushed "/undefined" into history.
-  const lowdefy = { inputs: {}, home: { configured: false, pageId: null } };
+  const lowdefy = {
+    inputs: {},
+    home: { configured: false, pageId: null },
+    linkPaths: {},
+    pagePaths: {},
+    pathMemory: new Map(),
+  };
   const link = createLink({
     backLink: mockBackLink,
     disabledLink: mockDisabledLink,
@@ -583,7 +619,7 @@ test('createLink, link with home calls noLink when the home config names no page
 });
 
 test('createLink, link with home calls noLink when there is no home config at all', () => {
-  const lowdefy = { inputs: {} };
+  const lowdefy = { inputs: {}, linkPaths: {}, pagePaths: {}, pathMemory: new Map() };
   const link = createLink({
     backLink: mockBackLink,
     disabledLink: mockDisabledLink,
@@ -599,7 +635,13 @@ test('createLink, link with home calls noLink when there is no home config at al
 });
 
 test('createLink, no params calls noLink', () => {
-  const lowdefy = { inputs: {}, home: { pageId: 'home' } };
+  const lowdefy = {
+    inputs: {},
+    home: { pageId: 'home' },
+    linkPaths: {},
+    pagePaths: {},
+    pathMemory: new Map(),
+  };
   const link = createLink({
     backLink: mockBackLink,
     disabledLink: mockDisabledLink,
@@ -617,7 +659,13 @@ test('createLink, no params calls noLink', () => {
 });
 
 test('createLink, disabled calls disabledLink', () => {
-  const lowdefy = { inputs: {}, home: { pageId: 'home' } };
+  const lowdefy = {
+    inputs: {},
+    home: { pageId: 'home' },
+    linkPaths: {},
+    pagePaths: {},
+    pathMemory: new Map(),
+  };
   const link = createLink({
     backLink: mockBackLink,
     disabledLink: mockDisabledLink,
@@ -642,7 +690,7 @@ test('createLink, disabled calls disabledLink', () => {
 });
 
 test('createLink, link with back', () => {
-  const lowdefy = { inputs: {} };
+  const lowdefy = { inputs: {}, linkPaths: {}, pagePaths: {}, pathMemory: new Map() };
   const link = createLink({
     backLink: mockBackLink,
     disabledLink: mockDisabledLink,
@@ -683,7 +731,7 @@ test('createLink, more than one grammar key throws the resolver ambiguity error'
 });
 
 test('createLink, replace and scroll are passed through to sameOriginLink', () => {
-  const lowdefy = { inputs: {} };
+  const lowdefy = { inputs: {}, linkPaths: {}, pagePaths: {}, pathMemory: new Map() };
   const link = createLink({
     backLink: mockBackLink,
     disabledLink: mockDisabledLink,
@@ -698,4 +746,67 @@ test('createLink, replace and scroll are passed through to sameOriginLink', () =
     replace: true,
     scroll: false,
   });
+});
+
+test('createLink seeds the input of the page instance a pageId link opens', () => {
+  const lowdefy = createLowdefy();
+  lowdefy.pagePaths = { ticket: 'tickets/{ticket_id}' };
+  const link = createLink({
+    backLink: mockBackLink,
+    disabledLink: mockDisabledLink,
+    lowdefy,
+    newOriginLink: mockNewOriginLink,
+    noLink: mockNoLink,
+    sameOriginLink: mockSameOriginLink,
+  });
+  link({ pageId: 'ticket', pathParams: { ticket_id: 7 }, input: { from: 'list' } });
+  expect(mockSameOriginLink.mock.calls[0][0].pathname).toEqual('/tickets/7');
+  mockSameOriginLink.mock.calls[0][0].setInput();
+  expect(lowdefy.inputs).toEqual({ 'page:ticket#tickets/7': { from: 'list' } });
+});
+
+test('createLink remembers a page link only when it is followed', () => {
+  const lowdefy = createLowdefy();
+  lowdefy.pagePaths = { ticket: 'tickets/{space}/{ticket_id}' };
+  const link = createLink({
+    backLink: mockBackLink,
+    disabledLink: mockDisabledLink,
+    lowdefy,
+    newOriginLink: mockNewOriginLink,
+    noLink: mockNoLink,
+    sameOriginLink: mockSameOriginLink,
+  });
+  const props = { pageId: 'ticket', pathParams: { space: 's', ticket_id: 7 }, input: { a: 1 } };
+  link(props);
+  link(props);
+  link(props);
+  expect(lowdefy.pathMemory.size).toBe(0);
+  mockSameOriginLink.mock.calls[0][0].setInput();
+  expect([...lowdefy.pathMemory.entries()]).toEqual([
+    [
+      'tickets/s/7',
+      {
+        pageId: 'ticket',
+        pathParams: { space: 's', ticket_id: '7' },
+        instanceKey: 'page:ticket#tickets/s/7',
+      },
+    ],
+  ]);
+  expect(lowdefy.inputs).toEqual({ 'page:ticket#tickets/s/7': { a: 1 } });
+});
+
+test('createLink seeds no input for a url link', () => {
+  const lowdefy = createLowdefy();
+  const link = createLink({
+    backLink: mockBackLink,
+    disabledLink: mockDisabledLink,
+    lowdefy,
+    newOriginLink: mockNewOriginLink,
+    noLink: mockNoLink,
+    sameOriginLink: mockSameOriginLink,
+  });
+  link({ url: '/tickets/7', input: { from: 'list' } });
+  mockSameOriginLink.mock.calls[0][0].setInput();
+  expect(lowdefy.inputs).toEqual({});
+  expect(lowdefy.pathMemory.size).toBe(0);
 });

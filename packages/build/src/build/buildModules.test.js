@@ -59,6 +59,27 @@ test('buildModules adds module pages with scoped IDs', () => {
   ]);
 });
 
+test('buildModules scopes a module page path to its entry, as it scopes the page id', () => {
+  const moduleEntry = makeModuleEntry({
+    id: 'support',
+    manifest: {
+      pages: [
+        { id: 'ticket', type: 'Box', path: '{space}/tickets/{ticket_id}' },
+        { id: 'tickets', type: 'Box' },
+      ],
+    },
+  });
+  const context = makeContext([moduleEntry]);
+  const components = { modules: [{ id: 'support' }], pages: [] };
+
+  const result = buildModules({ components, context });
+
+  expect(result.pages).toEqual([
+    { id: 'support/ticket', type: 'Box', path: 'support/{space}/tickets/{ticket_id}' },
+    { id: 'support/tickets', type: 'Box' },
+  ]);
+});
+
 test('buildModules adds module connections with scoped IDs', () => {
   const moduleEntry = makeModuleEntry({
     id: 'team-users',

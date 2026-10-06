@@ -17,11 +17,6 @@
 import { Hono } from 'hono';
 import { jest } from '@jest/globals';
 
-const mockGetPageConfig = jest.fn();
-jest.unstable_mockModule('@lowdefy/api', () => ({
-  getPageConfig: mockGetPageConfig,
-}));
-
 jest.unstable_mockModule('../../lib/build/appMeta.js', () => ({
   default: { buildId: 'build-abc' },
 }));
@@ -36,11 +31,32 @@ jest.unstable_mockModule('../../lib/build/config.js', () => ({
 
 const { default: apiPageHandler } = await import('./apiPage.js');
 
-function createApp() {
+const routes = [
+  { pageId: 'home', path: 'home' },
+  { pageId: 'ticket', path: '{space}/tickets/{ticket_id}' },
+];
+
+const pages = {
+  home: { id: 'home' },
+  ticket: { id: 'ticket' },
+};
+
+function createApp({
+  outcome = 'allow',
+  pagesProtectedByDefault = false,
+  user = { id: 'u1' },
+} = {}) {
   const app = new Hono();
   app.use('*', async (c, next) => {
     c.set('lowdefyContext', {
+      authEnforcement: { pagesProtectedByDefault },
+      authorizeOutcome: () => outcome,
       logger: { debug: jest.fn(), info: jest.fn(), error: jest.fn() },
+      readConfigFile: async (file) => {
+        if (file === 'routes.json') return routes;
+        return pages[file.slice('pages/'.length, -'.json'.length)] ?? null;
+      },
+      user,
     });
     await next();
   });
@@ -48,50 +64,80 @@ function createApp() {
   return app;
 }
 
-afterEach(() => {
-  mockGetPageConfig.mockReset();
+test('apiPageHandler returns pageId, pathParams and matchedPath for a patterned page', async () => {
+  const res = await createApp().request('/api/page/support/tickets/1234');
+  expect(res.status).toEqual(200);
+  expect(await res.json()).toEqual({
+    buildId: 'build-abc',
+    pageId: 'ticket',
+    pathParams: { space: 'support', ticket_id: '1234' },
+    matchedPath: 'support/tickets/1234',
+    pageConfig: { id: 'ticket' },
+  });
+});
+
+test('apiPageHandler decodes an encoded "/" in a value once and keeps matchedPath encoded', async () => {
+  const res = await createApp().request('/api/page/support/tickets/a%2Fb/');
+  const body = await res.json();
+  expect(body.pathParams).toEqual({ space: 'support', ticket_id: 'a/b' });
+  expect(body.matchedPath).toEqual('support/tickets/a%2Fb');
+});
+
+test('apiPageHandler serves a page without path at its id', async () => {
+  const res = await createApp().request('/api/page/home');
+  expect(res.status).toEqual(200);
+  expect(await res.json()).toEqual({
+    buildId: 'build-abc',
+    pageId: 'home',
+    pathParams: {},
+    matchedPath: 'home',
+    pageConfig: { id: 'home' },
+  });
+});
+
+test('apiPageHandler returns 404 when no page matches the path', async () => {
+  const res = await createApp().request('/api/page/support/tickets');
+  expect(res.status).toEqual(404);
+  expect(await res.json()).toEqual({ pageConfig: null });
+});
+
+test('apiPageHandler returns a 401 sign-in redirect with the path and query when no page matches under pagesProtectedByDefault', async () => {
+  const res = await createApp({ pagesProtectedByDefault: true, user: null }).request(
+    '/api/page/support/tickets?tab=2'
+  );
+  expect(res.status).toEqual(401);
+  expect(await res.json()).toEqual({
+    redirect: `/auth/login?callbackUrl=${encodeURIComponent('/support/tickets?tab=2')}`,
+  });
+});
+
+test('apiPageHandler unauthenticated redirect carries the request path and query on callbackUrl', async () => {
+  const res = await createApp({ outcome: 'deny', user: null }).request(
+    '/api/page/support/tickets/1234?tab=2'
+  );
+  expect(res.status).toEqual(401);
+  expect(await res.json()).toEqual({
+    redirect: `/auth/login?callbackUrl=${encodeURIComponent('/support/tickets/1234?tab=2')}`,
+  });
 });
 
 test('apiPageHandler enrol_required redirect carries the request query on callbackUrl', async () => {
-  mockGetPageConfig.mockResolvedValue({ status: 'enrol_required' });
-  const res = await createApp().request('/api/page/invoices?id=123&tab=2');
+  const res = await createApp({ outcome: 'enrol_required' }).request('/api/page/home?id=123&tab=2');
   expect(res.status).toEqual(403);
-  const body = await res.json();
-  expect(body).toEqual({
-    redirect: `/two-factor-enrol?callbackUrl=${encodeURIComponent('/invoices?id=123&tab=2')}`,
+  expect(await res.json()).toEqual({
+    redirect: `/two-factor-enrol?callbackUrl=${encodeURIComponent('/home?id=123&tab=2')}`,
   });
 });
 
 test('apiPageHandler enrol_required redirect is path-only when the request has no query', async () => {
-  mockGetPageConfig.mockResolvedValue({ status: 'enrol_required' });
-  const res = await createApp().request('/api/page/invoices');
+  const res = await createApp({ outcome: 'enrol_required' }).request('/api/page/home');
   expect(res.status).toEqual(403);
-  const body = await res.json();
-  expect(body).toEqual({
-    redirect: `/two-factor-enrol?callbackUrl=${encodeURIComponent('/invoices')}`,
+  expect(await res.json()).toEqual({
+    redirect: `/two-factor-enrol?callbackUrl=${encodeURIComponent('/home')}`,
   });
 });
 
-test('apiPageHandler still returns a 401 sign-in redirect when unauthenticated', async () => {
-  mockGetPageConfig.mockResolvedValue({ status: 'unauthenticated' });
-  const res = await createApp().request('/api/page/invoices');
-  expect(res.status).toEqual(401);
-  const body = await res.json();
-  expect(body).toEqual({
-    redirect: `/auth/login?callbackUrl=${encodeURIComponent('/invoices')}`,
-  });
-});
-
-test('apiPageHandler returns the pageConfig stamped with the build id when status is ok', async () => {
-  mockGetPageConfig.mockResolvedValue({ status: 'ok', pageConfig: { id: 'invoices' } });
-  const res = await createApp().request('/api/page/invoices');
-  expect(res.status).toEqual(200);
-  expect(await res.json()).toEqual({ buildId: 'build-abc', pageConfig: { id: 'invoices' } });
-});
-
-test('apiPageHandler returns 404 when the page is not found', async () => {
-  mockGetPageConfig.mockResolvedValue({ status: 'not_found' });
-  const res = await createApp().request('/api/page/invoices');
+test('apiPageHandler returns 404 for a signed-in caller without access', async () => {
+  const res = await createApp({ outcome: 'deny' }).request('/api/page/home');
   expect(res.status).toEqual(404);
-  expect(await res.json()).toEqual({ pageConfig: null });
 });

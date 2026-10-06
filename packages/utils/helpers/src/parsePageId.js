@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-// The page id a URL shows: its pathname without the basePath and the outer slashes. The app root
-// gives null.
+// The page path a URL shows: its pathname without the basePath and the outer slashes. It is the
+// page id only for pages without a `path` pattern. The app root gives null.
 function parsePageId(url, basePath = '') {
   const pathname = new URL(url, 'http://localhost').pathname;
   const stripped =

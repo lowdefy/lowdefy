@@ -1,0 +1,14 @@
+# U2: Unquoted Leading Placeholder
+# =================================
+# Tests that a path starting with an unquoted placeholder, which YAML parses
+# as a mapping, fails the build with a message to quote it.
+#
+# Expected error:
+#   [Config Error] Page "post" path should be a string. ...
+
+lowdefy: local
+
+pages:
+  - id: post
+    type: Box
+    path: {slug}

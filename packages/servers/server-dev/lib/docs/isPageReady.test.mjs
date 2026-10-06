@@ -19,7 +19,13 @@ import isPageReady from './isPageReady.js';
 // isPageReady runs against `window` inside the browser, so each case installs
 // a stub context on global.window and asserts the boolean.
 function setWindow(context) {
-  global.window = { lowdefy: { contexts: context === undefined ? {} : { 'page:home': context } } };
+  global.window = {
+    lowdefy: {
+      pageId: 'home',
+      pageInstances: { home: ['page:home'] },
+      contexts: context === undefined ? {} : { 'page:home': context },
+    },
+  };
 }
 
 function settledContext({ blocks = {}, requests = {}, websockets = {} } = {}) {
@@ -39,17 +45,41 @@ afterEach(() => {
 test('isPageReady returns false when the page context does not exist', () => {
   setWindow(undefined);
 
-  expect(isPageReady('home')).toBe(false);
+  expect(isPageReady()).toBe(false);
 });
 
-test('isPageReady with a null pageId waits for the page the app shows', () => {
-  global.window = { lowdefy: { contexts: { 'page:login': settledContext() } } };
-  expect(isPageReady(null)).toBe(false);
+test('isPageReady reads the page the app shows', () => {
+  global.window = {
+    lowdefy: { contexts: { 'page:login': settledContext() }, pageInstances: {} },
+  };
+  expect(isPageReady()).toBe(false);
 
   // A protected page redirected to sign in: the login page is what mounted.
   global.window.lowdefy.pageId = 'login';
-  expect(isPageReady(null)).toBe(true);
-  expect(isPageReady('dashboard')).toBe(false);
+  global.window.lowdefy.pageInstances.login = ['page:login'];
+  expect(isPageReady()).toBe(true);
+});
+
+test('isPageReady reads the most recently rendered instance of the shown page', () => {
+  const loading = settledContext();
+  loading._internal.onInitDone = false;
+  global.window = {
+    lowdefy: {
+      pageId: 'ticket',
+      contexts: {
+        'page:ticket#tickets/s/1': settledContext(),
+        'page:ticket#tickets/s/2': loading,
+      },
+      pageInstances: { ticket: ['page:ticket#tickets/s/1', 'page:ticket#tickets/s/2'] },
+    },
+  };
+  expect(isPageReady()).toBe(false);
+
+  global.window.lowdefy.pageInstances.ticket = [
+    'page:ticket#tickets/s/2',
+    'page:ticket#tickets/s/1',
+  ];
+  expect(isPageReady()).toBe(true);
 });
 
 test('isPageReady returns false while a client navigation has not rendered the next page', () => {
@@ -58,46 +88,47 @@ test('isPageReady returns false while a client navigation has not rendered the n
   global.window = {
     lowdefy: {
       pageId: 'guarded',
+      pageInstances: { guarded: ['page:guarded'] },
       contexts: { 'page:guarded': settledContext() },
       _devNavigating: true,
     },
   };
-  expect(isPageReady(null)).toBe(false);
-  expect(isPageReady('guarded')).toBe(false);
+  expect(isPageReady()).toBe(false);
 
   // The next page rendered: window.lowdefy names it and waits on its context.
   global.window.lowdefy._devNavigating = false;
   global.window.lowdefy.pageId = 'home';
-  expect(isPageReady(null)).toBe(false);
+  global.window.lowdefy.pageInstances.home = ['page:home'];
+  expect(isPageReady()).toBe(false);
   global.window.lowdefy.contexts['page:home'] = settledContext();
-  expect(isPageReady(null)).toBe(true);
+  expect(isPageReady()).toBe(true);
 });
 
 test('isPageReady returns false when window.lowdefy is not defined', () => {
   global.window = {};
 
-  expect(isPageReady('home')).toBe(false);
+  expect(isPageReady()).toBe(false);
 });
 
 test('isPageReady returns false while onInit has not finished', () => {
   setWindow({ _internal: { RootSlots: { map: {} } }, requests: {} });
 
-  expect(isPageReady('home')).toBe(false);
+  expect(isPageReady()).toBe(false);
 });
 
 test('isPageReady returns false while onInitAsync has not finished', () => {
   setWindow({ _internal: { onInitDone: true, RootSlots: { map: {} } }, requests: {} });
 
-  expect(isPageReady('home')).toBe(false);
+  expect(isPageReady()).toBe(false);
 });
 
 test('isPageReady returns false while the app onInitAsync has not finished', () => {
   setWindow(settledContext());
   global.window.lowdefy.appContext = { _internal: { onInitDone: true } };
-  expect(isPageReady('home')).toBe(false);
+  expect(isPageReady()).toBe(false);
 
   global.window.lowdefy.appContext._internal.onInitAsyncDone = true;
-  expect(isPageReady('home')).toBe(true);
+  expect(isPageReady()).toBe(true);
 });
 
 test('isPageReady returns false while a block onMountAsync event is loading', () => {
@@ -107,7 +138,7 @@ test('isPageReady returns false while a block onMountAsync event is loading', ()
     })
   );
 
-  expect(isPageReady('home')).toBe(false);
+  expect(isPageReady()).toBe(false);
 });
 
 test('isPageReady returns true when a block event has finished loading', () => {
@@ -117,37 +148,37 @@ test('isPageReady returns true when a block event has finished loading', () => {
     })
   );
 
-  expect(isPageReady('home')).toBe(true);
+  expect(isPageReady()).toBe(true);
 });
 
 test('isPageReady returns false while a request is loading', () => {
   setWindow(settledContext({ requests: { get_users: [{ loading: true }] } }));
 
-  expect(isPageReady('home')).toBe(false);
+  expect(isPageReady()).toBe(false);
 });
 
 test('isPageReady returns true when a request has resolved', () => {
   setWindow(settledContext({ requests: { get_users: [{ loading: false, response: [] }] } }));
 
-  expect(isPageReady('home')).toBe(true);
+  expect(isPageReady()).toBe(true);
 });
 
 test('isPageReady returns false while a websocket channel has not connected', () => {
   setWindow(settledContext({ websockets: { orders: { connected: false, error: null } } }));
 
-  expect(isPageReady('home')).toBe(false);
+  expect(isPageReady()).toBe(false);
 });
 
 test('isPageReady returns true when a websocket channel failed with an error', () => {
   setWindow(settledContext({ websockets: { orders: { connected: false, error: 'refused' } } }));
 
-  expect(isPageReady('home')).toBe(true);
+  expect(isPageReady()).toBe(true);
 });
 
 test('isPageReady returns true when every websocket channel is connected', () => {
   setWindow(settledContext({ websockets: { orders: { connected: true, error: null } } }));
 
-  expect(isPageReady('home')).toBe(true);
+  expect(isPageReady()).toBe(true);
 });
 
 test('isPageReady returns true for a settled page with blocks, requests and websockets', () => {
@@ -159,32 +190,32 @@ test('isPageReady returns true for a settled page with blocks, requests and webs
     })
   );
 
-  expect(isPageReady('home')).toBe(true);
+  expect(isPageReady()).toBe(true);
 });
 
 test('isPageReady returns true for a page with no blocks, requests or websockets', () => {
   setWindow({ _internal: { onInitDone: true, onInitAsyncDone: true } });
 
-  expect(isPageReady('home')).toBe(true);
+  expect(isPageReady()).toBe(true);
 });
 
 test('isPageReady returns false while a lazy block on the page is still loading', () => {
   setWindow(settledContext());
   global.window.__lowdefyLazyLoads = 1;
 
-  expect(isPageReady('home')).toBe(false);
+  expect(isPageReady()).toBe(false);
 });
 
 test('isPageReady returns true once every lazy block has loaded', () => {
   setWindow(settledContext());
   global.window.__lowdefyLazyLoads = 0;
 
-  expect(isPageReady('home')).toBe(true);
+  expect(isPageReady()).toBe(true);
 });
 
 test('isPageReady returns true when no lazy block has mounted and the counter is absent', () => {
   setWindow(settledContext());
 
   expect(global.window.__lowdefyLazyLoads).toBeUndefined();
-  expect(isPageReady('home')).toBe(true);
+  expect(isPageReady()).toBe(true);
 });

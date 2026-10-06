@@ -131,7 +131,9 @@ testSchema()        // Validate against schema (unchanged)
 buildApp()          // Process app.html, app.git_sha; default app.email branding from name/theme
 validateConfig()    // Validate basePath and config
 addDefaultPages()   // Generate 404 if missing
+buildRoutes()       // Route table: every page's path (its id when it has none), ties, home and 404 path rules
 buildAuth()         // Process authentication (MODIFIED: wildcard auth matching)
+validateAuthPagePaths() // Auth pages: no placeholders, authPages URLs name the page's path
 buildConnections()  // Process data connections
 buildApi()          // Process API endpoints
 buildPages()        // Process pages, blocks, requests
@@ -139,6 +141,8 @@ buildMenu()         // Build navigation structure
 ```
 
 Auth matching now supports wildcard glob patterns (`team-users/*`) for module page access rules.
+
+`buildRoutes` parses each page's `path` (`parsePathPattern` from `@lowdefy/helpers`) or takes its id as an all-fixed pattern, refuses ties (`checkRouteTies`: same length, placeholders in the same positions, fixed segments equal ignoring case) and placeholders on the `homePageId` page or any `path` on the `404` page, and keeps the table on `context.routes`. `writeRoutes` writes it as `routes.json` (`[{ pageId, path, auth }]`), which the server matcher (`matchPagePath` in `@lowdefy/node-utils`) and the server-side URL builders read. `buildPages` writes each page's `linkPaths` (the paths of the pages its collected links target) and checks those links' `pathParams`; `buildMenu` checks menu links' `pathParams`.
 
 ### Phase 6: Finalization
 
@@ -516,7 +520,7 @@ The shallow build then:
 1. Collects **skeleton source files** from `~r` markers on non-page components (before `addKeys` removes them)
 2. Collects all string content from pages via `collectPageContent()` into `context.tailwindContentMap` (before stripping)
 3. Strips page content keys from pages (`stripPageContent`)
-4. Runs skeleton build steps (buildApp, buildAuth, buildConnections, buildApi, buildMenu)
+4. Runs skeleton build steps (buildApp, buildRoutes, buildAuth, buildConnections, buildApi, buildMenu) and writes `routes.json`. `path` is a top-level page key, not a page content key, so the skeleton resolves it behind `_ref`, `_build.*` and `_var` as it resolves `id`, and the dev server can match URLs before any page is built.
 5. Creates a **page registry** with page metadata and source file references
 6. Adds all types from installed packages (since page-level types aren't counted)
 7. Writes skeleton artifacts + `pageRegistry.json` + `jsMap.json` + `skeletonSourceFiles.json`

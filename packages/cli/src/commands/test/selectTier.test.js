@@ -22,7 +22,13 @@ import selectTier from './selectTier.js';
 import sequenceId from '../journeys/evidence/sequenceId.js';
 
 const configDirectory = path.join('/app');
-const context = { directories: { config: configDirectory } };
+const context = {
+  directories: {
+    config: configDirectory,
+    dev: path.join(configDirectory, '.lowdefy', 'dev'),
+    build: path.join(configDirectory, '.lowdefy', 'server', 'build'),
+  },
+};
 
 function filePath(name) {
   return path.join(configDirectory, 'tests', 'journeys', name);

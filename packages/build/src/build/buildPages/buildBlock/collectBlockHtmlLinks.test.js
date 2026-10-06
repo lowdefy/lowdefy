@@ -38,9 +38,30 @@ test('collectBlockHtmlLinks collects data-page-id from the block config but not 
     { linkActionRefs, pageId: 'home' }
   );
   expect(linkActionRefs).toEqual([
-    { configKey: 'k1', html: true, location: 'page "home"', pageId: 'contacts' },
-    { configKey: 'k1', html: true, location: 'page "home"', pageId: 'tasks' },
-    { configKey: 'k1', html: true, location: 'page "home"', pageId: 'report' },
+    {
+      configKey: 'k1',
+      html: true,
+      location: 'page "home"',
+      pageId: 'contacts',
+      pathParams: undefined,
+      pathParamsDynamic: false,
+    },
+    {
+      configKey: 'k1',
+      html: true,
+      location: 'page "home"',
+      pageId: 'tasks',
+      pathParams: undefined,
+      pathParamsDynamic: false,
+    },
+    {
+      configKey: 'k1',
+      html: true,
+      location: 'page "home"',
+      pageId: 'report',
+      pathParams: undefined,
+      pathParamsDynamic: false,
+    },
   ]);
 });
 
@@ -51,4 +72,27 @@ test('collectBlockHtmlLinks adds nothing for a block without data-page-id', () =
     { linkActionRefs, pageId: 'home' }
   );
   expect(linkActionRefs).toEqual([]);
+});
+
+test('collectBlockHtmlLinks carries the data-path-params of each link', () => {
+  const linkActionRefs = [];
+  collectBlockHtmlLinks(
+    {
+      '~k': 'k1',
+      properties: {
+        html: `<a data-page-id="ticket" data-path-params='{"space":"s","ticket_id":"1"}'>t</a>`,
+      },
+    },
+    { linkActionRefs, pageId: 'home' }
+  );
+  expect(linkActionRefs).toEqual([
+    {
+      configKey: 'k1',
+      html: true,
+      location: 'page "home"',
+      pageId: 'ticket',
+      pathParams: { space: 's', ticket_id: '1' },
+      pathParamsDynamic: false,
+    },
+  ]);
 });

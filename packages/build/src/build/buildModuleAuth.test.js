@@ -17,6 +17,9 @@
 import { jest } from '@jest/globals';
 
 import buildModuleAuth from './buildModuleAuth.js';
+import buildRoutes from './buildRoutes/buildRoutes.js';
+import getAlwaysPublicPageIds from './buildAuth/getAlwaysPublicPageIds.js';
+import testContext from '../test-utils/testContext.js';
 
 function makeContext(modules) {
   const context = { modules: {}, logger: { info: jest.fn(), warn: jest.fn() } };
@@ -136,6 +139,23 @@ test('buildModuleAuth fills an unclaimed authPages role with the scoped page pat
     signIn: '/crm/login',
     signUp: '/crm/signup',
   });
+});
+
+test('buildModuleAuth writes an auth page URL from the page path, and the page stays public', () => {
+  const context = makeContext([
+    { id: 'crm', manifest: { auth: { pages: { signIn: 'sign-in' } } } },
+  ]);
+  // buildModules has scoped the module page's id and path to its entry.
+  const components = {
+    auth: configuredAuth(),
+    pages: [{ id: 'crm/sign-in', type: 'Box', path: 'crm/login' }],
+  };
+  buildModuleAuth({ components, context, moduleEntries: [{ id: 'crm' }] });
+  expect(components.auth.authPages).toEqual({ signIn: '/crm/login' });
+
+  const routeContext = testContext();
+  buildRoutes({ components, context: routeContext });
+  expect(getAlwaysPublicPageIds({ components, context: routeContext })).toEqual(['crm/sign-in']);
 });
 
 test('buildModuleAuth keeps the app authPages value when the app sets the role', () => {

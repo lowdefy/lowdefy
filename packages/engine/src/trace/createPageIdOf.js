@@ -14,22 +14,10 @@
   limitations under the License.
 */
 
-import { parsePageId, type } from '@lowdefy/helpers';
-
-// The page a URL shows. It reads the URL, never lowdefy.pageId: posthog-js captures a
-// history_change pageview inside its pushState patch, before the next page renders. The app root
-// serves the configured home page.
-function createPageIdOf({ lowdefy }) {
+// The id of the page a URL shows, from the path memory, else the path as a page id.
+function createPageIdOf({ pathEntryOf }) {
   return function pageIdOf(url) {
-    const pageId = parsePageId(url, lowdefy.basePath);
-    if (!type.isNull(pageId)) {
-      return pageId;
-    }
-    // The registry can be used before the client initialises lowdefy.
-    if (lowdefy.home?.configured === true) {
-      return lowdefy.home.pageId;
-    }
-    return null;
+    return pathEntryOf(url)?.pageId ?? null;
   };
 }
 

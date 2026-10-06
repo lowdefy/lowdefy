@@ -46,7 +46,7 @@ Interpolates template property strings against the data item. Every interpolated
 
 **Location:** `src/resolveLink.js`
 
-Turns a `{ pageId, urlQuery }` link object into a URL string (direct page URL, or a landing-page URL when configured). The API package's `resolveNotificationLinks` uses the same convention across `data.links` and template `dataKeys` arrays.
+Turns a `{ pageId, urlQuery, pathParams }` link object into a URL string (direct page URL, or a landing-page URL when configured). The page path comes from `buildPagePath` with the page's pattern from the build's routes (`paths`, `{ [pageId]: path }`). The API package's `resolveNotificationLinks` uses the same convention across `data.links` and template `dataKeys` arrays.
 
 ### Layout and theme
 

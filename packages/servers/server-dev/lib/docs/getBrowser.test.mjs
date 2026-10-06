@@ -268,8 +268,10 @@ test('openPage loads the page and waits on isPageReady for the page the app show
     waitUntil: 'load',
     timeout: 15000,
   });
-  // null: the page shown, so a redirect to the sign-in page settles too.
-  expect(opened.page.waitForFunction).toHaveBeenCalledWith(isPageReady, null, { timeout: 15000 });
+  // The page shown, so a redirect to the sign-in page settles too.
+  expect(opened.page.waitForFunction).toHaveBeenCalledWith(isPageReady, undefined, {
+    timeout: 15000,
+  });
   expect(opened.ready).toBe(true);
 });
 
@@ -344,6 +346,39 @@ test('buildPageUrl appends urlQuery the way the engine serializes Link urlQuery'
       urlQuery: { id: 'abc 1', page: 2, filter: { open: true } },
     })
   ).toEqual('http://localhost:3001/detail?id=abc+1&page=2&filter=%7B%22open%22%3Atrue%7D');
+});
+
+test('buildPageUrl fills the page pattern with pathParams, encoding each value', () => {
+  expect(
+    buildPageUrl({
+      origin: 'http://localhost:3001',
+      pageId: 'ticket',
+      path: 'tickets/{space}/{ticket_id}',
+      pathParams: { space: 'a b/c', ticket_id: 1 },
+      urlQuery: { tab: 'notes' },
+    })
+  ).toEqual('http://localhost:3001/tickets/a%20b%2Fc/1?tab=notes');
+});
+
+test('buildPageUrl serves a multi-segment page id without a path as is', () => {
+  expect(buildPageUrl({ origin: 'http://localhost:3001', pageId: 'support/inbox' })).toEqual(
+    'http://localhost:3001/support/inbox'
+  );
+});
+
+test('openPage opens the page instance its pathParams name', async () => {
+  const { browser, page } = createBrowser();
+
+  const opened = await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'ticket',
+    path: 'tickets/{space}/{ticket_id}',
+    pathParams: { space: 's', ticket_id: '1' },
+  });
+
+  expect(opened.url).toEqual('http://localhost:3001/tickets/s/1');
+  expect(page.goto.mock.calls[0][0]).toEqual('http://localhost:3001/tickets/s/1');
 });
 
 test('openPage opens the page at the urlQuery it was given', async () => {

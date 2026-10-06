@@ -20,6 +20,7 @@ import createChangeSignal from '../utils/createChangeSignal.mjs';
 import findBuildFilesOutsideWatch from '../utils/findBuildFilesOutsideWatch.mjs';
 import getLowdefyVersion from '../utils/getLowdefyVersion.mjs';
 import loadSkeletonSourceFiles from '../utils/loadSkeletonSourceFiles.mjs';
+import pagePathChanged from '../utils/pagePathChanged.mjs';
 import setupWatcher from '../utils/setupWatcher.mjs';
 import updatePageTailwindCss from '../utils/updatePageTailwindCss.mjs';
 
@@ -33,7 +34,8 @@ function findLocalModuleRoots(context) {
 // roots, and every other file the build reads (found in the build's ref maps).
 // A change to a file that shapes the skeleton (lowdefy.yaml, a
 // module.lowdefy.yaml, or a file in skeletonSourceFiles.json) rebuilds the
-// config, as does any change after a failed config build. After every batch,
+// config, as does a page file edit that changes the page's path, and any
+// change after a failed config build. After every batch,
 // the dev server is told files changed (build/invalidatePages), and checks the
 // JIT-built pages against what they read.
 async function lowdefyBuildWatcher(context) {
@@ -87,7 +89,11 @@ async function lowdefyBuildWatcher(context) {
         context.lastBuildFailed ||
         lowdefyYamlModified ||
         moduleYamlModified ||
-        skeletonFileModified
+        skeletonFileModified ||
+        (await pagePathChanged({
+          changedFiles: [...changedFiles, ...relativeChangedFiles],
+          context,
+        }))
       ) {
         await context.lowdefyBuild();
         // In this batch, so a build-status wait also waits for the restart

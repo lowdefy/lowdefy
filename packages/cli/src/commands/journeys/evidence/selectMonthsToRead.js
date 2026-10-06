@@ -25,11 +25,17 @@ import reconcileFlows from './reconcileFlows.js';
 //
 // - journeys: the committed journeys.
 // - dayCounts: { 'YYYY-MM': final days cached }.
-// - isConfigText: the app's config text rule, as reconcileFlows reads it.
-function selectMonthsToRead({ journeys, dayCounts, today, isConfigText }) {
+// - routeTable, isConfigText: the build's route table and the app's config
+//   text rule, as reconcileFlows reads them.
+function selectMonthsToRead({ journeys, dayCounts, today, routeTable, isConfigText }) {
   const months = new Set();
   journeys.forEach((journey) => {
-    const { live, deprecated, recount } = reconcileFlows({ journey, today, isConfigText });
+    const { live, deprecated, recount } = reconcileFlows({
+      journey,
+      today,
+      routeTable,
+      isConfigText,
+    });
     [live, ...deprecated.filter((entry) => isCountedFlow({ entry }))].forEach((entry) => {
       const days = new Map(entry.months.map((month) => [month.month, month.days]));
       Object.keys(dayCounts).forEach((month) => {

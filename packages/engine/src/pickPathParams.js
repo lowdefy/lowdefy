@@ -14,19 +14,21 @@
   limitations under the License.
 */
 
-// location comes from the custom router (@lowdefy/client/adapters):
-// { pageId, pathname, search }. pageId is null at the root path.
-function setPageId(location, rootConfig) {
-  if (location.pageId === '404') {
-    return { redirect: false, pageId: '404' };
+import { parsePathPattern, type } from '@lowdefy/helpers';
+
+// The values a page's URL carries: one string per placeholder in its pattern, as the server
+// returns them for a matched path. Keys the pattern does not use are dropped.
+function pickPathParams({ path, pathParams }) {
+  if (type.isUndefined(path)) {
+    return {};
   }
-  if (!location.pageId) {
-    if (rootConfig.home.configured === false) {
-      return { redirect: true, pageId: rootConfig.home.pageId };
+  const values = {};
+  parsePathPattern(path).forEach((segment) => {
+    if (type.isString(segment.name)) {
+      values[segment.name] = String(pathParams[segment.name]);
     }
-    return { redirect: false, pageId: rootConfig.home.pageId };
-  }
-  return { redirect: false, pageId: location.pageId };
+  });
+  return values;
 }
 
-export default setPageId;
+export default pickPathParams;

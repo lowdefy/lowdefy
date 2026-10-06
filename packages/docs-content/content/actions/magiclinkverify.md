@@ -7,18 +7,21 @@
     pageId?: string
     url?: string
     urlQuery?: object
+    pathParams?: object
   }
   errorCallbackUrl?: {
     home?: boolean
     pageId?: string
     url?: string
     urlQuery?: object
+    pathParams?: object
   }
   newUserCallbackUrl?: {
     home?: boolean
     pageId?: string
     url?: string
     urlQuery?: object
+    pathParams?: object
   }
   token?: string
 }): void
@@ -60,6 +63,7 @@ The event chain ends after this action, like every other action that navigates t
   - `pageId: string`: The pageId to land on.
   - `url: string`: The URL to land on. An absolute URL is not `basePath`-prefixed, so it can be an external landing page.
   - `urlQuery: object`: The urlQuery to set on the destination.
+  - `pathParams: object`: Values for the placeholders in the destination page's [`path`](/page-paths), by placeholder name.
 - `newUserCallbackUrl: object`: Where a sign-in that creates a new account lands, for a first-run or onboarding page. Defaults to the `?newUserCallbackURL=` URL query parameter. Same fields as `callbackUrl`.
 - `errorCallbackUrl: object`: Where a failed verification lands, with the reason in `?error=`. Defaults to the `?errorCallbackURL=` URL query parameter, then to `auth.authPages.error`. Same fields as `callbackUrl`.
 

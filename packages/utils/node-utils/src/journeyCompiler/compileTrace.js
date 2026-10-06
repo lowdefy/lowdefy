@@ -103,6 +103,10 @@ function publicSegment(segment) {
 // neither reads nor writes files, so the CLI, a future MCP tool, coverage and
 // the tests all drive the same arithmetic.
 //
+// `routeTable` ({ routes, basePath }, the build's routes.json and config
+// basePath) is how a segment's sequence reads the page a navigation by click
+// landed on (journeySequence).
+//
 // `existingCandidates` is { fileName: contents } of the output directory. A
 // known sequence hash keeps its file and gets a new origin block; a new one
 // gets a new file. `filters` ({ since, until, build, page }) is how the CLI's
@@ -121,6 +125,7 @@ function publicSegment(segment) {
 function compileTrace({
   records,
   blockMetas = {},
+  routeTable,
   existingCandidates = {},
   source,
   filters = {},
@@ -135,7 +140,7 @@ function compileTrace({
   }
   const { segments: prepared, dropped } = prepareSegments({ records, source, filters });
   const segments = prepared
-    .map((segment) => describeSegment({ records: segment, blockMetas, source }))
+    .map((segment) => describeSegment({ records: segment, blockMetas, routeTable, source }))
     .filter((segment) => !type.isUndefined(segment) && keepSegment({ segment, filters }));
   const clusters = clusterSegments({ segments });
   const textTokens = countTextTokens({ segments });

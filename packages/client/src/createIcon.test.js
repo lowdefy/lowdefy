@@ -96,6 +96,23 @@ test('Icon renders icon data as a lucide svg inside the antd anticon span', () =
   expect(getSvg(container).getAttribute('viewBox')).toBe('0 0 24 24');
 });
 
+test('Icon keeps the page path params off the svg', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const { container } = render(
+    <IconComponent
+      blockId="test-id"
+      methods={methods}
+      pathParams={{ id: '1' }}
+      properties={{ name: 'Pencil' }}
+    />
+  );
+  expect(getSvg(container).hasAttribute('pathParams')).toBe(false);
+  expect(getSvg(container).hasAttribute('pathparams')).toBe(false);
+  expect(errorSpy).not.toHaveBeenCalled();
+  errorSpy.mockRestore();
+});
+
 test('Icon accepts a string as properties', () => {
   const IconComponent = createIcon({ icons: Icons });
   const { container } = render(

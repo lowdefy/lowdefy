@@ -87,6 +87,8 @@ beforeEach(() => {
   context = {
     directories: {
       config: configDirectory,
+      dev: path.join(configDirectory, '.lowdefy', 'dev'),
+      build: path.join(configDirectory, '.lowdefy', 'server', 'build'),
       journeys: path.join(configDirectory, 'tests', 'journeys'),
       test: path.join(configDirectory, '.lowdefy', 'test'),
     },

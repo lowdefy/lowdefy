@@ -75,6 +75,7 @@ async function runJourney({ context, item, url, recordRun, mutant }) {
   try {
     const body = {
       pageId: journey.pageId,
+      pathParams: journey.pathParams,
       data: journey.data,
       steps: journey.steps,
       user: journey.user,

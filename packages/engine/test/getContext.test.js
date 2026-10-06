@@ -23,6 +23,7 @@ const getLowdefy = () => {
   const testLowdefy = {
     contexts: {},
     inputs: { test: {} },
+    pageInstances: {},
     urlQuery: {},
     _internal: {
       displayMessage: () => () => {},

@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 import buildBlock from './buildBlock/buildBlock.js';
+import buildLinkPaths from './buildLinkPaths.js';
 import buildSubscriptions from './buildSubscriptions.js';
 import collectExceptions from '../../utils/collectExceptions.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
@@ -56,10 +57,15 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   // subscriptions key on nested blocks, so the page root must not carry it.
   const subscriptions = page.subscriptions;
   delete page.subscriptions;
+  // The same holds for path, which only a page may declare.
+  const pagePath = page.path;
+  delete page.path;
   const { pageCounters, typeCounters } = createPageTypeCounters({
     typeCounters: context.typeCounters,
   });
   context.pageTypeCounters.set(page.pageId, pageCounters);
+  // The link refs this page adds, for its linkPaths.
+  const linkRefsStart = context.linkActionRefs.length;
   const pageContext = {
     auth: page.auth,
     blockIdCounter: createCounter(),
@@ -82,6 +88,9 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   buildBlock(page, pageContext);
   // set page.id since buildBlock sets id as well.
   page.id = `page:${page.pageId}`;
+  if (!type.isUndefined(pagePath)) {
+    page.path = pagePath;
+  }
 
   // Flag pages with Dynamic blocks so the server can skip resolution
   // (and the deep copy it requires) for static pages with one property read.
@@ -101,6 +110,12 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     shortcutRefs,
     typeCounters,
     websocketActionRefs: context.websocketActionRefs ?? [],
+  });
+
+  buildLinkPaths({
+    page,
+    linkRefs: context.linkActionRefs.slice(linkRefsStart),
+    context,
   });
 
   countImpliedClientTypes({ blockMetas: context.blockMetas, pageCounters, typeCounters });

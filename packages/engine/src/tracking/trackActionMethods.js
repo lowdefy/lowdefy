@@ -28,6 +28,7 @@ const reportingMethods = new Set([
   'getInput',
   'getLocale',
   'getPageId',
+  'getPathParams',
   'getRequestDetails',
   'getState',
   'getUrlQuery',

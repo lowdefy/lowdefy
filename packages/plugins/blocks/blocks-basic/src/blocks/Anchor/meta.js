@@ -57,6 +57,14 @@ export default {
           displayType: 'yaml',
         },
       },
+      pathParams: {
+        type: 'object',
+        description:
+          "Values for the placeholders in the path of the page given by pageId, like `{ ticket_id: '1234' }` for `tickets/{ticket_id}`.",
+        docs: {
+          displayType: 'yaml',
+        },
+      },
       disabled: {
         type: 'boolean',
         default: false,

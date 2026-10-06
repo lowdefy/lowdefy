@@ -153,13 +153,13 @@ function createApp() {
   // Push channel for non-MCP clients. Must sit above the `/lowdefy-docs/:kind`
   // catch-all, which would otherwise treat "events" as a type kind.
   app.get('/lowdefy-docs/events', docsEventsHandler);
-  app.get('/lowdefy-docs/page-config/:pageId', docsPageConfigHandler);
+  app.get('/lowdefy-docs/page-config/:pageId{.+}', docsPageConfigHandler);
   app.get('/lowdefy-docs/find/:id', docsFindHandler);
-  app.get('/lowdefy-docs/screenshot/:pageId', docsScreenshotHandler);
+  app.get('/lowdefy-docs/screenshot/:pageId{.+}', docsScreenshotHandler);
   app.post('/lowdefy-docs/journey', docsJourneyHandler);
   app.post('/lowdefy-docs/mutants', docsMutantsHandler);
   mountExploreWalkRoutes({ app });
-  app.get('/lowdefy-docs/inspect-state/:pageId', docsInspectStateHandler);
+  app.get('/lowdefy-docs/inspect-state/:pageId{.+}', docsInspectStateHandler);
   app.post('/lowdefy-docs/eval-operator', docsEvalOperatorHandler);
   app.post('/lowdefy-docs/run-request', docsRunRequestHandler);
   app.post('/lowdefy-docs/run-endpoint', docsRunEndpointHandler);

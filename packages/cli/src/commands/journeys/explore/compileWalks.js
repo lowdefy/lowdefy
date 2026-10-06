@@ -24,6 +24,7 @@ import { type } from '@lowdefy/helpers';
 import explorerCandidatesDirectory from './explorerCandidatesDirectory.js';
 import filterSnapshotExpectations from './filterSnapshotExpectations.js';
 import loadBlockMetas from '../loadBlockMetas.js';
+import loadRouteTable from '../loadRouteTable.js';
 
 const INTERACTIONS = ['click', 'fill', 'select', 'open'];
 const EFFECT_STEP = { expect: { effect: true } };
@@ -167,6 +168,7 @@ function compileWalks({
       .map((record) => [record.session, record.run.journey])
   );
   const blockMetas = loadBlockMetas({ buildDirectory });
+  const routeTable = loadRouteTable({ buildDirectory });
   const runDirectory = path.join(explorerCandidatesDirectory({ configDirectory }), run);
   const findingsDirectory = path.join(runDirectory, 'findings');
   let droppedExpectations = 0;
@@ -220,6 +222,7 @@ function compileWalks({
     const { candidates, segments } = compileTrace({
       records: records.filter((record) => record.run?.journey === log.walk),
       blockMetas,
+      routeTable,
       source: 'explorer',
       filters: { until },
       prepareCandidate: ({ journey, origin, comments }) => {
@@ -271,6 +274,7 @@ function compileWalks({
   const { candidates: coverageCandidates } = compileTrace({
     records: records.filter((record) => !findingWalks.has(record.run?.journey)),
     blockMetas,
+    routeTable,
     source: 'explorer',
     prepareCandidate: ({ journey, origin, comments, sessions }) => {
       if (!touchesChange({ journey, scope })) return null;

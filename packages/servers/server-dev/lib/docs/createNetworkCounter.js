@@ -26,7 +26,7 @@ function requestKey({ pageId, requestId }) {
 // It lives in Node and is fed by Playwright's context-level request event, so
 // the counts survive full page loads, which replace everything in the page.
 function createNetworkCounter({ origin, basePath }) {
-  const pages = new Set();
+  const pagePaths = new Set();
   const requests = new Map();
   const endpoints = new Map();
   let appEvents = false;
@@ -46,7 +46,7 @@ function createNetworkCounter({ origin, basePath }) {
         appEvents = true;
         return;
       case 'page':
-        pages.add(match.pageId);
+        pagePaths.add(match.path);
         return;
       case 'request': {
         const key = requestKey(match);
@@ -76,7 +76,7 @@ function createNetworkCounter({ origin, basePath }) {
 
   function snapshot() {
     return {
-      pages: [...pages],
+      pagePaths: [...pagePaths],
       appEvents,
       requests: [...requests.values()].map((entry) => ({ ...entry })),
       endpoints: [...endpoints.entries()].map(([endpointId, calls]) => ({ endpointId, calls })),

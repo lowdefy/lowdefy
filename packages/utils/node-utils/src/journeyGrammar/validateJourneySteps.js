@@ -288,23 +288,36 @@ function validateWait(params) {
   return undefined;
 }
 
-// goto takes a pageId string, or { pageId, urlQuery } for a page that reads
-// _url_query.
+// goto takes a pageId string, or { pageId, pathParams, urlQuery } for a page
+// whose path has placeholders or that reads _url_query. Path values are the
+// strings the URL carries.
 function validateGoto(params) {
   if (type.isString(params) && params !== '') {
     return undefined;
   }
   if (!type.isObject(params)) {
-    return `Step "goto" requires a pageId string or { pageId, urlQuery }. Received ${describe(
+    return `Step "goto" requires a pageId string or { pageId, pathParams, urlQuery }. Received ${describe(
       params
     )}.`;
   }
-  const unknownKeys = findUnknownKeys({ key: 'goto', params, allowed: ['pageId', 'urlQuery'] });
+  const unknownKeys = findUnknownKeys({
+    key: 'goto',
+    params,
+    allowed: ['pageId', 'pathParams', 'urlQuery'],
+  });
   if (!type.isUndefined(unknownKeys)) {
     return unknownKeys;
   }
   if (!type.isString(params.pageId) || params.pageId === '') {
     return `Step "goto" requires a "pageId" string. Received ${describe(params.pageId)}.`;
+  }
+  if (
+    !type.isUndefined(params.pathParams) &&
+    (!type.isObject(params.pathParams) || !Object.values(params.pathParams).every(type.isString))
+  ) {
+    return `Step "goto" requires "pathParams" to be an object of strings, one per path placeholder. Received ${describe(
+      params.pathParams
+    )}.`;
   }
   if (!type.isUndefined(params.urlQuery) && !type.isObject(params.urlQuery)) {
     return `Step "goto" requires "urlQuery" to be an object. Received ${describe(

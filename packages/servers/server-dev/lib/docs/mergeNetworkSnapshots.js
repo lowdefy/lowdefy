@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-// One journey's network path across all of its actors: a page any actor
-// loaded, and each request or endpoint with the calls of every actor summed.
+// One journey's network path across all of its actors: the request path of a
+// page any actor loaded, and each request or endpoint with the calls of every actor summed.
 function mergeNetworkSnapshots({ snapshots }) {
-  const pages = new Set();
+  const pagePaths = new Set();
   const requests = new Map();
   const endpoints = new Map();
   let appEvents = false;
   snapshots.forEach((snapshot) => {
-    snapshot.pages.forEach((pageId) => pages.add(pageId));
+    snapshot.pagePaths.forEach((path) => pagePaths.add(path));
     appEvents = appEvents || snapshot.appEvents;
     snapshot.requests.forEach(({ pageId, requestId, calls }) => {
       const key = JSON.stringify([pageId, requestId]);
@@ -35,7 +35,7 @@ function mergeNetworkSnapshots({ snapshots }) {
     });
   });
   return {
-    pages: [...pages].sort(),
+    pagePaths: [...pagePaths].sort(),
     appEvents,
     requests: [...requests.values()].sort(
       (a, b) => a.pageId.localeCompare(b.pageId) || a.requestId.localeCompare(b.requestId)

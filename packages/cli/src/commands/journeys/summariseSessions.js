@@ -50,7 +50,8 @@ function findFirstFailure(records) {
 // which builds, the pages it moved through, its attempts (the segments the
 // compiler cuts) and how many ended in a failed event, and how many of its
 // interactions the newest test run also drove (null when there is none).
-function summariseSessions({ records, testKeys, hasTestRun }) {
+// `routeTable` is the build's routes (loadRouteTable).
+function summariseSessions({ records, routeTable, testKeys, hasTestRun }) {
   const bySession = new Map();
   records.forEach((record) => {
     if (!type.isString(record?.session)) return;
@@ -59,7 +60,7 @@ function summariseSessions({ records, testKeys, hasTestRun }) {
   });
   const sessions = [...bySession.entries()].map(([id, sessionRecords]) => {
     const sorted = [...sessionRecords].sort((a, b) => Date.parse(a.t) - Date.parse(b.t));
-    const { segments } = compileTrace({ records: sorted, source: 'dev' });
+    const { segments } = compileTrace({ records: sorted, routeTable, source: 'dev' });
     const sequence = segments.flatMap((segment) => segment.sequence);
     return {
       id,

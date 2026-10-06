@@ -26,6 +26,14 @@ const steps = [
   { expect: { text: { blockId: 'status', equals: 'Assigned' } } },
 ];
 
+const routeTable = {
+  routes: [
+    { pageId: 'board', path: 'board' },
+    { pageId: 'tickets', path: 'tickets' },
+  ],
+  basePath: '',
+};
+
 const id = sequenceId({ pageId: 'tickets', steps });
 
 test('sequenceId is the matcher version and eight hex characters', () => {
@@ -56,7 +64,7 @@ test.each([
     },
   ],
 ])('sequenceId changes with %s', (_, journey) => {
-  expect(sequenceId(journey)).not.toBe(id);
+  expect(sequenceId({ ...journey, routeTable })).not.toBe(id);
 });
 
 test.each([

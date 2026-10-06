@@ -53,6 +53,18 @@ currentTab:
   _url_query: tab
 ```
 
+### \_path_params
+
+Access the values of the page's path placeholders (always strings). Tracked as pure: a page instance's values never change, since different values are a different instance.
+
+```yaml
+# Page path: tickets/{space}/{ticket_id}, URL: /tickets/support/1234
+ticketId:
+  _path_params: ticket_id
+```
+
+The `_js` client accessor `pathParams` calls it the same way.
+
 ### \_input
 
 Access navigation input:

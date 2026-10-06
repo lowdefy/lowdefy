@@ -59,7 +59,20 @@ There is no operator evaluation inside template properties — they are data tem
 
 ### Links
 
-Links live under `data.links` (and inside the arrays a template declares, like `data.actions`), supplied as Lowdefy-native `{ pageId, urlQuery }` objects. The `RenderNotification` step resolves them to full URLs at render time — see [Rendering notifications as a routine step](/lowdefy-api#rendering-notifications-as-a-routine-step). A link that is already an absolute URL string passes through unchanged.
+Links live under `data.links` (and inside the arrays a template declares, like `data.actions`), supplied as Lowdefy-native `{ pageId, urlQuery, pathParams }` objects. The `RenderNotification` step resolves them to full URLs at render time — see [Rendering notifications as a routine step](/lowdefy-api#rendering-notifications-as-a-routine-step). A link that is already an absolute URL string passes through unchanged.
+
+A link to a page with a [`path`](/page-paths) gives the values of its placeholders in `pathParams`, as the `Link` action does:
+
+```yaml
+links:
+  button:
+    pageId: ticket
+    pathParams:
+      space: support
+      ticket_id: T-001
+```
+
+For a page with `path: tickets/{space}/{ticket_id}`, this renders as `https://myapp.com/tickets/support/T-001`. Every placeholder needs a value, or rendering fails with an error naming the page and the placeholder. The step resolves links in a copy of the item, so the item you store keeps the original `{ pageId, urlQuery, pathParams }` link, and the app can open it in the browser with a `Link` action, or from a landing page.
 
 ## Built-in templates
 

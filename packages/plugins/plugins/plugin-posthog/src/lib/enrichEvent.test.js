@@ -39,7 +39,16 @@ function target(fields) {
 function useTrace(described) {
   postHogState.trace = createFakeTrace({
     describeChain: () => described,
-    pageIdOf: (url) => new URL(url).pathname.slice(1) || null,
+    pathEntryOf: (url) => {
+      const path = new URL(url).pathname.slice(1);
+      if (path === '') {
+        return null;
+      }
+      if (path === 'tickets/s/1') {
+        return { pageId: 'ticket', pathParams: { space: 's', ticket_id: '1' }, instanceKey: 'k' };
+      }
+      return { pageId: path, pathParams: {}, instanceKey: `page:${path}` };
+    },
   });
   return postHogState.trace;
 }
@@ -64,6 +73,7 @@ test.each(['$autocapture', '$rageclick', '$dead_click'])(
       $current_url: 'https://example.com/orders',
       $elements_chain: CHAIN,
       lowdefy_page_id: 'orders',
+      lowdefy_path_params: {},
       lowdefy_block_id: 'save_button',
       lowdefy_block_type: 'Button',
       lowdefy_block_ids: ['save_button', 'card'],
@@ -103,6 +113,17 @@ test('enrichEvent gives every other event the page id from its URL', () => {
   expect(trace.describeChain).not.toHaveBeenCalled();
 });
 
+test('enrichEvent gives an event on a patterned page its page id and path values', () => {
+  useTrace(target({}));
+  const event = {
+    event: '$pageview',
+    properties: { $current_url: 'https://example.com/tickets/s/1' },
+  };
+  enrichEvent(event);
+  expect(event.properties.lowdefy_page_id).toBe('ticket');
+  expect(event.properties.lowdefy_path_params).toEqual({ space: 's', ticket_id: '1' });
+});
+
 test('enrichEvent keeps a page id an event already carries', () => {
   useTrace(target({}));
   const event = {
@@ -111,6 +132,7 @@ test('enrichEvent keeps a page id an event already carries', () => {
   };
   enrichEvent(event);
   expect(event.properties.lowdefy_page_id).toBe('orders');
+  expect(event.properties.lowdefy_path_params).toBeUndefined();
 });
 
 test('enrichEvent leaves an event without a URL or page unchanged', () => {

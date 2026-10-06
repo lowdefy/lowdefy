@@ -311,6 +311,14 @@ urlQuery.format({ page: 1, filter: 'active' });
 // 'page=1&filter=active'
 ```
 
+### Page paths
+
+A page's `path` pattern (`tickets/{space}/{ticket_id}`) is read by three helpers, shared by the build, the server and the client:
+
+- `parsePathPattern(path)` splits a pattern into frozen segments, each `{ fixed }` or `{ name }`, and throws on what a pattern may not hold (empty segments, a leading or trailing `/`, partial-segment, optional or catch-all placeholders, invalid characters, a repeated name). Results are cached per pattern string, since links resolve on every render.
+- `buildPagePath({ pageId, path, pathParams })` writes a page's URL path, with no leading `/` and no basePath: the page id when `path` is undefined, else the pattern with each placeholder filled by `encodeURIComponent(String(value))`. A missing, `null` or empty value, or a value of `.` or `..`, throws an error naming the page and the placeholder.
+- `pageInstanceKey({ pageId, path, pathParams })` is the key a page instance's context and input live under: `page:{pageId}` for a page without placeholders, else `page:{pageId}#{buildPagePath(...)}`, so every spelling of the same decoded values gives one key.
+
 ## Other Utilities
 
 ### stableStringify(obj, options)

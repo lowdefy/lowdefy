@@ -15,7 +15,7 @@ The docs recommend `PostHogInit` (and `PostHogIdentify`) in the root `events.onI
 `loadPostHog` sets `before_send` to `enrichEvent` (YAML options cannot carry a function, so the plugin owns the hook). `enrichEvent` reads `postHogState.trace` and always returns the event:
 
 - `$autocapture`, `$rageclick`, `$dead_click` with `$elements_chain`: `trace.describeChain(chain)` gives `lowdefy_page_id`, `lowdefy_block_id`, `lowdefy_block_type`, `lowdefy_row`, `lowdefy_column`, `lowdefy_block_ids`, `lowdefy_option` (true only). Null, false and empty values are left out; text is not repeated (`$el_text`).
-- Every event without `lowdefy_page_id` and with a `$current_url` gets `trace.pageIdOf($current_url)`.
+- Every event with a `$current_url` gets `trace.pathEntryOf($current_url)`: `lowdefy_page_id` when it has none, and `lowdefy_path_params` (`{}` for a page without a path pattern) when its page id is the entry's.
 
 `PostHogInit` registers `environment`, `lowdefy_build_id` (`lowdefyApp.buildId`) and `lowdefy_app_version` (`lowdefyApp.version`) as super properties. `~k` config keys are per-build ids, so the build id is what maps `lowdefy_config_key` back to config.
 
@@ -28,7 +28,7 @@ After PostHog is `enabled` and unless `captureEventFailures` is `false` (default
 The production journey miner reads these names; changing one is a breaking change for captured history:
 
 - Enriched autocapture: `lowdefy_page_id`, `lowdefy_block_id`, `lowdefy_block_type`, `lowdefy_block_ids`, `lowdefy_row`, `lowdefy_column`, `lowdefy_option`.
-- Every event: `lowdefy_page_id`. Super properties: `lowdefy_build_id`, `lowdefy_app_version`.
+- Every event: `lowdefy_page_id`, `lowdefy_path_params`. Super properties: `lowdefy_build_id`, `lowdefy_app_version`.
 - `lowdefy_event_failed`: `lowdefy_event_scope`, `lowdefy_page_id`, `lowdefy_block_id`, `lowdefy_block_type` (not for `app`), `lowdefy_event_name`, `lowdefy_debounce_ms`, `lowdefy_action_id`, `lowdefy_action_type`, `lowdefy_error_name`, `lowdefy_config_key`, `lowdefy_invalid_blocks` (not when empty).
 
 None carries a message, a typed value or text autocapture does not already send.

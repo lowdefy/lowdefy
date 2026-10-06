@@ -139,6 +139,26 @@ function validateUrl({ record, production }) {
   return undefined;
 }
 
+// A pageview's path values, one string per placeholder of the page's path, as
+// the page read them. Production keeps them: the URL's path carries them too.
+function validatePathParams({ record }) {
+  if (type.isUndefined(record.path_params)) return undefined;
+  if (record.kind !== 'pageview') {
+    return `Trace record "path_params" appears only on "pageview" records. Received ${describe(
+      record.path_params
+    )} on a ${record.kind} record.`;
+  }
+  if (
+    !type.isObject(record.path_params) ||
+    !Object.values(record.path_params).every(type.isString)
+  ) {
+    return `Trace record "path_params" should be an object of strings, one per path placeholder. Received ${describe(
+      record.path_params
+    )}.`;
+  }
+  return undefined;
+}
+
 function validateTargetPlacement({ record }) {
   if (TARGET_KINDS.includes(record.kind)) {
     return validateTraceTarget({ target: record.target });
@@ -247,6 +267,7 @@ function validateTraceRecord({ record }) {
     validateHeader({ record }) ??
     validateContext({ record }) ??
     validateUrl({ record, production }) ??
+    validatePathParams({ record }) ??
     validateTargetPlacement({ record }) ??
     validateValue({ record, production }) ??
     validateEvents({ record, production });

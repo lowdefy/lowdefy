@@ -14,14 +14,16 @@
   limitations under the License.
 */
 
+import pageContextExpression from './instanceKey.js';
+
 async function getValidation(page, blockId) {
-  return page.evaluate((id) => {
-    const lowdefy = window.lowdefy;
-    const pageId = lowdefy?.pageId;
-    const context = lowdefy?.contexts?.[`page:${pageId}`];
-    const block = context?._internal?.RootSlots?.map?.[id];
-    return block?.validationEval?.output;
-  }, blockId);
+  return page.evaluate(
+    ({ id, getContext }) => {
+      const context = new Function(`return ${getContext}`)();
+      return context?._internal?.RootSlots?.map?.[id]?.validationEval?.output;
+    },
+    { id: blockId, getContext: pageContextExpression }
+  );
 }
 
 export { getValidation };

@@ -29,6 +29,9 @@ function setup({ signInResult, signUpResult } = {}) {
       },
     },
     home: { configured: false, pageId: 'home-page' },
+    linkPaths: {},
+    pagePaths: {},
+    pathMemory: new Map(),
   };
   // A page-kind navigation goes through router.push, which is where basePath is
   // applied (once, through createUrl) and the auth hard-reload happens. The fake
@@ -264,6 +267,41 @@ test('login with email and password navigates to callbackURL on a session respon
   });
   expect(assign.mock.calls).toEqual([['/dashboard']]);
   expect(data).toEqual({ token: 't', user: {} });
+});
+
+test('login returns to a patterned page callback and remembers its path before the push', async () => {
+  const { auth, lowdefy, assign, push } = setup({ signInResult: { token: 't', user: {} } });
+  lowdefy.pagePaths = { ticket: 'tickets/{space}/{ticket_id}' };
+  const memoryAtPush = [];
+  push.mockImplementation(({ pathname }) => {
+    memoryAtPush.push(lowdefy.pathMemory.get(pathname.slice(1)));
+    assign(pathname);
+  });
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: { pageId: 'ticket', pathParams: { space: 'a+b', ticket_id: 1 } },
+  });
+  expect(assign.mock.calls).toEqual([['/tickets/a%2Bb/1']]);
+  expect(memoryAtPush).toEqual([
+    {
+      pageId: 'ticket',
+      pathParams: { space: 'a+b', ticket_id: '1' },
+      instanceKey: 'page:ticket#tickets/a%2Bb/1',
+    },
+  ]);
+});
+
+test('login to a url callback writes no path memory entry', async () => {
+  const { auth, lowdefy } = setup({ signInResult: { token: 't', user: {} } });
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: { url: '/dashboard' },
+  });
+  expect(lowdefy.pathMemory.size).toBe(0);
 });
 
 test('login returns the two-factor challenge without navigating when authPages.twoFactor is unset', async () => {

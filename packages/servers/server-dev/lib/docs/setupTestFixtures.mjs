@@ -33,6 +33,7 @@ function setupTestFixtures() {
 
   // lib/build/config.js reads this at import time (screenshotPage → basePath).
   write('build/config.json', {});
+  write('build/routes.json', [{ pageId: 'home', path: 'home' }]);
 
   write('build/plugins/availableTypes.json', {
     actions: {

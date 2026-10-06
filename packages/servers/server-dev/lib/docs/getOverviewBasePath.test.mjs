@@ -23,6 +23,7 @@ import setupTestFixtures from './setupTestFixtures.mjs';
 // time, so the fixture carries the basePath before getOverview is imported.
 const fixtureDir = setupTestFixtures();
 fs.writeFileSync(path.join(fixtureDir, 'build/config.json'), JSON.stringify({ basePath: '/app' }));
+fs.writeFileSync(path.join(fixtureDir, 'build', 'routes.json'), JSON.stringify([]));
 process.chdir(fixtureDir);
 
 const { default: getOverview } = await import('./getOverview.js');

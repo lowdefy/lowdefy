@@ -98,6 +98,12 @@
       "path": "content/concepts/page-and-app-state.md"
     },
     {
+      "slug": "concepts/page-paths",
+      "title": "Page Paths",
+      "section": "Concepts",
+      "path": "content/concepts/page-paths.md"
+    },
+    {
       "slug": "concepts/selectors",
       "title": "Driving Selectors",
       "section": "Concepts",
@@ -2462,6 +2468,14 @@
       "typeName": "_or"
     },
     {
+      "slug": "operators/_path_params",
+      "title": "_path_params",
+      "section": "Operators",
+      "path": "content/operators/_path_params.md",
+      "kind": "operator",
+      "typeName": "_path_params"
+    },
+    {
       "slug": "operators/_product",
       "title": "_product",
       "section": "Operators",
@@ -2935,7 +2949,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "5cc79f7d6978e3dbddd7ae5532e82ac28338e3f2fa9db86c44612aef1b33ac4f"
+      "hash": "3c8c17890ee709fff8d176440740ff3b17c604b69688acc5015f3fb4f66870a0"
     },
     "concepts/menus": {
       "files": [
@@ -2950,7 +2964,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "cc96ac1e4a9b1f70bcc9e578a976341718c8ca354b2c4caa43f0cc7618a57726"
+      "hash": "2f11bee68e813fda02bd98f95342558ed586fc5e05f6661a558b761b1427755a"
     },
     "concepts/references-and-templates": {
       "files": [
@@ -3010,7 +3024,23 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "eba6af9c23caa7b984b5e0f7e26a88f82764325de1711e267cc7eb6c96d8cac9"
+      "hash": "b3f2f31260b1c9db05f45938535755f5b75d0daa69be41852ff99ce7480abacd"
+    },
+    "concepts/page-paths": {
+      "files": [
+        "concepts/page-paths.md",
+        "concepts/page-paths.yaml",
+        "requests/discord_message.yaml.njk",
+        "requests/insert_feedback.yaml",
+        "requests/insert_newsletter.yaml",
+        "templates/footer.yaml.njk",
+        "templates/general.yaml.njk",
+        "templates/header.yaml",
+        "templates/navigation_buttons.yaml",
+        "templates/validate_email.yaml",
+        "version.yaml"
+      ],
+      "hash": "de753010e293ffaace2aa41c0dbe2772581d5856b637ca3ab982ec3d461f8353"
     },
     "concepts/selectors": {
       "files": [
@@ -3127,7 +3157,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "af0f04e8e970bdb3ad3852260bcfc5917d3d6d1311517a0f16f3cfb5231bc16c"
+      "hash": "faad4b774b1c70b5bf01a8bdef914aa6dba37a6a5c2d8f559416e7cd05d39874"
     },
     "concepts/secrets": {
       "files": [
@@ -3246,7 +3276,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "256b92fff96a4ca23484694e36286f77fee17742fe26b2f07b52dcc0c010a818"
+      "hash": "c2e0127d44cf0f420f5b276702d7f5a9d5765d463a255588b057cf9a13652870"
     },
     "concepts/cli": {
       "files": [
@@ -3276,7 +3306,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "6bd782083a347068e98bdac48ea4e586970ea9ddc7b1a139f48f30372ee87c9a"
+      "hash": "8ba4ea74a6fe395857f49ee5d9899f6571b220fac0b27ef549ae54b6c51086c6"
     },
     "concepts/notifications": {
       "files": [
@@ -3292,7 +3322,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "89d12f9fd322a67f15ea2a7cee4aa1df7102499ede4e0a0942c4ec05e84d38d6"
+      "hash": "365168fd99f47fbe4d37f09ddafdad6ea7ba6f7032cbcacf62549187cfa891bd"
     },
     "concepts/dynamic-page-content": {
       "files": [
@@ -3308,7 +3338,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "f1c57f2018d44f58fee4a24dc0d5bf5e78d9093031790099b37de97263820e65"
+      "hash": "0a929d36bdcd725c291c5dfec0dc558d664ea499b1719e4a7146e6e6b7112b00"
     },
     "concepts/ai-agent-docs": {
       "files": [
@@ -3324,7 +3354,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "0f724efe16856baeedc3669506c63167a14ec1c4880d35798629c47880b11ce0"
+      "hash": "55d78a9d3520b4bdd4a6f4aa054353e7b5549fa9590ae843c7579041d8a68ce8"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3354,7 +3384,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "0ff48aecda89b2b5213eb9cfe03edbced3e0ac45a2c2f60987fb78a8e8f8afbe"
+      "hash": "71fb80362222887779d0467f422e7d2a198618a7fce51ba0104d15490ad5f1ae"
     },
     "agents/agent-endpoint-tools": {
       "files": [
@@ -3414,7 +3444,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "9f8000b543edaf58883ec2ccd305f9d0686ae848d085de37e0cb9f23b3d8cb73"
+      "hash": "cbd3a4406abfb65770c55745a38b46e2c863ae751e44a2d846d280fa966ce16e"
     },
     "agents/agentchat": {
       "files": [
@@ -3429,7 +3459,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "62a18ae50f4fae87a071b21fdc32393d33f2710b89c852461310982550d5735e"
+      "hash": "470e464bd6574082b13bad5e9dfa93dffcad58c002952fcd2f925d28c6747861"
     },
     "agents/agentconversations": {
       "files": [
@@ -3590,7 +3620,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "4b803573c9ad5fc09dd6bf830ca42d0af85d59082cf199d94f5b4088ba8ee12a"
+      "hash": "bbbf32d0712b88b70605d56f830e9346a786b4541958180e4d56e7c2ddf3bbf1"
     },
     "plugins/plugins-connections": {
       "files": [
@@ -3648,7 +3678,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "539d16c1f7707e03954dd00541fcd3f7ec6e345ae42eee5b62bfecc07fc5a28e"
+      "hash": "a45ed5548283229d952b693a3c76a2584b4d462a944ab7e320894d12a8935067"
     },
     "user-authentication/users-introduction": {
       "files": [
@@ -3693,7 +3723,7 @@
         "users/login-and-logout.yaml",
         "version.yaml"
       ],
-      "hash": "8d9ebd75d3679ae1e10cdf3d502dbc27c18d39208789e7e4d5e868cc2b52c736"
+      "hash": "683ccf0c553dde12af7fa9c42e1c73b525a9e4b840b32105da615d17c98588fd"
     },
     "user-authentication/two-factor": {
       "files": [
@@ -3892,7 +3922,7 @@
         "testing/config-tests.yaml",
         "version.yaml"
       ],
-      "hash": "aca15aeec062e936409c679190f39bc2ef057e99745f5a165034bc4c3ddb15a6"
+      "hash": "759fdbf01cf6facd3dfab873d1c24871839e3418b78f2fdb7cedb92a13fa04f7"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -3907,7 +3937,7 @@
         "testing/journey-data-sets.yaml",
         "version.yaml"
       ],
-      "hash": "a8494669f4029df3332d20810343de928dff10ee5aeb17cb82cdc01c496a63a8"
+      "hash": "fdf74f82ae693a5baae3a0fc65a72a02635e2fc7054449302f130718f84650c9"
     },
     "testing/explore-pull-request": {
       "files": [
@@ -3967,7 +3997,7 @@
         "testing/e2e-writing-tests.yaml",
         "version.yaml"
       ],
-      "hash": "8228d29027e632a56bb6db1b075fa58a7070af1077acfa3a1d5157066b4cea62"
+      "hash": "720ac4477bd812375fc026e84821478bff2fecc31e1798b6062b5fe4e5789246"
     },
     "testing/e2e-mocking": {
       "files": [
@@ -4745,7 +4775,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "b95cbdfc8256700ed04756069d4c39199ef1c8d4fe4d459af4b9ef20e26d269f"
+      "hash": "f780c0e24ce6f8076038293ad42668f151a405a9fa9c066a21a9487778ba8541"
     },
     "display-blocks/avatar": {
       "files": [
@@ -5034,7 +5064,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "84808911560690ae9b12fe3453bc4a4fa6a7943923be280b4581828041eccc8d"
+      "hash": "909f70e261ce657dbc3c0b79baf5b40ae6e662aaebd6ee21aac40ad09aeecc37"
     },
     "display-blocks/icon": {
       "files": [
@@ -5411,7 +5441,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "1e814dc6f9f1e623c3ebd844829db2ee81c9d02c39c2158f04539aa59d7e2be5"
+      "hash": "c456bcf8032d9c1b75cd4f74a1643e15727cd37f2b63c2902186a80438779cda"
     },
     "display-blocks/tablelight": {
       "files": [
@@ -5429,7 +5459,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "4efd702d10a5e2c89658cf44b1aede37d83f2f82b53aab58352efa028acdb5f5"
+      "hash": "4c5c2fccb84a1bb1ab4a6f0ebaf92a6db943cb0343ec6f4f841a697b2e7b90ed"
     },
     "display-blocks/tag": {
       "files": [
@@ -6627,7 +6657,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "15e79c980c477cf1b0c3b71df27797fd34d96428c27d8c50feb1d0ebc2701473"
+      "hash": "11bba91e09ee2618f593cfbad0451e6a0c73cee68ed8c578d7aec3d963a5faab"
     },
     "actions/fetch": {
       "files": [
@@ -6672,7 +6702,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "4958148236b01d41c11d0c4c8c88b473d8345a3de1b7e1aa8842ff29aa2d06f0"
+      "hash": "759c6f20877a2508716ff5e75e95e5e1e7ce9f9ac6528a6557e55cf89f2ae1cc"
     },
     "actions/login": {
       "files": [
@@ -6687,7 +6717,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "80699318f928dc96ceac8aa02d374d7453aee12ab4ef67fe9427cd8763334d96"
+      "hash": "8b3eddafb63e0d3d055f0a2ee877303bea7ce9c3d8049db58f070e8670912081"
     },
     "actions/logout": {
       "files": [
@@ -6702,7 +6732,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "8c44701929c33968f04d51bd14b9ff1e44fc89ea20f628ee0fedf00d0f670e73"
+      "hash": "8ebe47ec1831d8b796c9de9a23dc9a1ac3b4c1305f425877e98db241a482b9fb"
     },
     "actions/magiclinkverify": {
       "files": [
@@ -6717,7 +6747,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "26bc1fa7cf555d42de0fb780c899dd43d373f06bced6c5398f57acca0aeaf315"
+      "hash": "551c3aee98bac4ca3c15299f301ea8c998a1802ea66e620f6ec35a6d38cc0799"
     },
     "actions/pdfmake": {
       "files": [
@@ -7617,7 +7647,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "323eb5934546b26161fa0afba73a0711bb38602ff714475876e9b6421e050ef9"
+      "hash": "3cc73d8bbab2f8efcf14c16cc0a2f92527024f5d4006b88a87126d1016cf984c"
     },
     "operators/_json": {
       "files": [
@@ -7677,7 +7707,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "481ad9d17af672b592e5ab71057ebf6f9373908c2fa3210d24794f51e8f808f5"
+      "hash": "4f90c3bd789950bfe97c91858837eb50e9ca985d4fb6e984f4d412eba8348898"
     },
     "operators/_log": {
       "files": [
@@ -7918,6 +7948,21 @@
         "version.yaml"
       ],
       "hash": "bbb65663fe8d104d01acda751d22002bf9be8309cf1265f8822807d6914d0640"
+    },
+    "operators/_path_params": {
+      "files": [
+        "operators/_path_params.yaml",
+        "requests/discord_message.yaml.njk",
+        "requests/insert_feedback.yaml",
+        "requests/insert_newsletter.yaml",
+        "templates/footer.yaml.njk",
+        "templates/general.yaml.njk",
+        "templates/header.yaml",
+        "templates/operators.yaml.njk",
+        "templates/validate_email.yaml",
+        "version.yaml"
+      ],
+      "hash": "06088a734223e24348a6ad0584b43ef1f49884374e531047ba2d07d297cf9a8a"
     },
     "operators/_product": {
       "files": [
@@ -8187,7 +8232,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "d1cffb2e01ce687beefdcc3169d9f47a97531f83def72ad8e01aa1c9b4dd46b2"
+      "hash": "824a6dbb0af45f2f85888d41270001a14f2c95e7ec1add94f6f701800597c539"
     },
     "operators/_user": {
       "files": [
@@ -8473,7 +8518,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "80e6feb70793b52588e5db32e185f91fd3ec710ea462728fcbc1fb7cca245051"
+      "hash": "d0899e3e17f441d4481798577f47955e0c9e192dc72fd01cde69547f90351987"
     },
     "migration/v3-to-v4": {
       "files": [

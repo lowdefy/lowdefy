@@ -50,8 +50,9 @@ function targetValues(target) {
 }
 
 // expect.url.contains is split at its first `?`. A part before it that
-// starts with `/` names a page and is free: a Lowdefy URL carries data only
-// in its query (this is what lets the Role refused variant assert /404).
+// starts with `/` is a path and is not checked (this is what lets the Role
+// refused variant assert /404): a path value in it is checked where the
+// journey sets it, as pathParams.
 // Everything else is query text, such as a dev candidate's recorded
 // ?id=<snapshot id>: each key=value value is checked exactly, as a urlQuery
 // is, and a bare token with no `=` (an id written alone) as a substring.
@@ -134,7 +135,10 @@ function stepValues(step) {
     return expectValues(params);
   }
   if (key === 'goto' && type.isObject(params)) {
-    return stringLeaves({ value: params.urlQuery, path: 'urlQuery' }).map((leaf) => ({
+    return [
+      ...stringLeaves({ value: params.pathParams, path: 'pathParams' }),
+      ...stringLeaves({ value: params.urlQuery, path: 'urlQuery' }),
+    ].map((leaf) => ({
       label: leaf.path,
       value: leaf.value,
       exact: true,
@@ -204,7 +208,10 @@ function L7({ journey, exercisedEntry, dataSet, buildDirectory, snapshotStrings,
     });
   }
 
-  stringLeaves({ value: journey.urlQuery, path: 'urlQuery' }).forEach((leaf) => {
+  [
+    ...stringLeaves({ value: journey.pathParams, path: 'pathParams' }),
+    ...stringLeaves({ value: journey.urlQuery, path: 'urlQuery' }),
+  ].forEach((leaf) => {
     if (!isAllowed({ value: leaf.value, exact: true })) {
       refuse({ where: 'the journey', label: leaf.path, value: leaf.value, exact: true });
     }

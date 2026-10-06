@@ -47,8 +47,8 @@ const WebSocketsEffect = ({ context }) => {
   return null;
 };
 
-const Context = ({ appContext, children, config, jsMap, lowdefy, resetContext }) => {
-  const context = getContext({ config, jsMap, lowdefy, resetContext });
+const Context = ({ appContext, children, config, jsMap, lowdefy, pathParams, resetContext }) => {
+  const context = getContext({ config, jsMap, lowdefy, pathParams, resetContext });
   const progress = () => {
     lowdefy._internal.progress.dispatch({
       type: 'increment',

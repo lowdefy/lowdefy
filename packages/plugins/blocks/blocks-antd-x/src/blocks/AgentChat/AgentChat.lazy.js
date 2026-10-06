@@ -45,6 +45,7 @@ function AgentChat({
   events,
   methods,
   pageId,
+  pathParams,
   properties,
 }) {
   const {
@@ -102,6 +103,7 @@ function AgentChat({
   const effectiveConversationId = conversationId ?? mintedIdRef.current;
 
   const urlQueryKey = JSON.stringify(urlQuery ?? null);
+  const pathParamsKey = JSON.stringify(pathParams ?? null);
   const transport = useMemo(
     () =>
       createLowdefyChatTransport({
@@ -110,10 +112,11 @@ function AgentChat({
         agentId,
         conversationId: effectiveConversationId,
         urlQuery,
+        pathParams,
         sharedStateRef,
         sharedStateReadOnlyRef,
       }),
-    [basePath, pageId, agentId, effectiveConversationId, urlQueryKey]
+    [basePath, pageId, agentId, effectiveConversationId, urlQueryKey, pathParamsKey]
   );
 
   const bubbleListRef = useRef(null);

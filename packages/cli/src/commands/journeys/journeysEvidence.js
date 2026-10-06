@@ -23,6 +23,7 @@ import createTokenResolver from './createTokenResolver.js';
 import describeMissingPull from './describeMissingPull.js';
 import formatEvidence from '../test/formatEvidence.js';
 import formatZeroBacked from './evidence/formatZeroBacked.js';
+import loadRouteTable from './loadRouteTable.js';
 import listFinalDays from './listFinalDays.js';
 import loadBlockMetas from './loadBlockMetas.js';
 import readCommittedJourneys from './readCommittedJourneys.js';
@@ -86,7 +87,7 @@ function warnUnreadDays({ logger, otherSalt, traceSalt }) {
 // to config text; the rest are named with the pull that fetches them again.
 // Undefined when the cache holds no such final day, so the committed
 // production evidence is kept.
-function readProduction({ context, journeys, today, now, configText }) {
+function readProduction({ context, journeys, today, now, configText, routeTable }) {
   const { directories, logger } = context;
   removeUntokenisedTraces({ directories, logger, now });
   const traceSalt = readTraceSalt({ directories });
@@ -108,6 +109,7 @@ function readProduction({ context, journeys, today, now, configText }) {
     journeys: journeys.map((entry) => entry.journey),
     dayCounts,
     today,
+    routeTable,
     isConfigText: configText.isConfigText,
   });
   if (months.length === 0) return { dayCounts, months, segments: [], days: [] };
@@ -120,6 +122,7 @@ function readProduction({ context, journeys, today, now, configText }) {
   const { segments } = compileTrace({
     records,
     blockMetas: loadBlockMetas({ buildDirectory: resolveBuildDirectory({ context }) }),
+    routeTable,
     source: 'production',
   });
   return { dayCounts, months, segments, days };
@@ -186,7 +189,8 @@ async function journeysEvidence({ context }) {
   const now = Date.now();
   const today = new Date(now).toISOString().slice(0, 10);
   const configText = await readConfigText({ context });
-  const production = readProduction({ context, journeys, today, now, configText });
+  const routeTable = loadRouteTable({ buildDirectory: resolveBuildDirectory({ context }) });
+  const production = readProduction({ context, journeys, today, now, configText, routeTable });
   const results = computeEvidence({
     journeys,
     sources: {
@@ -194,6 +198,7 @@ async function journeysEvidence({ context }) {
       dev: readDevSegments({ context, now }),
       mutation: readMutationReport({ directories: context.directories }),
     },
+    routeTable,
     today,
     isConfigText: configText.isConfigText,
   });

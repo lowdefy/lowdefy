@@ -35,7 +35,7 @@ async function agentHandler(c) {
   const pageId = segments.slice(0, -1).join('/');
   context.logger.info({ event: 'call_agent', agentId, pageId });
   const { conversationId } = c.req.query();
-  const { messages, urlQuery, sharedState, sharedStateReadOnly } = parseRequestBody({
+  const { messages, pathParams, urlQuery, sharedState, sharedStateReadOnly } = parseRequestBody({
     text: await c.req.text(),
   });
   if (!Array.isArray(messages)) {
@@ -43,6 +43,9 @@ async function agentHandler(c) {
   }
   if (urlQuery != null && (typeof urlQuery !== 'object' || Array.isArray(urlQuery))) {
     return c.json({ error: t('agent.runtime.urlQueryMustBeObject') }, 400);
+  }
+  if (pathParams != null && !type.isObject(pathParams)) {
+    return c.json({ error: t('agent.runtime.pathParamsMustBeObject') }, 400);
   }
   if (sharedState != null && !type.isObject(sharedState)) {
     return c.json({ error: t('agent.runtime.sharedStateMustBeObject') }, 400);
@@ -57,6 +60,7 @@ async function agentHandler(c) {
     conversationId: conversationId ?? undefined,
     sharedState: sharedState ?? undefined,
     sharedStateReadOnly: sharedStateReadOnly ?? undefined,
+    pathParams: pathParams ?? undefined,
     urlQuery: urlQuery ?? undefined,
   });
 

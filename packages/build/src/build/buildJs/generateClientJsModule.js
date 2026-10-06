@@ -21,7 +21,7 @@ import isVolatileJsSource from './isVolatileJsSource.js';
 // (writeJs) and the dev server's per-page fold (getPageJitEnrichment) generate
 // client jsMap module text through here, so the destructured argument list has
 // exactly one source of truth.
-const CLIENT_JS_FUNCTION_PROTOTYPE = `{ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user }`;
+const CLIENT_JS_FUNCTION_PROTOTYPE = `{ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, pathParams, request, state, urlQuery, user }`;
 
 // The volatile scan runs here, so the full build and the dev fold mark the same functions.
 function generateClientJsModule(map) {

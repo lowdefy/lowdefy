@@ -127,21 +127,24 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
     });
   }
 
-  registerDevTool('lowdefy_inspect_state', async ({ pageId, source, user }) => {
-    const result = await inspectState({ origin, pageId, source, user });
+  registerDevTool('lowdefy_inspect_state', async ({ pageId, pathParams, source, user }) => {
+    const result = await inspectState({ origin, pageId, pathParams, source, user });
     if (result.error) {
       return notFoundResult(result.error);
     }
     return textResult(result);
   });
 
-  registerDevTool('lowdefy_eval_operator', async ({ pageId, expression, source, user }) => {
-    const result = await evalOperator({ origin, pageId, expression, source, user });
-    if (result.error) {
-      return notFoundResult(result.error);
+  registerDevTool(
+    'lowdefy_eval_operator',
+    async ({ pageId, pathParams, expression, source, user }) => {
+      const result = await evalOperator({ origin, pageId, pathParams, expression, source, user });
+      if (result.error) {
+        return notFoundResult(result.error);
+      }
+      return textResult(result);
     }
-    return textResult(result);
-  });
+  );
 
   registerDevTool(
     'lowdefy_run_request',
@@ -166,13 +169,24 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
 
   registerDevTool('lowdefy_app_map', () => textResult(getAppMap()));
 
-  registerDevTool('lowdefy_snapshot_state', async ({ pageId, name, notes, source, overwrite }) => {
-    const result = await snapshotState({ origin, pageId, name, notes, source, overwrite });
-    if (result.error) {
-      return notFoundResult(result.error);
+  registerDevTool(
+    'lowdefy_snapshot_state',
+    async ({ pageId, pathParams, name, notes, source, overwrite }) => {
+      const result = await snapshotState({
+        origin,
+        pageId,
+        pathParams,
+        name,
+        notes,
+        source,
+        overwrite,
+      });
+      if (result.error) {
+        return notFoundResult(result.error);
+      }
+      return textResult(result);
     }
-    return textResult(result);
-  });
+  );
 
   registerDevTool('lowdefy_load_state', async ({ name, mode, user }) => {
     const result = await loadState({ origin, name, mode, user });
@@ -233,6 +247,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
     'lowdefy_screenshot_page',
     async ({
       pageId,
+      pathParams,
       urlQuery,
       steps,
       fullPage,
@@ -250,6 +265,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       const result = await screenshotPage({
         origin,
         pageId,
+        pathParams,
         urlQuery,
         steps,
         fullPage,
@@ -287,7 +303,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
 
   registerDevTool(
     'lowdefy_run_journey',
-    async ({ pageId, steps, user, urlQuery, state, timeout, data }) => {
+    async ({ pageId, pathParams, steps, user, urlQuery, state, timeout, data }) => {
       if (!origin) {
         return notFoundResult('Journey unavailable: server origin unknown for this transport.');
       }
@@ -331,6 +347,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       const result = await runJourney({
         origin,
         pageId,
+        pathParams,
         steps,
         user,
         urlQuery,

@@ -7,6 +7,7 @@
     pageId?: string
     url?: string
     urlQuery?: object
+    pathParams?: object
   }
   redirect?: boolean,
 }): void
@@ -24,6 +25,7 @@ The `callbackUrl` parameter of the Logout action specifies where the user lands 
   - `pageId: string`: The pageId of the page to redirect to after the logout flow is complete.
   - `url: string`: The URL to redirect to after the logout flow is complete. An absolute URL is not `basePath`-prefixed, so it can be an external logout landing page.
   - `urlQuery: object`: The urlQuery to set for the page the user is redirected to after logout.
+  - `pathParams: object`: Values for the placeholders in the destination page's [`path`](/page-paths), by placeholder name.
 - `redirect: boolean`: If set to `false` the user session will be cleared, but the page will not be reloaded.
 
 #### Examples

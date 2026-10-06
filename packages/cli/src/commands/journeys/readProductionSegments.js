@@ -17,6 +17,7 @@
 import { compileTrace } from '@lowdefy/node-utils';
 
 import loadBlockMetas from './loadBlockMetas.js';
+import loadRouteTable from './loadRouteTable.js';
 import readProductionTrace from './readProductionTrace.js';
 import resolveBuildDirectory from './resolveBuildDirectory.js';
 
@@ -34,9 +35,11 @@ async function readProductionSegments({ context, maxDays }) {
     from: options.from,
     to: options.to,
   });
+  const buildDirectory = resolveBuildDirectory({ context });
   const { segments } = compileTrace({
     records,
-    blockMetas: loadBlockMetas({ buildDirectory: resolveBuildDirectory({ context }) }),
+    blockMetas: loadBlockMetas({ buildDirectory }),
+    routeTable: loadRouteTable({ buildDirectory }),
     source: 'production',
     filters: {
       since: Date.parse(`${window.from}T00:00:00.000Z`),

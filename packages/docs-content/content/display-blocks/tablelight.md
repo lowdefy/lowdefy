@@ -43,9 +43,9 @@ columns:
 | `boolean`                       | a label or an icon                                              | `trueLabel`, `falseLabel`, `trueColor`, `falseColor`, `trueIcon`, `falseIcon`                                                                                                                                                     |
 | `tag`, `tags`, `status`         | tinted tags, or a dot and a label                               | `colorMap`, `colorFrom`, `default`, `max` (tags)                                                                                                                                                                                  |
 | `avatar`, `people`              | initials or an image; `people` overlaps several with a +N count | `nameField`, `srcField`, `idField`, `shape`, `link` (avatar), `max` (people)                                                                                                                                                      |
-| `link`                          | a link that navigates by itself                                 | `pageId`, `href`, `urlQuery`, `newTab`, `home`, `back`, `input`, `labelField`                                                                                                                                                     |
+| `link`                          | a link that navigates by itself                                 | `pageId`, `href`, `urlQuery`, `pathParams`, `newTab`, `home`, `back`, `input`, `labelField`                                                                                                                                       |
 | `email`, `phone`, `url`         | `mailto:`, `tel:` and external links                            | `label`, `labelField`, `newTab` (url)                                                                                                                                                                                             |
-| `relation`                      | related records as chips, linked to their page                  | `labelField`, `pageId`, `href`, `urlQuery`, `newTab`                                                                                                                                                                              |
+| `relation`                      | related records as chips, linked to their page                  | `labelField`, `pageId`, `href`, `urlQuery`, `pathParams`, `newTab`                                                                                                                                                                |
 | `progress`, `rating`            | a bar, or stars                                                 | `max`, `suffix`, `color`, `thresholds`, `colors`, `showValue`, `nullLabel` (progress)                                                                                                                                             |
 | `image`                         | a lazy thumbnail                                                | `width`, `height`, `shape`, `alt`, `altField`                                                                                                                                                                                     |
 | `html`                          | a template or a field holding HTML                              | `template`                                                                                                                                                                                                                        |
@@ -53,7 +53,7 @@ columns:
 | `buttons`                       | row buttons                                                     | `buttons`, `showOn`                                                                                                                                                                                                               |
 | `menu`                          | a row menu                                                      | `items`, `icon`, `title`, `placement`                                                                                                                                                                                             |
 
-Values in `urlQuery` and every `...Field` option are paths in the row. For `people` they are paths in each person, and for `relation` paths in the related record, where `urlQuery` defaults to `{ _id: _id }`.
+Values in `urlQuery`, `pathParams` and every `...Field` option are paths in the row. For `people` they are paths in each person, and for `relation` paths in the related record, where `urlQuery` defaults to `{ _id: _id }` when neither `urlQuery` nor `pathParams` is set.
 
 A `url` value with a scheme other than http or https, such as `javascript:`, shows as text, not as a link.
 
@@ -135,6 +135,8 @@ rowLink:
   urlQuery:
     _id: _id
 ```
+
+For a page with a [`path`](/page-paths), give its placeholder values in `pathParams`, also as paths in the row: `rowLink: { pageId: ticket, pathParams: { space: space_id, ticket_id: _id } }`. Table links are block properties, so on a public page a link to a protected page with a path cannot be built while the user is logged out (see [`Link`](/Link)).
 
 A plain click navigates, and a Cmd/Ctrl or middle click opens a new tab. With `onRowClick` defined as well, a plain click runs `onRowClick` (to open a drawer, say) and only a modified click follows the link.
 
@@ -586,10 +588,11 @@ A block `skeleton` config replaces the table while the block loads, as for any b
 | `defaultColumn.wrap` | boolean | `false` | Wrap long text. |
 | `defaultColumn.ellipsis` | integer | - | Clamp text to this many lines. |
 | `user` | object | - | The user object for `$user` values in `rules`, `rowRules` and button `hidden`/`disabled` conditions, usually `{ _user: true }`. Blocks do not see the session, so conditions read `$user` from this property. |
-| `rowLink` | object | - | Make rows links. A plain click navigates, Cmd/Ctrl or middle click opens a new tab. Values in `urlQuery` are row paths. |
+| `rowLink` | object | - | Make rows links. A plain click navigates, Cmd/Ctrl or middle click opens a new tab. Values in `urlQuery` and `pathParams` are row paths. |
 | `rowLink.pageId` | string | - | The page to open. |
 | `rowLink.href` | string | - | A URL to open instead of a page. |
 | `rowLink.urlQuery` | object | - | Query parameters; each value is a path in the row, like `{ _id: _id }`. |
+| `rowLink.pathParams` | object | - | Values for the page path's placeholders; each value is a path in the row, like `{ ticket_id: _id }`. |
 | `rowLink.input` | object | - | Input for the page. |
 | `rowLink.newTab` | boolean | - | Always open in a new tab. |
 | `rowRules` | array | - | Conditional row formatting: `[{ when, className, style, color }]`, where `when` conditions name columns by `key`. |

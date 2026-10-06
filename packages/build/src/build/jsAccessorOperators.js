@@ -25,6 +25,7 @@ const jsAccessorOperators = {
     '_global',
     '_input',
     '_location',
+    '_path_params',
     '_request',
     '_state',
     '_url_query',

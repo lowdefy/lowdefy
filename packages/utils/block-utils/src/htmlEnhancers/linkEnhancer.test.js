@@ -17,6 +17,7 @@
 import React from 'react';
 import { jest } from '@jest/globals';
 import { act, fireEvent, render } from '@testing-library/react';
+import { buildPagePath } from '@lowdefy/helpers';
 
 import HtmlComponent from '../HtmlComponent.js';
 import registerHtmlEnhancements from '../registerHtmlEnhancements.js';
@@ -29,10 +30,19 @@ function createHref({ pathname, query }) {
   return `/base${pathname}${search ? `?${search}` : ''}`;
 }
 
+const pagePaths = { ticket: 'tickets/{space}/{ticket_id}' };
+
+// Stands in for the client's resolveTarget and createUrl.
+function createPageHref({ pageId, pathParams, urlQuery }) {
+  const pathname = `/${buildPagePath({ pageId, path: pagePaths[pageId], pathParams })}`;
+  return createHref({ pathname, query: urlQuery });
+}
+
 beforeEach(() => {
   link.mockReset();
   registerHtmlEnhancements({
     createHref,
+    createPageHref,
     HtmlOverlay: () => null,
     Icon: () => null,
     icons: {},
@@ -68,7 +78,44 @@ test('a plain click on a data-page-id link navigates with link like the Link act
   );
   const event = click(container.querySelector('a'));
   expect(event.defaultPrevented).toBe(true);
-  expect(link).toHaveBeenCalledWith({ pageId: 'contacts', urlQuery: { _id: '42' } });
+  expect(link).toHaveBeenCalledWith({
+    pageId: 'contacts',
+    pathParams: {},
+    urlQuery: { _id: '42' },
+  });
+});
+
+test('data-path-params fills the page path in the href and travels with the click', () => {
+  const { container } = render(
+    <HtmlComponent
+      html={`<a data-page-id="ticket" data-path-params='{"space":"s","ticket_id":"1"}' data-url-query="tab=notes">Ticket</a>`}
+    />
+  );
+  expect(container.querySelector('a').getAttribute('href')).toBe('/base/tickets/s/1?tab=notes');
+  const event = click(container.querySelector('a'));
+  expect(event.defaultPrevented).toBe(true);
+  expect(link).toHaveBeenCalledWith({
+    pageId: 'ticket',
+    pathParams: { space: 's', ticket_id: '1' },
+    urlQuery: { tab: 'notes' },
+  });
+});
+
+test('data-path-params that is not a JSON object leaves the link alone with a warning', () => {
+  const { container } = render(
+    <HtmlComponent
+      div={true}
+      html={`<a id="a" data-page-id="ticket" data-path-params="space=s">a</a><a id="b" data-page-id="ticket" data-path-params='["s","1"]'>b</a>`}
+    />
+  );
+  expect(container.querySelector('#a').hasAttribute('href')).toBe(false);
+  expect(container.querySelector('#b').hasAttribute('href')).toBe(false);
+  expect(console.warn).toHaveBeenCalledWith(
+    'data-path-params on data-page-id="ticket" is not a JSON object, so the link was not set.'
+  );
+  expect(console.warn).toHaveBeenCalledTimes(2);
+  click(container.querySelector('#a'));
+  expect(link).not.toHaveBeenCalled();
 });
 
 test('the href and the click use the same query when a key repeats', () => {
@@ -77,7 +124,7 @@ test('the href and the click use the same query when a key repeats', () => {
   );
   expect(container.querySelector('a').getAttribute('href')).toBe('/base/list?tag=b');
   click(container.querySelector('a'));
-  expect(link).toHaveBeenCalledWith({ pageId: 'list', urlQuery: { tag: 'b' } });
+  expect(link).toHaveBeenCalledWith({ pageId: 'list', pathParams: {}, urlQuery: { tag: 'b' } });
 });
 
 test('modified, middle and new-tab clicks are left to the browser', () => {
@@ -168,6 +215,7 @@ test('a data-event on a data-page-id link fires the event and does not navigate'
 test('a link inside popover content navigates through the nested HtmlComponent', () => {
   registerHtmlEnhancements({
     createHref,
+    createPageHref,
     HtmlOverlay: ({ content }) => <div data-testid="overlay">{content}</div>,
     Icon: () => null,
     icons: {},
@@ -182,7 +230,7 @@ test('a link inside popover content navigates through the nested HtmlComponent',
   const anchor = getByTestId('overlay').querySelector('a');
   expect(anchor.getAttribute('href')).toBe('/base/report');
   click(anchor);
-  expect(link).toHaveBeenCalledWith({ pageId: 'report', urlQuery: {} });
+  expect(link).toHaveBeenCalledWith({ pageId: 'report', pathParams: {}, urlQuery: {} });
 });
 
 // Without a basePath (the default), a path that starts with "//" once dot
@@ -195,6 +243,7 @@ test.each([
 ])('%s never becomes a link to another origin', (_, html) => {
   registerHtmlEnhancements({
     createHref: ({ pathname }) => pathname,
+    createPageHref: ({ pageId }) => `/${pageId}`,
     HtmlOverlay: () => null,
     Icon: () => null,
     icons: {},

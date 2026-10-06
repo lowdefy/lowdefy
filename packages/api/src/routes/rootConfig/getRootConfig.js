@@ -19,14 +19,16 @@ import getHomeAndMenus from './getHomeAndMenus.js';
 import getLowdefyGlobal from './getLowdefyGlobal.js';
 import getLowdefyI18n from './getLowdefyI18n.js';
 import getLowdefyTheme from './getLowdefyTheme.js';
+import getPagePaths from './getPagePaths.js';
 
 async function getRootConfig(context) {
-  const [events, lowdefyGlobal, theme, i18n, { home, menus }] = await Promise.all([
+  const [events, lowdefyGlobal, theme, i18n, { home, menus }, pagePaths] = await Promise.all([
     getAppEvents(context),
     getLowdefyGlobal(context),
     getLowdefyTheme(context),
     getLowdefyI18n(context),
     getHomeAndMenus(context),
+    getPagePaths(context),
   ]);
   return {
     events,
@@ -35,6 +37,7 @@ async function getRootConfig(context) {
     lowdefyApp: context.appMeta,
     lowdefyGlobal,
     menus,
+    pagePaths,
     theme,
   };
 }

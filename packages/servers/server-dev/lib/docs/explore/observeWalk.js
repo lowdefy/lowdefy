@@ -150,8 +150,9 @@ async function observeWalk({ page, walk, open = false }) {
 
   const observation = {
     pageId: listed.pageId,
+    pathParams: listed.pathParams,
     url: listed.url,
-    ready: await page.evaluate(isPageReady, null),
+    ready: await page.evaluate(isPageReady),
     shape: computeShape({
       pageId: listed.pageId,
       layers: listed.layers,

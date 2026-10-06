@@ -29,6 +29,7 @@ function getLowdefy({ actions = {}, lowdefyGlobal = {} } = {}) {
     contexts: {},
     home: {},
     inputs: {},
+    pageInstances: {},
     lowdefyGlobal,
     menus: [],
     urlQuery: {},

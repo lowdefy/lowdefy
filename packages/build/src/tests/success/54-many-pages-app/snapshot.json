@@ -1963,6 +1963,9 @@
       "~arr": [],
       "~k": "4h"
     },
+    "linkPaths": {
+      "~k": "21"
+    },
     "requests": {
       "~arr": [],
       "~k": "4i"
@@ -2007,6 +2010,9 @@
     "subscriptions": {
       "~arr": [],
       "~k": "33"
+    },
+    "linkPaths": {
+      "~k": "v"
     },
     "requests": {
       "~arr": [],
@@ -2053,6 +2059,9 @@
       "~arr": [],
       "~k": "39"
     },
+    "linkPaths": {
+      "~k": "10"
+    },
     "requests": {
       "~arr": [],
       "~k": "3a"
@@ -2097,6 +2106,9 @@
     "subscriptions": {
       "~arr": [],
       "~k": "3f"
+    },
+    "linkPaths": {
+      "~k": "15"
     },
     "requests": {
       "~arr": [],
@@ -2143,6 +2155,9 @@
       "~arr": [],
       "~k": "3l"
     },
+    "linkPaths": {
+      "~k": "1a"
+    },
     "requests": {
       "~arr": [],
       "~k": "3m"
@@ -2187,6 +2202,9 @@
     "subscriptions": {
       "~arr": [],
       "~k": "3r"
+    },
+    "linkPaths": {
+      "~k": "1f"
     },
     "requests": {
       "~arr": [],
@@ -2233,6 +2251,9 @@
       "~arr": [],
       "~k": "3x"
     },
+    "linkPaths": {
+      "~k": "1k"
+    },
     "requests": {
       "~arr": [],
       "~k": "3y"
@@ -2277,6 +2298,9 @@
     "subscriptions": {
       "~arr": [],
       "~k": "43"
+    },
+    "linkPaths": {
+      "~k": "1p"
     },
     "requests": {
       "~arr": [],
@@ -2323,6 +2347,9 @@
       "~arr": [],
       "~k": "49"
     },
+    "linkPaths": {
+      "~k": "1u"
+    },
     "requests": {
       "~arr": [],
       "~k": "4a"
@@ -2358,6 +2385,10 @@
               "urlQuery": {
                 "type": "object",
                 "description": "URL query parameters."
+              },
+              "pathParams": {
+                "type": "object",
+                "description": "Values for the placeholders in the page's path, by placeholder name."
               },
               "input": {
                 "type": "object",
@@ -2467,7 +2498,7 @@
         },
         {
           "id": "html-hardcoded-links",
-          "message": "Link to app pages with <a data-page-id=\"page-id\" data-url-query=\"key=value\">, not <a href=\"/page-id?key=value\">. A hard-coded href reloads the whole app on click, ignores basePath and is not checked by the build. Use data-new-tab, not target=\"_blank\", which sanitising removes.",
+          "message": "Link to app pages with <a data-page-id=\"page-id\" data-url-query=\"key=value\"> (and data-path-params='{\"name\":\"value\"}' for a page whose path has placeholders), not <a href=\"/page-id?key=value\">. A hard-coded href reloads the whole app on click, ignores basePath and is not checked by the build. Use data-new-tab, not target=\"_blank\", which sanitising removes.",
           "see": "concepts/html-attributes"
         },
         {
@@ -2869,6 +2900,13 @@
             "urlQuery": {
               "type": "object",
               "description": "When the link is clicked, pass data as a url query to the next page.",
+              "docs": {
+                "displayType": "yaml"
+              }
+            },
+            "pathParams": {
+              "type": "object",
+              "description": "Values for the placeholders in the path of the page given by pageId, like `{ ticket_id: '1234' }` for `tickets/{ticket_id}`.",
               "docs": {
                 "displayType": "yaml"
               }
@@ -3910,7 +3948,7 @@
           "properties": {
             "html": {
               "type": "string",
-              "description": "Content to be rendered as Html. It understands these attributes: data-icon=\"edit\" renders an icon (a semantic name like edit, delete or warning, or a Lucide icon name like Pencil); data-tooltip=\"Text\" shows a tooltip on hover and focus; data-popover=\"id\" toggles a popover showing the element with data-popover-content=\"id\" (mark it hidden); <a data-page-id=\"page-id\" data-url-query=\"key=value\"> links to an app page without reloading (never hard-code href=\"/page\"); data-link opts an existing app-relative <a href=\"/path\"> into the same navigation; data-new-tab opens a link in a new tab (target is stripped by sanitising); data-tag=\"success\" renders a tinted status tag and data-status=\"success\" a status dot (tones success, processing, info, warning, error, default, an antd preset colour, a CSS colour, or any other value to seed a stable colour); <time datetime=\"ISO\" data-time=\"relative\"> renders a date as relative, date, datetime, time or a dayjs format; data-format=\"currency\" data-currency=\"USD\" formats the element's number as number, currency, percent, compact or bytes; data-avatar=\"Jane Doe\" renders initials (on an <img>, a fallback for a broken image; never use an avatar image service); data-copy adds a copy button for the element's text or the attribute's value; data-truncate=\"2\" clamps block text to 1–6 lines with the full text in a tooltip when cut off; data-tone=\"secondary\" colours text with a theme tone (secondary, tertiary, quaternary, success, warning, error, info). See the HTML attributes docs page.",
+              "description": "Content to be rendered as Html. It understands these attributes: data-icon=\"edit\" renders an icon (a semantic name like edit, delete or warning, or a Lucide icon name like Pencil); data-tooltip=\"Text\" shows a tooltip on hover and focus; data-popover=\"id\" toggles a popover showing the element with data-popover-content=\"id\" (mark it hidden); <a data-page-id=\"page-id\" data-url-query=\"key=value\"> links to an app page without reloading (never hard-code href=\"/page\"), with data-path-params='{\"name\":\"value\"}' (a JSON object) for a page whose path has placeholders; data-link opts an existing app-relative <a href=\"/path\"> into the same navigation; data-new-tab opens a link in a new tab (target is stripped by sanitising); data-tag=\"success\" renders a tinted status tag and data-status=\"success\" a status dot (tones success, processing, info, warning, error, default, an antd preset colour, a CSS colour, or any other value to seed a stable colour); <time datetime=\"ISO\" data-time=\"relative\"> renders a date as relative, date, datetime, time or a dayjs format; data-format=\"currency\" data-currency=\"USD\" formats the element's number as number, currency, percent, compact or bytes; data-avatar=\"Jane Doe\" renders initials (on an <img>, a fallback for a broken image; never use an avatar image service); data-copy adds a copy button for the element's text or the attribute's value; data-truncate=\"2\" clamps block text to 1–6 lines with the full text in a tooltip when cut off; data-tone=\"secondary\" colours text with a theme tone (secondary, tertiary, quaternary, success, warning, error, info). See the HTML attributes docs page.",
               "docs": {
                 "displayType": "text-area"
               }
@@ -7944,6 +7982,80 @@
       "parent": null
     }
   },
+  "routes.json": [
+    {
+      "pageId": "page-001",
+      "path": "page-001",
+      "auth": {
+        "public": true,
+        "~k": "30"
+      }
+    },
+    {
+      "pageId": "page-002",
+      "path": "page-002",
+      "auth": {
+        "public": true,
+        "~k": "36"
+      }
+    },
+    {
+      "pageId": "page-003",
+      "path": "page-003",
+      "auth": {
+        "public": true,
+        "~k": "3c"
+      }
+    },
+    {
+      "pageId": "page-004",
+      "path": "page-004",
+      "auth": {
+        "public": true,
+        "~k": "3i"
+      }
+    },
+    {
+      "pageId": "page-005",
+      "path": "page-005",
+      "auth": {
+        "public": true,
+        "~k": "3o"
+      }
+    },
+    {
+      "pageId": "page-006",
+      "path": "page-006",
+      "auth": {
+        "public": true,
+        "~k": "3u"
+      }
+    },
+    {
+      "pageId": "page-007",
+      "path": "page-007",
+      "auth": {
+        "public": true,
+        "~k": "40"
+      }
+    },
+    {
+      "pageId": "page-008",
+      "path": "page-008",
+      "auth": {
+        "public": true,
+        "~k": "46"
+      }
+    },
+    {
+      "pageId": "404",
+      "path": "404",
+      "auth": {
+        "public": true,
+        "~k": "4g"
+      }
+    }
+  ],
   "tailwind-candidates.css": "/* Generated by Lowdefy build — rewritten on page changes to trigger CSS recompilation */\n",
   "theme.json": {
     "darkMode": "system",

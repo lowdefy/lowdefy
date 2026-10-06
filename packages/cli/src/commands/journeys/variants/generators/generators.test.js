@@ -112,6 +112,16 @@ test('interrupt reloads the start page with its urlQuery', () => {
   expect(variant.steps[1]).toEqual({ goto: { pageId: 'tickets', urlQuery: { id: 't1' } } });
 });
 
+test('interrupt reloads the start page with its path values and urlQuery', () => {
+  const [variant] = interrupt({
+    journey: { ...journey, pathParams: { space: 's' }, urlQuery: { id: 't1' } },
+    exercised: writes,
+  });
+  expect(variant.steps[1]).toEqual({
+    goto: { pageId: 'tickets', pathParams: { space: 's' }, urlQuery: { id: 't1' } },
+  });
+});
+
 test('a write through an endpoint is counted with expect.calls on the endpoint', () => {
   const viaEndpoint = exercised({
     requests: [{ pageId: 'tickets', requestId: 'save', calls: 1, write: false }],

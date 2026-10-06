@@ -14,20 +14,23 @@
   limitations under the License.
 */
 
-import collectHtmlPageIds from '../../../utils/collectHtmlPageIds.js';
+import collectHtmlPageLinks from '../../../utils/collectHtmlPageLinks.js';
 
 // HTML anywhere in the block's own config — properties, events, requests, _js
-// sources — can link to a page with data-page-id. Child blocks are collected
-// when buildBlock visits them.
+// sources — can link to a page with data-page-id, and give its path values
+// with data-path-params. Child blocks are collected when buildBlock visits
+// them.
 function collectBlockHtmlLinks(block, { linkActionRefs, pageId }) {
   // eslint-disable-next-line no-unused-vars
   const { areas, blocks, slots, ...ownConfig } = block;
-  collectHtmlPageIds({ json: JSON.stringify(ownConfig) }).forEach((linkedPageId) => {
+  collectHtmlPageLinks({ json: JSON.stringify(ownConfig) }).forEach((link) => {
     linkActionRefs.push({
       configKey: block['~k'],
       html: true,
       location: `page "${pageId}"`,
-      pageId: linkedPageId,
+      pageId: link.pageId,
+      pathParams: link.pathParams,
+      pathParamsDynamic: link.pathParamsDynamic,
     });
   });
 }

@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import findAuthPageRoute from '../buildRoutes/findAuthPageRoute.js';
+
 // twoFactorEnrol is the one authPages role that does NOT imply public. The
 // user arriving there holds a complete valid session - they are missing a
 // factor, not an identity - so there is no bootstrap paradox to solve, and
@@ -30,17 +32,20 @@ const NEVER_IMPLIES_PUBLIC = ['twoFactorEnrol'];
 // - Pages holding an authPages role (hand-written, module-contributed or
 //   default) - a sign-in page behind the wall is a bootstrap paradox, so a
 //   role implies public. The one exception is twoFactorEnrol (see
-//   NEVER_IMPLIES_PUBLIC above). Role values are page paths ("/login");
-//   stripping the leading slash yields the page id ("login", "crm/login").
+//   NEVER_IMPLIES_PUBLIC above). Role values are page URLs ("/login"), mapped
+//   to page ids through the route table.
 // - Module-contributed public pages (context.moduleAuthPublicPages) - they
 //   behave as public exceptions but never join a protected list.
 function getAlwaysPublicPageIds({ components, context }) {
   const rolePageIds = [];
   Object.entries(components.auth.authPages ?? {}).forEach(([role, value]) => {
-    if (role.startsWith('~') || !type.isString(value) || NEVER_IMPLIES_PUBLIC.includes(role)) {
+    if (role.startsWith('~') || NEVER_IMPLIES_PUBLIC.includes(role)) {
       return;
     }
-    rolePageIds.push(value.startsWith('/') ? value.slice(1) : value);
+    const route = findAuthPageRoute({ routes: context.routes, url: value });
+    if (!type.isNone(route)) {
+      rolePageIds.push(route.pageId);
+    }
   });
   return [...rolePageIds, ...(context.moduleAuthPublicPages ?? [])];
 }

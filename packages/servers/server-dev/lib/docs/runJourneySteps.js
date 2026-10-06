@@ -30,6 +30,7 @@ import isPageReady from './isPageReady.js';
 import JourneyStepError from './JourneyStepError.js';
 import openJourneyEmail from './openJourneyEmail.js';
 import readJourneyEmailMatch from './readJourneyEmailMatch.js';
+import readPagePath from './readPagePath.js';
 
 // Structural equality over values that have already been through the JSON
 // round-trip getState performs in the page (no undefined, no Dates, no
@@ -549,12 +550,28 @@ async function runBack({ page, timeout }) {
 
 // Loads an app page the way a typed URL does. The page shown may not be the
 // one asked for - a protected page redirects a signed-out actor to sign in -
-// so the runner settles whichever page the app mounts (isPageReady with a
-// null pageId, as openPage does) and lets the next step assert where it
+// so the runner settles whichever page the app mounts (isPageReady reads the
+// instance on screen, as in openPage) and lets the next step assert where it
 // landed.
 async function runGoto({ page, step, origin, timeout }) {
-  const { pageId, urlQuery } = type.isString(step.goto) ? { pageId: step.goto } : step.goto;
-  const url = buildPageUrl({ origin, pageId, urlQuery });
+  const { pageId, pathParams, urlQuery } = type.isString(step.goto)
+    ? { pageId: step.goto }
+    : step.goto;
+  let url;
+  try {
+    url = buildPageUrl({
+      origin,
+      pageId,
+      path: readPagePath({ pageId }),
+      pathParams,
+      urlQuery,
+    });
+  } catch (error) {
+    throw new JourneyStepError(`Could not open page "${pageId}": ${error.message}`, {
+      expected: `page "${pageId}" to load`,
+      actual: error.message,
+    });
+  }
   try {
     await page.goto(url, { waitUntil: 'load', timeout });
   } catch (error) {
@@ -563,7 +580,7 @@ async function runGoto({ page, step, origin, timeout }) {
       actual: cleanMessage(error),
     });
   }
-  await page.waitForFunction(isPageReady, null, { timeout }).catch(() => {});
+  await page.waitForFunction(isPageReady, undefined, { timeout }).catch(() => {});
 }
 
 // Polls a page read until it satisfies `check`, or fails once `timeout` has
@@ -884,8 +901,8 @@ async function runExpect({ journey, page, step, timeout }) {
 // readiness check openPage uses, so the next step asserts against the
 // outcome rather than racing it. Tolerant: a page that never settles (a
 // hung request) simply moves on and lets the next expect report what it
-// finds. Reads the current pageId from the page because a click may have
-// navigated to another page.
+// finds. Waits for the instance on screen, since a click may have navigated
+// to another page or instance.
 //
 // Never longer than SETTLE_TIMEOUT_MS, however long the steps may wait: an
 // event that ends in a Wait (a sign-in link's resend cooldown) keeps the page
@@ -896,7 +913,7 @@ async function settlePage({ page, timeout }) {
   if (type.isNone(pageId)) {
     return;
   }
-  await page.waitForFunction(isPageReady, pageId, { timeout }).catch(() => {});
+  await page.waitForFunction(isPageReady, undefined, { timeout }).catch(() => {});
 }
 
 const INTERACTION_STEPS = ['click', 'open', 'fill', 'select', 'press', 'back'];

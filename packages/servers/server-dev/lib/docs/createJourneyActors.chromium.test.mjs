@@ -110,7 +110,7 @@ chromiumTest(
       expect(actors.countCalls({ endpoint: 'notify' })).toEqual(1);
       expect(actors.networkSnapshots()).toEqual([
         {
-          pages: ['first', 'second'],
+          pagePaths: ['first', 'second'],
           appEvents: true,
           requests: [{ pageId: 'first', requestId: 'save', calls: 2 }],
           endpoints: [{ endpointId: 'notify', calls: 1 }],

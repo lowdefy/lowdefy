@@ -16,6 +16,8 @@
 
 import { jest } from '@jest/globals';
 
+import { operatorsServer } from '@lowdefy/operators-js';
+
 import getPageConfig from './getPageConfig.js';
 import testContext from '../../test/testContext.js';
 
@@ -27,25 +29,37 @@ const authenticatedContext = testContext({
   user: { sub: 'sub', roles: [] },
 });
 
+const routes = [
+  { pageId: 'pageId', path: 'pageId', auth: { public: true } },
+  { pageId: 'ticket', path: '{space}/tickets/{ticket_id}', auth: { public: true } },
+];
+
+// Serves routes.json with the files a test names.
+function serveFiles(files) {
+  mockReadConfigFile.mockImplementation((path) => {
+    if (path === 'routes.json') return routes;
+    return files[path] ?? null;
+  });
+}
+
 beforeEach(() => {
   mockReadConfigFile.mockReset();
 });
 
 test('getPageConfig, public', async () => {
-  mockReadConfigFile.mockImplementation((path) => {
-    if (path === 'pages/pageId.json') {
-      return {
-        id: 'page:pageId',
-        auth: {
-          public: true,
-        },
-      };
-    }
-    return null;
+  serveFiles({
+    'pages/pageId.json': {
+      id: 'page:pageId',
+      auth: {
+        public: true,
+      },
+    },
   });
-  const res = await getPageConfig(context, { pageId: 'pageId' });
+  const res = await getPageConfig(context, { path: 'pageId' });
   expect(res).toEqual({
     status: 'ok',
+    pageId: 'pageId',
+    pathParams: {},
     pageConfig: {
       id: 'page:pageId',
     },
@@ -53,37 +67,33 @@ test('getPageConfig, public', async () => {
 });
 
 test('getPageConfig, protected, no user, returns unauthenticated', async () => {
-  mockReadConfigFile.mockImplementation((path) => {
-    if (path === 'pages/pageId.json') {
-      return {
-        id: 'page:pageId',
-        auth: {
-          public: false,
-        },
-      };
-    }
-    return null;
+  serveFiles({
+    'pages/pageId.json': {
+      id: 'page:pageId',
+      auth: {
+        public: false,
+      },
+    },
   });
-  const res = await getPageConfig(context, { pageId: 'pageId' });
-  expect(res).toEqual({ status: 'unauthenticated' });
+  const res = await getPageConfig(context, { path: 'pageId' });
+  expect(res).toEqual({ status: 'unauthenticated', pageId: 'pageId', pathParams: {} });
 });
 
 test('getPageConfig, protected, with authorized user', async () => {
-  mockReadConfigFile.mockImplementation((path) => {
-    if (path === 'pages/pageId.json') {
-      return {
-        id: 'page:pageId',
-        auth: {
-          public: false,
-        },
-      };
-    }
-    return null;
+  serveFiles({
+    'pages/pageId.json': {
+      id: 'page:pageId',
+      auth: {
+        public: false,
+      },
+    },
   });
 
-  const res = await getPageConfig(authenticatedContext, { pageId: 'pageId' });
+  const res = await getPageConfig(authenticatedContext, { path: 'pageId' });
   expect(res).toEqual({
     status: 'ok',
+    pageId: 'pageId',
+    pathParams: {},
     pageConfig: {
       id: 'page:pageId',
     },
@@ -91,105 +101,96 @@ test('getPageConfig, protected, with authorized user', async () => {
 });
 
 test('getPageConfig, protected by role, with user but wrong role, returns unauthorized', async () => {
-  mockReadConfigFile.mockImplementation((path) => {
-    if (path === 'pages/pageId.json') {
-      return {
-        id: 'page:pageId',
-        auth: {
-          public: false,
-          roles: ['admin'],
-        },
-      };
-    }
-    return null;
+  serveFiles({
+    'pages/pageId.json': {
+      id: 'page:pageId',
+      auth: {
+        public: false,
+        roles: ['admin'],
+      },
+    },
   });
 
-  const res = await getPageConfig(authenticatedContext, { pageId: 'pageId' });
-  expect(res).toEqual({ status: 'unauthorized' });
+  const res = await getPageConfig(authenticatedContext, { path: 'pageId' });
+  expect(res).toEqual({ status: 'unauthorized', pageId: 'pageId', pathParams: {} });
 });
 
-test('getPageConfig, page does not exist', async () => {
-  mockReadConfigFile.mockImplementation((path) => {
-    if (path === 'pages/pageId.json') {
-      return {
-        id: 'page:pageId',
-        auth: {
-          public: true,
-        },
-      };
-    }
-    return null;
+test('getPageConfig, unmatched path returns not_found', async () => {
+  serveFiles({
+    'pages/pageId.json': {
+      id: 'page:pageId',
+      auth: {
+        public: true,
+      },
+    },
   });
-  const res = await getPageConfig(context, { pageId: 'doesNotExist' });
+  const res = await getPageConfig(context, { path: 'doesNotExist' });
   expect(res).toEqual({ status: 'not_found' });
 });
 
-test('getPageConfig, missing page, authenticated user, pagesProtectedByDefault true, returns not_found', async () => {
-  mockReadConfigFile.mockImplementation(() => null);
+test('getPageConfig, unmatched path, authenticated user, pagesProtectedByDefault true, returns not_found', async () => {
+  serveFiles({});
   const protectedContext = testContext({
     readConfigFile: mockReadConfigFile,
     authEnforcement: { pagesProtectedByDefault: true },
     user: { sub: 'sub', roles: [] },
   });
-  const res = await getPageConfig(protectedContext, { pageId: 'doesNotExist' });
+  const res = await getPageConfig(protectedContext, { path: 'doesNotExist' });
   expect(res).toEqual({ status: 'not_found' });
 });
 
-test('getPageConfig, missing page, no user, pagesProtectedByDefault false, returns not_found', async () => {
-  mockReadConfigFile.mockImplementation(() => null);
+test('getPageConfig, unmatched path, no user, pagesProtectedByDefault false, returns not_found', async () => {
+  serveFiles({});
   const openContext = testContext({
     readConfigFile: mockReadConfigFile,
     authEnforcement: { pagesProtectedByDefault: false },
   });
-  const res = await getPageConfig(openContext, { pageId: 'doesNotExist' });
+  const res = await getPageConfig(openContext, { path: 'doesNotExist' });
   expect(res).toEqual({ status: 'not_found' });
 });
 
-test('getPageConfig, missing page, no user, authEnforcement null, returns not_found', async () => {
-  mockReadConfigFile.mockImplementation(() => null);
-  const res = await getPageConfig(context, { pageId: 'doesNotExist' });
+test('getPageConfig, unmatched path, no user, authEnforcement null, returns not_found', async () => {
+  serveFiles({});
+  const res = await getPageConfig(context, { path: 'doesNotExist' });
   expect(res).toEqual({ status: 'not_found' });
 });
 
-test('getPageConfig, missing page, no user, authEnforcement has no pagesProtectedByDefault key, returns not_found', async () => {
-  mockReadConfigFile.mockImplementation(() => null);
+test('getPageConfig, unmatched path, no user, authEnforcement has no pagesProtectedByDefault key, returns not_found', async () => {
+  serveFiles({});
   const noKeyContext = testContext({
     readConfigFile: mockReadConfigFile,
     authEnforcement: {},
   });
-  const res = await getPageConfig(noKeyContext, { pageId: 'doesNotExist' });
+  const res = await getPageConfig(noKeyContext, { path: 'doesNotExist' });
   expect(res).toEqual({ status: 'not_found' });
 });
 
-test('getPageConfig, missing page, no user, pagesProtectedByDefault true, returns unauthenticated', async () => {
-  mockReadConfigFile.mockImplementation(() => null);
+test('getPageConfig, unmatched path, no user, pagesProtectedByDefault true, returns unauthenticated', async () => {
+  serveFiles({});
   const protectedContext = testContext({
     readConfigFile: mockReadConfigFile,
     authEnforcement: { pagesProtectedByDefault: true },
   });
-  const res = await getPageConfig(protectedContext, { pageId: 'doesNotExist' });
+  const res = await getPageConfig(protectedContext, { path: 'doesNotExist' });
   expect(res).toEqual({ status: 'unauthenticated' });
 });
 
 test('getPageConfig, existing page, enrol_required, returns enrol_required with no pageConfig', async () => {
-  mockReadConfigFile.mockImplementation((path) => {
-    if (path === 'pages/pageId.json') {
-      return {
-        id: 'page:pageId',
-        auth: {
-          public: false,
-        },
-      };
-    }
-    return null;
+  serveFiles({
+    'pages/pageId.json': {
+      id: 'page:pageId',
+      auth: {
+        public: false,
+      },
+    },
   });
   const enrolContext = testContext({
     readConfigFile: mockReadConfigFile,
     authEnforcement: { twoFactorRequired: true, twoFactorEnrolPageId: 'enrol' },
     user: { sub: 'sub', roles: [], two_factor_enrolled: false },
   });
-  const res = await getPageConfig(enrolContext, { pageId: 'pageId' });
-  expect(res).toEqual({ status: 'enrol_required' });
+  const res = await getPageConfig(enrolContext, { path: 'pageId' });
+  expect(res).toEqual({ status: 'enrol_required', pageId: 'pageId', pathParams: {} });
   expect(res.pageConfig).toBe(undefined);
 });
 
@@ -200,13 +201,10 @@ test('getPageConfig, gate is called with pageConfig and { pageId }', async () =>
       public: true,
     },
   };
-  mockReadConfigFile.mockImplementation((path) => {
-    if (path === 'pages/pageId.json') return pageConfig;
-    return null;
-  });
+  serveFiles({ 'pages/pageId.json': pageConfig });
   const spiedContext = testContext({ readConfigFile: mockReadConfigFile });
   spiedContext.authorizeOutcome = jest.fn(() => 'allow');
-  await getPageConfig(spiedContext, { pageId: 'pageId' });
+  await getPageConfig(spiedContext, { path: 'pageId' });
   expect(spiedContext.authorizeOutcome).toHaveBeenCalledWith(pageConfig, { pageId: 'pageId' });
 });
 
@@ -233,6 +231,7 @@ test('getPageConfig, dynamic page resolves Dynamic blocks and does not mutate th
     },
   };
   mockReadConfigFile.mockImplementation((path) => {
+    if (path === 'routes.json') return routes;
     if (path === 'pages/pageId.json') return cachedPageConfig;
     if (path === 'types.json') {
       return {
@@ -257,7 +256,7 @@ test('getPageConfig, dynamic page resolves Dynamic blocks and does not mutate th
     }
     return null;
   });
-  const res = await getPageConfig(context, { pageId: 'pageId', urlQuery: {} });
+  const res = await getPageConfig(context, { path: 'pageId', urlQuery: {} });
   expect(res.status).toBe('ok');
   const dynamicBlock = res.pageConfig.slots.content.blocks[0];
   expect(dynamicBlock.slots.content.blocks[0].properties.html).toBe('resolved');
@@ -266,4 +265,102 @@ test('getPageConfig, dynamic page resolves Dynamic blocks and does not mutate th
   const cachedDynamicBlock = cachedPageConfig.slots.content.blocks[0];
   expect(cachedDynamicBlock.properties.endpointId).toBe('resolve_section');
   expect(cachedDynamicBlock.slots).toBe(undefined);
+});
+
+test('getPageConfig matches a patterned path and loads the matched page by id', async () => {
+  serveFiles({
+    'pages/ticket.json': {
+      id: 'page:ticket',
+      path: '{space}/tickets/{ticket_id}',
+      linkPaths: {},
+      auth: { public: true },
+    },
+  });
+  const res = await getPageConfig(context, { path: 'support/tickets/1234' });
+  expect(res).toEqual({
+    status: 'ok',
+    pageId: 'ticket',
+    pathParams: { space: 'support', ticket_id: '1234' },
+    pageConfig: {
+      id: 'page:ticket',
+      path: '{space}/tickets/{ticket_id}',
+      linkPaths: {},
+    },
+  });
+  expect(mockReadConfigFile).toHaveBeenCalledWith('pages/ticket.json');
+});
+
+test('getPageConfig, unmatched patterned path, no user, pagesProtectedByDefault true, returns unauthenticated', async () => {
+  serveFiles({});
+  const protectedContext = testContext({
+    readConfigFile: mockReadConfigFile,
+    authEnforcement: { pagesProtectedByDefault: true },
+  });
+  const res = await getPageConfig(protectedContext, { path: 'support/tickets' });
+  expect(res).toEqual({ status: 'unauthenticated' });
+});
+
+test('getPageConfig, dynamic page passes pathParams to the Dynamic endpoint payload', async () => {
+  const dynamicPage = {
+    id: 'page:ticket',
+    pageId: 'ticket',
+    blockId: 'ticket',
+    type: 'Box',
+    dynamic: true,
+    auth: { public: true },
+    requests: [],
+    slots: {
+      content: {
+        blocks: [
+          {
+            id: 'block:ticket:section_1:0',
+            blockId: 'section_1',
+            type: 'Dynamic',
+            properties: { endpointId: 'resolve_section' },
+          },
+        ],
+      },
+    },
+  };
+  mockReadConfigFile.mockImplementation((path) => {
+    if (path === 'routes.json') return routes;
+    if (path === 'pages/ticket.json') return dynamicPage;
+    if (path === 'types.json') {
+      return {
+        actions: {},
+        blocks: { Box: {}, Dynamic: {}, Html: {} },
+        operators: { client: {}, server: {} },
+      };
+    }
+    if (path === 'api/resolve_section.json') {
+      return {
+        endpointId: 'resolve_section',
+        type: 'InternalApi',
+        auth: { public: true },
+        routine: {
+          ':return': {
+            blocks: [
+              {
+                id: 'generated',
+                type: 'Html',
+                properties: { html: { _payload: 'pathParams.ticket_id' } },
+              },
+            ],
+          },
+        },
+      };
+    }
+    return null;
+  });
+  const operatorsContext = testContext({
+    readConfigFile: mockReadConfigFile,
+    operators: operatorsServer,
+  });
+  const res = await getPageConfig(operatorsContext, {
+    path: 'support/tickets/1234',
+    urlQuery: {},
+  });
+  expect(res.status).toBe('ok');
+  const dynamicBlock = res.pageConfig.slots.content.blocks[0];
+  expect(dynamicBlock.slots.content.blocks[0].properties.html).toBe('1234');
 });

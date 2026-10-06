@@ -58,6 +58,38 @@ test('T1 the first pageview gives the journey pageId and urlQuery', () => {
   });
 });
 
+test('T1 a pageview of a patterned page gives the journey its page id and path values', () => {
+  const { journey } = compile([
+    traceRecord({
+      at: 0,
+      kind: 'pageview',
+      page: 'ticket',
+      url: '/tickets/s/1?tab=open',
+      path_params: { space: 's', ticket_id: '1' },
+    }),
+    traceRecord({ at: 1, page: 'ticket', block: 'save' }),
+  ]);
+  expect(journey).toEqual({
+    name: 'tickets recorded test',
+    pageId: 'ticket',
+    pathParams: { space: 's', ticket_id: '1' },
+    urlQuery: { tab: 'open' },
+    steps: [{ click: 'save' }],
+  });
+});
+
+test('T1 a pageview with no path values gives the journey no pathParams', () => {
+  const { journey } = compile([
+    traceRecord({ at: 0, kind: 'pageview', url: '/tickets', path_params: {} }),
+    traceRecord({ at: 1, block: 'save' }),
+  ]);
+  expect(journey).toEqual({
+    name: 'tickets recorded test',
+    pageId: 'tickets',
+    steps: [{ click: 'save' }],
+  });
+});
+
 test('T2 a production entry gives the query keys with null values and a comment', () => {
   const { journey, comments } = compile([
     traceRecord({ at: 0, kind: 'pageview', url: '/tickets?id=&tab=', source: 'production' }),

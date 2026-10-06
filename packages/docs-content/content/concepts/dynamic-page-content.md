@@ -15,7 +15,7 @@ For content where only the _data_ changes, use [requests](/connections-and-reque
 
 1. A user requests a page containing a `Dynamic` block.
 2. The server checks page authorization as usual, then calls the endpoint configured on each `Dynamic` block — in-process, no HTTP. The endpoint's own auth is also checked against the user's session.
-3. The routine executes with a payload containing the block's `params`, the `pageId`, the `blockId`, and the page request's `urlQuery`.
+3. The routine executes with a payload containing the block's `params`, the `pageId`, the `blockId`, and the page request's `urlQuery` and `pathParams`.
 4. The routine returns `{ blocks: [...] }` — ordinary Lowdefy block config.
 5. The server builds and validates the returned blocks: block, action and operator types must be in the app's client bundle, block properties are validated against each block type's schema, and `Request` actions must reference requests defined statically on the page.
 6. The validated blocks become the `Dynamic` block's content, and the page is sent to the client.
@@ -58,6 +58,7 @@ The endpoint receives this payload:
 - `pageId: string` - The page being resolved.
 - `blockId: string` - The `Dynamic` block's id.
 - `urlQuery: object` - The query parameters of the page request.
+- `pathParams: object` - The values of the placeholders in the page's [`path`](/page-paths), as strings. `{}` for a page without placeholders.
 
 The routine must return an object with a `blocks` array:
 
@@ -169,6 +170,10 @@ api:
 
 The resolver executes on every navigation to the page — a menu link, a `Link` action (including to the same page), or the browser back and forward buttons all re-resolve the content on the server. Dynamic page config is never served from a client cache.
 
+## Using pathParams in the Routine
+
+On a page with a [`path`](/page-paths), the values of its placeholders are forwarded as `pathParams`, next to `urlQuery`. A page with `path: forms/{form_id}`, loaded as `/forms/F-17`, resolves with `pathParams: { form_id: 'F-17' }`, read with `_payload: pathParams.form_id`. Each set of values gets its own page instance, but a page with a `Dynamic` block still starts fresh on every visit.
+
 ## Client Bundle Types
 
 The client bundle is fixed at build time — resolved content can only use block, action and operator types the build included. Types used on static pages are always available. To use a type that appears _only_ in dynamic content, declare it on the `Dynamic` block:
@@ -228,7 +233,7 @@ policies:
 | `operators`     | `[]`      | Client operator names. `_string` allows every `_string` method. `_operator` cannot be listed.               |
 | `endpoints`     | `[]`      | Endpoints a `CallAPI` action in the content may call.                                                       |
 | `requests`      | `[]`      | Page requests a `Request` action may call. The build checks every page that hosts the policy defines them.  |
-| `links.pages`   | `[]`      | Pages the content may navigate to, by `pageId` or by an app path such as `/form_submitted`.                 |
+| `links.pages`   | `[]`      | Page ids the content may link to. A link by app path, like `/form_submitted`, is matched to its page.       |
 | `links.origins` | `[]`      | Exact origins (`https://example.com`) the content may link to or load from.                                 |
 | `state`         | none      | When set, input block ids, `SetState` keys and `_state` reads must sit under this state path.               |
 | `html`          | `false`   | When `false`, no string in the content may contain HTML tag syntax.                                         |

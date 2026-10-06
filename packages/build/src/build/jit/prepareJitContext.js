@@ -19,6 +19,7 @@ import path from 'path';
 import { type } from '@lowdefy/helpers';
 
 import createJitMaps from './createJitMaps.js';
+import parsePageRoute from '../buildRoutes/parsePageRoute.js';
 import getJitIconContext from './getJitIconContext.js';
 
 // Restore the skeleton-computed auth config projection so _build.authConfig
@@ -35,6 +36,25 @@ function readAuthConfigProjection({ directories }) {
   }
 }
 
+// The route table buildRoutes keeps on the skeleton build's context, read back
+// from routes.json for the same reason: page builds read the patterns of the
+// pages they link to.
+function readRoutes({ directories }) {
+  const routesPath = path.join(directories.build, 'routes.json');
+  let routes;
+  try {
+    routes = JSON.parse(fs.readFileSync(routesPath, 'utf8'));
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+    return undefined;
+  }
+  return routes.map((route) =>
+    parsePageRoute({
+      page: { id: route.pageId, path: route.path === route.pageId ? undefined : route.path },
+    })
+  );
+}
+
 // Fills, on the context JIT page builds share, every field build code would
 // otherwise fill on first use. Each page build runs on a shallow copy of this
 // context (createPageBuildContext), so a field first set during a build would
@@ -44,6 +64,10 @@ function prepareJitContext(context) {
   if (type.isUndefined(context.authConfigProjection) && type.isString(context.directories?.build)) {
     context.authConfigProjection = readAuthConfigProjection({ directories: context.directories });
   }
+  if (type.isUndefined(context.routes) && type.isString(context.directories?.build)) {
+    context.routes = readRoutes({ directories: context.directories });
+  }
+  context.routes ??= [];
 
   // A context made without jitMaps (a test, or buildPageJit's minimal
   // context) starts its log here, before its first page build adds an entry.

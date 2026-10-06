@@ -370,10 +370,11 @@ Any other save path works too: the value is plain data, so a request can read `_
 | `expandable.template` | string | - | Nunjucks HTML for the detail row, rendered with `row` and `rowKey`. Output is escaped: use `\| safe` to insert HTML from a field. The HTML is sanitised. |
 | `expandable.rowExpandable` | object | - | Which rows can expand. |
 | `expandable.rowExpandable.when` | object | - | A condition (`{ key, op, value }`, or `and` / `or` lists) tested against the row. |
-| `rowLink` | object | - | Make rows links. A plain click navigates, Cmd/Ctrl or middle click opens a new tab, and Enter on a focused row follows it. Values in `urlQuery` are row paths. |
+| `rowLink` | object | - | Make rows links. A plain click navigates, Cmd/Ctrl or middle click opens a new tab, and Enter on a focused row follows it. Values in `urlQuery` and `pathParams` are row paths. |
 | `rowLink.pageId` | string | - | The page to open. |
 | `rowLink.href` | string | - | A URL to open instead of a page. |
 | `rowLink.urlQuery` | object | - | Query parameters; each value is a path in the row, like `{ _id: _id }`. |
+| `rowLink.pathParams` | object | - | Values for the page path's placeholders; each value is a path in the row, like `{ ticket_id: _id }`. |
 | `rowLink.input` | object | - | Input for the page. |
 | `rowLink.newTab` | boolean | - | Always open in a new tab. |
 | `rowRules` | array | - | Conditional row formatting: `[{ when, className, style, color }]`, where `when` conditions name columns by `key`. |

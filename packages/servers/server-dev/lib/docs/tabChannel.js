@@ -29,28 +29,52 @@ import { type } from '@lowdefy/helpers';
 const tabs = new Map();
 const pendingRequests = new Map();
 
+// Orders instance renders across tabs, so "most recently rendered" does not hang on clock ticks.
+let renderSequence = 0;
+
 // A tab the dev server's own headless browser opened (an explorer walk, a
 // journey run, a headless tool) is automated: it is listed, so the hub keeps
-// the server alive while it runs, but findTab never picks it for an agent's
-// or developer's live-tab request.
-function registerTab({ id, pageId, send, source = 'dev', automated = false }) {
+// the server alive while it runs, but findPageInstance never picks it for an
+// agent's or developer's live-tab request.
+function registerTab({ id, send, source = 'dev', automated = false }) {
   if (type.isNone(id) || !type.isString(id)) {
     throw new Error(`registerTab requires an "id" string. Received ${JSON.stringify(id)}.`);
   }
   if (!type.isFunction(send)) {
     throw new Error('registerTab requires a "send" function.');
   }
-  tabs.set(id, { id, pageId: pageId ?? null, send, source, automated, connectedAt: new Date() });
+  tabs.set(id, {
+    id,
+    page: null,
+    rendered: new Map(),
+    send,
+    source,
+    automated,
+    connectedAt: new Date(),
+  });
 }
 
-function updateTabPage({ id, pageId }) {
+// Records the page instance a tab shows, { pageId, pathParams, instanceKey }, and keeps it among
+// the instances the tab has rendered, whose contexts the tab still holds.
+function updateTabPage({ id, pageId, pathParams, instanceKey }) {
   const tab = tabs.get(id);
   if (type.isNone(tab)) {
     // The tab may have disconnected between the client sending the ping and
     // it arriving — nothing to update, and not worth failing the request.
     return;
   }
-  tab.pageId = pageId ?? null;
+  if (!type.isString(pageId) || !type.isString(instanceKey)) {
+    throw new Error(
+      `updateTabPage requires "pageId" and "instanceKey" strings. Received ${JSON.stringify({
+        pageId,
+        instanceKey,
+      })}.`
+    );
+  }
+  renderSequence += 1;
+  const page = { pageId, pathParams: pathParams ?? {}, instanceKey };
+  tab.page = page;
+  tab.rendered.set(instanceKey, { ...page, sequence: renderSequence });
 }
 
 function unregisterTab({ id }) {
@@ -58,39 +82,101 @@ function unregisterTab({ id }) {
 }
 
 function listTabs() {
-  return Array.from(tabs.values()).map(({ id, pageId, source, automated, connectedAt }) => ({
+  return Array.from(tabs.values()).map(({ id, page, source, automated, connectedAt }) => ({
     id,
-    pageId,
+    pageId: page?.pageId ?? null,
+    pathParams: page?.pathParams ?? null,
+    instanceKey: page?.instanceKey ?? null,
     source,
     automated,
     connectedAt,
   }));
 }
 
-// Most recently connected tab wins — Map preserves insertion order, and
-// re-registering a tab id (reconnect) deletes then re-sets it, so the last
-// entry is always the most recent connection. Automated tabs are skipped.
-function findTab({ pageId }) {
-  const candidates = Array.from(tabs.values()).filter(
-    (tab) => !tab.automated && (type.isNone(pageId) || tab.pageId === pageId)
-  );
-  if (candidates.length === 0) {
-    return undefined;
+// Path values compare as strings: a tab reports them decoded from its URL, an agent may pass
+// a number.
+function pathParamsMatch({ requested, rendered }) {
+  if (type.isNone(requested)) {
+    return true;
   }
-  return candidates[candidates.length - 1];
+  const requestedKeys = Object.keys(requested);
+  if (requestedKeys.length !== Object.keys(rendered).length) {
+    return false;
+  }
+  return requestedKeys.every((key) => String(requested[key]) === rendered[key]);
 }
 
-function requestFromTab({ pageId, event, payload = {}, timeout = 5000 }) {
+function instanceMatches({ instance, pageId, pathParams }) {
+  if (type.isNone(pageId)) {
+    return true;
+  }
+  return (
+    instance.pageId === pageId &&
+    pathParamsMatch({ requested: pathParams, rendered: instance.pathParams })
+  );
+}
+
+// Which tab and page instance a dev tool request reads, as { tab, pageId, pathParams,
+// instanceKey }, or undefined when no tab has one:
+//   - the instance on screen in a tab, when one shows the requested page (and values), the most
+//     recently connected such tab first (Map order: a reconnect deletes and re-sets the tab id);
+//   - else the requested page's most recently rendered instance (with those values) in any tab,
+//     whose context that tab still holds.
+// A request naming no page reads the instance on screen in the most recently connected tab.
+// Automated tabs are skipped.
+function findPageInstance({ pageId, pathParams } = {}) {
+  const candidates = Array.from(tabs.values()).filter((tab) => !tab.automated);
+  const onScreen = candidates.filter(
+    (tab) => !type.isNone(tab.page) && instanceMatches({ instance: tab.page, pageId, pathParams })
+  );
+  if (onScreen.length > 0) {
+    const tab = onScreen[onScreen.length - 1];
+    return { tab, ...tab.page };
+  }
+  if (type.isNone(pageId)) {
+    return undefined;
+  }
+  let found;
+  candidates.forEach((tab) => {
+    tab.rendered.forEach((instance) => {
+      if (!instanceMatches({ instance, pageId, pathParams })) {
+        return;
+      }
+      if (type.isNone(found) || instance.sequence > found.sequence) {
+        found = { tab, ...instance };
+      }
+    });
+  });
+  if (type.isNone(found)) {
+    return undefined;
+  }
+  const { sequence, ...instance } = found;
+  return instance;
+}
+
+function describeRequestedPage({ pageId, pathParams }) {
+  if (type.isNone(pageId)) {
+    return 'any page';
+  }
+  if (type.isNone(pathParams)) {
+    return `page "${pageId}"`;
+  }
+  return `page "${pageId}" with pathParams ${JSON.stringify(pathParams)}`;
+}
+
+function requestFromTab({ pageId, pathParams, event, payload = {}, timeout = 5000 }) {
   if (type.isNone(event) || !type.isString(event)) {
     throw new Error(
       `requestFromTab requires an "event" string. Received ${JSON.stringify(event)}.`
     );
   }
-  const tab = findTab({ pageId });
-  if (type.isNone(tab)) {
-    const location = type.isNone(pageId) ? 'any page' : `page "${pageId}"`;
+  const instance = findPageInstance({ pageId, pathParams });
+  if (type.isNone(instance)) {
     return Promise.resolve({
-      error: `No browser tab connected on ${location}. Ask the developer to open the page, or use source: "headless".`,
+      error: `No browser tab connected on ${describeRequestedPage({
+        pageId,
+        pathParams,
+      })}. Ask the developer to open the page, or use source: "headless".`,
     });
   }
 
@@ -107,7 +193,13 @@ function requestFromTab({ pageId, event, payload = {}, timeout = 5000 }) {
       resolve(result);
     });
 
-    tab.send(event, { requestId, ...payload });
+    instance.tab.send(event, {
+      requestId,
+      pageId: instance.pageId,
+      pathParams: instance.pathParams,
+      instanceKey: instance.instanceKey,
+      ...payload,
+    });
   });
 }
 
@@ -122,4 +214,12 @@ function resolveTabRequest({ requestId, result }) {
   return true;
 }
 
-export { listTabs, registerTab, requestFromTab, resolveTabRequest, unregisterTab, updateTabPage };
+export {
+  findPageInstance,
+  listTabs,
+  registerTab,
+  requestFromTab,
+  resolveTabRequest,
+  unregisterTab,
+  updateTabPage,
+};

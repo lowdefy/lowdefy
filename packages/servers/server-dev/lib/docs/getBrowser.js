@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
+import { buildPagePath, type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 import lowdefyConfig from '../build/config.js';
 import createBrowserLifecycle from './createBrowserLifecycle.js';
@@ -40,9 +40,11 @@ const { getBrowser, trackContext } = createBrowserLifecycle({
 // callers only need to pass the bare origin. `urlQuery` (an object) is
 // appended as a query string, serialized by the same helper the engine uses
 // for Link urlQuery, so a page reads it back through _url_query unchanged.
-function buildPageUrl({ origin, pageId, urlQuery }) {
+// `path` is the page's path pattern (readPagePath), filled with `pathParams`
+// by the builder links use; it throws when a placeholder has no value.
+function buildPageUrl({ origin, pageId, path, pathParams, urlQuery }) {
   const basePath = lowdefyConfig.basePath ?? '';
-  const url = `${origin}${basePath}/${pageId}`;
+  const url = `${origin}${basePath}/${buildPagePath({ pageId, path, pathParams })}`;
   const query = urlQueryFn.stringify(urlQuery);
   if (query === '') {
     return url;
@@ -58,6 +60,8 @@ async function openPage({
   browser,
   origin,
   pageId,
+  path,
+  pathParams,
   user,
   urlQuery,
   width = 1280,
@@ -70,7 +74,7 @@ async function openPage({
   onContext,
   timeout = 15000,
 }) {
-  const url = buildPageUrl({ origin, pageId, urlQuery });
+  const url = buildPageUrl({ origin, pageId, path, pathParams, urlQuery });
   // `none` injects no caller: the context starts signed out and the app's own
   // auth resolves every request from the session cookies it sets. Otherwise
   // the user is resolved before the context is created so an invalid `user`
@@ -159,13 +163,13 @@ async function openPage({
     // after the bundle loads — 'load' fires before that. Every caller
     // (screenshot, inspect, eval, checkpoint load, journeys) needs the app's
     // async lifecycle to have settled, not just the bundle to have loaded, so
-    // wait on isPageReady - for the page the app shows (a null pageId), which
-    // is not the one asked for when the app redirects, as a protected page
-    // does for a signed-out caller. Tolerant: on timeout proceed with ready:
+    // wait on isPageReady - for the instance the app shows, which is not the
+    // one asked for when the app redirects, as a protected page does for a
+    // signed-out caller. Tolerant: on timeout proceed with ready:
     // false and let the caller surface what it finds — a snapshot of a hung
     // page is still useful signal, and a far better answer than a tool failure.
     let ready = true;
-    await page.waitForFunction(isPageReady, null, { timeout }).catch(() => {
+    await page.waitForFunction(isPageReady, undefined, { timeout }).catch(() => {
       ready = false;
     });
     // Images blocks render start loading only once the page is ready; a

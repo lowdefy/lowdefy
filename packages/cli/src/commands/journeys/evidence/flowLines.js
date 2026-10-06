@@ -20,8 +20,8 @@ import { journeySequence } from '@lowdefy/node-utils';
 // the entry page, written into evidence so the flow can still be matched once
 // the steps that made it have been edited away. Click text is read by the
 // config text rule, as sequenceId reads it.
-function flowLines({ pageId, steps, isConfigText }) {
-  return journeySequence({ pageId, steps, isConfigText }).map(
+function flowLines({ pageId, steps, routeTable, isConfigText }) {
+  return journeySequence({ pageId, steps, routeTable, isConfigText }).map(
     ({ page, identity }) => `${page} ${identity}`
   );
 }

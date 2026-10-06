@@ -67,7 +67,7 @@ function createDisplayMeta(blockName, { size = false } = {}) {
         description:
           'Triggered when a built-in `cell.type: link` (or avatar with `link`) cell is clicked. Wire to a `Link` action with `params: { _event: link }` to navigate.',
         event: {
-          link: 'The resolved link config (pageId/href/urlQuery/back/home/newTab).',
+          link: 'The resolved link config (pageId/href/urlQuery/pathParams/back/home/newTab).',
           row: 'The row data.',
           value: 'The cell value.',
         },
@@ -236,7 +236,7 @@ function createDisplayMeta(blockName, { size = false } = {}) {
               cell: {
                 type: 'object',
                 description:
-                  'Built-in cell renderer. Takes precedence over `cellRenderer` when `type` is set. Field-valued keys (e.g. `nameField`, `srcField`, `urlQuery.*`) are row-data paths.',
+                  'Built-in cell renderer. Takes precedence over `cellRenderer` when `type` is set. Field-valued keys (e.g. `nameField`, `srcField`, `urlQuery.*`, `pathParams.*`) are row-data paths.',
                 properties: {
                   type: {
                     type: 'string',
@@ -292,7 +292,7 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                   link: {
                     type: 'object',
                     description:
-                      'Avatar/Link: navigation config. Emits `onCellLink` on click. `pageId`/`href`/`back`/`home`/`newTab` are literal; `urlQuery` values are row-data paths.',
+                      'Avatar/Link: navigation config. Emits `onCellLink` on click. `pageId`/`href`/`back`/`home`/`newTab` are literal; `urlQuery` and `pathParams` values are row-data paths.',
                   },
                   pageId: { type: 'string', description: 'Link: target page id (literal).' },
                   href: {
@@ -306,6 +306,11 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                   urlQuery: {
                     type: 'object',
                     description: 'Link: query params. Each value is a row-data path.',
+                  },
+                  pathParams: {
+                    type: 'object',
+                    description:
+                      "Link: values for the page path's placeholders. Each value is a row-data path.",
                   },
                   labelField: {
                     type: 'string',

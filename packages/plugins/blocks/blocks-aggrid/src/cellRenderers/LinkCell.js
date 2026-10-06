@@ -16,21 +16,9 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
+import GridLink from './GridLink.js';
 import NullCell from './NullCell.js';
-import { resolveLink, resolveUrlQuery } from './resolveFieldRefs.js';
-
-function buildHref(link) {
-  if (!type.isObject(link)) return undefined;
-  if (type.isString(link.href)) return link.href;
-  if (!type.isString(link.pageId)) return undefined;
-  const query = type.isObject(link.urlQuery)
-    ? Object.entries(link.urlQuery)
-        .filter(([, v]) => !type.isNone(v))
-        .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
-        .join('&')
-    : '';
-  return `/${link.pageId}${query ? `?${query}` : ''}`;
-}
+import { resolveLink } from './resolveFieldRefs.js';
 
 const linkStyle = {
   color: 'var(--ant-color-link)',
@@ -39,7 +27,7 @@ const linkStyle = {
 };
 
 function LinkCell(params) {
-  const { value, data, cellConfig, methods } = params;
+  const { value, data, cellConfig, methods, components } = params;
   if (type.isNone(value) || value === '') {
     return <NullCell />;
   }
@@ -55,35 +43,24 @@ function LinkCell(params) {
       back: cellConfig?.back,
       home: cellConfig?.home,
       newTab: cellConfig?.newTab,
+      pathParams: cellConfig?.pathParams,
       urlQuery: cellConfig?.urlQuery,
     },
     data
   );
 
-  const href = buildHref(link);
-
-  function onClick(event) {
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.button === 1) return;
-    if (cellConfig?.newTab) return;
-    event.preventDefault();
-    methods?.triggerEvent?.({
-      name: 'onCellLink',
-      event: { link, row: data, value },
-    });
-  }
-
   return (
-    <a
-      href={href ?? '#'}
+    <GridLink
+      link={link}
+      components={components}
+      methods={methods}
+      row={data}
+      value={value}
       style={linkStyle}
-      onClick={onClick}
-      target={cellConfig?.newTab ? '_blank' : undefined}
-      rel={cellConfig?.newTab ? 'noopener noreferrer' : undefined}
     >
       {label}
-    </a>
+    </GridLink>
   );
 }
 
-export { buildHref, resolveUrlQuery };
 export default LinkCell;

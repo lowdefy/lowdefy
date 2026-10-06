@@ -83,11 +83,14 @@ const blockData = (config) => {
 
 // Builds an engine context around one root block: the page's root block for a
 // page context, and a block-less root carrying the app events for the app context.
-function createContext({ config, jsMap, lowdefy }) {
+// instanceKey is where the context and its input are stored.
+function createContext({ config, instanceKey, jsMap, lowdefy, pathParams }) {
   const { id } = config;
   const ctx = {
     id,
+    instanceKey,
     pageId: config.pageId,
+    pathParams,
     eventLog: [],
     jsMap,
     requests: {},

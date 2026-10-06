@@ -182,7 +182,7 @@ function MarkdownLink({ Link, onLinkClick }) {
     const text = linkText(children);
     const handleClick = (domEvent) => onLinkClick?.({ href, text, domEvent });
     const external = /^[a-z][a-z0-9+.-]*:/i.test(href) || href.startsWith('//');
-    // A fragment cannot be expressed as a pageId link, so it keeps the anchor.
+    // A fragment moves within the document, which the router cannot do, so it keeps the anchor.
     const inApp = !external && href.startsWith('/') && !href.includes('#');
     if (!inApp || !Link) {
       return (
@@ -197,17 +197,8 @@ function MarkdownLink({ Link, onLinkClick }) {
         </a>
       );
     }
-    // `pageId`, not `href`: Link renders a plain anchor for href and url — its new-origin form —
-    // and only routes client-side for a pageId. Passing the path as href therefore went through
-    // Link and still reloaded the page, dropping the conversation this exists to preserve.
-    const [pathname, search = ''] = href.slice(1).split('?');
     return (
-      <Link
-        {...props}
-        pageId={pathname}
-        urlQuery={Object.fromEntries(new URLSearchParams(search))}
-        onClick={handleClick}
-      >
+      <Link {...props} url={href} onClick={handleClick}>
         {children}
       </Link>
     );

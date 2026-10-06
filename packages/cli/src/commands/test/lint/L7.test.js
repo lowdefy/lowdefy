@@ -207,6 +207,20 @@ test('L7 refuses a snapshot id in the journey urlQuery and a goto urlQuery, and 
   ]);
 });
 
+test('L7 refuses a snapshot id in the journey pathParams and a goto pathParams', () => {
+  const problems = lint(
+    [
+      { goto: { pageId: 'ticket', pathParams: { ticket_id: '65f0c0ffee0000000000abcd' } } },
+      { expect: { title: { equals: 'Ticket detail' } } },
+    ],
+    { pathParams: { ticket_id: '65f0c0ffee0000000000beef' } }
+  );
+  expect(problems.map(({ message }) => message.split(' is ')[0])).toEqual([
+    'the journey pathParams.ticket_id "65f0c0ffee0000000000beef"',
+    'step 0 (goto "ticket") pathParams.ticket_id "65f0c0ffee0000000000abcd"',
+  ]);
+});
+
 test('L7 refuses a snapshot id in a recorded expect.url query and passes a path or fixture value', () => {
   const problems = lint([
     { expect: { url: { contains: '/ticket?id=65f0c0ffee0000000000abcd&tab=Open' } } },
