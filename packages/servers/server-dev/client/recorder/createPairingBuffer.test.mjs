@@ -154,7 +154,7 @@ test('a mount-time request becomes a kind engine record and pairs with nothing',
     at: 10,
     arrive: 200,
     context: undefined,
-    requests: { get_tickets: [{ actionId: 'fetch', responseTime: 40 }] },
+    requests: { get_tickets: [{ actionId: 'fetch', blockId: 'tickets', responseTime: 40 }] },
     responses: { fetch: { type: 'Request' } },
   });
   expect(records).toHaveLength(1);

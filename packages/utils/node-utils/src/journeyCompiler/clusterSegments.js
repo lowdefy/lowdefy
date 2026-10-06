@@ -16,8 +16,9 @@
 
 import { type } from '@lowdefy/helpers';
 
-import { MAX_SAMPLE_SESSIONS } from './mergeOrigin.js';
 import rankClusters from './rankClusters.js';
+
+const MAX_SAMPLE_SESSIONS = 5;
 
 function distinct(values) {
   return [...new Set(values)].sort();
@@ -55,7 +56,6 @@ function clusterSegments({ segments }) {
       .map((segment) => segment.last_seen)
       .sort()
       .reverse()[0],
-    builds: distinct(members.flatMap((segment) => segment.builds)),
     representative: representative({ segments: members }),
     sample_sessions: distinct(members.map((segment) => segment.session)).slice(
       0,

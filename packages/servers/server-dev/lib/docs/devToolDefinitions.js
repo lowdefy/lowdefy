@@ -465,6 +465,20 @@ const devToolDefinitions = {
       package: z.string().describe('The package name, e.g. "@lowdefy/blocks-antd".'),
     },
   },
+
+  lowdefy_journey_session: {
+    description:
+      'Read what the developer did in this app\'s dev server, to write journeys from. Without an id: the recorded dev sessions, newest first, one line each (id, time span, pages, interactions, failures). With an id: that session as a log, one line per interaction with what the app did in response, e.g. `click save → Validate failed [priority]`, `fill title "Quarterly"`, `click save → ran Validate, request createTicket ok`, and `page <pageId>` per page view. Failed attempts and their retries are both kept; values typed in dev and generated ids show as recorded. Write each journey from the log yourself (assert outcomes, not generated ids) and prove it with lowdefy_run_journey or `lowdefy test --repeat 3 <file>`.',
+    inputSchema: {
+      id: z.string().optional().describe('The session to read, as the list names it.'),
+      since: z
+        .string()
+        .optional()
+        .describe(
+          'Only sessions with records at or after this time: a duration back from now (30m, 2h, 7d) or an ISO date.'
+        ),
+    },
+  },
 };
 
 export { HAZARDS_NOTE, INSTRUCTIONS };

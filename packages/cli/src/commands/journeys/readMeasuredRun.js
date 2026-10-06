@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { compileTrace, listFailurePaths } from '@lowdefy/node-utils';
+import { compileSegments, listFailurePaths } from '@lowdefy/node-utils';
 
 import loadRouteTable from './loadRouteTable.js';
 import readNewestTestRun from './readNewestTestRun.js';
 import readTestRunResults from './readTestRunResults.js';
-import { sequenceKey } from './readTestRunKeys.js';
 import resolveBuildDirectory from './resolveBuildDirectory.js';
+import sequenceKey from './sequenceKey.js';
 
 // What the newest test run measured, for coverage: the interactions the suite
 // drove, as sequence keys, and the failed events the journeys that passed
@@ -31,7 +31,7 @@ function readMeasuredRun({ context }) {
   if (newest === null) {
     return null;
   }
-  const { segments } = compileTrace({
+  const { segments } = compileSegments({
     records: newest.records,
     routeTable: loadRouteTable({ buildDirectory: resolveBuildDirectory({ context }) }),
     source: 'journey',

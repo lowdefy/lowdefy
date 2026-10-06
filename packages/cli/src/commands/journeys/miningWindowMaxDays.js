@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-// The longest window, in UTC days, that pull, compile and coverage mine.
+// The longest window, in UTC days, that pull, coverage and production session logs mine.
 // Evidence is not a mining window and is not capped.
 const MINING_WINDOW_MAX_DAYS = 30;
 

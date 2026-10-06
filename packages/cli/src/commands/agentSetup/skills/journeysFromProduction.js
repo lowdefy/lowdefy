@@ -15,9 +15,10 @@
 */
 
 // The journeys-from-production skill: the coding agent mines journeys from
-// production analytics. It picks the window, pulls, compiles and measures,
-// then reads each recorded routine with the app's config and code to decide
-// what it means and whether it deserves a journey. It never reads raw
+// production analytics. It picks the window, pulls and measures, then reads
+// each session's log (or, at scale, the grouped flows) with the app's config
+// and code to decide what it means and whether it deserves a journey, writes
+// that journey and proves it. It never reads raw
 // production text: the pull stores clicked text as tokens, and the CLI turns a
 // token back into text only when it is the app's config text. It never
 // deletes a journey, or proposes deleting one, for lack of production use.
@@ -29,7 +30,7 @@ function journeysFromProduction({ appPath }) {
   const cd = appPath === '' ? '' : `cd ${appPath} && `;
   return `---
 name: journeys-from-production
-description: Use when the developer wants journeys (tests) for what real users do in production, asks which production flows or failures no journey covers, or wants journey evidence refreshed. Pulls production analytics, reads each recorded routine with the app's config and code, and proves the journeys that deserve one.
+description: Use when the developer wants journeys (tests) for what real users do in production, asks which production flows or failures no journey covers, or wants journey evidence refreshed. Pulls production analytics, reads each session's log with the app's config and code, and writes and proves the journeys that deserve one.
 ---
 
 # Journeys from production
@@ -39,8 +40,8 @@ from what real users do. In this skill you, not a rule, decide what each recorde
 and which ones deserve a journey, by reading them next to the app's config and code. Run every
 command below from the app directory (\`${cd}…\`).
 
-Interaction steps come only from the compiler: you edit candidates within what was recorded, and
-never write a step the routine did not record. Nothing in this loop deletes a journey,
+You write the journeys, from what the sessions show; the runner decides whether they pass. Write
+no interaction a session did not show. Nothing in this loop deletes a journey,
 and you never propose deleting one because production does not use it: a 30-day window cannot
 see quarterly or yearly work. Nothing in it deletes a journey's deprecated flows either.
 
@@ -51,7 +52,7 @@ Production text never enters this conversation. The pull stores every clicked te
 the app's config (a button label, a menu item, an option label, a message). Everything else, a
 customer's name in a grid cell or a label built from values, stays a token.
 
-Read: the day files and manifests in \`.lowdefy/traces/production/\` (tokens), the candidates,
+Read: the day files and manifests in \`.lowdefy/traces/production/\` (tokens), the session logs,
 \`.lowdefy/test/coverage.json\`, command output, the app's config and code, and the dev server's
 \`/lowdefy-docs\` routes when one is running.
 
@@ -71,18 +72,17 @@ question you are answering, and say which and why in your report:
 - a regression: from the first day of the deploy that changed it, \`--from <day> --to <day>\`;
 - a periodic process (month-end, payroll): the days around it.
 
-## 2. Pull, compile, measure
+## 2. Pull and measure
 
 Run, with your window:
 
 1. \`${cd}lowdefy journeys pull posthog --since 30d\`: one file per UTC day in
    \`.lowdefy/traces/production/\`; each finished day is fetched once.
-2. \`${cd}lowdefy journeys compile --source production --since 30d\`: candidates in
-   \`tests/journeys/_candidates/production/\`, which \`lowdefy test\` does not run on its own.
-3. \`${cd}lowdefy journeys coverage --source production --since 30d\`: what no journey covers
-   yet, in \`.lowdefy/test/coverage.json\`.
+2. \`${cd}lowdefy journeys coverage --source production --since 30d\`: what no journey covers
+   yet, in \`.lowdefy/test/coverage.json\`. Its \`flowGrouping\` says whether the window was
+   large enough (100,000 rows or more) to group sessions into flows.
 
-Compile, coverage and evidence build the app once to collect its config text (cached until the
+The session reader, coverage and evidence build the app once to collect its config text (cached until the
 config changes): if they say to run \`lowdefy dev\` first, or list config errors, tell the
 developer.
 
@@ -98,38 +98,54 @@ then wait:
 
 Never ask for the key in chat, and never write it to a file yourself.
 
-## 3. Read each routine
+## 3. Read the sessions
 
-For each candidate and each uncovered flow and failure path in \`coverage.json\`
-(\`measures.failure.uncovered\`, \`measures.flow.uncovered\`), read the page's config, the
-requests and actions its steps run, and the block plugins' code, and work out:
+Below 100,000 rows, read the sessions one by one:
+
+- \`${cd}lowdefy journeys session --source production --since 30d\` lists the window's sessions,
+  newest first, with their pages, interactions and failures. Start with the ones that failed,
+  then the uncovered failure paths in \`coverage.json\` (\`measures.failure.uncovered\`).
+- \`${cd}lowdefy journeys session --source production --since 30d <id>\` prints one session as a
+  log, one line per interaction with what the app did in response, for example
+  \`click save → Validate failed [priority]\`. Production records no typed values, so a
+  \`fill\` line names the control only; a click on text that is not config text reads
+  \`(text not in config)\`; \`(dead click)\` and \`(rage click)\` mark frustrated clicks.
+
+From 100,000 rows on, nobody can read them one by one: read the grouped flows instead, in
+\`measures.flow.uncovered\` of \`coverage.json\` and the uncovered flows \`lowdefy journeys usage\`
+lists, and print a session of a flow you need in detail. (\`--group\` and \`--no-group\` on
+\`journeys coverage\` force grouping either way.)
+
+For each session or flow, read the page's config, the requests and actions it runs, and the block
+plugins' code, and work out:
 
 - what the person was doing, in plain words;
-- what each tokenised click is. A step flagged \`tokenised-text\` carries a comment naming its
-  token, and the candidate's origin (\`text_tokens\`) and \`production.textTokens\` in
-  \`coverage.json\` give, per page, block and column, the clicks, the distinct tokens and the
-  most-clicked tokens with how many people clicked each. One token clicked by many people on a
-  button reads as a label built from values ("Open (3)"); hundreds of tokens on a grid column read
-  as data rows;
+- what each click without config text is. \`production.textTokens\` in \`coverage.json\` gives,
+  per page, block and column, the clicks, the distinct tokens and the most-clicked tokens with how
+  many people clicked each. One token clicked by many people on a button reads as a label built
+  from values ("Open (3)"); hundreds of tokens on a grid column read as data rows;
 - which steps are incidental (a stray click, a focus, a reopened menu).
 
 ## 4. Decide what deserves a journey
 
 Take them in this order:
 
-1. failures: uncovered failure paths and candidates whose origin counts failures;
+1. failures: uncovered failure paths and sessions that failed;
 2. routines that write data, move money, change access or end a process;
-3. the rest, by how often production showed them (\`sessions\` in the candidate's origin).
+3. the rest, by how often production showed them (how many sessions did the same, or a grouped
+   flow's \`count\`).
 
 Skip a routine that is incidental, duplicates a committed journey, or tests nothing the app does,
 and note why.
 
-## 5. Edit candidates within what was recorded
+## 5. Write the journeys
 
-- Name the journey after what the person did, and decide whether it is one journey or two.
-- A production \`fill\` has \`value: null, from: shape\`, because typed values are never
-  captured. Fill each value from the journey's data set \`fixtures\`; when none fits, add a
-  fixture document for the journey.
+- Write each one in \`tests/journeys/\`, named after what the person did (\`name\`, at most 100
+  characters), and decide whether it is one journey or two. Its steps follow the session: the
+  same targets, in the same order.
+- Typed values are never captured in production, so a \`fill\` line has no value. Take each value
+  from the journey's data set \`fixtures\`; when none fits, add a fixture document for the
+  journey.
 - Re-target a click on a data row to a row of fixture data, and fill a tokenised option pick from
   the fixtures or the config's options.
 - Write a label you read in the config where it tells two controls in one block apart. A click on
@@ -144,23 +160,22 @@ and note why.
   that page.
 - Add waits and expectations from the code: a \`wait: { request }\` for the request a step runs,
   an \`expect\` for what it changes.
-- Never add an interaction the routine did not record.
+- Never add an interaction the session did not show.
 
-## 6. Prove and promote
+## 6. Prove it
 
-Run \`${cd}lowdefy test --repeat 3 tests/journeys/_candidates/production/<file>.yaml\`. It runs a
-journey from any path and records nothing. (\`lowdefy test --filter "<name>"\` only reaches
-journeys already in \`tests/journeys/\`.)
+Run \`${cd}lowdefy test --repeat 3 tests/journeys/<file>.yaml\`. It records nothing.
 
-- **PASS** (three passes): move the file from \`tests/journeys/_candidates/production/\` to
-  \`tests/journeys/\`.
-- **FAIL** (three failures): production did this and it breaks now, so it is a finding: a bug or
-  a behaviour change.
+- **PASS** (three passes): keep it.
+- **FAIL** (three failures): read the failure. A step you wrote wrong, fix and run again. A
+  journey that does what production did and still fails is a finding (a bug or a behaviour
+  change): show the developer the journey and its failing step, and let them decide whether it
+  stays as a failing test until the bug is fixed.
 - **FLAKY** (one or two failures): fix the cause, a missing \`wait: { request }\` or a data
   dependency. Never add \`wait: { ms }\`. Then run it three more times.
 
 If \`${cd}lowdefy journeys --help\` lists \`variants\`, run
-\`${cd}lowdefy journeys variants <file>\` on each promoted journey.
+\`${cd}lowdefy journeys variants <file>\` on each journey you kept.
 
 Then refresh evidence, with the usage report on either side of it:
 

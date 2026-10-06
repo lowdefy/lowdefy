@@ -60,20 +60,29 @@ function writeJourney({ file, name, blockId, months, extra = {}, deprecated }) {
   fs.writeFileSync(path.join(configDirectory, 'tests', 'journeys', file), YAML.stringify(journey));
 }
 
-function writeCoverage() {
+function writeCoverage({ grouped = true, forced = false, version = 2 } = {}) {
   fs.mkdirSync(context.directories.test, { recursive: true });
   fs.writeFileSync(
     path.join(context.directories.test, 'coverage.json'),
     JSON.stringify({
-      version: 1,
+      version,
       window: { from: '2026-09-04', to: '2026-10-03' },
+      flowGrouping: { grouped, rows: 4200, threshold: 100000, forced },
       measures: {
-        flow: {
-          uncovered: [
-            { key: 'aaaa1111', hash: 'aaaa1111', page: 'tickets', count: 4, sequence: [{}] },
-            { key: 'bbbb2222', hash: 'bbbb2222', page: 'board', count: 40, sequence: [{}, {}] },
-          ],
-        },
+        flow: grouped
+          ? {
+              uncovered: [
+                { key: 'aaaa1111', hash: 'aaaa1111', page: 'tickets', count: 4, sequence: [{}] },
+                {
+                  key: 'bbbb2222',
+                  hash: 'bbbb2222',
+                  page: 'board',
+                  count: 40,
+                  sequence: [{}, {}],
+                },
+              ],
+            }
+          : null,
       },
     })
   );
@@ -193,6 +202,25 @@ test('journeys usage ranks journeys by rate with tiers, months and old flows, th
     '      40 sessions  board  bbbb2222  (2 steps)',
     '       4 sessions  tickets  aaaa1111  (1 steps)',
   ]);
+});
+
+test('journeys usage says why it lists no flows when coverage did not group them', async () => {
+  writeCoverage({ grouped: false });
+  await journeysUsage({ context });
+  expect(logged[logged.length - 1]).toBe(
+    'Uncovered production flows in 2026-09-04 to 2026-10-03: not grouped (4200 rows < 100000). Read the sessions with "lowdefy journeys session --source production", or run "lowdefy journeys coverage --group".'
+  );
+  writeCoverage({ grouped: false, forced: true });
+  await journeysUsage({ context });
+  expect(logged[logged.length - 1]).toContain('not grouped (coverage ran with --no-group)');
+});
+
+test('journeys usage reads a coverage report of an earlier version as none', async () => {
+  writeCoverage({ version: 1 });
+  await journeysUsage({ context });
+  expect(logged[logged.length - 1]).toBe(
+    'Uncovered production flows: no coverage report yet. Run "lowdefy journeys coverage" to list them.'
+  );
 });
 
 test('journeys usage says to run coverage when there is no coverage report', async () => {

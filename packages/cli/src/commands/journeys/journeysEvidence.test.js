@@ -522,35 +522,18 @@ function writeDevRecording({ id, start, blocks }) {
   );
 }
 
-test('journeys evidence --refresh prints the dev recordings of the last 7 days that back each journey and writes none', async () => {
+test('journeys evidence --refresh counts no dev recordings: agents read them as session logs', async () => {
   const savesPath = writeJourney('saves.yaml', SAVES);
   writeDevRecording({
     id: '20261003T080000Z-dev001',
     start: Date.parse('2026-10-03T08:00:00Z'),
     blocks: ['edit', 'title', 'save'],
   });
-  writeDevRecording({
-    id: '20261001T080000Z-dev002',
-    start: Date.parse('2026-10-01T08:00:00Z'),
-    blocks: ['edit', 'save'],
-  });
-  writeDevRecording({
-    id: '20261002T080000Z-dev003',
-    start: Date.parse('2026-10-02T08:00:00Z'),
-    blocks: ['close'],
-  });
-  // Older than the 7-day window.
-  writeDevRecording({
-    id: '20260920T080000Z-dev004',
-    start: Date.parse('2026-09-20T08:00:00Z'),
-    blocks: ['edit', 'save'],
-  });
   context.options.refresh = true;
   await journeysEvidence({ context });
   const journey = YAML.parse(fs.readFileSync(savesPath, 'utf8'));
-  expect(journey.evidence).not.toHaveProperty('dev');
-  expect(validateJourney({ journey })).toEqual({ valid: true });
-  expect(logged.some((line) => line.includes('2 dev recordings'))).toBe(true);
+  expect(journey.evidence?.dev).toBeUndefined();
+  expect(logged.some((line) => line.includes('dev recordings'))).toBe(false);
 });
 
 test('journeys evidence --refresh removes a committed dev count', async () => {

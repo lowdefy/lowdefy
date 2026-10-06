@@ -16,15 +16,17 @@
 
 import { type } from '@lowdefy/helpers';
 
+import isEventCall from './isEventCall.js';
+
 // The requests this event's actions fired, as trace record entries.
 // `context.requests[requestId]` is a newest-first call history whose entries
-// carry the id of the action that made the call, so the newest call of a
-// request belongs to this event exactly when that action is one of its own.
-function collectEventRequests({ context, responses }) {
+// carry the block and the id of the action that made the call, so the newest
+// call of a request belongs to this event when isEventCall says so.
+function collectEventRequests({ blockId, context, responses }) {
   const requests = [];
   Object.keys(context?.requests ?? {}).forEach((requestId) => {
     const call = (context.requests[requestId] ?? [])[0];
-    if (type.isNone(call) || type.isNone(call.actionId) || !(call.actionId in responses)) return;
+    if (!isEventCall({ blockId, call, responses })) return;
     requests.push({
       id: requestId,
       ok: type.isNone(call.error),

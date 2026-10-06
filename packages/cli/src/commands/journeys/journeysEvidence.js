@@ -15,7 +15,7 @@
 */
 
 import fs from 'fs';
-import { compileTrace } from '@lowdefy/node-utils';
+import { compileSegments } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import committedFlowTexts from './evidence/committedFlowTexts.js';
@@ -28,7 +28,6 @@ import loadRouteTable from './loadRouteTable.js';
 import listFinalDays from './listFinalDays.js';
 import loadBlockMetas from './loadBlockMetas.js';
 import readCommittedJourneys from './readCommittedJourneys.js';
-import readDevSegments from './readDevSegments.js';
 import readMutationReport from './readMutationReport.js';
 import readConfigText from './configText/readConfigText.js';
 import readProductionMonths from './readProductionMonths.js';
@@ -40,14 +39,10 @@ import writeEvidenceNode from './evidence/writeEvidenceNode.js';
 
 const SOURCES = ['production'];
 
-// The PASS line's evidence, plus this machine's dev recordings, which are
-// printed but never written: a rolling count that differs by machine.
-function summarise({ evidence, recordings }) {
-  const parts = [formatEvidence({ evidence })].filter((part) => part !== '');
-  if (!type.isUndefined(recordings)) {
-    parts.push(`${recordings} dev recordings`);
-  }
-  return parts.length === 0 ? 'no evidence' : parts.join(' · ');
+// The PASS line's evidence.
+function summarise({ evidence }) {
+  const line = formatEvidence({ evidence });
+  return line === '' ? 'no evidence' : line;
 }
 
 function countDaysByMonth({ days }) {
@@ -124,7 +119,7 @@ function readProduction({ context, journeys, today, now, configText, routeTable 
       texts: new Set([...configText.texts, ...committedFlowTexts({ journeys })]),
     }),
   });
-  const { segments } = compileTrace({
+  const { segments } = compileSegments({
     records,
     blockMetas: loadBlockMetas({ buildDirectory: resolveBuildDirectory({ context }) }),
     routeTable,
@@ -200,7 +195,6 @@ async function journeysEvidence({ context }) {
     journeys,
     sources: {
       production,
-      dev: readDevSegments({ context, now }),
       mutation: readMutationReport({ directories: context.directories }),
     },
     routeTable,
@@ -211,10 +205,9 @@ async function journeysEvidence({ context }) {
   const changed = results.filter((result) => result.changed);
   changed.forEach((result) => {
     logger.info(
-      `${result.file}#${result.name}: ${summarise({
-        evidence: result.before,
-        recordings: result.before?.dev?.recordings,
-      })} -> ${summarise({ evidence: result.after, recordings: result.devRecordings })}`
+      `${result.file}#${result.name}: ${summarise({ evidence: result.before })} -> ${summarise({
+        evidence: result.after,
+      })}`
     );
   });
   const read = describeRead({ production });

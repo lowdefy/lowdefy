@@ -44,6 +44,7 @@ import listDataSets from './listDataSets.js';
 import matchPagePath from './matchPagePath.js';
 import parseDataSet from './parseDataSet.js';
 import parseIpRange from './parseIpRange.js';
+import parseSince from './parseSince.js';
 import parsePsStartTime from './parsePsStartTime.js';
 import readDevInstance from './readDevInstance.js';
 import readDevInstanceAsync from './readDevInstanceAsync.js';
@@ -58,6 +59,7 @@ import writeFile from './writeFile.js';
 import writeFileAtomic from './writeFileAtomic.js';
 import watchOwner from './watchOwner.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
+import compileSegments from './journeyCompiler/compileSegments.js';
 import compileTrace from './journeyCompiler/compileTrace.js';
 import countTextTokens from './journeyEvidence/countTextTokens.js';
 import collectKnownText from './journeyText/collectKnownText.js';
@@ -71,6 +73,10 @@ import journeySequence from './journeyCompiler/journeySequence.js';
 import listFailurePaths from './journeyCompiler/listFailurePaths.js';
 import parseTraceLines from './journeyCompiler/parseTraceLines.js';
 import profileProduction from './journeyEvidence/profileProduction.js';
+import buildSessionReport from './sessionLog/buildSessionReport.js';
+import formatSessionLog from './sessionLog/formatSessionLog.js';
+import formatSessionReport from './sessionLog/formatSessionReport.js';
+import summariseSessions from './sessionLog/summariseSessions.js';
 import stepIdentity from './journeyCompiler/stepIdentity.js';
 import validateJourneySteps, {
   getStepKey,
@@ -84,11 +90,13 @@ import validateTraceRecord from './journeyTrace/validateTraceRecord.js';
 
 export {
   acquireMachineSlot,
+  buildSessionReport,
   checkEnvironmentGuards,
   cleanDirectory,
   collectEnvironmentGuards,
   collectKnownText,
   compareProcessStartTimes,
+  compileSegments,
   compileTrace,
   copyFileOrDirectory,
   countDataSetDocuments,
@@ -101,6 +109,8 @@ export {
   findAvailablePort,
   findPlaceholderStep,
   findPnpmWorkspaceRoot,
+  formatSessionLog,
+  formatSessionReport,
   findWorkspacePackages,
   getDevInstancePath,
   getFileExtension,
@@ -126,6 +136,7 @@ export {
   normaliseBlockId,
   normaliseClickText,
   parseIpRange,
+  parseSince,
   parsePsStartTime,
   parseTraceLines,
   profileProduction,
@@ -138,6 +149,7 @@ export {
   RECORDING_SOURCES,
   spawnProcess,
   stepIdentity,
+  summariseSessions,
   readFile,
   writeFile,
   writeFileAtomic,

@@ -27,6 +27,7 @@ let test_directory;
 const measure = { covered: 1, total: 2, share: 0.5, uncovered: [{ key: 'a', count: 1 }] };
 const input = {
   window: { from: '2026-09-04', to: '2026-10-03' },
+  flowGrouping: { grouped: true, rows: 120000, threshold: 100000, forced: false },
   measures: {
     interaction: measure,
     flow: measure,
@@ -80,6 +81,26 @@ test('writeCoverageReport gives the same bytes for the same inputs apart from ge
   writeCoverageReport({ directories: { test: test_directory }, generated: 'two', ...input });
   const second = fs.readFileSync(path.join(test_directory, 'coverage.json'), 'utf8');
   expect(second.replace('"two"', '"one"')).toBe(first);
+});
+
+test('coverageReportSchema accepts a null flow measure when flows were not grouped', () => {
+  const { report } = writeCoverageReport({
+    directories: { test: test_directory },
+    generated: 'x',
+    ...input,
+    flowGrouping: { grouped: false, rows: 4200, threshold: 100000, forced: false },
+    measures: { ...input.measures, flow: null },
+  });
+  expect(report.version).toBe(2);
+  expect(Object.keys(report).slice(0, 6)).toEqual([
+    'version',
+    'generated',
+    'source',
+    'window',
+    'flowGrouping',
+    'measures',
+  ]);
+  expect(validate({ schema: coverageReportSchema, data: report })).toEqual({ valid: true });
 });
 
 test('coverageReportSchema refuses a report with an unknown top-level key', () => {
