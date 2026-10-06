@@ -17,9 +17,15 @@
 import { jest } from '@jest/globals';
 
 // A stand-in for the engine's trace registry (the `trace` action argument): emit plays the
-// engine, describeChain and pathEntryOf return what the test gives them. Like the engine, it holds
+// engine, describeChain and pathEntryOf return what the test gives them, and isConfigText is
+// true for the configTexts the test gives it. Like the engine, it holds
 // failures emitted before the first replay subscriber and hands them to it inside subscribe.
-function createFakeTrace({ describeChain = () => null, pathEntryOf = () => null } = {}) {
+function createFakeTrace({
+  configTexts = [],
+  describeChain = () => null,
+  isConfigText = ({ text }) => configTexts.includes(text.replace(/\s+/g, ' ').trim()),
+  pathEntryOf = () => null,
+} = {}) {
   const listeners = [];
   let heldFailures = [];
   let holding = true;
@@ -31,6 +37,7 @@ function createFakeTrace({ describeChain = () => null, pathEntryOf = () => null 
       }
       [...listeners].forEach((listener) => listener(payload));
     },
+    isConfigText: jest.fn(isConfigText),
     listeners,
     pathEntryOf: jest.fn(pathEntryOf),
     subscribe: jest.fn((listener, { replay = false } = {}) => {

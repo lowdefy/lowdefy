@@ -239,6 +239,22 @@ test('PostHogInit stores the trace registry for the before_send hook', async () 
   expect(postHogState.trace).toBe(trace);
 });
 
+test('PostHogInit throws when maskDataText is not a boolean', async () => {
+  await expect(
+    PostHogInit({ trace: createFakeTrace(), params: { apiKey: 'phc_key', maskDataText: 'no' } })
+  ).rejects.toThrow('PostHogInit "maskDataText" must be a boolean. Received "no".');
+});
+
+test('PostHogInit stores maskDataText, true by default, for the before_send hook', async () => {
+  await PostHogInit({ trace: createFakeTrace(), params: { apiKey: 'phc_key' } });
+  expect(postHogState.maskDataText).toBe(true);
+  await PostHogInit({
+    trace: createFakeTrace(),
+    params: { apiKey: 'phc_key', maskDataText: false },
+  });
+  expect(postHogState.maskDataText).toBe(false);
+});
+
 test('PostHogInit throws when captureEventFailures is not a boolean', async () => {
   await expect(
     PostHogInit({

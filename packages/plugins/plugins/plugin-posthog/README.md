@@ -46,6 +46,10 @@ With `enabled: false`, `posthog-js` is never downloaded and every other action i
 
 When the app declares `config.environments`, `PostHogInit` registers the current environment's name as the `environment` super property on every event, so one PostHog project can hold staging and production.
 
+## Click text masking
+
+By default the plugin masks click text that shows the app's data before any event leaves the browser. A clicked text is kept only when the page's config, the menus, the i18n messages or the antd locale spell it out, so grid cells, request-filled options and labels built from records are removed while button, menu, tab, column header and literal option labels stay. Element attributes other than structural ones (tag, classes, `class`, `role`, `type`, `row-index`, `col-id`, `nth-child`, `nth-of-type`) are removed, and `id` is kept only as a block wrapper id (`bl-<blockId>`), since library ids such as antd's `rc-tabs-<n>-tab-<key>` can embed record keys. Classes and `data-ph-capture-attribute-<name>` values (sent as property `<name>`) are not masked, so never build them from data. The `lowdefy_*` properties stay, so clicks still record their block, row and column. URLs are not masked. Set `maskDataText: false` on `PostHogInit` to send full click text.
+
 ## Never breaks the app
 
 Analytics must never break an app. Every action other than `PostHogInit` does nothing and returns `null` when PostHog is disabled or `posthog-js` could not be downloaded. `PostHogFeatureFlag` returns its configured `default` instead, and `PostHogReloadFeatureFlags` returns `{ flags: [], variants: {} }`.
@@ -58,21 +62,21 @@ Never send personally identifiable information to PostHog: no names, email addre
 
 ## Actions
 
-| Action                       | Params                                             | Returns                        |
-| ---------------------------- | -------------------------------------------------- | ------------------------------ |
-| `PostHogInit`                | `apiKey`, `apiHost`, `options`, `debug`, `enabled` | `null`                         |
-| `PostHogCapture`             | `event`, `properties`, `groups`                    | `null`                         |
-| `PostHogPageview`            | `properties`                                       | `null`                         |
-| `PostHogCapturePageLeave`    | `properties`                                       | `null`                         |
-| `PostHogIdentify`            | `id`, `properties`, `propertiesOnce`               | `null`                         |
-| `PostHogSetPersonProperties` | `set`, `setOnce`                                   | `null`                         |
-| `PostHogAlias`               | `alias`                                            | `null`                         |
-| `PostHogGroup`               | `type`, `key`, `properties`                        | `null`                         |
-| `PostHogReset`               | `resetDeviceId`                                    | `null`                         |
-| `PostHogOptIn`               | none                                               | `null`                         |
-| `PostHogOptOut`              | none                                               | `null`                         |
-| `PostHogFeatureFlag`         | `key`, `default`, `enabled`, `payload`             | the flag value, or `default`   |
-| `PostHogReloadFeatureFlags`  | `timeout`                                          | `Promise<{ flags, variants }>` |
+| Action                       | Params                                                                                     | Returns                        |
+| ---------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------ |
+| `PostHogInit`                | `apiKey`, `apiHost`, `options`, `debug`, `enabled`, `captureEventFailures`, `maskDataText` | `null`                         |
+| `PostHogCapture`             | `event`, `properties`, `groups`                                                            | `null`                         |
+| `PostHogPageview`            | `properties`                                                                               | `null`                         |
+| `PostHogCapturePageLeave`    | `properties`                                                                               | `null`                         |
+| `PostHogIdentify`            | `id`, `properties`, `propertiesOnce`                                                       | `null`                         |
+| `PostHogSetPersonProperties` | `set`, `setOnce`                                                                           | `null`                         |
+| `PostHogAlias`               | `alias`                                                                                    | `null`                         |
+| `PostHogGroup`               | `type`, `key`, `properties`                                                                | `null`                         |
+| `PostHogReset`               | `resetDeviceId`                                                                            | `null`                         |
+| `PostHogOptIn`               | none                                                                                       | `null`                         |
+| `PostHogOptOut`              | none                                                                                       | `null`                         |
+| `PostHogFeatureFlag`         | `key`, `default`, `enabled`, `payload`                                                     | the flag value, or `default`   |
+| `PostHogReloadFeatureFlags`  | `timeout`                                                                                  | `Promise<{ flags, variants }>` |
 
 Full documentation, including examples, is at [docs.lowdefy.com/PostHog](https://docs.lowdefy.com/PostHog).
 

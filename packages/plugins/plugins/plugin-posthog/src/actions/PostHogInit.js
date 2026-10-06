@@ -23,6 +23,8 @@ import subscribeEventFailures from '../lib/subscribeEventFailures.js';
 const defaultApiHost = 'https://us.i.posthog.com';
 // Whether lowdefy_event_failed is captured when captureEventFailures is not set.
 const defaultCaptureEventFailures = true;
+// Whether click text that is not config text is masked when maskDataText is not set.
+const defaultMaskDataText = true;
 
 // Initialise posthog-js. Every other action in this package does nothing until
 // it has run, so run it from the app's events.onInitAsync, which runs once per
@@ -30,13 +32,14 @@ const defaultCaptureEventFailures = true;
 // placement is safe too. The deployment environment (config.environments /
 // LOWDEFY_ENVIRONMENT), build id and app version are registered as super
 // properties, so every event carries them. Events are enriched with Lowdefy
-// semantics, and failed block and app events are captured as
+// semantics, click text that is not spelled out in config is masked unless
+// maskDataText is false, and failed block and app events are captured as
 // lowdefy_event_failed unless captureEventFailures is false.
 async function PostHogInit({ params, lowdefyApp, trace }) {
   if (!type.isObject(params)) {
     throw new Error(`PostHogInit params must be an object. Received ${JSON.stringify(params)}.`);
   }
-  const { apiKey, apiHost, captureEventFailures, debug, enabled, options } = params;
+  const { apiKey, apiHost, captureEventFailures, debug, enabled, maskDataText, options } = params;
 
   if (!type.isNone(enabled) && !type.isBoolean(enabled)) {
     throw new Error(
@@ -55,6 +58,11 @@ async function PostHogInit({ params, lowdefyApp, trace }) {
   }
   if (!type.isNone(debug) && !type.isBoolean(debug)) {
     throw new Error(`PostHogInit "debug" must be a boolean. Received ${JSON.stringify(debug)}.`);
+  }
+  if (!type.isNone(maskDataText) && !type.isBoolean(maskDataText)) {
+    throw new Error(
+      `PostHogInit "maskDataText" must be a boolean. Received ${JSON.stringify(maskDataText)}.`
+    );
   }
   if (!type.isNone(captureEventFailures) && !type.isBoolean(captureEventFailures)) {
     throw new Error(
@@ -96,6 +104,7 @@ async function PostHogInit({ params, lowdefyApp, trace }) {
   }
   // Read by the before_send hook, which posthog-js calls for every event.
   postHogState.trace = trace;
+  postHogState.maskDataText = maskDataText ?? defaultMaskDataText;
   await initPostHog({
     apiKey: apiKey ?? null,
     config,

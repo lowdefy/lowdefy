@@ -22,6 +22,7 @@ function resetPostHogState() {
   postHogState.apiKey = null;
   postHogState.client = null;
   postHogState.loading = null;
+  postHogState.maskDataText = true;
   postHogState.status = 'uninitialized';
   postHogState.subscription = null;
   postHogState.trace = null;

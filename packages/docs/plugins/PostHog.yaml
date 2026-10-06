@@ -140,9 +140,46 @@ _ref:
 
             `lowdefy journeys pull posthog` reads these events back to your machine over PostHog's query API, so [journeys can be mined from production](/config-tests#production-journeys): compiled into candidate tests, checked for how much real use backs each journey, and compared with what users do that no journey covers. It needs `POSTHOG_PROJECT_ID`, `POSTHOG_API_HOST` and your own personal API key with the Query Read scope in `POSTHOG_PERSONAL_API_KEY`; see the [CLI reference](/cli#journeys-pull-posthog).
 
-            What reaches your machine, in `.lowdefy/traces/production/`, which is not committed: no typed values (PostHog never captured them), person and organisation ids hashed with a salt that stays on your machine, URL query parameter names without their values, and no clicked text. The clicked element's text is stored only as a token, a hash under the same salt; the journey commands turn a token back into text only when it is text from the app's own config, such as a button label or a menu item. The element chain is read in memory and never written. PostHog itself still stores the clicked element's text (`$el_text`, and text in `$elements_chain`) for every autocaptured click, as posthog-js does by default. Events from before the Lowdefy properties above were added still count: the pull reads the block ids from the element chain instead.
+            What reaches your machine, in `.lowdefy/traces/production/`, which is not committed: no typed values (PostHog never captured them), person and organisation ids hashed with a salt that stays on your machine, URL query parameter names without their values, and no clicked text. The clicked element's text is stored only as a token, a hash under the same salt; the journey commands turn a token back into text only when it is text from the app's own config, such as a button label or a menu item. The element chain is read in memory and never written. PostHog itself only holds the clicked text the app's config spells out, unless `maskDataText` is `false` (see [Click text masking](#click-text-masking)), so a production record of a click on data carries its page, block, row and column but no text. Events from before the Lowdefy properties above were added still count: the pull reads the block ids from the element chain instead.
 
             Every event the plugin enriches names its page in `lowdefy_page_id`, so the pull never guesses it. A failed app event names the page the app loaded on, including a configured home page served at the app root (`/`). Events from before the Lowdefy properties were added carry no page id, so the pull reads the page from the URL path. That reading assumes the app is served at the root and that `/` only redirects: older events from an app with a `basePath`, or from a home page served at `/`, are dropped.
+
+            ## Click text masking
+
+            By default, `posthog-js` sends the text of every element a person clicks. In a business app that text is often data: a customer's name in a grid row, an account picked from a dropdown filled by a request. The plugin masks that text in the browser, before any event is sent, and keeps the text the app's config spells out.
+
+            ###### What is masked
+
+            On every event, whatever its name (autocaptured clicks, rage clicks, dead clicks and swipes, copy events and any event `posthog-js` adds later):
+
+            - __Text that is not config text.__ Each clicked text (`$el_text`, the `text` entries of `$elements_chain` and `$elements`, `$selected_content` and link targets) is kept only when it equals, after whitespace is collapsed, a string in the config of the page the event was captured on, in the app's menus, in the i18n messages or in the antd locale. Everything else is removed: grid and table cell values, options and menu items a request fills, labels built from records, and anything a `Dynamic` block's endpoint returned. A link whose target is not config text keeps its `href` attribute, emptied, so the click still reads as a link click.
+            - __Element attributes outside a structural allow-list.__ Only the tag, classes, `class`, `role`, `type`, `row-index`, `col-id`, `nth-child` and `nth-of-type` are kept, and `id` only when it is a block's wrapper id (`bl-<blockId>`). Other ids are removed, because ids that libraries generate can embed runtime keys: an antd tab is `rc-tabs-<n>-tab-<key>`, so a `Tabs` block keyed by record would send the record. Every other attribute is removed, including `title` (antd select options carry their label there), `aria-label`, `value`, `placeholder`, `alt` and every `data-*` attribute.
+
+            ###### What stays
+
+            - Config labels: button titles, menu and tab labels, column headers, card titles, literal option labels, and antd's own strings such as modal __OK__ and __Cancel__ or pagination.
+            - Every `lowdefy_*` property, so a click on data still records its page, block, row, column and whether it picked an option.
+
+            A data value that happens to equal a config string, such as a status `Active` that is also a literal option, is kept: that string is already in config shipped to every visitor of the page.
+
+            ###### What is not masked
+
+            URLs. `$current_url`, `$pathname`, URL query values and `lowdefy_path_params` still reach PostHog unchanged, so keep names and other personal data out of page paths and query parameters.
+
+            ###### Changing it
+
+            - `maskDataText: false` on [`PostHogInit`](/PostHogInit) sends full click text and every attribute, as `posthog-js` does by default.
+            - `options.mask_all_text: true` sends no click text at all, config labels included.
+            - A block `class` of `ph-sensitive` masks that block's config text too. It covers only the block's own DOM: popups a block renders into the page body, such as `Dropdown` and `DropdownButton` items, table and grid `MenuCell` menus, `Modal` and `Drawer`, are outside it.
+
+            Two things are left to the app:
+
+            - Classes are sent as they are, so never build a block's `class` from data.
+            - A `data-ph-capture-attribute-<name>` attribute is how `posthog-js` lets an app add a property to a click: its value is sent unmasked as property `<name>`. Only put config values in it.
+
+            ###### Session replay
+
+            Session replay is separate from click events and is not covered by this masking. When the PostHog project turns recordings on, replay records the page's text (inputs are masked by `posthog-js` by default). Set `options.session_recording.maskTextSelector: '*'` to mask all text in recordings, or give a block a `class` of `ph-mask` to mask one block.
 
             ## Analytics never breaks the app
 
@@ -331,7 +368,7 @@ _ref:
 
             | Action | Params | Response |
             | --- | --- | --- |
-            | [`PostHogInit`](/PostHogInit) | `apiKey`, `apiHost`, `options`, `debug`, `enabled`, `captureEventFailures` | `null` |
+            | [`PostHogInit`](/PostHogInit) | `apiKey`, `apiHost`, `options`, `debug`, `enabled`, `captureEventFailures`, `maskDataText` | `null` |
             | [`PostHogCapture`](/PostHogCapture) | `event`, `properties`, `groups` | `null` |
             | [`PostHogPageview`](/PostHogPageview) | `properties` | `null` |
             | [`PostHogCapturePageLeave`](/PostHogCapturePageLeave) | `properties` | `null` |

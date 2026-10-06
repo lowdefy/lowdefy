@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import maskEventText from './maskEventText.js';
 import postHogState from './postHogState.js';
 
 // The events autocapture records with an `$elements_chain`.
@@ -43,9 +44,11 @@ function targetProperties(target) {
 
 // posthog-js before_send: stamps Lowdefy semantics onto events, from the trace registry the last
 // PostHogInit stored. Clicks get the block they hit; every event gets the page it was captured
-// on and that page's path values. It adds no event and always returns the event it was given.
+// on and that page's path values. Then, unless maskDataText is false, the text of the app's data
+// is masked, after describeChain has read the full chain. It adds no event and always returns
+// the event it was given.
 function enrichEvent(event) {
-  const { trace } = postHogState;
+  const { maskDataText, trace } = postHogState;
   const { properties } = event;
   if (AUTOCAPTURE_EVENTS.includes(event.event) && type.isString(properties.$elements_chain)) {
     Object.assign(properties, targetProperties(trace.describeChain(properties.$elements_chain)));
@@ -61,6 +64,9 @@ function enrichEvent(event) {
     if (properties.lowdefy_page_id === entry.pageId) {
       properties.lowdefy_path_params = entry.pathParams;
     }
+  }
+  if (maskDataText !== false) {
+    maskEventText({ event, trace, pageId: properties.lowdefy_page_id ?? null });
   }
   return event;
 }

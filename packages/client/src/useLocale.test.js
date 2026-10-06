@@ -25,6 +25,8 @@ jest.unstable_mockModule('dayjs', () => ({
 }));
 
 const { default: useLocale } = await import('./useLocale.js');
+const { default: antdEnUSModule } = await import('antd/locale/en_US.js');
+const antdEnUS = antdEnUSModule.default ?? antdEnUSModule;
 
 const i18n = {
   defaultLocale: 'en-US',
@@ -45,6 +47,7 @@ beforeEach(() => {
   window.localStorage.clear();
   delete window.__lowdefy_setLocale;
   delete window.__lowdefy_locale;
+  delete window.__lowdefy_antd_locale;
   dayjsLocale.mockReset();
   antdLocaleLoaders['en-US'].mockClear();
   antdLocaleLoaders['de-DE'].mockClear();
@@ -129,9 +132,7 @@ test('writes window.__lowdefy_supported_locales with the configured list', () =>
 });
 
 test('writes empty supported_locales when no i18n config', () => {
-  renderHook(() =>
-    useLocale({ i18n: undefined, antdLocaleLoaders: {}, dayjsLocaleMap: {} })
-  );
+  renderHook(() => useLocale({ i18n: undefined, antdLocaleLoaders: {}, dayjsLocaleMap: {} }));
   expect(window.__lowdefy_supported_locales).toEqual([]);
 });
 
@@ -140,4 +141,26 @@ test('returns undefined active when i18n config is empty', () => {
     useLocale({ i18n: undefined, antdLocaleLoaders: {}, dayjsLocaleMap: {} })
   );
   expect(result.current.active).toBeUndefined();
+});
+
+test('writes window.__lowdefy_antd_locale as antd en_US before a locale loads and the loaded locale after', async () => {
+  let resolveLocale;
+  const loaders = {
+    'en-US': () =>
+      new Promise((resolve) => {
+        resolveLocale = resolve;
+      }),
+  };
+  renderHook(() => useLocale({ i18n, antdLocaleLoaders: loaders, dayjsLocaleMap }));
+  expect(window.__lowdefy_antd_locale).toBe(antdEnUS);
+  expect(window.__lowdefy_antd_locale.Modal.okText).toBe('OK');
+  await act(async () => {
+    resolveLocale({ default: { name: 'en_US-loaded' } });
+  });
+  await waitFor(() => expect(window.__lowdefy_antd_locale).toEqual({ name: 'en_US-loaded' }));
+});
+
+test('writes window.__lowdefy_antd_locale as antd en_US when no i18n config', () => {
+  renderHook(() => useLocale({ i18n: undefined, antdLocaleLoaders: {}, dayjsLocaleMap: {} }));
+  expect(window.__lowdefy_antd_locale).toBe(antdEnUS);
 });

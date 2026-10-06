@@ -14,47 +14,12 @@
   limitations under the License.
 */
 
-// Every entry's attributes start with one of these keys, since posthog-js sorts them and always
-// writes nth-child: the colon before one ends the tag and class part, which can itself hold a
-// colon (a Tailwind class like `md:flex`).
-const FIRST_ATTRIBUTE_PREFIXES = ['attr_', 'href="', 'nth-child="'];
-
-function isHeaderEnd(chain, index) {
-  if (chain[index] !== ':') {
-    return false;
-  }
-  const next = index + 1;
-  if (next === chain.length || chain[next] === ';') {
-    return true;
-  }
-  return FIRST_ATTRIBUTE_PREFIXES.some((prefix) => chain.startsWith(prefix, next));
-}
+import isChainHeaderEnd from './isChainHeaderEnd.js';
+import readChainValue from './readChainValue.js';
 
 function parseHeader(header) {
   const [tag, ...classes] = header.split('.');
   return { tag: tag.toLowerCase(), classes: classes.filter((name) => name !== '') };
-}
-
-// Reads a quoted value from `start` (just past its opening quote). posthog-js escapes a quote
-// in a value as \". Returns the value and the index past its closing quote, or the end of the
-// chain when the quote is never closed.
-function readValue(chain, start) {
-  let value = '';
-  let index = start;
-  while (index < chain.length) {
-    const char = chain[index];
-    if (char === '\\' && chain[index + 1] === '"') {
-      value += '"';
-      index += 2;
-      continue;
-    }
-    if (char === '"') {
-      return { value, end: index + 1 };
-    }
-    value += char;
-    index += 1;
-  }
-  return { value, end: index };
 }
 
 // Splits a posthog-js `$elements_chain` into entries, target first. Each entry is
@@ -65,7 +30,11 @@ function parseElementsChain(chain) {
   let index = 0;
   while (index < chain.length) {
     let headerEnd = index;
-    while (headerEnd < chain.length && chain[headerEnd] !== ';' && !isHeaderEnd(chain, headerEnd)) {
+    while (
+      headerEnd < chain.length &&
+      chain[headerEnd] !== ';' &&
+      !isChainHeaderEnd(chain, headerEnd)
+    ) {
       headerEnd += 1;
     }
     const entry = { ...parseHeader(chain.slice(index, headerEnd)), attributes: {} };
@@ -80,7 +49,7 @@ function parseElementsChain(chain) {
       if (keyEnd === -1) {
         return entries;
       }
-      const { value, end } = readValue(chain, keyEnd + 2);
+      const { value, end } = readChainValue(chain, keyEnd + 2);
       entry.attributes[chain.slice(index, keyEnd)] = value;
       index = end;
     }
