@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 
 import computeEvidence from './evidence/computeEvidence.js';
 import createTokenResolver from './createTokenResolver.js';
+import describeMissingPull from './describeMissingPull.js';
 import formatEvidence from '../test/formatEvidence.js';
 import formatZeroBacked from './evidence/formatZeroBacked.js';
 import listFinalDays from './listFinalDays.js';
@@ -57,20 +58,51 @@ function countDaysByMonth({ days }) {
   return counts;
 }
 
+// Final days the cache holds but this machine cannot read are named, with the
+// pull that fetches them again, so a month that did not update says why: a
+// day hashed under another salt resolves none of its tokens. With no salt at
+// all, the pull writes a new one.
+function warnUnreadDays({ logger, otherSalt, traceSalt }) {
+  if (otherSalt.length === 0) return;
+  const shown =
+    otherSalt.length > 5 ? `${otherSalt.slice(0, 5).join(', ')}, …` : otherSalt.join(', ');
+  const pull = describeMissingPull({ missing: otherSalt });
+  if (type.isNone(traceSalt)) {
+    logger.warn(
+      `There is no trace salt in .lowdefy/traces/production/, so ${otherSalt.length} final day(s) of the production cache cannot be read (${shown}). Pulling them again hashes them under a new salt. ${pull}`
+    );
+    return;
+  }
+  logger.warn(
+    `Left out ${otherSalt.length} final day(s) of the production cache pulled under another trace salt (${shown}). Pulling them again hashes them under this machine's salt. ${pull}`
+  );
+}
+
 // The production source of a refresh: how many final days the cache holds of
 // each month, and the segments of the months some journey's counts can still
 // change in, compiled in one pass. Days pulled before clicked text was stored
 // as tokens are removed first, as every production read removes them. Only
 // days hashed under this machine's salt are read, with their tokens resolved
-// to config text. Undefined when the cache holds no such final day, so the
-// committed production evidence is kept.
+// to config text; the rest are named with the pull that fetches them again.
+// Undefined when the cache holds no such final day, so the committed
+// production evidence is kept.
 function readProduction({ context, journeys, today, now, configText }) {
   const { directories, logger } = context;
   removeUntokenisedTraces({ directories, logger, now });
   const traceSalt = readTraceSalt({ directories });
-  if (type.isNone(traceSalt)) return undefined;
-  const finalDays = listFinalDays({ directories, saltId: traceSalt.saltId });
-  if (finalDays.length === 0) return undefined;
+  const { days: finalDays, otherSalt } = listFinalDays({
+    directories,
+    saltId: type.isNone(traceSalt) ? null : traceSalt.saltId,
+  });
+  warnUnreadDays({ logger, otherSalt, traceSalt });
+  if (finalDays.length === 0) {
+    if (otherSalt.length === 0) {
+      logger.warn(
+        'The production trace cache holds no final day. Run "lowdefy journeys pull posthog" first to count production use.'
+      );
+    }
+    return undefined;
+  }
   const dayCounts = countDaysByMonth({ days: finalDays });
   const months = selectMonthsToRead({
     journeys: journeys.map((entry) => entry.journey),
@@ -155,11 +187,6 @@ async function journeysEvidence({ context }) {
   const today = new Date(now).toISOString().slice(0, 10);
   const configText = await readConfigText({ context });
   const production = readProduction({ context, journeys, today, now, configText });
-  if (type.isUndefined(production)) {
-    logger.warn(
-      'The production trace cache holds no final day. Run "lowdefy journeys pull posthog" first to count production use.'
-    );
-  }
   const results = computeEvidence({
     journeys,
     sources: {

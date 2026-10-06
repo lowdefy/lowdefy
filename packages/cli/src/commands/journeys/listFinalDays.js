@@ -25,20 +25,29 @@ const MANIFEST = /^(\d{4}-\d{2}-\d{2})\.manifest\.json$/;
 // later pull. Gaps are expected: a month this machine never pulled, a pruned
 // day. A day hashed under another salt resolves none of its clicked-text
 // tokens, so it is left out, as a day not held, until a pull hashes it again
-// under this machine's salt (`saltId`, from readTraceSalt).
+// under this machine's salt (`saltId`, from readTraceSalt, or null when the
+// machine has none, which leaves every day out).
+//
+// Returns { days, otherSalt }: the final days to read, and the final days
+// left out for another salt, oldest first, so the caller can name the pull
+// that fetches them again.
 function listFinalDays({ directories, saltId }) {
   const directory = path.join(directories.traces, 'production');
-  if (!fs.existsSync(directory)) return [];
-  return fs
+  if (!fs.existsSync(directory)) return { days: [], otherSalt: [] };
+  const finals = fs
     .readdirSync(directory)
     .map((name) => MANIFEST.exec(name))
     .filter((match) => match !== null)
-    .filter((match) => {
-      const manifest = JSON.parse(fs.readFileSync(path.join(directory, match[0]), 'utf8'));
-      return manifest.final === true && manifest.salt_id === saltId;
-    })
-    .map((match) => match[1])
-    .sort();
+    .map((match) => ({
+      day: match[1],
+      manifest: JSON.parse(fs.readFileSync(path.join(directory, match[0]), 'utf8')),
+    }))
+    .filter(({ manifest }) => manifest.final === true)
+    .sort((a, b) => a.day.localeCompare(b.day));
+  return {
+    days: finals.filter(({ manifest }) => manifest.salt_id === saltId).map(({ day }) => day),
+    otherSalt: finals.filter(({ manifest }) => manifest.salt_id !== saltId).map(({ day }) => day),
+  };
 }
 
 export default listFinalDays;
