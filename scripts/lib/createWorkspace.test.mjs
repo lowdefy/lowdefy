@@ -100,3 +100,13 @@ test('createWorkspace mirrors the package.json link: overrides into pnpm-workspa
     '@lowdefy/helpers': 'link:../packages/utils/helpers',
   });
 });
+
+test('createWorkspace keeps the server allowlist for an empty app pnpm-workspace.yaml', () => {
+  const workspace = setup({ appWorkspaceYaml: '' });
+  assert.equal(workspace.allowBuilds.esbuild, true);
+  assert.equal(workspace.allowBuilds['mongodb-memory-server'], false);
+});
+
+test('createWorkspace throws on an app pnpm-workspace.yaml that does not parse', () => {
+  assert.throws(() => setup({ appWorkspaceYaml: 'packages: [\n' }), /Could not parse/);
+});
