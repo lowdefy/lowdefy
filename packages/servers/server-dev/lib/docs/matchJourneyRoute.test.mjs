@@ -18,6 +18,7 @@ import createNetworkCounter from './createNetworkCounter.js';
 import matchExercisedPages from './matchExercisedPages.js';
 import matchJourneyRoute from './matchJourneyRoute.js';
 import mergeNetworkSnapshots from './mergeNetworkSnapshots.js';
+import nextJourneySequence from './nextJourneySequence.js';
 
 const origin = 'http://localhost:3111';
 
@@ -163,4 +164,15 @@ test('a journey under a basePath reports page ids for the page paths it loaded',
       pagePaths: mergeNetworkSnapshots({ snapshots: [counter.snapshot()] }).pagePaths,
     })
   ).toEqual(['admin/users', 'ticket']);
+});
+
+test('the network counter tells a request call made after a point from one made before it', () => {
+  const counter = createNetworkCounter({ origin, basePath: '' });
+  const call = { url: () => `${origin}/api/request/form/save`, method: () => 'POST' };
+  const beforeCall = nextJourneySequence();
+  counter.record(call);
+  const afterCall = nextJourneySequence();
+  expect(counter.calledSince({ request: 'save', pageId: 'form', since: beforeCall })).toBe(true);
+  expect(counter.calledSince({ request: 'save', pageId: 'form', since: afterCall })).toBe(false);
+  expect(counter.calledSince({ request: 'load', pageId: 'form', since: 0 })).toBe(false);
 });

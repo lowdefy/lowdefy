@@ -67,22 +67,22 @@ A page whose [`path`](/page-paths) has placeholders, such as `controls/{control_
 
 `user: none` injects no user at all, so the journey signs in through the app's own auth — see [Testing sign-up and sign-in](#testing-sign-up-and-sign-in). It is refused on a data set journey while auth is configured, and on any journey while a dev mock user is active, since every request would then act as the mock user.
 
-`timeout` sets how long each step may wait, in milliseconds (a whole number from 1 to 60000, default 5000). Raise it on a slow machine or CI runner rather than adding `wait: { ms }` steps.
+`timeout` sets how long each step may wait, in milliseconds (a whole number from 1 to 60000, default 5000). Raise it on a slow machine rather than adding `wait: { ms }` steps.
 
 ### Timeouts
 
 The journey's `timeout` (the step timeout) bounds every wait a step makes for something to happen, and a step moves on as soon as it has:
 
-| Wait                                                                       | Bound                                      |
-| -------------------------------------------------------------------------- | ------------------------------------------ |
-| A control becoming actionable for `click`, `fill`, `select`                | The step timeout.                          |
-| `expect` (`state`, `visible`, `text`, `url`, `title`) matching             | The step timeout.                          |
-| `wait: { request }` and `wait: { state }`                                  | The step timeout.                          |
-| `back` loading the previous page                                           | The step timeout.                          |
-| An email arriving for `email` or `fill.fromEmail`                          | The step timeout.                          |
-| Opening a page: the journey's page, `goto`, the first `as` for a name      | The step timeout, but at least 15 seconds. |
-| Settling after an interaction (`click`, `fill`, `select`, `press`, `back`) | The step timeout, but at most 5 seconds.   |
-| `wait: { ms }`                                                             | Exactly `ms`; the timeout does not apply.  |
+| Wait                                                                                               | Bound                                      |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| A control becoming actionable for `click`, `open`, `fill`, `select`, and the popup an `open` shows | The step timeout.                          |
+| `expect` (`state`, `visible`, `text`, `url`, `title`) matching                                     | The step timeout.                          |
+| `wait: { request }` and `wait: { state }`                                                          | The step timeout.                          |
+| `back` loading the previous page                                                                   | The step timeout.                          |
+| An email arriving for `email` or `fill.fromEmail`                                                  | The step timeout.                          |
+| Opening a page: the journey's page, `goto`, the first `as` for a name                              | The step timeout, but at least 15 seconds. |
+| Settling after an interaction (`click`, `fill`, `select`, `press`, `back`)                         | The step timeout, but at most 5 seconds.   |
+| `wait: { ms }`                                                                                     | Exactly `ms`; the timeout does not apply.  |
 
 The settle after an interaction lets the page's own events and requests finish before the next step. It never fails a step: a page still busy after 5 seconds (an event that ends in a resend cooldown, for example) moves on, and the next step waits for what it needs itself. So raising `timeout` makes a slow journey pass without making a passing one slower.
 
@@ -90,32 +90,33 @@ The settle after an interaction lets the page's own events and requests finish b
 
 Blocks are addressed by their `blockId`. A step that does not complete within the step timeout (5 seconds, or the journey's [`timeout`](#timeouts)) fails the journey. An `expect` step waits, up to that timeout, for what it checks to become true, so a value a click leads to can arrive a moment later.
 
-| Step                                      | Meaning                                                                                                                                                                                                                          |
-| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `click: target`                           | Click the block, or the control a [target](#targets) narrows to.                                                                                                                                                                 |
-| `click: { ...target, count: 2 }`          | Click 2 (or 3) times in quick succession, as a person's double click, before the runner waits for the page to settle. `count` defaults to 1.                                                                                     |
-| `fill: { blockId, value }`                | Type `value` into the input inside the block (or the grid cell a target names).                                                                                                                                                  |
-| `fill: { blockId, fromEmail }`            | Type text read from an [email](#emails) instead of a fixed value, such as a one-time sign-in code. The actor stays on the page.                                                                                                  |
-| `select: { blockId, value }`              | Open the selector block (or grid cell) and choose the option whose text is `value`. A radio, button or segmented selector's option is clicked by its label.                                                                      |
-| `press: Enter`                            | Press a key or chord. `Mod` in a chord (`Mod+k`) resolves to Cmd on macOS and Ctrl elsewhere.                                                                                                                                    |
-| `back: true`                              | Go back one page, like the browser's Back button. Fails when the journey has not navigated from an earlier page.                                                                                                                 |
-| `goto: pageId`                            | Load a page the way a typed URL does; `{ pageId, pathParams, urlQuery }` adds the values of a [page path](/page-paths)'s placeholders and a query string. A protected page may redirect (to sign in), so assert where it landed. |
-| `email: { to, subject }`                  | Open the newest [email](#emails) to `to` — with a subject containing `subject`, when given — that arrived during the journey, waiting for it if needed.                                                                          |
-| `as: name`                                | Act as [another person](#several-people), each in their own browser. The journey starts as `main`. On a journey with `data`, the name is `main` or one of the data set's users.                                                  |
-| `wait: { ms }`                            | Pause for `ms` milliseconds.                                                                                                                                                                                                     |
-| `wait: { request: requestId }`            | Wait until the request has finished loading.                                                                                                                                                                                     |
-| `wait: { state: path }`                   | Wait until the state value at `path` is defined.                                                                                                                                                                                 |
-| `screenshot: name`                        | Capture a screenshot. Screenshots are returned to agents using the MCP tool; the CLI runner ignores them.                                                                                                                        |
-| `expect: { state: { path, equals } }`     | The page state at `path` deep-equals `equals`. A path that does not exist reads as `null`, so `equals: null` also passes for a misspelt path.                                                                                    |
-| `expect: { visible: target }`             | The block, or the control a target narrows to, is visible.                                                                                                                                                                       |
-| `expect: { hidden: target }`              | Nothing the target names is visible: no element matches, or every match is hidden. Passes at once when nothing matches yet, so pair it with a presence.                                                                          |
-| `expect: { calls: { request, count } }`   | This person's browser called the request `count` times since the journey started, counted once the page settles. `pageId` names the request's page.                                                                              |
-| `expect: { calls: { endpoint, count } }`  | The same for an endpoint called with `CallAPI`. Counts survive full page loads, so `count: 0` after a reload checks a write was never sent.                                                                                      |
-| `expect: { text: { blockId, contains } }` | The block's rendered text (or a grid row's or cell's) contains the string.                                                                                                                                                       |
-| `expect: { url: { contains } }`           | The browser URL contains the string. It checks where the browser landed and never names a page: open a page with `pageId` or `goto`, with its `pathParams`.                                                                      |
-| `expect: { title: { equals } }`           | The document title (the browser tab's text) is exactly the string; `{ contains }` checks part of it.                                                                                                                             |
-| `expect: { error: text }`                 | The interaction just before it raised an [app error](#app-errors) whose message contains `text`. Must directly follow a click, open, fill, select, press or back.                                                                |
-| `expect: { effect: true }`                | The interaction just before it did something. Must directly follow a click, open, fill, select, press or back.                                                                                                                   |
+| Step                                      | Meaning                                                                                                                                                                                                                                                                           |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `click: target`                           | Click the block, or the control a [target](#targets) narrows to.                                                                                                                                                                                                                  |
+| `click: { ...target, count: 2 }`          | Click 2 (or 3) times in quick succession, as a person's double click, before the runner waits for the page to settle. `count` defaults to 1.                                                                                                                                      |
+| `open: target`                            | Open an input's dropdown or picker popup (Selector, MultipleSelector, AutoComplete, DateSelector, Cascader...) and wait for it to show, so a following `screenshot` or `select` sees the options. A block with no popup is clicked; one whose click opens nothing fails the step. |
+| `fill: { blockId, value }`                | Type `value` into the input inside the block (or the grid cell a target names).                                                                                                                                                                                                   |
+| `fill: { blockId, fromEmail }`            | Type text read from an [email](#emails) instead of a fixed value, such as a one-time sign-in code. The actor stays on the page.                                                                                                                                                   |
+| `select: { blockId, value }`              | Open the selector block (or grid cell) and choose the option whose text is `value`. A radio, button or segmented selector's option is clicked by its label.                                                                                                                       |
+| `press: Enter`                            | Press a key or chord. `Mod` in a chord (`Mod+k`) resolves to Cmd on macOS and Ctrl elsewhere.                                                                                                                                                                                     |
+| `back: true`                              | Go back one page, like the browser's Back button. Fails when the journey has not navigated from an earlier page.                                                                                                                                                                  |
+| `goto: pageId`                            | Load a page the way a typed URL does; `{ pageId, pathParams, urlQuery }` adds the values of a [page path](/page-paths)'s placeholders and a query string. A protected page may redirect (to sign in), so assert where it landed.                                                  |
+| `email: { to, subject }`                  | Open the newest [email](#emails) to `to` — with a subject containing `subject`, when given — that arrived during the journey, waiting for it if needed.                                                                                                                           |
+| `as: name`                                | Act as [another person](#several-people), each in their own browser. The journey starts as `main`. On a journey with `data`, the name is `main` or one of the data set's users.                                                                                                   |
+| `wait: { ms }`                            | Pause for `ms` milliseconds.                                                                                                                                                                                                                                                      |
+| `wait: { request: requestId }`            | Wait until the request has been called since the last interaction (`click`, `open`, `fill`, `select`, `press`, `back`, `goto` or `as`; the page open before the first) and has finished loading. A call the page made before that interaction does not count.                     |
+| `wait: { state: path }`                   | Wait until the state value at `path` is defined.                                                                                                                                                                                                                                  |
+| `screenshot: name`                        | Capture a screenshot. Screenshots are returned to agents using the MCP tool; the CLI runner ignores them.                                                                                                                                                                         |
+| `expect: { state: { path, equals } }`     | The page state at `path` deep-equals `equals`. A path that does not exist reads as `null`, so `equals: null` also passes for a misspelt path.                                                                                                                                     |
+| `expect: { visible: target }`             | The block, or the control a target narrows to, is visible.                                                                                                                                                                                                                        |
+| `expect: { hidden: target }`              | Nothing the target names is visible: no element matches, or every match is hidden. Passes at once when nothing matches yet, so pair it with a presence.                                                                                                                           |
+| `expect: { calls: { request, count } }`   | This person's browser called the request `count` times since the journey started, counted once the page settles. `pageId` names the request's page.                                                                                                                               |
+| `expect: { calls: { endpoint, count } }`  | The same for an endpoint called with `CallAPI`. Counts survive full page loads, so `count: 0` after a reload checks a write was never sent.                                                                                                                                       |
+| `expect: { text: { blockId, contains } }` | The block's rendered text (or a grid row's or cell's) contains the string.                                                                                                                                                                                                        |
+| `expect: { url: { contains } }`           | The browser URL contains the string. It checks where the browser landed and never names a page: open a page with `pageId` or `goto`, with its `pathParams`.                                                                                                                       |
+| `expect: { title: { equals } }`           | The document title (the browser tab's text) is exactly the string; `{ contains }` checks part of it.                                                                                                                                                                              |
+| `expect: { error: text }`                 | The interaction just before it raised an [app error](#app-errors) whose message contains `text`. Must directly follow a click, open, fill, select, press or back.                                                                                                                 |
+| `expect: { effect: true }`                | The interaction just before it did something. Must directly follow a click, open, fill, select, press or back.                                                                                                                                                                    |
 
 `expect.calls` takes `{ request: requestId, pageId, count }`: request ids are scoped to a page, and two pages often share one such as `save`, so `pageId` names the page; it defaults to the page the person is on when the step runs. It compares once, without waiting for the count to change, because "not called" can only be judged after the moment has passed.
 
@@ -228,7 +229,7 @@ A journey with `user: none` injects no user: it starts signed out, and the app's
 
 A journey that opens a protected page signed out lands on the sign-in page, the way a visitor would; assert where it landed with `expect: { url: ... }`.
 
-Give journeys that sign people in a `timeout` of about 30000. They load many pages, reload the app after each sign-in and wait for real emails, so on a busy machine or a CI runner the 5 second default fails them at random steps.
+Give journeys that sign people in a `timeout` of about 30000. They load many pages, reload the app after each sign-in and wait for real emails, so on a busy machine the 5 second default fails them at random steps.
 
 ### Emails
 
@@ -286,10 +287,12 @@ A plain `lowdefy test`, and the `lowdefy_run_tests` agent tool, never read that 
 ## Running
 
 ```
-pnpx lowdefy@5 test
+pnpx lowdefy@7 test
 ```
 
 With no options, `lowdefy test` prepares `.lowdefy/dev` exactly as `lowdefy dev` does, starts the development server on a free port without opening a browser, runs every journey, prints the results and stops the server.
+
+Journeys run on your machine, never in CI. `lowdefy test` needs only Node.js, pnpm and a Chromium the dev server can launch. The dev server uses Playwright's `chromium-headless-shell`, which it downloads itself the first time a browser tool needs it, and falls back to an installed Google Chrome meanwhile. Set `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` to turn the download off.
 
 To verify the change in hand, run all journeys, a folder or glob of them, or a tagged section:
 
@@ -363,13 +366,13 @@ Journeys can be compiled from real use. A recorded trace is a JSONL file of inte
 `lowdefy journeys compile` turns a pile of traces into candidate journeys:
 
 ```
-pnpx lowdefy@5 journeys compile .lowdefy/traces/dev/2026-10-03/*.jsonl
+pnpx lowdefy@7 journeys compile .lowdefy/traces/dev/2026-10-03/*.jsonl
 ```
 
 Without trace files, `--source dev` or `--source explorer` reads every recording under `.lowdefy/traces/<source>/` (narrowed by `--since`):
 
 ```
-pnpx lowdefy@5 journeys compile --source dev --since 2h
+pnpx lowdefy@7 journeys compile --source dev --since 2h
 ```
 
 It cuts each browser tab's recording into segments (a fresh page load starts one), groups segments that do the same thing step by step, and writes one candidate per group to `tests/journeys/_candidates/<source>/<pageId>-<hash>.yaml`, ranked by how often the flow happened and how often it failed. `lowdefy test` does not read `_candidates/`, so candidates never run until you move them.
@@ -555,10 +558,10 @@ Each file starts with a header line naming the journey file it came from and hol
 Journeys can be mined from what your users do in production. Apps that send analytics with the [PostHog plugin](/PostHog) can pull them to your machine, compile candidates from them, and see which journeys real use backs and what it does that no journey covers.
 
 ```
-pnpx lowdefy@5 journeys pull posthog --since 30d
-pnpx lowdefy@5 journeys compile --source production --since 30d
-pnpx lowdefy@5 journeys coverage --source production
-pnpx lowdefy@5 journeys evidence --refresh
+pnpx lowdefy@7 journeys pull posthog --since 30d
+pnpx lowdefy@7 journeys compile --source production --since 30d
+pnpx lowdefy@7 journeys coverage --source production
+pnpx lowdefy@7 journeys evidence --refresh
 ```
 
 [`journeys pull posthog`](/cli#journeys-pull-posthog) needs `POSTHOG_PROJECT_ID`, `POSTHOG_API_HOST` and your own `POSTHOG_PERSONAL_API_KEY` with the Query Read scope. It writes one file per UTC day to `.lowdefy/traces/production/`. What it keeps:
@@ -633,9 +636,9 @@ No command removes a journey for lack of production use. Three months cannot see
 [`lowdefy journeys usage`](/cli#journeys-usage) ranks the journeys by how much real use leans on them now:
 
 ```
-pnpx lowdefy@5 journeys usage
-pnpx lowdefy@5 journeys usage tests/journeys/review --tier common
-pnpx lowdefy@5 journeys usage --json
+pnpx lowdefy@7 journeys usage
+pnpx lowdefy@7 journeys usage tests/journeys/review --tier common
+pnpx lowdefy@7 journeys usage --json
 ```
 
 A journey's rate is its production sessions over the final days its months hold in the usage window: the last 3 calendar months (`--usage-window 3m`), ending at the newest month any selected journey has, so every journey is ranked over the same calendar and a flow that launched last month is not buried under years of history. The report lists the journeys by rate with their tier, their sessions and failures over the window and all time, one line per month with that month's people and organisations, and their deprecated flows with their recent use. Below that come the production flows no journey covers, from the coverage report, ranked by their sessions in coverage's window.
@@ -670,27 +673,3 @@ Coverage also reads the newest full test run that the development server recorde
 It writes the measures, a production profile (the top flows per entry page, failure paths, frustrated blocks, role sets per page, entry pages, and per block and column the clicks, distinct clicked-text tokens and most-clicked tokens) and each journey's interactions to `.lowdefy/test/coverage.json`, which is rewritten on every run and not committed. With a mutation report, the suite's mutation score is added as a sixth number.
 
 `lowdefy agent-setup` installs a `journeys-from-production` skill for your coding agent. The agent picks the window for the question and says why, pulls, compiles and measures, then reads each recorded routine with the page's config, requests, actions and plugin code to decide what the person was doing and whether it deserves a journey: failures first, then routines that write data, move money, change access or end a process, then the rest by count. It edits candidates only within what was recorded, filling typed values from your data set's fixtures and labels from your config, proves each with `lowdefy test --repeat 3`, refreshes evidence with `lowdefy journeys usage --json` read before and after, and reports what it wrote, what it skipped and why, the findings, the deprecated flows users still follow, and how the tiers moved. It reads tokens, never production text: it does not read the trace salt, your `.env` or snapshots, and never queries PostHog directly. It asks you only about findings and dead clicks, commits nothing, and never deletes a journey or suggests deleting one. It never deletes a deprecated flow either; it may suggest you delete one that shows no use.
-
-## Continuous integration
-
-`lowdefy test` needs only Node.js, pnpm and a Chromium the dev server can launch. The dev server uses Playwright's `chromium-headless-shell`, which it downloads itself the first time a browser tool needs it, and falls back to an installed Google Chrome meanwhile. Set `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` to turn the download off. In CI, install the shell up front, together with the system libraries it needs. A GitHub Actions job looks like:
-
-```yaml
-name: Config tests
-on: [push, pull_request]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - run: pnpx playwright install --with-deps chromium-headless-shell
-      - run: pnpx lowdefy@5 test
-        env:
-          LOWDEFY_DISABLE_TELEMETRY: true
-```
-
-Set the same environment variables (`.env` values, connection secrets) the app needs in dev, and make sure the database the journeys write to is a test database — journeys perform real actions against real requests.
