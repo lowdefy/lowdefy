@@ -449,14 +449,15 @@ test('runJourney clicks a cell button by row and exact text inside a grid block'
 
   expect(result.passed).toBe(true);
   expect(page.clicks).toEqual([`#bl-grid .ag-row[row-index="1"] ${CONTROLS}`]);
-  expect(filters).toHaveLength(2);
+  // An action target with text and no nth is located twice, before and after
+  // waiting for a first match, and acted on once it is the only one.
+  expect(filters).toHaveLength(4);
   expect(filters[0].filter.hasText.test('Edit')).toBe(true);
   expect(filters[0].filter.hasText.test(' Edit ')).toBe(true);
   expect(filters[0].filter.hasText.test('Edit row')).toBe(false);
   expect(filters[1].filter).toEqual({ visible: true });
-  expect(page.nths).toEqual([
-    { selector: `#bl-grid .ag-row[row-index="1"] ${CONTROLS}`, index: 0 },
-  ]);
+  expect(filters.slice(2)).toEqual(filters.slice(0, 2));
+  expect(page.nths).toEqual([]);
 });
 
 test('runJourney clicks the control inside a grid cell addressed by row and column', async () => {
@@ -525,9 +526,12 @@ test('runJourney clicks a page-wide control by text when the target has no block
   expect(result.passed).toBe(true);
   expect(page.clicks).toEqual([CONTROLS, CONTROLS]);
   // No menu or dialog is open (every count is 0), so only the page-wide
-  // search filters apply, once per step.
+  // search filters apply: twice for the text with no nth (before and after
+  // waiting for a match), once for the text with an nth.
   const pageWide = filters.filter((f) => f.selector === CONTROLS);
   expect(pageWide.map((f) => f.filter)).toEqual([
+    { hasText: expect.any(RegExp) },
+    { visible: true },
     { hasText: expect.any(RegExp) },
     { visible: true },
     { hasText: expect.any(RegExp) },
@@ -535,31 +539,104 @@ test('runJourney clicks a page-wide control by text when the target has no block
   ]);
   expect(pageWide[0].filter.hasText.test('OK')).toBe(true);
   expect(pageWide[0].filter.hasText.test('OKAY')).toBe(false);
-  expect(page.nths).toEqual([
-    { selector: CONTROLS, index: 0 },
-    { selector: CONTROLS, index: 1 },
-  ]);
+  expect(pageWide[4].filter.hasText.test('Delete')).toBe(true);
+  expect(page.nths).toEqual([{ selector: CONTROLS, index: 1 }]);
 });
 
-test('runJourney finds a page-wide text target in the open dialog before the page', async () => {
+test('runJourney fails an action whose text target matches several controls', async () => {
   const page = createPage();
   page.nths = [];
   openWith(page);
   trackFilters(page);
-  // A dialog is open and it holds a control with the text; the grid behind it
-  // holds one too, but the dialog wins.
+  const instrumented = page.locator.getMockImplementation();
+  page.locator.mockImplementation((selector) => {
+    const locator = instrumented(selector);
+    if (selector === CONTROLS) {
+      locator.count.mockResolvedValue(3);
+    }
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { text: 'Delete' } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(page.clicks).toEqual([]);
+  expect(result.failure).toEqual({
+    index: 0,
+    step: { click: { text: 'Delete' } },
+    expected: 'exactly one control with text "Delete" in the page',
+    actual: '3 controls',
+    message:
+      'Matched 3 controls with text "Delete" in the page; add nth: 0..2, or a blockId/row to narrow it.',
+  });
+});
+
+test('runJourney fails an action whose containing target matches several elements in a block', async () => {
+  const page = createPage();
+  openWith(page);
   page.locator.mockImplementation((selector) => {
     const locator = createLocator({ selector, page });
+    locator.getByText.mockImplementation((text) => {
+      const found = createLocator({ selector: `${selector} >> text=${text}`, page });
+      found.count.mockResolvedValue(2);
+      return found;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ fill: { blockId: 'members', containing: 'ada', value: 'x' } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(page.fills).toEqual([]);
+  expect(result.failure.message).toBe(
+    'Matched 2 elements containing "ada" in block "members"; add nth: 0..1, or a blockId/row to narrow it.'
+  );
+});
+
+test('runJourney accepts any of several matches in an expectation', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.count.mockResolvedValue(3);
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ expect: { visible: { text: 'Delete' } } }],
+  });
+
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+});
+
+test('runJourney finds a page-wide text target in the open dialog before the page', async () => {
+  const page = createPage();
+  openWith(page);
+  // A dialog is open and it holds one control with the text; the grid behind
+  // it holds three, but only the dialog's is counted, so the click is not
+  // ambiguous.
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    if (selector === CONTROLS) {
+      locator.count.mockResolvedValue(3);
+    }
     if (selector === '[role="dialog"]') {
       locator.count.mockResolvedValue(1);
       locator.last.mockImplementation(() => locator);
       locator.locator.mockImplementation((child) => {
         const inner = createLocator({ selector: `${selector} ${child}`, page });
         inner.count.mockResolvedValue(1);
-        inner.nth.mockImplementation((index) => {
-          page.nths.push({ selector: inner.selector, index });
-          return inner;
-        });
         return inner;
       });
     }
@@ -574,10 +651,6 @@ test('runJourney finds a page-wide text target in the open dialog before the pag
 
   expect(result.passed).toBe(true);
   expect(page.clicks).toEqual([`[role="dialog"] ${CONTROLS}`]);
-  expect(page.nths).toEqual([
-    { selector: `[role="dialog"] ${CONTROLS}`, index: 0 },
-    { selector: `[role="dialog"] ${CONTROLS}`, index: 0 },
-  ]);
 });
 
 test('runJourney prefers an open menu over an open dialog for a page-wide text target', async () => {

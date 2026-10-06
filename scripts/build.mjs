@@ -22,10 +22,11 @@
     pnpm app:build                                                   # app/ with defaults
     pnpm app:build --config-directory /path/to/app --log-level debug # external app
     pnpm app:build --skip-build                                      # skip monorepo build
+    pnpm app:build --server-directory _server/prod-pelican           # a second copy beside _server/prod
 
   How it works:
     1. Builds the monorepo (pnpm build:turbo)
-    2. Copies server to _server/prod/
+    2. Copies server to _server/prod/ (or --server-directory)
     3. Scans monorepo packages, rewrites @lowdefy/* deps to link: paths
     4. Handles workspace:* plugins from external pnpm monorepos
     5. Runs pnpm install in the isolated copy
@@ -48,12 +49,18 @@ const SERVER_DIR = path.join(REPO_ROOT, 'packages/servers/server');
 
 // -- Arg parsing --
 
-const { configDirectory, logLevel, skipBuild, values: args } = parse({
+const {
+  configDirectory,
+  logLevel,
+  skipBuild,
+  values: args,
+} = parse({
   'ref-resolver': { type: 'string' },
+  'server-directory': { type: 'string', default: '_server/prod' },
 });
 
 const refResolver = args['ref-resolver'];
-const prodDir = path.join(REPO_ROOT, '_server/prod');
+const prodDir = path.resolve(REPO_ROOT, args['server-directory']);
 
 console.log('Lowdefy build');
 console.log(`  Config directory: ${configDirectory}`);
@@ -99,7 +106,7 @@ addPlugins({ configDirectory, targetDir: prodDir, logger });
 // -- Step 7: Create isolated workspace --
 
 logger.info({ spin: 'start' }, 'Creating isolated pnpm workspace...');
-createWorkspace({ targetDir: prodDir });
+createWorkspace({ targetDir: prodDir, configDirectory });
 logger.info({ spin: 'succeed' }, 'Created isolated pnpm workspace.');
 
 // -- Step 8: Install dependencies --
@@ -135,4 +142,9 @@ execSync('pnpm run build:client', { cwd: prodDir, stdio: 'inherit', env: buildEn
 logger.info({ spin: 'succeed' }, 'Client build complete.');
 
 console.log('');
-console.log('Build complete. Run `pnpm app:start` to start the production server.');
+console.log(
+  `Build complete. Run \`node scripts/start.mjs --server-directory ${path.relative(
+    REPO_ROOT,
+    prodDir
+  )}\` to start the production server.`
+);

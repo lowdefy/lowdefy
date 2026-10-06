@@ -15,44 +15,83 @@
 */
 
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 
-function createWorkspace({ targetDir }) {
-  // Carry the repo's build-script allowlist into the isolated workspace —
-  // pnpm refuses to run dependency build scripts (@swc/core, @sentry/cli,
-  // better-sqlite3, esbuild) unless they are approved in the workspace file.
-  // pnpm 10 reads onlyBuiltDependencies; pnpm 11 reads allowBuilds and fails
-  // the install without it.
-  // pnpm 11 also stopped reading pnpm.overrides from package.json, so the
-  // link: overrides written by rewriteDeps/addPlugins (this runs after both)
-  // are mirrored into pnpm-workspace.yaml — without them a fresh install
-  // resolves @lowdefy/* plugins from the npm registry instead of the monorepo.
+import { findPnpmWorkspaceRoot } from './addPlugins.mjs';
+import { REPO_ROOT } from './parseArgs.mjs';
+
+// The repo root installs no YAML parser; the CLI, which writes the same file
+// for the servers it generates, does.
+const YAML = createRequire(path.join(REPO_ROOT, 'packages/cli/package.json'))('yaml');
+
+// The server's own dependencies with build scripts: true runs the script,
+// false skips it. mongodb-memory-server (through @shelf/jest-mongodb, a
+// server-dev dev dependency) only downloads a MongoDB binary in its
+// postinstall, which mongodb-memory-server-core downloads when it first
+// starts one.
+const serverAllowBuilds = {
+  '@sentry/cli': true,
+  '@swc/core': true,
+  'better-sqlite3': true,
+  esbuild: true,
+  'mongodb-memory-server': false,
+  sharp: true,
+};
+
+// The build approvals of the pnpm workspace the app lives in (its own
+// repository, for an app outside this one), so the plugins it installs from
+// npm build as they do there. pnpm 11 fails an install on any dependency build
+// script that is neither allowed nor ignored.
+function readAppAllowBuilds({ configDirectory }) {
+  const workspaceRoot = findPnpmWorkspaceRoot(configDirectory);
+  if (workspaceRoot === null) {
+    return {};
+  }
+  const filePath = path.join(workspaceRoot, 'pnpm-workspace.yaml');
+  const document = YAML.parseDocument(fs.readFileSync(filePath, 'utf8'));
+  if (document.errors.length > 0) {
+    throw new Error(`Could not parse ${filePath}: ${document.errors[0].message}`);
+  }
+  const settings = document.toJS() ?? {};
+  return {
+    ...Object.fromEntries((settings.onlyBuiltDependencies ?? []).map((name) => [name, true])),
+    ...Object.fromEntries((settings.ignoredBuiltDependencies ?? []).map((name) => [name, false])),
+    ...settings.allowBuilds,
+  };
+}
+
+function namesWith({ allowBuilds, allowed }) {
+  return Object.keys(allowBuilds)
+    .filter((name) => allowBuilds[name] === allowed)
+    .sort();
+}
+
+function createWorkspace({ targetDir, configDirectory }) {
+  // A dependency the app's workspace allows or ignores keeps the app's choice.
+  const allowBuilds = {
+    ...serverAllowBuilds,
+    ...readAppAllowBuilds({ configDirectory }),
+  };
+  // pnpm 11 stopped reading pnpm.overrides from package.json, so the link:
+  // overrides written by rewriteDeps/addPlugins (this runs after both) are
+  // mirrored into pnpm-workspace.yaml. Without them a fresh install resolves
+  // @lowdefy/* plugins from the npm registry instead of the monorepo.
   const pkg = JSON.parse(fs.readFileSync(path.join(targetDir, 'package.json'), 'utf8'));
-  // YAML single-quoted scalars escape embedded quotes by doubling them.
-  const quote = (value) => `'${String(value).replace(/'/g, "''")}'`;
-  const overrides = Object.entries(pkg.pnpm?.overrides ?? {}).map(
-    ([name, target]) => `  ${quote(name)}: ${quote(target)}`
-  );
-  fs.writeFileSync(
-    path.join(targetDir, 'pnpm-workspace.yaml'),
-    [
-      'packages: []',
-      'onlyBuiltDependencies:',
-      "  - '@sentry/cli'",
-      "  - '@swc/core'",
-      '  - better-sqlite3',
-      '  - esbuild',
-      '  - sharp',
-      'allowBuilds:',
-      "  '@sentry/cli': true",
-      "  '@swc/core': true",
-      '  better-sqlite3: true',
-      '  esbuild: true',
-      '  sharp: true',
-      ...(overrides.length > 0 ? ['overrides:', ...overrides] : []),
-      '',
-    ].join('\n')
-  );
+  const overrides = pkg.pnpm?.overrides ?? {};
+  // packages: [] keeps the copy out of any workspace above it. pnpm 10 reads
+  // onlyBuiltDependencies and ignoredBuiltDependencies; pnpm >=10.29 and 11
+  // read allowBuilds.
+  const workspace = {
+    packages: [],
+    onlyBuiltDependencies: namesWith({ allowBuilds, allowed: true }),
+    ignoredBuiltDependencies: namesWith({ allowBuilds, allowed: false }),
+    allowBuilds,
+  };
+  if (Object.keys(overrides).length > 0) {
+    workspace.overrides = overrides;
+  }
+  fs.writeFileSync(path.join(targetDir, 'pnpm-workspace.yaml'), YAML.stringify(workspace));
   if (!fs.existsSync(path.join(targetDir, '.npmrc'))) {
     fs.writeFileSync(path.join(targetDir, '.npmrc'), 'strict-peer-dependencies=false\n');
   }

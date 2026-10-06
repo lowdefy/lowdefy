@@ -366,7 +366,7 @@ See `code-docs/architecture/error-tracing.md` for the complete error system.
 
 ### Running Tests
 
-`code-docs/testing.md` covers worktree setup (`pnpm worktree <branch>`), MongoDB tests (`pnpm test:mongodb`), ports and e2e.
+`code-docs/testing.md` covers worktree setup (`pnpm worktree <branch>`), MongoDB tests (`pnpm test:mongodb`), ports and e2e, and running an app from another repository on this checkout ("An app from another repository": `node scripts/dev.mjs --config-directory <app> --dev-directory _server/dev-<name>`, never hand-written overrides or a copied server).
 
 ```bash
 # All tests (from repo root)

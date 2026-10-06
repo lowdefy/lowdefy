@@ -22,7 +22,8 @@ import { createNodeLogger } from '@lowdefy/logger/node';
 
 import runConfigTreeBuild from './runConfigTreeBuild.mjs';
 
-// Entry for the explorer's base and head builds: the CLI spawns
+// Entry for the explorer's base and head builds and the journey readers'
+// config text set: the CLI spawns
 // `node <dev>/lib/docs/explore/buildConfigTree.mjs --config <dir> --out <dir>`
 // from the installed dev server, which holds @lowdefy/build and the app's
 // plugins. Exits 1 when the build fails; <out>/result.json says why.

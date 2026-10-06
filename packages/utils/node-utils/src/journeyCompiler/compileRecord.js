@@ -104,6 +104,21 @@ function compileFill({ record }) {
   return { step: { fill: { ...fill, value: null, from: 'shape' } }, comments };
 }
 
+function tokenComment({ target }) {
+  return `clicked text not in config: ${target.text_token}`;
+}
+
+// A production click whose text token resolved to no config string: the
+// element showed text, but not text the app's config holds (a data row, a
+// label built from values), so the step carries no text.
+function isTokenised({ target }) {
+  return (
+    (!type.isString(target.text) || target.text === '') &&
+    type.isString(target.text_token) &&
+    target.text_token !== ''
+  );
+}
+
 function compileSelect({ record }) {
   const { target } = record;
   const select = { blockId: target.block_id };
@@ -111,6 +126,13 @@ function compileSelect({ record }) {
   if (!type.isNone(target.column)) select.column = target.column;
   if (type.isString(target.text) && target.text !== '') {
     return { step: { select: { ...select, value: target.text } }, comments: [] };
+  }
+  if (isTokenised({ target })) {
+    return {
+      step: { select: { ...select, value: null, from: 'shape' } },
+      comments: [tokenComment({ target })],
+      flag: 'tokenised-text',
+    };
   }
   return { step: { select: { ...select, value: null, from: 'shape' } }, comments: [] };
 }
@@ -138,9 +160,10 @@ function compileInteractionStep({ record, blockMetas }) {
   const hasBlock = type.isString(blockId) && blockId !== '';
   const hasText = type.isString(target.text) && target.text !== '';
   if (!hasBlock && (record.kind === 'change' || target.option === true || !hasText)) {
+    const known = isTokenised({ target }) ? ` (${tokenComment({ target })})` : '';
     return {
       comments: [
-        `${record.kind} on a control known neither by block nor by kept text: write the step by hand`,
+        `${record.kind} on a control known neither by block nor by kept text${known}: write the step by hand`,
       ],
       flag: 'unresolved-target',
     };
@@ -149,6 +172,13 @@ function compileInteractionStep({ record, blockMetas }) {
   if (target.option === true) return compileSelect({ record });
   const comments =
     record.frustration === 'dead' ? ['dead click in production: assert what this should do'] : [];
+  if (isTokenised({ target })) {
+    return {
+      step: { click: compileTarget({ target }) },
+      comments: [...comments, tokenComment({ target })],
+      flag: 'tokenised-text',
+    };
+  }
   return { step: { click: compileTarget({ target }) }, comments };
 }
 

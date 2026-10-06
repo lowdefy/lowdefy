@@ -64,11 +64,16 @@ function pageWideRoot({ document, text }) {
 }
 
 // The control's index among the controls the runner would match in the scope: those with the
-// same text, or with no text, every control.
+// same text, or with no text, every control. Null only for a unique match: the runner refuses to
+// act on the first of several when no nth names it, so a recorded target always says which one
+// it means, 0 included.
 function nthOf({ control, root, text }) {
   const matches = text === null ? findInteractiveControls(root) : controlsWithText(root, text);
   const index = matches.indexOf(control);
-  return index > 0 ? index : null;
+  if (index < 0 || matches.length < 2) {
+    return null;
+  }
+  return index;
 }
 
 // The journey target an element describes as: the journey runner's resolution in reverse, read

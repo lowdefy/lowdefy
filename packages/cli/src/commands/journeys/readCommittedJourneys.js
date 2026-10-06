@@ -20,14 +20,15 @@ import { type } from '@lowdefy/helpers';
 import discoverJourneys from '../test/discoverJourneys.js';
 import validateJourney from '../test/validateJourney.js';
 
-// The committed journeys evidence and coverage read, with each one's place
-// in its file and its path relative to the config directory. A file that does not parse, or a journey that does not validate,
-// is reported and left alone.
-function readCommittedJourneys({ context }) {
+// The committed journeys evidence, coverage and usage read, with each one's
+// place in its file and its path relative to the config directory. `paths`
+// (resolved by resolveJourneyPaths) reads only those files. A file that does
+// not parse, or a journey that does not validate, is reported and left alone.
+function readCommittedJourneys({ context, paths }) {
   const journeys = [];
   const skipped = [];
   const indexByFile = new Map();
-  discoverJourneys({ context }).forEach((item) => {
+  discoverJourneys({ context, paths }).forEach((item) => {
     const journeyIndex = indexByFile.get(item.filePath) ?? 0;
     indexByFile.set(item.filePath, journeyIndex + 1);
     const file = path.relative(context.directories.config, item.filePath);

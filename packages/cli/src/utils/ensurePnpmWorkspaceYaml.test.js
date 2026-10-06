@@ -82,10 +82,12 @@ onlyBuiltDependencies:
   - sharp
 ignoredBuiltDependencies:
   - '@sentry/cli'
+  - mongodb-memory-server
 allowBuilds:
   better-sqlite3: true
   sharp: true
   '@sentry/cli': false
+  mongodb-memory-server: false
 `,
     ],
   ]);
@@ -139,10 +141,12 @@ onlyBuiltDependencies:
   - sharp
 ignoredBuiltDependencies:
   - "@sentry/cli"
+  - mongodb-memory-server
 allowBuilds:
   better-sqlite3: true
   sharp: true
   "@sentry/cli": false
+  mongodb-memory-server: false
 allowUnusedPatches: true
 `,
     ],
@@ -228,10 +232,12 @@ onlyBuiltDependencies:
   - sharp
 ignoredBuiltDependencies:
   - "@sentry/cli"
+  - mongodb-memory-server
 allowBuilds:
   better-sqlite3: true
   sharp: true
   "@sentry/cli": false
+  mongodb-memory-server: false
 minimumReleaseAgeExclude:
   - "@lowdefy/server-dev@7.0.1"
 `,
