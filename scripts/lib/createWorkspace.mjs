@@ -22,7 +22,10 @@ function createWorkspace({ targetDir }) {
   // pnpm refuses to run dependency build scripts (@swc/core, @sentry/cli,
   // better-sqlite3, esbuild) unless they are approved in the workspace file.
   // pnpm 10 reads onlyBuiltDependencies; pnpm 11 reads allowBuilds and fails
-  // the install without it.
+  // the install on any build script it lists neither way.
+  // mongodb-memory-server (through @shelf/jest-mongodb, a server-dev dev
+  // dependency) is ignored: its postinstall only downloads a MongoDB binary,
+  // which mongodb-memory-server-core downloads when it first starts one.
   // pnpm 11 also stopped reading pnpm.overrides from package.json, so the
   // link: overrides written by rewriteDeps/addPlugins (this runs after both)
   // are mirrored into pnpm-workspace.yaml — without them a fresh install
@@ -43,11 +46,14 @@ function createWorkspace({ targetDir }) {
       '  - better-sqlite3',
       '  - esbuild',
       '  - sharp',
+      'ignoredBuiltDependencies:',
+      '  - mongodb-memory-server',
       'allowBuilds:',
       "  '@sentry/cli': true",
       "  '@swc/core': true",
       '  better-sqlite3: true',
       '  esbuild: true',
+      '  mongodb-memory-server: false',
       '  sharp: true',
       ...(overrides.length > 0 ? ['overrides:', ...overrides] : []),
       '',
