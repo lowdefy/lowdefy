@@ -34,7 +34,14 @@ const input = {
     frustration: measure,
     role: measure,
   },
-  profile: { flows: [], failurePaths: [], frustration: [], roleMatrix: [], entryPoints: [] },
+  profile: {
+    flows: [],
+    failurePaths: [],
+    frustration: [],
+    roleMatrix: [],
+    entryPoints: [],
+    textTokens: [],
+  },
   journeys: [
     {
       file: 'tests/journeys/saves.yaml',

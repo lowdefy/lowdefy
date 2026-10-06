@@ -327,11 +327,13 @@ A **target** is a `blockId` string, or an object that narrows the search to a co
 | `row`      | A grid row, zero-based as displayed (`AgGrid*` blocks, `.ag-row[row-index]`); needs `blockId`                                        |
 | `column`   | A grid cell in that row, by the column's `field` or `colId` (`.ag-cell[col-id]`); needs `blockId`                                    |
 | `text`     | The visible interactive control whose text is exactly this — a button label, a tab, a menu item (`"Cat"` never matches `"Category"`) |
-| `nth`      | When several controls match, the zero-based one to use                                                                               |
+| `nth`      | When several elements match, the zero-based one to use                                                                               |
 
 A radio, checkbox or segmented option is reached through its label: `{ "click": { "blockId": "period", "text": "Month" } }` clicks the Month option of a `SegmentedSelector`, whose own radio input has no size.
 
 `text` without a `blockId` searches the page, front-most layer first — an open dropdown menu (`[role="menu"]`), then an open dialog (`[role="dialog"]`), then the page — so `{ "click": { "text": "Delete" } }` with a confirm dialog open clicks the dialog's Delete and not the grid's, without counting buttons. `fill`, `select` and `expect.text` always need a `blockId`. Unknown target keys are rejected before a browser opens.
+
+A `click`, `open`, `fill` or `select` whose `text` or `containing` matches more than one visible element fails with `Matched <n> controls with text "<text>" in <scope>; add nth: 0..<n-1>, or a blockId/row to narrow it.` Add `nth` or narrow the scope. Expectations accept any match: `expect.visible` passes when one is visible, `expect.hidden` when none is.
 
 ```json
 [
