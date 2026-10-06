@@ -46,6 +46,10 @@ jest.unstable_mockModule('./readJourneyEmailMatch.js', () => ({
   default: mockReadJourneyEmailMatch,
 }));
 
+// The fake pages have no build to check step references against; the checks
+// have tests of their own (checkStepReferences.test.mjs and the fixture suite).
+jest.unstable_mockModule('./checkStepReferences.js', () => ({ default: async () => {} }));
+
 // No client error report is ever in flight here; the real wait's grace would
 // only slow every test down.
 jest.unstable_mockModule('./observe/waitForClientErrorReports.js', () => ({

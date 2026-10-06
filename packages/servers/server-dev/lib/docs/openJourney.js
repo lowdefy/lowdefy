@@ -76,6 +76,13 @@ async function openJourney({
       startedAt,
       openTimeout,
       stepTimeout,
+      // The page the journey opened, whose blocks a step may name after the
+      // app sent the person elsewhere (see checkStepReferences).
+      pageId,
+      mainActor: MAIN_ACTOR,
+      // The data set's users on a data set run (undefined otherwise), which
+      // the `as` names are checked against (see checkStepReferences).
+      dataSetUsers: users,
     };
     return { journey, main };
   } catch (error) {

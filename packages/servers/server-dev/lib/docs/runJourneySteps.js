@@ -23,6 +23,7 @@ import {
 } from '@lowdefy/e2e-utils/runtime';
 import { getStepKey } from '@lowdefy/node-utils';
 
+import checkStepReferences from './checkStepReferences.js';
 import createLeftOriginError from './createLeftOriginError.js';
 import { buildPageUrl } from './getBrowser.js';
 import hasNoEffect from './observe/hasNoEffect.js';
@@ -923,6 +924,7 @@ const SETTLE_TIMEOUT_MS = 5000;
 async function runStep({ journey, step, index, screenshots }) {
   const page = journey.actors.current().page;
   const timeout = journey.stepTimeout;
+  await checkStepReferences({ journey, page, step });
   switch (getStepKey(step)) {
     case 'click':
       await runClick({ page, step, timeout });
