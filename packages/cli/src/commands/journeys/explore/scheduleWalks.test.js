@@ -149,16 +149,3 @@ test('a walk that throws stops the run with its error and keeps the earlier walk
   expect(logs).toHaveLength(1);
   expect(stopped).toEqual({ reason: 'error', message: 'Gateway down' });
 });
-
-test('afterWalk runs after each walk, so confirmation replays count against the budget', async () => {
-  const seen = [];
-  await scheduleWalks({
-    targets: [targets[0]],
-    walks: 2,
-    shouldStop: () => null,
-    buildChanged: async () => false,
-    runOne: async (walk) => logFor(walk),
-    afterWalk: async (log) => seen.push(log.walk),
-  });
-  expect(seen).toEqual(['walk-1', 'walk-2']);
-});

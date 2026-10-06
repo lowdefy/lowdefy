@@ -132,7 +132,7 @@ addPlugins({ configDirectory, targetDir: devDir, logger });
 // -- Step 7: Create isolated workspace --
 
 logger.info({ spin: 'start' }, 'Creating isolated pnpm workspace...');
-createWorkspace({ targetDir: devDir });
+createWorkspace({ targetDir: devDir, configDirectory });
 logger.info({ spin: 'succeed' }, 'Created isolated pnpm workspace.');
 
 // -- Step 8: Install dependencies --

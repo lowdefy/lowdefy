@@ -14,15 +14,14 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
+import hasClickedText from './hasClickedText.js';
 import isSameBlock from './isSameBlock.js';
 import recordTime from './recordTime.js';
 
 const TOGGLE_WINDOW_MS = 1000;
 
 function isLabelledClick(record) {
-  return record.kind === 'click' && type.isString(record.target?.text) && record.target.text !== '';
+  return record.kind === 'click' && hasClickedText({ target: record.target });
 }
 
 function isUnlabelledClick(record) {

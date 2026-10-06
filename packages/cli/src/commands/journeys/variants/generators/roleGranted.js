@@ -23,16 +23,42 @@ function formatRoles(roles) {
   return `[${roles.join(', ')}]`;
 }
 
-// Role, granted: for each role set other than the journey user's (the page's
+// The data set user names the journey runs as, or null when it runs as an
+// inline user, signed out or as no data set user, so has no list to add to.
+function listedUserNames({ journey, dataSet }) {
+  if (type.isArray(journey.user)) {
+    return journey.user;
+  }
+  const { name } = journeyUser({ journey, dataSet });
+  return type.isNull(name) ? null : [name];
+}
+
+// The role sets the journey already runs as: each listed user's, or its one
+// user's.
+function currentRoleKeys({ journey, dataSet, names }) {
+  if (type.isNull(names)) {
+    return new Set([roleKey(journeyUser({ journey, dataSet }).user?.roles)]);
+  }
+  return new Set(
+    names
+      .filter((name) => Object.prototype.hasOwnProperty.call(dataSet.users, name))
+      .map((name) => roleKey(dataSet.users[name].roles))
+  );
+}
+
+// Role, granted: for each role set other than the journey users' (the page's
 // role matrix from production use, else each data set user's role set), the
 // same steps as a data set user with exactly that set. A set no user has is
 // listed for the developer to add. When the start page has auth.roles, a set
-// holding none of them is left to the refused variant.
+// holding none of them is left to the refused variant. A variant that passes
+// is kept as a persona of the journey, not a copy: its comment names the user
+// list to set on the original journey, and the variant file is then deleted.
 function roleGranted({ journey, dataSet, roleMatrix, pageConfigs }) {
   if (type.isNone(dataSet)) {
     return { skipped: 'the journey declares no data: set' };
   }
-  const current = roleKey(journeyUser({ journey, dataSet }).user?.roles);
+  const names = listedUserNames({ journey, dataSet });
+  const current = currentRoleKeys({ journey, dataSet, names });
   const pageRoles = pageConfigs[0]?.auth?.roles;
   const source = type.isNone(roleMatrix)
     ? Object.values(dataSet.users).map((user) => user.roles)
@@ -41,7 +67,7 @@ function roleGranted({ journey, dataSet, roleMatrix, pageConfigs }) {
   source.forEach((roles) => {
     const key = roleKey(roles);
     const set = JSON.parse(key);
-    if (key === current) return;
+    if (current.has(key)) return;
     if (type.isArray(pageRoles) && !set.some((role) => pageRoles.includes(role))) return;
     roleSets.set(key, set);
   });
@@ -62,12 +88,21 @@ function roleGranted({ journey, dataSet, roleMatrix, pageConfigs }) {
       skipped.push(`add a user with roles ${formatRoles(roles)} to the data set`);
       return;
     }
-    variants.push({
+    const variant = {
       kind: 'role',
       detail: `granted to ${name} ${formatRoles(roles)}`,
       overrides: { user: name },
       steps: journey.steps,
-    });
+    };
+    if (!type.isNull(names)) {
+      variant.comments = {
+        0: `Passes? Keep ${name} as a persona of "${journey.name}", not a copy: set its user to [${[
+          ...names,
+          name,
+        ].join(', ')}] and delete this file.`,
+      };
+    }
+    variants.push(variant);
   });
   return { variants, skipped };
 }

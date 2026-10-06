@@ -18,6 +18,7 @@ import path from 'path';
 import { type } from '@lowdefy/helpers';
 
 import discoverJourneys from '../../test/discoverJourneys.js';
+import expandPersonas from '../../test/expandPersonas.js';
 import fetchBuildId from '../../test/fetchBuildId.js';
 import fetchVariantInputs from './fetchVariantInputs.js';
 import formatJourneyResult from '../../test/formatJourneyResult.js';
@@ -94,8 +95,10 @@ function selectJourney({ context }) {
   return { item };
 }
 
-// The journey's newest measured path, or a fresh baseline run's.
-async function readOrMeasure({ context, item, url }) {
+// The journey's newest measured path, or a fresh baseline run's. A journey
+// with a list of users is measured by its first user's persona run.
+async function readOrMeasure({ context, item: journeyItem, url }) {
+  const [item] = expandPersonas({ item: journeyItem });
   const entry = readExercised({
     directories: context.directories,
     file: path.relative(context.directories.config, item.filePath),
@@ -178,10 +181,14 @@ async function replay({ context, written, url }) {
       );
       continue;
     }
-    const [item] = discoverJourneys({ context, paths: [file.path] });
-    const result = await runRepeated({ suite, context, item, url, repeat: REPLAYS });
-    const log = result.passed ? context.logger.info : context.logger.error;
-    formatJourneyResult({ result }).forEach((line) => log(line));
+    // A variant of a journey with a list of users keeps the list, so it
+    // replays once per user.
+    const [variantItem] = discoverJourneys({ context, paths: [file.path] });
+    for (const item of expandPersonas({ item: variantItem })) {
+      const result = await runRepeated({ suite, context, item, url, repeat: REPLAYS });
+      const log = result.passed ? context.logger.info : context.logger.error;
+      formatJourneyResult({ result }).forEach((line) => log(line));
+    }
   }
   context.logger.info(
     'PASS: a candidate to keep. FAIL: a finding, a bug or behaviour to assert as expected. FLAKY: fix the cause.'

@@ -36,7 +36,8 @@ Two rules hold throughout:
 
 - **Never delete a journey, and never propose deleting one.** A 30-day window of production use
   cannot see an annual review, a year-end close or a quarterly import, and a journey that is the
-  only one to kill a mutant is load-bearing whatever its traffic. The developer decides.
+  only one to kill a mutant is load-bearing whatever its traffic. The developer decides. A
+  variant candidate in \`_candidates/\` is not yet a journey of the suite.
 - **Write no step the compiler or the variants generator did not produce**, except an assertion
   the developer approved. Never add \`wait: { ms }\`: lint L3 refuses it.
 
@@ -93,6 +94,16 @@ empty and large data, bad input, a reload mid-flow, a double click) to
 \`tests/journeys/_candidates/variants/<source>/\` and replays each three times. Present failures one at a
 time: is it a bug, or behaviour to assert as expected? A FLAKY variant gets its cause fixed. A
 variant with a \`from: shape\` placeholder needs the value its comment asks for before it runs.
+
+When the developer keeps a variant:
+
+- A **role, granted** variant that passes is the same flow for another role, so it joins the
+  original journey rather than becoming a copy of it. Add its user to the original journey's
+  \`user\` list (\`user: member\` becomes \`user: [member, admin]\`; the variant's first comment
+  names the list), and the variant file then goes, so the steps stay in one place. A journey with
+  a list of users runs once as each, reported as \`<name> [<user>]\`.
+- Every other variant, a **role, refused** one included (it expects a different outcome: \`/404\`
+  or the feature hidden), moves into \`tests/journeys/\` as a journey of its own.
 
 ## 6. Evidence
 

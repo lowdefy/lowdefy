@@ -490,6 +490,90 @@ test('MCP lowdefy_run_journey advertises data and the name form of user', async 
   await client.close();
 });
 
+test('MCP tools/call lowdefy_run_journey runs a list of users once each and reports every run', async () => {
+  mockRunJourney.mockImplementation(async ({ user }) => ({
+    pageId: 'tickets',
+    passed: user === 'admin',
+    steps: [],
+    screenshots: [{ name: 'end', data: user === 'admin' ? 'AAAA' : 'BBBB', mimeType: 'image/png' }],
+    ...(user === 'admin'
+      ? {}
+      : { failure: { index: 0, step: { click: 'edit' }, message: 'edit is hidden' } }),
+  }));
+  const client = await connectClient();
+
+  const result = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: { pageId: 'tickets', steps: [], data: 'crm', user: ['admin', 'member'] },
+  });
+
+  expect(mockRunJourney).toHaveBeenCalledTimes(2);
+  expect(mockRunJourney.mock.calls.map(([params]) => params.user)).toEqual(['admin', 'member']);
+  expect(mockRunJourney.mock.calls[0][0]).toEqual(
+    expect.objectContaining({ pageId: 'tickets', data: 'crm' })
+  );
+  const [first, second] = mockRunJourney.mock.calls.map(([params]) => params.recording.run.id);
+  expect(first).not.toEqual(second);
+  const summary = JSON.parse(result.content[0].text);
+  expect(summary.passed).toBe(false);
+  expect(summary.runs.map(({ user, passed }) => ({ user, passed }))).toEqual([
+    { user: 'admin', passed: true },
+    { user: 'member', passed: false },
+  ]);
+  expect(summary.runs[1].failure.message).toBe('edit is hidden');
+  expect(summary.runs[0].screenshots).toEqual([{ name: 'end' }]);
+  expect(result.content.slice(1)).toEqual([
+    { type: 'image', data: 'AAAA', mimeType: 'image/png' },
+    { type: 'image', data: 'BBBB', mimeType: 'image/png' },
+  ]);
+  await client.close();
+});
+
+test('MCP tools/call lowdefy_run_journey reports a run the runner could not do in its run', async () => {
+  mockRunJourney.mockImplementation(async ({ user }) =>
+    user === 'ghost'
+      ? { error: 'Data set "crm" declares no user "ghost".', refused: true }
+      : { pageId: 'tickets', passed: true, steps: [], screenshots: [] }
+  );
+  const client = await connectClient();
+
+  const result = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: { pageId: 'tickets', steps: [], data: 'crm', user: ['admin', 'ghost'] },
+  });
+
+  const summary = JSON.parse(result.content[0].text);
+  expect(summary.passed).toBe(false);
+  expect(summary.runs[1]).toEqual({
+    user: 'ghost',
+    passed: false,
+    error: 'Data set "crm" declares no user "ghost".',
+    screenshots: [],
+  });
+  await client.close();
+});
+
+test.each([
+  [['admin'], undefined, 'declares no "data"'],
+  [['admin', 'admin'], 'crm', 'names "admin" more than once'],
+  [['none'], 'crm', 'Received "none".'],
+])(
+  'MCP tools/call lowdefy_run_journey refuses user list %j with data %j before running',
+  async (user, data, message) => {
+    const client = await connectClient();
+
+    const result = await client.callTool({
+      name: 'lowdefy_run_journey',
+      arguments: { pageId: 'tickets', steps: [], data, user },
+    });
+
+    expect(result.isError).toBe(true);
+    expect(result.content[0].text).toContain(message);
+    expect(mockRunJourney).not.toHaveBeenCalled();
+    await client.close();
+  }
+);
+
 test('MCP tools/call lowdefy_run_journey reports a runner error as a tool error', async () => {
   mockRunJourney.mockResolvedValue({ error: 'Step 0: Unknown journey step "hover".' });
   const client = await connectClient();

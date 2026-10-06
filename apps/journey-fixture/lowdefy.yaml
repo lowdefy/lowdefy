@@ -19,11 +19,34 @@ connections:
       collection: items
       write: true
 
+# Auth exists only to gate auditor_only, so a journey can be refused by a real
+# auth gate. An API key strategy is the one auth mechanism that needs no
+# database and no login method; every page and every other endpoint stays
+# public, and journeys still act as injected callers.
+auth:
+  secret:
+    _secret: FIXTURE_AUTH_SECRET
+  strategies:
+    - id: fixture_key
+      type: apiKey
+      properties:
+        keys:
+          - id: fixture
+            value:
+              _secret: FIXTURE_API_KEY
+  roles:
+    - id: auditor
+  api:
+    roles:
+      auditor:
+        - auditor_only
+
 api:
   - _ref: api/notify.yaml
   - _ref: api/log_activity.yaml
   - _ref: api/detached_log.yaml
   - _ref: api/explode.yaml
+  - _ref: api/auditor_only.yaml
 
 pages:
   - _ref: pages/home.yaml
@@ -31,3 +54,6 @@ pages:
   - _ref: pages/explore.yaml
   - _ref: pages/explore_guarded.yaml
   - _ref: pages/explore_pr.yaml
+  - _ref: pages/app_errors.yaml
+  - _ref: pages/app_errors_open.yaml
+  - _ref: pages/targets.yaml

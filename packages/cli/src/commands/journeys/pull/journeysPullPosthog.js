@@ -22,12 +22,14 @@ import buildDayRecords from './buildDayRecords.js';
 import checkPropertyName from './checkPropertyName.js';
 import createPostHogQueryClient from './createPostHogQueryClient.js';
 import listWindowDays from '../listWindowDays.js';
+import MINING_WINDOW_MAX_DAYS from '../miningWindowMaxDays.js';
 import parseTraceWindow from '../parseTraceWindow.js';
 import pruneDayFiles from './pruneDayFiles.js';
 import pullDay from './pullDay.js';
 import PullStoppedError from './PullStoppedError.js';
+import readOrCreateTraceSalt from './readOrCreateTraceSalt.js';
 import readPostHogCredentials from './readPostHogCredentials.js';
-import readTraceSalt from './readTraceSalt.js';
+import removeUntokenisedTraces from '../removeUntokenisedTraces.js';
 import writeDayFile from './writeDayFile.js';
 
 const ADAPTERS = ['posthog'];
@@ -87,6 +89,7 @@ function buildManifest({ day, final, credentials, options, pulled, built, saltId
     queries: pulled.queries,
     bytes_read: pulled.bytesRead,
     salt_id: saltId,
+    text_rule: 'token',
   };
 }
 
@@ -115,6 +118,7 @@ async function journeysPullPosthog({ context, params }) {
     from: options.from,
     to: options.to,
     now,
+    maxDays: MINING_WINDOW_MAX_DAYS,
   });
   const orgProperty = options.orgProperty ?? 'org_id';
   const rolesProperty = options.rolesProperty ?? 'roles';
@@ -132,11 +136,12 @@ async function journeysPullPosthog({ context, params }) {
   });
   const credentials = readPostHogCredentials({ env: process.env });
 
+  removeUntokenisedTraces({ directories, logger, now });
   const pruned = pruneDayFiles({ directories, now });
   if (pruned.length > 0) {
     logger.info(`Pruned ${pruned.length} production trace files older than 400 days.`);
   }
-  const { salt, saltId } = readTraceSalt({ directories });
+  const { salt, saltId } = readOrCreateTraceSalt({ directories });
   const client = createPostHogQueryClient({ ...credentials, logger });
   const today = new Date(now).toISOString().slice(0, 10);
   const totals = { rows: 0, records: 0, dropped: 0, bytesRead: 0, days: 0 };

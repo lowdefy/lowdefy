@@ -25,17 +25,21 @@ function readJourneyFile({ filePath }) {
   try {
     parsed = YAML.parse(fs.readFileSync(filePath, 'utf8'));
   } catch (error) {
-    return [{ filePath, journey: undefined, error: `Invalid YAML: ${error.message}` }];
+    return [
+      { filePath, journeyIndex: 0, journey: undefined, error: `Invalid YAML: ${error.message}` },
+    ];
   }
   if (type.isArray(parsed)) {
-    return parsed.map((journey) => ({ filePath, journey }));
+    return parsed.map((journey, journeyIndex) => ({ filePath, journeyIndex, journey }));
   }
-  return [{ filePath, journey: parsed }];
+  return [{ filePath, journeyIndex: 0, journey: parsed }];
 }
 
-// With `paths` (journey files already resolved by resolveJourneyPaths), the
-// named files are read; otherwise every file under tests/journeys, sub-folders
-// included, except those in a folder whose name starts with "_".
+// Each item is { filePath, journeyIndex, journey }: the journey's place in its
+// file names it where its name may not be unique. With `paths` (journey files
+// already resolved by resolveJourneyPaths), the named files are read;
+// otherwise every file under tests/journeys, sub-folders included, except
+// those in a folder whose name starts with "_".
 function discoverJourneys({ context, paths }) {
   if (!type.isUndefined(paths)) {
     return paths.flatMap((filePath) => readJourneyFile({ filePath }));

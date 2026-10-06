@@ -26,6 +26,7 @@ const defaultAllowBuilds = {
   'better-sqlite3': true,
   sharp: true,
   '@sentry/cli': false,
+  'mongodb-memory-server': false,
 };
 
 // A dependency the parent allows or ignores keeps the parent's choice.

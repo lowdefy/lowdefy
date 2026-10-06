@@ -133,8 +133,89 @@ test('profileProduction ranks failure paths by persons then sessions, app failur
 test('profileProduction counts rage and dead clicks per page and block', () => {
   const { frustration } = profileProduction({ segments: SEGMENTS });
   expect(frustration).toEqual([
-    { key: 'home.Help', page: 'home', block_id: null, text: 'Help', rage: 0, dead: 2 },
-    { key: 'tickets.save', page: 'tickets', block_id: 'save', text: 'Save', rage: 1, dead: 0 },
+    {
+      key: 'home.Help',
+      page: 'home',
+      block_id: null,
+      text: 'Help',
+      text_token: null,
+      rage: 0,
+      dead: 2,
+    },
+    {
+      key: 'tickets.save',
+      page: 'tickets',
+      block_id: 'save',
+      text: 'Save',
+      text_token: null,
+      rage: 1,
+      dead: 0,
+    },
+  ]);
+});
+
+test('profileProduction keeps blockless frustration on different tokens apart', () => {
+  const { frustration } = profileProduction({
+    segments: [
+      segment({
+        hash: 'ddd',
+        session: 's5',
+        frustrations: [
+          {
+            page: 'tickets',
+            block_id: null,
+            text: null,
+            text_token: 't_00000000000000a1',
+            kind: 'rage',
+          },
+          {
+            page: 'tickets',
+            block_id: null,
+            text: null,
+            text_token: 't_00000000000000b2',
+            kind: 'rage',
+          },
+        ],
+      }),
+    ],
+  });
+  expect(frustration.map((entry) => entry.key)).toEqual([
+    'tickets.t_00000000000000a1',
+    'tickets.t_00000000000000b2',
+  ]);
+  expect(frustration.map((entry) => entry.text_token)).toEqual([
+    't_00000000000000a1',
+    't_00000000000000b2',
+  ]);
+});
+
+test('profileProduction counts clicked-text tokens per page, block and column', () => {
+  const { textTokens } = profileProduction({
+    segments: [
+      {
+        ...segment({ hash: 'eee', session: 's6' }),
+        text_clicks: [
+          {
+            page: 'tickets',
+            block_id: 'grid',
+            column: 'name',
+            text_token: 't_00000000000000c1',
+            config_text: false,
+            person: 'p_1',
+          },
+        ],
+      },
+    ],
+  });
+  expect(textTokens).toEqual([
+    {
+      page: 'tickets',
+      block_id: 'grid',
+      column: 'name',
+      clicks: 1,
+      tokens: 1,
+      top: [{ token: 't_00000000000000c1', clicks: 1, persons: 1 }],
+    },
   ]);
 });
 
@@ -166,5 +247,6 @@ test('profileProduction gives the same profile for the same segments', () => {
     frustration: [],
     roleMatrix: [],
     entryPoints: [],
+    textTokens: [],
   });
 });

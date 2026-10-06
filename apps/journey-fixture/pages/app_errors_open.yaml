@@ -1,0 +1,22 @@
+# Its onInit request fails on the database: a journey on this page fails on
+# open (appErrors.test.mjs in packages/servers/server-dev/test/journeyFixture).
+id: app_errors_open
+type: Box
+requests:
+  - id: broken_on_open
+    type: MongoDBAggregation
+    connectionId: fixture_db
+    properties:
+      pipeline:
+        - $explorerFixtureBogusStage: {}
+events:
+  onInit:
+    - id: load_broken
+      type: Request
+      params: broken_on_open
+blocks:
+  - id: app_errors_open_title
+    type: Title
+    properties:
+      content: Fails on open
+      level: 2

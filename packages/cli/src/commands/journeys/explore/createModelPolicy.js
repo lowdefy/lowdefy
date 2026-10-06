@@ -44,6 +44,33 @@ function isRefusedModel(error) {
   );
 }
 
+// Errors raised before a request reaches the model, or while the caller
+// stops waiting for it: an abort or timeout, or a fetch that got no response
+// (an API call error with no status code, which the Gateway wraps as a 500).
+const UNSENT_ERRORS = ['AbortError', 'TimeoutError', 'GatewayTimeoutError'];
+
+function isUnsent(error) {
+  for (let cause = error; !type.isNone(cause); cause = cause.cause) {
+    if (UNSENT_ERRORS.includes(cause.name)) return true;
+    if (cause.name === 'AI_APICallError' && type.isNone(cause.statusCode)) return true;
+  }
+  return false;
+}
+
+// The error of a call's last attempt: the AI SDK wraps retried attempts in a
+// RetryError.
+function lastAttemptError(error) {
+  return error?.name === 'AI_RetryError' ? error.lastError : error;
+}
+
+// A failed call may still have been billed: the model can answer and the
+// structured output then fail validation, on every attempt. Only a refused
+// model and a request that never got an answer are known to cost nothing.
+function mayHaveBeenBilled(error) {
+  const last = lastAttemptError(error);
+  return !isRefusedModel(last) && !isUnsent(last);
+}
+
 // A request the model rejects as too big (Jev takes 32k tokens of state and
 // question), which no retry of the same request fixes.
 function isOverLimit(error) {
@@ -63,6 +90,8 @@ function isOverLimit(error) {
 // asking; none ends the walk (optionId null). An answer outside the options,
 // or a call that failed after the backend's retries, falls back to the seeded
 // choice and says so; three failed calls in a row throw the Gateway's error.
+// A failed call that may have been billed carries an estimated cost, so the
+// spending cap counts it.
 //
 // With the evaluation backend (Jev), a structured-output model
 // (fallbackModelId) stands by. When the Gateway refuses Jev, at any call, or
@@ -141,11 +170,27 @@ async function createModelPolicy({
       if (failedCalls >= MAX_FAILED_CALLS) {
         throw error;
       }
-      return {
+      const failed = {
         optionId: seeded.choose(step),
         asked: true,
         fallback: 'failed',
         error: error.message,
+      };
+      if (!mayHaveBeenBilled(error)) {
+        return failed;
+      }
+      // Gateway cost is reported only on a result, so a failed call is always
+      // charged at the estimate, from the tokens the error carries if any.
+      const { inputTokens, outputTokens, usd } = readCallCost({
+        usage: lastAttemptError(error).usage,
+        state,
+        questions,
+        modelId: current.modelId,
+      });
+      return {
+        ...failed,
+        usage: { inputTokens, outputTokens },
+        cost: { usd, estimated: true },
       };
     }
     failedCalls = 0;

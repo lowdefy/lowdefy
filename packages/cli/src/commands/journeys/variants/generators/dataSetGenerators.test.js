@@ -63,10 +63,49 @@ test('roleGranted writes one variant per other role set a data set user holds', 
         detail: 'granted to admin [admin]',
         overrides: { user: 'admin' },
         steps: journey.steps,
+        comments: {
+          0: 'Passes? Keep admin as a persona of "member closes a ticket", not a copy: set its user to [member, admin] and delete this file.',
+        },
       },
     ],
     skipped: [],
   });
+});
+
+test('roleGranted skips the role sets of every user a journey lists, and adds to its list', () => {
+  const listed = { ...journey, user: ['member', 'stranger'] };
+  expect(roleGranted({ journey: listed, dataSet, roleMatrix: null, pageConfigs })).toEqual({
+    skipped: "no role set other than the journey user's among the data set users",
+  });
+  const generated = roleGranted({
+    journey: listed,
+    dataSet,
+    roleMatrix: [['member'], ['admin'], ['admin', 'member']],
+    pageConfigs,
+  });
+  expect(generated.variants).toEqual([]);
+  expect(generated.skipped).toEqual(['add a user with roles [admin, member] to the data set']);
+  const memberOnly = roleGranted({
+    journey: { ...journey, user: ['member'] },
+    dataSet,
+    roleMatrix: null,
+    pageConfigs,
+  });
+  expect(memberOnly.variants.map(({ overrides, comments }) => ({ overrides, comments }))).toEqual([
+    {
+      overrides: { user: 'admin' },
+      comments: {
+        0: 'Passes? Keep admin as a persona of "member closes a ticket", not a copy: set its user to [member, admin] and delete this file.',
+      },
+    },
+  ]);
+});
+
+test('roleGranted writes no list comment for a journey with an inline user', () => {
+  const inline = { ...journey, user: { roles: ['member'] } };
+  const generated = roleGranted({ journey: inline, dataSet, roleMatrix: null, pageConfigs });
+  expect(generated.variants.map(({ detail }) => detail)).toEqual(['granted to admin [admin]']);
+  expect(generated.variants[0]).not.toHaveProperty('comments');
 });
 
 test('roleGranted reads the page role matrix and lists a role set no user has', () => {

@@ -18,6 +18,7 @@ import fs from 'fs';
 import path from 'path';
 import YAML from 'yaml';
 import { type } from '@lowdefy/helpers';
+import { findPlaceholderStep } from '@lowdefy/node-utils';
 
 import buildVariantJourney from './buildVariantJourney.js';
 import readVariantOwnership from './readVariantOwnership.js';
@@ -151,7 +152,7 @@ function writeVariantFiles({ directories, filePath, journey, variants, kinds }) 
     return {
       path: variantPath,
       kind: variant.kind,
-      placeholder: !type.isUndefined(variant.comments),
+      placeholder: !type.isUndefined(findPlaceholderStep({ steps: variant.steps }).error),
       status: 'written',
     };
   });

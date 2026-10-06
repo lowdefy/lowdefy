@@ -19,7 +19,9 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import { row } from './tests/postHogRows.js';
+import { validateTraceRecord } from '@lowdefy/node-utils';
+
+import { chains, row } from './tests/postHogRows.js';
 
 const KEY = 'phx_pull_key_never_written_42';
 const mockQuery = jest.fn();
@@ -102,6 +104,7 @@ beforeEach(() => {
     directories: {
       config: configDirectory,
       traces: path.join(configDirectory, '.lowdefy', 'traces'),
+      test: path.join(configDirectory, '.lowdefy', 'test'),
     },
     logger: { info: log, warn: log, error: log, debug: log },
     sendTelemetry: async () => {},
@@ -157,6 +160,7 @@ test('journeys pull posthog writes a day file and manifest per day under traces/
     chain_fallbacks: 0,
     queries: 2,
     bytes_read: 105,
+    text_rule: 'token',
   });
   expect(manifest.salt_id).toMatch(/^[0-9a-f]{8}$/);
   const today = JSON.parse(
@@ -214,7 +218,10 @@ test('journeys pull posthog prunes day files older than 400 days', async () => {
   const young = utcDay(Date.parse('2026-10-03T00:00:00Z') - 399 * DAY);
   [old, young].forEach((day) => {
     fs.writeFileSync(path.join(production(), `${day}.jsonl`), '');
-    fs.writeFileSync(path.join(production(), `${day}.manifest.json`), '{}');
+    fs.writeFileSync(
+      path.join(production(), `${day}.manifest.json`),
+      JSON.stringify({ text_rule: 'token' })
+    );
   });
   await pull();
   expect(fs.existsSync(path.join(production(), `${old}.jsonl`))).toBe(false);
@@ -282,4 +289,175 @@ test('journeys pull posthog writes the key and raw ids to no manifest, day file 
   expect(written).not.toContain(KEY);
   expect(written).not.toContain('raw-person');
   expect(logged.join('\n')).not.toContain(KEY);
+});
+
+// A day with a labelled button, a grid cell showing a customer's name, a rage
+// click on that cell, and a portal dropdown item known only by its text.
+const TEXTS = ['Save', 'Acme Ltd', 'Alice Example'];
+
+function textDayRows(day) {
+  return [
+    row({
+      uuid: `${day}-1`,
+      timestamp: `${day}T10:00:00.000000Z`,
+      event: '$pageview',
+    }),
+    row({
+      uuid: `${day}-2`,
+      timestamp: `${day}T10:00:01.000000Z`,
+      eventType: 'click',
+      elText: 'Save',
+      lowdefy_block_id: 'save',
+      lowdefy_block_type: 'Button',
+    }),
+    row({
+      uuid: `${day}-3`,
+      timestamp: `${day}T10:00:02.000000Z`,
+      eventType: 'click',
+      elText: 'Acme Ltd',
+      lowdefy_block_id: 'grid',
+      lowdefy_block_type: 'AgGridAlpine',
+      lowdefy_row: 3,
+      lowdefy_column: 'name',
+    }),
+    row({
+      uuid: `${day}-4`,
+      timestamp: `${day}T10:00:05.000000Z`,
+      event: '$rageclick',
+      elText: 'Acme  Ltd',
+      lowdefy_block_id: 'grid',
+      lowdefy_block_type: 'AgGridAlpine',
+      lowdefy_row: 4,
+      lowdefy_column: 'name',
+    }),
+    row({
+      uuid: `${day}-5`,
+      timestamp: `${day}T10:00:07.000000Z`,
+      eventType: 'click',
+      elText: 'Alice Example',
+      elementsChain: chains.portalOption,
+    }),
+  ];
+}
+
+function readDay(day) {
+  return fs
+    .readFileSync(path.join(production(), `${day}.jsonl`), 'utf8')
+    .trim()
+    .split('\n')
+    .map((line) => JSON.parse(line));
+}
+
+test('journeys pull posthog stores clicked text as tokens and never as text', async () => {
+  dayRows = textDayRows;
+  await pull({ since: '1d' });
+  const records = readDay('2026-10-03');
+  const clicks = records.filter((record) => record.kind === 'click');
+  expect(clicks).toHaveLength(4);
+  clicks.forEach((record) => {
+    expect(record.target).not.toHaveProperty('text');
+    expect(record.target.text_token).toMatch(/^t_[0-9a-f]{16}$/);
+    expect(validateTraceRecord({ record })).toEqual({});
+  });
+  const [button, cell, rage, option] = clicks;
+  expect(button.target.block_id).toEqual('save');
+  expect(cell.target).toMatchObject({ block_id: 'grid', row: 3, column: 'name' });
+  expect(rage).toMatchObject({ frustration: 'rage', target: { block_id: 'grid', row: 4 } });
+  expect(rage.target.text_token).toEqual(cell.target.text_token);
+  expect(button.target.text_token).not.toEqual(cell.target.text_token);
+  expect(option.target).toMatchObject({ block_id: null, option: true });
+});
+
+test('journeys pull posthog writes no clicked text to a day file or a log line', async () => {
+  dayRows = textDayRows;
+  await pull({ since: '1d' });
+  const written = fs
+    .readdirSync(production())
+    .filter((name) => name !== 'salt')
+    .map((name) => fs.readFileSync(path.join(production(), name), 'utf8'))
+    .join('\n');
+  TEXTS.forEach((text) => {
+    expect(written).not.toContain(text);
+    expect(logged.join('\n')).not.toContain(text);
+  });
+  expect(written).not.toContain('Acme');
+});
+
+test('journeys pull posthog gives other tokens under another salt', async () => {
+  dayRows = textDayRows;
+  await pull({ since: '1d' });
+  const first = readDay('2026-10-03').find((record) => record.target?.block_id === 'save');
+  fs.writeFileSync(path.join(production(), 'salt'), Buffer.alloc(32, 9));
+  await pull({ since: '1d' });
+  const second = readDay('2026-10-03').find((record) => record.target?.block_id === 'save');
+  expect(second.target.text_token).toMatch(/^t_[0-9a-f]{16}$/);
+  expect(second.target.text_token).not.toEqual(first.target.text_token);
+});
+
+function writeOldRuleCache() {
+  fs.mkdirSync(production(), { recursive: true });
+  fs.writeFileSync(path.join(production(), 'salt'), Buffer.alloc(32, 3));
+  fs.writeFileSync(path.join(production(), '2026-09-20.jsonl'), '{"text":"Acme Ltd"}\n');
+  fs.writeFileSync(
+    path.join(production(), '2026-09-20.manifest.json'),
+    JSON.stringify({ day: '2026-09-20' })
+  );
+  fs.writeFileSync(path.join(production(), '2026-09-21.jsonl'), '');
+  fs.writeFileSync(
+    path.join(production(), '2026-09-21.manifest.json'),
+    JSON.stringify({ day: '2026-09-21', text_rule: 'token' })
+  );
+  const candidates = path.join(configDirectory, 'tests', 'journeys', '_candidates');
+  fs.mkdirSync(path.join(candidates, 'production'), { recursive: true });
+  fs.mkdirSync(path.join(candidates, 'dev'), { recursive: true });
+  fs.writeFileSync(path.join(candidates, 'production', 'tickets.yaml'), 'name: Acme Ltd\n');
+  fs.writeFileSync(path.join(candidates, 'dev', 'tickets.yaml'), 'name: dev\n');
+  fs.writeFileSync(
+    path.join(configDirectory, 'tests', 'journeys', 'tickets.yaml'),
+    'name: tickets\nevidence:\n  refreshed: 2026-09-01\n'
+  );
+  fs.mkdirSync(path.join(configDirectory, '.lowdefy', 'test'), { recursive: true });
+  fs.writeFileSync(path.join(configDirectory, '.lowdefy', 'test', 'coverage.json'), '{}');
+  fs.mkdirSync(path.join(configDirectory, '.lowdefy', 'traces', 'dev'), { recursive: true });
+  fs.writeFileSync(path.join(configDirectory, '.lowdefy', 'traces', 'dev', 'x.jsonl'), '{}\n');
+}
+
+test('journeys pull posthog removes old-rule days, production candidates and coverage.json once', async () => {
+  writeOldRuleCache();
+  const salt = fs.readFileSync(path.join(production(), 'salt'));
+  await pull({ since: '1d' });
+  expect(fs.existsSync(path.join(production(), '2026-09-20.jsonl'))).toBe(false);
+  expect(fs.existsSync(path.join(production(), '2026-09-20.manifest.json'))).toBe(false);
+  expect(fs.existsSync(path.join(production(), '2026-09-21.manifest.json'))).toBe(true);
+  expect(fs.readFileSync(path.join(production(), 'salt')).equals(salt)).toBe(true);
+  const journeys = path.join(configDirectory, 'tests', 'journeys');
+  expect(fs.existsSync(path.join(journeys, '_candidates', 'production'))).toBe(false);
+  expect(fs.existsSync(path.join(journeys, '_candidates', 'dev', 'tickets.yaml'))).toBe(true);
+  expect(fs.readFileSync(path.join(journeys, 'tickets.yaml'), 'utf8')).toEqual(
+    'name: tickets\nevidence:\n  refreshed: 2026-09-01\n'
+  );
+  expect(fs.existsSync(path.join(configDirectory, '.lowdefy', 'test', 'coverage.json'))).toBe(
+    false
+  );
+  expect(fs.existsSync(path.join(configDirectory, '.lowdefy', 'traces', 'dev', 'x.jsonl'))).toBe(
+    true
+  );
+  const removal = logged.filter((line) => line.startsWith('Removed'));
+  expect(removal).toEqual([
+    'Removed 1 production trace days, the production candidates, coverage.json, written before clicked text was stored as tokens. Pull the days again with lowdefy journeys pull posthog.',
+  ]);
+  logged = [];
+  context.logger = { info: (m) => logged.push(m), warn: (m) => logged.push(m), debug: () => {} };
+  await pull({ since: '1d' });
+  expect(logged.filter((line) => line.startsWith('Removed'))).toEqual([]);
+  expect(fs.existsSync(path.join(production(), '2026-09-21.manifest.json'))).toBe(true);
+});
+
+test('journeys pull posthog refuses a window over 30 days before any request', async () => {
+  await expect(pull({ since: '31d' })).rejects.toThrow('a mining window is at most 30 days');
+  await expect(pull({ since: undefined, from: '2026-09-01', to: '2026-10-01' })).rejects.toThrow(
+    'The window 2026-09-01/2026-10-01 is 31 days long; a mining window is at most 30 days.'
+  );
+  expect(mockQuery).not.toHaveBeenCalled();
+  await expect(pull({ since: '30d' })).resolves.toMatchObject({ days: 30 });
 });

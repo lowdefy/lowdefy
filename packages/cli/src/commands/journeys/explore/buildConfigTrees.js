@@ -18,25 +18,14 @@ import fs from 'fs';
 import path from 'path';
 import { type } from '@lowdefy/helpers';
 
-import spawnConfigTreeBuild from './spawnConfigTreeBuild.js';
-
-const MAX_LISTED_ERRORS = 10;
-
-function readBuilderVersion({ devDirectory }) {
-  return JSON.parse(fs.readFileSync(path.join(devDirectory, 'package.json'), 'utf8')).version;
-}
+import describeBuildErrors from '../configBuilder/describeBuildErrors.js';
+import resolveConfigBuilder from '../configBuilder/resolveConfigBuilder.js';
+import spawnConfigTreeBuild from '../configBuilder/spawnConfigTreeBuild.js';
 
 function isCachedBuild({ outDirectory }) {
   const resultPath = path.join(outDirectory, 'result.json');
   if (!fs.existsSync(resultPath)) return false;
   return JSON.parse(fs.readFileSync(resultPath, 'utf8')).status === 'ok';
-}
-
-function describeErrors(errors) {
-  return errors
-    .slice(0, MAX_LISTED_ERRORS)
-    .map((error) => `  ${error.source ? `${error.source}: ` : ''}${error.message}`)
-    .join('\n');
 }
 
 async function buildOne({ context, script, configDirectory, outDirectory, cacheable }) {
@@ -64,15 +53,8 @@ async function buildConfigTrees({
   runDirectory,
   pluginSets,
 }) {
-  const devDirectory = context.directories.dev;
-  const script = path.join(devDirectory, 'lib', 'docs', 'explore', 'buildConfigTree.mjs');
-  if (!fs.existsSync(script)) {
-    throw new Error(
-      `The dev server installed in ${devDirectory} has no explore builder. Stop the running dev server and start it again to update it.`
-    );
-  }
+  const { script, version } = resolveConfigBuilder({ context });
   const buildsDirectory = path.join(context.directories.config, '.lowdefy', 'explore', 'builds');
-  const version = readBuilderVersion({ devDirectory });
   const headOnly = type.isNone(revisions.base);
   const baseOut = headOnly ? null : path.join(buildsDirectory, `${revisions.base}-${version}`);
   const headOut = revisions.dirty
@@ -100,7 +82,7 @@ async function buildConfigTrees({
 
   if (head.status !== 'ok') {
     const error = new Error(
-      `The config at the head does not build, so there is nothing to walk:\n${describeErrors(
+      `The config at the head does not build, so there is nothing to walk:\n${describeBuildErrors(
         head.errors
       )}`
     );
@@ -130,7 +112,7 @@ async function buildConfigTrees({
         ? `The base lists plugins the head does not install (${missing.join(
             ', '
           )}), so the base could not be built. Every page is a target.`
-        : `The config at the base does not build, so every page is a target:\n${describeErrors(
+        : `The config at the base does not build, so every page is a target:\n${describeBuildErrors(
             base.errors
           )}`;
   }

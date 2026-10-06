@@ -23,7 +23,6 @@ import appendWalkLog from './appendWalkLog.js';
 import buildConfigTrees from './buildConfigTrees.js';
 import checkLiveDataRule from './checkLiveDataRule.js';
 import checkWriteOptIn from './checkWriteOptIn.js';
-import createConfirmations from './createConfirmations.js';
 import createCostTracker from './createCostTracker.js';
 import createModelPolicy from './createModelPolicy.js';
 import createSeededPolicy from './createSeededPolicy.js';
@@ -240,17 +239,13 @@ async function walkRun({
     liveData: options.liveData,
     allowExternal: options.allowExternal,
   };
-  const confirmations = createConfirmations({ client, run, options: walkOptions, shouldStop });
-  const targetsByWalk = new Map();
   const walkStarted = Date.now();
   const result = await scheduleWalks({
     targets,
     walks: options.walks,
     shouldStop,
     buildChanged: async () => (await client.buildId()) !== startBuildId,
-    afterWalk: (log) => confirmations.afterWalk({ log, target: targetsByWalk.get(log.walk) }),
     runOne: async ({ target, walkId, walkIndex, progress }) => {
-      targetsByWalk.set(walkId, target);
       const log = await runWalk({
         client,
         run,
@@ -282,8 +277,6 @@ async function walkRun({
     costs: costs.totals(),
     walkMs: Date.now() - walkStarted,
     logs: result.logs,
-    confirmations: confirmations.list(),
-    findingsByWalk: confirmations.findingsByWalk,
     notRun: [...notRun, ...result.notRun],
     stopped: result.stopped,
   };
@@ -333,6 +326,7 @@ async function exploreOnServer({ context, options, policyConfig, revisions, serv
     scope: scoped.scope,
     walked,
     buildDirectory: scoped.builds.headBuild,
+    url: server.url,
     startedAt,
   });
   return { run, runDirectory, scope: scoped.scope, walked, report };

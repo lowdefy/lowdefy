@@ -27,6 +27,146 @@ function count({ key }) {
   };
 }
 
+const MONTH = '^\\d{4}-\\d{2}$';
+const SEQUENCE = '^v\\d+-[0-9a-f]{8}$';
+
+function sequenceSchema({ key }) {
+  return {
+    type: 'string',
+    pattern: SEQUENCE,
+    errorMessage: `Journey "${key}" should be a flow id such as v1-3f9a12c0.`,
+  };
+}
+
+function pageIdSchema({ key }) {
+  return {
+    type: 'string',
+    errorMessage: `Journey "${key}" should be a page id.`,
+  };
+}
+
+function flowSchema({ key }) {
+  return {
+    type: 'array',
+    items: { type: 'string' },
+    errorMessage: `Journey "${key}" should be a list of "<page> <step>" lines.`,
+  };
+}
+
+function monthsSchema({ key }) {
+  return {
+    type: 'array',
+    items: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['month', 'days', 'sessions', 'persons', 'orgs', 'failures'],
+      properties: {
+        month: {
+          type: 'string',
+          pattern: MONTH,
+          errorMessage: `Journey "${key}[].month" should be a month as YYYY-MM.`,
+        },
+        days: {
+          type: 'integer',
+          minimum: 1,
+          maximum: 31,
+          errorMessage: `Journey "${key}[].days" should be a whole number of days from 1 to 31.`,
+        },
+        sessions: count({ key: `${key}[].sessions` }),
+        persons: count({ key: `${key}[].persons` }),
+        orgs: count({ key: `${key}[].orgs` }),
+        failures: count({ key: `${key}[].failures` }),
+      },
+      errorMessage: {
+        type: `Journey "${key}" entries should be objects.`,
+        additionalProperties: `Journey "${key}" entries have an unknown key. Keys are: month, days, sessions, persons, orgs, failures.`,
+        required: `Journey "${key}" entries should have month, days, sessions, persons, orgs and failures.`,
+      },
+    },
+    errorMessage: { type: `Journey "${key}" should be a list of months.` },
+  };
+}
+
+// Production use counted by calendar month, for the flow the journey's steps
+// walk now (`sequence`, `pageId`, `flow`) and for the flows it walked before
+// (`deprecated`).
+const monthlyProductionSchema = {
+  additionalProperties: false,
+  required: ['sequence', 'pageId', 'flow', 'months'],
+  properties: {
+    sequence: sequenceSchema({ key: 'evidence.production.sequence' }),
+    pageId: pageIdSchema({ key: 'evidence.production.pageId' }),
+    flow: flowSchema({ key: 'evidence.production.flow' }),
+    months: monthsSchema({ key: 'evidence.production.months' }),
+    deprecated: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['sequence', 'pageId', 'flow', 'replaced', 'months'],
+        properties: {
+          sequence: sequenceSchema({ key: 'evidence.production.deprecated[].sequence' }),
+          pageId: pageIdSchema({ key: 'evidence.production.deprecated[].pageId' }),
+          flow: flowSchema({ key: 'evidence.production.deprecated[].flow' }),
+          replaced: {
+            type: 'string',
+            pattern: DAY,
+            errorMessage:
+              'Journey "evidence.production.deprecated[].replaced" should be a date as YYYY-MM-DD.',
+          },
+          months: monthsSchema({ key: 'evidence.production.deprecated[].months' }),
+        },
+        errorMessage: {
+          type: 'Journey "evidence.production.deprecated" entries should be objects.',
+          additionalProperties:
+            'Journey "evidence.production.deprecated" entries have an unknown key. Keys are: sequence, pageId, flow, replaced, months.',
+          required:
+            'Journey "evidence.production.deprecated" entries should have sequence, pageId, flow, replaced and months.',
+        },
+      },
+      errorMessage: {
+        type: 'Journey "evidence.production.deprecated" should be a list of flows.',
+      },
+    },
+  },
+  errorMessage: {
+    additionalProperties:
+      'Journey "evidence.production" has an unknown key. Keys are: sequence, pageId, flow, months, deprecated.',
+    required: 'Journey "evidence.production" should have sequence, pageId, flow and months.',
+  },
+};
+
+// The window shape monthly evidence replaced, accepted for one minor release
+// so committed journeys still validate until their next refresh rewrites them.
+const legacyProductionSchema = {
+  additionalProperties: false,
+  required: ['sessions', 'persons', 'orgs', 'share', 'failures', 'window'],
+  properties: {
+    sessions: count({ key: 'evidence.production.sessions' }),
+    persons: count({ key: 'evidence.production.persons' }),
+    orgs: count({ key: 'evidence.production.orgs' }),
+    failures: count({ key: 'evidence.production.failures' }),
+    share: {
+      type: 'number',
+      minimum: 0,
+      maximum: 1,
+      errorMessage: 'Journey "evidence.production.share" should be a number from 0 to 1.',
+    },
+    window: {
+      type: 'string',
+      pattern: WINDOW,
+      errorMessage:
+        'Journey "evidence.production.window" should be two dates as YYYY-MM-DD/YYYY-MM-DD.',
+    },
+  },
+  errorMessage: {
+    additionalProperties:
+      'Journey "evidence.production" has an unknown key. Keys are: sessions, persons, orgs, share, failures, window.',
+    required:
+      'Journey "evidence.production" should have sessions, persons, orgs, share, failures and window.',
+  },
+};
+
 // How much real use backs a journey. Only `lowdefy journeys evidence --refresh`
 // writes it, so every level is strict: a hand-edited typo fails here, before
 // the browser opens. killed <= total is checked in validateJourney.
@@ -36,32 +176,19 @@ const evidenceSchema = {
   properties: {
     production: {
       type: 'object',
-      additionalProperties: false,
-      required: ['sessions', 'persons', 'orgs', 'share', 'failures', 'window'],
-      properties: {
-        sessions: count({ key: 'evidence.production.sessions' }),
-        persons: count({ key: 'evidence.production.persons' }),
-        orgs: count({ key: 'evidence.production.orgs' }),
-        failures: count({ key: 'evidence.production.failures' }),
-        share: {
-          type: 'number',
-          minimum: 0,
-          maximum: 1,
-          errorMessage: 'Journey "evidence.production.share" should be a number from 0 to 1.',
-        },
-        window: {
-          type: 'string',
-          pattern: WINDOW,
-          errorMessage:
-            'Journey "evidence.production.window" should be two dates as YYYY-MM-DD/YYYY-MM-DD.',
-        },
+      // The legacy shape is told apart by its own keys; anything else is
+      // checked as monthly evidence.
+      if: {
+        anyOf: [
+          { required: ['months'] },
+          { not: { anyOf: [{ required: ['sessions'] }, { required: ['window'] }] } },
+        ],
       },
+      then: monthlyProductionSchema,
+      else: legacyProductionSchema,
       errorMessage: {
         type: 'Journey "evidence.production" should be an object.',
-        additionalProperties:
-          'Journey "evidence.production" has an unknown key. Keys are: sessions, persons, orgs, share, failures, window.',
-        required:
-          'Journey "evidence.production" should have sessions, persons, orgs, share, failures and window.',
+        if: 'Journey "evidence.production" should be monthly evidence or, until its next refresh, the window shape it replaced.',
       },
     },
     dev: {
@@ -145,10 +272,19 @@ const journeySchema = {
       errorMessage:
         'Journey "data" should be a data set name (tests/data/<name>.yaml): lowercase letters, digits, "-" and "_".',
     },
+    // validateJourney checks a list with validateJourneyUser: names only, and
+    // a data set to read them from.
     user: {
-      anyOf: [{ type: 'object' }, { const: 'none' }, { type: 'string' }],
+      anyOf: [
+        { type: 'object' },
+        { const: 'none' },
+        { type: 'string' },
+        { type: 'array', items: { type: 'string' } },
+      ],
+      description:
+        'Who the journey runs as: an inline user object, "none" for signed out, the name of a user in the journey\'s data set, or a list of data set user names to run the journey once as each, reported as "<name> [<user>]".',
       errorMessage:
-        'Journey "user" should be an inline user object, e.g. {roles: [admin]}, "none" to sign in through the app, or the name of a user in the journey\'s data set.',
+        'Journey "user" should be an inline user object, e.g. {roles: [admin]}, "none" to sign in through the app, the name of a user in the journey\'s data set, or a list of such names, e.g. [admin, member].',
     },
     urlQuery: {
       type: 'object',
@@ -195,6 +331,14 @@ const journeySchema = {
       maximum: 60000,
       errorMessage:
         'Journey "timeout" should be a whole number of milliseconds from 1 to 60000 - how long each step may wait.',
+    },
+    // A flow being retired from the app, while the team watches its
+    // production use drain: refresh keeps counting it.
+    deprecated: {
+      type: 'boolean',
+      description:
+        'Marks a journey whose flow is being retired from the app. `lowdefy journeys evidence --refresh` keeps counting its production use.',
+      errorMessage: 'Journey "deprecated" should be true or false.',
     },
     evidence: evidenceSchema,
     steps: {

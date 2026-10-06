@@ -304,6 +304,9 @@ test('journeysVariants writes the data-set kinds from data set files, byte for b
   );
   expect(read('member-opens-a-ticket-role-1.yaml')).toContain('user: admin\n');
   expect(read('member-opens-a-ticket-role-1.yaml')).toContain('detail: granted to admin [admin]\n');
+  expect(read('member-opens-a-ticket-role-1.yaml')).toContain(
+    'steps:\n  # Passes? Keep admin as a persona of "member opens a ticket", not a copy: set its user to [member, admin] and delete this file.\n  - click:'
+  );
   expect(read('member-opens-a-ticket-empty.yaml')).toContain('data: empty-org\n');
   expect(read('member-opens-a-ticket-empty.yaml')).toContain(
     '  - expect: { visible: tickets_grid }\n'
@@ -361,4 +364,64 @@ test('journeysVariants reports a conflict for a journey whose name slugs like an
       'tickets.yaml'
     )}; rename one of the journeys`
   );
+});
+
+test('journeysVariants measures a journey with a list of users as its first user and replays its variants once per user', async () => {
+  writeDataSet(
+    'tickets',
+    [
+      'users:',
+      '  member: { id: u_1, roles: [member] }',
+      '  admin: { id: u_2, roles: [admin] }',
+      '',
+    ].join('\n')
+  );
+  fs.writeFileSync(
+    journeysPath('tickets.yaml'),
+    JSON.stringify({
+      ...journey,
+      name: 'saves a ticket',
+      data: 'tickets',
+      user: ['member', 'admin'],
+    })
+  );
+  await variants({ kinds: 'negative,role' });
+  const bodies = mockPost.mock.calls.map(([, body]) => body);
+  // One baseline run as member, then the negative variant three times per user.
+  expect(bodies.map((body) => body.user)).toEqual([
+    'member',
+    'member',
+    'member',
+    'member',
+    'admin',
+    'admin',
+    'admin',
+  ]);
+  expect(logs.info).toContain(
+    "SKIPPED  role: no role set other than the journey user's among the data set users"
+  );
+  expect(logs.info).toContainEqual(expect.stringMatching(/^PASS .*\[member\]/));
+  expect(logs.info).toContainEqual(expect.stringMatching(/^PASS .*\[admin\]/));
+});
+
+test('journeysVariants replays a granted role variant, whose comment is no placeholder', async () => {
+  writeDataSet(
+    'tickets',
+    [
+      'users:',
+      '  member: { id: u_1, roles: [member] }',
+      '  admin: { id: u_2, roles: [admin] }',
+      '',
+    ].join('\n')
+  );
+  fs.writeFileSync(
+    journeysPath('tickets.yaml'),
+    JSON.stringify({ ...journey, data: 'tickets', user: 'member' })
+  );
+  await variants({ kinds: 'role' });
+  const bodies = mockPost.mock.calls.map(([, body]) => body);
+  // One baseline run as member, then the granted variant three times as admin.
+  expect(bodies.map((body) => body.user)).toEqual(['member', 'admin', 'admin', 'admin']);
+  expect(logs.warn.filter((line) => line.startsWith('NOT RUN'))).toEqual([]);
+  expect(logs.info).toContainEqual(expect.stringMatching(/^PASS .*granted to admin/));
 });

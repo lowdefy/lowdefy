@@ -78,12 +78,29 @@ test.each([0, 60001, 2.5, '5000'])('journeySchema rejects a timeout of %j', (tim
   );
 });
 
-test.each([['admin'], true, 3])('journeySchema rejects user %j', (user) => {
+test.each([true, 3, [[3]]])('journeySchema rejects user %j', (user) => {
   const result = validateJourney({ journey: { ...minimalJourney, user } });
   expect(result.valid).toBe(false);
   expect(result.message).toContain(
-    'Journey "user" should be an inline user object, e.g. {roles: [admin]}, "none" to sign in through the app, or the name of a user in the journey\'s data set.'
+    'Journey "user" should be an inline user object, e.g. {roles: [admin]}, "none" to sign in through the app, the name of a user in the journey\'s data set, or a list of such names, e.g. [admin, member].'
   );
+});
+
+test('journeySchema accepts a list of data set user names on a journey with data', () => {
+  expect(
+    validateJourney({ journey: { ...minimalJourney, data: 'crm', user: ['admin', 'member'] } })
+  ).toEqual({ valid: true });
+});
+
+test.each([
+  [['admin'], undefined, 'declares no "data"'],
+  [[], 'crm', 'empty list'],
+  [['admin', 'none'], 'crm', 'Received "none".'],
+  [['admin', 'admin'], 'crm', 'names "admin" more than once'],
+])('journeySchema refuses user list %j with data %j', (user, data, message) => {
+  const result = validateJourney({ journey: { ...minimalJourney, data, user } });
+  expect(result.valid).toBe(false);
+  expect(result.message).toContain(message);
 });
 
 test('journeySchema rejects a step with two keys', () => {
@@ -278,6 +295,74 @@ test.each(['2026-09-03', '2026-09-03..2026-10-02'])(
     expect(result.message).toContain('evidence.production.window');
   }
 );
+
+const monthlyProduction = {
+  sequence: 'v1-3f9a12c0',
+  pageId: 'tickets',
+  flow: ['tickets ["click","assign_button",null,"Assign"]'],
+  months: [
+    { month: '2026-09', days: 30, sessions: 412, persons: 37, orgs: 9, failures: 14 },
+    { month: '2026-10', days: 3, sessions: 38, persons: 11, orgs: 5, failures: 1 },
+  ],
+  deprecated: [
+    {
+      sequence: 'v1-91be04d7',
+      pageId: 'tickets',
+      flow: ['tickets ["click","assign",null,null]'],
+      replaced: '2026-10-05',
+      months: [{ month: '2026-09', days: 30, sessions: 0, persons: 0, orgs: 0, failures: 0 }],
+    },
+  ],
+};
+
+test('journeySchema accepts monthly production evidence with deprecated flows', () => {
+  const evidence = { ...fullEvidence, production: monthlyProduction };
+  expect(validateJourney({ journey: { ...minimalJourney, evidence } })).toEqual({ valid: true });
+});
+
+test.each([
+  ['months[].month', { months: [{ ...monthlyProduction.months[0], month: '2026-9' }] }],
+  ['months[].days', { months: [{ ...monthlyProduction.months[0], days: 0 }] }],
+  ['sequence', { sequence: '3f9a12c0' }],
+  [
+    'deprecated[].replaced',
+    { deprecated: [{ ...monthlyProduction.deprecated[0], replaced: 'yesterday' }] },
+  ],
+])('journeySchema refuses monthly evidence with a bad %s', (key, change) => {
+  const evidence = { production: { ...monthlyProduction, ...change } };
+  const result = validateJourney({ journey: { ...minimalJourney, evidence } });
+  expect(result.valid).toBe(false);
+  expect(result.message).toContain(`Journey "evidence.production.${key}"`);
+});
+
+test('journeySchema refuses monthly evidence without its flow', () => {
+  const { flow, ...production } = monthlyProduction;
+  const result = validateJourney({ journey: { ...minimalJourney, evidence: { production } } });
+  expect(result.valid).toBe(false);
+  expect(result.message).toContain(
+    'Journey "evidence.production" should have sequence, pageId, flow and months.'
+  );
+});
+
+test('journeySchema refuses a legacy key mixed into monthly evidence', () => {
+  const production = { ...monthlyProduction, share: 0.3 };
+  const result = validateJourney({ journey: { ...minimalJourney, evidence: { production } } });
+  expect(result.valid).toBe(false);
+  expect(result.message).toContain('Journey "evidence.production" has an unknown key');
+});
+
+test('journeySchema accepts deprecated: true on a journey', () => {
+  expect(validateJourney({ journey: { ...minimalJourney, deprecated: true } })).toEqual({
+    valid: true,
+  });
+});
+
+test('journeySchema refuses a deprecated flag that is not a boolean, naming the key', () => {
+  expect(validateJourney({ journey: { ...minimalJourney, deprecated: 'yes' } })).toEqual({
+    valid: false,
+    message: 'Journey "deprecated" should be true or false.',
+  });
+});
 
 test('validateJourney refuses more mutants killed than total, naming both numbers', () => {
   const evidence = { ...fullEvidence, mutation: { killed: 13, total: 12 } };

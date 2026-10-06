@@ -39,13 +39,13 @@ const skills = [
     name: 'journeys-from-production',
     render: journeysFromProduction,
     agentsMdLine:
-      '`journeys-from-production`: turning what real users do in production into proven journeys, uncovered failures and flows first.',
+      '`journeys-from-production`: reading what real users do in production with the app config and turning the routines that matter into proven journeys, failures first.',
   },
   {
     name: 'journeys-from-pr',
     render: journeysFromPr,
     agentsMdLine:
-      '`journeys-from-pr`: exploring a pull request before it merges, confirmed findings first, then proven journeys for what it changed.',
+      '`journeys-from-pr`: exploring a pull request before it merges, findings proven by failing journeys first, then proven journeys for what it changed.',
   },
   {
     name: 'journeys-harden',

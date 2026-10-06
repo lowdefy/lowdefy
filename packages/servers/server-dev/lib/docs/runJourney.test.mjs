@@ -19,6 +19,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { jest } from '@jest/globals';
+import { isTraceId } from '@lowdefy/helpers';
 import { acquireMachineSlot } from '@lowdefy/node-utils';
 
 // getBrowser.js is mocked so no Chromium is needed; the fake page below stands
@@ -41,7 +42,14 @@ jest.unstable_mockModule('./readJourneyEmailMatch.js', () => ({
   default: mockReadJourneyEmailMatch,
 }));
 
+// No client error report is ever in flight here; the real wait's grace would
+// only slow every test down.
+jest.unstable_mockModule('./observe/waitForClientErrorReports.js', () => ({
+  default: async () => {},
+}));
+
 const { default: runJourney } = await import('./runJourney.js');
+const { recordRunError } = await import('./runErrorBuffers.js');
 
 // Node ships a read-only navigator; the page's platform decides Mod, so it is
 // replaced with a Mac one for the Mod+k test.
@@ -135,6 +143,7 @@ function createPage({ window = createLowdefyWindow(), url = 'http://localhost:32
       }
     }),
     url: jest.fn(() => url),
+    isClosed: jest.fn(() => false),
     documentTitle: '',
     title: jest.fn(async () => page.documentTitle),
     goBack: jest.fn(async () => null),
@@ -244,9 +253,75 @@ test('runJourney passes user, urlQuery and viewport through to openPage', async 
     width: 800,
     height: 600,
     clientAddress: expect.stringMatching(/^203\.0\.113\.\d+$/),
+    recording: {
+      source: 'journey',
+      run: { id: expect.any(String), by: null, journey: null, actor: 'main' },
+      record: false,
+    },
     onContext: expect.any(Function),
     timeout: 15000,
   });
+});
+
+test('runJourney gives an unrecorded run an identity of its own that records nothing', async () => {
+  const page = createPage();
+  page.evaluate.mockClear();
+  openWith(page);
+  const result = await runJourney({ origin, pageId: 'form', steps: [], by: 'test' });
+  expect(result.passed).toBe(true);
+  const { recording } = mockOpenPage.mock.calls[0][0];
+  expect(recording).toEqual({
+    source: 'journey',
+    run: { id: expect.any(String), by: 'test', journey: null, actor: 'main' },
+    record: false,
+  });
+  expect(isTraceId(recording.run.id)).toBe(true);
+  // No recorder flush: the run records nothing.
+  expect(page.evaluate.mock.calls.map(([fn]) => String(fn))).not.toContainEqual(
+    expect.stringContaining('__lowdefyRecorder')
+  );
+});
+
+test('runJourney keeps the identity of a run its caller records', async () => {
+  const page = createPage();
+  openWith(page);
+  const recording = {
+    source: 'journey',
+    run: { id: '20261003T151200Z-p0d4rm', by: 'test', journey: 'tests/journeys/a.yaml#A' },
+  };
+  await runJourney({ origin, pageId: 'form', steps: [], recording, by: 'test' });
+  expect(mockOpenPage.mock.calls[0][0].recording).toEqual({
+    ...recording,
+    run: { ...recording.run, actor: 'main' },
+  });
+  expect(page.evaluate.mock.calls.map(([fn]) => String(fn))).toContainEqual(
+    expect.stringContaining('__lowdefyRecorder')
+  );
+});
+
+test('runJourney claims the errors its run causes while it runs and releases its buffer after', async () => {
+  const page = createPage();
+  const context = { close: jest.fn(async () => {}) };
+  let recording;
+  let claimedDuringRun;
+  mockOpenPage.mockImplementationOnce(async (options) => {
+    recording = options.recording;
+    claimedDuringRun = recordRunError({
+      timestamp: new Date().toISOString(),
+      message: 'during',
+      recording: { source: 'journey', run: recording.run.id, journey: recording.run.journey },
+    });
+    return { context, page, ready: true, url: page.url(), leftOrigin: [] };
+  });
+  await runJourney({ origin, pageId: 'form', steps: [] });
+  expect(claimedDuringRun).toBe(true);
+  expect(
+    recordRunError({
+      timestamp: new Date().toISOString(),
+      message: 'late',
+      recording: { source: 'journey', run: recording.run.id, journey: recording.run.journey },
+    })
+  ).toBe(false);
 });
 
 test('runJourney fills, clicks and asserts state, returning passed with the final state', async () => {
@@ -374,14 +449,15 @@ test('runJourney clicks a cell button by row and exact text inside a grid block'
 
   expect(result.passed).toBe(true);
   expect(page.clicks).toEqual([`#bl-grid .ag-row[row-index="1"] ${CONTROLS}`]);
-  expect(filters).toHaveLength(2);
+  // An action target with text and no nth is located twice, before and after
+  // waiting for a first match, and acted on once it is the only one.
+  expect(filters).toHaveLength(4);
   expect(filters[0].filter.hasText.test('Edit')).toBe(true);
   expect(filters[0].filter.hasText.test(' Edit ')).toBe(true);
   expect(filters[0].filter.hasText.test('Edit row')).toBe(false);
   expect(filters[1].filter).toEqual({ visible: true });
-  expect(page.nths).toEqual([
-    { selector: `#bl-grid .ag-row[row-index="1"] ${CONTROLS}`, index: 0 },
-  ]);
+  expect(filters.slice(2)).toEqual(filters.slice(0, 2));
+  expect(page.nths).toEqual([]);
 });
 
 test('runJourney clicks the control inside a grid cell addressed by row and column', async () => {
@@ -450,9 +526,12 @@ test('runJourney clicks a page-wide control by text when the target has no block
   expect(result.passed).toBe(true);
   expect(page.clicks).toEqual([CONTROLS, CONTROLS]);
   // No menu or dialog is open (every count is 0), so only the page-wide
-  // search filters apply, once per step.
+  // search filters apply: twice for the text with no nth (before and after
+  // waiting for a match), once for the text with an nth.
   const pageWide = filters.filter((f) => f.selector === CONTROLS);
   expect(pageWide.map((f) => f.filter)).toEqual([
+    { hasText: expect.any(RegExp) },
+    { visible: true },
     { hasText: expect.any(RegExp) },
     { visible: true },
     { hasText: expect.any(RegExp) },
@@ -460,31 +539,104 @@ test('runJourney clicks a page-wide control by text when the target has no block
   ]);
   expect(pageWide[0].filter.hasText.test('OK')).toBe(true);
   expect(pageWide[0].filter.hasText.test('OKAY')).toBe(false);
-  expect(page.nths).toEqual([
-    { selector: CONTROLS, index: 0 },
-    { selector: CONTROLS, index: 1 },
-  ]);
+  expect(pageWide[4].filter.hasText.test('Delete')).toBe(true);
+  expect(page.nths).toEqual([{ selector: CONTROLS, index: 1 }]);
 });
 
-test('runJourney finds a page-wide text target in the open dialog before the page', async () => {
+test('runJourney fails an action whose text target matches several controls', async () => {
   const page = createPage();
   page.nths = [];
   openWith(page);
   trackFilters(page);
-  // A dialog is open and it holds a control with the text; the grid behind it
-  // holds one too, but the dialog wins.
+  const instrumented = page.locator.getMockImplementation();
+  page.locator.mockImplementation((selector) => {
+    const locator = instrumented(selector);
+    if (selector === CONTROLS) {
+      locator.count.mockResolvedValue(3);
+    }
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { text: 'Delete' } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(page.clicks).toEqual([]);
+  expect(result.failure).toEqual({
+    index: 0,
+    step: { click: { text: 'Delete' } },
+    expected: 'exactly one control with text "Delete" in the page',
+    actual: '3 controls',
+    message:
+      'Matched 3 controls with text "Delete" in the page; add nth: 0..2, or a blockId/row to narrow it.',
+  });
+});
+
+test('runJourney fails an action whose containing target matches several elements in a block', async () => {
+  const page = createPage();
+  openWith(page);
   page.locator.mockImplementation((selector) => {
     const locator = createLocator({ selector, page });
+    locator.getByText.mockImplementation((text) => {
+      const found = createLocator({ selector: `${selector} >> text=${text}`, page });
+      found.count.mockResolvedValue(2);
+      return found;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ fill: { blockId: 'members', containing: 'ada', value: 'x' } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(page.fills).toEqual([]);
+  expect(result.failure.message).toBe(
+    'Matched 2 elements containing "ada" in block "members"; add nth: 0..1, or a blockId/row to narrow it.'
+  );
+});
+
+test('runJourney accepts any of several matches in an expectation', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.count.mockResolvedValue(3);
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ expect: { visible: { text: 'Delete' } } }],
+  });
+
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+});
+
+test('runJourney finds a page-wide text target in the open dialog before the page', async () => {
+  const page = createPage();
+  openWith(page);
+  // A dialog is open and it holds one control with the text; the grid behind
+  // it holds three, but only the dialog's is counted, so the click is not
+  // ambiguous.
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    if (selector === CONTROLS) {
+      locator.count.mockResolvedValue(3);
+    }
     if (selector === '[role="dialog"]') {
       locator.count.mockResolvedValue(1);
       locator.last.mockImplementation(() => locator);
       locator.locator.mockImplementation((child) => {
         const inner = createLocator({ selector: `${selector} ${child}`, page });
         inner.count.mockResolvedValue(1);
-        inner.nth.mockImplementation((index) => {
-          page.nths.push({ selector: inner.selector, index });
-          return inner;
-        });
         return inner;
       });
     }
@@ -499,10 +651,6 @@ test('runJourney finds a page-wide text target in the open dialog before the pag
 
   expect(result.passed).toBe(true);
   expect(page.clicks).toEqual([`[role="dialog"] ${CONTROLS}`]);
-  expect(page.nths).toEqual([
-    { selector: `[role="dialog"] ${CONTROLS}`, index: 0 },
-    { selector: `[role="dialog"] ${CONTROLS}`, index: 0 },
-  ]);
 });
 
 test('runJourney prefers an open menu over an open dialog for a page-wide text target', async () => {
@@ -1504,6 +1652,7 @@ test('runJourney opens each actor the first time an as step names it and returns
     ...mainOpen,
     clientAddress: inviteeOpen.clientAddress,
     onContext: inviteeOpen.onContext,
+    recording: { ...mainOpen.recording, run: { ...mainOpen.recording.run, actor: 'invitee' } },
   });
   expect(inviteeOpen).toMatchObject({ pageId: 'signup', user: 'none' });
   // Two people, two clients: rate limits count each actor's attempts apart.
@@ -1730,12 +1879,14 @@ function openActorsWithNetwork(actors) {
   const listeners = [];
   actors.forEach(({ page, opening }) => {
     mockOpenPage.mockImplementationOnce(async ({ onContext }) => {
-      let listener;
+      // The network counter and the app error watch both listen for requests.
+      const requestCallbacks = [];
+      const listener = (request) => requestCallbacks.forEach((callback) => callback(request));
       const context = {
         close: jest.fn(async () => {}),
         exposeBinding: jest.fn(async () => {}),
         on: jest.fn((event, callback) => {
-          if (event === 'request') listener = callback;
+          if (event === 'request') requestCallbacks.push(callback);
         }),
       };
       await onContext(context);

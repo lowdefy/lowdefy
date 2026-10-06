@@ -141,6 +141,29 @@ const targetFixtures = [
     variants: [],
   },
   {
+    name: 'first of several controls in a cell, by nth 0',
+    html: grid,
+    element: '[row-index="1"] [col-id="move"] button:nth-of-type(1)',
+    target: target({ block_id: 'tasks', row: 1, column: 'move', nth: 0 }),
+    blockIds: ['tasks'],
+    resolvable: true,
+    variants: [],
+  },
+  {
+    name: 'first of several same-text controls in a block, by nth 0',
+    html: `
+<div id="bl-toolbar">
+  <button type="button" class="ant-btn"><span>Delete</span></button>
+  <button type="button" class="ant-btn"><span>Delete</span></button>
+</div>`,
+    element: '#bl-toolbar button:nth-of-type(1)',
+    clicked: '#bl-toolbar button:nth-of-type(1) span',
+    target: target({ block_id: 'toolbar', text: 'Delete', nth: 0 }),
+    blockIds: ['toolbar'],
+    resolvable: true,
+    variants: [{ block_id: 'toolbar', nth: 0 }],
+  },
+  {
     name: 'page-wide text in a dialog',
     html: `
 <div id="bl-page"><div id="bl-delete_button"><button>Delete</button></div></div>
