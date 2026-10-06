@@ -170,7 +170,10 @@ test('a --charters run reports each charter with its pages, roles and walks, and
     { pageId: 'tickets', user: null, roles: [], charter: 2 },
   ];
   walked.logs = walked.logs.map((log, index) => ({ ...log, charter: index }));
-  walked.notRun = [{ pageId: 'tickets', user: 'guest', charter: 2, reason: 'budget', walks: 5 }];
+  walked.notRun = [
+    { pageId: 'tickets', user: 'guest', charter: 2, reason: 'budget', walks: 5 },
+    { pageId: 'invoices', reason: 'no-charter' },
+  ];
   const charters = [
     { goal: 'Try edge input on the ticket form.', pages: ['ticket'] },
     { goal: 'Try error paths.' },
@@ -243,5 +246,7 @@ test('a --charters run reports each charter with its pages, roles and walks, and
     '  WARNING dead-click  tickets  Clicking help did nothing.    (1 walk, member)',
     '      charter: Try error paths.',
   ]);
-  expect(lines).toContain('Not run   tickets × guest (charter 3): budget');
+  expect(lines).toContain(
+    'Not run   tickets × guest (charter 3): budget   invoices: no charter walks it'
+  );
 });

@@ -254,7 +254,7 @@ _ref:
             - `--charters <file>`: A bug bash: a YAML list of charters, each `{ goal, pages?, roles? }`, run as one run under one budget with one report. Each finding names the charters that hit it and is proven once. It needs a model, and cannot be combined with `--charter`. See [Bug bash](/explore-pull-request#bug-bash).
             - `--data <name>`: The data set walks run on. The default is `tests/data/default.yaml`, else the only data set.
             - `--live-data`: Run without a data set, writing to what the app's connections point at. Needs `cli.agentTools.allowWriteRequests: true`.
-            - `--page <pageId...>`: Also walk these pages.
+            - `--page <pageId...>`: Also walk these pages. With `--charters`, it is refused when every charter names its own pages.
             - `--role <name...>`: Walk only as these data set users.
             - `--walks <n>`: Walks per (page, role). The default is `5`.
             - `--steps <n>`: Interactions per walk. The default is `15`.

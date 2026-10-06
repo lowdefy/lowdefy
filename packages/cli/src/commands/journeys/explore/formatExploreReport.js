@@ -42,6 +42,20 @@ const REASON_TEXT = {
   'live-writes': 'the run wrote to live connections',
 };
 
+const NOT_RUN_TEXT = {
+  'no-charter': 'no charter walks it',
+};
+
+// A not-run entry names its page and, when a role was refused or a budget
+// stopped it, the user or roles and the charter. A page no charter walks
+// (no-charter) names the page alone.
+function formatNotRun(entry) {
+  const who = entry.user ?? (entry.roles ?? []).join('+');
+  const target = who === '' ? entry.pageId : `${entry.pageId} × ${who}`;
+  const charter = type.isUndefined(entry.charter) ? '' : ` (charter ${entry.charter + 1})`;
+  return `${target}${charter}: ${NOT_RUN_TEXT[entry.reason] ?? entry.reason}`;
+}
+
 function plural({ count, word }) {
   return `${count} ${word}${count === 1 ? '' : 's'}`;
 }
@@ -112,16 +126,7 @@ function formatExploreReport({ report }) {
     lines.push(`Stopped   ${report.budget.stopped.reason}`);
   }
   if (report.notRun.length > 0) {
-    lines.push(
-      `Not run   ${report.notRun
-        .map(
-          (entry) =>
-            `${entry.pageId} × ${entry.user ?? (entry.roles ?? []).join('+')}${
-              type.isUndefined(entry.charter) ? '' : ` (charter ${entry.charter + 1})`
-            }: ${entry.reason}`
-        )
-        .join('   ')}`
-    );
+    lines.push(`Not run   ${report.notRun.map(formatNotRun).join('   ')}`);
   }
   report.accessChanged.forEach(({ pageId, user }) => {
     lines.push(`Access    changed in this PR: ${pageId} no longer admits ${user}`);

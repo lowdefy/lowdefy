@@ -115,6 +115,10 @@ proven ones first.
   \`live-writes\`): one line each. Nothing proves them, and they have no journey.
 - The proof time, from the summary, and any charter that walked nothing (budget), with a
   suggestion to rerun it alone or with a larger \`--budget\`.
+- **Pages no charter walked**: \`notRun\` entries with reason \`no-charter\` (\`no charter walks
+  it\` in the summary) are pages the branch changed that every charter left out, so nothing
+  explored them. Name each one, and suggest a charter for it, or one charter without \`pages\`,
+  which walks every changed page.
 
 Commit nothing. The journeys stay in \`tests/journeys/_candidates/explorer/<run>/findings/\` for the
 developer. Ask whether to stop the dev server (\`lowdefy_dev_stop\`).

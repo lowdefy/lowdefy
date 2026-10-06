@@ -100,6 +100,36 @@ test('a role set no data set user has is listed as not run once, however many ch
   ]);
 });
 
+test('a changed page no charter names is listed as not run, no-charter, when every charter names its pages', () => {
+  const { targets, notRun } = resolveWalkTargets({
+    scope: {
+      pages: [scopePage('invoice', ['page']), scopePage('tickets', ['request:list'])],
+    },
+    coverage: null,
+    dataSet,
+    roles: ['member_max'],
+    charters: [
+      { goal: 'Try edge input.', pages: ['invoice'] },
+      { goal: 'Try error paths.', pages: ['invoice'] },
+    ],
+  });
+  expect(names(targets)).toEqual(['0:invoice/member_max', '1:invoice/member_max']);
+  expect(notRun).toEqual([{ pageId: 'tickets', reason: 'no-charter' }]);
+});
+
+test('a charter without pages walks every changed page, so none is listed as no-charter', () => {
+  const { notRun } = resolveWalkTargets({
+    scope: {
+      pages: [scopePage('invoice', ['page']), scopePage('tickets', ['request:list'])],
+    },
+    coverage: null,
+    dataSet,
+    roles: ['member_max'],
+    charters: [{ goal: 'Try edge input.', pages: ['invoice'] }, { goal: 'Try error paths.' }],
+  });
+  expect(notRun).toEqual([]);
+});
+
 test('--role with no data set is refused', () => {
   expect(() =>
     resolveWalkTargets({ scope, coverage: null, dataSet: null, roles: ['admin_ann'], charters: [] })

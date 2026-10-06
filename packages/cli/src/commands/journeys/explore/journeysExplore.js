@@ -24,6 +24,7 @@ import buildConfigTrees from './buildConfigTrees.js';
 import checkCharterPages from './checkCharterPages.js';
 import checkCharterRoles from './checkCharterRoles.js';
 import checkLiveDataRule from './checkLiveDataRule.js';
+import checkManualPagesWalked from './checkManualPagesWalked.js';
 import checkWriteOptIn from './checkWriteOptIn.js';
 import createCostTracker from './createCostTracker.js';
 import createModelPolicy from './createModelPolicy.js';
@@ -354,6 +355,7 @@ async function journeysExplore({ context }) {
   try {
     const parsed = parseExploreOptions(context.options);
     const options = { ...parsed, charters: listRunCharters(parsed) };
+    checkManualPagesWalked({ charters: options.charters, manualPages: options.pages });
     await pruneExploreDirectory({
       exploreDirectory: path.join(context.directories.config, '.lowdefy', 'explore'),
     });

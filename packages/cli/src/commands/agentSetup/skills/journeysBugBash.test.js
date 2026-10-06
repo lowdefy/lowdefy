@@ -63,6 +63,12 @@ test('journeys-bug-bash reports proven findings first, each journey as the regre
   expect(skill).not.toMatch(/\bdelete (?:the|a|this) journey/i);
 });
 
+test('journeys-bug-bash reports the changed pages no charter walked', () => {
+  const skill = journeysBugBash({ appPath: '' });
+  expect(skill).toContain('**Pages no charter walked**');
+  expect(skill).toContain('reason `no-charter`');
+});
+
 test('journeys-bug-bash names the app directory in a monorepo', () => {
   expect(journeysBugBash({ appPath: 'apps/crm' })).toContain('the app directory being\n`apps/crm`');
 });

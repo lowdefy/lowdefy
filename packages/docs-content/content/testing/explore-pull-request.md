@@ -72,7 +72,7 @@ lowdefy journeys explore --charters charters.yaml
 lowdefy journeys explore --charters charters.yaml --pr 2531
 ```
 
-A charter without `pages` walks the run's other targets: the pages the pull request changed, or `--page`, or else the entry pages. A charter without `roles` walks as `--role`, or else every role the page has. An unknown page or data set user, or a charter with no goal, is refused before any walk, naming the charter. `--charters` cannot be combined with `--charter`, and needs a model just as `--charter` does.
+A charter without `pages` walks the run's other targets: the pages the pull request changed, or `--page`, or else the entry pages. A charter without `roles` walks as `--role`, or else every role the page has. When every charter names its own pages, a changed page that none of them names is not walked: the summary lists it under "Not run" (`no charter walks it`), and `report.json` lists it in `notRun` with reason `no-charter`. `--page` is refused then, since no charter would walk its pages. An unknown page or data set user, or a charter with no goal, is refused before any walk, naming the charter. `--charters` cannot be combined with `--charter`, and needs a model just as `--charter` does.
 
 Every charter's (page, role) targets share one set of breadth-first rounds and the one `--budget`: the first target of each charter is walked before any charter's second. The run holds one walk open at a time, so it stays within the dev server's limit of two open walks. Findings merge by key across charters, and each finding lists the charters whose walks hit it. Each finding is proven once, however many charters hit it.
 

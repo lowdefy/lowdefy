@@ -41,13 +41,24 @@ function interleave(lists) {
   return targets;
 }
 
+// The scope pages no charter walks: with every charter naming its own pages,
+// the pages the PR changed (or the entry pages) that none of them names. Each
+// is not run, as no-charter, so the report does not read as if it was covered.
+function unwalkedPages({ defaults, groups }) {
+  const walked = new Set(groups.flatMap((group) => group.pageIds));
+  return defaults
+    .filter((pageId) => !walked.has(pageId))
+    .map((pageId) => ({ pageId, reason: 'no-charter' }));
+}
+
 // The run's (page, role) targets in walk order. Without charters, every scope
 // page as each role (--role keeps only those data set users), changed pages
 // first (orderTargets). With charters (--charter, or a --charters file), each
 // charter's targets are its pages (else the default pages) as its roles (else
 // --role), each tagged with the charter's index, and the charters' ordered
 // lists are interleaved so a budget that runs out mid-round has walked every
-// charter. Returns { targets, notRun }, notRun without repeats.
+// charter. Returns { targets, notRun }, notRun without repeats: the page and
+// role pairs resolveRoles refused, then the default pages no charter walks.
 function resolveWalkTargets({ scope, coverage, dataSet, roles, charters }) {
   if (roles.length > 0 && type.isNone(dataSet)) {
     throw new Error('--role names data set users, but no data set resolved. Name one with --data.');
@@ -75,7 +86,10 @@ function resolveWalkTargets({ scope, coverage, dataSet, roles, charters }) {
     });
     return orderTargets({ scopePages: scope.pages, targets });
   });
-  return { targets: interleave(lists), notRun: [...notRun.values()] };
+  return {
+    targets: interleave(lists),
+    notRun: [...notRun.values(), ...unwalkedPages({ defaults, groups })],
+  };
 }
 
 export default resolveWalkTargets;
