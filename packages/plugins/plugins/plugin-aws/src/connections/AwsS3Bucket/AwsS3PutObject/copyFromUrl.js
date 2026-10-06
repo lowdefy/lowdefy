@@ -17,7 +17,9 @@
 import { Readable } from 'node:stream';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { type } from '@lowdefy/helpers';
+import { Agent, fetch } from 'undici';
 
+import connectPublic from './connectPublic.js';
 import createCopyError from './createCopyError.js';
 import limitBody from './limitBody.js';
 import matchesContentType from './matchesContentType.js';
@@ -33,6 +35,8 @@ async function collect(chunks) {
 const REDIRECT_STATUSES = new Set([301, 302, 303, 307, 308]);
 const MAX_REDIRECTS = 20;
 
+const dispatcher = new Agent({ connect: connectPublic });
+
 function isHttps(link) {
   return URL.parse(link)?.protocol === 'https:';
 }
@@ -43,11 +47,13 @@ async function fetchOnce({ url, signal }) {
     // matches the Content-Length checked against maxBytes.
     return await fetch(url, {
       headers: { 'accept-encoding': 'identity' },
+      dispatcher,
       redirect: 'manual',
       signal,
     });
   } catch (error) {
     if (signal.aborted) throw error;
+    if (error.cause?.code === 'url_not_public') throw error.cause;
     // The url is left out of the message: a presigned link carries its signature.
     throw createCopyError({
       code: 'fetch_failed',
@@ -57,7 +63,8 @@ async function fetchOnce({ url, signal }) {
   }
 }
 
-// Follows redirects by hand, so each link is checked to be https: before it is requested.
+// Follows redirects by hand, so each link is checked to be https: before it is requested. The
+// dispatcher checks each link's address as it connects.
 async function fetchUrl({ url, signal }) {
   let link = url;
   for (let redirects = 0; redirects <= MAX_REDIRECTS; redirects += 1) {

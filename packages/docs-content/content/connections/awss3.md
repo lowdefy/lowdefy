@@ -264,7 +264,7 @@ The copy is capped at `maxBytes`, can be limited to `contentTypes`, and must fin
 #### Properties
 - `key: string`: __Required__ - Key under which the object will be stored.
 - `content: string`: Object content as a base64 encoded string. Give either `content` or `url`.
-- `url: string`: An `https:` link whose answer is streamed into the bucket. Give either `content` or `url`.
+- `url: string`: An `https:` link to a public address whose answer is streamed into the bucket. Give either `content` or `url`.
 - `maxBytes: integer`: __Required with `url`__ - The most bytes the link may answer with. A `Content-Length` over it is refused before the body is read, and a body that passes it is cut off and refused, so nothing larger is stored.
 - `contentTypes: string[]`: With `url`, the content types the link may answer with, such as `image/png`, `image/*` or `application/pdf`. Any other answer is refused.
 - `timeout: integer`: Default: `20000` - With `url`, the milliseconds the whole fetch and upload may take.
@@ -276,6 +276,7 @@ Returns `{ bucket, key, size, contentType }`, with `size` in bytes and `contentT
 A refused copy from a `url` stores nothing and throws an error whose `code` names the reason, so a `:catch` can answer each its own way (`_error: code`):
 
 - `url_not_https`: the link, or a link it redirects to, is not `https:`. Refused before that link is requested.
+- `url_not_public`: the link, or a link it redirects to, leads to an address that is not public: loopback, private, link-local (such as a cloud metadata address), unique-local, carrier-grade NAT, unspecified or multicast. The address is checked as the connection is opened, so nothing is sent to it.
 - `too_large`: the answer is larger than `maxBytes`.
 - `content_type`: the answer's `Content-Type` is not one of `contentTypes`.
 - `fetch_failed`: the link answered with a status that is not 2xx (the error's `statusCode` holds it), could not be reached, or sent a body that does not match its `Content-Length`.
