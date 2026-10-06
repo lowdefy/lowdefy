@@ -377,7 +377,7 @@ test('test --lint lints without a server, exits 1 on an error and 0 on warnings 
   expect(process.exitCode).toBeUndefined();
   expect(logs.info).toContain('Linted 1 journeys: 0 errors, 2 warnings.');
   expect(logs.warn).toContain(
-    'L5  asserts  has no user: name a user from its data set, or write user: none for signed out.'
+    'L5  asserts  has no user: name a user from its data set (or a list of them), or write user: none for signed out.'
   );
 });
 
@@ -640,4 +640,139 @@ test('test fails a journey whose tags break the grammar without posting it', asy
   expect(mockPost).not.toHaveBeenCalled();
   expect(logs.error.join('\n')).toContain('Journey "tags": Tag "Smoke" should be');
   expect(process.exitCode).toEqual(1);
+});
+
+function personaJourneyYaml({
+  name = 'edits a ticket',
+  user = '[admin, member]',
+  data = 'tickets',
+}) {
+  const dataLine = data === null ? '' : `data: ${data}\n`;
+  return `name: ${name}\npageId: form\n${dataLine}user: ${user}\nsteps:\n  - click: submit\n`;
+}
+
+test('test runs a journey with a list of users once per user, each named for its user', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', personaJourneyYaml({}));
+  const exercised = { pages: ['form'], appEvents: true, requests: [], endpoints: [] };
+  mockPost.mockResolvedValue({ data: { passed: true, exercised } });
+  await test({ context });
+  const bodies = mockPost.mock.calls.map(([, body]) => body);
+  expect(bodies.map((body) => body.user)).toEqual(['admin', 'member']);
+  expect(bodies.map((body) => body.data)).toEqual(['tickets', 'tickets']);
+  expect(bodies.map((body) => body.recording.journey)).toEqual([
+    'tests/journeys/a.yaml#edits a ticket [admin]',
+    'tests/journeys/a.yaml#edits a ticket [member]',
+  ]);
+  expect(logs.info.filter((line) => line.startsWith('PASS'))).toEqual([
+    expect.stringContaining('PASS  edits a ticket [admin]'),
+    expect.stringContaining('PASS  edits a ticket [member]'),
+  ]);
+  expect(logs.info).toContain('2 passed, 0 failed of 2 journeys');
+  const written = JSON.parse(
+    fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'exercised.json'), 'utf8')
+  );
+  expect(Object.keys(written.journeys)).toEqual([
+    `${path.join('tests', 'journeys', 'a.yaml')}#edits a ticket [admin]`,
+    `${path.join('tests', 'journeys', 'a.yaml')}#edits a ticket [member]`,
+  ]);
+  const testRun = JSON.parse(
+    fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'run.json'), 'utf8')
+  );
+  expect(Object.keys(testRun.journeys)).toEqual([
+    'tests/journeys/a.yaml#edits a ticket [admin]',
+    'tests/journeys/a.yaml#edits a ticket [member]',
+  ]);
+});
+
+test('test reports each persona run of a journey on its own', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', personaJourneyYaml({}));
+  mockPost.mockImplementation((url, body) =>
+    Promise.resolve({
+      data:
+        body.user === 'member'
+          ? {
+              passed: false,
+              failure: { index: 0, step: { click: 'submit' }, message: 'submit is hidden' },
+            }
+          : { passed: true },
+    })
+  );
+  await test({ context });
+  expect(logs.info).toContainEqual(expect.stringContaining('PASS  edits a ticket [admin]'));
+  expect(logs.error).toContain('FAIL  edits a ticket [member]');
+  expect(logs.error).toContain('1 passed, 1 failed of 2 journeys');
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --filter picks one persona run of a journey by its user', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', personaJourneyYaml({}));
+  context.options.filter = '[member]';
+  await test({ context });
+  expect(mockPost).toHaveBeenCalledTimes(1);
+  expect(mockPost.mock.calls[0][1].user).toBe('member');
+  expect(mockPost.mock.calls[0][1].recording).toBeUndefined();
+});
+
+test('test posts a persona run as its user with its as: steps unchanged', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile(
+    'a.yaml',
+    'name: reviews a ticket\npageId: form\ndata: tickets\nuser: [admin, member]\nsteps:\n  - click: submit\n  - as: reviewer\n  - expect: { visible: submit }\n'
+  );
+  await test({ context });
+  const bodies = mockPost.mock.calls.map(([, body]) => body);
+  expect(bodies.map((body) => body.user)).toEqual(['admin', 'member']);
+  bodies.forEach((body) => {
+    expect(body.steps).toEqual([
+      { click: 'submit' },
+      { as: 'reviewer' },
+      { expect: { visible: 'submit' } },
+    ]);
+  });
+});
+
+test('test --repeat repeats each persona run', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', personaJourneyYaml({}));
+  context.options.repeat = '2';
+  await test({ context });
+  expect(mockPost.mock.calls.map(([, body]) => body.user)).toEqual([
+    'admin',
+    'admin',
+    'member',
+    'member',
+  ]);
+  expect(logs.info).toContain('2 passed, 0 failed of 2 journeys');
+});
+
+test('test refuses a list of users without data once, as an invalid journey file', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', personaJourneyYaml({ data: null }));
+  await test({ context });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(logs.error).toContainEqual(
+    expect.stringContaining(
+      'Invalid journey file: Journey "user" is a list of data set users, but the journey declares no "data"'
+    )
+  );
+  expect(logs.error).toContain('0 passed, 1 failed of 1 journeys');
+});
+
+test('test --lint lints a journey with a list of users once', async () => {
+  const { default: test } = await import('./test.js');
+  writeConfigFile('tests/data/tickets.yaml', 'users:\n  admin:\n    roles: [admin]\n');
+  writeJourneyFile('a.yaml', personaJourneyYaml({ user: '[admin, stranger]' }));
+  context.options = { lint: true };
+  await test({ context });
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  const l5 = logs.warn.filter((line) => line.startsWith('L5'));
+  expect(l5).toEqual([
+    'L5  edits a ticket  names user "stranger", which data set "tickets" does not have. Its users: admin.',
+  ]);
+  expect([...logs.info, ...logs.error]).toContainEqual(
+    expect.stringMatching(/^Linted 1 journeys:/)
+  );
 });

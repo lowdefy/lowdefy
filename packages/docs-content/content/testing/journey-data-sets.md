@@ -74,7 +74,7 @@ Rules, checked before any browser opens:
 
 ## Named users and `as`
 
-`user:` takes a third form on a data set journey: the name of one of the data set's users.
+`user:` takes two more forms on a data set journey: the name of one of the data set's users, or a list of them.
 
 | `user`           | The journey acts as                                                                                      |
 | ---------------- | -------------------------------------------------------------------------------------------------------- |
@@ -82,10 +82,38 @@ Rules, checked before any browser opens:
 | an object        | that inline user                                                                                         |
 | `none`           | nobody: the journey signs in through the app (refused on a data set while auth is configured, see below) |
 | any other string | that data set user, e.g. `user: member`                                                                  |
+| a list of names  | each of those data set users in turn, e.g. `user: [admin, member]` (see below)                           |
 
 `as: <name>` switches to another person with their own browser. When the name is a user of the journey's data set, that actor acts as that user. Any other name opens as the journey's `user`, as before. So a two-person journey (`owner` invites, `outsider` must not see the tenant's rows) needs no sign-in at all.
 
 A user name with no `data:`, or a name the data set does not declare, fails before a browser opens.
+
+## One journey, several users
+
+When several roles are promised the same flow, list their users rather than copying the journey once per role:
+
+```yaml
+name: edits a ticket
+pageId: ticket
+data: tickets
+user: [admin, member]
+steps:
+  - click: edit_button
+  # ...
+```
+
+`lowdefy test` and `lowdefy_run_tests` run the journey once as each user, each in a fresh database of its own, and report each run on its own line as `<name> [<user>]`:
+
+```
+PASS  edits a ticket [admin]  (6 steps, 2310ms)
+FAIL  edits a ticket [member]
+```
+
+`--filter` matches that name, so `lowdefy test --filter "[member]"` runs only the member's run, and a full-suite recording and coverage see each user's run apart. `--repeat` repeats each run. Lints read the journey once.
+
+- A list holds data set user names only, needs `data:`, and names each user once. `none` and inline user objects stay single values.
+- `as:` steps work as before: the journey's first actor, `main`, is the run's user, and any other `as:` name that is a data set user opens as that user.
+- A role that must be refused (it lands on `/404`, or the feature is hidden) expects a different outcome, so it is a journey of its own, not another user in the list.
 
 ## The fixture rule
 
@@ -189,4 +217,4 @@ Data set users are injected callers. A journey that signs up or signs in through
 
 ## Agents
 
-The `lowdefy_run_journey` MCP tool takes `data` and the name form of `user`, the same as the journey file, and returns the data set the journey ran on with its result. `lowdefy_run_tests` and `lowdefy test --url` run data set journeys like any other, because the dev server they target does the loading.
+The `lowdefy_run_journey` MCP tool takes `data` and the name and list forms of `user`, the same as the journey file, and returns the data set the journey ran on with its result. With a list it runs once as each user and returns `{ passed, runs: [{ user, ... }] }`, `passed` only when every run passed. `lowdefy_run_tests` and `lowdefy test --url` run data set journeys like any other, because the dev server they target does the loading.

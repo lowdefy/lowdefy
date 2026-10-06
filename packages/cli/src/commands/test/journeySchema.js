@@ -272,10 +272,19 @@ const journeySchema = {
       errorMessage:
         'Journey "data" should be a data set name (tests/data/<name>.yaml): lowercase letters, digits, "-" and "_".',
     },
+    // validateJourney checks a list with validateJourneyUser: names only, and
+    // a data set to read them from.
     user: {
-      anyOf: [{ type: 'object' }, { const: 'none' }, { type: 'string' }],
+      anyOf: [
+        { type: 'object' },
+        { const: 'none' },
+        { type: 'string' },
+        { type: 'array', items: { type: 'string' } },
+      ],
+      description:
+        'Who the journey runs as: an inline user object, "none" for signed out, the name of a user in the journey\'s data set, or a list of data set user names to run the journey once as each, reported as "<name> [<user>]".',
       errorMessage:
-        'Journey "user" should be an inline user object, e.g. {roles: [admin]}, "none" to sign in through the app, or the name of a user in the journey\'s data set.',
+        'Journey "user" should be an inline user object, e.g. {roles: [admin]}, "none" to sign in through the app, the name of a user in the journey\'s data set, or a list of such names, e.g. [admin, member].',
     },
     urlQuery: {
       type: 'object',

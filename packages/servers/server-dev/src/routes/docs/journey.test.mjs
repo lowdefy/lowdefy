@@ -167,6 +167,18 @@ test('docsJourneyHandler returns 400 when user is malformed', async () => {
   expect(mockRunJourney).not.toHaveBeenCalled();
 });
 
+test('docsJourneyHandler refuses a list of users with 400: one POST is one run', async () => {
+  const c = createContext({ pageId: 'form', steps: [], data: 'crm', user: ['admin', 'member'] });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(result.status).toBe(400);
+  expect(result.data.error).toBe(
+    'POST /lowdefy-docs/journey runs one user. For a list of data set users, post once per user, or use lowdefy test or lowdefy_run_journey, which run the journey once as each. Received ["admin","member"].'
+  );
+  expect(mockRunJourney).not.toHaveBeenCalled();
+});
+
 test('docsJourneyHandler passes user none through so the journey signs in through the app', async () => {
   const c = createContext({ pageId: 'login', steps: [{ goto: 'dashboard' }], user: 'none' });
 

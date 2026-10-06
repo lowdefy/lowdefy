@@ -78,12 +78,29 @@ test.each([0, 60001, 2.5, '5000'])('journeySchema rejects a timeout of %j', (tim
   );
 });
 
-test.each([['admin'], true, 3])('journeySchema rejects user %j', (user) => {
+test.each([true, 3, [[3]]])('journeySchema rejects user %j', (user) => {
   const result = validateJourney({ journey: { ...minimalJourney, user } });
   expect(result.valid).toBe(false);
   expect(result.message).toContain(
-    'Journey "user" should be an inline user object, e.g. {roles: [admin]}, "none" to sign in through the app, or the name of a user in the journey\'s data set.'
+    'Journey "user" should be an inline user object, e.g. {roles: [admin]}, "none" to sign in through the app, the name of a user in the journey\'s data set, or a list of such names, e.g. [admin, member].'
   );
+});
+
+test('journeySchema accepts a list of data set user names on a journey with data', () => {
+  expect(
+    validateJourney({ journey: { ...minimalJourney, data: 'crm', user: ['admin', 'member'] } })
+  ).toEqual({ valid: true });
+});
+
+test.each([
+  [['admin'], undefined, 'declares no "data"'],
+  [[], 'crm', 'empty list'],
+  [['admin', 'none'], 'crm', 'Received "none".'],
+  [['admin', 'admin'], 'crm', 'names "admin" more than once'],
+])('journeySchema refuses user list %j with data %j', (user, data, message) => {
+  const result = validateJourney({ journey: { ...minimalJourney, data, user } });
+  expect(result.valid).toBe(false);
+  expect(result.message).toContain(message);
 });
 
 test('journeySchema rejects a step with two keys', () => {

@@ -17,6 +17,7 @@
 import { isBackedBy, journeySequence } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
+import measuredJourney from '../../test/measuredJourney.js';
 import isCountedFlow from './isCountedFlow.js';
 import mergeMonths from './mergeMonths.js';
 import parseFlowLines from './parseFlowLines.js';
@@ -159,7 +160,9 @@ function computeEvidence({ journeys, sources, today, isConfigText }) {
         }).length,
       };
     }
-    const mutation = sources.mutation?.byJourney.get(`${file}#${journey.name}`);
+    const mutation = sources.mutation?.byJourney.get(
+      `${file}#${measuredJourney({ journey }).name}`
+    );
     if (!type.isUndefined(mutation)) {
       computed.mutation = mutation;
     }

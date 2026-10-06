@@ -328,6 +328,21 @@ test('computeEvidence writes mutation for journeys the report names and keeps th
   expect(other.changed).toBe(false);
 });
 
+test("computeEvidence reads a journey with a list of users' mutation score from its first user's run", () => {
+  const report = {
+    byJourney: new Map([
+      ['tests/journeys/t.yaml#saves a ticket [admin]', { killed: 9, total: 12, unique: 1 }],
+      ['tests/journeys/t.yaml#saves a ticket [member]', { killed: 7, total: 12, unique: 0 }],
+    ]),
+    score: { killed: 9, total: 12 },
+  };
+  const result = compute(
+    { ...journey, data: 'tickets', user: ['admin', 'member'] },
+    { mutation: report }
+  );
+  expect(result.after.mutation).toEqual({ killed: 9, total: 12, unique: 1 });
+});
+
 test('computeEvidence counts the dev segments that back a journey as dev.recordings', () => {
   const devSegments = [
     segment({ session: 'd1', steps: ['edit', 'title', 'save'] }),

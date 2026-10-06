@@ -16,6 +16,7 @@
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { createTraceId, type } from '@lowdefy/helpers';
+import { validateJourneyUser } from '@lowdefy/node-utils';
 
 import checkpointToMocks from './checkpointToMocks.js';
 import createConfigCheckpoint from './createConfigCheckpoint.js';
@@ -43,6 +44,7 @@ import requestRestart from './requestRestart.js';
 import runCheck from './runCheck.js';
 import runEndpoint from './runEndpoint.js';
 import runJourney from './runJourney.js';
+import runJourneyAsUsers from './runJourneyAsUsers.js';
 import runRequest from './runRequest.js';
 import snapshotState from './snapshotState.js';
 import { listStateCheckpoints } from './checkpointStore.js';
@@ -288,6 +290,43 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
     async ({ pageId, steps, user, urlQuery, state, timeout, data }) => {
       if (!origin) {
         return notFoundResult('Journey unavailable: server origin unknown for this transport.');
+      }
+      const { error: userError } = validateJourneyUser({ user, data });
+      if (userError) {
+        return notFoundResult(userError);
+      }
+      if (type.isArray(user)) {
+        const { passed, runs } = await runJourneyAsUsers({
+          origin,
+          pageId,
+          steps,
+          users: user,
+          urlQuery,
+          state,
+          stepTimeout: timeout,
+          data,
+        });
+        // Every run's screenshots follow the JSON as images, run by run in
+        // the order of the runs, each named in its run.
+        const summary = {
+          passed,
+          runs: runs.map(({ screenshots = [], ...run }) => ({
+            ...run,
+            screenshots: screenshots.map(({ name }) => ({ name })),
+          })),
+        };
+        return {
+          content: [
+            { type: 'text', text: JSON.stringify(summary, null, 2) },
+            ...runs.flatMap(({ screenshots = [] }) =>
+              screenshots.map(({ data: image, mimeType }) => ({
+                type: 'image',
+                data: image,
+                mimeType,
+              }))
+            ),
+          ],
+        };
       }
       const result = await runJourney({
         origin,
