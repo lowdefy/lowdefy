@@ -26,7 +26,13 @@
 // A null pageId means the page the app is showing, so a caller waits out a
 // redirect (a protected page sending a signed-out caller to sign in) instead
 // of waiting for a page that will never mount.
+//
+// No page is ready while the app is between pages: a client navigation (a
+// Link, even one in onInit) has changed the URL, but window.lowdefy.pageId
+// still names the page being left until the next page renders (the dev
+// client's Routing.jsx and Page.jsx mark that span).
 function isPageReady(pageId) {
+  if (window.lowdefy?._devNavigating === true) return false;
   const shownPageId = pageId ?? window.lowdefy?.pageId;
   const context = window.lowdefy?.contexts?.['page:' + shownPageId];
   if (!context) return false;
