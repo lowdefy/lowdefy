@@ -208,3 +208,31 @@ test('journeySequence moves the page only at an expect.url contains that is an a
   });
   expect(sequence.map((entry) => entry.page)).toEqual(['orders', 'orders', 'settings']);
 });
+
+test('stepIdentity with isConfigText keeps config text and reads any other text as none', () => {
+  const isConfigText = (text) => text === 'Assign';
+  expect(
+    stepIdentity({ step: { click: { blockId: 'grid', text: 'Assign' } }, isConfigText })
+  ).toEqual('["click","grid",null,"Assign"]');
+  expect(
+    stepIdentity({
+      step: { click: { blockId: 'grid', column: 'name', text: 'Acme Ltd' } },
+      isConfigText,
+    })
+  ).toEqual(stepIdentity({ step: { click: { blockId: 'grid', column: 'name' } }, isConfigText }));
+  expect(stepIdentity({ step: { click: { blockId: 'grid', text: 'Acme Ltd' } } })).toEqual(
+    '["click","grid",null,"Acme Ltd"]'
+  );
+});
+
+test('journeySequence passes isConfigText to every click identity', () => {
+  const isConfigText = (text) => text === 'Assign';
+  const steps = [
+    { click: { blockId: 'open_button', text: 'Open (3)' } },
+    { click: { blockId: 'assign_button', text: 'Assign' } },
+  ];
+  expect(journeySequence({ pageId: 'tickets', steps, isConfigText })).toEqual([
+    { page: 'tickets', identity: '["click","open_button",null,null]' },
+    { page: 'tickets', identity: '["click","assign_button",null,"Assign"]' },
+  ]);
+});
