@@ -73,6 +73,7 @@ async function journeysUsage({ context }) {
     journeys,
     usageWindow: options.usageWindow,
     isConfigText: await readTierConfigText({ context, journeys }),
+    fullTierOption: '--tier full',
   });
   if (tier !== 'full' && !type.isUndefined(tiers.refused)) {
     logger.error(tiers.refused);

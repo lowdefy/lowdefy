@@ -27,12 +27,14 @@ function journeyKey({ file, journeyIndex }) {
 }
 
 // What a PASS line shows of a journey's place in the ranking. Undefined for a
-// journey with no production evidence: there is nothing to rank it by.
-function describeUsage({ row, journey, usageWindow }) {
+// journey with no production evidence: there is nothing to rank it by. Below
+// the match floor there is no ranking, so tier and rank are null and the line
+// shows the rate and failures only.
+function describeUsage({ row, journey, usageWindow, ranked }) {
   if (type.isNone(journey.evidence?.production)) return undefined;
   return {
-    tier: row.tier,
-    rank: row.rank,
+    tier: ranked ? row.tier : null,
+    rank: ranked ? row.rank : null,
     rate: row.rate,
     failures: row.failures,
     unranked: row.unranked,
@@ -51,15 +53,21 @@ function describeUsage({ row, journey, usageWindow }) {
 // parse, a journey that does not validate) stays selected so the run reports
 // it.
 //
+// A full run cuts no tier, so the ranking only decorates its PASS lines: it
+// never reads the config text set (which can mean a config build), and a
+// journey whose id cannot be confirmed without it shows as unranked.
+//
 // - tier: common, wide, edge or full (parsed by parseTier).
 // - usageWindow: `<n>m` (parsed by parseUsageWindow).
+// - fullTierOption: how the caller asks for a full run, named when a tier is
+//   refused: `--tier full` for `lowdefy test`, `tier "full"` for the MCP tool.
 //
 // Returns { selected, skipped, refused, tierRows }: `selected` the
 // { suite, item, usage } entries to run, `usage` what the PASS line shows of
 // the journey's tier; `skipped` the deprecated journeys as { name, filePath,
 // rate, usageWindow }; `refused` why a tier other than full cannot be cut (nothing is
 // selected then); `tierRows` the computeTiers rows.
-async function selectTier({ context, selected, tier, usageWindow }) {
+async function selectTier({ context, selected, tier, usageWindow, fullTierOption }) {
   const { journeys: committed } = committedJourneys({
     context,
     items: selected.map(({ item }) => item),
@@ -70,12 +78,13 @@ async function selectTier({ context, selected, tier, usageWindow }) {
     name: journey.name,
     journey,
   }));
-  const tiers = computeTiers({
-    journeys,
-    usageWindow,
-    isConfigText: await readTierConfigText({ context, journeys }),
-  });
-  if (tier !== 'full' && !type.isUndefined(tiers.refused)) {
+  let isConfigText;
+  if (tier !== 'full') {
+    isConfigText = await readTierConfigText({ context, journeys });
+  }
+  const tiers = computeTiers({ journeys, usageWindow, isConfigText, fullTierOption });
+  const ranked = type.isUndefined(tiers.refused);
+  if (tier !== 'full' && !ranked) {
     return { selected: [], skipped: [], refused: tiers.refused, tierRows: tiers.rows };
   }
   const rows = new Map(tiers.rows.map((row) => [journeyKey(row), row]));
@@ -92,7 +101,12 @@ async function selectTier({ context, selected, tier, usageWindow }) {
       result.selected.push(entry);
       return;
     }
-    const usage = describeUsage({ row, journey: item.personaOf ?? item.journey, usageWindow });
+    const usage = describeUsage({
+      row,
+      journey: item.personaOf ?? item.journey,
+      usageWindow,
+      ranked,
+    });
     if (row.deprecated) {
       if (skippedKeys.has(key)) return;
       skippedKeys.add(key);

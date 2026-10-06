@@ -63,7 +63,7 @@ function cutLength({ rows, percent, total }) {
   return length;
 }
 
-function refusal({ ranked, matches, windowMonths }) {
+function refusal({ ranked, matches, windowMonths, fullTierOption }) {
   const hasEvidence = ranked.some((row) => row.days > 0);
   if (!hasEvidence) {
     return 'No selected journey has production evidence to rank by. Pull production use with "lowdefy journeys pull posthog", then run "lowdefy journeys evidence --refresh".';
@@ -71,7 +71,7 @@ function refusal({ ranked, matches, windowMonths }) {
   if (matches < MIN_MATCHES) {
     return `The selection has ${matches} journey matches in ${windowMonths[0]} to ${
       windowMonths[windowMonths.length - 1]
-    }, fewer than the ${MIN_MATCHES} tiers need. Use --tier full, or pull more production use.`;
+    }, fewer than the ${MIN_MATCHES} tiers need. Use ${fullTierOption}, or pull more production use.`;
   }
   return undefined;
 }
@@ -91,6 +91,10 @@ function refusal({ ranked, matches, windowMonths }) {
 // - journeys: [{ file, journeyIndex, name, journey }], one per journey.
 // - usageWindow: the `--usage-window` value (`<n>m`, default 3m).
 // - isConfigText: the app's config text rule, from readTierConfigText.
+//   Undefined reads every click text as config text, so a journey whose id
+//   differs from its stored one is unranked.
+// - fullTierOption: how the caller asks for every journey, named in the
+//   refusal: `--tier full` on the command line, `tier "full"` over MCP.
 //
 // Returns { windowMonths, anchor, matches, refused, rows }. A row is
 // { file, journeyIndex, name, tier, rank, rate, sessions, failures, days, unranked,
@@ -99,7 +103,7 @@ function refusal({ ranked, matches, windowMonths }) {
 // rank or rate. A `deprecated: true` journey is in no tier: tier and rank are
 // null, its usage is still shown. `refused` says why tiers other than `full`
 // cannot be cut: fewer than 100 matches, or no evidence at all.
-function computeTiers({ journeys, usageWindow, isConfigText }) {
+function computeTiers({ journeys, usageWindow, isConfigText, fullTierOption }) {
   // Deprecated journeys anchor the window too, so one named on its own still
   // shows its recent use.
   const anchor = newestMonth({ journeys: journeys.map(({ journey }) => journey) });
@@ -132,7 +136,7 @@ function computeTiers({ journeys, usageWindow, isConfigText }) {
     windowMonths,
     anchor,
     matches,
-    refused: refusal({ ranked, matches, windowMonths }),
+    refused: refusal({ ranked, matches, windowMonths, fullTierOption }),
     rows: [
       ...ranked,
       ...rows.filter((row) => row.unranked),

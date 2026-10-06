@@ -17,14 +17,15 @@
 import { type } from '@lowdefy/helpers';
 
 // The journey's place in its run's ranking, over the usage window:
-// `common #2 · 13.7/day · 14 failed (3m)`, or `unranked` for a journey with
-// no counts for its current flow. Persons and orgs are left out: they do not
-// add up across months.
+// `common #2 · 13.7/day · 14 failed (3m)`, `unranked` for a journey with
+// no counts for its current flow, or the rate and failures alone when the
+// selection has too few matches to rank (no tier). Persons and orgs are left
+// out: they do not add up across months.
 function formatUsage({ usage }) {
   if (usage.unranked) return 'unranked';
-  return `${usage.tier} #${usage.rank} · ${usage.rate.toFixed(1)}/day · ${usage.failures} failed (${
-    usage.usageWindow
-  })`;
+  const use = `${usage.rate.toFixed(1)}/day · ${usage.failures} failed (${usage.usageWindow})`;
+  if (type.isNone(usage.tier)) return use;
+  return `${usage.tier} #${usage.rank} · ${use}`;
 }
 
 // The production part of the line without a ranking. Monthly evidence shows

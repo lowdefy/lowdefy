@@ -279,7 +279,7 @@ PASS  member assigns an open ticket  (5 steps, 2100ms)  common #2 · 13.7/day ·
 PASS  member reopens a ticket  (4 steps, 1650ms)  unranked
 ```
 
-`unranked` marks a journey with no counts for its current steps yet. Persons and organisations are left out, since they do not add up across months; [`lowdefy journeys usage`](/cli#journeys-usage) shows them month by month. The mutants part is left out when there is no mutation report. `FAIL` lines carry no evidence.
+`unranked` marks a journey with no counts for its current steps yet. A run without `--tier` never builds config to rank journeys, so a journey that clicks a data value (a grid row by its name) also shows `unranked` there; `--tier common`, `wide` or `edge` ranks it. With fewer than 100 journey matches in the usage window there is no ranking, and the line shows the rate and failures with no tier or rank. Persons and organisations are left out, since they do not add up across months; [`lowdefy journeys usage`](/cli#journeys-usage) shows them month by month. The mutants part is left out when there is no mutation report. `FAIL` lines carry no evidence.
 
 A journey with `deprecated: true` is never run, even when named by path or `--filter`. It is listed with its recent rate, and the closing line counts it:
 

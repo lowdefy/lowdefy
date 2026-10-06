@@ -100,12 +100,11 @@ test('selectTier common keeps the common and unranked journeys and skips depreca
 
 test('selectTier full keeps every journey but the deprecated ones, with each ranking', async () => {
   const selected = entries(
-    item({ file: 'a.yaml', name: 'top', sessions: 30 }),
-    item({ file: 'b.yaml', name: 'low', sessions: 3 }),
-    item({ file: 'c.yaml', name: 'retired', sessions: 3, deprecated: true })
+    item({ file: 'a.yaml', name: 'top', sessions: 300 }),
+    item({ file: 'b.yaml', name: 'low', sessions: 30 }),
+    item({ file: 'c.yaml', name: 'retired', sessions: 30, deprecated: true })
   );
   const result = await selectTier({ context, selected, tier: 'full', usageWindow: '3m' });
-  // Too few matches to cut a tier, but a full run needs no cut.
   expect(result.refused).toBeUndefined();
   expect(names(result)).toEqual(['top', 'low']);
   expect(result.selected.map((entry) => [entry.usage.tier, entry.usage.rank])).toEqual([
@@ -113,6 +112,21 @@ test('selectTier full keeps every journey but the deprecated ones, with each ran
     ['edge', 2],
   ]);
   expect(result.skipped.map((skipped) => skipped.name)).toEqual(['retired']);
+});
+
+test('selectTier full below 100 matches runs every journey with no tier or rank', async () => {
+  const selected = entries(
+    item({ file: 'a.yaml', name: 'top', sessions: 30 }),
+    item({ file: 'b.yaml', name: 'low', sessions: 3 })
+  );
+  const result = await selectTier({ context, selected, tier: 'full', usageWindow: '3m' });
+  // Too few matches to cut a tier, but a full run needs no cut.
+  expect(result.refused).toBeUndefined();
+  expect(names(result)).toEqual(['top', 'low']);
+  expect(result.selected.map((entry) => entry.usage)).toEqual([
+    { tier: null, rank: null, rate: 1, failures: 2, unranked: false, usageWindow: '3m' },
+    { tier: null, rank: null, rate: 0.1, failures: 2, unranked: false, usageWindow: '3m' },
+  ]);
 });
 
 test('selectTier tiers a journey with a list of users once and keeps every persona run', async () => {
@@ -147,11 +161,20 @@ test('selectTier refuses a tier below 100 matches, and names the refresh with no
     selected: entries(item({ file: 'a.yaml', name: 'top', sessions: 30 })),
     tier: 'common',
     usageWindow: '3m',
+    fullTierOption: '--tier full',
   });
   expect(thin.selected).toEqual([]);
   expect(thin.refused).toBe(
     'The selection has 30 journey matches in 2026-07 to 2026-09, fewer than the 100 tiers need. Use --tier full, or pull more production use.'
   );
+  const overMcp = await selectTier({
+    context,
+    selected: entries(item({ file: 'a.yaml', name: 'top', sessions: 30 })),
+    tier: 'common',
+    usageWindow: '3m',
+    fullTierOption: 'tier "full"',
+  });
+  expect(overMcp.refused).toContain('Use tier "full", or pull more production use.');
   const none = await selectTier({
     context,
     selected: entries(item({ file: 'a.yaml', name: 'top' })),

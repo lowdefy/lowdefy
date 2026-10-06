@@ -135,9 +135,10 @@ test('computeTiers refuses tiers below 100 journey matches and prints the count'
       months: [{ month: '2026-10', days: 9, sessions: 9, persons: 1, orgs: 1, failures: 0 }],
     }),
   ];
-  const result = computeTiers({ journeys: thin });
+  const result = computeTiers({ journeys: thin, fullTierOption: '--tier full' });
   expect(result.matches).toBe(99);
   expect(result.refused).toContain('99 journey matches');
+  expect(result.refused).toContain('Use --tier full, or pull more production use.');
 });
 
 test('computeTiers says to pull and refresh when no journey has evidence', () => {
@@ -214,4 +215,10 @@ test('computeTiers reads click text by the config text rule when it tells an edi
   });
   const unranked = Object.fromEntries(result.rows.map((row) => [row.name, row.unranked]));
   expect(unranked).toEqual({ same: false, 'other value': false, label: true });
+});
+
+test('computeTiers without the config text rule leaves a journey clicking a data value unranked', () => {
+  const same = valueJourney({ name: 'same', text: 'Sample customer' });
+  const result = computeTiers({ journeys: [same] });
+  expect(result.rows[0].unranked).toBe(true);
 });

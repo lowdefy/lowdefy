@@ -24,7 +24,9 @@ import sequenceId from '../evidence/sequenceId.js';
 // click text, differs from its stored one: an edit, or click text that is not
 // config text. Reading the config text set can mean a full config build, so
 // a selection whose journeys all match their stored ids, or have none, never
-// pays for it. Returns isConfigText, or undefined when it is not needed.
+// pays for it. A journey whose click text is not config text always differs,
+// so only runs that cut a tier call this (selectTier skips it for `full`).
+// Returns isConfigText, or undefined when it is not needed.
 async function readTierConfigText({ context, journeys }) {
   const needed = journeys.some(({ journey }) => {
     if (journey.deprecated === true) return false;

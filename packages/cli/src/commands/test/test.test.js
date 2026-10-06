@@ -29,6 +29,16 @@ jest.unstable_mockModule('axios', () => ({
   default: { post: mockPost, get: mockGet },
 }));
 
+// The config text set the tier ranking reads: "Save" is config text, a grid
+// cell's data value is not.
+const mockReadConfigText = jest.fn(async () => ({
+  texts: new Set(['Save']),
+  isConfigText: (text) => text === 'Save',
+}));
+jest.unstable_mockModule('../journeys/configText/readConfigText.js', () => ({
+  default: mockReadConfigText,
+}));
+
 const mockStop = jest.fn();
 const mockStartDevServer = jest.fn();
 jest.unstable_mockModule('./startDevServer.js', () => ({
@@ -71,6 +81,7 @@ beforeEach(() => {
     },
     sendTelemetry: jest.fn(),
   };
+  mockReadConfigText.mockClear();
   mockStop.mockResolvedValue();
   mockStartDevServer.mockResolvedValue({ url: 'http://localhost:3228', stop: mockStop });
   mockPost.mockResolvedValue({ data: { passed: true, steps: [] } });
@@ -882,6 +893,62 @@ test('test --tier common runs every user of a journey with a list of users in th
   expect(logs.info.filter((line) => line.startsWith('PASS'))).toEqual([
     expect.stringMatching(/^PASS {2}edits a ticket \[admin\] .* common #1 · 10\.0\/day/),
     expect.stringMatching(/^PASS {2}edits a ticket \[member\] .* common #1 · 10\.0\/day/),
+  ]);
+});
+
+// A journey clicking a grid row by a data value, refreshed: its stored id
+// reads that text as none, since it is not config text.
+function dataValueJourneyYaml({ name, sessions }) {
+  const steps = [{ click: { blockId: 'grid', text: 'Sample customer' } }];
+  const isConfigText = (text) => text === 'Save';
+  return YAML.stringify({
+    name,
+    pageId: 'form',
+    steps,
+    evidence: {
+      production: {
+        sequence: sequenceId({ pageId: 'form', steps, isConfigText }),
+        pageId: 'form',
+        flow: flowLines({ pageId: 'form', steps, isConfigText }),
+        months: [{ month: '2026-09', days: 30, sessions, persons: 1, orgs: 1, failures: 0 }],
+      },
+    },
+  });
+}
+
+test('test without --tier never reads config text, and shows a journey clicking a data value as unranked', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', rankedJourneyYaml({ name: 'top', sessions: 300 }));
+  writeJourneyFile('b.yaml', dataValueJourneyYaml({ name: 'opens a customer', sessions: 60 }));
+  await test({ context });
+  expect(mockReadConfigText).not.toHaveBeenCalled();
+  expect(mockPost).toHaveBeenCalledTimes(2);
+  expect(logs.info.filter((line) => line.startsWith('PASS'))).toEqual([
+    expect.stringContaining('common #1 · 10.0/day'),
+    expect.stringMatching(/^PASS {2}opens a customer .* unranked$/),
+  ]);
+});
+
+test('test --tier edge reads config text to rank a journey clicking a data value', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', rankedJourneyYaml({ name: 'top', sessions: 300 }));
+  writeJourneyFile('b.yaml', dataValueJourneyYaml({ name: 'opens a customer', sessions: 60 }));
+  context.options.tier = 'edge';
+  await test({ context });
+  expect(mockReadConfigText).toHaveBeenCalledTimes(1);
+  expect(logs.info.filter((line) => line.startsWith('PASS'))).toEqual([
+    expect.stringContaining('common #1 · 10.0/day'),
+    expect.stringMatching(/^PASS {2}opens a customer .* edge #2 · 2\.0\/day/),
+  ]);
+});
+
+test('test without --tier below 100 matches shows the rate and failures with no tier', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', rankedJourneyYaml({ name: 'top', sessions: 30, failures: 3 }));
+  await test({ context });
+  expect(process.exitCode).toBeUndefined();
+  expect(logs.info.filter((line) => line.startsWith('PASS'))).toEqual([
+    expect.stringMatching(/^PASS {2}top {2}\(1 steps, \d+ms\) {2}1\.0\/day · 3 failed \(3m\)$/),
   ]);
 });
 
