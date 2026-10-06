@@ -27,30 +27,49 @@ function AvatarCell({ value, row, column, components, onEvent }) {
   const name = type.isString(cell.nameField) ? get(row, cell.nameField) : value;
   const src = type.isString(cell.srcField) ? get(row, cell.srcField) : undefined;
   const id = type.isString(cell.idField) ? get(row, cell.idField) : undefined;
+  const description = type.isString(cell.descriptionField)
+    ? get(row, cell.descriptionField)
+    : undefined;
   if (type.isNone(name) && type.isNone(src)) return <EmptyCell />;
   const label = type.isNone(name) ? '' : String(name);
   const mark = <AvatarMark name={label} src={src} seed={id} shape={cell.shape} />;
+  let nameElement;
   if (type.isObject(cell.link)) {
     const link = resolveLink({ link: cell.link, row });
-    return (
-      <span className="lf-table-person">
-        {mark}
-        <CellLink
-          link={link}
-          components={components}
-          className="lf-table-link lf-table-person-name"
-          onClick={() => onEvent({ name: 'onCellLink', event: { link, row, value } })}
-        >
-          {label}
-        </CellLink>
+    nameElement = (
+      <CellLink
+        link={link}
+        components={components}
+        className="lf-table-link lf-table-person-name"
+        onClick={() => onEvent({ name: 'onCellLink', event: { link, row, value } })}
+      >
+        {label}
+      </CellLink>
+    );
+  } else {
+    nameElement = (
+      <span className="lf-table-person-name" title={label}>
+        {label}
       </span>
     );
   }
+  if (type.isNone(description) || description === '') {
+    return (
+      <span className="lf-table-person">
+        {mark}
+        {nameElement}
+      </span>
+    );
+  }
+  const descriptionText = String(description);
   return (
-    <span className="lf-table-person">
+    <span className="lf-table-person lf-table-person-stacked">
       {mark}
-      <span className="lf-table-person-name" title={label}>
-        {label}
+      <span className="lf-table-person-text">
+        {nameElement}
+        <span className="lf-table-person-description" title={descriptionText}>
+          {descriptionText}
+        </span>
       </span>
     </span>
   );

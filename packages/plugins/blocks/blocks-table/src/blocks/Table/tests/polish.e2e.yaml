@@ -426,3 +426,24 @@ blocks:
             amount: 4350.5,
             due: '2026-09-18',
           }
+
+  # ============================================
+  # PERSON WITH A DESCRIPTION: name over email, in comfortable rows
+  # ============================================
+  - id: members
+    type: Table
+    properties:
+      size: comfortable
+      rowKey: id
+      columns:
+        - key: name
+          title: Person
+          type: avatar
+          cell:
+            idField: id
+            descriptionField: email
+        - key: joined
+          type: date
+      data:
+        - { id: 1, name: Ana Moreau, email: ana@example.com, joined: '2026-09-24' }
+        - { id: 2, name: Ben Okafor, joined: '2026-09-28' }

@@ -342,6 +342,31 @@ test.describe('Table visual polish', () => {
     await expect(name).toHaveAttribute('title', 'Samuel Adeyemi');
   });
 
+  test('a person with a description shows it under the name, the avatar whole in the row', async ({
+    page,
+  }) => {
+    const cell = row(page, 'members', 1).locator('[data-col-key="name"]');
+    await expect(cell.locator('.lf-table-person-description')).toHaveText('ana@example.com');
+    const boxes = await cell.evaluate((element) => {
+      const name = element.querySelector('.lf-table-person-name').getBoundingClientRect();
+      const description = element
+        .querySelector('.lf-table-person-description')
+        .getBoundingClientRect();
+      return {
+        cell: element.getBoundingClientRect().toJSON(),
+        avatar: element.querySelector('.lf-table-avatar').getBoundingClientRect().toJSON(),
+        nameBottom: name.bottom,
+        descriptionTop: description.top,
+      };
+    });
+    expect(boxes.avatar.height).toBe(32);
+    expect(isInsideBox(boxes.avatar, boxes.cell)).toBe(true);
+    expect(boxes.descriptionTop).toBeGreaterThanOrEqual(boxes.nameBottom - 0.5);
+    await expect(
+      row(page, 'members', 2).locator('[data-col-key="name"] .lf-table-person-description')
+    ).toHaveCount(0);
+  });
+
   test('row separators run the full width of a table wider than its columns', async ({ page }) => {
     const rows = await table(page, 'narrow').evaluate((root) => {
       const scroller = root.querySelector('.lf-table-scroller');
