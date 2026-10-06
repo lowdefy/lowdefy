@@ -14,12 +14,11 @@
   limitations under the License.
 */
 
-import { countDataSetDocuments } from '@lowdefy/node-utils';
-
-// The `data` a journey result carries: which data set it ran on, how many documents it loaded and
-// how long the load took, which lowdefy test prints.
-function describeDataSetResult({ dataSet, loadMs }) {
-  return { name: dataSet.name, loadMs, documents: countDataSetDocuments({ dataSet }) };
+// The index a duplicate key error names, from the server's message ("... index: number_1 dup
+// key: ..."), or "unknown".
+function duplicateIndexName(message) {
+  const match = /index: (\S+)/.exec(message ?? '');
+  return match === null ? 'unknown' : match[1];
 }
 
-export default describeDataSetResult;
+export default duplicateIndexName;

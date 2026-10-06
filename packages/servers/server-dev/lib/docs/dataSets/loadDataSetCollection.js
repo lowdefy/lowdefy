@@ -15,10 +15,12 @@
 */
 
 import insertFixture from './insertFixture.js';
+import insertGeneratedDocuments from './insertGeneratedDocuments.js';
 import mergeCollectionIndexes from './mergeCollectionIndexes.js';
 
 // Loads one collection into a fresh session database: indexes first, on the empty collection, so a
-// fixture that breaks a unique index fails here instead of loading; then the fixtures.
+// fixture that breaks a unique index fails here instead of loading; then the generated documents;
+// then the fixtures.
 async function loadDataSetCollection({ db, dataSetName, collectionName, group }) {
   const collection = await db.createCollection(collectionName);
   const indexes = mergeCollectionIndexes({
@@ -28,6 +30,9 @@ async function loadDataSetCollection({ db, dataSetName, collectionName, group })
   });
   if (indexes.length > 0) {
     await collection.createIndexes(indexes);
+  }
+  for (const batch of group.generated) {
+    await insertGeneratedDocuments({ collection, dataSetName, batch });
   }
   for (const fixture of group.fixtures) {
     await insertFixture({ collection, dataSetName, fixture });

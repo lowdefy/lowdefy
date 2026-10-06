@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { countDataSetDocuments } from '@lowdefy/node-utils';
-
-// The `data` a journey result carries: which data set it ran on, how many documents it loaded and
-// how long the load took, which lowdefy test prints.
-function describeDataSetResult({ dataSet, loadMs }) {
-  return { name: dataSet.name, loadMs, documents: countDataSetDocuments({ dataSet }) };
+// How many documents a data set loads: its fixtures and its generated documents.
+function countDataSetDocuments({ dataSet }) {
+  return [...Object.values(dataSet.fixtures), ...Object.values(dataSet.generated)].reduce(
+    (total, documents) => total + documents.length,
+    0
+  );
 }
 
-export default describeDataSetResult;
+export default countDataSetDocuments;

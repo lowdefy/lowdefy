@@ -14,12 +14,19 @@
   limitations under the License.
 */
 
-import { countDataSetDocuments } from '@lowdefy/node-utils';
+// The field kinds a data set's `generate` block knows. A field whose spec is an object names
+// exactly one of them; any other value is written as it is.
+const generateKinds = [
+  'literal',
+  'oneOf',
+  'number',
+  'date',
+  'text',
+  'name',
+  'email',
+  'company',
+  'sequence',
+  'ref',
+];
 
-// The `data` a journey result carries: which data set it ran on, how many documents it loaded and
-// how long the load took, which lowdefy test prints.
-function describeDataSetResult({ dataSet, loadMs }) {
-  return { name: dataSet.name, loadMs, documents: countDataSetDocuments({ dataSet }) };
-}
-
-export default describeDataSetResult;
+export default generateKinds;

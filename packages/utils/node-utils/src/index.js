@@ -39,6 +39,7 @@ import isProcessStartTime from './isProcessStartTime.js';
 import isPortAvailable from './isPortAvailable.js';
 import linkDependenciesToWorkspace from './linkDependenciesToWorkspace.js';
 import linkWorkspaceDependencies from './linkWorkspaceDependencies.js';
+import countDataSetDocuments from './countDataSetDocuments.js';
 import listDataSets from './listDataSets.js';
 import matchPagePath from './matchPagePath.js';
 import parseDataSet from './parseDataSet.js';
@@ -90,6 +91,7 @@ export {
   compareProcessStartTimes,
   compileTrace,
   copyFileOrDirectory,
+  countDataSetDocuments,
   countTextTokens,
   createClientAddressResolver,
   createSecretScrubber,

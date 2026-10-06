@@ -21,7 +21,13 @@ import readConnectionArtifacts from './readConnectionArtifacts.js';
 import resolveDataSetCollection from './resolveDataSetCollection.js';
 
 function getKeyedConnectionIds({ dataSet }) {
-  return [...new Set([...Object.keys(dataSet.fixtures), ...Object.keys(dataSet.indexes)])];
+  return [
+    ...new Set([
+      ...Object.keys(dataSet.fixtures),
+      ...Object.keys(dataSet.generated),
+      ...Object.keys(dataSet.indexes),
+    ]),
+  ];
 }
 
 // The data set checks only the dev build can make, on top of parseDataSet's: every connection the
@@ -30,7 +36,7 @@ function getKeyedConnectionIds({ dataSet }) {
 // them) or reported. Runs before any browser opens.
 async function readDataSet({ configDirectory, buildDirectory, name }) {
   const dataSet = await parseDataSet({ configDirectory, name });
-  const warnings = [];
+  const warnings = [...dataSet.warnings];
 
   const artifacts = await readConnectionArtifacts({ buildDirectory });
   const keyedIds = getKeyedConnectionIds({ dataSet });

@@ -17,13 +17,9 @@
 import { type } from '@lowdefy/helpers';
 
 import deserializeFixture from './deserializeFixture.js';
+import duplicateIndexName from './duplicateIndexName.js';
 
 const DUPLICATE_KEY = 11000;
-
-function indexNameFrom(error) {
-  const match = /index: (\S+)/.exec(error.message ?? '');
-  return match === null ? 'unknown' : match[1];
-}
 
 // A fixture that breaks a unique index fails the load, naming the fixture, the index, the duplicate
 // key and the document that already holds it. Loading indexes before documents is what lets this
@@ -35,9 +31,9 @@ async function describeDuplicate({ collection, dataSetName, fixture, error }) {
   const where = `Data set "${dataSetName}" fixture ${fixture.connectionId}[${fixture.index}]`;
   const heldBy = type.isNone(holder) ? '' : ` held by document _id ${JSON.stringify(holder._id)}`;
   return new Error(
-    `${where} breaks unique index "${indexNameFrom(error)}": duplicate key ${JSON.stringify(
-      error.keyValue
-    )}${heldBy}.`
+    `${where} breaks unique index "${duplicateIndexName(
+      error.message
+    )}": duplicate key ${JSON.stringify(error.keyValue)}${heldBy}.`
   );
 }
 

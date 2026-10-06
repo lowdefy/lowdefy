@@ -53,6 +53,7 @@ const origin = 'http://localhost:3227';
 const dataSet = {
   name: 'sample',
   fixtures: { tickets: [{ _id: 't1' }, { _id: 't2' }], companies: [{ _id: 'c1' }] },
+  generated: { invoices: [{ _id: 'i1' }] },
   users: { outsider: { id: 'u_9', roles: ['admin'], organizationId: 'org_b' } },
   warnings: ['Connections "a" and "b" both name collection "events" in different databases.'],
 };
@@ -148,7 +149,7 @@ test('runJourney opens a data session, gives every actor its cookie and data set
   expect(result.data).toEqual({
     name: 'sample',
     loadMs: expect.any(Number),
-    documents: 3,
+    documents: 4,
   });
   expect(result.warnings).toEqual(dataSet.warnings);
 });

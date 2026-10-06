@@ -202,3 +202,58 @@ test('parseDataSet refuses a snapshot block, saying snapshots were removed', asy
     )}: snapshot is no longer supported: data sets hold committed documents only. Move the documents journeys need into fixtures or generate.`
   );
 });
+
+test('parseDataSet returns generated documents beside fixtures, with no warnings for a small set', async () => {
+  writeDataSet(
+    'alpha.yaml',
+    [
+      'fixtures:',
+      '  customers_db:',
+      '    - { _id: c-1, name: Fixture customer }',
+      'generate:',
+      '  seed: 7',
+      '  invoices_db:',
+      '    count: 3',
+      '    fields:',
+      '      status: { oneOf: [draft, paid] }',
+      '      issued: { date: { from: 2026-01-01, to: 2026-01-31 } }',
+      '      customerId: { ref: customers_db }',
+      '',
+    ].join('\n')
+  );
+  const dataSet = await parseDataSet({ configDirectory, name: 'alpha' });
+  expect(dataSet.fixtures).toEqual({ customers_db: [{ _id: 'c-1', name: 'Fixture customer' }] });
+  expect(dataSet.generated.invoices_db.map(({ _id, customerId }) => [_id, customerId])).toEqual([
+    ['invoices_db-1', 'c-1'],
+    ['invoices_db-2', 'c-1'],
+    ['invoices_db-3', 'c-1'],
+  ]);
+  expect(dataSet.generated.invoices_db[0].issued['~d']).toMatch(/^2026-01-/);
+  expect(dataSet.warnings).toEqual([]);
+});
+
+test('parseDataSet warns, without refusing, when a connection loads more than 1,000 documents', async () => {
+  writeDataSet(
+    'big.yaml',
+    'fixtures:\n  tickets:\n    - { _id: t-fixture }\ngenerate:\n  seed: 1\n  tickets:\n    count: 1000\n'
+  );
+  const dataSet = await parseDataSet({ configDirectory, name: 'big' });
+  expect(dataSet.generated.tickets).toHaveLength(1000);
+  expect(dataSet.warnings).toEqual([
+    'Data set "big" loads 1,001 documents for connection "tickets". More than 1,000 per collection is not advised: every journey on it loads slower, and journeys target fixture values, not volume.',
+  ]);
+});
+
+test('parseDataSet refuses a generate field with an unknown kind, naming the file', async () => {
+  writeDataSet(
+    'alpha.yaml',
+    'generate:\n  seed: 1\n  tickets:\n    count: 1\n    fields:\n      id: { uuid: true }\n'
+  );
+  await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
+    `Data set ${path.join(
+      'tests',
+      'data',
+      'alpha.yaml'
+    )}: generate.tickets.fields.id has unknown kind "uuid".`
+  );
+});

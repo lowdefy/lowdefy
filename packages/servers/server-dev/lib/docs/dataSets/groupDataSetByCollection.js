@@ -15,12 +15,13 @@
 */
 
 function ensureGroup({ groups, collection }) {
-  groups[collection] = groups[collection] ?? { fixtures: [], indexes: [] };
+  groups[collection] = groups[collection] ?? { fixtures: [], generated: [], indexes: [] };
   return groups[collection];
 }
 
-// The data set keyed by collection, the unit the store loads: fixtures and indexes are keyed by
-// connection id, and two connections that name one collection load into it together.
+// The data set keyed by collection, the unit the store loads: fixtures, generated documents and
+// indexes are keyed by connection id, and two connections that name one collection load into it
+// together.
 function groupDataSetByCollection({ dataSet }) {
   const groups = {};
   Object.entries(dataSet.fixtures).forEach(([connectionId, documents]) => {
@@ -28,6 +29,10 @@ function groupDataSetByCollection({ dataSet }) {
     documents.forEach((document, index) => {
       group.fixtures.push({ connectionId, index, document });
     });
+  });
+  Object.entries(dataSet.generated).forEach(([connectionId, documents]) => {
+    const group = ensureGroup({ groups, collection: dataSet.collections[connectionId] });
+    group.generated.push({ connectionId, documents });
   });
   Object.entries(dataSet.indexes).forEach(([connectionId, indexes]) => {
     const group = ensureGroup({ groups, collection: dataSet.collections[connectionId] });

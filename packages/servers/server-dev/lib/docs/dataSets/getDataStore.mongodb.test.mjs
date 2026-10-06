@@ -56,7 +56,7 @@ test('a store whose mongod died is replaced: the next session reports it, the on
   expect(fresh).not.toBe(dead);
   expect(fresh.uri).not.toEqual(dead.uri);
   const opened = await openDataSession({
-    dataSet: { name: 'shop', fixtures: {}, indexes: {}, collections: {} },
+    dataSet: { name: 'shop', fixtures: {}, generated: {}, indexes: {}, collections: {} },
   });
   await opened.close();
   await fresh.stop();

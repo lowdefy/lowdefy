@@ -14,8 +14,12 @@
   limitations under the License.
 */
 
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import { jest } from '@jest/globals';
 import { MongoClient, ObjectId } from 'mongodb';
+import { parseDataSet } from '@lowdefy/node-utils';
 
 import dataSessionRegistry from './dataSessionRegistry.js';
 import getDataStore from './getDataStore.js';
@@ -43,6 +47,7 @@ function makeDataSet(overrides) {
   return {
     name: 'sample',
     fixtures: {},
+    generated: {},
     indexes: {},
     users: {},
     collections: {},
@@ -149,6 +154,86 @@ test('openDataSession lets a later fixture replace one with the same _id and rev
   } finally {
     await close();
   }
+});
+
+test('openDataSession loads fixtures and generated documents together, with generated dates as Dates', async () => {
+  const configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-generate-'));
+  try {
+    fs.mkdirSync(path.join(configDirectory, 'tests', 'data'), { recursive: true });
+    fs.writeFileSync(
+      path.join(configDirectory, 'tests', 'data', 'invoices.yaml'),
+      [
+        'fixtures:',
+        '  customers_db:',
+        '    - { _id: c-fixture, name: Fixture customer }',
+        'generate:',
+        '  seed: 7',
+        '  customers_db:',
+        '    count: 4',
+        '    fields:',
+        '      name: { company: true }',
+        '  invoices_db:',
+        '    count: 30',
+        '    fields:',
+        '      _id: { sequence: { prefix: inv-, start: 1 } }',
+        '      status: { oneOf: [draft, sent, paid], weights: [1, 2, 5] }',
+        '      issued: { date: { from: 2026-01-01, to: 2026-09-30 } }',
+        '      customerId: { ref: customers_db }',
+        '',
+      ].join('\n')
+    );
+    const parsed = await parseDataSet({ configDirectory, name: 'invoices' });
+    const dataSet = makeDataSet({
+      ...parsed,
+      name: 'sample',
+      collections: { customers_db: 'customers', invoices_db: 'invoices' },
+    });
+    const { session, close } = await openDataSession({ dataSet });
+    try {
+      const customers = await sessionDb(session)
+        .collection('customers')
+        .find({})
+        .sort({ _id: 1 })
+        .toArray();
+      expect(customers.map(({ _id }) => _id)).toEqual([
+        'c-fixture',
+        'customers_db-1',
+        'customers_db-2',
+        'customers_db-3',
+        'customers_db-4',
+      ]);
+      const invoices = await sessionDb(session).collection('invoices').find({}).toArray();
+      expect(invoices).toHaveLength(30);
+      expect(invoices[0]._id).toEqual('inv-1');
+      expect(invoices[0].issued).toBeInstanceOf(Date);
+      const customerIds = customers.map(({ _id }) => _id);
+      invoices.forEach((invoice) => expect(customerIds).toContain(invoice.customerId));
+      expect(
+        await sessionDb(session).collection('invoices').countDocuments({ status: 'paid' })
+      ).toEqual(parsed.generated.invoices_db.filter(({ status }) => status === 'paid').length);
+    } finally {
+      await close();
+    }
+  } finally {
+    fs.rmSync(configDirectory, { recursive: true, force: true });
+  }
+});
+
+test('openDataSession fails naming the generated document that breaks a unique index', async () => {
+  const dataSet = makeDataSet({
+    collections: { tickets: 'tickets' },
+    indexes: { tickets: [{ key: { status: 1 }, name: 'status_1', unique: true }] },
+    generated: {
+      tickets: [
+        { _id: 'g1', status: 'open' },
+        { _id: 'g2', status: 'closed' },
+        { _id: 'g3', status: 'open' },
+      ],
+    },
+  });
+  await expect(openDataSession({ dataSet })).rejects.toThrow(
+    'Data set "sample" generated tickets[2] (_id "g3") breaks unique index "status_1": duplicate key { status: "open" }.'
+  );
 });
 
 test('a session database runs a transaction and opens a change stream', async () => {

@@ -14,12 +14,9 @@
   limitations under the License.
 */
 
+import countDataSetDocuments from './countDataSetDocuments.js';
 import listDataSetFiles from './listDataSetFiles.js';
 import parseDataSet from './parseDataSet.js';
-
-function countDocuments({ fixtures }) {
-  return Object.values(fixtures).reduce((total, documents) => total + documents.length, 0);
-}
 
 // One entry per data set file, for `lowdefy data list`: its name, how many documents it loads and
 // how many users it names.
@@ -30,7 +27,7 @@ async function listDataSets({ configDirectory }) {
     const dataSet = await parseDataSet({ configDirectory, name });
     dataSets.push({
       name,
-      documents: countDocuments({ fixtures: dataSet.fixtures }),
+      documents: countDataSetDocuments({ dataSet }),
       users: Object.keys(dataSet.users).length,
     });
   }

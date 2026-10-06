@@ -159,3 +159,27 @@ test('readDataSet warns on the same collision between two unkeyed connections', 
     'Connections "a" and "b" both name collection "events" in different databases; under a data set they read one database, so they share one collection.',
   ]);
 });
+
+test('readDataSet resolves generated connections and refuses one the app does not have', async () => {
+  writeConnection('tickets', mongo({ collection: 'tickets' }));
+  writeDataSet(
+    'alpha',
+    'generate:\n  seed: 1\n  tickets:\n    count: 2\n  invoices:\n    count: 1\n'
+  );
+  await expect(readDataSet({ configDirectory, buildDirectory, name: 'alpha' })).rejects.toThrow(
+    'Data set "alpha" connection "invoices" is not a connection in this app.'
+  );
+  writeDataSet('beta', 'generate:\n  seed: 1\n  tickets:\n    count: 2\n');
+  const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'beta' });
+  expect(dataSet.collections).toEqual({ tickets: 'tickets' });
+  expect(dataSet.generated.tickets.map(({ _id }) => _id)).toEqual(['tickets-1', 'tickets-2']);
+});
+
+test('readDataSet passes the size advice of a large data set on as a warning', async () => {
+  writeConnection('tickets', mongo({ collection: 'tickets' }));
+  writeDataSet('big', 'generate:\n  seed: 1\n  tickets:\n    count: 1200\n');
+  const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'big' });
+  expect(dataSet.warnings).toEqual([
+    'Data set "big" loads 1,200 documents for connection "tickets". More than 1,000 per collection is not advised: every journey on it loads slower, and journeys target fixture values, not volume.',
+  ]);
+});

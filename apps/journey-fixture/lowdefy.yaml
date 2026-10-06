@@ -60,3 +60,4 @@ pages:
   - _ref: pages/app_errors_open.yaml
   - _ref: pages/timing.yaml
   - _ref: pages/targets.yaml
+  - _ref: pages/generated.yaml

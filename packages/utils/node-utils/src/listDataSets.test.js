@@ -46,9 +46,11 @@ test('listDataSets returns each data set with its document and user counts, sort
     'sample.yml',
     'fixtures:\n  tickets:\n    - { title: A }\n    - { title: B }\n  companies:\n    - { name: C }\nusers:\n  owner: { id: u_1 }\n  member: { id: u_2 }\n'
   );
+  writeDataSet('generated.yaml', 'generate:\n  seed: 1\n  tickets:\n    count: 25\n');
   writeDataSet('README.md', '# not a data set\n');
   expect(await listDataSets({ configDirectory })).toEqual([
     { name: 'empty-org', documents: 0, users: 1 },
+    { name: 'generated', documents: 25, users: 0 },
     { name: 'sample', documents: 3, users: 2 },
   ]);
 });
