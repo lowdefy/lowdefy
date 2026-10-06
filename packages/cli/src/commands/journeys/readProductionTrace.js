@@ -26,19 +26,7 @@ import parseTraceWindow from './parseTraceWindow.js';
 import readConfigText from './configText/readConfigText.js';
 import readTraceSalt from './pull/readTraceSalt.js';
 import removeUntokenisedTraces from './removeUntokenisedTraces.js';
-
-// A record as the compiler may see it: a clicked-text token that is the
-// token of a config string sets `target.text` to that string and keeps the
-// token; any other token leaves the target without text. No other text from a
-// day file reaches a reader.
-function resolveRecordText({ record, resolve }) {
-  if (!type.isObject(record?.target)) return record;
-  const target = { ...record.target };
-  delete target.text;
-  const resolved = type.isString(target.text_token) ? resolve(target.text_token) : null;
-  if (!type.isNone(resolved)) target.text = resolved;
-  return { ...record, target };
-}
+import resolveRecordText from './resolveRecordText.js';
 
 // The pull refuses a window longer than the mining cap, while evidence reads
 // longer windows, so a longer gap names a pull the cap accepts and says to

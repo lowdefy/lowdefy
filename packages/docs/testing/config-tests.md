@@ -269,7 +269,7 @@ FAIL  guest sees the empty state
 
 A failing journey stops at its first failing step and prints the step's index, the step itself, and the `expected` and `actual` values. Steps after the failure are not run.
 
-A journey with an [`evidence`](#evidence) key prints it after its `PASS` line: `PASS  member creates a control  (5 steps, 1840ms)  412 sessions · 9 orgs · 11/12 mutants`. The organisations part is left out when the app sends none, the mutants part when there is no mutation report, and a journey nothing backs shows `0 sessions in window`. `FAIL` lines carry no evidence.
+A journey with an [`evidence`](#evidence) key prints it after its `PASS` line: `PASS  member creates a control  (5 steps, 1840ms)  412 sessions · 11/12 mutants`. The sessions are the journey's production sessions summed over all its months; the mutants part is left out when there is no mutation report. `FAIL` lines carry no evidence.
 
 ### Options
 
@@ -510,29 +510,80 @@ Upgrading from a version that stored clicked text: the first pull or production 
 
 ### Evidence
 
-A committed journey can carry how much production use backs it:
+A committed journey can carry how much production use backs it, by calendar month:
 
 ```yaml
 - name: member assigns an open ticket to a teammate
   pageId: tickets
   evidence:
     production:
-      sessions: 412 # sessions that did what this journey does
-      persons: 37
-      orgs: 9 # 0 when the app sends no organisation
-      share: 0.31 # of the sessions entering on pageId
-      failures: 14 # backing sessions that hit a failed event
-      window: 2026-09-03/2026-10-02
+      sequence: v1-3f9a12c0 # the flow these months were counted for
+      pageId: tickets
+      flow:
+        - tickets ["click","assign",null,"Assign"]
+        - tickets ["select","assignee",null,null]
+      months:
+        - { month: 2026-08, days: 31, sessions: 380, persons: 35, orgs: 9, failures: 12 }
+        - { month: 2026-09, days: 30, sessions: 412, persons: 37, orgs: 9, failures: 14 }
+        - { month: 2026-10, days: 3, sessions: 38, persons: 11, orgs: 5, failures: 1 }
     dev: { recordings: 2 } # dev sessions of the last 7 days that did it
     mutation: { killed: 11, total: 12, unique: 2 }
-    refreshed: 2026-10-03
+    refreshed: 2026-10-05
   steps:
-    - click: assign
+    - click: { blockId: assign, text: Assign }
+    - select: { blockId: assignee, value: Ann }
 ```
 
 A session backs a journey when it does the journey's interactions in the same order, other clicks in between allowed, starting on the journey's page. A journey's click text counts only when it is text from your app's config: any other text reads as no text, so a click on a grid cell by a customer's name is backed by that column's clicks exactly as one with no text, and no command tells whether production showed that value. Only [`lowdefy journeys evidence --refresh`](/cli#journeys-evidence) writes the key, and it changes nothing else in the file: comments, key order and quoting stay as they are. `lowdefy test` reads it to print the PASS line and validates it strictly, so a typo in a hand edit fails before the browser opens. `dev.recordings` counts the [dev recordings](#dev-recordings) of the last 7 days that back the journey, by the same rule. `dev`, `explorer` and `mutation` subkeys whose source is not on your machine keep their committed values; `mutation` is filled from a hardening run's report in `.lowdefy/test/mutation.json` when there is one.
 
-No command removes a journey for lack of production use. A 30-day window cannot see quarterly or yearly work, and a journey that is the only one to catch a mutant matters whatever its traffic. `journeys evidence` lists the journeys nothing backs, beside their mutation numbers, and leaves the decision to you.
+Each month is a UTC calendar month. `days` is how many of its final days the refresh read: the pull re-pulls today and yesterday for late events, so they count only once a later pull marks them final. `sessions` counts the backing sessions that started in that month, so a session that crosses midnight counts once; `failures` counts those that hit a failed event; `persons` and `orgs` are distinct within the month and do not add up across months. A month read with no backing session is written with `sessions: 0`, and a month never pulled is missing.
+
+Counts build up across pulls and machines without double counting. A refresh reads every final day in the cache, gaps and all, and rewrites a month only when the cache holds at least as many final days of it as the committed entry. Refreshing twice changes nothing, a colleague's fuller pull wins, and a laptop that never pulled a month, or pruned it, leaves that month as committed.
+
+`flow` is what the journey's steps are matched on: one `<page> <step>` line per click, select, fill, press, back or open, with the block, grid column and clicked text, and `sequence` names it. Waits, other expectations, typed or picked values, rows and `nth` leave it unchanged. When an edit changes it (a click's text or block, the order, a `goto`, or an `expect.url` path that moves later steps to another page), the next refresh moves the counted months to a deprecated flow and counts the new flow from the cache:
+
+```yaml
+production:
+  sequence: v1-3f9a12c0
+  # …
+  deprecated:
+    - sequence: v1-91be04d7
+      pageId: tickets
+      flow:
+        - tickets ["click","assign_button",null,"Assign"]
+      replaced: 2026-10-05
+      months:
+        - { month: 2026-09, days: 30, sessions: 40, persons: 12, orgs: 4, failures: 0 }
+```
+
+A deprecated flow is never run, and every refresh keeps counting it, so you can see whether users still follow the old way. Undo the edit and it becomes live again with its months. No command deletes one; delete it by hand once it shows no use. A `production` block in the older window shape (`sessions`, `share`, `window`) still validates, and the next refresh replaces it with months.
+
+A journey can also be retired as a whole with `deprecated: true` at its top level, while you watch its flow drain from production: refresh keeps counting it.
+
+No command removes a journey for lack of production use. Three months cannot see yearly work, and a journey that is the only one to catch a mutant matters whatever its traffic. `journeys evidence` lists the journeys nothing backs over the last 3 months, beside their mutation numbers, and leaves the decision to you.
+
+### Usage and tiers
+
+[`lowdefy journeys usage`](/cli#journeys-usage) ranks the journeys by how much real use leans on them now:
+
+```
+pnpx lowdefy@5 journeys usage
+pnpx lowdefy@5 journeys usage tests/journeys/review --tier common
+pnpx lowdefy@5 journeys usage --json
+```
+
+A journey's rate is its production sessions over the final days its months hold in the usage window: the last 3 calendar months (`--usage-window 3m`), ending at the newest month any selected journey has, so every journey is ranked over the same calendar and a flow that launched last month is not buried under years of history. The report lists the journeys by rate with their tier, their sessions and failures over the window and all time, one line per month with that month's people and organisations, and their deprecated flows with their recent use. Below that come the production flows no journey covers, from the coverage report, ranked by their sessions in coverage's window.
+
+A tier is a cut through the selected journeys, ranked by rate, most first:
+
+| Tier     | Cut | Reads as                              |
+| -------- | --- | ------------------------------------- |
+| `common` | p50 | the happy paths                       |
+| `wide`   | p80 | the usual variations                  |
+| `edge`   | p95 | the edge cases real users still reach |
+| `full`   | p0  | every journey                         |
+
+Tier pX holds the shortest run of journeys, from the top, whose summed rates reach X% of the total. Tiers nest, and journeys with equal rates are never split across a boundary. Tiers are cut over the selection after paths, `--tag` and `--filter`, so `tests/journeys/review --tier common` is the happy paths of the review area. A session counts for every journey it backs, so a tier's share is a share of journey matches, not of sessions. A journey edited since the last refresh, or never refreshed, has no counts for its current flow: it is `unranked` and in every tier, since a new or changed journey is what a change needs tested. A `deprecated: true` journey is in no tier. With fewer than 100 journey matches in the window, tiers are noise, and every tier but `full` is refused.
 
 ### Coverage
 
