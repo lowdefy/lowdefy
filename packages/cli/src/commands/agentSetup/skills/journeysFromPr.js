@@ -132,7 +132,7 @@ the developer decides.
 
 Commit nothing. Leave the journeys on the PR's branch in the worktree, with a summary: the pages
 and roles explored, the journeys added, the findings and the comments posted. Ask the developer
-whether to stop the dev server (\`lowdefy_dev_stop\`; the hub stops it after 30 idle minutes
+whether to stop the dev server (\`lowdefy_dev_stop\`; the hub stops it after 15 idle minutes
 anyway) and whether to keep the worktree.
 `;
 }

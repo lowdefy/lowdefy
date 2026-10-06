@@ -155,7 +155,7 @@ The expectation claims the errors of that interaction whose message contains `te
 
 ### Recorded values: `from`
 
-`fill`, `select` and `expect.state` take an optional `from`, which marks a value taken from a recording, as the explorer's candidates do:
+`fill`, `select` and `expect.state` take an optional `from`, which marks a value taken from a recording:
 
 - `from: recorded` marks a value observed in a trace. The step runs as usual; the marker tells you the value is whatever that recording happened to use, so review it.
 - `from: shape` marks a placeholder, `value: null`, for a value the trace could not hold: a value typed in production, or a password the dev recorder did not keep. The runner refuses a journey that holds one before it opens a browser, naming the step. Fill the value from your test data or the journey's user, then remove `from`.
@@ -571,7 +571,7 @@ A committed journey can carry how much production use backs it, by calendar mont
     - select: { blockId: assignee, value: Ann }
 ```
 
-A session backs a journey when it does the journey's interactions in the same order, other clicks in between allowed, starting on the journey's page. A journey's click text counts only when it is text from your app's config: any other text reads as no text, so a click on a grid cell by a customer's name is backed by that column's clicks exactly as one with no text, and no command tells whether production showed that value. Only [`lowdefy journeys evidence --refresh`](/cli#journeys-evidence) writes the key, and it changes nothing else in the file: comments, key order and quoting stay as they are. `lowdefy test` reads it to print the PASS line and validates it strictly, so a typo in a hand edit fails before the browser opens. A refresh removes a `dev` key an older version wrote. `explorer` and `mutation` subkeys whose source is not on your machine keep their committed values; `mutation` is filled from a hardening run's report in `.lowdefy/test/mutation.json` when there is one.
+A session backs a journey when it does the journey's interactions in the same order, other clicks in between allowed, starting on the journey's page. A journey's click text counts only when it is text from your app's config: any other text reads as no text, so a click on a grid cell by a customer's name is backed by that column's clicks exactly as one with no text, and no command tells whether production showed that value. Only [`lowdefy journeys evidence --refresh`](/cli#journeys-evidence) writes the key, and it changes nothing else in the file: comments, key order and quoting stay as they are. `lowdefy test` reads it to print the PASS line and validates it strictly, so a typo in a hand edit fails before the browser opens. A refresh removes a `dev` key an older version wrote. A committed `mutation` subkey keeps its value when its source is not on your machine; it is filled from a hardening run's report in `.lowdefy/test/mutation.json` when there is one.
 
 Each month is a UTC calendar month. `days` is how many of its final days the refresh read: the pull re-pulls today and yesterday for late events, so they count only once a later pull marks them final. `sessions` counts the backing sessions that started in that month, so a session that crosses midnight counts once; `failures` counts those that hit a failed event; `persons` and `orgs` are distinct within the month and do not add up across months. A month read with no backing session is written with `sessions: 0`, and a month never pulled is missing.
 

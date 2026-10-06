@@ -416,7 +416,7 @@ A step that fails **stops the journey and comes back as data**, never as a tool 
 | `true`                  | The whole state, however large                                        |
 | `false`                 | No state                                                              |
 
-A journey also fails at the step that causes an **app error**, even when every expectation holds: an action that fails with an error that is not a user error, an uncaught page exception or a client error report, a server error from a request or endpoint, or a 5xx from one. Only errors the journey's own browsers cause count, and they are reported in its result, not in `build-status` or the event stream. A failed `Validate`, a `Throw` action and 401/403 refusals never count. The failure carries each error with its kind, its config `source` and a `key` (the explorer's finding key):
+A journey also fails at the step that causes an **app error**, even when every expectation holds: an action that fails with an error that is not a user error, an uncaught page exception or a client error report, a server error from a request or endpoint, or a 5xx from one. Only errors the journey's own browsers cause count, and they are reported in its result, not in `build-status` or the event stream. A failed `Validate`, a `Throw` action and 401/403 refusals never count. The failure carries each error with its kind, its config `source` and a `key` that names the error by its kind, page and source, the same across runs:
 
 ```json
 {

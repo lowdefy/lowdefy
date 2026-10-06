@@ -566,7 +566,7 @@ state loads share one browser per child:
   SIGKILLed child. The headless shell exits with its parent anyway.
 
 **Page instances in the headless tools.** Screenshot, inspect state, eval operator, snapshot and
-load state, journeys and explorer walks take `pathParams` next to `pageId` and `urlQuery`.
+load state and journeys take `pathParams` next to `pageId` and `urlQuery`.
 `resolvePageInstance` reads the page's pattern from `routes.json` (`readPagePath`) and returns
 `{ path, instanceKey }`, or the URL builder's error for a missing placeholder, which the tool
 returns to the agent before a browser opens. `openPage` and `buildPageUrl` take the pattern as

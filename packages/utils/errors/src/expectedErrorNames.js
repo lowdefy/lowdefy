@@ -19,7 +19,7 @@
 // handler that catches one answers it itself - a 400, 401 or 403 with
 // { name, message } and one warning line. They still stop the action, show
 // their message and run its catch actions, but they are never posted to
-// /api/client-error and never an app error to a journey or an explorer walk.
+// /api/client-error and never an app error to a journey.
 // Keyed on the class name, because plugins bundle their own @lowdefy/errors
 // copy and a server answer reaches the client as a name only.
 const expectedErrorNames = new Set([
