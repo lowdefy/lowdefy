@@ -3678,7 +3678,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "7a1786069fb0f70452efc46303d2b52e272b1ce84fefc092b4e786c1f8bdf2db"
+      "hash": "9b2c4e355bfe24b58c1ea0be49c8a5cee35e874ae4ab2b98d6fd0f216a78ab51"
     },
     "user-authentication/users-introduction": {
       "files": [
@@ -6867,7 +6867,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "1903a19a1fc5546c9f1af1a7047c68fbed6371fa3b742a2402c0c8060c677f9a"
+      "hash": "9dd513f2bdce67d595163ca15f0ad22b3a29055878990a45f18e6901f079f955"
     },
     "actions/posthogoptin": {
       "files": [

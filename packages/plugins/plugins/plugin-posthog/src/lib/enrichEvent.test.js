@@ -155,7 +155,7 @@ test('enrichEvent does not describe an autocapture event without a chain', () =>
 });
 
 const DATA_CHAIN =
-  'div.ag-cell:attr__col-id="name"attr__title="Jane Customer"nth-child="1"nth-of-type="1"text="Jane Customer";div.ag-row:attr__row-index="2"nth-child="3"nth-of-type="3";div:attr__id="bl-grid"attr_id="bl-grid"nth-child="1"nth-of-type="1"';
+  'div.ag-cell:attr__col-id="name"attr__title="Jane Customer"nth-child="1"nth-of-type="1"text="Jane Customer";div.ag-row:attr__id="row-cust_42"attr__row-index="2"attr_id="row-cust_42"nth-child="3"nth-of-type="3";div:attr__id="bl-grid"attr_id="bl-grid"nth-child="1"nth-of-type="1"';
 const MASKED_DATA_CHAIN =
   'div.ag-cell:attr__col-id="name"nth-child="1"nth-of-type="1";div.ag-row:attr__row-index="2"nth-child="3"nth-of-type="3";div:attr__id="bl-grid"attr_id="bl-grid"nth-child="1"nth-of-type="1"';
 

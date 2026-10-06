@@ -14,29 +14,34 @@
   limitations under the License.
 */
 
-import { filterElementsChain, type } from '@lowdefy/helpers';
+import { filterElementsChain, journeyTargetSelectors, type } from '@lowdefy/helpers';
+
+const { blockWrapperPrefix } = journeyTargetSelectors;
 
 // Chain keys that only describe structure and stay as they are. Any other attribute goes, so an
-// attribute posthog-js or a block adds later cannot carry data out.
+// attribute posthog-js or a block adds later cannot carry data out. Classes stay: the classes
+// Lowdefy and antd render carry no runtime keys, so a block's `class` must not be built from data.
 const CHAIN_STRUCTURAL_KEYS = new Set([
   'attr__class',
   'attr__col-id',
-  'attr__id',
   'attr__role',
   'attr__row-index',
   'attr__type',
-  'attr_id',
   'nth-child',
   'nth-of-type',
 ]);
 const CHAIN_TEXT_KEYS = new Set(['text']);
 const CHAIN_HREF_KEYS = new Set(['href', 'attr__href']);
 
+// An id stays only as a block wrapper id. Library ids can embed runtime keys (antd tabs write
+// `rc-tabs-N-tab-<key>`, a submenu popup gets `<uuid>-<eventKey>-popup`), so a Tabs block or
+// submenu keyed by record would send the record; nothing downstream reads any id but `bl-` ones.
+const ID_KEYS = new Set(['attr__id', 'attr_id']);
+
 // The same keys in an `$elements` entry, as posthog-js builds them before writing the chain.
 const ELEMENT_STRUCTURAL_KEYS = new Set([
   'attr__class',
   'attr__col-id',
-  'attr__id',
   'attr__role',
   'attr__row-index',
   'attr__type',
@@ -52,12 +57,21 @@ const ELEMENT_HREF_KEYS = new Set(['attr__href']);
 // the plugin adds to events goes in this list, so it is masked like the rest.
 const TEXT_PROPERTIES = ['$el_text', '$selected_content', '$external_click_url'];
 
-// How one attribute is masked: structural keys stay, a text stays only when keepText passes it,
-// an href that fails is emptied so the link still reads as a link, and everything else goes.
+function isBlockWrapperId(value) {
+  return type.isString(value) && value.startsWith(blockWrapperPrefix);
+}
+
+// How one attribute is masked: structural keys stay, an id stays only as a block wrapper id (it is
+// structure, not text, so it does not go through keepText), a text stays only when keepText
+// passes it, an href that fails is emptied so the link still reads as a link, and everything else
+// goes.
 function createMaskValue({ structuralKeys, textKeys, hrefKeys, keepText }) {
   return function maskValue({ key, value }) {
     if (structuralKeys.has(key)) {
       return value;
+    }
+    if (ID_KEYS.has(key)) {
+      return isBlockWrapperId(value) ? value : null;
     }
     if (textKeys.has(key)) {
       return keepText(value) ? value : null;
@@ -117,7 +131,8 @@ function maskProperties({ properties, keepText }) {
 // value stays only when the config of the page it was captured on (or the menus, messages or
 // antd locale) spells it out, and element attributes go by an allow-list. It acts on the fields
 // an event carries, never on its name, so every click event posthog-js has or adds is covered.
-// posthog-js drops an event whose before_send throws, so a failing check strips all text instead.
+// posthog-js drops an event whose before_send throws, so a failing check strips all text (and
+// every attribute outside the allow-list) instead.
 function maskEventText({ event, trace, pageId }) {
   if (!type.isObject(event.properties)) {
     return event;

@@ -113,6 +113,87 @@ test('maskEventText leaves a masked chain that still targets the block, row, col
   });
 });
 
+// A tab keyed by record inside a Tabs block, then a submenu popup keyed by record: library ids
+// that embed runtime keys.
+const ID_CHAIN = [
+  'div.ant-tabs-tab-btn:attr__aria-selected="true"attr__id="rc-tabs-0-tab-Jane Customer"attr__role="tab"attr_id="rc-tabs-0-tab-Jane Customer"nth-child="1"nth-of-type="1"text="Assign"',
+  'div.ant-tabs-tab:nth-child="2"nth-of-type="2"',
+  'div:attr__id="bl-tabs"attr_id="bl-tabs"nth-child="1"nth-of-type="1"',
+].join(';');
+
+const MASKED_ID_CHAIN = [
+  'div.ant-tabs-tab-btn:attr__role="tab"nth-child="1"nth-of-type="1"text="Assign"',
+  'div.ant-tabs-tab:nth-child="2"nth-of-type="2"',
+  'div:attr__id="bl-tabs"attr_id="bl-tabs"nth-child="1"nth-of-type="1"',
+].join(';');
+
+const SUBMENU_CHAIN = [
+  'li.ant-menu-item:attr__role="menuitem"nth-child="1"nth-of-type="1"text="Active"',
+  'ul.ant-menu.ant-menu-sub:attr__id="rc-menu-uuid-1-acme-popup"attr__role="menu"attr_id="rc-menu-uuid-1-acme-popup"nth-child="1"nth-of-type="1"',
+  'div:attr__id="bl-menu"attr_id="bl-menu"nth-child="1"nth-of-type="1"',
+].join(';');
+
+test('maskEventText removes library ids that embed runtime keys and keeps block wrapper ids', () => {
+  expect(mask({ $elements_chain: ID_CHAIN }).properties.$elements_chain).toBe(MASKED_ID_CHAIN);
+  const { properties } = mask({ $elements_chain: SUBMENU_CHAIN });
+  expect(properties.$elements_chain).toBe(
+    [
+      'li.ant-menu-item:attr__role="menuitem"nth-child="1"nth-of-type="1"text="Active"',
+      'ul.ant-menu.ant-menu-sub:attr__role="menu"nth-child="1"nth-of-type="1"',
+      'div:attr__id="bl-menu"attr_id="bl-menu"nth-child="1"nth-of-type="1"',
+    ].join(';')
+  );
+  expect(properties.$elements_chain).not.toContain('acme');
+});
+
+test('maskEventText keeps classes, row-index, col-id and bl- ids byte for byte while dropping other ids', () => {
+  const chain = [
+    'div.ant-select-item.ant-select-item-option:attr__class="ant-select-item ant-select-item-option"attr__id="customer_list_3"attr__role="option"attr_id="customer_list_3"nth-child="3"nth-of-type="3"',
+    'div.ag-row:attr__row-index="4"attr__role="row"nth-child="5"nth-of-type="5"',
+    'div.ag-cell:attr__col-id="name"attr__role="gridcell"nth-child="2"nth-of-type="2"',
+    'div:attr__id="bl-grid"attr_id="bl-grid"nth-child="1"nth-of-type="1"',
+  ].join(';');
+  expect(mask({ $elements_chain: chain }).properties.$elements_chain).toBe(
+    chain.replace(/attr__id="customer_list_3"/, '').replace(/attr_id="customer_list_3"/, '')
+  );
+});
+
+test('maskEventText removes a non-block id from an $elements entry and keeps a bl- id', () => {
+  const { properties } = mask({
+    $elements: [
+      {
+        tag_name: 'div',
+        classes: ['ant-tabs-tab-btn'],
+        attr__id: 'rc-tabs-0-tab-Jane Customer',
+        attr_id: 'rc-tabs-0-tab-Jane Customer',
+        attr__role: 'tab',
+        nth_child: 1,
+        nth_of_type: 1,
+      },
+      { tag_name: 'div', attr__id: 'bl-tabs', attr_id: 'bl-tabs', nth_child: 1, nth_of_type: 1 },
+    ],
+  });
+  expect(properties.$elements).toEqual([
+    {
+      tag_name: 'div',
+      classes: ['ant-tabs-tab-btn'],
+      attr__role: 'tab',
+      nth_child: 1,
+      nth_of_type: 1,
+    },
+    { tag_name: 'div', attr__id: 'bl-tabs', attr_id: 'bl-tabs', nth_child: 1, nth_of_type: 1 },
+  ]);
+});
+
+test('maskEventText leaves targetFromElementsChain unchanged apart from text when ids are dropped', () => {
+  [GRID_CHAIN, OPTION_CHAIN, ID_CHAIN, SUBMENU_CHAIN].forEach((chain) => {
+    const { block_id, block_ids, row, column, option } = targetFromElementsChain(chain);
+    expect(
+      targetFromElementsChain(mask({ $elements_chain: chain }).properties.$elements_chain)
+    ).toEqual(expect.objectContaining({ block_id, block_ids, row, column, option }));
+  });
+});
+
 test('maskEventText empties a failing href and keeps a config href', () => {
   const chain =
     'a:attr__href="/customers/jane"href="/customers/jane"nth-child="1"nth-of-type="1"text="Jane Customer";a:attr__href="/orders"href="/orders"nth-child="2"nth-of-type="2"text="Assign"';
@@ -231,7 +312,11 @@ test('maskEventText strips every text and non-structural attribute and still ret
     event: '$autocapture',
     properties: {
       $elements_chain: GRID_CHAIN,
-      $elements: [{ tag_name: 'button', $el_text: 'Assign', attr__title: 'Jane', nth_child: 1 }],
+      $elements: [
+        { tag_name: 'button', $el_text: 'Assign', attr__title: 'Jane', nth_child: 1 },
+        { tag_name: 'div', attr__id: 'rc-tabs-0-tab-Jane', nth_child: 1 },
+        { tag_name: 'div', attr__id: 'bl-grid', attr_id: 'bl-grid', nth_child: 1 },
+      ],
       $el_text: 'Assign',
       $selected_content: 'Assign',
       lowdefy_block_id: 'grid',
@@ -240,7 +325,11 @@ test('maskEventText strips every text and non-structural attribute and still ret
   expect(maskEventText({ event, trace, pageId: 'orders' })).toBe(event);
   expect(event.properties).toEqual({
     $elements_chain: MASKED_GRID_CHAIN.replace(/text="Assign"/g, ''),
-    $elements: [{ tag_name: 'button', nth_child: 1 }],
+    $elements: [
+      { tag_name: 'button', nth_child: 1 },
+      { tag_name: 'div', nth_child: 1 },
+      { tag_name: 'div', attr__id: 'bl-grid', attr_id: 'bl-grid', nth_child: 1 },
+    ],
     lowdefy_block_id: 'grid',
   });
 });

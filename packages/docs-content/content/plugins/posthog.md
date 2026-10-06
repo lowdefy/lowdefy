@@ -129,7 +129,7 @@ By default, `posthog-js` sends the text of every element a person clicks. In a b
 On every event, whatever its name (autocaptured clicks, rage clicks, dead clicks and swipes, copy events and any event `posthog-js` adds later):
 
 - __Text that is not config text.__ Each clicked text (`$el_text`, the `text` entries of `$elements_chain` and `$elements`, `$selected_content` and link targets) is kept only when it equals, after whitespace is collapsed, a string in the config of the page the event was captured on, in the app's menus, in the i18n messages or in the antd locale. Everything else is removed: grid and table cell values, options and menu items a request fills, labels built from records, and anything a `Dynamic` block's endpoint returned. A link whose target is not config text keeps its `href` attribute, emptied, so the click still reads as a link click.
-- __Element attributes outside a structural allow-list.__ Only the tag, classes, `id`, `class`, `role`, `type`, `row-index`, `col-id`, `nth-child` and `nth-of-type` are kept. Every other attribute is removed, including `title` (antd select options carry their label there), `aria-label`, `value`, `placeholder`, `alt` and every `data-*` attribute.
+- __Element attributes outside a structural allow-list.__ Only the tag, classes, `class`, `role`, `type`, `row-index`, `col-id`, `nth-child` and `nth-of-type` are kept, and `id` only when it is a block's wrapper id (`bl-<blockId>`). Other ids are removed, because ids that libraries generate can embed runtime keys: an antd tab is `rc-tabs-<n>-tab-<key>`, so a `Tabs` block keyed by record would send the record. Every other attribute is removed, including `title` (antd select options carry their label there), `aria-label`, `value`, `placeholder`, `alt` and every `data-*` attribute.
 
 ###### What stays
 
@@ -147,6 +147,11 @@ URLs. `$current_url`, `$pathname`, URL query values and `lowdefy_path_params` st
 - `maskDataText: false` on [`PostHogInit`](/PostHogInit) sends full click text and every attribute, as `posthog-js` does by default.
 - `options.mask_all_text: true` sends no click text at all, config labels included.
 - A block `class` of `ph-sensitive` masks that block's config text too. It covers only the block's own DOM: popups a block renders into the page body, such as `Dropdown` and `DropdownButton` items, table and grid `MenuCell` menus, `Modal` and `Drawer`, are outside it.
+
+Two things are left to the app:
+
+- Classes are sent as they are, so never build a block's `class` from data.
+- A `data-ph-capture-attribute-<name>` attribute is how `posthog-js` lets an app add a property to a click: its value is sent unmasked as property `<name>`. Only put config values in it.
 
 ###### Session replay
 
