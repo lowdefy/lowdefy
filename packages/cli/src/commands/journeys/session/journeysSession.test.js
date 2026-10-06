@@ -19,7 +19,14 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import journeysSession from './journeysSession.js';
+// The production cache reader resolves tokens against a full config build;
+// these tests hand it the window's records instead.
+const mockReadProductionTrace = jest.fn();
+jest.unstable_mockModule('../readProductionTrace.js', () => ({
+  default: mockReadProductionTrace,
+}));
+
+const { default: journeysSession } = await import('./journeysSession.js');
 
 const OLD_SESSION = '20261003T134000Z-aaaaaa';
 const NEW_SESSION = '20261003T140300Z-bbbbbb';
@@ -214,4 +221,110 @@ test('journeys session with an unknown id fails naming the id and the newest ses
 test('journeys session says when nothing was recorded', async () => {
   await journeysSession({ context });
   expect(logs).toEqual(['No recorded dev sessions in this window.']);
+});
+
+function productionRecord({ session, t, kind = 'click', block, event }) {
+  const record = {
+    v: 1,
+    source: 'production',
+    session,
+    t,
+    scope: 'page',
+    kind,
+    page_id: 'tickets',
+    roles: ['member'],
+    person: 'p_1',
+    org: 'o_1',
+    build: null,
+    target: null,
+  };
+  if (kind === 'pageview') record.url = '/tickets';
+  if (block) {
+    record.target = {
+      block_id: block,
+      block_type: 'Button',
+      row: null,
+      column: null,
+      text: null,
+      nth: null,
+      option: false,
+    };
+  }
+  if (event) record.event = event;
+  return record;
+}
+
+const PRODUCTION_SESSION = 'ph_5f1c2a';
+
+function mockProductionWindow() {
+  mockReadProductionTrace.mockResolvedValue({
+    records: [
+      productionRecord({ session: PRODUCTION_SESSION, t: at(60), kind: 'pageview' }),
+      productionRecord({ session: PRODUCTION_SESSION, t: at(61), kind: 'change', block: 'title' }),
+      productionRecord({
+        session: PRODUCTION_SESSION,
+        t: at(62),
+        block: 'save',
+        event: {
+          name: 'onClick',
+          block_id: 'save',
+          success: false,
+          error: { name: 'UserError', config_key: null, action_type: 'Validate', action_id: null },
+          invalid_blocks: ['priority'],
+        },
+      }),
+    ],
+    window: { from: '2026-09-04', to: '2026-10-03' },
+  });
+}
+
+test('journeys session --source production lists the sessions of the pulled window', async () => {
+  mockProductionWindow();
+  context.options = { source: 'production', since: '30d' };
+  const report = await journeysSession({ context });
+  expect(mockReadProductionTrace).toHaveBeenCalledWith(
+    expect.objectContaining({ context, maxDays: 30, since: '30d' })
+  );
+  expect(report.sessions.map((session) => session.id)).toEqual([PRODUCTION_SESSION]);
+  expect(report.sessions[0]).toMatchObject({ interactions: 2, failures: 1 });
+});
+
+test('journeys session --source production prints a session with controls and outcomes only', async () => {
+  mockProductionWindow();
+  context.options = { source: 'production' };
+  const report = await journeysSession({ context, params: [PRODUCTION_SESSION] });
+  expect(report.log.lines).toEqual([
+    'page tickets',
+    'fill title',
+    'click save → Validate failed [priority]',
+  ]);
+});
+
+test('journeys session --source production fails for a session not in the window', async () => {
+  mockProductionWindow();
+  context.options = { source: 'production' };
+  await expect(journeysSession({ context, params: ['ph_missing'] })).rejects.toThrow(
+    `No session "ph_missing" in this window. The newest sessions are ${PRODUCTION_SESSION}.`
+  );
+});
+
+test('journeys session says the production window holds no sessions', async () => {
+  mockReadProductionTrace.mockResolvedValue({
+    records: [],
+    window: { from: '2026-09-04', to: '2026-10-03' },
+  });
+  context.options = { source: 'production' };
+  await journeysSession({ context });
+  expect(logs).toEqual(['No production sessions in 2026-09-04/2026-10-03.']);
+});
+
+test('journeys session refuses an unknown source and a production window on dev', async () => {
+  context.options = { source: 'explorer' };
+  await expect(journeysSession({ context })).rejects.toThrow(
+    '--source should be one of dev, production. Received "explorer".'
+  );
+  context.options = { from: '2026-10-01' };
+  await expect(journeysSession({ context })).rejects.toThrow(
+    '--from and --to choose a production window; use --since for dev sessions.'
+  );
 });

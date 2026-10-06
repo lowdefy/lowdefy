@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
-// The longest window, in UTC days, that pull, coverage and production session logs mine.
-// Evidence is not a mining window and is not capped.
-const MINING_WINDOW_MAX_DAYS = 30;
+// Below this many production rows in the window, sessions are few enough for
+// a reader to go through one by one with `lowdefy journeys session --source
+// production`, and grouping them into flows hides the detail a reader reasons
+// from. From this many on, coverage and usage group sessions into flows.
+const FLOW_GROUPING_MIN_ROWS = 100000;
 
-export default MINING_WINDOW_MAX_DAYS;
+export default FLOW_GROUPING_MIN_ROWS;

@@ -18,13 +18,17 @@ import fs from 'fs';
 import path from 'path';
 import { type } from '@lowdefy/helpers';
 
-// Builds .lowdefy/test/coverage.json and writes it whole: the five measures,
-// the production profile and each committed journey's sequence, so the
-// explorer, variants and the app graph read production from one file. The
-// same inputs give the same bytes apart from `generated`.
+import COVERAGE_REPORT_VERSION from './coverageReportVersion.js';
+
+// Builds .lowdefy/test/coverage.json and writes it whole: whether sessions
+// were grouped into flows, the five measures, the production profile and each
+// committed journey's sequence, so the explorer, variants and the app graph
+// read production from one file. The same inputs give the same bytes apart
+// from `generated`.
 function writeCoverageReport({
   directories,
   window,
+  flowGrouping,
   measures,
   profile,
   journeys,
@@ -32,10 +36,11 @@ function writeCoverageReport({
   generated,
 }) {
   const report = {
-    version: 1,
+    version: COVERAGE_REPORT_VERSION,
     generated,
     source: 'production',
     window: { from: window.from, to: window.to },
+    flowGrouping,
     measures,
   };
   if (!type.isUndefined(mutation)) report.mutation = mutation;

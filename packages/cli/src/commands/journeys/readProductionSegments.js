@@ -22,8 +22,9 @@ import readProductionTrace from './readProductionTrace.js';
 import resolveBuildDirectory from './resolveBuildDirectory.js';
 
 // The production window's segments (compileSegments), for coverage, with the
-// app's isConfigText to read journeys by the same text rule, for coverage,
-// which passes maxDays, the mining cap. Evidence refresh reads whole months
+// app's isConfigText to read journeys by the same text rule and the window's
+// row count, which decides whether coverage groups flows. Coverage passes
+// maxDays, the mining cap. Evidence refresh reads whole months
 // through readProductionMonths instead.
 async function readProductionSegments({ context, maxDays }) {
   const { options } = context;
@@ -45,7 +46,7 @@ async function readProductionSegments({ context, maxDays }) {
       until: Date.parse(`${window.to}T23:59:59.999Z`),
     },
   });
-  return { segments, window, isConfigText };
+  return { segments, window, isConfigText, rows: records.length };
 }
 
 export default readProductionSegments;

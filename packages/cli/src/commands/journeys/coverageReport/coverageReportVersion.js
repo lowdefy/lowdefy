@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-// The longest window, in UTC days, that pull, coverage and production session logs mine.
-// Evidence is not a mining window and is not capped.
-const MINING_WINDOW_MAX_DAYS = 30;
+// The version of .lowdefy/test/coverage.json this CLI writes. Version 2 added
+// flowGrouping; a report of another version reads as no report.
+const COVERAGE_REPORT_VERSION = 2;
 
-export default MINING_WINDOW_MAX_DAYS;
+export default COVERAGE_REPORT_VERSION;

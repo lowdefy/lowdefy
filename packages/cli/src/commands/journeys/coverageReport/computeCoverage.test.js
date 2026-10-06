@@ -128,7 +128,12 @@ const reviews = committed({
 });
 
 function coverage(journeys) {
-  return computeCoverage({ journeys, segments, profile: profileProduction({ segments }) });
+  return computeCoverage({
+    journeys,
+    segments,
+    profile: profileProduction({ segments }),
+    groupFlows: true,
+  });
 }
 
 test('computeCoverage weights interactions by occurrence', () => {
@@ -188,6 +193,7 @@ function measuredCoverage({ journeys, measuredRun }) {
     segments,
     profile: profileProduction({ segments }),
     measuredRun,
+    groupFlows: true,
   });
 }
 
@@ -258,6 +264,7 @@ test('computeCoverage matches measured failure paths across list indices', () =>
     journeys: [reviews],
     segments: listSegments,
     profile: profileProduction({ segments: listSegments }),
+    groupFlows: true,
     measuredRun: {
       run: RUN,
       keys: new Set(),
@@ -283,4 +290,15 @@ test('computeCoverage stays reached when the newest run has no pass results', ()
   expect(failure.mode).toBe('reached');
   expect(failure.note).toContain('run.json');
   expect(failure).toMatchObject({ covered: 2, total: 2 });
+});
+
+test('computeCoverage leaves the flow measure null when flows are not grouped', () => {
+  const measures = computeCoverage({
+    journeys: [saves],
+    segments,
+    profile: profileProduction({ segments }),
+    groupFlows: false,
+  });
+  expect(measures.flow).toBeNull();
+  expect(measures.interaction).toEqual(coverage([saves]).interaction);
 });

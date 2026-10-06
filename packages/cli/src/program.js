@@ -41,6 +41,7 @@ import initVercel from './commands/init-vercel/initVercel.js';
 import journeysHarden from './commands/journeys/harden/journeysHarden.js';
 import journeysVariants from './commands/journeys/variants/journeysVariants.js';
 import journeysSession from './commands/journeys/session/journeysSession.js';
+import FLOW_GROUPING_MIN_ROWS from './commands/journeys/flowGroupingMinRows.js';
 import journeysCoverage from './commands/journeys/journeysCoverage.js';
 import journeysEvidence from './commands/journeys/journeysEvidence.js';
 import journeysUsage from './commands/journeys/journeysUsage.js';
@@ -412,7 +413,7 @@ journeys
 journeys
   .command('session')
   .description(
-    'Print a recorded dev session as a log, one line per interaction with what the app did in response, to write journeys from. Without an id, list the recent sessions, newest first.'
+    'Print a recorded session as a log, one line per interaction with what the app did in response, to write journeys from. Without an id, list the sessions, newest first.'
   )
   .usage('[id] [options]')
   .argument('[id]', 'The session to print, as the list names it.')
@@ -422,9 +423,21 @@ journeys
   .addOption(options.logLevel)
   .addOption(
     new Option(
-      '--since <since>',
-      'Sessions with records at or after this time: a duration back from now (30m, 2h, 7d) or an ISO date.'
+      '--source <source>',
+      'Where sessions are read from: dev (the default), what the dev server recorded, or production, the cache "journeys pull posthog" writes.'
     )
+  )
+  .addOption(
+    new Option(
+      '--since <since>',
+      'Dev: sessions with records at or after this time, a duration back from now (30m, 2h, 7d) or an ISO date. Production: the window ending today, a number of days such as 30d (the default) or a start date.'
+    )
+  )
+  .addOption(
+    new Option('--from <date>', 'Production only: the first UTC day of the window, YYYY-MM-DD.')
+  )
+  .addOption(
+    new Option('--to <date>', 'Production only: the last UTC day of the window, YYYY-MM-DD.')
   )
   .addOption(new Option('--json', 'Print the list or the log as JSON on stdout.'))
   .action(runCommand({ cliVersion, handler: journeysSession }));
@@ -638,7 +651,16 @@ const journeysCoverageCommand = journeys
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
   .addOption(new Option('--source <source>', 'Where use is read from: production (the default).'))
-  .addOption(new Option('--json', 'Print the coverage report as JSON instead of the summary.'));
+  .addOption(new Option('--json', 'Print the coverage report as JSON instead of the summary.'))
+  .addOption(
+    new Option(
+      '--group',
+      `Group sessions into flows and rank them by use, whatever the window holds. By default flows are grouped only from ${FLOW_GROUPING_MIN_ROWS} production rows on.`
+    )
+  )
+  .addOption(
+    new Option('--no-group', 'Never group sessions into flows, whatever the window holds.')
+  );
 productionWindowOptions.forEach((option) => journeysCoverageCommand.addOption(option));
 journeysCoverageCommand.action(runCommand({ cliVersion, handler: journeysCoverage }));
 
