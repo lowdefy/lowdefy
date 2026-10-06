@@ -134,3 +134,10 @@ test('journeys-from-production reports deprecated flows still in use and how the
   expect(report).toContain('you may suggest that, and leave it to the developer');
   expect(skill).toContain("Nothing in it deletes a journey's deprecated flows either.");
 });
+
+test('journeys-from-production narrows a shared-label click, since production records carry no nth', () => {
+  const skill = journeysFromProduction({ appPath: '' });
+  expect(skill).toContain('A production click carries no `nth`');
+  expect(skill).toContain('narrow it from what the routine did');
+  expect(skill).toContain('Add `nth` only when the config shows which control it must be.');
+});

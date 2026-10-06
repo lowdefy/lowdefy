@@ -135,6 +135,12 @@ and note why.
   the fixtures or the config's options.
 - Write a label you read in the config where it tells two controls in one block apart. A click on
   a label built from values stays without text.
+- A production click carries no \`nth\`: analytics cannot say which of several controls with the
+  same label was clicked. Where a step's \`text\` or \`containing\` target can match more than
+  one control (a grid's per-row Edit, a list's Delete), narrow it from what the routine did: the
+  \`blockId\` it was in, the \`row\` of fixture data it worked on, or \`containing\` the text
+  that row shows. Add \`nth\` only when the config shows which control it must be. A target that
+  still matches several controls fails the run rather than clicking the first.
 - Pick the user from the role matrix: a user whose roles match a role set production shows on
   that page.
 - Add waits and expectations from the code: a \`wait: { request }\` for the request a step runs,

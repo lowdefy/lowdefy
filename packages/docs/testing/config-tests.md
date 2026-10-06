@@ -521,6 +521,7 @@ pnpx lowdefy@5 journeys evidence --refresh
 - Person and organisation ids hashed with a salt that never leaves your machine, so counts of people and organisations are the same on every machine while no raw id is stored.
 - Page URLs with query parameter names only (`/tickets?id=&tab=`), never their values.
 - No clicked text. The text of each clicked element is stored as a token, a hash under the same salt, so the same text groups and counts without being kept. Compile, coverage and evidence turn a token back into text only when it is text from your app's config (pages, menus, i18n messages, block plugins' default messages, antd's own strings), collected with one full build of the app by the installed development server and cached until the config changes. Text that is not in the config, such as a customer's name in a grid cell, stays a token.
+- No match index. A click on one of several controls with the same label, such as a grid's per-row Edit, carries no `nth`, so its candidate step targets every one of them. Narrow such a step by `blockId`, `row` or `containing` before you promote the candidate; a target that matches several controls fails the run rather than clicking the first. The `journeys-from-production` skill does this for you.
 
 Pull, compile and coverage read at most 30 days at a time: pick the window for the question, such as the last 30 days, the days since a deploy for a regression, or the days around a month-end for a periodic process. Evidence is not capped.
 
