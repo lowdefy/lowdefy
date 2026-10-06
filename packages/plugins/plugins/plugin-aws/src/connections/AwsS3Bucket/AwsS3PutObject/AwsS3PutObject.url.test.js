@@ -163,6 +163,56 @@ test.each([
   expect(mockSend).not.toHaveBeenCalled();
 });
 
+test('AwsS3PutObject asks for the body uncompressed and follows no redirect on its own', async () => {
+  mockFetch();
+  await AwsS3PutObject({ request: { key: 'k', url, maxBytes: 100 }, connection });
+  const options = global.fetch.mock.calls[0][1];
+  expect(options.headers).toEqual({ 'accept-encoding': 'identity' });
+  expect(options.redirect).toBe('manual');
+});
+
+test('AwsS3PutObject follows a redirect to an https link', async () => {
+  global.fetch = jest.fn(async (link) => {
+    if (link === url) {
+      return new Response(null, { status: 302, headers: { location: '/moved/shot.png' } });
+    }
+    return new Response(bodyOf(['hello']), {
+      status: 200,
+      headers: { 'content-type': 'image/png', 'content-length': '5' },
+    });
+  });
+  const res = await AwsS3PutObject({ request: { key: 'k', url, maxBytes: 100 }, connection });
+  expect(global.fetch.mock.calls.map(([link]) => link)).toEqual([
+    url,
+    'https://client.test/moved/shot.png',
+  ]);
+  expect(res.size).toBe(5);
+  expect(stored.toString()).toBe('hello');
+});
+
+test.each([['http://169.254.169.254/latest/meta-data/'], ['file:///etc/passwd']])(
+  'AwsS3PutObject refuses a redirect to %s before requesting it',
+  async (location) => {
+    global.fetch = jest.fn(async () => new Response(null, { status: 301, headers: { location } }));
+    const error = await refusal({ maxBytes: 100 });
+    expect(error.code).toBe('url_not_https');
+    expect(error.message).toBe('AwsS3PutObject "url" redirected to a link that is not https:.');
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(mockSend).not.toHaveBeenCalled();
+  }
+);
+
+test('AwsS3PutObject refuses a url that redirects more than 20 times', async () => {
+  global.fetch = jest.fn(
+    async () => new Response(null, { status: 307, headers: { location: url } })
+  );
+  const error = await refusal({ maxBytes: 100 });
+  expect(error.code).toBe('fetch_failed');
+  expect(error.message).toBe('AwsS3PutObject url redirected more than 20 times.');
+  expect(global.fetch).toHaveBeenCalledTimes(21);
+  expect(mockSend).not.toHaveBeenCalled();
+});
+
 test('AwsS3PutObject refuses a Content-Length over maxBytes before reading the body', async () => {
   mockFetch({ chunks: ['12345678901'] });
   const error = await refusal({ maxBytes: 10 });

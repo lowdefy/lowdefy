@@ -30,9 +30,22 @@ async function collect(chunks) {
   return Buffer.concat(buffers);
 }
 
-async function fetchUrl({ url, signal }) {
+const REDIRECT_STATUSES = new Set([301, 302, 303, 307, 308]);
+const MAX_REDIRECTS = 20;
+
+function isHttps(link) {
+  return URL.parse(link)?.protocol === 'https:';
+}
+
+async function fetchOnce({ url, signal }) {
   try {
-    return await fetch(url, { signal });
+    // Asks for the body uncompressed: fetch decodes a compressed body, whose length then no longer
+    // matches the Content-Length checked against maxBytes.
+    return await fetch(url, {
+      headers: { 'accept-encoding': 'identity' },
+      redirect: 'manual',
+      signal,
+    });
   } catch (error) {
     if (signal.aborted) throw error;
     // The url is left out of the message: a presigned link carries its signature.
@@ -44,19 +57,37 @@ async function fetchUrl({ url, signal }) {
   }
 }
 
+// Follows redirects by hand, so each link is checked to be https: before it is requested.
+async function fetchUrl({ url, signal }) {
+  let link = url;
+  for (let redirects = 0; redirects <= MAX_REDIRECTS; redirects += 1) {
+    const response = await fetchOnce({ url: link, signal });
+    const location = response.headers.get('location');
+    if (!REDIRECT_STATUSES.has(response.status) || location === null) {
+      return response;
+    }
+    await response.body?.cancel();
+    link = URL.parse(location, link)?.href ?? location;
+    if (!isHttps(link)) {
+      throw createCopyError({
+        code: 'url_not_https',
+        message: 'AwsS3PutObject "url" redirected to a link that is not https:.',
+      });
+    }
+  }
+  throw createCopyError({
+    code: 'fetch_failed',
+    message: `AwsS3PutObject url redirected more than ${MAX_REDIRECTS} times.`,
+  });
+}
+
 // Streams what an https url answers into the bucket, capped at maxBytes. A body with a
 // Content-Length streams straight into one PutObject; one without is read into memory, still
 // capped at maxBytes, since PutObject needs the length up front.
 async function copyFromUrl({ s3, params, request }) {
   const { contentType, contentTypes, maxBytes, timeout = 20000, url } = request;
 
-  let parsed = null;
-  try {
-    parsed = new URL(url);
-  } catch {
-    // Refused below, as any url that is not https.
-  }
-  if (parsed?.protocol !== 'https:') {
+  if (!isHttps(url)) {
     throw createCopyError({
       code: 'url_not_https',
       message: 'AwsS3PutObject "url" must be an https: link.',
@@ -67,13 +98,6 @@ async function copyFromUrl({ s3, params, request }) {
   let refusal = null;
   try {
     const response = await fetchUrl({ url, signal });
-    if (response.url && new URL(response.url).protocol !== 'https:') {
-      await response.body?.cancel();
-      throw createCopyError({
-        code: 'url_not_https',
-        message: 'AwsS3PutObject "url" redirected to a link that is not https:.',
-      });
-    }
     if (!response.ok) {
       await response.body?.cancel();
       throw createCopyError({

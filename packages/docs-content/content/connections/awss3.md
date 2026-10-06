@@ -275,7 +275,7 @@ Returns `{ bucket, key, size, contentType }`, with `size` in bytes and `contentT
 
 A refused copy from a `url` stores nothing and throws an error whose `code` names the reason, so a `:catch` can answer each its own way (`_error: code`):
 
-- `url_not_https`: the link is not `https:`. Refused before any request is made.
+- `url_not_https`: the link, or a link it redirects to, is not `https:`. Refused before that link is requested.
 - `too_large`: the answer is larger than `maxBytes`.
 - `content_type`: the answer's `Content-Type` is not one of `contentTypes`.
 - `fetch_failed`: the link answered with a status that is not 2xx (the error's `statusCode` holds it), could not be reached, or sent a body that does not match its `Content-Length`.
