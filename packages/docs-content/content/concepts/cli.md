@@ -45,21 +45,12 @@ The `build` command runs a Lowdefy build. This builds a production Lowdefy app i
 
 ## data list
 
-The `data list` command prints each [journey data set](/journey-data-sets) in `tests/data/`: fixtures only, or the snapshot's source environment, when it was pulled, its age and document count, and whether the data set's `snapshot` block has changed since the pull.
+The `data list` command prints each [journey data set](/journey-data-sets) in `tests/data/` with the number of documents it loads and the users it names.
 
 - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
 - `--disable-telemetry`: Disable telemetry.
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 
-## data pull
-
-The `data pull <name>` command copies a scoped, capped snapshot of the connections a [journey data set](/journey-data-sets) lists, from a pre-production database into `.lowdefy/data/<name>/`, for journeys to run on. Run it with the source environment's secrets, for example `infisical run --env=staging -- lowdefy data pull staging-sample`. It reads only from an environment that sets `dataPull: true`, and is guarded by that environment's `guards.secrets` pins. A failed pull leaves the previous snapshot in place.
-
-- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
-- `--dev-directory <dev-directory>`: Change the dev directory. The pull runs from the development server's installation. The default is `<config-directory>/.lowdefy/dev`.
-- `--disable-telemetry`: Disable telemetry.
-- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
-- `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
 
 ## dev
 
@@ -171,28 +162,12 @@ The `test` command runs the app's config tests — every journey in `tests/journ
 - `--filter <name>`: Only run journeys whose `name` contains this string (case-insensitive). Repeat it to run the journeys matching any of the strings. Exits with code `1` if no journey matches.
 - `--tier <tier>`: Only run the journeys in this popularity tier of the selection, ranked by recent production use: `common` (p50, the happy paths), `wide` (p80), `edge` (p95) or `full` (every journey, the default). Journeys with no counts for their current steps run in every tier. A tiered run never records as the suite's run. Exits with code `1` when the selection has fewer than 100 journey matches in the usage window, or no evidence. See [Usage and tiers](/config-tests#usage-and-tiers).
 - `--usage-window <months>`: The calendar months recent use is ranked over, for `--tier` and the `PASS` line, such as `6m`. The default is `3m`.
-- `--lint`: Check the journeys for the lint rules (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L5 named data set users, L6 final assertion, L7 no snapshot values) and run nothing. Exits with code `1` on any lint error. See [Lint](/config-tests#lint).
+- `--lint`: Check the journeys for the lint rules (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L5 named data set users, L6 final assertion) and run nothing. Exits with code `1` on any lint error. See [Lint](/config-tests#lint).
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 - `--port <port>`: The port to start the development server on. If it is in use, the next free port is used. The default is `3000`.
 - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
 - `--repeat <n>`: Run each journey `n` times (1 to 10) and classify it `PASS`, `FLAKY` or `FAIL`. Exits with code `1` on any `FLAKY` or `FAIL`. See [Replaying candidates](/config-tests#replaying-candidates).
 - `--url <url>`: Run the journeys against an already running development server (for example `--url http://localhost:3000` while `lowdefy dev` is running) instead of starting one.
-
-## journeys compile
-
-The `journeys compile` command turns recorded interaction traces into candidate journeys. It groups recorded segments that do the same thing step by step and writes one candidate per group to `tests/journeys/_candidates/<source>/`, which `lowdefy test` does not run. See [Candidates from recorded traces](/config-tests#candidates-from-recorded-traces).
-
-- `[traceFiles...]`: The trace files (JSONL) to compile. Without them, `--source dev` or `--source explorer` reads the recordings in `.lowdefy/traces/<source>/`.
-- `--source <source>`: `production`, `dev` or `explorer`. Required when no trace files are given; with files, compiles only records of this source. `--source production` with no files reads the cache that [`journeys pull posthog`](#journeys-pull-posthog) writes to `.lowdefy/traces/production/`, over the window's whole UTC days, with each clicked-text token read back as text only when it is text from the app's config. A production click whose text is not config text compiles without text, with a comment naming its token and a `tokenised-text` flag on the candidate.
-- `--since <since>`: Only records at or after this time: a duration back from now (`30m`, `2h`, `7d`) or an ISO date. Production traces default to `30d`, and a production window longer than 30 days is refused.
-- `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: Production only. An explicit window of whole UTC days instead of `--since`.
-- `--build <id|current>`: Only segments whose records all ran on this build. `current` is the build the running development server serves.
-- `--page <pageId>`: Only segments that visit this page.
-- `--out <directory>`: The candidates directory. The source is appended. The default is `tests/journeys/_candidates`.
-- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
-- `--dev-directory <dev-directory>`: Change the dev directory, where the development server's build is read from. The default is `<config-directory>/.lowdefy/dev`.
-- `--disable-telemetry`: Disable telemetry.
-- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 
 ## journeys harden
 
@@ -230,21 +205,22 @@ The `journeys scope` command prints what a change touched, for a coding agent ex
 - `--json`: Print the scope as JSON instead of the summary.
 - `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `test`.
 
-## journeys recordings
+## journeys session
 
-The `journeys recordings` command lists the sessions the development server recorded in `.lowdefy/traces/dev/`, newest first: the time span, the builds, the pages visited, how many attempts ended in an error, and how many interactions the newest full test run already drove. See [Dev recordings](/config-tests#dev-recordings). Set `LOWDEFY_DEV_RECORD=false` to turn recording off.
+The `journeys session [<id>]` command reads the sessions the development server recorded in `.lowdefy/traces/dev/`, or, with `--source production`, the production cache [`journeys pull posthog`](#journeys-pull-posthog) writes. Without an id it lists them, newest first: the session id, its time span, the pages visited, and how many interactions it holds and how many failed. With an id it prints that session as a log, one line per interaction with what the app did in response, such as `click save → Validate failed [priority]`, to write journeys from. A production log never shows a typed value, and shows clicked text only when it is text from the app's config. An id not in the window exits with code `1`, naming the newest sessions. Agents connected to the development server read dev sessions with the `lowdefy_journey_session` tool. Set `LOWDEFY_DEV_RECORD=false` to turn dev recording off. See [Session logs](/config-tests#session-logs).
 
-- `--since <since>`: Only sessions at or after this time: a duration back from now (`30m`, `2h`, `7d`) or an ISO date.
-- `--page <pageId>`: Only sessions that visited this page.
-- `--build <id|current>`: Only sessions recorded against this build. `current` is the build the running development server serves.
-- `--json`: Print the sessions as JSON on stdout.
+- `--source <source>`: `dev` (the default) or `production`.
+- `--since <since>`: Dev: only sessions with records at or after this time, a duration back from now (`30m`, `2h`, `7d`) or an ISO date. Production: the window ending today, a number of days such as `30d` (the default) or a start date, at most 30 days.
+- `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: Production only. An explicit window of whole UTC days instead of `--since`.
+- `--json`: Print the list or the log as JSON on stdout.
 - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--dev-directory <dev-directory>`: Change the dev directory, where the development server's build is read from. The default is `<config-directory>/.lowdefy/dev`.
 - `--disable-telemetry`: Disable telemetry.
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 
 ## journeys pull posthog
 
-The `journeys pull posthog` command reads the app's production analytics from its PostHog project, one UTC day at a time, and writes them as interaction traces to `.lowdefy/traces/production/<YYYY-MM-DD>.jsonl`, with a `<YYYY-MM-DD>.manifest.json` beside each day. `journeys compile`, `journeys evidence` and `journeys coverage` read that cache with `--source production`. See [Production journeys](/config-tests#production-journeys).
+The `journeys pull posthog` command reads the app's production analytics from its PostHog project, one UTC day at a time, and writes them as interaction traces to `.lowdefy/traces/production/<YYYY-MM-DD>.jsonl`, with a `<YYYY-MM-DD>.manifest.json` beside each day. `journeys session`, `journeys evidence` and `journeys coverage` read that cache with `--source production`. See [Production journeys](/config-tests#production-journeys).
 
 It reads three environment variables (the app's `.env` file is loaded first):
 
@@ -252,11 +228,11 @@ It reads three environment variables (the app's `.env` file is loaded first):
 - `POSTHOG_API_HOST`: The project's API host, an `https://` URL such as `https://eu.posthog.com`. There is no default, because the wrong region answers as if the key were wrong.
 - `POSTHOG_PERSONAL_API_KEY`: Your own PostHog personal API key, scoped to the project with the **Query Read** scope. Export it in your shell or put it in the app's `.env`; never commit it. It is sent only to `POSTHOG_API_HOST` and never logged or written to a manifest.
 
-A day older than yesterday is final: it is pulled once and skipped afterwards. Today and yesterday are pulled again on every run, because PostHog accepts late events. Day files older than 400 days are removed at the start of each pull. Person and organisation ids are hashed with a random salt kept in `.lowdefy/traces/production/salt`, which never leaves your machine. Only the pull creates the salt. `journeys compile`, `journeys coverage` and `journeys evidence` read a day only when it was pulled under this salt: a day pulled under another one (the salt file deleted, or the cache copied from another machine) reads as missing, with the pull that fetches it again.
+A day older than yesterday is final: it is pulled once and skipped afterwards. Today and yesterday are pulled again on every run, because PostHog accepts late events. Day files older than 400 days are removed at the start of each pull. Person and organisation ids are hashed with a random salt kept in `.lowdefy/traces/production/salt`, which never leaves your machine. Only the pull creates the salt. `journeys session`, `journeys coverage` and `journeys evidence` read a day only when it was pulled under this salt: a day pulled under another one (the salt file deleted, or the cache copied from another machine) reads as missing, with the pull that fetches it again.
 
-Clicked text is never written. Each clicked element's text is stored as a token, a hash under the same salt, so clicks on the same text can be grouped and counted without it. `journeys compile`, `journeys coverage` and `journeys evidence` turn a token back into text only when it is the hash of a string in the app's config: the built pages, menus, i18n messages, block plugins' default messages and antd's locale strings for the app's locales. They collect those strings with one full build of the app by the installed development server (run `lowdefy dev` once first), cached until the config changes. Any other text, such as a customer's name in a grid cell or a label built from values, stays a token.
+Clicked text is never written. Each clicked element's text is stored as a token, a hash under the same salt, so clicks on the same text can be grouped and counted without it. `journeys session`, `journeys coverage` and `journeys evidence` turn a token back into text only when it is the hash of a string in the app's config: the built pages, menus, i18n messages, block plugins' default messages and antd's locale strings for the app's locales. They collect those strings with one full build of the app by the installed development server (run `lowdefy dev` once first), cached until the config changes. Any other text, such as a customer's name in a grid cell or a label built from values, stays a token.
 
-Pull, compile and coverage mine at most 30 UTC days at a time, and refuse a longer window; `journeys evidence` is not capped. The first pull or production read after upgrading from a version that stored clicked text deletes the day files pulled that way, `tests/journeys/_candidates/production/` and `.lowdefy/test/coverage.json`, which the next pull, compile and coverage write again. Committed journeys are never changed.
+Pull, session and coverage read at most 30 UTC days at a time, and refuse a longer window; `journeys evidence` is not capped. The first pull or production read after upgrading from a version that stored clicked text deletes the day files pulled that way, any `tests/journeys/_candidates/production/` an earlier version wrote, and `.lowdefy/test/coverage.json`, which the next pull and coverage write again. Committed journeys are never changed.
 
 - `--since <since>`: The days to pull, ending today: a number of days such as `30d`, or a start date. The default is `30d`, and the longest window is 30 days.
 - `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: An explicit window of whole UTC days instead of `--since`, at most 30 days. Pass both.
@@ -275,7 +251,7 @@ When PostHog rate limits the pull for longer than a minute, or the project's hou
 
 ## journeys evidence
 
-The `journeys evidence` command works out how much production use backs each journey in `tests/journeys/`, by calendar month: the sessions that did what the journey does, the people and organisations behind them, and how many of them failed. It reads every final day of the production cache (today and yesterday are not final until a later pull), not a window, and gaps in the cache are fine. A month already counted from at least as many final days is not read again, so a routine refresh reads the current month. It also counts the dev recordings of the last 7 days that back each journey. See [Evidence](/config-tests#evidence).
+The `journeys evidence` command works out how much production use backs each journey in `tests/journeys/`, by calendar month: the sessions that did what the journey does, the people and organisations behind them, and how many of them failed. It reads every final day of the production cache (today and yesterday are not final until a later pull), not a window, and gaps in the cache are fine. A month already counted from at least as many final days is not read again, so a routine refresh reads the current month. Days pulled with different filters (project, environment, test accounts) are refused. See [Evidence](/config-tests#evidence).
 
 A journey's click text counts only when it is text from the app's config, as production text is read: a journey clicking a grid cell by a customer's name is backed exactly as one clicking it with no text, so no command confirms whether production showed a value.
 
@@ -283,11 +259,11 @@ Without `--refresh` it prints what would change and writes nothing. With `--refr
 
 - `--refresh`: Write the changed `evidence` keys.
 - `--source <source>`: Where use is read from. Only `production` for now, the default.
-- `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys compile`](#journeys-compile).
+- `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys session`](#journeys-session).
 
 ## journeys usage
 
-The `journeys usage` command reports which journeys real use leans on most. It ranks the journeys in `tests/journeys/` by their recent rate: their production sessions over the final days their months hold in the usage window, the last 3 calendar months ending at the newest month any selected journey has. Each journey shows its popularity tier, its sessions and failures over the window and all time, a line per month with that month's persons and organisations, and its deprecated flows with their recent use. Below that it lists the production flows no journey covers, from the report [`journeys coverage`](#journeys-coverage) writes, ranked by their sessions in coverage's window and not tiered. See [Usage and tiers](/config-tests#usage-and-tiers).
+The `journeys usage` command reports which journeys real use leans on most. It ranks the journeys in `tests/journeys/` by their recent rate: their production sessions over the final days their months hold in the usage window, the last 3 calendar months ending at the newest month any selected journey has. Each journey shows its popularity tier, its sessions and failures over the window and all time, a line per month with that month's persons and organisations, and its deprecated flows with their recent use. Below that it lists the production flows no journey covers, from the report [`journeys coverage`](#journeys-coverage) writes, ranked by their sessions in coverage's window and not tiered, when coverage grouped them into flows; otherwise it says why it lists none. See [Usage and tiers](/config-tests#usage-and-tiers).
 
 A tier is a cut through the selected journeys, ranked by rate, most first: `common` holds the shortest run of journeys reaching 50% of the summed rates, `wide` 80% and `edge` 95%, and `full` holds every journey. Tiers nest and never split journeys with equal rates. A journey edited since the last refresh, or never refreshed, is `unranked` and in every tier. A journey with `deprecated: true` is in no tier. Fewer than 100 journey matches in the window refuses every tier but `full`.
 
@@ -295,16 +271,18 @@ A tier is a cut through the selected journeys, ranked by rate, most first: `comm
 - `--tier <tier>`: Only the journeys in `common`, `wide`, `edge` or `full` (the default, every journey).
 - `--usage-window <months>`: The calendar months recent use is ranked over, such as `3m`, the default.
 - `--json`: Print the report as JSON, for agents.
-- `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys compile`](#journeys-compile).
+- `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys session`](#journeys-session).
 
 ## journeys coverage
 
-The `journeys coverage` command reports what real use no journey in `tests/journeys/` covers yet, five ways, each with its uncovered items ranked by use, and writes the report with the production profile to `.lowdefy/test/coverage.json`. A journey's click text counts only when it is text from the app's config; any other text in a journey reads as no text, so the click matches that block and column's clicks. A journey with `deprecated: true` is never run, so it covers nothing and is left out. When the development server recorded a full test run, the interaction measure adds the share that run drove, and failure coverage counts only failures a passing journey produced. See [Coverage](/config-tests#coverage).
+The `journeys coverage` command reports what real use no journey in `tests/journeys/` covers yet, five ways, each with its uncovered items ranked by use, and writes the report with the production profile to `.lowdefy/test/coverage.json`. A journey's click text counts only when it is text from the app's config; any other text in a journey reads as no text, so the click matches that block and column's clicks. A journey with `deprecated: true` is never run, so it covers nothing and is left out. When the development server recorded a full test run, the interaction measure adds the share that run drove, and failure coverage counts only failures a passing journey produced. The flow measure groups sessions into flows only when the window holds 100,000 rows or more; below that it is left out, the summary says why and points to [`journeys session --source production`](#journeys-session), and the report's `flowGrouping` records it. See [Coverage](/config-tests#coverage).
 
+- `--group`: Group sessions into flows whatever the window holds.
+- `--no-group`: Never group sessions into flows.
 - `--json`: Print the report as JSON instead of the summary.
 - `--source <source>`: Where use is read from. Only `production` for now, the default.
 - `--since <since>`, `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: The production window, as for [`journeys pull posthog`](#journeys-pull-posthog), at most 30 days.
-- `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys compile`](#journeys-compile).
+- `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys session`](#journeys-session).
 
 ## upgrade
 

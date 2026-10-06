@@ -16,9 +16,10 @@
 
 import request from './request.js';
 
-function createCallRequest({ basePath }) {
+function createCallRequest({ basePath, buildId }) {
   function callRequest({ actionId, blockId, pageId, payload, requestId }) {
     return request({
+      buildId,
       url: `${basePath}/api/request/${pageId}/${requestId}`,
       method: 'POST',
       body: { actionId, blockId, payload },

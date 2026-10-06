@@ -61,6 +61,11 @@ to a committed journey, to the developer one at a time.
 
 ## 3. Size the run
 
+Only journeys with a data set (\`data:\`) can be hardened: mutant runs write through the app's
+connections, and without a data set that is the developer's own database. harden leaves out
+every journey without \`data:\` and names it. Tell the developer which ones were left out; moving
+a journey onto a data set is their call.
+
 Run \`${cd}lowdefy journeys harden --list\`. Show the developer how many mutants it would run per
 page and operator and the time estimate, and ask whether to run all of it or only some pages
 (\`--page <pageId>\`). Wait for the answer.
@@ -114,8 +119,6 @@ Run \`${cd}lowdefy journeys evidence --refresh\`, so the mutation scores land in
 
 Report to the developer:
 
-- the age of each pulled data set snapshot (\`${cd}lowdefy data list\`), flagging any over 14
-  days;
 - the journeys with no production backing in the window, with their mutation kills and unique
   kills exactly as \`lowdefy journeys evidence\` prints them, and no proposal to delete any of them;
 - journeys whose \`sequence\` in \`.lowdefy/test/coverage.json\` duplicates another's;

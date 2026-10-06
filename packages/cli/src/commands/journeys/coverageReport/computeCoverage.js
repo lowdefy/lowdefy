@@ -280,7 +280,9 @@ function measureRole({ profile, journeys }) {
 // `measuredRun` is readMeasuredRun's result, null without a test run: it adds
 // the measured interaction share and makes failure coverage measured.
 // `isConfigText` reads journey click text by the config text rule, as the
-// journeys' sequences were read.
+// journeys' sequences were read. `groupFlows` (decideFlowGrouping) says
+// whether sessions are grouped into flows; when they are not, the flow measure
+// is null and the other measures are unchanged.
 function computeCoverage({
   journeys,
   segments,
@@ -288,11 +290,12 @@ function computeCoverage({
   routeTable,
   measuredRun = null,
   isConfigText,
+  groupFlows,
 }) {
   const journeyKeys = new Set(journeys.flatMap((journey) => journey.sequence.map(entryKey)));
   return {
     interaction: measureInteraction({ segments, journeyKeys, measuredRun }),
-    flow: measureFlow({ segments, journeys }),
+    flow: groupFlows ? measureFlow({ segments, journeys }) : null,
     failure: measureFailure({ profile, segments, journeys, journeyKeys, measuredRun }),
     frustration: measureFrustration({ profile, journeys, routeTable, isConfigText }),
     role: measureRole({ profile, journeys }),

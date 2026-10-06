@@ -17,6 +17,8 @@
 import fs from 'fs';
 import path from 'path';
 
+import checkPullFilters from './checkPullFilters.js';
+
 const MANIFEST = /^(\d{4}-\d{2}-\d{2})\.manifest\.json$/;
 
 // The days of the production cache that will not change again, oldest first:
@@ -27,6 +29,9 @@ const MANIFEST = /^(\d{4}-\d{2}-\d{2})\.manifest\.json$/;
 // tokens, so it is left out, as a day not held, until a pull hashes it again
 // under this machine's salt (`saltId`, from readTraceSalt, or null when the
 // machine has none, which leaves every day out).
+//
+// The days to read must have been pulled with one set of filters
+// (checkPullFilters), or this throws.
 //
 // Returns { days, otherSalt }: the final days to read, and the final days
 // left out for another salt, oldest first, so the caller can name the pull
@@ -44,8 +49,10 @@ function listFinalDays({ directories, saltId }) {
     }))
     .filter(({ manifest }) => manifest.final === true)
     .sort((a, b) => a.day.localeCompare(b.day));
+  const readable = finals.filter(({ manifest }) => manifest.salt_id === saltId);
+  checkPullFilters({ entries: readable });
   return {
-    days: finals.filter(({ manifest }) => manifest.salt_id === saltId).map(({ day }) => day),
+    days: readable.map(({ day }) => day),
     otherSalt: finals.filter(({ manifest }) => manifest.salt_id !== saltId).map(({ day }) => day),
   };
 }

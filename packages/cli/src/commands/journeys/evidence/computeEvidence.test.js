@@ -276,7 +276,7 @@ test('computeEvidence rehashes a flow stored under an older matcher and recounts
   });
 });
 
-test('computeEvidence keeps committed dev and mutation when their sources are absent', () => {
+test('computeEvidence keeps committed mutation when their sources are absent, and removes dev', () => {
   const committed = {
     dev: { recordings: 2 },
     mutation: { killed: 11, total: 12, unique: 2 },
@@ -285,7 +285,6 @@ test('computeEvidence keeps committed dev and mutation when their sources are ab
   const result = compute({ ...journey, evidence: committed });
   expect(result.after).toEqual({
     production: expect.any(Object),
-    dev: { recordings: 2 },
     mutation: { killed: 11, total: 12, unique: 2 },
     refreshed: today,
   });
@@ -298,12 +297,25 @@ test('computeEvidence never adds mutation without a report', () => {
 test('computeEvidence keeps everything committed when no source is present', () => {
   const committed = {
     production: { ...live, months: [month('2026-09', 30, 3)] },
-    dev: { recordings: 1 },
     refreshed: '2026-09-01',
   };
   const result = compute({ ...journey, evidence: committed }, {});
   expect(result.changed).toBe(false);
   expect(result.after).toEqual(committed);
+});
+
+test('computeEvidence removes a committed dev count even when nothing else changed', () => {
+  const committed = {
+    production: { ...live, months: [month('2026-09', 30, 3)] },
+    dev: { recordings: 1 },
+    refreshed: '2026-09-01',
+  };
+  const result = compute({ ...journey, evidence: committed }, {});
+  expect(result.changed).toBe(true);
+  expect(result.after).toEqual({
+    production: committed.production,
+    refreshed: today,
+  });
 });
 
 test('computeEvidence writes mutation for journeys the report names and keeps the rest', () => {
@@ -342,7 +354,7 @@ test("computeEvidence reads a journey with a list of users' mutation score from 
   expect(result.after.mutation).toEqual({ killed: 9, total: 12, unique: 1 });
 });
 
-test('computeEvidence counts the dev segments that back a journey as dev.recordings', () => {
+test('computeEvidence counts the dev segments that back a journey for the summary and never writes them', () => {
   const devSegments = [
     segment({ session: 'd1', steps: ['edit', 'title', 'save'] }),
     segment({ session: 'd2', steps: ['save', 'edit'] }),
@@ -352,16 +364,17 @@ test('computeEvidence counts the dev segments that back a journey as dev.recordi
     { ...journey, evidence: { dev: { recordings: 7 }, refreshed: '2026-09-01' } },
     { production: production(), dev: { segments: devSegments } }
   );
-  expect(result.after.dev).toEqual({ recordings: 2 });
+  expect(result.devRecordings).toBe(2);
+  expect(result.after).not.toHaveProperty('dev');
   expect(result.after.refreshed).toBe(today);
 });
 
-test('computeEvidence writes dev.recordings 0 when dev recordings exist but none back the journey', () => {
+test('computeEvidence counts 0 dev recordings when dev recordings exist but none back the journey', () => {
   const result = compute(journey, {
     production: production(),
     dev: { segments: [segment({ session: 'd1', steps: ['close'] })] },
   });
-  expect(result.after.dev).toEqual({ recordings: 0 });
+  expect(result.devRecordings).toBe(0);
 });
 
 test('computeEvidence reads dev text by the config text rule on both sides', () => {
@@ -387,7 +400,7 @@ test('computeEvidence reads dev text by the config text rule on both sides', () 
     today,
     isConfigText,
   });
-  expect(result.after.dev).toEqual({ recordings: 1 });
+  expect(result.devRecordings).toBe(1);
 });
 
 test('computeEvidence reads journey click text by the config text rule in the sequence id, flow and counts', () => {

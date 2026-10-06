@@ -265,7 +265,7 @@ const journeySchema = {
       type: 'string',
       pattern: '^[a-z0-9][a-z0-9_-]{0,63}$',
       description:
-        "The data set (tests/data/<name>.yaml) the journey runs on, in a fresh database of its own. Every value the journey types, selects, clicks by text or asserts comes from the data set's fixtures or users, or is UI text, never from its snapshot. See https://docs.lowdefy.com/journey-data-sets.",
+        "The data set (tests/data/<name>.yaml) the journey runs on, in a fresh database of its own. Every value the journey types, selects, clicks by text or asserts comes from the data set's fixtures or users, or is UI text. See https://docs.lowdefy.com/journey-data-sets.",
       errorMessage:
         'Journey "data" should be a data set name (tests/data/<name>.yaml): lowercase letters, digits, "-" and "_".',
     },

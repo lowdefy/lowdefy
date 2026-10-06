@@ -175,7 +175,7 @@ function countEntryPoints({ segments }) {
 }
 
 // What production use looks like, computed once from the segments
-// compileTrace returns: ranked flows per entry page, failure paths, frustrated
+// compileSegments returns: ranked flows per entry page, failure paths, frustrated
 // blocks, the role sets seen per page, the pages tab sessions start on, and
 // the clicked-text token counts per page, block and column (countTextTokens).
 // Coverage writes it to coverage.json, which journeys scope and variants read,

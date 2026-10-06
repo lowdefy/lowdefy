@@ -88,11 +88,7 @@ test('formatJourneyResult prints the message when a journey failed without a ste
 
 test('formatJourneyResult prints the data set line once across several journeys on one data set', () => {
   const seen = new Set();
-  const data = {
-    name: 'staging-sample',
-    loadMs: 900,
-    snapshot: { pulledAt: '2026-09-30T00:00:00.000Z', ageDays: 3, documents: 41212 },
-  };
+  const data = { name: 'sample', loadMs: 900, documents: 41212 };
   const first = formatJourneyResult({
     result: { name: 'a', passed: true, stepCount: 1, durationMs: 10, data },
     seen,
@@ -101,45 +97,26 @@ test('formatJourneyResult prints the data set line once across several journeys 
     result: { name: 'b', passed: true, stepCount: 1, durationMs: 10, data },
     seen,
   });
-  expect(first).toEqual([
-    'PASS  a  (1 steps, 10ms)',
-    '      data staging-sample: snapshot 3 days old, 41,212 documents',
-  ]);
+  expect(first).toEqual(['PASS  a  (1 steps, 10ms)', '      data sample: 41,212 documents']);
   expect(second).toEqual(['PASS  b  (1 steps, 10ms)']);
 });
 
-test('formatJourneyResult prints fixtures only for a data set with no snapshot', () => {
+test('formatJourneyResult prints the data set line on a failing journey too', () => {
   const lines = formatJourneyResult({
     result: {
       name: 'a',
       filePath: 'f.yaml',
       passed: false,
       message: 'boom',
-      data: { name: 'empty-org', loadMs: 20, snapshot: null },
+      data: { name: 'empty-org', loadMs: 20, documents: 1 },
     },
     seen: new Set(),
   });
   expect(lines).toEqual([
     'FAIL  a',
-    '      data empty-org: fixtures only',
+    '      data empty-org: 1 document',
     '      file: f.yaml',
     '      boom',
-  ]);
-});
-
-test('formatJourneyResult warns past 14 days with the pull command', () => {
-  const lines = formatJourneyResult({
-    result: {
-      name: 'a',
-      passed: true,
-      stepCount: 2,
-      durationMs: 5,
-      data: { name: 'staging-sample', snapshot: { ageDays: 15, documents: 1200 } },
-    },
-  });
-  expect(lines).toEqual([
-    'PASS  a  (2 steps, 5ms)',
-    '      warning: data staging-sample: snapshot 15 days old, 1,200 documents. Run: lowdefy data pull staging-sample',
   ]);
 });
 

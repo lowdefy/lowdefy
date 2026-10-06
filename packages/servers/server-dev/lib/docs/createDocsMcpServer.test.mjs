@@ -15,6 +15,7 @@
 */
 
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
@@ -75,6 +76,7 @@ const EXPECTED_TOOLS = [
   'lowdefy_load_state',
   'lowdefy_list_state_checkpoints',
   'lowdefy_checkpoint_to_mocks',
+  'lowdefy_journey_session',
 ];
 
 async function connectClient() {
@@ -465,7 +467,7 @@ test('MCP tools/call lowdefy_run_journey passes data and a data set user name th
     passed: true,
     steps: [],
     screenshots: [],
-    data: { name: 'staging-sample', loadMs: 12, snapshot: null },
+    data: { name: 'staging-sample', loadMs: 12, documents: 0 },
     warnings: [],
   });
   const client = await connectClient();
@@ -595,4 +597,110 @@ test('MCP instructions teach lowdefy_run_journey as the way to verify behaviour'
   expect(instructions).toContain('lowdefy_run_journey');
   expect(instructions).toContain('verify behaviour');
   await client.close();
+});
+
+function writeDevSession({ configDirectory, id, records }) {
+  const directory = path.join(configDirectory, '.lowdefy', 'traces', 'dev', '2026-10-06');
+  fs.mkdirSync(directory, { recursive: true });
+  fs.writeFileSync(
+    path.join(directory, `${id}.jsonl`),
+    records.map((record) => JSON.stringify(record)).join('\n')
+  );
+}
+
+function devRecord({ id, t, kind, page, ...rest }) {
+  return {
+    v: 1,
+    source: 'dev',
+    session: id,
+    t,
+    scope: 'page',
+    kind,
+    page_id: page,
+    roles: [],
+    person: null,
+    org: null,
+    build: null,
+    target: null,
+    event: null,
+    ...rest,
+  };
+}
+
+test('MCP tools/call lowdefy_journey_session lists dev sessions and prints one as a log', async () => {
+  const configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-mcp-session-'));
+  const previous = process.env.LOWDEFY_DIRECTORY_CONFIG;
+  process.env.LOWDEFY_DIRECTORY_CONFIG = configDirectory;
+  const id = '20261006T100000Z-abcdef';
+  writeDevSession({
+    configDirectory,
+    id,
+    records: [
+      devRecord({
+        id,
+        t: '2026-10-06T10:00:00.000Z',
+        kind: 'pageview',
+        page: 'tickets',
+        url: '/tickets',
+      }),
+      devRecord({
+        id,
+        t: '2026-10-06T10:00:02.000Z',
+        kind: 'click',
+        page: 'tickets',
+        target: {
+          block_id: 'sync',
+          block_type: 'Button',
+          row: null,
+          column: null,
+          text: null,
+          nth: null,
+          option: false,
+        },
+        event: {
+          name: 'onClick',
+          block_id: 'sync',
+          success: true,
+          actions: ['CallAPI'],
+          requests: [],
+          endpoints: [{ id: 'syncTickets', ok: true, ms: 10 }],
+          state_writes: [],
+          url_after: '/tickets',
+        },
+      }),
+    ],
+  });
+  try {
+    const client = await connectClient();
+    const list = await client.callTool({ name: 'lowdefy_journey_session', arguments: {} });
+    expect(list.isError).toBeUndefined();
+    expect(list.content[0].text).toContain(`${id}   `);
+    expect(list.content[0].text).toContain('tickets   1 interaction');
+
+    const log = await client.callTool({ name: 'lowdefy_journey_session', arguments: { id } });
+    expect(log.content[0].text).toBe(
+      [
+        `Session ${id}, 2026-10-06T10:00:00.000Z to 2026-10-06T10:00:02.000Z:`,
+        'page tickets',
+        'click sync → endpoint syncTickets ok',
+      ].join('\n')
+    );
+
+    const unknown = await client.callTool({
+      name: 'lowdefy_journey_session',
+      arguments: { id: 'missing' },
+    });
+    expect(unknown.isError).toBe(true);
+    expect(unknown.content[0].text).toBe(
+      `No session "missing" in this window. The newest sessions are ${id}.`
+    );
+    await client.close();
+  } finally {
+    if (previous === undefined) {
+      delete process.env.LOWDEFY_DIRECTORY_CONFIG;
+    } else {
+      process.env.LOWDEFY_DIRECTORY_CONFIG = previous;
+    }
+    fs.rmSync(configDirectory, { recursive: true, force: true });
+  }
 });

@@ -79,9 +79,7 @@ function describeSegment({ records, blockMetas, routeTable, source }) {
     session: records[0].session,
     first_seen: records[0].t,
     last_seen: records[records.length - 1].t,
-    builds: distinctStrings(records.map((record) => record.build)),
     pages: distinctStrings(records.map((record) => record.page_id)),
-    allBuilds: records.map((record) => record.build),
     compiled,
   };
 }

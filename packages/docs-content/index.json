@@ -2949,7 +2949,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "3c8c17890ee709fff8d176440740ff3b17c604b69688acc5015f3fb4f66870a0"
+      "hash": "40ae6cc2f221063e40442f40fccc4f496a0f657d8a4b44ebf36d9257feb60cce"
     },
     "concepts/menus": {
       "files": [
@@ -3290,7 +3290,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "9979a2cea2fe0856591170cdb2c85d67a7705e9d9b6d73ab17043a2bb4ea5b7e"
+      "hash": "3ae7054635fd61266fde35dd48d4dbe157bba84859466faa871d35c3d5bbb7d9"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3354,7 +3354,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "f661d8db2924a5ed7529449c9925c4b6857c21470c7d444067c4f12142e687b0"
+      "hash": "e09e5cc4566cd28469ecff5ffef448f9e7e4df858e39231c0daa66c6e3c9f2ee"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3575,7 +3575,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "2a266228bb1ae6f8217749207bc613e14ae702fda873cde4c56ce05f96c6b8f7"
+      "hash": "fc00053ffbb7d6a91def3c3d08c557fdacfd56de07815152df50ffd2eeb96db6"
     },
     "plugins/plugins-introduction": {
       "files": [
@@ -3922,7 +3922,7 @@
         "testing/config-tests.yaml",
         "version.yaml"
       ],
-      "hash": "0386de1cf8b0c30d59f8fb1c67eeb2bf04dccfc8b3858605ec16c0fa789a6dde"
+      "hash": "d1a06a18afc115fffc305c3b29ff1218ccd37bacffac5534859d9b96d33c5dc6"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -3937,7 +3937,7 @@
         "testing/journey-data-sets.yaml",
         "version.yaml"
       ],
-      "hash": "289147b578d6755960f26c1c998be9fe706523e3b3fc92be91dd7e7e72db25a2"
+      "hash": "63d1f22c67a8f2b09eabbd4459ee670deb7ac8c27435b9b99876b90c4d132631"
     },
     "testing/explore-pull-request": {
       "files": [

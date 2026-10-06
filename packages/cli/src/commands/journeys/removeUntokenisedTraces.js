@@ -61,10 +61,11 @@ function removeLeftovers({ directory, now }) {
 }
 
 // Day files pulled before clicked text was stored as tokens can hold
-// production text, and so can the production candidates and coverage.json
-// compiled from them. When any day manifest lacks `text_rule: 'token'`, those
-// days, tests/journeys/_candidates/production/ and .lowdefy/test/coverage.json
-// are deleted; the next pull, compile and coverage write them again. Files a
+// production text, and so can the production candidates an earlier version
+// compiled from them and coverage.json. When any day manifest lacks
+// `text_rule: 'token'`, those days, tests/journeys/_candidates/production/ and
+// .lowdefy/test/coverage.json are deleted; the next pull and coverage write the
+// days and coverage.json again. Files a
 // stopped pull left outside the cache (`.tmp` files, records without a
 // manifest) are deleted too, on their own. The salt, committed journeys and
 // dev and journey recordings are left alone. Runs at the start of every pull

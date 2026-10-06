@@ -23,7 +23,6 @@ import getDataStore from './getDataStore.js';
 import groupDataSetByCollection from './groupDataSetByCollection.js';
 import isDataStoreGone from './isDataStoreGone.js';
 import loadDataSetCollection from './loadDataSetCollection.js';
-import loadSnapshot from './loadSnapshot.js';
 import sweepOrphanDatabases from './sweepOrphanDatabases.js';
 
 const DRAIN_TIMEOUT_MS = 30000;
@@ -74,13 +73,6 @@ async function openDataSession({ dataSet }) {
   dataSessionRegistry.set(id, session);
   try {
     await sweepOrphanDatabases({ client });
-    const snapshotDocuments = type.isNone(dataSet.snapshot)
-      ? {}
-      : await loadSnapshot({
-          configDirectory: dataSet.configDirectory,
-          name: dataSet.name,
-          manifest: dataSet.snapshot,
-        });
     const db = client.db(session.databaseName);
     const groups = groupDataSetByCollection({ dataSet });
     // allSettled, so no collection is still loading when a failed load drops the database.
@@ -91,7 +83,6 @@ async function openDataSession({ dataSet }) {
           dataSetName: dataSet.name,
           collectionName,
           group,
-          documents: snapshotDocuments[collectionName] ?? [],
         })
       )
     );

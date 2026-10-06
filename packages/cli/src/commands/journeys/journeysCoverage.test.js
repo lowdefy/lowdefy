@@ -30,6 +30,10 @@ jest.unstable_mockModule('./configText/readConfigText.js', () => ({
   default: async () => ({ texts: CONFIG_TEXTS, isConfigText: (text) => CONFIG_TEXTS.has(text) }),
 }));
 
+// Grouping starts at 100000 rows in use; the cache written below holds 5, so
+// 6 puts it just under the threshold, and one more visit over it.
+jest.unstable_mockModule('./flowGroupingMinRows.js', () => ({ default: 6 }));
+
 const { default: journeysCoverage } = await import('./journeysCoverage.js');
 const { default: tokenText } = await import('./tokenText.js');
 
@@ -128,7 +132,8 @@ beforeEach(() => {
       traces: path.join(configDirectory, '.lowdefy', 'traces'),
     },
     logger: { info: log, warn: log },
-    options: { since: '2d' },
+    // Most tests measure flows, so they group whatever the window holds.
+    options: { since: '2d', group: true },
     sendTelemetry: async () => {},
   };
   jest.spyOn(Date, 'now').mockReturnValue(NOW);
@@ -189,6 +194,42 @@ test('journeys coverage leaves a deprecated journey out, so the flow only it wal
   const live = await journeysCoverage({ context });
   expect(live.measures.flow).toMatchObject({ covered: 1, total: 2 });
   expect(live.journeys.map((journey) => journey.name)).toEqual(['member saves a ticket']);
+});
+
+test('journeys coverage does not group a window under the threshold and says why', async () => {
+  delete context.options.group;
+  const report = await journeysCoverage({ context });
+  expect(validate({ schema: coverageReportSchema, data: report })).toEqual({ valid: true });
+  expect(report.flowGrouping).toEqual({ grouped: false, rows: 5, threshold: 6, forced: false });
+  expect(report.measures.flow).toBeNull();
+  expect(report.production.flows).toEqual([]);
+  expect(report.measures.role).toMatchObject({ covered: 1, total: 1 });
+  expect(logged).toContain(
+    'flow         not grouped (5 rows < 6): read sessions with "lowdefy journeys session --source production", or group them with --group'
+  );
+});
+
+test('journeys coverage --group groups a window under the threshold', async () => {
+  const report = await journeysCoverage({ context });
+  expect(report.flowGrouping).toEqual({ grouped: true, rows: 5, threshold: 6, forced: true });
+  expect(report.measures.flow).toMatchObject({ covered: 1, total: 2 });
+  expect(report.production.flows.length).toBeGreaterThan(0);
+});
+
+test('journeys coverage groups a window at the threshold, unless --no-group', async () => {
+  delete context.options.group;
+  writeDay(
+    '2026-10-03',
+    visit({ session: 's3', start: Date.parse('2026-10-03T08:00:00Z'), blocks: [] })
+  );
+  const grouped = await journeysCoverage({ context });
+  expect(grouped.flowGrouping).toEqual({ grouped: true, rows: 6, threshold: 6, forced: false });
+  expect(grouped.measures.flow).toMatchObject({ covered: 1, total: 2 });
+  context.options.group = false;
+  const skipped = await journeysCoverage({ context });
+  expect(skipped.flowGrouping).toEqual({ grouped: false, rows: 6, threshold: 6, forced: true });
+  expect(skipped.measures.flow).toBeNull();
+  expect(logged.some((line) => line.includes('not grouped (--no-group)'))).toBe(true);
 });
 
 test('journeys coverage --json prints the report', async () => {
@@ -423,4 +464,28 @@ steps:
   expect(uncovered.filter((text) => text === 'Help')).toEqual([]);
   expect(uncovered.filter((text) => text === null)).toHaveLength(2);
   expect(JSON.stringify(report)).not.toContain('Acme');
+});
+
+// Sets one cached day's pull filters as the pull records them.
+function setPullFilters({ day, environment }) {
+  const manifestPath = path.join(
+    configDirectory,
+    '.lowdefy',
+    'traces',
+    'production',
+    `${day}.manifest.json`
+  );
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  fs.writeFileSync(
+    manifestPath,
+    JSON.stringify({ ...manifest, project_id: '1', environment, filter_test_accounts: true })
+  );
+}
+
+test('journeys coverage refuses a window whose days were pulled with different environments', async () => {
+  setPullFilters({ day: '2026-10-02', environment: 'production' });
+  setPullFilters({ day: '2026-10-03', environment: 'staging' });
+  await expect(journeysCoverage({ context })).rejects.toThrow(
+    'The production trace cache holds days pulled with different filters, which cannot be counted together: 2026-10-02 (project 1, environment "production", test accounts filtered out); 2026-10-03 (project 1, environment "staging", test accounts filtered out). Pull them again with one set of filters (the same --environment and --include-test-accounts for every day): run "lowdefy journeys pull posthog --refetch --from 2026-10-02 --to 2026-10-03".'
+  );
 });

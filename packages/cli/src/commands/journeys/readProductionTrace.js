@@ -19,6 +19,7 @@ import path from 'path';
 import { parseTraceLines } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
+import checkPullFilters from './checkPullFilters.js';
 import createTokenResolver from './createTokenResolver.js';
 import describeMissingPull from './describeMissingPull.js';
 import listWindowDays from './listWindowDays.js';
@@ -51,11 +52,12 @@ function describeOtherSalt({ otherSalt, traceSalt }) {
 // written (the pull writes it last) under this machine's salt. A missing day
 // is an error naming the pull that fills it, never a silent gap. Days pulled
 // before clicked text was stored as tokens are removed first, so they read as
-// missing. maxDays caps the window for the mining commands. Every token is
-// resolved against the app's config text set, so compile, coverage and
-// evidence see config text and tokens only; isConfigText comes back with the
-// records for readers that match journeys against them. A reader never writes
-// a salt.
+// missing, and days pulled with different filters are refused
+// (checkPullFilters). maxDays caps the window for the mining commands. Every
+// token is resolved against the app's config text set, so compile, coverage
+// and evidence see config text and tokens only; isConfigText comes back with
+// the records for readers that match journeys against them. A reader never
+// writes a salt.
 async function readProductionTrace({ context, since, from, to, now = Date.now(), maxDays }) {
   const { directories, logger } = context;
   const window = parseTraceWindow({ since, from, to, now, maxDays });
@@ -82,6 +84,7 @@ async function readProductionTrace({ context, since, from, to, now = Date.now(),
       })}`
     );
   }
+  checkPullFilters({ entries: days.map((day, index) => ({ day, manifest: manifests[index] })) });
   const records = [];
   let unparsable = 0;
   days.forEach((day) => {

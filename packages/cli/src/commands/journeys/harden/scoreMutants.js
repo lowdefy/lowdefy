@@ -14,24 +14,7 @@
   limitations under the License.
 */
 
-function mutantStatus({ verdicts, changed }) {
-  if (changed) {
-    return 'changed';
-  }
-  if (verdicts.length === 0) {
-    return 'not run';
-  }
-  if (verdicts.some(({ verdict }) => verdict === 'killed')) {
-    return 'killed';
-  }
-  if (verdicts.every(({ verdict }) => verdict === 'survived')) {
-    return 'survived';
-  }
-  if (verdicts.every(({ verdict }) => verdict === 'unapplied')) {
-    return 'unapplied';
-  }
-  return 'errored';
-}
+import mutantStatus from './mutantStatus.js';
 
 // Scores a harden run. A mutant is killed when a journey on its path killed
 // it, survived when every journey on its path survived it, unapplied when

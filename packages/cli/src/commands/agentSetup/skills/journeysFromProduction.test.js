@@ -28,18 +28,27 @@ test('journeys-from-production renders a frontmatter with its name and descripti
   expect(skill.startsWith('---\nname: journeys-from-production\ndescription: Use when')).toBe(true);
 });
 
-test('journeys-from-production names the four production commands in order', () => {
+test('journeys-from-production names the production commands in order', () => {
   const skill = journeysFromProduction({ appPath: '' });
   const commands = [
     'lowdefy journeys pull posthog --since 30d',
-    'lowdefy journeys compile --source production --since 30d',
     'lowdefy journeys coverage --source production --since 30d',
+    'lowdefy journeys session --source production --since 30d',
+    'lowdefy journeys session --source production --since 30d <id>',
+    'lowdefy test --repeat 3 tests/journeys/<file>.yaml',
     'lowdefy journeys evidence --refresh',
   ];
   const positions = commands.map((command) => skill.indexOf(command));
   positions.forEach((position) => expect(position).toBeGreaterThan(-1));
   expect([...positions].sort((a, b) => a - b)).toEqual(positions);
-  expect(skill).toContain('lowdefy test --repeat 3 tests/journeys/_candidates/production/');
+});
+
+test('journeys-from-production reads session logs, and grouped flows only at scale', () => {
+  const skill = journeysFromProduction({ appPath: '' });
+  expect(skill).toContain('Below 100,000 rows, read the sessions one by one');
+  expect(skill).toContain('From 100,000 rows on, nobody can read them one by one');
+  expect(skill).toContain('`--group` and `--no-group`');
+  expect(skill).not.toMatch(/journeys compile|journeys recordings|_candidates|candidate/);
 });
 
 test('journeys-from-production never asks for the key in chat', () => {
@@ -60,9 +69,7 @@ test('journeys-from-production gives no instruction to delete a journey', () => 
 
 test('journeys-from-production keeps the fixture, frustration, flake and commit rules', () => {
   const skill = journeysFromProduction({ appPath: '' });
-  expect(skill).toContain(
-    'add a\n  fixture document for the journey rather than borrowing a value'
-  );
+  expect(skill).toContain('add a fixture document for the\n  journey.');
   expect(skill).toContain('A dead click on a\n  block that should do nothing is a finding');
   expect(skill).toContain('Never add `wait: { ms }`');
   expect(skill).toContain('Commit nothing.');
@@ -80,25 +87,24 @@ test('journeys-from-production has the agent pick a window of at most 30 days an
 test('journeys-from-production reads routines with the config and decides what deserves a journey', () => {
   const skill = journeysFromProduction({ appPath: '' });
   expect(skill).toContain(
-    "read the page's config, the\nrequests and actions its steps run, and the block plugins' code"
+    "read the page's config, the requests and actions it runs, and the block\nplugins' code"
   );
-  expect(skill).toContain('tokenised-text');
+  expect(skill).toContain('production.textTokens');
   expect(skill).toContain('1. failures');
   expect(skill).toContain(
     '2. routines that write data, move money, change access or end a process;'
   );
   expect(skill).toContain('3. the rest, by how often production showed them');
-  expect(skill).toContain('Never add an interaction the routine did not record.');
+  expect(skill).toContain('Never add an interaction the session did not show.');
   expect(skill).toContain('A click on\n  a label built from values stays without text.');
   expect(skill).toContain('ask them only about findings and dead clicks');
 });
 
-test('journeys-from-production never reads production text, secrets, snapshots or PostHog', () => {
+test('journeys-from-production never reads production text, secrets or PostHog', () => {
   const skill = journeysFromProduction({ appPath: '' });
   expect(skill).toContain(
     "read `.lowdefy/traces/production/salt`, the app's `.env` or any credential;"
   );
-  expect(skill).toContain('read `.lowdefy/data/` snapshots;');
   expect(skill).toContain('call PostHog through its MCP, its API or a URL, or run HogQL;');
   expect(skill).toContain('add text to the config to resolve a token');
   expect(skill).not.toContain('## PostHog MCP');

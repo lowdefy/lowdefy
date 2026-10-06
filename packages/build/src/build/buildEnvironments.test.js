@@ -229,32 +229,6 @@ test('buildEnvironments throws when a feature switch is not a boolean', () => {
   );
 });
 
-test('buildEnvironments fails when dataPull is not a boolean', () => {
-  const { context } = makeContext();
-  const components = {
-    config: { environments: { staging: { '~k': 'k-staging', dataPull: 'yes' } } },
-  };
-  let error;
-  try {
-    buildEnvironments({ components, context });
-  } catch (e) {
-    error = e;
-  }
-  expect(error.message).toEqual('App "config.environments.staging.dataPull" should be a boolean.');
-  expect(error.received).toEqual('yes');
-  expect(error.configKey).toEqual('k-staging');
-});
-
-test('buildEnvironments accepts dataPull: true and keeps it out of config.json', () => {
-  process.env.LOWDEFY_ENVIRONMENT = 'staging';
-  const { context } = makeContext();
-  const components = {
-    config: { environments: { prod: {}, staging: { dataPull: true }, local: { dataPull: false } } },
-  };
-  buildEnvironments({ components, context });
-  expect(components.config.environments).toEqual({ prod: {}, staging: {}, local: {} });
-});
-
 describe('guards', () => {
   const guarded = {
     prod: {
@@ -357,61 +331,5 @@ describe('guards', () => {
     expect(() => buildEnvironments({ components, context })).toThrow(
       'App "config.environments.prod.guards" environment variable "BETTER_AUTH_URL" is not a valid regular expression'
     );
-  });
-
-  test("buildEnvironments with environmentGuards 'all' keeps every environment's guards, unguarded ones as empty maps", () => {
-    process.env.LOWDEFY_ENVIRONMENT = 'staging';
-    const { context } = makeContext();
-    context.environmentGuards = 'all';
-    const components = {
-      config: {
-        environments: {
-          ...structuredClone(guarded),
-          staging: { url: 'https://staging.example.com', dataPull: true },
-          local: { guards: { secrets: { '~k': 'k1', MONGODB_URI: 'localhost' } }, dataPull: false },
-        },
-      },
-    };
-    buildEnvironments({ components, context });
-    expect(components.environmentGuards).toEqual({
-      prod: {
-        dataPull: false,
-        secrets: { MONGODB_URI: 'acme-prod\\.a1b2c\\.mongodb\\.net' },
-        env: { BETTER_AUTH_URL: '^https://app\\.example\\.com$' },
-      },
-      staging: { dataPull: true, secrets: {}, env: {} },
-      local: { dataPull: false, secrets: { MONGODB_URI: 'localhost' }, env: {} },
-    });
-    // Other environments' guards, and every dataPull, still leave config.json.
-    expect(components.config.environments.prod.guards).toBeUndefined();
-    expect(components.config.environments.staging.dataPull).toBeUndefined();
-  });
-
-  test("buildEnvironments with environmentGuards 'all' skips the current environment's guard check", () => {
-    process.env.LOWDEFY_ENVIRONMENT = 'prod';
-    process.env.LOWDEFY_SECRET_MONGODB_URI = 'mongodb+srv://u:p@acme-new.zzzzz.mongodb.net/db';
-    const { context } = makeContext();
-    context.environmentGuards = 'all';
-    const components = { config: { environments: structuredClone(guarded) } };
-    buildEnvironments({ components, context });
-    expect(components.config.environment).toEqual('prod');
-    expect(Object.keys(components.environmentGuards)).toEqual(['prod', 'staging']);
-  });
-
-  test("buildEnvironments with environmentGuards 'all' and no environments declared records {}", () => {
-    process.env.LOWDEFY_ENVIRONMENT = 'staging';
-    const { context } = makeContext();
-    context.environmentGuards = 'all';
-    const components = { config: {} };
-    buildEnvironments({ components, context });
-    expect(components.environmentGuards).toEqual({});
-  });
-
-  test('buildEnvironments without environmentGuards records no guards for other environments', () => {
-    process.env.LOWDEFY_ENVIRONMENT = 'staging';
-    const { context } = makeContext();
-    const components = { config: { environments: structuredClone(guarded) } };
-    buildEnvironments({ components, context });
-    expect(components.environmentGuards).toBeUndefined();
   });
 });

@@ -18,6 +18,7 @@ import { journeySequence, profileProduction } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import computeCoverage from './coverageReport/computeCoverage.js';
+import decideFlowGrouping from './decideFlowGrouping.js';
 import loadRouteTable from './loadRouteTable.js';
 import readCommittedJourneys from './readCommittedJourneys.js';
 import readMeasuredRun from './readMeasuredRun.js';
@@ -44,9 +45,20 @@ function scoreMutation({ report }) {
   return { killed, total, share: total === 0 ? 0 : Math.round((killed / total) * 100) / 100 };
 }
 
-function logSummary({ logger, measures, mutation, reportPath }) {
+function describeUngrouped({ flowGrouping }) {
+  const why = flowGrouping.forced
+    ? '--no-group'
+    : `${flowGrouping.rows} rows < ${flowGrouping.threshold}`;
+  return `not grouped (${why}): read sessions with "lowdefy journeys session --source production", or group them with --group`;
+}
+
+function logSummary({ logger, measures, mutation, reportPath, flowGrouping }) {
   MEASURES.forEach((name) => {
     const entry = measures[name];
+    if (entry === null) {
+      logger.info(`${name.padEnd(12)} ${describeUngrouped({ flowGrouping })}`);
+      return;
+    }
     const mode = type.isString(entry.mode) ? `, ${entry.mode}` : '';
     logger.info(`${name.padEnd(12)} ${entry.covered}/${entry.total} (${entry.share}${mode})`);
     if (!type.isUndefined(entry.measured)) {
@@ -72,7 +84,9 @@ function logSummary({ logger, measures, mutation, reportPath }) {
 
 // `lowdefy journeys coverage --source production`: which real flows,
 // interactions, failures, frustrated clicks and (page, role set) pairs no
-// committed journey covers yet, ranked by use. It writes
+// committed journey covers yet, ranked by use. Sessions are grouped into
+// flows only from FLOW_GROUPING_MIN_ROWS rows on, or with --group; below it
+// the flow measure is null and the reader reads sessions one by one. It writes
 // .lowdefy/test/coverage.json with the production profile, which journeys scope
 // and variants read instead of profiling production again. A `deprecated:
 // true` journey is never run, so it covers nothing: it is left out of every
@@ -85,10 +99,11 @@ async function journeysCoverage({ context }) {
   }
   const { journeys: committed, skipped } = readCommittedJourneys({ context });
   skipped.forEach((line) => logger.warn(`Skipped ${line}`));
-  const { segments, window, isConfigText } = await readProductionSegments({
+  const { segments, window, isConfigText, rows } = await readProductionSegments({
     context,
     maxDays: MINING_WINDOW_MAX_DAYS,
   });
+  const flowGrouping = decideFlowGrouping({ rows, group: options.group });
   const routeTable = loadRouteTable({ buildDirectory: resolveBuildDirectory({ context }) });
   // A journey's click text counts only when it is config text, as production
   // segments hold, so no report confirms a guessed production value.
@@ -106,7 +121,9 @@ async function journeysCoverage({ context }) {
       }),
       journey,
     }));
-  const profile = profileProduction({ segments });
+  // Ranked flows are grouped output too, so an ungrouped window lists none.
+  const profiled = profileProduction({ segments });
+  const profile = flowGrouping.grouped ? profiled : { ...profiled, flows: [] };
   const measures = computeCoverage({
     journeys,
     segments,
@@ -114,6 +131,7 @@ async function journeysCoverage({ context }) {
     routeTable,
     measuredRun: readMeasuredRun({ context }),
     isConfigText,
+    groupFlows: flowGrouping.grouped,
   });
   const mutation = scoreMutation({
     report: readMutationReport({ directories: context.directories }),
@@ -121,6 +139,7 @@ async function journeysCoverage({ context }) {
   const { report, reportPath } = writeCoverageReport({
     directories: context.directories,
     window,
+    flowGrouping,
     measures,
     profile,
     journeys,
@@ -131,7 +150,7 @@ async function journeysCoverage({ context }) {
     // The report is the command's output with --json, for scripts and agents.
     process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
   } else {
-    logSummary({ logger, measures, mutation, reportPath });
+    logSummary({ logger, measures, mutation, reportPath, flowGrouping });
   }
   await context.sendTelemetry();
   return report;

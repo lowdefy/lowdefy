@@ -16,9 +16,10 @@
 
 import callAPIHandler from '../callAPIHandler.js';
 
-function createCallAPI({ blockId, context }) {
+function createCallAPI({ actionId, blockId, context }) {
   return function callAPI(params) {
     return callAPIHandler(context, {
+      actionId,
       blockId,
       params,
     });

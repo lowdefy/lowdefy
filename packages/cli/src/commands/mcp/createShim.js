@@ -158,7 +158,10 @@ function createShim({ cliVersion, cwd, devTools }) {
   }
 
   // A running server is used as it is - the user's terminal server included.
-  // Anything else goes to the hub, which starts it and waits for ready.
+  // Anything else goes to the hub, which starts it and waits for ready. The
+  // hub's answer is the server to call: it read the instance record itself, and
+  // reading it again here can disagree with it (a CLI older than the dev server
+  // that wrote the record), so calls go where lowdefy_dev_status says it runs.
   async function ensureRunning(app) {
     const running = await readDevInstanceAsync({ configDirectory: app.configDirectory });
     if (running !== null && running.state === 'ready') {
@@ -176,7 +179,7 @@ function createShim({ cliVersion, cwd, devTools }) {
     if (status.state !== 'ready') {
       throw new Error(describeNotReady({ label: app.label, status }));
     }
-    return readDevInstanceAsync({ configDirectory: app.configDirectory });
+    return status;
   }
 
   async function callDevTool({ name, args }) {
@@ -250,9 +253,8 @@ function createShim({ cliVersion, cwd, devTools }) {
   // sees a newer app's tools right after starting it, before any forwarded
   // call. A failure here must not fail the start: the next forwarded call
   // connects again.
-  async function connectToLearnTools(app) {
-    const instance = await readDevInstanceAsync({ configDirectory: app.configDirectory });
-    if (instance === null || instance.state !== 'ready') {
+  async function connectToLearnTools({ app, instance }) {
+    if (instance.state !== 'ready') {
       return;
     }
     try {
@@ -267,7 +269,7 @@ function createShim({ cliVersion, cwd, devTools }) {
     const running = await readDevInstanceAsync({ configDirectory: app.configDirectory });
     if (running !== null && running.owner !== 'hub') {
       if (!restart && !clean) {
-        await connectToLearnTools(app);
+        await connectToLearnTools({ app, instance: running });
         return { app: app.label, ...running };
       }
       // Not the hub's to stop: restart it in place through its own dev tools.
@@ -305,7 +307,7 @@ function createShim({ cliVersion, cwd, devTools }) {
       throw new Error(describeNotReady({ label: app.label, status: result }));
     }
     await touchDevServer({ url: result.url });
-    await connectToLearnTools(app);
+    await connectToLearnTools({ app, instance: result });
     // A note from the hub (a server another hub started, which it cannot
     // restart) says the request was not done, so it stands over the idle rule.
     return { app: app.label, ...result, note: result.note ?? IDLE_STOP_NOTE };

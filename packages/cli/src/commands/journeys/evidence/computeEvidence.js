@@ -23,7 +23,10 @@ import mergeMonths from './mergeMonths.js';
 import parseFlowLines from './parseFlowLines.js';
 import reconcileFlows from './reconcileFlows.js';
 
-const SUBKEYS = ['production', 'dev', 'mutation'];
+// The subkeys a journey file commits. Dev recordings are a rolling count that
+// differs by machine, so `dev` is counted for the summary only and an existing
+// `dev` is removed on refresh.
+const SUBKEYS = ['production', 'mutation'];
 
 function distinctCount(values) {
   return new Set(values.filter((value) => !type.isNone(value))).size;
@@ -74,10 +77,11 @@ function countMonths({ entry, segmentsByMonth, dayCounts }) {
   });
 }
 
-function countFlow({ entry, segmentsByMonth, dayCounts }) {
+function countFlow({ entry, segmentsByMonth, dayCounts, recount = false }) {
   return mergeMonths({
     committed: entry.months,
     counted: countMonths({ entry, segmentsByMonth, dayCounts }),
+    recount,
   });
 }
 
@@ -103,12 +107,17 @@ function productionEvidence({
   routeTable,
   isConfigText,
 }) {
-  const { live, deprecated } = reconcileFlows({ journey, today, routeTable, isConfigText });
+  const { live, deprecated, recount } = reconcileFlows({
+    journey,
+    today,
+    routeTable,
+    isConfigText,
+  });
   const production = {
     sequence: live.sequence,
     pageId: live.pageId,
     flow: live.flow,
-    months: countFlow({ entry: live, segmentsByMonth, dayCounts }),
+    months: countFlow({ entry: live, segmentsByMonth, dayCounts, recount }),
   };
   if (deprecated.length > 0) {
     production.deprecated = deprecated.map((entry) => {
@@ -125,16 +134,18 @@ function isEqual(a, b) {
 
 // What each committed journey's evidence becomes. A subkey is computed only
 // from a source this machine has; one whose source is absent keeps its
-// committed value, so a laptop without dev recordings does not erase a
-// colleague's counts, and no subkey is invented. `refreshed` moves only when
-// some subkey changed, so a no-op refresh changes no file.
+// committed value, so a laptop without a mutation report does not erase a
+// colleague's scores, and no subkey is invented. `refreshed` moves only when
+// some subkey changed or a committed `dev` is removed, so a no-op refresh
+// changes no file. `devRecordings` is the local dev count, for the summary,
+// never written.
 //
 // - journeys: [{ filePath, journeyIndex, journey }]
 // - sources: { production?: { dayCounts, months, segments }, dev?: { segments },
 //   mutation?: readMutationReport's result }
 //   `production.dayCounts` is { 'YYYY-MM': final days cached }, `months` the
 //   months read (selectMonthsToRead) and `segments` their compiled segments.
-//   `dev.recordings` counts the dev segments that back the journey. A
+//   `devRecordings` counts the dev segments that back the journey. A
 //   mutation report sets `mutation` for the journeys it names only.
 // - routeTable: the build's routes the segments' sequences were read with,
 //   which journeys and dev segments are read with too.
@@ -151,6 +162,7 @@ function computeEvidence({ journeys, sources, routeTable, today, isConfigText })
   return journeys.map(({ filePath, file, journeyIndex, journey }) => {
     const before = journey.evidence;
     const computed = {};
+    let devRecordings;
     if (!type.isNone(sources.production)) {
       computed.production = productionEvidence({
         journey,
@@ -162,18 +174,16 @@ function computeEvidence({ journeys, sources, routeTable, today, isConfigText })
       });
     }
     if (!type.isNone(devSegments)) {
-      computed.dev = {
-        recordings: backingSegments({
+      devRecordings = backingSegments({
+        pageId: journey.pageId,
+        sequence: journeySequence({
           pageId: journey.pageId,
-          sequence: journeySequence({
-            pageId: journey.pageId,
-            steps: journey.steps,
-            routeTable,
-            isConfigText,
-          }),
-          segments: devSegments,
-        }).length,
-      };
+          steps: journey.steps,
+          routeTable,
+          isConfigText,
+        }),
+        segments: devSegments,
+      }).length;
     }
     const mutation = sources.mutation?.byJourney.get(
       `${file}#${measuredJourney({ journey }).name}`
@@ -186,7 +196,8 @@ function computeEvidence({ journeys, sources, routeTable, today, isConfigText })
       const value = key in computed ? computed[key] : before?.[key];
       if (!type.isUndefined(value)) after[key] = value;
     });
-    const changed = SUBKEYS.some((key) => !isEqual(before?.[key], after[key]));
+    const changed =
+      SUBKEYS.some((key) => !isEqual(before?.[key], after[key])) || !type.isUndefined(before?.dev);
     if (changed) {
       after.refreshed = today;
     } else if (!type.isUndefined(before?.refreshed)) {
@@ -201,6 +212,7 @@ function computeEvidence({ journeys, sources, routeTable, today, isConfigText })
       before,
       after,
       changed,
+      devRecordings,
     };
   });
 }

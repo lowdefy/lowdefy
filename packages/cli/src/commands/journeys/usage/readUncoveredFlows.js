@@ -16,19 +16,24 @@
 
 import { type } from '@lowdefy/helpers';
 
+import COVERAGE_REPORT_VERSION from '../coverageReport/coverageReportVersion.js';
 import readCoverage from '../readCoverage.js';
 
 // The production flows no journey covers, from the coverage report `lowdefy
-// journeys coverage` writes, most sessions first, with the report's window:
-// exact-sequence clusters over a mining window, not months, so they have no
-// rate to tier by. Null when coverage has not been run here.
+// journeys coverage` writes, most sessions first, with the report's window and
+// whether it grouped sessions into flows at all (flowGrouping; flows is empty
+// when it did not): exact-sequence clusters over a mining window, not months,
+// so they have no rate to tier by. Null when coverage has not been run here
+// by this version.
 function readUncoveredFlows({ directories }) {
   const report = readCoverage({ directories });
-  if (type.isNull(report)) return null;
-  const flows = [...report.measures.flow.uncovered].sort(
-    (a, b) => b.count - a.count || a.key.localeCompare(b.key)
-  );
-  return { window: report.window, flows };
+  if (type.isNull(report) || report.version !== COVERAGE_REPORT_VERSION) return null;
+  const flows = report.flowGrouping.grouped
+    ? [...report.measures.flow.uncovered].sort(
+        (a, b) => b.count - a.count || a.key.localeCompare(b.key)
+      )
+    : [];
+  return { window: report.window, flowGrouping: report.flowGrouping, flows };
 }
 
 export default readUncoveredFlows;

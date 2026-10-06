@@ -1,11 +1,11 @@
 # Journey Data Sets
 
-A **data set** gives [config test journeys](/config-tests) a database of their own. You declare test data, and the people journeys act as, in `tests/data/<name>.yaml`. A journey that names the data set with `data:` runs against a fresh in-memory MongoDB database loaded with that data. Journeys on a data set may write freely: every run starts from the same data, and the developer's own database is never touched.
+A **data set** gives [config test journeys](/config-tests) a database of their own. You declare test data, and the people journeys act as, in `tests/data/<name>.yaml`. Everything a data set loads is committed, so every machine runs a journey on the same data. A journey that names the data set with `data:` runs against a fresh in-memory MongoDB database loaded with that data. Journeys on a data set may write freely: every run starts from the same data, and the developer's own database is never touched.
 
 ```yaml
 - name: member assigns an open ticket to a teammate
   pageId: tickets
-  data: staging-sample
+  data: tickets
   user: member
   steps:
     - click: { blockId: tickets_grid, containing: t-empty-title, column: assignee }
@@ -22,23 +22,20 @@ Without `data:`, a journey runs exactly as before, against whatever database the
 A data set is a plain YAML file in `tests/data/` under the config directory. The file name is the data set's name: lowercase letters, digits, `-` and `_`.
 
 ```yaml
-# tests/data/staging-sample.yaml
-snapshot: # optional; filled by `lowdefy data pull staging-sample`
-  from: staging # a config.environments name
-  connections: # exactly the connections to copy
-    - tickets
-    - companies
-    - { id: frameworks, scope: false, limit: 20000 }
-    - { id: connections, sort: { created_at: -1 }, omit: [auth.encrypted] }
-  scope: # applied to each collection that has the field
-    field: organizationId
-    values: [org_b, org_c]
-  limit: 5000 # per collection; default 5000
+# tests/data/tickets.yaml
 fixtures: # committed documents, keyed by connection id
   tickets:
     - { _id: t-empty-title, organizationId: org_a, title: '', status: open }
   organizations:
     - { _id: org_a, name: Acme Test Co }
+generate: # optional: seeded background documents, the same on every machine
+  seed: 7
+  tickets:
+    count: 200
+    fields:
+      organizationId: org_b
+      title: { text: { words: [3, 8] } }
+      status: { oneOf: [open, pending, closed], weights: [3, 1, 6] }
 indexes: # optional, keyed by connection id, in the listIndexes() shape
   tickets:
     - { key: { organizationId: 1, number: 1 }, unique: true }
@@ -48,7 +45,7 @@ users: # the people journeys act as
   outsider: { id: u_9, roles: [admin], organizationId: org_b }
 ```
 
-A fixtures-only data set needs no snapshot, and is fully committed and hermetic:
+A data set can be as small as one organization and its owner:
 
 ```yaml
 # tests/data/empty-org.yaml
@@ -58,19 +55,64 @@ users:
   owner: { id: u_new, roles: [admin], organizationId: org_new }
 ```
 
-| Key        | Description                                                                                                                                                                                                                                                                                                                                               |
-| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `fixtures` | Documents to load, keyed by connection id. Dates use the serializer's `{ "~d": "2026-01-02T00:00:00.000Z" }` marker and ObjectIds use `{ _oid: '<hex>' }`. A fixture with an `_id` replaces any snapshot document with that `_id`; one without is inserted.                                                                                               |
-| `users`    | The people journeys act as, keyed by name. Each is an inline user object, the shape a journey's inline `user:` takes. They are injected callers and carry no credentials: `password` is refused.                                                                                                                                                          |
-| `indexes`  | Indexes to create, keyed by connection id, in the shape MongoDB's `listIndexes()` returns: `key`, an optional `name`, and any other option (`unique`, `sparse`, `partialFilterExpression`, `collation`, `weights`, …), passed to `createIndexes` as given. `v` and `ns` are refused. An entry whose `key` equals a snapshot's recorded index replaces it. |
-| `snapshot` | Where `lowdefy data pull` copies a snapshot from, and what it copies. See [Pulling a snapshot](#pulling-a-snapshot).                                                                                                                                                                                                                                      |
+| Key        | Description                                                                                                                                                                                                                                                                                                                                        |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `fixtures` | Documents to load, keyed by connection id. Dates use the serializer's `{ "~d": "2026-01-02T00:00:00.000Z" }` marker and ObjectIds use `{ _oid: '<hex>' }`. A fixture with an `_id` replaces any earlier document with that `_id`; one without is inserted.                                                                                         |
+| `generate` | Documents made from a small spec with a fixed seed, keyed by connection id like `fixtures`. See [Generated documents](#generated-documents).                                                                                                                                                                                                       |
+| `users`    | The people journeys act as, keyed by name. Each is an inline user object, the shape a journey's inline `user:` takes. They are injected callers and carry no credentials: `password` is refused.                                                                                                                                                   |
+| `indexes`  | Indexes to create, keyed by connection id, in the shape MongoDB's `listIndexes()` returns: `key`, an optional `name`, and any other option (`unique`, `sparse`, `partialFilterExpression`, `collation`, `weights`, …), passed to `createIndexes` as given. `v` and `ns` are refused. Two connections that load one collection merge their indexes. |
+
+## Generated documents
+
+`generate` gives a data set volume and realistic neighbours without copying a real database: a list page with 400 invoices, a search over many customers, a report over months of dates. A `seed` makes the output identical on every machine and every run; change it to get a different, equally fixed set.
+
+```yaml
+generate:
+  seed: 7
+  customers_db:
+    count: 50
+    fields:
+      name: { company: true }
+  invoices_db:
+    count: 400
+    fields:
+      _id: { sequence: { prefix: inv-, start: 1 } }
+      status: { oneOf: [draft, sent, paid], weights: [1, 2, 5] }
+      amount: { number: { min: 10, max: 5000, decimals: 2 } }
+      issued: { date: { from: 2026-01-01, to: 2026-09-30 } }
+      note: { text: { words: [3, 12] } }
+      contact: { name: true }
+      email: { email: true }
+      customerId: { ref: customers_db }
+      currency: ZAR
+```
+
+Each key under `generate` other than `seed` is a connection id, with `count` (how many documents) and `fields` (how to make each field). A field's value is one of these kinds:
+
+| Kind       | Example                                              | Makes                                                                                                                                                                             |
+| ---------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| a literal  | `currency: ZAR`                                      | The value as written, in every document. A string, number, boolean, `null`, list, or a `~d` date or `_oid` marker. Write any other object as `{ literal: { ... } }`.              |
+| `oneOf`    | `{ oneOf: [draft, sent, paid], weights: [1, 2, 5] }` | One of the values. `weights` is optional, one number per value; without it each value is equally likely.                                                                          |
+| `number`   | `{ number: { min: 10, max: 5000, decimals: 2 } }`    | A number from `min` to `max`, rounded to `decimals` places (default `0`, whole numbers).                                                                                          |
+| `date`     | `{ date: { from: 2026-01-01, to: 2026-09-30 } }`     | A date between `from` and `to`, loaded as a date, as a fixture's `~d` marker is. Each bound is a UTC date (`2026-01-31`) or a date-time with its offset (`2026-01-31T09:00:00Z`). |
+| `text`     | `{ text: { words: [3, 12] } }`                       | A sentence of that many words from a small built-in word list.                                                                                                                    |
+| `name`     | `{ name: true }`                                     | A person's name, such as `Grace Okafor`, from small built-in lists.                                                                                                               |
+| `email`    | `{ email: true }`                                    | An address at a reserved example domain, such as `maya.chen@example.org`, so it can never reach a real inbox.                                                                     |
+| `company`  | `{ company: true }`                                  | A made-up company name, such as `Harbor Logistics Ltd`.                                                                                                                           |
+| `sequence` | `{ sequence: { prefix: inv-, start: 1 } }`           | `inv-1`, `inv-2`, …, one per document. Without `prefix` it makes numbers; `sequence: true` counts from 1.                                                                         |
+| `ref`      | `{ ref: customers_db }`                              | The `_id` of a document of another connection, from its fixtures or its generated documents. Connections are generated in the order their refs need; a cycle is refused.          |
+
+- **`_id`.** A document's `_id` is `<connection id>-1`, `<connection id>-2`, … unless `fields` sets it. A generated `_id` that is also a fixture's `_id`, or that is generated twice, is refused.
+- **Stable.** Each field has its own seeded sequence, so adding a field or a connection leaves every other field's values as they were.
+- **Size advice.** A connection that loads more than 1,000 documents (fixtures and generated together) gets a warning saying it is not advised. Every journey on the data set loads that many documents, so keep the count to what a page needs. It is never refused.
+- **No dependency.** The lists are small and built in; nothing is downloaded.
 
 Rules, checked before any browser opens:
 
 - **Plain YAML.** No `_ref` and no operators: a data set is test input, not app config.
-- **Connections.** Every connection id in `fixtures`, `indexes` and `snapshot.connections` must be a `MongoDBCollection` connection whose `collection` is a literal string, and whose `databaseName` is a literal string or not set. Two connections that name one collection load into it together.
+- **Connections.** Every connection id in `fixtures`, `generate` and `indexes` must be a `MongoDBCollection` connection whose `collection` is a literal string, and whose `databaseName` is a literal string or not set. Two connections that name one collection load into it together.
 - **One database.** Under a data set every redirected connection reads one database. Two connections that name the same collection in different databases (a different `databaseName` or `databaseUri` secret) would share one collection. When the data set names either of them, the journey is refused. When it names neither, the result carries a warning. A connection whose `collection` is computed per request cannot be checked.
-- **Indexes first.** Each collection's indexes are created before any document is loaded, so a fixture that breaks a unique index fails the load and names the fixture, the index and the duplicate key. A TTL index is loaded as a plain index, so old fixture dates are never deleted mid-run.
+- **Indexes first.** Each collection's indexes are created before any document is loaded, so a fixture or generated document that breaks a unique index fails the load and names the document, the index and the duplicate key. A TTL index is loaded as a plain index, so old fixture dates are never deleted mid-run.
 
 ## Named users and `as`
 
@@ -117,63 +159,24 @@ FAIL  edits a ticket [member]
 
 ## The fixture rule
 
-A snapshot is pulled by each developer at a different time, from a database others keep editing. A journey that selects a snapshot record by its name passes on one pull and fails on the next. So, on a data set with a snapshot:
+Generated documents are background: they give a page volume, realistic shapes and neighbouring records. A journey depends only on values written for it:
 
-- Every value a journey types, selects, clicks by text, puts in `urlQuery` or `pathParams` (the values of a [page path](/page-paths)'s placeholders) or asserts comes from the data set's `fixtures` or `users`, or is UI text from the app's config (labels, titles, options). The snapshot supplies volume, realistic shapes and neighbouring records, never a value a journey depends on.
+- Every value a journey types, selects, clicks by text, puts in `urlQuery` or `pathParams` (the values of a [page path](/page-paths)'s placeholders) or asserts comes from the data set's `fixtures` or `users`, or is UI text from the app's config (labels, titles, options). A generated value is the same on every machine, but it changes when the spec or the seed does, and nobody reading the journey can see where it came from.
 - Target grid rows with `containing: <fixture value>`, never a bare `row: N`. A state path with an array index, such as `locations.0.path`, has the same problem: assert it only on a list the fixtures own outright, or assert by text.
-- Scope the snapshot away from the fixture tenant. Let the fixtures own one organization completely, and let the snapshot bring other organizations plus the shared content the app reads across them.
+- Keep generated documents away from the fixture tenant. Let the fixtures own one organization completely, and generate other organizations' rows around it.
 
 Fixture records are test data written for the journey: never rows copied with credentials, tokens or external ids intact.
 
-## Pulling a snapshot
+## What `lowdefy test` prints
 
-```
-infisical run --env=staging -- lowdefy data pull staging-sample
-```
-
-`lowdefy data pull <name>` builds the app as the `from` environment and copies a scoped, capped snapshot of exactly the connections `snapshot.connections` lists into `.lowdefy/data/<name>/`, with their indexes. Run it with that environment's secrets. `.lowdefy/` is gitignored, so snapshots never reach git. A failed pull leaves the previous snapshot in place.
-
-**The source must opt in.** A pull reads only from an environment that sets `dataPull: true`, and refuses every other environment before it reads any secret. The refusal names the line to add. Set it only on pre-production environments: nothing else marks an environment as production, so the opt-in is what keeps production rows off developer machines. See [Deployment environments](/deployment-environments).
-
-```yaml
-config:
-  environments:
-    staging:
-      dataPull: true
-      guards:
-        secrets:
-          MONGODB_URI: 'acme-staging\.a1b2c\.mongodb\.net'
-    prod:
-      guards:
-        secrets:
-          MONGODB_URI: 'acme-prod\.a1b2c\.mongodb\.net'
-```
-
-**The guard.** The pull then proves which database it reads with the environments' own `guards.secrets` pins. For each listed connection:
-
-- `databaseUri` must be a `_secret`; a literal URI or any other operator is refused.
-- The `from` environment must pin a guard for that secret.
-- The secret's value must match the `from` environment's pin.
-- It must not match any other environment's pin for that secret, when that pin differs from `from`'s.
-
-Messages name the secret and the environment, never the value.
-
-**What is copied.** Only the connections `snapshot.connections` lists: a collection is copied because someone named it. Per collection, `scope` applies only when the collection has the field. Documents are sorted by `_id` descending unless `sort` is set, and capped at `limit`. An entry can override `scope` (`false` to copy across scopes), `limit`, `sort` and `omit`.
-
-- List what journeys need for volume and neighbours.
-- Leave out collections that hold only credentials: sessions, OAuth accounts, API keys.
-- Use `omit:` for credentials and tokens kept inside documents, such as `omit: [auth.encrypted, tokens]`. Omitted fields are left out by the database query, so they never leave the database.
-
-**Freshness.** `lowdefy test` prints the data set once per run, as `data staging-sample: snapshot 3 days old, 41,212 documents`. Past 14 days it is printed as a warning naming the pull command. It never fails the run. A data set with a `snapshot` block and no pulled snapshot fails every journey that names it, with the pull command. When the `snapshot` block has changed since the pull, the result warns you to pull again.
-
-`lowdefy data list` prints each data set: fixtures only, or the snapshot's source, when it was pulled, its age and document count, and whether the `snapshot` block still matches the pull.
+`lowdefy test` prints each data set once per run, as `data tickets: 203 documents`, and the warnings its load returned (size advice, connections that share a collection). `lowdefy data list` prints each data set in `tests/data/` with the documents it loads and the users it names.
 
 ## How a journey reaches its database
 
 A data set journey runs on the running dev server, beside your own browser tabs:
 
 1. The dev server starts one in-memory MongoDB replica set the first time a data set journey runs, on a free port from 49152 up so it never holds a port one of your apps needs. It stops, and its files are removed, when the dev server stops; if it dies, the journey that finds it fails and the next one starts a new store. The first run downloads the MongoDB binary once (`Downloading MongoDB <version> for journey data sets (once).`). Set `MONGOMS_VERSION` to match your cluster's MongoDB version.
-2. Each journey run gets a fresh database on it, loaded with the snapshot, then the fixtures. Runs never see each other's writes, so an agent's journey can run alongside `lowdefy test`.
+2. Each journey run gets a fresh database on it, loaded with the indexes, then the generated documents, then the fixtures. Runs never see each other's writes, so an agent's journey can run alongside `lowdefy test`.
 3. Every browser the journey opens carries a cookie that only the dev server's own headless browser can produce. Requests with it read the run's database. Your own tabs carry no such cookie and keep using your real database on the same server.
 4. When the journey ends, its browsers close, the dev server waits up to 30 seconds for background work the journey started (detached `CallApi` calls, background endpoint work), and then drops the database.
 

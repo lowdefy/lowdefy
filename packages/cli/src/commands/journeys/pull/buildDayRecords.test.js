@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { compileTrace, profileProduction, validateTraceRecord } from '@lowdefy/node-utils';
+import { compileSegments, profileProduction, validateTraceRecord } from '@lowdefy/node-utils';
 
 import buildDayRecords from './buildDayRecords.js';
 import { chains, ORG_ID, PERSON_ID, row, SESSION_ID } from './tests/postHogRows.js';
@@ -269,7 +269,7 @@ test('buildDayRecords keeps an app failure captured at the root path and profile
   expect(records[1]).toMatchObject({ kind: 'engine', scope: 'app', page_id: 'tickets', url: '/' });
   records.forEach((record) => expect(validateTraceRecord({ record })).toEqual({}));
 
-  const { segments } = compileTrace({ records, blockMetas: {}, source: 'production' });
+  const { segments } = compileSegments({ records, blockMetas: {}, source: 'production' });
   const { failurePaths } = profileProduction({ segments });
   expect(failurePaths.map((path) => path.key)).toEqual(['app.onInitAsync']);
 });

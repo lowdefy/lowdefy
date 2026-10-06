@@ -67,7 +67,6 @@ import writeAppEvents from '../writeAppEvents.js';
 import writeAppMeta from '../writeAppMeta.js';
 import writeAuth from '../writeAuth.js';
 import writeConfig from '../writeConfig.js';
-import writeEnvironmentGuards from '../writeEnvironmentGuards.js';
 import writeConnections from '../writeConnections.js';
 import writeDynamicPolicies from '../writeDynamicPolicies.js';
 import writeTenantTargets from '../writeTenantTargets.js';
@@ -246,7 +245,6 @@ async function shallowBuild(options) {
     await writeWebsockets({ components, context });
     await writeNotifications({ components, context });
     await writeConfig({ components, context });
-    await writeEnvironmentGuards({ components, context });
     await writeGlobal({ components, context });
     await writeTheme({ components, context });
     await writeI18n({ components, context });

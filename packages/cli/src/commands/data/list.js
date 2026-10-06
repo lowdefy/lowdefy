@@ -16,40 +16,23 @@
 
 import { listDataSets } from '@lowdefy/node-utils';
 
-const staleAfterDays = 14;
-
-function formatDataSet(dataSet) {
-  if (dataSet.kind === 'fixtures') {
-    return { level: 'info', line: `${dataSet.name}: fixtures only` };
-  }
-  if (dataSet.pulledAt === undefined) {
-    return {
-      level: 'warn',
-      line: `${dataSet.name}: snapshot from ${dataSet.from}, not pulled. Run: lowdefy data pull ${dataSet.name}`,
-    };
-  }
-  const days = dataSet.ageDays === 1 ? 'day' : 'days';
-  const parts = [
-    `${dataSet.name}: snapshot from ${dataSet.from}, pulled ${dataSet.pulledAt.slice(0, 10)}`,
-    `${dataSet.ageDays} ${days} old`,
-    `${dataSet.documents.toLocaleString('en-US')} documents`,
-  ];
-  if (!dataSet.specMatches) {
-    parts.push('spec changed: pull again');
-  }
-  const stale = dataSet.ageDays > staleAfterDays;
-  return { level: !dataSet.specMatches || stale ? 'warn' : 'info', line: parts.join(', ') };
+function plural({ count, word }) {
+  return `${count.toLocaleString('en-US')} ${word}${count === 1 ? '' : 's'}`;
 }
 
-// `lowdefy data list`: each data set in tests/data and its snapshot's age.
+// `lowdefy data list`: each data set in tests/data with the documents and users it loads.
 async function list({ context }) {
   const dataSets = await listDataSets({ configDirectory: context.directories.config });
   if (dataSets.length === 0) {
     context.logger.info('No data sets. Add one at tests/data/<name>.yaml.');
   }
   dataSets.forEach((dataSet) => {
-    const { level, line } = formatDataSet(dataSet);
-    context.logger[level](line);
+    context.logger.info(
+      `${dataSet.name}: ${plural({ count: dataSet.documents, word: 'document' })}, ${plural({
+        count: dataSet.users,
+        word: 'user',
+      })}`
+    );
   });
   context.sendTelemetry();
 }

@@ -60,20 +60,29 @@ function writeJourney({ file, name, blockId, months, extra = {}, deprecated }) {
   fs.writeFileSync(path.join(configDirectory, 'tests', 'journeys', file), YAML.stringify(journey));
 }
 
-function writeCoverage() {
+function writeCoverage({ grouped = true, forced = false, version = 2 } = {}) {
   fs.mkdirSync(context.directories.test, { recursive: true });
   fs.writeFileSync(
     path.join(context.directories.test, 'coverage.json'),
     JSON.stringify({
-      version: 1,
+      version,
       window: { from: '2026-09-04', to: '2026-10-03' },
+      flowGrouping: { grouped, rows: 4200, threshold: 100000, forced },
       measures: {
-        flow: {
-          uncovered: [
-            { key: 'aaaa1111', hash: 'aaaa1111', page: 'tickets', count: 4, sequence: [{}] },
-            { key: 'bbbb2222', hash: 'bbbb2222', page: 'board', count: 40, sequence: [{}, {}] },
-          ],
-        },
+        flow: grouped
+          ? {
+              uncovered: [
+                { key: 'aaaa1111', hash: 'aaaa1111', page: 'tickets', count: 4, sequence: [{}] },
+                {
+                  key: 'bbbb2222',
+                  hash: 'bbbb2222',
+                  page: 'board',
+                  count: 40,
+                  sequence: [{}, {}],
+                },
+              ],
+            }
+          : null,
       },
     })
   );
@@ -91,6 +100,7 @@ beforeEach(() => {
       build: path.join(configDirectory, '.lowdefy', 'server', 'build'),
       journeys: path.join(configDirectory, 'tests', 'journeys'),
       test: path.join(configDirectory, '.lowdefy', 'test'),
+      traces: path.join(configDirectory, '.lowdefy', 'traces'),
     },
     logger: {
       info: (message) => logged.push(String(message)),
@@ -194,6 +204,25 @@ test('journeys usage ranks journeys by rate with tiers, months and old flows, th
   ]);
 });
 
+test('journeys usage says why it lists no flows when coverage did not group them', async () => {
+  writeCoverage({ grouped: false });
+  await journeysUsage({ context });
+  expect(logged[logged.length - 1]).toBe(
+    'Uncovered production flows in 2026-09-04 to 2026-10-03: not grouped (4200 rows < 100000). Read the sessions with "lowdefy journeys session --source production", or run "lowdefy journeys coverage --group".'
+  );
+  writeCoverage({ grouped: false, forced: true });
+  await journeysUsage({ context });
+  expect(logged[logged.length - 1]).toContain('not grouped (coverage ran with --no-group)');
+});
+
+test('journeys usage reads a coverage report of an earlier version as none', async () => {
+  writeCoverage({ version: 1 });
+  await journeysUsage({ context });
+  expect(logged[logged.length - 1]).toBe(
+    'Uncovered production flows: no coverage report yet. Run "lowdefy journeys coverage" to list them.'
+  );
+});
+
 test('journeys usage says to run coverage when there is no coverage report', async () => {
   await journeysUsage({ context });
   expect(logged[logged.length - 1]).toBe(
@@ -279,4 +308,33 @@ test('journeys usage refuses an unknown tier and a malformed usage window', asyn
   context.options.tier = undefined;
   context.options.usageWindow = '90d';
   await expect(journeysUsage({ context })).rejects.toThrow('--usage-window takes');
+});
+
+test('journeys usage refuses a production cache whose days were pulled with different environments', async () => {
+  const directory = path.join(configDirectory, '.lowdefy', 'traces', 'production');
+  fs.mkdirSync(directory, { recursive: true });
+  fs.writeFileSync(path.join(directory, 'salt'), Buffer.alloc(32, 4));
+  const { default: readTraceSalt } = await import('./pull/readTraceSalt.js');
+  const { saltId } = readTraceSalt({ directories: context.directories });
+  [
+    ['2026-09-01', 'production'],
+    ['2026-09-02', 'staging'],
+  ].forEach(([day, environment]) => {
+    fs.writeFileSync(path.join(directory, `${day}.jsonl`), '');
+    fs.writeFileSync(
+      path.join(directory, `${day}.manifest.json`),
+      JSON.stringify({
+        day,
+        final: true,
+        salt_id: saltId,
+        text_rule: 'token',
+        project_id: '1',
+        environment,
+        filter_test_accounts: true,
+      })
+    );
+  });
+  await expect(journeysUsage({ context })).rejects.toThrow(
+    'The production trace cache holds days pulled with different filters, which cannot be counted together: 2026-09-01 (project 1, environment "production", test accounts filtered out); 2026-09-02 (project 1, environment "staging", test accounts filtered out).'
+  );
 });

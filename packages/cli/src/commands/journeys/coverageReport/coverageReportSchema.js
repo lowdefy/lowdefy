@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import COVERAGE_REPORT_VERSION from './coverageReportVersion.js';
+
 const DAY = '^\\d{4}-\\d{2}-\\d{2}$';
 
 const sequenceSchema = {
@@ -114,14 +116,36 @@ const textTokensSchema = {
   },
 };
 
-// The shape of .lowdefy/test/coverage.json, version 1. Journeys scope, variants
-// and the app graph read it, so the writer's tests hold it to this schema.
+// Whether coverage grouped the window's sessions into flows (decideFlowGrouping).
+const flowGroupingSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['grouped', 'rows', 'threshold', 'forced'],
+  properties: {
+    grouped: { type: 'boolean' },
+    rows: { type: 'integer', minimum: 0 },
+    threshold: { type: 'integer', minimum: 1 },
+    forced: { type: 'boolean' },
+  },
+};
+
+// The shape of .lowdefy/test/coverage.json. Journeys scope, variants, usage and
+// the app graph read it, so the writer's tests hold it to this schema.
 const coverageReportSchema = {
   type: 'object',
   additionalProperties: false,
-  required: ['version', 'generated', 'source', 'window', 'measures', 'production', 'journeys'],
+  required: [
+    'version',
+    'generated',
+    'source',
+    'window',
+    'flowGrouping',
+    'measures',
+    'production',
+    'journeys',
+  ],
   properties: {
-    version: { const: 1 },
+    version: { const: COVERAGE_REPORT_VERSION },
     generated: { type: 'string' },
     source: { const: 'production' },
     window: {
@@ -133,13 +157,14 @@ const coverageReportSchema = {
         to: { type: 'string', pattern: DAY },
       },
     },
+    flowGrouping: flowGroupingSchema,
     measures: {
       type: 'object',
       additionalProperties: false,
       required: ['interaction', 'flow', 'failure', 'frustration', 'role'],
       properties: {
         interaction: measureSchema,
-        flow: measureSchema,
+        flow: { anyOf: [measureSchema, { type: 'null' }] },
         failure: measureSchema,
         frustration: measureSchema,
         role: measureSchema,

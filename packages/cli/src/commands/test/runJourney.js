@@ -114,7 +114,7 @@ async function runJourney({ context, item, url, recordRun, mutant }) {
   if (!type.isNone(result.error)) {
     return { name, filePath, passed: false, stepCount, durationMs, message: result.error };
   }
-  // The data set the server loaded and its warnings (snapshot age, colliding connections).
+  // The data set the server loaded and its warnings (colliding connections, size advice).
   const dataSet = { data: result.data, warnings: result.warnings };
   if (result.passed === true) {
     const passed = {

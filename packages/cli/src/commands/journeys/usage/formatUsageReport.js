@@ -67,6 +67,13 @@ function uncoveredLines({ coverage }) {
       'Uncovered production flows: no coverage report yet. Run "lowdefy journeys coverage" to list them.',
     ];
   }
+  if (!coverage.flowGrouping.grouped) {
+    const { rows, threshold, forced } = coverage.flowGrouping;
+    const why = forced ? 'coverage ran with --no-group' : `${rows} rows < ${threshold}`;
+    return [
+      `Uncovered production flows in ${coverage.window.from} to ${coverage.window.to}: not grouped (${why}). Read the sessions with "lowdefy journeys session --source production", or run "lowdefy journeys coverage --group".`,
+    ];
+  }
   const flows = coverage.flows;
   const lines = [
     `Uncovered production flows in ${coverage.window.from} to ${coverage.window.to} (coverage's window, by sessions, not tiered): ${flows.length}`,

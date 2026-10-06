@@ -68,3 +68,4 @@ pages:
   - _ref: pages/timing.yaml
   - _ref: pages/targets.yaml
   - _ref: pages/rails.yaml
+  - _ref: pages/generated.yaml

@@ -22,6 +22,7 @@ import { serveStatic } from '@hono/node-server/serve-static';
 import agentHandler from './routes/agent.js';
 import apiContext from './middleware/apiContext.js';
 import apiPageHandler from './routes/apiPage.js';
+import appMeta from '../lib/build/appMeta.js';
 import authJson from '../lib/build/auth.js';
 import authMiddleware from './routes/auth.js';
 import clientErrorHandler from './routes/clientError.js';
@@ -40,8 +41,10 @@ import mountPageRoutes from './routes/mountPageRoutes.js';
 import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
+import refuseOtherBuild from './middleware/refuseOtherBuild.js';
 import requestTimeout from './middleware/requestTimeout.js';
 import sentryMiddleware from './middleware/sentry.js';
+import stampBuildId from './middleware/stampBuildId.js';
 import usageHandler from './routes/usage.js';
 import userHandler from './routes/user.js';
 import websocketHandler from './routes/websocket.js';
@@ -116,11 +119,20 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   app.all('/.well-known/*', wellKnownFallbackHandler);
 
   app.use('/api/*', apiContext({ clientAddressHeader }));
+  // A tab left open across a deploy (or restored from the browser cache) runs
+  // the old bundle against this build: see refuseOtherBuild and stampBuildId.
+  app.use('/api/auth/*', stampBuildId({ buildId: appMeta.buildId }));
+  app.use('/api/user', stampBuildId({ buildId: appMeta.buildId }));
   app.use('/api/auth/*', authMiddleware({ logger }));
-  app.all('/api/request/*', requestHandler);
+  app.all('/api/request/*', refuseOtherBuild({ buildId: appMeta.buildId }), requestHandler);
   // Endpoint payloads may carry base64 file content (emitFileContent + CallAPI);
   // cap bodies at 10 MiB to match the agent route.
-  app.all('/api/endpoints/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), endpointsHandler);
+  app.all(
+    '/api/endpoints/*',
+    refuseOtherBuild({ buildId: appMeta.buildId }),
+    bodyLimit({ maxSize: 10 * 1024 * 1024 }),
+    endpointsHandler
+  );
   app.get('/api/cron/*', cronHandler);
   app.get('/api/cron-forward/*', cronForwardHandler);
   app.post('/api/detached/*', detachedHandler);

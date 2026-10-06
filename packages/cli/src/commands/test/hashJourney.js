@@ -17,10 +17,20 @@
 import crypto from 'crypto';
 import { stableStringify } from '@lowdefy/helpers';
 
-// Identifies one version of a journey: an exercised.json entry whose hash no
-// longer matches describes a journey that has since changed.
+// The fields that decide what a journey run does. The name keys the
+// exercised.json entry; evidence, tags and the rest describe the journey
+// without changing its run, so `journeys evidence --refresh` keeps every
+// measured path current.
+const runFields = ['pageId', 'steps', 'user', 'data', 'pathParams', 'urlQuery'];
+
+// Identifies one version of a journey's run: an exercised.json entry whose
+// hash no longer matches describes a journey whose run has since changed.
 function hashJourney(journey) {
-  return crypto.createHash('sha1').update(stableStringify(journey)).digest('hex');
+  const run = {};
+  runFields.forEach((field) => {
+    run[field] = journey[field] ?? null;
+  });
+  return crypto.createHash('sha1').update(stableStringify(run)).digest('hex');
 }
 
 export default hashJourney;
