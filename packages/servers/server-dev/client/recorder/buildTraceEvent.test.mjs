@@ -46,9 +46,9 @@ test('buildTraceEvent names the endpoints its CallAPI actions called', () => {
     payload: payload({
       responses: { call: { type: 'CallAPI', index: 0 } },
       apiResponses: {
-        syncInvoices: [{ actionId: 'call', success: true, responseTime: 30 }],
-        failedElsewhere: [{ actionId: 'other', success: false, responseTime: 5 }],
-        refused: [{ actionId: 'call', success: false }],
+        syncInvoices: [{ actionId: 'call', blockId: 'save', success: true, responseTime: 30 }],
+        failedElsewhere: [{ actionId: 'other', blockId: 'save', success: false, responseTime: 5 }],
+        refused: [{ actionId: 'call', blockId: 'save', success: false }],
       },
     }),
   });
@@ -56,4 +56,26 @@ test('buildTraceEvent names the endpoints its CallAPI actions called', () => {
     { id: 'syncInvoices', ok: true, ms: 30 },
     { id: 'refused', ok: false, ms: null },
   ]);
+});
+
+test('buildTraceEvent leaves out calls another block or a skipped action made', () => {
+  const event = buildTraceEvent({
+    payload: payload({
+      responses: {
+        call: { type: 'CallAPI', index: 0 },
+        fetch: { type: 'Request', index: 1, skipped: true },
+      },
+      requests: {
+        listItems: [{ actionId: 'call', blockId: 'refresh' }],
+        getItem: [{ actionId: 'fetch', blockId: 'save' }],
+        saveItem: [{ actionId: 'call', blockId: 'save', responseTime: 12 }],
+      },
+      apiResponses: {
+        notify: [{ actionId: 'call', blockId: 'other_button', success: true }],
+        archive: [{ actionId: 'fetch', blockId: 'save', success: true }],
+      },
+    }),
+  });
+  expect(event.requests).toEqual([{ id: 'saveItem', ok: true, ms: 12 }]);
+  expect(event.endpoints).toEqual([]);
 });

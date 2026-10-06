@@ -33,8 +33,8 @@ function buildTraceEvent({ payload, urlAfter }) {
     block_id: payload.blockId,
     success: payload.success,
     actions: collectEventActions({ responses }),
-    requests: collectEventRequests({ context, responses }),
-    endpoints: collectEventEndpoints({ context, responses }),
+    requests: collectEventRequests({ blockId: payload.blockId, context, responses }),
+    endpoints: collectEventEndpoints({ blockId: payload.blockId, context, responses }),
     state_writes: diffStateWrites({
       before: payload.stateBefore,
       after: context?.state,

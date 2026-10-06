@@ -16,16 +16,18 @@
 
 import { type } from '@lowdefy/helpers';
 
+import isEventCall from './isEventCall.js';
+
 // The API endpoints this event's CallAPI actions called, as trace record
 // entries. `apiResponses[endpointId]` is a newest-first call history whose
-// entries carry the id of the action that made the call, read as
-// collectEventRequests reads request calls.
-function collectEventEndpoints({ context, responses }) {
+// entries carry the block and the id of the action that made the call, read
+// as collectEventRequests reads request calls.
+function collectEventEndpoints({ blockId, context, responses }) {
   const apiResponses = context?._internal?.lowdefy?.apiResponses ?? {};
   const endpoints = [];
   Object.keys(apiResponses).forEach((endpointId) => {
     const call = (apiResponses[endpointId] ?? [])[0];
-    if (type.isNone(call) || type.isNone(call.actionId) || !(call.actionId in responses)) return;
+    if (!isEventCall({ blockId, call, responses })) return;
     endpoints.push({
       id: endpointId,
       ok: call.success === true,
