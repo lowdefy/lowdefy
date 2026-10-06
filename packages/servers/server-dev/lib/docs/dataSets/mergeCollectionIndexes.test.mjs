@@ -16,16 +16,16 @@
 
 import mergeCollectionIndexes from './mergeCollectionIndexes.js';
 
-test('mergeCollectionIndexes lets a declared index replace a recorded one with the same key', () => {
+test('mergeCollectionIndexes lets a later index replace an earlier one with the same key', () => {
   expect(
     mergeCollectionIndexes({
       dataSetName: 'sample',
       collection: 'tickets',
-      recorded: [
+      indexes: [
         { key: { a: 1 }, name: 'a_1' },
         { key: { b: 1 }, name: 'b_1' },
+        { key: { a: 1 }, name: 'a_unique', unique: true },
       ],
-      declared: [{ key: { a: 1 }, name: 'a_unique', unique: true }],
     })
   ).toEqual([
     { key: { a: 1 }, name: 'a_unique', unique: true },
@@ -38,8 +38,7 @@ test('mergeCollectionIndexes drops expireAfterSeconds and keeps every other opti
     mergeCollectionIndexes({
       dataSetName: 'sample',
       collection: 'events',
-      recorded: [{ key: { created: 1 }, name: 'ttl', expireAfterSeconds: 60, sparse: true }],
-      declared: [],
+      indexes: [{ key: { created: 1 }, name: 'ttl', expireAfterSeconds: 60, sparse: true }],
     })
   ).toEqual([{ key: { created: 1 }, name: 'ttl', sparse: true }]);
 });
@@ -49,8 +48,10 @@ test('mergeCollectionIndexes throws naming both keys when two indexes share a na
     mergeCollectionIndexes({
       dataSetName: 'sample',
       collection: 'tickets',
-      recorded: [{ key: { a: 1 }, name: 'idx' }],
-      declared: [{ key: { b: 1 }, name: 'idx' }],
+      indexes: [
+        { key: { a: 1 }, name: 'idx' },
+        { key: { b: 1 }, name: 'idx' },
+      ],
     })
   ).toThrow(
     'Data set "sample" collection "tickets" has two indexes named "idx" with different keys: {"a":1} and {"b":1}.'

@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
 import { parseDataSet } from '@lowdefy/node-utils';
 
 import findCollectionCollisions from './findCollectionCollisions.js';
@@ -22,11 +21,13 @@ import readConnectionArtifacts from './readConnectionArtifacts.js';
 import resolveDataSetCollection from './resolveDataSetCollection.js';
 
 function getKeyedConnectionIds({ dataSet }) {
-  const ids = new Set([...Object.keys(dataSet.fixtures), ...Object.keys(dataSet.indexes)]);
-  (dataSet.snapshotSpec?.connections ?? []).forEach((connection) => {
-    ids.add(type.isString(connection) ? connection : connection.id);
-  });
-  return [...ids];
+  return [
+    ...new Set([
+      ...Object.keys(dataSet.fixtures),
+      ...Object.keys(dataSet.generated),
+      ...Object.keys(dataSet.indexes),
+    ]),
+  ];
 }
 
 // The data set checks only the dev build can make, on top of parseDataSet's: every connection the
@@ -35,20 +36,7 @@ function getKeyedConnectionIds({ dataSet }) {
 // them) or reported. Runs before any browser opens.
 async function readDataSet({ configDirectory, buildDirectory, name }) {
   const dataSet = await parseDataSet({ configDirectory, name });
-  const warnings = [];
-
-  if (!type.isNone(dataSet.snapshotSpec)) {
-    if (type.isNone(dataSet.snapshot)) {
-      throw new Error(
-        `Data set "${name}" has a snapshot block but no snapshot. Run: lowdefy data pull ${name} (with the ${dataSet.snapshotSpec.from} environment's secrets).`
-      );
-    }
-    if (dataSet.snapshot.specHash !== dataSet.specHash) {
-      warnings.push(
-        `Data set "${name}" snapshot block changed since the last pull. Run: lowdefy data pull ${name}`
-      );
-    }
-  }
+  const warnings = [...dataSet.warnings];
 
   const artifacts = await readConnectionArtifacts({ buildDirectory });
   const keyedIds = getKeyedConnectionIds({ dataSet });
@@ -70,7 +58,7 @@ async function readDataSet({ configDirectory, buildDirectory, name }) {
     warnings.push(message);
   });
 
-  return { ...dataSet, configDirectory, collections, warnings };
+  return { ...dataSet, collections, warnings };
 }
 
 export default readDataSet;

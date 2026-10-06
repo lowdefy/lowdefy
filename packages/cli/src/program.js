@@ -21,7 +21,6 @@ import agentSetup from './commands/agentSetup/agentSetup.js';
 import agentSetupUser from './commands/agentSetup/agentSetupUser.js';
 import build from './commands/build/build.js';
 import dataList from './commands/data/list.js';
-import dataPull from './commands/data/pull.js';
 import dev from './commands/dev/dev.js';
 import dockerOutput from './commands/dockerOutput/dockerOutput.js';
 import emails from './commands/emails/emails.js';
@@ -176,27 +175,8 @@ const data = program
   .description('Manage journey data sets (tests/data/<name>.yaml).');
 
 data
-  .command('pull')
-  .description(
-    "Copy a snapshot of a data set's listed connections from a pre-production environment into .lowdefy/data/<name>, guarded by that environment's guards.secrets pins. Run it with the environment's secrets, e.g. infisical run --env=staging -- lowdefy data pull staging-sample."
-  )
-  .argument('<name>', 'The data set name (tests/data/<name>.yaml).')
-  .usage('<name> [options]')
-  .addOption(options.configDirectory)
-  .addOption(options.devDirectory)
-  .addOption(options.disableTelemetry)
-  .addOption(options.logLevel)
-  .addOption(options.refResolver)
-  .action((name, commandOptions, command) =>
-    runCommand({
-      cliVersion,
-      handler: ({ context }) => dataPull({ context, name }),
-    })(commandOptions, command)
-  );
-
-data
   .command('list')
-  .description('List the data sets in tests/data and the age of each pulled snapshot.')
+  .description('List the data sets in tests/data with the documents and users each loads.')
   .usage('[options]')
   .addOption(options.configDirectory)
   .addOption(options.disableTelemetry)
@@ -793,7 +773,7 @@ program
   .addOption(
     new Option(
       '--lint',
-      'Lint the journeys (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L5 named data set users, L6 final assertion, L7 no snapshot values) and run nothing.'
+      'Lint the journeys (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L5 named data set users, L6 final assertion) and run nothing.'
     )
   )
   .addOption(options.logLevel)

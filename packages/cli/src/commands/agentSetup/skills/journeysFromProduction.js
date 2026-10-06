@@ -58,7 +58,6 @@ Read: the day files and manifests in \`.lowdefy/traces/production/\` (tokens), t
 Never:
 
 - read \`.lowdefy/traces/production/salt\`, the app's \`.env\` or any credential;
-- read \`.lowdefy/data/\` snapshots;
 - call PostHog through its MCP, its API or a URL, or run HogQL;
 - add text to the config to resolve a token, or write a guessed value into a journey to see what
   production showed.
@@ -130,7 +129,7 @@ and note why.
 - Name the journey after what the person did, and decide whether it is one journey or two.
 - A production \`fill\` has \`value: null, from: shape\`, because typed values are never
   captured. Fill each value from the journey's data set \`fixtures\`; when none fits, add a
-  fixture document for the journey rather than borrowing a value from a database snapshot.
+  fixture document for the journey.
 - Re-target a click on a data row to a row of fixture data, and fill a tokenised option pick from
   the fixtures or the config's options.
 - Write a label you read in the config where it tells two controls in one block apart. A click on

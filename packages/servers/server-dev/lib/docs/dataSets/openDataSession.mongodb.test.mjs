@@ -18,7 +18,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { jest } from '@jest/globals';
-import { BSON, MongoClient, ObjectId } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
+import { parseDataSet } from '@lowdefy/node-utils';
 
 import dataSessionRegistry from './dataSessionRegistry.js';
 import getDataStore from './getDataStore.js';
@@ -28,7 +29,6 @@ import { journeyActorToken } from '../../server/auth/journeyActor.js';
 
 jest.setTimeout(120000);
 
-let configDirectory;
 let store;
 let client;
 
@@ -43,41 +43,14 @@ afterAll(async () => {
   await store.stop();
 });
 
-beforeEach(() => {
-  configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-data-session-'));
-});
-
-afterEach(() => {
-  fs.rmSync(configDirectory, { recursive: true, force: true });
-});
-
-function writeSnapshot({ name, collections }) {
-  const directory = path.join(configDirectory, '.lowdefy', 'data', name);
-  fs.mkdirSync(directory, { recursive: true });
-  const manifestCollections = {};
-  Object.entries(collections).forEach(([collection, { documents, indexes }]) => {
-    fs.writeFileSync(
-      path.join(directory, `${collection}.jsonl`),
-      documents.map((document) => BSON.EJSON.stringify(document, { relaxed: false })).join('\n')
-    );
-    manifestCollections[collection] = {
-      connections: [collection],
-      count: documents.length,
-      indexes,
-    };
-  });
-  return { pulledAt: new Date().toISOString(), collections: manifestCollections };
-}
-
 function makeDataSet(overrides) {
   return {
     name: 'sample',
-    configDirectory,
     fixtures: {},
+    generated: {},
     indexes: {},
     users: {},
     collections: {},
-    snapshot: null,
     ...overrides,
   };
 }
@@ -95,52 +68,44 @@ async function listDatabaseNames() {
   return databases.map((database) => database.name);
 }
 
-test('openDataSession creates indexes before documents, so a fixture duplicating a unique snapshot key fails naming both', async () => {
-  const snapshot = writeSnapshot({
-    name: 'sample',
-    collections: {
-      tickets: {
-        documents: [{ _id: 's1', number: 7 }],
-        indexes: [{ key: { number: 1 }, name: 'number_1', unique: true }],
-      },
+test('openDataSession creates indexes before documents, so a fixture duplicating a unique key fails naming both', async () => {
+  const dataSet = makeDataSet({
+    collections: { tickets: 'tickets' },
+    indexes: { tickets: [{ key: { number: 1 }, name: 'number_1', unique: true }] },
+    fixtures: {
+      tickets: [
+        { _id: 'f0', number: 7 },
+        { _id: 'f1', number: 7 },
+      ],
     },
   });
-  const dataSet = makeDataSet({
-    snapshot,
-    collections: { tickets: 'tickets' },
-    fixtures: { tickets: [{ _id: 'f1', number: 7 }] },
-  });
   await expect(openDataSession({ dataSet })).rejects.toThrow(
-    'Data set "sample" fixture tickets[0] breaks unique index "number_1": duplicate key {"number":7} held by document _id "s1".'
+    'Data set "sample" fixture tickets[1] breaks unique index "number_1": duplicate key {"number":7} held by document _id "f0".'
   );
   expect([...dataSessionRegistry.values()].filter((s) => s.name === 'sample')).toEqual([]);
 });
 
-test('openDataSession drops expireAfterSeconds, recreates a text index and lets a data set index replace a recorded one', async () => {
-  const snapshot = writeSnapshot({
-    name: 'sample',
-    collections: {
-      events: {
-        documents: [{ _id: 'e1', title: 'hello', created: new Date('2000-01-01') }],
-        indexes: [
-          { key: { created: 1 }, name: 'created_ttl', expireAfterSeconds: 60 },
-          {
-            key: { _fts: 'text', _ftsx: 1 },
-            name: 'title_text',
-            weights: { title: 1 },
-            default_language: 'english',
-            language_override: 'language',
-            textIndexVersion: 3,
-          },
-          { key: { organizationId: 1 }, name: 'org_1' },
-        ],
-      },
-    },
-  });
+test('openDataSession drops expireAfterSeconds, creates a text index and lets a later index replace one with the same key', async () => {
   const dataSet = makeDataSet({
-    snapshot,
-    collections: { events: 'events' },
-    indexes: { events: [{ key: { organizationId: 1 }, name: 'org_unique', unique: true }] },
+    collections: { events: 'events', 'events-archive': 'events' },
+    fixtures: {
+      events: [{ _id: 'e1', title: 'hello', created: { '~d': '2000-01-01T00:00:00.000Z' } }],
+    },
+    indexes: {
+      events: [
+        { key: { created: 1 }, name: 'created_ttl', expireAfterSeconds: 60 },
+        {
+          key: { _fts: 'text', _ftsx: 1 },
+          name: 'title_text',
+          weights: { title: 1 },
+          default_language: 'english',
+          language_override: 'language',
+          textIndexVersion: 3,
+        },
+        { key: { organizationId: 1 }, name: 'org_1' },
+      ],
+      'events-archive': [{ key: { organizationId: 1 }, name: 'org_unique', unique: true }],
+    },
   });
   const { session, close } = await openDataSession({ dataSet });
   try {
@@ -160,17 +125,15 @@ test('openDataSession drops expireAfterSeconds, recreates a text index and lets 
   }
 });
 
-test('openDataSession lets a fixture replace the snapshot document with the same _id and revives dates and ObjectIds', async () => {
+test('openDataSession lets a later fixture replace one with the same _id and revives dates and ObjectIds', async () => {
   const oid = new ObjectId();
-  const snapshot = writeSnapshot({
-    name: 'sample',
-    collections: { tickets: { documents: [{ _id: 't1', title: 'from snapshot' }], indexes: [] } },
-  });
   const dataSet = makeDataSet({
-    snapshot,
     collections: { tickets: 'tickets', 'tickets-archive': 'tickets' },
     fixtures: {
-      tickets: [{ _id: 't1', title: 'from fixture' }],
+      tickets: [
+        { _id: 't1', title: 'first' },
+        { _id: 't1', title: 'from fixture' },
+      ],
       'tickets-archive': [
         {
           title: 'no id',
@@ -191,6 +154,86 @@ test('openDataSession lets a fixture replace the snapshot document with the same
   } finally {
     await close();
   }
+});
+
+test('openDataSession loads fixtures and generated documents together, with generated dates as Dates', async () => {
+  const configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-generate-'));
+  try {
+    fs.mkdirSync(path.join(configDirectory, 'tests', 'data'), { recursive: true });
+    fs.writeFileSync(
+      path.join(configDirectory, 'tests', 'data', 'invoices.yaml'),
+      [
+        'fixtures:',
+        '  customers_db:',
+        '    - { _id: c-fixture, name: Fixture customer }',
+        'generate:',
+        '  seed: 7',
+        '  customers_db:',
+        '    count: 4',
+        '    fields:',
+        '      name: { company: true }',
+        '  invoices_db:',
+        '    count: 30',
+        '    fields:',
+        '      _id: { sequence: { prefix: inv-, start: 1 } }',
+        '      status: { oneOf: [draft, sent, paid], weights: [1, 2, 5] }',
+        '      issued: { date: { from: 2026-01-01, to: 2026-09-30 } }',
+        '      customerId: { ref: customers_db }',
+        '',
+      ].join('\n')
+    );
+    const parsed = await parseDataSet({ configDirectory, name: 'invoices' });
+    const dataSet = makeDataSet({
+      ...parsed,
+      name: 'sample',
+      collections: { customers_db: 'customers', invoices_db: 'invoices' },
+    });
+    const { session, close } = await openDataSession({ dataSet });
+    try {
+      const customers = await sessionDb(session)
+        .collection('customers')
+        .find({})
+        .sort({ _id: 1 })
+        .toArray();
+      expect(customers.map(({ _id }) => _id)).toEqual([
+        'c-fixture',
+        'customers_db-1',
+        'customers_db-2',
+        'customers_db-3',
+        'customers_db-4',
+      ]);
+      const invoices = await sessionDb(session).collection('invoices').find({}).toArray();
+      expect(invoices).toHaveLength(30);
+      expect(invoices[0]._id).toEqual('inv-1');
+      expect(invoices[0].issued).toBeInstanceOf(Date);
+      const customerIds = customers.map(({ _id }) => _id);
+      invoices.forEach((invoice) => expect(customerIds).toContain(invoice.customerId));
+      expect(
+        await sessionDb(session).collection('invoices').countDocuments({ status: 'paid' })
+      ).toEqual(parsed.generated.invoices_db.filter(({ status }) => status === 'paid').length);
+    } finally {
+      await close();
+    }
+  } finally {
+    fs.rmSync(configDirectory, { recursive: true, force: true });
+  }
+});
+
+test('openDataSession fails naming the generated document that breaks a unique index', async () => {
+  const dataSet = makeDataSet({
+    collections: { tickets: 'tickets' },
+    indexes: { tickets: [{ key: { status: 1 }, name: 'status_1', unique: true }] },
+    generated: {
+      tickets: [
+        { _id: 'g1', status: 'open' },
+        { _id: 'g2', status: 'closed' },
+        { _id: 'g3', status: 'open' },
+      ],
+    },
+  });
+  await expect(openDataSession({ dataSet })).rejects.toThrow(
+    'Data set "sample" generated tickets[2] (_id "g3") breaks unique index "status_1": duplicate key { status: "open" }.'
+  );
 });
 
 test('a session database runs a transaction and opens a change stream', async () => {

@@ -20,16 +20,13 @@ function keyOf(index) {
   return JSON.stringify(index.key);
 }
 
-// The indexes one collection is created with: the snapshot's recorded indexes, then the data set's
-// own, where a data set index whose key equals a recorded one replaces it. expireAfterSeconds is
+// The indexes one collection is created with, from every connection the data set loads into it,
+// where a later index whose key equals an earlier one replaces it. expireAfterSeconds is
 // dropped, so a TTL index becomes a plain one: fixtures often carry old dates, and the TTL monitor
 // would delete them on its own clock, making a run depend on when it happened.
-function mergeCollectionIndexes({ dataSetName, collection, recorded, declared }) {
+function mergeCollectionIndexes({ dataSetName, collection, indexes }) {
   const byKey = new Map();
-  recorded.forEach((index) => {
-    byKey.set(keyOf(index), index);
-  });
-  declared.forEach((index) => {
+  indexes.forEach((index) => {
     byKey.set(keyOf(index), index);
   });
   const byName = new Map();

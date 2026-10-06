@@ -114,8 +114,6 @@ Run \`${cd}lowdefy journeys evidence --refresh\`, so the mutation scores land in
 
 Report to the developer:
 
-- the age of each pulled data set snapshot (\`${cd}lowdefy data list\`), flagging any over 14
-  days;
 - the journeys with no production backing in the window, with their mutation kills and unique
   kills exactly as \`lowdefy journeys evidence\` prints them, and no proposal to delete any of them;
 - journeys whose \`sequence\` in \`.lowdefy/test/coverage.json\` duplicates another's;

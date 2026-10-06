@@ -396,7 +396,7 @@ chromiumTest(
     });
     expect(first.status).toBe(200);
     expect(first.result.passed).toBe(true);
-    expect(first.result.data).toEqual({ name: 'shop', loadMs: expect.any(Number), snapshot: null });
+    expect(first.result.data).toEqual({ name: 'shop', loadMs: expect.any(Number), documents: 3 });
 
     const second = await runJourney({
       data: 'shop',

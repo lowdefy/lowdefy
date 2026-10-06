@@ -14,15 +14,11 @@
   limitations under the License.
 */
 
-// Written only by a build run with `environmentGuards: 'all'` (the `lowdefy data pull` build), so
-// the pull can check a secret against every environment's pins. Every other build drops the other
-// environments' guards and writes no such file.
-async function writeEnvironmentGuards({ components, context }) {
-  if (context.environmentGuards !== 'all') return;
-  await context.writeBuildArtifact(
-    'environmentGuards.json',
-    JSON.stringify(components.environmentGuards, null, 2)
-  );
+// The index a duplicate key error names, from the server's message ("... index: number_1 dup
+// key: ..."), or "unknown".
+function duplicateIndexName(message) {
+  const match = /index: (\S+)/.exec(message ?? '');
+  return match === null ? 'unknown' : match[1];
 }
 
-export default writeEnvironmentGuards;
+export default duplicateIndexName;
