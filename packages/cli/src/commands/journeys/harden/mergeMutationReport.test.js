@@ -20,8 +20,8 @@ function verdict(name, value) {
   return { file: `${name}.yaml`, name, verdict: value, failure: null, misses: [] };
 }
 
-function journey(name, killed, total) {
-  return { file: `${name}.yaml`, name, killed, total, unique: 0 };
+function journey(name, killed, total, unique = 0) {
+  return { file: `${name}.yaml`, name, killed, total, unique };
 }
 
 const previous = {
@@ -56,7 +56,7 @@ test('mergeMutationReport replaces this run journeys, keeps the others that stil
   });
   expect(merged.generated).toBe(report.generated);
   expect(merged.buildId).toBe('new');
-  expect(merged.journeys).toEqual([journey('a', 1, 1), journey('b', 0, 1)]);
+  expect(merged.journeys).toEqual([journey('a', 1, 1, 1), journey('b', 0, 1)]);
   expect(merged.mutants).toEqual([
     {
       id: 'shared',
@@ -76,4 +76,25 @@ test('mergeMutationReport keeps a changed mutant changed', () => {
   });
   expect(merged.mutants[0].status).toBe('changed');
   expect(merged.killed).toBe(0);
+});
+
+test('mergeMutationReport recounts unique over the merged verdicts when two runs kill the same mutant', () => {
+  const merged = mergeMutationReport({
+    previous: {
+      ...previous,
+      mutants: [{ id: 'shared', status: 'killed', ranBy: [verdict('a', 'killed')] }],
+      journeys: [journey('a', 1, 1, 1)],
+    },
+    report: {
+      ...report,
+      killed: 1,
+      mutants: [
+        { id: 'shared', status: 'killed', ranBy: [verdict('b', 'killed')] },
+        { id: 'onlyB', status: 'killed', ranBy: [verdict('b', 'killed')] },
+      ],
+      journeys: [journey('b', 2, 2, 2)],
+    },
+    journeyKeys: new Set(['a.yaml#a', 'b.yaml#b']),
+  });
+  expect(merged.journeys).toEqual([journey('a', 1, 1, 0), journey('b', 2, 2, 1)]);
 });
