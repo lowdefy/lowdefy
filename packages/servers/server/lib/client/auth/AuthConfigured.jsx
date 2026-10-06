@@ -29,6 +29,8 @@ import { passkeyClient } from '@better-auth/passkey/client';
 
 import { normalizeCaller } from '@lowdefy/helpers';
 
+import fetchCheckingBuild from './fetchCheckingBuild.js';
+
 // The app basePath, from Vite's BASE_URL (`${config.basePath}/`, set in
 // vite.config.js). build/config.json is server-only - it carries every
 // deployment environment's settings - so it is never imported into the client.
@@ -44,6 +46,7 @@ const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 // sent), so the sign-in a Lowdefy GenericOAuth provider makes is unaffected.
 const authClient = createAuthClient({
   baseURL: `${window.location.origin}${basePath}/api/auth`,
+  fetchOptions: { customFetchImpl: fetchCheckingBuild },
   plugins: [
     adminClient(),
     emailOTPClient(),
@@ -158,7 +161,7 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     // The server-resolved caller - roles from the active member row and the
     // merged attributes bag - for re-syncing after session changes.
     getResolvedUser: async () => {
-      const response = await fetch(`${basePath}/api/user`, {
+      const response = await fetchCheckingBuild(`${basePath}/api/user`, {
         credentials: 'same-origin',
       });
       if (!response.ok) {
