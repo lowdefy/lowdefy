@@ -17,15 +17,18 @@
 import { type } from '@lowdefy/helpers';
 
 // A flow's months after a refresh. Each month the cache counted replaces the
-// committed entry when the cache read at least as many final days of it, and
-// leaves it otherwise: a fuller pull wins, a pruned or partial cache changes
-// nothing, and a month is never added to itself. Months the cache did not
-// count keep their committed values. Oldest first.
-function mergeMonths({ committed, counted }) {
+// committed entry only when the cache read more final days of it: a fuller
+// pull wins, and a pruned, partial or equally full cache changes nothing, so
+// two machines holding the same days never overwrite each other's counts. A
+// recount (the matcher changed, reconcileFlows) also replaces a month read
+// from as many days, since the committed count was made the old way. A month
+// is never added to itself. Months the cache did not count keep their
+// committed values. Oldest first.
+function mergeMonths({ committed, counted, recount = false }) {
   const byMonth = new Map(committed.map((entry) => [entry.month, entry]));
   counted.forEach((entry) => {
     const kept = byMonth.get(entry.month);
-    if (type.isUndefined(kept) || entry.days >= kept.days) {
+    if (type.isUndefined(kept) || entry.days > kept.days || (recount && entry.days === kept.days)) {
       byMonth.set(entry.month, entry);
     }
   });

@@ -16,15 +16,34 @@
 
 import fs from 'fs';
 import path from 'path';
+import { type } from '@lowdefy/helpers';
 
 import getMutationReportPath from './getMutationReportPath.js';
+import mergeMutationReport from './mergeMutationReport.js';
 
-// Rewrites .lowdefy/test/mutation.json with this run's report. Never touches
-// a journey file.
-function writeMutationReport({ directories, report }) {
+function readPrevious(filePath) {
+  if (!fs.existsSync(filePath)) {
+    return null;
+  }
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch (error) {
+    throw new Error(`The mutation report at ${filePath} is not JSON: ${error.message}`);
+  }
+}
+
+// Writes this run's report into .lowdefy/test/mutation.json, merged per
+// journey with the report an earlier run wrote (mergeMutationReport), so a
+// run over one journey keeps the others' scores. `journeyKeys` is every
+// journey's `file#name` now. Never touches a journey file.
+function writeMutationReport({ directories, report, journeyKeys }) {
   const filePath = getMutationReportPath({ directories });
+  const previous = readPrevious(filePath);
+  const written = type.isNone(previous)
+    ? report
+    : mergeMutationReport({ previous, report, journeyKeys });
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(filePath, `${JSON.stringify(report, null, 2)}\n`);
+  fs.writeFileSync(filePath, `${JSON.stringify(written, null, 2)}\n`);
   return filePath;
 }
 

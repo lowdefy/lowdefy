@@ -1,9 +1,10 @@
 # Driven by lowdefy journeys harden in the cli fixture tests: it asserts the
 # save message and nothing else, so a dropped save action kills it while a
-# dropped unasserted_alert survives.
+# dropped unasserted_alert survives. harden runs only journeys on a data set.
 - name: saves an item and sees the message
   pageId: home
-  user: none
+  data: harden
+  user: member
   steps:
     - fill: { blockId: name_input, value: Fixture item }
     - click: save_button

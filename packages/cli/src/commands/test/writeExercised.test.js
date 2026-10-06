@@ -99,3 +99,22 @@ test('readExercised returns null when nothing was recorded', () => {
     readExercised({ directories, file: 'a.yaml', journey: { name: 'a', steps: [] } })
   ).toBeNull();
 });
+
+test('readExercised keeps the entry when only evidence, name or tags change, and drops it when a step changes', () => {
+  const run = result({ name: 'first', file: 'tests/journeys/a.yaml' });
+  writeExercised({ directories, results: [run], buildId: 'build-1' });
+  const file = path.join('tests', 'journeys', 'a.yaml');
+  const described = {
+    ...run.journey,
+    tags: ['smoke'],
+    evidence: { refreshed: '2026-10-06', mutation: { killed: 1, total: 2 } },
+  };
+  expect(readExercised({ directories, file, journey: described })).not.toBeNull();
+  expect(
+    readExercised({
+      directories,
+      file,
+      journey: { ...described, steps: [{ click: 'cancel' }] },
+    })
+  ).toBeNull();
+});
