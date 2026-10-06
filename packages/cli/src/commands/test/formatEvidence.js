@@ -16,22 +16,36 @@
 
 import { type } from '@lowdefy/helpers';
 
-// The evidence a PASS line carries: `412 sessions · 9 orgs · 11/12 mutants`.
-// Orgs are left out when the app sends none, mutants when no mutation report
-// has been refreshed into the journey. Empty when there is nothing to show.
+// The production part of the line. Monthly evidence shows its all-time
+// sessions: persons and orgs are per month and do not add up across months.
+// The legacy window shape, accepted for one minor release, shows its window's
+// sessions and orgs as before.
+function formatProduction({ production }) {
+  if (type.isArray(production.months)) {
+    const sessions = production.months.reduce((sum, entry) => sum + entry.sessions, 0);
+    return [`${sessions} sessions`];
+  }
+  const parts = [];
+  if (production.sessions === 0) {
+    parts.push('0 sessions in window');
+  } else {
+    parts.push(`${production.sessions} sessions`);
+  }
+  if (production.orgs > 0) {
+    parts.push(`${production.orgs} orgs`);
+  }
+  return parts;
+}
+
+// The evidence a PASS line carries: `412 sessions · 11/12 mutants`. Mutants
+// are left out when no mutation report has been refreshed into the journey.
+// Empty when there is nothing to show.
 function formatEvidence({ evidence }) {
   if (!type.isObject(evidence)) return '';
   const parts = [];
   const { production, mutation } = evidence;
   if (type.isObject(production)) {
-    if (production.sessions === 0) {
-      parts.push('0 sessions in window');
-    } else {
-      parts.push(`${production.sessions} sessions`);
-    }
-    if (production.orgs > 0) {
-      parts.push(`${production.orgs} orgs`);
-    }
+    parts.push(...formatProduction({ production }));
   }
   if (type.isObject(mutation)) {
     parts.push(`${mutation.killed}/${mutation.total} mutants`);

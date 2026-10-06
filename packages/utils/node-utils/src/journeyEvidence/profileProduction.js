@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import countTextTokens from './countTextTokens.js';
 import failurePathKey from './failurePathKey.js';
 
 const TOP_FLOWS_PER_PAGE = 20;
@@ -94,18 +95,25 @@ function rankFailurePaths({ segments }) {
     .sort((a, b) => b.persons - a.persons || b.sessions - a.sessions || compareText(a.key, b.key));
 }
 
+// A frustrated element is its block, else (a click outside every block) its
+// clicked-text token, else its text, so blockless rage and dead clicks on
+// different elements stay apart without their text.
+function frustrationTarget({ entry }) {
+  return entry.block_id ?? entry.text_token ?? entry.text;
+}
+
 function rankFrustration({ segments }) {
   const groups = new Map();
   segments.forEach((segment) => {
     (segment.frustrations ?? []).forEach((entry) => {
-      const block = entry.block_id ?? entry.text;
-      const key = `${entry.page}.${block}`;
+      const key = `${entry.page}.${frustrationTarget({ entry })}`;
       if (!groups.has(key)) {
         groups.set(key, {
           key,
           page: entry.page,
           block_id: entry.block_id,
           text: entry.text,
+          text_token: entry.text_token ?? null,
           rage: 0,
           dead: 0,
         });
@@ -168,7 +176,8 @@ function countEntryPoints({ segments }) {
 
 // What production use looks like, computed once from the segments
 // compileTrace returns: ranked flows per entry page, failure paths, frustrated
-// blocks, the role sets seen per page, and the pages tab sessions start on.
+// blocks, the role sets seen per page, the pages tab sessions start on, and
+// the clicked-text token counts per page, block and column (countTextTokens).
 // Coverage writes it to coverage.json, which the explorer and variants read,
 // so production is profiled in one place. Every list is sorted, ties broken
 // by key, so the same segments give the same profile.
@@ -179,6 +188,7 @@ function profileProduction({ segments }) {
     frustration: rankFrustration({ segments }),
     roleMatrix: buildRoleMatrix({ segments }),
     entryPoints: countEntryPoints({ segments }),
+    textTokens: countTextTokens({ segments }),
   };
 }
 

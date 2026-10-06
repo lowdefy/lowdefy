@@ -16,32 +16,48 @@
 
 import formatZeroBacked from './formatZeroBacked.js';
 
-const window = { from: '2026-09-03', to: '2026-10-02' };
+function month(name, sessions) {
+  return { month: name, days: 30, sessions, persons: sessions, orgs: 0, failures: 0 };
+}
 
-function result(name, sessions, mutation) {
-  const after = { production: { sessions } };
+function result(name, months, mutation) {
+  const after = { production: { sequence: 'v1-00000000', pageId: 'p', flow: [], months } };
   if (mutation) after.mutation = mutation;
   return { name, after };
 }
 
-test('formatZeroBacked lists unbacked journeys with their mutation numbers and removes nothing', () => {
+test('formatZeroBacked lists journeys unbacked over the usage window with their mutation numbers', () => {
   expect(
     formatZeroBacked({
-      window,
       results: [
-        result('admin runs the year-end close', 0, { killed: 4, total: 5, unique: 2 }),
-        result('member saves a ticket', 12),
-        result('owner restores a deleted framework', 0),
+        result('admin runs the year-end close', [month('2026-01', 40), month('2026-09', 0)], {
+          killed: 4,
+          total: 5,
+          unique: 2,
+        }),
+        result('member saves a ticket', [month('2026-09', 12), month('2026-10', 3)]),
+        result('owner restores a deleted framework', [month('2026-10', 0)]),
       ],
     })
   ).toEqual([
-    'No production backing in 2026-09-03/2026-10-02 (nothing is removed):',
+    'No production backing in 2026-08 to 2026-10 (nothing is removed):',
     '  admin runs the year-end close       0 sessions · 4/5 mutants · 2 only this journey kills',
     '  owner restores a deleted framework  0 sessions · no mutation report yet',
-    'A 30-day window cannot see quarterly or yearly work. A journey that is the only one to kill a mutant is load-bearing whatever its traffic.',
+    'Three months cannot see yearly work. A journey that is the only one to kill a mutant is load-bearing whatever its traffic.',
   ]);
 });
 
 test('formatZeroBacked prints nothing when every journey is backed', () => {
-  expect(formatZeroBacked({ window, results: [result('a', 1)] })).toEqual([]);
+  expect(formatZeroBacked({ results: [result('a', [month('2026-10', 1)])] })).toEqual([]);
+});
+
+test('formatZeroBacked skips journeys without monthly evidence', () => {
+  expect(
+    formatZeroBacked({
+      results: [
+        { name: 'legacy', after: { production: { sessions: 0, window: '2026-09-03/2026-10-02' } } },
+        { name: 'none', after: {} },
+      ],
+    })
+  ).toEqual([]);
 });
