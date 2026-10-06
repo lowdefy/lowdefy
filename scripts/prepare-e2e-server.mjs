@@ -93,6 +93,6 @@ fs.copyFileSync(packageJsonPath, path.join(serverDir, 'package.original.json'));
 const packageMap = scanPackages(REPO_ROOT);
 rewriteDeps({ sourceDir: SERVER_DIR, targetDir: serverDir, packageMap });
 addPlugins({ configDirectory, targetDir: serverDir, logger });
-createWorkspace({ targetDir: serverDir });
+createWorkspace({ targetDir: serverDir, configDirectory });
 
 logger.info(`Prepared e2e server at ${serverDir}.`);
