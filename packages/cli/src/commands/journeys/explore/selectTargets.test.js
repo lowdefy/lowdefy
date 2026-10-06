@@ -139,7 +139,7 @@ function appFiles() {
   };
 }
 
-function targets({ change = () => {}, coverage = null, manualPages = [] } = {}) {
+function targets({ change = () => {}, coverage = null, manualPages = [], charterPages = [] } = {}) {
   const head = appFiles();
   change(head);
   const baseBuild = writeBuild('base', appFiles());
@@ -150,6 +150,7 @@ function targets({ change = () => {}, coverage = null, manualPages = [] } = {}) 
     headBuild,
     coverage,
     manualPages,
+    charterPages,
   });
 }
 
@@ -411,6 +412,35 @@ test('selectTargets for a head-only run refuses a --page that is not in the head
   expect(() => selectTargets({ headBuild, manualPages: ['nope'], headOnly: true })).toThrow(
     '--page "nope" is not a page in the head build.'
   );
+});
+
+test('selectTargets for a head-only bug bash adds the charter pages, and the entry pages only while a charter names none', () => {
+  const headBuild = writeBuild('head', appFiles());
+  expect(
+    reasons(
+      selectTargets({
+        headBuild,
+        charterPages: ['tickets', 'settings'],
+        withDefaultPages: false,
+        headOnly: true,
+      })
+    )
+  ).toEqual({ settings: ['charter'], tickets: ['charter'] });
+  expect(
+    reasons(
+      selectTargets({
+        headBuild,
+        charterPages: ['tickets', 'home'],
+        withDefaultPages: true,
+        headOnly: true,
+      })
+    )
+  ).toEqual({ home: ['entry', 'charter'], tickets: ['charter'] });
+});
+
+test('selectTargets for a PR run adds the charter pages beside the changed ones', () => {
+  const result = targets({ manualPages: ['home'], charterPages: ['home', 'tickets'] });
+  expect(reasons(result)).toEqual({ home: ['manual', 'charter'], tickets: ['charter'] });
 });
 
 test('writeScope writes scope.json in the run directory', async () => {

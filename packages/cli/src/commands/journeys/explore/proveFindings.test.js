@@ -74,7 +74,7 @@ test('an app error is proven when both runs fail with its key at a step, run in 
     context,
     url,
     findings: [serverError],
-    candidates: { finding: [{ key: serverError.key, path: filePath }], notCompiled: [] },
+    candidates: { finding: [{ key: serverError.key, path: filePath }] },
     live: false,
   });
   expect(proof.proven).toEqual([{ key: serverError.key, path: filePath }]);
@@ -98,7 +98,7 @@ test('an app error at phase open proves its key', async () => {
     context,
     url,
     findings: [serverError],
-    candidates: { finding: [{ key: serverError.key, path: filePath }], notCompiled: [] },
+    candidates: { finding: [{ key: serverError.key, path: filePath }] },
     live: false,
   });
   expect(proof.proven.map((entry) => entry.key)).toEqual([serverError.key]);
@@ -113,7 +113,7 @@ test('a finding whose journey fails with it on only one of two runs is not-repro
     context,
     url,
     findings: [serverError],
-    candidates: { finding: [{ key: serverError.key, path: filePath }], notCompiled: [] },
+    candidates: { finding: [{ key: serverError.key, path: filePath }] },
     live: false,
   });
   expect(proof.proven).toEqual([]);
@@ -130,7 +130,7 @@ test('a failure with a different key is not-reproduced, and the second run is sk
     context,
     url,
     findings: [serverError],
-    candidates: { finding: [{ key: serverError.key, path: filePath }], notCompiled: [] },
+    candidates: { finding: [{ key: serverError.key, path: filePath }] },
     live: false,
   });
   expect(proof.notProven).toEqual([{ key: serverError.key, reason: 'not-reproduced' }]);
@@ -150,7 +150,7 @@ test('a proof run that fails on an environment error gives environment', async (
     context,
     url,
     findings: [serverError],
-    candidates: { finding: [{ key: serverError.key, path: filePath }], notCompiled: [] },
+    candidates: { finding: [{ key: serverError.key, path: filePath }] },
     live: false,
   });
   expect(proof.notProven).toEqual([{ key: serverError.key, reason: 'environment' }]);
@@ -176,7 +176,6 @@ test('a dead click is proven by a failure at its final expect.effect step, not b
         { key: deadClick.key, path: provenPath },
         { key: otherDeadClick.key, path: earlierPath },
       ],
-      notCompiled: [],
     },
     live: false,
   });
@@ -198,7 +197,7 @@ test('a role refusal is proven by its page root expectation failing, not by pass
     context,
     url,
     findings: [roleRefused],
-    candidates: { finding: [{ key: roleRefused.key, path: filePath }], notCompiled: [] },
+    candidates: { finding: [{ key: roleRefused.key, path: filePath }] },
     live: false,
   });
   expect(proof.proven.map((entry) => entry.key)).toEqual([roleRefused.key]);
@@ -209,7 +208,7 @@ test('a finding with no candidate is no-candidate and a walk environment finding
     context,
     url,
     findings: [deadClick, environment],
-    candidates: { finding: [], notCompiled: [{ key: deadClick.key, reason: 'no-candidate' }] },
+    candidates: { finding: [] },
     live: false,
   });
   expect(proof.notProven).toEqual([
@@ -225,7 +224,7 @@ test('a run on live connections gives every finding live-writes and runs no jour
     context,
     url,
     findings: [serverError, deadClick],
-    candidates: { finding: [{ key: serverError.key, path: filePath }], notCompiled: [] },
+    candidates: { finding: [{ key: serverError.key, path: filePath }] },
     live: true,
   });
   expect(proof.proven).toEqual([]);

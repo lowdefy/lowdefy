@@ -17,7 +17,13 @@
 */
 
 import { jest } from '@jest/globals';
-import { ActionError, ConfigError, OperatorError, UserError } from '@lowdefy/errors';
+import {
+  ActionError,
+  AuthorizationError,
+  ConfigError,
+  OperatorError,
+  UserError,
+} from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 import decodeServerError from '../src/decodeServerError.js';
@@ -2012,6 +2018,41 @@ describe('_error in catch lists', () => {
     expect(fromActions.name).toBe(caught.name);
     expect(fromActions.message).toBe(caught.message);
     expect(fromActions.requestId).toBe(caught.requestId);
+  });
+
+  // client/src/request.js rebuilds an auth gate's refusal from its { name, message } answer.
+  test('_error in a catch action names the refusal class of a refused request, not ActionError', async () => {
+    const Actions = await setupErrorContext({
+      callRequest: () => {
+        throw new AuthorizationError('Forbidden.');
+      },
+    });
+    const res = await Actions.callActions({
+      actions: [{ id: 'fetch', type: 'Request', params: 'fetch_req', messages: { error: false } }],
+      arrayIndices,
+      block: { blockId: 'blockId' },
+      catchActions: [
+        {
+          id: 'read',
+          type: 'ActionSync',
+          params: {
+            name: { _error: 'name' },
+            message: { _error: 'message' },
+            cause: { _error: 'cause' },
+            fromActions: { _actions: 'fetch.error.name' },
+          },
+        },
+      ],
+      event: {},
+      eventName,
+    });
+    expect(res.success).toBe(false);
+    expect(res.responses.read.response).toEqual({
+      name: 'AuthorizationError',
+      message: 'Forbidden.',
+      cause: null,
+      fromActions: 'AuthorizationError',
+    });
   });
 
   test('_error returns a control-raised error projected, with no actionId', async () => {

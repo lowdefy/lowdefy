@@ -56,8 +56,10 @@ function createErrorHandler({ basePath = '', logger }) {
       }
       return c.text('Two-factor enrolment required', 403);
     }
-    // A caller whose payload does not match the endpoint's declared payloadSchema
-    // (or any other UserError raised before a routine starts). The caller's own
+    // An API client whose payload does not match the endpoint's declared
+    // payloadSchema (or any other UserError raised before a routine starts). A
+    // page's CallAPI payload the schema refuses is a ConfigError instead: the
+    // page's own config built it (validatePayload). The caller's own
     // request is wrong, not the config or the server: a 400 with the message the
     // caller needs, one warning line, no structured error log and no Sentry
     // capture. A UserError raised inside a routine never gets here - it returns

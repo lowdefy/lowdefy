@@ -16,14 +16,13 @@
 
 import { type } from '@lowdefy/helpers';
 
-// The walk route's open body for a (page, role) target. Every walk is
-// recorded, so the run's walks compile into candidates.
+// The walk route's open body for a (page, role) target. The dev server
+// records every walk, so the run's walks compile into candidates.
 function buildOpenBody({ target, run, walkId, options }) {
   const body = {
     pageId: target.pageId,
     run,
     walk: walkId,
-    record: true,
     roles: target.roles,
     roleMatrixListed: target.matrixListed,
   };

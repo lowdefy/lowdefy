@@ -1,6 +1,6 @@
 # An expected outcome stops an action without being an app error: a journey
-# that clicks these passes (appErrors.test.mjs in
-# packages/servers/server-dev/test/journeyFixture).
+# that clicks these passes, except bad_payload_button, a config fault
+# (appErrors.test.mjs in packages/servers/server-dev/test/journeyFixture).
 id: app_errors
 type: Box
 blocks:
@@ -49,3 +49,17 @@ blocks:
               - true
           then: Admitted
           else: Refused
+  # Sends typed_order a quantity its payloadSchema refuses: the page's own
+  # config built the payload, so the refusal is a ConfigError, not a UserError.
+  - id: bad_payload_button
+    type: Button
+    properties:
+      title: Bad payload
+    events:
+      onClick:
+        - id: call_typed_order
+          type: CallAPI
+          params:
+            endpointId: typed_order
+            payload:
+              quantity: two

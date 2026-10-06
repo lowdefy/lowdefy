@@ -1,0 +1,16 @@
+# Declares a payloadSchema that app_errors' bad_payload_button breaks: a page
+# whose own config builds a payload the endpoint refuses is a config fault, so
+# a journey that clicks it fails (appErrors.test.mjs in
+# packages/servers/server-dev/test/journeyFixture).
+id: typed_order
+type: Api
+payloadSchema:
+  type: object
+  properties:
+    quantity:
+      type: number
+  required:
+    - quantity
+routine:
+  - ':return':
+      ordered: true

@@ -17,30 +17,13 @@
 import { type } from '@lowdefy/helpers';
 
 import armIdleClose from './armIdleClose.js';
-import evaluateInvariants from './evaluateInvariants.js';
+import evaluateWalkWindow from './evaluateWalkWindow.js';
 import { getWalk } from './walkSessions.js';
 import matchOfferedStep from './matchOfferedStep.js';
 import observeWalkPage from './observeWalkPage.js';
-import resolveConfigKeySource from './resolveConfigKeySource.js';
 import runObservedStep from './runObservedStep.js';
 import saveWalkScreenshot from './saveWalkScreenshot.js';
-import usesSearchStage from './usesSearchStage.js';
 import validateWalkStep from './validateWalkStep.js';
-
-async function evaluateStep({ walk, step, result, window, pageId }) {
-  const { buildDirectory, configDirectory } = walk;
-  return evaluateInvariants({
-    step,
-    result,
-    window,
-    pageId,
-    basePath: walk.basePath,
-    configDirectory,
-    usesSearchStage: (entry) => usesSearchStage({ buildDirectory, entry }),
-    resolveSource: (configKey) =>
-      resolveConfigKeySource({ buildDirectory, configDirectory, configKey }),
-  });
-}
 
 function notFound(walkId) {
   return {
@@ -93,9 +76,9 @@ async function stepWalk({ walkId, body, idleMs }) {
     if (!type.isUndefined(step.fill)) {
       walk.typed.push(String(step.fill.value));
     }
-    const findings = (await evaluateStep({ walk, step, result: stepResult, window, pageId })).map(
-      (finding) => ({ ...finding, step: index })
-    );
+    const findings = (
+      await evaluateWalkWindow({ walk, step, result: stepResult, window, pageId })
+    ).map((finding) => ({ ...finding, step: index }));
     const body = {};
     if (findings.some((finding) => finding.severity === 'error')) {
       const screenshot = await saveWalkScreenshot({

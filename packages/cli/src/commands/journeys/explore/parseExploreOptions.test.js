@@ -22,6 +22,7 @@ test('parseExploreOptions defaults 5 walks, 15 steps and a 20 minute budget', ()
     pr: null,
     against: 'origin/main',
     charter: null,
+    chartersFile: null,
     data: null,
     liveData: false,
     pages: [],
@@ -37,9 +38,9 @@ test('parseExploreOptions defaults 5 walks, 15 steps and a 20 minute budget', ()
   });
 });
 
-test('parseExploreOptions needs one of --pr, --against or --charter, and whole counts', () => {
+test('parseExploreOptions needs one of --pr, --against, --charter or --charters, and whole counts', () => {
   expect(() => parseExploreOptions({})).toThrow(
-    'Pass one of --pr <number>, --against <ref> or --charter <text>.'
+    'Pass one of --pr <number>, --against <ref>, --charter <text> or --charters <file>.'
   );
   expect(() => parseExploreOptions({ pr: '1', against: 'x' })).toThrow(
     'Pass one of --pr <number> or --against <ref>, not both.'
@@ -77,6 +78,21 @@ test('parseExploreOptions takes --charter with --pr or --against', () => {
 test('parseExploreOptions refuses an empty --charter', () => {
   expect(() => parseExploreOptions({ charter: '   ' })).toThrow(
     '--charter should be a sentence saying what to try. Received "   ".'
+  );
+});
+
+test('parseExploreOptions takes --charters alone, or with --pr, as the path to read', () => {
+  expect(parseExploreOptions({ charters: 'bash.yaml' })).toEqual(
+    expect.objectContaining({ pr: null, against: null, charter: null, chartersFile: 'bash.yaml' })
+  );
+  expect(parseExploreOptions({ pr: '7', charters: 'bash.yaml' })).toEqual(
+    expect.objectContaining({ pr: '7', chartersFile: 'bash.yaml' })
+  );
+});
+
+test('parseExploreOptions refuses --charter with --charters', () => {
+  expect(() => parseExploreOptions({ charter: 'try edge input', charters: 'bash.yaml' })).toThrow(
+    'Pass one of --charter <text> or --charters <file>, not both.'
   );
 });
 

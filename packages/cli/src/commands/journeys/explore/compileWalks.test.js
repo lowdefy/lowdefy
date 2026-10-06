@@ -181,7 +181,6 @@ test('an error walk compiles into the run findings directory with its data set, 
     record({ walk: 'walk-1', t: at(2), step: { click: 'assign_submit' } }),
   ]);
   const result = compile({ logs: [walkLog({ walk: 'walk-1', findings: [errorFinding] })] });
-  expect(result.notCompiled).toEqual([]);
   expect(result.finding).toEqual([{ key: errorFinding.key, path: expect.any(String) }]);
   expect(path.dirname(result.finding[0].path)).toBe(path.join(runDirectory(), 'findings'));
   const { contents, journey } = readCandidate(result.finding[0].path);
@@ -226,7 +225,6 @@ test('a dead click mid-walk is cut where the next step started and ends in expec
       }),
     ],
   });
-  expect(result.notCompiled).toEqual([]);
   const { journey } = readCandidate(result.finding[0].path);
   expect(journey.steps).toEqual([{ click: 'help' }, { expect: { effect: true } }]);
   expect(validateJourney({ journey })).toEqual({ valid: true });
@@ -277,7 +275,6 @@ test('a dead click whose compiled journey does not end on that click is no-candi
     ],
   });
   expect(result.finding).toEqual([]);
-  expect(result.notCompiled).toEqual([{ key: deadClick.key, reason: 'no-candidate' }]);
   expect(fs.existsSync(path.join(runDirectory(), 'findings'))).toBe(false);
 });
 

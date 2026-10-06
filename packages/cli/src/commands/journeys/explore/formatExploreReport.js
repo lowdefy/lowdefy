@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 function seconds(ms) {
   return ms === null ? '-' : (ms / 1000).toFixed(1);
 }
@@ -22,12 +24,15 @@ function usd(value) {
   return `$${value.toFixed(2)}`;
 }
 
-function formatFinding(finding) {
+// A --charters run names, under each finding, the charters that hit it.
+function formatFinding({ finding, withCharters }) {
   const label = finding.severity === 'error' ? 'ERROR' : finding.severity.toUpperCase();
   const walks = `${finding.walks.length} walk${finding.walks.length === 1 ? '' : 's'}`;
-  return `  ${label} ${finding.kind}  ${finding.pageId}  ${finding.message}  ${
+  const line = `  ${label} ${finding.kind}  ${finding.pageId}  ${finding.message}  ${
     finding.source ?? ''
   }  (${walks}, ${finding.users.join(', ')})`;
+  if (!withCharters) return [line];
+  return [line, ...finding.charters.map((goal) => `      charter: ${goal}`)];
 }
 
 const REASON_TEXT = {
@@ -37,14 +42,30 @@ const REASON_TEXT = {
   'live-writes': 'the run wrote to live connections',
 };
 
+const NOT_RUN_TEXT = {
+  'no-charter': 'no charter walks it',
+};
+
+// A not-run entry names its page and, when a role was refused or a budget
+// stopped it, the user or roles and the charter. A page no charter walks
+// (no-charter) names the page alone.
+function formatNotRun(entry) {
+  const who = entry.user ?? (entry.roles ?? []).join('+');
+  const target = who === '' ? entry.pageId : `${entry.pageId} × ${who}`;
+  const charter = type.isUndefined(entry.charter) ? '' : ` (charter ${entry.charter + 1})`;
+  return `${target}${charter}: ${NOT_RUN_TEXT[entry.reason] ?? entry.reason}`;
+}
+
 function plural({ count, word }) {
   return `${count} ${word}${count === 1 ? '' : 's'}`;
 }
 
-// The run summary printed after the walks: the charter, if any, what ran and
-// what it cost, what did not run and why, access the PR changed, the findings
-// (proven ones, each with the journey that fails with it, then the not-proven
-// ones by reason), how long the proofs took, the candidates kept and the
+// The run summary printed after the walks: the charter, or a --charters
+// run's charters with what each walked, what ran and what it cost, what did
+// not run and why, access the PR changed, the findings (proven ones, each
+// with the journey that fails with it, then the not-proven ones by reason,
+// each with the charters that hit it on a --charters run), how long the
+// proofs took, the candidates kept, the old candidate folders pruned and the
 // trace file's size.
 function formatExploreReport({ report }) {
   const { ran, timings, model } = report;
@@ -54,8 +75,20 @@ function formatExploreReport({ report }) {
       report.policy.modelId ? ` ${report.policy.modelId}` : ''
     }   data ${report.data ?? 'none'}`
   );
+  // A --charter run has one charter; a --charters run lists each of its own.
+  const chartersRun = report.charter === null && report.charters.length > 0;
   if (report.charter !== null) {
     lines.push(`Charter   ${report.charter.goal}`);
+  }
+  if (chartersRun) {
+    lines.push(`Charters  ${report.charters.length}, one run`);
+    report.charters.forEach((charter, index) => {
+      lines.push(
+        `  ${index + 1}. ${charter.goal}  (${charter.pages.join(', ')} × ${charter.roles.join(
+          ', '
+        )}; ${plural({ count: charter.walks, word: 'walk' })})`
+      );
+    });
   }
   const { switched } = report.policy;
   if (switched !== null) {
@@ -94,14 +127,7 @@ function formatExploreReport({ report }) {
     lines.push(`Stopped   ${report.budget.stopped.reason}`);
   }
   if (report.notRun.length > 0) {
-    lines.push(
-      `Not run   ${report.notRun
-        .map(
-          (entry) =>
-            `${entry.pageId} × ${entry.user ?? (entry.roles ?? []).join('+')}: ${entry.reason}`
-        )
-        .join('   ')}`
-    );
+    lines.push(`Not run   ${report.notRun.map(formatNotRun).join('   ')}`);
   }
   report.accessChanged.forEach(({ pageId, user }) => {
     lines.push(`Access    changed in this PR: ${pageId} no longer admits ${user}`);
@@ -109,12 +135,17 @@ function formatExploreReport({ report }) {
   const { proven, notProven } = report.findings;
   const notProvenCount = Object.values(notProven).reduce((total, group) => total + group.length, 0);
   lines.push(`Findings  ${proven.length} proven, ${notProvenCount} not proven`);
-  proven.forEach((finding) => lines.push(`${formatFinding(finding)}  → ${finding.candidate}`));
+  proven.forEach((finding) => {
+    const [line, ...charterLines] = formatFinding({ finding, withCharters: chartersRun });
+    lines.push(`${line}  → ${finding.candidate}`, ...charterLines);
+  });
   Object.entries(notProven).forEach(([reason, group]) => {
     lines.push(
       `Not proven, ${REASON_TEXT[reason]}: ${plural({ count: group.length, word: 'finding' })}`
     );
-    group.forEach((finding) => lines.push(formatFinding(finding)));
+    group.forEach((finding) =>
+      lines.push(...formatFinding({ finding, withCharters: chartersRun }))
+    );
   });
   if (report.proof.live) {
     lines.push(
@@ -126,6 +157,19 @@ function formatExploreReport({ report }) {
   lines.push(
     `Candidates  ${report.candidates.finding.length} finding · ${report.candidates.coverage.length} coverage → tests/journeys/_candidates/explorer/${report.run}/`
   );
+  const { pruned, keptEdited } = report.pruned;
+  if (pruned.length > 0 || keptEdited.length > 0) {
+    const kept =
+      keptEdited.length === 0
+        ? ''
+        : `; kept ${plural({ count: keptEdited.length, word: 'folder' })} with edited files`;
+    lines.push(
+      `Pruned    ${plural({
+        count: pruned.length,
+        word: 'candidate folder',
+      })} older than 14 days${kept}`
+    );
+  }
   if (report.trace !== null) {
     lines.push(`Trace     ${report.trace.path} (${Math.ceil(report.trace.bytes / 1024)} KB)`);
   }

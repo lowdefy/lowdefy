@@ -21,10 +21,10 @@ import { compileTrace, readRecordings } from '@lowdefy/node-utils';
 import renderCandidate from '@lowdefy/node-utils/journeyCompiler/renderCandidate.js';
 import { type } from '@lowdefy/helpers';
 
+import explorerCandidatesDirectory from './explorerCandidatesDirectory.js';
 import filterSnapshotExpectations from './filterSnapshotExpectations.js';
 import loadBlockMetas from '../loadBlockMetas.js';
 
-const CANDIDATES_DIRECTORY = path.join('tests', 'journeys', '_candidates', 'explorer');
 const INTERACTIONS = ['click', 'fill', 'select', 'open'];
 const EFFECT_STEP = { expect: { effect: true } };
 
@@ -146,8 +146,9 @@ function writeFile({ outDirectory, fileName, contents }) {
 // always on a head-only run. On a snapshot data set, expectations holding
 // snapshot values are dropped. Each origin gains explorer: { run, pr, walks,
 // finding? }, finding being { key, kind, message, source }. Returns
-// { finding: [{ key, path }], notCompiled: [{ key, reason: 'no-candidate' }],
-// coverage: [paths], droppedExpectations }.
+// { finding: [{ key, path }], coverage: [paths], droppedExpectations }: a
+// finding with no candidate is left out of finding, and proveFindings reports
+// it as no-candidate.
 function compileWalks({
   configDirectory,
   run,
@@ -166,7 +167,7 @@ function compileWalks({
       .map((record) => [record.session, record.run.journey])
   );
   const blockMetas = loadBlockMetas({ buildDirectory });
-  const runDirectory = path.join(configDirectory, CANDIDATES_DIRECTORY, run);
+  const runDirectory = path.join(explorerCandidatesDirectory({ configDirectory }), run);
   const findingsDirectory = path.join(runDirectory, 'findings');
   let droppedExpectations = 0;
 
@@ -256,15 +257,11 @@ function compileWalks({
   }
 
   const findingCandidates = [];
-  const notCompiled = [];
   firstWalkByKey({ logs }).forEach(({ finding, log }, key) => {
     const filePath = isOpenFinding(finding)
       ? writeOpenCandidate({ finding, log })
       : writeStepCandidate({ finding, log });
-    if (filePath === null) {
-      notCompiled.push({ key, reason: 'no-candidate' });
-      return;
-    }
+    if (filePath === null) return;
     findingCandidates.push({ key, path: filePath });
   });
 
@@ -297,7 +294,7 @@ function compileWalks({
     })
   );
 
-  return { finding: findingCandidates, notCompiled, coverage, droppedExpectations };
+  return { finding: findingCandidates, coverage, droppedExpectations };
 }
 
 export default compileWalks;

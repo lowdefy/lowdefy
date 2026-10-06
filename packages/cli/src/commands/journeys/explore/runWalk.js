@@ -33,10 +33,12 @@ function refusalReason({ opened, scopePage }) {
 // choose among the options buildDecisionState offers, sends the chosen
 // grammar step, and keeps the findings the invariants decided. Stop reasons:
 // steps, exhausted, off-topic (model policies only: the lowest relevance on
-// two steps running), finding (an error finding), left-app, step-failed,
+// two steps running), finding (an error finding), environment (a search
+// stage the data set's memory store cannot run), left-app, step-failed,
 // budget, cost (from shouldStop), server-restarted (the walk is gone: a 404),
 // and at open refused or access-changed (the head config refuses the role).
-// Returns the walk's log, the record walks.jsonl keeps.
+// Returns the walk's log, the record walks.jsonl keeps, which names the
+// target's charter by its index (null without one).
 async function runWalk({
   client,
   run,
@@ -61,6 +63,7 @@ async function runWalk({
     pageId: target.pageId,
     user: target.user,
     roles: target.roles,
+    charter: target.charter ?? null,
     startedAt: new Date(now()).toISOString(),
     open: null,
     steps: [],
@@ -90,11 +93,16 @@ async function runWalk({
     pageMs: opened.body.timings?.pageMs ?? null,
     redirected: first.redirected === true,
     admitted,
+    screenshot: opened.body.screenshot ?? null,
   };
   try {
-    if (openFindings.length > 0) {
-      log.findings.push(...openFindings);
+    log.findings.push(...openFindings);
+    if (openFindings.some((finding) => finding.severity === 'error')) {
       log.stopReason = 'finding';
+      return log;
+    }
+    if (openFindings.some((finding) => finding.kind === 'environment')) {
+      log.stopReason = 'environment';
       return log;
     }
     if (first.redirected === true) {

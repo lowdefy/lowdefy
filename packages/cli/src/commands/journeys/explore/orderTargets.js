@@ -24,15 +24,17 @@ function changeSize(page) {
   return { blocks, calls };
 }
 
+const UNCHANGED_REASONS = ['app-wide', 'manual', 'entry', 'charter'];
+
 function isChanged(page) {
-  return page.reasons.some((reason) => reason !== 'app-wide' && reason !== 'manual');
+  return page.reasons.some((reason) => !UNCHANGED_REASONS.includes(reason));
 }
 
 // The order walks visit (page, role) targets in each breadth-first round:
 // changed pages by the size of their change (blocks added or changed, then
-// requests and endpoints), then the rest (app-wide entry pages and --page),
-// and within a page its roles in role order. scopePages are scope.json's
-// pages; targets are resolveRoles' targets.
+// requests and endpoints), then the rest (app-wide entry pages, --page and
+// charter pages), and within a page its roles in role order. scopePages are
+// scope.json's pages; targets are resolveRoles' targets.
 function orderTargets({ scopePages, targets }) {
   const rank = new Map(
     [...scopePages]

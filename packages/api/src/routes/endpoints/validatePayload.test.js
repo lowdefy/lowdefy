@@ -15,7 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { UserError } from '@lowdefy/errors';
+import { ConfigError, UserError } from '@lowdefy/errors';
 
 const compileCalls = [];
 jest.unstable_mockModule('@lowdefy/ajv', async () => {
@@ -62,12 +62,32 @@ test('validatePayload returns for a payload that matches the schema', () => {
   ).not.toThrow();
 });
 
-test('validatePayload throws a UserError naming the endpoint, location and first ajv message', () => {
+test('validatePayload throws a ConfigError naming the endpoint, location and first ajv message for a payload the app built', () => {
+  let thrown;
+  try {
+    validatePayload({
+      endpointConfig: { endpointId: 'create_order', payloadSchema: schema, '~k': 'k:endpoint' },
+      payload: { quantity: 'two' },
+    });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown).toBeInstanceOf(ConfigError);
+  expect(thrown.message).toEqual(
+    'Payload for endpoint "create_order" does not match its payloadSchema at /quantity: must be number.'
+  );
+  expect(thrown.configKey).toEqual('k:endpoint');
+  expect(Array.isArray(thrown.cause)).toBe(true);
+  expect(thrown.cause[0].instancePath).toEqual('/quantity');
+});
+
+test('validatePayload throws a UserError with the same message for an outside caller', () => {
   let thrown;
   try {
     validatePayload({
       endpointConfig: { endpointId: 'create_order', payloadSchema: schema },
       payload: { quantity: 'two' },
+      outsideCaller: true,
     });
   } catch (error) {
     thrown = error;
@@ -76,7 +96,6 @@ test('validatePayload throws a UserError naming the endpoint, location and first
   expect(thrown.message).toEqual(
     'Payload for endpoint "create_order" does not match its payloadSchema at /quantity: must be number.'
   );
-  expect(Array.isArray(thrown.cause)).toBe(true);
   expect(thrown.cause[0].instancePath).toEqual('/quantity');
 });
 

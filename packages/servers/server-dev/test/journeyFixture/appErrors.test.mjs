@@ -49,7 +49,6 @@ async function walkClick({ blockId, walk, pageId = 'explore' }) {
       data: 'explore',
       run: newRunId(),
       walk,
-      record: false,
     },
   });
   if (opened.status !== 200) {
@@ -169,6 +168,24 @@ describe.each([
   });
 });
 
+// The page's own config built the payload, so the endpoint's payloadSchema
+// refusing it is a config fault (ConfigError), not an expected outcome.
+fixtureTest('a CallAPI payload the endpoint payloadSchema refuses fails the journey', async () => {
+  const result = await postJourney({
+    pageId: 'app_errors',
+    steps: [{ click: 'bad_payload_button' }, { expect: { visible: 'bad_payload_button' } }],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure).toEqual(
+    expect.objectContaining({
+      index: 0,
+      step: { click: 'bad_payload_button' },
+      kind: 'app-error',
+    })
+  );
+  expect(JSON.stringify(result.failure.errors)).toContain('ConfigError');
+});
+
 fixtureTest('an auditor is admitted by the endpoint the auth gate refuses to others', async () => {
   const result = await postJourney({
     pageId: 'app_errors',
@@ -204,6 +221,49 @@ fixtureTest('an onInit request that throws fails the journey on open', async () 
   expect(sortedKinds(result.failure.errors)).toContain('server-error');
   expect(result.steps.map((step) => step.status)).toEqual(['skipped']);
 });
+
+fixtureTest(
+  'an explorer walk opened on a page whose onInit request throws finds the error at open, with the key a journey on the page fails with',
+  async () => {
+    const result = await postJourney({
+      pageId: 'app_errors_open',
+      user: 'member',
+      data: 'explore',
+      steps: [{ expect: { visible: 'app_errors_open' } }],
+    });
+    expect(result.failure).toEqual(expect.objectContaining({ phase: 'open', kind: 'app-error' }));
+
+    const opened = await postJson({
+      path: '/lowdefy-docs/explore/walks',
+      body: {
+        pageId: 'app_errors_open',
+        user: 'member',
+        data: 'explore',
+        run: newRunId(),
+        walk: 'open-error',
+      },
+    });
+    expect(opened.status).toBe(200);
+    await fetch(`${fixtureUrl}/lowdefy-docs/explore/walks/${opened.body.walkId}`, {
+      method: 'DELETE',
+    });
+    const { findings, observation } = opened.body;
+    expect(sortedKinds(findings)).toContain('server-error');
+    findings.forEach((finding) => {
+      expect(finding.step).toBeUndefined();
+      expect(finding.source).toMatch(/^pages\/app_errors_open\.yaml:\d+$/);
+    });
+    expect(sortedKeys(findings)).toEqual(sortedKeys(result.failure.errors));
+    expect(opened.body.screenshot).toMatch(/open-error-open\.png$/);
+    // The error UI the failed onInit leaves behind offers no control a step
+    // cannot name.
+    observation.candidates.forEach((candidate) => {
+      expect(candidate.target.blockId !== undefined || candidate.target.text !== undefined).toBe(
+        true
+      );
+    });
+  }
+);
 
 fixtureTest(
   "an error from a developer's own tab during a journey does not fail it and reaches build-status; the journey's own does not",

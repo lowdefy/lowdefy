@@ -116,11 +116,14 @@ async function runEndpoint({
     // auth and payloadSchema exactly as the HTTP route does. A :reject or
     // :throw resolves normally with success: false and the routine's own
     // error, so neither reaches the catch below.
+    // The agent wrote the payload, so a payload the endpoint's payloadSchema
+    // refuses is the agent's to correct (outsideCaller), not a config fault.
     const result = system
-      ? await runDetachedEndpoint(context, { endpointId, payload })
+      ? await runDetachedEndpoint(context, { endpointId, outsideCaller: true, payload })
       : await callEndpoint(context, {
           blockId: undefined,
           endpointId,
+          outsideCaller: true,
           pageId: undefined,
           payload,
         });

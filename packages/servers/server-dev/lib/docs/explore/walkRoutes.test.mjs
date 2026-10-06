@@ -51,6 +51,9 @@ jest.unstable_mockModule('../dataSets/resolveJourneyDataSet.js', () => ({
 }));
 jest.unstable_mockModule('./observeWalkPage.js', () => ({ default: mockObserveWalkPage }));
 jest.unstable_mockModule('./runObservedStep.js', () => ({ default: mockRunObservedStep }));
+jest.unstable_mockModule('../observe/waitForClientErrorReports.js', () => ({
+  default: async () => {},
+}));
 jest.unstable_mockModule('./saveWalkScreenshot.js', () => ({
   default: async ({ walk, index }) =>
     `.lowdefy/explore/${walk.run}/screenshots/${walk.journey}-${index}.png`,
@@ -60,6 +63,7 @@ const { default: openWalk } = await import('./openWalk.js');
 const { default: stepWalk } = await import('./stepWalk.js');
 const { default: closeWalk } = await import('./closeWalk.js');
 const { getWalk, listWalks } = await import('./walkSessions.js');
+const { recordRunError } = await import('../runErrorBuffers.js');
 
 const run = '20261004T101500Z-ab12cd';
 const origin = 'http://localhost:3111';
@@ -107,14 +111,13 @@ function openBody(overrides = {}) {
     data: 'explore',
     run,
     walk: 'walk-1',
-    record: true,
     ...overrides,
   };
 }
 
 beforeEach(() => {
   actors = {
-    current: () => ({ page: {} }),
+    current: () => ({ page: { isClosed: () => false, url: () => `${origin}/home` } }),
     flushRecordings: jest.fn(async () => {}),
     closeAll: jest.fn(async () => {}),
   };
@@ -153,13 +156,38 @@ test('openWalk opens a recorded walk on a fresh data session and returns its fir
   expect(getWalk(body.walkId)).toEqual(expect.objectContaining({ run, journey: 'walk-1' }));
 });
 
-test('openWalk with record false marks the recording to record nothing, so the walk still claims its errors', async () => {
-  await openWalk({ body: openBody({ record: false, walk: 'walk-1-confirm' }), origin });
-  expect(mockOpenJourney.mock.calls[0][0].recording).toEqual({
-    source: 'explorer',
-    run: { id: run, by: 'explorer', journey: 'walk-1-confirm' },
-    record: false,
+test('openWalk returns no finding when opening the page caused no app error', async () => {
+  const { body } = await openWalk({ body: openBody(), origin });
+  expect(body.findings).toEqual([]);
+  expect(body.screenshot).toBeUndefined();
+});
+
+test('openWalk returns an app error its page open caused as a finding with no step, and a screenshot', async () => {
+  mockOpenJourney.mockImplementationOnce(async () => {
+    recordRunError({
+      recording: { run, journey: 'walk-1' },
+      store: 'server',
+      timestamp: new Date().toISOString(),
+      message: 'Unrecognized pipeline stage name',
+      source: 'pages/home.yaml:4',
+    });
+    return { journey: { actors } };
   });
+  const { status, body } = await openWalk({ body: openBody(), origin });
+  expect(status).toBe(200);
+  expect(body.admitted).toBe(true);
+  expect(body.findings).toEqual([
+    {
+      kind: 'server-error',
+      severity: 'error',
+      message: 'Unrecognized pipeline stage name',
+      pageId: 'home',
+      source: 'pages/home.yaml:4',
+      configKey: null,
+      key: 'server-error|home|pages/home.yaml:4',
+    },
+  ]);
+  expect(body.screenshot).toBe(`.lowdefy/explore/${run}/screenshots/walk-1-open.png`);
 });
 
 test('openWalk answers 409 for a third concurrent walk and for a walk of the run that is already open', async () => {
@@ -225,7 +253,6 @@ test('openWalk refuses a non-empty allowExternal unless the app opted in to writ
 
 test('openWalk answers 400 for a malformed body before anything opens', async () => {
   expect((await openWalk({ body: openBody({ run: 'nope' }), origin })).status).toBe(400);
-  expect((await openWalk({ body: openBody({ record: 'yes' }), origin })).status).toBe(400);
   expect((await openWalk({ body: null, origin })).status).toBe(400);
   expect(mockGetBrowser).not.toHaveBeenCalled();
 });
@@ -346,13 +373,6 @@ test('closeWalk flushes the recorder, closes the actors and the data session and
   });
   expect(step.status).toBe(404);
   expect((await closeWalk({ walkId: opened.walkId })).status).toBe(404);
-});
-
-test('closeWalk does not flush a walk that records nothing', async () => {
-  const { body: opened } = await openWalk({ body: openBody({ record: false }), origin });
-  await closeWalk({ walkId: opened.walkId });
-  expect(actors.flushRecordings).not.toHaveBeenCalled();
-  expect(actors.closeAll).toHaveBeenCalledTimes(1);
 });
 
 test('a walk idle past its idle time closes itself', async () => {

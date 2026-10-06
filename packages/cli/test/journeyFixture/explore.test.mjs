@@ -287,3 +287,45 @@ fixtureTest(
     expect(again.map(walkShape)).toEqual(walks.map(walkShape));
   }
 );
+
+fixtureTest(
+  'explore proves an onInit app error at open by the one-step page root journey, which fails on open under lowdefy test',
+  async () => {
+    const explored = await runCli(exploreArgs(['--page', 'app_errors_open', '--json']));
+    expect(explored.stderr).toBe('');
+    expect(explored.code).toBe(0);
+    const report = JSON.parse(explored.stdout);
+    const runDirectory = readRunDirectory();
+    const openWalks = readWalks(runDirectory).filter((walk) => walk.pageId === 'app_errors_open');
+    expect(openWalks.length).toBeGreaterThanOrEqual(1);
+    openWalks.forEach((walk) => {
+      expect(walk.stopReason).toBe('finding');
+      expect(walk.steps).toEqual([]);
+    });
+
+    const findings = JSON.parse(fs.readFileSync(path.join(runDirectory, 'findings.json'), 'utf8'));
+    const openErrors = findings.filter(
+      (finding) => finding.pageId === 'app_errors_open' && finding.kind === 'server-error'
+    );
+    expect(openErrors).toHaveLength(1);
+    expect(openErrors[0].status).toBe('proven');
+    expect(openErrors[0].step).toBeNull();
+    expect(report.findings.proven.map((finding) => finding.key)).toContain(openErrors[0].key);
+
+    const candidate = path.join(appDirectory, openErrors[0].candidate);
+    const contents = fs.readFileSync(candidate, 'utf8');
+    expect(contents).toContain('visible: app_errors_open');
+    expect(contents).toContain('data: explore');
+    expect(contents).toContain('user: member');
+    const proofRun = await runCli([
+      'test',
+      candidate,
+      '--config-directory',
+      appDirectory,
+      '--url',
+      fixtureUrl,
+    ]);
+    expect(proofRun.code).toBe(1);
+    expect(`${proofRun.stdout}${proofRun.stderr}`).toContain('on open');
+  }
+);

@@ -207,13 +207,15 @@ Payload for endpoint "create_order" does not match its payloadSchema at /status:
 Payload for endpoint "create_order" does not match its payloadSchema at (root): must NOT have additional properties (colour).
 ```
 
-- A REST call (`POST /api/endpoints/<endpointId>`) answers `400` with `{ name: 'UserError', message }`.
-- An MCP tool call answers `isError: true` carrying the same message, so the model can correct the arguments and retry.
-- An agent tool call surfaces the message to the model as a tool error.
-- A detached `CallApi` target fails its run with the message in the logs, as any other detached failure.
-- A scheduled run fails with the message — an authored `schedule.payload` that breaks its own endpoint's contract is a bug, not something to skip silently.
+Who built the payload decides what kind of error the refusal is.
 
-A refused payload is the caller's mistake, not a fault: it is logged at warn level only and never reported as a server error.
+- **An outside caller** sent it: an API client calling `POST /api/endpoints/<endpointId>` without naming a page, an MCP tool call, or an agent tool call (the model wrote the arguments). The refusal is the caller's mistake, not a fault: a `UserError`, logged at warn level only and never reported as a server error.
+  - The REST call answers `400` with `{ name: 'UserError', message }`.
+  - The MCP tool call answers `isError: true` carrying the same message, so the model can correct the arguments and retry.
+  - The agent tool call surfaces the message to the model as a tool error.
+- **The app's own config** built it: a page's [`CallAPI`](/CallAPI) action, a nested `CallApi` step (including a [detached](#detached-endpoint-calls) one), a Dynamic block's endpoint, an auth or agent hook, or a scheduled run's `schedule.payload`. The config breaks its own endpoint's contract, so the refusal is a `ConfigError`: logged as a server error with its config location, and a journey that triggers it fails.
+  - A page's `CallAPI` fails with the `ConfigError`; its `catch` actions see `_error.name` as `ConfigError`, and outside development the message is the generic server error message.
+  - A nested `CallApi` step fails its routine, a detached target fails its run, and a scheduled run fails, each with the message in the logs.
 
 There is **no opt-out** — no `validate: false`, no strict mode, no per-caller exemption. If you do not want a payload validated, do not declare a `payloadSchema`. The schema cannot be combined with `webhook`: a webhook routine receives the raw `{ body, query, headers }` transport envelope, never the `payloadSchema` shape, so declaring both is a build error. Validate a webhook body with a [`ValidateSchema` step](#validating-data-as-a-routine-step) instead.
 

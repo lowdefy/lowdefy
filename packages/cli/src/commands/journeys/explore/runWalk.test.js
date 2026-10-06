@@ -111,7 +111,6 @@ test('a walk stops at its step limit and closes', async () => {
     pageId: 'tickets',
     run,
     walk: 'walk-1',
-    record: true,
     roles: ['member'],
     roleMatrixListed: false,
     user: 'member',
@@ -290,6 +289,47 @@ test('a role-refused finding at open stops the walk as a finding', async () => {
   const log = await walk({ client });
   expect(log.stopReason).toBe('finding');
   expect(log.findings).toEqual([finding]);
+});
+
+test('an app error at open stops the walk as a finding, with the open screenshot, and takes no step', async () => {
+  const finding = {
+    kind: 'server-error',
+    severity: 'error',
+    key: 'server-error|tickets|pages/tickets.yaml:4',
+  };
+  const client = createClient({
+    open: {
+      status: 200,
+      body: {
+        walkId: 'w',
+        observation: observation(),
+        admitted: true,
+        findings: [finding],
+        screenshot: '.lowdefy/explore/run/screenshots/walk-1-open.png',
+      },
+    },
+  });
+  const log = await walk({ client });
+  expect(log.stopReason).toBe('finding');
+  expect(log.findings).toEqual([finding]);
+  expect(log.open.screenshot).toBe('.lowdefy/explore/run/screenshots/walk-1-open.png');
+  expect(client.step).not.toHaveBeenCalled();
+  expect(client.close).toHaveBeenCalledTimes(1);
+});
+
+test('an environment finding at open stops the walk as environment, not as a finding', async () => {
+  const finding = { kind: 'environment', severity: 'info', key: 'environment|tickets|x' };
+  const client = createClient({
+    open: {
+      status: 200,
+      body: { walkId: 'w', observation: observation(), admitted: true, findings: [finding] },
+    },
+  });
+  const log = await walk({ client });
+  expect(log.stopReason).toBe('environment');
+  expect(log.findings).toEqual([finding]);
+  expect(log.open.screenshot).toBeNull();
+  expect(client.step).not.toHaveBeenCalled();
 });
 
 test('a walk the dev server refuses to open throws, so the run stops', async () => {

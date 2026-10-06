@@ -57,6 +57,57 @@ test('findings are one per key with the walks and users that hit them, in the or
   findings.forEach((finding) => expect(finding).not.toHaveProperty('status'));
 });
 
+test('a finding at open has no step and carries the screenshot the walk took at open', () => {
+  const openError = {
+    kind: 'server-error',
+    severity: 'error',
+    message: 'Unrecognized pipeline stage name',
+    pageId: 'ticket',
+    source: 'pages/ticket.yaml:4',
+    key: 'server-error|ticket|pages/ticket.yaml:4',
+  };
+  const logs = [
+    {
+      walk: 'walk-1',
+      user: 'member',
+      open: { screenshot: 'open.png' },
+      steps: [{ index: 0, screenshot: 'step.png' }],
+      findings: [openError],
+    },
+  ];
+  const [finding] = collectFindings({ logs });
+  expect(finding.step).toBeNull();
+  expect(finding.screenshot).toBe('open.png');
+});
+
+test('one key hit by two charters is one finding listing both charters, in the order they hit it', () => {
+  const charters = [
+    { goal: 'Try edge input on the ticket form.' },
+    { goal: 'Try error paths on the ticket form.' },
+    { goal: 'Try the settings page.' },
+  ];
+  const logs = [
+    { walk: 'walk-1', user: 'admin', charter: 1, steps: [], findings: [actionError] },
+    { walk: 'walk-2', user: 'admin', charter: 2, steps: [], findings: [deadClick] },
+    { walk: 'walk-3', user: 'member', charter: 0, steps: [], findings: [actionError] },
+    { walk: 'walk-4', user: 'member', charter: 1, steps: [], findings: [actionError] },
+  ];
+  const findings = collectFindings({ logs, charters });
+  expect(findings).toHaveLength(2);
+  expect(findings[0]).toMatchObject({
+    key: actionError.key,
+    walks: ['walk-1', 'walk-3', 'walk-4'],
+    users: ['admin', 'member'],
+    charters: ['Try error paths on the ticket form.', 'Try edge input on the ticket form.'],
+  });
+  expect(findings[1]).toMatchObject({ key: 'dead', charters: ['Try the settings page.'] });
+});
+
+test('a run without charters lists none on its findings', () => {
+  const logs = [{ walk: 'walk-1', user: 'admin', charter: null, steps: [], findings: [deadClick] }];
+  expect(collectFindings({ logs })[0].charters).toEqual([]);
+});
+
 test('on a snapshot data set an expect.state holding a snapshot value is dropped; fixture, typed, boolean and null values are kept', () => {
   const known = new Set(['Fixture ticket']);
   const journey = {
