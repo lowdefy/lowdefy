@@ -21,10 +21,12 @@ import committedJourneys from './committedJourneys.js';
 import computeTiers from './usage/computeTiers.js';
 import formatUsageReport from './usage/formatUsageReport.js';
 import inTier from './usage/inTier.js';
+import listFinalDays from './listFinalDays.js';
 import loadRouteTable from './loadRouteTable.js';
 import parseTestSelection from '../test/parseTestSelection.js';
 import parseTier from './usage/parseTier.js';
 import readTierConfigText from './usage/readTierConfigText.js';
+import readTraceSalt from './pull/readTraceSalt.js';
 import readUncoveredFlows from './usage/readUncoveredFlows.js';
 import resolveBuildDirectory from './resolveBuildDirectory.js';
 import resolveJourneyPaths from '../test/resolveJourneyPaths.js';
@@ -49,6 +51,14 @@ function resolvePaths({ context }) {
 // Tiers are cut over the selection alone, as `lowdefy test --tier` cuts them.
 async function journeysUsage({ context }) {
   const { options, logger } = context;
+  // The report's counts were made from this machine's production cache (by
+  // evidence --refresh and coverage), so a cache whose days were pulled with
+  // different filters is refused here too.
+  const traceSalt = readTraceSalt({ directories: context.directories });
+  listFinalDays({
+    directories: context.directories,
+    saltId: type.isNone(traceSalt) ? null : traceSalt.saltId,
+  });
   const tier = parseTier(options.tier);
   const selection = parseTestSelection({ filter: options.filter, tags: options.tag });
   if (!type.isUndefined(selection.error)) throw new Error(selection.error);

@@ -14,29 +14,9 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
 import fetchBuildId from '../../test/fetchBuildId.js';
 import runJourney from '../../test/runJourney.js';
-
-function toVerdict(result) {
-  if (result.passed) {
-    const applied = result.mutant?.applied ?? 0;
-    if (applied >= 1) {
-      return { verdict: 'survived' };
-    }
-    return { verdict: 'unapplied', misses: result.mutant?.misses ?? [] };
-  }
-  // A failed step is the journey noticing the mutant; anything else (the
-  // runner could not run, the server did not answer) says nothing about it.
-  if (!type.isNone(result.failure)) {
-    return {
-      verdict: 'killed',
-      failure: { index: result.failure.index, message: result.failure.message },
-    };
-  }
-  return { verdict: 'error', message: result.message };
-}
+import toVerdict from './toVerdict.js';
 
 // Runs one (mutant, journey) pair: the journey POST with the mutant, as
 // listed against `buildId`. A 409 stale, or a build id that changed during

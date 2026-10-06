@@ -459,9 +459,11 @@ A snapshot is pulled per developer, at different times, from a database others k
 
 `lowdefy journeys harden` measures whether your journeys fail when the feature they walk breaks. It breaks the config on purpose, one small change at a time and only in the journeys' own browsers, while you keep working in the same development server: your own tabs keep seeing the unchanged app.
 
+Only journeys with a [data set](/journey-data-sets) (`data:`) are hardened: mutant runs write through the app's connections from parallel workers, and without a data set that is your own database. A selected journey with no `data:` is left out with an error naming it; when none is left, harden exits `1`.
+
 1. Each selected journey runs once, unchanged. One that fails is left out, with a note to replay it.
 2. The development server lists the mutants on what those runs exercised: a dropped action, a skipped validation, a flipped `visible` or `disabled`, swapped `_if` branches, a dropped payload key, a `Link` sent to `404`, a dropped block, a dropped endpoint step. A layout or template copied into several pages is mutated once.
-3. Each mutant runs against every journey whose path reached it: a journey that fails **kills** it; one that passes lets it **survive**.
+3. Each mutant runs against every journey whose path reached it: a journey that fails with the mutant applied **kills** it; one that passes lets it **survive**. A failure where the mutant never reached the run says nothing about the mutant: it counts as an error and runs once more.
 
 ```
 page tickets:
@@ -475,7 +477,7 @@ SCORE     12/14 killed, 3 unique  member assigns an open ticket  (tests/journeys
 
 A survivor is a change no journey noticed, with the source line it changed: add the assertion that would catch it (`expect.text` of the message, `expect.state`, `expect.visible`, `expect.hidden` or `expect.calls`) after the step that exercises it, and confirm with `lowdefy journeys harden --mutant <id>`. A mutant listed as **unapplied** never reached the journey's browser: that is a defect in harden, not a gap in the journey. Mutants no journey exercised are counted, not run.
 
-The report is written to `.lowdefy/test/mutation.json`: each mutant with the journeys that ran it, the suite's score, and each journey's `killed` out of `total` and its `unique` kills (mutants no other journey kills). Survivors are findings, so the exit code is `0`; it is `1` only when the run could not finish. Editing the config during a run is fine: harden re-lists the mutants, keeps the verdicts no changed file touched and runs the rest again. The third change in one run stops it. harden never writes or deletes a journey.
+The report is written to `.lowdefy/test/mutation.json`: each mutant with the journeys that ran it, the suite's score, and each journey's `killed` out of `total` and its `unique` kills (mutants no other journey kills). It is merged per journey: a run over some journeys replaces their scores and keeps every other journey's from earlier runs, until that journey is removed. `--mutant` runs write nothing. Survivors are findings, so the exit code is `0`; it is `1` only when the run could not finish. Editing the config during a run is fine: harden re-lists the mutants, keeps the verdicts no changed file touched and runs the rest again. The third change in one run stops it. harden never writes or deletes a journey.
 
 - `[paths...]`, `--filter <name>`: The journeys to harden, as for `lowdefy test` (one `--filter`, and no `--tag`).
 - `--page <pageId...>`: Only mutants on these pages, and the endpoint mutants a journey touching them called.
@@ -595,7 +597,6 @@ A committed journey can carry how much production use backs it, by calendar mont
         - { month: 2026-08, days: 31, sessions: 380, persons: 35, orgs: 9, failures: 12 }
         - { month: 2026-09, days: 30, sessions: 412, persons: 37, orgs: 9, failures: 14 }
         - { month: 2026-10, days: 3, sessions: 38, persons: 11, orgs: 5, failures: 1 }
-    dev: { recordings: 2 } # dev sessions of the last 7 days that did it
     mutation: { killed: 11, total: 12, unique: 2 }
     refreshed: 2026-10-05
   steps:
@@ -603,11 +604,13 @@ A committed journey can carry how much production use backs it, by calendar mont
     - select: { blockId: assignee, value: Ann }
 ```
 
-A session backs a journey when it does the journey's interactions in the same order, other clicks in between allowed, starting on the journey's page. A journey's click text counts only when it is text from your app's config: any other text reads as no text, so a click on a grid cell by a customer's name is backed by that column's clicks exactly as one with no text, and no command tells whether production showed that value. Only [`lowdefy journeys evidence --refresh`](/cli#journeys-evidence) writes the key, and it changes nothing else in the file: comments, key order and quoting stay as they are. `lowdefy test` reads it to print the PASS line and validates it strictly, so a typo in a hand edit fails before the browser opens. `dev.recordings` counts the [dev recordings](#dev-recordings) of the last 7 days that back the journey, by the same rule. `dev`, `explorer` and `mutation` subkeys whose source is not on your machine keep their committed values; `mutation` is filled from a hardening run's report in `.lowdefy/test/mutation.json` when there is one.
+A session backs a journey when it does the journey's interactions in the same order, other clicks in between allowed, starting on the journey's page. A journey's click text counts only when it is text from your app's config: any other text reads as no text, so a click on a grid cell by a customer's name is backed by that column's clicks exactly as one with no text, and no command tells whether production showed that value. Only [`lowdefy journeys evidence --refresh`](/cli#journeys-evidence) writes the key, and it changes nothing else in the file: comments, key order and quoting stay as they are. `lowdefy test` reads it to print the PASS line and validates it strictly, so a typo in a hand edit fails before the browser opens. `journeys evidence` also prints how many [dev recordings](#dev-recordings) of the last 7 days back each journey, by the same rule, but never writes that count: it differs by machine and by day. A refresh removes a `dev` key an older version wrote. `explorer` and `mutation` subkeys whose source is not on your machine keep their committed values; `mutation` is filled from a hardening run's report in `.lowdefy/test/mutation.json` when there is one.
 
 Each month is a UTC calendar month. `days` is how many of its final days the refresh read: the pull re-pulls today and yesterday for late events, so they count only once a later pull marks them final. `sessions` counts the backing sessions that started in that month, so a session that crosses midnight counts once; `failures` counts those that hit a failed event; `persons` and `orgs` are distinct within the month and do not add up across months. A month read with no backing session is written with `sessions: 0`, and a month never pulled is missing.
 
-Counts build up across pulls and machines without double counting. A refresh reads every final day in the cache, gaps and all, and rewrites a month only when the cache holds at least as many final days of it as the committed entry. Refreshing twice changes nothing, a colleague's fuller pull wins, and a laptop that never pulled a month, or pruned it, leaves that month as committed.
+Counts build up across pulls and machines without double counting. A refresh reads every final day in the cache, gaps and all, and rewrites a month only when the cache holds more final days of it than the committed entry. Refreshing twice changes nothing, two machines holding the same days never overwrite each other, a colleague's fuller pull wins, and a laptop that never pulled a month, or pruned it, leaves that month as committed.
+
+Each pulled day records the filters it was pulled with: the PostHog project, `--environment` and `--include-test-accounts`. Days pulled with different filters count different people, so `journeys evidence`, `journeys coverage` and `journeys usage` refuse a cache that mixes them, naming each set of filters with its days, and say to pull them again with one set (`lowdefy journeys pull posthog --refetch`). A pull whose filters differ from days already in the cache warns which days need pulling again.
 
 `flow` is what the journey's steps are matched on: one `<page> <step>` line per click, select, fill, press, back or open, with the block, grid column and clicked text (config text only, as above, so a click by a customer's name is the same flow as one with no text), and `sequence` names it. Waits, other expectations, typed or picked values, rows and `nth` leave it unchanged. When an edit changes it (a click's text or block, the order, a `goto`, or an `expect.url` path that moves later steps to another page), the next refresh moves the counted months to a deprecated flow and counts the new flow from the cache:
 
@@ -625,7 +628,7 @@ production:
         - { month: 2026-09, days: 30, sessions: 40, persons: 12, orgs: 4, failures: 0 }
 ```
 
-A deprecated flow is never run, and every refresh keeps counting it, so you can see whether users still follow the old way. Undo the edit and it becomes live again with its months. No command deletes one; delete it by hand once it shows no use. A `production` block in the older window shape (`sessions`, `share`, `window`) still validates, and the next refresh replaces it with months.
+A deprecated flow is never run, and every refresh keeps counting it, so you can see whether users still follow the old way. A renamed label keeps its history: a refresh reads a clicked-text token as today's config text or as any click text a committed flow already holds, so after `Assign` becomes `Allocate` the old flow's clicks still read as `Assign` and a fuller pull does not recount its months to 0. Undo the edit and it becomes live again with its months. No command deletes one; delete it by hand once it shows no use. A `production` block in the older window shape (`sessions`, `share`, `window`) still validates, and the next refresh replaces it with months.
 
 A journey can also be retired as a whole with `deprecated: true` at its top level, while you watch its flow drain from production: `lowdefy test` skips it in every run, refresh keeps counting it, and [coverage](#coverage) leaves it out, since a journey that never runs covers nothing. Remove the flag to run it again.
 

@@ -26,13 +26,33 @@ test('mergeMonths keeps a committed month the cache holds fewer final days of', 
   ).toEqual([entry('2026-09', 30, 400)]);
 });
 
-test('mergeMonths writes the cache numbers when the cache holds at least as many final days', () => {
-  expect(
-    mergeMonths({ committed: [entry('2026-09', 30, 400)], counted: [entry('2026-09', 30, 412)] })
-  ).toEqual([entry('2026-09', 30, 412)]);
+test('mergeMonths writes the cache numbers when the cache holds more final days', () => {
   expect(
     mergeMonths({ committed: [entry('2026-10', 2, 20)], counted: [entry('2026-10', 3, 38)] })
   ).toEqual([entry('2026-10', 3, 38)]);
+});
+
+test('mergeMonths keeps the committed month when the cache holds as many final days', () => {
+  expect(
+    mergeMonths({ committed: [entry('2026-09', 30, 400)], counted: [entry('2026-09', 30, 412)] })
+  ).toEqual([entry('2026-09', 30, 400)]);
+});
+
+test('mergeMonths replaces a month read from as many final days on a recount', () => {
+  expect(
+    mergeMonths({
+      committed: [entry('2026-09', 30, 400)],
+      counted: [entry('2026-09', 30, 412)],
+      recount: true,
+    })
+  ).toEqual([entry('2026-09', 30, 412)]);
+  expect(
+    mergeMonths({
+      committed: [entry('2026-09', 30, 400)],
+      counted: [entry('2026-09', 10, 90)],
+      recount: true,
+    })
+  ).toEqual([entry('2026-09', 30, 400)]);
 });
 
 test('mergeMonths never adds a month to itself and keeps months the cache did not count, oldest first', () => {

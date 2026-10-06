@@ -19,10 +19,11 @@ import { type } from '@lowdefy/helpers';
 // sessionStorage key holding the server build this tab last reloaded for.
 const RELOADED_FOR_BUILD_KEY = 'lowdefy.reloadedForBuild';
 
-// True when a page config fetched during SPA navigation came from a newer
-// deploy than the bundle this tab is running, so the tab must do a full load
-// to pick up the current bundle. Without this the new config can reference
-// _js functions the old bundle never shipped, and the page throws mid-event.
+// True when the server answered from a different build than the bundle this
+// tab is running, so the tab must do a full load to pick up the current
+// bundle. Without this a page config from the new build can reference _js
+// functions the old bundle never shipped, and the old page's requests can
+// name requests, endpoints or auth routes the new build renamed or removed.
 //
 // A tab reloads at most once per server build: if the freshly loaded bundle
 // still disagrees with the server (a rolling deploy answering from mixed
