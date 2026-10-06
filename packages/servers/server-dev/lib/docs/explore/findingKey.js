@@ -18,7 +18,7 @@ import crypto from 'node:crypto';
 
 // One finding per (kind, page, source location), or per message when there
 // is no location: the explorer de-duplicates across walks and roles by it,
-// and a confirmation replay must reproduce the same key.
+// and a journey proves the finding only by failing with the same key.
 function findingKey({ kind, pageId, source, message }) {
   const where =
     source ??

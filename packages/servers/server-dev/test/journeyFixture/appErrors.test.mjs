@@ -25,8 +25,8 @@ import {
 // A journey fails at the step that causes an app error, judged with the
 // explorer's invariants: the same controls of the fixture's explore page
 // give a journey the kinds and finding keys they give an explorer walk.
-// Expected outcomes (a failed Validate, a Throw) pass, and only errors the
-// journey's own browser caused count.
+// Expected outcomes (a failed Validate, a Throw, an auth gate's refusal) pass,
+// and only errors the journey's own browser caused count.
 
 let runCount = 0;
 function newRunId() {
@@ -38,13 +38,13 @@ function newRunId() {
   return `${stamp}-ae${String(runCount).padStart(4, '0')}`;
 }
 
-// The explorer's findings for one click on the explore page, over the same
-// fixture database the journeys use.
-async function walkClick({ blockId, walk }) {
+// The explorer's findings for one click on a page (the explore page unless
+// named), over the same fixture database the journeys use.
+async function walkClick({ blockId, walk, pageId = 'explore' }) {
   const opened = await postJson({
     path: '/lowdefy-docs/explore/walks',
     body: {
-      pageId: 'explore',
+      pageId,
       user: 'member',
       data: 'explore',
       run: newRunId(),
@@ -149,6 +149,46 @@ fixtureTest('a Throw action, a user error, does not fail a journey', async () =>
   });
   expect(result.failure).toBeUndefined();
   expect(result.passed).toBe(true);
+});
+
+describe.each([
+  ['a caller without the role (AuthorizationError, 403)', { roles: ['member'] }],
+  ['a signed-out caller (AuthenticationError, 401)', 'none'],
+])('a CallAPI the endpoint auth gate refuses, for %s,', (description, user) => {
+  fixtureTest('does not fail the journey', async () => {
+    const result = await postJourney({
+      pageId: 'app_errors',
+      user,
+      steps: [
+        { click: 'auditor_button' },
+        { expect: { text: { blockId: 'auditor_status', contains: 'Refused' } } },
+      ],
+    });
+    expect(result.failure).toBeUndefined();
+    expect(result.passed).toBe(true);
+  });
+});
+
+fixtureTest('an auditor is admitted by the endpoint the auth gate refuses to others', async () => {
+  const result = await postJourney({
+    pageId: 'app_errors',
+    user: { roles: ['auditor'] },
+    steps: [
+      { click: 'auditor_button' },
+      { expect: { text: { blockId: 'auditor_status', contains: 'Admitted' } } },
+    ],
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+});
+
+fixtureTest("an explorer walk finds no app error in an auth gate's refusal", async () => {
+  const findings = await walkClick({
+    blockId: 'auditor_button',
+    walk: 'compare-auditor_button',
+    pageId: 'app_errors',
+  });
+  expect(findings.filter((finding) => finding.severity === 'error')).toEqual([]);
 });
 
 fixtureTest('an onInit request that throws fails the journey on open', async () => {

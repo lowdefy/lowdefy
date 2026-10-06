@@ -137,7 +137,8 @@ database, since signing up an existing address sends no email.
 `apps/journey-fixture` is a small app the journey runner's real-Chromium tests drive through
 this checkout's dev server: the exercised path (pages, request counts, nested `CallApi`
 endpoints), config mutants reaching the page, request, endpoint and detached routes, and
-what later journey features assert. Run it after `pnpm build`:
+what later journey features assert. Its auth is strategies-only (no database, no login) and gates one
+endpoint, so a journey can be refused by a real auth gate. Run it after `pnpm build`:
 
 ```bash
 pnpm --filter=@lowdefy/server-dev test:fixture   # the runner, the observer, the grammar, mutants

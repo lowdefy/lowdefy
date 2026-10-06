@@ -16,13 +16,20 @@
 
 import { jest } from '@jest/globals';
 import { getDevError } from '@lowdefy/engine';
+import {
+  AuthenticationError,
+  AuthorizationError,
+  TwoFactorEnrolmentRequiredError,
+  UserError,
+} from '@lowdefy/errors';
 
 import request from './request.js';
 
-function mockFetchResponse({ ok, body }) {
+function mockFetchResponse({ ok, status = ok ? 200 : 500, body }) {
   global.fetch = jest.fn(() =>
     Promise.resolve({
       ok,
+      status,
       json: () => Promise.resolve(body),
     })
   );
@@ -61,4 +68,44 @@ test('request throws the decoded wire error for an error payload, with its dev e
 test('request throws the body message for a non-2xx response without an error payload', async () => {
   mockFetchResponse({ ok: false, body: { message: 'Bad gateway.' } });
   await expect(request({ url: '/api/test' })).rejects.toThrow('Bad gateway.');
+});
+
+test.each([
+  [401, 'AuthenticationError', 'Authentication required for request "save".', AuthenticationError],
+  [403, 'AuthorizationError', 'Request "save" does not exist.', AuthorizationError],
+  [
+    403,
+    'TwoFactorEnrolmentRequiredError',
+    'Two-factor enrolment required for request "save".',
+    TwoFactorEnrolmentRequiredError,
+  ],
+  [400, 'UserError', 'Payload does not match the endpoint schema.', UserError],
+])(
+  'request keeps the class of an expected outcome the server answers itself (%i %s)',
+  async (status, name, message, ErrorClass) => {
+    mockFetchResponse({ ok: false, status, body: { name, message } });
+    let thrown;
+    try {
+      await request({ url: '/api/request/home/save', method: 'POST', body: {} });
+    } catch (error) {
+      thrown = error;
+    }
+    expect(thrown).toBeInstanceOf(ErrorClass);
+    expect(thrown.name).toBe(name);
+    expect(thrown.message).toBe(message);
+    expect(thrown.isLowdefyError).toBe(true);
+  }
+);
+
+test('request throws a plain Error for a non-2xx body whose name is not an expected outcome', async () => {
+  mockFetchResponse({ ok: false, body: { name: 'constructor', message: 'Upstream failed.' } });
+  let thrown;
+  try {
+    await request({ url: '/api/test' });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown.name).toBe('Error');
+  expect(thrown.message).toBe('Upstream failed.');
+  expect(thrown.isLowdefyError).toBeUndefined();
 });

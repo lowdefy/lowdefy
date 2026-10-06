@@ -1,5 +1,5 @@
 # An expected outcome stops an action without being an app error: a journey
-# that clicks this passes (appErrors.test.mjs in
+# that clicks these passes (appErrors.test.mjs in
 # packages/servers/server-dev/test/journeyFixture).
 id: app_errors
 type: Box
@@ -21,3 +21,31 @@ blocks:
           params:
             throw: true
             message: Expected outcome
+  # Calls auditor_only, which the endpoint's auth gate refuses to anyone but
+  # an auditor.
+  - id: auditor_button
+    type: Button
+    properties:
+      title: Auditor only
+    events:
+      onClick:
+        - id: call_auditor_only
+          type: CallAPI
+          params:
+            endpointId: auditor_only
+  # Says how auditor_only answered, so a test can tell a refusal from a pass.
+  - id: auditor_status
+    type: Paragraph
+    visible:
+      _ne:
+        - _api: auditor_only
+        - null
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _api: auditor_only.success
+              - true
+          then: Admitted
+          else: Refused
