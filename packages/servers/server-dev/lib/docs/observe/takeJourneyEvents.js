@@ -22,7 +22,7 @@ function take(list, { since, until }) {
 }
 
 // Removes and returns the page errors, app requests and app responses a
-// journey's or walk's contexts buffered in [since, until] (milliseconds), dropping older
+// journey's contexts buffered in [since, until] (milliseconds), dropping older
 // ones: what one step's window produced.
 function takeJourneyEvents({ events, since, until }) {
   return {

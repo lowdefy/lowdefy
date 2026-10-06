@@ -159,11 +159,11 @@ test('POST /api/dev-recording writes nothing when the recording cookie is off', 
   expect(tracesExist()).toBe(false);
 });
 
-test('POST /api/dev-recording writes nothing for an explorer run that records nothing', async () => {
+test('POST /api/dev-recording writes nothing for a journey run that records nothing', async () => {
   const payload = recordingCookiePayload({
     recording: {
-      source: 'explorer',
-      run: { id: '20261003T160000Z-77abcd', by: 'explorer', journey: 'walk-1-confirm' },
+      source: 'journey',
+      run: { id: '20261003T160000Z-77abcd', by: 'agent', journey: 'save-ticket' },
       record: false,
     },
   });

@@ -52,7 +52,7 @@ function createClose({ session, client }) {
   };
 }
 
-// Opens a data session for one journey run (or a walk, or a mutant run): a fresh database on the dev
+// Opens a data session for one journey run (or a mutant run): a fresh database on the dev
 // server's memory store, loaded with the data set, registered under a random id. `cookie` is that id,
 // the payload openPage({ dataCookie }) writes into each actor's lowdefy_journey_data cookie. close()
 // waits for the session's background work (context.waitUntil), then drops the database.

@@ -515,7 +515,7 @@ test('a production click left with neither block nor text gives a comment and th
   expect(flags).toEqual(['unresolved-target']);
 });
 
-test('compileSegment writes user roles for dev and explorer sources only', () => {
+test('compileSegment writes user roles for the dev source only', () => {
   const records = [
     { ...entry, roles: ['member'] },
     { ...traceRecord({ at: 1, block: 'save' }), roles: ['member'] },

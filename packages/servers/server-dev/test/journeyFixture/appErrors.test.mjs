@@ -14,67 +14,14 @@
   limitations under the License.
 */
 
-import {
-  fixtureTest,
-  fixtureUrl,
-  launchChromium,
-  postJourney,
-  postJson,
-} from './fixtureClient.mjs';
+import { fixtureTest, fixtureUrl, launchChromium, postJourney } from './fixtureClient.mjs';
 
-// A journey fails at the step that causes an app error, judged with the
-// explorer's invariants: the same controls of the fixture's explore page
-// give a journey the kinds and finding keys they give an explorer walk.
-// Expected outcomes (a failed Validate, a Throw, an auth gate's refusal) pass,
+// A journey fails at the step that causes an app error, with the error's kind
+// and finding key. Expected outcomes (a failed Validate, a Throw, an auth gate's refusal) pass,
 // and only errors the journey's own browser caused count.
-
-let runCount = 0;
-function newRunId() {
-  runCount += 1;
-  const stamp = new Date()
-    .toISOString()
-    .replace(/[-:]/g, '')
-    .replace(/\.\d+Z$/, 'Z');
-  return `${stamp}-ae${String(runCount).padStart(4, '0')}`;
-}
-
-// The explorer's findings for one click on a page (the explore page unless
-// named), over the same fixture database the journeys use.
-async function walkClick({ blockId, walk, pageId = 'explore' }) {
-  const opened = await postJson({
-    path: '/lowdefy-docs/explore/walks',
-    body: {
-      pageId,
-      user: 'member',
-      data: 'explore',
-      run: newRunId(),
-      walk,
-    },
-  });
-  if (opened.status !== 200) {
-    throw new Error(`The walk did not open: ${JSON.stringify(opened.body)}`);
-  }
-  const { walkId, observation } = opened.body;
-  try {
-    const candidate = observation.candidates.find(
-      (entry) => entry.kind === 'click' && entry.target.blockId === blockId
-    );
-    const stepped = await postJson({
-      path: `/lowdefy-docs/explore/walks/${walkId}/steps`,
-      body: { step: { click: candidate.target } },
-    });
-    return stepped.body.findings;
-  } finally {
-    await fetch(`${fixtureUrl}/lowdefy-docs/explore/walks/${walkId}`, { method: 'DELETE' });
-  }
-}
 
 function sortedKinds(errors) {
   return errors.map((error) => error.kind).sort();
-}
-
-function sortedKeys(errors) {
-  return errors.map((error) => error.key).sort();
 }
 
 describe.each([
@@ -84,7 +31,7 @@ describe.each([
   ['a request with a $search stage', 'search_button', 'environment'],
 ])('%s', (description, blockId, kind) => {
   fixtureTest(
-    `fails the journey at the click that triggers it, with the explorer's ${kind} kind and key`,
+    `fails the journey at the click that triggers it, with the ${kind} kind and its key`,
     async () => {
       const result = await postJourney({
         pageId: 'explore',
@@ -110,13 +57,6 @@ describe.each([
       result.failure.errors.forEach((error) => {
         expect(error.key).toEqual(expect.stringMatching(/\|explore\|/));
       });
-
-      const findings = await walkClick({ blockId, walk: `compare-${blockId}` });
-      const walkErrors = findings.filter(
-        (finding) => finding.severity === 'error' || finding.kind === 'environment'
-      );
-      expect(sortedKinds(result.failure.errors)).toEqual(sortedKinds(walkErrors));
-      expect(sortedKeys(result.failure.errors)).toEqual(sortedKeys(walkErrors));
     }
   );
 });
@@ -199,15 +139,6 @@ fixtureTest('an auditor is admitted by the endpoint the auth gate refuses to oth
   expect(result.passed).toBe(true);
 });
 
-fixtureTest("an explorer walk finds no app error in an auth gate's refusal", async () => {
-  const findings = await walkClick({
-    blockId: 'auditor_button',
-    walk: 'compare-auditor_button',
-    pageId: 'app_errors',
-  });
-  expect(findings.filter((finding) => finding.severity === 'error')).toEqual([]);
-});
-
 fixtureTest('an onInit request that throws fails the journey on open', async () => {
   const result = await postJourney({
     pageId: 'app_errors_open',
@@ -222,48 +153,18 @@ fixtureTest('an onInit request that throws fails the journey on open', async () 
   expect(result.steps.map((step) => step.status)).toEqual(['skipped']);
 });
 
-fixtureTest(
-  'an explorer walk opened on a page whose onInit request throws finds the error at open, with the key a journey on the page fails with',
-  async () => {
-    const result = await postJourney({
-      pageId: 'app_errors_open',
-      user: 'member',
-      data: 'explore',
-      steps: [{ expect: { visible: 'app_errors_open' } }],
-    });
-    expect(result.failure).toEqual(expect.objectContaining({ phase: 'open', kind: 'app-error' }));
-
-    const opened = await postJson({
-      path: '/lowdefy-docs/explore/walks',
-      body: {
-        pageId: 'app_errors_open',
-        user: 'member',
-        data: 'explore',
-        run: newRunId(),
-        walk: 'open-error',
-      },
-    });
-    expect(opened.status).toBe(200);
-    await fetch(`${fixtureUrl}/lowdefy-docs/explore/walks/${opened.body.walkId}`, {
-      method: 'DELETE',
-    });
-    const { findings, observation } = opened.body;
-    expect(sortedKinds(findings)).toContain('server-error');
-    findings.forEach((finding) => {
-      expect(finding.step).toBeUndefined();
-      expect(finding.source).toMatch(/^pages\/app_errors_open\.yaml:\d+$/);
-    });
-    expect(sortedKeys(findings)).toEqual(sortedKeys(result.failure.errors));
-    expect(opened.body.screenshot).toMatch(/open-error-open\.png$/);
-    // The error UI the failed onInit leaves behind offers no control a step
-    // cannot name.
-    observation.candidates.forEach((candidate) => {
-      expect(candidate.target.blockId !== undefined || candidate.target.text !== undefined).toBe(
-        true
-      );
-    });
-  }
-);
+fixtureTest('a data set journey on a page whose onInit request throws fails on open', async () => {
+  const result = await postJourney({
+    pageId: 'app_errors_open',
+    user: 'member',
+    data: 'explore',
+    steps: [{ expect: { visible: 'app_errors_open' } }],
+  });
+  expect(result.failure).toEqual(expect.objectContaining({ phase: 'open', kind: 'app-error' }));
+  result.failure.errors.forEach((error) => {
+    expect(error.source).toMatch(/^pages\/app_errors_open\.yaml:\d+$/);
+  });
+});
 
 fixtureTest(
   "an error from a developer's own tab during a journey does not fail it and reaches build-status; the journey's own does not",

@@ -40,7 +40,7 @@
     - goto: notes
     - expect: { state: { path: note_texts, equals: [Alpha launch plan] } }
 
-- name: a member of two organizations switches between them, and loses access on the next request once removed
+- name: a member of two organizations switches between them and loses access once removed
   pageId: signup
   user: none
   timeout: 30000

@@ -60,7 +60,7 @@ function compileSegment({ records, blockMetas = {}, source, name }) {
     }
   }
   const roles = readRoles({ records });
-  if (['dev', 'explorer'].includes(source) && type.isArray(roles) && roles.length > 0) {
+  if (source === 'dev' && type.isArray(roles) && roles.length > 0) {
     journey.user = { roles };
   }
 

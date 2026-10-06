@@ -1,5 +1,5 @@
-# Public, but its onInit sends everyone home: a walk whose role production
-# use shows here is refused (role-refused in exploreWalks.test.mjs).
+# Public, but its onInit sends everyone home: a journey on it fails at its
+# first expect.visible, not at open (pageRoot.test.mjs).
 id: explore_guarded
 type: Box
 events:

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-// Serialized into the journey's or walk's page by page.evaluate, so this function must be
+// Serialized into the journey's page by page.evaluate, so this function must be
 // pure: it may reference nothing but `window`, `document` and its argument.
 //
 // Closes the step's window opened by installStepObserver and reads it: the

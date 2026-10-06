@@ -20,6 +20,7 @@ import { getState } from '@lowdefy/e2e-utils/runtime';
 import { findPlaceholderStep, validateJourneySteps } from '@lowdefy/node-utils';
 
 import collectExercised from './collectExercised.js';
+import createDataSetRails from './rails/createDataSetRails.js';
 import createJourneyAppErrors from './observe/createJourneyAppErrors.js';
 import describeDataSetResult from './dataSets/describeDataSetResult.js';
 import getDataStore from './dataSets/getDataStore.js';
@@ -274,6 +275,11 @@ async function runJourneyInBrowser({
     journey = opened.journey;
     journey.recording = runRecording;
     journey.appErrors = appErrors;
+    if (!type.isUndefined(dataSet)) {
+      journey.dataSetRails = createDataSetRails({
+        buildDirectory: path.join(process.cwd(), 'build'),
+      });
+    }
     const { results, screenshots, failure } = await runJourneySteps({ journey, steps });
     const state = await readFinalState({ page: journey.actors.current().page });
     const exercised = await collectExercised({

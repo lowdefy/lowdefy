@@ -16,7 +16,7 @@
 
 const POLL_MS = 25;
 
-// Waits, up to timeoutMs, until no client error report the journey's or walk's pages sent
+// Waits, up to timeoutMs, until no client error report the journey's pages sent
 // is still in flight, so an error the step caused lands in the run's error buffer
 // before the step's window closes. A short grace first lets a report the
 // page is about to send start.

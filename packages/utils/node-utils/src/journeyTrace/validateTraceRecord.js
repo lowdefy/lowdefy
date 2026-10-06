@@ -20,12 +20,12 @@ import validateTraceEvent from './validateTraceEvent.js';
 import validateTraceTarget from './validateTraceTarget.js';
 
 const TRACE_VERSION = 1;
-const SOURCES = ['production', 'dev', 'explorer', 'journey'];
+const SOURCES = ['production', 'dev', 'journey'];
 const SCOPES = ['page', 'app'];
 const KINDS = ['pageview', 'click', 'change', 'key', 'back', 'pageleave', 'engine'];
 const TARGET_KINDS = ['click', 'change'];
 const TARGETLESS_KINDS = ['pageview', 'back', 'pageleave', 'engine'];
-const RUN_SOURCES = ['journey', 'explorer'];
+const RUN_SOURCES = ['journey'];
 const FRUSTRATIONS = ['rage', 'dead'];
 
 function describe(value) {
@@ -110,7 +110,7 @@ function validateContext({ record }) {
   }
   if (!type.isNone(record.run)) {
     if (!RUN_SOURCES.includes(record.source)) {
-      return `Trace record "run" appears only on journey and explorer records. Received ${describe(
+      return `Trace record "run" appears only on journey records. Received ${describe(
         record.run
       )} on a ${record.source} record.`;
     }

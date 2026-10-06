@@ -16,13 +16,13 @@
 
 import errorRecordingStamp from './errorRecordingStamp.js';
 
-test('errorRecordingStamp gives the source, run id and walk of a verified run cookie', () => {
+test('errorRecordingStamp gives the source, run id and journey of a verified run cookie', () => {
   expect(
     errorRecordingStamp({
-      source: 'explorer',
-      run: { id: '20261003T151200Z-p0d4rm', by: 'explorer', journey: 'walk-3', actor: 'main' },
+      source: 'journey',
+      run: { id: '20261003T151200Z-p0d4rm', by: 'agent', journey: 'save-ticket', actor: 'main' },
     })
-  ).toEqual({ source: 'explorer', run: '20261003T151200Z-p0d4rm', journey: 'walk-3' });
+  ).toEqual({ source: 'journey', run: '20261003T151200Z-p0d4rm', journey: 'save-ticket' });
 });
 
 test('errorRecordingStamp is null for a developer tab and a headless tool context', () => {

@@ -24,7 +24,7 @@ import parseFlowLines from './parseFlowLines.js';
 import reconcileFlows from './reconcileFlows.js';
 
 // The subkeys a journey file commits.
-const SUBKEYS = ['production', 'explorer', 'mutation'];
+const SUBKEYS = ['production', 'mutation'];
 
 function distinctCount(values) {
   return new Set(values.filter((value) => !type.isNone(value))).size;

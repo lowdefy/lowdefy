@@ -29,8 +29,7 @@ import { passkeyClient } from '@better-auth/passkey/client';
 
 import { normalizeCaller } from '@lowdefy/helpers';
 
-import appMeta from '../../../build/appMeta.json';
-
+import bundleBuildId from '../bundleBuildId.js';
 import createFetchCheckingBuild from './createFetchCheckingBuild.js';
 
 // The app basePath, from Vite's BASE_URL (`${config.basePath}/`, set in
@@ -39,7 +38,7 @@ import createFetchCheckingBuild from './createFetchCheckingBuild.js';
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 // Reloads a tab whose auth call fails against a newer build.
-const fetchCheckingBuild = createFetchCheckingBuild({ buildId: appMeta.buildId });
+const fetchCheckingBuild = createFetchCheckingBuild({ buildId: bundleBuildId });
 
 // GenericOAuth providers have no client plugin here. BetterAuth 1.7.0 dropped
 // genericOAuthClient from better-auth/client/plugins, and nothing replaces it:

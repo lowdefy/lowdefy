@@ -17,7 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 // The recording identity an error entry carries: { source, run, journey } for
-// a request or page in a headless journey or explorer run (run and journey
+// a request or page in a headless journey run (run and journey
 // are the cookie's run.id and run.journey), or null for a developer's own tab
 // and for headless tool contexts, whose cookie is 'off'.
 function errorRecordingStamp(recording) {

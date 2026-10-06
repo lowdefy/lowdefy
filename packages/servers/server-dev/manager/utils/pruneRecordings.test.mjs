@@ -43,14 +43,14 @@ afterEach(() => {
   fs.rmSync(configDirectory, { recursive: true, force: true });
 });
 
-test('pruneRecordings deletes date directories older than 7 days under dev, journey and explorer', () => {
-  ['dev', 'journey', 'explorer'].forEach((source) => {
+test('pruneRecordings deletes date directories older than 7 days under dev and journey', () => {
+  ['dev', 'journey'].forEach((source) => {
     writeFile({ segments: [source, '2026-09-25', '20260925T100000Z-old000.jsonl'] });
     writeFile({ segments: [source, '2026-09-26', '20260926T100000Z-keep00.jsonl'] });
   });
   const deleted = pruneRecordings({ configDirectory, now: NOW });
-  expect(deleted.directories).toHaveLength(3);
-  ['dev', 'journey', 'explorer'].forEach((source) => {
+  expect(deleted.directories).toHaveLength(2);
+  ['dev', 'journey'].forEach((source) => {
     expect(fs.existsSync(tracePath(source, '2026-09-25'))).toBe(false);
     expect(fs.existsSync(tracePath(source, '2026-09-26', '20260926T100000Z-keep00.jsonl'))).toBe(
       true

@@ -70,7 +70,6 @@ import localDevToolsOnly from './middleware/localDevToolsOnly.js';
 import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
 import mountDevPageRoutes from './routes/mountDevPageRoutes.js';
-import mountExploreWalkRoutes from './routes/docs/exploreWalks.js';
 import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
 import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import pingHandler from './routes/ping.js';
@@ -158,7 +157,6 @@ function createApp() {
   app.get('/lowdefy-docs/screenshot/:pageId{.+}', docsScreenshotHandler);
   app.post('/lowdefy-docs/journey', docsJourneyHandler);
   app.post('/lowdefy-docs/mutants', docsMutantsHandler);
-  mountExploreWalkRoutes({ app });
   app.get('/lowdefy-docs/inspect-state/:pageId{.+}', docsInspectStateHandler);
   app.post('/lowdefy-docs/eval-operator', docsEvalOperatorHandler);
   app.post('/lowdefy-docs/run-request', docsRunRequestHandler);

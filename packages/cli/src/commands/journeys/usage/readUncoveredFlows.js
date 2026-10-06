@@ -17,7 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import COVERAGE_REPORT_VERSION from '../coverageReport/coverageReportVersion.js';
-import readCoverage from '../explore/readCoverage.js';
+import readCoverage from '../readCoverage.js';
 
 // The production flows no journey covers, from the coverage report `lowdefy
 // journeys coverage` writes, most sessions first, with the report's window and

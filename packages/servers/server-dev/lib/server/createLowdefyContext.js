@@ -139,7 +139,7 @@ async function createLowdefyContext({ c, user }) {
   const journeyCookies = forwardJourneyCookies(c.req.header('cookie'));
   context.loopbackHeaders = journeyCookies === '' ? {} : { cookie: journeyCookies };
   // Which browser context sent the request: errors it causes are stamped with
-  // it, so an explorer walk claims only its own (see createHandleError).
+  // it, so a journey run claims only its own (see createHandleError).
   context.recording = readRecordingCookie(c.req.header('cookie'));
   context.handleError = createHandleError({ context });
   const mockUser = getMockUser();

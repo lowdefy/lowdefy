@@ -16,8 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-// The error buffers of the headless runs open now (journey runs and explorer
-// walks), keyed by the run id and journey their recording cookie carries.
+// The error buffers of the headless journey runs open now, keyed by the run id and journey their recording cookie carries.
 // Kept on globalThis because the routes that open a run and the error stores
 // that feed it may load as separate module instances in one process (Vite's
 // SSR module graph and Node's), like the mutant runs.
@@ -30,7 +29,7 @@ function bufferKey({ run, journey }) {
 }
 
 // Opens the buffer the errors a run's browser contexts cause collect in.
-// `journey` is the cookie's run.journey: a journey's name or a walk id, or
+// `journey` is the cookie's run.journey: a journey's name, or
 // null for a run that names none. Registering an open buffer again shares it:
 // it stays open until every holder has released it.
 function registerRunBuffer({ run, journey }) {

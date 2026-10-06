@@ -1,6 +1,6 @@
-# The data set the explorer's walk tests open walks on
-# (packages/servers/server-dev/test/journeyFixture/exploreWalks.test.mjs and
-# the cli explore fixture test). Change it only together with them.
+# The data set the app error and step reference journeys run on
+# (packages/servers/server-dev/test/journeyFixture/appErrors.test.mjs,
+# pageRoot.test.mjs and references.test.mjs). Change it only together with them.
 fixtures:
   fixture_db:
     - { _id: item-1, kind: item, page: home, name: Fixture item }

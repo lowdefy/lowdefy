@@ -19,7 +19,7 @@ import path from 'path';
 
 // Only what the dev server records. traces/production/ is the production
 // mining cache, pruned by its own command on its own schedule.
-const PRUNED_SOURCES = ['dev', 'journey', 'explorer'];
+const PRUNED_SOURCES = ['dev', 'journey'];
 const DATE_DIRECTORY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const DAY_MS = 24 * 60 * 60 * 1000;
 

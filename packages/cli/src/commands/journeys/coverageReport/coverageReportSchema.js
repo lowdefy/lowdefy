@@ -129,7 +129,7 @@ const flowGroupingSchema = {
   },
 };
 
-// The shape of .lowdefy/test/coverage.json. The explorer, variants, usage and
+// The shape of .lowdefy/test/coverage.json. Journeys scope, variants, usage and
 // the app graph read it, so the writer's tests hold it to this schema.
 const coverageReportSchema = {
   type: 'object',

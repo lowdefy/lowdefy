@@ -132,7 +132,7 @@ Exports `RESERVED_PLATFORM_TOOL_NAMES` and a guard used by `buildAgentTools` to 
 
 `providerMetadata` is the AI SDK result's; on the AI Gateway it carries `gateway.cost`, which a caller that caps spend reads. `options` are AI SDK call options (`maxOutputTokens`, `timeout`, `abortSignal`, `maxRetries`, `providerOptions`); the evaluation backend folds `timeout` into the abort signal and drops `maxOutputTokens`.
 
-`decide` does not validate its questions. `createDecide({ createProvider, backends })` builds the `Decide` request resolver an AI connection offers: the request is validated by `DecideSchema` in the request layer, then the resolver resolves the model from the connection's provider, builds call limits, calls `decide` and returns `{ ...answers, usage }`. `decide` exists for callers with no connection or request, such as the journey explorer's model policy in the CLI, which builds its own Gateway model and questions.
+`decide` does not validate its questions. `createDecide({ createProvider, backends })` builds the `Decide` request resolver an AI connection offers: the request is validated by `DecideSchema` in the request layer, then the resolver resolves the model from the connection's provider, builds call limits, calls `decide` and returns `{ ...answers, usage }`. `decide` exists for callers with no connection or request, which build their own model and questions.
 
 ## Page state integration (`sharedState`)
 

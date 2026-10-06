@@ -36,9 +36,9 @@ function createPage() {
     evaluate: jest.fn(async (fn) => {
       if (fn === installStepObserver) return true;
       if (fn === readStepObserver) return { emits, mutationCount: 1 };
-      return 'explore';
+      return 'orders';
     }),
-    url: () => `${origin}/explore`,
+    url: () => `${origin}/orders`,
     isClosed: () => false,
   };
 }
@@ -64,9 +64,9 @@ function serverEntry({ message, recordingRun = run.run }) {
   return {
     timestamp: new Date().toISOString(),
     message,
-    source: '/app/pages/explore.yaml:12',
+    source: '/app/pages/orders.yaml:12',
     requestId: 'broken',
-    pageId: 'explore',
+    pageId: 'orders',
     store: 'server',
     recording: { source: 'journey', run: recordingRun, journey: null },
   };
@@ -97,7 +97,7 @@ async function runStepWindow({ step, during = () => {} }) {
   return appErrors.closeWindow({ journey, step, result: { status: 'ok' } });
 }
 
-test('a server error entry the run claimed fails the step, with the explorer kind, source and key', async () => {
+test('a server error entry the run claimed fails the step, with its kind, source and key', async () => {
   const findings = await runStepWindow({
     step: { click: 'broken' },
     during: () => recordRunError(serverEntry({ message: 'Unrecognized pipeline stage' })),
@@ -107,8 +107,8 @@ test('a server error entry the run claimed fails the step, with the explorer kin
       kind: 'server-error',
       severity: 'error',
       message: 'Unrecognized pipeline stage',
-      source: 'pages/explore.yaml:12',
-      key: 'server-error|explore|pages/explore.yaml:12',
+      source: 'pages/orders.yaml:12',
+      key: 'server-error|orders|pages/orders.yaml:12',
     }),
   ]);
 });
@@ -127,7 +127,7 @@ test("an error entry of another run is not this journey's", async () => {
 test('an unexplained 5xx from an app API route fails the step as request-failed', async () => {
   const findings = await runStepWindow({
     step: { click: 'save' },
-    during: () => context.respond({ url: `${origin}/api/request/explore/save`, status: 500 }),
+    during: () => context.respond({ url: `${origin}/api/request/orders/save`, status: 500 }),
   });
   expect(findings.map((finding) => finding.kind)).toEqual(['request-failed']);
 });
@@ -169,7 +169,7 @@ test('a UserError and a dead click are not app errors', async () => {
   emits = [];
   page.evaluate.mockImplementation(async (fn) => {
     if (fn === readStepObserver) return { emits: [], mutationCount: 0 };
-    return fn === installStepObserver ? true : 'explore';
+    return fn === installStepObserver ? true : 'orders';
   });
   const dead = await runStepWindow({ step: { click: 'dead_button' } });
   expect(dead).toEqual([]);
@@ -208,9 +208,9 @@ test('judgeOpen fails with phase open on an error raised while the page opened',
       {
         kind: 'server-error',
         message: 'onInit failed',
-        source: 'pages/explore.yaml:12',
+        source: 'pages/orders.yaml:12',
         configKey: null,
-        key: 'server-error|explore|pages/explore.yaml:12',
+        key: 'server-error|orders|pages/orders.yaml:12',
       },
     ],
   });
@@ -290,7 +290,7 @@ test('an app error expect.error does not claim still fails the click', async () 
       recordRunError(serverEntry({ message: 'E11000 duplicate key error' }));
       recordRunError({
         ...serverEntry({ message: 'Connection lost' }),
-        source: '/app/pages/explore.yaml:30',
+        source: '/app/pages/orders.yaml:30',
       });
     },
   });
@@ -342,8 +342,8 @@ test('previousWindow is the window the last step closed, for expect.effect to re
       emits,
       mutationCount: 1,
       requests: [],
-      urlBefore: `${origin}/explore`,
-      urlAfter: `${origin}/explore`,
+      urlBefore: `${origin}/orders`,
+      urlAfter: `${origin}/orders`,
     })
   );
 });

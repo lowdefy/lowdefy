@@ -60,9 +60,7 @@ import writeFileAtomic from './writeFileAtomic.js';
 import watchOwner from './watchOwner.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
 import compileSegments from './journeyCompiler/compileSegments.js';
-import compileTrace from './journeyCompiler/compileTrace.js';
 import countTextTokens from './journeyEvidence/countTextTokens.js';
-import collectKnownText from './journeyText/collectKnownText.js';
 import normaliseClickText from './journeyText/normaliseClickText.js';
 import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
 import failurePathKey from './journeyEvidence/failurePathKey.js';
@@ -94,10 +92,8 @@ export {
   checkEnvironmentGuards,
   cleanDirectory,
   collectEnvironmentGuards,
-  collectKnownText,
   compareProcessStartTimes,
   compileSegments,
-  compileTrace,
   copyFileOrDirectory,
   countDataSetDocuments,
   countTextTokens,
