@@ -33,12 +33,22 @@ function checkDay({ flag, day }) {
   }
 }
 
-// The production window of whole UTC days, as { from, to } (`YYYY-MM-DD`,
-// both included), shared by compile, coverage and evidence. `--since 30d` (the
-// default) is the 30 days ending today; another duration or a date starts on
-// the UTC day it reaches back to. `--from` and `--to` go together, and never
-// with `--since`.
-function parseTraceWindow({ since, from, to, now }) {
+function countDays({ from, to }) {
+  return Math.round((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / DAY_MS) + 1;
+}
+
+function checkLength({ window, maxDays }) {
+  if (type.isNone(maxDays)) return window;
+  const days = countDays(window);
+  if (days > maxDays) {
+    throw new Error(
+      `The window ${window.from}/${window.to} is ${days} days long; a mining window is at most ${maxDays} days. Pick a shorter window with --since or --from and --to.`
+    );
+  }
+  return window;
+}
+
+function readWindow({ since, from, to, now }) {
   const explicit = !type.isNone(from) || !type.isNone(to);
   if (explicit) {
     if (!type.isNone(since)) {
@@ -69,6 +79,16 @@ function parseTraceWindow({ since, from, to, now }) {
   const start = parseSince({ since: value, now });
   const startDay = toDay(start);
   return { from: startDay > today ? today : startDay, to: today };
+}
+
+// The production window of whole UTC days, as { from, to } (`YYYY-MM-DD`,
+// both included), shared by pull, compile, coverage and evidence. `--since
+// 30d` (the default) is the 30 days ending today; another duration or a date
+// starts on the UTC day it reaches back to. `--from` and `--to` go together,
+// and never with `--since`. With maxDays, a longer window is refused: pull,
+// compile and coverage mine at most 30 days, while evidence is not capped.
+function parseTraceWindow({ since, from, to, now, maxDays }) {
+  return checkLength({ window: readWindow({ since, from, to, now }), maxDays });
 }
 
 export default parseTraceWindow;

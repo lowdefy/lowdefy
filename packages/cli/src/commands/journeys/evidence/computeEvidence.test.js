@@ -15,15 +15,24 @@
 */
 
 import computeEvidence from './computeEvidence.js';
+import flowLines from './flowLines.js';
+import sequenceId from './sequenceId.js';
 
-const window = { from: '2026-09-03', to: '2026-10-02' };
-const today = '2026-10-03';
+const today = '2026-10-05';
 
 function identity(verb, blockId) {
   return JSON.stringify([verb, blockId, null, null]);
 }
 
-function segment({ session, page = 'tickets', steps, persons = [], orgs = [], failure }) {
+function segment({
+  session,
+  page = 'tickets',
+  steps,
+  persons = [],
+  orgs = [],
+  failure,
+  start = '2026-09-10T09:00:00.000Z',
+}) {
   return {
     session,
     page_id: page,
@@ -31,6 +40,7 @@ function segment({ session, page = 'tickets', steps, persons = [], orgs = [], fa
     persons,
     orgs,
     failure,
+    first_seen: start,
   };
 }
 
@@ -38,6 +48,12 @@ const journey = {
   name: 'saves a ticket',
   pageId: 'tickets',
   steps: [{ click: 'edit' }, { click: 'save' }],
+};
+
+const live = {
+  sequence: sequenceId(journey),
+  pageId: 'tickets',
+  flow: flowLines(journey),
 };
 
 const segments = [
@@ -57,10 +73,25 @@ const segments = [
   }),
   segment({ session: 's4', steps: ['save', 'edit'], persons: ['p_3'] }),
   segment({ session: 's5', page: 'home', steps: ['open'], persons: ['p_4'] }),
-  segment({ session: 's6', steps: ['close'], persons: ['p_5'] }),
+  segment({
+    session: 's6',
+    steps: ['edit', 'save'],
+    persons: ['p_5'],
+    start: '2026-10-02T09:00:00.000Z',
+  }),
 ];
 
-function compute(entry, sources = { production: { segments, window } }) {
+const dayCounts = { '2026-09': 30, '2026-10': 3 };
+
+function production(overrides = {}) {
+  return { dayCounts, months: ['2026-09', '2026-10'], segments, ...overrides };
+}
+
+function month(name, days, sessions, persons = 0, orgs = 0, failures = 0) {
+  return { month: name, days, sessions, persons, orgs, failures };
+}
+
+function compute(entry, sources = { production: production() }) {
   return computeEvidence({
     journeys: [
       {
@@ -75,38 +106,173 @@ function compute(entry, sources = { production: { segments, window } }) {
   })[0];
 }
 
-test('computeEvidence counts backing sessions once each, distinct persons and orgs, share and failures', () => {
+test('computeEvidence counts backing sessions by the month they started, with distinct persons and orgs and failures', () => {
   const result = compute(journey);
   expect(result.after).toEqual({
     production: {
-      sessions: 3,
-      persons: 2,
-      orgs: 2,
-      share: 0.6,
-      failures: 1,
-      window: '2026-09-03/2026-10-02',
+      ...live,
+      months: [month('2026-09', 30, 3, 2, 2, 1), month('2026-10', 3, 1, 1, 0, 0)],
     },
-    refreshed: '2026-10-03',
+    refreshed: today,
   });
   expect(result.changed).toBe(true);
 });
 
-test('computeEvidence gives orgs 0 for a single-tenant window', () => {
-  const single = segments.map((entry) => ({ ...entry, orgs: [] }));
-  expect(compute(journey, { production: { segments: single, window } }).after.production.orgs).toBe(
-    0
-  );
+test('computeEvidence writes a month read with no backing segment as zeros with its days', () => {
+  const result = compute(journey, {
+    production: production({ segments: segments.slice(0, 3) }),
+  });
+  expect(result.after.production.months).toEqual([
+    month('2026-09', 30, 3, 2, 2, 1),
+    month('2026-10', 3, 0),
+  ]);
 });
 
-test('computeEvidence rounds share to 2 decimals', () => {
-  const three = [
-    segment({ session: 'a', steps: ['edit', 'save'] }),
-    segment({ session: 'b', steps: ['x'] }),
-    segment({ session: 'c', steps: ['y'] }),
-  ];
-  expect(compute(journey, { production: { segments: three, window } }).after.production.share).toBe(
-    0.33
+test('computeEvidence counts a segment that crosses a month boundary once, in the month it started', () => {
+  const crossing = segment({
+    session: 'x',
+    steps: ['edit', 'save'],
+    persons: ['p_9'],
+    start: '2026-09-30T23:59:00.000Z',
+  });
+  const result = compute(journey, { production: production({ segments: [crossing] }) });
+  expect(result.after.production.months).toEqual([
+    month('2026-09', 30, 1, 1, 0, 0),
+    month('2026-10', 3, 0),
+  ]);
+});
+
+test('computeEvidence drops segments that started in a month not read', () => {
+  const early = segment({ session: 'e', steps: ['edit', 'save'], start: '2026-08-31T23:00:00Z' });
+  const result = compute(journey, {
+    production: production({ months: ['2026-09'], segments: [early] }),
+  });
+  expect(result.after.production.months).toEqual([month('2026-09', 30, 0)]);
+});
+
+test('computeEvidence keeps a committed month the cache holds fewer final days of, and months it did not read', () => {
+  const committed = {
+    ...live,
+    months: [month('2026-08', 31, 50, 5, 1, 0), month('2026-09', 30, 9, 3, 1, 0)],
+  };
+  const result = compute(
+    { ...journey, evidence: { production: committed, refreshed: '2026-09-01' } },
+    {
+      production: production({ dayCounts: { '2026-09': 10, '2026-10': 3 } }),
+    }
   );
+  expect(result.after.production.months).toEqual([
+    month('2026-08', 31, 50, 5, 1, 0),
+    month('2026-09', 30, 9, 3, 1, 0),
+    month('2026-10', 3, 1, 1, 0, 0),
+  ]);
+});
+
+test('computeEvidence leaves a journey unchanged, refreshed included, when nothing moved', () => {
+  const first = compute(journey);
+  const second = compute(
+    { ...journey, evidence: first.after },
+    { production: production({ months: [], segments: [] }) }
+  );
+  expect(second.changed).toBe(false);
+  expect(second.after).toEqual(first.after);
+});
+
+test('computeEvidence replaces the legacy window shape with monthly evidence', () => {
+  const legacy = {
+    sessions: 412,
+    persons: 37,
+    orgs: 9,
+    share: 0.31,
+    failures: 14,
+    window: '2026-09-03/2026-10-02',
+  };
+  const result = compute({ ...journey, evidence: { production: legacy } });
+  expect(result.after.production).toEqual({
+    ...live,
+    months: [month('2026-09', 30, 3, 2, 2, 1), month('2026-10', 3, 1, 1, 0, 0)],
+  });
+});
+
+test('computeEvidence moves the months of an edited flow to deprecated, keeps counting it, and counts the new flow from empty', () => {
+  const edited = { ...journey, steps: [{ click: 'edit' }, { click: 'title' }] };
+  const committed = { ...live, months: [month('2026-08', 31, 7, 2, 1, 0)] };
+  const result = compute({ ...edited, evidence: { production: committed } });
+  expect(result.after.production).toEqual({
+    sequence: sequenceId(edited),
+    pageId: 'tickets',
+    flow: flowLines(edited),
+    months: [month('2026-09', 30, 1, 1, 1, 0), month('2026-10', 3, 0)],
+    deprecated: [
+      {
+        ...live,
+        replaced: today,
+        months: [
+          month('2026-08', 31, 7, 2, 1, 0),
+          month('2026-09', 30, 3, 2, 2, 1),
+          month('2026-10', 3, 1, 1, 0, 0),
+        ],
+      },
+    ],
+  });
+});
+
+test('computeEvidence makes a deprecated flow live again when the edit is undone', () => {
+  const edited = { ...journey, steps: [{ click: 'edit' }, { click: 'title' }] };
+  const first = compute({
+    ...edited,
+    evidence: { production: { ...live, months: [month('2026-08', 31, 7, 2, 1, 0)] } },
+  });
+  const reverted = compute(
+    { ...journey, evidence: first.after },
+    { production: production({ months: [], segments: [] }) }
+  );
+  expect(reverted.after.production).toEqual({
+    ...live,
+    months: first.after.production.deprecated[0].months,
+    deprecated: [
+      {
+        sequence: sequenceId(edited),
+        pageId: 'tickets',
+        flow: flowLines(edited),
+        replaced: today,
+        months: first.after.production.months,
+      },
+    ],
+  });
+});
+
+test('computeEvidence keeps a deprecated flow of an older matcher version without counting it', () => {
+  const stale = {
+    sequence: 'v0-00000000',
+    pageId: 'tickets',
+    flow: flowLines(journey),
+    replaced: '2026-01-01',
+    months: [month('2026-01', 31, 3)],
+  };
+  const result = compute({
+    ...journey,
+    evidence: { production: { ...live, months: [], deprecated: [stale] } },
+  });
+  expect(result.after.production.deprecated).toEqual([stale]);
+});
+
+test('computeEvidence rehashes a flow stored under an older matcher and recounts the months the cache holds', () => {
+  const committed = {
+    sequence: 'v0-00000000',
+    pageId: 'tickets',
+    flow: ['tickets old'],
+    months: [month('2026-06', 30, 40), month('2026-09', 30, 99)],
+  };
+  const result = compute({ ...journey, evidence: { production: committed } });
+  expect(result.after.production).toEqual({
+    ...live,
+    months: [
+      month('2026-06', 30, 40),
+      month('2026-09', 30, 3, 2, 2, 1),
+      month('2026-10', 3, 1, 1, 0, 0),
+    ],
+  });
 });
 
 test('computeEvidence keeps committed dev, explorer and mutation when their sources are absent', () => {
@@ -122,7 +288,7 @@ test('computeEvidence keeps committed dev, explorer and mutation when their sour
     dev: { recordings: 2 },
     explorer: { prs: [2531] },
     mutation: { killed: 11, total: 12, unique: 2 },
-    refreshed: '2026-10-03',
+    refreshed: today,
   });
 });
 
@@ -130,16 +296,12 @@ test('computeEvidence never adds mutation without a report', () => {
   expect(compute(journey).after).not.toHaveProperty('mutation');
 });
 
-test('computeEvidence leaves a journey unchanged, refreshed included, when nothing moved', () => {
-  const first = compute(journey);
-  const second = compute({ ...journey, evidence: first.after });
-  expect(second.changed).toBe(false);
-  expect(second.after).toEqual(first.after);
-  expect(second.after.refreshed).toBe('2026-10-03');
-});
-
 test('computeEvidence keeps everything committed when no source is present', () => {
-  const committed = { dev: { recordings: 1 }, refreshed: '2026-09-01' };
+  const committed = {
+    production: { ...live, months: [month('2026-09', 30, 3)] },
+    dev: { recordings: 1 },
+    refreshed: '2026-09-01',
+  };
   const result = compute({ ...journey, evidence: committed }, {});
   expect(result.changed).toBe(false);
   expect(result.after).toEqual(committed);
@@ -152,7 +314,7 @@ test('computeEvidence writes mutation for journeys the report names and keeps th
     ]),
     score: { killed: 11, total: 12 },
   };
-  const named = compute(journey, { production: { segments, window }, mutation: report });
+  const named = compute(journey, { production: production(), mutation: report });
   expect(named.after.mutation).toEqual({ killed: 11, total: 12, unique: 2 });
   const other = compute(
     {
@@ -174,7 +336,7 @@ test('computeEvidence counts the dev segments that back a journey as dev.recordi
   ];
   const result = compute(
     { ...journey, evidence: { dev: { recordings: 7 }, refreshed: '2026-09-01' } },
-    { production: { segments, window }, dev: { segments: devSegments } }
+    { production: production(), dev: { segments: devSegments } }
   );
   expect(result.after.dev).toEqual({ recordings: 2 });
   expect(result.after.refreshed).toBe(today);
@@ -182,8 +344,34 @@ test('computeEvidence counts the dev segments that back a journey as dev.recordi
 
 test('computeEvidence writes dev.recordings 0 when dev recordings exist but none back the journey', () => {
   const result = compute(journey, {
-    production: { segments, window },
+    production: production(),
     dev: { segments: [segment({ session: 'd1', steps: ['close'] })] },
   });
   expect(result.after.dev).toEqual({ recordings: 0 });
+});
+
+test('computeEvidence reads dev text by the config text rule on both sides', () => {
+  const isConfigText = (text) => text === 'Assign';
+  const devSegment = {
+    session: 'd1',
+    page_id: 'tickets',
+    steps: [{ click: { blockId: 'grid', text: 'Sample customer' } }],
+    sequence: [
+      { page: 'tickets', identity: JSON.stringify(['click', 'grid', null, 'Sample customer']) },
+    ],
+    persons: [],
+    orgs: [],
+  };
+  const entry = {
+    name: 'opens a customer',
+    pageId: 'tickets',
+    steps: [{ click: { blockId: 'grid', text: 'Sample customer' } }],
+  };
+  const [result] = computeEvidence({
+    journeys: [{ filePath: '/app/t.yaml', file: 't.yaml', journeyIndex: 0, journey: entry }],
+    sources: { dev: { segments: [devSegment] } },
+    today,
+    isConfigText,
+  });
+  expect(result.after.dev).toEqual({ recordings: 1 });
 });

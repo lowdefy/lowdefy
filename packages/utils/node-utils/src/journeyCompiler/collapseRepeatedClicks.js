@@ -19,7 +19,7 @@ import { type } from '@lowdefy/helpers';
 import recordTime from './recordTime.js';
 
 const REPEAT_WINDOW_MS = 1000;
-const TARGET_KEYS = ['block_id', 'row', 'column', 'text', 'nth', 'option'];
+const TARGET_KEYS = ['block_id', 'row', 'column', 'text', 'text_token', 'nth', 'option'];
 
 function sameTarget({ a, b }) {
   return a.page_id === b.page_id && TARGET_KEYS.every((key) => a.target?.[key] === b.target?.[key]);
