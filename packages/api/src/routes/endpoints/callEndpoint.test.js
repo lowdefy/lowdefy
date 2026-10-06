@@ -383,7 +383,7 @@ function createOrderReadConfigFile({ async = false } = {}) {
   });
 }
 
-test('callEndpoint rejects a payload that violates the payloadSchema with a UserError before the routine runs', async () => {
+test('callEndpoint rejects a page CallAPI payload that violates the payloadSchema with a ConfigError before the routine runs', async () => {
   const context = testContext({
     logger,
     readConfigFile: createOrderReadConfigFile(),
@@ -406,7 +406,7 @@ test('callEndpoint rejects a payload that violates the payloadSchema with a User
       pageId: 'pageId',
       payload: {},
     })
-  ).rejects.toThrow(UserError);
+  ).rejects.toThrow(ConfigError);
 
   const result = await callEndpoint(context, {
     blockId: 'blockId',
@@ -433,8 +433,39 @@ test('callEndpoint rejects a payload that violates the payloadSchema of an async
       pageId: 'pageId',
       payload: { quantity: 'two' },
     })
-  ).rejects.toThrow(UserError);
+  ).rejects.toThrow(ConfigError);
   expect(waitUntil).not.toHaveBeenCalled();
+});
+
+test('callEndpoint rejects a payload from a call that names no page with a UserError: an API client sent it', async () => {
+  const context = testContext({
+    logger,
+    readConfigFile: createOrderReadConfigFile(),
+    user: { id: 'user_1' },
+  });
+  await expect(
+    callEndpoint(context, {
+      endpointId: 'create_order',
+      payload: { quantity: 'two' },
+    })
+  ).rejects.toThrow(UserError);
+});
+
+test('callEndpoint rejects an MCP tool call payload with a UserError though it names a placeholder page', async () => {
+  const context = testContext({
+    logger,
+    readConfigFile: createOrderReadConfigFile(),
+    user: { id: 'user_1' },
+  });
+  await expect(
+    callEndpoint(context, {
+      blockId: '_mcp',
+      endpointId: 'create_order',
+      outsideCaller: true,
+      pageId: '_mcp',
+      payload: { quantity: 'two' },
+    })
+  ).rejects.toThrow(UserError);
 });
 
 test('callEndpoint checks a call without a payload as an empty object, as every other caller does', async () => {

@@ -339,7 +339,7 @@ test('resolveDynamicContent falls back when the routine rejects', async () => {
   expect(logger.error).not.toHaveBeenCalled();
 });
 
-test('resolveDynamicContent logs a payload its endpoint refuses once, as a warning', async () => {
+test('resolveDynamicContent logs a payload its endpoint refuses as an error: the page config built it', async () => {
   const dynamicBlock = await resolveWithRoutine(
     { ':return': { blocks: [] } },
     {
@@ -350,13 +350,14 @@ test('resolveDynamicContent logs a payload its endpoint refuses once, as a warni
     }
   );
   expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
-  expect(logger.error).not.toHaveBeenCalled();
-  expect(logger.warn).toHaveBeenCalledTimes(1);
-  expect(logger.warn.mock.calls[0][0].event).toBe('dynamic_block_error');
-  expect(logger.warn.mock.calls[0][1]).toContain('at /params/area: must be number.');
+  expect(logger.warn).not.toHaveBeenCalled();
+  expect(logger.error).toHaveBeenCalledTimes(1);
+  expect(logger.error.mock.calls[0][0].event).toBe('dynamic_block_error');
+  expect(logger.error.mock.calls[0][0].err.name).toBe('ConfigError');
+  expect(logger.error.mock.calls[0][1]).toContain('at /params/area: must be number.');
 });
 
-test('resolveDynamicContent logs a nested CallApi payload its target refuses once, as a warning', async () => {
+test('resolveDynamicContent logs a nested CallApi payload its target refuses as an error, not a warning', async () => {
   const dynamicBlock = await resolveWithRoutine(
     [
       {
@@ -377,11 +378,13 @@ test('resolveDynamicContent logs a nested CallApi payload its target refuses onc
     }
   );
   expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
-  expect(logger.error).not.toHaveBeenCalled();
-  expect(logger.warn).toHaveBeenCalledTimes(1);
-  expect(logger.warn.mock.calls[0][1]).toContain(
-    'Payload for endpoint "inner_api" does not match its payloadSchema at /quantity'
-  );
+  expect(logger.warn).not.toHaveBeenCalled();
+  expect(logger.error.mock.calls[0][0]).toMatchObject({
+    name: 'ConfigError',
+    message: expect.stringContaining(
+      'Payload for endpoint "inner_api" does not match its payloadSchema at /quantity'
+    ),
+  });
 });
 
 test('resolveDynamicContent falls back when resolved content uses an unbundled block type', async () => {

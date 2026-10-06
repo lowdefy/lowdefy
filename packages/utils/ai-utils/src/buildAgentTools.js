@@ -91,7 +91,13 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
         description: endpointConfig.description,
         inputSchema: jsonSchema(cleanBuildArtifact(endpointConfig.payloadSchema)),
         execute: async (input, { abortSignal } = {}) => {
-          const result = await context.callEndpoint(endpointId, { payload: input, abortSignal });
+          // The model built the input, so a payload the endpoint's schema refuses
+          // is the model's mistake to correct, not a config fault.
+          const result = await context.callEndpoint(endpointId, {
+            payload: input,
+            abortSignal,
+            outsideCaller: true,
+          });
           if (!result.success) {
             const err = serializer.deserialize(result.error);
             // A Lowdefy error already carries its class, cause and location -

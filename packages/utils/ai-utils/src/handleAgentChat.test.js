@@ -249,7 +249,7 @@ test('builds tools from endpoint configs', async () => {
   const toolDef = mockTool.mock.calls[0][0];
   const input = { query: 'test' };
   const executeResult = await toolDef.execute(input);
-  expect(callEndpoint).toHaveBeenCalledWith('search', { payload: input });
+  expect(callEndpoint).toHaveBeenCalledWith('search', { payload: input, outsideCaller: true });
   expect(executeResult).toEqual({ hits: [] });
 });
 
@@ -1496,6 +1496,7 @@ test('tool execute passes abortSignal to callEndpoint', async () => {
   expect(callEndpoint).toHaveBeenCalledWith('signal-test', {
     payload: { query: 'test' },
     abortSignal: mockSignal,
+    outsideCaller: true,
   });
 });
 

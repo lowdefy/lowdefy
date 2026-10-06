@@ -25,7 +25,10 @@ import runRoutine from './runRoutine.js';
 import scheduleBackground from './scheduleBackground.js';
 import validatePayload from './validatePayload.js';
 
-async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
+async function callEndpoint(
+  context,
+  { blockId, endpointId, outsideCaller = false, pageId, payload }
+) {
   const { logger } = context;
 
   context.blockId = blockId;
@@ -54,8 +57,15 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   // Validated before the async fork, so a refused payload is answered to the
   // caller rather than failing in the background. A page CallAPI without a
   // payload sends none; it is an empty object here as on every other caller.
+  // A page's CallAPI names its page, whose config built the payload. A call that
+  // names no page is an API client's own, as is an MCP tool call
+  // (outsideCaller), so a refusal is that caller's mistake (validatePayload).
   const deserializedPayload = serializer.deserialize(payload ?? {});
-  validatePayload({ endpointConfig, payload: deserializedPayload });
+  validatePayload({
+    endpointConfig,
+    payload: deserializedPayload,
+    outsideCaller: outsideCaller || type.isNone(pageId),
+  });
 
   const routineContext = {
     steps: {},

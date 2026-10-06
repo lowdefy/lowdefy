@@ -324,6 +324,7 @@ test('buildAgentTools keys endpoint tools by name and executes by endpointId', a
   expect(context.callEndpoint).toHaveBeenCalledWith('reporting/query-data', {
     payload: { dataset: 'orders' },
     abortSignal: undefined,
+    outsideCaller: true,
   });
 });
 

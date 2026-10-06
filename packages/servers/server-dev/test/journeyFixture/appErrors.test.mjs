@@ -169,6 +169,24 @@ describe.each([
   });
 });
 
+// The page's own config built the payload, so the endpoint's payloadSchema
+// refusing it is a config fault (ConfigError), not an expected outcome.
+fixtureTest('a CallAPI payload the endpoint payloadSchema refuses fails the journey', async () => {
+  const result = await postJourney({
+    pageId: 'app_errors',
+    steps: [{ click: 'bad_payload_button' }, { expect: { visible: 'bad_payload_button' } }],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure).toEqual(
+    expect.objectContaining({
+      index: 0,
+      step: { click: 'bad_payload_button' },
+      kind: 'app-error',
+    })
+  );
+  expect(JSON.stringify(result.failure.errors)).toContain('ConfigError');
+});
+
 fixtureTest('an auditor is admitted by the endpoint the auth gate refuses to others', async () => {
   const result = await postJourney({
     pageId: 'app_errors',

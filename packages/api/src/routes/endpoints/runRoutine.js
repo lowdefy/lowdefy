@@ -106,8 +106,7 @@ async function runRoutine(context, routineContext, { routine }) {
     }
     // A UserError is an expected outcome, not a fault: it is logged once, as a
     // warning. A step or control that logs one marks it handled; one thrown
-    // without being logged, such as a nested CallApi whose payload the target's
-    // payloadSchema refuses, is logged here.
+    // without being logged is logged here.
     if (error.name === 'UserError') {
       if (!error.handled) {
         context.logger.warn({ event: 'warn_routine_user_error', err: error }, error.message);

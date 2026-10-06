@@ -47,6 +47,7 @@ api:
   - _ref: api/detached_log.yaml
   - _ref: api/explode.yaml
   - _ref: api/auditor_only.yaml
+  - _ref: api/typed_order.yaml
 
 pages:
   - _ref: pages/home.yaml

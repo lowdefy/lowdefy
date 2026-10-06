@@ -24,7 +24,15 @@ import validatePayload from './validatePayload.js';
 
 async function invokeEndpoint(
   context,
-  { agent = null, endpointId, payload, endpointDepth, literalData = null, caught = false }
+  {
+    agent = null,
+    endpointId,
+    payload,
+    endpointDepth,
+    literalData = null,
+    caught = false,
+    outsideCaller = false,
+  }
 ) {
   if (endpointDepth >= 10) {
     throw new ConfigError(
@@ -36,7 +44,9 @@ async function invokeEndpoint(
   authorizeApiEndpoint(context, { endpointConfig });
 
   const childPayload = payload ?? {};
-  validatePayload({ endpointConfig, payload: childPayload });
+  // The calling config built the payload, except an agent's tool call, whose
+  // model did (outsideCaller): see validatePayload.
+  validatePayload({ endpointConfig, payload: childPayload, outsideCaller });
 
   const childRoutineContext = {
     steps: {},

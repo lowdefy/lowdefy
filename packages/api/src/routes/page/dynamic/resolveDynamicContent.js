@@ -70,7 +70,7 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
     : shared.artifacts.dynamicPolicies[block.properties.policy];
   // A UserError the routine returns was logged as a warning and marked handled
   // where it was raised (a failed ValidateDynamic step, a :reject, a :throw) or
-  // by runRoutine (a refused nested CallApi payload).
+  // by runRoutine.
   let loggedByRoutine = false;
   try {
     if (depth >= MAX_DYNAMIC_DEPTH) {
@@ -158,8 +158,7 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
         err: error,
       };
       const message = `Dynamic block "${block.blockId}" on page "${shared.pageId}" failed to resolve: ${error.message}`;
-      // A payload the endpoint's payloadSchema refuses is an expected outcome,
-      // not a fault.
+      // A UserError is an expected outcome, not a fault.
       if (error.name === 'UserError') {
         logger.warn(entry, message);
       } else {
