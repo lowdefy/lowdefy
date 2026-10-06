@@ -133,6 +133,10 @@ function createJourneyActors({
     return counters.get(currentName).countCalls(query);
   }
 
+  function calledSince(query) {
+    return counters.get(currentName).calledSince(query);
+  }
+
   // The first URL any actor's context tried to reach on another host of the dev server, which a
   // data set journey must never do (see guardJourneyOrigin).
   function leftOrigin() {
@@ -187,6 +191,7 @@ function createJourneyActors({
     switchTo,
     current,
     countCalls,
+    calledSince,
     leftOrigin,
     networkSnapshots,
     sampleRendered,

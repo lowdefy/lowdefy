@@ -19,12 +19,11 @@ import { fixtureTest, postJourney } from './fixtureClient.mjs';
 // expect.hidden, expect.calls and click.count, run by the real runner over the
 // fixture app.
 
-fixtureTest('expect.hidden passes for an absent and an invisible target', async () => {
+fixtureTest('expect.hidden passes for an invisible target and an absent match', async () => {
   const result = await postJourney({
     pageId: 'home',
     steps: [
       { expect: { visible: 'home_title' } },
-      { expect: { hidden: 'no_such_block' } },
       // Mounted inside a forceRender modal that never opened.
       { expect: { hidden: 'forced_text' } },
       { expect: { hidden: { blockId: 'home_title', containing: 'Another title' } } },

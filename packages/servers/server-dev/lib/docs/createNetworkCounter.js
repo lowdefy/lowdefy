@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import matchJourneyRoute from './matchJourneyRoute.js';
+import nextJourneySequence from './nextJourneySequence.js';
 
 function requestKey({ pageId, requestId }) {
   return JSON.stringify([pageId, requestId]);
@@ -29,6 +30,9 @@ function createNetworkCounter({ origin, basePath }) {
   const pagePaths = new Set();
   const requests = new Map();
   const endpoints = new Map();
+  // Where the latest call to each request started in nextJourneySequence's
+  // order, kept apart from the counts so a snapshot carries only the counts.
+  const lastStarted = new Map();
   let appEvents = false;
 
   function record(request) {
@@ -57,6 +61,7 @@ function createNetworkCounter({ origin, basePath }) {
         };
         entry.calls += 1;
         requests.set(key, entry);
+        lastStarted.set(key, nextJourneySequence());
         return;
       }
       case 'endpoint':
@@ -74,6 +79,13 @@ function createNetworkCounter({ origin, basePath }) {
     return requests.get(requestKey({ pageId, requestId: request }))?.calls ?? 0;
   }
 
+  // Whether a call to the request started after `since` (a
+  // nextJourneySequence value): wait.request proves a call the step's
+  // interaction caused, not one the page made before it.
+  function calledSince({ request, pageId, since }) {
+    return (lastStarted.get(requestKey({ pageId, requestId: request })) ?? 0) > since;
+  }
+
   function snapshot() {
     return {
       pagePaths: [...pagePaths],
@@ -83,7 +95,7 @@ function createNetworkCounter({ origin, basePath }) {
     };
   }
 
-  return { record, countCalls, snapshot };
+  return { record, countCalls, calledSince, snapshot };
 }
 
 export default createNetworkCounter;

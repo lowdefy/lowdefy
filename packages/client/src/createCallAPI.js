@@ -16,9 +16,10 @@
 
 import request from './request.js';
 
-function createCallAPI({ basePath }) {
+function createCallAPI({ basePath, buildId }) {
   function callAPI({ payload, endpointId, pageId, blockId }) {
     return request({
+      buildId,
       url: `${basePath}/api/endpoints/${endpointId}`,
       method: 'POST',
       body: { payload, pageId, blockId },

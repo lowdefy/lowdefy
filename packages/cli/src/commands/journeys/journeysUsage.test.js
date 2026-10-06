@@ -100,6 +100,7 @@ beforeEach(() => {
       build: path.join(configDirectory, '.lowdefy', 'server', 'build'),
       journeys: path.join(configDirectory, 'tests', 'journeys'),
       test: path.join(configDirectory, '.lowdefy', 'test'),
+      traces: path.join(configDirectory, '.lowdefy', 'traces'),
     },
     logger: {
       info: (message) => logged.push(String(message)),
@@ -307,4 +308,33 @@ test('journeys usage refuses an unknown tier and a malformed usage window', asyn
   context.options.tier = undefined;
   context.options.usageWindow = '90d';
   await expect(journeysUsage({ context })).rejects.toThrow('--usage-window takes');
+});
+
+test('journeys usage refuses a production cache whose days were pulled with different environments', async () => {
+  const directory = path.join(configDirectory, '.lowdefy', 'traces', 'production');
+  fs.mkdirSync(directory, { recursive: true });
+  fs.writeFileSync(path.join(directory, 'salt'), Buffer.alloc(32, 4));
+  const { default: readTraceSalt } = await import('./pull/readTraceSalt.js');
+  const { saltId } = readTraceSalt({ directories: context.directories });
+  [
+    ['2026-09-01', 'production'],
+    ['2026-09-02', 'staging'],
+  ].forEach(([day, environment]) => {
+    fs.writeFileSync(path.join(directory, `${day}.jsonl`), '');
+    fs.writeFileSync(
+      path.join(directory, `${day}.manifest.json`),
+      JSON.stringify({
+        day,
+        final: true,
+        salt_id: saltId,
+        text_rule: 'token',
+        project_id: '1',
+        environment,
+        filter_test_accounts: true,
+      })
+    );
+  });
+  await expect(journeysUsage({ context })).rejects.toThrow(
+    'The production trace cache holds days pulled with different filters, which cannot be counted together: 2026-09-01 (project 1, environment "production", test accounts filtered out); 2026-09-02 (project 1, environment "staging", test accounts filtered out).'
+  );
 });

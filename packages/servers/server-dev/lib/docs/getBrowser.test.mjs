@@ -79,9 +79,13 @@ function createBrowser() {
   };
 }
 
-function decodeUserCookie(addCookies) {
+function decodeCallerCookie(addCookies) {
   const [[[cookie]]] = addCookies.mock.calls;
   return JSON.parse(Buffer.from(cookie.value, 'base64').toString());
+}
+
+function decodeUserCookie(addCookies) {
+  return decodeCallerCookie(addCookies).user;
 }
 
 test('openPage opens a 1280x800 light viewport by default', async () => {
@@ -113,15 +117,14 @@ test('openPage opens the viewport size and colour scheme it is given', async () 
   });
 });
 
-test('openPage injects the default roleless user when no user is given', async () => {
+test('openPage injects the default roleless user when no user is given, not marked explicit', async () => {
   const { browser, addCookies } = createBrowser();
 
   await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
 
-  expect(decodeUserCookie(addCookies)).toEqual({
-    id: 'lowdefy-headless',
-    name: 'Lowdefy Headless',
-    roles: [],
+  expect(decodeCallerCookie(addCookies)).toEqual({
+    user: { id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: [] },
+    explicit: false,
   });
 });
 
@@ -207,7 +210,7 @@ test('openPage gives the context the client address it is given, which the dev s
   expect(await response.text()).toBe('203.0.113.7');
 });
 
-test('openPage injects a per-call user with roles', async () => {
+test('openPage injects a per-call user with roles, marked explicit so it beats a mock user', async () => {
   const { browser, addCookies } = createBrowser();
 
   await openPage({
@@ -217,10 +220,9 @@ test('openPage injects a per-call user with roles', async () => {
     user: { id: 'agent', roles: ['user-admin'] },
   });
 
-  expect(decodeUserCookie(addCookies)).toEqual({
-    id: 'agent',
-    name: 'Lowdefy Headless',
-    roles: ['user-admin'],
+  expect(decodeCallerCookie(addCookies)).toEqual({
+    user: { id: 'agent', name: 'Lowdefy Headless', roles: ['user-admin'] },
+    explicit: true,
   });
 });
 

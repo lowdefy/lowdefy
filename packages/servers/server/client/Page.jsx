@@ -21,6 +21,7 @@ import createRouter from '@lowdefy/client/adapters/createRouter.js';
 import createLinkComponent from '@lowdefy/client/adapters/Link.js';
 import { createUrl } from '@lowdefy/client/adapters/url.js';
 import Head from '@lowdefy/client/adapters/Head.js';
+import shouldReloadForBuild from '@lowdefy/client/shouldReloadForBuild.js';
 import { buildPagePath } from '@lowdefy/helpers';
 
 import blockMetas from '../build/plugins/blockMetas.json';
@@ -30,7 +31,6 @@ import appMeta from '../build/appMeta.json';
 import getShownPage from './getShownPage.js';
 import loadAllIcons from './loadAllIcons.js';
 import loadPageTypes from './loadPageTypes.js';
-import shouldReloadForBuild from './shouldReloadForBuild.js';
 import types from './types.js';
 
 // The path to fetch for a navigation. The app root shows the home page, and

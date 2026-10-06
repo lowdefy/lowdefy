@@ -461,3 +461,17 @@ test('journeys pull posthog refuses a window over 30 days before any request', a
   expect(mockQuery).not.toHaveBeenCalled();
   await expect(pull({ since: '30d' })).resolves.toMatchObject({ days: 30 });
 });
+
+test('journeys pull posthog warns about cached days pulled with other filters', async () => {
+  await pull();
+  logged.length = 0;
+  // Today and yesterday are pulled again with the new filter; 2026-10-01 is
+  // final and kept as it was pulled.
+  await pull({ environment: 'production' });
+  expect(logged).toContain(
+    '1 cached day(s) were pulled with other filters (project, --environment or --include-test-accounts) than this pull (2026-10-01). Readers refuse to count them together: pull them again with these filters and --refetch, from 2026-10-01 to 2026-10-01.'
+  );
+  logged.length = 0;
+  await pull({ environment: 'production', refetch: true });
+  expect(logged.some((line) => line.includes('pulled with other filters'))).toBe(false);
+});

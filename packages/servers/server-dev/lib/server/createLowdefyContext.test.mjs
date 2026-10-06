@@ -56,7 +56,7 @@ jest.unstable_mockModule('./log/createLogger.js', () => ({
 jest.unstable_mockModule('./fileCache.js', () => ({ default: {} }));
 jest.unstable_mockModule('./auth/getAuth.js', () => ({ default: jest.fn(() => null) }));
 jest.unstable_mockModule('./auth/getHeadlessUser.js', () => ({
-  default: jest.fn(() => undefined),
+  default: jest.fn(() => null),
 }));
 jest.unstable_mockModule('./auth/getMockUser.js', () => ({ default: jest.fn(() => undefined) }));
 jest.unstable_mockModule('./auth/getStrategies.js', () => ({ default: jest.fn(() => null) }));
@@ -237,6 +237,7 @@ test('createLowdefyContext leaves readConfigFile alone without a mutant cookie',
 const { default: dataSessionRegistry } = await import('../docs/dataSets/dataSessionRegistry.js');
 const { default: getAuth } = await import('./auth/getAuth.js');
 const { default: getHeadlessUser } = await import('./auth/getHeadlessUser.js');
+const { default: getMockUser } = await import('./auth/getMockUser.js');
 const { resolveAuthentication, resolveTenantPreflight } = await import('@lowdefy/api');
 
 describe('data sessions', () => {
@@ -273,7 +274,7 @@ describe('data sessions', () => {
   test('a verified data cookie redirects connections, tracks background work, forwards the cookie and skips the tenant preflight', async () => {
     const session = registerSession();
     mockReadConfigFile();
-    getHeadlessUser.mockReturnValueOnce({ id: 'u_1', roles: ['admin'] });
+    getHeadlessUser.mockReturnValueOnce({ user: { id: 'u_1', roles: ['admin'] }, explicit: true });
     const cookie = `lowdefy_journey_data=${journeyActorToken}.session1`;
     const context = await createLowdefyContext({ c: createHonoContext({ headers: { cookie } }) });
     expect((await context.readConfigFile('connections/tickets.json')).properties).toEqual({
@@ -383,5 +384,39 @@ describe('data sessions', () => {
     expect(context.user).toBeNull();
     expect(getAuth).not.toHaveBeenCalled();
     expect(resolveAuthentication).not.toHaveBeenCalled();
+  });
+});
+
+describe('who a headless caller is under a dev mock user', () => {
+  const mockUser = { id: 'mock', roles: ['mock-role'] };
+
+  test('a journey user the caller named wins over the mock user', async () => {
+    getMockUser.mockReturnValueOnce(mockUser);
+    getHeadlessUser.mockReturnValueOnce({
+      user: { id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: ['admin'] },
+      explicit: true,
+    });
+    const context = await createLowdefyContext({ c: createHonoContext() });
+    expect(context.auth).toBeNull();
+    expect(context.user.roles).toEqual(['admin']);
+  });
+
+  test('the roleless headless default yields to the mock user', async () => {
+    getMockUser.mockReturnValueOnce(mockUser);
+    getHeadlessUser.mockReturnValueOnce({
+      user: { id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: [] },
+      explicit: false,
+    });
+    const context = await createLowdefyContext({ c: createHonoContext() });
+    expect(context.user).toEqual(mockUser);
+  });
+
+  test('the roleless headless default is the caller when no mock user is active', async () => {
+    getHeadlessUser.mockReturnValueOnce({
+      user: { id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: [] },
+      explicit: false,
+    });
+    const context = await createLowdefyContext({ c: createHonoContext() });
+    expect(context.user).toEqual({ id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: [] });
   });
 });

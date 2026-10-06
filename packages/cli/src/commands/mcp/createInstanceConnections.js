@@ -17,6 +17,7 @@
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import { LoggingMessageNotificationSchema } from '@modelcontextprotocol/sdk/types.js';
+import { type } from '@lowdefy/helpers';
 
 import fetchDevServer from './fetchDevServer.js';
 
@@ -55,6 +56,11 @@ function createInstanceConnections({
   }
 
   async function get({ configDirectory, instance, label }) {
+    if (!type.isString(instance.url)) {
+      throw new Error(
+        `${label}: the dev server (state ${instance.state}) has no URL yet. Call lowdefy_dev_status, then lowdefy_dev_start if it is not ready, and try again.`
+      );
+    }
     const current = connections.get(configDirectory);
     if (current && current.pid === instance.pid && current.startedAt === instance.startedAt) {
       return current.client;

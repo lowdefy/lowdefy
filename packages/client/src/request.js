@@ -16,18 +16,37 @@
 
 import { decodeServerError } from '@lowdefy/engine';
 import { expectedErrorNames, lowdefyErrorTypes } from '@lowdefy/errors';
-import { translate } from '@lowdefy/helpers';
+import { translate, type } from '@lowdefy/helpers';
 
-async function request({ url, method = 'GET', body }) {
+import shouldReloadForBuild from './shouldReloadForBuild.js';
+
+// buildId is the build this bundle was made from. The production server
+// refuses a call from another build with a 409 before running anything, since
+// an old page's payload can be the wrong shape for the new build's request and
+// still be written. The tab then reloads once onto the current build. The
+// promise never settles: the page is unloading, and a rejection would run the
+// action's catch actions and report the refusal as an error. Only the
+// production client carries a build id; the server lets a call naming none
+// through (dev and e2e pages, third-party webhooks).
+async function request({ buildId, url, method = 'GET', body }) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (!type.isNone(buildId)) {
+    headers['x-lowdefy-build'] = buildId;
+  }
   const res = await fetch(url, {
     method,
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers,
     body: JSON.stringify(body),
   });
   if (!res.ok) {
     const body = await res.json();
+    if (
+      res.status === 409 &&
+      shouldReloadForBuild({ bundleBuildId: buildId, serverBuildId: body?.buildId, window })
+    ) {
+      window.location.reload();
+      return new Promise(() => {});
+    }
     if (body?.['~e']) {
       throw decodeServerError(body);
     }

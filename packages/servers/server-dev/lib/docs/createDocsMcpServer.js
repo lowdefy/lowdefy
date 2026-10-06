@@ -50,6 +50,7 @@ import runRequest from './runRequest.js';
 import snapshotState from './snapshotState.js';
 import { listStateCheckpoints } from './checkpointStore.js';
 import createLogger from '../server/log/createLogger.js';
+import lowdefyConfig from '../build/config.js';
 import devToolDefinitions, { INSTRUCTIONS } from './devToolDefinitions.js';
 import scaffoldPage from './scaffoldPage.js';
 import screenshotPage from './screenshotPage.js';
@@ -312,17 +313,22 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       if (userError) {
         return notFoundResult(userError);
       }
+      // One params object for both branches, so neither can drop a parameter
+      // the other passes. basePath is read as the HTTP route reads it, so
+      // expect.calls counts and app errors match under a basePath.
+      const params = {
+        origin,
+        pageId,
+        pathParams,
+        steps,
+        urlQuery,
+        state,
+        stepTimeout: timeout,
+        data,
+        basePath: lowdefyConfig.basePath ?? '',
+      };
       if (type.isArray(user)) {
-        const { passed, runs } = await runJourneyAsUsers({
-          origin,
-          pageId,
-          steps,
-          users: user,
-          urlQuery,
-          state,
-          stepTimeout: timeout,
-          data,
-        });
+        const { passed, runs } = await runJourneyAsUsers({ ...params, users: user });
         // Every run's screenshots follow the JSON as images, run by run in
         // the order of the runs, each named in its run.
         const summary = {
@@ -346,15 +352,8 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
         };
       }
       const result = await runJourney({
-        origin,
-        pageId,
-        pathParams,
-        steps,
+        ...params,
         user,
-        urlQuery,
-        state,
-        stepTimeout: timeout,
-        data,
         // Each call is its own journey run, recorded apart from the suite's.
         recording: { source: 'journey', run: { id: createTraceId(), by: 'agent', journey: null } },
       });

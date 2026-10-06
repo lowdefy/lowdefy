@@ -536,7 +536,7 @@ test('journeys evidence --refresh counts no dev recordings: agents read them as 
   expect(logged.some((line) => line.includes('dev recordings'))).toBe(false);
 });
 
-test('journeys evidence keeps the committed dev.recordings when this machine has no dev recordings', async () => {
+test('journeys evidence --refresh removes a committed dev count', async () => {
   const savesPath = writeJourney(
     'saves.yaml',
     SAVES.replace('steps:', 'evidence:\n  dev: { recordings: 5 }\n  refreshed: 2026-09-01\nsteps:')
@@ -544,7 +544,8 @@ test('journeys evidence keeps the committed dev.recordings when this machine has
   context.options.refresh = true;
   await journeysEvidence({ context });
   const journey = YAML.parse(fs.readFileSync(savesPath, 'utf8'));
-  expect(journey.evidence.dev).toEqual({ recordings: 5 });
+  expect(journey.evidence).not.toHaveProperty('dev');
+  expect(validateJourney({ journey })).toEqual({ valid: true });
 });
 
 // Production clicks as the pull stores them: a token under the machine's
@@ -640,4 +641,57 @@ test('journeys evidence --refresh writes the same evidence for a guessed value a
   await journeysEvidence({ context });
   expect(YAML.parse(fs.readFileSync(plain, 'utf8')).evidence).toEqual(written);
   expect(octoberSessions(written.production)).toBe(1);
+});
+
+test('journeys evidence --refresh keeps counting a renamed label by the text its committed flow holds', async () => {
+  writeTokenisedDays();
+  context.options.refresh = true;
+  const picksPath = writeJourney(
+    'picks.yaml',
+    journeyFile({ blockId: 'assign_button', text: 'Assign' })
+  );
+  await journeysEvidence({ context });
+  const counted = readJourney(picksPath).evidence.production;
+  expect(counted.months).toEqual([month('2026-10', 2, 1, 1, 1, 0)]);
+  // The label is renamed in the config and in the journey, and a fuller pull
+  // adds a day of October, so the old flow's month is read again.
+  writeDay('2026-10-01', []);
+  CONFIG_TEXTS.delete('Assign');
+  CONFIG_TEXTS.add('Store');
+  try {
+    fs.writeFileSync(
+      picksPath,
+      fs.readFileSync(picksPath, 'utf8').replace('"text":"Assign"', '"text":"Store"')
+    );
+    await journeysEvidence({ context });
+  } finally {
+    CONFIG_TEXTS.delete('Store');
+    CONFIG_TEXTS.add('Assign');
+  }
+  const { production } = readJourney(picksPath).evidence;
+  expect(production.deprecated).toHaveLength(1);
+  expect(production.deprecated[0].flow).toEqual(counted.flow);
+  expect(production.deprecated[0].months).toEqual([month('2026-10', 3, 1, 1, 1, 0)]);
+  expect(production.months).toEqual([month('2026-10', 3, 0, 0, 0, 0)]);
+});
+
+test('journeys evidence --refresh refuses final days pulled with different environments', async () => {
+  const directory = path.join(configDirectory, '.lowdefy', 'traces', 'production');
+  [
+    ['2026-10-01', 'production'],
+    ['2026-10-02', 'staging'],
+  ].forEach(([day, environment]) => {
+    const manifestPath = path.join(directory, `${day}.manifest.json`);
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({ ...manifest, project_id: '1', environment, filter_test_accounts: true })
+    );
+  });
+  const savesPath = writeJourney('saves.yaml', SAVES);
+  context.options.refresh = true;
+  await expect(journeysEvidence({ context })).rejects.toThrow(
+    /different filters, which cannot be counted together: 2026-09-30 \(project null, any environment, test accounts filtered out\); 2026-10-01 \(project 1, environment "production", test accounts filtered out\); 2026-10-02 \(project 1, environment "staging", test accounts filtered out\)/
+  );
+  expect(fs.readFileSync(savesPath, 'utf8')).toBe(SAVES);
 });

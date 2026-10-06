@@ -152,11 +152,13 @@ beforeEach(() => {
   writeJourney('orders.yaml', {
     name: 'orders',
     pageId: 'orders',
+    data: 'shop',
     steps: [{ click: 'save' }, { expect: { visible: 'alert' } }],
   });
   writeJourney('refunds.yaml', {
     name: 'refunds',
     pageId: 'refunds',
+    data: 'shop',
     steps: [{ click: 'save' }, { expect: { visible: 'alert' } }],
   });
   mockGet.mockImplementation(async () => ({
@@ -406,4 +408,73 @@ test('journeysHarden sends a data-set journey its data set and user on the basel
   });
   expect(bodies.length).toBeGreaterThan(0);
   bodies.forEach((body) => expect(body.data).toBe('shop'));
+});
+
+test('journeysHarden leaves out a journey without a data set, names it, and hardens the rest', async () => {
+  writeJourney('refunds.yaml', {
+    name: 'refunds',
+    pageId: 'refunds',
+    steps: [{ click: 'save' }, { expect: { visible: 'alert' } }],
+  });
+  await harden();
+  expect(process.exitCode).toBeUndefined();
+  expect(logs.error).toEqual([
+    `Left out "refunds" (${path.join(
+      'tests',
+      'journeys',
+      'refunds.yaml'
+    )}): it has no data set, so its mutant runs would write to your database. Give it a data set (data:) to harden it.`,
+  ]);
+  expect([...new Set(journeyRuns.map(({ pageId }) => pageId))]).toEqual(['orders']);
+  expect(readReport().journeys.map(({ name }) => name)).toEqual(['orders']);
+});
+
+test('journeysHarden exits 1 without running anything when no selected journey has a data set', async () => {
+  ['orders', 'refunds'].forEach((name) =>
+    writeJourney(`${name}.yaml`, {
+      name,
+      pageId: name,
+      steps: [{ click: 'save' }, { expect: { visible: 'alert' } }],
+    })
+  );
+  await harden();
+  expect(process.exitCode).toBe(1);
+  expect(logs.error[0]).toMatch(/^No journey to harden has a data set\.\nLeft out "orders"/);
+  expect(logs.error[0]).toContain('Left out "refunds"');
+  expect(journeyRuns).toEqual([]);
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+});
+
+test('journeysHarden keeps the scores of journeys a later run did not measure in the report', async () => {
+  const { default: readMutationReport } = await import('../readMutationReport.js');
+  await harden({ filter: 'orders' });
+  await harden({ filter: 'refunds' });
+  const report = readReport();
+  expect(report.journeys.map(({ name, killed, total }) => [name, killed, total])).toEqual([
+    ['orders', 1, 3],
+    ['refunds', 0, 2],
+  ]);
+  // The app-event mutant ran on orders in the first run and on refunds in the second.
+  const app = report.mutants.find(({ id }) => id === 'app');
+  expect(app.ranBy.map(({ name }) => name).sort()).toEqual(['orders', 'refunds']);
+  expect(report.mutants.map(({ id }) => id).sort()).toEqual(['alert', 'app', 'kill', 'refund']);
+  expect(report.killed).toBe(1);
+  expect(report.total).toBe(4);
+  const read = readMutationReport({
+    directories: { test: path.join(configDirectory, '.lowdefy', 'test') },
+  });
+  expect(read.score).toEqual({ killed: 1, total: 4 });
+  expect([...read.byJourney.keys()]).toEqual([
+    `${path.join('tests', 'journeys', 'orders.yaml')}#orders`,
+    `${path.join('tests', 'journeys', 'refunds.yaml')}#refunds`,
+  ]);
+});
+
+test('journeysHarden drops an earlier score once its journey no longer exists', async () => {
+  await harden();
+  fs.rmSync(path.join(configDirectory, 'tests', 'journeys', 'refunds.yaml'));
+  await harden();
+  const report = readReport();
+  expect(report.journeys.map(({ name }) => name)).toEqual(['orders']);
+  expect(report.mutants.map(({ id }) => id)).not.toContain('refund');
 });

@@ -46,6 +46,10 @@ jest.unstable_mockModule('./readJourneyEmailMatch.js', () => ({
   default: mockReadJourneyEmailMatch,
 }));
 
+// The fake pages have no build to check step references against; the checks
+// have tests of their own (checkStepReferences.test.mjs and the fixture suite).
+jest.unstable_mockModule('./checkStepReferences.js', () => ({ default: async () => {} }));
+
 // No client error report is ever in flight here; the real wait's grace would
 // only slow every test down.
 jest.unstable_mockModule('./observe/waitForClientErrorReports.js', () => ({
@@ -105,6 +109,9 @@ function createLocator({ selector, page }) {
     locator: jest.fn((child) => createLocator({ selector: `${selector} ${child}`, page })),
     getByText: jest.fn((text) => createLocator({ selector: `${selector} >> text=${text}`, page })),
     first: jest.fn(() => locator),
+    // A union reads as this locator: the fake page shows a block and its
+    // control together.
+    or: jest.fn(() => locator),
     last: jest.fn(() => locator),
     nth: jest.fn(() => locator),
     filter: jest.fn(() => locator),
@@ -233,6 +240,7 @@ test('runJourney refuses a placeholder value (from: shape) before opening a brow
   expect(result).toEqual({
     error:
       'Step 1: fill on "title" has a placeholder value (from: shape). Fill it from the data set or the journey\'s user, then remove from.',
+    refused: true,
   });
   expect(mockGetBrowser).not.toHaveBeenCalled();
   expect(mockOpenPage).not.toHaveBeenCalled();
@@ -538,10 +546,12 @@ test('runJourney clicks a page-wide control by text when the target has no block
   expect(result.passed).toBe(true);
   expect(page.clicks).toEqual([CONTROLS, CONTROLS]);
   // No menu or dialog is open (every count is 0), so only the page-wide
-  // search filters apply: twice for the text with no nth (before and after
-  // waiting for a match), once for the text with an nth.
+  // search filters apply: twice for each text, before and after waiting for a
+  // match.
   const pageWide = filters.filter((f) => f.selector === CONTROLS);
   expect(pageWide.map((f) => f.filter)).toEqual([
+    { hasText: expect.any(RegExp) },
+    { visible: true },
     { hasText: expect.any(RegExp) },
     { visible: true },
     { hasText: expect.any(RegExp) },
@@ -1534,7 +1544,10 @@ test('runJourney waits for a request to finish loading and for a state path to b
     requests: { get_rows: [{ loading: true }] },
   });
   const page = createPage({ window });
-  openWith(page);
+  // The page calls get_rows as it opens, inside the first step's window.
+  openActorsWithNetwork([
+    { page, opening: [{ url: `${origin}/api/request/form/get_rows`, method: 'POST' }] },
+  ]);
   page.waitForTimeout.mockImplementation(async () => {
     window.lowdefy.contexts['page:form'].requests.get_rows[0] = { loading: false, response: [] };
     window.lowdefy.contexts['page:form'].state.rows = [];
@@ -1544,6 +1557,7 @@ test('runJourney waits for a request to finish loading and for a state path to b
     origin,
     pageId: 'form',
     steps: [{ wait: { request: 'get_rows' } }, { wait: { state: 'rows' } }, { wait: { ms: 10 } }],
+    readConfigFile: async (name) => (name === 'plugins/requestSchemas.json' ? {} : null),
   });
 
   expect(result.passed).toBe(true);
@@ -1554,18 +1568,26 @@ test('runJourney fails a wait that never settles with the last value seen', asyn
   const page = createPage({
     window: createLowdefyWindow({ requests: { get_rows: [{ loading: true }] } }),
   });
-  openWith(page);
+  openActorsWithNetwork([
+    { page, opening: [{ url: `${origin}/api/request/form/get_rows`, method: 'POST' }] },
+  ]);
 
   const result = await runJourney({
     origin,
     pageId: 'form',
     steps: [{ wait: { request: 'get_rows' } }],
     stepTimeout: 20,
+    readConfigFile: async (name) => (name === 'plugins/requestSchemas.json' ? {} : null),
   });
 
   expect(result.passed).toBe(false);
-  expect(result.failure.expected).toEqual('request "get_rows" to have finished loading');
-  expect(result.failure.actual).toEqual({ loading: true });
+  expect(result.failure.expected).toEqual(
+    'request "get_rows" to have been called since the last interaction and finished loading'
+  );
+  expect(result.failure.actual).toEqual({
+    calledSinceLastInteraction: true,
+    state: { loading: true },
+  });
   expect(result.failure.message).toMatch(/Timed out after 20ms/);
 });
 
@@ -2113,4 +2135,59 @@ test('runJourney reports the events and blocks its pages observed, deduplicated 
     },
   ]);
   expect(result.exercised.rendered).toEqual({ form: ['rows.$.label', 'save'] });
+});
+
+test('runJourney waits on a request only for a call started since the last interaction', async () => {
+  const window = createLowdefyWindow({ requests: { get_rows: [{ loading: false }] } });
+  const page = createPage({ window });
+  // The page called get_rows as it opened; the click calls nothing.
+  openActorsWithNetwork([
+    { page, opening: [{ url: `${origin}/api/request/form/get_rows`, method: 'POST' }] },
+  ]);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { wait: { request: 'get_rows' } },
+      { click: 'noop' },
+      { wait: { request: 'get_rows' } },
+    ],
+    stepTimeout: 20,
+    readConfigFile: async (name) => (name === 'plugins/requestSchemas.json' ? {} : null),
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure.index).toBe(2);
+  expect(result.failure.actual).toEqual({
+    calledSinceLastInteraction: false,
+    state: { loading: false },
+  });
+});
+
+test('runJourney passes a wait on a request the interaction before it called', async () => {
+  const window = createLowdefyWindow({ requests: { save: [{ loading: false }] } });
+  const page = createPage({ window });
+  const listeners = openActorsWithNetwork([{ page, opening: [] }]);
+  const instrumented = page.locator.getMockImplementation();
+  page.locator.mockImplementation((selector) => {
+    const locator = instrumented(selector);
+    const click = locator.click;
+    locator.click = jest.fn(async (...args) => {
+      await click(...args);
+      listeners[0]({ url: () => `${origin}/api/request/form/save`, method: () => 'POST' });
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ click: 'save' }, { wait: { request: 'save' } }],
+    stepTimeout: 20,
+    readConfigFile: async (name) => (name === 'plugins/requestSchemas.json' ? {} : null),
+  });
+
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
 });

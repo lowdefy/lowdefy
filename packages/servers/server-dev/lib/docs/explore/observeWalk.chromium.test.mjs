@@ -30,6 +30,8 @@ import { jest } from '@jest/globals';
 // and resolved by the journey runner's own runSteps, as on a dev page.
 // Skipped when no Chromium can be launched.
 jest.unstable_mockModule('../../build/config.js', () => ({ default: {} }));
+// The stand-in page has no build to check step references against.
+jest.unstable_mockModule('../checkStepReferences.js', () => ({ default: async () => {} }));
 jest.setTimeout(60000);
 
 const { getBrowser } = await import('../getBrowser.js');

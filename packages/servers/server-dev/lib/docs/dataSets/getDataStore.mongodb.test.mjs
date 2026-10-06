@@ -48,7 +48,7 @@ test('a store whose mongod died is replaced: the next session reports it, the on
   const dead = await getDataStore();
   const { pid, dbPath } = await describeMongod(dead);
   process.kill(pid, 'SIGKILL');
-  await expect(openDataSession({ dataSet: { name: 'shop', snapshot: null } })).rejects.toThrow(
+  await expect(openDataSession({ dataSet: { name: 'shop' } })).rejects.toThrow(
     'The journey data store stopped responding'
   );
   expect(fs.existsSync(dbPath)).toBe(false);
@@ -56,7 +56,7 @@ test('a store whose mongod died is replaced: the next session reports it, the on
   expect(fresh).not.toBe(dead);
   expect(fresh.uri).not.toEqual(dead.uri);
   const opened = await openDataSession({
-    dataSet: { name: 'shop', snapshot: null, fixtures: {}, indexes: {}, collections: {} },
+    dataSet: { name: 'shop', fixtures: {}, generated: {}, indexes: {}, collections: {} },
   });
   await opened.close();
   await fresh.stop();

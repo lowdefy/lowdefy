@@ -20,7 +20,7 @@
 // takes the developer through proven findings and then candidate journeys.
 // It never writes a step the compiler did not produce, never
 // overrules an invariant, and posts a PR comment only with text the developer
-// approved that carries no snapshot data.
+// approved that carries only config, fixture and typed text.
 function journeysFromPr({ appPath }) {
   const appDirectory = appPath === '' ? 'the worktree root' : `\`${appPath}\` in the worktree`;
   return `---
@@ -87,9 +87,9 @@ developer decides.
   reproduce, and the path of the journey that fails with it. Say that the journey is the
   regression test: once the fix lands and \`lowdefy test --repeat 3 <path>\` passes, it moves into
   \`tests/journeys/\`. Show the draft to the developer, and post it with
-  \`gh pr comment <n> --body-file <file>\` only once they approve the text. On a snapshot data set,
-  the comment carries no snapshot data: its steps and message keep only config, fixture and typed
-  text, every other value is written \`<data>\`, and no screenshot is attached.
+  \`gh pr comment <n> --body-file <file>\` only once they approve the text. The comment's steps
+  and message keep only config, fixture and typed text, every other value is written \`<data>\`,
+  and no screenshot is attached.
 - **Expected:** leave that finding's journey out of what you keep.
 
 A proven dead click ends in \`expect: { effect: true }\`, which the explorer adds by a fixed rule:
@@ -108,12 +108,8 @@ them, and they have no journey.
 For each coverage candidate in \`tests/journeys/_candidates/explorer/<run>/\`:
 
 - Name it after what it does.
-- On a snapshot data set, retarget each \`row: N\` click to \`containing: <value>\`, the row's
-  known-text value (the walk's \`rowText\` in \`walks.jsonl\`).
 - Keep the \`expect.state\` lines that are the point of the journey.
-- Run \`lowdefy test --lint <path>\`. On a snapshot data set, fix an L7 error on a recorded
-  \`pathParams\` or \`urlQuery\` value (on the journey or a \`goto\`) or a \`<data>\` pick by
-  switching to a fixture-owned value.
+- Run \`lowdefy test --lint <path>\`.
 - Run \`lowdefy test --repeat 3 <path>\`. It runs the candidate where it lies and records nothing;
   \`--filter\` cannot reach \`_candidates/\`.
   - **PASS:** move the file into \`tests/journeys/\`.

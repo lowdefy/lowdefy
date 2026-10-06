@@ -25,6 +25,7 @@ import { XProvider } from '@ant-design/x';
 import { serializer } from '@lowdefy/helpers';
 
 import antdLocaleLoaders from '../build/i18n/antdLocales.js';
+import appMeta from '../build/appMeta.json';
 import antdXLocaleLoaders from '../build/i18n/antdXLocales.js';
 import dayjsLocaleMap from '../build/i18n/dayjsLocales.js';
 import rawLoggerConfig from '../build/logger.json';
@@ -58,6 +59,9 @@ function App({ config }) {
 
   const usageDataRef = useRef({});
   const lowdefyRef = useRef({
+    // Sent with every request and endpoint call so the server refuses calls
+    // from a tab still running an earlier build (@lowdefy/client request.js).
+    buildId: appMeta.buildId,
     eventCallback: createLogUsage({ basePath: config.basePath ?? '', usageDataRef }),
   });
   if (rootConfig?.theme) {

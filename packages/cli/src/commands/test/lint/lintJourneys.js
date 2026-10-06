@@ -18,15 +18,12 @@ import path from 'path';
 import { type } from '@lowdefy/helpers';
 import { parseDataSet } from '@lowdefy/node-utils';
 
-import buildL7Pages from './buildL7Pages.js';
-import getL7PageIds from './getL7PageIds.js';
 import lintJourney from './lintJourney.js';
 import measuredJourney from '../measuredJourney.js';
 import readExercised from '../readExercised.js';
-import readSnapshotStrings from './readSnapshotStrings.js';
 import validateJourney from '../validateJourney.js';
 
-// Each data set the journeys name, read once: { dataSet, snapshotStrings } or
+// Each data set the journeys name, read once: { dataSet } or
 // { error } when its file cannot be read.
 async function readDataSets({ context, journeys }) {
   const dataSets = new Map();
@@ -35,15 +32,7 @@ async function readDataSets({ context, journeys }) {
     if (type.isNone(name) || dataSets.has(name)) continue;
     try {
       const dataSet = await parseDataSet({ configDirectory: context.directories.config, name });
-      const snapshotStrings =
-        type.isNone(dataSet.snapshotSpec) || type.isNone(dataSet.snapshot)
-          ? null
-          : readSnapshotStrings({
-              configDirectory: context.directories.config,
-              name,
-              manifest: dataSet.snapshot,
-            });
-      dataSets.set(name, { dataSet, snapshotStrings });
+      dataSets.set(name, { dataSet });
     } catch (error) {
       dataSets.set(name, { error: error.message });
     }
@@ -52,10 +41,8 @@ async function readDataSets({ context, journeys }) {
 }
 
 // `lowdefy test --lint`: lints the selected journeys and runs nothing. Data
-// sets are read from their files, so only L7 needs a dev server, and only
-// when some journey runs on a data set with a snapshot: the dev build is
-// just-in-time, so its pages are built before their config is read. Prints
-// one line per problem and returns whether any was an error.
+// sets are read from their files, so linting needs no dev server. Prints one
+// line per problem and returns whether any was an error.
 async function lintJourneys({ context, items }) {
   let errors = 0;
   let warnings = 0;
@@ -95,14 +82,6 @@ async function lintJourneys({ context, items }) {
   });
 
   const dataSets = await readDataSets({ context, journeys: valid.map(({ journey }) => journey) });
-  const l7PageIds = new Set();
-  valid.forEach(({ journey, exercisedEntry }) => {
-    if (type.isNone(dataSets.get(journey.data)?.dataSet?.snapshotSpec)) return;
-    getL7PageIds({ journey, exercisedEntry }).forEach((pageId) => l7PageIds.add(pageId));
-  });
-  const pageErrors =
-    l7PageIds.size === 0 ? {} : await buildL7Pages({ context, pageIds: [...l7PageIds] });
-  const buildDirectory = path.join(context.directories.dev, 'build');
 
   valid.forEach(({ journey, exercisedEntry }) => {
     const read = dataSets.get(journey.data) ?? {};
@@ -113,9 +92,6 @@ async function lintJourneys({ context, items }) {
       journey,
       exercisedEntry,
       dataSet: read.dataSet ?? null,
-      buildDirectory,
-      snapshotStrings: read.snapshotStrings ?? null,
-      pageErrors,
     }).forEach((problem) => {
       report({
         severity: problem.severity,

@@ -117,3 +117,14 @@ test('resolveJourneyDataSet returns readDataSet errors as its own', async () => 
   const { error } = await resolve({ data: 'missing', user: 'member' });
   expect(error).toEqual('Data set "missing" not found in tests/data. Declared: empty-org.');
 });
+
+test('resolveJourneyDataSet refuses user none while a dev mock user is active', async () => {
+  const { error } = await resolve({ user: 'none', mockUserActive: true });
+  expect(error).toMatch(
+    'The journey has user "none", which cannot run while a dev mock user is active'
+  );
+});
+
+test('resolveJourneyDataSet keeps user none when no dev mock user is active', async () => {
+  expect(await resolve({ user: 'none' })).toEqual({ user: 'none' });
+});

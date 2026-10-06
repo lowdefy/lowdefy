@@ -143,7 +143,7 @@ async function createLowdefyContext({ c, user }) {
   context.recording = readRecordingCookie(c.req.header('cookie'));
   context.handleError = createHandleError({ context });
   const mockUser = getMockUser();
-  const headlessUser = getHeadlessUser(c);
+  const headlessCaller = getHeadlessUser(c);
   if (!type.isNone(user)) {
     // An explicit per-call user wins over the ambient auth.dev.mockUser: the
     // caller named an identity for this call, so honour it. Merged over the
@@ -151,6 +151,12 @@ async function createLowdefyContext({ c, user }) {
     // headless page tools' `user` param is.
     context.auth = null;
     context.user = normalizeInjectedCaller(resolveHeadlessUser({ user }));
+  } else if (headlessCaller?.explicit === true) {
+    // A headless context whose tool call or journey named its user (getBrowser.js)
+    // wins over the mock user for the same reason: a journey with
+    // user: { roles: [admin] } must act as that user, not as the mock user.
+    context.auth = null;
+    context.user = normalizeInjectedCaller(headlessCaller.user);
   } else if (mockUser) {
     // The mock user is a pre-resolved caller - it substitutes for the
     // whole resolveAuthentication step and its roles are authoritative.
@@ -159,14 +165,15 @@ async function createLowdefyContext({ c, user }) {
     // floors it to the resolved-caller shape.
     context.auth = null;
     context.user = normalizeInjectedCaller(mockUser);
-  } else if (headlessUser) {
+  } else if (headlessCaller !== null) {
     // The headless renderer (docs/MCP screenshot and state tools) injects a
     // user cookie on its own browser context (getBrowser.js), so its /api/*
     // fetches carry a pre-resolved caller and auth-protected pages render.
     // The developer's real browser has no cookie and resolves through the
-    // auth engine below, so it is unaffected.
+    // auth engine below, so it is unaffected. The roleless default it injects
+    // when no user was named yields to the mock user above.
     context.auth = null;
-    context.user = normalizeInjectedCaller(headlessUser);
+    context.user = normalizeInjectedCaller(headlessCaller.user);
   } else if (!type.isNone(dataSession)) {
     // A data-session request never builds the auth engine: it is bound to the real auth database.
     // This is the detached hop (data cookie, no headless cookie); runDetachedEndpoint sets

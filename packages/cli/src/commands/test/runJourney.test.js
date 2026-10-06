@@ -189,7 +189,7 @@ test('runJourney leaves evidence off a pass for a journey without it', async () 
 
 test('runJourney posts data and passes the data set and warnings through', async () => {
   const { default: runJourney } = await import('./runJourney.js');
-  const data = { name: 'staging-sample', loadMs: 800, snapshot: null };
+  const data = { name: 'staging-sample', loadMs: 800, documents: 3 };
   mockPost.mockResolvedValue({
     data: { pageId: 'form', passed: true, steps: [{}], data, warnings: ['w'] },
   });

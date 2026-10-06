@@ -93,6 +93,40 @@ function buildManifest({ day, final, credentials, options, pulled, built, saltId
   };
 }
 
+const MANIFEST = /^(\d{4}-\d{2}-\d{2})\.manifest\.json$/;
+
+function filtersKey({ project_id, environment, filter_test_accounts }) {
+  return JSON.stringify([project_id ?? null, environment ?? null, filter_test_accounts]);
+}
+
+// Days already in the cache (under this salt) pulled with other filters than
+// this pull's cannot be counted with the days it writes: every reader refuses
+// the mix (checkPullFilters). Named here, so the developer re-pulls them now.
+function warnOtherFilters({ directories, logger, saltId, filters }) {
+  const directory = path.join(directories.traces, 'production');
+  if (!fs.existsSync(directory)) return;
+  const wanted = filtersKey(filters);
+  const other = fs
+    .readdirSync(directory)
+    .map((name) => MANIFEST.exec(name))
+    .filter((match) => match !== null)
+    .filter((match) => {
+      const manifest = JSON.parse(fs.readFileSync(path.join(directory, match[0]), 'utf8'));
+      return manifest.salt_id === saltId && filtersKey(manifest) !== wanted;
+    })
+    .map((match) => match[1])
+    .sort();
+  if (other.length === 0) return;
+  const shown = other.length > 5 ? `${other.slice(0, 5).join(', ')}, …` : other.join(', ');
+  logger.warn(
+    `${
+      other.length
+    } cached day(s) were pulled with other filters (project, --environment or --include-test-accounts) than this pull (${shown}). Readers refuse to count them together: pull them again with these filters and --refetch, from ${
+      other[0]
+    } to ${other[other.length - 1]}.`
+  );
+}
+
 function sumDropped(dropped) {
   return Object.values(dropped).reduce((total, count) => total + count, 0);
 }
@@ -145,6 +179,11 @@ async function journeysPullPosthog({ context, params }) {
   const client = createPostHogQueryClient({ ...credentials, logger });
   const today = new Date(now).toISOString().slice(0, 10);
   const totals = { rows: 0, records: 0, dropped: 0, bytesRead: 0, days: 0 };
+  const filters = {
+    project_id: credentials.projectId,
+    environment: options.environment ?? null,
+    filter_test_accounts: options.includeTestAccounts !== true,
+  };
 
   try {
     for (const day of listWindowDays(window)) {
@@ -192,6 +231,7 @@ async function journeysPullPosthog({ context, params }) {
   } catch (error) {
     if (!(error instanceof PullStoppedError)) throw error;
     logger.warn(error.message);
+    warnOtherFilters({ directories, logger, saltId, filters });
     logger.info(
       `Pulled ${totals.days} days before stopping: ${totals.rows} rows, ${totals.records} records, ${totals.dropped} dropped, ${totals.bytesRead} bytes read.`
     );
@@ -202,6 +242,7 @@ async function journeysPullPosthog({ context, params }) {
   logger.info(
     `Pulled ${totals.days} days of ${window.from}/${window.to}: ${totals.rows} rows, ${totals.records} records, ${totals.dropped} dropped, ${totals.bytesRead} bytes read.`
   );
+  warnOtherFilters({ directories, logger, saltId, filters });
   await context.sendTelemetry();
   return { ...totals, window };
 }

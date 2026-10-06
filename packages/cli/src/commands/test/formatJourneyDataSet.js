@@ -16,30 +16,18 @@
 
 import { type } from '@lowdefy/helpers';
 
-const staleAfterDays = 14;
-
-function formatSnapshot({ name, snapshot }) {
-  if (type.isNone(snapshot)) {
-    return `      data ${name}: fixtures only`;
-  }
-  const days = snapshot.ageDays === 1 ? 'day' : 'days';
-  const line = `data ${name}: snapshot ${snapshot.ageDays} ${days} old, ${(
-    snapshot.documents ?? 0
-  ).toLocaleString('en-US')} documents`;
-  if (snapshot.ageDays > staleAfterDays) {
-    return `      warning: ${line}. Run: lowdefy data pull ${name}`;
-  }
-  return `      ${line}`;
+function formatData({ name, documents }) {
+  const word = documents === 1 ? 'document' : 'documents';
+  return `      data ${name}: ${documents.toLocaleString('en-US')} ${word}`;
 }
 
 // The data set a journey ran on and the warnings its run returned, each printed once per run.
-// A stale snapshot is a warning, never a failure.
 function formatJourneyDataSet({ result, seen }) {
   const lines = [];
   const name = result.data?.name;
   if (type.isString(name) && !seen.has(`data:${name}`)) {
     seen.add(`data:${name}`);
-    lines.push(formatSnapshot({ name, snapshot: result.data.snapshot }));
+    lines.push(formatData(result.data));
   }
   (result.warnings ?? []).forEach((warning) => {
     if (seen.has(`warning:${warning}`)) return;

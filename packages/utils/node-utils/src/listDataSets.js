@@ -14,38 +14,22 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
+import countDataSetDocuments from './countDataSetDocuments.js';
 import listDataSetFiles from './listDataSetFiles.js';
 import parseDataSet from './parseDataSet.js';
 
-const dayMs = 24 * 60 * 60 * 1000;
-
-function countDocuments({ collections }) {
-  return Object.values(collections).reduce(
-    (total, collection) => total + (collection.count ?? 0),
-    0
-  );
-}
-
-// One entry per data set file, for `lowdefy data list` and for stale snapshot reports.
+// One entry per data set file, for `lowdefy data list`: its name, how many documents it loads and
+// how many users it names.
 async function listDataSets({ configDirectory }) {
   const names = [...new Set((await listDataSetFiles({ configDirectory })).map(({ name }) => name))];
   const dataSets = [];
   for (const name of names) {
     const dataSet = await parseDataSet({ configDirectory, name });
-    if (type.isNone(dataSet.snapshotSpec)) {
-      dataSets.push({ name, kind: 'fixtures' });
-      continue;
-    }
-    const entry = { name, kind: 'snapshot', from: dataSet.snapshotSpec.from };
-    if (!type.isNone(dataSet.snapshot)) {
-      entry.pulledAt = dataSet.snapshot.pulledAt;
-      entry.ageDays = Math.floor((Date.now() - Date.parse(dataSet.snapshot.pulledAt)) / dayMs);
-      entry.documents = countDocuments({ collections: dataSet.snapshot.collections });
-      entry.specMatches = dataSet.snapshot.specHash === dataSet.specHash;
-    }
-    dataSets.push(entry);
+    dataSets.push({
+      name,
+      documents: countDataSetDocuments({ dataSet }),
+      users: Object.keys(dataSet.users).length,
+    });
   }
   return dataSets;
 }

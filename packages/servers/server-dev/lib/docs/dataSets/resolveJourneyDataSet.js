@@ -35,6 +35,9 @@ function describeDeclaredUsers({ users }) {
 // "none" names a data set user. Returns { dataSet, user } (both undefined for a journey with no data
 // set) or { error }.
 //
+// `user: none` while a dev mock user is active is refused: no caller cookie is injected, so the mock
+// user would stand in for the journey instead of it running signed out.
+//
 // Two refusals keep a data-set journey off the app's real auth database:
 // - `user: none` while auth is configured: a signed-out actor signs in through the auth engine,
 //   which is bound to the real auth database while its requests read the data set;
@@ -49,6 +52,12 @@ async function resolveJourneyDataSet({
   mockUserActive,
 }) {
   if (type.isNone(data)) {
+    if (user === 'none' && mockUserActive) {
+      return {
+        error:
+          'The journey has user "none", which cannot run while a dev mock user is active (auth.dev.mockUser or LOWDEFY_DEV_USER): with no caller of its own, every request would act as the mock user, not signed out. Remove the mock user to run journeys signed out, or give the journey a user.',
+      };
+    }
     if (isUserName(user)) {
       return {
         error: `The journey's user ${JSON.stringify(

@@ -1,0 +1,89 @@
+id: timing
+type: Box
+# The step timing fixture tests (packages/servers/server-dev/test/journeyFixture/timing.test.mjs):
+# a request the page calls on open, a button that calls nothing, and a block
+# that renders a moment after the click that reveals it.
+requests:
+  - id: load_items
+    type: MongoDBFind
+    connectionId: fixture_db
+    properties:
+      query:
+        kind: timing
+  - id: save_timing
+    type: MongoDBInsertOne
+    connectionId: fixture_db
+    properties:
+      doc:
+        kind: timing
+events:
+  onInit:
+    - id: load
+      type: Request
+      params: load_items
+blocks:
+  - id: timing_title
+    type: Title
+    properties:
+      content: Step timing
+      level: 2
+  - id: noop_button
+    type: Button
+    properties:
+      title: Do nothing
+    events:
+      onClick:
+        - id: set_noop
+          type: SetState
+          params:
+            noop: true
+  - id: save_timing_button
+    type: Button
+    properties:
+      title: Save
+    events:
+      onClick:
+        - id: save
+          type: Request
+          params: save_timing
+  # Trailing-edge debounce longer than the settle after a click (capped at the
+  # journey timeout, 1500 ms in the test): the next step starts while the late
+  # row is not yet in the page at all.
+  - id: reveal_button
+    type: Button
+    properties:
+      title: Reveal
+    events:
+      onClick:
+        debounce:
+          ms: 2000
+        try:
+          - id: set_late_rows
+            type: SetState
+            params:
+              late_rows:
+                - label: Late
+  # The row's button sits on top of a tall paragraph: a click at the row's
+  # centre lands on the paragraph and misses the button.
+  - id: late_rows
+    type: List
+    blocks:
+      - id: late_rows.$.row
+        type: Box
+        blocks:
+          - id: late_rows.$.button
+            type: Button
+            properties:
+              title: Late
+            events:
+              onClick:
+                - id: set_late_clicked
+                  type: SetState
+                  params:
+                    late_clicked: true
+          - id: late_rows.$.spacer
+            type: Paragraph
+            properties:
+              content: Below the late button.
+              style:
+                minHeight: 300px
