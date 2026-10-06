@@ -249,3 +249,24 @@ test('runJourney fails the step that sent a data set journey to another host of 
   expect(result.steps.map((step) => step.status)).toEqual(['failed', 'skipped']);
   expect(close).toHaveBeenCalledTimes(1);
 });
+
+test('runJourney opens the data session before it fetches the browser', async () => {
+  mockOpenDataSession.mockImplementation(async () => {
+    order.push('openDataSession');
+    return { id: 'session1', cookie: 'session1', close };
+  });
+  mockGetBrowser.mockImplementation(async () => {
+    order.push('getBrowser');
+    return {};
+  });
+  await runJourney({ origin, pageId: 'tickets', steps: [], data: 'staging-sample' });
+  expect(order.slice(0, 2)).toEqual(['openDataSession', 'getBrowser']);
+});
+
+test('runJourney closes the data session when no browser can be fetched', async () => {
+  mockGetBrowser.mockRejectedValue(new Error("Executable doesn't exist"));
+  const result = await runJourney({ origin, pageId: 'tickets', steps: [], data: 'staging-sample' });
+  expect(result.error).toMatch(/No Chromium available/);
+  expect(close).toHaveBeenCalledTimes(1);
+  expect(mockOpenPage).not.toHaveBeenCalled();
+});

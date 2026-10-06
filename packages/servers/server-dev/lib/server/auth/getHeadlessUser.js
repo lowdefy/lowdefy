@@ -17,10 +17,12 @@
 import { HEADLESS_USER_COOKIE } from './headlessUser.js';
 
 // Mirrors the e2e user-injection pattern (server-e2e/lib/server/auth/getUser.js):
-// the headless renderer sets a base64-JSON user cookie on its own browser
+// the headless renderer sets a base64-JSON caller cookie on its own browser
 // context, so its /api/* fetches carry a pre-resolved caller while the
-// developer's real browser (no cookie) is unaffected. Returns the raw decoded
-// user, or null on miss - the caller floors the shape via normalizeInjectedCaller.
+// developer's real browser (no cookie) is unaffected. Returns { user, explicit }
+// as getBrowser.js wrote it, or null on miss - the caller floors the user's
+// shape via normalizeInjectedCaller. `explicit` is true when the tool call or
+// journey named the user, so createLowdefyContext lets it beat a dev mock user.
 function getHeadlessUser(c) {
   const cookieHeader = c.req.header('cookie') ?? '';
   const match = cookieHeader.match(new RegExp(`${HEADLESS_USER_COOKIE}=([^;]+)`));

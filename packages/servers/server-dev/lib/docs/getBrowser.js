@@ -99,12 +99,16 @@ async function openPage({
     }
     // Inject an authenticated user so auth-protected pages don't 404 for the
     // cookieless headless context. Mirrors the e2e user-cookie pattern; scoped to
-    // `origin` so it rides along on the same-origin /api/* fetches.
+    // `origin` so it rides along on the same-origin /api/* fetches. A user the
+    // caller named is explicit: it beats a dev mock user (createLowdefyContext),
+    // while the roleless default does not, so a screenshot under a mock user
+    // still sees what the developer sees.
     if (injectedUser !== null) {
+      const caller = { user: injectedUser, explicit: !type.isNone(user) };
       await context.addCookies([
         {
           name: HEADLESS_USER_COOKIE,
-          value: Buffer.from(JSON.stringify(injectedUser)).toString('base64'),
+          value: Buffer.from(JSON.stringify(caller)).toString('base64'),
           url: origin,
         },
       ]);

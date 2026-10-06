@@ -233,6 +233,7 @@ test('runJourney refuses a placeholder value (from: shape) before opening a brow
   expect(result).toEqual({
     error:
       'Step 1: fill on "title" has a placeholder value (from: shape). Fill it from the data set or the journey\'s user, then remove from.',
+    refused: true,
   });
   expect(mockGetBrowser).not.toHaveBeenCalled();
   expect(mockOpenPage).not.toHaveBeenCalled();
