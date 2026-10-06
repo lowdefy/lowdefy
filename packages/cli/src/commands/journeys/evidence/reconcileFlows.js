@@ -33,12 +33,14 @@ import sequenceVersion from './sequenceVersion.js';
 //   committed months move, with the old flow, to a new deprecated entry, and
 //   the live flow starts empty, unless the steps went back to one of the
 //   journey's own deprecated flows, which becomes live again with its months.
-function reconcileFlows({ journey, today }) {
+//
+// The live flow's id and lines read click text by isConfigText.
+function reconcileFlows({ journey, today, isConfigText }) {
   const committed = journey.evidence?.production;
   const current = {
-    sequence: sequenceId({ pageId: journey.pageId, steps: journey.steps }),
+    sequence: sequenceId({ pageId: journey.pageId, steps: journey.steps, isConfigText }),
     pageId: journey.pageId,
-    flow: flowLines({ pageId: journey.pageId, steps: journey.steps }),
+    flow: flowLines({ pageId: journey.pageId, steps: journey.steps, isConfigText }),
   };
   if (!type.isArray(committed?.months)) {
     return { live: { ...current, months: [] }, deprecated: [], recount: false };

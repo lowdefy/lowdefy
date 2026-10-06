@@ -14,20 +14,15 @@
   limitations under the License.
 */
 
-const APP_API_PREFIXES = ['/api/request/', '/api/endpoints/'];
+const MAX_LISTED_ERRORS = 10;
 
-// Whether a URL is one of the app's request or endpoint API routes on this
-// dev server: what a walk step counts as the app doing work, and where a 5xx
-// is a failed request.
-function isAppApiUrl({ url, origin, basePath = '' }) {
-  let parsed;
-  try {
-    parsed = new URL(url);
-  } catch {
-    return false;
-  }
-  if (parsed.origin !== origin) return false;
-  return APP_API_PREFIXES.some((prefix) => parsed.pathname.startsWith(`${basePath}${prefix}`));
+// The first build errors from a config builder result, one per line, each
+// with its config source when the build knows it.
+function describeBuildErrors(errors) {
+  return errors
+    .slice(0, MAX_LISTED_ERRORS)
+    .map((error) => `  ${error.source ? `${error.source}: ` : ''}${error.message}`)
+    .join('\n');
 }
 
-export default isAppApiUrl;
+export default describeBuildErrors;

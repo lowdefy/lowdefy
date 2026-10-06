@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import { registerRunBuffer, releaseRunBuffer, takeRunErrors } from '../runErrorBuffers.js';
+
 // The open explorer walks, keyed by walk id. Kept on globalThis because the
 // walk routes that open a walk and the error stores that feed it may load as
 // separate module instances in one process (Vite's SSR module graph and
@@ -26,7 +28,7 @@ const walks = globalThis[REGISTRY_KEY];
 
 // Opens a walk's record: its explorer run id and walk id (the recording
 // cookie's run.id and run.journey) and whatever state the walk routes keep.
-// Errors its browser contexts cause collect in its own buffer.
+// Errors its browser contexts cause collect in its own run error buffer.
 function registerWalk({ walkId, run, journey, ...state }) {
   if (!type.isString(walkId) || !type.isString(run) || !type.isString(journey)) {
     throw new Error(
@@ -37,8 +39,9 @@ function registerWalk({ walkId, run, journey, ...state }) {
       })}.`
     );
   }
-  const walk = { ...state, walkId, run, journey, errors: [] };
+  const walk = { ...state, walkId, run, journey };
   walks.set(walkId, walk);
+  registerRunBuffer({ run, journey });
   return walk;
 }
 
@@ -46,28 +49,19 @@ function getWalk(walkId) {
   return walks.get(walkId) ?? null;
 }
 
+// Closing a walk's record releases its error buffer: an error stamped for it
+// that arrives later is dropped.
 function removeWalk(walkId) {
+  const walk = walks.get(walkId);
+  if (type.isUndefined(walk)) {
+    return;
+  }
   walks.delete(walkId);
+  releaseRunBuffer({ run: walk.run, journey: walk.journey });
 }
 
 function listWalks() {
   return [...walks.values()];
-}
-
-// An error entry stamped with an explorer recording (tagged with the store it
-// came to, client or server) goes to the buffer of the
-// open walk whose run and walk id it carries, and nowhere else. An entry for a
-// walk that has closed is dropped. Returns whether a walk took it.
-function recordError(entry) {
-  const walk = [...walks.values()].find(
-    (candidate) =>
-      candidate.run === entry.recording?.run && candidate.journey === entry.recording?.journey
-  );
-  if (type.isUndefined(walk)) {
-    return false;
-  }
-  walk.errors.push(entry);
-  return true;
 }
 
 // Removes and returns the walk's errors whose timestamp falls in
@@ -77,18 +71,7 @@ function takeErrors({ walkId, since, until }) {
   if (type.isUndefined(walk)) {
     return [];
   }
-  const taken = [];
-  const kept = [];
-  walk.errors.forEach((entry) => {
-    const time = Date.parse(entry.timestamp);
-    if (time >= since && time <= until) {
-      taken.push(entry);
-    } else {
-      kept.push(entry);
-    }
-  });
-  walk.errors = kept;
-  return taken;
+  return takeRunErrors({ run: walk.run, journey: walk.journey, since, until });
 }
 
-export { getWalk, listWalks, recordError, registerWalk, removeWalk, takeErrors };
+export { getWalk, listWalks, registerWalk, removeWalk, takeErrors };

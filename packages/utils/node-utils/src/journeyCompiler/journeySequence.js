@@ -56,8 +56,9 @@ function pageNamedBy({ step }) {
 // steps after it act on the email, which no recording sees: they add nothing
 // until a goto or expect.url names a page again, and with no such step the
 // journey is read no further. A fill with fromEmail types into the app, so it
-// reads as any fill.
-function journeySequence({ pageId, steps }) {
+// reads as any fill. `isConfigText`, when given, is passed to stepIdentity so
+// only config text enters a click's identity.
+function journeySequence({ pageId, steps, isConfigText }) {
   const sequence = [];
   let page = pageId;
   let inEmail = false;
@@ -69,7 +70,7 @@ function journeySequence({ pageId, steps }) {
     }
     if (INTERACTION_VERBS.includes(verb)) {
       if (!inEmail) {
-        sequence.push({ page, identity: stepIdentity({ step }) });
+        sequence.push({ page, identity: stepIdentity({ step, isConfigText }) });
       }
       return;
     }

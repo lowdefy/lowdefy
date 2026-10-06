@@ -329,3 +329,138 @@ test('formatJourneyResult marks an unranked journey on the PASS line of a repeat
     })
   ).toEqual(['PASS   new flow   (2 steps, 3/3, 1.5s each)  unranked · 11/12 mutants']);
 });
+
+const appErrorFailure = {
+  index: 1,
+  step: { click: 'save' },
+  kind: 'app-error',
+  message: 'Step 1 (click) caused an app error: server-error: Unrecognized pipeline stage',
+  expected: 'no app error',
+  actual: ['server-error: Unrecognized pipeline stage'],
+  errors: [
+    {
+      kind: 'server-error',
+      message: 'Unrecognized pipeline stage',
+      source: 'pages/tickets.yaml:42',
+      configKey: null,
+      key: 'server-error|tickets|pages/tickets.yaml:42',
+    },
+    {
+      kind: 'client-error',
+      message: 'Boom',
+      source: null,
+      configKey: null,
+      key: 'client-error|tickets|message:abcd1234',
+    },
+  ],
+};
+
+test('formatJourneyResult prints an app error failure as the step and one line per error', () => {
+  expect(
+    formatJourneyResult({
+      result: {
+        name: 'saves a ticket',
+        filePath: '/app/tests/journeys/save.yaml',
+        passed: false,
+        failure: appErrorFailure,
+        message: appErrorFailure.message,
+      },
+    })
+  ).toEqual([
+    'FAIL  saves a ticket',
+    '      file: /app/tests/journeys/save.yaml',
+    '      step 1: { click: save }',
+    '      server-error  Unrecognized pipeline stage  pages/tickets.yaml:42',
+    '      client-error  Boom',
+  ]);
+});
+
+test('formatJourneyResult prints what the step found when it failed beside an app error', () => {
+  const lines = formatJourneyResult({
+    result: {
+      name: 'saves a ticket',
+      filePath: '/app/tests/journeys/save.yaml',
+      passed: false,
+      failure: {
+        ...appErrorFailure,
+        errors: [appErrorFailure.errors[0]],
+        stepMessage: 'save is hidden',
+      },
+    },
+  });
+  expect(lines.slice(2)).toEqual([
+    '      step 1: { click: save }',
+    '      server-error  Unrecognized pipeline stage  pages/tickets.yaml:42',
+    '      save is hidden',
+  ]);
+});
+
+test('formatJourneyResult prints an app error raised while the page opened as on open', () => {
+  const failure = {
+    phase: 'open',
+    kind: 'app-error',
+    message: 'Opening the page caused an app error: server-error: onInit failed',
+    expected: 'no app error',
+    actual: ['server-error: onInit failed'],
+    errors: [{ kind: 'server-error', message: 'onInit failed', source: 'pages/home.yaml:7' }],
+  };
+  expect(
+    formatJourneyResult({
+      result: {
+        name: 'opens home',
+        filePath: '/app/tests/journeys/home.yaml',
+        passed: false,
+        failure,
+      },
+    })
+  ).toEqual([
+    'FAIL  opens home',
+    '      file: /app/tests/journeys/home.yaml',
+    '      on open',
+    '      server-error  onInit failed  pages/home.yaml:7',
+  ]);
+  const repeated = formatJourneyResult({
+    result: {
+      name: 'opens home',
+      filePath: '/app/tests/journeys/home.yaml',
+      passed: false,
+      class: 'FLAKY',
+      repeat: 3,
+      runs: 3,
+      passedRuns: 1,
+      failures: [
+        { run: 1, step: null, phase: 'open', message: failure.message },
+        { run: 3, step: null, phase: 'open', message: failure.message },
+      ],
+      failure,
+      message: failure.message,
+    },
+  });
+  expect(repeated[0]).toEqual(
+    'FLAKY  opens home   (1/3 passed) run 1 failed on open: Opening the page caused an app error: server-error: onInit failed'
+  );
+  expect(repeated.at(-1)).toEqual(
+    '      run 3 failed on open: Opening the page caused an app error: server-error: onInit failed'
+  );
+});
+
+test('formatJourneyResult lists the app errors beside a left-origin failure', () => {
+  const lines = formatJourneyResult({
+    result: {
+      name: 'switches actor',
+      filePath: '/app/tests/journeys/switch.yaml',
+      passed: false,
+      failure: {
+        index: 0,
+        step: { as: 'outsider' },
+        expected: 'every request to stay on http://localhost:3000',
+        actual: 'http://127.0.0.1:3000/api/root',
+        message: 'Journey left its origin.',
+        errors: [appErrorFailure.errors[0]],
+      },
+    },
+  });
+  expect(lines.at(-1)).toEqual(
+    '      server-error  Unrecognized pipeline stage  pages/tickets.yaml:42'
+  );
+});

@@ -82,32 +82,61 @@ The settle after an interaction lets the page's own events and requests finish b
 
 Blocks are addressed by their `blockId`. A step that does not complete within the step timeout (5 seconds, or the journey's [`timeout`](#timeouts)) fails the journey. An `expect` step waits, up to that timeout, for what it checks to become true, so a value a click leads to can arrive a moment later.
 
-| Step                                      | Meaning                                                                                                                                                     |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `click: target`                           | Click the block, or the control a [target](#targets) narrows to.                                                                                            |
-| `click: { ...target, count: 2 }`          | Click 2 (or 3) times in quick succession, as a person's double click, before the runner waits for the page to settle. `count` defaults to 1.                |
-| `fill: { blockId, value }`                | Type `value` into the input inside the block (or the grid cell a target names).                                                                             |
-| `fill: { blockId, fromEmail }`            | Type text read from an [email](#emails) instead of a fixed value, such as a one-time sign-in code. The actor stays on the page.                             |
-| `select: { blockId, value }`              | Open the selector block (or grid cell) and choose the option whose text is `value`. A radio, button or segmented selector's option is clicked by its label. |
-| `press: Enter`                            | Press a key or chord. `Mod` in a chord (`Mod+k`) resolves to Cmd on macOS and Ctrl elsewhere.                                                               |
-| `back: true`                              | Go back one page, like the browser's Back button. Fails when the journey has not navigated from an earlier page.                                            |
-| `goto: pageId`                            | Load a page the way a typed URL does; `{ pageId, urlQuery }` adds a query string. A protected page may redirect (to sign in), so assert where it landed.    |
-| `email: { to, subject }`                  | Open the newest [email](#emails) to `to` — with a subject containing `subject`, when given — that arrived during the journey, waiting for it if needed.     |
-| `as: name`                                | Act as [another person](#several-people), each in their own browser. The journey starts as `main`.                                                          |
-| `wait: { ms }`                            | Pause for `ms` milliseconds.                                                                                                                                |
-| `wait: { request: requestId }`            | Wait until the request has finished loading.                                                                                                                |
-| `wait: { state: path }`                   | Wait until the state value at `path` is defined.                                                                                                            |
-| `screenshot: name`                        | Capture a screenshot. Screenshots are returned to agents using the MCP tool; the CLI runner ignores them.                                                   |
-| `expect: { state: { path, equals } }`     | The page state at `path` deep-equals `equals`. A path that does not exist reads as `null`, so `equals: null` also passes for a misspelt path.               |
-| `expect: { visible: target }`             | The block, or the control a target narrows to, is visible.                                                                                                  |
-| `expect: { hidden: target }`              | Nothing the target names is visible: no element matches, or every match is hidden. Passes at once when nothing matches yet, so pair it with a presence.     |
-| `expect: { calls: { request, count } }`   | This person's browser called the request `count` times since the journey started, counted once the page settles. `pageId` names the request's page.         |
-| `expect: { calls: { endpoint, count } }`  | The same for an endpoint called with `CallAPI`. Counts survive full page loads, so `count: 0` after a reload checks a write was never sent.                 |
-| `expect: { text: { blockId, contains } }` | The block's rendered text (or a grid row's or cell's) contains the string.                                                                                  |
-| `expect: { url: { contains } }`           | The browser URL contains the string.                                                                                                                        |
-| `expect: { title: { equals } }`           | The document title (the browser tab's text) is exactly the string; `{ contains }` checks part of it.                                                        |
+| Step                                      | Meaning                                                                                                                                                           |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `click: target`                           | Click the block, or the control a [target](#targets) narrows to.                                                                                                  |
+| `click: { ...target, count: 2 }`          | Click 2 (or 3) times in quick succession, as a person's double click, before the runner waits for the page to settle. `count` defaults to 1.                      |
+| `fill: { blockId, value }`                | Type `value` into the input inside the block (or the grid cell a target names).                                                                                   |
+| `fill: { blockId, fromEmail }`            | Type text read from an [email](#emails) instead of a fixed value, such as a one-time sign-in code. The actor stays on the page.                                   |
+| `select: { blockId, value }`              | Open the selector block (or grid cell) and choose the option whose text is `value`. A radio, button or segmented selector's option is clicked by its label.       |
+| `press: Enter`                            | Press a key or chord. `Mod` in a chord (`Mod+k`) resolves to Cmd on macOS and Ctrl elsewhere.                                                                     |
+| `back: true`                              | Go back one page, like the browser's Back button. Fails when the journey has not navigated from an earlier page.                                                  |
+| `goto: pageId`                            | Load a page the way a typed URL does; `{ pageId, urlQuery }` adds a query string. A protected page may redirect (to sign in), so assert where it landed.          |
+| `email: { to, subject }`                  | Open the newest [email](#emails) to `to` — with a subject containing `subject`, when given — that arrived during the journey, waiting for it if needed.           |
+| `as: name`                                | Act as [another person](#several-people), each in their own browser. The journey starts as `main`.                                                                |
+| `wait: { ms }`                            | Pause for `ms` milliseconds.                                                                                                                                      |
+| `wait: { request: requestId }`            | Wait until the request has finished loading.                                                                                                                      |
+| `wait: { state: path }`                   | Wait until the state value at `path` is defined.                                                                                                                  |
+| `screenshot: name`                        | Capture a screenshot. Screenshots are returned to agents using the MCP tool; the CLI runner ignores them.                                                         |
+| `expect: { state: { path, equals } }`     | The page state at `path` deep-equals `equals`. A path that does not exist reads as `null`, so `equals: null` also passes for a misspelt path.                     |
+| `expect: { visible: target }`             | The block, or the control a target narrows to, is visible.                                                                                                        |
+| `expect: { hidden: target }`              | Nothing the target names is visible: no element matches, or every match is hidden. Passes at once when nothing matches yet, so pair it with a presence.           |
+| `expect: { calls: { request, count } }`   | This person's browser called the request `count` times since the journey started, counted once the page settles. `pageId` names the request's page.               |
+| `expect: { calls: { endpoint, count } }`  | The same for an endpoint called with `CallAPI`. Counts survive full page loads, so `count: 0` after a reload checks a write was never sent.                       |
+| `expect: { text: { blockId, contains } }` | The block's rendered text (or a grid row's or cell's) contains the string.                                                                                        |
+| `expect: { url: { contains } }`           | The browser URL contains the string.                                                                                                                              |
+| `expect: { title: { equals } }`           | The document title (the browser tab's text) is exactly the string; `{ contains }` checks part of it.                                                              |
+| `expect: { error: text }`                 | The interaction just before it raised an [app error](#app-errors) whose message contains `text`. Must directly follow a click, open, fill, select, press or back. |
 
 `expect.calls` takes `{ request: requestId, pageId, count }`: request ids are scoped to a page, and two pages often share one such as `save`, so `pageId` names the page; it defaults to the page the person is on when the step runs. It compares once, without waiting for the count to change, because "not called" can only be judged after the moment has passed.
+
+### App errors
+
+A journey also fails at the step that causes an app error, even when every expectation after it holds. An app error is:
+
+- an action that fails with an error, such as a `Request` or `CallAPI` whose request throws, or an operator that throws,
+- an uncaught exception in the page, or an error the page reports to the dev server,
+- a request or endpoint that throws on the server, or answers with a 5xx.
+
+Errors raised while the journey's first page opens (its `onInit` and `onMount` requests) fail the journey `on open`, before any step runs. Expected outcomes never fail a journey: a failed `Validate`, a `Throw` action or any other user error, and a 401 or 403 refusal. Only errors the journey's own browsers cause count: an error you raise in your own tab on the same dev server while journeys run does not fail them, and a journey's errors are reported in its result, not in the dev server's build status.
+
+```
+FAIL  member saves a ticket
+      file: /my-app/tests/journeys/tickets.yaml
+      step 2: { click: save }
+      server-error  MongoDB: MongoDB rejected the MongoDBInsertOne command.  pages/tickets.yaml:42
+      action-error  Request "save_ticket" failed in save.onClick with ServiceError.  pages/tickets.yaml:88
+```
+
+Each error line gives its kind, its message and the config file and line it came from, when known. Fix the app in most cases. When the error is the outcome the app means, such as a unique index violation that a `catch` action shows as "already exists", either make it a user error in config (a `Throw` action is one), or assert it with `expect: { error: text }` straight after the interaction:
+
+```yaml
+- click: save
+- expect: { error: duplicate key }
+- expect: { visible: already_exists }
+```
+
+The expectation claims the errors of that interaction whose message contains `text`, with the failed action that reported them, and fails when none matches. Any other error the interaction raised still fails it.
 
 ### Recorded values: `from`
 
@@ -131,9 +160,11 @@ A `blockId` reaches a block's own control — its button, input or link. Some co
 | `column`     | A grid cell in that row, by the column's `field` or `colId`. Needs `blockId`.                               |
 | `text`       | The interactive control whose visible text is exactly this (a button label, a tab, a menu item).            |
 | `containing` | The element whose visible text contains this: a row of a list a person picks by the name or email it shows. |
-| `nth`        | When several controls match, the zero-based one to use.                                                     |
+| `nth`        | When several elements match, the zero-based one to use.                                                     |
 
 `text` on its own, with no `blockId`, searches the whole page — front-most layer first: an open dropdown menu, then an open dialog, then the page. That is how a confirm dialog's button is clicked while the grid behind its mask has a button with the same label.
+
+A `click`, `open`, `fill` or `select` whose `text` or `containing` matches more than one visible element fails rather than guess which one you meant. The failure says how many it matched and where, for example `Matched 3 controls with text "Delete" in the page; add nth: 0..2, or a blockId/row to narrow it.` Add `nth`, or narrow the target with `blockId`, `row` or `column`, so it names one element. Expectations are not strict: `expect.visible` passes when any match is visible, and `expect.hidden` when none is.
 
 ```yaml
 - name: member deletes a control from the grid
@@ -351,7 +382,7 @@ steps:
 
 Every click, fill, pick and key press becomes a step, whether or not it ran an event. An event adds what to check: a `wait` for the last request it called and, for dev and explorer traces, `expect.state` for the state it wrote. A failing event ends the candidate at its step, so the candidate is a failing test until the bug is fixed. Date and object inputs, which no journey step drives, become a comment asking you to write that step by hand.
 
-Values typed in production are never recorded, so production candidates carry `from: shape` placeholders, and a button or row label from production is kept only when at least 5 different people (in at least 2 organisations, when the traces hold several) clicked it.
+Values typed in production are never recorded, so production candidates carry `from: shape` placeholders. Clicked text from production is kept only when it is text from your app's config, such as a button label, a menu item or an option label; a click on anything else, such as a grid cell showing a customer's name or a label built from values ("Open (3)"), compiles to its block, row and column without text, with a comment naming its token and a `tokenised-text` flag. The candidate's origin lists, for each such block and column, how many clicks and distinct tokens the window holds and the most-clicked tokens, which tells a data column from a label built from values without showing the text.
 
 To promote a candidate, move it into `tests/journeys/`, give it a name, fill every `from: shape` placeholder and review the `from: recorded` values. Compiling again updates only the origin comment of a candidate that already exists, so your edits survive.
 
@@ -359,7 +390,7 @@ To promote a candidate, move it into `tests/journeys/`, give it a name, fill eve
 
 - `[traceFiles...]`: The trace files to compile, wherever they are. Without them, `dev` and `explorer` recordings are read from `.lowdefy/traces/<source>/`.
 - `--source <production|dev|explorer>`: Compile only records of this source. Required when no trace files are given; with files, the source comes from the records. `--source production` with no files reads the cache [`lowdefy journeys pull posthog`](#production-journeys) writes, and fails naming the pull to run when a day of the window is missing. Journey runs (`journey` traces) are coverage, not candidates, and are refused.
-- `--since <since>`: Only records at or after this time, as a duration back from now (`30m`, `2h`, `7d`) or an ISO date. Production traces default to the last 30 days.
+- `--since <since>`: Only records at or after this time, as a duration back from now (`30m`, `2h`, `7d`) or an ISO date. Production traces default to the last 30 days, and a production window is at most 30 days.
 - `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: Production only. An explicit window of whole UTC days instead of `--since`.
 - `--build <id|current>`: Only segments whose records all ran on this build. `current` is the build the running development server for the app serves, which changes with every config edit; with no server running, the newest build in the records is used and the command says so.
 - `--page <pageId>`: Only segments that visit this page.
@@ -522,7 +553,11 @@ pnpx lowdefy@5 journeys evidence --refresh
 - No value a user typed. PostHog never captures one, so a production candidate's `fill` steps carry `from: shape` placeholders for you to fill from your test data.
 - Person and organisation ids hashed with a salt that never leaves your machine, so counts of people and organisations are the same on every machine while no raw id is stored.
 - Page URLs with query parameter names only (`/tickets?id=&tab=`), never their values.
-- The text of the clicked element, as PostHog already holds it. It stays in `.lowdefy/`, which is not committed, and the compiler keeps a text target only when enough different people clicked it.
+- No clicked text. The text of each clicked element is stored as a token, a hash under the same salt, so the same text groups and counts without being kept. Compile, coverage and evidence turn a token back into text only when it is text from your app's config (pages, menus, i18n messages, block plugins' default messages, antd's own strings), collected with one full build of the app by the installed development server and cached until the config changes. Text that is not in the config, such as a customer's name in a grid cell, stays a token.
+
+Pull, compile and coverage read at most 30 days at a time: pick the window for the question, such as the last 30 days, the days since a deploy for a regression, or the days around a month-end for a periodic process. Evidence is not capped.
+
+Upgrading from a version that stored clicked text: the first pull or production read deletes the day files pulled that way, the production candidates in `tests/journeys/_candidates/production/` and `.lowdefy/test/coverage.json`; the next pull, compile and coverage write them again. Committed journeys are left as they are, so check any you promoted from production for text that came from your data rather than your config.
 
 ### Evidence
 
@@ -550,7 +585,7 @@ A committed journey can carry how much production use backs it, by calendar mont
     - select: { blockId: assignee, value: Ann }
 ```
 
-A session backs a journey when it does the journey's interactions in the same order, other clicks in between allowed, starting on the journey's page. Only [`lowdefy journeys evidence --refresh`](/cli#journeys-evidence) writes the key, and it changes nothing else in the file: comments, key order and quoting stay as they are. `lowdefy test` reads it to print the PASS line and validates it strictly, so a typo in a hand edit fails before the browser opens. `dev.recordings` counts the [dev recordings](#dev-recordings) of the last 7 days that back the journey, by the same rule. `dev`, `explorer` and `mutation` subkeys whose source is not on your machine keep their committed values; `mutation` is filled from a hardening run's report in `.lowdefy/test/mutation.json` when there is one.
+A session backs a journey when it does the journey's interactions in the same order, other clicks in between allowed, starting on the journey's page. A journey's click text counts only when it is text from your app's config: any other text reads as no text, so a click on a grid cell by a customer's name is backed by that column's clicks exactly as one with no text, and no command tells whether production showed that value. Only [`lowdefy journeys evidence --refresh`](/cli#journeys-evidence) writes the key, and it changes nothing else in the file: comments, key order and quoting stay as they are. `lowdefy test` reads it to print the PASS line and validates it strictly, so a typo in a hand edit fails before the browser opens. `dev.recordings` counts the [dev recordings](#dev-recordings) of the last 7 days that back the journey, by the same rule. `dev`, `explorer` and `mutation` subkeys whose source is not on your machine keep their committed values; `mutation` is filled from a hardening run's report in `.lowdefy/test/mutation.json` when there is one.
 
 Each month is a UTC calendar month. `days` is how many of its final days the refresh read: the pull re-pulls today and yesterday for late events, so they count only once a later pull marks them final. `sessions` counts the backing sessions that started in that month, so a session that crosses midnight counts once; `failures` counts those that hit a failed event; `persons` and `orgs` are distinct within the month and do not add up across months. A month read with no backing session is written with `sessions: 0`, and a month never pulled is missing.
 
@@ -615,9 +650,9 @@ Tier pX holds the shortest run of journeys, from the top, whose summed rates rea
 
 Coverage also reads the newest full test run that the development server recorded (a plain `lowdefy test`, or `lowdefy_run_tests` with no paths, tags, filter or tier). The interaction measure then adds a measured share beside the static one: the production interactions that run actually drove. Failure coverage becomes measured: a failure counts as covered when a journey that passed in that run produced the same failed event, because a journey that reaches a failure and still passes asserts it. The test runner keeps which journeys passed in `.lowdefy/test/run.json`. Without a recorded run, failure coverage is reported as reached: a journey does the interaction that failed, which does not show it checks the outcome.
 
-It writes the measures, a production profile (the top flows per entry page, failure paths, frustrated blocks, role sets per page and entry pages) and each journey's interactions to `.lowdefy/test/coverage.json`, which is rewritten on every run and not committed. With a mutation report, the suite's mutation score is added as a sixth number.
+It writes the measures, a production profile (the top flows per entry page, failure paths, frustrated blocks, role sets per page, entry pages, and per block and column the clicks, distinct clicked-text tokens and most-clicked tokens) and each journey's interactions to `.lowdefy/test/coverage.json`, which is rewritten on every run and not committed. With a mutation report, the suite's mutation score is added as a sixth number.
 
-`lowdefy agent-setup` installs a `journeys-from-production` skill that runs this loop with you: it pulls, compiles and reads the coverage report, then takes uncovered failures first and flows next, one at a time. For each it shows you the flow and waits, fills typed values from your data set's fixtures, runs the candidate three times with `lowdefy test --repeat 3`, and moves it into `tests/journeys/` when all three pass. It finishes with `lowdefy journeys evidence --refresh` and commits nothing. It never deletes a journey or suggests deleting one.
+`lowdefy agent-setup` installs a `journeys-from-production` skill for your coding agent. The agent picks the window for the question and says why, pulls, compiles and measures, then reads each recorded routine with the page's config, requests, actions and plugin code to decide what the person was doing and whether it deserves a journey: failures first, then routines that write data, move money, change access or end a process, then the rest by count. It edits candidates only within what was recorded, filling typed values from your data set's fixtures and labels from your config, proves each with `lowdefy test --repeat 3`, refreshes evidence and reports what it wrote, what it skipped and why, and the findings. It reads tokens, never production text: it does not read the trace salt, your `.env` or snapshots, and never queries PostHog directly. It asks you only about findings and dead clicks, commits nothing, and never deletes a journey or suggests deleting one.
 
 ## Continuous integration
 

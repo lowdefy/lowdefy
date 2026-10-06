@@ -29,10 +29,12 @@ onlyBuiltDependencies:
   - sharp
 ignoredBuiltDependencies:
   - "@sentry/cli"
+  - mongodb-memory-server
 allowBuilds:
   better-sqlite3: true
   sharp: true
   "@sentry/cli": false
+  mongodb-memory-server: false
 `);
 });
 
@@ -59,6 +61,7 @@ test('createNestedWorkspaceYaml carries the parent settings and rebases patch pa
 allowBuilds:
   better-sqlite3: true
   "@sentry/cli": false
+  mongodb-memory-server: false
   esbuild: true
   sharp: false
 catalog:
@@ -80,6 +83,7 @@ peerDependencyRules:
     - b
 ignoredBuiltDependencies:
   - "@sentry/cli"
+  - mongodb-memory-server
 allowUnusedPatches: true
 `);
 });
@@ -100,12 +104,14 @@ test('createNestedWorkspaceYaml keeps the parent choice for a dependency with a 
   expect(yaml).toEqual(`packages:
   - .
 ignoredBuiltDependencies:
+  - mongodb-memory-server
   - sharp
 onlyBuiltDependencies:
   - better-sqlite3
   - "@sentry/cli"
 allowBuilds:
   better-sqlite3: true
+  mongodb-memory-server: false
 `);
 });
 
@@ -138,10 +144,12 @@ onlyBuiltDependencies:
   - sharp
 ignoredBuiltDependencies:
   - "@sentry/cli"
+  - mongodb-memory-server
 allowBuilds:
   better-sqlite3: true
   sharp: true
   "@sentry/cli": false
+  mongodb-memory-server: false
 `);
 });
 
@@ -155,10 +163,12 @@ onlyBuiltDependencies:
   - sharp
 ignoredBuiltDependencies:
   - "@sentry/cli"
+  - mongodb-memory-server
 allowBuilds:
   better-sqlite3: true
   sharp: true
   "@sentry/cli": false
+  mongodb-memory-server: false
 minimumReleaseAgeExclude:
   - '@lowdefy/server@7.0.1'
   - '@lowdefy/api@7.0.1'
@@ -176,10 +186,12 @@ onlyBuiltDependencies:
   - sharp
 ignoredBuiltDependencies:
   - "@sentry/cli"
+  - mongodb-memory-server
 allowBuilds:
   better-sqlite3: true
   sharp: true
   "@sentry/cli": false
+  mongodb-memory-server: false
 minimumReleaseAgeExclude:
   - "@lowdefy/api@7.0.1"
   - "@lowdefy/server@7.0.1"
@@ -216,10 +228,12 @@ onlyBuiltDependencies:
   - sharp
 ignoredBuiltDependencies:
   - "@sentry/cli"
+  - mongodb-memory-server
 allowBuilds:
   better-sqlite3: true
   sharp: true
   "@sentry/cli": false
+  mongodb-memory-server: false
 `);
 });
 

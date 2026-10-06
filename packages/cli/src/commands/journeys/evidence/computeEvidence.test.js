@@ -364,3 +364,29 @@ test('computeEvidence writes dev.recordings 0 when dev recordings exist but none
   });
   expect(result.after.dev).toEqual({ recordings: 0 });
 });
+
+test('computeEvidence reads dev text by the config text rule on both sides', () => {
+  const isConfigText = (text) => text === 'Assign';
+  const devSegment = {
+    session: 'd1',
+    page_id: 'tickets',
+    steps: [{ click: { blockId: 'grid', text: 'Sample customer' } }],
+    sequence: [
+      { page: 'tickets', identity: JSON.stringify(['click', 'grid', null, 'Sample customer']) },
+    ],
+    persons: [],
+    orgs: [],
+  };
+  const entry = {
+    name: 'opens a customer',
+    pageId: 'tickets',
+    steps: [{ click: { blockId: 'grid', text: 'Sample customer' } }],
+  };
+  const [result] = computeEvidence({
+    journeys: [{ filePath: '/app/t.yaml', file: 't.yaml', journeyIndex: 0, journey: entry }],
+    sources: { dev: { segments: [devSegment] } },
+    today,
+    isConfigText,
+  });
+  expect(result.after.dev).toEqual({ recordings: 1 });
+});

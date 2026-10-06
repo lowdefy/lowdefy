@@ -19,8 +19,8 @@ import { journeySequence } from '@lowdefy/node-utils';
 // A journey's flow as the `<page> <identity>` lines sequenceId hashes after
 // the entry page, written into evidence so the flow can still be matched once
 // the steps that made it have been edited away.
-function flowLines({ pageId, steps }) {
-  return journeySequence({ pageId, steps }).map(({ page, identity }) => `${page} ${identity}`);
+function flowLines({ pageId, steps, isConfigText }) {
+  return journeySequence({ pageId, steps, isConfigText }).map(({ page, identity }) => `${page} ${identity}`);
 }
 
 export default flowLines;

@@ -58,7 +58,9 @@ import writeFileAtomic from './writeFileAtomic.js';
 import watchOwner from './watchOwner.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
 import compileTrace from './journeyCompiler/compileTrace.js';
+import countTextTokens from './journeyEvidence/countTextTokens.js';
 import collectKnownText from './journeyText/collectKnownText.js';
+import normaliseClickText from './journeyText/normaliseClickText.js';
 import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
 import failurePathKey from './journeyEvidence/failurePathKey.js';
 import isBackedBy from './journeyEvidence/isBackedBy.js';
@@ -71,6 +73,7 @@ import profileProduction from './journeyEvidence/profileProduction.js';
 import stepIdentity from './journeyCompiler/stepIdentity.js';
 import validateJourneySteps, {
   getStepKey,
+  INTERACTION_STEP_KEYS,
   STEP_KEYS,
   TARGET_KEYS,
 } from './journeyGrammar/validateJourneySteps.js';
@@ -87,6 +90,7 @@ export {
   compareProcessStartTimes,
   compileTrace,
   copyFileOrDirectory,
+  countTextTokens,
   createClientAddressResolver,
   createSecretScrubber,
   devPassiveHeader,
@@ -118,6 +122,7 @@ export {
   listFailurePaths,
   listRecordingFiles,
   normaliseBlockId,
+  normaliseClickText,
   parseIpRange,
   parsePsStartTime,
   parseTraceLines,
@@ -137,6 +142,7 @@ export {
   watchOwner,
   writeFileIfChanged,
   getStepKey,
+  INTERACTION_STEP_KEYS,
   STEP_KEYS,
   TARGET_KEYS,
   validateJourneySteps,

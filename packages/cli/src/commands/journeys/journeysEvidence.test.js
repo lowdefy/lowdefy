@@ -21,10 +21,20 @@ import path from 'path';
 import YAML from 'yaml';
 
 import flowLines from './evidence/flowLines.js';
-import journeysEvidence from './journeysEvidence.js';
-import readProductionTrace from './readProductionTrace.js';
 import sequenceId from './evidence/sequenceId.js';
 import validateJourney from '../test/validateJourney.js';
+import readTraceSalt from './pull/readTraceSalt.js';
+
+// The config text set comes from a full build by the dev server's builder;
+// these tests hold it fixed.
+const CONFIG_TEXTS = new Set(['Assign', 'Delete']);
+jest.unstable_mockModule('./configText/readConfigText.js', () => ({
+  default: async () => ({ texts: CONFIG_TEXTS, isConfigText: (text) => CONFIG_TEXTS.has(text) }),
+}));
+
+const { default: journeysEvidence } = await import('./journeysEvidence.js');
+const { default: readProductionTrace } = await import('./readProductionTrace.js');
+const { default: tokenText } = await import('./tokenText.js');
 
 let configDirectory;
 let context;
@@ -71,14 +81,25 @@ function visit({ session, start, blocks, person, org }) {
   ];
 }
 
+// A day as the pull writes it: under the machine's salt, which the first
+// day written here creates when a test has not written its own.
 function writeDay(day, records, { final = true } = {}) {
   const directory = path.join(configDirectory, '.lowdefy', 'traces', 'production');
   fs.mkdirSync(directory, { recursive: true });
+  if (!fs.existsSync(path.join(directory, 'salt'))) {
+    fs.writeFileSync(path.join(directory, 'salt'), Buffer.alloc(32, 2));
+  }
+  const { saltId } = readTraceSalt({
+    directories: { traces: path.join(configDirectory, '.lowdefy', 'traces') },
+  });
   fs.writeFileSync(
     path.join(directory, `${day}.jsonl`),
     records.map((entry) => JSON.stringify(entry)).join('\n')
   );
-  fs.writeFileSync(path.join(directory, `${day}.manifest.json`), JSON.stringify({ day, final }));
+  fs.writeFileSync(
+    path.join(directory, `${day}.manifest.json`),
+    JSON.stringify({ day, final, salt_id: saltId, text_rule: 'token' })
+  );
 }
 
 function writeJourney(name, text) {
@@ -270,14 +291,9 @@ test('journeys evidence refreshes over a cache with a missing day, which compile
     month('2026-09', 1, 0),
     month('2026-10', 1, 2, 2, 2),
   ]);
-  expect(() =>
-    readProductionTrace({
-      directories: context.directories,
-      from: '2026-09-30',
-      to: '2026-10-02',
-      now: NOW,
-    })
-  ).toThrow('missing 1 day(s)');
+  await expect(
+    readProductionTrace({ context, from: '2026-09-30', to: '2026-10-02', now: NOW })
+  ).rejects.toThrow('missing 1 day(s)');
 });
 
 test('journeys evidence --refresh deprecates an edited flow with its months and brings it back when the edit is undone', async () => {
@@ -399,6 +415,25 @@ test('journeys evidence reports a file that does not parse and leaves it alone',
   ).toBe(true);
 });
 
+// A day hashed under another salt resolves none of its clicked-text tokens,
+// so it reads as a day not held rather than as clicks without text.
+test('journeys evidence leaves out final days pulled under another salt', async () => {
+  const manifestPath = path.join(
+    context.directories.traces,
+    'production',
+    '2026-10-01.manifest.json'
+  );
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  fs.writeFileSync(manifestPath, JSON.stringify({ ...manifest, salt_id: 'other000' }));
+  const savesPath = writeJourney('saves.yaml', SAVES);
+  context.options.refresh = true;
+  await journeysEvidence({ context });
+  expect(readJourney(savesPath).evidence.production.months).toEqual([
+    month('2026-09', 1, 0),
+    month('2026-10', 1, 2, 2, 2),
+  ]);
+});
+
 test('journeys evidence refuses a source other than production', async () => {
   context.options.source = 'dev';
   await expect(journeysEvidence({ context })).rejects.toThrow('--source should be production');
@@ -498,4 +533,99 @@ test('journeys evidence keeps the committed dev.recordings when this machine has
   await journeysEvidence({ context });
   const journey = YAML.parse(fs.readFileSync(savesPath, 'utf8'));
   expect(journey.evidence.dev).toEqual({ recordings: 5 });
+});
+
+// Production clicks as the pull stores them: a token under the machine's
+// salt, never the text.
+function writeTokenisedDays() {
+  const directory = path.join(configDirectory, '.lowdefy', 'traces', 'production');
+  fs.mkdirSync(directory, { recursive: true });
+  const salt = Buffer.alloc(32, 6);
+  fs.writeFileSync(path.join(directory, 'salt'), salt);
+  const click = ({ session, t, block, column = null, text }) => {
+    const entry = record({ session, t, block });
+    entry.target = { ...entry.target, column, text_token: tokenText({ salt, text }) };
+    delete entry.target.text;
+    return entry;
+  };
+  const start = Date.parse('2026-10-02T09:00:00Z');
+  writeDay('2026-10-02', [
+    record({ session: 's1', t: start, kind: 'pageview' }),
+    click({ session: 's1', t: start + 1000, block: 'assign_button', text: 'Assign' }),
+    record({ session: 's2', t: start + 5000, kind: 'pageview' }),
+    click({ session: 's2', t: start + 6000, block: 'grid', column: 'name', text: 'Acme Ltd' }),
+    record({ session: 's3', t: start + 9000, kind: 'pageview' }),
+    click({ session: 's3', t: start + 10000, block: 'open_button', text: 'Open (3)' }),
+  ]);
+  writeDay('2026-10-03', []);
+}
+
+function journeyFile(steps) {
+  return `name: picks
+pageId: tickets
+steps:
+  - click: ${JSON.stringify(steps)}
+`;
+}
+
+async function productionFor(steps) {
+  writeJourney('picks.yaml', journeyFile(steps));
+  const { results } = await journeysEvidence({ context });
+  return results[0].after.production;
+}
+
+function octoberSessions(production) {
+  return production.months.find((entry) => entry.month === '2026-10').sessions;
+}
+
+test('journeys evidence backs a config label only by clicks that resolved to it', async () => {
+  writeTokenisedDays();
+  expect(octoberSessions(await productionFor({ blockId: 'assign_button', text: 'Assign' }))).toBe(
+    1
+  );
+  expect(octoberSessions(await productionFor({ blockId: 'assign_button', text: 'Delete' }))).toBe(
+    0
+  );
+});
+
+test('journeys evidence backs a guessed data value exactly as a click with no text', async () => {
+  writeTokenisedDays();
+  const shown = await productionFor({ blockId: 'grid', column: 'name', text: 'Acme Ltd' });
+  const shownLog = logged.join('\n');
+  logged.length = 0;
+  const neverShown = await productionFor({ blockId: 'grid', column: 'name', text: 'Initech' });
+  const neverShownLog = logged.join('\n');
+  logged.length = 0;
+  const none = await productionFor({ blockId: 'grid', column: 'name' });
+  expect(octoberSessions(shown)).toBe(1);
+  expect(shown).toEqual(neverShown);
+  expect(shown).toEqual(none);
+  expect(shownLog).toEqual(neverShownLog);
+  expect(shownLog).not.toContain('Acme');
+});
+
+test('journeys evidence backs a label built from values by its block', async () => {
+  writeTokenisedDays();
+  expect(octoberSessions(await productionFor({ blockId: 'open_button', text: 'Open (3)' }))).toBe(
+    1
+  );
+  expect(octoberSessions(await productionFor({ blockId: 'open_button', text: 'Open (4)' }))).toBe(
+    1
+  );
+});
+
+test('journeys evidence --refresh writes the same evidence for a guessed value and no text', async () => {
+  writeTokenisedDays();
+  context.options.refresh = true;
+  const guessed = writeJourney(
+    'guessed.yaml',
+    journeyFile({ blockId: 'grid', column: 'name', text: 'Initech' })
+  );
+  await journeysEvidence({ context });
+  const written = YAML.parse(fs.readFileSync(guessed, 'utf8')).evidence;
+  fs.rmSync(guessed);
+  const plain = writeJourney('plain.yaml', journeyFile({ blockId: 'grid', column: 'name' }));
+  await journeysEvidence({ context });
+  expect(YAML.parse(fs.readFileSync(plain, 'utf8')).evidence).toEqual(written);
+  expect(octoberSessions(written.production)).toBe(1);
 });

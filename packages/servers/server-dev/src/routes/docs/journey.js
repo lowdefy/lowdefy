@@ -145,6 +145,7 @@ async function docsJourneyHandler(c) {
       basePath: lowdefyConfig.basePath ?? '',
       mutantCookie: mutantRun?.cookiePayload,
       data: body.data,
+      by: 'test',
       // Journeys posted here come from `lowdefy test` and lowdefy_run_tests.
       recording: type.isNone(body.recording)
         ? undefined

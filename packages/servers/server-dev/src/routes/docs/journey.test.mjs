@@ -72,6 +72,7 @@ test('docsJourneyHandler runs the journey against the request origin and returns
     urlQuery: { id: '1' },
     stepTimeout: undefined,
     basePath: '/app',
+    by: 'test',
   });
   expect(result.status).toBe(200);
   expect(result.data.passed).toBe(true);
