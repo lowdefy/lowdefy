@@ -328,6 +328,47 @@ test('jev uses the evaluation model, with the structured-output model standing b
   expect(policy.switched()).toBe(null);
 });
 
+test('under a charter the model policy asks which option serves the charter and how closely the last step served it', async () => {
+  const policy = await createModelPolicy({
+    charter: { goal: 'Try edge input on the invoice form.' },
+    backend: 'structured-output',
+    modelId: 'google/gemini-2.5-flash-lite',
+    apiKey: 'test-key',
+    seeded: createSeededPolicy({ seed: 0 }),
+  });
+  mockDecide.mockResolvedValue(answers({ choice: 'o1', level: 'near the charter' }));
+  const result = await policy.choose(step({ candidates: three }));
+  const [{ questions }] = mockDecide.mock.calls[0];
+  expect(questions.next.choice).toEqual(
+    'Which interaction best serves the charter in the state, and has not been tried from this screen? For edge input, prefer the generated edge fill values (empty, long, invalid and the like); for error paths, prefer cancel, delete and submitting incomplete forms.'
+  );
+  expect(questions.relevance).toEqual({
+    score: 'How closely did the last step serve the charter?',
+    levels: ['unrelated to the charter', 'near the charter', 'serves the charter'],
+  });
+  expect(policy.lowestRelevance).toEqual('unrelated to the charter');
+  expect(result).toMatchObject({ optionId: 'o1', relevance: 'near the charter' });
+});
+
+test('without a charter the model policy asks about the change, as before', async () => {
+  const policy = await createModelPolicy({
+    backend: 'structured-output',
+    modelId: 'google/gemini-2.5-flash-lite',
+    apiKey: 'test-key',
+    seeded: createSeededPolicy({ seed: 0 }),
+  });
+  mockDecide.mockResolvedValue(answers({ choice: 'o1' }));
+  await policy.choose(step({ candidates: three }));
+  const [{ questions }] = mockDecide.mock.calls[0];
+  expect(questions.next.choice).toEqual(
+    'Which interaction most directly exercises what this change added or changed on this page, and has not been tried from this screen?'
+  );
+  expect(questions.relevance.score).toEqual(
+    'How closely did the last step exercise what this change added or changed?'
+  );
+  expect(policy.lowestRelevance).toEqual('unrelated to the change');
+});
+
 test('jev refused at any call switches to the fallback for the rest of the run, and says so', async () => {
   const onSwitch = jest.fn();
   const policy = await jevPolicy(onSwitch);

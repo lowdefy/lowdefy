@@ -368,6 +368,51 @@ test('selectTargets targets every head page but 404 when the base did not build'
   ).toEqual(['added', 'added']);
 });
 
+test('selectTargets for a head-only run takes the --page pages, every block in scope and none changed', () => {
+  const headBuild = writeBuild('head', appFiles());
+  const result = selectTargets({
+    diff: null,
+    baseBuild: null,
+    headBuild,
+    manualPages: ['tickets', 'home', 'tickets'],
+    headOnly: true,
+  });
+  expect(result).toEqual({
+    pages: [
+      { pageId: 'home', reasons: ['manual'], authChanged: false, blocks: [] },
+      { pageId: 'tickets', reasons: ['manual'], authChanged: false, blocks: [] },
+    ],
+    appWide: [],
+    uncompared: [],
+    removedPages: [],
+    warnings: [],
+  });
+});
+
+test('selectTargets for a head-only run without --page takes the entry pages, else the home page', () => {
+  const headBuild = writeBuild('head', appFiles());
+  const coverage = {
+    production: {
+      entryPoints: [
+        { page: 'settings', sessions: 40 },
+        { page: 'tickets', sessions: 30 },
+      ],
+    },
+  };
+  expect(reasons(selectTargets({ headBuild, coverage, headOnly: true }))).toEqual({
+    settings: ['entry'],
+    tickets: ['entry'],
+  });
+  expect(reasons(selectTargets({ headBuild, headOnly: true }))).toEqual({ home: ['entry'] });
+});
+
+test('selectTargets for a head-only run refuses a --page that is not in the head build', () => {
+  const headBuild = writeBuild('head', appFiles());
+  expect(() => selectTargets({ headBuild, manualPages: ['nope'], headOnly: true })).toThrow(
+    '--page "nope" is not a page in the head build.'
+  );
+});
+
 test('writeScope writes scope.json in the run directory', async () => {
   const scope = await writeScope({
     runDirectory: path.join(root, 'run'),

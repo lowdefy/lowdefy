@@ -530,7 +530,7 @@ journeys
   .description(
     'Walk the pages a pull request changed as each role on a journey data set, report what broke, and write candidate journeys to tests/journeys/_candidates/explorer/<run>/.'
   )
-  .usage('(--pr <n> | --against <ref>) [options]')
+  .usage('(--pr <n> | --against <ref> | --charter <text>) [options]')
   .addOption(
     new Option('--pr <n>', 'The pull request to explore; this checkout must be at its head.')
   )
@@ -538,6 +538,12 @@ journeys
     new Option(
       '--against <ref>',
       'Explore the changes since the merge base with this branch or commit.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--charter <text>',
+      'A one-sentence goal that steers which options the model picks, such as "try edge input on the invoice form". Needs a model. Without --pr or --against, walks the head: --page pages, else the entry pages.'
     )
   )
   .addOption(

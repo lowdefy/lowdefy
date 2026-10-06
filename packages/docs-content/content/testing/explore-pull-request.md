@@ -8,6 +8,9 @@ lowdefy journeys explore --pr 2531
 
 # Or: the changes since the merge base with a branch
 lowdefy journeys explore --against origin/main
+
+# Or: no pull request, steered by a charter
+lowdefy journeys explore --charter "try edge input on the invoice form" --page invoice
 ```
 
 The explorer is not a gate. It exits with code `0` when the run completes, with or without findings. It exits with `1` only when it cannot run.
@@ -29,6 +32,26 @@ A change to an **app-wide** artifact (app events, menus, global, app, config, i1
 Removed pages are reported, not walked. Changes the diff cannot see (plugin code, notification or agent artifacts) are listed as "changed but not compared". Pass `--page <pageId>` to walk a page anyway. `--scope-only` prints the scope and walks nothing.
 
 The base is built with the plugins the head installs. A plugin whose version changed is listed: its type changes are not in the diff. If the base cannot be built (for example, it lists a plugin the head no longer installs), every page is a target and the run says why.
+
+## Charters
+
+A **charter** is a one-sentence goal that steers a run where there is no pull request to follow, or that adds a direction to one that has:
+
+```bash
+lowdefy journeys explore --charter "try edge input on the invoice form" --page invoice
+lowdefy journeys explore --pr 2531 --charter "try error paths: cancel, delete, incomplete submits"
+```
+
+The charter goes to the model beside the pull request's text, never in place of it. At each step, the model is asked which option best serves the charter, and afterwards how closely that step served it. A charter can only steer through the options the walk already generates, so two stances work:
+
+- **edge input**: prefer the generated edge values (empty, long, invalid and the like) when filling in a form;
+- **error paths**: prefer cancel, delete and submitting incomplete forms.
+
+The charter never chooses pages or users. Pages come from `--page` and users from `--role`. It never decides what counts as a finding either: the same fixed checks decide, and a charter run reports the same kinds of finding as any other run.
+
+Without `--pr` or `--against`, a charter run builds only your working tree, with no base and no diff. It walks the `--page` pages, or else the three pages most production sessions start on (from `coverage.json`), or else the home page. Every block on those pages is in scope, so every coverage candidate is kept.
+
+A charter needs a model. `--charter` without `AI_GATEWAY_API_KEY`, or with `--policy seeded`, is refused before anything is built, because the seeded policy never reads the charter. The charter is recorded in `report.json` and printed at the top of the summary.
 
 ## Data and roles
 
@@ -61,7 +84,7 @@ At each step, a **policy** picks the next interaction from a generated list of w
 
 Set `AI_GATEWAY_API_KEY` in your shell or the app's `.env`. With `jev`, the structured-output model stands by. If the Gateway refuses Jev, or Jev rejects a request as over its limits, the run switches to that model for the rest of the run, and says so in its progress and its report. Jev has no zero-data-retention endpoint. If your app needs one, use `--policy model`.
 
-The model sees the pull request's title and description, the page, the role, the changed blocks and the labels on screen. A label that is not from your config, your data set's fixtures or a value the walk typed is sent as `<data>`, so no snapshot data leaves your machine.
+The model sees the pull request's title and description, the charter if there is one, the page, the role, the changed blocks and the labels on screen. A label that is not from your config, your data set's fixtures or a value the walk typed is sent as `<data>`, so no snapshot data leaves your machine.
 
 `--max-cost` (default `$1.00`) stops the run once the model cost the Gateway reports passes it. A call that reports no cost is counted at an estimate (Jev at its published price, other models at a deliberately high rate), and the run warns that the cap is working from an estimate. A failed call is counted at the same estimate, because the model may have answered before the call failed, unless the Gateway refused the model or the request got no response.
 

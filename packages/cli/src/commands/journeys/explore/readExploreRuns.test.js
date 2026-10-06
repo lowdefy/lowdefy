@@ -108,7 +108,9 @@ test('the report counts what ran and its timings, and readExploreRuns maps the r
   });
   expect(report.timings.walk).toEqual({ meanMs: 1490, dataMs: 475, openMs: 925, closeMs: 90 });
   expect(report.accessChanged).toEqual([{ pageId: 'tickets', user: 'member' }]);
+  expect(report.charter).toBeNull();
   const lines = formatExploreReport({ report });
+  expect(lines.some((line) => line.startsWith('Charter'))).toBe(false);
   expect(lines).toEqual(
     expect.arrayContaining([
       'Not run   invoices × member: budget',
@@ -132,4 +134,25 @@ test('the report counts what ran and its timings, and readExploreRuns maps the r
       finishedAt: '2026-10-04T12:05:00.000Z',
     },
   ]);
+});
+
+test('the report records the charter that steered the run, and the summary prints it', () => {
+  const report = buildExploreReport({
+    run: '20261004T120000Z-ab12cd',
+    revisions: { pr: null, base: null, head: 'bbb', dirty: false },
+    charter: { goal: 'Try edge input on the invoice form.' },
+    scope: { pages: [{ pageId: 'ticket' }], appWide: [], uncompared: [], removedPages: [] },
+    walked: walkedRun(),
+    findings: [],
+    proof: { ms: 0, live: false },
+    candidates: { finding: [], coverage: [], droppedExpectations: 0 },
+    trace: null,
+    startedAt: '2026-10-04T12:00:00.000Z',
+    finishedAt: '2026-10-04T12:05:00.000Z',
+    budgetMs: 1200000,
+  });
+  expect(report.charter).toEqual({ goal: 'Try edge input on the invoice form.' });
+  expect(report.base).toBeNull();
+  const lines = formatExploreReport({ report });
+  expect(lines[1]).toEqual('Charter   Try edge input on the invoice form.');
 });

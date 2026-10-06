@@ -16,6 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import { type } from '@lowdefy/helpers';
 
 import describeBuildErrors from '../configBuilder/describeBuildErrors.js';
 import resolveConfigBuilder from '../configBuilder/resolveConfigBuilder.js';
@@ -42,7 +43,9 @@ async function buildOne({ context, script, configDirectory, outDirectory, cachea
 // <sha>-<builderVersion>/: the base always, the head when it is clean; a
 // dirty head builds into the run directory. A head that does not build stops
 // the run. A base that does not build returns baseError naming the cause, and
-// the scope then targets every head page.
+// the scope then targets every head page. A head-only run (no base revision,
+// a charter with no PR) builds the head alone and returns baseBuild null with
+// no baseError.
 async function buildConfigTrees({
   context,
   revisions,
@@ -52,19 +55,22 @@ async function buildConfigTrees({
 }) {
   const { script, version } = resolveConfigBuilder({ context });
   const buildsDirectory = path.join(context.directories.config, '.lowdefy', 'explore', 'builds');
-  const baseOut = path.join(buildsDirectory, `${revisions.base}-${version}`);
+  const headOnly = type.isNone(revisions.base);
+  const baseOut = headOnly ? null : path.join(buildsDirectory, `${revisions.base}-${version}`);
   const headOut = revisions.dirty
     ? path.join(runDirectory, 'head-build')
     : path.join(buildsDirectory, `${revisions.head}-${version}`);
 
   const [base, head] = await Promise.all([
-    buildOne({
-      context,
-      script,
-      configDirectory: baseConfigDirectory,
-      outDirectory: baseOut,
-      cacheable: true,
-    }),
+    headOnly
+      ? null
+      : buildOne({
+          context,
+          script,
+          configDirectory: baseConfigDirectory,
+          outDirectory: baseOut,
+          cacheable: true,
+        }),
     buildOne({
       context,
       script,
@@ -84,6 +90,14 @@ async function buildConfigTrees({
     throw error;
   }
 
+  if (headOnly) {
+    return {
+      baseBuild: null,
+      headBuild: path.join(headOut, 'build'),
+      buildMs: { base: null, head: head.ms },
+      cached: { base: false, head: head.cached },
+    };
+  }
   const result = {
     baseBuild: path.join(baseOut, 'build'),
     headBuild: path.join(headOut, 'build'),

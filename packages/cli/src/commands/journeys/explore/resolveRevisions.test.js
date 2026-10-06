@@ -158,13 +158,24 @@ test('resolveRevisions --pr uses the merge base of the PR refs and the PR text a
   });
 });
 
-test('resolveRevisions needs exactly one of --pr and --against', async () => {
-  await expect(resolveRevisions({ cwd: repo })).rejects.toThrow(
-    'Pass one of --pr <number> or --against <ref>.'
-  );
+test('resolveRevisions refuses both --pr and --against', async () => {
   await expect(resolveRevisions({ pr: 1, against: 'main', cwd: repo })).rejects.toThrow(
-    'Pass one of --pr <number> or --against <ref>.'
+    'Pass one of --pr <number> or --against <ref>, not both.'
   );
+});
+
+test('resolveRevisions with neither --pr nor --against resolves the head only, with no base and no context', async () => {
+  fs.writeFileSync(path.join(repo, 'app', 'pages', 'tickets.yaml'), 'id: tickets\ntype: Box\n');
+  const revisions = await resolveRevisions({ cwd: path.join(repo, 'app') });
+  expect(revisions).toEqual({
+    root: expect.any(String),
+    head: headSha,
+    dirty: true,
+    base: null,
+    pr: null,
+    context: null,
+  });
+  expect(mockReadPullRequest).not.toHaveBeenCalled();
 });
 
 test('resolveRevisions --pr refuses anything but a pull request number', async () => {

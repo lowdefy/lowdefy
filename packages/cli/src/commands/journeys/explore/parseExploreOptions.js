@@ -38,15 +38,32 @@ function asList(value) {
   return type.isArray(value) ? value : [value];
 }
 
+function parseCharter(value) {
+  if (type.isNone(value)) return null;
+  if (!type.isString(value) || value.trim() === '') {
+    throw new Error(
+      `--charter should be a sentence saying what to try. Received ${JSON.stringify(value)}.`
+    );
+  }
+  return { goal: value.trim() };
+}
+
 // The explore command's flags, checked and defaulted. The policy flags
-// (--policy, --model, --max-cost) are resolvePolicy's.
+// (--policy, --model, --max-cost) are resolvePolicy's. A run explores a pull
+// request (--pr), the changes since a ref (--against), or, with --charter
+// and neither, the head alone.
 function parseExploreOptions(options) {
-  if (type.isNone(options.pr) === type.isNone(options.against)) {
-    throw new Error('Pass one of --pr <number> or --against <ref>.');
+  if (!type.isNone(options.pr) && !type.isNone(options.against)) {
+    throw new Error('Pass one of --pr <number> or --against <ref>, not both.');
+  }
+  const charter = parseCharter(options.charter);
+  if (type.isNone(options.pr) && type.isNone(options.against) && charter === null) {
+    throw new Error('Pass one of --pr <number>, --against <ref> or --charter <text>.');
   }
   return {
     pr: options.pr ?? null,
     against: options.against ?? null,
+    charter,
     data: options.data ?? null,
     liveData: options.liveData === true,
     pages: asList(options.page),

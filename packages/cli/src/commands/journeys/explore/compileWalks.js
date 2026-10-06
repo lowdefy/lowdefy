@@ -44,7 +44,10 @@ function changedBlocks({ scope, pageId }) {
   );
 }
 
+// A head-only run (a charter with no PR, scope.base null) has no diff, so
+// every block on a target page is in scope.
 function touchesChange({ journey, scope }) {
+  if (type.isNone(scope.base)) return true;
   const changed = changedBlocks({ scope, pageId: journey.pageId });
   return journey.steps.some((step) => changed.has(stepBlockId(step)));
 }
@@ -139,12 +142,12 @@ function writeFile({ outDirectory, fileName, contents }) {
 // block), and a finding at open, which the compiler makes no steps from, is
 // written directly as the one step expect: { visible: <pageId> }. The other
 // walks compile into the run directory as coverage candidates, kept only when
-// they interact with a block the page's diff lists as added or changed. On a
-// snapshot data set, expectations holding snapshot values are dropped. Each
-// origin gains explorer: { run, pr, walks, finding? }, finding being
-// { key, kind, message, source }. Returns { finding: [{ key, path }],
-// notCompiled: [{ key, reason: 'no-candidate' }], coverage: [paths],
-// droppedExpectations }.
+// they interact with a block the page's diff lists as added or changed, or
+// always on a head-only run. On a snapshot data set, expectations holding
+// snapshot values are dropped. Each origin gains explorer: { run, pr, walks,
+// finding? }, finding being { key, kind, message, source }. Returns
+// { finding: [{ key, path }], notCompiled: [{ key, reason: 'no-candidate' }],
+// coverage: [paths], droppedExpectations }.
 function compileWalks({
   configDirectory,
   run,

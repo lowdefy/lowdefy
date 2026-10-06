@@ -89,6 +89,7 @@ async function finishRun({
   const report = buildExploreReport({
     run,
     revisions,
+    charter: options.charter,
     scope,
     walked,
     findings,

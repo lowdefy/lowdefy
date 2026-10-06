@@ -48,6 +48,7 @@ async function runWalk({
   policy,
   progress,
   decisionContext,
+  charter = null,
   knownTextFor,
   fixtures,
   shouldStop,
@@ -124,6 +125,7 @@ async function runWalk({
         truncated,
       } = buildDecisionState({
         context: decisionContext,
+        charter,
         pageId: target.pageId,
         role: target.user ?? 'default',
         url: observation.url,
