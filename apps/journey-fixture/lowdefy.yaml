@@ -31,3 +31,4 @@ pages:
   - _ref: pages/explore.yaml
   - _ref: pages/explore_guarded.yaml
   - _ref: pages/explore_pr.yaml
+  - _ref: pages/targets.yaml

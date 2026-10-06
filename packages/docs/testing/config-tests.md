@@ -129,9 +129,11 @@ A `blockId` reaches a block's own control — its button, input or link. Some co
 | `column`     | A grid cell in that row, by the column's `field` or `colId`. Needs `blockId`.                               |
 | `text`       | The interactive control whose visible text is exactly this (a button label, a tab, a menu item).            |
 | `containing` | The element whose visible text contains this: a row of a list a person picks by the name or email it shows. |
-| `nth`        | When several controls match, the zero-based one to use.                                                     |
+| `nth`        | When several elements match, the zero-based one to use.                                                     |
 
 `text` on its own, with no `blockId`, searches the whole page — front-most layer first: an open dropdown menu, then an open dialog, then the page. That is how a confirm dialog's button is clicked while the grid behind its mask has a button with the same label.
+
+A `click`, `open`, `fill` or `select` whose `text` or `containing` matches more than one visible element fails rather than guess which one you meant. The failure says how many it matched and where, for example `Matched 3 controls with text "Delete" in the page; add nth: 0..2, or a blockId/row to narrow it.` Add `nth`, or narrow the target with `blockId`, `row` or `column`, so it names one element. Expectations are not strict: `expect.visible` passes when any match is visible, and `expect.hidden` when none is.
 
 ```yaml
 - name: member deletes a control from the grid
