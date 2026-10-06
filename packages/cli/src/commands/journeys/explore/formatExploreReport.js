@@ -65,7 +65,8 @@ function plural({ count, word }) {
 // not run and why, access the PR changed, the findings (proven ones, each
 // with the journey that fails with it, then the not-proven ones by reason,
 // each with the charters that hit it on a --charters run), how long the
-// proofs took, the candidates kept and the trace file's size.
+// proofs took, the candidates kept, the old candidate folders pruned and the
+// trace file's size.
 function formatExploreReport({ report }) {
   const { ran, timings, model } = report;
   const lines = [];
@@ -156,6 +157,19 @@ function formatExploreReport({ report }) {
   lines.push(
     `Candidates  ${report.candidates.finding.length} finding · ${report.candidates.coverage.length} coverage → tests/journeys/_candidates/explorer/${report.run}/`
   );
+  const { pruned, keptEdited } = report.pruned;
+  if (pruned.length > 0 || keptEdited.length > 0) {
+    const kept =
+      keptEdited.length === 0
+        ? ''
+        : `; kept ${plural({ count: keptEdited.length, word: 'folder' })} with edited files`;
+    lines.push(
+      `Pruned    ${plural({
+        count: pruned.length,
+        word: 'candidate folder',
+      })} older than 14 days${kept}`
+    );
+  }
   if (report.trace !== null) {
     lines.push(`Trace     ${report.trace.path} (${Math.ceil(report.trace.bytes / 1024)} KB)`);
   }

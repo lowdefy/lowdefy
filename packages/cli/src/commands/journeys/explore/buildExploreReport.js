@@ -56,7 +56,9 @@ function describeCharters({ charters, targets, logs }) {
 // and what that cost, the targets it did not walk and why, its findings
 // (proven ones first, then the not-proven ones grouped by reason, each naming
 // the charters that hit it), how long the proofs took, the candidates it
-// kept, and its trace file. findings comes from applyProof, in report order.
+// kept, the old candidate folders its start pruned (and those kept because a
+// file in them was edited), and its trace file. findings comes from
+// applyProof, in report order.
 // readExploreRuns reads run, pr, base, head and finishedAt from it.
 function buildExploreReport({
   run,
@@ -68,6 +70,7 @@ function buildExploreReport({
   findings,
   proof,
   candidates,
+  pruned = { pruned: [], keptEdited: [] },
   trace,
   startedAt,
   finishedAt,
@@ -124,6 +127,7 @@ function buildExploreReport({
     },
     proof,
     candidates,
+    pruned,
     trace,
   };
 }

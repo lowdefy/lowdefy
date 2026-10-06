@@ -38,6 +38,7 @@ import formatWalkPlan from './formatWalkPlan.js';
 import listLiveDataConnections from './listLiveDataConnections.js';
 import materialiseTree from './materialiseTree.js';
 import parseExploreOptions from './parseExploreOptions.js';
+import pruneCandidateDirectory from './pruneCandidateDirectory.js';
 import pruneExploreDirectory from './pruneExploreDirectory.js';
 import readChartersFile from './readChartersFile.js';
 import readBuildArtifacts from './readBuildArtifacts.js';
@@ -289,7 +290,7 @@ async function walkRun({
   };
 }
 
-async function exploreOnServer({ context, options, policyConfig, revisions, server }) {
+async function exploreOnServer({ context, options, policyConfig, revisions, server, pruned }) {
   const startedAt = new Date().toISOString();
   const exploreDirectory = path.join(context.directories.config, '.lowdefy', 'explore');
   const run = createTraceId();
@@ -335,6 +336,7 @@ async function exploreOnServer({ context, options, policyConfig, revisions, serv
     buildDirectory: scoped.builds.headBuild,
     url: server.url,
     startedAt,
+    pruned,
   });
   return { run, runDirectory, scope: scoped.scope, walked, report };
 }
@@ -359,6 +361,7 @@ async function journeysExplore({ context }) {
     await pruneExploreDirectory({
       exploreDirectory: path.join(context.directories.config, '.lowdefy', 'explore'),
     });
+    const pruned = await pruneCandidateDirectory({ configDirectory: context.directories.config });
     const policyConfig = resolvePolicy({ options: context.options });
     const optInError = checkWriteOptIn({
       cliConfig: context.cliConfig,
@@ -372,7 +375,14 @@ async function journeysExplore({ context }) {
       cwd: context.directories.config,
     });
     server = await resolveExploreServer({ context, url: options.url });
-    const explored = await exploreOnServer({ context, options, policyConfig, revisions, server });
+    const explored = await exploreOnServer({
+      context,
+      options,
+      policyConfig,
+      revisions,
+      server,
+      pruned,
+    });
     return explored;
   } catch (error) {
     context.logger.error(error.message);

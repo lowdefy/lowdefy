@@ -21,10 +21,10 @@ import { compileTrace, readRecordings } from '@lowdefy/node-utils';
 import renderCandidate from '@lowdefy/node-utils/journeyCompiler/renderCandidate.js';
 import { type } from '@lowdefy/helpers';
 
+import explorerCandidatesDirectory from './explorerCandidatesDirectory.js';
 import filterSnapshotExpectations from './filterSnapshotExpectations.js';
 import loadBlockMetas from '../loadBlockMetas.js';
 
-const CANDIDATES_DIRECTORY = path.join('tests', 'journeys', '_candidates', 'explorer');
 const INTERACTIONS = ['click', 'fill', 'select', 'open'];
 const EFFECT_STEP = { expect: { effect: true } };
 
@@ -167,7 +167,7 @@ function compileWalks({
       .map((record) => [record.session, record.run.journey])
   );
   const blockMetas = loadBlockMetas({ buildDirectory });
-  const runDirectory = path.join(configDirectory, CANDIDATES_DIRECTORY, run);
+  const runDirectory = path.join(explorerCandidatesDirectory({ configDirectory }), run);
   const findingsDirectory = path.join(runDirectory, 'findings');
   let droppedExpectations = 0;
 

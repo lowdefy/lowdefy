@@ -159,7 +159,7 @@ If a walk's recording splits in two (a page load nobody's click caused, or five 
 
 ## Candidates
 
-The walks are recorded by the dev server's recorder and compiled by the same compiler as `lowdefy journeys compile`. Apart from the two proof expectations above, the explorer never writes a step itself. Each run writes its candidates to a directory of its own, `tests/journeys/_candidates/explorer/<run>/`, and never touches another run's.
+The walks are recorded by the dev server's recorder and compiled by the same compiler as `lowdefy journeys compile`. Apart from the two proof expectations above, the explorer never writes a step itself. Each run writes its candidates to a directory of its own, `tests/journeys/_candidates/explorer/<run>/`, with a `.generated.json` recording a hash of each file as written, and never touches another run's candidates. At the start of a run, a candidate directory older than 14 days is removed, unless a file in it was edited or added since its run wrote it: a candidate you changed is never deleted. The summary says how many were removed and how many were kept for edits.
 
 - `findings/`: one journey per proven finding, the one that proved it. Its origin block names the finding's key, kind, message and source. It fails under `lowdefy test` until the bug is fixed. Then it is the regression test: once `lowdefy test --repeat 3 <path>` passes, move it into `tests/journeys/`.
 - The run directory itself: coverage candidates, kept only when they interact with a block the pull request added or changed. On a data set with a snapshot, recorded `expect.state` lines that hold snapshot values are dropped.

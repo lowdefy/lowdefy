@@ -23,8 +23,10 @@ import applyProof from './applyProof.js';
 import buildExploreReport from './buildExploreReport.js';
 import collectFindings from './collectFindings.js';
 import compileWalks from './compileWalks.js';
+import explorerCandidatesDirectory from './explorerCandidatesDirectory.js';
 import formatExploreReport from './formatExploreReport.js';
 import proveFindings from './proveFindings.js';
+import writeCandidateManifest from './writeCandidateManifest.js';
 import writeExploreReport from './writeExploreReport.js';
 
 function readTrace({ configDirectory, run }) {
@@ -53,9 +55,11 @@ function deleteUnproven({ candidates, proof }) {
 // After the walks: de-duplicates the findings, compiles the recorded walks
 // into candidates, proves each finding by running its candidate (outside the
 // budget: proofs make no model calls), deletes the candidates that proved
-// nothing, writes report.json and findings.json, and prints the summary (or
-// report.json with --json). Proofs run on the server the walks used. Returns
-// the report.
+// nothing, records a hash of each one kept (so a later run's pruning can tell
+// an edited one), writes report.json and findings.json, and prints the
+// summary (or report.json with --json), with the candidate folders the run's
+// start pruned (pruned). Proofs run on the server the walks used. Returns the
+// report.
 async function finishRun({
   context,
   options,
@@ -67,6 +71,7 @@ async function finishRun({
   buildDirectory,
   url,
   startedAt,
+  pruned,
 }) {
   const configDirectory = context.directories.config;
   const collected = collectFindings({ logs: walked.logs, charters: options.charters });
@@ -85,6 +90,13 @@ async function finishRun({
   const live = options.liveData === true || options.allowExternal.length > 0;
   const proof = await proveFindings({ context, url, findings: collected, candidates, live });
   deleteUnproven({ candidates, proof });
+  const kept = [...proof.proven.map((entry) => entry.path), ...candidates.coverage];
+  if (kept.length > 0) {
+    writeCandidateManifest({
+      directory: path.join(explorerCandidatesDirectory({ configDirectory }), run),
+      files: kept,
+    });
+  }
   const findings = applyProof({ findings: collected, proof, configDirectory });
   const report = buildExploreReport({
     run,
@@ -100,6 +112,7 @@ async function finishRun({
       coverage: candidates.coverage.map((file) => path.relative(configDirectory, file)),
       droppedExpectations: candidates.droppedExpectations,
     },
+    pruned,
     trace: readTrace({ configDirectory, run }),
     startedAt,
     finishedAt: new Date().toISOString(),

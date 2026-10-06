@@ -229,6 +229,19 @@ test('finishRun proves findings after compiling, deletes unproven candidates and
   );
 });
 
+test('finishRun records a hash of each candidate it keeps, so a later run can tell an edited one', async () => {
+  await finish({ logs: [walkLog({ walk: 'walk-2', findings: [errorFinding] })] });
+  const manifest = JSON.parse(
+    fs.readFileSync(
+      path.join(path.dirname(path.dirname(candidatePath('error'))), '.generated.json')
+    )
+  );
+  expect(Object.keys(manifest.files)).toEqual([
+    path.relative(path.dirname(path.dirname(candidatePath('error'))), candidatePath('error')),
+  ]);
+  expect(manifest.files[Object.keys(manifest.files)[0]]).toMatch(/^[0-9a-f]{64}$/);
+});
+
 test('a run whose walks ran out of budget still proves every finding', async () => {
   const logs = [walkLog({ walk: 'walk-1', findings: [errorFinding, flakyFinding] })];
   const report = await finish({ logs, stopped: { reason: 'budget' } });

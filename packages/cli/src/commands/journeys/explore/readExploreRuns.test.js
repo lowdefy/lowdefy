@@ -113,8 +113,22 @@ test('the report counts what ran and its timings, and readExploreRuns maps the r
   expect(report.timings.walk).toEqual({ meanMs: 1490, dataMs: 475, openMs: 925, closeMs: 90 });
   expect(report.accessChanged).toEqual([{ pageId: 'tickets', user: 'member' }]);
   expect(report.charter).toBeNull();
+  expect(report.pruned).toEqual({ pruned: [], keptEdited: [] });
   const lines = formatExploreReport({ report });
   expect(lines.some((line) => line.startsWith('Charter'))).toBe(false);
+  expect(lines.some((line) => line.startsWith('Pruned'))).toBe(false);
+  const pruning = formatExploreReport({
+    report: {
+      ...report,
+      pruned: {
+        pruned: ['tests/journeys/_candidates/explorer/a', 'tests/journeys/_candidates/explorer/b'],
+        keptEdited: ['tests/journeys/_candidates/explorer/c'],
+      },
+    },
+  });
+  expect(pruning).toContain(
+    'Pruned    2 candidate folders older than 14 days; kept 1 folder with edited files'
+  );
   expect(lines).toEqual(
     expect.arrayContaining([
       'Not run   invoices × member: budget',
