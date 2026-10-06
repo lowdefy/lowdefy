@@ -192,15 +192,9 @@ const evidenceSchema = {
       },
     },
     dev: {
-      type: 'object',
-      additionalProperties: false,
-      required: ['recordings'],
-      properties: { recordings: count({ key: 'evidence.dev.recordings' }) },
-      errorMessage: {
-        type: 'Journey "evidence.dev" should be an object.',
-        additionalProperties: 'Journey "evidence.dev" has an unknown key. Keys are: recordings.',
-        required: 'Journey "evidence.dev" should have recordings.',
-      },
+      not: {},
+      errorMessage:
+        'Journey "evidence" has a "dev" key, which nothing reads. Delete it: dev sessions are read with lowdefy journeys session.',
     },
     explorer: {
       type: 'object',
@@ -244,7 +238,7 @@ const evidenceSchema = {
   errorMessage: {
     type: 'Journey "evidence" should be an object.',
     additionalProperties:
-      'Journey "evidence" has an unknown key. Keys are: production, dev, explorer, mutation, refreshed.',
+      'Journey "evidence" has an unknown key. Keys are: production, explorer, mutation, refreshed.',
   },
 };
 

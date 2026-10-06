@@ -223,7 +223,6 @@ const fullEvidence = {
     failures: 14,
     window: '2026-09-03/2026-10-02',
   },
-  dev: { recordings: 2 },
   explorer: { prs: [2531] },
   mutation: { killed: 11, total: 12, unique: 2 },
   refreshed: '2026-10-03',
@@ -248,11 +247,6 @@ test.each([
     'Journey "evidence.production" has an unknown key',
   ],
   [
-    'evidence.dev',
-    { ...fullEvidence, dev: { recordings: 2, runs: 1 } },
-    'Journey "evidence.dev" has an unknown key',
-  ],
-  [
     'evidence.explorer',
     { ...fullEvidence, explorer: { prs: [1], walks: 2 } },
     'Journey "evidence.explorer" has an unknown key',
@@ -266,6 +260,15 @@ test.each([
   const result = validateJourney({ journey: { ...minimalJourney, evidence } });
   expect(result.valid).toBe(false);
   expect(result.message).toContain(message);
+});
+
+test('journeySchema refuses a dev evidence key and says to delete it', () => {
+  const evidence = { ...fullEvidence, dev: { recordings: 2 } };
+  const result = validateJourney({ journey: { ...minimalJourney, evidence } });
+  expect(result.valid).toBe(false);
+  expect(result.message).toContain(
+    'Journey "evidence" has a "dev" key, which nothing reads. Delete it: dev sessions are read with lowdefy journeys session.'
+  );
 });
 
 test('journeySchema refuses evidence.production without a window', () => {

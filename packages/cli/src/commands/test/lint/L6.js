@@ -18,7 +18,7 @@ import describeStep from './describeStep.js';
 import isAssertionStep from './isAssertionStep.js';
 
 // L6: the journey ends on an assertion, so its last action is checked. A
-// compiled candidate's final wait: { request } counts.
+// final wait: { request } counts.
 function L6({ journey }) {
   const index = journey.steps.length - 1;
   const step = journey.steps[index];

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { isBackedBy, journeySequence } from '@lowdefy/node-utils';
+import { isBackedBy } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import measuredJourney from '../../test/measuredJourney.js';
@@ -23,9 +23,7 @@ import mergeMonths from './mergeMonths.js';
 import parseFlowLines from './parseFlowLines.js';
 import reconcileFlows from './reconcileFlows.js';
 
-// The subkeys a journey file commits. Dev recordings are a rolling count that
-// differs by machine, so `dev` is counted for the summary only and an existing
-// `dev` is removed on refresh.
+// The subkeys a journey file commits.
 const SUBKEYS = ['production', 'explorer', 'mutation'];
 
 function distinctCount(values) {
@@ -85,20 +83,6 @@ function countFlow({ entry, segmentsByMonth, dayCounts, recount = false }) {
   });
 }
 
-// Dev segments hold the developer's own text: they are read by the same rule
-// as the journeys they back, so non-config text on both sides reads as none.
-function readDevSequences({ segments, routeTable, isConfigText }) {
-  return segments.map((segment) => ({
-    ...segment,
-    sequence: journeySequence({
-      pageId: segment.page_id,
-      steps: segment.steps,
-      routeTable,
-      isConfigText,
-    }),
-  }));
-}
-
 function productionEvidence({
   journey,
   segmentsByMonth,
@@ -136,33 +120,26 @@ function isEqual(a, b) {
 // from a source this machine has; one whose source is absent keeps its
 // committed value, so a laptop without a mutation report does not erase a
 // colleague's scores, and no subkey is invented. `refreshed` moves only when
-// some subkey changed or a committed `dev` is removed, so a no-op refresh
-// changes no file. `devRecordings` is the local dev count, for the summary,
-// never written.
+// some subkey changed, so a no-op refresh changes no file.
 //
 // - journeys: [{ filePath, journeyIndex, journey }]
-// - sources: { production?: { dayCounts, months, segments }, dev?: { segments },
+// - sources: { production?: { dayCounts, months, segments },
 //   mutation?: readMutationReport's result }
 //   `production.dayCounts` is { 'YYYY-MM': final days cached }, `months` the
 //   months read (selectMonthsToRead) and `segments` their compiled segments.
-//   `devRecordings` counts the dev segments that back the journey. A
-//   mutation report sets `mutation` for the journeys it names only.
+//   A mutation report sets `mutation` for the journeys it names only.
 // - routeTable: the build's routes the segments' sequences were read with,
-//   which journeys and dev segments are read with too.
-// - isConfigText: the app's config text rule; journey click text, and dev
-//   segment text, count only when it is config text, and the sequence id and
-//   flow lines read journeys the same way.
+//   which journeys are read with too.
+// - isConfigText: the app's config text rule; journey click text counts only
+//   when it is config text, and the sequence id and flow lines read journeys
+//   the same way.
 function computeEvidence({ journeys, sources, routeTable, today, isConfigText }) {
   const segmentsByMonth = type.isNone(sources.production)
     ? undefined
     : bucketByMonth(sources.production);
-  const devSegments = type.isNone(sources.dev)
-    ? null
-    : readDevSequences({ segments: sources.dev.segments, routeTable, isConfigText });
   return journeys.map(({ filePath, file, journeyIndex, journey }) => {
     const before = journey.evidence;
     const computed = {};
-    let devRecordings;
     if (!type.isNone(sources.production)) {
       computed.production = productionEvidence({
         journey,
@@ -172,18 +149,6 @@ function computeEvidence({ journeys, sources, routeTable, today, isConfigText })
         routeTable,
         isConfigText,
       });
-    }
-    if (!type.isNone(devSegments)) {
-      devRecordings = backingSegments({
-        pageId: journey.pageId,
-        sequence: journeySequence({
-          pageId: journey.pageId,
-          steps: journey.steps,
-          routeTable,
-          isConfigText,
-        }),
-        segments: devSegments,
-      }).length;
     }
     const mutation = sources.mutation?.byJourney.get(
       `${file}#${measuredJourney({ journey }).name}`
@@ -196,8 +161,7 @@ function computeEvidence({ journeys, sources, routeTable, today, isConfigText })
       const value = key in computed ? computed[key] : before?.[key];
       if (!type.isUndefined(value)) after[key] = value;
     });
-    const changed =
-      SUBKEYS.some((key) => !isEqual(before?.[key], after[key])) || !type.isUndefined(before?.dev);
+    const changed = SUBKEYS.some((key) => !isEqual(before?.[key], after[key]));
     if (changed) {
       after.refreshed = today;
     } else if (!type.isUndefined(before?.refreshed)) {
@@ -212,7 +176,6 @@ function computeEvidence({ journeys, sources, routeTable, today, isConfigText })
       before,
       after,
       changed,
-      devRecordings,
     };
   });
 }

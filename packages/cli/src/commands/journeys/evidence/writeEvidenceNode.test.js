@@ -93,7 +93,7 @@ const sequence = `# Two journeys.
       share: 0.5
       failures: 0
       window: 2026-09-01/2026-09-30
-    dev: { recordings: 2 }
+    mutation: { killed: 2, total: 3 }
     refreshed: 2026-10-01
 
   # the steps
@@ -124,7 +124,7 @@ test('writeEvidenceNode writes the right journey of a sequence file and keeps th
   const end = sequence.indexOf('\n  # the steps');
   expect(first.slice(0, start)).toBe(sequence.slice(0, start));
   expect(first.endsWith(sequence.slice(end))).toBe(true);
-  expect(YAML.parse(first)[0].evidence.dev).toEqual({ recordings: 2 });
+  expect(YAML.parse(first)[0].evidence.mutation).toEqual({ killed: 2, total: 3 });
 });
 
 test('writeEvidenceNode throws for a file that does not parse', () => {

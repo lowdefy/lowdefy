@@ -60,9 +60,7 @@ test('formatEvidence shows mutants alone when there is no production evidence', 
 
 test('formatEvidence is empty with nothing to show', () => {
   expect(formatEvidence({ evidence: undefined })).toBe('');
-  expect(formatEvidence({ evidence: { dev: { recordings: 2 }, refreshed: '2026-10-03' } })).toBe(
-    ''
-  );
+  expect(formatEvidence({ evidence: { refreshed: '2026-10-03' } })).toBe('');
 });
 
 test('formatEvidence shows the all-time sessions of monthly evidence and leaves orgs out', () => {
