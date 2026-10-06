@@ -67,7 +67,7 @@ function removeLeftovers({ directory, now }) {
 // are deleted; the next pull, compile and coverage write them again. Files a
 // stopped pull left outside the cache (`.tmp` files, records without a
 // manifest) are deleted too, on their own. The salt, committed journeys and
-// dev and explorer recordings are left alone. Runs at the start of every pull
+// dev and journey recordings are left alone. Runs at the start of every pull
 // and before every production read.
 function removeUntokenisedTraces({ directories, logger, now = Date.now() }) {
   const directory = path.join(directories.traces, 'production');

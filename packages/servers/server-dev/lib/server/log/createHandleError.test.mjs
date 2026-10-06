@@ -201,14 +201,14 @@ test('handleError still logs when the server error store throws', async () => {
 test('handleError stamps a stored error with the recording of the context that caused it', async () => {
   const context = testContext();
   context.recording = {
-    source: 'explorer',
-    run: { id: '20261003T151200Z-p0d4rm', by: 'explorer', journey: 'walk-2', actor: 'main' },
+    source: 'journey',
+    run: { id: '20261003T151200Z-p0d4rm', by: 'agent', journey: 'save-ticket', actor: 'main' },
   };
   await createHandleError({ context })(new ConfigError('Bad config.', { configKey: 'key_1' }));
   expect(serverErrorStore.push.mock.calls[0][0].recording).toEqual({
-    source: 'explorer',
+    source: 'journey',
     run: '20261003T151200Z-p0d4rm',
-    journey: 'walk-2',
+    journey: 'save-ticket',
   });
 });
 

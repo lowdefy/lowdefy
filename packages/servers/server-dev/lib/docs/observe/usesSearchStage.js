@@ -27,7 +27,7 @@ function readArtifactText({ buildDirectory, name }) {
 
 // Whether a server error entry came from a request or endpoint whose built
 // artifact uses an Atlas Search stage ($search, $vectorSearch), which a data
-// set's memory store cannot run: the walk environment's limit, not the app's
+// set's memory store cannot run: the journey environment's limit, not the app's
 // fault.
 function usesSearchStage({ buildDirectory, entry }) {
   let text = '';

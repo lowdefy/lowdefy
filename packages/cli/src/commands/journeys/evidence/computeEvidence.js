@@ -23,7 +23,7 @@ import mergeMonths from './mergeMonths.js';
 import parseFlowLines from './parseFlowLines.js';
 import reconcileFlows from './reconcileFlows.js';
 
-const SUBKEYS = ['production', 'dev', 'explorer', 'mutation'];
+const SUBKEYS = ['production', 'dev', 'mutation'];
 
 function distinctCount(values) {
   return new Set(values.filter((value) => !type.isNone(value))).size;

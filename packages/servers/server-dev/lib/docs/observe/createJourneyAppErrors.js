@@ -20,15 +20,15 @@ import { getStepKey, INTERACTION_STEP_KEYS } from '@lowdefy/node-utils';
 
 import claimExpectedErrors from './claimExpectedErrors.js';
 
-import evaluateInvariants from '../explore/evaluateInvariants.js';
+import evaluateInvariants from './evaluateInvariants.js';
 import installStepObserver from './installStepObserver.js';
 import readStepObserver from './readStepObserver.js';
-import resolveConfigKeySource from '../explore/resolveConfigKeySource.js';
+import resolveConfigKeySource from './resolveConfigKeySource.js';
 import takeJourneyEvents from './takeJourneyEvents.js';
 import { takeRunErrors } from '../runErrorBuffers.js';
 import toAppErrorFailure from './toAppErrorFailure.js';
 import TRANSIENT_SELECTOR from './TRANSIENT_SELECTOR.js';
-import usesSearchStage from '../explore/usesSearchStage.js';
+import usesSearchStage from './usesSearchStage.js';
 import waitForClientErrorReports from './waitForClientErrorReports.js';
 import watchJourneyContext from './watchJourneyContext.js';
 import withAppErrors from './withAppErrors.js';
@@ -44,15 +44,14 @@ function isQuietStep(step) {
   return ['expect', 'wait', 'screenshot'].includes(getStepKey(step)) && !isExpectError(step);
 }
 
-// What fails a journey: an app error. A dead click is only a warning, and
-// stays the explorer's business.
+// What fails a journey: an app error. A dead click is only a warning; a
+// journey asserts it with expect.effect.
 function isAppError(finding) {
   return finding.severity === 'error' || finding.kind === 'environment';
 }
 
 // Watches a journey run for app errors and judges each step's window with the
-// explorer's invariants (one classifier for journeys and walks, so a journey
-// compiled from an explorer finding fails with the finding's key). Every
+// app error invariants (evaluateInvariants), each error keyed by findingKey. Every
 // actor's context is watched from before its first request (onContext). The
 // windows are contiguous, from the page open to the final drain after the
 // last step, so an error that lands between two steps is never lost. Each

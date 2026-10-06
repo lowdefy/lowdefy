@@ -23,7 +23,7 @@ import { registerTab, unregisterTab } from '../../lib/docs/tabChannel.js';
 import readRecordingCookie from '../../lib/server/recording/readRecordingCookie.js';
 
 // A verified recording cookie means the dev server's own headless browser
-// opened the tab: an explorer walk or journey run ({ source }), or a headless
+// opened the tab: a journey run ({ source }), or a headless
 // tool ('off'). A developer's tab carries none.
 function tabOrigin(cookieHeader) {
   const recording = readRecordingCookie(cookieHeader);

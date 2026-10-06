@@ -202,23 +202,6 @@ const evidenceSchema = {
         required: 'Journey "evidence.dev" should have recordings.',
       },
     },
-    explorer: {
-      type: 'object',
-      additionalProperties: false,
-      required: ['prs'],
-      properties: {
-        prs: {
-          type: 'array',
-          items: { type: 'integer', minimum: 1 },
-          errorMessage: 'Journey "evidence.explorer.prs" should be a list of pull request numbers.',
-        },
-      },
-      errorMessage: {
-        type: 'Journey "evidence.explorer" should be an object.',
-        additionalProperties: 'Journey "evidence.explorer" has an unknown key. Keys are: prs.',
-        required: 'Journey "evidence.explorer" should have prs.',
-      },
-    },
     mutation: {
       type: 'object',
       additionalProperties: false,
@@ -244,7 +227,7 @@ const evidenceSchema = {
   errorMessage: {
     type: 'Journey "evidence" should be an object.',
     additionalProperties:
-      'Journey "evidence" has an unknown key. Keys are: production, dev, explorer, mutation, refreshed.',
+      'Journey "evidence" has an unknown key. Keys are: production, dev, mutation, refreshed.',
   },
 };
 

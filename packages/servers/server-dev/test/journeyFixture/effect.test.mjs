@@ -17,7 +17,7 @@
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
 
 // expect.effect, run by the real runner over the fixture app: it fails after
-// a click that did nothing, the explorer's dead click, and passes after one
+// a click that did nothing (a dead click), and passes after one
 // that ran an event, navigated or called a request.
 
 fixtureTest('expect.effect fails after a click on a button with no events', async () => {

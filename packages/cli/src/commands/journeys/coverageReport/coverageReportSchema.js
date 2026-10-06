@@ -114,7 +114,7 @@ const textTokensSchema = {
   },
 };
 
-// The shape of .lowdefy/test/coverage.json, version 1. The explorer, variants
+// The shape of .lowdefy/test/coverage.json, version 1. Journeys scope, variants
 // and the app graph read it, so the writer's tests hold it to this schema.
 const coverageReportSchema = {
   type: 'object',

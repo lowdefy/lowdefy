@@ -29,7 +29,7 @@ import resolveCurrentBuild from './resolveCurrentBuild.js';
 import resolveWindow from './resolveWindow.js';
 
 const DEFAULT_OUT = path.join('tests', 'journeys', '_candidates');
-const CANDIDATE_SOURCES = ['production', 'dev', 'explorer'];
+const CANDIDATE_SOURCES = ['production', 'dev'];
 const MAX_REASONS = 5;
 
 function readExistingCandidates({ outDirectory }) {
@@ -58,7 +58,7 @@ function checkSourceOption({ source }) {
 
 // The records to compile and their window. Trace files are read as given.
 // Without them, `--source production` reads the pulled cache over whole UTC
-// days, and dev and explorer read the recordings the dev server wrote,
+// days, and dev reads the recordings the dev server wrote,
 // through readRecordings, so the compile never knows the layout.
 async function readRecords({ context, traceFiles, source, now }) {
   const { options } = context;

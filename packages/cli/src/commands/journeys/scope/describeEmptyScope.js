@@ -21,17 +21,14 @@ function listFiles(files) {
   return files.length > MAX_LISTED ? `${listed} and ${files.length - MAX_LISTED} more` : listed;
 }
 
-// What to say when no page is a target: the diff sees only the compared
-// artifacts, so say what else changed (uncompared build files, plugin code)
-// and how to list every page anyway.
-function describeEmptyScope({ scope, pluginDirectories = [] }) {
+// What to say when no page is in scope: the diff sees only the compared
+// artifacts, so say what else changed (uncompared build files) and how to
+// list every page anyway.
+function describeEmptyScope({ scope }) {
   const parts = ['no change in the compared artifacts'];
   if (scope.uncompared.length > 0) {
     parts.push(`changed but not compared: ${listFiles(scope.uncompared)}`);
   }
-  pluginDirectories.forEach((directory) => {
-    parts.push(`plugin code changed under ${directory}`);
-  });
   parts.push('run without --base to list every page.');
   return parts.join('; ');
 }

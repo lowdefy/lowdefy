@@ -178,7 +178,7 @@ function countEntryPoints({ segments }) {
 // compileTrace returns: ranked flows per entry page, failure paths, frustrated
 // blocks, the role sets seen per page, the pages tab sessions start on, and
 // the clicked-text token counts per page, block and column (countTextTokens).
-// Coverage writes it to coverage.json, which the explorer and variants read,
+// Coverage writes it to coverage.json, which journeys scope and variants read,
 // so production is profiled in one place. Every list is sorted, ties broken
 // by key, so the same segments give the same profile.
 function profileProduction({ segments }) {

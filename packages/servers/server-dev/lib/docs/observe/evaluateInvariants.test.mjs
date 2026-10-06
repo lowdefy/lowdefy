@@ -109,18 +109,18 @@ test('client error entries and uncaught page errors are client-errors; a page er
         {
           store: 'client',
           name: 'OperatorError',
-          message: 'Explorer boom',
+          message: 'Ticket boom',
           source: 'pages/tickets.yaml:12',
         },
       ],
       pageErrors: [
-        { name: 'Error', message: 'Explorer boom' },
+        { name: 'Error', message: 'Ticket boom' },
         { name: 'TypeError', message: 'x is undefined' },
       ],
     }),
   });
   expect(findings.map(({ kind, message, source }) => [kind, message, source])).toEqual([
-    ['client-error', 'Explorer boom', 'pages/tickets.yaml:12'],
+    ['client-error', 'Ticket boom', 'pages/tickets.yaml:12'],
     ['client-error', 'TypeError: x is undefined', null],
   ]);
 });

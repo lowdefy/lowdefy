@@ -198,21 +198,21 @@ test('journeys compile filters records within the given files by --source', asyn
   writeBuild();
   const file = writeTrace('trace.jsonl', [
     ...session({ id: 's-1', start: now - 60000 }),
-    ...session({ id: 's-2', start: now - 50000, source: 'explorer' }),
+    ...session({ id: 's-2', start: now - 50000, source: 'production' }),
   ]);
-  context.options.source = 'explorer';
+  context.options.source = 'dev';
   const { segments } = await journeysCompile({ context, params: [[file]] });
-  expect(segments.map((segment) => segment.session)).toEqual(['s-2']);
-  expect(candidates('explorer')).toHaveLength(1);
+  expect(segments.map((segment) => segment.session)).toEqual(['s-1']);
+  expect(candidates('dev')).toHaveLength(1);
 });
 
 test('journeys compile refuses files holding several sources without --source', async () => {
   const file = writeTrace('trace.jsonl', [
     ...session({ id: 's-1', start: now }),
-    ...session({ id: 's-2', start: now, source: 'explorer' }),
+    ...session({ id: 's-2', start: now, source: 'production' }),
   ]);
   await expect(journeysCompile({ context, params: [[file]] })).rejects.toThrow(
-    'The trace files hold records from several sources (dev, explorer); choose one with --source.'
+    'The trace files hold records from several sources (dev, production); choose one with --source.'
   );
 });
 
@@ -370,18 +370,6 @@ test('journeys compile --source dev reads the dev recordings and writes dev cand
   const { candidates: compiled } = await journeysCompile({ context, params: [[]] });
   expect(compiled).toHaveLength(1);
   expect(candidates('dev')).toEqual([compiled[0].fileName]);
-});
-
-test('journeys compile --source explorer reads the explorer recordings', async () => {
-  const start = now - 60 * 60 * 1000;
-  writeRecording({
-    source: 'explorer',
-    id: traceId(start, 'eeeeee'),
-    records: session({ id: 'walk-1', start, source: 'explorer' }),
-  });
-  context.options.source = 'explorer';
-  await journeysCompile({ context, params: [[]] });
-  expect(candidates('explorer')).toHaveLength(1);
 });
 
 test('journeys compile --source dev --since skips recordings older than the window', async () => {

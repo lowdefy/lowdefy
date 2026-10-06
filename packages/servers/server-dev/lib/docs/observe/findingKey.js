@@ -14,15 +14,16 @@
   limitations under the License.
 */
 
-const DATA_SET_CONNECTION_TYPE = 'MongoDBCollection';
+import crypto from 'node:crypto';
 
-// The head build's connections a walk would write to for real without a data
-// set: the MongoDBCollection connections, which a data set redirects.
-function listLiveDataConnections({ headBuild }) {
-  return Object.entries(headBuild.connections)
-    .filter(([, connection]) => connection.type === DATA_SET_CONNECTION_TYPE)
-    .map(([connectionId]) => connectionId)
-    .sort();
+// One finding per (kind, page, source location), or per message when there
+// is no location: a journey's app errors are reported, and compared across
+// runs, by it.
+function findingKey({ kind, pageId, source, message }) {
+  const where =
+    source ??
+    `message:${crypto.createHash('sha1').update(String(message)).digest('hex').slice(0, 8)}`;
+  return [kind, pageId ?? '', where].join('|');
 }
 
-export default listLiveDataConnections;
+export default findingKey;

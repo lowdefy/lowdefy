@@ -16,7 +16,7 @@
 
 // The recording sources a headless run stamps its errors with. An entry
 // carrying one belongs to that run's own error buffer, not the shared stores.
-const RUN_SOURCES = ['journey', 'explorer'];
+const RUN_SOURCES = ['journey'];
 
 function isRunErrorEntry(entry) {
   return RUN_SOURCES.includes(entry.recording?.source);

@@ -32,8 +32,8 @@ const pendingRequests = new Map();
 // Orders instance renders across tabs, so "most recently rendered" does not hang on clock ticks.
 let renderSequence = 0;
 
-// A tab the dev server's own headless browser opened (an explorer walk, a
-// journey run, a headless tool) is automated: it is listed, so the hub keeps
+// A tab the dev server's own headless browser opened (a journey run, a
+// headless tool) is automated: it is listed, so the hub keeps
 // the server alive while it runs, but findPageInstance never picks it for an
 // agent's or developer's live-tab request.
 function registerTab({ id, send, source = 'dev', automated = false }) {

@@ -870,8 +870,8 @@ async function expectUrl({ page, params, timeout }) {
   }
 }
 
-// Fails when the interaction just before it did nothing, the explorer's
-// dead-click invariant inverted (see observe/hasNoEffect). It reads that
+// Fails when the interaction just before it did nothing, the dead-click
+// invariant inverted (see observe/hasNoEffect). It reads that
 // interaction's window, which the runner closed once the page settled, so it
 // does not wait. Only a run that watches its steps' windows (a journey run,
 // not a screenshot's steps) has one to read.

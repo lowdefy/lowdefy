@@ -28,7 +28,7 @@ const MAX_ENTRIES = 50;
 const entries = [];
 
 // Each entry is stamped with the build it happened under (see getBuildId).
-// An entry a journey run or an explorer walk caused goes to that run's own
+// An entry a journey run caused goes to that run's own
 // buffer only (see runErrorBuffers), or is dropped when the run has ended:
 // kept out of this ring and the event bus, it never reaches build-status or
 // an agent's event stream, and a run that trips many errors cannot evict the

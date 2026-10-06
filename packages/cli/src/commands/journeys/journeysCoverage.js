@@ -73,7 +73,7 @@ function logSummary({ logger, measures, mutation, reportPath }) {
 // `lowdefy journeys coverage --source production`: which real flows,
 // interactions, failures, frustrated clicks and (page, role set) pairs no
 // committed journey covers yet, ranked by use. It writes
-// .lowdefy/test/coverage.json with the production profile, which the explorer
+// .lowdefy/test/coverage.json with the production profile, which journeys scope
 // and variants read instead of profiling production again. A `deprecated:
 // true` journey is never run, so it covers nothing: it is left out of every
 // measure, as the measured run leaves it out.

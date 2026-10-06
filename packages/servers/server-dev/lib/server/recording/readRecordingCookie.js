@@ -18,7 +18,7 @@ import { isTraceId, type } from '@lowdefy/helpers';
 
 import { JOURNEY_COOKIES, readJourneyCookie } from '../journeyCookies.js';
 
-const RUN_SOURCES = ['journey', 'explorer'];
+const RUN_SOURCES = ['journey'];
 
 function parsePayload(payload) {
   try {
@@ -29,7 +29,7 @@ function parsePayload(payload) {
 }
 
 // What the recording cookie on a request says: 'off' (a headless tool context
-// that must not record), { source, run } (a headless journey or explorer run),
+// that must not record), { source, run } (a headless journey run),
 // or null (no verified cookie - a developer's own tab, which records as dev).
 // A run that records nothing (a journey run its caller does not record) also
 // carries record: false: its errors are attributed to it, but the recorder

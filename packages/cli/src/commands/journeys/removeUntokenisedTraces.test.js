@@ -67,7 +67,7 @@ function writeCache() {
   writeFile(path.join(directories.config, 'tests', 'journeys', 'orders.yaml'), 'name: orders\n');
   writeFile(path.join(directories.test, 'coverage.json'), '{}');
   writeFile(path.join(directories.traces, 'dev', 'session.jsonl'), '{"id":4}\n');
-  writeFile(path.join(directories.traces, 'explorer', 'walk.jsonl'), '{"id":5}\n');
+  writeFile(path.join(directories.traces, 'journey', 'run.jsonl'), '{"id":5}\n');
 }
 
 function expectOnlyLeftoversRemoved() {
@@ -81,7 +81,7 @@ function expectOnlyLeftoversRemoved() {
     path.join(directories.config, 'tests', 'journeys', 'orders.yaml'),
     path.join(directories.test, 'coverage.json'),
     path.join(directories.traces, 'dev', 'session.jsonl'),
-    path.join(directories.traces, 'explorer', 'walk.jsonl'),
+    path.join(directories.traces, 'journey', 'run.jsonl'),
   ].forEach((filePath) => expect(fs.existsSync(filePath)).toBe(true));
 }
 

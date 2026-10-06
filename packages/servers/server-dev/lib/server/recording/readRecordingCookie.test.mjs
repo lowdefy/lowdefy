@@ -38,16 +38,16 @@ test('readRecordingCookie returns null with no cookie or a forged one', () => {
 test('readRecordingCookie reads off and a run payload', () => {
   expect(readRecordingCookie(cookieFor('off'))).toBe('off');
   const recording = {
-    source: 'explorer',
-    run: { id: '20261003T160000Z-77abcd', by: 'explorer', journey: 'walk-1', actor: 'main' },
+    source: 'journey',
+    run: { id: '20261003T160000Z-77abcd', by: 'agent', journey: 'save-ticket', actor: 'main' },
   };
   expect(readRecordingCookie(cookieFor(recordingCookiePayload({ recording })))).toEqual(recording);
 });
 
 test('readRecordingCookie keeps record: false on a run that records nothing, and isRecordingEnabled is false for it', () => {
   const recording = {
-    source: 'explorer',
-    run: { id: '20261003T160000Z-77abcd', by: 'explorer', journey: 'walk-1-confirm', actor: 'main' },
+    source: 'journey',
+    run: { id: '20261003T160000Z-77abcd', by: 'agent', journey: 'save-ticket', actor: 'main' },
     record: false,
   };
   const cookie = cookieFor(recordingCookiePayload({ recording }));

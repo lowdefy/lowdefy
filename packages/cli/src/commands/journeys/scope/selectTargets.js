@@ -22,7 +22,7 @@ import normaliseArtifact from './normaliseArtifact.js';
 import resolveHomePageId from './resolveHomePageId.js';
 
 const ENTRY_PAGE_COUNT = 3;
-// The default page the build adds; walking it tells nothing about a PR.
+// The default page the build adds; it tells nothing about a change.
 const NOT_FOUND_PAGE_ID = '404';
 
 function changeReasons({ diff, headBuild, pageId }) {
@@ -65,82 +65,15 @@ function authChanged({ baseBuild, headBuild, pageId }) {
   return JSON.stringify(baseAuth) !== JSON.stringify(headAuth);
 }
 
-function checkManualPages({ manualPages, headBuild }) {
-  manualPages.forEach((pageId) => {
-    if (!(pageId in headBuild.pages)) {
-      throw new Error(`--page "${pageId}" is not a page in the head build.`);
-    }
-  });
-}
-
-// A head-only run (a charter with no PR) has no diff: its targets are the
-// --page pages, else the entry pages, and the pages a --charters file names.
-// The entry pages are left out when every charter names its own
-// (withDefaultPages false); --page is refused then (checkManualPagesWalked).
-// Every block on a target page is in scope, so no block is listed as changed
-// and no option is ranked by it.
-function selectHeadOnlyTargets({
-  headBuild,
-  coverage,
-  manualPages,
-  charterPages,
-  withDefaultPages,
-}) {
-  checkManualPages({ manualPages, headBuild });
-  const reasonsByPage = new Map();
-  function addReason(pageId, reason) {
-    reasonsByPage.set(pageId, [...new Set([...(reasonsByPage.get(pageId) ?? []), reason])]);
-  }
-  if (withDefaultPages) {
-    const reason = manualPages.length > 0 ? 'manual' : 'entry';
-    const pageIds = manualPages.length > 0 ? manualPages : entryPages({ coverage, headBuild });
-    pageIds.forEach((pageId) => addReason(pageId, reason));
-  }
-  charterPages.forEach((pageId) => addReason(pageId, 'charter'));
-  return {
-    pages: [...reasonsByPage.keys()].sort().map((pageId) => ({
-      pageId,
-      reasons: reasonsByPage.get(pageId),
-      authChanged: false,
-      blocks: [],
-    })),
-    appWide: [],
-    uncompared: [],
-    removedPages: [],
-    warnings: [],
-  };
-}
-
-// The head pages a PR changed, each with why: its own artifact (page), one of
-// its requests (request:<id>), an endpoint it calls (endpoint:<id>), a
-// connection its requests or endpoints use (connection:<id>), a websocket it
-// subscribes to (websocket:<id>), an app-wide artifact (app-wide: the entry
-// pages), --page (manual), or a --charters file (charter: charterPages,
-// already checked). With no base build every head page is a target
+// The head pages a change touched, each with why: its own artifact (page),
+// one of its requests (request:<id>), an endpoint it calls (endpoint:<id>),
+// a connection its requests or endpoints use (connection:<id>), a websocket
+// it subscribes to (websocket:<id>), or an app-wide artifact (app-wide: the
+// entry pages). A change that travels through _ref shows on every page whose
+// artifact holds it. With no base build every head page is listed
 // (base-not-built) and the base error is a warning. Removed pages are
-// reported, not targeted. A head-only run (headOnly) has no base at all and
-// takes the --page pages, else the entry pages (entry), and the charter
-// pages.
-function selectTargets({
-  diff,
-  baseBuild,
-  headBuild,
-  coverage = null,
-  manualPages = [],
-  charterPages = [],
-  withDefaultPages = true,
-  baseError,
-  headOnly = false,
-}) {
-  if (headOnly) {
-    return selectHeadOnlyTargets({
-      headBuild,
-      coverage,
-      manualPages,
-      charterPages,
-      withDefaultPages,
-    });
-  }
+// reported, not listed.
+function selectTargets({ diff, baseBuild, headBuild, coverage = null, baseError }) {
   const reasonsByPage = new Map();
   function addReasons(pageId, reasons) {
     if (reasons.length === 0) return;
@@ -160,9 +93,6 @@ function selectTargets({
       entryPages({ coverage, headBuild }).forEach((pageId) => addReasons(pageId, ['app-wide']));
     }
   }
-  checkManualPages({ manualPages, headBuild });
-  manualPages.forEach((pageId) => addReasons(pageId, ['manual']));
-  charterPages.forEach((pageId) => addReasons(pageId, ['charter']));
 
   const pages = [...reasonsByPage.keys()].sort().map((pageId) => ({
     pageId,

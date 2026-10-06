@@ -107,7 +107,7 @@ async function journeysScope({ context }) {
   try {
     await pruneScopeDirectory({ scopeDirectory });
     const revisions = await resolveRevisions({
-      against: context.options.base,
+      base: context.options.base,
       cwd: context.directories.config,
     });
     const { baseConfigDirectory, pluginSets } = await prepareBase({

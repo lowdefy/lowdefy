@@ -26,7 +26,7 @@ function describeWhere({ phase, index, step }) {
 
 // The journey failure for the app errors a window held: the step that caused
 // them (or phase 'open' for the page open, in place of index and step), each
-// error with its kind, message, config source and the explorer's finding key.
+// error with its kind, message, config source and finding key.
 // When the step also failed on its own, the app error leads the message, since
 // it is usually the cause, and the step's own message follows (and is kept
 // apart as stepMessage).

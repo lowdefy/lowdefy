@@ -224,7 +224,6 @@ const fullEvidence = {
     window: '2026-09-03/2026-10-02',
   },
   dev: { recordings: 2 },
-  explorer: { prs: [2531] },
   mutation: { killed: 11, total: 12, unique: 2 },
   refreshed: '2026-10-03',
 };
@@ -251,11 +250,6 @@ test.each([
     'evidence.dev',
     { ...fullEvidence, dev: { recordings: 2, runs: 1 } },
     'Journey "evidence.dev" has an unknown key',
-  ],
-  [
-    'evidence.explorer',
-    { ...fullEvidence, explorer: { prs: [1], walks: 2 } },
-    'Journey "evidence.explorer" has an unknown key',
   ],
   [
     'evidence.mutation',

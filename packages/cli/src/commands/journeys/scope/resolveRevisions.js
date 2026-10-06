@@ -16,71 +16,24 @@
 
 import { type } from '@lowdefy/helpers';
 
-import readPullRequest from '../explore/readPullRequest.js';
 import runGit from './runGit.js';
 
-async function hasCommit({ sha, cwd }) {
-  try {
-    await runGit({ args: ['cat-file', '-e', `${sha}^{commit}`], cwd });
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-async function fromPullRequest({ number, cwd, head }) {
-  const pullRequest = await readPullRequest({ number, cwd });
-  if (head !== pullRequest.headRefOid) {
-    throw new Error(
-      `This checkout is at ${head}; PR #${pullRequest.number}'s head is ${pullRequest.headRefOid}. Run from the PR's worktree (the journeys-from-pr skill makes one), or pass --against.`
-    );
-  }
-  if (!(await hasCommit({ sha: pullRequest.baseRefOid, cwd }))) {
-    await runGit({ args: ['fetch', '--end-of-options', 'origin', pullRequest.baseRefName], cwd });
-  }
-  const base = await runGit({
-    args: ['merge-base', pullRequest.baseRefOid, pullRequest.headRefOid],
-    cwd,
-  });
-  return {
-    base,
-    pr: { number: pullRequest.number, url: pullRequest.url, title: pullRequest.title },
-    context: { title: pullRequest.title ?? null, body: pullRequest.body ?? '' },
-  };
-}
-
-async function fromRef({ against, cwd }) {
-  // --end-of-options: a ref that starts with a dash is read as a ref, never
-  // as a git option.
-  const base = await runGit({ args: ['merge-base', '--end-of-options', against, 'HEAD'], cwd });
-  const messages = await runGit({ args: ['log', '--format=%s%n%n%b', `${base}..HEAD`], cwd });
-  return { base, pr: null, context: { title: null, body: messages.trim() } };
-}
-
-// The two revisions the explorer compares. The head is the working tree of
-// this checkout, uncommitted changes included (dirty). The base is the merge
-// base with the PR's base branch (--pr) or with a ref (--against), and the
-// context is the text a policy reads about the change: the PR's title and
-// body, or the commit messages since the base. With neither (a charter run)
-// there is no base and no context: the run builds the head alone.
-async function resolveRevisions({ pr, against, cwd }) {
-  if (!type.isNone(pr) && !type.isNone(against)) {
-    throw new Error('Pass one of --pr <number> or --against <ref>, not both.');
-  }
-  // gh pr view also takes a branch, a URL or its own flags; only a number is a PR here.
-  if (!type.isNone(pr) && !/^[1-9][0-9]*$/.test(String(pr))) {
-    throw new Error(`--pr should be a pull request number. Received ${JSON.stringify(pr)}.`);
-  }
+// The two revisions the scope compares. The head is the working tree of this
+// checkout, uncommitted changes included (dirty). The base is the merge base
+// of HEAD with --base (a branch or commit, such as the pull request's base
+// branch). Without --base there is no base: the scope builds the head alone.
+async function resolveRevisions({ base, cwd }) {
   const root = await runGit({ args: ['rev-parse', '--show-toplevel'], cwd });
   const head = await runGit({ args: ['rev-parse', 'HEAD'], cwd });
   const status = await runGit({ args: ['status', '--porcelain'], cwd: root });
-  if (type.isNone(pr) && type.isNone(against)) {
-    return { root, head, dirty: status !== '', base: null, pr: null, context: null };
+  const dirty = status !== '';
+  if (type.isNone(base)) {
+    return { root, head, dirty, base: null };
   }
-  const resolved = type.isNone(pr)
-    ? await fromRef({ against, cwd })
-    : await fromPullRequest({ number: Number(pr), cwd, head });
-  return { root, head, dirty: status !== '', ...resolved };
+  // --end-of-options: a ref that starts with a dash is read as a ref, never
+  // as a git option.
+  const mergeBase = await runGit({ args: ['merge-base', '--end-of-options', base, 'HEAD'], cwd });
+  return { root, head, dirty, base: mergeBase };
 }
 
 export default resolveRevisions;
