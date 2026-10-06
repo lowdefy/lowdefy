@@ -19,8 +19,8 @@ import decideWithStructuredOutput from './decideWithStructuredOutput.js';
 
 // Typed questions about a state in, typed answers with a confidence out, on
 // a model the caller already holds. The Decide request resolver runs this
-// with its connection's provider; the journey explorer's policy runs it from
-// the CLI, where there is no connection or request.
+// with its connection's provider; code with no connection or request calls it
+// with a model of its own.
 //   evaluation         an evaluation model (provider.evaluationModel(id));
 //   structured-output  any language model (provider(id)).
 // providerMetadata is the AI SDK result's, which carries gateway.cost when

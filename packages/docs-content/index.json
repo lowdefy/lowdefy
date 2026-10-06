@@ -3354,7 +3354,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "e09e5cc4566cd28469ecff5ffef448f9e7e4df858e39231c0daa66c6e3c9f2ee"
+      "hash": "acdd8f6d5561d3daadf5006923489e1e54085248bf73d41c9a0ee331d53de7b6"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3922,7 +3922,7 @@
         "testing/config-tests.yaml",
         "version.yaml"
       ],
-      "hash": "d1a06a18afc115fffc305c3b29ff1218ccd37bacffac5534859d9b96d33c5dc6"
+      "hash": "84b8b967f9e319fbf39c095a0fc4dc423b4460a99f21c413f849d8d9b1df8272"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -5441,7 +5441,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "c456bcf8032d9c1b75cd4f74a1643e15727cd37f2b63c2902186a80438779cda"
+      "hash": "4ae95aa9b4413c8c3665a9a890495b06c558c8d3feb10f6d961217be20c7eb05"
     },
     "display-blocks/tablelight": {
       "files": [
@@ -5459,7 +5459,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "4c5c2fccb84a1bb1ab4a6f0ebaf92a6db943cb0343ec6f4f841a697b2e7b90ed"
+      "hash": "30a4a2b5d4b3742b5b31c57fc5f467b9b5eeb504d334931036bf5e4d21f4ddbd"
     },
     "display-blocks/tag": {
       "files": [
