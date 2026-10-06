@@ -37,7 +37,10 @@ import validatePayload from './validatePayload.js';
 // carried identity, exactly as a synchronous CallApi would.
 // Payload arrives serialized (dates etc. survive the HTTP hop via
 // @lowdefy/helpers serializer).
-async function runDetachedEndpoint(context, { endpointId, payload, principal }) {
+async function runDetachedEndpoint(
+  context,
+  { endpointId, outsideCaller = false, payload, principal }
+) {
   const { logger } = context;
 
   context.endpointId = endpointId;
@@ -74,7 +77,10 @@ async function runDetachedEndpoint(context, { endpointId, payload, principal }) 
   authorizeApiEndpoint(context, { endpointConfig });
 
   const deserializedPayload = serializer.deserialize(payload ?? {});
-  validatePayload({ endpointConfig, payload: deserializedPayload });
+  // A detached CallApi step's config built the payload. The dev server's agent
+  // tool runs a system endpoint through here with a payload the agent wrote
+  // (outsideCaller): see validatePayload.
+  validatePayload({ endpointConfig, payload: deserializedPayload, outsideCaller });
 
   const routineContext = {
     steps: {},

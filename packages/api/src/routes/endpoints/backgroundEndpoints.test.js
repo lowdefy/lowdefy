@@ -1117,3 +1117,31 @@ test('detached run refuses a payload that violates the target payloadSchema befo
   expect(result.success).toBe(true);
   expect(result.response).toBe(3);
 });
+
+test('detached run refuses an outside caller payload that violates the target payloadSchema with a UserError', async () => {
+  const readConfigFile = jest.fn((path) => {
+    if (path === 'api/typed_child.json') {
+      return {
+        endpointId: 'typed_child',
+        type: 'Api',
+        auth: { public: false },
+        payloadSchema: {
+          type: 'object',
+          properties: { count: { type: 'number' } },
+          required: ['count'],
+        },
+        routine: { ':return': { _payload: 'count' } },
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  await expect(
+    runDetachedEndpoint(context, {
+      endpointId: 'typed_child',
+      outsideCaller: true,
+      payload: serializer.serialize({ count: 'three' }),
+      principal: { user: serializer.serialize(null), system: true },
+    })
+  ).rejects.toThrow(UserError);
+});

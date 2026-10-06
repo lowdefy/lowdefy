@@ -152,6 +152,7 @@ test('runEndpoint runs a successful routine and returns its result', async () =>
   expect(mockCallEndpoint).toHaveBeenCalledWith(context, {
     blockId: undefined,
     endpointId: 'create_order',
+    outsideCaller: true,
     pageId: undefined,
     payload: { sku: 'A1' },
   });
@@ -195,6 +196,7 @@ test('runEndpoint with system: true runs through runDetachedEndpoint instead of 
   expect(mockCreateLowdefyContext).toHaveBeenCalledWith({ c: honoContext, user: undefined });
   expect(mockRunDetachedEndpoint).toHaveBeenCalledWith(context, {
     endpointId: 'purge_stale',
+    outsideCaller: true,
     payload: { mode: 'full' },
   });
   expect(mockCallEndpoint).not.toHaveBeenCalled();
