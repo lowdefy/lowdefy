@@ -18,7 +18,7 @@
 // mismatch (they are Lowdefy's routes, not app config, and a session refetch on
 // window focus would reload away unsaved input); instead the client reloads
 // when an auth call fails and this header shows a newer build answered
-// (lib/client/auth/fetchCheckingBuild.js). Set after next() so error responses
+// (lib/client/auth/createFetchCheckingBuild.js). Set after next() so error responses
 // and the raw responses BetterAuth returns carry it too.
 function stampBuildId({ buildId }) {
   return async function stampBuildIdMiddleware(c, next) {

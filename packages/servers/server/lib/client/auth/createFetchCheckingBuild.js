@@ -16,29 +16,30 @@
 
 import shouldReloadForBuild from '@lowdefy/client/shouldReloadForBuild.js';
 
-import appMeta from '../../../build/appMeta.json';
-
 // fetch for the auth client and /api/user. When an auth call fails and the
 // server's x-lowdefy-build (src/middleware/stampBuildId.js) shows a newer build
 // answered, the route may have been renamed or removed since this bundle
 // loaded, so the tab reloads once onto the current build. The promise never
 // settles: the page is unloading, and a rejection would surface as an auth
 // error. A successful call from a newer build carries on; the next navigation
-// reloads the tab (client/Page.jsx).
-async function fetchCheckingBuild(input, init) {
-  const response = await fetch(input, init);
-  if (
-    !response.ok &&
-    shouldReloadForBuild({
-      bundleBuildId: appMeta.buildId,
-      serverBuildId: response.headers.get('x-lowdefy-build'),
-      window,
-    })
-  ) {
-    window.location.reload();
-    return new Promise(() => {});
-  }
-  return response;
+// reloads the tab (client/Page.jsx). buildId is the build this bundle was made
+// from.
+function createFetchCheckingBuild({ buildId }) {
+  return async function fetchCheckingBuild(input, init) {
+    const response = await fetch(input, init);
+    if (
+      !response.ok &&
+      shouldReloadForBuild({
+        bundleBuildId: buildId,
+        serverBuildId: response.headers.get('x-lowdefy-build'),
+        window,
+      })
+    ) {
+      window.location.reload();
+      return new Promise(() => {});
+    }
+    return response;
+  };
 }
 
-export default fetchCheckingBuild;
+export default createFetchCheckingBuild;
