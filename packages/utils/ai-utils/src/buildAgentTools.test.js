@@ -328,6 +328,53 @@ test('buildAgentTools keys endpoint tools by name and executes by endpointId', a
   });
 });
 
+test('endpoint tool gives the model its payloadSchema without a top-level oneOf', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const payloadSchema = {
+    type: 'object',
+    oneOf: [{ required: ['title', 'body'], not: { required: ['id'] } }, { required: ['id'] }],
+    properties: {
+      id: { type: 'string' },
+      title: { type: 'string' },
+      body: { type: 'string' },
+    },
+  };
+  const agent = { tools: [{ endpointId: 'tasks/write_task', name: 'write_task' }], mcp: [] };
+  const context = {
+    logger: testLogger,
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'Create or update a task.',
+      payloadSchema,
+    }),
+    callEndpoint: jest.fn().mockResolvedValue({ success: true, response: { id: 't1' } }),
+    evaluateOperators: jest.fn((x) => x),
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+
+  expect(mockJsonSchema).toHaveBeenCalledWith({
+    type: 'object',
+    properties: {
+      id: { type: 'string' },
+      title: { type: 'string' },
+      body: { type: 'string' },
+    },
+  });
+  expect(tools.write_task.description).toBe(
+    'Input constraint: Provide parameters for exactly one of: (title, body) or (id).\n\n' +
+      'Create or update a task.'
+  );
+  // The endpoint call validates the payload against the endpoint's own payloadSchema.
+  expect(payloadSchema.oneOf).toHaveLength(2);
+  await tools.write_task.execute({ id: 't1' }, {});
+  expect(context.callEndpoint).toHaveBeenCalledWith('tasks/write_task', {
+    payload: { id: 't1' },
+    abortSignal: undefined,
+    outsideCaller: true,
+  });
+});
+
 test('buildAgentTools keys sub-agent tools by name', async () => {
   const { default: buildAgentTools } = await import('./buildAgentTools.js');
 

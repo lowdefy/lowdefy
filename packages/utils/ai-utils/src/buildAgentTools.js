@@ -31,6 +31,7 @@ import listFiles from './fileSystem/listFiles.js';
 import readFile from './fileSystem/readFile.js';
 import searchFiles from './fileSystem/searchFiles.js';
 import statFile from './fileSystem/statFile.js';
+import buildToolInputSchema from './buildToolInputSchema.js';
 import RESERVED_PLATFORM_TOOL_NAMES from './reservedToolNames.js';
 
 function assertNotPlatformToolName(name, kind, i18n) {
@@ -83,13 +84,17 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
       throw new LowdefyInternalError(`Endpoint tool "${toolName}" uses a reserved key name.`);
     }
     const endpointConfig = await context.getEndpointConfig({ endpointId });
+    const { inputSchema, description } = buildToolInputSchema({
+      schema: cleanBuildArtifact(endpointConfig.payloadSchema),
+      description: endpointConfig.description,
+    });
 
     setKey(
       tools,
       toolName,
       tool({
-        description: endpointConfig.description,
-        inputSchema: jsonSchema(cleanBuildArtifact(endpointConfig.payloadSchema)),
+        description,
+        inputSchema: jsonSchema(inputSchema),
         execute: async (input, { abortSignal } = {}) => {
           // The model built the input, so a payload the endpoint's schema refuses
           // is the model's mistake to correct, not a config fault.
