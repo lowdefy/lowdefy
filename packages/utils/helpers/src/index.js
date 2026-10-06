@@ -21,6 +21,7 @@ import cachedPromises from './cachedPromises.js';
 import cleanBuildArtifact from './cleanBuildArtifact.js';
 import createTraceId from './createTraceId.js';
 import extractErrorProps from './extractErrorProps.js';
+import filterElementsChain from './filterElementsChain.js';
 import findInteractiveControls from './findInteractiveControls.js';
 import get from './get.js';
 import getKey from './getKey.js';
@@ -68,6 +69,7 @@ export {
   cleanBuildArtifact,
   createTraceId,
   extractErrorProps,
+  filterElementsChain,
   findInteractiveControls,
   get,
   getKey,

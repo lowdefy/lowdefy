@@ -44,6 +44,11 @@ export default {
         description:
           'Capture a lowdefy_event_failed event, with config ids only, when a block or app event fails. At most 50 per app load. Defaults to true.',
       },
+      maskDataText: {
+        type: 'boolean',
+        description:
+          'Mask click text that the page config, menus, i18n messages or antd locale do not spell out (grid cells, request-filled options, labels built from records), and remove element attributes other than structural ones, before events leave the browser. Set to false to send full click text. Defaults to true.',
+      },
       enabled: {
         type: 'boolean',
         description:

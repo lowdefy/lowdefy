@@ -18,7 +18,7 @@
 */
 
 import { targetFixtures } from '@lowdefy/e2e-utils/targets';
-import { targetFromElementsChain } from '@lowdefy/helpers';
+import { filterElementsChain, targetFromElementsChain } from '@lowdefy/helpers';
 import { autocapturePropertiesForElement } from 'posthog-js/lib/src/autocapture.js';
 
 // The chain posthog-js itself records for a click on the element, with the version this plugin
@@ -56,5 +56,14 @@ test.each(targetFixtures.map((fixture) => [fixture.name, fixture]))(
     const chain = chainOf(clicked);
     expect(typeof chain).toBe('string');
     expect(targetFromElementsChain(chain)).toEqual(chainTarget(fixture));
+  }
+);
+
+test.each(targetFixtures.map((fixture) => [fixture.name, fixture]))(
+  'filterElementsChain keeps the posthog-js chain of a click byte for byte when it keeps every attribute: %s',
+  (name, fixture) => {
+    document.body.innerHTML = fixture.html;
+    const chain = chainOf(document.querySelector(fixture.clicked ?? fixture.element));
+    expect(filterElementsChain({ chain, filterAttribute: ({ value }) => value })).toBe(chain);
   }
 );

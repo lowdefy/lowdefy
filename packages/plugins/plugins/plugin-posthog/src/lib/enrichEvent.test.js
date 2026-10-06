@@ -36,8 +36,9 @@ function target(fields) {
   };
 }
 
-function useTrace(described) {
+function useTrace(described, { configTexts = ['Save'] } = {}) {
   postHogState.trace = createFakeTrace({
+    configTexts,
     describeChain: () => described,
     pathEntryOf: (url) => {
       const path = new URL(url).pathname.slice(1);
@@ -151,4 +152,67 @@ test('enrichEvent does not describe an autocapture event without a chain', () =>
   enrichEvent(event);
   expect(trace.describeChain).not.toHaveBeenCalled();
   expect(event.properties.lowdefy_page_id).toBe('a');
+});
+
+const DATA_CHAIN =
+  'div.ag-cell:attr__col-id="name"attr__title="Jane Customer"nth-child="1"nth-of-type="1"text="Jane Customer";div.ag-row:attr__row-index="2"nth-child="3"nth-of-type="3";div:attr__id="bl-grid"attr_id="bl-grid"nth-child="1"nth-of-type="1"';
+const MASKED_DATA_CHAIN =
+  'div.ag-cell:attr__col-id="name"nth-child="1"nth-of-type="1";div.ag-row:attr__row-index="2"nth-child="3"nth-of-type="3";div:attr__id="bl-grid"attr_id="bl-grid"nth-child="1"nth-of-type="1"';
+
+test('enrichEvent masks data text after describeChain has read the full chain', () => {
+  const trace = useTrace(
+    target({ block_id: 'grid', row: 2, column: 'name', text: 'Jane Customer', block_ids: ['grid'] })
+  );
+  const event = {
+    event: '$autocapture',
+    properties: {
+      $current_url: 'https://example.com/orders',
+      $elements_chain: DATA_CHAIN,
+      $el_text: 'Jane Customer',
+    },
+  };
+  enrichEvent(event);
+  expect(trace.describeChain).toHaveBeenCalledWith(DATA_CHAIN);
+  expect(trace.isConfigText).toHaveBeenCalledWith({ text: 'Jane Customer', pageId: 'orders' });
+  expect(event.properties).toEqual({
+    $current_url: 'https://example.com/orders',
+    $elements_chain: MASKED_DATA_CHAIN,
+    lowdefy_page_id: 'orders',
+    lowdefy_path_params: {},
+    lowdefy_block_id: 'grid',
+    lowdefy_row: 2,
+    lowdefy_column: 'name',
+    lowdefy_block_ids: ['grid'],
+  });
+});
+
+test('enrichEvent masks every event, whatever its name', () => {
+  useTrace(target({}));
+  const event = {
+    event: '$some_future_event',
+    properties: { $elements_chain: DATA_CHAIN, $el_text: 'Jane Customer' },
+  };
+  enrichEvent(event);
+  expect(event.properties).toEqual({ $elements_chain: MASKED_DATA_CHAIN });
+});
+
+test('enrichEvent sends the event unchanged when maskDataText is false', () => {
+  const trace = useTrace(target({ block_id: 'grid', block_ids: ['grid'] }));
+  postHogState.maskDataText = false;
+  const event = {
+    event: '$autocapture',
+    properties: { $elements_chain: DATA_CHAIN, $el_text: 'Jane Customer' },
+  };
+  enrichEvent(event);
+  expect(event.properties.$elements_chain).toBe(DATA_CHAIN);
+  expect(event.properties.$el_text).toBe('Jane Customer');
+  expect(trace.isConfigText).not.toHaveBeenCalled();
+});
+
+test('enrichEvent masks by default', () => {
+  useTrace(target({}));
+  expect(postHogState.maskDataText).toBe(true);
+  const event = { event: '$autocapture', properties: { $el_text: 'Jane Customer' } };
+  enrichEvent(event);
+  expect(event.properties).toEqual({});
 });

@@ -26,11 +26,13 @@
 // - enabled: client is the initialised posthog-js instance.
 //
 // trace is the engine's trace registry, set by every PostHogInit; the before_send hook reads it.
+// maskDataText is the PostHogInit param of that name, set beside trace; false sends full text.
 // subscription is the lowdefy_event_failed listener: { trace, unsubscribe, count }.
 const postHogState = {
   apiKey: null,
   client: null,
   loading: null,
+  maskDataText: true,
   status: 'uninitialized',
   subscription: null,
   trace: null,
