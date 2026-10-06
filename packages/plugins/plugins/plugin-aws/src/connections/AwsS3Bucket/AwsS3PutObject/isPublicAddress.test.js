@@ -36,6 +36,11 @@ test.each([
   ['fd12:3456::1'],
   ['fe80::1'],
   ['ff02::1'],
+  ['64:ff9b::a00:1'],
+  ['64:ff9b::7f00:1'],
+  ['64:ff9b::a9fe:a9fe'],
+  ['2002:a00:1::1'],
+  ['2002:a9fe:a9fe::1'],
 ])('isPublicAddress refuses %s', (address) => {
   expect(isPublicAddress(address)).toBe(false);
 });
@@ -49,6 +54,8 @@ test.each([
   ['2606:4700:4700::1111'],
   ['2a00:1450:4001::200e'],
   ['::ffff:8.8.8.8'],
+  ['64:ff9b::808:808'],
+  ['2002:808:808::1'],
 ])('isPublicAddress allows %s', (address) => {
   expect(isPublicAddress(address)).toBe(true);
 });
