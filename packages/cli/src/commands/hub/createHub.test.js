@@ -48,6 +48,7 @@ fs.writeFileSync(path.join('.lowdefy', 'instance.json'), JSON.stringify({
   port,
   url: 'http://localhost:' + port,
   startedAt: new Date().toISOString(),
+  version: '6.0.0',
 }));
 console.log('fake dev server ready on ' + port + ' ' + process.env.FROM_REQUESTER);
 setInterval(() => {}, 1000);
@@ -210,7 +211,13 @@ const onPosix = isWindows ? test.skip : test;
 
 test('hub start runs the dev script as its own process group, with a hub port, and waits for ready', async () => {
   const status = await hub.start({ configDirectory });
-  expect(status).toMatchObject({ configDirectory, owner: 'hub', state: 'ready', managed: true });
+  expect(status).toMatchObject({
+    configDirectory,
+    owner: 'hub',
+    state: 'ready',
+    version: '6.0.0',
+    managed: true,
+  });
   expect(Number(new URL(status.url).port)).toBeGreaterThanOrEqual(portRange.first);
 });
 
