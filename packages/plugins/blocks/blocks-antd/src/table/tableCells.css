@@ -117,7 +117,7 @@
     background: var(--lf-table-tone-bg);
     color: var(--lf-table-tone-text);
     font-size: var(--ant-font-size-sm, 12px);
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1;
     white-space: nowrap;
     vertical-align: middle;
@@ -194,6 +194,31 @@
 
   .lf-table-person-name {
     overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* With a description the person is two lines: a larger avatar beside the name and the
+     description under it. It needs a default or comfortable row to fit. */
+  .lf-table-person-stacked {
+    --lf-avatar-size: 32px;
+    --lf-avatar-font-size: 12px;
+    gap: var(--ant-margin-xs, 8px);
+    height: auto;
+    vertical-align: middle;
+  }
+
+  .lf-table-person-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.35;
+  }
+
+  .lf-table-person-description {
+    overflow: hidden;
+    color: var(--ant-color-text-secondary);
+    font-size: var(--ant-font-size-sm, 12px);
     text-overflow: ellipsis;
     white-space: nowrap;
   }
