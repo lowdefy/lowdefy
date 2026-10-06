@@ -14,18 +14,27 @@
   limitations under the License.
 */
 
+function skippedText({ skipped }) {
+  return skipped > 0 ? `, ${skipped} deprecated skipped` : '';
+}
+
 // The closing line of a run: how many journeys passed, were flaky and
-// failed. `failed` counts flaky journeys too, since either fails the run.
-function summariseResults({ results }) {
+// failed, and how many `deprecated: true` journeys it skipped. `failed`
+// counts flaky journeys too, since either fails the run.
+function summariseResults({ results, skipped }) {
   const passed = results.filter((result) => result.class === 'PASS').length;
   const flaky = results.filter((result) => result.class === 'FLAKY').length;
   const failed = results.length - passed - flaky;
+  const skippedSuffix = skippedText({ skipped });
   if (flaky === 0) {
-    return { failed, text: `${passed} passed, ${failed} failed of ${results.length} journeys` };
+    return {
+      failed,
+      text: `${passed} passed, ${failed} failed of ${results.length} journeys${skippedSuffix}`,
+    };
   }
   return {
     failed: failed + flaky,
-    text: `${passed} passed, ${flaky} flaky, ${failed} failed of ${results.length} journeys`,
+    text: `${passed} passed, ${flaky} flaky, ${failed} failed of ${results.length} journeys${skippedSuffix}`,
   };
 }
 

@@ -65,3 +65,33 @@ test('parseTraceWindow refuses --from after --to', () => {
     '--from should not be after --to'
   );
 });
+
+test('parseTraceWindow refuses a window longer than maxDays with one message', () => {
+  expect(() => parseTraceWindow({ since: '31d', now, maxDays: 30 })).toThrow(
+    'The window 2026-09-03/2026-10-03 is 31 days long; a mining window is at most 30 days. Pick a shorter window with --since or --from and --to.'
+  );
+  expect(() =>
+    parseTraceWindow({ from: '2026-09-01', to: '2026-10-01', now, maxDays: 30 })
+  ).toThrow(
+    'The window 2026-09-01/2026-10-01 is 31 days long; a mining window is at most 30 days.'
+  );
+  expect(() => parseTraceWindow({ since: '2026-08-01', now, maxDays: 30 })).toThrow(
+    'a mining window is at most 30 days'
+  );
+});
+
+test('parseTraceWindow takes a window of exactly maxDays', () => {
+  expect(parseTraceWindow({ now, maxDays: 30 })).toEqual({ from: '2026-09-04', to: '2026-10-03' });
+  expect(parseTraceWindow({ since: '30d', now, maxDays: 30 })).toEqual({
+    from: '2026-09-04',
+    to: '2026-10-03',
+  });
+  expect(parseTraceWindow({ from: '2026-09-01', to: '2026-09-30', now, maxDays: 30 })).toEqual({
+    from: '2026-09-01',
+    to: '2026-09-30',
+  });
+});
+
+test('parseTraceWindow does not cap a window without maxDays', () => {
+  expect(parseTraceWindow({ since: '90d', now })).toEqual({ from: '2026-07-06', to: '2026-10-03' });
+});

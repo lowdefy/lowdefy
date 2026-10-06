@@ -64,3 +64,73 @@ test('formatEvidence is empty with nothing to show', () => {
     ''
   );
 });
+
+test('formatEvidence shows the all-time sessions of monthly evidence and leaves orgs out', () => {
+  const monthly = {
+    sequence: 'v1-3f9a12c0',
+    pageId: 'tickets',
+    flow: [],
+    months: [
+      { month: '2026-09', days: 30, sessions: 412, persons: 37, orgs: 9, failures: 14 },
+      { month: '2026-10', days: 3, sessions: 38, persons: 11, orgs: 5, failures: 1 },
+    ],
+  };
+  expect(
+    formatEvidence({ evidence: { production: monthly, mutation: { killed: 11, total: 12 } } })
+  ).toBe('450 sessions · 11/12 mutants');
+});
+
+test('formatEvidence shows 0 sessions for monthly evidence with no backing', () => {
+  const monthly = {
+    sequence: 'v1-3f9a12c0',
+    pageId: 'tickets',
+    flow: [],
+    months: [{ month: '2026-10', days: 3, sessions: 0, persons: 0, orgs: 0, failures: 0 }],
+  };
+  expect(formatEvidence({ evidence: { production: monthly } })).toBe('0 sessions');
+});
+
+const usage = {
+  tier: 'common',
+  rank: 2,
+  rate: 13.666,
+  failures: 14,
+  unranked: false,
+  usageWindow: '3m',
+};
+
+test('formatEvidence shows the tier, rank, rate and failures over the window in place of sessions', () => {
+  const monthly = {
+    sequence: 'v1-3f9a12c0',
+    pageId: 'tickets',
+    flow: [],
+    months: [{ month: '2026-09', days: 30, sessions: 410, persons: 37, orgs: 9, failures: 14 }],
+  };
+  expect(
+    formatEvidence({
+      evidence: { production: monthly, mutation: { killed: 11, total: 12 } },
+      usage,
+    })
+  ).toBe('common #2 · 13.7/day · 14 failed (3m) · 11/12 mutants');
+  expect(formatEvidence({ evidence: { production: monthly }, usage })).toBe(
+    'common #2 · 13.7/day · 14 failed (3m)'
+  );
+});
+
+test('formatEvidence shows the rate and failures alone when the selection is too thin to rank', () => {
+  expect(
+    formatEvidence({
+      evidence: { production, mutation: { killed: 4, total: 5 } },
+      usage: { ...usage, tier: null, rank: null },
+    })
+  ).toBe('13.7/day · 14 failed (3m) · 4/5 mutants');
+});
+
+test('formatEvidence shows unranked for a journey with no counts for its current flow', () => {
+  expect(
+    formatEvidence({
+      evidence: { production, mutation: { killed: 4, total: 5 } },
+      usage: { tier: 'common', rank: null, rate: null, failures: null, unranked: true },
+    })
+  ).toBe('unranked · 4/5 mutants');
+});

@@ -15,15 +15,25 @@
 */
 
 import fs from 'fs';
+import { compileTrace } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import computeEvidence from './evidence/computeEvidence.js';
+import createTokenResolver from './createTokenResolver.js';
+import describeMissingPull from './describeMissingPull.js';
 import formatEvidence from '../test/formatEvidence.js';
 import formatZeroBacked from './evidence/formatZeroBacked.js';
+import listFinalDays from './listFinalDays.js';
+import loadBlockMetas from './loadBlockMetas.js';
 import readCommittedJourneys from './readCommittedJourneys.js';
 import readDevSegments from './readDevSegments.js';
 import readMutationReport from './readMutationReport.js';
-import readProductionSegments from './readProductionSegments.js';
+import readConfigText from './configText/readConfigText.js';
+import readProductionMonths from './readProductionMonths.js';
+import readTraceSalt from './pull/readTraceSalt.js';
+import removeUntokenisedTraces from './removeUntokenisedTraces.js';
+import resolveBuildDirectory from './resolveBuildDirectory.js';
+import selectMonthsToRead from './evidence/selectMonthsToRead.js';
 import writeEvidenceNode from './evidence/writeEvidenceNode.js';
 
 const SOURCES = ['production'];
@@ -37,6 +47,92 @@ function summarise({ evidence }) {
     parts.push(`${recordings} dev recordings`);
   }
   return parts.length === 0 ? 'no evidence' : parts.join(' · ');
+}
+
+function countDaysByMonth({ days }) {
+  const counts = {};
+  days.forEach((day) => {
+    const month = day.slice(0, 7);
+    counts[month] = (counts[month] ?? 0) + 1;
+  });
+  return counts;
+}
+
+// Final days the cache holds but this machine cannot read are named, with the
+// pull that fetches them again, so a month that did not update says why: a
+// day hashed under another salt resolves none of its tokens. With no salt at
+// all, the pull writes a new one.
+function warnUnreadDays({ logger, otherSalt, traceSalt }) {
+  if (otherSalt.length === 0) return;
+  const shown =
+    otherSalt.length > 5 ? `${otherSalt.slice(0, 5).join(', ')}, …` : otherSalt.join(', ');
+  const pull = describeMissingPull({ missing: otherSalt });
+  if (type.isNone(traceSalt)) {
+    logger.warn(
+      `There is no trace salt in .lowdefy/traces/production/, so ${otherSalt.length} final day(s) of the production cache cannot be read (${shown}). Pulling them again hashes them under a new salt. ${pull}`
+    );
+    return;
+  }
+  logger.warn(
+    `Left out ${otherSalt.length} final day(s) of the production cache pulled under another trace salt (${shown}). Pulling them again hashes them under this machine's salt. ${pull}`
+  );
+}
+
+// The production source of a refresh: how many final days the cache holds of
+// each month, and the segments of the months some journey's counts can still
+// change in, compiled in one pass. Days pulled before clicked text was stored
+// as tokens are removed first, as every production read removes them. Only
+// days hashed under this machine's salt are read, with their tokens resolved
+// to config text; the rest are named with the pull that fetches them again.
+// Undefined when the cache holds no such final day, so the committed
+// production evidence is kept.
+function readProduction({ context, journeys, today, now, configText }) {
+  const { directories, logger } = context;
+  removeUntokenisedTraces({ directories, logger, now });
+  const traceSalt = readTraceSalt({ directories });
+  const { days: finalDays, otherSalt } = listFinalDays({
+    directories,
+    saltId: type.isNone(traceSalt) ? null : traceSalt.saltId,
+  });
+  warnUnreadDays({ logger, otherSalt, traceSalt });
+  if (finalDays.length === 0) {
+    if (otherSalt.length === 0) {
+      logger.warn(
+        'The production trace cache holds no final day. Run "lowdefy journeys pull posthog" first to count production use.'
+      );
+    }
+    return undefined;
+  }
+  const dayCounts = countDaysByMonth({ days: finalDays });
+  const months = selectMonthsToRead({
+    journeys: journeys.map((entry) => entry.journey),
+    dayCounts,
+    today,
+    isConfigText: configText.isConfigText,
+  });
+  if (months.length === 0) return { dayCounts, months, segments: [], days: [] };
+  const { records, days } = readProductionMonths({
+    directories,
+    finalDays,
+    months,
+    resolve: createTokenResolver({ salt: traceSalt.salt, texts: configText.texts }),
+  });
+  const { segments } = compileTrace({
+    records,
+    blockMetas: loadBlockMetas({ buildDirectory: resolveBuildDirectory({ context }) }),
+    source: 'production',
+  });
+  return { dayCounts, months, segments, days };
+}
+
+function describeRead({ production }) {
+  if (type.isUndefined(production)) {
+    return 'with no final day in the production cache, so production evidence is kept as committed';
+  }
+  if (production.months.length === 0) {
+    return 'with no new final days in the production cache';
+  }
+  return `over ${production.days.length} final days of ${production.months.join(', ')}`;
 }
 
 // Writes every changed journey of each file in turn. A file whose evidence
@@ -72,10 +168,13 @@ function writeChanged({ changed, logger }) {
 }
 
 // `lowdefy journeys evidence [--refresh]`: how much production use backs each
-// committed journey. Without --refresh it prints what would change; with it,
-// it rewrites only the `evidence` node of the journeys whose numbers moved -
-// the only command that writes that key. It then lists the journeys nothing
-// in the window backs, and removes none of them.
+// committed journey, by calendar month. Without --refresh it prints what would
+// change; with it, it rewrites only the `evidence` node of the journeys whose
+// numbers moved - the only command that writes that key. It reads every final
+// day of the production cache, not a window, and then lists the journeys
+// nothing backs over the usage window, and removes none of them. A journey's
+// click text counts only when it is config text, in its counts, its sequence
+// id and its flow lines alike.
 async function journeysEvidence({ context }) {
   const { options, logger } = context;
   const source = options.source ?? 'production';
@@ -84,8 +183,10 @@ async function journeysEvidence({ context }) {
   }
   const { journeys, skipped } = readCommittedJourneys({ context });
   skipped.forEach((line) => logger.warn(`Skipped ${line}`));
-  const production = readProductionSegments({ context });
   const now = Date.now();
+  const today = new Date(now).toISOString().slice(0, 10);
+  const configText = await readConfigText({ context });
+  const production = readProduction({ context, journeys, today, now, configText });
   const results = computeEvidence({
     journeys,
     sources: {
@@ -93,7 +194,8 @@ async function journeysEvidence({ context }) {
       dev: readDevSegments({ context, now }),
       mutation: readMutationReport({ directories: context.directories }),
     },
-    today: new Date(now).toISOString().slice(0, 10),
+    today,
+    isConfigText: configText.isConfigText,
   });
 
   const changed = results.filter((result) => result.changed);
@@ -104,20 +206,19 @@ async function journeysEvidence({ context }) {
       })}`
     );
   });
+  const read = describeRead({ production });
   if (options.refresh === true) {
     const written = writeChanged({ changed, logger });
-    logger.info(
-      `Refreshed evidence for ${written} of ${results.length} journeys over ${production.window.from}/${production.window.to}.`
-    );
+    logger.info(`Refreshed evidence for ${written} of ${results.length} journeys ${read}.`);
   } else {
     logger.info(
-      `${changed.length} of ${results.length} journeys would change over ${production.window.from}/${production.window.to}. Run with --refresh to write them.`
+      `${changed.length} of ${results.length} journeys would change ${read}. Run with --refresh to write them.`
     );
   }
-  formatZeroBacked({ results, window: production.window }).forEach((line) => logger.info(line));
+  formatZeroBacked({ results }).forEach((line) => logger.info(line));
 
   await context.sendTelemetry();
-  return { results, window: production.window };
+  return { results, months: production?.months ?? [] };
 }
 
 export default journeysEvidence;

@@ -28,6 +28,10 @@ function isNonEmptyString(value) {
   return type.isString(value) && value !== '';
 }
 
+// A production click's text as the pull stores it: never the text, a salted
+// token of it, which readers turn back into text only when it is config text.
+const TEXT_TOKEN_PATTERN = /^t_[0-9a-f]{16}$/;
+
 // The DOM target of an interaction, as the describe functions produce it. The
 // page and the enclosing block ids belong elsewhere: `page_id` is on the record
 // and `block_ids` only feeds the pairing rule, so a target carrying either was
@@ -41,8 +45,12 @@ function validateTraceTarget({ target }) {
       target
     )}.`;
   }
-  if (!isNonEmptyString(target.block_id) && !isNonEmptyString(target.text)) {
-    return `Trace record "target" requires a "block_id" or a "text". Received ${JSON.stringify(
+  if (
+    !isNonEmptyString(target.block_id) &&
+    !isNonEmptyString(target.text) &&
+    !isNonEmptyString(target.text_token)
+  ) {
+    return `Trace record "target" requires a "block_id", a "text" or a "text_token". Received ${JSON.stringify(
       target
     )}.`;
   }
@@ -54,6 +62,11 @@ function validateTraceTarget({ target }) {
   if (!isStringOrNone(target.text)) {
     return `Trace record "target.text" should be a string or null. Received ${JSON.stringify(
       target.text
+    )}.`;
+  }
+  if (!type.isNone(target.text_token) && !TEXT_TOKEN_PATTERN.test(target.text_token)) {
+    return `Trace record "target.text_token" should be "t_" and 16 hex characters, or null. Received ${JSON.stringify(
+      target.text_token
     )}.`;
   }
   if (!isStringOrNone(target.block_type)) {

@@ -228,6 +228,74 @@ test('a success resets the failed-call count', async () => {
   expect(mockDecide).toHaveBeenCalledTimes(4);
 });
 
+function structuredPolicy() {
+  return createModelPolicy({
+    backend: 'structured-output',
+    modelId: 'm',
+    apiKey: 'k',
+    seeded: createSeededPolicy(),
+  });
+}
+
+function retried(lastError) {
+  return Object.assign(new Error(`Failed after 3 attempts. Last error: ${lastError.message}`), {
+    name: 'AI_RetryError',
+    lastError,
+    errors: [lastError, lastError, lastError],
+  });
+}
+
+test('a failed call that may have been billed is charged an estimate, so the cap counts it', async () => {
+  const policy = await structuredPolicy();
+  const unparsed = Object.assign(new Error('No object generated: response did not match schema.'), {
+    name: 'AI_NoObjectGeneratedError',
+  });
+  mockDecide.mockRejectedValueOnce(retried(unparsed));
+  const answer = await policy.choose(step({ candidates: three }));
+  expect(answer.fallback).toEqual('failed');
+  expect(answer.cost.estimated).toBe(true);
+  expect(answer.cost.usd).toBeGreaterThan(0);
+  expect(answer.usage).toEqual({ inputTokens: 0, outputTokens: 0 });
+});
+
+test('a failed call that carries its usage is charged from those tokens', async () => {
+  const policy = await structuredPolicy();
+  const unparsed = Object.assign(new Error('No object generated.'), {
+    name: 'AI_NoObjectGeneratedError',
+    usage: { inputTokens: 1_000_000, outputTokens: 0 },
+  });
+  mockDecide.mockRejectedValueOnce(unparsed);
+  const answer = await policy.choose(step({ candidates: three }));
+  expect(answer.usage).toEqual({ inputTokens: 1_000_000, outputTokens: 0 });
+  expect(answer.cost).toEqual({ usd: 1, estimated: true });
+});
+
+test('a refused model, a network failure or an abort adds no cost', async () => {
+  const policy = await structuredPolicy();
+  const unreachable = Object.assign(new Error('Gateway request failed'), {
+    name: 'GatewayResponseError',
+    statusCode: 500,
+    cause: Object.assign(new Error('Cannot connect to API: fetch failed'), {
+      name: 'AI_APICallError',
+      cause: new TypeError('fetch failed'),
+    }),
+  });
+  const aborted = Object.assign(new Error('This operation was aborted'), { name: 'AbortError' });
+  mockDecide
+    .mockRejectedValueOnce(refused)
+    .mockRejectedValueOnce(retried(unreachable))
+    .mockResolvedValueOnce(answers({ choice: 'o0' }))
+    .mockRejectedValueOnce(aborted);
+  const first = await policy.choose(step({ candidates: three }));
+  const second = await policy.choose(step({ candidates: three }));
+  await policy.choose(step({ candidates: three }));
+  const fourth = await policy.choose(step({ candidates: three }));
+  for (const answer of [first, second, fourth]) {
+    expect(answer.fallback).toEqual('failed');
+    expect(answer.cost).toBeUndefined();
+  }
+});
+
 function jevPolicy(onSwitch = () => {}) {
   return createModelPolicy({
     backend: 'evaluation',

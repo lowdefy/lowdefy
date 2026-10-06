@@ -17,8 +17,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import build from '@lowdefy/build';
+import defaultMessagesMap from '@lowdefy/build/defaultMessagesMap';
 import { serializeBuildException } from '@lowdefy/build/dev';
+import { mergeObjects } from '@lowdefy/helpers';
 
+import collectConfigText from './collectConfigText.mjs';
 import createCustomPluginMessagesMap from '../../../manager/utils/createCustomPluginMessagesMap.mjs';
 import createCustomPluginTypesMap from '../../../manager/utils/createCustomPluginTypesMap.mjs';
 import prepareScratchServer from './prepareScratchServer.mjs';
@@ -29,7 +32,9 @@ import prepareScratchServer from './prepareScratchServer.mjs';
 // types come from the installed dev server, so base and head are built by
 // one builder and a Lowdefy version bump does not show as a config change.
 // Writes <out>/build/, <out>/server/ and <out>/result.json, which the CLI
-// reads for the build's errors and warnings.
+// reads for the build's errors and warnings. A build that succeeds also
+// writes <out>/configText.json, the app's config text set, which the journey
+// readers resolve production text tokens against.
 async function runConfigTreeBuild({
   configDirectory,
   outDirectory,
@@ -43,7 +48,9 @@ async function runConfigTreeBuild({
     server: path.join(outDirectory, 'server'),
   };
   const resultPath = path.join(outDirectory, 'result.json');
+  const configTextPath = path.join(outDirectory, 'configText.json');
   await fs.promises.rm(resultPath, { force: true });
+  await fs.promises.rm(configTextPath, { force: true });
   await prepareScratchServer({ devDirectory, serverDirectory: directories.server });
   let result;
   try {
@@ -59,6 +66,11 @@ async function runConfigTreeBuild({
       refResolver,
       stage: 'dev',
     });
+    const configText = await collectConfigText({
+      buildDirectory: directories.build,
+      messagesMap: mergeObjects([defaultMessagesMap, customMessagesMap]),
+    });
+    await fs.promises.writeFile(configTextPath, JSON.stringify(configText, null, 2));
     result = { status: 'ok', errors: [], warnings: [] };
   } catch (error) {
     result = {

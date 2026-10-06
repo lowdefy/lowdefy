@@ -32,7 +32,20 @@ function readTarget(params) {
 // target, so its chord is what tells Enter from Escape. A hand-written `open`
 // clicks its target's trigger, which is what a recording holds for it, so it
 // reads as a click on that target.
-function stepIdentity({ step }) {
+//
+// With `isConfigText`, a click's text enters the identity only when it is the
+// app's config text, and any other text reads as no text: production clicks
+// hold config text or none, so a journey click on a data row or on a label
+// built from values matches them by block and column, and no reader confirms
+// a production value that is not already in the repository. Without it the
+// text is read as written.
+function readClickText({ target, isConfigText }) {
+  if (!type.isString(target.text)) return null;
+  if (!type.isUndefined(isConfigText) && !isConfigText(target.text)) return null;
+  return target.text;
+}
+
+function stepIdentity({ step, isConfigText }) {
   const stepKey = getStepKey(step);
   const params = step[stepKey];
   const verb = stepKey === 'open' ? 'click' : stepKey;
@@ -45,7 +58,7 @@ function stepIdentity({ step }) {
   const target = readTarget(params);
   const blockId = type.isString(target.blockId) ? normaliseBlockId(target.blockId) : null;
   const column = type.isString(target.column) ? target.column : null;
-  const text = verb === 'click' && type.isString(target.text) ? target.text : null;
+  const text = verb === 'click' ? readClickText({ target, isConfigText }) : null;
   return JSON.stringify([verb, blockId, column, text]);
 }
 

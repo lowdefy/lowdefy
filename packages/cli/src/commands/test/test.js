@@ -20,14 +20,18 @@ import { createTraceId, traceIdDate, type } from '@lowdefy/helpers';
 import collapsePersonas from './collapsePersonas.js';
 import fetchBuildId from './fetchBuildId.js';
 import formatNoTestsMatched from './formatNoTestsMatched.js';
+import formatSkippedJourney from './formatSkippedJourney.js';
 import isFullSuiteRun from './isFullSuiteRun.js';
 import lintJourneys from './lint/lintJourneys.js';
 import parseRepeat from './parseRepeat.js';
 import parseTestSelection from './parseTestSelection.js';
+import parseTier from '../journeys/usage/parseTier.js';
+import parseUsageWindow from '../journeys/usage/parseUsageWindow.js';
 import resolveJourneyPaths from './resolveJourneyPaths.js';
 import resolveServer from './resolveServer.js';
 import runRepeated from './runRepeated.js';
 import selectTests from './selectTests.js';
+import selectTier from './selectTier.js';
 import summariseResults from './summariseResults.js';
 import writeExercised from './writeExercised.js';
 import writeTestRun from './writeTestRun.js';
@@ -46,6 +50,8 @@ async function test({ context }) {
     refuse({ context, message: repeatError });
     return;
   }
+  const tier = parseTier(context.options.tier);
+  const usageWindow = `${parseUsageWindow(context.options.usageWindow)}m`;
   const {
     filters,
     tags,
@@ -102,6 +108,24 @@ async function test({ context }) {
     return;
   }
 
+  const tiered = await selectTier({
+    context,
+    selected,
+    tier,
+    usageWindow,
+    fullTierOption: '--tier full',
+  });
+  if (!type.isUndefined(tiered.refused)) {
+    refuse({ context, message: tiered.refused });
+    return;
+  }
+  tiered.skipped.forEach((skipped) => context.logger.info(formatSkippedJourney({ skipped })));
+  if (tiered.selected.length === 0) {
+    context.logger.info(summariseResults({ results: [], skipped: tiered.skipped.length }).text);
+    context.sendTelemetry();
+    return;
+  }
+
   const server = await resolveServer({ context });
   let interrupted = false;
   // The dev server runs in its own process group, out of reach of a signal to
@@ -122,20 +146,29 @@ async function test({ context }) {
 
   // One run id per invocation names this run's trace file; only a full-suite
   // run records (see runRepeated).
-  const recording = { run: createTraceId(), paths: givenPaths, filter: filters, tags };
-  const recorded = isFullSuiteRun({ paths: givenPaths, filter: filters, tags, repetition: 1 });
+  const recording = { run: createTraceId(), paths: givenPaths, filter: filters, tags, tier };
+  const recorded = isFullSuiteRun({
+    paths: givenPaths,
+    filter: filters,
+    tags,
+    tier,
+    repetition: 1,
+  });
   const results = [];
   const seen = new Set();
   try {
-    for (const { suite, item } of selected) {
-      const result = await runRepeated({
-        suite,
-        context,
-        item,
-        url: server.url,
-        repeat,
-        recording,
-      });
+    for (const { suite, item, usage } of tiered.selected) {
+      const result = {
+        ...(await runRepeated({
+          suite,
+          context,
+          item,
+          url: server.url,
+          repeat,
+          recording,
+        })),
+        usage,
+      };
       results.push(result);
       const lines = suite.format({ result, seen });
       if (result.passed) {
@@ -167,7 +200,7 @@ async function test({ context }) {
       )}.`
     );
   }
-  const summary = summariseResults({ results });
+  const summary = summariseResults({ results, skipped: tiered.skipped.length });
   if (summary.failed > 0) {
     context.logger.error(summary.text);
     process.exitCode = 1;

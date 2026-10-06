@@ -44,6 +44,7 @@ import journeysVariants from './commands/journeys/variants/journeysVariants.js';
 import journeysRecordings from './commands/journeys/journeysRecordings.js';
 import journeysCoverage from './commands/journeys/journeysCoverage.js';
 import journeysEvidence from './commands/journeys/journeysEvidence.js';
+import journeysUsage from './commands/journeys/journeysUsage.js';
 import journeysExplore from './commands/journeys/explore/journeysExplore.js';
 import journeysPullPosthog from './commands/journeys/pull/journeysPullPosthog.js';
 import mcp from './commands/mcp/mcp.js';
@@ -617,7 +618,7 @@ const productionWindowOptions = [
 const journeysEvidenceCommand = journeys
   .command('evidence')
   .description(
-    "Report how much production use backs each journey in tests/journeys/; --refresh writes it into each journey's evidence key."
+    "Report how much production use backs each journey in tests/journeys/, by calendar month, from every final day of the production cache; --refresh writes it into each journey's evidence key."
   )
   .usage('[options]')
   .addOption(options.configDirectory)
@@ -631,8 +632,50 @@ const journeysEvidenceCommand = journeys
       'Write the evidence key of every journey whose numbers changed, and nothing else in the file.'
     )
   );
-productionWindowOptions.forEach((option) => journeysEvidenceCommand.addOption(option));
 journeysEvidenceCommand.action(runCommand({ cliVersion, handler: journeysEvidence }));
+
+journeys
+  .command('usage')
+  .description(
+    "Rank the journeys in tests/journeys/ by their recent production use, with each one's popularity tier, months and old flows, then list the production flows no journey covers."
+  )
+  .usage('[options] [paths...]')
+  .argument(
+    '[paths...]',
+    'Journey files, directories or quoted globs to report on instead of the whole suite, as for lowdefy test.'
+  )
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(
+    new Option(
+      '--filter <name>',
+      'Only journeys whose name contains this string (case-insensitive). Repeat it to match any of the strings.'
+    ).argParser(collectValues)
+  )
+  .addOption(
+    new Option(
+      '--tag <tag>',
+      'Only journeys whose tags include this tag. Repeat it to match any of the tags.'
+    ).argParser(collectValues)
+  )
+  .addOption(
+    new Option(
+      '--tier <tier>',
+      'Only the journeys in this popularity tier of the selection: common (p50), wide (p80), edge (p95) or full (every journey, the default).'
+    )
+  )
+  .addOption(
+    new Option(
+      '--usage-window <months>',
+      'The calendar months recent use is ranked over, ending at the newest month any selected journey holds, such as 3m (the default).'
+    )
+  )
+  .addOption(new Option('--json', 'Print the report as JSON instead of text.'))
+  .action((paths, commandOptions, command) =>
+    runCommand({ cliVersion, handler: journeysUsage })({ ...commandOptions, paths }, command)
+  );
 
 const journeysCoverageCommand = journeys
   .command('coverage')
@@ -733,6 +776,18 @@ program
     new Option(
       '--journeys-directory <journeys-directory>',
       'Change the directory journeys are read from. Default is "<config-directory>/tests/journeys". Fails when the directory holds no journeys.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--tier <tier>',
+      'Only run the journeys in this popularity tier of the selection, ranked by recent production use: common (p50, the happy paths), wide (p80), edge (p95) or full (every journey, the default). Journeys with no counts for their current steps run in every tier.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--usage-window <months>',
+      'The calendar months recent use is ranked over for --tier and the PASS line, ending at the newest month any selected journey holds, such as 6m. Default 3m.'
     )
   )
   .addOption(

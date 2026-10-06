@@ -113,7 +113,7 @@ Set `AI_GATEWAY_API_KEY` in your shell or the app's `.env`. With `jev`, the stru
 
 The model sees the pull request's title and description, the charter if there is one, the page, the role, the changed blocks and the labels on screen. A label that is not from your config, your data set's fixtures or a value the walk typed is sent as `<data>`, so no snapshot data leaves your machine.
 
-`--max-cost` (default `$1.00`) stops the run once the model cost the Gateway reports passes it. A call that reports no cost is counted at an estimate (Jev at its published price, other models at a deliberately high rate), and the run warns that the cap is working from an estimate.
+`--max-cost` (default `$1.00`) stops the run once the model cost the Gateway reports passes it. A call that reports no cost is counted at an estimate (Jev at its published price, other models at a deliberately high rate), and the run warns that the cap is working from an estimate. A failed call is counted at the same estimate, because the model may have answered before the call failed, unless the Gateway refused the model or the request got no response.
 
 ## Findings
 

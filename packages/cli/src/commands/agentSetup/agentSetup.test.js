@@ -89,6 +89,9 @@ test('agentSetup creates .mcp.json, the Claude Code skill, and AGENTS.md from sc
   expect(skillMd).toContain('Never guess type names or properties.');
   expect(skillMd).toContain('When you finish work in a git worktree you created for the task');
   expect(skillMd).toContain('stops once it has been idle for 15 minutes');
+  expect(skillMd).toContain('## Testing a change');
+  expect(skillMd).toContain('Run `tier: common` first');
+  expect(skillMd).toContain('Widen to `tier: edge` before you call the change done');
   expect(skillMd).not.toContain('localhost:');
 
   const agentsMd = read('AGENTS.md');
@@ -96,6 +99,9 @@ test('agentSetup creates .mcp.json, the Claude Code skill, and AGENTS.md from sc
   expect(agentsMd).toContain('npx lowdefy dev');
   expect(agentsMd).toContain('lowdefy_dev_start');
   expect(agentsMd).toContain('When you finish work in a git worktree you created for the task');
+  expect(agentsMd).toContain('### Testing a change');
+  expect(agentsMd).toContain('Run `tier: common` first');
+  expect(agentsMd).toContain('`lowdefy test --tier common`');
   expect(agentsMd).not.toContain('localhost:');
 
   const settings = JSON.parse(read(path.join('.claude', 'settings.json')));

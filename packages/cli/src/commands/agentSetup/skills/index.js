@@ -40,7 +40,7 @@ const skills = [
     name: 'journeys-from-production',
     render: journeysFromProduction,
     agentsMdLine:
-      '`journeys-from-production`: turning what real users do in production into proven journeys, uncovered failures and flows first.',
+      '`journeys-from-production`: reading what real users do in production with the app config and turning the routines that matter into proven journeys, failures first.',
   },
   {
     name: 'journeys-from-pr',
