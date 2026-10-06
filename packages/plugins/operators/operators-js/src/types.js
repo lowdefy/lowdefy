@@ -93,6 +93,7 @@ export default {
       '_gt',
       '_gte',
       '_hash',
+      '_hmac',
       '_if',
       '_if_none',
       '_intl',

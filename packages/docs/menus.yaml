@@ -1217,6 +1217,9 @@
         - id: _hash
           type: MenuLink
           pageId: _hash
+        - id: _hmac
+          type: MenuLink
+          pageId: _hmac
         - id: _if
           type: MenuLink
           pageId: _if
