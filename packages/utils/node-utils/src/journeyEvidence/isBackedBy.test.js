@@ -14,9 +14,7 @@
   limitations under the License.
 */
 
-import YAML from 'yaml';
-
-import compileTrace from '../journeyCompiler/compileTrace.js';
+import compileSegments from '../journeyCompiler/compileSegments.js';
 import journeySequence from '../journeyCompiler/journeySequence.js';
 import traceRecord from '../journeyCompiler/traceRecord.js';
 import { blockMetas, traceRecords } from '../journeyCompiler/testTrace.js';
@@ -106,7 +104,7 @@ test('isBackedBy reads a hand-written journey that follows a Link without expect
   expect(isBackedBy({ journeySequence: journey, segmentSequence, pageId: 'home' })).toBe(false);
 });
 
-test('isBackedBy backs every compiled candidate by the segments it was compiled from', () => {
+test('isBackedBy backs every compiled segment by its own steps', () => {
   const production = [
     traceRecord({ at: 0, session: 'p-1', kind: 'pageview', url: '/tickets', source: 'production' }),
     traceRecord({ at: 1, session: 'p-1', kind: 'change', block: 'title', source: 'production' }),
@@ -121,20 +119,21 @@ test('isBackedBy backs every compiled candidate by the segments it was compiled 
     }),
   ];
   const corpora = [
-    { records: traceRecords, source: 'dev' },
+    {
+      records: traceRecords.map((record) => ({ ...record, source: 'journey' })),
+      source: 'journey',
+    },
     { records: production, source: 'production' },
   ];
   corpora.forEach(({ records, source }) => {
-    const { candidates, segments } = compileTrace({ records, blockMetas, source });
+    const { segments } = compileSegments({ records, blockMetas, source });
     expect(segments.length).toBeGreaterThan(0);
     segments.forEach((segment) => {
-      const candidate = candidates.find((item) => item.hash === segment.hash);
-      const journey = YAML.parse(candidate.contents);
       expect(
         isBackedBy({
-          journeySequence: journeySequence({ pageId: journey.pageId, steps: journey.steps }),
+          journeySequence: journeySequence({ pageId: segment.page_id, steps: segment.steps }),
           segmentSequence: segment.sequence,
-          pageId: journey.pageId,
+          pageId: segment.page_id,
         })
       ).toBe(true);
     });

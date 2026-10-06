@@ -59,6 +59,7 @@ import writeFile from './writeFile.js';
 import writeFileAtomic from './writeFileAtomic.js';
 import watchOwner from './watchOwner.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
+import compileSegments from './journeyCompiler/compileSegments.js';
 import compileTrace from './journeyCompiler/compileTrace.js';
 import countTextTokens from './journeyEvidence/countTextTokens.js';
 import collectKnownText from './journeyText/collectKnownText.js';
@@ -95,6 +96,7 @@ export {
   collectEnvironmentGuards,
   collectKnownText,
   compareProcessStartTimes,
+  compileSegments,
   compileTrace,
   copyFileOrDirectory,
   countTextTokens,

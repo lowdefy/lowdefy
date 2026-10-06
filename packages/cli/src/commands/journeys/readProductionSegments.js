@@ -14,15 +14,14 @@
   limitations under the License.
 */
 
-import { compileTrace } from '@lowdefy/node-utils';
+import { compileSegments } from '@lowdefy/node-utils';
 
 import loadBlockMetas from './loadBlockMetas.js';
 import loadRouteTable from './loadRouteTable.js';
 import readProductionTrace from './readProductionTrace.js';
 import resolveBuildDirectory from './resolveBuildDirectory.js';
 
-// The production window's segments, compiled the way `journeys compile
-// --source production` compiles them, for evidence and coverage, with the
+// The production window's segments (compileSegments), for coverage, with the
 // app's isConfigText to read journeys by the same text rule, for coverage,
 // which passes maxDays, the mining cap. Evidence refresh reads whole months
 // through readProductionMonths instead.
@@ -36,7 +35,7 @@ async function readProductionSegments({ context, maxDays }) {
     to: options.to,
   });
   const buildDirectory = resolveBuildDirectory({ context });
-  const { segments } = compileTrace({
+  const { segments } = compileSegments({
     records,
     blockMetas: loadBlockMetas({ buildDirectory }),
     routeTable: loadRouteTable({ buildDirectory }),

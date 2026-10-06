@@ -17,47 +17,18 @@
 import { type } from '@lowdefy/helpers';
 
 import clusterSegments from './clusterSegments.js';
-import countTextTokens from '../journeyEvidence/countTextTokens.js';
-import describeSegment from './describeSegment.js';
-import mergeOrigin from './mergeOrigin.js';
-import parseCandidateOrigin from './parseCandidateOrigin.js';
-import prepareSegments from './prepareSegments.js';
+import describeSegments from './describeSegments.js';
+import publicSegment from './publicSegment.js';
 import renderCandidate from './renderCandidate.js';
-import updateCandidateOrigin from './updateCandidateOrigin.js';
-
-const SOURCES = ['production', 'dev', 'explorer', 'journey'];
 
 function candidateFileName({ hash, pageId }) {
   return `${pageId.replace(/[^A-Za-z0-9_-]/g, '-')}-${hash}.yaml`;
 }
 
-function keepSegment({ segment, filters }) {
-  if (!type.isNone(filters.build) && !segment.allBuilds.every((build) => build === filters.build)) {
-    return false;
-  }
-  return type.isNone(filters.page) || segment.pages.includes(filters.page);
-}
-
-function placeKey({ page, block_id: blockId, column }) {
-  return JSON.stringify([page, blockId ?? null, column ?? null]);
-}
-
-// The window's token counts for the places the representative clicked with a
-// token that resolved to no config text, so the agent can tell a label built
-// from values from a data row without the text.
-function tokenisedPlaces({ segment, textTokens }) {
-  const places = new Set(
-    segment.text_clicks
-      .filter((click) => !click.config_text && !type.isNone(click.text_token))
-      .map(placeKey)
-  );
-  return textTokens.filter((row) => places.has(placeKey(row)));
-}
-
-function buildOrigin({ cluster, source, textTokens }) {
+function buildOrigin({ cluster }) {
   const { compiled } = cluster.representative;
   const origin = {
-    source,
+    source: 'explorer',
     sequence_hash: cluster.hash,
     sessions: cluster.sessions,
     persons: cluster.persons,
@@ -68,52 +39,20 @@ function buildOrigin({ cluster, source, textTokens }) {
   origin.first_seen = cluster.first_seen;
   origin.last_seen = cluster.last_seen;
   origin.rank = cluster.rank;
-  if (source === 'dev') origin.builds = cluster.builds;
   if (compiled.flags.length > 0) origin.flags = compiled.flags;
-  const tokenised = tokenisedPlaces({ segment: cluster.representative, textTokens });
-  if (tokenised.length > 0) origin.text_tokens = tokenised;
   origin.sample_sessions = cluster.sample_sessions;
   return origin;
 }
 
-function publicSegment(segment) {
-  const { hash, sequence, steps, persons, orgs, roles, failure, session } = segment;
-  return {
-    hash,
-    sequence,
-    steps,
-    persons,
-    orgs,
-    roles,
-    failure,
-    session,
-    first_seen: segment.first_seen,
-    last_seen: segment.last_seen,
-    // Read by the production profile and coverage.
-    page_id: segment.page_id,
-    pages: segment.pages,
-    failure_path: segment.failure_path,
-    frustrations: segment.frustrations,
-    text_clicks: segment.text_clicks,
-  };
-}
-
-// The whole compile: v1 trace records in, one candidate journey per distinct
-// flow out, plus every segment's sequence for evidence and coverage. Pure - it
-// neither reads nor writes files, so the CLI, a future MCP tool, coverage and
-// the tests all drive the same arithmetic.
+// The explorer's walks compiled to candidate journeys: one candidate per
+// distinct flow, plus every segment's sequence. Journeys are otherwise written
+// by the coding agent from session logs (formatSessionLog); only the explorer
+// still turns its own walks into candidates. Pure - it neither reads nor
+// writes files.
 //
-// `routeTable` ({ routes, basePath }, the build's routes.json and config
-// basePath) is how a segment's sequence reads the page a navigation by click
-// landed on (journeySequence).
-//
-// `existingCandidates` is { fileName: contents } of the output directory. A
-// known sequence hash keeps its file and gets a new origin block; a new one
-// gets a new file. `filters` ({ since, until, build, page }) is how the CLI's
-// flags reach the compile: since/until bound the window, build and page select
-// segments. Production records hold config text or a clicked-text token; the
-// counts the agent reads a tokenised step by (countTextTokens) are over every
-// kept segment of the window.
+// `routeTable` ({ routes, basePath }) is how a segment's sequence reads the
+// page a navigation by click landed on. `filters` ({ since, until }) bound the
+// window.
 //
 // `prepareCandidate({ journey, origin, comments, sessions })`, when given,
 // sees each candidate before it is rendered, with the sessions its cluster
@@ -126,37 +65,33 @@ function compileTrace({
   records,
   blockMetas = {},
   routeTable,
-  existingCandidates = {},
   source,
   filters = {},
   prepareCandidate,
 }) {
-  if (!SOURCES.includes(source)) {
+  if (source !== 'explorer') {
     throw new Error(
-      `Journey compiler requires "source" to be one of ${SOURCES.join(
-        ', '
-      )}. Received ${JSON.stringify(source)}.`
+      `Journey compiler compiles only explorer walks to candidates. Received "source" ${JSON.stringify(
+        source
+      )}.`
     );
   }
-  const { segments: prepared, dropped } = prepareSegments({ records, source, filters });
-  const segments = prepared
-    .map((segment) => describeSegment({ records: segment, blockMetas, routeTable, source }))
-    .filter((segment) => !type.isUndefined(segment) && keepSegment({ segment, filters }));
+  const { segments, dropped } = describeSegments({
+    records,
+    blockMetas,
+    routeTable,
+    source,
+    filters,
+  });
   const clusters = clusterSegments({ segments });
-  const textTokens = countTextTokens({ segments });
 
   const candidates = clusters
     .map((cluster) => {
       const { compiled } = cluster.representative;
-      const fileName = candidateFileName({ hash: cluster.hash, pageId: compiled.journey.pageId });
-      const existing = existingCandidates[fileName];
       let candidate = {
         journey: compiled.journey,
         comments: compiled.comments,
-        origin: mergeOrigin({
-          existing: parseCandidateOrigin({ contents: existing }),
-          origin: buildOrigin({ cluster, source, textTokens }),
-        }),
+        origin: buildOrigin({ cluster }),
       };
       if (!type.isUndefined(prepareCandidate)) {
         candidate = prepareCandidate({
@@ -166,16 +101,12 @@ function compileTrace({
         if (candidate === null) return null;
       }
       const { journey, comments, origin } = candidate;
-      const known = !type.isUndefined(existing);
       return {
-        fileName,
-        contents: known
-          ? updateCandidateOrigin({ contents: existing, origin })
-          : renderCandidate({ comments, footer: compiled.footer, journey, origin }),
+        fileName: candidateFileName({ hash: cluster.hash, pageId: compiled.journey.pageId }),
+        contents: renderCandidate({ comments, footer: compiled.footer, journey, origin }),
         hash: cluster.hash,
         journey,
         origin,
-        status: known ? 'updated' : 'created',
       };
     })
     .filter((candidate) => candidate !== null);

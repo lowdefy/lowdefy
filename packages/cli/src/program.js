@@ -38,10 +38,8 @@ import hubUntrust from './commands/hub/hubUntrust.js';
 import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
-import journeysCompile from './commands/journeys/journeysCompile.js';
 import journeysHarden from './commands/journeys/harden/journeysHarden.js';
 import journeysVariants from './commands/journeys/variants/journeysVariants.js';
-import journeysRecordings from './commands/journeys/journeysRecordings.js';
 import journeysSession from './commands/journeys/session/journeysSession.js';
 import journeysCoverage from './commands/journeys/journeysCoverage.js';
 import journeysEvidence from './commands/journeys/journeysEvidence.js';
@@ -328,52 +326,8 @@ hub
 const journeys = program
   .command('journeys')
   .description(
-    'Compile candidate journeys from recorded traces, report how real use backs them, harden journeys and write their variants.'
+    'Read recorded dev and production sessions to write journeys from, report how real use backs them, harden journeys and write their variants.'
   );
-
-journeys
-  .command('compile')
-  .description(
-    'Compile recorded traces into candidate journeys under tests/journeys/_candidates/<source>/.'
-  )
-  .usage('[options] [traceFiles...]')
-  .argument('[traceFiles...]', 'Trace files (JSONL) to compile, wherever they are.')
-  .addOption(options.configDirectory)
-  .addOption(options.devDirectory)
-  .addOption(options.disableTelemetry)
-  .addOption(options.logLevel)
-  .addOption(
-    new Option(
-      '--source <source>',
-      'The trace source: production, dev or explorer. Required unless trace files are given; with files, compiles only records of this source.'
-    )
-  )
-  .addOption(
-    new Option(
-      '--since <since>',
-      'Records at or after this time: a duration back from now (30m, 2h, 7d) or an ISO date. Production default: 30d.'
-    )
-  )
-  .addOption(
-    new Option('--from <date>', 'Production only: the first UTC day of the window, YYYY-MM-DD.')
-  )
-  .addOption(
-    new Option('--to <date>', 'Production only: the last UTC day of the window, YYYY-MM-DD.')
-  )
-  .addOption(
-    new Option(
-      '--build <build>',
-      'Only segments whose records all ran on this build; "current" is the build the running dev server serves.'
-    )
-  )
-  .addOption(new Option('--page <pageId>', 'Only segments that visit this page.'))
-  .addOption(
-    new Option(
-      '--out <directory>',
-      'The candidates directory; the source is appended. Default is "tests/journeys/_candidates".'
-    )
-  )
-  .action(runCommand({ cliVersion, handler: journeysCompile }));
 
 journeys
   .command('harden')
@@ -454,31 +408,6 @@ journeys
   .action((file, commandOptions, command) =>
     runCommand({ cliVersion, handler: journeysVariants })({ ...commandOptions, file }, command)
   );
-
-journeys
-  .command('recordings')
-  .description(
-    'List the dev sessions the dev server recorded, with what the newest test run already covers.'
-  )
-  .usage('[options]')
-  .addOption(options.configDirectory)
-  .addOption(options.disableTelemetry)
-  .addOption(options.logLevel)
-  .addOption(
-    new Option(
-      '--since <since>',
-      'Sessions at or after this time: a duration back from now (30m, 2h, 7d) or an ISO date.'
-    )
-  )
-  .addOption(new Option('--page <pageId>', 'Only sessions that visited this page.'))
-  .addOption(
-    new Option(
-      '--build <build>',
-      'Only sessions recorded against this build; "current" is the build the running dev server serves.'
-    )
-  )
-  .addOption(new Option('--json', 'Print the sessions as JSON on stdout.'))
-  .action(runCommand({ cliVersion, handler: journeysRecordings }));
 
 journeys
   .command('session')

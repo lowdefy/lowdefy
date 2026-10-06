@@ -15,7 +15,7 @@
 */
 
 import fs from 'fs';
-import { compileTrace } from '@lowdefy/node-utils';
+import { compileSegments } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import computeEvidence from './evidence/computeEvidence.js';
@@ -27,7 +27,6 @@ import loadRouteTable from './loadRouteTable.js';
 import listFinalDays from './listFinalDays.js';
 import loadBlockMetas from './loadBlockMetas.js';
 import readCommittedJourneys from './readCommittedJourneys.js';
-import readDevSegments from './readDevSegments.js';
 import readMutationReport from './readMutationReport.js';
 import readConfigText from './configText/readConfigText.js';
 import readProductionMonths from './readProductionMonths.js';
@@ -39,15 +38,10 @@ import writeEvidenceNode from './evidence/writeEvidenceNode.js';
 
 const SOURCES = ['production'];
 
-// The PASS line's evidence, plus the dev recordings, which the PASS line
-// leaves out but a refresh can change.
+// The PASS line's evidence.
 function summarise({ evidence }) {
-  const parts = [formatEvidence({ evidence })].filter((part) => part !== '');
-  const recordings = evidence?.dev?.recordings;
-  if (!type.isUndefined(recordings)) {
-    parts.push(`${recordings} dev recordings`);
-  }
-  return parts.length === 0 ? 'no evidence' : parts.join(' · ');
+  const line = formatEvidence({ evidence });
+  return line === '' ? 'no evidence' : line;
 }
 
 function countDaysByMonth({ days }) {
@@ -119,7 +113,7 @@ function readProduction({ context, journeys, today, now, configText, routeTable 
     months,
     resolve: createTokenResolver({ salt: traceSalt.salt, texts: configText.texts }),
   });
-  const { segments } = compileTrace({
+  const { segments } = compileSegments({
     records,
     blockMetas: loadBlockMetas({ buildDirectory: resolveBuildDirectory({ context }) }),
     routeTable,
@@ -195,7 +189,6 @@ async function journeysEvidence({ context }) {
     journeys,
     sources: {
       production,
-      dev: readDevSegments({ context, now }),
       mutation: readMutationReport({ directories: context.directories }),
     },
     routeTable,
