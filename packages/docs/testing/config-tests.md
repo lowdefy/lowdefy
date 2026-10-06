@@ -528,7 +528,7 @@ Upgrading from a version that stored clicked text: the first pull or production 
 
 ### Production session logs
 
-`lowdefy journeys session --source production` reads the pulled window (`--since`, or `--from` and `--to`, at most 30 days) and works as it does for [dev sessions](#session-logs): without an id it lists the window's sessions, newest first; with one it prints that session as a log. Session ids are the cache's hashed ids. A production log shows the controls used and what the app did, never a typed value, and clicked text only when it is config text: a click on anything else reads `(text not in config)`. Rage and dead clicks are marked `(rage click)` and `(dead click)`. Production sees only the events that failed, so a line shows an outcome only when something failed.
+`lowdefy journeys session --source production` reads the pulled window (`--since`, or `--from` and `--to`, at most 30 days) and works as it does for [dev sessions](#session-logs): without an id it lists the window's sessions, newest first; with one it prints that session as a log. Session ids are the analytics session ids the pulled cache holds (people and organizations in it are hashed). A production log shows the controls used and what the app did, never a typed value, and clicked text only when it is config text: a click on anything else reads `(text not in config)`. Rage and dead clicks are marked `(rage click)` and `(dead click)`. Production sees only the events that failed, so a line shows an outcome only when something failed.
 
 ```
 page tickets
