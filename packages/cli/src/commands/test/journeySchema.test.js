@@ -296,6 +296,74 @@ test.each(['2026-09-03', '2026-09-03..2026-10-02'])(
   }
 );
 
+const monthlyProduction = {
+  sequence: 'v1-3f9a12c0',
+  pageId: 'tickets',
+  flow: ['tickets ["click","assign_button",null,"Assign"]'],
+  months: [
+    { month: '2026-09', days: 30, sessions: 412, persons: 37, orgs: 9, failures: 14 },
+    { month: '2026-10', days: 3, sessions: 38, persons: 11, orgs: 5, failures: 1 },
+  ],
+  deprecated: [
+    {
+      sequence: 'v1-91be04d7',
+      pageId: 'tickets',
+      flow: ['tickets ["click","assign",null,null]'],
+      replaced: '2026-10-05',
+      months: [{ month: '2026-09', days: 30, sessions: 0, persons: 0, orgs: 0, failures: 0 }],
+    },
+  ],
+};
+
+test('journeySchema accepts monthly production evidence with deprecated flows', () => {
+  const evidence = { ...fullEvidence, production: monthlyProduction };
+  expect(validateJourney({ journey: { ...minimalJourney, evidence } })).toEqual({ valid: true });
+});
+
+test.each([
+  ['months[].month', { months: [{ ...monthlyProduction.months[0], month: '2026-9' }] }],
+  ['months[].days', { months: [{ ...monthlyProduction.months[0], days: 0 }] }],
+  ['sequence', { sequence: '3f9a12c0' }],
+  [
+    'deprecated[].replaced',
+    { deprecated: [{ ...monthlyProduction.deprecated[0], replaced: 'yesterday' }] },
+  ],
+])('journeySchema refuses monthly evidence with a bad %s', (key, change) => {
+  const evidence = { production: { ...monthlyProduction, ...change } };
+  const result = validateJourney({ journey: { ...minimalJourney, evidence } });
+  expect(result.valid).toBe(false);
+  expect(result.message).toContain(`Journey "evidence.production.${key}"`);
+});
+
+test('journeySchema refuses monthly evidence without its flow', () => {
+  const { flow, ...production } = monthlyProduction;
+  const result = validateJourney({ journey: { ...minimalJourney, evidence: { production } } });
+  expect(result.valid).toBe(false);
+  expect(result.message).toContain(
+    'Journey "evidence.production" should have sequence, pageId, flow and months.'
+  );
+});
+
+test('journeySchema refuses a legacy key mixed into monthly evidence', () => {
+  const production = { ...monthlyProduction, share: 0.3 };
+  const result = validateJourney({ journey: { ...minimalJourney, evidence: { production } } });
+  expect(result.valid).toBe(false);
+  expect(result.message).toContain('Journey "evidence.production" has an unknown key');
+});
+
+test('journeySchema accepts deprecated: true on a journey', () => {
+  expect(validateJourney({ journey: { ...minimalJourney, deprecated: true } })).toEqual({
+    valid: true,
+  });
+});
+
+test('journeySchema refuses a deprecated flag that is not a boolean, naming the key', () => {
+  expect(validateJourney({ journey: { ...minimalJourney, deprecated: 'yes' } })).toEqual({
+    valid: false,
+    message: 'Journey "deprecated" should be true or false.',
+  });
+});
+
 test('validateJourney refuses more mutants killed than total, naming both numbers', () => {
   const evidence = { ...fullEvidence, mutation: { killed: 13, total: 12 } };
   const result = validateJourney({ journey: { ...minimalJourney, evidence } });

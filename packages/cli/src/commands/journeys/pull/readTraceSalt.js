@@ -18,23 +18,16 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 
-const SALT_BYTES = 32;
-
-// The machine-local salt production ids are hashed with: 32 random bytes in
-// .lowdefy/traces/production/salt, written on the first pull and never sent
-// or committed. `saltId` (8 hex of its SHA-256) goes on each day manifest so a
-// day hashed under another salt is pulled again.
+// The machine-local salt production ids and clicked text are hashed with:
+// 32 random bytes in .lowdefy/traces/production/salt, written by the first
+// pull and never sent or committed. `saltId` (8 hex of its SHA-256) goes on
+// each day manifest, so a day hashed under another salt is pulled again and a
+// reader refuses it rather than resolving none of its tokens. Returns null
+// when there is no salt: only the pull creates one (readOrCreateTraceSalt).
 function readTraceSalt({ directories }) {
-  const directory = path.join(directories.traces, 'production');
-  const saltPath = path.join(directory, 'salt');
-  let salt;
-  if (fs.existsSync(saltPath)) {
-    salt = fs.readFileSync(saltPath);
-  } else {
-    fs.mkdirSync(directory, { recursive: true });
-    salt = crypto.randomBytes(SALT_BYTES);
-    fs.writeFileSync(saltPath, salt, { mode: 0o600 });
-  }
+  const saltPath = path.join(directories.traces, 'production', 'salt');
+  if (!fs.existsSync(saltPath)) return null;
+  const salt = fs.readFileSync(saltPath);
   const saltId = crypto.createHash('sha256').update(salt).digest('hex').slice(0, 8);
   return { salt, saltId };
 }
