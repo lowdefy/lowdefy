@@ -240,7 +240,21 @@ const journeySchema = {
   properties: {
     name: {
       type: 'string',
-      errorMessage: { type: 'Journey "name" should be a string.' },
+      maxLength: 100,
+      errorMessage: {
+        type: 'Journey "name" should be a string.',
+        maxLength: 'Journey "name" should be at most 100 characters.',
+      },
+    },
+    // What the journey proves, in at most 60 words: the pattern allows up to
+    // 60 runs of non-space characters.
+    description: {
+      type: 'string',
+      pattern: '^\\s*(?:\\S+\\s+){0,59}\\S*\\s*$',
+      errorMessage: {
+        type: 'Journey "description" should be a string.',
+        pattern: 'Journey "description" should be at most 60 words.',
+      },
     },
     pageId: {
       type: 'string',
