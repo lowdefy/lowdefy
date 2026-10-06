@@ -33,7 +33,8 @@ function refusalReason({ opened, scopePage }) {
 // choose among the options buildDecisionState offers, sends the chosen
 // grammar step, and keeps the findings the invariants decided. Stop reasons:
 // steps, exhausted, off-topic (model policies only: the lowest relevance on
-// two steps running), finding (an error finding), left-app, step-failed,
+// two steps running), finding (an error finding), environment (a search
+// stage the data set's memory store cannot run), left-app, step-failed,
 // budget, cost (from shouldStop), server-restarted (the walk is gone: a 404),
 // and at open refused or access-changed (the head config refuses the role).
 // Returns the walk's log, the record walks.jsonl keeps, which names the

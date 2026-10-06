@@ -20,8 +20,8 @@ import { type } from '@lowdefy/helpers';
 // order the walks hit them: each with the walks and data set users that hit
 // it, the goals of the charters whose walks hit it (charters lists the run's
 // charters, which walk logs name by index; empty without any), and its first
-// occurrence's step and screenshot (the open's, for a finding at open). Whether a finding is proven is the
-// proof's to say (applyProof).
+// occurrence's step and screenshot (the open's, for a finding at open).
+// Whether a finding is proven is the proof's to say (applyProof).
 function collectFindings({ logs, charters = [] }) {
   const byKey = new Map();
   logs.forEach((log) => {
