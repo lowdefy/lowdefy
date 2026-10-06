@@ -190,8 +190,9 @@ test('lowdefy_dev_start counts as use and says the hub stops the server once it 
     expect(text(result)).toContain(
       'The hub stops this server once nobody has used it for 15 minutes (sooner when the machine is short of memory); the next lowdefy_ call starts it again.'
     );
-    // Asking for the server counts as using it.
-    expect(hub.devRequests).toEqual(['/api/ping']);
+    // Asking for the server counts as using it, then the shim connects to it
+    // at the url the hub reported, to learn its tools.
+    expect(hub.devRequests).toEqual(['/api/ping', '/lowdefy-docs/mcp']);
   } finally {
     await client.close();
     await shim.close();
@@ -566,8 +567,10 @@ async function listedTool(name) {
 }
 
 // A stand-in hub on the hub socket: it starts nothing, and reports the app
-// ready with the instance record written for the fake dev server.
-async function listenAsHub({ app, devServer }) {
+// ready at the fake dev server, as a hub reports what it read from the
+// instance record. With writeRecord false the record is not left for the shim
+// to read, as when the shim's read of it disagrees with the hub's.
+async function listenAsHub({ app, devServer, writeRecord = true }) {
   const { hubDirectory, socketPath } = getHubPaths();
   fs.mkdirSync(hubDirectory, { recursive: true });
   const methods = [];
@@ -585,8 +588,17 @@ async function listenAsHub({ app, devServer }) {
             result = { protocol: HUB_PROTOCOL, pid: 1, version: '6.0.0' };
           }
           if (method === 'start') {
-            writeInstance({ app, devServer, owner: 'hub' });
-            result = { configDirectory: app, state: 'ready', owner: 'hub' };
+            if (writeRecord) {
+              writeInstance({ app, devServer, owner: 'hub' });
+            }
+            result = {
+              configDirectory: app,
+              state: 'ready',
+              owner: 'hub',
+              url: `http://127.0.0.1:${devServer.address().port}`,
+              pid: process.pid,
+              managed: true,
+            };
           }
           socket.write(`${JSON.stringify({ id, result })}\n`);
         },
@@ -643,6 +655,27 @@ test('lowdefy mcp learns a dev server tools as soon as the hub reports it ready'
     expect(hub.methods).toContain('start');
     expect(await listedTool('lowdefy_newer_tool')).toBeDefined();
     expect(listChanged.count).toEqual(1);
+  } finally {
+    await client.close();
+    await shim.close();
+    await hub.close();
+    await stopFakeDevServer(devServer);
+  }
+});
+
+test('lowdefy mcp sends a dev tool call to the server the hub reports ready when its own read of the instance record finds none', async () => {
+  const devServer = await startFakeDevServer({ tools: [fakeTool('lowdefy_build_status')] });
+  const app = makeApp('.');
+  const hub = await listenAsHub({ app, devServer, writeRecord: false });
+  try {
+    await connect({ cwd: root });
+
+    const result = await client.callTool({ name: 'lowdefy_build_status', arguments: {} });
+
+    expect(result.isError).toBeFalsy();
+    expect(hub.methods).toContain('start');
+    expect(text(result)).toContain(`http://127.0.0.1:${devServer.address().port}`);
+    expect(text(result)).toContain('lowdefy_build_status answered');
   } finally {
     await client.close();
     await shim.close();

@@ -43,3 +43,14 @@ test('an instance connection fails when the dev server does not answer in time',
     instances.get({ configDirectory: '/app', instance: { url, pid: 1 }, label: 'app' })
   ).rejects.toThrow('timed out');
 });
+
+test('an instance connection to a dev server with no URL yet says so', async () => {
+  const instances = createInstanceConnections({ cliVersion: '6.0.0', onNotification: () => {} });
+  await expect(
+    instances.get({
+      configDirectory: '/app',
+      instance: { state: 'starting', pid: 1 },
+      label: 'app',
+    })
+  ).rejects.toThrow('app: the dev server (state starting) has no URL yet.');
+});

@@ -174,6 +174,7 @@ function createHub({
         url: record.url,
         pid: record.pid,
         startedAt: record.startedAt,
+        version: record.version,
         managed: record.owner === 'hub' && !type.isUndefined(managed),
         command: managed?.command,
       };
