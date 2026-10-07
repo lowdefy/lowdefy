@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 
 import getMutationReportPath from './getMutationReportPath.js';
 import mergeMutationReport from './mergeMutationReport.js';
+import requestCurrentMutantIds from './requestCurrentMutantIds.js';
 
 function readPrevious(filePath) {
   if (!fs.existsSync(filePath)) {
@@ -32,16 +33,26 @@ function readPrevious(filePath) {
   }
 }
 
+async function mergeWithPrevious({ previous, report, journeyKeys, url }) {
+  const listedThisRun = new Set(report.mutants.map(({ id }) => id));
+  const currentIds = await requestCurrentMutantIds({
+    url,
+    mutants: previous.mutants.filter(({ id }) => !listedThisRun.has(id)),
+  });
+  return mergeMutationReport({ previous, report, journeyKeys, currentIds });
+}
+
 // Writes this run's report into .lowdefy/test/mutation.json, merged per
 // journey with the report an earlier run wrote (mergeMutationReport), so a
 // run over one journey keeps the others' scores. `journeyKeys` is every
-// journey's `file#name` now. Never touches a journey file.
-function writeMutationReport({ directories, report, journeyKeys }) {
+// journey's `file#name` now; the dev server at `url` says which earlier
+// mutants this run did not list still exist. Never touches a journey file.
+async function writeMutationReport({ directories, report, journeyKeys, url }) {
   const filePath = getMutationReportPath({ directories });
   const previous = readPrevious(filePath);
   const written = type.isNone(previous)
     ? report
-    : mergeMutationReport({ previous, report, journeyKeys });
+    : await mergeWithPrevious({ previous, report, journeyKeys, url });
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(filePath, `${JSON.stringify(written, null, 2)}\n`);
   return filePath;

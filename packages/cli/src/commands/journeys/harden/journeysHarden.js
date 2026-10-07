@@ -171,10 +171,11 @@ async function hardenOnServer({ context, options, items, url }) {
   });
   // A --mutant run confirms one kill; it must not change the report.
   if (type.isNone(options.mutant)) {
-    writeMutationReport({
+    await writeMutationReport({
       directories: context.directories,
       report,
       journeyKeys: currentJourneyKeys({ context }),
+      url,
     });
   }
   if (options.json) {

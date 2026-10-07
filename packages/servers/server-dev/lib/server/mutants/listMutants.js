@@ -39,7 +39,9 @@ function artifactPaths({ pages, requests, endpoints, appEvents }) {
 // build-independent id, its anchor, the source line and config path of its
 // target, and `_ref` copies grouped into one mutant. Also returns the content
 // hash of every artifact read, so a harden run can tell which of its verdicts
-// a config edit left standing.
+// a config edit left standing, and `ids`, the id of every copy before
+// grouping, so a harden run can tell whether a mutant an earlier run listed
+// still exists, whichever copy that run kept.
 async function listMutants({
   pages = [],
   requests = [],
@@ -82,6 +84,7 @@ async function listMutants({
   }
   return {
     artifacts,
+    ids: mutants.map(({ id }) => id),
     mutants: groupMutantCopies({ mutants }).map(
       ({
         id,

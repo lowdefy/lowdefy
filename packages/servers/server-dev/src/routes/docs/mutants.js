@@ -42,9 +42,16 @@ async function docsMutantsHandler(c) {
   const buildDirectory = path.join(process.cwd(), 'build');
   const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd();
   const pageIds = [...new Set([...body.pages, ...body.requests.map((request) => request.pageId)])];
+  // A page no longer in the app lists no mutants, even while an older build
+  // of it is still on disk: a harden run asks after the pages an earlier run
+  // listed, to drop the mutants that are gone.
+  const removedPages = new Set();
   for (const pageId of pageIds) {
     try {
-      await buildPageIfNeeded({ pageId, buildDirectory, configDirectory });
+      const built = await buildPageIfNeeded({ pageId, buildDirectory, configDirectory });
+      if (built === false) {
+        removedPages.add(pageId);
+      }
     } catch (error) {
       return c.json(
         {
@@ -59,6 +66,8 @@ async function docsMutantsHandler(c) {
   const { keyMap, refMap } = await readMergedMaps({ buildDirectory });
   const result = await listMutants({
     ...body,
+    pages: body.pages.filter((pageId) => !removedPages.has(pageId)),
+    requests: body.requests.filter(({ pageId }) => !removedPages.has(pageId)),
     readConfigFile: async (name) => readBuildArtifact({ name, deserialize: true }),
     keyMap,
     refMap,

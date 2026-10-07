@@ -37,6 +37,8 @@ let logs;
 let journeyRuns;
 let currentBuildId;
 let onMutantRun;
+let removedMutants;
+let listingBodies;
 const originalExitCode = process.exitCode;
 
 function exercisedFor(pageId) {
@@ -107,13 +109,16 @@ const listing = {
 // The listing of one build: a build after the first changes the refunds page
 // only, and keys every mutant afresh.
 function listingFor(buildId) {
+  const mutants = listing.mutants.filter(({ id }) => !removedMutants.has(id));
+  const ids = mutants.map(({ id }) => id);
   if (buildId === 'build-1') {
-    return listing;
+    return { ...listing, ids, mutants };
   }
   return {
     buildId,
     artifacts: { ...listing.artifacts, 'pages/refunds.json': buildId },
-    mutants: listing.mutants.map((mutant) => ({ ...mutant, key: `${mutant.key}-${buildId}` })),
+    ids,
+    mutants: mutants.map((mutant) => ({ ...mutant, key: `${mutant.key}-${buildId}` })),
   };
 }
 
@@ -136,6 +141,8 @@ beforeEach(() => {
   journeyRuns = [];
   currentBuildId = 'build-1';
   onMutantRun = () => {};
+  removedMutants = new Set();
+  listingBodies = [];
   context = {
     directories: {
       config: configDirectory,
@@ -167,6 +174,7 @@ beforeEach(() => {
   }));
   mockPost.mockImplementation(async (target, body) => {
     if (target === `${url}/lowdefy-docs/mutants`) {
+      listingBodies.push(body);
       return { data: listingFor(currentBuildId) };
     }
     journeyRuns.push({ pageId: body.pageId, mutant: body.mutant?.key ?? null });
@@ -478,4 +486,25 @@ test('journeysHarden drops an earlier score once its journey no longer exists', 
   const report = readReport();
   expect(report.journeys.map(({ name }) => name)).toEqual(['orders']);
   expect(report.mutants.map(({ id }) => id)).not.toContain('refund');
+});
+
+test('journeysHarden drops an earlier mutant a later run did not list once its config is gone', async () => {
+  await harden({ filter: 'orders' });
+  expect(readReport().mutants.map(({ id }) => id)).toContain('alert');
+  // The orders alert block is removed; the next run measures refunds only.
+  removedMutants.add('alert');
+  await harden({ filter: 'refunds' });
+  const report = readReport();
+  expect(report.mutants.map(({ id }) => id).sort()).toEqual(['app', 'kill', 'refund']);
+  expect(report.journeys.map(({ name, killed, total }) => [name, killed, total])).toEqual([
+    ['orders', 1, 2],
+    ['refunds', 0, 2],
+  ]);
+  // The merge asked after the artifacts the earlier mutants were kept on.
+  expect(listingBodies[listingBodies.length - 1]).toEqual({
+    pages: ['orders'],
+    requests: [],
+    endpoints: [],
+    appEvents: false,
+  });
 });

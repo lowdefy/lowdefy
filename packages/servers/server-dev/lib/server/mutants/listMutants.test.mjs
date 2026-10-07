@@ -252,6 +252,36 @@ test("copies of one _ref'd node on three pages group into one mutant with two co
   expect(mutants[0].key).toBe(artifacts['pages/contacts.json'].slots.content.blocks[0]['~k']);
 });
 
+test('ids lists every copy of a grouped mutant, so a copy kept by an earlier listing is found', async () => {
+  const artifacts = {};
+  const keyMap = {};
+  ['orders', 'tickets'].forEach((pageId, index) => {
+    artifacts[`pages/${pageId}.json`] = keyArtifact({
+      value: layoutPage({ pageId, footerText: 'Made with care' }),
+      prefix: `i${index}_`,
+      keyMap,
+    }).root;
+  });
+  const both = await listMutants({
+    pages: ['orders', 'tickets'],
+    operators: ['drop-block'],
+    readConfigFile: reader(artifacts),
+    keyMap,
+    refMap: {},
+  });
+  const ticketsOnly = await listMutants({
+    pages: ['tickets'],
+    operators: ['drop-block'],
+    readConfigFile: reader(artifacts),
+    keyMap,
+    refMap: {},
+  });
+  const footer = (listing) => listing.mutants.find(({ describe }) => describe.includes('footer'));
+  expect(footer(both).id).not.toBe(footer(ticketsOnly).id);
+  expect(both.ids).toContain(footer(ticketsOnly).id);
+  expect(both.ids).toContain(footer(both).id);
+});
+
 test('two template copies with different content stay two mutants', async () => {
   const artifacts = {};
   const keyMap = {};
