@@ -16,6 +16,7 @@
 
 import { serializer } from '@lowdefy/helpers';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
+import { getMarkedCredentials } from '@lowdefy/node-utils';
 
 import addStepResult from './addStepResult.js';
 import createBoundSystemContext from '../../context/createBoundSystemContext.js';
@@ -96,6 +97,9 @@ async function handleEndpointCall(context, routineContext, { step }) {
             organizationId: callContext.boundOrganizationId ?? null,
             agent: routineContext.agent ?? null,
           },
+          // The values this request marked with _credential, so the target's logs scrub them
+          // too: the target runs as a new request with a scope of its own.
+          credentials: getMarkedCredentials(),
         }),
       })
     );

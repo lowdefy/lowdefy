@@ -17,6 +17,7 @@
 import { Hono } from 'hono';
 import { compress } from 'hono/compress';
 import { serveStatic } from '@hono/node-server/serve-static';
+import { runInCredentialScope } from '@lowdefy/node-utils';
 
 import apiContext from './middleware/apiContext.js';
 import apiPageHandler from './routes/apiPage.js';
@@ -39,6 +40,10 @@ const basePath = lowdefyConfig.basePath ?? '';
 function createApp() {
   const app = basePath ? new Hono().basePath(basePath) : new Hono();
   const logger = createLogger({ server: 'lowdefy' });
+
+  // Each request runs in its own credential scope: what it marks with _credential is scrubbed
+  // from every log line written while it is handled.
+  app.use('*', (c, next) => runInCredentialScope(next));
 
   app.use('*', async (c, next) => {
     if (c.req.path.includes('/api/websocket')) {

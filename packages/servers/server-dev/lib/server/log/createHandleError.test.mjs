@@ -16,6 +16,7 @@
 
 import { jest } from '@jest/globals';
 import { ConfigError, LowdefyInternalError, UserError } from '@lowdefy/errors';
+import { markCredential, runInCredentialScope } from '@lowdefy/node-utils';
 
 jest.unstable_mockModule('../../docs/serverErrorStore.js', () => ({
   default: { push: jest.fn(), list: jest.fn(() => []) },
@@ -194,8 +195,27 @@ test('handleError still logs when the server error store throws', async () => {
   await handleError(error);
 
   expect(error.handled).toBe(true);
-  expect(console.error).toHaveBeenCalledWith(error);
+  expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Bad config.'));
   expect(console.error).toHaveBeenCalledWith('An error occurred while logging the error.');
+});
+
+test('handleError writes its fallback lines with the credentials the request marked redacted', async () => {
+  serverErrorStore.push.mockImplementation(() => {
+    throw new Error('Store refused runtime-made-app-key-0001.');
+  });
+  const handleError = createHandleError({ context: testContext() });
+  await runInCredentialScope(async () => {
+    markCredential('runtime-made-app-key-0001');
+    await handleError(new ConfigError('Upstream refused runtime-made-app-key-0001.'));
+  });
+  const written = console.error.mock.calls.map(([line]) => line);
+  expect(written).toEqual(
+    expect.arrayContaining([
+      expect.stringContaining('Upstream refused [REDACTED].'),
+      expect.stringContaining('Store refused [REDACTED].'),
+    ])
+  );
+  written.forEach((line) => expect(line).not.toContain('runtime-made-app-key-0001'));
 });
 
 test('handleError stamps a stored error with the recording of the context that caused it', async () => {
@@ -217,4 +237,13 @@ test('handleError stamps a developer request error with a null recording', async
   context.recording = null;
   await createHandleError({ context })(new ConfigError('Bad config.', { configKey: 'key_1' }));
   expect(serverErrorStore.push.mock.calls[0][0].recording).toBeNull();
+});
+
+test('handleError stores a message with the credentials the request marked redacted', async () => {
+  const handleError = createHandleError({ context: testContext() });
+  await runInCredentialScope(async () => {
+    markCredential('runtime-made-app-key-0001');
+    await handleError(new ConfigError('Upstream refused runtime-made-app-key-0001.'));
+  });
+  expect(serverErrorStore.push.mock.calls[0][0].message).toBe('Upstream refused [REDACTED].');
 });

@@ -1178,6 +1178,9 @@
         - id: _change_case
           type: MenuLink
           pageId: _change_case
+        - id: _credential
+          type: MenuLink
+          pageId: _credential
         - id: _cron
           type: MenuLink
           pageId: _cron

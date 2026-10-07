@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { createNodeLogger } from '@lowdefy/logger/node';
-import { scrubCredentials } from '@lowdefy/node-utils';
+import createValueScrubber from './createValueScrubber.js';
+import credentialStorage from './credentialStorage.js';
 
-const logger = createNodeLogger({
-  name: 'lowdefy_server_dev',
-  level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
-  base: { pid: undefined, hostname: undefined },
-  // Secrets stay in these logs, but a value a request marked with _credential does not.
-  hooks: { streamWrite: scrubCredentials },
-});
-
-function createLogger(metadata = {}) {
-  return logger.child(metadata);
+// Replaces the credentials marked in a scope, by default the current one, with [REDACTED]. A line
+// written outside any scope (server start-up) has none to replace.
+function scrubCredentials(value, scope = credentialStorage.getStore()) {
+  if (scope === undefined) {
+    return value;
+  }
+  if (scope.scrub === null) {
+    scope.scrub = createValueScrubber([...scope.values]);
+  }
+  return scope.scrub(value);
 }
 
-export default createLogger;
+export default scrubCredentials;

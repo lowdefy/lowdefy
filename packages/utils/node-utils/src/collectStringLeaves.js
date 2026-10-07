@@ -14,19 +14,21 @@
   limitations under the License.
 */
 
-import { createNodeLogger } from '@lowdefy/logger/node';
-import { scrubCredentials } from '@lowdefy/node-utils';
+import { type } from '@lowdefy/helpers';
 
-const logger = createNodeLogger({
-  name: 'lowdefy_server_dev',
-  level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
-  base: { pid: undefined, hostname: undefined },
-  // Secrets stay in these logs, but a value a request marked with _credential does not.
-  hooks: { streamWrite: scrubCredentials },
-});
-
-function createLogger(metadata = {}) {
-  return logger.child(metadata);
+function collectStringLeaves(value, leaves = []) {
+  if (type.isString(value)) {
+    leaves.push(value);
+    return leaves;
+  }
+  if (type.isArray(value)) {
+    value.forEach((item) => collectStringLeaves(item, leaves));
+    return leaves;
+  }
+  if (type.isObject(value)) {
+    Object.values(value).forEach((item) => collectStringLeaves(item, leaves));
+  }
+  return leaves;
 }
 
-export default createLogger;
+export default collectStringLeaves;

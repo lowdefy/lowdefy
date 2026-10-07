@@ -15,11 +15,14 @@
 */
 
 import { createNodeLogger } from '@lowdefy/logger/node';
+import { scrubCredentials } from '@lowdefy/node-utils';
 
 const logger = createNodeLogger({
   name: 'lowdefy_server_e2e',
   level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
   base: { pid: undefined, hostname: undefined },
+  // Secrets stay in these logs, but a value a request marked with _credential does not.
+  hooks: { streamWrite: scrubCredentials },
 });
 
 function createLogger(metadata = {}) {

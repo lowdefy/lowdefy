@@ -14,19 +14,17 @@
   limitations under the License.
 */
 
-import { createNodeLogger } from '@lowdefy/logger/node';
-import { scrubCredentials } from '@lowdefy/node-utils';
+import credentialStorage from './credentialStorage.js';
+import scrubCredentials from './scrubCredentials.js';
 
-const logger = createNodeLogger({
-  name: 'lowdefy_server_dev',
-  level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
-  base: { pid: undefined, hostname: undefined },
-  // Secrets stay in these logs, but a value a request marked with _credential does not.
-  hooks: { streamWrite: scrubCredentials },
-});
-
-function createLogger(metadata = {}) {
-  return logger.child(metadata);
+// Returns a scrub for the current scope's marked credentials that keeps working after the scope
+// has ended, for work a request leaves behind, such as the Sentry transaction sent once the
+// response is written. Values marked later in the scope are scrubbed too.
+function bindCredentialScrub() {
+  const scope = credentialStorage.getStore();
+  return function scrubBoundCredentials(value) {
+    return scrubCredentials(value, scope);
+  };
 }
 
-export default createLogger;
+export default bindCredentialScrub;

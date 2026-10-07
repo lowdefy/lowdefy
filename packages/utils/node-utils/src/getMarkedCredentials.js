@@ -14,19 +14,16 @@
   limitations under the License.
 */
 
-import { createNodeLogger } from '@lowdefy/logger/node';
-import { scrubCredentials } from '@lowdefy/node-utils';
+import credentialStorage from './credentialStorage.js';
 
-const logger = createNodeLogger({
-  name: 'lowdefy_server_dev',
-  level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
-  base: { pid: undefined, hostname: undefined },
-  // Secrets stay in these logs, but a value a request marked with _credential does not.
-  hooks: { streamWrite: scrubCredentials },
-});
-
-function createLogger(metadata = {}) {
-  return logger.child(metadata);
+// The values marked so far in the current scope, so work the request hands to another request
+// (a detached CallApi) can mark them there too. Outside any scope nothing has been marked.
+function getMarkedCredentials() {
+  const scope = credentialStorage.getStore();
+  if (scope === undefined) {
+    return [];
+  }
+  return [...scope.values];
 }
 
-export default createLogger;
+export default getMarkedCredentials;

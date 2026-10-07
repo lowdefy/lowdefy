@@ -14,7 +14,10 @@
   limitations under the License.
 */
 
+import { inspect } from 'node:util';
+
 import { LowdefyInternalError, loadAndResolveErrorLocation } from '@lowdefy/errors';
+import { scrubCredentials } from '@lowdefy/node-utils';
 
 import errorRecordingStamp from '../recording/errorRecordingStamp.js';
 import serverErrorStore from '../../docs/serverErrorStore.js';
@@ -64,7 +67,8 @@ function createHandleError({ context }) {
         serverErrorStore.push({
           timestamp: new Date().toISOString(),
           name: error.name,
-          message: error.message,
+          // Agents read the store through build-status, after this request's scope has ended.
+          message: scrubCredentials(error.message),
           source: error.source ?? null,
           config: error.config ?? null,
           hint: error.hint ?? null,
@@ -77,9 +81,10 @@ function createHandleError({ context }) {
 
       context.logger.error(error);
     } catch (e) {
-      console.error(error);
+      // Written past the logger, so past its streamWrite scrub of marked credentials.
+      console.error(scrubCredentials(inspect(error)));
       console.error('An error occurred while logging the error.');
-      console.error(e);
+      console.error(scrubCredentials(inspect(e)));
     }
   };
 }

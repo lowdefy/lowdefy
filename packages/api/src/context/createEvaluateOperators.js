@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { markCredential } from '@lowdefy/node-utils';
 import { ServerParser } from '@lowdefy/operators';
 
 function createEvaluateOperators(context) {
@@ -23,6 +24,7 @@ function createEvaluateOperators(context) {
     i18n,
     jsMap,
     lowdefyApp: appMeta,
+    markCredential,
     operators,
     organization,
     secrets,

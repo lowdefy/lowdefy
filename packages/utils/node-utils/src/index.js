@@ -15,6 +15,7 @@
 */
 
 import acquireMachineSlot from './acquireMachineSlot.js';
+import bindCredentialScrub from './bindCredentialScrub.js';
 import checkEnvironmentGuards from './checkEnvironmentGuards.js';
 import cleanDirectory from './cleanDirectory.js';
 import collectEnvironmentGuards from './collectEnvironmentGuards.js';
@@ -31,6 +32,7 @@ import findPnpmWorkspaceRoot from './findPnpmWorkspaceRoot.js';
 import findWorkspacePackages from './findWorkspacePackages.js';
 import getDevInstancePath from './getDevInstancePath.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
+import getMarkedCredentials from './getMarkedCredentials.js';
 import getLowdefyHome from './getLowdefyHome.js';
 import getProcessStartTime from './getProcessStartTime.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
@@ -56,6 +58,8 @@ import readServerRegistry from './readServerRegistry.js';
 import registerServer from './registerServer.js';
 import listRecordingFiles, { RECORDING_SOURCES } from './recordings/listRecordingFiles.js';
 import readRecordings from './recordings/readRecordings.js';
+import runInCredentialScope from './runInCredentialScope.js';
+import scrubCredentials from './scrubCredentials.js';
 import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
@@ -74,6 +78,7 @@ import journeyStepSchema, { JOURNEY_STEP_SCHEMAS } from './journeyGrammar/journe
 import hashSequence from './journeyCompiler/hashSequence.js';
 import journeySequence from './journeyCompiler/journeySequence.js';
 import listFailurePaths from './journeyCompiler/listFailurePaths.js';
+import markCredential from './markCredential.js';
 import parseTraceLines from './journeyCompiler/parseTraceLines.js';
 import profileProduction from './journeyEvidence/profileProduction.js';
 import buildSessionReport from './sessionLog/buildSessionReport.js';
@@ -93,6 +98,7 @@ import validateTraceRecord from './journeyTrace/validateTraceRecord.js';
 
 export {
   acquireMachineSlot,
+  bindCredentialScrub,
   buildSessionReport,
   checkEnvironmentGuards,
   cleanDirectory,
@@ -118,6 +124,7 @@ export {
   getDevInstancePath,
   getFileExtension,
   getFileSubExtension,
+  getMarkedCredentials,
   getLowdefyHome,
   getProcessStartTime,
   getSecretsFromEnv,
@@ -137,6 +144,7 @@ export {
   parseDataSet,
   listFailurePaths,
   listRecordingFiles,
+  markCredential,
   matchPagePath,
   normaliseBlockId,
   normaliseJourneySteps,
@@ -153,6 +161,8 @@ export {
   registerServer,
   readRecordings,
   RECORDING_SOURCES,
+  runInCredentialScope,
+  scrubCredentials,
   spawnProcess,
   stepIdentity,
   summariseSessions,
