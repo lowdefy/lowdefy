@@ -27,6 +27,7 @@ import rebaseModuleRefPaths from '../buildRefs/rebaseModuleRefPaths.js';
 import runTransformer from '../buildRefs/runTransformer.js';
 import { resolve, WalkContext } from '../buildRefs/walker.js';
 import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
+import isPageContentPath from './isPageContentPath.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 
 validateOperatorsDynamic({ operators });
@@ -35,7 +36,10 @@ const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 // Resolves one page's config from its source file, as the full build's ref
 // walk would: vars, refs, transformer and static operators, with a module
 // page's id scoped to its entry.
-async function resolvePageSource({ pageId, pageEntry, buildContext }) {
+// With skipContent, the page's content keys are dropped unwalked, as the
+// skeleton build drops them, so the files they ref are not read and the other
+// keys (id, path, auth) resolve as they do for routes.json.
+async function resolvePageSource({ pageId, pageEntry, buildContext, skipContent = false }) {
   // If this is a module page, set up module context
   let moduleDependencies = null;
   let moduleEntry = null;
@@ -119,6 +123,12 @@ async function resolvePageSource({ pageId, pageEntry, buildContext }) {
     refDef,
     referencedFrom: null,
   });
+  let shouldStop = null;
+  if (skipContent) {
+    // Walker paths here start at the page file; the skeleton's start at the
+    // pages array in lowdefy.yaml.
+    shouldStop = (jsonPath) => isPageContentPath(`pages.${jsonPath}`);
+  }
   const pageCtx = new WalkContext({
     buildContext,
     refId: refDef.id,
@@ -135,7 +145,7 @@ async function resolvePageSource({ pageId, pageEntry, buildContext }) {
     env: process.env,
     lowdefyApp: buildContext.appMeta,
     dynamicIdentifiers,
-    shouldStop: null,
+    shouldStop,
   });
   let processed = await resolve(pageContent, pageCtx);
   // The walker runs a ref's transformer after walking its content; the page's

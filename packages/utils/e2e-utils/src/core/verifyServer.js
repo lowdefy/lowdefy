@@ -15,16 +15,8 @@
 */
 
 import fs from 'fs';
-import path from 'path';
 
-// The e2e server serves every route under the app's basePath, which the build records in
-// config.json. With no build yet (Playwright skips it when another server holds the
-// port), the server on the port cannot be this app's, and the root path is as good as any.
-function readBasePath({ buildDir }) {
-  const configFile = path.join(buildDir, 'config.json');
-  if (!fs.existsSync(configFile)) return '';
-  return JSON.parse(fs.readFileSync(configFile, 'utf8')).basePath ?? '';
-}
+import readBasePath from './readBasePath.js';
 
 async function readIdentity({ identityPath, port }) {
   let response;

@@ -23,15 +23,17 @@ async function waitForReady(page) {
   await page.waitForFunction(`Boolean(${pageContextExpression})`, undefined, { timeout: 30000 });
 }
 
-// A target is a URL path, or { pageId, path, pathParams, urlQuery } where `path` is the page's
-// path pattern (omit it for a page served at its id). The query is written as the app's links
-// write it, so `_url_query` reads back numbers, booleans and objects.
+// A target is a URL path, or { basePath, pageId, path, pathParams, urlQuery } where `path` is
+// the page's path pattern (omit it for a page served at its id) and `basePath` the app's
+// config.basePath (omit it for an app served at the root). A string target is used as written,
+// so it carries its own basePath. The query is written as the app's links write it, so
+// `_url_query` reads back numbers, booleans and objects.
 function createPageUrl(target) {
   if (type.isString(target)) {
     return target;
   }
-  const { pageId, path, pathParams, urlQuery: query } = target;
-  const pathname = `/${buildPagePath({ pageId, path, pathParams })}`;
+  const { basePath = '', pageId, path, pathParams, urlQuery: query } = target;
+  const pathname = `${basePath}/${buildPagePath({ pageId, path, pathParams })}`;
   const search = urlQuery.stringify(query);
   return search ? `${pathname}?${search}` : pathname;
 }

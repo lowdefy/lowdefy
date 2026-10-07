@@ -17,6 +17,7 @@
 import fs from 'fs';
 import path from 'path';
 
+import readBasePath from '../core/readBasePath.js';
 import extractBlockMap from './extractBlockMap.js';
 
 function generateManifest({ buildDir = '.lowdefy' }) {
@@ -37,7 +38,7 @@ function generateManifest({ buildDir = '.lowdefy' }) {
 
   const pagesDir = path.join(buildDir, 'pages');
 
-  const manifest = { pages: {}, paths: {} };
+  const manifest = { basePath: readBasePath({ buildDir }), pages: {}, paths: {} };
 
   // The path of every page served at a path other than its id, for building its URL.
   const routes = JSON.parse(fs.readFileSync(path.join(buildDir, 'routes.json'), 'utf-8'));
