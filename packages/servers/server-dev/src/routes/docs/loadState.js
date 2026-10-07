@@ -37,7 +37,7 @@ async function docsLoadStateHandler(c) {
     return c.json({ error: userError }, 400);
   }
 
-  const result = await loadState({ origin, name, mode, user });
+  const result = await loadState({ origin, name, mode, user, data: body.data });
   if (result.error) {
     // A contradictory call (`user` in 'registry-only' mode) is the caller's
     // mistake, not a failed render — 502 would read as "the renderer broke" and

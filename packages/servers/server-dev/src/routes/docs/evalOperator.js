@@ -48,7 +48,15 @@ async function docsEvalOperatorHandler(c) {
     return c.json({ error: pathParamsError }, 400);
   }
 
-  const result = await evalOperator({ origin, pageId, pathParams, expression, source, user });
+  const result = await evalOperator({
+    origin,
+    pageId,
+    pathParams,
+    expression,
+    source,
+    user,
+    data: body.data,
+  });
   if (result.error) {
     // A contradictory call (`user` with `source: 'tab'`) is the caller's
     // mistake, not a failed render — 502 would read as "the renderer broke" and

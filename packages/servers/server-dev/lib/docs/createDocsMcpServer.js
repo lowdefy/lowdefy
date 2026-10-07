@@ -129,8 +129,8 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
     });
   }
 
-  registerDevTool('lowdefy_inspect_state', async ({ pageId, pathParams, source, user }) => {
-    const result = await inspectState({ origin, pageId, pathParams, source, user });
+  registerDevTool('lowdefy_inspect_state', async ({ pageId, pathParams, source, user, data }) => {
+    const result = await inspectState({ origin, pageId, pathParams, source, user, data });
     if (result.error) {
       return notFoundResult(result.error);
     }
@@ -139,8 +139,16 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
 
   registerDevTool(
     'lowdefy_eval_operator',
-    async ({ pageId, pathParams, expression, source, user }) => {
-      const result = await evalOperator({ origin, pageId, pathParams, expression, source, user });
+    async ({ pageId, pathParams, expression, source, user, data }) => {
+      const result = await evalOperator({
+        origin,
+        pageId,
+        pathParams,
+        expression,
+        source,
+        user,
+        data,
+      });
       if (result.error) {
         return notFoundResult(result.error);
       }
@@ -150,15 +158,17 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
 
   registerDevTool(
     'lowdefy_run_request',
-    async ({ pageId, requestId, payload, user, saveResponse }) =>
-      textResult(await runRequest({ pageId, requestId, payload, user, saveResponse, honoContext }))
+    async ({ pageId, requestId, payload, user, data, saveResponse }) =>
+      textResult(
+        await runRequest({ pageId, requestId, payload, user, data, saveResponse, honoContext })
+      )
   );
 
   registerDevTool(
     'lowdefy_run_endpoint',
-    async ({ endpointId, payload, user, system, saveResponse }) =>
+    async ({ endpointId, payload, user, data, system, saveResponse }) =>
       textResult(
-        await runEndpoint({ endpointId, payload, user, system, saveResponse, honoContext })
+        await runEndpoint({ endpointId, payload, user, data, system, saveResponse, honoContext })
       )
   );
 
@@ -190,8 +200,8 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
     }
   );
 
-  registerDevTool('lowdefy_load_state', async ({ name, mode, user }) => {
-    const result = await loadState({ origin, name, mode, user });
+  registerDevTool('lowdefy_load_state', async ({ name, mode, user, data }) => {
+    const result = await loadState({ origin, name, mode, user, data });
     if (result.error) {
       return notFoundResult(result.error);
     }
@@ -257,6 +267,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       scrollX,
       scrollY,
       user,
+      data,
       width,
       height,
       colorScheme,
@@ -275,6 +286,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
         scrollX,
         scrollY,
         user,
+        data,
         width,
         height,
         colorScheme,

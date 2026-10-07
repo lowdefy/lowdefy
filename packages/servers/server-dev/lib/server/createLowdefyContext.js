@@ -78,11 +78,13 @@ function isMcpPath(path) {
 // middleware chain, to call callRequest directly for agent-driven request
 // execution. A `user` option injects a per-call caller (agent tools that run
 // outside a browser, e.g. run_request), resolved the same way the headless
-// renderer's cookie user is.
-async function createLowdefyContext({ c, user }) {
+// renderer's cookie user is. A `dataSession` option runs a call the dev
+// server makes itself (run_request, run_endpoint on a data set) on that data
+// session's database, as a journey's cookie does for its browser requests.
+async function createLowdefyContext({ c, user, dataSession: callDataSession }) {
   // A journey on a data set: this request, and only this one, reads the session's database. Read
   // before anything else, so a request that outlived its session never reaches either database.
-  const dataSession = readDataSession(c.req.header('cookie'));
+  const dataSession = callDataSession ?? readDataSession(c.req.header('cookie'));
   if (!type.isNone(dataSession?.ended)) {
     throw createDataSessionEndedError({ id: dataSession.ended });
   }
@@ -136,7 +138,10 @@ async function createLowdefyContext({ c, user }) {
   // The one writer of loopbackHeaders: a detached CallApi carries these on its
   // loopback fetch, so the target runs with the journey's data set and mutant.
   // With no journey cookie to forward it carries no Cookie header at all.
-  const journeyCookies = forwardJourneyCookies(c.req.header('cookie'));
+  const journeyCookies = forwardJourneyCookies({
+    cookieHeader: c.req.header('cookie'),
+    dataSessionId: callDataSession?.id,
+  });
   context.loopbackHeaders = journeyCookies === '' ? {} : { cookie: journeyCookies };
   // Which browser context sent the request: errors it causes are stamped with
   // it, so a journey run claims only its own (see createHandleError).

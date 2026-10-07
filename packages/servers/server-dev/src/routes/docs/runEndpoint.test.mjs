@@ -70,13 +70,23 @@ test('docsRunEndpointHandler leaves the original request body readable', async (
 });
 
 test('docsRunEndpointHandler returns 400 when user is malformed', async () => {
-  const c = createContext({ endpointId: 'create_order', user: 'nope' });
+  const c = createContext({ endpointId: 'create_order', user: '{nope' });
 
   const result = await docsRunEndpointHandler(c);
 
   expect(result.status).toBe(400);
   expect(result.data.error).toMatch(/The "user" param must be JSON/);
   expect(mockRunEndpoint).not.toHaveBeenCalled();
+});
+
+test('docsRunEndpointHandler passes a data set user name and data through', async () => {
+  const c = createContext({ endpointId: 'create_order', user: 'member', data: 'crm' });
+
+  await docsRunEndpointHandler(c);
+
+  expect(mockRunEndpoint).toHaveBeenCalledWith(
+    expect.objectContaining({ user: 'member', data: 'crm' })
+  );
 });
 
 test('docsRunEndpointHandler passes an undefined user when the body omits it', async () => {

@@ -37,7 +37,7 @@ Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and e
 
 Behaviour, not just layout: a screenshot shows what rendered, not what works. To verify behaviour, drive the page with lowdefy_run_journey — a declarative list of steps (click, fill, select, press, back, goto, email, as, wait, screenshot, expect) addressed by blockId — and assert on state, visibility, text, url or title. A failing step stops the journey and comes back as data (passed: false, failure with expected/actual, the remaining steps skipped) together with the final page state, so you can read what the app actually did and write the next assertion. A large final state comes back as a summary of its keys; pass state with the paths you need. Pass user to act as a real member (e.g. {"roles":["admin"]}) when the flow is role-gated, or user "none" to test auth itself (sign-up, sign-in, invitations) through the app's own pages and sessions.
 
-Role-gated pages: the headless renderer signs in as a roleless user, so a page or request gated on a role renders empty or refused. Pass user to lowdefy_screenshot_page, lowdefy_run_journey, lowdefy_inspect_state, lowdefy_eval_operator, lowdefy_load_state, lowdefy_run_request or lowdefy_run_endpoint to act as a specific caller — e.g. user {"roles":["admin"]} — and vary it per call to compare what different roles see. A request run without user runs as a roleless anonymous caller, so a tenant-walled or role-gated request returns empty rather than an error.
+Role-gated pages: the headless renderer signs in as a roleless user, so a page or request gated on a role renders empty or refused. Pass user to lowdefy_screenshot_page, lowdefy_run_journey, lowdefy_inspect_state, lowdefy_eval_operator, lowdefy_load_state, lowdefy_run_request or lowdefy_run_endpoint to act as a specific caller, in the same forms on every one: a user object (e.g. {"roles":["admin"]}), "none" to act signed out, or the name of a data set user together with data (e.g. user "member", data "crm"), which runs the call on that data set's own database. Vary it per call to compare what different roles see. A request run without user runs as a roleless anonymous caller, so a tenant-walled or role-gated request returns empty rather than an error.
 
 Safety: lowdefy_checkpoint snapshots the config files before risky multi-file changes; lowdefy_revert_checkpoint restores them.
 
@@ -48,15 +48,27 @@ State checkpoints (testing): lowdefy_snapshot_state captures a page's live state
 const HAZARDS_NOTE =
   ' Results include `hazards`: behaviours of this type that its schema does not show. Read them before writing config.';
 
-// Shared by every tool that renders a page headless, so one call can act as an
-// admin and the next as a plain member — each headless call gets its own browser
-// context, so they never share an identity.
+// One sentence, shared by the description of every tool that acts as someone,
+// so the caller option reads the same wherever an agent meets it.
+const CALLER_NOTE =
+  ' Pass user to act as someone: a user object such as {"roles":["admin"]}, "none" to act signed out, or the name of a user in the data set that data names (tests/data/<name>.yaml), which also runs the call on that data set\'s own database.';
+
+// Shared by every tool that acts as someone, in the forms a journey takes, so
+// one call can act as an admin and the next as a plain member - each headless
+// call gets its own browser context, so they never share an identity.
 const userSchema = z
-  .object({})
-  .passthrough()
+  .union([z.literal('none'), z.string().min(1), z.object({}).passthrough()])
   .optional()
   .describe(
-    'Act as this caller instead of the default roleless headless user, e.g. {"roles":["user-admin"]} to render a role-gated page. Merged over the default, so include email/profile/attributes fields too if the page reads them — no auth engine runs for an injected caller, so nothing derives them. Headless only: it is never applied to a page the developer opens in their own browser, so combining it with source "tab" or load_state mode "registry-only" is an error rather than a silently dropped role, and on lowdefy_run_request / lowdefy_run_endpoint it sets the caller the request or routine runs as.'
+    'Who the call acts as. Omitted: the default roleless headless user. An object: that injected caller, e.g. {"roles":["user-admin"]}, merged over the default, so include email/profile/attributes fields too if the page reads them; no auth engine runs for an injected caller, so nothing derives them. "none": no injected caller, so the app\'s own auth decides and the call runs signed out. Any other string: the name of a user in the data set named by data, e.g. "member". Headless only: it is never applied to a page the developer opens in their own browser, so combining it with source "tab" or load_state mode "registry-only" is an error rather than a silently dropped role.'
+  );
+
+// Shared by every tool that takes userSchema.
+const dataSchema = z
+  .string()
+  .optional()
+  .describe(
+    'The name of a data set in tests/data/<name>.yaml. The call then runs against a fresh in-memory database of its own, loaded with the data set, as a journey with data does, and user can name one of its users. Headless only, like user.'
   );
 
 // Shared by every tool that names a page instance: a page whose `path` has
@@ -79,7 +91,8 @@ const saveResponseSchema = z
 const devToolDefinitions = {
   lowdefy_inspect_state: {
     description:
-      "Read the LIVE state of a running page: state, request results, event log (recent actions fired), global, user, input, and urlQuery. If the developer has the page open in a browser it reads their actual tab (ask them to interact first, then inspect); otherwise it runs the page headless. Use this to see what the app's data model really looks like.",
+      "Read the LIVE state of a running page: state, request results, event log (recent actions fired), global, user, input, and urlQuery. If the developer has the page open in a browser it reads their actual tab (ask them to interact first, then inspect); otherwise it runs the page headless. Use this to see what the app's data model really looks like." +
+      CALLER_NOTE,
     inputSchema: {
       pageId: z.string().describe('The page id to inspect.'),
       pathParams: pathParamsSchema.describe(
@@ -90,12 +103,14 @@ const devToolDefinitions = {
         .optional()
         .describe('Force a source. Default: live tab if connected, else headless.'),
       user: userSchema,
+      data: dataSchema,
     },
   },
 
   lowdefy_eval_operator: {
     description:
-      'Evaluate a Lowdefy operator expression against the live state of a running page — a REPL for config. Pass the operator object in the "expression" argument — any JSON value, e.g. {"_state": "customer.name"} or {"_if": {...}}. Evaluates in the real browser runtime (live tab if connected, else headless).',
+      'Evaluate a Lowdefy operator expression against the live state of a running page — a REPL for config. Pass the operator object in the "expression" argument — any JSON value, e.g. {"_state": "customer.name"} or {"_if": {...}}. Evaluates in the real browser runtime (live tab if connected, else headless).' +
+      CALLER_NOTE,
     inputSchema: {
       pageId: z.string().describe('The page id whose context to evaluate against.'),
       pathParams: pathParamsSchema.describe(
@@ -106,28 +121,33 @@ const devToolDefinitions = {
         .describe('The operator expression — any JSON value, e.g. {"_state": "key"}.'),
       source: z.enum(['tab', 'headless']).optional(),
       user: userSchema,
+      data: dataSchema,
     },
   },
 
   lowdefy_run_request: {
     description:
-      'Execute a request in dev with a test payload to verify the data shape a page receives. The page is built first when it changed since its last build, so the request that runs is the one in the config now; a page that fails to build is refused with its build errors. Read-only request types always run; write requests are refused unless the app opts in (cli.agentTools.allowWriteRequests in lowdefy.yaml). A response too large to return inline is written in full to responseFile.',
+      'Execute a request in dev with a test payload to verify the data shape a page receives. The page is built first when it changed since its last build, so the request that runs is the one in the config now; a page that fails to build is refused with its build errors. Read-only request types always run; write requests are refused unless the app opts in (cli.agentTools.allowWriteRequests in lowdefy.yaml). A response too large to return inline is written in full to responseFile.' +
+      CALLER_NOTE,
     inputSchema: {
       pageId: z.string().describe('The page the request is defined on.'),
       requestId: z.string().describe('The request id.'),
       payload: z.record(z.any()).optional().describe('Test payload for _payload operators.'),
       user: userSchema,
+      data: dataSchema,
       saveResponse: saveResponseSchema,
     },
   },
 
   lowdefy_run_endpoint: {
     description:
-      'Execute an Api endpoint routine in dev with a test payload and caller, to verify what it returns, rejects or throws. Requires agent write access (cli.agentTools.allowWriteRequests) because routines are not classified read-only. A :reject or :throw comes back as data (success: false, status "reject"/"error" with the routine\'s own error), not as a tool failure. Pass system: true to run it as a system context the way a cron or detached run does — no user (_user undefined), endpoint auth not checked, InternalApi endpoints allowed — which is the local test path for scheduled (schedules) and detached-only routines. Nested CallApi steps with detached: true still dispatch over HTTP and need CRON_SECRET set on the dev server; they are not faked.',
+      'Execute an Api endpoint routine in dev with a test payload and caller, to verify what it returns, rejects or throws. Requires agent write access (cli.agentTools.allowWriteRequests) because routines are not classified read-only. A :reject or :throw comes back as data (success: false, status "reject"/"error" with the routine\'s own error), not as a tool failure. Pass system: true to run it as a system context the way a cron or detached run does — no user (_user undefined), endpoint auth not checked, InternalApi endpoints allowed — which is the local test path for scheduled (schedules) and detached-only routines. Nested CallApi steps with detached: true still dispatch over HTTP and need CRON_SECRET set on the dev server; they are not faked.' +
+      CALLER_NOTE,
     inputSchema: {
       endpointId: z.string().describe('The Api endpoint id.'),
       payload: z.record(z.any()).optional().describe('Test payload for _payload operators.'),
       user: userSchema,
+      data: dataSchema,
       system: z
         .boolean()
         .optional()
@@ -169,11 +189,13 @@ const devToolDefinitions = {
 
   lowdefy_load_state: {
     description:
-      "Put the app back into a saved state checkpoint. mode 'headless' (default) verifies the restored state itself; mode 'registry-only' loads the recorded request data into the dev server and returns a ?_checkpoint URL the developer can open to manually test the app in that exact state.",
+      "Put the app back into a saved state checkpoint. mode 'headless' (default) verifies the restored state itself; mode 'registry-only' loads the recorded request data into the dev server and returns a ?_checkpoint URL the developer can open to manually test the app in that exact state." +
+      CALLER_NOTE,
     inputSchema: {
       name: z.string().describe('The checkpoint name.'),
       mode: z.enum(['headless', 'registry-only']).optional(),
       user: userSchema,
+      data: dataSchema,
     },
   },
 
@@ -250,7 +272,8 @@ const devToolDefinitions = {
 
   lowdefy_screenshot_page: {
     description:
-      'Screenshot a page of the running dev server (headless Chromium) to visually verify layout and rendering. Returns a PNG image. Set width (and height) to check a narrow or phone layout, e.g. width 390, and colorScheme "dark" to check dark mode. To capture a state beyond the page as it loads — an OPEN Selector / MultipleSelector / AutoComplete / DateSelector (calendar) / Cascader / TreeSelector dropdown, a modal a button opens — pass steps, e.g. [{"open": "status"}]: they run after the page settles and before the capture. Popups antd renders in a portal are included, also with fullPage. Pass urlQuery for a page that reads _url_query, and pathParams for a page whose path has placeholders.',
+      'Screenshot a page of the running dev server (headless Chromium) to visually verify layout and rendering. Returns a PNG image. Set width (and height) to check a narrow or phone layout, e.g. width 390, and colorScheme "dark" to check dark mode. To capture a state beyond the page as it loads — an OPEN Selector / MultipleSelector / AutoComplete / DateSelector (calendar) / Cascader / TreeSelector dropdown, a modal a button opens — pass steps, e.g. [{"open": "status"}]: they run after the page settles and before the capture. Popups antd renders in a portal are included, also with fullPage. Pass urlQuery for a page that reads _url_query, and pathParams for a page whose path has placeholders.' +
+      CALLER_NOTE,
     inputSchema: {
       pageId: z.string().describe('The page id to screenshot.'),
       pathParams: pathParamsSchema,
@@ -305,12 +328,14 @@ const devToolDefinitions = {
           'The colour scheme the page\'s prefers-color-scheme reports. Default "light". An app that follows the system theme renders dark with "dark"; a darkMode fixed in the app config wins.'
         ),
       user: userSchema,
+      data: dataSchema,
     },
   },
 
   lowdefy_run_journey: {
     description:
-      'Drive a page of the running dev server headless through declarative steps and assert what happens — the way to verify behaviour (a form submits, a modal opens, a filter works), not just layout. Blocks are addressed by blockId; a target object narrows to a grid row/cell ({"blockId": "grid", "row": 1, "column": "actions"}), to the control with exactly some text ({"blockId": "grid", "row": 1, "text": "Edit"}), or reaches portal-rendered controls page-wide by text alone ({"text": "OK"} for a confirm dialog or modal footer button, a menu item). A step that fails stops the journey and is returned as data (passed: false, failure with index/step/expected/actual/message, later steps "skipped") — never as a tool error. A journey also fails at the step that causes an app error its own browsers raised (an action failing with an error that is not a user error, an uncaught page error, a server error or 5xx from a request or endpoint): failure.kind "app-error" with errors [{kind, message, source, configKey, key}], or phase "open" when opening the page raised it. A failed Validate, a Throw action and 401/403 refusals never count. Where an error is the intended outcome, {"expect": {"error": text}} straight after the interaction claims its errors whose message contains text. Returns the final page state (whole when small, otherwise stateOmitted with its size and top-level keys; see the state param) and any screenshots taken (as images after the JSON text).',
+      'Drive a page of the running dev server headless through declarative steps and assert what happens — the way to verify behaviour (a form submits, a modal opens, a filter works), not just layout. Blocks are addressed by blockId; a target object narrows to a grid row/cell ({"blockId": "grid", "row": 1, "column": "actions"}), to the control with exactly some text ({"blockId": "grid", "row": 1, "text": "Edit"}), or reaches portal-rendered controls page-wide by text alone ({"text": "OK"} for a confirm dialog or modal footer button, a menu item). A step that fails stops the journey and is returned as data (passed: false, failure with index/step/expected/actual/message, later steps "skipped") — never as a tool error. A journey also fails at the step that causes an app error its own browsers raised (an action failing with an error that is not a user error, an uncaught page error, a server error or 5xx from a request or endpoint): failure.kind "app-error" with errors [{kind, message, source, configKey, key}], or phase "open" when opening the page raised it. A failed Validate, a Throw action and 401/403 refusals never count. Where an error is the intended outcome, {"expect": {"error": text}} straight after the interaction claims its errors whose message contains text. Returns the final page state (whole when small, otherwise stateOmitted with its size and top-level keys; see the state param) and any screenshots taken (as images after the JSON text).' +
+      CALLER_NOTE,
     inputSchema: {
       pageId: z.string().describe('The page id to open.'),
       steps: z

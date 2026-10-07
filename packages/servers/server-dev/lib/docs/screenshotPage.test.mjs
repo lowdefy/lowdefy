@@ -28,6 +28,15 @@ jest.unstable_mockModule('playwright-core', () => ({
 }));
 // A missing shell would otherwise start a real download.
 jest.unstable_mockModule('./installHeadlessShell.js', () => ({ default: () => null }));
+// A data set caller loads a data set into the dev server's memory store; both
+// are mocked so the test checks who the page opens as and on which database.
+const mockReadDataSet = jest.fn();
+const mockOpenDataSession = jest.fn();
+jest.unstable_mockModule('./dataSets/readDataSet.js', () => ({ default: mockReadDataSet }));
+jest.unstable_mockModule('./dataSets/getDataStore.js', () => ({ default: async () => ({}) }));
+jest.unstable_mockModule('./dataSets/openDataSession.js', () => ({
+  default: mockOpenDataSession,
+}));
 
 // lib/build/config.js reads build/config.json from process.cwd() at import
 // time — chdir into a fixture that has one before screenshotPage.js (which
@@ -207,4 +216,105 @@ test('screenshotPage returns the error naming a missing placeholder before openi
   });
   expect(result.invalidInput).toBe(true);
   expect(result.error).toMatch(/missing a value for path placeholder "ticket_id"/);
+});
+
+test('screenshotPage refuses a data set user name without data before launching a browser', async () => {
+  const { chromium } = await import('playwright-core');
+  chromium.launch.mockClear();
+  const result = await screenshotPage({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    user: 'member',
+  });
+  expect(result).toEqual({
+    error:
+      'The call\'s user "member" names a data set user, but the call has no "data". Add data: <data set name>, or give user as an object.',
+    invalidInput: true,
+  });
+  expect(chromium.launch).not.toHaveBeenCalled();
+});
+
+test("screenshotPage renders as a data set user, on the data set's own database", async () => {
+  const { chromium } = await import('playwright-core');
+  const member = { id: 'u_member', roles: ['member'] };
+  mockReadDataSet.mockResolvedValue({ name: 'crm', users: { member } });
+  const close = jest.fn(async () => {});
+  mockOpenDataSession.mockResolvedValue({ cookie: 'session1', session: { id: 'session1' }, close });
+  const page = {
+    goto: jest.fn(async () => {}),
+    waitForFunction: jest.fn(async () => {}),
+    waitForTimeout: jest.fn(async () => {}),
+    screenshot: jest.fn(async () => Buffer.from('png')),
+  };
+  const cookies = [];
+  const context = {
+    addCookies: jest.fn(async (added) => cookies.push(...added)),
+    route: jest.fn(async () => {}),
+    newPage: jest.fn(async () => page),
+    close: jest.fn(async () => {}),
+    on: jest.fn(),
+  };
+  let connected = true;
+  chromium.launch.mockResolvedValue({
+    isConnected: () => connected,
+    newContext: async () => context,
+  });
+  try {
+    const result = await screenshotPage({
+      origin: 'http://localhost:3001',
+      pageId: 'home',
+      user: 'member',
+      data: 'crm',
+    });
+    expect(result.mimeType).toEqual('image/png');
+    expect(mockReadDataSet).toHaveBeenCalledWith(expect.objectContaining({ name: 'crm' }));
+    expect(mockOpenDataSession).toHaveBeenCalledWith({
+      dataSet: { name: 'crm', users: { member } },
+    });
+    const headless = cookies.find((cookie) => cookie.name === 'lowdefy_headless_user');
+    const caller = JSON.parse(Buffer.from(headless.value, 'base64').toString());
+    expect(caller.explicit).toBe(true);
+    expect(caller.user).toMatchObject({ id: 'u_member', roles: ['member'] });
+    expect(cookies.map((cookie) => cookie.name)).toContain('lowdefy_journey_data');
+    expect(close).toHaveBeenCalledTimes(1);
+  } finally {
+    connected = false;
+    chromium.launch.mockRejectedValue(new Error("Executable doesn't exist"));
+  }
+});
+
+test('screenshotPage opens the page signed out for user "none"', async () => {
+  const { chromium } = await import('playwright-core');
+  mockOpenDataSession.mockClear();
+  const page = {
+    goto: jest.fn(async () => {}),
+    waitForFunction: jest.fn(async () => {}),
+    waitForTimeout: jest.fn(async () => {}),
+    screenshot: jest.fn(async () => Buffer.from('png')),
+  };
+  const cookies = [];
+  const context = {
+    addCookies: jest.fn(async (added) => cookies.push(...added)),
+    newPage: jest.fn(async () => page),
+    close: jest.fn(async () => {}),
+    on: jest.fn(),
+  };
+  let connected = true;
+  chromium.launch.mockResolvedValue({
+    isConnected: () => connected,
+    newContext: async () => context,
+  });
+  try {
+    const result = await screenshotPage({
+      origin: 'http://localhost:3001',
+      pageId: 'home',
+      user: 'none',
+    });
+    expect(result.mimeType).toEqual('image/png');
+    expect(cookies.map((cookie) => cookie.name)).not.toContain('lowdefy_headless_user');
+    expect(mockOpenDataSession).not.toHaveBeenCalled();
+  } finally {
+    connected = false;
+    chromium.launch.mockRejectedValue(new Error("Executable doesn't exist"));
+  }
 });

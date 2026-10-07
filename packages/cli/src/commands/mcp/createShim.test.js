@@ -52,14 +52,17 @@ const devTools = {
   ],
 };
 
+// Where the shim runs from: a checkout of Lowdefy, as in its own repository.
+const CLI_CHECKOUT = path.join(os.tmpdir(), 'lowdefy-checkout', 'packages', 'cli');
+
 let root;
 let home;
 let client;
 let shim;
 const originalHome = process.env.LOWDEFY_HOME;
 
-async function connect({ cwd, onElicit, cliVersion = '6.0.0' }) {
-  shim = createShim({ cliVersion, cwd, devTools });
+async function connect({ cwd, onElicit, cliVersion = '6.0.0', cliDirectory = CLI_CHECKOUT }) {
+  shim = createShim({ cliVersion, cliDirectory, cwd, devTools });
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
   await shim.server.connect(serverTransport);
   client = new Client(
@@ -245,6 +248,7 @@ test('lowdefy_dev_status reports a terminal dev server from its instance record 
       owner: 'terminal',
       state: 'starting',
       url: 'http://localhost:3000',
+      version: '7.2.0',
     })
   );
   await connect({ cwd: root });
@@ -254,6 +258,7 @@ test('lowdefy_dev_status reports a terminal dev server from its instance record 
     app: `apps/main @ ${path.basename(root)}`,
     owner: 'terminal',
     state: 'starting',
+    version: '7.2.0',
   });
   expect(fs.existsSync(path.join(home, 'hub'))).toBe(false);
 });
@@ -514,9 +519,12 @@ async function startFakeDevServer({ version = '7.1.0', tools, failListTools = fa
       }
       return { tools };
     });
-    server.setRequestHandler(CallToolRequestSchema, (request) => ({
-      content: [{ type: 'text', text: `${request.params.name} answered` }],
-    }));
+    server.setRequestHandler(CallToolRequestSchema, (request) => {
+      if (request.params.name === 'lowdefy_fails') {
+        return { content: [{ type: 'text', text: 'Unknown option "wait".' }], isError: true };
+      }
+      return { content: [{ type: 'text', text: `${request.params.name} answered` }] };
+    });
     const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
     res.on('close', () => {
       transport.close();
@@ -526,6 +534,9 @@ async function startFakeDevServer({ version = '7.1.0', tools, failListTools = fa
     await transport.handleRequest(req, res);
   });
   await new Promise((resolve) => httpServer.listen(0, '127.0.0.1', resolve));
+  // The version its instance record and the hub report, as a dev server
+  // writes its own version into its record.
+  httpServer.lowdefyVersion = version;
   return httpServer;
 }
 
@@ -539,7 +550,7 @@ function fakeTool(name, { description = `${name}.`, properties = {} } = {}) {
   return { name, description, inputSchema: { type: 'object', properties } };
 }
 
-function writeInstance({ app, devServer, owner = 'terminal' }) {
+function writeInstance({ app, devServer, owner = 'terminal', extra = {} }) {
   fs.mkdirSync(path.join(app, '.lowdefy'), { recursive: true });
   fs.writeFileSync(
     path.join(app, '.lowdefy', 'instance.json'),
@@ -549,6 +560,8 @@ function writeInstance({ app, devServer, owner = 'terminal' }) {
       owner,
       state: 'ready',
       url: `http://127.0.0.1:${devServer.address().port}`,
+      version: devServer.lowdefyVersion,
+      ...extra,
     })
   );
 }
@@ -597,6 +610,7 @@ async function listenAsHub({ app, devServer, writeRecord = true }) {
               owner: 'hub',
               url: `http://127.0.0.1:${devServer.address().port}`,
               pid: process.pid,
+              version: devServer.lowdefyVersion,
               managed: true,
             };
           }
@@ -898,4 +912,157 @@ test('lowdefy mcp adds the tools a newer dev server has on the first forwarded c
   } finally {
     await stopFakeDevServer(devServer);
   }
+});
+
+// A dev server on a later build than the shim, whose instance record carries
+// fields and a process start time in a format this shim does not know.
+const NEWER_RECORD_FORMAT = {
+  processStartTime: { format: 3, bootId: 'b-1', ticks: '123456' },
+  ports: { app: 3601, data: 3602 },
+};
+
+test('lowdefy mcp forwards build_status, run_endpoint and screenshot_page to a dev server on another version and record format', async () => {
+  const devServer = await startFakeDevServer({
+    version: '7.2.0',
+    tools: [
+      fakeTool('lowdefy_build_status'),
+      fakeTool('lowdefy_run_endpoint'),
+      fakeTool('lowdefy_screenshot_page'),
+    ],
+  });
+  try {
+    writeInstance({ app: makeApp('.'), devServer, extra: NEWER_RECORD_FORMAT });
+    await connect({ cwd: root, cliVersion: '7.1.0' });
+
+    const results = [];
+    for (const name of [
+      'lowdefy_build_status',
+      'lowdefy_run_endpoint',
+      'lowdefy_screenshot_page',
+    ]) {
+      results.push(await client.callTool({ name, arguments: {} }));
+    }
+
+    results.forEach((result, index) => {
+      expect(result.isError).toBeFalsy();
+      expect(text(result)).toContain(
+        `${
+          ['lowdefy_build_status', 'lowdefy_run_endpoint', 'lowdefy_screenshot_page'][index]
+        } answered`
+      );
+      expect(text(result)).not.toMatch(/TypeError|Cannot read properties/);
+    });
+    // The note comes once a session, on the first call.
+    expect(text(results[0])).toContain(
+      `Note: lowdefy mcp is 7.1.0 but this dev server is 7.2.0, so tools and their options can differ. To match them, run \`pnpm install\` and \`pnpm build\` in ${CLI_CHECKOUT}, then restart the agent session.`
+    );
+    expect(text(results[1])).not.toContain('Note:');
+    expect(text(results[2])).not.toContain('Note:');
+  } finally {
+    await stopFakeDevServer(devServer);
+  }
+});
+
+test('lowdefy mcp sends the call to the server the hub reports on another version, and notes both versions', async () => {
+  const devServer = await startFakeDevServer({
+    version: '7.2.0',
+    tools: [fakeTool('lowdefy_build_status')],
+  });
+  const app = makeApp('.');
+  const hub = await listenAsHub({ app, devServer, writeRecord: false });
+  try {
+    await connect({ cwd: root, cliVersion: '7.1.0' });
+
+    const result = await client.callTool({ name: 'lowdefy_build_status', arguments: {} });
+
+    expect(result.isError).toBeFalsy();
+    expect(text(result)).toContain('lowdefy_build_status answered');
+    expect(text(result)).toContain('lowdefy mcp is 7.1.0 but this dev server is 7.2.0');
+  } finally {
+    await client.close();
+    await shim.close();
+    await hub.close();
+    await stopFakeDevServer(devServer);
+  }
+});
+
+test('lowdefy mcp names both versions and the fix on every failed call to a dev server on another version', async () => {
+  const devServer = await startFakeDevServer({
+    version: '7.0.0',
+    tools: [fakeTool('lowdefy_build_status'), fakeTool('lowdefy_fails')],
+  });
+  try {
+    writeInstance({ app: makeApp('.'), devServer });
+    await connect({
+      cwd: root,
+      cliVersion: '7.1.0',
+      cliDirectory: path.join(root, 'node_modules', 'lowdefy'),
+    });
+    // Starting learns the tools the shim lacks, lowdefy_fails among them.
+    await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
+
+    const first = await client.callTool({ name: 'lowdefy_fails', arguments: {} });
+    const second = await client.callTool({ name: 'lowdefy_fails', arguments: {} });
+
+    [first, second].forEach((result) => {
+      expect(result.isError).toBe(true);
+      expect(text(result)).toContain('Unknown option "wait".');
+      expect(text(result)).toContain(
+        `Note: lowdefy mcp is 7.1.0 but this dev server is 7.0.0, so tools and their options can differ. To match them, run \`npx lowdefy agent-setup\` in ${root} to pin lowdefy mcp to the app's Lowdefy version, then restart the agent session.`
+      );
+    });
+  } finally {
+    await stopFakeDevServer(devServer);
+  }
+});
+
+test('lowdefy mcp adds no version note when the shim and dev server run the same version', async () => {
+  const devServer = await startFakeDevServer({
+    version: 'v7.1.0',
+    tools: [fakeTool('lowdefy_build_status'), fakeTool('lowdefy_fails')],
+  });
+  try {
+    writeInstance({ app: makeApp('.'), devServer });
+    await connect({ cwd: root, cliVersion: '7.1.0' });
+
+    const passed = await client.callTool({ name: 'lowdefy_build_status', arguments: {} });
+    const failed = await client.callTool({ name: 'lowdefy_fails', arguments: {} });
+
+    expect(text(passed)).not.toContain('Note:');
+    expect(text(failed)).not.toContain('Note:');
+  } finally {
+    await stopFakeDevServer(devServer);
+  }
+});
+
+test('lowdefy mcp says where it could not reach a dev server on another version, never a bare TypeError', async () => {
+  const app = makeApp('.');
+  fs.mkdirSync(path.join(app, '.lowdefy'));
+  fs.writeFileSync(
+    path.join(app, '.lowdefy', 'instance.json'),
+    JSON.stringify({
+      pid: process.pid,
+      configDirectory: app,
+      owner: 'terminal',
+      state: 'ready',
+      // Nothing listens on port 9 (discard) here.
+      url: 'http://127.0.0.1:9',
+      version: '7.2.0',
+      ...NEWER_RECORD_FORMAT,
+    })
+  );
+  await connect({ cwd: root, cliVersion: '7.1.0' });
+
+  const result = await client.callTool({ name: 'lowdefy_build_status', arguments: {} });
+
+  expect(result.isError).toBe(true);
+  expect(text(result)).toMatch(
+    new RegExp(
+      `^${path.basename(
+        root
+      )}: could not reach the dev server at http://127.0.0.1:9 to call lowdefy_build_status`
+    )
+  );
+  expect(text(result)).toContain('lowdefy mcp is 7.1.0 but this dev server is 7.2.0');
+  expect(text(result)).not.toMatch(/TypeError|Cannot read properties/);
 });

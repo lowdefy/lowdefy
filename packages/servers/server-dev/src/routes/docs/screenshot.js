@@ -103,6 +103,7 @@ async function docsScreenshotHandler(c) {
     scrollX,
     scrollY,
     user,
+    data: c.req.query('data'),
     width,
     height,
     colorScheme,

@@ -23,6 +23,7 @@ import {
   ListToolsRequestSchema,
   McpError,
 } from '@modelcontextprotocol/sdk/types.js';
+import { type } from '@lowdefy/helpers';
 import { readDevInstanceAsync } from '@lowdefy/node-utils';
 
 import callWithReconnect from './callWithReconnect.js';
@@ -30,11 +31,13 @@ import checkDependenciesInstalled from './checkDependenciesInstalled.js';
 import createCheckoutGuard from './createCheckoutGuard.js';
 import createHubConnection from './createHubConnection.js';
 import createInstanceConnections from './createInstanceConnections.js';
+import describeVersionMismatch from './describeVersionMismatch.js';
 import fetchBuildSummary from './fetchBuildSummary.js';
 import findApps from './findApps.js';
 import findGitRoot from './findGitRoot.js';
 import formatInstanceLabel from './formatInstanceLabel.js';
 import isNewerVersion from './isNewerVersion.js';
+import isSameVersion from './isSameVersion.js';
 import lifecycleTools, { DIRECTORY_PROPERTY } from './lifecycleTools.js';
 import resolveApp from './resolveApp.js';
 import runAppTests from './runAppTests.js';
@@ -76,6 +79,10 @@ function withDirectory(tool) {
 }
 
 function describeNotReady({ label, status }) {
+  // A hub from another Lowdefy version may answer without a status.
+  if (type.isNone(status)) {
+    return `${label}: the hub reported no status for the dev server. Call lowdefy_dev_status to see where it stands.`;
+  }
   if (status.state === 'exited') {
     const tail = (status.logTail ?? []).join('\n');
     return `${label}: the dev server exited before it was ready. Last output:\n${tail}\n\nIf this needs something only the user can do (a secrets login, a missing dependency), ask them, then call lowdefy_dev_start again.`;
@@ -84,7 +91,33 @@ function describeNotReady({ label, status }) {
   return `${label}: the dev server is still ${status.state}. ${status.note ?? ''}\n${tail}`.trim();
 }
 
-function createShim({ cliVersion, cwd, devTools }) {
+// A record another Lowdefy version wrote can be in a format this one cannot
+// read (an older CLI compared process start times in another format).
+// Unreadable counts as no record, so the hub - which started the server and
+// read its record itself - decides where it runs.
+async function readRunningInstance({ configDirectory }) {
+  try {
+    return await readDevInstanceAsync({ configDirectory });
+  } catch {
+    return null;
+  }
+}
+
+// Why a forwarded call never got an answer, for the agent. The fetch under
+// the MCP client throws a bare TypeError ("fetch failed") when the server is
+// unreachable, which says nothing of where or what to do.
+function describeForwardError({ label, name, url, error }) {
+  if (error instanceof McpError && error.code === ErrorCode.ConnectionClosed) {
+    return `${label}: the dev server stopped or dropped the connection before ${name} answered, so the call may have run in part. Call lowdefy_dev_status, then lowdefy_dev_start if it is not ready, and try again.`;
+  }
+  // By name: undici's TypeError can come from another realm than this module's.
+  if (error.name === 'TypeError') {
+    return `${label}: could not reach the dev server at ${url} to call ${name} (${error.message}). Call lowdefy_dev_status, then lowdefy_dev_start if it is not ready, and try again.`;
+  }
+  return `${label}: ${name} failed: ${error.message}`;
+}
+
+function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
   const hub = createHubConnection();
   const server = new Server(
     { name: 'lowdefy', version: cliVersion },
@@ -113,8 +146,12 @@ function createShim({ cliVersion, cwd, devTools }) {
   // experimental builds are 0.0.0-experimental-*, which semver ranks below
   // every release, so a shim on one would otherwise lose its definitions to
   // the first released server it met.
-  async function learnTools(client) {
-    const serverVersion = semver.valid(client.getServerVersion()?.version);
+  //
+  // The server's version is the one its instance status reports (the hub's
+  // status, or the record a running server wrote, which is what the hub
+  // reads), the same source the version note below compares.
+  async function learnTools({ client, instance }) {
+    const serverVersion = semver.valid(instance.version);
     if (serverVersion === null) {
       return;
     }
@@ -163,7 +200,7 @@ function createShim({ cliVersion, cwd, devTools }) {
   // reading it again here can disagree with it (a CLI older than the dev server
   // that wrote the record), so calls go where lowdefy_dev_status says it runs.
   async function ensureRunning(app) {
-    const running = await readDevInstanceAsync({ configDirectory: app.configDirectory });
+    const running = await readRunningInstance({ configDirectory: app.configDirectory });
     if (running !== null && running.state === 'ready') {
       if (running.owner === 'hub' || hub.isConnected()) {
         await hub.attach(app);
@@ -176,10 +213,37 @@ function createShim({ cliVersion, cwd, devTools }) {
       configDirectory: app.configDirectory,
       env: process.env,
     });
-    if (status.state !== 'ready') {
+    if (status?.state !== 'ready') {
       throw new Error(describeNotReady({ label: app.label, status }));
     }
     return status;
+  }
+
+  // Server versions already noted on a successful call, so the note is said
+  // once a session rather than on every call.
+  const notedVersions = new Set();
+
+  // The note a forwarded call carries when this shim and the dev server run
+  // different Lowdefy versions: always on a failure, once on a success. The
+  // call itself goes to the server's own /lowdefy-docs/mcp either way, so it
+  // runs with the server's own tool contract.
+  function versionNote({ app, instance, isError }) {
+    if (
+      typeof instance.version !== 'string' ||
+      isSameVersion({ a: cliVersion, b: instance.version })
+    ) {
+      return null;
+    }
+    if (!isError && notedVersions.has(instance.version)) {
+      return null;
+    }
+    notedVersions.add(instance.version);
+    return `Note: ${describeVersionMismatch({
+      cliVersion,
+      serverVersion: instance.version,
+      cliDirectory,
+      appRoot: app.root,
+    })}`;
   }
 
   async function callDevTool({ name, args }) {
@@ -204,27 +268,22 @@ function createShim({ cliVersion, cwd, devTools }) {
         reconnect: () => instances.drop({ configDirectory: app.configDirectory }),
       });
     } catch (error) {
-      // The connection ended before the answer (see fetchDevServer). Not
-      // retried here: the dev server may have run part of the call.
-      if (!(error instanceof McpError) || error.code !== ErrorCode.ConnectionClosed) {
-        throw error;
-      }
+      // Not retried here: the dev server may have run part of the call. The
+      // connection is dropped so the next call opens a fresh one.
       await instances.drop({ configDirectory: app.configDirectory });
-      throw new Error(
-        `${app.label}: the dev server stopped or dropped the connection before ${name} answered, so the call may have run in part. Call lowdefy_dev_status, then lowdefy_dev_start if it is not ready, and try again.`
-      );
+      const message = describeForwardError({ label: app.label, name, url: instance.url, error });
+      const note = versionNote({ app, instance, isError: true });
+      throw new Error(note === null ? message : `${message}\n\n${note}`);
     }
     const content = [
       { type: 'text', text: `${app.label} · ${instance.url}` },
       ...(result.content ?? []),
     ];
-    // The handlers come from the dev server, whose version follows the app.
-    // A tool this CLI lists that an older server lacks fails - say why.
-    if (result.isError && instance.version && instance.version !== cliVersion) {
-      content.push({
-        type: 'text',
-        text: `Note: lowdefy mcp is ${cliVersion} but this dev server is ${instance.version}; tools can differ between versions.`,
-      });
+    // The handlers come from the dev server, whose version follows the app,
+    // so a tool or option this CLI lists can differ from the server's.
+    const note = versionNote({ app, instance, isError: result.isError === true });
+    if (note !== null) {
+      content.push({ type: 'text', text: note });
     }
     return { ...result, content };
   }
@@ -236,7 +295,7 @@ function createShim({ cliVersion, cwd, devTools }) {
       { configDirectory: app.configDirectory },
       { autoStart: false }
     );
-    const record = await readDevInstanceAsync({ configDirectory: app.configDirectory });
+    const record = await readRunningInstance({ configDirectory: app.configDirectory });
     const current = hubStatus ?? {
       configDirectory: app.configDirectory,
       owner: record?.owner,
@@ -244,6 +303,7 @@ function createShim({ cliVersion, cwd, devTools }) {
       url: record?.url,
       pid: record?.pid,
       startedAt: record?.startedAt,
+      version: record?.version,
     };
     const build = current.state === 'ready' ? await fetchBuildSummary({ url: current.url }) : null;
     return { app: app.label, ...current, build };
@@ -266,7 +326,7 @@ function createShim({ cliVersion, cwd, devTools }) {
 
   async function start({ directory, restart = false, clean = false }) {
     const app = await resolve({ directory });
-    const running = await readDevInstanceAsync({ configDirectory: app.configDirectory });
+    const running = await readRunningInstance({ configDirectory: app.configDirectory });
     if (running !== null && running.owner !== 'hub') {
       if (!restart && !clean) {
         await connectToLearnTools({ app, instance: running });
@@ -303,7 +363,7 @@ function createShim({ cliVersion, cwd, devTools }) {
       restart,
       clean,
     });
-    if (result.state !== 'ready') {
+    if (result?.state !== 'ready') {
       throw new Error(describeNotReady({ label: app.label, status: result }));
     }
     await touchDevServer({ url: result.url });
@@ -315,7 +375,7 @@ function createShim({ cliVersion, cwd, devTools }) {
 
   async function stop({ directory }) {
     const app = await resolve({ directory });
-    const running = await readDevInstanceAsync({ configDirectory: app.configDirectory });
+    const running = await readRunningInstance({ configDirectory: app.configDirectory });
     if (running !== null && running.owner !== 'hub') {
       return {
         app: app.label,
@@ -356,7 +416,7 @@ function createShim({ cliVersion, cwd, devTools }) {
     const root = findGitRoot({ directory: fs.realpathSync.native(cwd) });
     const apps = await Promise.all(
       findApps({ root }).map(async (configDirectory) => {
-        const record = await readDevInstanceAsync({ configDirectory });
+        const record = await readRunningInstance({ configDirectory });
         return {
           app: formatInstanceLabel({ configDirectory, root }),
           configDirectory,
@@ -398,6 +458,14 @@ function createShim({ cliVersion, cwd, devTools }) {
       }
       return errorResult(`Unknown tool "${name}".`);
     } catch (error) {
+      // A TypeError here is a fault in this shim, not something the agent
+      // did: say whose, and where to look, rather than pass on a bare
+      // "Cannot read properties of undefined".
+      if (error.name === 'TypeError') {
+        return errorResult(
+          `lowdefy mcp ${cliVersion} failed running ${name} (${error.message}). Call lowdefy_dev_status to see the dev server's state and version.`
+        );
+      }
       return errorResult(error.message);
     }
   });

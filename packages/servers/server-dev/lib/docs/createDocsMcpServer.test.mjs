@@ -197,6 +197,48 @@ test('MCP tools that render a page headless advertise an optional user parameter
   await client.close();
 });
 
+test('MCP tools that act as someone take one user option and share one sentence explaining it', async () => {
+  const client = await connectClient();
+  const { tools } = await client.listTools();
+  const sentence =
+    'Pass user to act as someone: a user object such as {"roles":["admin"]}, "none" to act signed out, or the name of a user in the data set that data names';
+
+  [
+    'lowdefy_screenshot_page',
+    'lowdefy_run_journey',
+    'lowdefy_inspect_state',
+    'lowdefy_eval_operator',
+    'lowdefy_load_state',
+    'lowdefy_run_request',
+    'lowdefy_run_endpoint',
+  ].forEach((name) => {
+    const tool = tools.find((candidate) => candidate.name === name);
+    expect(tool.description).toContain(sentence);
+    expect(tool.inputSchema.properties.data.type).toEqual('string');
+    const forms = JSON.stringify(tool.inputSchema.properties.user);
+    expect(forms).toContain('"const":"none"');
+    expect(forms).toContain('"type":"string"');
+    expect(forms).toContain('"type":"object"');
+  });
+
+  await client.close();
+});
+
+test('MCP tools/call lowdefy_screenshot_page passes data and a data set user name through', async () => {
+  mockScreenshotPage.mockResolvedValue({ data: 'AAAA', mimeType: 'image/png', screenshots: [] });
+  const client = await connectClient();
+
+  await client.callTool({
+    name: 'lowdefy_screenshot_page',
+    arguments: { pageId: 'tickets', user: 'member', data: 'crm' },
+  });
+
+  expect(mockScreenshotPage).toHaveBeenCalledWith(
+    expect.objectContaining({ pageId: 'tickets', user: 'member', data: 'crm' })
+  );
+  await client.close();
+});
+
 test('MCP lowdefy_screenshot_page advertises width and height up to 4096, and colorScheme', async () => {
   const client = await connectClient();
   const { tools } = await client.listTools();

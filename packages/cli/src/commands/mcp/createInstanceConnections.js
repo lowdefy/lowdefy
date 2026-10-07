@@ -51,7 +51,7 @@ function createInstanceConnections({
       }),
       { timeout: connectTimeoutMs }
     );
-    await onOpen?.(client);
+    await onOpen?.({ client, instance });
     return client;
   }
 

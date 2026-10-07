@@ -19,8 +19,10 @@ import { type } from '@lowdefy/helpers';
 import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
 import noBrowserError from './noBrowserError.js';
 import resolvePageInstance from './resolvePageInstance.js';
+import resolveToolCaller from './resolveToolCaller.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import withBrowserSlot from './withBrowserSlot.js';
+import withDataSession from './withDataSession.js';
 
 // Collects a state snapshot from a headless Chromium tab navigated to the
 // page instance's own route (`pathParams` fill a patterned page's placeholders),
@@ -30,7 +32,7 @@ import withBrowserSlot from './withBrowserSlot.js';
 // inside the page instead. That strips functions/undefined and turns Dates
 // into plain ISO strings — good enough for agent inspection, just not a
 // byte-for-byte match of the app's own `~d`-tagged serialization.
-async function inspectStateHeadless({ origin, pageId, pathParams, user, timeout = 15000 }) {
+async function inspectStateHeadless({ origin, pageId, pathParams, user, data, timeout = 15000 }) {
   if (type.isNone(origin) || !type.isString(origin)) {
     return {
       error: `inspectStateHeadless requires an "origin" string. Received ${JSON.stringify(
@@ -49,13 +51,39 @@ async function inspectStateHeadless({ origin, pageId, pathParams, user, timeout 
     return { error: instance.error, invalidInput: true };
   }
 
+  const caller = await resolveToolCaller({ user, data });
+  if (!type.isUndefined(caller.error)) {
+    return caller;
+  }
+
   return withBrowserSlot({
-    task: () => inspectStateInBrowser({ origin, pageId, pathParams, instance, user, timeout }),
+    task: () =>
+      withDataSession({
+        dataSet: caller.dataSet,
+        task: ({ dataCookie }) =>
+          inspectStateInBrowser({
+            origin,
+            pageId,
+            pathParams,
+            instance,
+            user: caller.user,
+            dataCookie,
+            timeout,
+          }),
+      }),
   });
 }
 
 // The part of inspectStateHeadless that runs in the browser, inside a browser slot.
-async function inspectStateInBrowser({ origin, pageId, pathParams, instance, user, timeout }) {
+async function inspectStateInBrowser({
+  origin,
+  pageId,
+  pathParams,
+  instance,
+  user,
+  dataCookie,
+  timeout,
+}) {
   let browser;
   try {
     browser = await getBrowser();
@@ -74,6 +102,7 @@ async function inspectStateInBrowser({ origin, pageId, pathParams, instance, use
       path: instance.path,
       pathParams,
       user,
+      dataCookie,
       timeout,
     });
     context = opened.context;

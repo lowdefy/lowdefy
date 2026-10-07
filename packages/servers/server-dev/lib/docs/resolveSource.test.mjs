@@ -73,7 +73,7 @@ test('resolveSource marks a user combined with source "tab" as invalid input', (
 
   expect(result.invalidInput).toBe(true);
   expect(result.error).toBe(
-    'inspectState cannot apply "user" to the developer\'s live tab — it carries their real session. Omit "source", or use "headless".'
+    'inspectState cannot apply "user" to the developer\'s live tab — it carries their real session and database. Omit "source", or use "headless".'
   );
   expect(result.tryTab).toBeUndefined();
 });

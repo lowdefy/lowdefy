@@ -38,7 +38,14 @@ async function docsInspectStateHandler(c) {
     return c.json({ error: pathParamsError }, 400);
   }
 
-  const result = await inspectState({ origin, pageId, pathParams, source, user });
+  const result = await inspectState({
+    origin,
+    pageId,
+    pathParams,
+    source,
+    user,
+    data: c.req.query('data'),
+  });
   if (result.error) {
     // A contradictory call (`user` with `source=tab`) is the caller's mistake,
     // not a failed render — 502 would read as "the renderer broke" and invite a

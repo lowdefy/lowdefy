@@ -19,8 +19,10 @@ import { type } from '@lowdefy/helpers';
 import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
 import noBrowserError from './noBrowserError.js';
 import resolvePageInstance from './resolvePageInstance.js';
+import resolveToolCaller from './resolveToolCaller.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import withBrowserSlot from './withBrowserSlot.js';
+import withDataSession from './withDataSession.js';
 
 // Evaluates an operator expression against the live client state of a
 // headless Chromium tab navigated to the page instance's own route (`pathParams`
@@ -33,6 +35,7 @@ async function evalOperatorHeadless({
   pathParams,
   expression,
   user,
+  data,
   timeout = 15000,
 }) {
   if (type.isNone(origin) || !type.isString(origin)) {
@@ -56,9 +59,27 @@ async function evalOperatorHeadless({
     return { error: instance.error, invalidInput: true };
   }
 
+  const caller = await resolveToolCaller({ user, data });
+  if (!type.isUndefined(caller.error)) {
+    return caller;
+  }
+
   return withBrowserSlot({
     task: () =>
-      evalOperatorInBrowser({ origin, pageId, pathParams, instance, expression, user, timeout }),
+      withDataSession({
+        dataSet: caller.dataSet,
+        task: ({ dataCookie }) =>
+          evalOperatorInBrowser({
+            origin,
+            pageId,
+            pathParams,
+            instance,
+            expression,
+            user: caller.user,
+            dataCookie,
+            timeout,
+          }),
+      }),
   });
 }
 
@@ -70,6 +91,7 @@ async function evalOperatorInBrowser({
   instance,
   expression,
   user,
+  dataCookie,
   timeout,
 }) {
   let browser;
@@ -90,6 +112,7 @@ async function evalOperatorInBrowser({
       path: instance.path,
       pathParams,
       user,
+      dataCookie,
       timeout,
     });
     context = opened.context;

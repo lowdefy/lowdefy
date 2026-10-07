@@ -25,7 +25,9 @@ import fitResponse from './fitResponse.js';
 import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
 import mapPageBuildErrors from './mapPageBuildErrors.js';
 import readBuildArtifact from './readBuildArtifact.js';
+import resolveToolCaller from './resolveToolCaller.js';
 import reviewPage from './reviewPage.js';
+import withDataSession from './withDataSession.js';
 
 function getRequestType({ pageId, requestId }) {
   // The request's `type` is stripped from build/pages/<pageId>.json by the
@@ -45,12 +47,15 @@ function getRequestType({ pageId, requestId }) {
 // is not declared read-only (checkWrite: false in requestSchemas.json meta)
 // are refused unless the app opts in via lowdefy.yaml's
 // cli.agentTools.allowWriteRequests. Never throws — errors and refusals are
-// returned as data so an agent can reason about them.
+// returned as data so an agent can reason about them. `user` and `data` name
+// the caller as a journey's do (see resolveToolCaller); a data set runs the
+// request on that data set's own database.
 async function runRequest({
   pageId,
   requestId,
   payload = {},
   user,
+  data,
   saveResponse = false,
   honoContext,
 }) {
@@ -65,12 +70,9 @@ async function runRequest({
     );
   }
 
-  if (!type.isNone(user) && !type.isObject(user)) {
-    throw new ConfigError(
-      `run_request "user" must be an object, e.g. {"roles":["admin"]}. Received ${JSON.stringify(
-        user
-      )}.`
-    );
+  const caller = await resolveToolCaller({ user, data });
+  if (!type.isUndefined(caller.error)) {
+    throw new ConfigError(`run_request: ${caller.error}`);
   }
 
   if (!type.isBoolean(saveResponse)) {
@@ -128,29 +130,41 @@ async function runRequest({
   // at module load would break every consumer of this module (e.g. the MCP
   // server) in environments without a full build.
   const { default: createLowdefyContext } = await import('../server/createLowdefyContext.js');
-  const context = await createLowdefyContext({ c: honoContext, user });
-  context.logger.info({ event: 'agent_run_request', pageId, requestId, user });
-
-  let ran;
-  try {
-    const result = await callRequest(context, {
-      blockId: undefined,
-      pageId,
-      payload,
-      requestId,
-    });
-    ran = {
-      refused: false,
-      ...fitResponse({ result, name: `${pageId}.${requestId}`, saveResponse }),
-    };
-  } catch (error) {
-    ran = {
-      refused: false,
-      error: {
-        name: error.name,
-        message: error.message,
-      },
-    };
+  const ran = await withDataSession({
+    dataSet: caller.dataSet,
+    task: async ({ dataSession }) => {
+      // "none" injects no caller: the app's own auth resolves this call, which
+      // carries no session, so it runs signed out.
+      const context = await createLowdefyContext({
+        c: honoContext,
+        user: caller.user === 'none' ? undefined : caller.user,
+        dataSession,
+      });
+      context.logger.info({ event: 'agent_run_request', pageId, requestId, user, data });
+      try {
+        const result = await callRequest(context, {
+          blockId: undefined,
+          pageId,
+          payload,
+          requestId,
+        });
+        return {
+          refused: false,
+          ...fitResponse({ result, name: `${pageId}.${requestId}`, saveResponse }),
+        };
+      } catch (error) {
+        return {
+          refused: false,
+          error: {
+            name: error.name,
+            message: error.message,
+          },
+        };
+      }
+    },
+  });
+  if (!type.isUndefined(ran.error) && type.isString(ran.error)) {
+    return { refused: true, reason: ran.error };
   }
   const signals = syncBuildSignals({ buildDirectory, configDirectory });
   const review = await reviewPage({

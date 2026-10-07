@@ -24,19 +24,21 @@ import tabAvailable from './tabAvailable.js';
 // actually looking at (their own interactions, in-flight requests), while
 // headless always starts a clean navigation.
 //
-// `user` is headless-only — the developer's tab carries their real session,
-// which the dev server cannot re-identify — so it selects the headless source,
-// and contradicts an explicit `source: 'tab'`.
+// `user` and `data` are headless-only — the developer's tab carries their real
+// session and reads the app's real database, which the dev server cannot
+// swap — so either selects the headless source, and contradicts an explicit
+// `source: 'tab'`.
 //
 // Returns { tryTab }, or { error, invalidInput } for a contradictory call.
 // `invalidInput` marks the caller's own mistake rather than a failed render, so
 // the HTTP routes can answer 400 instead of a 502 that reads as "the renderer
 // broke, retry".
-function resolveSource({ name, pageId, pathParams, source, user }) {
-  const hasUser = !type.isNone(user);
+function resolveSource({ name, pageId, pathParams, source, user, data }) {
+  const hasUser = !type.isNone(user) || !type.isNone(data);
   if (hasUser && source === 'tab') {
+    const param = type.isNone(user) ? 'data' : 'user';
     return {
-      error: `${name} cannot apply "user" to the developer's live tab — it carries their real session. Omit "source", or use "headless".`,
+      error: `${name} cannot apply "${param}" to the developer's live tab — it carries their real session and database. Omit "source", or use "headless".`,
       invalidInput: true,
     };
   }
