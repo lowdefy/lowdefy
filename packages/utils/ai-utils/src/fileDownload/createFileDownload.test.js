@@ -14,26 +14,22 @@
   limitations under the License.
 */
 
+import { Socket } from 'node:net';
 import { jest } from '@jest/globals';
 import { MockLanguageModelV4 } from 'ai/test';
 
 const mockFetchUrl = jest.fn();
-const mockConnect = jest.fn();
 const undici = jest.requireActual('undici');
 
 // fetch is mocked per test; a test that needs the real connection path hands it undici's fetch.
-// mockConnect records each socket the download's connector opens.
 jest.unstable_mockModule('undici', () => ({
   ...undici,
-  buildConnector: (options) => {
-    const connect = undici.buildConnector(options);
-    return (...connectArgs) => {
-      mockConnect(...connectArgs);
-      return connect(...connectArgs);
-    };
-  },
   fetch: (...fetchArgs) => mockFetchUrl(...fetchArgs),
 }));
+
+// Records every socket opened, whichever copy of undici built the connector: tls.connect and
+// net.connect both open theirs through Socket.prototype.connect.
+const socketConnect = jest.spyOn(Socket.prototype, 'connect');
 
 const { default: createFileDownload } = await import('./createFileDownload.js');
 const { default: createToolLoopAgent } = await import('../createToolLoopAgent.js');
@@ -79,7 +75,11 @@ async function refusal(link = url, options = {}) {
 
 beforeEach(() => {
   mockFetchUrl.mockReset();
-  mockConnect.mockReset();
+  socketConnect.mockClear();
+});
+
+afterAll(() => {
+  socketConnect.mockRestore();
 });
 
 test('createFileDownload reads a file the model does not take as a link', async () => {
@@ -250,9 +250,9 @@ test.each([
 ])('createFileDownload refuses %s with url_not_public before connecting', async (link) => {
   mockFetchUrl.mockImplementation(undici.fetch);
   const error = await refusal(link, { timeout: 2000 });
+  expect(socketConnect).not.toHaveBeenCalled();
   expect(error.code).toBe('url_not_public');
   expect(error.message).toMatch(/^File link to .+ leads to an address that is not public\.$/);
-  expect(mockConnect).not.toHaveBeenCalled();
 });
 
 test.each([['https://127.0.0.1/report.csv'], ['https://[::1]/report.csv']])(
@@ -265,9 +265,9 @@ test.each([['https://127.0.0.1/report.csv'], ['https://[::1]/report.csv']])(
       return undici.fetch(link, options);
     });
     const error = await refusal(url, { timeout: 2000 });
+    expect(socketConnect).not.toHaveBeenCalled();
     expect(error.code).toBe('url_not_public');
     expect(mockFetchUrl.mock.calls.map(([link]) => link)).toEqual([url, location]);
-    expect(mockConnect).not.toHaveBeenCalled();
   }
 );
 
