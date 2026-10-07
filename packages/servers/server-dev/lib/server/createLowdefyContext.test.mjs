@@ -316,6 +316,21 @@ describe('data sessions', () => {
     );
   });
 
+  test('a data session passed by a dev tool call redirects connections and rides the detached hop as a data cookie', async () => {
+    const session = registerSession();
+    mockReadConfigFile();
+    const context = await createLowdefyContext({ c: createHonoContext(), dataSession: session });
+    expect((await context.readConfigFile('connections/tickets.json')).properties).toEqual({
+      databaseUri: 'mongodb://memory/',
+      databaseName: 'ld_aaaaaaaaaaaa',
+      collection: 'tickets',
+    });
+    expect(context.dataSet).toEqual('staging-sample');
+    expect(context.loopbackHeaders).toEqual({
+      cookie: `lowdefy_journey_data=${journeyActorToken}.session1`,
+    });
+  });
+
   test('a data cookie and a mutant cookie are both forwarded on loopbackHeaders', async () => {
     registerSession();
     const opened = openMutantRun({

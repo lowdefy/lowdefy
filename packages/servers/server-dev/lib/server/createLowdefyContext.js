@@ -138,7 +138,10 @@ async function createLowdefyContext({ c, user, dataSession: callDataSession }) {
   // The one writer of loopbackHeaders: a detached CallApi carries these on its
   // loopback fetch, so the target runs with the journey's data set and mutant.
   // With no journey cookie to forward it carries no Cookie header at all.
-  const journeyCookies = forwardJourneyCookies(c.req.header('cookie'));
+  const journeyCookies = forwardJourneyCookies({
+    cookieHeader: c.req.header('cookie'),
+    dataSessionId: callDataSession?.id,
+  });
   context.loopbackHeaders = journeyCookies === '' ? {} : { cookie: journeyCookies };
   // Which browser context sent the request: errors it causes are stamped with
   // it, so a journey run claims only its own (see createHandleError).

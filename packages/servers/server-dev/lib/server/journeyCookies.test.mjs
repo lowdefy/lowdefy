@@ -85,7 +85,7 @@ test('forwardJourneyCookies joins the verified data and mutant cookies and leave
     writeJourneyCookie({ name: JOURNEY_COOKIES.data.name, payload: 'data1', origin }),
     writeJourneyCookie({ name: JOURNEY_COOKIES.mutant.name, payload: 'mutant1', origin }),
   ]);
-  expect(forwardJourneyCookies(cookieHeader)).toEqual(
+  expect(forwardJourneyCookies({ cookieHeader })).toEqual(
     `lowdefy_journey_data=${journeyActorToken}.data1; lowdefy_journey_mutant=${journeyActorToken}.mutant1`
   );
 });
@@ -95,14 +95,27 @@ test('forwardJourneyCookies leaves out a loopback cookie that fails verification
     { name: JOURNEY_COOKIES.data.name, value: `${forgedToken}.data1` },
     writeJourneyCookie({ name: JOURNEY_COOKIES.mutant.name, payload: 'mutant1', origin }),
   ]);
-  expect(forwardJourneyCookies(cookieHeader)).toEqual(
+  expect(forwardJourneyCookies({ cookieHeader })).toEqual(
     `lowdefy_journey_mutant=${journeyActorToken}.mutant1`
   );
 });
 
+test('forwardJourneyCookies forwards a data session the call opened itself in place of a data cookie', () => {
+  const cookieHeader = header([
+    writeJourneyCookie({ name: JOURNEY_COOKIES.data.name, payload: 'data1', origin }),
+    writeJourneyCookie({ name: JOURNEY_COOKIES.mutant.name, payload: 'mutant1', origin }),
+  ]);
+  expect(forwardJourneyCookies({ cookieHeader, dataSessionId: 'own1' })).toEqual(
+    `lowdefy_journey_data=${journeyActorToken}.own1; lowdefy_journey_mutant=${journeyActorToken}.mutant1`
+  );
+  expect(forwardJourneyCookies({ cookieHeader: undefined, dataSessionId: 'own1' })).toEqual(
+    `lowdefy_journey_data=${journeyActorToken}.own1`
+  );
+});
+
 test('forwardJourneyCookies returns an empty string with no journey cookies', () => {
-  expect(forwardJourneyCookies(undefined)).toEqual('');
-  expect(forwardJourneyCookies('session=abc')).toEqual('');
+  expect(forwardJourneyCookies({ cookieHeader: undefined })).toEqual('');
+  expect(forwardJourneyCookies({ cookieHeader: 'session=abc' })).toEqual('');
 });
 
 // One writer, so a wrapper (data set, mutant) can never drop another's cookie

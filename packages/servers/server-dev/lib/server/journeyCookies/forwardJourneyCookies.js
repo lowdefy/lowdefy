@@ -14,17 +14,25 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import JOURNEY_COOKIES from './JOURNEY_COOKIES.js';
 import readJourneyCookie from './readJourneyCookie.js';
 import { journeyActorToken } from '../auth/journeyActor.js';
 
 // The Cookie header a detached loopback call carries, so its target runs with
 // the same data set and mutant as the journey request that dispatched it. Only
-// verified cookies are forwarded.
-function forwardJourneyCookies(cookieHeader) {
+// verified cookies are forwarded. `dataSessionId` names a data session a dev
+// tool call opened itself (run_request, run_endpoint with data): that call has
+// no data cookie, but its detached hop must still read the data set, never the
+// app's own database.
+function forwardJourneyCookies({ cookieHeader, dataSessionId }) {
   return Object.values(JOURNEY_COOKIES)
     .filter((cookie) => cookie.loopback)
     .map((cookie) => {
+      if (cookie === JOURNEY_COOKIES.data && !type.isNone(dataSessionId)) {
+        return `${cookie.name}=${journeyActorToken}.${dataSessionId}`;
+      }
       const payload = readJourneyCookie({ cookieHeader, name: cookie.name });
       if (payload === null) {
         return null;
