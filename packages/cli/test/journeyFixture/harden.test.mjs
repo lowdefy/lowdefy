@@ -171,3 +171,69 @@ fixtureTest('harden carries its verdicts over a page edit mid-run and finishes',
     fs.writeFileSync(pagePath, original);
   }
 });
+
+const SHARED_JOURNEYS = {
+  'shared_alpha.yaml': `- name: opens shared alpha
+  pageId: shared_alpha
+  data: harden
+  user: member
+  steps:
+    - expect: { visible: shared_alpha_title }
+`,
+  'shared_beta.yaml': `- name: reads the shared notice on shared beta
+  pageId: shared_beta
+  data: harden
+  user: member
+  steps:
+    - expect: { text: { blockId: shared_notice, contains: Shared notice } }
+`,
+};
+
+// shared_notice is _ref'd into shared_alpha and shared_beta, so it is one
+// mutant kept on shared_alpha. Only the shared_beta journey asserts it, so it
+// is killed only when that journey runs it on shared_beta's copy.
+fixtureTest(
+  'harden runs a shared layout mutant on the copy a journey renders on a later page',
+  async () => {
+    const journeyDirectory = path.join(configDirectory, 'tests', 'journeys');
+    const files = Object.keys(SHARED_JOURNEYS).map((name) => path.join(journeyDirectory, name));
+    Object.entries(SHARED_JOURNEYS).forEach(([name, content]) =>
+      fs.writeFileSync(path.join(journeyDirectory, name), content)
+    );
+    try {
+      const { code, stdout, stderr } = await runCli([
+        'journeys',
+        'harden',
+        ...files,
+        '--config-directory',
+        configDirectory,
+        '--url',
+        fixtureUrl,
+        '--operators',
+        'drop-block',
+        '--json',
+        '--log-level',
+        'error',
+      ]);
+      expect(stderr).toBe('');
+      expect(code).toBe(0);
+      const report = JSON.parse(stdout);
+      const notice = report.mutants.find(({ describe }) =>
+        describe.startsWith('drop-block Paragraph "shared_notice"')
+      );
+      expect(notice.copies).toEqual(['shared_beta']);
+      expect(notice.source).toMatch(/^pages\/shared\/notice\.yaml:\d+$/);
+      expect(notice.status).toBe('killed');
+      expect(
+        notice.ranBy
+          .map(({ file, verdict }) => [file, verdict])
+          .sort((a, b) => a[0].localeCompare(b[0]))
+      ).toEqual([
+        ['tests/journeys/shared_alpha.yaml', 'survived'],
+        ['tests/journeys/shared_beta.yaml', 'killed'],
+      ]);
+    } finally {
+      files.forEach((file) => fs.rmSync(file, { force: true }));
+    }
+  }
+);

@@ -62,6 +62,7 @@ function mutant({ id, operator, anchor }) {
     config: `root.${id}`,
     describe: `${operator} ${id}`,
     copies: [],
+    copyTargets: [],
   };
 }
 

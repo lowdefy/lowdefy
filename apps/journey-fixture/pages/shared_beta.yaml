@@ -1,0 +1,9 @@
+id: shared_beta
+type: Box
+blocks:
+  - id: shared_beta_title
+    type: Title
+    properties:
+      content: Shared beta
+      level: 2
+  - _ref: pages/shared/notice.yaml

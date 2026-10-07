@@ -97,6 +97,7 @@ test('POST /lowdefy-docs/mutants lists the mutants of the posted pages and endpo
     artifact: 'api/notify.json',
     anchor: { type: 'endpoint', endpointId: 'notify' },
     copies: [],
+    copyTargets: [],
   });
 });
 

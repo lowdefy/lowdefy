@@ -169,6 +169,7 @@ test('listMutants answers each mutant with its anchor, source, config and the ar
     config: 'root.slots.content.blocks[0:title:Title]',
     describe: 'drop-block Title "title" from tickets',
     copies: [],
+    copyTargets: [],
   });
 });
 
@@ -240,6 +241,15 @@ test("copies of one _ref'd node on three pages group into one mutant with two co
   expect(mutants).toHaveLength(1);
   expect(mutants[0].anchor.pageId).toEqual('contacts');
   expect(mutants[0].copies).toEqual(['orders', 'tickets']);
+  // Each copy carries its own page's key, so a journey on that page runs its copy.
+  expect(mutants[0].copyTargets).toEqual(
+    ['orders', 'tickets'].map((pageId) => ({
+      artifact: `pages/${pageId}.json`,
+      key: artifacts[`pages/${pageId}.json`].slots.content.blocks[0]['~k'],
+      anchor: { type: 'block', pageId, blockId: 'footer', parentBlockId: pageId },
+    }))
+  );
+  expect(mutants[0].key).toBe(artifacts['pages/contacts.json'].slots.content.blocks[0]['~k']);
 });
 
 test('two template copies with different content stay two mutants', async () => {

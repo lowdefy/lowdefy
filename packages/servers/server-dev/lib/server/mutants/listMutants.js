@@ -83,7 +83,7 @@ async function listMutants({
   return {
     artifacts,
     mutants: groupMutantCopies({ mutants }).map(
-      ({ id, operator, artifact, key, arg, anchor, source, config, describe, copies }) => ({
+      ({
         id,
         operator,
         artifact,
@@ -94,6 +94,19 @@ async function listMutants({
         config,
         describe,
         copies,
+        copyTargets,
+      }) => ({
+        id,
+        operator,
+        artifact,
+        key,
+        arg,
+        anchor,
+        source,
+        config,
+        describe,
+        copies,
+        copyTargets,
       })
     ),
   };

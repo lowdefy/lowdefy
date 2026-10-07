@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-import isOnPath from './isOnPath.js';
+import findOnPathCopy from './findOnPathCopy.js';
 
 function anchorPageId(anchor) {
   return anchor.type === 'endpoint' ? null : anchor.pageId;
@@ -34,14 +34,17 @@ function keptByPages({ mutant, pages, baselines }) {
     );
   }
   // App-event mutants run on every journey, so a page-scoped run leaves them out.
-  return pages.includes(anchorPageId(mutant.anchor));
+  // A `_ref`'d node is kept when any page it is copied onto is named.
+  return [mutant.anchor, ...mutant.copyTargets.map(({ anchor }) => anchor)].some((anchor) =>
+    pages.includes(anchorPageId(anchor))
+  );
 }
 
-// Pairs each listed mutant with the journeys whose baseline exercised it.
-// Mutants on no journey's path are only counted: no assertion in these
-// journeys could kill them. --page keeps mutants anchored on those pages and
-// the endpoint mutants a journey touching them called; --operators keeps the
-// operators named.
+// Pairs each listed mutant with the journeys whose baseline exercised it, on
+// any page it is copied onto. Mutants on no journey's path are only counted:
+// no assertion in these journeys could kill them. --page keeps mutants
+// anchored or copied on those pages and the endpoint mutants a journey
+// touching them called; --operators keeps the operators named.
 function scopeMutants({ mutants, baselines, pages, operators }) {
   const onPath = [];
   let notExercised = 0;
@@ -53,9 +56,7 @@ function scopeMutants({ mutants, baselines, pages, operators }) {
       return;
     }
     const journeys = baselines
-      .filter(({ exercised }) =>
-        isOnPath({ anchor: mutant.anchor, operator: mutant.operator, exercised })
-      )
+      .filter(({ exercised }) => !type.isUndefined(findOnPathCopy({ mutant, exercised })))
       .map(({ key }) => key);
     if (journeys.length === 0) {
       notExercised += 1;

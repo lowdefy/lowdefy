@@ -40,23 +40,32 @@ const mutants = [
     id: 'grid',
     operator: 'drop-block',
     anchor: { type: 'block', pageId: 'tickets', blockId: 'grid' },
+    copyTargets: [],
   },
   {
     id: 'form',
     operator: 'drop-block',
     anchor: { type: 'block', pageId: 'settings', blockId: 'form' },
+    copyTargets: [],
   },
   {
     id: 'tab',
     operator: 'drop-block',
     anchor: { type: 'block', pageId: 'settings', blockId: 'tab' },
+    copyTargets: [],
   },
   {
     id: 'app',
     operator: 'drop-action',
     anchor: { type: 'action', pageId: 'app', blockId: null, eventName: 'onInit' },
+    copyTargets: [],
   },
-  { id: 'step', operator: 'drop-step', anchor: { type: 'endpoint', endpointId: 'notify' } },
+  {
+    id: 'step',
+    operator: 'drop-step',
+    anchor: { type: 'endpoint', endpointId: 'notify' },
+    copyTargets: [],
+  },
 ];
 
 test('scopeMutants pairs mutants with the journeys on their path, an app-event mutant with every journey', () => {
@@ -78,4 +87,51 @@ test('scopeMutants --page keeps that page and the endpoints its journeys called,
 test('scopeMutants --operators keeps only the named operators', () => {
   const { onPath } = scopeMutants({ mutants, baselines, operators: ['drop-step'] });
   expect(onPath.map(({ id }) => id)).toEqual(['step']);
+});
+
+// A shared layout block, kept on "a-home" (first by page id) with a copy on
+// tickets, which journey a renders.
+const sharedFooter = {
+  id: 'footer',
+  operator: 'drop-block',
+  artifact: 'pages/a-home.json',
+  key: 'k_home',
+  anchor: { type: 'block', pageId: 'a-home', blockId: 'footer', parentBlockId: 'a-home' },
+  copies: ['tickets'],
+  copyTargets: [
+    {
+      artifact: 'pages/tickets.json',
+      key: 'k_tickets',
+      anchor: { type: 'block', pageId: 'tickets', blockId: 'footer', parentBlockId: 'tickets' },
+    },
+  ],
+};
+
+const footerBaselines = [
+  {
+    key: 'tests/journeys/a.yaml#a',
+    exercised: exercised({ pages: ['tickets'], rendered: { tickets: ['footer'] } }),
+  },
+  baselines[1],
+];
+
+test('scopeMutants pairs a shared layout mutant with a journey that renders it only on a copy page', () => {
+  const { onPath, notExercised } = scopeMutants({
+    mutants: [sharedFooter],
+    baselines: footerBaselines,
+  });
+  expect(onPath.map(({ id, journeys }) => [id, journeys])).toEqual([
+    ['footer', ['tests/journeys/a.yaml#a']],
+  ]);
+  expect(notExercised).toBe(0);
+});
+
+test('scopeMutants --page keeps a shared layout mutant when a copy is on a named page', () => {
+  expect(
+    scopeMutants({ mutants: [sharedFooter], baselines: footerBaselines, pages: ['tickets'] }).onPath
+  ).toHaveLength(1);
+  expect(
+    scopeMutants({ mutants: [sharedFooter], baselines: footerBaselines, pages: ['settings'] })
+      .onPath
+  ).toHaveLength(0);
 });

@@ -406,8 +406,8 @@ A journey written from a [session log](#session-logs), with event-less clicks an
 Only journeys with a [data set](/journey-data-sets) (`data:`) are hardened: mutant runs write through the app's connections from parallel workers, and without a data set that is your own database. A selected journey with no `data:` is left out with an error naming it; when none is left, harden exits `1`.
 
 1. Each selected journey runs once, unchanged. One that fails is left out, with a note to replay it.
-2. The development server lists the mutants on what those runs exercised: a dropped action, a skipped validation, a flipped `visible` or `disabled`, swapped `_if` branches, a dropped payload key, a `Link` sent to `404`, a dropped block, a dropped endpoint step. A layout or template copied into several pages is mutated once.
-3. Each mutant runs against every journey whose path reached it: a journey that fails with the mutant applied **kills** it; one that passes lets it **survive**. A failure where the mutant never reached the run says nothing about the mutant: it counts as an error and runs once more.
+2. The development server lists the mutants on what those runs exercised: a dropped action, a skipped validation, a flipped `visible` or `disabled`, swapped `_if` branches, a dropped payload key, a `Link` sent to `404`, a dropped block, a dropped endpoint step. A layout or template copied into several pages is one mutant, listed under the first page by id.
+3. Each mutant runs against every journey whose path reached it, on any page it is copied onto, and is applied to the copy that journey reaches: a journey that fails with the mutant applied **kills** it; one that passes lets it **survive**. A failure where the mutant never reached the run says nothing about the mutant: it counts as an error and runs once more.
 
 ```
 page tickets:

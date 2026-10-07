@@ -24,7 +24,10 @@ function copyPage(mutant) {
 // uses it, so one written node is enumerated once per page. Mutants with the
 // same operator, source, arg and target content are one mutant: the copy on
 // the first page by page id is kept, and the other pages are listed under
-// `copies`. Templated copies whose content differs stay apart.
+// `copies`. Each other copy's own artifact, key and anchor are listed under
+// `copyTargets`, in the same order: the build keys every copy apart, so a
+// journey that reaches the node on another page is run against that page's
+// copy. Templated copies whose content differs stay apart.
 function groupMutantCopies({ mutants }) {
   const groups = new Map();
   mutants.forEach((mutant) => {
@@ -36,7 +39,11 @@ function groupMutantCopies({ mutants }) {
   });
   return [...groups.values()].map((group) => {
     const [kept, ...others] = [...group].sort((a, b) => copyPage(a).localeCompare(copyPage(b)));
-    return { ...kept, copies: others.map(copyPage) };
+    return {
+      ...kept,
+      copies: others.map(copyPage),
+      copyTargets: others.map(({ artifact, key, anchor }) => ({ artifact, key, anchor })),
+    };
   });
 }
 
