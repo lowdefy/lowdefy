@@ -431,7 +431,9 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
     return textResult(appendHazards(doc));
   });
 
-  registerDevTool('lowdefy_search_docs', ({ query }) => textResult(searchDocs({ query })));
+  registerDevTool('lowdefy_search_docs', ({ query, source }) =>
+    textResult(searchDocs({ query, source }))
+  );
 
   registerDevTool('lowdefy_search_icons', async ({ query, limit }) =>
     textResult(await searchIcons({ query, limit }))

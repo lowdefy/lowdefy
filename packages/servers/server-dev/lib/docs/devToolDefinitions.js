@@ -16,6 +16,7 @@
 
 import { z } from 'zod';
 
+import docSources from './docSources.js';
 import { MAX_JOURNEY_TIMEOUT } from './validateJourneyTimeout.js';
 import { MAX_VIEWPORT_SIZE } from './validateViewport.js';
 
@@ -470,9 +471,14 @@ const devToolDefinitions = {
   },
 
   lowdefy_search_docs: {
-    description: 'Search the core Lowdefy docs by keyword. Returns matching slugs with snippets.',
+    description:
+      'Search the Lowdefy docs by keywords. The query is split into words, and pages are ranked by how many match, title matches first. Returns up to 20 hits, each with its slug, snippet, source, package and version; read one with lowdefy_get_doc.',
     inputSchema: {
-      query: z.string().describe('Search keywords.'),
+      query: z.string().describe('Search keywords, e.g. "Link action pathParams".'),
+      source: z
+        .enum(docSources)
+        .optional()
+        .describe('Only search docs from this source. Default: all.'),
     },
   },
 
