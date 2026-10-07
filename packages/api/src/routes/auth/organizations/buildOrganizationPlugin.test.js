@@ -196,6 +196,27 @@ test('buildOrganizationPlugin passes auth.organizations.invitationExpiresIn thro
   expect(plugin.options.invitationExpiresIn).toBe(1209600);
 });
 
+test('buildOrganizationPlugin replaces the BetterAuth membershipLimit default with an effectively open one when unset', () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig,
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  expect(plugin.options.membershipLimit).toBe(1000000);
+});
+
+test('buildOrganizationPlugin passes auth.organizations.membershipLimit through', () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig: {
+      ...authConfig,
+      organizations: { ...authConfig.organizations, membershipLimit: 10000 },
+    },
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  expect(plugin.options.membershipLimit).toBe(10000);
+});
+
 test('buildOrganizationPlugin tolerates a missing authConfig', () => {
   const plugin = buildOrganizationPlugin({
     getAuth: () => ({}),
@@ -203,4 +224,5 @@ test('buildOrganizationPlugin tolerates a missing authConfig', () => {
   });
   expect(plugin.id).toBe('organization');
   expect(plugin.options.invitationExpiresIn).toBeUndefined();
+  expect(plugin.options.membershipLimit).toBe(1000000);
 });

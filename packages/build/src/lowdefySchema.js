@@ -1677,11 +1677,21 @@ export default {
                 minimum: 'Auth "organizations.invitationExpiresIn" should be at least 60 seconds.',
               },
             },
+            membershipLimit: {
+              type: 'integer',
+              minimum: 1,
+              description:
+                'The most members an organization may have. Defaults to 1000000, effectively open. Accepting an invitation or adding a member is refused once an organization has this many members.',
+              errorMessage: {
+                type: 'Auth "organizations.membershipLimit" should be an integer.',
+                minimum: 'Auth "organizations.membershipLimit" should be at least 1.',
+              },
+            },
           },
           errorMessage: {
             type: 'Auth "organizations" should be an object.',
             additionalProperties:
-              'Auth "organizations" contains an unknown property. The known properties are "policy", "org", "signup", "create" and "invitationExpiresIn".',
+              'Auth "organizations" contains an unknown property. The known properties are "policy", "org", "signup", "create", "invitationExpiresIn" and "membershipLimit".',
           },
         },
         dev: {

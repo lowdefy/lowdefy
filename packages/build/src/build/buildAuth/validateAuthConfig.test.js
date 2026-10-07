@@ -835,6 +835,46 @@ test('validateAuthConfig throws when organizations.invitationExpiresIn is under 
   );
 });
 
+test('validateAuthConfig passes an organizations block with a membership limit', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      organizations: { policy: 'pinned', org: 'acme', membershipLimit: 10000 },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when organizations.membershipLimit is not an integer', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      organizations: { membershipLimit: 'unlimited' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "organizations.membershipLimit" should be an integer.'
+  );
+});
+
+test('validateAuthConfig throws when organizations.membershipLimit is under 1', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      organizations: { membershipLimit: 0 },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "organizations.membershipLimit" should be at least 1.'
+  );
+});
+
 test('validateAuthConfig throws when organizations contains an unknown property', () => {
   const components = {
     auth: {

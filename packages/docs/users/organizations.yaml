@@ -51,6 +51,7 @@ _ref:
             | `signup` | `invite-only` \| `open` | both | `pinned` → `invite-only`, `tenant` → `open` | Whether uninvited sign-ups are admitted. `invite-only` refuses a sign-up with no invitation; `open` admits everyone. |
             | `create` | `auto` \| `operator` | **tenant only** | `tenant` → `auto` | How a tenant organization comes into being: `auto` mints one for a user at first session; `operator` leaves creation to your own config (the `CreateOrganization` step). |
             | `invitationExpiresIn` | integer (seconds, min 60) | both | `172800` (48h) | How long an invitation stays acceptable. Re-sending an invitation refreshes its expiry. |
+            | `membershipLimit` | integer (min 1) | both | `1000000` (effectively open) | The most members one organization may have. Once an organization has this many, accepting an invitation and adding a member are refused (a 403). Set it to cap organization size, for example per tenant. It is also the default page size of `ListMembers` when no `limit` is given. |
 
             The build cross-checks these, and the errors are worth knowing before you hit them:
 

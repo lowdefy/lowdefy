@@ -20,6 +20,8 @@ import createAfterAcceptInvitationHook from './createAfterAcceptInvitationHook.j
 import modelNames from '../modelNames.js';
 import { ac, roles } from './organizationAccessControl.js';
 
+const DEFAULT_MEMBERSHIP_LIMIT = 1000000;
+
 // Organizations are always on - the membership and boundary mechanism for every
 // app. member.role carries BetterAuth's org-authority tier and nothing else, so
 // the same three built-in roles - owner, admin, member - are registered under
@@ -64,6 +66,17 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail
     ...(Number.isFinite(authConfig.organizations?.invitationExpiresIn)
       ? { invitationExpiresIn: authConfig.organizations.invitationExpiresIn }
       : {}),
+    // The most members an organization may have. BetterAuth's default of 100
+    // is replaced with a cap high enough to be effectively open unless
+    // auth.organizations.membershipLimit (build-validated) says otherwise - a
+    // pinned deployment keeps every user in one organization, so past 100
+    // accept-invitation and addMember refuse with a 403. It stays finite
+    // because the plugin also passes it to the adapter as a query limit: the
+    // default page size of list-members and the user lookup behind
+    // getFullOrganization.
+    membershipLimit: Number.isFinite(authConfig.organizations?.membershipLimit)
+      ? authConfig.organizations.membershipLimit
+      : DEFAULT_MEMBERSHIP_LIMIT,
     schema: {
       organization: {
         modelName: modelNames.organization,
