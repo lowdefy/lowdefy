@@ -508,3 +508,34 @@ test('journeysHarden drops an earlier mutant a later run did not list once its c
     appEvents: false,
   });
 });
+
+test('journeysHarden keeps an earlier mutant on a page that now fails to build, writes the report and names the page', async () => {
+  await harden({ filter: 'orders' });
+  // The orders page is broken: listing its mutants answers 422. Its alert
+  // block would be gone, but harden cannot know that until the page builds.
+  removedMutants.add('alert');
+  const listMutants = mockPost.getMockImplementation();
+  mockPost.mockImplementation(async (target, body) => {
+    if (target === `${url}/lowdefy-docs/mutants` && body.pages.includes('orders')) {
+      const error = new Error('Request failed with status code 422');
+      error.response = {
+        status: 422,
+        data: { error: 'Page "orders" fails to build, so its mutants cannot be listed.' },
+      };
+      throw error;
+    }
+    return listMutants(target, body);
+  });
+  await harden({ filter: 'refunds' });
+  expect(process.exitCode).toBeUndefined();
+  const report = readReport();
+  expect(report.mutants.map(({ id }) => id).sort()).toEqual(['alert', 'app', 'kill', 'refund']);
+  expect(report.journeys.map(({ name, killed, total }) => [name, killed, total])).toEqual([
+    ['orders', 1, 3],
+    ['refunds', 0, 2],
+  ]);
+  expect(logs.warn).toEqual([
+    'Kept the earlier mutants on "orders" as they were: harden could not check they still exist, since that page fails to build.',
+  ]);
+  expect(logs.info.length).toBeGreaterThan(0);
+});

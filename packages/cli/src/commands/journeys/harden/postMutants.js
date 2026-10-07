@@ -18,7 +18,8 @@ import axios from 'axios';
 
 // POST /lowdefy-docs/mutants on the dev server: lists the mutants on the
 // pages, requests, endpoints and app events in `body`, as { buildId,
-// artifacts, ids, mutants }.
+// artifacts, ids, mutants }. A failed response's error keeps the axios error
+// as its `cause`, so a caller can tell a page that fails to build (422).
 async function postMutants({ url, body }) {
   try {
     const response = await axios.post(`${url}/lowdefy-docs/mutants`, body);
@@ -33,10 +34,11 @@ async function postMutants({ url, body }) {
       throw new Error(
         `POST /lowdefy-docs/mutants responded ${error.response.status}: ${JSON.stringify(
           error.response.data
-        )}`
+        )}`,
+        { cause: error }
       );
     }
-    throw new Error(`Could not reach the dev server: ${error.message}`);
+    throw new Error(`Could not reach the dev server: ${error.message}`, { cause: error });
   }
 }
 
