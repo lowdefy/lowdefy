@@ -238,7 +238,7 @@ const STEPS = {
   },
   wait: {
     description:
-      'Wait a fixed number of milliseconds (a bare number is { ms }), for a request started since the last interaction to finish, or for a state path to be defined.',
+      'Wait for a request started since the last interaction to finish, or for a state path to be defined. { ms } (or a bare number of ms) waits a fixed time, which the lowdefy test lint refuses (L3): prefer a request, a state or an expect.',
     oneOf: [
       { type: 'number' },
       ...singleKey({

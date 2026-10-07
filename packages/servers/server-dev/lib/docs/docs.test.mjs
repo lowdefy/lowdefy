@@ -163,6 +163,12 @@ test('getSchema throws for kinds without schemas', () => {
   );
 });
 
+test('getSchema throws when a type kind is given no type', () => {
+  expect(() => getSchema({ kind: 'blocks' })).toThrow(
+    'Getting a blocks schema requires a "type", the exact type name. Received undefined.'
+  );
+});
+
 test('getSchema returns the journey step grammar for kind journey-step', () => {
   const result = getSchema({ kind: 'journey-step' });
   expect(result.kind).toEqual('journey-step');

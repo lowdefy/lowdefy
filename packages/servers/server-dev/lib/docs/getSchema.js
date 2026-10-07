@@ -56,6 +56,15 @@ function getSchema({ kind, type: typeName }) {
       )}. Use one of: blocks, operators, actions, connections, requests, or journey-step for the journey step grammar.`
     );
   }
+  // type is optional only for journey-step, so a type kind without one is
+  // refused rather than looked up as "undefined".
+  if (type.isNone(typeName) || typeName === '') {
+    throw new Error(
+      `Getting a ${normalizedKind} schema requires a "type", the exact type name. Received ${JSON.stringify(
+        typeName
+      )}.`
+    );
+  }
   const schemas = readBuildArtifact({ name: SCHEMA_ARTIFACTS[normalizedKind] }) ?? {};
   const entry = schemas[typeName];
   if (type.isNone(entry)) {
