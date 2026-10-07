@@ -29,13 +29,14 @@ async function handleAgentCall(context, routineContext, { step }) {
     step,
   });
 
-  // Evaluate operators in step.properties (resolves agentId, prompt)
+  // Evaluate operators in step.properties (resolves agentId, prompt, files)
   const evaluatedProperties = evaluateRoutineOperators(context, routineContext, {
     input: step.properties,
     location: step.stepId,
   });
 
   const { agentId, prompt } = evaluatedProperties;
+  const files = evaluatedProperties.files ?? [];
   if (!type.isString(agentId)) {
     throw new ConfigError(
       `CallAgent step "${
@@ -52,6 +53,31 @@ async function handleAgentCall(context, routineContext, { step }) {
       { configKey: step['~k'] }
     );
   }
+  if (!type.isArray(files)) {
+    throw new ConfigError(
+      `CallAgent step "${
+        step.stepId
+      }" properties.files must evaluate to an array. Received ${JSON.stringify(files)}.`,
+      { configKey: step['~k'] }
+    );
+  }
+  files.forEach((file, index) => {
+    if (
+      !type.isObject(file) ||
+      !type.isString(file.url) ||
+      !URL.canParse(file.url) ||
+      !type.isString(file.mediaType)
+    ) {
+      throw new ConfigError(
+        `CallAgent step "${
+          step.stepId
+        }" properties.files[${index}] must have a url and a mediaType string. Received ${JSON.stringify(
+          file
+        )}.`,
+        { configKey: step['~k'] }
+      );
+    }
+  });
 
   // Headless agent context — no page, no conversation, no sharedState (which
   // also excludes the client-only update-page-state tool). userId is null
@@ -77,7 +103,7 @@ async function handleAgentCall(context, routineContext, { step }) {
 
   const { result } = await agentType.resolver({
     connection: connectionInstance,
-    properties: { agent: agentConfig, prompt },
+    properties: { agent: agentConfig, prompt, files },
     context: resolverContext,
   });
 

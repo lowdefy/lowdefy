@@ -578,6 +578,7 @@ A `CallAgent` step has:
 - `type: CallAgent`: **Required** - Identifies this as an agent call step.
 - `properties.agentId: string`: **Required** - The id of the agent to run. **Operators are evaluated**.
 - `properties.prompt: string`: **Required** - The task prompt for the agent run. **Operators are evaluated**.
+- `properties.files: object[]`: Images and documents the model reads beside the prompt. Each entry is `{ url, mediaType }`: `url` is a link the model provider can fetch (a presigned link to a private file), and `mediaType` its type, like `image/png` or `application/pdf`. An `image/*` file is sent as an image, anything else as a document. The prompt and the files go to the model as one user message. The server does not download the files; the provider fetches each link, so it must still be valid when the step runs. Which media types a model reads depends on the provider. **Operators are evaluated**.
 
 The step result contains:
 
@@ -617,6 +618,34 @@ api:
           subject: Daily signup report
           text:
             _step: research.text
+```
+
+To let the agent see files, pass them with `files`. Here an endpoint signs a link to a ticket's screenshot with an S3 request and hands it to the agent:
+
+```yaml
+api:
+  - id: scope-ticket
+    type: Api
+    routine:
+      - id: screenshot_link
+        type: AwsS3PresignedGetObject
+        connectionId: files
+        properties:
+          key:
+            _payload: screenshot_key
+          expires: 600
+      - id: scope
+        type: CallAgent
+        properties:
+          agentId: scope_agent
+          prompt:
+            _string.concat:
+              - 'Scope this ticket: '
+              - _payload: description
+          files:
+            - url:
+                _step: screenshot_link
+              mediaType: image/png
 ```
 
 Headless agent runs differ from interactive chat in a few ways:

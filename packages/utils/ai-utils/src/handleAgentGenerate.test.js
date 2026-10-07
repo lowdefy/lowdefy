@@ -147,7 +147,7 @@ test('handleAgentGenerate returns a serializable summary with accumulated usage'
 
   const { result } = await handleAgentGenerate({
     connection,
-    properties: { agent: createAgent(), prompt: 'Summarize the signups.' },
+    properties: { agent: createAgent(), prompt: 'Summarize the signups.', files: [] },
     context: createTestContext(),
   });
 
@@ -169,13 +169,50 @@ test('handleAgentGenerate returns a serializable summary with accumulated usage'
   });
 });
 
+test('handleAgentGenerate sends files as parts of one user message after the prompt', async () => {
+  const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
+  mockGenerateSteps();
+
+  await handleAgentGenerate({
+    connection,
+    properties: {
+      agent: createAgent(),
+      prompt: 'Describe the screenshots.',
+      files: [
+        { url: 'https://files.example.com/one.png?sig=a', mediaType: 'image/png' },
+        { url: 'https://files.example.com/two.jpg?sig=b', mediaType: 'image/jpeg' },
+      ],
+    },
+    context: createTestContext(),
+  });
+
+  expect(mockGenerate.mock.calls[0][0].prompt).toEqual([
+    {
+      role: 'user',
+      content: [
+        { type: 'text', text: 'Describe the screenshots.' },
+        {
+          type: 'image',
+          image: new URL('https://files.example.com/one.png?sig=a'),
+          mediaType: 'image/png',
+        },
+        {
+          type: 'image',
+          image: new URL('https://files.example.com/two.jpg?sig=b'),
+          mediaType: 'image/jpeg',
+        },
+      ],
+    },
+  ]);
+});
+
 test('handleAgentGenerate does not build the update-page-state tool when sharedState is undefined', async () => {
   const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
   mockGenerateSteps();
 
   await handleAgentGenerate({
     connection,
-    properties: { agent: createAgent(), prompt: 'Go.' },
+    properties: { agent: createAgent(), prompt: 'Go.', files: [] },
     context: createTestContext(),
   });
 
@@ -191,6 +228,7 @@ test('handleAgentGenerate asks no approval for confirm tools (autoApprove)', asy
     properties: {
       agent: createAgent({ tools: [{ endpointId: 'lookup-data', confirm: true }] }),
       prompt: 'Go.',
+      files: [],
     },
     context: createTestContext(),
   });
@@ -209,6 +247,7 @@ test('handleAgentGenerate wires agent-level hook callbacks onto the ToolLoopAgen
     properties: {
       agent: createAgent({ hooks: { onStart: ['log-start'], onStepFinish: ['log-step'] } }),
       prompt: 'Go.',
+      files: [],
     },
     context: createTestContext(),
   });
@@ -233,6 +272,7 @@ test('handleAgentGenerate awaits onFinish hooks with the finish payload and igno
     properties: {
       agent: createAgent({ hooks: { onFinish: ['save-run'] } }),
       prompt: 'Go.',
+      files: [],
     },
     context,
   });
@@ -260,6 +300,7 @@ test('handleAgentGenerate logs an error and continues when an onFinish hook fail
     properties: {
       agent: createAgent({ hooks: { onFinish: ['save-run'] } }),
       prompt: 'Go.',
+      files: [],
     },
     context: createTestContext({ callEndpoint }),
   });
@@ -286,6 +327,7 @@ test('handleAgentGenerate closes MCP clients when generate rejects', async () =>
       properties: {
         agent: createAgent({ mcp: [{ url: 'https://mcp.example.com' }] }),
         prompt: 'Go.',
+        files: [],
       },
       context: createTestContext(),
     })
@@ -303,6 +345,7 @@ test('handleAgentGenerate passes the agent timeout to generate', async () => {
     properties: {
       agent: createAgent({ properties: { model: 'test-model', timeout: 60000 } }),
       prompt: 'Go.',
+      files: [],
     },
     context: createTestContext(),
   });
@@ -317,7 +360,7 @@ test('handleAgentGenerate cancels the run with the signal of the request that st
 
   await handleAgentGenerate({
     connection,
-    properties: { agent: createAgent(), prompt: 'Go.' },
+    properties: { agent: createAgent(), prompt: 'Go.', files: [] },
     context: { ...createTestContext(), signal },
   });
 
@@ -331,7 +374,7 @@ test('handleAgentGenerate falls back to the connection maxOutputTokens and timeo
 
   await handleAgentGenerate({
     connection: limited,
-    properties: { agent: createAgent(), prompt: 'Go.' },
+    properties: { agent: createAgent(), prompt: 'Go.', files: [] },
     context: createTestContext(),
   });
   expect(lastAgentConfig.maxOutputTokens).toBe(800);
@@ -342,6 +385,7 @@ test('handleAgentGenerate falls back to the connection maxOutputTokens and timeo
     properties: {
       agent: createAgent({ properties: { model: 'm', maxOutputTokens: 200, timeout: 5000 } }),
       prompt: 'Go.',
+      files: [],
     },
     context: createTestContext(),
   });
@@ -358,6 +402,7 @@ test('handleAgentGenerate never generates a conversation title', async () => {
     properties: {
       agent: createAgent({ properties: { model: 'test-model', generateTitle: true } }),
       prompt: 'Go.',
+      files: [],
     },
     context: createTestContext(),
   });

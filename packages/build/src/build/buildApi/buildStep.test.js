@@ -886,6 +886,61 @@ test('CallAgent step allows operator objects for agentId and prompt', () => {
   expect(() => buildApi({ components, context })).not.toThrow();
 });
 
+test('CallAgent step allows files as an array or an operator', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callagent_files',
+        type: 'Api',
+        routine: [
+          {
+            id: 'run_agent',
+            type: 'CallAgent',
+            properties: {
+              agentId: 'research_agent',
+              prompt: 'Describe the screenshot.',
+              files: [{ url: { _payload: 'url' }, mediaType: 'image/png' }],
+            },
+          },
+          {
+            id: 'run_agent_files_operator',
+            type: 'CallAgent',
+            properties: {
+              agentId: 'research_agent',
+              prompt: 'Describe the screenshots.',
+              files: { _payload: 'files' },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test('CallAgent step with files that is not an array throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callagent_bad_files',
+        type: 'Api',
+        routine: [
+          {
+            id: 'run_agent',
+            type: 'CallAgent',
+            properties: { agentId: 'research_agent', prompt: 'Go.', files: 'shot.png' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'CallAgent step "run_agent" at endpoint "test_callagent_bad_files" properties.files is not an array.'
+  );
+});
+
 test('CallAgent step without properties.agentId throws', () => {
   const context = testContext({ logger });
   const components = {
