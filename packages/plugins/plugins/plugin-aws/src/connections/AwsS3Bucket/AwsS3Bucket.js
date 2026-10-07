@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import AwsS3DeleteObject from './AwsS3DeleteObject/AwsS3DeleteObject.js';
 import AwsS3GetObject from './AwsS3GetObject/AwsS3GetObject.js';
 import AwsS3HeadObject from './AwsS3HeadObject/AwsS3HeadObject.js';
 import AwsS3PresignedGetObject from './AwsS3PresignedGetObject/AwsS3PresignedGetObject.js';
@@ -24,6 +25,7 @@ import schema from './schema.js';
 export default {
   schema,
   requests: {
+    AwsS3DeleteObject,
     AwsS3GetObject,
     AwsS3HeadObject,
     AwsS3PresignedGetObject,
