@@ -165,6 +165,14 @@ properties:
 
 A chat turn keeps running when the client disconnects, so its `onFinish` hooks still save the whole conversation; `timeout` and `maxSteps` are what bound it. A `CallAgent` step is cancelled with the routine that runs it: when its request closes or the server's request timeout (`config.requestTimeout`) answers first.
 
+## File Downloads
+
+A file in a chat or a `CallAgent` step goes to the model as a link when the provider takes that media type as a link (the main providers do for images and PDFs). Any other file is downloaded by the server and sent as content. The server downloads only an `https:` link to a public address, checking the address on every redirect, and a failed download names the file's host, never its link.
+
+- `fileDownload: object`: Limits on a file the server downloads.
+  - `maxBytes: integer`: Default: `20971520` (20 MB) - Largest file the server downloads. A larger file fails the turn.
+  - `timeout: integer`: Default: `30000` - Milliseconds a file download may take.
+
 ## Provider-Specific Properties
 
 - `providerOptions: object`: Pass provider-specific options directly to the AI SDK. Use this for options not covered by the properties above.

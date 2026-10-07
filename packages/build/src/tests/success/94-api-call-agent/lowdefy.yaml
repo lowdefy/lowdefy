@@ -48,6 +48,17 @@ api:
           usage:
             _step: research.usage
 
+  - id: describe-screenshots
+    type: Api
+    routine:
+      - id: describe
+        type: CallAgent
+        properties:
+          agentId: research_agent
+          prompt: Describe what the screenshots show.
+          files:
+            _payload: files
+
   - id: dynamic-agent
     type: Api
     routine:

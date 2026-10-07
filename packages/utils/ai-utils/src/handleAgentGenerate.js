@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import buildGeneratePrompt from './buildGeneratePrompt.js';
 import createToolLoopAgent from './createToolLoopAgent.js';
 import createUsageAccumulator from './createUsageAccumulator.js';
 
@@ -22,7 +23,7 @@ import createUsageAccumulator from './createUsageAccumulator.js';
 // resolve an approval), update-page-state is excluded (callers pass no
 // sharedState), and no conversation title is generated.
 async function handleAgentGenerate({ connection, properties, context }) {
-  const { agent, prompt } = properties;
+  const { agent, prompt, files } = properties;
 
   const { agentInstance, mcpClients, timeoutConfig, locale } = await createToolLoopAgent({
     connection,
@@ -36,7 +37,7 @@ async function handleAgentGenerate({ connection, properties, context }) {
   let result;
   try {
     result = await agentInstance.generate({
-      prompt,
+      prompt: buildGeneratePrompt({ prompt, files }),
       abortSignal: context.signal,
       ...timeoutConfig,
       onStepEnd: (stepResult) => usageAccumulator.add(stepResult),

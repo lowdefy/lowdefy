@@ -31,14 +31,18 @@ import getConnection from '../connections/getConnection.js';
 // config, evaluates operators, creates the provider connection, and builds the
 // resolver context. mode ('chat' | 'generate') selects the resolver's execution
 // path; endpointDepth threads the endpoint call depth cap through agent tool
-// and hook endpoint calls.
-async function prepareAgent(context, { agentId, agentContext, endpointDepth = 0, mode = 'chat' }) {
+// and hook endpoint calls; files are the chat's attached files `_agent: files` reads.
+async function prepareAgent(
+  context,
+  { agentId, agentContext, endpointDepth = 0, files, mode = 'chat' }
+) {
   const agentConfig = await getAgentConfig(context, { agentId });
   authorizeAgent(context, { agentConfig });
 
   // What `_agent` reads in the tool and hook endpoints this agent calls. Built here from the
-  // agent being run and its conversation, so no tool input can set or change it.
-  const agent = { id: agentId, conversationId: agentContext.conversationId ?? null };
+  // agent being run, its conversation and the files of the chat request, so no tool input can
+  // set or change it.
+  const agent = { id: agentId, conversationId: agentContext.conversationId ?? null, files };
 
   // Evaluate operators in agent properties (e.g. _user, _secret, _payload)
   agentConfig.properties = context.evaluateOperators({

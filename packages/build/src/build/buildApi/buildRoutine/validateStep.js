@@ -100,6 +100,16 @@ function validateStep(
         { received: step.properties.prompt, configKey }
       );
     }
+    if (
+      !type.isNone(step.properties.files) &&
+      !type.isArray(step.properties.files) &&
+      !type.isObject(step.properties.files)
+    ) {
+      throw new ConfigError(
+        `CallAgent step "${step.id}" at endpoint "${endpointId}" properties.files is not an array.`,
+        { received: step.properties.files, configKey }
+      );
+    }
     if (!type.isNone(step.connectionId)) {
       throw new ConfigError(
         `CallAgent step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,

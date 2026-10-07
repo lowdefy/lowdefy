@@ -39,10 +39,11 @@ const logger = {
 const whoamiReturn = {
   id: { _agent: 'id' },
   conversationId: { _agent: 'conversationId' },
+  files: { _agent: 'files' },
   all: { _agent: true },
 };
 
-const noAgent = { id: null, conversationId: null, all: null };
+const noAgent = { id: null, conversationId: null, files: null, all: null };
 
 // A spoofing payload: fields a model could put in a tool call's input.
 const spoofPayload = {
@@ -193,13 +194,13 @@ function createContext({ user = { id: 'user_1', sub: 'user_1' } } = {}) {
   return context;
 }
 
-async function chatToolCall({ endpointId, input = {}, conversationId = 'conv_1' }) {
+async function chatToolCall({ endpointId, input = {}, conversationId = 'conv_1', messages = [] }) {
   toolCall = { endpointId, input };
   const context = createContext();
   const { response } = await callAgent(context, {
     agentId: 'support_agent',
     conversationId,
-    messages: [],
+    messages,
     pageId: 'chat',
   });
   expect(response.success).toBe(true);
@@ -209,8 +210,44 @@ async function chatToolCall({ endpointId, input = {}, conversationId = 'conv_1' 
 const supportAgent = {
   id: 'support_agent',
   conversationId: 'conv_1',
-  all: { id: 'support_agent', conversationId: 'conv_1' },
+  files: [],
+  all: { id: 'support_agent', conversationId: 'conv_1', files: [] },
 };
+
+// A chat whose first message carries an upload and whose third carries a pasted, inline image.
+const chatWithFiles = [
+  {
+    id: 'm1',
+    role: 'user',
+    parts: [
+      { type: 'text', text: 'The save button does nothing.' },
+      {
+        type: 'file',
+        url: 'https://files.example.com/org_1/nigel/user_1/f1/screenshot.png?sig=x',
+        mediaType: 'image/png',
+        filename: 'screenshot.png',
+        providerMetadata: { lowdefy: { key: 'org_1/nigel/user_1/f1/screenshot.png' } },
+      },
+    ],
+  },
+  { id: 'm2', role: 'assistant', parts: [{ type: 'text', text: 'Which page?' }] },
+  {
+    id: 'm3',
+    role: 'user',
+    parts: [
+      { type: 'text', text: 'The ticket page. Write it up.' },
+      { type: 'file', url: 'iVBORw0KGgo=', mediaType: 'image/png', filename: 'pasted.png' },
+    ],
+  },
+];
+
+const chatFiles = [
+  {
+    key: 'org_1/nigel/user_1/f1/screenshot.png',
+    filename: 'screenshot.png',
+    mediaType: 'image/png',
+  },
+];
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -240,8 +277,29 @@ test('a chat without a conversation id gives a null conversationId', async () =>
   expect(await chatToolCall({ endpointId: 'whoami', conversationId: null })).toEqual({
     id: 'support_agent',
     conversationId: null,
-    all: { id: 'support_agent', conversationId: null },
+    files: [],
+    all: { id: 'support_agent', conversationId: null, files: [] },
   });
+});
+
+test('a tool endpoint reads the files of every message the chat request carried', async () => {
+  const result = await chatToolCall({ endpointId: 'whoami', messages: chatWithFiles });
+  expect(result.files).toEqual(chatFiles);
+  expect(result.all.files).toEqual(chatFiles);
+});
+
+test('an endpoint a tool endpoint calls through CallApi reads the same files', async () => {
+  const result = await chatToolCall({ endpointId: 'nested_call_api', messages: chatWithFiles });
+  expect(result.files).toEqual(chatFiles);
+});
+
+test('a tool payload naming files changes nothing', async () => {
+  const result = await chatToolCall({
+    endpointId: 'whoami',
+    input: { files: [{ key: 'org_1/nigel/user_2/secret.png', filename: 'secret.png' }] },
+    messages: chatWithFiles,
+  });
+  expect(result.files).toEqual(chatFiles);
 });
 
 test('a tool called by a headless CallAgent step reads the agent with a null conversationId', async () => {
@@ -268,7 +326,8 @@ test('a tool called by a headless CallAgent step reads the agent with a null con
   expect(routineContext.steps.run_agent.response).toEqual({
     id: 'support_agent',
     conversationId: null,
-    all: { id: 'support_agent', conversationId: null },
+    files: [],
+    all: { id: 'support_agent', conversationId: null, files: [] },
   });
 });
 
@@ -332,7 +391,11 @@ test('a detached CallApi from a tool endpoint carries the agent to the detached 
     pageId: 'chat',
   });
   const body = JSON.parse(fetchMock.mock.calls[0][1].body);
-  expect(body.principal.agent).toEqual({ id: 'support_agent', conversationId: 'conv_1' });
+  expect(body.principal.agent).toEqual({
+    id: 'support_agent',
+    conversationId: 'conv_1',
+    files: [],
+  });
 
   const detachedContext = createContext();
   const result = await runDetachedEndpoint(detachedContext, {

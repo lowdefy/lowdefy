@@ -629,6 +629,7 @@ A `CallAgent` step has:
 - `type: CallAgent`: **Required** - Identifies this as an agent call step.
 - `properties.agentId: string`: **Required** - The id of the agent to run. **Operators are evaluated**.
 - `properties.prompt: string`: **Required** - The task prompt for the agent run. **Operators are evaluated**.
+- `properties.files: object[]`: Images and documents the model reads beside the prompt. Each entry is `{ url, mediaType }`: `url` is a link the model provider can fetch (a presigned link to a private file), and `mediaType` its type, like `image/png` or `application/pdf`. An `image/*` file is sent as an image, anything else as a document. The prompt and the files go to the model as one user message. A provider that takes that media type as a link fetches it itself (the main providers do for images and PDFs); for any other media type the server downloads the file first and sends its content. The server downloads only an `https:` link to a public address, checked on every redirect, within the agent's `fileDownload` limits (20 MB and 30 seconds by default). Either way the link must still be valid when the step runs. Which media types a model reads depends on the provider. **Operators are evaluated**.
 
 The step result contains:
 
@@ -668,6 +669,41 @@ api:
           subject: Daily signup report
           text:
             _step: research.text
+```
+
+To let the agent see files, pass them with `files`. Here an endpoint reads a ticket, signs a link to its screenshot with an S3 request and hands it to the agent. The storage key comes from the ticket, not from the payload, so a caller names a ticket and cannot have any file in the bucket signed:
+
+```yaml
+api:
+  - id: scope-ticket
+    type: Api
+    routine:
+      - id: get_ticket
+        type: MongoDBFindOne
+        connectionId: tickets
+        properties:
+          query:
+            _id:
+              _payload: ticket_id
+      - id: screenshot_link
+        type: AwsS3PresignedGetObject
+        connectionId: files
+        properties:
+          key:
+            _step: get_ticket.screenshot_key
+          expires: 600
+      - id: scope
+        type: CallAgent
+        properties:
+          agentId: scope_agent
+          prompt:
+            _string.concat:
+              - 'Scope this ticket: '
+              - _step: get_ticket.description
+          files:
+            - url:
+                _step: screenshot_link
+              mediaType: image/png
 ```
 
 Headless agent runs differ from interactive chat in a few ways:

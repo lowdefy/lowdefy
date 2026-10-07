@@ -19,6 +19,8 @@ import { ToolLoopAgent, isStepCount, hasToolCall } from 'ai';
 import buildAgentTools from './buildAgentTools.js';
 import buildPrepareStep from './buildPrepareStep.js';
 import buildUpdatePageStateTool from './buildUpdatePageStateTool.js';
+import createFileDownload from './fileDownload/createFileDownload.js';
+import nameAttachedFiles from './nameAttachedFiles.js';
 
 // Strip non-serializable fields from agent-level hook events before sending as payload.
 // messages excluded here — the stream-level onFinish sends UIMessage[] directly.
@@ -143,6 +145,11 @@ async function createToolLoopAgent({ connection, agent, context, autoApprove = f
     ...(agent.properties.prepareStep
       ? { prepareStep: buildPrepareStep(agent.properties.prepareStep) }
       : {}),
+    prepareCall: (callArgs) => ({ ...callArgs, prompt: nameAttachedFiles(callArgs.prompt) }),
+    experimental_download: createFileDownload({
+      ...agent.properties.fileDownload,
+      signal: context.signal,
+    }),
     ...hookCallbacks,
     ...(agent.properties.repairToolCall
       ? {

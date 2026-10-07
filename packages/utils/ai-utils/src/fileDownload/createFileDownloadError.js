@@ -14,21 +14,16 @@
   limitations under the License.
 */
 
-import { getFromObject } from '@lowdefy/operators';
-
-// Reads the agent ({ id, conversationId, files }) the engine put on the routine when an agent
-// called the endpoint as a tool or hook. On any other call there is no agent, and every read
-// resolves to null or its default, the way `_error` does outside a catch.
-function _agent({ agent, arrayIndices, location, params }) {
-  return getFromObject({
-    arrayIndices,
-    location,
-    object: agent ?? null,
-    operator: '_agent',
-    params,
-  });
+// A refused or failed agent file download. `code` names the reason; `status` is the HTTP status
+// the link answered with, when there was one. The message names the host, never the link: a file
+// link is usually signed, and this error reaches the server log.
+function createFileDownloadError({ code, message, status, cause }) {
+  const error = new Error(message, { cause });
+  error.code = code;
+  if (status !== undefined) {
+    error.status = status;
+  }
+  return error;
 }
 
-_agent.dynamic = true;
-
-export default _agent;
+export default createFileDownloadError;

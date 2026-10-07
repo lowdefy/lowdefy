@@ -267,6 +267,8 @@ _ref:
                 downloadPolicyRequestId: get_download_url
             ```
 
+            A file uploaded to storage becomes a file part of the message, `{ type: 'file', url, mediaType, filename, providerMetadata: { lowdefy: { key } } }`, where `key` is the file's storage key from the upload policy. The key sits under `providerMetadata` because the AI SDK keeps no other extra field on a file part, so it survives the saved conversation, the `onFinish` hook's messages and a reload. It is not sent to the model. Use it to sign a fresh link when a saved conversation is reopened (a signed link expires), and read it in a tool endpoint with [`_agent: files`](/_agent). Before each file, the model gets a line naming it (`Attached file: screenshot.png`), so it can pass the name to a tool; the saved messages do not hold that line.
+
             #### Sender Switches
 
             Toggle switches in the sender footer. The switch state is included in the `onBeforeSend` event and in message metadata.

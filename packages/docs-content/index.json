@@ -3314,7 +3314,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "6c9082e35662db0cb04fc205d61be0f37c720363ffb1773d3303344a78528dfb"
+      "hash": "823d71aa21275db72897e737d15cdd404f11a2c1819649ddd05f153370dedf3e"
     },
     "concepts/notifications": {
       "files": [
@@ -3377,7 +3377,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "67a680f97c99a423be2eec334df9c53408e905c5a43c22a26684a2b45e9de700"
+      "hash": "580e8b60f817d74e69326cf73dd7eff7d07f223c1504c62e8e83c094003ad995"
     },
     "agents/agent-properties": {
       "files": [
@@ -3392,7 +3392,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "71fb80362222887779d0467f422e7d2a198618a7fce51ba0104d15490ad5f1ae"
+      "hash": "59134ff8a4aa3bd2adf29b435d5318459a1050ff655d4e9413aaab62ba6e728b"
     },
     "agents/agent-endpoint-tools": {
       "files": [
@@ -3467,7 +3467,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "470e464bd6574082b13bad5e9dfa93dffcad58c002952fcd2f925d28c6747861"
+      "hash": "8b1e692b94b34453fe2fba15b0d943f2a97bb459dfbb846dd09ae38277ead3fa"
     },
     "agents/agentconversations": {
       "files": [
@@ -7220,7 +7220,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "5a9a5a270e9e9b16c7acd3cdc2f72f9ffaf6c30121eefe2b6e06fce09fc1a10b"
+      "hash": "9af2fe95f090d74017a84f2671149ff9426e9e94dbd78dab2807f1c5c4901fb1"
     },
     "operators/_and": {
       "files": [

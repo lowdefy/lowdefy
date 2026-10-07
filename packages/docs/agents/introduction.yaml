@@ -123,7 +123,7 @@ _ref:
 
                 ## Beyond Chat
 
-                Agents can also run headlessly from [API endpoint routines](/api) using the `CallAgent` step — the agent loops through its tools to completion and the result lands in the routine's `_step` results, no chat UI involved. See [Running Agents As A Routine Step](/api) for details.
+                Agents can also run headlessly from [API endpoint routines](/api) using the `CallAgent` step — the agent loops through its tools to completion and the result lands in the routine's `_step` results, no chat UI involved. The step can pass images and documents beside its prompt with `files`. See [Running Agents As A Routine Step](/api) for details.
 
                 ## What's Next
 
