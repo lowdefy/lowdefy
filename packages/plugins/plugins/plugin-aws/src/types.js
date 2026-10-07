@@ -27,6 +27,7 @@ export default {
     AwsS3Bucket: { tenant: false },
   },
   requests: [
+    'AwsS3DeleteObject',
     'AwsS3GetObject',
     'AwsS3HeadObject',
     'AwsS3PresignedGetObject',

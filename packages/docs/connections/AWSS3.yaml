@@ -93,6 +93,7 @@ _ref:
             ## Requests
 
             Request types:
+              - AwsS3DeleteObject
               - AwsS3GetObject
               - AwsS3HeadObject
               - AwsS3PresignedGetObject
@@ -363,6 +364,74 @@ _ref:
                   - ':return':
                       size:
                         _step: copy.size
+            ```
+
+            ### AwsS3DeleteObject
+
+            The `AwsS3DeleteObject` request deletes one object, or up to 1000 objects in one call, from the
+            connection's bucket. Use it in an [API endpoint](/lowdefy-api) routine to remove objects the routine
+            stored and no longer wants, such as the files it copied before a later step refused the call. It
+            deletes only from the bucket the connection names; the request takes no bucket. The connection must
+            set `write: true`.
+
+            #### Properties
+            - `key: string`: Key of the object to delete. Give either `key` or `keys`.
+            - `keys: string[]`: Keys of the objects to delete, 1 to 1000. Give either `key` or `keys`.
+
+            Returns `{ bucket, deleted, errors }`: `deleted` lists the keys deleted, and `errors` lists each key
+            S3 could not delete as `{ key, code, message }`, such as `AccessDenied`. A key with no object
+            counts as deleted, as S3 reports it. A failure of the call itself, such as wrong credentials or a
+            missing bucket, throws. With one `key`, a key S3 cannot delete throws too, so `errors` is always
+            empty.
+
+            #### Examples
+
+            ###### Remove both copies when either copy is refused:
+            ```yaml
+            api:
+              - id: attach_files
+                type: Api
+                routine:
+                  - :try:
+                      - id: copy_screenshot
+                        type: AwsS3PutObject
+                        connectionId: my_bucket
+                        properties:
+                          key:
+                            _string.concat:
+                              - 'tickets/'
+                              - _payload: ticket_id
+                              - '/screenshot'
+                          url:
+                            _payload: screenshot_url
+                          maxBytes: 10000000
+                      - id: copy_log
+                        type: AwsS3PutObject
+                        connectionId: my_bucket
+                        properties:
+                          key:
+                            _string.concat:
+                              - 'tickets/'
+                              - _payload: ticket_id
+                              - '/log'
+                          url:
+                            _payload: log_url
+                          maxBytes: 10000000
+                    :catch:
+                      - id: remove_copies
+                        type: AwsS3DeleteObject
+                        connectionId: my_bucket
+                        properties:
+                          keys:
+                            - _string.concat:
+                                - 'tickets/'
+                                - _payload: ticket_id
+                                - '/screenshot'
+                            - _string.concat:
+                                - 'tickets/'
+                                - _payload: ticket_id
+                                - '/log'
+                      - :reject: The files could not be stored.
             ```
 
             ## Creating a bucket
