@@ -42,6 +42,18 @@ jest.unstable_mockModule('./isWriteRequestsAllowed.js', () => ({
 jest.unstable_mockModule('../server/createLowdefyContext.js', () => ({
   default: mockCreateLowdefyContext,
 }));
+// A data set caller loads a data set into the dev server's memory store; both
+// are mocked so the test checks who the routine runs as and on which database.
+const mockReadDataSet = jest.fn();
+const mockOpenDataSession = jest.fn();
+jest.unstable_mockModule('./dataSets/readDataSet.js', () => ({ default: mockReadDataSet }));
+jest.unstable_mockModule('./dataSets/getDataStore.js', () => ({ default: async () => ({}) }));
+jest.unstable_mockModule('./dataSets/openDataSession.js', () => ({
+  default: mockOpenDataSession,
+}));
+jest.unstable_mockModule('./readDevAuthMode.js', () => ({
+  default: () => ({ authConfigured: true, mockUserActive: false }),
+}));
 
 const { ConfigError } = await import('@lowdefy/errors');
 const { MAX_INLINE_RESPONSE_CHARS } = await import('./fitResponse.js');
@@ -85,14 +97,95 @@ test('runEndpoint throws a ConfigError when endpointId is not a string', async (
   expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
 });
 
-test('runEndpoint throws a ConfigError when user is not an object', async () => {
+test('runEndpoint throws a ConfigError when user is neither an object nor a name', async () => {
   await expect(
-    runEndpoint({ endpointId: 'create_order', user: 'admin', honoContext })
+    runEndpoint({ endpointId: 'create_order', user: ['admin'], honoContext })
   ).rejects.toThrow(ConfigError);
   await expect(
     runEndpoint({ endpointId: 'create_order', user: ['admin'], honoContext })
-  ).rejects.toThrow(/run_endpoint "user" must be an object/);
+  ).rejects.toThrow(/run_endpoint: "user" should be a user object/);
   expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
+});
+
+test('runEndpoint throws a ConfigError for a data set user name without data', async () => {
+  await expect(
+    runEndpoint({ endpointId: 'create_order', user: 'member', honoContext })
+  ).rejects.toThrow(
+    'run_endpoint: The call\'s user "member" names a data set user, but the call has no "data".'
+  );
+  expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
+});
+
+test("runEndpoint runs as a data set user, on the data set's own database", async () => {
+  const member = { id: 'u_member', roles: ['member'] };
+  const dataSet = { name: 'crm', users: { member } };
+  const session = { id: 'session1', state: 'open' };
+  const close = jest.fn(async () => {});
+  mockReadDataSet.mockResolvedValue(dataSet);
+  mockOpenDataSession.mockResolvedValue({ cookie: 'session1', session, close });
+
+  const result = await runEndpoint({
+    endpointId: 'create_order',
+    user: 'member',
+    data: 'crm',
+    honoContext,
+  });
+
+  expect(result.refused).toBe(false);
+  expect(result.success).toBe(true);
+  expect(mockOpenDataSession).toHaveBeenCalledWith({ dataSet });
+  expect(mockCreateLowdefyContext).toHaveBeenCalledWith({
+    c: honoContext,
+    user: member,
+    dataSession: session,
+  });
+  expect(close).toHaveBeenCalledTimes(1);
+});
+
+test('runEndpoint closes the data session when the routine throws', async () => {
+  const close = jest.fn(async () => {});
+  mockReadDataSet.mockResolvedValue({ name: 'crm', users: { member: { id: 'u_member' } } });
+  mockOpenDataSession.mockResolvedValue({ cookie: 'session1', session: {}, close });
+  mockCallEndpoint.mockRejectedValue(new Error('boom'));
+
+  const result = await runEndpoint({
+    endpointId: 'create_order',
+    user: 'member',
+    data: 'crm',
+    honoContext,
+  });
+
+  expect(result.error.message).toEqual('boom');
+  expect(close).toHaveBeenCalledTimes(1);
+});
+
+test('runEndpoint refuses a data set that fails to load without running the routine', async () => {
+  mockReadDataSet.mockResolvedValue({ name: 'crm', users: { member: { id: 'u_member' } } });
+  mockOpenDataSession.mockRejectedValue(new Error('Data set "crm": fixture orders is not valid.'));
+
+  const result = await runEndpoint({
+    endpointId: 'create_order',
+    user: 'member',
+    data: 'crm',
+    honoContext,
+  });
+
+  expect(result).toEqual({
+    refused: true,
+    reason: 'Data set "crm": fixture orders is not valid.',
+  });
+  expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
+});
+
+test('runEndpoint runs signed out for user "none", with no injected caller', async () => {
+  await runEndpoint({ endpointId: 'create_order', user: 'none', honoContext });
+
+  expect(mockCreateLowdefyContext).toHaveBeenCalledWith({
+    c: honoContext,
+    user: undefined,
+    dataSession: undefined,
+  });
+  expect(mockOpenDataSession).not.toHaveBeenCalled();
 });
 
 test('runEndpoint refuses every endpoint when agent write access is disabled', async () => {

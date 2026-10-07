@@ -20,6 +20,8 @@ import { type } from '@lowdefy/helpers';
 
 import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
 import fitResponse from './fitResponse.js';
+import resolveToolCaller from './resolveToolCaller.js';
+import withDataSession from './withDataSession.js';
 
 // Executes an Api endpoint routine the same way POST /api/endpoints/<endpointId>
 // does (src/routes/endpoints.js), but gated for agent use. Endpoints are not
@@ -38,10 +40,15 @@ import fitResponse from './fitResponse.js';
 // only local way to exercise a schedules-only InternalApi routine without
 // CRON_SECRET. Nested CallApi steps with detached: true are not faked: they
 // still dispatch over HTTP against the request origin and need CRON_SECRET.
+//
+// `user` and `data` name the caller as a journey's do (see resolveToolCaller):
+// a user object, "none" (signed out) or a data set user's name. A data set
+// runs the routine on that data set's own database.
 async function runEndpoint({
   endpointId,
   payload = {},
   user,
+  data,
   system = false,
   saveResponse = false,
   honoContext,
@@ -49,14 +56,6 @@ async function runEndpoint({
   if (type.isUndefined(endpointId) || !type.isString(endpointId)) {
     throw new ConfigError(
       `run_endpoint requires an "endpointId" string. Received ${JSON.stringify(endpointId)}.`
-    );
-  }
-
-  if (!type.isNone(user) && !type.isObject(user)) {
-    throw new ConfigError(
-      `run_endpoint "user" must be an object, e.g. {"roles":["admin"]}. Received ${JSON.stringify(
-        user
-      )}.`
     );
   }
 
@@ -78,6 +77,11 @@ async function runEndpoint({
     );
   }
 
+  const caller = await resolveToolCaller({ user, data });
+  if (!type.isUndefined(caller.error)) {
+    throw new ConfigError(`run_endpoint: ${caller.error}`);
+  }
+
   const allowed = await isWriteRequestsAllowed();
   if (!allowed) {
     return {
@@ -88,12 +92,49 @@ async function runEndpoint({
     };
   }
 
+  const ran = await withDataSession({
+    dataSet: caller.dataSet,
+    task: ({ dataSession }) =>
+      runEndpointInContext({
+        endpointId,
+        payload,
+        user: caller.user,
+        system,
+        saveResponse,
+        honoContext,
+        dataSession,
+      }),
+  });
+  // A data set that failed to load never ran the routine.
+  if (type.isString(ran.error)) {
+    return { refused: true, reason: ran.error };
+  }
+  return ran;
+}
+
+// The part of runEndpoint that runs in a Lowdefy context, on the data set's
+// database when the call named one.
+async function runEndpointInContext({
+  endpointId,
+  payload,
+  user,
+  system,
+  saveResponse,
+  honoContext,
+  dataSession,
+}) {
   // Deferred import: createLowdefyContext statically imports build/plugins/*
   // artifacts, which only exist in a running server directory - importing it
   // at module load would break every consumer of this module (e.g. the MCP
   // server) in environments without a full build.
   const { default: createLowdefyContext } = await import('../server/createLowdefyContext.js');
-  const context = await createLowdefyContext({ c: honoContext, user });
+  // "none" injects no caller: the app's own auth resolves this call, which
+  // carries no session, so it runs signed out.
+  const context = await createLowdefyContext({
+    c: honoContext,
+    user: user === 'none' ? undefined : user,
+    dataSession,
+  });
 
   // getEndpointConfig needs the context's readConfigFile, so the endpoint is
   // resolved after the context is built. Its not-found ConfigError is answered

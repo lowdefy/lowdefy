@@ -58,13 +58,23 @@ test('docsRunRequestHandler passes a user object through to runRequest', async (
 });
 
 test('docsRunRequestHandler returns 400 when user is malformed', async () => {
-  const c = createContext({ pageId: 'home', requestId: 'get_rows', user: 'admin' });
+  const c = createContext({ pageId: 'home', requestId: 'get_rows', user: 42 });
 
   const result = await docsRunRequestHandler(c);
 
   expect(result.status).toBe(400);
-  expect(result.data.error).toMatch(/must be JSON/);
+  expect(result.data.error).toMatch(/must be a user object/);
   expect(mockRunRequest).not.toHaveBeenCalled();
+});
+
+test('docsRunRequestHandler passes a data set user name and data through', async () => {
+  const c = createContext({ pageId: 'home', requestId: 'get_rows', user: 'member', data: 'crm' });
+
+  await docsRunRequestHandler(c);
+
+  expect(mockRunRequest).toHaveBeenCalledWith(
+    expect.objectContaining({ user: 'member', data: 'crm' })
+  );
 });
 
 test('docsRunRequestHandler passes an undefined user when the body omits it', async () => {

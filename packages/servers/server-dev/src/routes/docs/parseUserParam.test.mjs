@@ -32,14 +32,26 @@ test('parseUserParam passes an object from a JSON body through', () => {
   });
 });
 
-test('parseUserParam returns an error when the query param is not JSON', () => {
-  expect(parseUserParam({ value: 'admin' }).error).toMatch(/must be JSON/);
+test('parseUserParam passes a data set user name through', () => {
+  expect(parseUserParam({ value: 'member' })).toEqual({ user: 'member' });
+});
+
+test('parseUserParam passes "none" through', () => {
+  expect(parseUserParam({ value: 'none' })).toEqual({ user: 'none' });
+});
+
+test('parseUserParam returns an error when a query param that opens like JSON is not JSON', () => {
+  expect(parseUserParam({ value: '{roles: [admin]}' }).error).toMatch(/must be JSON/);
 });
 
 test('parseUserParam returns an error when the param parses to a non-object', () => {
-  expect(parseUserParam({ value: '["admin"]' }).error).toMatch(/must be an object/);
+  expect(parseUserParam({ value: '["admin"]' }).error).toMatch(/must be a user object/);
 });
 
-test('parseUserParam returns an error when a body value is not an object', () => {
-  expect(parseUserParam({ value: 42 }).error).toMatch(/must be an object/);
+test('parseUserParam returns an error when a body value is neither an object nor a string', () => {
+  expect(parseUserParam({ value: 42 }).error).toMatch(/must be a user object/);
+});
+
+test('parseUserParam returns an error for an empty string', () => {
+  expect(parseUserParam({ value: '' }).error).toMatch(/must be a user object/);
 });

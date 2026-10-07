@@ -43,9 +43,13 @@ function describeDeclaredUsers({ users }) {
 //   which is bound to the real auth database while its requests read the data set;
 // - any data-set journey while a dev mock user is active: the mock user wins over the injected
 //   caller, so the journey would silently act as someone outside the data set.
+//
+// `subject` names the run in the refusals: "journey" for a journey, "call" for the other dev tools
+// that act as someone (resolveToolCaller), which take the same user and data.
 async function resolveJourneyDataSet({
   data,
   user,
+  subject = 'journey',
   configDirectory,
   buildDirectory,
   authConfigured,
@@ -54,31 +58,30 @@ async function resolveJourneyDataSet({
   if (type.isNone(data)) {
     if (user === 'none' && mockUserActive) {
       return {
-        error:
-          'The journey has user "none", which cannot run while a dev mock user is active (auth.dev.mockUser or LOWDEFY_DEV_USER): with no caller of its own, every request would act as the mock user, not signed out. Remove the mock user to run journeys signed out, or give the journey a user.',
+        error: `The ${subject} has user "none", which cannot run while a dev mock user is active (auth.dev.mockUser or LOWDEFY_DEV_USER): with no caller of its own, every request would act as the mock user, not signed out. Remove the mock user to run signed out, or give the ${subject} a user.`,
       };
     }
     if (isUserName(user)) {
       return {
-        error: `The journey's user ${JSON.stringify(
+        error: `The ${subject}'s user ${JSON.stringify(
           user
-        )} names a data set user, but the journey has no "data". Add data: <data set name>, or give user as an object.`,
+        )} names a data set user, but the ${subject} has no "data". Add data: <data set name>, or give user as an object.`,
       };
     }
     return { user };
   }
   if (mockUserActive) {
     return {
-      error: `The journey on data set ${JSON.stringify(
+      error: `The ${subject} on data set ${JSON.stringify(
         data
-      )} cannot run while a dev mock user is active (auth.dev.mockUser or LOWDEFY_DEV_USER): every request would act as the mock user, who is not in the data set. Remove the mock user to run journeys on data sets.`,
+      )} cannot run while a dev mock user is active (auth.dev.mockUser or LOWDEFY_DEV_USER): every request would act as the mock user, who is not in the data set. Remove the mock user to run on data sets.`,
     };
   }
   if (user === 'none' && authConfigured) {
     return {
-      error: `The journey on data set ${JSON.stringify(
+      error: `The ${subject} on data set ${JSON.stringify(
         data
-      )} has user "none", which is refused while auth is configured: signing in through the app would write to the app's real auth database. Name a data set user instead; journeys that sign in stay off data sets.`,
+      )} has user "none", which is refused while auth is configured: signing in through the app would write to the app's real auth database. Name a data set user instead; runs that sign in stay off data sets.`,
     };
   }
   let dataSet;

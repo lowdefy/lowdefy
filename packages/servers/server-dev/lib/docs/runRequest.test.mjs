@@ -103,13 +103,13 @@ test('runRequest logs the user it ran the request as', async () => {
   });
 });
 
-test('runRequest throws a ConfigError when user is not an object', async () => {
+test('runRequest throws a ConfigError when user is neither an object nor a data set user', async () => {
   await expect(
     runRequest({ pageId: 'home', requestId: 'get_rows', user: 'admin', honoContext })
   ).rejects.toThrow(ConfigError);
   await expect(
     runRequest({ pageId: 'home', requestId: 'get_rows', user: ['admin'], honoContext })
-  ).rejects.toThrow(/run_request "user" must be an object/);
+  ).rejects.toThrow(/run_request: "user" should be a user object/);
   expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
 });
 

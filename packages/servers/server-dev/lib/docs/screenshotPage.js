@@ -21,11 +21,13 @@ import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
 import noBrowserError from './noBrowserError.js';
 import openJourney from './openJourney.js';
 import resolvePageInstance from './resolvePageInstance.js';
+import resolveToolCaller from './resolveToolCaller.js';
 import runJourneySteps from './runJourneySteps.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneyMail from './validateJourneyMail.js';
 import validateViewport from './validateViewport.js';
 import withBrowserSlot from './withBrowserSlot.js';
+import withDataSession from './withDataSession.js';
 
 // A feedback annotation's elementRect/shapes are captured in the developer's
 // live tab, viewport-relative at whatever scroll position they were at
@@ -66,7 +68,7 @@ async function resolveClip({ page, clip, scrollX, scrollY }) {
 // function, the page-open timeout, any captures `screenshot` steps took and any
 // step failure; the capture happens on whatever state the steps left (also
 // after a failed step, which is what the agent needs to see).
-async function openAndRunSteps({ browser, steps, stepTimeout, ...pageOptions }) {
+async function openAndRunSteps({ browser, steps, stepTimeout, users, ...pageOptions }) {
   if (steps.length === 0) {
     const opened = await openPage({ browser, ...pageOptions });
     return {
@@ -76,7 +78,7 @@ async function openAndRunSteps({ browser, steps, stepTimeout, ...pageOptions }) 
       screenshots: [],
     };
   }
-  const { journey, main } = await openJourney({ browser, ...pageOptions, stepTimeout });
+  const { journey, main } = await openJourney({ browser, ...pageOptions, stepTimeout, users });
   const { screenshots, failure } = await runJourneySteps({ journey, steps });
   return {
     opened: { ...journey.actors.current(), ready: main.ready },
@@ -94,7 +96,9 @@ async function openAndRunSteps({ browser, steps, stepTimeout, ...pageOptions }) 
 // drive it first — open a dropdown, click a button — so the capture shows
 // that state; captures `screenshot` steps take come back as `screenshots`.
 // Popups antd renders in a portal at the end of <body> are part of the
-// document, so a fullPage or clip capture includes them.
+// document, so a fullPage or clip capture includes them. `user` and `data`
+// name the caller as a journey's do (see resolveToolCaller): a data set user
+// renders the page on that data set's own database.
 async function screenshotPage({
   origin,
   pageId,
@@ -107,6 +111,7 @@ async function screenshotPage({
   scrollX = 0,
   scrollY = 0,
   user,
+  data,
   width = 1280,
   height = 800,
   colorScheme = 'light',
@@ -145,26 +150,36 @@ async function screenshotPage({
   if (!type.isUndefined(mailError)) {
     return { error: mailError };
   }
+  const caller = await resolveToolCaller({ user, data });
+  if (!type.isUndefined(caller.error)) {
+    return caller;
+  }
 
   return withBrowserSlot({
     task: () =>
-      screenshotInBrowser({
-        origin,
-        pageId,
-        path: instance.path,
-        pathParams,
-        urlQuery,
-        user,
-        width,
-        height,
-        colorScheme,
-        timeout,
-        steps,
-        stepTimeout,
-        clip,
-        scrollX,
-        scrollY,
-        fullPage,
+      withDataSession({
+        dataSet: caller.dataSet,
+        task: ({ dataCookie }) =>
+          screenshotInBrowser({
+            origin,
+            pageId,
+            path: instance.path,
+            pathParams,
+            urlQuery,
+            user: caller.user,
+            dataCookie,
+            users: caller.dataSet?.users,
+            width,
+            height,
+            colorScheme,
+            timeout,
+            steps,
+            stepTimeout,
+            clip,
+            scrollX,
+            scrollY,
+            fullPage,
+          }),
       }),
   });
 }
@@ -177,6 +192,8 @@ async function screenshotInBrowser({
   pathParams,
   urlQuery,
   user,
+  dataCookie,
+  users,
   width,
   height,
   colorScheme,
@@ -207,6 +224,8 @@ async function screenshotInBrowser({
       pathParams,
       urlQuery,
       user,
+      dataCookie,
+      users,
       width,
       height,
       colorScheme,

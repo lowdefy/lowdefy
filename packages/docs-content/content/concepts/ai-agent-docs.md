@@ -225,7 +225,19 @@ To act as a specific caller, pass `user` — every tool that renders a page head
 
 It is merged over the default user, so `{"roles": [...]}` is usually all you need. No auth engine runs for an injected caller, so nothing derives the rest of the record — include `email`, `profile` or `attributes` in the object if the page reads them. Every call opens its own browser context, so one call can act as an admin and the next as a plain member.
 
-`user` applies to the headless renderer only — it is never applied to a page you open in your own browser, which carries your real session and cannot be re-identified. `lowdefy_inspect_state` and `lowdefy_eval_operator` normally prefer your open tab, so passing `user` selects the headless source instead; combining it with `source: "tab"` is an error rather than a silently ignored role, as is combining it with `lowdefy_load_state`'s `mode: "registry-only"` (that mode hands you a URL to open yourself). The plain HTTP routes take the same param: `?user={"roles":["admin"]}` on the GET routes, a `user` key in the body of `POST /lowdefy-docs/journey`, `POST /lowdefy-docs/eval-operator`, `POST /lowdefy-docs/state-checkpoints/load`, `POST /lowdefy-docs/run-request` and `POST /lowdefy-docs/run-endpoint`. They answer a malformed or contradictory `user` with a `400`, distinct from the `502` a failed render returns.
+Every one of these tools takes `user` in the same three forms:
+
+- a user object, as above;
+- `"none"`: no injected caller, so the call runs signed out and the app's own auth decides what it sees;
+- the name of a user in a [journey data set](/journey-data-sets), together with `data`, the data set's name. The call then acts as that user and runs on a fresh database of its own loaded with the data set, exactly as a journey with `data` does, so it never touches the app's real data:
+
+```json
+{ "pageId": "tickets", "user": "member", "data": "crm" }
+```
+
+A data set user name without `data` is refused, as are a data set while a dev mock user is active and `"none"` on a data set while auth is configured. `lowdefy_run_endpoint` also takes `system: true`, which cannot be combined with `user`.
+
+`user` applies to the headless renderer only — it is never applied to a page you open in your own browser, which carries your real session and cannot be re-identified. `lowdefy_inspect_state` and `lowdefy_eval_operator` normally prefer your open tab, so passing `user` selects the headless source instead; combining it with `source: "tab"` is an error rather than a silently ignored role, as is combining it with `lowdefy_load_state`'s `mode: "registry-only"` (that mode hands you a URL to open yourself). The plain HTTP routes take the same params: `?user={"roles":["admin"]}` (or `?user=member&data=crm`, or `?user=none`) on the GET routes, a `user` key in the body of `POST /lowdefy-docs/journey`, `POST /lowdefy-docs/eval-operator`, `POST /lowdefy-docs/state-checkpoints/load`, `POST /lowdefy-docs/run-request` and `POST /lowdefy-docs/run-endpoint`. They answer a malformed or contradictory `user` with a `400`, distinct from the `502` a failed render returns.
 
 To bypass login for the whole dev server — your own browser included — start it with a mock user instead: `lowdefy dev --mock-user '{"id":"dev","roles":["admin"]}'` (or configure `auth.dev.mockUser`). See [Auth Configuration](/auth-configuration#mock-user-for-testing-dev-server-only).
 
@@ -273,7 +285,7 @@ cli:
 
 Endpoints are not classified read-only — a routine has no `checkWrite` meta, and a single routine can read, write, call other endpoints and send notifications — so running one always requires the same `cli.agentTools.allowWriteRequests: true` opt-in as write requests. Without it the tool answers `refused: true` with the reason and how to enable it, and nothing runs.
 
-The result is the same `{ error, response, status, success }` object the HTTP endpoint route returns. A `:reject` or `:throw` in the routine is not a tool failure: it comes back as `success: false` with `status: "reject"` or `"error"` and the routine's own `error`, so the agent can assert on the shape it designed. `InternalApi` endpoints are refused with the same message HTTP callers get, an unknown `endpointId` answers `refused: true`, and faults that escape the routine (an auth refusal, a missing connection) come back as `error: { name, message, source, configKey }`. Only malformed input — a missing `endpointId` or a non-object `user` — is a `400`.
+The result is the same `{ error, response, status, success }` object the HTTP endpoint route returns. A `:reject` or `:throw` in the routine is not a tool failure: it comes back as `success: false` with `status: "reject"` or `"error"` and the routine's own `error`, so the agent can assert on the shape it designed. `InternalApi` endpoints are refused with the same message HTTP callers get, an unknown `endpointId` answers `refused: true`, and faults that escape the routine (an auth refusal, a missing connection) come back as `error: { name, message, source, configKey }`. Only malformed input — a missing `endpointId`, or a `user` or `data` the call cannot act as — is a `400`.
 
 Scheduled and detached-only endpoints are `InternalApi` by design, so a plain run refuses them. Pass `system: true` to run the routine as a system context instead — the same code path `/api/cron` and `/api/detached` use: no session, no user (`_user` is `undefined`), the endpoint's `auth` is not checked, and `InternalApi` endpoints are allowed. This is the local test path for a `schedules` routine, without setting `CRON_SECRET` or curling the cron route:
 

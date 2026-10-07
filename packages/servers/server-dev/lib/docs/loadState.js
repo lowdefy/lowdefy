@@ -21,8 +21,10 @@ import noBrowserError from './noBrowserError.js';
 import { loadMocks } from './devMockRegistry.js';
 import { readCheckpoint } from './checkpointStore.js';
 import resolvePageInstance from './resolvePageInstance.js';
+import resolveToolCaller from './resolveToolCaller.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import withBrowserSlot from './withBrowserSlot.js';
+import withDataSession from './withDataSession.js';
 
 const VERIFY_KEY_COUNT = 3;
 const READY_TIMEOUT = 15000;
@@ -34,12 +36,13 @@ const READY_TIMEOUT = 15000;
 //     (pageId, pathParams) and urlQuery, injects its recorded state directly
 //     into that instance's context, and verifies
 //     a few keys round-tripped. Good for an agent verifying its own change.
-//     Takes a `user` so a checkpoint captured on a role-gated page restores
-//     into a page that actually renders (see resolveHeadlessUser.js).
+//     Takes a `user` (and `data`, see resolveToolCaller) so a checkpoint
+//     captured on a role-gated page restores into a page that actually
+//     renders (see resolveHeadlessUser.js).
 //   - 'registry-only': just returns a URL a human can open in a real browser
 //     tab — client/Inspector.jsx's `?_checkpoint=` bootstrap does the state
 //     injection client-side once that tab loads.
-async function loadState({ origin, name, mode = 'headless', user }) {
+async function loadState({ origin, name, mode = 'headless', user, data }) {
   if (type.isNone(name) || !type.isString(name)) {
     return { error: `loadState requires a "name" string. Received ${JSON.stringify(name)}.` };
   }
@@ -47,10 +50,10 @@ async function loadState({ origin, name, mode = 'headless', user }) {
   // `user` only reaches a page this function opens itself. In 'registry-only'
   // mode the developer opens the returned URL in their own browser, carrying
   // their own session, so an injected caller would be silently dropped.
-  if (!type.isNone(user) && mode === 'registry-only') {
+  if ((!type.isNone(user) || !type.isNone(data)) && mode === 'registry-only') {
+    const param = type.isNone(user) ? 'data' : 'user';
     return {
-      error:
-        'loadState cannot apply "user" in "registry-only" mode — the developer opens the returned URL in their own browser, carrying their own session. Use the default "headless" mode.',
+      error: `loadState cannot apply "${param}" in "registry-only" mode — the developer opens the returned URL in their own browser, carrying their own session and database. Use the default "headless" mode.`,
       invalidInput: true,
     };
   }
@@ -105,18 +108,28 @@ async function loadState({ origin, name, mode = 'headless', user }) {
     return { error: `loadState requires an "origin" string. Received ${JSON.stringify(origin)}.` };
   }
 
+  const caller = await resolveToolCaller({ user, data });
+  if (!type.isUndefined(caller.error)) {
+    return caller;
+  }
+
   return withBrowserSlot({
     task: () =>
-      loadStateInBrowser({
-        origin,
-        name,
-        mode,
-        user,
-        pageId,
-        instance,
-        pathParams,
-        urlQuery,
-        checkpoint,
+      withDataSession({
+        dataSet: caller.dataSet,
+        task: ({ dataCookie }) =>
+          loadStateInBrowser({
+            origin,
+            name,
+            mode,
+            user: caller.user,
+            dataCookie,
+            pageId,
+            instance,
+            pathParams,
+            urlQuery,
+            checkpoint,
+          }),
       }),
   });
 }
@@ -127,6 +140,7 @@ async function loadStateInBrowser({
   name,
   mode,
   user,
+  dataCookie,
   pageId,
   instance,
   pathParams,
@@ -150,6 +164,7 @@ async function loadStateInBrowser({
       pathParams,
       urlQuery,
       user,
+      dataCookie,
       timeout: READY_TIMEOUT,
     });
     context = opened.context;
