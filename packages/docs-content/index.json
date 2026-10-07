@@ -3306,7 +3306,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "6a873385a967e1cab58b53507f98e12e3187d0c5d9f2be1597791e8d93cefa19"
+      "hash": "823d71aa21275db72897e737d15cdd404f11a2c1819649ddd05f153370dedf3e"
     },
     "concepts/notifications": {
       "files": [
@@ -3384,7 +3384,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "71fb80362222887779d0467f422e7d2a198618a7fce51ba0104d15490ad5f1ae"
+      "hash": "59134ff8a4aa3bd2adf29b435d5318459a1050ff655d4e9413aaab62ba6e728b"
     },
     "agents/agent-endpoint-tools": {
       "files": [

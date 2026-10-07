@@ -175,6 +175,37 @@ export default {
           'AISDKAgent agent property "timeout" should be a number or an object with totalMs, stepMs, and/or chunkMs.',
       },
     },
+    fileDownload: {
+      type: 'object',
+      description:
+        'Limits for a file link the server downloads because the model does not take it as a link.',
+      properties: {
+        maxBytes: {
+          type: 'integer',
+          minimum: 1,
+          description: 'Largest file the server downloads, in bytes. Default: 20971520 (20 MB).',
+          errorMessage: {
+            type: 'AISDKAgent agent property "fileDownload.maxBytes" should be an integer.',
+            minimum: 'AISDKAgent agent property "fileDownload.maxBytes" should be at least 1.',
+          },
+        },
+        timeout: {
+          type: 'integer',
+          minimum: 1,
+          description: 'Milliseconds a file download may take. Default: 30000.',
+          errorMessage: {
+            type: 'AISDKAgent agent property "fileDownload.timeout" should be an integer.',
+            minimum: 'AISDKAgent agent property "fileDownload.timeout" should be at least 1.',
+          },
+        },
+      },
+      additionalProperties: false,
+      errorMessage: {
+        type: 'AISDKAgent agent property "fileDownload" should be an object.',
+        additionalProperties:
+          'AISDKAgent agent property "fileDownload" should only have maxBytes and timeout.',
+      },
+    },
     pageContext: {
       type: 'boolean',
       description:

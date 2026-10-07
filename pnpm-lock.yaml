@@ -3127,6 +3127,9 @@ importers:
       glob:
         specifier: 13.0.6
         version: 13.0.6
+      undici:
+        specifier: 7.30.0
+        version: 7.30.0
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
