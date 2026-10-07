@@ -49,7 +49,7 @@ test('validateModuleAuthManifest throws on an unknown auth key', () => {
   expect(() =>
     validateModuleAuthManifest({ auth: { authPages: { signIn: 'login' } }, entryId: 'crm' })
   ).toThrow(
-    'Module "crm" manifest "auth" has unknown key "authPages". Allowed keys are: api, hooks, pages, public, websockets.'
+    'Module "crm" manifest "auth" has unknown key "authPages". Allowed keys are: agents, api, hooks, pages, public, websockets.'
   );
 });
 
@@ -159,6 +159,7 @@ test('validateModuleAuthManifest throws when a public entry is not a string', ()
 });
 
 describe.each([
+  ['agents', 'agent', 'ClaudeAgent'],
   ['api', 'endpoint', 'Api'],
   ['websockets', 'websocket', 'Channel'],
 ])('validateModuleAuthManifest auth.%s', (entity, label, itemType) => {

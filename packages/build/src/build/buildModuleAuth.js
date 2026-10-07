@@ -32,10 +32,11 @@ import isAuthConfigured from './buildAuth/isAuthConfigured.js';
 //   exceptions - they join an app public list, are no-ops under public: true,
 //   and never join a protected list (buildEntityAuth keeps them public via
 //   context.moduleAuthPublicPages in the protected modes).
-// - api.public and websockets.public: the module's endpoints and websockets
-//   that need no signed-in caller. A module endpoint or websocket is protected
-//   unless the module lists it here or the app's auth.api or auth.websockets
-//   rules make it public explicitly; buildEntityAuth reads
+// - agents.public, api.public and websockets.public: the module's agents,
+//   endpoints and websockets that need no signed-in caller. A module agent,
+//   endpoint or websocket is protected unless the module lists it here or the
+//   app's auth.api (agents and endpoints) or auth.websockets rules make it
+//   public explicitly; buildEntityAuth and buildAgentAuth read
 //   context.moduleAuthPublicEntities and context.moduleEntityIds.
 // An auth page is served at its path (buildModules has scoped it to the entry)
 // or, without one, at its id. A path that is not a string is refused by
@@ -67,6 +68,7 @@ function buildModuleAuth({ components, context, moduleEntries }) {
   const roleClaims = {};
   context.moduleAuthPublicPages = context.moduleAuthPublicPages ?? [];
   context.moduleAuthPublicEntities = context.moduleAuthPublicEntities ?? {
+    agents: [],
     api: [],
     websockets: [],
   };
@@ -136,6 +138,7 @@ function buildModuleAuth({ components, context, moduleEntries }) {
     }
 
     for (const [entity, label] of [
+      ['agents', 'agent'],
       ['api', 'endpoint'],
       ['websockets', 'websocket'],
     ]) {

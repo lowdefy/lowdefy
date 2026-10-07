@@ -295,21 +295,32 @@ test('buildModuleAuth returns components unchanged when no module declares auth'
   expect(components.auth.authPages).toBe(undefined);
 });
 
-test('buildModuleAuth records scoped public endpoints and websockets on the context', () => {
+test('buildModuleAuth records scoped public agents, endpoints and websockets on the context', () => {
   const context = makeContext([
     {
       id: 'crm',
-      manifest: { auth: { api: { public: ['sign-up'] }, websockets: { public: ['status'] } } },
+      manifest: {
+        auth: {
+          agents: { public: ['concierge'] },
+          api: { public: ['sign-up'] },
+          websockets: { public: ['status'] },
+        },
+      },
     },
   ]);
   const components = { auth: configuredAuth() };
   buildModuleAuth({ components, context, moduleEntries: [{ id: 'crm' }] });
   expect(context.moduleAuthPublicEntities).toEqual({
+    agents: ['crm/concierge'],
     api: ['crm/sign-up'],
     websockets: ['crm/status'],
   });
+  expect(components.auth.agents).toBe(undefined);
   expect(components.auth.api).toBe(undefined);
   expect(components.auth.websockets).toBe(undefined);
+  expect(context.logger.info).toHaveBeenCalledWith(
+    'Module "crm" declared agent "crm/concierge" public.'
+  );
   expect(context.logger.info).toHaveBeenCalledWith(
     'Module "crm" declared endpoint "crm/sign-up" public.'
   );
@@ -318,11 +329,17 @@ test('buildModuleAuth records scoped public endpoints and websockets on the cont
   );
 });
 
-test('buildModuleAuth public endpoints and websockets are inert without app auth', () => {
+test('buildModuleAuth public agents, endpoints and websockets are inert without app auth', () => {
   const context = makeContext([
     {
       id: 'crm',
-      manifest: { auth: { api: { public: ['sign-up'] }, websockets: { public: ['status'] } } },
+      manifest: {
+        auth: {
+          agents: { public: ['concierge'] },
+          api: { public: ['sign-up'] },
+          websockets: { public: ['status'] },
+        },
+      },
     },
   ]);
   const components = { auth: {} };

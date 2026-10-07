@@ -16,14 +16,23 @@
 
 import { type } from '@lowdefy/helpers';
 
-// A module endpoint or websocket needs a signed-in caller unless the module
-// declares it public (manifest auth.api.public or auth.websockets.public) or
-// the app's rules for the entity make it public explicitly: public: true, or a
-// public list (under which an unlisted id is protected already). With no rule,
-// or a protected list that does not name it, an app item resolves public by
-// default; a module item is protected instead, because the app developer did
-// not write it and nothing prompts them to protect it. Without app auth there
-// is no caller to gate, so module items follow the app's rules unchanged.
+// Agents are served from the API surface, so the app's auth.api rules govern
+// them as they do endpoints.
+const appRuleSections = {
+  agents: 'api',
+  api: 'api',
+  websockets: 'websockets',
+};
+
+// A module agent, endpoint or websocket needs a signed-in caller unless the
+// module declares it public (manifest auth.agents.public, auth.api.public or
+// auth.websockets.public) or the app's rules for it make it public
+// explicitly: public: true, or a public list (under which an unlisted id is
+// protected already). With no rule, or a protected list that does not name it,
+// an app item resolves public by default; a module item is protected instead,
+// because the app developer did not write it and nothing prompts them to
+// protect it. Without app auth there is no caller to gate, so module items
+// follow the app's rules unchanged.
 // Returns the module item ids to add to the protected ids, and the
 // module-declared public ids, which stay public in every mode.
 function getModuleEntityAuth({ components, context, entity }) {
@@ -31,8 +40,8 @@ function getModuleEntityAuth({ components, context, entity }) {
   if (components.auth.configured !== true) {
     return { protectedIds: [], publicIds };
   }
-  const entityConfig = components.auth[entity];
-  if (entityConfig.public === true || type.isArray(entityConfig.public)) {
+  const appRule = components.auth[appRuleSections[entity]];
+  if (appRule.public === true || type.isArray(appRule.public)) {
     return { protectedIds: [], publicIds };
   }
   return { protectedIds: context.moduleEntityIds?.[entity] ?? [], publicIds };

@@ -19,6 +19,7 @@
 import { isReserved, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 import getAgentRoles from './getAgentRoles.js';
+import getModuleEntityAuth from './getModuleEntityAuth.js';
 import getProtectedAgents from './getProtectedAgents.js';
 import { isInPatternList } from './matchPattern.js';
 
@@ -36,7 +37,11 @@ function buildAgentAuth({ components, context }) {
       );
     }
   });
-  const protectedAgents = getProtectedAgents({ components });
+  const moduleAuth = getModuleEntityAuth({ components, context, entity: 'agents' });
+  const protectedAgents = [
+    ...getProtectedAgents({ components }),
+    ...moduleAuth.protectedIds,
+  ].filter((id) => !moduleAuth.publicIds.includes(id));
   const agentRoles = getAgentRoles({ components });
   let configPublicApi = [];
   if (type.isArray(components.auth.api.public)) {

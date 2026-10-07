@@ -1018,6 +1018,39 @@ api:
   );
 });
 
+test('resolveFullManifest refuses a public agent the module does not ship', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+auth:
+  agents:
+    public:
+      - concierge
+agents:
+  - id: triage
+    type: ClaudeAgent
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await resolveLocalManifest({
+    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  await expect(resolveFullManifest({ entryId: 'my-mod', context })).rejects.toThrow(
+    'Module "my-mod" manifest "auth.agents.public" lists "concierge", but the module ships no agent with that id.'
+  );
+});
+
 describe('operator-generated components sections', () => {
   // Components are record-ified by the exportables pass (Phase C.5), which
   // runs after the header parse — drive both, as buildModuleDefs does.

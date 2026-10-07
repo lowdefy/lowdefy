@@ -19,14 +19,14 @@ import { ConfigError } from '@lowdefy/errors';
 
 import authPageRoles from './buildAuth/authPageRoles.js';
 
-const allowedKeys = ['api', 'hooks', 'pages', 'public', 'websockets'];
+const allowedKeys = ['agents', 'api', 'hooks', 'pages', 'public', 'websockets'];
 
 function contentKeys(object) {
   return Object.keys(object).filter((key) => !key.startsWith('~'));
 }
 
-// Validates auth.api or auth.websockets: an object whose only key, public,
-// lists ids of items the manifest ships.
+// Validates auth.agents, auth.api or auth.websockets: an object whose only
+// key, public, lists ids of items the manifest ships.
 function validatePublicItems({ auth, entity, entryId, filePath, items, label }) {
   const section = auth[entity];
   if (type.isNone(section)) {
@@ -75,8 +75,8 @@ function validatePublicItems({ auth, entity, entryId, filePath, items, label }) 
 // module-local ids here - buildModuleAuth resolves them to scoped ids per
 // module entry, and the merged result is validated again by buildAuth
 // (hook points, endpoint existence and type) exactly as hand-written config.
-// Each public endpoint or websocket id must name one the manifest ships.
-function validateModuleAuthManifest({ api, auth, entryId, filePath, websockets }) {
+// Each public agent, endpoint or websocket id must name one the manifest ships.
+function validateModuleAuthManifest({ agents, api, auth, entryId, filePath, websockets }) {
   if (type.isNone(auth)) {
     return;
   }
@@ -164,6 +164,7 @@ function validateModuleAuthManifest({ api, auth, entryId, filePath, websockets }
     }
   }
 
+  validatePublicItems({ auth, entity: 'agents', entryId, filePath, items: agents, label: 'agent' });
   validatePublicItems({ auth, entity: 'api', entryId, filePath, items: api, label: 'endpoint' });
   validatePublicItems({
     auth,

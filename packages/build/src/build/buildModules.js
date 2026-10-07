@@ -57,7 +57,7 @@ function validateModuleSecrets({ content, manifest, entryId }) {
 function buildModules({ components, context }) {
   const moduleEntries = components.modules ?? [];
   delete components.modules;
-  context.moduleEntityIds = { api: [], websockets: [] };
+  context.moduleEntityIds = { agents: [], api: [], websockets: [] };
 
   for (const entry of moduleEntries) {
     const moduleEntry = context.modules[entry.id];
@@ -137,6 +137,7 @@ function buildModules({ components, context }) {
       agent.id = `${entry.id}/${agent.id}`;
       components.agents = components.agents ?? [];
       components.agents.push(agent);
+      context.moduleEntityIds.agents.push(agent.id);
     }
 
     // Process notifications
@@ -156,8 +157,8 @@ function buildModules({ components, context }) {
   }
 
   // Contribute manifest auth wiring (hooks, authPages roles, public pages,
-  // endpoints and websockets) with scoped ids - buildAuth validates the merged result
-  // downstream.
+  // agents, endpoints and websockets) with scoped ids - buildAuth validates the
+  // merged result downstream.
   buildModuleAuth({ components, context, moduleEntries });
 
   validateTenantRemaps({ components, context, moduleEntries });
