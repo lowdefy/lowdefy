@@ -618,19 +618,26 @@ api:
             _step: research.text
 ```
 
-To let the agent see files, pass them with `files`. Here an endpoint signs a link to a ticket's screenshot with an S3 request and hands it to the agent:
+To let the agent see files, pass them with `files`. Here an endpoint reads a ticket, signs a link to its screenshot with an S3 request and hands it to the agent. The storage key comes from the ticket, not from the payload, so a caller names a ticket and cannot have any file in the bucket signed:
 
 ```yaml
 api:
   - id: scope-ticket
     type: Api
     routine:
+      - id: get_ticket
+        type: MongoDBFindOne
+        connectionId: tickets
+        properties:
+          query:
+            _id:
+              _payload: ticket_id
       - id: screenshot_link
         type: AwsS3PresignedGetObject
         connectionId: files
         properties:
           key:
-            _payload: screenshot_key
+            _step: get_ticket.screenshot_key
           expires: 600
       - id: scope
         type: CallAgent
@@ -639,7 +646,7 @@ api:
           prompt:
             _string.concat:
               - 'Scope this ticket: '
-              - _payload: description
+              - _step: get_ticket.description
           files:
             - url:
                 _step: screenshot_link
