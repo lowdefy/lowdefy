@@ -4,13 +4,13 @@
     "html": {
       "appendBody": "",
       "appendHead": "",
-      "~k": "20"
+      "~k": "21"
     },
     "email": {
       "companyName": "Module Websockets Test",
-      "~k": "21"
+      "~k": "22"
     },
-    "~k": "1z"
+    "~k": "20"
   },
   "appMeta.json": {
     "slug": null,
@@ -21,7 +21,7 @@
     "lowdefyVersion": "local",
     "gitSha": "test-git-sha-for-snapshots",
     "buildId": "<BUILD_ID>",
-    "~k": "22"
+    "~k": "23"
   },
   "auth.json": {
     "secret": {
@@ -51,7 +51,7 @@
           "~k": "c"
         }
       ],
-      "~k": "26"
+      "~k": "27"
     },
     "websockets": {
       "protected": true,
@@ -69,33 +69,33 @@
     "configured": true,
     "api": {
       "roles": {
-        "~k": "28"
+        "~k": "29"
       },
-      "~k": "27"
+      "~k": "28"
     },
     "pages": {
       "roles": {
-        "~k": "2a"
+        "~k": "2b"
       },
-      "~k": "29"
+      "~k": "2a"
     },
     "providers": {
       "~arr": [],
-      "~k": "2b"
+      "~k": "2c"
     },
     "hooks": {
       "~arr": [],
-      "~k": "2c"
+      "~k": "2d"
     },
     "strategies": {
       "~arr": [],
-      "~k": "2d"
+      "~k": "2e"
     },
     "organizations": {
       "policy": "pinned",
       "org": "default",
       "signup": "invite-only",
-      "~k": "2e"
+      "~k": "2f"
     },
     "authPages": {
       "signIn": "/login",
@@ -104,7 +104,7 @@
       "forgotPassword": "/forgot-password",
       "resetPassword": "/reset-password",
       "verifyEmail": "/verify-email",
-      "~k": "2f"
+      "~k": "2g"
     },
     "session": {
       "expiresIn": 604800,
@@ -112,30 +112,30 @@
       "cookieCache": {
         "enabled": false,
         "maxAge": 300,
-        "~k": "2h"
+        "~k": "2i"
       },
       "crossSubDomainCookies": {
         "enabled": false,
-        "~k": "2i"
+        "~k": "2j"
       },
-      "~k": "2g"
+      "~k": "2h"
     },
     "account": {
       "accountLinking": {
         "enabled": true,
         "trustedProviders": {
           "~arr": [],
-          "~k": "2l"
+          "~k": "2m"
         },
-        "~k": "2k"
+        "~k": "2l"
       },
-      "~k": "2j"
+      "~k": "2k"
     },
     "rateLimit": {
       "enabled": true,
       "window": 60,
       "max": 100,
-      "~k": "2m"
+      "~k": "2n"
     },
     "pagesProtectedByDefault": false,
     "~k": "6"
@@ -146,7 +146,7 @@
     "@lowdefy/blocks-loaders"
   ],
   "config.json": {
-    "~k": "23"
+    "~k": "24"
   },
   "connections/app-users.json": {
     "id": "connection:app-users",
@@ -331,110 +331,110 @@
       "~l": 15
     },
     "10": {
-      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button]",
-      "~k_parent": "z",
+      "key": "root.pages[1:help/thread:Box].blocks",
+      "~k_parent": "u",
       "~r": "pages.0",
-      "~l": 10
+      "~l": 11
     },
     "11": {
-      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button].properties",
+      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button]",
       "~k_parent": "10",
       "~r": "pages.0",
       "~l": 12
     },
     "12": {
-      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button].events",
-      "~k_parent": "10",
+      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button].properties",
+      "~k_parent": "11",
       "~r": "pages.0",
       "~l": 14
     },
     "13": {
-      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button].events.onClick",
-      "~k_parent": "12",
-      "~r": "pages.0",
-      "~l": 15
-    },
-    "14": {
-      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button].events.onClick[0:unsubscribe:Unsubscribe]",
-      "~k_parent": "13",
+      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button].events",
+      "~k_parent": "11",
       "~r": "pages.0",
       "~l": 16
     },
+    "14": {
+      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button].events.onClick",
+      "~k_parent": "13",
+      "~r": "pages.0",
+      "~l": 17
+    },
     "15": {
-      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button].events.onClick[0:unsubscribe:Unsubscribe].params",
+      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button].events.onClick[0:unsubscribe:Unsubscribe]",
       "~k_parent": "14",
       "~r": "pages.0",
       "~l": 18
     },
     "16": {
-      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button].events.onClick[1:subscribe:Subscribe]",
-      "~k_parent": "13",
+      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button].events.onClick[0:unsubscribe:Unsubscribe].params",
+      "~k_parent": "15",
       "~r": "pages.0",
-      "~l": 21
+      "~l": 20
     },
     "17": {
-      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button].events.onClick[1:subscribe:Subscribe].params",
-      "~k_parent": "16",
+      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button].events.onClick[1:subscribe:Subscribe]",
+      "~k_parent": "14",
       "~r": "pages.0",
       "~l": 23
     },
     "18": {
+      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button].events.onClick[1:subscribe:Subscribe].params",
+      "~k_parent": "17",
+      "~r": "pages.0",
+      "~l": 25
+    },
+    "19": {
       "key": "root.websockets",
       "~k_parent": "5"
     },
-    "19": {
-      "key": "root.websockets[0:help/messages:MongoDBChangeStream]",
-      "~k_parent": "18",
-      "~r": "websockets.0",
-      "~l": 1
-    },
     "20": {
-      "key": "root.app.html",
-      "~k_parent": "1z"
+      "key": "root.app",
+      "~k_parent": "5"
     },
     "21": {
-      "key": "root.app.email",
-      "~k_parent": "1z"
+      "key": "root.app.html",
+      "~k_parent": "20"
     },
     "22": {
+      "key": "root.app.email",
+      "~k_parent": "20"
+    },
+    "23": {
       "key": "root.appMeta",
       "~k_parent": "5"
     },
-    "23": {
+    "24": {
       "key": "root.config",
       "~k_parent": "5"
     },
-    "24": {
+    "25": {
       "key": "root.logger",
       "~k_parent": "5"
     },
-    "26": {
+    "27": {
       "key": "root.auth.roles",
       "~k_parent": "6"
     },
-    "27": {
+    "28": {
       "key": "root.auth.api",
       "~k_parent": "6"
     },
-    "28": {
-      "key": "root.auth.api.roles",
-      "~k_parent": "27"
-    },
     "29": {
-      "key": "root.auth.pages",
-      "~k_parent": "6"
+      "key": "root.auth.api.roles",
+      "~k_parent": "28"
     },
     "30": {
-      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button].events.onClick",
-      "~k_parent": "12"
+      "key": "root.pages[1:help/thread:Box].slots.content",
+      "~k_parent": "2z"
     },
     "31": {
-      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button].events.onClick.catch",
-      "~k_parent": "30"
+      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button].events.onClick",
+      "~k_parent": "13"
     },
     "32": {
-      "key": "root.pages[1:help/thread:Box].subscriptions[0].client",
-      "~k_parent": "w"
+      "key": "root.pages[1:help/thread:Box].blocks[0:resubscribe:Button].events.onClick.catch",
+      "~k_parent": "31"
     },
     "33": {
       "key": "root.pages[1:help/thread:Box].subscriptions[0].events",
@@ -442,11 +442,11 @@
     },
     "34": {
       "key": "root.pages[1:help/thread:Box].requests",
-      "~k_parent": "2w"
+      "~k_parent": "2x"
     },
     "35": {
       "key": "root.pages[2:404:Result]",
-      "~k_parent": "2n"
+      "~k_parent": "2o"
     },
     "36": {
       "key": "root.pages[2:404:Result].style",
@@ -458,7 +458,7 @@
     },
     "38": {
       "key": "root.pages[2:404:Result].slots.extra.blocks[0:home:Button].events.onClick",
-      "~k_parent": "1v"
+      "~k_parent": "1w"
     },
     "39": {
       "key": "root.pages[2:404:Result].slots.extra.blocks[0:home:Button].events.onClick.catch",
@@ -718,234 +718,236 @@
       "~l": 7
     },
     "z": {
-      "key": "root.pages[1:help/thread:Box].blocks",
-      "~k_parent": "u",
+      "key": "root.pages[1:help/thread:Box].subscriptions[0].client",
+      "~k_parent": "w",
       "~r": "pages.0",
       "~l": 9
     },
     "1a": {
-      "key": "root.websockets[0:help/messages:MongoDBChangeStream].properties",
+      "key": "root.websockets[0:help/messages:MongoDBChangeStream]",
       "~k_parent": "19",
+      "~r": "websockets.0",
+      "~l": 1
+    },
+    "1b": {
+      "key": "root.websockets[0:help/messages:MongoDBChangeStream].properties",
+      "~k_parent": "1a",
       "~r": "websockets.0",
       "~l": 5
     },
-    "1b": {
+    "1c": {
       "key": "root.websockets[0:help/messages:MongoDBChangeStream].properties.pipeline",
-      "~k_parent": "1a",
+      "~k_parent": "1b",
       "~r": "websockets.0",
       "~l": 6
     },
-    "1c": {
-      "key": "root.websockets[0:help/messages:MongoDBChangeStream].properties.pipeline[0]",
-      "~k_parent": "1b",
-      "~r": "websockets.0",
-      "~l": 7
-    },
     "1d": {
-      "key": "root.websockets[0:help/messages:MongoDBChangeStream].properties.pipeline[0].$match",
+      "key": "root.websockets[0:help/messages:MongoDBChangeStream].properties.pipeline[0]",
       "~k_parent": "1c",
       "~r": "websockets.0",
       "~l": 7
     },
     "1e": {
-      "key": "root.websockets[0:help/messages:MongoDBChangeStream].properties.pipeline[0].$match.fullDocument.ticket_id",
+      "key": "root.websockets[0:help/messages:MongoDBChangeStream].properties.pipeline[0].$match",
       "~k_parent": "1d",
+      "~r": "websockets.0",
+      "~l": 7
+    },
+    "1f": {
+      "key": "root.websockets[0:help/messages:MongoDBChangeStream].properties.pipeline[0].$match.fullDocument.ticket_id",
+      "~k_parent": "1e",
       "~r": "websockets.0",
       "~l": 9
     },
-    "1f": {
+    "1g": {
       "key": "root.websockets[1:app-users:MongoDBChangeStream]",
-      "~k_parent": "18",
+      "~k_parent": "19",
       "~r": "websockets.1",
       "~l": 1
     },
-    "1g": {
+    "1h": {
       "key": "root.websockets[1:app-users:MongoDBChangeStream].properties",
-      "~k_parent": "1f",
+      "~k_parent": "1g",
       "~r": "websockets.1",
       "~l": 5
     },
-    "1h": {
+    "1i": {
       "key": "root.websockets[1:app-users:MongoDBChangeStream].properties.pipeline",
-      "~k_parent": "1g",
+      "~k_parent": "1h",
       "~r": "websockets.1",
       "~l": 6
     },
-    "1i": {
-      "key": "root.websockets[1:app-users:MongoDBChangeStream].properties.pipeline[0]",
-      "~k_parent": "1h",
-      "~r": "websockets.1",
-      "~l": 7
-    },
     "1j": {
-      "key": "root.websockets[1:app-users:MongoDBChangeStream].properties.pipeline[0].$match",
+      "key": "root.websockets[1:app-users:MongoDBChangeStream].properties.pipeline[0]",
       "~k_parent": "1i",
       "~r": "websockets.1",
       "~l": 7
     },
-    "1l": {
+    "1k": {
+      "key": "root.websockets[1:app-users:MongoDBChangeStream].properties.pipeline[0].$match",
+      "~k_parent": "1j",
+      "~r": "websockets.1",
+      "~l": 7
+    },
+    "1m": {
       "key": "root.pages",
       "~k_parent": "5"
     },
-    "1m": {
-      "key": "root.pages[2:404:Result]",
-      "~k_parent": "1l"
-    },
     "1n": {
-      "key": "root.pages[2:404:Result].style",
+      "key": "root.pages[2:404:Result]",
       "~k_parent": "1m"
     },
     "1o": {
-      "key": "root.pages[2:404:Result].properties",
-      "~k_parent": "1m"
+      "key": "root.pages[2:404:Result].style",
+      "~k_parent": "1n"
     },
     "1p": {
-      "key": "root.pages[2:404:Result].properties.icon",
-      "~k_parent": "1o"
+      "key": "root.pages[2:404:Result].properties",
+      "~k_parent": "1n"
     },
     "1q": {
-      "key": "root.pages[2:404:Result].slots",
-      "~k_parent": "1m"
+      "key": "root.pages[2:404:Result].properties.icon",
+      "~k_parent": "1p"
     },
     "1r": {
-      "key": "root.pages[2:404:Result].slots.extra",
-      "~k_parent": "1q"
+      "key": "root.pages[2:404:Result].slots",
+      "~k_parent": "1n"
     },
     "1s": {
-      "key": "root.pages[2:404:Result].slots.extra.blocks",
+      "key": "root.pages[2:404:Result].slots.extra",
       "~k_parent": "1r"
     },
     "1t": {
-      "key": "root.pages[2:404:Result].slots.extra.blocks[0:home:Button]",
+      "key": "root.pages[2:404:Result].slots.extra.blocks",
       "~k_parent": "1s"
     },
     "1u": {
-      "key": "root.pages[2:404:Result].slots.extra.blocks[0:home:Button].properties",
+      "key": "root.pages[2:404:Result].slots.extra.blocks[0:home:Button]",
       "~k_parent": "1t"
     },
     "1v": {
-      "key": "root.pages[2:404:Result].slots.extra.blocks[0:home:Button].events",
-      "~k_parent": "1t"
+      "key": "root.pages[2:404:Result].slots.extra.blocks[0:home:Button].properties",
+      "~k_parent": "1u"
     },
     "1w": {
-      "key": "root.pages[2:404:Result].slots.extra.blocks[0:home:Button].events.onClick",
-      "~k_parent": "1v"
+      "key": "root.pages[2:404:Result].slots.extra.blocks[0:home:Button].events",
+      "~k_parent": "1u"
     },
     "1x": {
-      "key": "root.pages[2:404:Result].slots.extra.blocks[0:home:Button].events.onClick[0:home:Link]",
+      "key": "root.pages[2:404:Result].slots.extra.blocks[0:home:Button].events.onClick",
       "~k_parent": "1w"
     },
     "1y": {
-      "key": "root.pages[2:404:Result].slots.extra.blocks[0:home:Button].events.onClick[0:home:Link].params",
+      "key": "root.pages[2:404:Result].slots.extra.blocks[0:home:Button].events.onClick[0:home:Link]",
       "~k_parent": "1x"
     },
     "1z": {
-      "key": "root.app",
-      "~k_parent": "5"
+      "key": "root.pages[2:404:Result].slots.extra.blocks[0:home:Button].events.onClick[0:home:Link].params",
+      "~k_parent": "1y"
     },
     "2a": {
-      "key": "root.auth.pages.roles",
-      "~k_parent": "29"
+      "key": "root.auth.pages",
+      "~k_parent": "6"
     },
     "2b": {
+      "key": "root.auth.pages.roles",
+      "~k_parent": "2a"
+    },
+    "2c": {
       "key": "root.auth.providers",
       "~k_parent": "6"
     },
-    "2c": {
+    "2d": {
       "key": "root.auth.hooks",
       "~k_parent": "6"
     },
-    "2d": {
+    "2e": {
       "key": "root.auth.strategies",
       "~k_parent": "6"
     },
-    "2e": {
+    "2f": {
       "key": "root.auth.organizations",
       "~k_parent": "6"
     },
-    "2f": {
+    "2g": {
       "key": "root.auth.authPages",
       "~k_parent": "6"
     },
-    "2g": {
+    "2h": {
       "key": "root.auth.session",
       "~k_parent": "6"
     },
-    "2h": {
-      "key": "root.auth.session.cookieCache",
-      "~k_parent": "2g"
-    },
     "2i": {
-      "key": "root.auth.session.crossSubDomainCookies",
-      "~k_parent": "2g"
+      "key": "root.auth.session.cookieCache",
+      "~k_parent": "2h"
     },
     "2j": {
+      "key": "root.auth.session.crossSubDomainCookies",
+      "~k_parent": "2h"
+    },
+    "2k": {
       "key": "root.auth.account",
       "~k_parent": "6"
     },
-    "2k": {
-      "key": "root.auth.account.accountLinking",
-      "~k_parent": "2j"
-    },
     "2l": {
-      "key": "root.auth.account.accountLinking.trustedProviders",
+      "key": "root.auth.account.accountLinking",
       "~k_parent": "2k"
     },
     "2m": {
+      "key": "root.auth.account.accountLinking.trustedProviders",
+      "~k_parent": "2l"
+    },
+    "2n": {
       "key": "root.auth.rateLimit",
       "~k_parent": "6"
     },
-    "2n": {
+    "2o": {
       "key": "root.pages",
       "~k_parent": "5"
     },
-    "2o": {
-      "key": "root.pages[0:home:Box]",
-      "~k_parent": "2n"
-    },
     "2p": {
-      "key": "root.pages[0:home:Box].auth",
+      "key": "root.pages[0:home:Box]",
       "~k_parent": "2o"
     },
     "2q": {
-      "key": "root.pages[0:home:Box].slots",
-      "~k_parent": "2o"
+      "key": "root.pages[0:home:Box].auth",
+      "~k_parent": "2p"
     },
     "2r": {
-      "key": "root.pages[0:home:Box].slots.content",
-      "~k_parent": "2q"
+      "key": "root.pages[0:home:Box].slots",
+      "~k_parent": "2p"
     },
     "2s": {
+      "key": "root.pages[0:home:Box].slots.content",
+      "~k_parent": "2r"
+    },
+    "2t": {
       "key": "root.pages[0:home:Box].subscriptions[0].payload",
       "~k_parent": "q"
     },
-    "2t": {
+    "2u": {
       "key": "root.pages[0:home:Box].subscriptions[0].client",
       "~k_parent": "q"
     },
-    "2u": {
+    "2v": {
       "key": "root.pages[0:home:Box].subscriptions[0].events",
       "~k_parent": "q"
     },
-    "2v": {
-      "key": "root.pages[0:home:Box].requests",
-      "~k_parent": "2o"
-    },
     "2w": {
-      "key": "root.pages[1:help/thread:Box]",
-      "~k_parent": "2n"
+      "key": "root.pages[0:home:Box].requests",
+      "~k_parent": "2p"
     },
     "2x": {
-      "key": "root.pages[1:help/thread:Box].auth",
-      "~k_parent": "2w"
+      "key": "root.pages[1:help/thread:Box]",
+      "~k_parent": "2o"
     },
     "2y": {
-      "key": "root.pages[1:help/thread:Box].slots",
-      "~k_parent": "2w"
+      "key": "root.pages[1:help/thread:Box].auth",
+      "~k_parent": "2x"
     },
     "2z": {
-      "key": "root.pages[1:help/thread:Box].slots.content",
-      "~k_parent": "2y"
+      "key": "root.pages[1:help/thread:Box].slots",
+      "~k_parent": "2x"
     },
     "3a": {
       "key": "root.pages[2:404:Result].auth",
@@ -961,7 +963,7 @@
     },
     "3d": {
       "key": "root.websockets[0:help/messages:MongoDBChangeStream].auth",
-      "~k_parent": "19"
+      "~k_parent": "1a"
     },
     "3e": {
       "key": "root.websockets[0:help/messages:MongoDBChangeStream].auth.roles",
@@ -969,7 +971,7 @@
     },
     "3f": {
       "key": "root.websockets[1:app-users:MongoDBChangeStream].auth",
-      "~k_parent": "1f"
+      "~k_parent": "1g"
     },
     "3g": {
       "key": "root.websockets[1:app-users:MongoDBChangeStream].auth.roles",
@@ -1314,7 +1316,7 @@
   },
   "layer-order.css": "/* Generated by Lowdefy build */\n@layer theme, base, antd, components, utilities;\n",
   "logger.json": {
-    "~k": "24"
+    "~k": "25"
   },
   "mcp.json": {
     "name": "lowdefy",
@@ -1522,11 +1524,11 @@
         "name": "FileSearch",
         "size": 80,
         "color": "var(--ant-color-primary)",
-        "~k": "1p"
+        "~k": "1q"
       },
       "title": "404",
       "subTitle": "Sorry, the page you are visiting does not exist.",
-      "~k": "1o"
+      "~k": "1p"
     },
     "slots": {
       "extra": {
@@ -1537,7 +1539,7 @@
               "type": "Button",
               "properties": {
                 "title": "Go to home page",
-                "~k": "1u"
+                "~k": "1v"
               },
               "events": {
                 "onClick": {
@@ -1548,12 +1550,12 @@
                         "type": "Link",
                         "params": {
                           "home": true,
-                          "~k": "1y"
+                          "~k": "1z"
                         },
-                        "~k": "1x"
+                        "~k": "1y"
                       }
                     ],
-                    "~k": "1w"
+                    "~k": "1x"
                   },
                   "catch": {
                     "~arr": [],
@@ -1561,17 +1563,17 @@
                   },
                   "~k": "38"
                 },
-                "~k": "1v"
+                "~k": "1w"
               },
               "blockId": "home",
-              "~k": "1t"
+              "~k": "1u"
             }
           ],
-          "~k": "1s"
+          "~k": "1t"
         },
-        "~k": "1r"
+        "~k": "1s"
       },
-      "~k": "1q"
+      "~k": "1r"
     },
     "auth": {
       "public": true,
@@ -1584,7 +1586,7 @@
       "~k": "3b"
     },
     "linkPaths": {
-      "~k": "1m"
+      "~k": "1n"
     },
     "requests": {
       "~arr": [],
@@ -1598,7 +1600,7 @@
     "type": "Box",
     "auth": {
       "public": true,
-      "~k": "2x"
+      "~k": "2y"
     },
     "pageId": "help/thread",
     "blockId": "help/thread",
@@ -1611,7 +1613,7 @@
               "type": "Button",
               "properties": {
                 "title": "Refresh",
-                "~k": "11"
+                "~k": "12"
               },
               "events": {
                 "onClick": {
@@ -1622,39 +1624,39 @@
                         "type": "Unsubscribe",
                         "params": {
                           "websocketId": "help/thread-messages",
-                          "~k": "15"
+                          "~k": "16"
                         },
-                        "~k": "14"
+                        "~k": "15"
                       },
                       {
                         "id": "subscribe",
                         "type": "Subscribe",
                         "params": {
                           "websocketId": "help/thread-messages",
-                          "~k": "17"
+                          "~k": "18"
                         },
-                        "~k": "16"
+                        "~k": "17"
                       }
                     ],
-                    "~k": "13"
+                    "~k": "14"
                   },
                   "catch": {
                     "~arr": [],
-                    "~k": "31"
+                    "~k": "32"
                   },
-                  "~k": "30"
+                  "~k": "31"
                 },
-                "~k": "12"
+                "~k": "13"
               },
               "blockId": "resubscribe",
-              "~k": "10"
+              "~k": "11"
             }
           ],
-          "~k": "z"
+          "~k": "10"
         },
-        "~k": "2z"
+        "~k": "30"
       },
-      "~k": "2y"
+      "~k": "2z"
     },
     "subscriptions": {
       "~arr": [
@@ -1668,9 +1670,10 @@
             "~k": "x"
           },
           "client": {
+            "subscribeOnMount": false,
             "maxMessages": 100,
             "throttleRender": 250,
-            "~k": "32"
+            "~k": "z"
           },
           "events": {
             "~k": "33"
@@ -1690,14 +1693,14 @@
       "~k": "34"
     },
     "typesKey": "df3ac16083aa",
-    "~k": "2w"
+    "~k": "2x"
   },
   "pages/home.json": {
     "id": "page:home",
     "type": "Box",
     "auth": {
       "public": true,
-      "~k": "2p"
+      "~k": "2q"
     },
     "pageId": "home",
     "blockId": "home",
@@ -1718,24 +1721,25 @@
           ],
           "~k": "r"
         },
-        "~k": "2r"
+        "~k": "2s"
       },
-      "~k": "2q"
+      "~k": "2r"
     },
     "subscriptions": {
       "~arr": [
         {
           "websocketId": "help/user-changes",
           "payload": {
-            "~k": "2s"
+            "~k": "2t"
           },
           "client": {
             "maxMessages": 100,
             "throttleRender": 250,
-            "~k": "2t"
+            "subscribeOnMount": true,
+            "~k": "2u"
           },
           "events": {
-            "~k": "2u"
+            "~k": "2v"
           },
           "pageId": "home",
           "id": "subscription:home:help/user-changes",
@@ -1749,10 +1753,10 @@
     },
     "requests": {
       "~arr": [],
-      "~k": "2v"
+      "~k": "2w"
     },
     "typesKey": "9c5c8deab66b",
-    "~k": "2o"
+    "~k": "2p"
   },
   "plugins/actionSchemas.json": {
     "Unsubscribe": {
@@ -7592,7 +7596,7 @@
       "path": "home",
       "auth": {
         "public": true,
-        "~k": "2p"
+        "~k": "2q"
       }
     },
     {
@@ -7600,7 +7604,7 @@
       "path": "help/thread",
       "auth": {
         "public": true,
-        "~k": "2x"
+        "~k": "2y"
       }
     },
     {
@@ -7896,16 +7900,16 @@
               "operationType": "insert",
               "fullDocument.ticket_id": {
                 "_payload": "ticket_id",
-                "~k": "1e"
+                "~k": "1f"
               },
-              "~k": "1d"
+              "~k": "1e"
             },
-            "~k": "1c"
+            "~k": "1d"
           }
         ],
-        "~k": "1b"
+        "~k": "1c"
       },
-      "~k": "1a"
+      "~k": "1b"
     },
     "auth": {
       "public": false,
@@ -7918,7 +7922,7 @@
       "~k": "3d"
     },
     "websocketId": "help/thread-messages",
-    "~k": "19"
+    "~k": "1a"
   },
   "websockets/help/user-changes.json": {
     "id": "websocket:help/user-changes",
@@ -7930,14 +7934,14 @@
           {
             "$match": {
               "operationType": "update",
-              "~k": "1j"
+              "~k": "1k"
             },
-            "~k": "1i"
+            "~k": "1j"
           }
         ],
-        "~k": "1h"
+        "~k": "1i"
       },
-      "~k": "1g"
+      "~k": "1h"
     },
     "auth": {
       "public": false,
@@ -7950,6 +7954,6 @@
       "~k": "3f"
     },
     "websocketId": "help/user-changes",
-    "~k": "1f"
+    "~k": "1g"
   }
 }

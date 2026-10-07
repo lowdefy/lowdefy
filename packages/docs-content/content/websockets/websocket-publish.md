@@ -81,18 +81,15 @@ Payload values keep their types across the wire — dates arrive as dates.
 
 ### `Subscribe` and `Unsubscribe`
 
-Page `subscriptions` cover most cases, but the actions give dynamic control — subscribe after an interaction, or re-subscribe with a fresh payload:
+Page `subscriptions` cover most cases, but the actions give dynamic control — subscribe after an interaction, or re-subscribe with a fresh payload. Both take the id of a subscription declared on the page; a subscription with `client.subscribeOnMount: false` opens only with `Subscribe`:
 
 ```yaml
-- id: change_filter
-  type: Unsubscribe
-  params: activity_feed
 - id: resubscribe
   type: Subscribe
   params: activity_feed # payload re-evaluates from current state
 ```
 
-`Subscribe` on an already-subscribed channel does nothing. Channels subscribed with the action are still cleaned up when the page unmounts.
+`Subscribe` on an already-subscribed channel evaluates the payload again: with a changed payload it replaces the channel (its state starts empty), with the same payload it does nothing. `Unsubscribe` on a channel that is not open does nothing. Channels subscribed with the action are still cleaned up when the page unmounts.
 
 ## Deployment
 

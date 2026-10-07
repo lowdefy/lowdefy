@@ -1,6 +1,6 @@
 # Page Subscriptions
 
-Pages subscribe to websocket channels with the `subscriptions` key. The engine subscribes when the page mounts and unsubscribes when the user navigates away — no cleanup wiring needed.
+Pages subscribe to websocket channels with the `subscriptions` key. The engine subscribes when the page mounts (unless the subscription sets `client.subscribeOnMount: false`) and unsubscribes when the user navigates away — no cleanup wiring needed.
 
 ## Subscription Definition
 
@@ -9,6 +9,7 @@ Pages subscribe to websocket channels with the `subscriptions` key. The engine s
 - `events: object`: Actions for `onMessage`, `onSubscribe` and `onError`.
 - `client.maxMessages: number`: How many messages to retain in `messages` (default 100, oldest dropped first).
 - `client.throttleRender: number`: Minimum milliseconds between renders while messages stream in (default 250, minimum 100).
+- `client.subscribeOnMount: boolean`: Subscribe when the page mounts (default `true`). Set `false` to open the channel only with the [`Subscribe`](/websocket-publish) action.
 
 ## Reacting to Messages
 
@@ -97,4 +98,39 @@ websockets:
               _user: id
 ```
 
-The payload is evaluated once, at subscribe time. To subscribe with new values — say a changed filter — run [`Unsubscribe` then `Subscribe`](/websocket-publish).
+The payload is evaluated once, at subscribe time. To subscribe with new values — say a changed filter — run [`Subscribe`](/websocket-publish) again: with a changed payload it replaces the open channel, and the channel state starts empty.
+
+## Subscribing on Demand
+
+A subscription with `client.subscribeOnMount: false` is declared on the page but opens only when a [`Subscribe`](/websocket-publish) action runs, and [`Unsubscribe`](/websocket-publish) closes it. Use it for a channel the page needs only some of the time, such as a chat panel that holds a change stream only while it is open:
+
+```yaml
+subscriptions:
+  - websocketId: thread_messages
+    payload:
+      ticket_id:
+        _state: ticket_id
+    client:
+      subscribeOnMount: false
+blocks:
+  - id: open_thread
+    type: Button
+    events:
+      onClick:
+        - id: set_ticket
+          type: SetState
+          params:
+            ticket_id: T-1
+        - id: subscribe
+          type: Subscribe
+          params: thread_messages # payload evaluates now, with ticket_id T-1
+  - id: close_thread
+    type: Button
+    events:
+      onClick:
+        - id: unsubscribe
+          type: Unsubscribe
+          params: thread_messages
+```
+
+Until it is subscribed, the channel's `_websocket` state reads as not connected with no messages. The page still closes it when it unmounts.

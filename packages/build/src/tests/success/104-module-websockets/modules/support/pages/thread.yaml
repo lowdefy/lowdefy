@@ -6,6 +6,8 @@ subscriptions:
     payload:
       ticket_id:
         _state: ticket_id
+    client:
+      subscribeOnMount: false
 blocks:
   - id: resubscribe
     type: Button

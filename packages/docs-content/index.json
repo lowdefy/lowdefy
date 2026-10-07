@@ -3504,7 +3504,7 @@
         "version.yaml",
         "websockets/subscriptions.yaml"
       ],
-      "hash": "0bbed24fa2de2ed5a60f1392e8163302cced7a7a5dac76a10df04a697fbafce8"
+      "hash": "72444b8a3affb6490745763e2bf2739d1be7af34c3df3b7635b7ccd73f2b9c86"
     },
     "websockets/websocket-publish": {
       "files": [
@@ -3519,7 +3519,7 @@
         "version.yaml",
         "websockets/publish.yaml"
       ],
-      "hash": "2f37d8c5e6f88c8ccd486d22bb4642c9fa3545a153022f680a4a7dac57cd8a5d"
+      "hash": "d085beda217d73d91becd733d81a21611e1bc5592c74ed4d715d102b29a0b1ed"
     },
     "deployment/docker": {
       "files": [
