@@ -51,6 +51,7 @@ The following operators can be used during the build:
 - [_gt](/_gt)
 - [_gte](/_gte)
 - [_hash](/_hash)
+- [_hmac](/_hmac)
 - [_if](/_if)
 - [_if_none](/_if_none)
 - [_intl](/_intl)

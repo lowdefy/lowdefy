@@ -2252,6 +2252,14 @@
       "typeName": "_hash"
     },
     {
+      "slug": "operators/_hmac",
+      "title": "_hmac",
+      "section": "Operators",
+      "path": "content/operators/_hmac.md",
+      "kind": "operator",
+      "typeName": "_hmac"
+    },
+    {
       "slug": "operators/_if",
       "title": "_if",
       "section": "Operators",
@@ -6293,7 +6301,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "51e35ab96734f02f78b928379a030c858cec7f58f1149b741f71e6bb8e011eb2"
+      "hash": "b372c8637682f38cd88c3cadda105ce22022996654d0d2144e73c9d342320604"
     },
     "connections/azureblobstorage": {
       "files": [
@@ -7332,7 +7340,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "be3db3d62540d209cf437a1fa12a625d3f9fbeca4868dd4a8fa218a712f9d66a"
+      "hash": "be4cc3ad186383b22d199eee76064fc39018b7c55375f5cd8c2504cd013329f6"
     },
     "operators/_change_case": {
       "files": [
@@ -7543,6 +7551,21 @@
         "version.yaml"
       ],
       "hash": "31939497cce017e460d3f154db423406c038a4f141ea02763b4e994e4c22fb96"
+    },
+    "operators/_hmac": {
+      "files": [
+        "operators/_hmac.yaml",
+        "requests/discord_message.yaml.njk",
+        "requests/insert_feedback.yaml",
+        "requests/insert_newsletter.yaml",
+        "templates/footer.yaml.njk",
+        "templates/general.yaml.njk",
+        "templates/header.yaml",
+        "templates/operators.yaml.njk",
+        "templates/validate_email.yaml",
+        "version.yaml"
+      ],
+      "hash": "fc79f1230dffdeed8dae91bfedd6eee5415081173f290bce687ccf749be4e0dd"
     },
     "operators/_if": {
       "files": [
@@ -8382,7 +8405,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "baf2c826ef9e5458a8a5450d842be76778727ea728d7e8486870a59d5f7e15fd"
+      "hash": "c7094055be791e74ea2696adf505165fd346fcd50fae169b929e444218775cbe"
     },
     "controls/return": {
       "files": [

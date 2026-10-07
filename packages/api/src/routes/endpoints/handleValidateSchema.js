@@ -55,6 +55,8 @@ async function handleValidateSchema(context, routineContext, { step }) {
     // No cause: a UserError's cause crosses the wire as author data, and the ajv errors carry
     // server schema detail. They stay in the step result and the log.
     const error = new UserError(buildErrorMessage(result.errors, step.stepId));
+    // A webhook answers an invalid request with 400 rather than 500 (createWebhookAnswer).
+    error.isInvalidRequest = true;
     // Log under `err` — see controlThrow: only the `err` key runs the pino error
     // serializer, so `error` would drop the message from the log line.
     logger.warn({

@@ -439,13 +439,15 @@ const cases = [
 // properties otherwise.
 async function throwFromRequest(thrown) {
   const context = testContext({ logger: silentLogger });
+  async function requestResolver() {
+    throw thrown;
+  }
+  requestResolver.meta = { checkRead: false, checkWrite: false };
   return callRequestResolver(context, {
     connectionProperties: {},
     requestConfig,
     requestProperties,
-    requestResolver: async () => {
-      throw thrown;
-    },
+    requestResolver,
   }).catch((error) => error);
 }
 
