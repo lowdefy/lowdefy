@@ -69,3 +69,5 @@ pages:
   - _ref: pages/targets.yaml
   - _ref: pages/rails.yaml
   - _ref: pages/generated.yaml
+  - _ref: pages/shared_alpha.yaml
+  - _ref: pages/shared_beta.yaml

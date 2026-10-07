@@ -37,6 +37,8 @@ let logs;
 let journeyRuns;
 let currentBuildId;
 let onMutantRun;
+let removedMutants;
+let listingBodies;
 const originalExitCode = process.exitCode;
 
 function exercisedFor(pageId) {
@@ -62,6 +64,7 @@ function mutant({ id, operator, anchor }) {
     config: `root.${id}`,
     describe: `${operator} ${id}`,
     copies: [],
+    copyTargets: [],
   };
 }
 
@@ -106,13 +109,16 @@ const listing = {
 // The listing of one build: a build after the first changes the refunds page
 // only, and keys every mutant afresh.
 function listingFor(buildId) {
+  const mutants = listing.mutants.filter(({ id }) => !removedMutants.has(id));
+  const ids = mutants.map(({ id }) => id);
   if (buildId === 'build-1') {
-    return listing;
+    return { ...listing, ids, mutants };
   }
   return {
     buildId,
     artifacts: { ...listing.artifacts, 'pages/refunds.json': buildId },
-    mutants: listing.mutants.map((mutant) => ({ ...mutant, key: `${mutant.key}-${buildId}` })),
+    ids,
+    mutants: mutants.map((mutant) => ({ ...mutant, key: `${mutant.key}-${buildId}` })),
   };
 }
 
@@ -135,6 +141,8 @@ beforeEach(() => {
   journeyRuns = [];
   currentBuildId = 'build-1';
   onMutantRun = () => {};
+  removedMutants = new Set();
+  listingBodies = [];
   context = {
     directories: {
       config: configDirectory,
@@ -166,6 +174,7 @@ beforeEach(() => {
   }));
   mockPost.mockImplementation(async (target, body) => {
     if (target === `${url}/lowdefy-docs/mutants`) {
+      listingBodies.push(body);
       return { data: listingFor(currentBuildId) };
     }
     journeyRuns.push({ pageId: body.pageId, mutant: body.mutant?.key ?? null });
@@ -477,4 +486,56 @@ test('journeysHarden drops an earlier score once its journey no longer exists', 
   const report = readReport();
   expect(report.journeys.map(({ name }) => name)).toEqual(['orders']);
   expect(report.mutants.map(({ id }) => id)).not.toContain('refund');
+});
+
+test('journeysHarden drops an earlier mutant a later run did not list once its config is gone', async () => {
+  await harden({ filter: 'orders' });
+  expect(readReport().mutants.map(({ id }) => id)).toContain('alert');
+  // The orders alert block is removed; the next run measures refunds only.
+  removedMutants.add('alert');
+  await harden({ filter: 'refunds' });
+  const report = readReport();
+  expect(report.mutants.map(({ id }) => id).sort()).toEqual(['app', 'kill', 'refund']);
+  expect(report.journeys.map(({ name, killed, total }) => [name, killed, total])).toEqual([
+    ['orders', 1, 2],
+    ['refunds', 0, 2],
+  ]);
+  // The merge asked after the artifacts the earlier mutants were kept on.
+  expect(listingBodies[listingBodies.length - 1]).toEqual({
+    pages: ['orders'],
+    requests: [],
+    endpoints: [],
+    appEvents: false,
+  });
+});
+
+test('journeysHarden keeps an earlier mutant on a page that now fails to build, writes the report and names the page', async () => {
+  await harden({ filter: 'orders' });
+  // The orders page is broken: listing its mutants answers 422. Its alert
+  // block would be gone, but harden cannot know that until the page builds.
+  removedMutants.add('alert');
+  const listMutants = mockPost.getMockImplementation();
+  mockPost.mockImplementation(async (target, body) => {
+    if (target === `${url}/lowdefy-docs/mutants` && body.pages.includes('orders')) {
+      const error = new Error('Request failed with status code 422');
+      error.response = {
+        status: 422,
+        data: { error: 'Page "orders" fails to build, so its mutants cannot be listed.' },
+      };
+      throw error;
+    }
+    return listMutants(target, body);
+  });
+  await harden({ filter: 'refunds' });
+  expect(process.exitCode).toBeUndefined();
+  const report = readReport();
+  expect(report.mutants.map(({ id }) => id).sort()).toEqual(['alert', 'app', 'kill', 'refund']);
+  expect(report.journeys.map(({ name, killed, total }) => [name, killed, total])).toEqual([
+    ['orders', 1, 3],
+    ['refunds', 0, 2],
+  ]);
+  expect(logs.warn).toEqual([
+    'Kept the earlier mutants on "orders" as they were: harden could not check they still exist, since that page fails to build.',
+  ]);
+  expect(logs.info.length).toBeGreaterThan(0);
 });

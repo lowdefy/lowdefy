@@ -21,6 +21,7 @@ import computeCoverage from './coverageReport/computeCoverage.js';
 import decideFlowGrouping from './decideFlowGrouping.js';
 import loadRouteTable from './loadRouteTable.js';
 import readCommittedJourneys from './readCommittedJourneys.js';
+import readJourneyDataSetUsers from './coverageReport/readJourneyDataSetUsers.js';
 import readMeasuredRun from './readMeasuredRun.js';
 import readMutationReport from './readMutationReport.js';
 import MINING_WINDOW_MAX_DAYS from './miningWindowMaxDays.js';
@@ -132,6 +133,11 @@ async function journeysCoverage({ context }) {
     measuredRun: readMeasuredRun({ context }),
     isConfigText,
     groupFlows: flowGrouping.grouped,
+    dataSetUsers: await readJourneyDataSetUsers({
+      configDirectory: context.directories.config,
+      journeys: journeys.map(({ journey }) => journey),
+      logger,
+    }),
   });
   const mutation = scoreMutation({
     report: readMutationReport({ directories: context.directories }),

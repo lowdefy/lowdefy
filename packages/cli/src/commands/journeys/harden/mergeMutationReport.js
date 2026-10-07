@@ -20,25 +20,40 @@ function journeyKey({ file, name }) {
   return `${file}#${name}`;
 }
 
-// The mutants only this journey killed, over the merged verdicts: a journey
-// this run measured can now share a kill with one an earlier run measured, so
-// neither run's own count holds.
-function countUnique({ key, mutants }) {
-  return mutants.filter(({ ranBy }) => {
-    const killers = ranBy.filter(({ verdict }) => verdict === 'killed').map(journeyKey);
-    return killers.includes(key) && killers.every((killer) => killer === key);
-  }).length;
+// A journey's score over the merged verdicts: the mutants it killed out of
+// those it killed or survived, and `unique`, the ones only it killed. A
+// journey this run measured can now share a kill with one an earlier run
+// measured, and an earlier journey's mutants may since have gone, so neither
+// run's own count holds.
+function scoreJourney({ key, mutants }) {
+  let killed = 0;
+  let total = 0;
+  let unique = 0;
+  mutants.forEach(({ ranBy }) => {
+    const own = ranBy.filter((verdict) => journeyKey(verdict) === key);
+    if (own.some(({ verdict }) => verdict === 'killed')) {
+      killed += 1;
+      const killers = ranBy.filter(({ verdict }) => verdict === 'killed').map(journeyKey);
+      if (killers.every((killer) => killer === key)) unique += 1;
+    }
+    if (own.some(({ verdict }) => verdict === 'killed' || verdict === 'survived')) {
+      total += 1;
+    }
+  });
+  return { killed, total, unique };
 }
 
 // Folds this run's mutation report into the one an earlier run wrote, so a
 // run over some journeys keeps every other journey's score. This run's
 // journeys replace their earlier entries and verdicts; an earlier journey this
 // run did not measure keeps its entry and its mutants' verdicts while it still
-// exists (`journeyKeys`: every journey's `file#name` now). A mutant's status,
-// each journey's `unique` and the suite's `killed` and `total` are recounted
-// from the merged verdicts; the run fields (`generated`, `buildId`, `sampled`...) describe
-// this run.
-function mergeMutationReport({ previous, report, journeyKeys }) {
+// exists (`journeyKeys`: every journey's `file#name` now). A mutant this run
+// did not list is kept only while it still exists (`currentIds`: the ids the
+// dev server lists now, requestCurrentMutantIds), so removed or edited config
+// stops counting in the score. A mutant's status, each journey's score and
+// the suite's `killed` and `total` are recounted from the merged verdicts; the
+// run fields (`generated`, `buildId`, `sampled`...) describe this run.
+function mergeMutationReport({ previous, report, journeyKeys, currentIds }) {
   const ranThisRun = new Set(report.journeys.map(journeyKey));
   function keep(entry) {
     const key = journeyKey(entry);
@@ -56,7 +71,7 @@ function mergeMutationReport({ previous, report, journeyKeys }) {
   });
   const listedThisRun = new Set(report.mutants.map(({ id }) => id));
   previous.mutants
-    .filter(({ id }) => !listedThisRun.has(id))
+    .filter(({ id }) => !listedThisRun.has(id) && currentIds.has(id))
     .forEach((mutant) => {
       const ranBy = mutant.ranBy.filter(keep);
       if (ranBy.length === 0) {
@@ -68,7 +83,7 @@ function mergeMutationReport({ previous, report, journeyKeys }) {
     .sort((a, b) => journeyKey(a).localeCompare(journeyKey(b)))
     .map((entry) => ({
       ...entry,
-      unique: countUnique({ key: journeyKey(entry), mutants: merged }),
+      ...scoreJourney({ key: journeyKey(entry), mutants: merged }),
     }));
   const killed = merged.filter(({ status }) => status === 'killed').length;
   const survived = merged.filter(({ status }) => status === 'survived').length;

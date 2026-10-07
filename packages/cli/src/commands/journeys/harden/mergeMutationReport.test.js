@@ -53,6 +53,7 @@ test('mergeMutationReport replaces this run journeys, keeps the others that stil
     previous,
     report,
     journeyKeys: new Set(['a.yaml#a', 'b.yaml#b']),
+    currentIds: new Set(['shared', 'onlyB', 'gone']),
   });
   expect(merged.generated).toBe(report.generated);
   expect(merged.buildId).toBe('new');
@@ -73,6 +74,7 @@ test('mergeMutationReport keeps a changed mutant changed', () => {
     previous,
     report: { ...report, mutants: [{ id: 'shared', status: 'changed', ranBy: [] }] },
     journeyKeys: new Set(['a.yaml#a', 'b.yaml#b']),
+    currentIds: new Set(['shared', 'onlyB', 'gone']),
   });
   expect(merged.mutants[0].status).toBe('changed');
   expect(merged.killed).toBe(0);
@@ -95,6 +97,30 @@ test('mergeMutationReport recounts unique over the merged verdicts when two runs
       journeys: [journey('b', 2, 2, 2)],
     },
     journeyKeys: new Set(['a.yaml#a', 'b.yaml#b']),
+    currentIds: new Set(['shared', 'onlyB', 'gone']),
   });
   expect(merged.journeys).toEqual([journey('a', 1, 1, 0), journey('b', 2, 2, 1)]);
+});
+
+const earlierOnlyA = {
+  ...previous,
+  mutants: [
+    ...previous.mutants,
+    { id: 'removed', status: 'killed', ranBy: [verdict('a', 'killed')] },
+    { id: 'standing', status: 'survived', ranBy: [verdict('a', 'survived')] },
+  ],
+};
+
+test('mergeMutationReport keeps an earlier mutant this run did not list only while it still exists', () => {
+  const merged = mergeMutationReport({
+    previous: earlierOnlyA,
+    report,
+    journeyKeys: new Set(['a.yaml#a', 'b.yaml#b']),
+    currentIds: new Set(['standing']),
+  });
+  expect(merged.mutants.map(({ id }) => id)).toEqual(['shared', 'standing']);
+  // The removed mutant's kill no longer counts for the suite or for journey a.
+  expect(merged.killed).toBe(1);
+  expect(merged.total).toBe(2);
+  expect(merged.journeys).toEqual([journey('a', 1, 2, 1), journey('b', 0, 1)]);
 });

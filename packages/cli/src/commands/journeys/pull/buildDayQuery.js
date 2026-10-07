@@ -46,6 +46,7 @@ const LOWDEFY_PROPERTIES = [
   'lowdefy_error_name',
   'lowdefy_config_key',
   'lowdefy_invalid_blocks',
+  'lowdefy_text',
 ];
 
 // One page of one UTC day's events, keyset-paged on (timestamp, uuid): OFFSET

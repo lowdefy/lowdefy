@@ -81,6 +81,7 @@ function normalisePostHogRow({ row }) {
     currentUrl: readString(row.current_url),
     eventType: readString(row.event_type),
     elText: normaliseClickText(row.el_text),
+    controlText: normaliseClickText(row.lowdefy_text),
     buildId: readString(row.lowdefy_build_id),
     pageId: readString(row.lowdefy_page_id),
     pathParams: readStringObject(row.lowdefy_path_params),

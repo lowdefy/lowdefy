@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import axios from 'axios';
+import postMutants from './postMutants.js';
 
 function union({ baselines, read }) {
   return [...new Set(baselines.flatMap(({ exercised }) => read(exercised)))];
 }
 
 // Lists the mutants on everything the baselines exercised, through the dev
-// server's POST /lowdefy-docs/mutants: { buildId, artifacts, mutants }.
+// server's POST /lowdefy-docs/mutants: { buildId, artifacts, ids, mutants }.
 async function requestMutants({ url, baselines, operators }) {
   const requests = new Map();
   baselines.forEach(({ exercised }) =>
@@ -29,8 +29,9 @@ async function requestMutants({ url, baselines, operators }) {
       requests.set(JSON.stringify([pageId, requestId]), { pageId, requestId })
     )
   );
-  try {
-    const response = await axios.post(`${url}/lowdefy-docs/mutants`, {
+  return postMutants({
+    url,
+    body: {
       pages: union({ baselines, read: (exercised) => exercised.pages }),
       requests: [...requests.values()],
       endpoints: union({
@@ -39,23 +40,8 @@ async function requestMutants({ url, baselines, operators }) {
       }),
       appEvents: baselines.some(({ exercised }) => exercised.appEvents),
       operators: operators ?? undefined,
-    });
-    return response.data;
-  } catch (error) {
-    if (error.response?.status === 404) {
-      throw new Error(
-        'The dev server has no mutants route (POST /lowdefy-docs/mutants): it needs a newer Lowdefy.'
-      );
-    }
-    if (error.response) {
-      throw new Error(
-        `POST /lowdefy-docs/mutants responded ${error.response.status}: ${JSON.stringify(
-          error.response.data
-        )}`
-      );
-    }
-    throw new Error(`Could not reach the dev server: ${error.message}`);
-  }
+    },
+  });
 }
 
 export default requestMutants;

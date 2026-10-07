@@ -55,7 +55,7 @@ const ELEMENT_HREF_KEYS = new Set(['attr__href']);
 
 // Top-level properties that carry text, removed unless the text is config text. A text property
 // the plugin adds to events goes in this list, so it is masked like the rest.
-const TEXT_PROPERTIES = ['$el_text', '$selected_content', '$external_click_url'];
+const TEXT_PROPERTIES = ['$el_text', '$selected_content', '$external_click_url', 'lowdefy_text'];
 
 function isBlockWrapperId(value) {
   return type.isString(value) && value.startsWith(blockWrapperPrefix);

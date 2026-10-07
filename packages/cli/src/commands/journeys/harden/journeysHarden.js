@@ -171,11 +171,20 @@ async function hardenOnServer({ context, options, items, url }) {
   });
   // A --mutant run confirms one kill; it must not change the report.
   if (type.isNone(options.mutant)) {
-    writeMutationReport({
+    const { unbuildablePages } = await writeMutationReport({
       directories: context.directories,
       report,
       journeyKeys: currentJourneyKeys({ context }),
+      url,
     });
+    if (unbuildablePages.length > 0) {
+      const pages = unbuildablePages.map((pageId) => `"${pageId}"`).join(', ');
+      context.logger.warn(
+        `Kept the earlier mutants on ${pages} as they were: harden could not check they still exist, since ${
+          unbuildablePages.length === 1 ? 'that page fails' : 'those pages fail'
+        } to build.`
+      );
+    }
   }
   if (options.json) {
     // Plain stdout, so the report can be piped to a JSON reader.

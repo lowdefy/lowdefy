@@ -97,6 +97,7 @@ test('POST /lowdefy-docs/mutants lists the mutants of the posted pages and endpo
     artifact: 'api/notify.json',
     anchor: { type: 'endpoint', endpointId: 'notify' },
     copies: [],
+    copyTargets: [],
   });
 });
 
@@ -163,4 +164,17 @@ test('POST /lowdefy-docs/mutants answers with the build id read before the pages
   const { status, data } = await post({ pages: ['tickets'] });
   expect(status).toBe(200);
   expect(data.buildId).toEqual('2026-10-03T08:00:00.000Z');
+});
+
+test('POST /lowdefy-docs/mutants lists no mutants for a page no longer in the app, though its old build is on disk', async () => {
+  mockBuildPageIfNeeded.mockResolvedValue(false);
+  const { status, data } = await post({
+    pages: ['tickets'],
+    requests: [{ pageId: 'tickets', requestId: 'load' }],
+    endpoints: ['notify'],
+  });
+  expect(status).toBe(200);
+  expect(Object.keys(data.artifacts)).toEqual(['api/notify.json']);
+  expect(data.mutants.every(({ artifact }) => artifact === 'api/notify.json')).toBe(true);
+  expect(data.ids).toEqual(data.mutants.map(({ id }) => id));
 });

@@ -243,26 +243,43 @@ function measureFrustration({ profile, journeys, routeTable, isConfigText }) {
   return measure({ covered, total: profile.frustration.length, uncovered });
 }
 
-// The role set a journey runs as: its inline user's roles, or signed out
-// when it has no user. `user: none` signs in through the app, so its roles
-// are not known statically. Named data-set users replace this when data sets
-// ship.
-function journeyRoles({ journey }) {
-  if (type.isNone(journey.user)) return [];
-  if (!type.isObject(journey.user)) return undefined;
-  return [...(journey.user.roles ?? [])].sort();
+function sortedRoles({ user }) {
+  return [...(user.roles ?? [])].map(String).sort();
 }
 
-function measureRole({ profile, journeys }) {
+// The role sets a journey runs as: its inline user's roles, signed out ([])
+// when it has no user, or the roles of each data set user it names (a list
+// runs once per user). `user: none` signs in through the app, so its roles are
+// not known statically, and neither are a data set user's when the data set
+// could not be read or does not declare that user: those give undefined.
+function journeyRoleSets({ journey, dataSetUsers }) {
+  const { user } = journey;
+  if (type.isNone(user)) return [[]];
+  if (type.isObject(user)) return [sortedRoles({ user })];
+  if (user === 'none') return undefined;
+  const users = dataSetUsers.get(journey.data);
+  if (type.isUndefined(users)) return undefined;
+  const names = type.isArray(user) ? user : [user];
+  return names
+    .filter((name) => Object.hasOwn(users, name))
+    .map((name) => sortedRoles({ user: users[name] }));
+}
+
+function measureRole({ profile, journeys, dataSetUsers }) {
+  const roleSetsByJourney = journeys.map((journey) => ({
+    journey,
+    roleSets: (journeyRoleSets({ journey: journey.journey, dataSetUsers }) ?? []).map((roles) =>
+      JSON.stringify(roles)
+    ),
+  }));
   const uncovered = [];
   let covered = 0;
   profile.roleMatrix.forEach((pair) => {
     const roles = JSON.stringify(pair.roles);
-    const hit = journeys.some((journey) => {
+    const hit = roleSetsByJourney.some(({ journey, roleSets }) => {
       const visits =
         journey.pageId === pair.page || journey.sequence.some((entry) => entry.page === pair.page);
-      const runsAs = journeyRoles({ journey: journey.journey });
-      return visits && !type.isUndefined(runsAs) && JSON.stringify(runsAs) === roles;
+      return visits && roleSets.includes(roles);
     });
     if (hit) {
       covered += 1;
@@ -282,7 +299,9 @@ function measureRole({ profile, journeys }) {
 // `isConfigText` reads journey click text by the config text rule, as the
 // journeys' sequences were read. `groupFlows` (decideFlowGrouping) says
 // whether sessions are grouped into flows; when they are not, the flow measure
-// is null and the other measures are unchanged.
+// is null and the other measures are unchanged. `dataSetUsers`
+// (readJourneyDataSetUsers) maps each data set the journeys name to its users,
+// so a journey that names data set users counts as their role sets.
 function computeCoverage({
   journeys,
   segments,
@@ -291,6 +310,7 @@ function computeCoverage({
   measuredRun = null,
   isConfigText,
   groupFlows,
+  dataSetUsers = new Map(),
 }) {
   const journeyKeys = new Set(journeys.flatMap((journey) => journey.sequence.map(entryKey)));
   return {
@@ -298,7 +318,7 @@ function computeCoverage({
     flow: groupFlows ? measureFlow({ segments, journeys }) : null,
     failure: measureFailure({ profile, segments, journeys, journeyKeys, measuredRun }),
     frustration: measureFrustration({ profile, journeys, routeTable, isConfigText }),
-    role: measureRole({ profile, journeys }),
+    role: measureRole({ profile, journeys, dataSetUsers }),
   };
 }
 
