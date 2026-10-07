@@ -1401,3 +1401,63 @@ test('buildPageJit resolves _build.authConfig in a module page from the restored
 
   fs.rmSync(buildDirectory, { recursive: true, force: true });
 });
+
+test('page builds on one dev context log an unset _build.env variable once per change event, each page listing its own reads', async () => {
+  delete process.env.LDF_JIT_UNSET_ENV;
+  const context = createTestContext();
+  // The dev server's kept context: shared by page builds, cleared on each change event.
+  context.seenSourceLines = new Set();
+  const logged = [];
+  context.logger.warn = (warning) => logged.push(warning);
+  const pageYaml = (pageId) => `
+id: ${pageId}
+type: PageHeaderMenu
+blocks:
+  - id: first
+    type: Title
+    properties:
+      content:
+        _build.env: LDF_JIT_UNSET_ENV
+  - id: second
+    type: Title
+    properties:
+      content:
+        _build.env: LDF_JIT_UNSET_ENV
+`;
+  mockFiles([
+    { path: 'one.yaml', content: pageYaml('one') },
+    { path: 'two.yaml', content: pageYaml('two') },
+  ]);
+  const pageRegistry = new Map(
+    ['one', 'two'].map((pageId) => [
+      pageId,
+      {
+        pageId,
+        auth: { public: true },
+        refId: `ref-${pageId}`,
+        refPath: `${pageId}.yaml`,
+        unresolvedVars: null,
+      },
+    ])
+  );
+  const envWarnings = (page) =>
+    (page._warnings ?? []).filter((warning) => warning.message.includes('LDF_JIT_UNSET_ENV'));
+
+  const one = await buildPageJit({ pageId: 'one', pageRegistry, context });
+  const two = await buildPageJit({ pageId: 'two', pageRegistry, context });
+
+  expect(envWarnings(one)).toHaveLength(1);
+  expect(envWarnings(one)[0].message).toContain('in 2 places (one.yaml:8, one.yaml:13)');
+  expect(envWarnings(one)[0].source).toBe('one.yaml:8');
+  expect(envWarnings(two)).toHaveLength(1);
+  expect(envWarnings(two)[0].message).toContain('in 2 places (two.yaml:8, two.yaml:13)');
+  expect(logged).toHaveLength(1);
+
+  // A change event clears the shared lines: the next page build logs it again, once.
+  context.seenSourceLines.clear();
+  await buildPageJit({ pageId: 'two', pageRegistry, context });
+  await buildPageJit({ pageId: 'one', pageRegistry, context });
+
+  expect(logged).toHaveLength(2);
+  expect(logged[1].source).toBe('two.yaml:8');
+});
