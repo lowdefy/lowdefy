@@ -58,6 +58,7 @@ modules:
 - `api: object[]` — API endpoint definitions
 - `notifications: object[]` — Notification email template definitions
 - `websockets: object[]` — Websocket definitions (same items as the app's `websockets:`)
+- `auth: object` — Auth wiring the entry contributes (`buildModuleAuth`): `hooks`, `pages` (authPages roles), `public` (page ids) and `websockets.public` (websocket ids). With app auth configured, a module websocket is protected unless `websockets.public` lists it or the app's `auth.websockets` sets `public: true` or a `public` list naming it (`getModuleWebsocketAuth`); buildModules records the module websocket ids on `context.moduleWebsocketIds` for this.
 - `components: object[]` — Named reusable config fragments
 - `menus: object[]` — Menu definitions
 - `plugins: object[]` — Required plugin dependencies with semver ranges

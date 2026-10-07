@@ -19,7 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 
 import authPageRoles from './buildAuth/authPageRoles.js';
 
-const allowedKeys = ['hooks', 'pages', 'public'];
+const allowedKeys = ['hooks', 'pages', 'public', 'websockets'];
 
 function contentKeys(object) {
   return Object.keys(object).filter((key) => !key.startsWith('~'));
@@ -29,7 +29,8 @@ function contentKeys(object) {
 // module-local ids here - buildModuleAuth resolves them to scoped ids per
 // module entry, and the merged result is validated again by buildAuth
 // (hook points, endpoint existence and type) exactly as hand-written config.
-function validateModuleAuthManifest({ auth, entryId, filePath }) {
+// Each public websocket id must name a websocket the manifest ships.
+function validateModuleAuthManifest({ auth, entryId, filePath, websockets }) {
   if (type.isNone(auth)) {
     return;
   }
@@ -113,6 +114,45 @@ function validateModuleAuthManifest({ auth, entryId, filePath }) {
           `Module "${entryId}" manifest "auth.public" entries must be page id strings.`,
           { received: pageId, filePath }
         );
+      }
+    }
+  }
+
+  if (!type.isNone(auth.websockets)) {
+    if (!type.isObject(auth.websockets)) {
+      throw new ConfigError(`Module "${entryId}" manifest "auth.websockets" must be an object.`, {
+        received: auth.websockets,
+        filePath,
+      });
+    }
+    for (const key of contentKeys(auth.websockets)) {
+      if (key !== 'public') {
+        throw new ConfigError(
+          `Module "${entryId}" manifest "auth.websockets" has unknown key "${key}". Allowed keys are: public.`,
+          { filePath }
+        );
+      }
+    }
+    if (!type.isNone(auth.websockets.public)) {
+      if (!type.isArray(auth.websockets.public)) {
+        throw new ConfigError(
+          `Module "${entryId}" manifest "auth.websockets.public" must be an array of websocket ids.`,
+          { received: auth.websockets.public, filePath }
+        );
+      }
+      for (const websocketId of auth.websockets.public) {
+        if (!type.isString(websocketId)) {
+          throw new ConfigError(
+            `Module "${entryId}" manifest "auth.websockets.public" entries must be websocket id strings.`,
+            { received: websocketId, filePath }
+          );
+        }
+        if (!(websockets ?? []).some((websocket) => websocket.id === websocketId)) {
+          throw new ConfigError(
+            `Module "${entryId}" manifest "auth.websockets.public" lists "${websocketId}", but the module ships no websocket with that id.`,
+            { filePath }
+          );
+        }
       }
     }
   }

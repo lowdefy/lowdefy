@@ -3,6 +3,8 @@
 # points a websocket at the module's own connection or the app connection it is
 # remapped to; _module.websocketId resolves in module pages (string form) and
 # at the app level (object form); auth.websockets rules match the scoped ids.
+# With no app public rule a module websocket is protected (user-changes) unless
+# the manifest declares it public (ticket-status).
 lowdefy: local
 name: Module Websockets Test
 
@@ -18,10 +20,9 @@ auth:
   roles:
     - id: agent
   websockets:
-    protected: true
     roles:
       agent:
-        - help/*
+        - help/thread-messages
 
 connections:
   - id: app-users

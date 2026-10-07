@@ -393,7 +393,12 @@ async function resolveFullManifest({ entryId, context }) {
 
   // The auth section is fully resolved now - validate its shape before
   // buildModules contributes it to the app's auth config.
-  validateModuleAuthManifest({ auth: resolved.auth, entryId, filePath: moduleYamlPath });
+  validateModuleAuthManifest({
+    auth: resolved.auth,
+    entryId,
+    filePath: moduleYamlPath,
+    websockets: resolved.websockets,
+  });
 
   // Validate var types against lazily-resolved values
   const varDefs = moduleEntry.varDefs;

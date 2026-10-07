@@ -9,9 +9,15 @@ connections:
   - _ref: connections/messages.yaml
   - _ref: connections/users.yaml
 
+auth:
+  websockets:
+    public:
+      - ticket-status
+
 websockets:
   - _ref: websockets/thread-messages.yaml
   - _ref: websockets/user-changes.yaml
+  - _ref: websockets/ticket-status.yaml
 
 pages:
   - _ref: pages/thread.yaml

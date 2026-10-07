@@ -320,6 +320,18 @@ _ref:
 
             The id is scoped like every other module id: in an entry with `id: user-admin` it is `user-admin/user-changes`. The app's `auth.websockets` rules match the scoped id, so `user-admin/**` under `auth.websockets.roles` restricts every websocket the entry ships. A `_secret` in a websocket's properties must be declared in the manifest's `secrets`, as for connections.
 
+            In an app with auth configured, a module websocket needs a signed-in caller unless the module or the app makes it public. The module lists the websockets anyone may subscribe to under `auth.websockets.public` in its manifest:
+
+            ```yaml
+            # module.lowdefy.yaml
+            auth:
+              websockets:
+                public:
+                  - status-feed
+            ```
+
+            The app makes a module websocket public with `auth.websockets.public: true`, or by naming it in an `auth.websockets.public` list. Otherwise it stays protected, also with no `auth.websockets` rule or under a `protected` list that does not name it, where an app websocket would be public. A role in `auth.websockets.roles` restricts a module websocket whether it is public or not. In an app without auth, module websockets follow the app's rules like any other.
+
             ## Exposing Components
 
             Components are reusable config fragments that consuming apps can `_ref` into any page. Declare them in the manifest:

@@ -29,7 +29,7 @@ test('buildEntityAuth websockets: returns components when no websockets defined'
       },
     },
   };
-  const res = buildEntityAuth({ components, entity: 'websockets' });
+  const res = buildEntityAuth({ components, context: {}, entity: 'websockets' });
   expect(res.websockets).toBe(undefined);
 });
 
@@ -45,7 +45,7 @@ test('buildEntityAuth websockets: sets all websockets public by default', () => 
       { id: 'ws2', type: 'Channel' },
     ],
   };
-  const res = buildEntityAuth({ components, entity: 'websockets' });
+  const res = buildEntityAuth({ components, context: {}, entity: 'websockets' });
   expect(res.websockets).toEqual([
     { id: 'ws1', type: 'Channel', auth: { public: true } },
     { id: 'ws2', type: 'Channel', auth: { public: true } },
@@ -65,7 +65,7 @@ test('buildEntityAuth websockets: protected true makes all websockets protected'
       { id: 'ws2', type: 'Channel' },
     ],
   };
-  const res = buildEntityAuth({ components, entity: 'websockets' });
+  const res = buildEntityAuth({ components, context: {}, entity: 'websockets' });
   expect(res.websockets).toEqual([
     { id: 'ws1', type: 'Channel', auth: { public: false } },
     { id: 'ws2', type: 'Channel', auth: { public: false } },
@@ -85,7 +85,7 @@ test('buildEntityAuth websockets: protected list protects only listed websockets
       { id: 'ws2', type: 'Channel' },
     ],
   };
-  const res = buildEntityAuth({ components, entity: 'websockets' });
+  const res = buildEntityAuth({ components, context: {}, entity: 'websockets' });
   expect(res.websockets).toEqual([
     { id: 'ws1', type: 'Channel', auth: { public: false } },
     { id: 'ws2', type: 'Channel', auth: { public: true } },
@@ -105,7 +105,7 @@ test('buildEntityAuth websockets: public list protects all websockets not listed
       { id: 'ws2', type: 'Channel' },
     ],
   };
-  const res = buildEntityAuth({ components, entity: 'websockets' });
+  const res = buildEntityAuth({ components, context: {}, entity: 'websockets' });
   expect(res.websockets).toEqual([
     { id: 'ws1', type: 'Channel', auth: { public: true } },
     { id: 'ws2', type: 'Channel', auth: { public: false } },
@@ -128,7 +128,7 @@ test('buildEntityAuth websockets: roles protect websockets and list the granted 
       { id: 'ws3', type: 'Channel' },
     ],
   };
-  const res = buildEntityAuth({ components, entity: 'websockets' });
+  const res = buildEntityAuth({ components, context: {}, entity: 'websockets' });
   expect(res.websockets).toEqual([
     { id: 'ws1', type: 'Channel', auth: { public: false, roles: ['role1', 'role2'] } },
     { id: 'ws2', type: 'Channel', auth: { public: false, roles: ['role2'] } },
@@ -148,7 +148,7 @@ test('buildEntityAuth websockets: throws when a websocket is both protected by r
     },
     websockets: [{ id: 'ws1', type: 'Channel' }],
   };
-  expect(() => buildEntityAuth({ components, entity: 'websockets' })).toThrow(
+  expect(() => buildEntityAuth({ components, context: {}, entity: 'websockets' })).toThrow(
     'Websocket "ws1" is both protected by roles and public.'
   );
 });
@@ -168,7 +168,7 @@ test('buildEntityAuth websockets: roles with protected true still assigns roles'
       { id: 'ws2', type: 'Channel' },
     ],
   };
-  const res = buildEntityAuth({ components, entity: 'websockets' });
+  const res = buildEntityAuth({ components, context: {}, entity: 'websockets' });
   expect(res.websockets).toEqual([
     { id: 'ws1', type: 'Channel', auth: { public: false, roles: ['role1'] } },
     { id: 'ws2', type: 'Channel', auth: { public: false } },
@@ -571,7 +571,103 @@ test('buildEntityAuth websockets: a reserved websocket id throws a located Confi
     },
     websockets: [{ id: 'prototype', '~k': 'ws-key', type: 'Channel' }],
   };
-  expect(() => buildEntityAuth({ components, entity: 'websockets' })).toThrow(
+  expect(() => buildEntityAuth({ components, context: {}, entity: 'websockets' })).toThrow(
     'Websocket id "prototype" is a reserved name and cannot be used as an id.'
   );
+});
+
+function moduleWebsocketsComponents(websocketsAuth) {
+  return {
+    auth: {
+      configured: true,
+      websockets: { roles: {}, ...websocketsAuth },
+    },
+    websockets: [
+      { id: 'ticker', type: 'Channel' },
+      { id: 'support/thread-messages', type: 'Channel' },
+    ],
+  };
+}
+
+const moduleWebsocketsContext = { moduleWebsocketIds: ['support/thread-messages'] };
+
+test('buildEntityAuth websockets: a module websocket is protected when auth is configured and the app sets no rule', () => {
+  const components = moduleWebsocketsComponents({});
+  buildEntityAuth({ components, context: moduleWebsocketsContext, entity: 'websockets' });
+  expect(components.websockets.map((websocket) => websocket.auth)).toEqual([
+    { public: true },
+    { public: false },
+  ]);
+});
+
+test('buildEntityAuth websockets: a module websocket a protected list does not name stays protected', () => {
+  const components = moduleWebsocketsComponents({ protected: ['ticker'] });
+  buildEntityAuth({ components, context: moduleWebsocketsContext, entity: 'websockets' });
+  expect(components.websockets.map((websocket) => websocket.auth)).toEqual([
+    { public: false },
+    { public: false },
+  ]);
+});
+
+test('buildEntityAuth websockets: app public true makes a module websocket public', () => {
+  const components = moduleWebsocketsComponents({ public: true });
+  buildEntityAuth({ components, context: moduleWebsocketsContext, entity: 'websockets' });
+  expect(components.websockets.map((websocket) => websocket.auth)).toEqual([
+    { public: true },
+    { public: true },
+  ]);
+});
+
+test('buildEntityAuth websockets: an app public list naming a module websocket makes it public', () => {
+  const components = moduleWebsocketsComponents({ public: ['support/**'] });
+  buildEntityAuth({ components, context: moduleWebsocketsContext, entity: 'websockets' });
+  expect(components.websockets.map((websocket) => websocket.auth)).toEqual([
+    { public: false },
+    { public: true },
+  ]);
+});
+
+test('buildEntityAuth websockets: app roles on a module websocket apply as for an app websocket', () => {
+  const components = moduleWebsocketsComponents({ roles: { agent: ['support/**'] } });
+  buildEntityAuth({ components, context: moduleWebsocketsContext, entity: 'websockets' });
+  expect(components.websockets[1].auth).toEqual({ public: false, roles: ['agent'] });
+});
+
+test('buildEntityAuth websockets: a module-declared public websocket is public with no app rule', () => {
+  const components = moduleWebsocketsComponents({});
+  buildEntityAuth({
+    components,
+    context: {
+      ...moduleWebsocketsContext,
+      moduleAuthPublicWebsockets: ['support/thread-messages'],
+    },
+    entity: 'websockets',
+  });
+  expect(components.websockets[1].auth).toEqual({ public: true });
+});
+
+test('buildEntityAuth websockets: a module-declared public websocket stays public under protected true', () => {
+  const components = moduleWebsocketsComponents({ protected: true });
+  buildEntityAuth({
+    components,
+    context: {
+      ...moduleWebsocketsContext,
+      moduleAuthPublicWebsockets: ['support/thread-messages'],
+    },
+    entity: 'websockets',
+  });
+  expect(components.websockets.map((websocket) => websocket.auth)).toEqual([
+    { public: false },
+    { public: true },
+  ]);
+});
+
+test('buildEntityAuth websockets: a module websocket follows the app rules when auth is not configured', () => {
+  const components = moduleWebsocketsComponents({});
+  components.auth.configured = false;
+  buildEntityAuth({ components, context: moduleWebsocketsContext, entity: 'websockets' });
+  expect(components.websockets.map((websocket) => websocket.auth)).toEqual([
+    { public: true },
+    { public: true },
+  ]);
 });
