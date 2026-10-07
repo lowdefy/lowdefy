@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
+import createConnectPublic from '@lowdefy/node-utils/createConnectPublic.js';
 import { Agent, fetch } from 'undici';
 
-import connectPublic from './connectPublic.js';
 import createFileDownloadError from './createFileDownloadError.js';
 
 const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
@@ -24,7 +24,15 @@ const DEFAULT_TIMEOUT = 30000;
 const REDIRECT_STATUSES = new Set([301, 302, 303, 307, 308]);
 const MAX_REDIRECTS = 10;
 
-const dispatcher = new Agent({ connect: connectPublic });
+const dispatcher = new Agent({
+  connect: createConnectPublic({
+    createNotPublicError: (hostname) =>
+      createFileDownloadError({
+        code: 'url_not_public',
+        message: `Agent file link to ${hostname} leads to an address that is not public.`,
+      }),
+  }),
+});
 
 function parseHttps(link) {
   const parsed = URL.parse(link);

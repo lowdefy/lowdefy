@@ -44,6 +44,7 @@
     "@lowdefy/errors": "6.0.0",
     "@lowdefy/helpers": "6.0.0",
     "fs-extra": "11.3.4",
+    "undici": "7.30.0",
     "yaml": "2.9.0"
   },
   "devDependencies": {

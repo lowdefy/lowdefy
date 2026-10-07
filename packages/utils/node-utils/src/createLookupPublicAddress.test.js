@@ -22,7 +22,15 @@ jest.unstable_mockModule('node:dns', () => ({
   lookup: (...lookupArgs) => mockLookup(...lookupArgs),
 }));
 
-const { default: lookupPublicAddress } = await import('./lookupPublicAddress.js');
+const { default: createLookupPublicAddress } = await import('./createLookupPublicAddress.js');
+
+function createNotPublicError(hostname) {
+  const error = new Error(`Link to ${hostname} leads to an address that is not public.`);
+  error.code = 'url_not_public';
+  return error;
+}
+
+const lookupPublicAddress = createLookupPublicAddress({ createNotPublicError });
 
 function answer(...result) {
   mockLookup.mockImplementation((hostname, options, callback) => callback(...result));
@@ -34,7 +42,7 @@ function run(options) {
   });
 }
 
-test('lookupPublicAddress hands the socket the public addresses it resolved', async () => {
+test('createLookupPublicAddress hands the socket the public addresses it resolved', async () => {
   const addresses = [
     { address: '2606:4700:4700::1111', family: 6 },
     { address: '1.1.1.1', family: 4 },
@@ -47,38 +55,36 @@ test('lookupPublicAddress hands the socket the public addresses it resolved', as
   expect(mockLookup.mock.calls[0][1]).toEqual({ all: true });
 });
 
-test('lookupPublicAddress hands the socket a single public address with its family', async () => {
+test('createLookupPublicAddress hands the socket a single public address with its family', async () => {
   answer(null, '1.1.1.1', 4);
   expect(await run({})).toEqual([null, '1.1.1.1', 4]);
 });
 
-test('lookupPublicAddress refuses a name when any address it resolves to is not public', async () => {
+test('createLookupPublicAddress refuses a name when any address it resolves to is not public', async () => {
   answer(null, [
     { address: '1.1.1.1', family: 4 },
     { address: '10.0.0.1', family: 4 },
   ]);
   const [error, address] = await run({ all: true });
   expect(error.code).toBe('url_not_public');
-  expect(error.message).toBe(
-    'Agent file link to files.test leads to an address that is not public.'
-  );
+  expect(error.message).toBe('Link to files.test leads to an address that is not public.');
   expect(address).toBeUndefined();
 });
 
-test('lookupPublicAddress refuses a single address that is not public', async () => {
+test('createLookupPublicAddress refuses a single address that is not public', async () => {
   answer(null, '169.254.169.254', 4);
   const [error] = await run({});
   expect(error.code).toBe('url_not_public');
 });
 
-test('lookupPublicAddress checks every lookup, so a name that rebinds to a private address is refused', async () => {
+test('createLookupPublicAddress checks every lookup, so a name that rebinds to a private address is refused', async () => {
   answer(null, '1.1.1.1', 4);
   expect((await run({}))[0]).toBe(null);
   answer(null, '127.0.0.1', 4);
   expect((await run({}))[0].code).toBe('url_not_public');
 });
 
-test('lookupPublicAddress passes a DNS error through', async () => {
+test('createLookupPublicAddress passes a DNS error through', async () => {
   const dnsError = Object.assign(new Error('getaddrinfo ENOTFOUND files.test'), {
     code: 'ENOTFOUND',
   });

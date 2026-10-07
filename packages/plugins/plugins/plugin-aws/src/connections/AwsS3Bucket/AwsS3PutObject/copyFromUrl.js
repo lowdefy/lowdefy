@@ -17,9 +17,9 @@
 import { Readable } from 'node:stream';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { type } from '@lowdefy/helpers';
+import createConnectPublic from '@lowdefy/node-utils/createConnectPublic.js';
 import { Agent, fetch } from 'undici';
 
-import connectPublic from './connectPublic.js';
 import createCopyError from './createCopyError.js';
 import limitBody from './limitBody.js';
 import matchesContentType from './matchesContentType.js';
@@ -35,7 +35,15 @@ async function collect(chunks) {
 const REDIRECT_STATUSES = new Set([301, 302, 303, 307, 308]);
 const MAX_REDIRECTS = 20;
 
-const dispatcher = new Agent({ connect: connectPublic });
+const dispatcher = new Agent({
+  connect: createConnectPublic({
+    createNotPublicError: () =>
+      createCopyError({
+        code: 'url_not_public',
+        message: 'AwsS3PutObject "url" leads to an address that is not public.',
+      }),
+  }),
+});
 
 function isHttps(link) {
   return URL.parse(link)?.protocol === 'https:';

@@ -20,7 +20,9 @@ import cleanDirectory from './cleanDirectory.js';
 import collectEnvironmentGuards from './collectEnvironmentGuards.js';
 import compareProcessStartTimes from './compareProcessStartTimes.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
+import createConnectPublic from './createConnectPublic.js';
 import createClientAddressResolver from './createClientAddressResolver.js';
+import createLookupPublicAddress from './createLookupPublicAddress.js';
 import createSecretScrubber from './createSecretScrubber.js';
 import devPassiveHeader from './devPassiveHeader.js';
 import dataSetNamePattern from './dataSetNamePattern.js';
@@ -35,6 +37,7 @@ import getSecretsFromEnv from './getSecretsFromEnv.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 import isPidAlive from './isPidAlive.js';
 import isProcessAlive from './isProcessAlive.js';
+import isPublicAddress from './isPublicAddress.js';
 import isProcessStartTime from './isProcessStartTime.js';
 import isPortAvailable from './isPortAvailable.js';
 import linkDependenciesToWorkspace from './linkDependenciesToWorkspace.js';
@@ -98,6 +101,8 @@ export {
   countDataSetDocuments,
   countTextTokens,
   createClientAddressResolver,
+  createConnectPublic,
+  createLookupPublicAddress,
   createSecretScrubber,
   devPassiveHeader,
   dataSetNamePattern,
@@ -119,6 +124,7 @@ export {
   isBackedBy,
   isPidAlive,
   isProcessAlive,
+  isPublicAddress,
   isProcessStartTime,
   isPortAvailable,
   journeySequence,
