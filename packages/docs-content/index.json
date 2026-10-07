@@ -3009,7 +3009,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "63c85a1ac731d6e576c36adbf5b38f38d1abacb02073dac4bb42f6ec0d064b20"
+      "hash": "fd0b9e4d8a9a585b9f26b273edc437ff88a026be6c9e40c22c4d2d452f399765"
     },
     "concepts/page-and-app-state": {
       "files": [
@@ -3489,7 +3489,7 @@
         "version.yaml",
         "websockets/introduction.yaml"
       ],
-      "hash": "7c1b9e4779ec4050d5c164e438c67acb9dad2c7227b69958ae16121862cf2eb4"
+      "hash": "9083ea3c55bc6df74aea391d291be5fcb324904959ecd8b201a75de362a93819"
     },
     "websockets/websocket-subscriptions": {
       "files": [

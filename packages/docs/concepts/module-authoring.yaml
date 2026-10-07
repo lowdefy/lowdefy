@@ -318,7 +318,7 @@ _ref:
                   _module.websocketId: user-changes
             ```
 
-            The id is scoped like every other module id: in an entry with `id: user-admin` it is `user-admin/user-changes`. The app's `auth.websockets` rules match the scoped id, so `user-admin/*` under `auth.websockets.roles` restricts every websocket the entry ships. A `_secret` in a websocket's properties must be declared in the manifest's `secrets`, as for connections.
+            The id is scoped like every other module id: in an entry with `id: user-admin` it is `user-admin/user-changes`. The app's `auth.websockets` rules match the scoped id, so `user-admin/**` under `auth.websockets.roles` restricts every websocket the entry ships. A `_secret` in a websocket's properties must be declared in the manifest's `secrets`, as for connections.
 
             ## Exposing Components
 
