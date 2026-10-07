@@ -172,14 +172,16 @@ function createChannelRegistry() {
   }
 
   async function subscribe(context, { websocketId, payload, subscriber }) {
-    const { connectionProperties, properties, tenant, websocketConfig, websocketResolver } =
-      await prepareChannel(context, { websocketId, payload });
-
     // One subscription per websocketId per connection — a re-subscribe (e.g.
-    // with a new payload) replaces the previous one.
+    // with a new payload) replaces the previous one. The client stops reading
+    // the previous one when it sends the re-subscribe, so it is removed before
+    // the new one is prepared: a re-subscribe that fails leaves nothing open.
     if (subscriber.subscriptions.has(websocketId)) {
       unsubscribe({ websocketId, subscriber });
     }
+
+    const { connectionProperties, properties, tenant, websocketConfig, websocketResolver } =
+      await prepareChannel(context, { websocketId, payload });
 
     const key = getChannelKey({ connectionProperties, properties, tenant, websocketId });
     let channel = channels.get(key);

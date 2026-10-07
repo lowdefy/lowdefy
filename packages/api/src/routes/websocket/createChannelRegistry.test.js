@@ -287,6 +287,29 @@ test('re-subscribe to the same websocketId replaces the previous subscription', 
   expect(channel.properties).toEqual({ room: 2 });
 });
 
+test('re-subscribe that fails to prepare leaves the previous subscription closed', async () => {
+  const resolver = createPendingResolver();
+  mockPrepare({ resolver });
+  const registry = createChannelRegistry();
+  const context = createTestContext();
+  const subscriber = createSubscriber('a');
+
+  await registry.subscribe(context, { websocketId: 'ticker', payload: { room: 1 }, subscriber });
+  await flushMicrotasks();
+  const firstSignal = resolver.mock.calls[0][0].signal;
+
+  mockPrepareChannel.mockImplementationOnce(async () => {
+    throw new ConfigError('Websocket "ticker" does not exist.');
+  });
+  await expect(
+    registry.subscribe(context, { websocketId: 'ticker', payload: { room: 2 }, subscriber })
+  ).rejects.toThrow('Websocket "ticker" does not exist.');
+
+  expect(firstSignal.aborted).toBe(true);
+  expect(registry.channels.size).toBe(0);
+  expect(subscriber.subscriptions.size).toBe(0);
+});
+
 test('resolver rejection sends an error frame to subscribers and restarts with backoff', async () => {
   useFakeTimers();
   const resolver = jest
