@@ -132,6 +132,7 @@ test('L3 refuses a fixed wait', () => {
     journey: journey([
       { wait: { ms: 500 } },
       { wait: { state: 'a' } },
+      { wait: 500 },
       { expect: { visible: 'a' } },
     ]),
     exercisedEntry: entry(),
@@ -143,6 +144,13 @@ test('L3 refuses a fixed wait', () => {
       stepIndex: 0,
       message:
         'step 0 (wait: { ms }) waits a fixed time: wait for a request or a state, or expect the outcome, instead.',
+    },
+    {
+      rule: 'L3',
+      severity: 'error',
+      stepIndex: 2,
+      message:
+        'step 2 (wait: { ms }) waits a fixed time: wait for a request or a state, or expect the outcome, instead.',
     },
   ]);
 });

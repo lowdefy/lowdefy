@@ -3518,6 +3518,9 @@ importers:
       '@swc/jest':
         specifier: 0.2.39
         version: 0.2.39(@swc/core@1.15.32)
+      ajv:
+        specifier: 8.20.0
+        version: 8.20.0
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1

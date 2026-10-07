@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { normaliseJourneySteps } from '@lowdefy/node-utils';
+
 import L1 from './L1.js';
 import L2 from './L2.js';
 import L3 from './L3.js';
@@ -26,9 +28,15 @@ const RULES = { L1, L2, L3, L4, L5, L6 };
 // Every problem one journey has, as { rule, severity, stepIndex?, message }.
 // `exercisedEntry` is the journey's newest measured run (readExercised), or
 // null when it has none. `dataSet` is its data set (parseDataSet), or null.
+// The rules read each step in its full form, so `wait: 500` is checked as
+// `wait: { ms: 500 }`.
 function lintJourney({ journey, exercisedEntry, dataSet = null, rules = RULES }) {
+  const normalised = { ...journey, steps: normaliseJourneySteps({ steps: journey.steps }) };
   return Object.entries(rules).flatMap(([rule, check]) =>
-    check({ journey, exercisedEntry, dataSet }).map((problem) => ({ rule, ...problem }))
+    check({ journey: normalised, exercisedEntry, dataSet }).map((problem) => ({
+      rule,
+      ...problem,
+    }))
   );
 }
 

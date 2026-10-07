@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { validateJourneySteps } from '@lowdefy/node-utils';
+import { normaliseJourneySteps, validateJourneySteps } from '@lowdefy/node-utils';
 
 import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
 import noBrowserError from './noBrowserError.js';
@@ -100,7 +100,7 @@ async function screenshotPage({
   pageId,
   pathParams,
   urlQuery,
-  steps = [],
+  steps: inputSteps = [],
   stepTimeout = 5000,
   fullPage = false,
   clip,
@@ -133,10 +133,11 @@ async function screenshotPage({
   if (!type.isUndefined(instance.error)) {
     return { error: instance.error, invalidInput: true };
   }
-  const { error: stepsError } = validateJourneySteps({ steps });
+  const { error: stepsError } = validateJourneySteps({ steps: inputSteps });
   if (!type.isUndefined(stepsError)) {
     return { error: stepsError };
   }
+  const steps = normaliseJourneySteps({ steps: inputSteps });
   const viewportError = validateViewport({ width, height, colorScheme });
   if (!type.isUndefined(viewportError)) {
     return { error: viewportError };

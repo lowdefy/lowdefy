@@ -66,6 +66,8 @@ import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
 import failurePathKey from './journeyEvidence/failurePathKey.js';
 import isBackedBy from './journeyEvidence/isBackedBy.js';
 import normaliseBlockId from './journeyGrammar/normaliseBlockId.js';
+import normaliseJourneySteps from './journeyGrammar/normaliseJourneySteps.js';
+import journeyStepSchema, { JOURNEY_STEP_SCHEMAS } from './journeyGrammar/journeyStepSchema.js';
 import hashSequence from './journeyCompiler/hashSequence.js';
 import journeySequence from './journeyCompiler/journeySequence.js';
 import listFailurePaths from './journeyCompiler/listFailurePaths.js';
@@ -122,6 +124,7 @@ export {
   isProcessStartTime,
   isPortAvailable,
   journeySequence,
+  journeyStepSchema,
   linkDependenciesToWorkspace,
   linkWorkspaceDependencies,
   listDataSets,
@@ -130,6 +133,7 @@ export {
   listRecordingFiles,
   matchPagePath,
   normaliseBlockId,
+  normaliseJourneySteps,
   normaliseClickText,
   parseIpRange,
   parseSince,
@@ -153,6 +157,7 @@ export {
   writeFileIfChanged,
   getStepKey,
   INTERACTION_STEP_KEYS,
+  JOURNEY_STEP_SCHEMAS,
   STEP_KEYS,
   TARGET_KEYS,
   validateJourneySteps,

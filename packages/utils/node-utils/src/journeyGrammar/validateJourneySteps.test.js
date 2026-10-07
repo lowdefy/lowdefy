@@ -16,6 +16,10 @@
 
 import validateJourneySteps from './validateJourneySteps.js';
 
+// Every step error ends with examples of the step; a test of the rule a
+// message names compares the message without them.
+const EXAMPLES = / Example: .*$/;
+
 test('validateJourneySteps accepts every step of the grammar', () => {
   const result = validateJourneySteps({
     steps: [
@@ -43,6 +47,7 @@ test('validateJourneySteps accepts every step of the grammar', () => {
       },
       { as: 'invitee' },
       { wait: { ms: 100 } },
+      { wait: 3000 },
       { wait: { request: 'get_rows' } },
       { wait: { state: 'rows' } },
       { screenshot: 'after' },
@@ -162,7 +167,7 @@ test.each([
   [{ fill: { blockId: 'name' } }, /Step "fill" requires a "value"/],
   [{ select: { value: 'x' } }, /Step "select" requires a "blockId" string/],
   [{ press: ['Enter'] }, /Step "press" requires a key string/],
-  [{ wait: 100 }, /Step "wait" requires one of \{ ms \}, \{ request \}, \{ state \}/],
+  [{ wait: '100' }, /Step "wait" requires one of \{ ms \}, \{ request \}, \{ state \}/],
   [
     { wait: { ms: 1, request: 'r' } },
     /Step "wait" requires exactly one of "ms", "request", "state"/,
@@ -313,17 +318,26 @@ test('validateJourneySteps accepts from recorded and from shape on fill, select 
 
 test('validateJourneySteps rejects from on click, press and wait', () => {
   expect(
-    validateJourneySteps({ steps: [{ click: { blockId: 'a', from: 'recorded' } }] }).error
+    validateJourneySteps({ steps: [{ click: { blockId: 'a', from: 'recorded' } }] }).error.replace(
+      EXAMPLES,
+      ''
+    )
   ).toBe(
     'Step 0: Step "click" has unknown key "from". Keys are: blockId, text, containing, row, column, nth, count.'
   );
   expect(
-    validateJourneySteps({ steps: [{ press: { key: 'Enter', from: 'recorded' } }] }).error
+    validateJourneySteps({ steps: [{ press: { key: 'Enter', from: 'recorded' } }] }).error.replace(
+      EXAMPLES,
+      ''
+    )
   ).toBe(
     'Step 0: Step "press" requires a key string such as "Enter" or "Mod+k". Received {"key":"Enter","from":"recorded"}.'
   );
   expect(
-    validateJourneySteps({ steps: [{ wait: { request: 'r', from: 'recorded' } }] }).error
+    validateJourneySteps({ steps: [{ wait: { request: 'r', from: 'recorded' } }] }).error.replace(
+      EXAMPLES,
+      ''
+    )
   ).toBe(
     'Step 0: Step "wait" requires exactly one of "ms", "request", "state". Received {"request":"r","from":"recorded"}.'
   );
@@ -331,19 +345,26 @@ test('validateJourneySteps rejects from on click, press and wait', () => {
 
 test('validateJourneySteps rejects a from value other than recorded or shape', () => {
   expect(
-    validateJourneySteps({ steps: [{ fill: { blockId: 'a', value: 'x', from: 'guess' } }] }).error
+    validateJourneySteps({
+      steps: [{ fill: { blockId: 'a', value: 'x', from: 'guess' } }],
+    }).error.replace(EXAMPLES, '')
   ).toBe('Step 0: Step "fill" requires "from" to be one of "recorded", "shape". Received "guess".');
   expect(
     validateJourneySteps({
       steps: [{ expect: { state: { path: 'a', equals: 1, from: 'guess' } } }],
-    }).error
+    }).error.replace(EXAMPLES, '')
   ).toBe(
     'Step 0: Step "expect.state" requires "from" to be one of "recorded", "shape". Received "guess".'
   );
 });
 
 test('validateJourneySteps rejects a null fill or select value without from shape', () => {
-  expect(validateJourneySteps({ steps: [{ fill: { blockId: 'a', value: null } }] }).error).toBe(
+  expect(
+    validateJourneySteps({ steps: [{ fill: { blockId: 'a', value: null } }] }).error.replace(
+      EXAMPLES,
+      ''
+    )
+  ).toBe(
     'Step 0: Step "fill" requires a non-null "value"; a placeholder value: null is marked from: shape. Received {"blockId":"a","value":null}.'
   );
   expect(
@@ -354,7 +375,9 @@ test('validateJourneySteps rejects a null fill or select value without from shap
 
 test('validateJourneySteps keeps the equals requirement on expect.state with from shape', () => {
   expect(
-    validateJourneySteps({ steps: [{ expect: { state: { path: 'a', from: 'shape' } } }] }).error
+    validateJourneySteps({
+      steps: [{ expect: { state: { path: 'a', from: 'shape' } } }],
+    }).error.replace(EXAMPLES, '')
   ).toBe(
     'Step 0: Step "expect.state" requires { path, equals }. Received {"path":"a","from":"shape"}.'
   );
@@ -388,7 +411,7 @@ test('validateJourneySteps rejects malformed expect.hidden', () => {
 
 test('validateJourneySteps rejects malformed expect.calls', () => {
   function error(calls) {
-    return validateJourneySteps({ steps: [{ expect: { calls } }] }).error;
+    return validateJourneySteps({ steps: [{ expect: { calls } }] }).error.replace(EXAMPLES, '');
   }
   expect(error({ request: 'save', endpoint: 'notify', count: 1 })).toBe(
     'Step 0: Step "expect.calls" requires exactly one of "request" or "endpoint". Received {"request":"save","endpoint":"notify","count":1}.'
@@ -410,15 +433,24 @@ test('validateJourneySteps rejects malformed expect.calls', () => {
 });
 
 test('validateJourneySteps rejects a click count outside 1 to 3', () => {
-  expect(validateJourneySteps({ steps: [{ click: { blockId: 'a', count: 0 } }] }).error).toBe(
-    'Step 0: Step "click" requires "count" to be 1, 2 or 3. Received 0.'
-  );
-  expect(validateJourneySteps({ steps: [{ click: { blockId: 'a', count: 4 } }] }).error).toBe(
-    'Step 0: Step "click" requires "count" to be 1, 2 or 3. Received 4.'
-  );
-  expect(validateJourneySteps({ steps: [{ click: { blockId: 'a', count: '2' } }] }).error).toBe(
-    'Step 0: Step "click" requires "count" to be 1, 2 or 3. Received "2".'
-  );
+  expect(
+    validateJourneySteps({ steps: [{ click: { blockId: 'a', count: 0 } }] }).error.replace(
+      EXAMPLES,
+      ''
+    )
+  ).toBe('Step 0: Step "click" requires "count" to be 1, 2 or 3. Received 0.');
+  expect(
+    validateJourneySteps({ steps: [{ click: { blockId: 'a', count: 4 } }] }).error.replace(
+      EXAMPLES,
+      ''
+    )
+  ).toBe('Step 0: Step "click" requires "count" to be 1, 2 or 3. Received 4.');
+  expect(
+    validateJourneySteps({ steps: [{ click: { blockId: 'a', count: '2' } }] }).error.replace(
+      EXAMPLES,
+      ''
+    )
+  ).toBe('Step 0: Step "click" requires "count" to be 1, 2 or 3. Received "2".');
   // count belongs to click alone.
   expect(validateJourneySteps({ steps: [{ open: { blockId: 'a', count: 2 } }] }).error).toContain(
     'Step "open" has unknown key "count"'
@@ -429,12 +461,12 @@ test('validateJourneySteps rejects an unknown key on expect.state', () => {
   expect(
     validateJourneySteps({
       steps: [{ expect: { state: { path: 'a', equals: null, form: 'shape' } } }],
-    }).error
+    }).error.replace(EXAMPLES, '')
   ).toBe('Step 0: Step "expect.state" has unknown key "form". Keys are: path, equals, from.');
   expect(
     validateJourneySteps({
       steps: [{ expect: { state: { path: 'a', equals: 1, value: 1, eq: 1 } } }],
-    }).error
+    }).error.replace(EXAMPLES, '')
   ).toBe(
     'Step 0: Step "expect.state" has unknown keys "value", "eq". Keys are: path, equals, from.'
   );
@@ -505,7 +537,7 @@ test.each([
   [{ effect: { blockId: 'save' } }, 'Received {"blockId":"save"}.'],
 ])('validateJourneySteps rejects expect %j', (expectation, message) => {
   const result = validateJourneySteps({ steps: [{ click: 'save' }, { expect: expectation }] });
-  expect(result.error).toBe(
+  expect(result.error.replace(EXAMPLES, '')).toBe(
     `Step 1: Step "expect.effect" takes only true: write { "expect": { "effect": true } }. ${message}`
   );
 });
@@ -526,4 +558,28 @@ test('validateJourneySteps rejects an expect.effect that does not follow an inte
       steps: [{ click: 'save' }, { screenshot: true }, { expect: { effect: true } }],
     }).error
   ).toContain('Received it after a "screenshot" step.');
+});
+
+test('validateJourneySteps ends a step error with examples of that step', () => {
+  expect(validateJourneySteps({ steps: [{ wait: '3s' }] }).error).toBe(
+    'Step 0: Step "wait" requires one of { ms }, { request }, { state }. Received "3s". Example: {"wait":{"request":"get_orders"}} or {"wait":{"state":"orders"}} or {"wait":{"ms":500}}.'
+  );
+  expect(validateJourneySteps({ steps: [{ goto: { path: 'orders' } }] }).error).toMatch(
+    /Example: \{"goto":"dashboard"\} or \{"goto":\{"pageId":"ticket",/
+  );
+});
+
+test('validateJourneySteps ends an expect error with examples of that expect kind', () => {
+  expect(
+    validateJourneySteps({ steps: [{ expect: { text: { blockId: 'title' } } }] }).error
+  ).toMatch(/ Example: \{"expect":\{"text":\{"blockId":"title","contains":"Orders"\}\}\}\.$/);
+  expect(validateJourneySteps({ steps: [{ expect: { count: 1 } }] }).error).toMatch(
+    / Example: \{"expect":\{"visible":"save_button"\}\} or \{"expect":\{"url":\{"contains":"\/orders"\}\}\}\.$/
+  );
+});
+
+test('validateJourneySteps lists the valid step names for an unknown step', () => {
+  expect(validateJourneySteps({ steps: [{ browser_forward: true }] }).error).toBe(
+    'Step 0: Unknown journey step "browser_forward". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
+  );
 });
