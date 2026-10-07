@@ -302,3 +302,57 @@ test('a transaction sent after the response is scrubbed of the credentials its r
   expect(clientSpan.data['http.query']).toEqual('key=[REDACTED]');
   expect(JSON.stringify(transaction)).not.toContain(markedKey);
 });
+
+test('concurrent requests each scrub their transaction with their own marked credentials', async () => {
+  const keyA = 'runtime-made-app-key-aaaa';
+  const keyB = 'runtime-made-app-key-bbbb';
+  const upstream = http.createServer((req, res) => res.end('{}'));
+  upstream.listen(0, '127.0.0.1');
+  const upstreamPort = await listen(upstream);
+
+  let markedB;
+  const bMarked = new Promise((resolve) => {
+    markedB = resolve;
+  });
+  const app = new Hono();
+  app.use('*', (c, next) => runInCredentialScope(next));
+  app.use('*', sentryMiddleware());
+  // The first request's middleware runs before the second's, and its fetch after the second
+  // has marked its own key, so a scrub shared between them would miss the first key.
+  app.post('/api/endpoints/first', async (c) => {
+    markCredential(keyA);
+    await bMarked;
+    await (await fetch(`http://127.0.0.1:${upstreamPort}/v1/first?key=${keyA}`)).text();
+    return c.json({ ok: true });
+  });
+  app.post('/api/endpoints/second', async (c) => {
+    markCredential(keyB);
+    markedB();
+    await (await fetch(`http://127.0.0.1:${upstreamPort}/v1/second?key=${keyB}`)).text();
+    return c.json({ ok: true });
+  });
+  const server = serve({ fetch: app.fetch, port: 0, hostname: '127.0.0.1' });
+  const port = await listen(server);
+  try {
+    const first = fetch(`http://127.0.0.1:${port}/api/endpoints/first`, { method: 'POST' });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    const second = fetch(`http://127.0.0.1:${port}/api/endpoints/second`, { method: 'POST' });
+    await Promise.all([(await first).text(), (await second).text()]);
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+    await new Promise((resolve) => upstream.close(resolve));
+  }
+  await RealSentry.flush();
+  const transactions = sentTransactions();
+  const firstTransaction = transactions.find(
+    ({ transaction: name }) => name === 'POST /api/endpoints/first'
+  );
+  const secondTransaction = transactions.find(
+    ({ transaction: name }) => name === 'POST /api/endpoints/second'
+  );
+  expect(JSON.stringify(firstTransaction)).toContain('/v1/first?key=[REDACTED]');
+  expect(JSON.stringify(secondTransaction)).toContain('/v1/second?key=[REDACTED]');
+  expect(JSON.stringify([firstTransaction, secondTransaction])).not.toContain(keyA);
+  expect(JSON.stringify([firstTransaction, secondTransaction])).not.toContain(keyB);
+});
