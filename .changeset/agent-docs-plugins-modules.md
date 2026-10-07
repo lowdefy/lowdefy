@@ -9,3 +9,4 @@ Doc search ranks by words, and covers the app's own plugins and modules.
 - The docs your app's plugins and modules ship are searched and read like the core docs, local plugins and `file:` modules included. `lowdefy_get_doc` returns a plugin's README as `plugins/<package>`, a `docs/*.md` file as `plugins/<package>/<file>`, and the same for modules under `modules/<id>`. A plugin docs file named after a type is that type's doc.
 - `modules/<id>/manifest` lists the vars (type, required, description, default), components and exports a module's `module.lowdefy.yaml` declares.
 - The dev server reads these docs when it starts and again when plugins or modules change. A config-only edit does not re-read them.
+- Only files inside a plugin or module are served: a README or docs file that links outside it is left out. A part of `module.lowdefy.yaml` with the wrong shape is named on the manifest page instead of failing the docs tools.

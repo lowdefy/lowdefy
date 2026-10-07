@@ -40,6 +40,21 @@ function findTypeSlug({ typeDocs, kind, typeName, anyKind }) {
   return null;
 }
 
+// With no kind, a core page for exactly this type name belongs to a Lowdefy
+// type, unless a plugin registers the name in that same kind and so replaces
+// it. A plugin type of another kind must not take that page's place.
+function namesOtherCoreType({ entries, typeDocs, kind, typeName }) {
+  if (!type.isNone(kind)) {
+    return false;
+  }
+  return entries.some(
+    (entry) =>
+      entry.source === 'core' &&
+      entry.typeName === typeName &&
+      !typeDocs.has(`${entry.kind}:${typeName}`)
+  );
+}
+
 function makePluginDoc({ entries, slug }) {
   const entry = entries.find((item) => item.source !== 'core' && item.slug === slug);
   if (type.isUndefined(entry)) {
@@ -71,7 +86,7 @@ function getDoc({ slug, kind, type: typeName }) {
     return null;
   }
   const pluginSlug = findTypeSlug({ typeDocs, kind, typeName, anyKind: false });
-  if (!type.isNone(pluginSlug)) {
+  if (!type.isNone(pluginSlug) && !namesOtherCoreType({ entries, typeDocs, kind, typeName })) {
     return makePluginDoc({ entries, slug: pluginSlug });
   }
   const coreDoc = getCoreDoc({ kind, type: typeName });

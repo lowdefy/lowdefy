@@ -88,6 +88,7 @@ writeBuild('plugins/availableTypes.json', {
     ButtonPlus: { package: 'fancy-blocks', version: '2.1.0' },
     FancyCard: { package: 'fancy-blocks', version: '2.1.0' },
     PlainCard: { package: 'fancy-blocks', version: '2.1.0' },
+    SetState: { package: 'fancy-blocks', version: '2.1.0' },
   },
   operators: {
     client: { _shout: { package: 'local-tools', version: 'workspace:*' } },
@@ -117,6 +118,12 @@ write(
 write(path.join(localPluginDir, 'package.json'), { name: 'local-tools', version: '0.3.1' });
 write(path.join(localPluginDir, 'README.md'), '# Local tools\n\nShouting operators.\n');
 write(path.join(localPluginDir, 'docs/_shout.md'), '# The _shout operator\n\nUppercases text.\n');
+// Links out of the package, a link to nowhere and a directory named like a
+// doc are never indexed.
+write(path.join(rootDir, 'outside.md'), '# Outside\n\nNot part of the plugin.\n');
+fs.symlinkSync(path.join(rootDir, 'outside.md'), path.join(localPluginDir, 'docs/leak.md'));
+fs.symlinkSync(path.join(rootDir, 'missing.md'), path.join(localPluginDir, 'docs/broken.md'));
+fs.mkdirSync(path.join(localPluginDir, 'docs/folder.md'));
 fs.symlinkSync(localPluginDir, path.join(serverDir, 'node_modules/local-tools'));
 write(path.join(moduleRoot, 'README.md'), '# Contacts module\n\nA list of people you work with.\n');
 write(path.join(moduleRoot, 'docs/setup.md'), '# Setting up contacts\n\nCreate the collection.\n');
@@ -210,6 +217,21 @@ test('a plugin type points at its own doc, else at the package README', () => {
 
 test('a plugin type named like a core type gets its plugin doc, not the core prefix match', () => {
   expect(getDoc({ kind: 'block', type: 'ButtonPlus' }).slug).toEqual('plugins/fancy-blocks');
+});
+
+test('a plugin type named like a core type of another kind leaves the core page to the core type', () => {
+  expect(getDoc({ type: 'SetState' }).slug).toEqual('actions/setstate');
+  expect(getDoc({ kind: 'action', type: 'SetState' }).slug).toEqual('actions/setstate');
+  expect(getDoc({ kind: 'block', type: 'SetState' }).slug).toEqual('plugins/fancy-blocks');
+});
+
+test('docs that link outside the package, link nowhere or are directories are left out', () => {
+  const slugs = getDocsIndex().entries.map((entry) => entry.slug);
+  expect(slugs).toContain('plugins/local-tools/_shout');
+  expect(slugs).not.toContain('plugins/local-tools/leak');
+  expect(slugs).not.toContain('plugins/local-tools/broken');
+  expect(slugs).not.toContain('plugins/local-tools/folder');
+  expect(getDoc({ slug: 'plugins/local-tools/leak' })).toBeNull();
 });
 
 test('getDoc returns plugin and module docs by slug with their source', () => {
@@ -319,4 +341,37 @@ test('a doc file added to a local plugin or module rebuilds the docs index', () 
   expect(afterPlugin.entries.map((entry) => entry.slug)).toContain('plugins/local-tools/whisper');
   write(path.join(moduleRoot, 'docs/import.md'), '# Importing contacts\n');
   expect(getDocsIndex().entries.map((entry) => entry.slug)).toContain('modules/contacts/import');
+});
+
+test('a malformed module manifest names the bad parts on its page and breaks no docs call', () => {
+  const broken = moduleEntry({
+    id: 'broken',
+    varDefs: { good: { type: 'string' }, bad: null, nested: { properties: { inner: 'x' } } },
+    manifest: {
+      components: { card: {} },
+      exports: { pages: ['home', null, { id: 'list' }], api: 'all' },
+    },
+  });
+  writeBuild('modules.json', serializer.serialize({ contacts: moduleEntry(), broken }));
+  const { markdown } = getDoc({ slug: 'modules/broken/manifest' });
+  expect(markdown).toContain('- `good` (string)');
+  expect(markdown).toContain(
+    '- `bad`: not valid in module.lowdefy.yaml, expected an object. Received null.'
+  );
+  expect(markdown).toContain(
+    '  - `nested.inner`: not valid in module.lowdefy.yaml, expected an object. Received "x".'
+  );
+  expect(markdown).toContain(
+    '- `components`: not valid in module.lowdefy.yaml, expected a list. Received {"card":{}}.'
+  );
+  expect(markdown).toContain(
+    '- `exports.pages.0`: not valid in module.lowdefy.yaml, expected an object with a string id. Received "home".'
+  );
+  expect(markdown).toContain('- `list`');
+  expect(markdown).toContain(
+    '- `exports.api`: not valid in module.lowdefy.yaml, expected a list. Received "all".'
+  );
+  expect(searchDocs({ query: 'not valid', source: 'module' }).map((hit) => hit.slug)).toEqual([
+    'modules/broken/manifest',
+  ]);
 });

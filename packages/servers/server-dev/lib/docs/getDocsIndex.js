@@ -70,6 +70,14 @@ function statKey(filePath) {
   }
 }
 
+// Component bodies are left out: only the ids and descriptions are shown.
+function componentsKey({ components }) {
+  if (!type.isArray(components)) {
+    return components;
+  }
+  return components.map((item) => (type.isObject(item) ? [item.id, item.description] : item));
+}
+
 // modules.json also holds what a config edit changes (resolved var values,
 // page bodies), so only the parts the docs read are compared.
 function readModules() {
@@ -89,7 +97,7 @@ function readModules() {
       moduleEntry.manifest?.name,
       moduleEntry.manifest?.description,
       moduleEntry.manifest?.exports,
-      (moduleEntry.manifest?.components ?? []).map((item) => [item.id, item.description]),
+      componentsKey({ components: moduleEntry.manifest?.components }),
     ])
   );
 }
