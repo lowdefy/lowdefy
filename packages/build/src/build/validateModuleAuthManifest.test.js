@@ -214,3 +214,16 @@ describe.each([
     );
   });
 });
+
+test('validateModuleAuthManifest names auth.agents.public for an agent listed under auth.api.public', () => {
+  expect(() =>
+    validateModuleAuthManifest({
+      agents: [{ id: 'concierge', type: 'ClaudeAgent' }],
+      api: [{ id: 'status', type: 'Api' }],
+      auth: { api: { public: ['concierge'] } },
+      entryId: 'crm',
+    })
+  ).toThrow(
+    'Module "crm" manifest "auth.api.public" lists "concierge", but the module ships no endpoint with that id. "concierge" is one of the module\'s agents: list it under "auth.agents.public".'
+  );
+});

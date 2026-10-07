@@ -298,6 +298,8 @@ auth:
 
 The app makes a module agent public with `auth.api.public: true`, or by naming it in an `auth.api.public` list. Otherwise it stays protected, also with no `auth.api` rule or under a `protected` list that does not name it, where an app agent would be public. A role in `auth.api.roles` restricts a module agent whether it is public or not. In an app without auth, module agents follow the app's rules like any other.
 
+A public agent does not open its tools: each tool endpoint keeps its own access, so a module endpoint the agent calls as a tool is refused when the caller is signed out unless the endpoint is public too. List the tools a public agent needs under `auth.api.public` as well, and a sub-agent it hands work to under `auth.agents.public`.
+
 ## Shipping Websockets
 
 A module declares the websockets its pages subscribe to in `websockets:`, so an app that installs the module needs no websocket config of its own. Each item takes the same fields as an app's top-level [`websockets`](/websockets-introduction) (`id`, `type`, `connectionId`, `properties`, `tenant`). Write `connectionId` with `_module.connectionId`, so a connection the app remaps resolves to the app's connection:

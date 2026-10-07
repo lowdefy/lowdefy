@@ -21,13 +21,33 @@ import authPageRoles from './buildAuth/authPageRoles.js';
 
 const allowedKeys = ['agents', 'api', 'hooks', 'pages', 'public', 'websockets'];
 
+const publicSections = [
+  { entity: 'agents', label: 'agent' },
+  { entity: 'api', label: 'endpoint' },
+  { entity: 'websockets', label: 'websocket' },
+];
+
 function contentKeys(object) {
   return Object.keys(object).filter((key) => !key.startsWith('~'));
 }
 
+// The app's auth.api rules govern agents too, so a module author may list an
+// agent under auth.api.public. Name the section the id belongs in.
+function otherSectionHint({ entity, itemId, shipped }) {
+  const other = publicSections.find(
+    (section) =>
+      section.entity !== entity &&
+      (shipped[section.entity] ?? []).some((item) => item.id === itemId)
+  );
+  if (type.isNone(other)) {
+    return '';
+  }
+  return ` "${itemId}" is one of the module's ${other.label}s: list it under "auth.${other.entity}.public".`;
+}
+
 // Validates auth.agents, auth.api or auth.websockets: an object whose only
 // key, public, lists ids of items the manifest ships.
-function validatePublicItems({ auth, entity, entryId, filePath, items, label }) {
+function validatePublicItems({ auth, entity, entryId, filePath, label, shipped }) {
   const section = auth[entity];
   if (type.isNone(section)) {
     return;
@@ -62,9 +82,10 @@ function validatePublicItems({ auth, entity, entryId, filePath, items, label }) 
         { received: itemId, filePath }
       );
     }
-    if (!(items ?? []).some((item) => item.id === itemId)) {
+    if (!(shipped[entity] ?? []).some((item) => item.id === itemId)) {
+      const hint = otherSectionHint({ entity, itemId, shipped });
       throw new ConfigError(
-        `Module "${entryId}" manifest "auth.${entity}.public" lists "${itemId}", but the module ships no ${label} with that id.`,
+        `Module "${entryId}" manifest "auth.${entity}.public" lists "${itemId}", but the module ships no ${label} with that id.${hint}`,
         { filePath }
       );
     }
@@ -164,16 +185,10 @@ function validateModuleAuthManifest({ agents, api, auth, entryId, filePath, webs
     }
   }
 
-  validatePublicItems({ auth, entity: 'agents', entryId, filePath, items: agents, label: 'agent' });
-  validatePublicItems({ auth, entity: 'api', entryId, filePath, items: api, label: 'endpoint' });
-  validatePublicItems({
-    auth,
-    entity: 'websockets',
-    entryId,
-    filePath,
-    items: websockets,
-    label: 'websocket',
-  });
+  const shipped = { agents, api, websockets };
+  for (const { entity, label } of publicSections) {
+    validatePublicItems({ auth, entity, entryId, filePath, label, shipped });
+  }
 }
 
 export default validateModuleAuthManifest;
