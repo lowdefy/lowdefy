@@ -1,0 +1,9 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "errors": ["_module.var operator takes a string argument."],
+      "errorContains": ["modules/widget/module.lowdefy.yaml:7"]
+    }
+  ]
+}
