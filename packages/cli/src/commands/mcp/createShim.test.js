@@ -248,6 +248,7 @@ test('lowdefy_dev_status reports a terminal dev server from its instance record 
       owner: 'terminal',
       state: 'starting',
       url: 'http://localhost:3000',
+      version: '7.2.0',
     })
   );
   await connect({ cwd: root });
@@ -257,6 +258,7 @@ test('lowdefy_dev_status reports a terminal dev server from its instance record 
     app: `apps/main @ ${path.basename(root)}`,
     owner: 'terminal',
     state: 'starting',
+    version: '7.2.0',
   });
   expect(fs.existsSync(path.join(home, 'hub'))).toBe(false);
 });

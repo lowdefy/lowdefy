@@ -303,6 +303,7 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
       url: record?.url,
       pid: record?.pid,
       startedAt: record?.startedAt,
+      version: record?.version,
     };
     const build = current.state === 'ready' ? await fetchBuildSummary({ url: current.url }) : null;
     return { app: app.label, ...current, build };
