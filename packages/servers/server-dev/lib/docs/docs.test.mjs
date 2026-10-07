@@ -202,6 +202,13 @@ test('getPluginDoc returns null for packages without docs', () => {
   expect(getPluginDoc({ packageName: 'no-such-package' })).toBeNull();
 });
 
+test('getPluginDoc reads only the app plugins, never a path out of node_modules', () => {
+  fs.writeFileSync(path.join(fixtureDir, 'README.md'), '# Server readme\n');
+  expect(getPluginDoc({ packageName: '..' })).toBeNull();
+  expect(getPluginDoc({ packageName: 'test-plugin/../..' })).toBeNull();
+  fs.rmSync(path.join(fixtureDir, 'README.md'));
+});
+
 test('getCoreDoc returns markdown by slug from docs-content', () => {
   const doc = getCoreDoc({ slug: 'operators/_get' });
   expect(doc.title).toEqual('_get');

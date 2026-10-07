@@ -18,10 +18,25 @@ import fs from 'node:fs';
 import { type } from '@lowdefy/helpers';
 
 import listPackageDocFiles from './listPackageDocFiles.js';
+import readBuildArtifact from './readBuildArtifact.js';
+import readPluginPackages from './readPluginPackages.js';
 import resolvePluginDir from './resolvePluginDir.js';
+
+// The package name comes from the caller, and a name such as "../../x" would
+// resolve outside node_modules, so only the app's own plugins are read.
+function isAppPlugin({ packageName }) {
+  const installed = readBuildArtifact({ name: 'installedPluginPackages.json' }) ?? [];
+  if (installed.includes(packageName)) {
+    return true;
+  }
+  return readPluginPackages().some((plugin) => plugin.package === packageName);
+}
 
 // Every markdown file a plugin package ships, joined into one document.
 function getPluginDoc({ packageName }) {
+  if (!isAppPlugin({ packageName })) {
+    return null;
+  }
   const pluginDir = resolvePluginDir({ packageName });
   if (type.isNone(pluginDir)) {
     return null;
