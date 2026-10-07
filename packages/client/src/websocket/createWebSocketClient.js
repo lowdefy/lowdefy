@@ -126,6 +126,12 @@ function createWebSocketClient(lowdefy) {
     });
     if (subscription.pending) {
       subscriptions.delete(subscription.websocketId);
+      // The server handles the frame late, or not yet, and would open the feed
+      // for a caller that has given up on it.
+      if (isSocketOpen()) {
+        socket.send(JSON.stringify({ type: 'unsubscribe', websocketId: subscription.websocketId }));
+      }
+      scheduleIdleClose();
       subscription.pending.reject(error);
       return;
     }
@@ -230,6 +236,7 @@ function createWebSocketClient(lowdefy) {
         clearAckTimer(subscription);
         if (subscription.pending) {
           subscriptions.delete(websocketId);
+          scheduleIdleClose();
           subscription.pending.reject(error);
           return;
         }
