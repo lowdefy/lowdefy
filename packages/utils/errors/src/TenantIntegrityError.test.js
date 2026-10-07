@@ -25,6 +25,7 @@ test('TenantIntegrityError sets name and isLowdefyError', () => {
   expect(error.message).toBe('bad row');
   expect(error.collection).toBeNull();
   expect(error.endpointId).toBeNull();
+  expect(error.configKey).toBeNull();
 });
 
 test('TenantIntegrityError stores its fields and cause', () => {
@@ -32,6 +33,7 @@ test('TenantIntegrityError stores its fields and cause', () => {
   const error = new TenantIntegrityError('bad row', {
     cause,
     collection: 'contacts',
+    configKey: 'key_1',
     connectionId: 'contacts_conn',
     organizationId: 'org_a',
     field: 'organization_id',
@@ -39,6 +41,7 @@ test('TenantIntegrityError stores its fields and cause', () => {
   });
   expect(error.cause).toBe(cause);
   expect(error.collection).toBe('contacts');
+  expect(error.configKey).toBe('key_1');
   expect(error.connectionId).toBe('contacts_conn');
   expect(error.organizationId).toBe('org_a');
   expect(error.field).toBe('organization_id');

@@ -17,17 +17,9 @@
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 
 // One change log record per request that wrote cells, when the connection has a change log.
-async function writeEnrichmentLog({
-  args,
-  context,
-  logCollection,
-  organizationId,
-  response,
-  type,
-}) {
+async function writeEnrichmentLog({ args, context, logCollection, response, type }) {
   if (!logCollection) return;
-  const { blockId, connection, connectionId, pageId, payload, requestId, tenant, tenantGuard } =
-    context;
+  const { blockId, connection, connectionId, pageId, payload, requestId, tenant } = context;
   await logCollection.insertOne(
     stampTenantOnLogRecord({
       record: {
@@ -43,8 +35,6 @@ async function writeEnrichmentLog({
         meta: connection.changeLog?.meta,
       },
       tenant,
-      tenantGuard,
-      organizationId,
     })
   );
 }

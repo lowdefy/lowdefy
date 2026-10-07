@@ -17,6 +17,7 @@
 import { ConfigError } from '@lowdefy/errors';
 
 import applyTenantToFilter from '../connections/MongoDBCollection/tenant/applyTenantToFilter.js';
+import assertTenantWritable from '../connections/MongoDBCollection/tenant/assertTenantWritable.js';
 import applyTenantToUpdate from '../connections/MongoDBCollection/tenant/applyTenantToUpdate.js';
 import getCollection from '../connections/MongoDBCollection/getCollection.js';
 import mapMongoError from '../connections/MongoDBCollection/mapMongoError.js';
@@ -71,6 +72,7 @@ function getWalledCollection({
   };
 
   function assertWrite(method) {
+    assertTenantWritable({ tenantGuard, requestType: `The walled MongoDB client's "${method}"` });
     if (connection.write !== true) {
       throw new ConfigError(
         `Walled MongoDB client can not run "${method}": the connection does not allow writes.`
@@ -171,7 +173,7 @@ function getWalledCollection({
           // The driver returned the pre-update row; the log records the row left behind.
           after = await collection.findOne({ _id: result.value._id });
         }
-        if (logCollection && !(tenantGuard?.stampChangeLog && after == null)) {
+        if (logCollection) {
           await logCollection.insertOne(
             stampTenantOnLogRecord({
               record: {
@@ -185,8 +187,6 @@ function getWalledCollection({
                 meta: connection.changeLog?.meta,
               },
               tenant,
-              tenantGuard,
-              organizationId: tenantGuard && after?.[tenantGuard.field],
             })
           );
         }

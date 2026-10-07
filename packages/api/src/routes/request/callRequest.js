@@ -55,6 +55,7 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
     connection,
     connectionConfig,
     requestConfig,
+    writes: requestResolver.meta.checkWrite === true,
   });
 
   // A page request runs outside any routine, so it evaluates against an empty frame.

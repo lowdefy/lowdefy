@@ -21,6 +21,7 @@ import mapMongoError from '../mapMongoError.js';
 import injectTenantIntoPipeline from '../tenant/injectTenantIntoPipeline.js';
 import { assertUnscopedPipeline } from '../tenant/guardUnscopedWrite.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 function checkOutAndMerge({ pipeline, connection }) {
@@ -51,7 +52,7 @@ async function MongodbAggregation({ request, connection, tenant, tenantGuard }) 
     pipeline = injectTenantIntoPipeline({ pipeline, tenant });
   }
   if (tenantGuard) {
-    assertUnscopedPipeline({ pipeline, field: tenantGuard.field });
+    assertUnscopedPipeline({ pipeline, field: tenantGuard.field, readOnly: tenantGuard.readOnly });
   }
   const { collection } = await getCollection({ connection });
   let res;
@@ -65,9 +66,6 @@ async function MongodbAggregation({ request, connection, tenant, tenantGuard }) 
 }
 
 MongodbAggregation.schema = schema;
-MongodbAggregation.meta = {
-  checkRead: true,
-  checkWrite: false,
-};
+MongodbAggregation.meta = requestMetas.MongoDBAggregation;
 
 export default MongodbAggregation;

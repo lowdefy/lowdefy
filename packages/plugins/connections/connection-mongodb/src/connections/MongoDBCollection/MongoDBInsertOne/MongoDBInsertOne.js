@@ -16,11 +16,13 @@
 
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import verifyStoredTenant from '../tenant/verifyStoredTenant.js';
 import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import { assertUnscopedDoc } from '../tenant/guardUnscopedWrite.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 async function MongodbInsertOne({
@@ -35,6 +37,7 @@ async function MongodbInsertOne({
   tenant,
   tenantGuard,
 }) {
+  assertTenantWritable({ tenantGuard, requestType: 'MongoDBInsertOne' });
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { doc } = deserializedRequest;
@@ -64,8 +67,6 @@ async function MongodbInsertOne({
             meta: connection.changeLog?.meta,
           },
           tenant,
-          tenantGuard,
-          organizationId: tenantGuard && doc[tenantGuard.field],
         })
       );
     }
@@ -87,9 +88,6 @@ async function MongodbInsertOne({
 }
 
 MongodbInsertOne.schema = schema;
-MongodbInsertOne.meta = {
-  checkRead: false,
-  checkWrite: true,
-};
+MongodbInsertOne.meta = requestMetas.MongoDBInsertOne;
 
 export default MongodbInsertOne;

@@ -44,6 +44,7 @@ async function handleRequest(context, routineContext, { request }) {
     connection,
     connectionConfig,
     requestConfig,
+    writes: requestResolver.meta.checkWrite === true,
   });
 
   const { connectionProperties, requestProperties } = evaluateOperators(context, {

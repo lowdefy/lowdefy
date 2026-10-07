@@ -39,6 +39,12 @@ function createContext({
     defaultPackageNames: new Set(defaultPackages),
     agentIds: new Set(),
     connectionIds: new Set(),
+    // Set by buildConnections, or restored onto a dev page build
+    // (restoreTenantTargets). Empty until then, so a page built without the
+    // connections (buildTestPage) gets no tenant checks rather than a crash.
+    tenantConnectionIds: new Set(),
+    walledTargets: new Map(),
+    sharedTargets: new Map(),
     notificationIds: new Set(),
     websocketIds: new Set(),
     directories,

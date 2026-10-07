@@ -18,16 +18,16 @@ import { ConfigError } from '@lowdefy/errors';
 
 import getCollectionWriteStage from './getCollectionWriteStage.js';
 
-// The write half of the tenant: none opt-out, and of a tenant: shared
-// connection over a walled collection (the guard is computed by the api's
-// resolveTenancy). An unscoped request is neither filtered nor stamped, so the
-// app authors the tenant field itself - and this checks that it did. Every row an unscoped write leaves behind must carry a non-empty
-// string organization id: a row with a null or missing field is invisible to
-// every walled read. Refusing the write fails one request that names its step
-// instead of leaving a row nobody can see.
+// The write guard of a tenant: shared connection over a walled collection (the
+// guard is computed by the api's resolveTenancy). An unscoped write is neither
+// filtered nor stamped, so the app authors the tenant field itself - and this
+// checks that it did. Every row an unscoped write leaves behind must carry a
+// non-empty string organization id: a row with a null or missing field is
+// invisible to every walled read. Refusing the write fails one request that
+// names its step instead of leaving a row nobody can see.
 //
 // Only the tenant field is checked, and only what THIS write does to it - the
-// filter stays unscoped (tenant: none may address rows of every org).
+// filter stays unscoped (a shared connection may address rows of every org).
 //
 // Updates are walked as a small state machine over the field:
 //   kept    - the matched row keeps whatever it holds (not this write's doing)
@@ -56,7 +56,7 @@ function isPipelineOrganizationId(value) {
 
 function refuse({ field, detail }) {
   throw new ConfigError(
-    `Unscoped write to a walled collection (tenant: none, or a tenant: shared connection over a collection a scoped connection reads) must leave "${field}" a non-empty organization id on every row it writes - ${detail}. A row without it is invisible to every walled read and stays invisible until it is fixed. Author the organization id explicitly, or keep data that belongs to no organization in a collection no scoped connection reads.`
+    `Unscoped write to a walled collection (a tenant: shared connection over a collection a scoped connection reads) must leave "${field}" a non-empty organization id on every row it writes - ${detail}. A row without it is invisible to every walled read and stays invisible until it is fixed. Author the organization id explicitly, or keep data that belongs to no organization in a collection no scoped connection reads.`
   );
 }
 
@@ -240,52 +240,6 @@ function assertUnscopedUpdate({ update, filter, field, upsert = false, position 
   assertEndState({ state: updateEndState({ update, field, state }), field, position });
 }
 
-// A change-log record copies the rows it records (documents, filter, update),
-// so on a change-logged connection an unscoped write is stamped with the one
-// organization it writes (stampTenantOnLogRecord) - otherwise the record would
-// be an organization-less row in the log collection, which is usually walled
-// itself. A single-document write takes the organization from the row it
-// wrote or deleted. A multi-document write must name it up front: every
-// inserted document carries the same organization id, or the filter matches
-// the tenant field by equality and the update leaves it alone. Anything that
-// can touch rows of several organizations is refused before it writes.
-function refuseChangeLog({ field, detail, remedy }) {
-  throw new ConfigError(
-    `Unscoped write (tenant: none) on a change-logged tenant connection must write rows of one organization - ${detail}. The change-log record is stamped with the organization of the rows it records, and a write that can reach several organizations has no single "${field}" to stamp. ${remedy}`
-  );
-}
-
-function changeLogOrganizationOfDocs({ docs, field }) {
-  const organizationIds = [...new Set((docs ?? []).map((doc) => doc?.[field]))];
-  if (organizationIds.length !== 1) {
-    refuseChangeLog({
-      field,
-      detail: `the documents carry ${JSON.stringify(organizationIds)}`,
-      remedy: 'Write the documents of each organization in a request of their own.',
-    });
-  }
-  return organizationIds[0];
-}
-
-function changeLogOrganizationOfFilter({ filter, update, field }) {
-  const organizationId = filterOrganizationId({ filter, field });
-  if (organizationId === null) {
-    refuseChangeLog({
-      field,
-      detail: `the filter does not match "${field}" by equality to one organization id`,
-      remedy: `Match it in the filter (for example { ${field}: <organization id> }), and run the write once per organization.`,
-    });
-  }
-  if (update !== undefined && updateEndState({ update, field, state: 'kept' }) !== 'kept') {
-    refuseChangeLog({
-      field,
-      detail: `the update writes "${field}", so the rows can move to another organization`,
-      remedy: `Leave "${field}" out of the update, or move rows between organizations one document at a time.`,
-    });
-  }
-  return organizationId;
-}
-
 function assertUnscopedBulkOperations({ operations, field }) {
   (operations ?? []).forEach((operation, index) => {
     const entries = Object.entries(operation ?? {});
@@ -327,26 +281,36 @@ function assertUnscopedBulkOperations({ operations, field }) {
   });
 }
 
-// An aggregation reads unscoped under the guard, which is the point of the
-// opt-out, but $out and $merge write the pipeline's output as rows no check
-// can see - refused like on the scoped path (injectTenantIntoPipeline).
-// MongoDB only runs them as the final root stage; the walk still covers every
-// sub-pipeline the scoped path walks, so the guard does not rest on the
-// server's placement rule.
-function assertUnscopedPipeline({ pipeline, field }) {
+// $out and $merge write the pipeline's output as rows no check can see, so an
+// unscoped aggregation can not run them: under tenant: none (readOnly) because
+// the opt-out only reads, on a shared connection over a walled collection
+// because the rows would skip the guard - refused like on the scoped path
+// (injectTenantIntoPipeline). MongoDB only runs them as the final root stage;
+// the walk still covers every sub-pipeline the scoped path walks, so the guard
+// does not rest on the server's placement rule.
+function refusePipelineWrite({ writeStage, field, readOnly }) {
+  if (readOnly) {
+    throw new ConfigError(
+      `An aggregation with tenant: none may only read, and "${writeStage}" writes its output into a collection. Return the documents instead. To write rows of one organization from a system run, call an endpoint with a CallApi step that names the "organization": its requests are filtered and stamped with that organization.`
+    );
+  }
+  throw new ConfigError(
+    `Unscoped aggregation on a walled collection (a tenant: shared connection over a collection a scoped connection reads) can not contain "${writeStage}" - it writes rows the tenant guard can not check for a non-empty "${field}", and a row without it stays invisible to every walled read. Return the documents and write them with MongoDBInsertMany or MongoDBBulkWrite, which check every row. An aggregation that neither reads nor writes a walled collection can run on a tenant: shared connection.`
+  );
+}
+
+function assertUnscopedPipeline({ pipeline, field, readOnly = false }) {
   (Array.isArray(pipeline) ? pipeline : []).forEach((stage) => {
     if (stage === null || typeof stage !== 'object') return;
     const writeStage = getCollectionWriteStage({ stage });
     if (writeStage !== null) {
-      throw new ConfigError(
-        `Unscoped aggregation on a walled collection (tenant: none, or a tenant: shared connection over a collection a scoped connection reads) can not contain "${writeStage}" - it writes rows the tenant guard can not check for a non-empty "${field}", and a row without it stays invisible to every walled read. Return the documents and write them with MongoDBInsertMany or MongoDBBulkWrite, which check every row. An aggregation that neither reads nor writes a walled collection can run on a tenant: shared connection.`
-      );
+      refusePipelineWrite({ writeStage, field, readOnly });
     }
-    assertUnscopedPipeline({ pipeline: stage.$lookup?.pipeline, field });
-    assertUnscopedPipeline({ pipeline: stage.$unionWith?.pipeline, field });
+    assertUnscopedPipeline({ pipeline: stage.$lookup?.pipeline, field, readOnly });
+    assertUnscopedPipeline({ pipeline: stage.$unionWith?.pipeline, field, readOnly });
     if (stage.$facet !== null && typeof stage.$facet === 'object') {
       Object.values(stage.$facet).forEach((branch) =>
-        assertUnscopedPipeline({ pipeline: branch, field })
+        assertUnscopedPipeline({ pipeline: branch, field, readOnly })
       );
     }
   });
@@ -357,6 +321,4 @@ export {
   assertUnscopedDoc,
   assertUnscopedPipeline,
   assertUnscopedUpdate,
-  changeLogOrganizationOfDocs,
-  changeLogOrganizationOfFilter,
 };

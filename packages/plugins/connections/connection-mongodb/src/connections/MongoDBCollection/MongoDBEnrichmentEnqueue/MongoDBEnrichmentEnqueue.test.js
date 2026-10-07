@@ -440,25 +440,19 @@ describe('tenant scoping and change log', () => {
     });
   });
 
-  test('an unscoped request on a change-logged tenant connection logs the organization its filter pins', async () => {
-    const { connection, logCollection } = await setupEnrichmentCollection({
+  test('a tenant: none request on a change-logged tenant connection is refused and logs nothing', async () => {
+    const { collection, connection, logCollection } = await setupEnrichmentCollection({
       name,
       documents: leads(),
       changeLog: true,
     });
-    await enqueue({ connection, tenantGuard: { field: 'org', stampChangeLog: true } });
-    const records = await readDocuments(logCollection);
-    expect(records[0].org).toBe('o1');
+    const before = await readDocuments(collection);
     await expect(
-      enqueue({
-        connection,
-        filter: {},
-        mode: 'errors',
-        tenantGuard: { field: 'org', stampChangeLog: true },
-      })
-    ).resolves.toMatchObject({ queued: 0 });
-    await expect(
-      enqueue({ connection, filter: {}, tenantGuard: { field: 'org', stampChangeLog: true } })
-    ).rejects.toThrow('Unscoped');
+      enqueue({ connection, tenantGuard: { field: 'org', readOnly: true } })
+    ).rejects.toThrow(
+      'MongoDBEnrichmentEnqueue writes, and a request with tenant: none may only read'
+    );
+    expect(await readDocuments(collection)).toEqual(before);
+    expect(await readDocuments(logCollection)).toEqual([]);
   });
 });

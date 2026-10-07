@@ -753,7 +753,7 @@ test("table query: a $lookup in the base pipeline only joins this org's rows", a
   });
 });
 
-test('table query under tenantGuard (tenant: none) is unscoped by design and joins every org', async () => {
+test('table query under tenant: none is unscoped by design and joins every org', async () => {
   const collection = 'tenantIsolationTableQueryGuard';
   await populateTestMongoDb({ collection, documents: lookupDocs });
   const res = await MongoDBTableQuery({
@@ -763,7 +763,7 @@ test('table query under tenantGuard (tenant: none) is unscoped by design and joi
       project: false,
     },
     connection: makeConnection(collection, { read: true }),
-    tenantGuard: { field: 'organization_id' },
+    tenantGuard: { field: 'organization_id', readOnly: true },
   });
   expect(res.total).toBe(3);
   res.rows.forEach((row) => expect(row.joined).toHaveLength(3));
@@ -938,10 +938,10 @@ test.each([
   docs.forEach((doc) => expect(doc._enrich).toBeUndefined());
 });
 
-test('enrichment under tenantGuard (tenant: none) is scoped by its filter alone', async () => {
+test('enrichment on a shared connection over a walled collection is scoped by its filter alone', async () => {
   const collection = 'tenantIsolationEnrichmentGuard';
   await populateTestMongoDb({ collection, documents: enrichmentDocs });
-  const tenantGuard = { field: 'organization_id' };
+  const tenantGuard = { field: 'organization_id', readOnly: false };
   const scoped = await MongoDBEnrichmentEnqueue({
     request: { fields, columnDefs, columns: ['email'], filter: { organization_id: 'org_b' } },
     connection: enrichmentConnection(collection),

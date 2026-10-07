@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import getLiteralWriteTarget from './getLiteralWriteTarget.js';
 import tenantTargetKey from './tenantTargetKey.js';
 
 // Best-effort DX check, like validateTenantPipelineEntry: literal pipelines
@@ -29,22 +30,6 @@ import tenantTargetKey from './tenantTargetKey.js';
 //
 // MongoDB only runs $out and $merge as the last stage of the root pipeline,
 // so only the root stages are read.
-function getLiteralWriteTarget(stage) {
-  if (!type.isObject(stage)) {
-    return null;
-  }
-  if (type.isString(stage.$out)) {
-    return { operator: '$out', collection: stage.$out };
-  }
-  if (type.isString(stage.$merge)) {
-    return { operator: '$merge', collection: stage.$merge };
-  }
-  if (type.isString(stage.$merge?.into)) {
-    return { operator: '$merge', collection: stage.$merge.into };
-  }
-  return null;
-}
-
 function validateSharedPipelineWrite({
   config,
   location,
@@ -76,7 +61,7 @@ function validateSharedPipelineWrite({
       return;
     }
     throw new ConfigError(
-      `${location} writes into collection "${write.collection}" with "${write.operator}" on tenant: shared connection "${config.connectionId}", but scoped connection "${walled.connectionId}" reads that collection. Rows an aggregation writes are not checked for a non-empty "${walled.field}", and a row without it is invisible to every walled read and makes the tenant preflight refuse to serve the app. Return the documents and write them with MongoDBInsertMany or MongoDBBulkWrite on connection "${walled.connectionId}" (with tenant: none when rows of several organizations are written), which checks every row.`,
+      `${location} writes into collection "${write.collection}" with "${write.operator}" on tenant: shared connection "${config.connectionId}", but scoped connection "${walled.connectionId}" reads that collection. Rows an aggregation writes are not checked for a non-empty "${walled.field}", and a row without it is invisible to every walled read and makes the tenant preflight refuse to serve the app. Return the documents and write them with MongoDBInsertMany or MongoDBBulkWrite on connection "${walled.connectionId}", which stamps every row with the caller's organization (from a system run, call an endpoint with a CallApi step that names the "organization").`,
       { configKey }
     );
   });

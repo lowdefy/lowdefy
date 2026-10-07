@@ -22,12 +22,13 @@
 class TenantIntegrityError extends Error {
   constructor(
     message,
-    { cause, collection, connectionId, organizationId, field, endpointId } = {}
+    { cause, collection, configKey, connectionId, organizationId, field, endpointId } = {}
   ) {
     super(message, { cause });
     this.name = 'TenantIntegrityError';
     this.isLowdefyError = true;
     this.collection = collection ?? null;
+    this.configKey = configKey ?? null;
     this.connectionId = connectionId ?? null;
     this.organizationId = organizationId ?? null;
     this.field = field ?? null;

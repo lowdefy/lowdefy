@@ -32,7 +32,7 @@ function validateTenantPipelineEntry({ config, location, tenantConnectionIds, co
   if (config.tenant === 'none' || config.tenant === 'authored') {
     return;
   }
-  if (!tenantConnectionIds || !tenantConnectionIds.has(config.connectionId)) {
+  if (!tenantConnectionIds.has(config.connectionId)) {
     return;
   }
   const pipeline = config.properties?.pipeline;
