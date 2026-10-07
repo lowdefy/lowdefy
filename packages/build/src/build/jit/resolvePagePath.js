@@ -27,14 +27,15 @@ import resolvePageSource from './resolvePageSource.js';
 // files are read through a fresh read cache: the kept context's cache holds
 // what the skeleton build read. The page's content is skipped, as the skeleton
 // build skips it, so a check does not read the files the content refs, and the
-// refs it does walk go on a copy of refMap, so checks do not grow the kept
-// context's.
+// refs it does walk go on copies of refMap and unresolvedRefVars, so checks do
+// not grow the kept context's.
 async function resolvePagePath({ pageId, pageRegistry, context }) {
   prepareJitContext(context);
   const pageEntry = pageRegistry.get(pageId);
   const buildContext = createPageBuildContext(context);
   buildContext.readConfigFile = createReadConfigFile({ directories: context.directories });
   buildContext.refMap = { ...context.refMap };
+  buildContext.unresolvedRefVars = { ...context.unresolvedRefVars };
   const { page } = await resolvePageSource({
     pageId,
     pageEntry,
