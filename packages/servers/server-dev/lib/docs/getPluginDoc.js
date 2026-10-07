@@ -15,40 +15,23 @@
 */
 
 import fs from 'node:fs';
-import path from 'node:path';
 import { type } from '@lowdefy/helpers';
 
+import listPackageDocFiles from './listPackageDocFiles.js';
 import resolvePluginDir from './resolvePluginDir.js';
 
-// Local plugins have no doc convention — probe the common locations and
-// return whatever markdown ships with the package.
+// Every markdown file a plugin package ships, joined into one document.
 function getPluginDoc({ packageName }) {
   const pluginDir = resolvePluginDir({ packageName });
   if (type.isNone(pluginDir)) {
     return null;
   }
-  const sections = [];
-  for (const readme of ['README.md', 'readme.md']) {
-    const readmePath = path.join(pluginDir, readme);
-    if (fs.existsSync(readmePath)) {
-      sections.push(fs.readFileSync(readmePath, 'utf8'));
-      break;
-    }
-  }
-  for (const docsDir of ['docs', 'dist/docs']) {
-    const dirPath = path.join(pluginDir, docsDir);
-    if (!fs.existsSync(dirPath)) {
-      continue;
-    }
-    for (const fileName of fs.readdirSync(dirPath).sort()) {
-      if (fileName.endsWith('.md')) {
-        sections.push(fs.readFileSync(path.join(dirPath, fileName), 'utf8'));
-      }
-    }
-  }
-  if (sections.length === 0) {
+  const { readme, docs } = listPackageDocFiles({ dir: pluginDir });
+  const files = type.isNone(readme) ? docs : [readme, ...docs];
+  if (files.length === 0) {
     return null;
   }
+  const sections = files.map((filePath) => fs.readFileSync(filePath, 'utf8'));
   return { package: packageName, markdown: sections.join('\n\n---\n\n') };
 }
 

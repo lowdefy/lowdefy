@@ -14,14 +14,16 @@
   limitations under the License.
 */
 
-import getCoreDoc from '../../../lib/docs/getCoreDoc.js';
+import getDoc from '../../../lib/docs/getDoc.js';
 
 function docsContentHandler(c) {
   const slug = c.req.param('slug');
-  const doc = getCoreDoc({ slug });
+  const doc = getDoc({ slug });
   if (doc === null) {
     return c.json(
-      { error: `No doc found for slug "${slug}". Use GET /lowdefy-docs/search?q=... to find the right slug.` },
+      {
+        error: `No doc found for slug "${slug}". Use GET /lowdefy-docs/search?q=... to find the right slug.`,
+      },
       404
     );
   }

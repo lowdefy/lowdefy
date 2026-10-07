@@ -80,6 +80,7 @@ import requestTimeout from './middleware/requestTimeout.js';
 import rootHandler from './routes/root.js';
 import staleFlag from './middleware/staleFlag.js';
 import startIdleGc from '../lib/server/startIdleGc.js';
+import getDocsIndex from '../lib/docs/getDocsIndex.js';
 import usageHandler from './routes/usage.js';
 import userHandler from './routes/user.js';
 import websocketHandler from './routes/websocket.js';
@@ -183,6 +184,9 @@ function createApp() {
   // it out of the request timeout list.
   app.use('/api/dev-recording', localDevToolsOnly());
   app.post('/api/dev-recording', bodyLimit({ maxSize: 1024 * 1024 }), devRecordingHandler);
+  // Built now so the first doc search does not pay for reading every plugin
+  // and module's docs.
+  getDocsIndex();
   app.get('/lowdefy-docs/plugins', docsPluginsHandler);
   app.get('/lowdefy-docs/schema/:kind/:type', docsSchemaHandler);
   app.get('/lowdefy-docs/examples/:type', docsExamplesHandler);

@@ -28,7 +28,7 @@ import { MAX_VIEWPORT_SIZE } from './validateViewport.js';
 
 const INSTRUCTIONS = `Lowdefy documentation and feedback server for this project. Lowdefy apps are YAML config composing blocks (UI), operators (logic), actions (event handlers), and connections/requests (data).
 
-Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a kind to discover ALL installed blocks/operators/actions/connections/requests — never guess type names. Then lowdefy_get_schema and lowdefy_get_examples for the exact contract of a type, and lowdefy_get_doc / lowdefy_search_docs for concept documentation. Icons: use a semantic name (icon: edit); otherwise use a Lucide name in PascalCase (icon: Receipt) found with lowdefy_search_icons; never invent an icon name, never emoji; in any HTML string use <i data-icon="edit"></i>, data-tooltip="…" and data-popover="…", ClickableHtml with data-event for clicks (list each event in its dataEvents property; escape request and user data in the HTML), <a data-page-id="page" data-url-query="k=v"> for in-app links (never a hard-coded href; data-new-tab, not target), and data-tag="success" / data-status="success" for statuses (never inline-styled pills), <time datetime="…" data-time="relative">, data-format="currency" data-currency="USD" on raw numbers, data-avatar="Name" (never an avatar image service), data-copy, data-truncate="2", data-tone="secondary" (never inline grey colours) and, in ClickableHtml, confirm on destructive events in dataEvents ({ name: onDelete, confirm: "…" }); lowdefy_get_doc concepts/html-attributes lists them all. lowdefy_list_plugins and lowdefy_get_plugin_doc cover this project's local plugin packages.
+Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a kind to discover ALL installed blocks/operators/actions/connections/requests — never guess type names. Then lowdefy_get_schema and lowdefy_get_examples for the exact contract of a type, and lowdefy_get_doc / lowdefy_search_docs for concept documentation. Icons: use a semantic name (icon: edit); otherwise use a Lucide name in PascalCase (icon: Receipt) found with lowdefy_search_icons; never invent an icon name, never emoji; in any HTML string use <i data-icon="edit"></i>, data-tooltip="…" and data-popover="…", ClickableHtml with data-event for clicks (list each event in its dataEvents property; escape request and user data in the HTML), <a data-page-id="page" data-url-query="k=v"> for in-app links (never a hard-coded href; data-new-tab, not target), and data-tag="success" / data-status="success" for statuses (never inline-styled pills), <time datetime="…" data-time="relative">, data-format="currency" data-currency="USD" on raw numbers, data-avatar="Name" (never an avatar image service), data-copy, data-truncate="2", data-tone="secondary" (never inline grey colours) and, in ClickableHtml, confirm on destructive events in dataEvents ({ name: onDelete, confirm: "…" }); lowdefy_get_doc concepts/html-attributes lists them all. lowdefy_search_docs and lowdefy_get_doc also cover the docs this app's own plugins and modules ship (READMEs, docs/*.md, and modules/<id>/manifest for a module's components, exports and vars), so read those before reading plugin or module source.
 
 Push events: build results, server restarts and browser/server errors arrive as notifications/message from logger "lowdefy" (data.type is one of build, restart, client_error, server_error; a build event carries status, errors, warnings and stale). Act on them without polling — lowdefy_build_status remains the full picture.
 
@@ -458,7 +458,7 @@ const devToolDefinitions = {
 
   lowdefy_get_doc: {
     description:
-      'Get a core Lowdefy documentation page as markdown. Look up by slug (e.g. "concepts/lowdefy-schema", "operators/_get") or by kind + type name. Key concept slugs: concepts/lowdefy-schema, concepts/blocks, concepts/events-and-actions, concepts/connections-and-requests, concepts/operators, concepts/page-and-app-state.' +
+      'Get a Lowdefy documentation page as markdown. Look up by slug (e.g. "concepts/lowdefy-schema", "operators/_get") or by kind + type name. Also returns the docs this app\'s own plugins and modules ship: "plugins/<package>" and "modules/<id>" for a README, "plugins/<package>/<file>" and "modules/<id>/<file>" for a docs/*.md file, and "modules/<id>/manifest" for the components, exports and vars a module declares. Key concept slugs: concepts/lowdefy-schema, concepts/blocks, concepts/events-and-actions, concepts/connections-and-requests, concepts/operators, concepts/page-and-app-state.' +
       HAZARDS_NOTE,
     inputSchema: {
       slug: z.string().optional().describe('Doc slug, e.g. "operators/_get".'),
@@ -498,7 +498,7 @@ const devToolDefinitions = {
 
   lowdefy_get_plugin_doc: {
     description:
-      "Get markdown documentation shipped inside an installed plugin package (README, guides). Useful for this project's local custom plugins.",
+      'Get all the markdown an installed plugin package ships (README, docs/*.md) as one page. lowdefy_search_docs and lowdefy_get_doc reach the same files page by page.',
     inputSchema: {
       package: z.string().describe('The package name, e.g. "@lowdefy/blocks-antd".'),
     },

@@ -14,18 +14,18 @@
   limitations under the License.
 */
 
-import getDocsIndex from './getDocsIndex.js';
-import readPluginPackages from './readPluginPackages.js';
-
-function listPlugins() {
-  const slugs = new Set(getDocsIndex().entries.map((entry) => entry.slug));
-  return readPluginPackages().map((plugin) => {
-    const docSlug = `plugins/${plugin.package}`;
-    if (!slugs.has(docSlug)) {
-      return plugin;
-    }
-    return { ...plugin, docSlug };
-  });
+// A module's source names its package and version: "github:owner/repo/path@ref"
+// is package "github:owner/repo/path" at version "ref"; a local "file:" source
+// is version "local".
+function parseModuleSource({ source }) {
+  if (source.startsWith('file:')) {
+    return { package: source, version: 'local' };
+  }
+  const at = source.lastIndexOf('@');
+  if (at <= 0) {
+    return { package: source, version: null };
+  }
+  return { package: source.slice(0, at), version: source.slice(at + 1) };
 }
 
-export default listPlugins;
+export default parseModuleSource;

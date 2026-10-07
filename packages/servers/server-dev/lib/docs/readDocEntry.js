@@ -15,12 +15,19 @@
 */
 
 import fs from 'node:fs';
+import { type } from '@lowdefy/helpers';
+
+import makeModuleManifestDoc from './makeModuleManifestDoc.js';
 
 const coreContent = new Map();
 
 // Core docs ship with the installed docs package and never change while the
-// server runs, so they are read once. Other docs are read on every call.
+// server runs, so they are read once. Plugin and module docs are read on
+// every call; a module's manifest page is generated from its build entry.
 function readDocEntry({ entry }) {
+  if (!type.isUndefined(entry.moduleEntry)) {
+    return makeModuleManifestDoc({ moduleEntry: entry.moduleEntry });
+  }
   if (entry.source !== 'core') {
     return fs.readFileSync(entry.filePath, 'utf8');
   }
