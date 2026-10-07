@@ -150,6 +150,37 @@ const secrets = getSecretsFromEnv(process.env);
 
 Typically filtered by prefix or naming convention in calling code.
 
+### Public address checks
+
+A server that fetches a link a user supplied must not reach a private, loopback, link-local or
+cloud metadata address. One copy of the check serves every such fetch (the `AwsS3PutObject` url
+copy, the agent and AI request file downloads), so a range added here closes it for all of them.
+
+- `isPublicAddress(address)`: `false` for any IPv4 or IPv6 address that is not public unicast,
+  including an IPv4-mapped, NAT64 (`64:ff9b::/96`) or 6to4 (`2002::/16`) address that embeds a
+  private IPv4 address.
+- `createLookupPublicAddress({ createNotPublicError })`: a `dns.lookup` for a socket. The socket
+  connects to the addresses it answers, so the address checked is the address connected to and a
+  name that rebinds between lookups gets nowhere.
+- `createConnectPublic({ createNotPublicError })`: an undici connector built on that lookup, which
+  also checks an IP literal (a literal skips the lookup). Pass it as `new Agent({ connect })` and
+  every request and redirect through that dispatcher is checked.
+
+`createNotPublicError(hostname)` returns the error a refused address fails with, so each caller
+keeps its own message and `code`:
+
+```javascript
+import createConnectPublic from '@lowdefy/node-utils/createConnectPublic.js';
+import { Agent } from 'undici';
+
+const dispatcher = new Agent({
+  connect: createConnectPublic({
+    createNotPublicError: (hostname) =>
+      Object.assign(new Error(`Link to ${hostname} is not public.`), { code: 'url_not_public' }),
+  }),
+});
+```
+
 ## Error Classes (Moved to @lowdefy/errors)
 
 > **Note:** Error classes (`ConfigError`, `ConfigWarning`, `ConfigMessage`) and location resolution (`resolveConfigLocation`, `shouldSuppressBuildCheck`, `VALID_CHECK_SLUGS`) have moved to `@lowdefy/errors`. Import from there:
@@ -169,18 +200,21 @@ Typically filtered by prefix or naming convention in calling code.
 
 - `@lowdefy/helpers` (4.4.0)
 - `fs-extra` (11.1.1)
+- `undici` (the public address connector)
 
 ## Key Files
 
-| File                           | Purpose                                |
-| ------------------------------ | -------------------------------------- |
-| `src/readFile.js`              | File reading                           |
-| `src/writeFile.js`             | File writing                           |
-| `src/cleanDirectory.js`        | Directory cleaning                     |
-| `src/copyFileOrDirectory.js`   | Copy operations                        |
-| `src/getFileExtension.js`      | Extension parsing                      |
-| `src/spawnProcess.js`          | Process spawning                       |
-| `src/getSecretsFromEnv.js`     | Environment secrets                    |
+| File                         | Purpose                                      |
+| ---------------------------- | -------------------------------------------- |
+| `src/readFile.js`            | File reading                                 |
+| `src/writeFile.js`           | File writing                                 |
+| `src/cleanDirectory.js`      | Directory cleaning                           |
+| `src/copyFileOrDirectory.js` | Copy operations                              |
+| `src/getFileExtension.js`    | Extension parsing                            |
+| `src/spawnProcess.js`        | Process spawning                             |
+| `src/getSecretsFromEnv.js`   | Environment secrets                          |
+| `src/isPublicAddress.js`     | Public address ranges                        |
+| `src/createConnectPublic.js` | Connector that reaches public addresses only |
 
 ## Usage Examples
 

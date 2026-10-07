@@ -16,8 +16,9 @@
 
 import { BlockList, isIPv6 } from 'node:net';
 
-// Ranges a url copy may not reach: anything that is not a public unicast address. BlockList also
-// matches an IPv4-mapped IPv6 address (::ffff:127.0.0.1) against the IPv4 ranges.
+// Ranges a server-side fetch of a user-supplied link may not reach: anything that is not a public
+// unicast address. BlockList also matches an IPv4-mapped IPv6 address (::ffff:127.0.0.1) against
+// the IPv4 ranges.
 const notPublicIPv4 = [
   ['0.0.0.0', 8], // this network, unspecified
   ['10.0.0.0', 8], // private

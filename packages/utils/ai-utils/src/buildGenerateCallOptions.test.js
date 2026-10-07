@@ -38,7 +38,22 @@ test('buildGenerateCallOptions maps a prompt-only request', () => {
 
 test('buildGenerateCallOptions maps a messages-only request', () => {
   const messages = [{ role: 'user', content: 'Hello' }];
-  expect(buildGenerateCallOptions({ request: { messages } })).toEqual({ messages });
+  expect(buildGenerateCallOptions({ request: { messages } })).toEqual({
+    messages,
+    experimental_download: expect.any(Function),
+  });
+});
+
+test('buildGenerateCallOptions bounds the file downloads of a messages request', () => {
+  const options = buildGenerateCallOptions({
+    request: { messages: [{ role: 'user', content: 'Hello' }] },
+  });
+  expect(typeof options.experimental_download).toBe('function');
+});
+
+test('buildGenerateCallOptions sets no download function for a prompt request', () => {
+  const options = buildGenerateCallOptions({ request: { prompt: 'Hello' } });
+  expect(options).not.toHaveProperty('experimental_download');
 });
 
 test('buildGenerateCallOptions copies all defined call settings and omits undefined ones', () => {
@@ -68,7 +83,11 @@ const systemMessages = [
 test('buildGenerateCallOptions passes system messages when the request allows them', () => {
   expect(
     buildGenerateCallOptions({ request: { messages: systemMessages, allowSystemInMessages: true } })
-  ).toEqual({ messages: systemMessages, allowSystemInMessages: true });
+  ).toEqual({
+    messages: systemMessages,
+    allowSystemInMessages: true,
+    experimental_download: expect.any(Function),
+  });
 });
 
 test.each([undefined, false])(

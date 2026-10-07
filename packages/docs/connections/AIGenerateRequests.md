@@ -24,6 +24,10 @@ A call is also cancelled when the request that started it closes, so a provider 
 - Endpoints with `async: true`, `detached: true` calls, and scheduled runs answer at once and then run to their end: the closing request does not cancel them.
 - An agent chat turn runs to its end after the client disconnects, so its `onFinish` hooks still save the conversation. Bound it with the agent's `timeout` and `maxSteps`. A `CallAgent` step is cancelled with the routine that runs it.
 
+### Files in messages
+
+A file part in `messages` (`{ type: 'file', data: <link>, mediaType }`) goes to the model as a link when the provider takes that media type as a link (the main providers do for images and PDFs). Any other file, such as a CSV or text file, is downloaded by the server and sent as content, within the request's `fileDownload` limits. The server downloads only an `https:` link to a public address, checking the address on every redirect, and a failed download names the file's host, never its link, so a signed link stays out of the server log. `Decide` takes no files.
+
 When a provider rate-limits a call (HTTP 429), the model client retries it (`maxRetries`), waiting as long as the provider's `Retry-After` asks, up to a minute. If the retries run out, the request fails with a `ServiceError`, as a 429 does on every connection, and the server log records the `Retry-After` value.
 
 ### GenerateText
@@ -39,6 +43,9 @@ Generates text from a prompt.
 - `allowSystemInMessages: boolean`: Default: `false` - Allow `system` role messages in `messages`. A system message instructs the model as the app itself, so without this a request whose `messages` include one fails. Only set it when the messages come from the app, never from a user (for example a message list built from `_payload`). Use `system` for the system prompt.
 - `maxOutputTokens: number`: Maximum number of tokens to generate. Defaults to the connection's `maxOutputTokens`.
 - `timeout: number`: Milliseconds the model call may take, retries included, before it is cancelled. Defaults to the connection's `timeout`.
+- `fileDownload: object`: Limits on a file in `messages` the server downloads (see [Files in messages](#files-in-messages)).
+  - `maxBytes: integer`: Default: `20971520` (20 MB) - Largest file the server downloads. A larger file fails the request.
+  - `timeout: integer`: Default: `30000` - Milliseconds a file download may take.
 - `temperature: number`: Sampling temperature (0 to 2).
 - `topP: number`: Nucleus sampling.
 - `topK: number`: Only sample from the top K options for each subsequent token.

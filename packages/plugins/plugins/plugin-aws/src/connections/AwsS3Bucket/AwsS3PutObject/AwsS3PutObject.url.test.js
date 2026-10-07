@@ -14,28 +14,24 @@
   limitations under the License.
 */
 
+import { Socket } from 'node:net';
 import { Readable } from 'node:stream';
 import { jest } from '@jest/globals';
 
 const mockSend = jest.fn();
 const mockPutObjectCommand = jest.fn();
 const mockFetchUrl = jest.fn();
-const mockConnect = jest.fn();
 const undici = jest.requireActual('undici');
 
 // fetch is mocked per test; a test that needs the real connection path hands it undici's fetch.
-// mockConnect records each socket the url copy's connector opens.
 jest.unstable_mockModule('undici', () => ({
   ...undici,
-  buildConnector: (options) => {
-    const connect = undici.buildConnector(options);
-    return (...connectArgs) => {
-      mockConnect(...connectArgs);
-      return connect(...connectArgs);
-    };
-  },
   fetch: (...fetchArgs) => mockFetchUrl(...fetchArgs),
 }));
+
+// Records every socket opened, whichever copy of undici built the connector: tls.connect and
+// net.connect both open theirs through Socket.prototype.connect.
+const socketConnect = jest.spyOn(Socket.prototype, 'connect');
 
 jest.unstable_mockModule('@aws-sdk/client-s3', () => ({
   S3Client: jest.fn().mockImplementation(() => ({
@@ -103,7 +99,7 @@ async function refusal(request) {
 
 beforeEach(() => {
   mockFetchUrl.mockReset();
-  mockConnect.mockReset();
+  socketConnect.mockClear();
   mockSend.mockReset();
   mockPutObjectCommand.mockReset();
   stored = null;
@@ -111,6 +107,10 @@ beforeEach(() => {
     stored = await readBody(params.Body);
     return {};
   });
+});
+
+afterAll(() => {
+  socketConnect.mockRestore();
 });
 
 test('AwsS3PutObject copies a url into the bucket and returns its size and content type', async () => {
@@ -232,9 +232,9 @@ test.each([
 ])('AwsS3PutObject refuses %s with url_not_public before connecting', async (link) => {
   mockFetchUrl.mockImplementation(undici.fetch);
   const error = await refusal({ url: link, maxBytes: 100, timeout: 2000 });
+  expect(socketConnect).not.toHaveBeenCalled();
   expect(error.code).toBe('url_not_public');
   expect(error.message).toBe(notPublicMessage);
-  expect(mockConnect).not.toHaveBeenCalled();
   expect(mockSend).not.toHaveBeenCalled();
 });
 
@@ -253,10 +253,10 @@ test.each([
       return undici.fetch(link, options);
     });
     const error = await refusal({ maxBytes: 100, timeout: 2000 });
+    expect(socketConnect).not.toHaveBeenCalled();
     expect(error.code).toBe('url_not_public');
     expect(error.message).toBe(notPublicMessage);
     expect(mockFetchUrl.mock.calls.map(([link]) => link)).toEqual([url, location]);
-    expect(mockConnect).not.toHaveBeenCalled();
     expect(mockSend).not.toHaveBeenCalled();
   }
 );

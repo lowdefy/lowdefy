@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-// A refused or failed agent file download. `code` names the reason; `status` is the HTTP status
+// A refused or failed file download. `code` names the reason; `status` is the HTTP status
 // the link answered with, when there was one. The message names the host, never the link: a file
 // link is usually signed, and this error reaches the server log.
 function createFileDownloadError({ code, message, status, cause }) {
