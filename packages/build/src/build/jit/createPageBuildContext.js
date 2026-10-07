@@ -72,6 +72,7 @@ function createPageBuildContext(keptContext) {
     orgClientActionRefs: [],
     modules: copyModules(keptContext.modules),
     deferred: copyDeferredRecords(keptContext.deferred),
+    unsetEnvReads: new Map(),
   };
   pageBuildContext.handleError = createBuildHandleError({ context: pageBuildContext });
   pageBuildContext.handleWarning = createHandleWarning({ context: pageBuildContext });

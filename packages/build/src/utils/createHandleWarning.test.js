@@ -201,6 +201,21 @@ test('handleWarning does not deduplicate different sources', () => {
   expect(lines).toHaveLength(2);
 });
 
+test('handleWarning deduplicates by dedupKey when warnings at different sources share one', () => {
+  const { context, lines } = createContext();
+  const handleWarning = createHandleWarning({ context });
+
+  const first = new ConfigWarning('Variable unset', { filePath: 'pages/one.yaml', lineNumber: 7 });
+  first.dedupKey = '_build.env:SMTP_HOST';
+  const second = new ConfigWarning('Variable unset', { filePath: 'pages/two.yaml', lineNumber: 7 });
+  second.dedupKey = '_build.env:SMTP_HOST';
+  handleWarning(first);
+  handleWarning(second);
+
+  expect(lines).toHaveLength(1);
+  expect(lines[0].err.source).toBe(`${path.resolve('/app', 'pages/one.yaml')}:7`);
+});
+
 // --- Missing context.seenSourceLines ---
 
 test('handleWarning works without context.seenSourceLines (no dedup)', () => {

@@ -17,7 +17,7 @@
 import path from 'path';
 
 import { get, ReservedKeyError, type } from '@lowdefy/helpers';
-import { ConfigError, ConfigWarning } from '@lowdefy/errors';
+import { ConfigError } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
 import makeRefDefinition from './makeRefDefinition.js';
 import rebaseModuleRefPaths from './rebaseModuleRefPaths.js';
@@ -225,27 +225,28 @@ function nodeLocation(node, ctx) {
 }
 
 // A _build.env read is inlined here, so a name the environment does not set
-// becomes a literal null in the artifact before any check can see it. Warn at
-// the inline site on every build: unlike a _secret, which is read where the app
-// runs, the value is frozen in the environment the build runs in.
-function warnUnsetEnvReference(node, ctx) {
+// becomes a literal null in the artifact before any check can see it. Record
+// the read site on every build: unlike a _secret, which is read where the app
+// runs, the value is frozen in the environment the build runs in. The reads are
+// warned once per variable when the walk ends (warnUnsetEnvReads), so a variable
+// read in many places does not bury the other warnings.
+function recordUnsetEnvRead(node, ctx) {
   const params = node['_build.env'];
   const name = type.isString(params) ? params : params?.key;
   if (!type.isString(name)) return;
   if (type.isObject(params) && Object.hasOwn(params, 'default')) return;
   if (!type.isUndefined(process.env[name])) return;
-  ctx.buildContext.handleWarning(
-    new ConfigWarning(
-      `Environment variable "${name}" is not set. _build.env read it at build time and inlined null; set it in the build environment or in .env, or give the operator a default.`,
-      { configKey: node['~k'], checkSlug: 'secrets' }
-    )
-  );
+  const { unsetEnvReads } = ctx.buildContext;
+  if (!unsetEnvReads.has(name)) {
+    unsetEnvReads.set(name, []);
+  }
+  unsetEnvReads.get(name).push(nodeLocation(node, ctx));
 }
 
 // Evaluate a _build.* operator using evaluateOperators
 function evaluateBuildOperator(node, ctx) {
   if (type.isObject(node) && Object.hasOwn(node, '_build.env')) {
-    warnUnsetEnvReference(node, ctx);
+    recordUnsetEnvRead(node, ctx);
   }
   const { output, errors } = evaluateOperators({
     input: node,
