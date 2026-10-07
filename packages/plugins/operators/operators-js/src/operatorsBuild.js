@@ -52,6 +52,7 @@ import _uri from './operators/shared/uri.js';
 
 import _base64 from './operators/server/base64.js';
 import _hash from './operators/server/hash.js';
+import _hmac from './operators/server/hmac.js';
 
 import _authConfig from './operators/build/authConfig.js';
 import _env from './operators/build/env.js';
@@ -73,6 +74,7 @@ export default {
   _gt,
   _gte,
   _hash,
+  _hmac,
   _if_none,
   _if,
   _intl,

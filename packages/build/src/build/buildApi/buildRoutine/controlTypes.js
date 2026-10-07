@@ -41,9 +41,9 @@ const controlTypes = {
   ':reject': {
     required: [':reject'],
     routine: [],
-    optional: [':cause'],
+    optional: [':cause', ':status', ':body'],
     description:
-      'Ends the routine with a reject status. Not caught by :try/:catch — use :throw for failures a :catch should handle.',
+      'Ends the routine with a reject status. Not caught by :try/:catch — use :throw for failures a :catch should handle. In a webhook endpoint, or an InternalApi endpoint a webhook calls, :status (400 to 499) and :body set the HTTP answer.',
   },
   ':return': { required: [':return'], routine: [], optional: [] },
   ':set_state': { required: [':set_state'], routine: [], optional: [] },
@@ -128,6 +128,31 @@ function handleSwitch(control, endpointContext) {
   });
 }
 
+// :status and :body set a webhook's HTTP answer, so they are refused where no webhook route can
+// send them. A literal :status must be an integer from 400 to 499; an operator is checked when it
+// evaluates.
+function checkRejectAnswer(control, endpointContext) {
+  const { endpointId, rejectSetsStatus } = endpointContext;
+  const answerKeys = [':status', ':body'].filter((key) => key in control);
+  if (answerKeys.length === 0) return;
+  if (rejectSetsStatus !== true) {
+    throw new ConfigError(
+      `:reject in endpoint ${endpointId} sets ${answerKeys.join(
+        ' and '
+      )}, which only a webhook endpoint, or an InternalApi endpoint a webhook calls, answers with.`,
+      { received: answerKeys, configKey: control['~k'] }
+    );
+  }
+  const status = control[':status'];
+  if (type.isUndefined(status) || type.isObject(status)) return;
+  if (!type.isInt(status) || status < 400 || status > 499) {
+    throw new ConfigError(
+      `:status in :reject must be an integer from 400 to 499 at endpoint ${endpointId}.`,
+      { received: status, configKey: control['~k'] }
+    );
+  }
+}
+
 // A literal :concurrency must be a positive integer; an operator is checked when it evaluates.
 function checkConcurrency(control, endpointContext) {
   const concurrency = control[':concurrency'];
@@ -166,6 +191,7 @@ function validateControl(control, endpointContext) {
   checkMissingRequiredControls({ controlType, keys, control }, endpointContext);
   checkInvalidControls({ controlType, keys, control }, endpointContext);
   if (controlType === ':parallel_for') checkConcurrency(control, endpointContext);
+  if (controlType === ':reject') checkRejectAnswer(control, endpointContext);
 
   return controlType;
 }

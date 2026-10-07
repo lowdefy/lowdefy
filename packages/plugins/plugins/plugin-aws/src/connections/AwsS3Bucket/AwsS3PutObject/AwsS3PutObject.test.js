@@ -70,7 +70,7 @@ test('AwsS3PutObject decodes base64 content and writes the object', async () => 
   expect(params.Key).toEqual('key');
   expect(Buffer.isBuffer(params.Body)).toBe(true);
   expect(params.Body.toString('utf8')).toEqual('file content');
-  expect(res).toEqual({ bucket: 'bucket', key: 'key' });
+  expect(res).toEqual({ bucket: 'bucket', key: 'key', size: 12, contentType: null });
 });
 
 test('AwsS3PutObject sets contentType and acl when provided', async () => {
@@ -154,10 +154,56 @@ test('Request key missing', async () => {
   );
 });
 
-test('Request content missing', async () => {
+test('Request with neither content nor url', async () => {
   const request = { key: 'key' };
   expect(() => validate({ schema, data: request })).toThrow(
-    'AwsS3PutObject request should have required property "content".'
+    'AwsS3PutObject request should have either "content" or "url", not both.'
+  );
+});
+
+test('Request with both content and url', async () => {
+  const request = { key: 'key', content: 'content', url: 'https://a.test/f', maxBytes: 10 };
+  expect(() => validate({ schema, data: request })).toThrow(
+    'AwsS3PutObject request should have either "content" or "url", not both.'
+  );
+});
+
+test('Request with url and maxBytes is valid', async () => {
+  const request = {
+    key: 'key',
+    url: 'https://a.test/f',
+    maxBytes: 10,
+    contentTypes: ['image/*'],
+    timeout: 1000,
+  };
+  expect(validate({ schema, data: request })).toEqual({ valid: true });
+});
+
+test('Request with url and no maxBytes', async () => {
+  const request = { key: 'key', url: 'https://a.test/f' };
+  expect(() => validate({ schema, data: request })).toThrow(
+    'AwsS3PutObject request with "url" should have "maxBytes", and "maxBytes", "contentTypes" and "timeout" apply only with "url".'
+  );
+});
+
+test('Request with maxBytes and content', async () => {
+  const request = { key: 'key', content: 'content', maxBytes: 10 };
+  expect(() => validate({ schema, data: request })).toThrow(
+    'AwsS3PutObject request with "url" should have "maxBytes", and "maxBytes", "contentTypes" and "timeout" apply only with "url".'
+  );
+});
+
+test('Request maxBytes not a positive integer', async () => {
+  const request = { key: 'key', url: 'https://a.test/f', maxBytes: 0 };
+  expect(() => validate({ schema, data: request })).toThrow(
+    'AwsS3PutObject request property "maxBytes" should be a positive integer.'
+  );
+});
+
+test('Request contentTypes not an array of strings', async () => {
+  const request = { key: 'key', url: 'https://a.test/f', maxBytes: 10, contentTypes: 'image/png' };
+  expect(() => validate({ schema, data: request })).toThrow(
+    'AwsS3PutObject request property "contentTypes" should be an array of strings.'
   );
 });
 

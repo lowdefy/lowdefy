@@ -19,6 +19,7 @@ import { RequestError, ServiceError, UserError } from '@lowdefy/errors';
 import getCurrentEnvironment from '../../context/getCurrentEnvironment.js';
 import createWalledResolver from './createWalledResolver.js';
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
+import maskCredentialProperties from './maskCredentialProperties.js';
 
 async function callRequestResolver(
   context,
@@ -148,7 +149,7 @@ async function callRequestResolver(
     const requestError = new RequestError(error.message, {
       cause: error,
       typeName: requestConfig.type,
-      received: requestProperties,
+      received: maskCredentialProperties({ requestProperties, requestResolver }),
       location: `${requestConfig.connectionId}/${stepOrRequestId}`,
       configKey: requestConfig['~k'],
     });

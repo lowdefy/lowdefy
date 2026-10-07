@@ -393,6 +393,7 @@ test('raw Error is wrapped into RequestError', async () => {
   const requestResolver = async () => {
     throw new Error('raw');
   };
+  requestResolver.meta = { checkRead: false, checkWrite: false };
   let caught;
   try {
     await callRequestResolver(context, {
@@ -438,6 +439,7 @@ test('configKey attached when missing', async () => {
   const requestResolver = async () => {
     throw new Error('raw');
   };
+  requestResolver.meta = { checkRead: false, checkWrite: false };
   let caught;
   try {
     await callRequestResolver(context, {
@@ -451,6 +453,58 @@ test('configKey attached when missing', async () => {
     caught = e;
   }
   expect(caught.configKey).toBe('request_key');
+});
+
+test('a RequestError masks the properties its request type names as credentials in received', async () => {
+  const context = createTestContext();
+  const url = 'https://client.test/shot.png?X-Amz-Signature=abc';
+  const requestProperties = { key: 'copies/shot.png', url, maxBytes: 100 };
+  const requestResolver = async () => {
+    throw new Error('AwsS3PutObject url content type "text/html" is not one of image/*.');
+  };
+  requestResolver.meta = { checkRead: false, checkWrite: true, credentialProperties: ['url'] };
+  let caught;
+  try {
+    await callRequestResolver(context, {
+      connectionProperties: {},
+      endpointDepth: 0,
+      requestConfig,
+      requestProperties,
+      requestResolver,
+    });
+  } catch (e) {
+    caught = e;
+  }
+  expect(caught).toBeInstanceOf(RequestError);
+  expect(caught.received).toEqual({
+    key: 'copies/shot.png',
+    url: '[REDACTED]',
+    maxBytes: 100,
+  });
+  expect(JSON.stringify(caught.received)).not.toContain('X-Amz-Signature');
+  expect(requestProperties.url).toBe(url);
+});
+
+test('a RequestError keeps every request property in received when none is a credential', async () => {
+  const context = createTestContext();
+  const requestProperties = { url: 'https://example.test/', body: { a: 1 } };
+  const requestResolver = async () => {
+    throw new Error('raw');
+  };
+  requestResolver.meta = { checkRead: false, checkWrite: false };
+  let caught;
+  try {
+    await callRequestResolver(context, {
+      connectionProperties: {},
+      endpointDepth: 0,
+      requestConfig,
+      requestProperties,
+      requestResolver,
+    });
+  } catch (e) {
+    caught = e;
+  }
+  expect(caught.received).toBe(requestProperties);
 });
 
 // A resolver that runs until its signal aborts, then rejects with the abort reason,

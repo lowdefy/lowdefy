@@ -16,6 +16,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import buildRoutine from './buildRoutine/buildRoutine.js';
 import resolveEndpointSchedules from './resolveEndpointSchedules.js';
 import validateDecideBranches from './validateDecideBranches.js';
@@ -27,8 +29,12 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId, env
   endpoint.endpointId = endpoint.id;
   resolveEndpointSchedules({ endpoint, environments });
 
+  const isWebhook = !type.isNone(endpoint.webhook) && endpoint.webhook !== false;
   buildRoutine(endpoint.routine, {
     endpointId: endpoint.endpointId,
+    // A webhook route answers the HTTP status a :reject sets, also from an InternalApi endpoint
+    // the webhook calls. No other route sends one.
+    rejectSetsStatus: isWebhook || endpoint.type === 'InternalApi',
     dynamicPolicies: context.dynamicPolicies,
     typeCounters: context.typeCounters,
     stepTypes: context.typesMap?.steps ?? {},

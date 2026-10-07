@@ -114,7 +114,7 @@ test('POST /api/endpoints with a JSON body passes its fields to callEndpoint', a
 
 test('POST /api/endpoints to a webhook endpoint passes the body text exactly as sent as rawBody', async () => {
   mockGetEndpointConfig.mockResolvedValueOnce({ webhook: { verify: {} } });
-  mockRunWebhookEndpoint.mockResolvedValue({ success: true, response: { ok: true } });
+  mockRunWebhookEndpoint.mockResolvedValue({ status: 200, body: { ok: true } });
   const body = '{ "zeta": 1,  "alpha": "caf\\u00e9", "beta": "café" }';
   const res = await createApp().request('/api/endpoints/signed_hook?t=1', {
     method: 'POST',
@@ -129,3 +129,19 @@ test('POST /api/endpoints to a webhook endpoint passes the body text exactly as 
     headers: expect.objectContaining({ 'x-hub-signature-256': 'sha256=abc' }),
   });
 });
+
+test.each([
+  [200, { received: true }],
+  [401, { error: { code: 'unauthorized', message: 'Webhook verification failed.' } }],
+  [404, { error: 'not_found', id: 'ticket-1' }],
+  [500, { error: { code: 'internal_error', message: 'Webhook failed.' } }],
+])(
+  'POST /api/endpoints to a webhook endpoint answers status %s with its body',
+  async (status, body) => {
+    mockGetEndpointConfig.mockResolvedValueOnce({ webhook: true });
+    mockRunWebhookEndpoint.mockResolvedValue({ status, body });
+    const res = await createApp().request('/api/endpoints/hook', { method: 'POST', body: '{}' });
+    expect(res.status).toBe(status);
+    expect(await res.json()).toEqual(body);
+  }
+);

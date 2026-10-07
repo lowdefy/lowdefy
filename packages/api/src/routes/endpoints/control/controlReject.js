@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { UserError } from '@lowdefy/errors';
+import { ConfigError, UserError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import createWireProjection from '../../../response/createWireProjection.js';
@@ -37,6 +37,27 @@ async function controlReject(context, routineContext, { control }) {
   // - rather than stringified with its library text; `{ _error: message }` opts into the real text.
   const text = type.isError(message) ? createWireProjection(context)(message).message : message;
   const error = new UserError(text, { cause, isReject: true });
+  // :status and :body set the HTTP answer of the webhook whose routine this reject ends
+  // (createWebhookAnswer). The build allows them only where a webhook can answer with them.
+  if (':status' in control) {
+    const status = evaluateRoutineOperators(context, routineContext, {
+      input: control[':status'],
+      location,
+    });
+    if (!type.isInt(status) || status < 400 || status > 499) {
+      throw new ConfigError(':status in :reject must be an integer from 400 to 499.', {
+        received: status,
+        configKey: control['~k'],
+      });
+    }
+    error.webhookStatus = status;
+  }
+  if (':body' in control) {
+    error.webhookBody = evaluateRoutineOperators(context, routineContext, {
+      input: control[':body'],
+      location,
+    });
+  }
 
   // Log under `err` — see controlThrow: only the `err` key runs the pino error
   // serializer, so `error` would drop the message from the log line.
