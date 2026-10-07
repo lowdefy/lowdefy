@@ -192,6 +192,20 @@ test('Request key not a string', async () => {
   );
 });
 
+test('Request key empty', async () => {
+  const request = { key: '' };
+  expect(() => validate({ schema, data: request })).toThrow(
+    'AwsS3DeleteObject request property "key" should not be empty.'
+  );
+});
+
+test('Request keys holds an empty key', async () => {
+  const request = { keys: ['a.png', ''] };
+  expect(() => validate({ schema, data: request })).toThrow(
+    'AwsS3DeleteObject request property "keys" should not hold an empty key.'
+  );
+});
+
 test('Request keys not an array', async () => {
   const request = { keys: 'a.png' };
   expect(() => validate({ schema, data: request })).toThrow(

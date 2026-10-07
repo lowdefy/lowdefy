@@ -18,12 +18,15 @@ export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
   title: 'Lowdefy Request Schema - AwsS3DeleteObject',
   type: 'object',
+  // An empty key makes the SDK send DELETE to the bucket itself, which S3 reads as DeleteBucket.
   properties: {
     key: {
       type: 'string',
+      minLength: 1,
       description: 'Key of the object to delete. Give either key or keys.',
       errorMessage: {
         type: 'AwsS3DeleteObject request property "key" should be a string.',
+        minLength: 'AwsS3DeleteObject request property "key" should not be empty.',
       },
     },
     keys: {
@@ -32,8 +35,10 @@ export default {
       maxItems: 1000,
       items: {
         type: 'string',
+        minLength: 1,
         errorMessage: {
           type: 'AwsS3DeleteObject request property "keys" should be an array of strings.',
+          minLength: 'AwsS3DeleteObject request property "keys" should not hold an empty key.',
         },
       },
       description: 'Keys of the objects to delete, 1 to 1000. Give either key or keys.',
