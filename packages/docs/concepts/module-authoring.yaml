@@ -306,7 +306,7 @@ _ref:
                   - ticket-status
             ```
 
-            The app makes a module endpoint public with `auth.api.public: true`, or by naming it in an `auth.api.public` list. Otherwise it stays protected, also with no `auth.api` rule or under a `protected` list that does not name it, where an app endpoint would be public. A role in `auth.api.roles` restricts a module endpoint whether it is public or not. A webhook endpoint must still be listed in the app's `auth.api.public`. In an app without auth, module endpoints follow the app's rules like any other.
+            The app makes a module endpoint public with `auth.api.public: true`, or by naming it in an `auth.api.public` list. Otherwise it stays protected, also with no `auth.api` rule or under a `protected` list that does not name it, where an app endpoint would be public. This holds for `InternalApi` endpoints and for calls made from a routine too: a public app endpoint, or a webhook without a `verify` gate, that calls a module endpoint with `CallApi` is refused when the caller is signed out. A role in `auth.api.roles` restricts a module endpoint whether it is public or not. A webhook endpoint must still be listed in the app's `auth.api.public`. In an app without auth, module endpoints follow the app's rules like any other.
 
             ## Shipping Websockets
 
