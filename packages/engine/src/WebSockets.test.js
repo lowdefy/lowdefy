@@ -445,3 +445,114 @@ test('subscribe throws a ConfigError for a websocketId with no subscription on t
   );
   expect(client.subscribe).not.toHaveBeenCalled();
 });
+
+test('subscribeAll skips subscriptions with client.subscribeOnMount false', async () => {
+  const { client, context } = createTestContext({
+    subscriptions: [
+      { websocketId: 'ticker', client: { subscribeOnMount: true } },
+      { websocketId: 'thread', client: { subscribeOnMount: false } },
+    ],
+  });
+  const websockets = new WebSockets(context);
+
+  websockets.subscribeAll();
+  await Promise.resolve();
+
+  expect(client.subscribe.mock.calls.map(([call]) => call.websocketId)).toEqual(['ticker']);
+  expect(context.websockets.thread).toEqual(initialChannelState);
+});
+
+test('a subscription that waits for Subscribe opens on subscribe and receives messages', async () => {
+  useFakeTimers();
+  const { client, context } = createTestContext({
+    subscriptions: [
+      {
+        websocketId: 'thread',
+        payload: { ticket_id: { _state: 'ticket_id' } },
+        client: { subscribeOnMount: false },
+      },
+    ],
+  });
+  context._internal.parser.parse.mockReturnValue({ output: { ticket_id: 't-1' }, errors: [] });
+  const websockets = new WebSockets(context);
+  websockets.subscribeAll();
+
+  await websockets.subscribe({ websocketId: 'thread' });
+  subscribeHandlers(client).onConnected();
+  subscribeHandlers(client).onMessage(serializer.serialize({ data: { text: 'hi' } }));
+
+  expect(client.subscribe).toHaveBeenCalledTimes(1);
+  expect(client.subscribe.mock.calls[0][0].payload).toEqual({ ticket_id: 't-1' });
+  expect(context.websockets.thread.connected).toBe(true);
+  expect(context.websockets.thread.messages).toEqual([{ text: 'hi' }]);
+});
+
+test('subscribe with a changed payload replaces the open channel', async () => {
+  useFakeTimers();
+  const { client, context } = createTestContext({
+    subscriptions: [
+      {
+        websocketId: 'thread',
+        payload: { ticket_id: { _state: 'ticket_id' } },
+        client: { subscribeOnMount: false },
+      },
+    ],
+  });
+  context._internal.parser.parse.mockReturnValue({ output: { ticket_id: 't-1' }, errors: [] });
+  const websockets = new WebSockets(context);
+  await websockets.subscribe({ websocketId: 'thread' });
+  subscribeHandlers(client, 0).onConnected();
+  subscribeHandlers(client, 0).onMessage(serializer.serialize({ data: { text: 'one' } }));
+
+  context._internal.parser.parse.mockReturnValue({ output: { ticket_id: 't-2' }, errors: [] });
+  await websockets.subscribe({ websocketId: 'thread' });
+
+  expect(client.subscribe).toHaveBeenCalledTimes(2);
+  expect(client.subscribe.mock.calls[1][0].payload).toEqual({ ticket_id: 't-2' });
+  expect(client.unsubscribe).not.toHaveBeenCalled();
+  expect(context.websockets.thread).toEqual(initialChannelState);
+
+  // Until the replacing subscribe is acknowledged, frames still come from the old channel.
+  const handlers = subscribeHandlers(client, 1);
+  handlers.onMessage(serializer.serialize({ data: { text: 'stale' } }));
+  expect(context.websockets.thread.messages).toEqual([]);
+
+  handlers.onConnected();
+  jest.advanceTimersByTime(1000);
+  handlers.onMessage(serializer.serialize({ data: { text: 'two' } }));
+  expect(context.websockets.thread.connected).toBe(true);
+  expect(context.websockets.thread.messages).toEqual([{ text: 'two' }]);
+});
+
+test('subscribe with an unchanged payload keeps the open channel', async () => {
+  const { client, context } = createTestContext({
+    subscriptions: [{ websocketId: 'thread', client: { subscribeOnMount: false } }],
+  });
+  context._internal.parser.parse.mockReturnValue({ output: { ticket_id: 't-1' }, errors: [] });
+  const websockets = new WebSockets(context);
+  await websockets.subscribe({ websocketId: 'thread' });
+
+  await websockets.subscribe({ websocketId: 'thread' });
+
+  expect(client.subscribe).toHaveBeenCalledTimes(1);
+});
+
+test('a subscription opened by Subscribe closes on unsubscribe and on unmount', async () => {
+  const { client, context } = createTestContext({
+    subscriptions: [{ websocketId: 'thread', client: { subscribeOnMount: false } }],
+  });
+  const websockets = new WebSockets(context);
+
+  await websockets.subscribe({ websocketId: 'thread' });
+  websockets.unsubscribe({ websocketId: 'thread' });
+  expect(client.unsubscribe).toHaveBeenCalledTimes(1);
+
+  // Closing one that is not open does nothing.
+  websockets.unsubscribe({ websocketId: 'thread' });
+  expect(client.unsubscribe).toHaveBeenCalledTimes(1);
+
+  await websockets.subscribe({ websocketId: 'thread' });
+  websockets.unsubscribeAll();
+  expect(client.unsubscribe).toHaveBeenCalledTimes(2);
+  expect(client.subscribe).toHaveBeenCalledTimes(2);
+});

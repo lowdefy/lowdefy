@@ -2542,6 +2542,12 @@ export default {
                 type: 'Subscription "client.throttleRender" should be a number.',
               },
             },
+            subscribeOnMount: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Subscription "client.subscribeOnMount" should be a boolean.',
+              },
+            },
           },
           errorMessage: {
             type: 'Subscription "client" should be an object.',

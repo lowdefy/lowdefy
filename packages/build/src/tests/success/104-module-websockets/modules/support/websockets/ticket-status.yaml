@@ -1,0 +1,8 @@
+id: ticket-status
+type: MongoDBChangeStream
+connectionId:
+  _module.connectionId: messages
+properties:
+  pipeline:
+    - $match:
+        operationType: update

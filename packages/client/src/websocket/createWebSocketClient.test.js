@@ -288,6 +288,37 @@ describe('subscribe ack timers', () => {
     expect(subscribed.error.message).toBe('WebSocket: Subscribe to "chat" timed out.');
   });
 
+  test('a subscribe sent on an open connection that times out unsubscribes the feed and lets the socket close', async () => {
+    const { client, open, sentFrames } = createTestClient();
+    client.connect();
+    const socket = open();
+    const subscribed = track(
+      client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' })
+    );
+    jest.advanceTimersByTime(10000);
+    await flushPromises();
+    expect(subscribed.state).toBe('rejected');
+    expect(sentFrames(socket)).toEqual([
+      { type: 'subscribe', websocketId: 'chat', payload: {}, requestId: 's1' },
+      { type: 'unsubscribe', websocketId: 'chat' },
+    ]);
+    jest.advanceTimersByTime(5000);
+    expect(socket.close).toHaveBeenCalledTimes(1);
+  });
+
+  test('a refused subscribe lets the idle socket close', async () => {
+    const { client, open, receive } = createTestClient();
+    const subscribed = track(
+      client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' })
+    );
+    const socket = open();
+    receive({ type: 'error', websocketId: 'chat', requestId: 's1', error: { '~e': wireError } });
+    await flushPromises();
+    expect(subscribed.state).toBe('rejected');
+    jest.advanceTimersByTime(5000);
+    expect(socket.close).toHaveBeenCalledTimes(1);
+  });
+
   test('a subscribe sent into a connection that closes gets a fresh ack timeout when it is resent on reconnect', async () => {
     const { client, close, open, receive, sentFrames, sockets } = createTestClient();
     client.connect();

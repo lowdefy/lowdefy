@@ -153,6 +153,7 @@ test('buildSubscriptions sets payload, client and events defaults on a valid sub
       client: {
         maxMessages: 100,
         throttleRender: 250,
+        subscribeOnMount: true,
       },
       events: {},
     },
@@ -282,8 +283,42 @@ test('buildSubscriptions keeps configured client values above the minimums', () 
   expect(res.pages[0].subscriptions[0].client).toEqual({
     maxMessages: 5,
     throttleRender: 500,
+    subscribeOnMount: true,
   });
   expect(context.handleWarning).not.toHaveBeenCalled();
+});
+
+test('buildSubscriptions keeps client.subscribeOnMount false', () => {
+  const context = createTestContext({ websocketIds: ['ws1'] });
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        subscriptions: [{ websocketId: 'ws1', client: { subscribeOnMount: false } }],
+      },
+    ],
+  };
+  const res = buildPages({ components, context });
+  expect(res.pages[0].subscriptions[0].client.subscribeOnMount).toBe(false);
+});
+
+test('buildSubscriptions throws when client.subscribeOnMount is not a boolean', () => {
+  const context = createTestContext({ websocketIds: ['ws1'] });
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        subscriptions: [{ websocketId: 'ws1', client: { subscribeOnMount: 'later' } }],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Subscription "ws1" at page "page_1" client.subscribeOnMount should be a boolean.'
+  );
 });
 
 test('buildSubscriptions warns on unsupported event names which will never fire', () => {

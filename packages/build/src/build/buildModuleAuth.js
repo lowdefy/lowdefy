@@ -32,6 +32,10 @@ import isAuthConfigured from './buildAuth/isAuthConfigured.js';
 //   exceptions - they join an app public list, are no-ops under public: true,
 //   and never join a protected list (buildEntityAuth keeps them public via
 //   context.moduleAuthPublicPages in the protected modes).
+// - websockets.public: the module's websockets that need no signed-in caller.
+//   A module websocket is protected unless the module lists it here or the
+//   app's auth.websockets rules make it public explicitly; buildEntityAuth
+//   reads context.moduleAuthPublicWebsockets and context.moduleWebsocketIds.
 // An auth page is served at its path (buildModules has scoped it to the entry)
 // or, without one, at its id. A path that is not a string is refused by
 // buildRoutes.
@@ -61,6 +65,7 @@ function buildModuleAuth({ components, context, moduleEntries }) {
   const contributedHooks = [];
   const roleClaims = {};
   context.moduleAuthPublicPages = context.moduleAuthPublicPages ?? [];
+  context.moduleAuthPublicWebsockets = context.moduleAuthPublicWebsockets ?? [];
 
   // Snapshot the roles the app sets before any module contributes, so a
   // module's contribution is not mistaken for an app override.
@@ -124,6 +129,14 @@ function buildModuleAuth({ components, context, moduleEntries }) {
       context.logger.info(
         `Module "${entryId}" contributed public page "${scopedId}" to "auth.pages.public".`
       );
+    }
+
+    for (const websocketId of auth.websockets?.public ?? []) {
+      const scopedId = `${entryId}/${websocketId}`;
+      if (!context.moduleAuthPublicWebsockets.includes(scopedId)) {
+        context.moduleAuthPublicWebsockets.push(scopedId);
+      }
+      context.logger.info(`Module "${entryId}" declared websocket "${scopedId}" public.`);
     }
   }
 

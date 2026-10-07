@@ -382,7 +382,7 @@ async function resolveFullManifest({ entryId, context }) {
   // Filter null entries produced by _ref resolution failures. The arrays are
   // filtered in place so they keep their ~r ref marker: the dev server's
   // skeleton source files find a module's pages list file through it.
-  for (const key of ['pages', 'connections', 'api', 'agents', 'notifications']) {
+  for (const key of ['pages', 'connections', 'api', 'agents', 'notifications', 'websockets']) {
     if (type.isArray(resolved[key])) {
       const items = resolved[key].filter((item) => !type.isNone(item));
       resolved[key].splice(0, resolved[key].length, ...items);
@@ -393,7 +393,12 @@ async function resolveFullManifest({ entryId, context }) {
 
   // The auth section is fully resolved now - validate its shape before
   // buildModules contributes it to the app's auth config.
-  validateModuleAuthManifest({ auth: resolved.auth, entryId, filePath: moduleYamlPath });
+  validateModuleAuthManifest({
+    auth: resolved.auth,
+    entryId,
+    filePath: moduleYamlPath,
+    websockets: resolved.websockets,
+  });
 
   // Validate var types against lazily-resolved values
   const varDefs = moduleEntry.varDefs;

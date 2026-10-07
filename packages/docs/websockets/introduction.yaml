@@ -99,6 +99,8 @@ _ref:
 
                 Because `properties` evaluate per subscription, two users subscribing to `my_feed` get two independent server sources — but a thousand subscribers to a channel with static properties share just one.
 
+                A [module](/module-authoring) can ship websockets in its manifest's `websockets:` section. Their ids are scoped to the module entry (`support/thread-messages`), module pages subscribe with [`_module.websocketId`](/_module), and `auth.websockets` rules match the scoped ids (for example `support/**`). When the app has auth, a module websocket needs a signed-in caller unless the module's manifest or an app `auth.websockets.public` rule makes it public.
+
                 ## Core Types
 
                 - `Channel` — a pure pub/sub relay. Clients publish messages with the [`Publish`](/websocket-publish) action and the server broadcasts them to all subscribers. Set `properties.publish: true` to allow publishing.

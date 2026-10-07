@@ -93,7 +93,7 @@ _ref:
 
             ## How Modules Stay Scoped and Composable
 
-            Three mechanisms keep modules working at scale. **Auto-scoping** prefixes every page, connection, API endpoint, notification, and menu item ID with the entry's `id`, so module authors write plain IDs and installing the same module twice under different entry IDs produces no collisions. **`_module.var`** lets any file in the module read the entry's vars at any depth, without the app threading values through nested `_ref`s. **Typed exports** declared in `exports:` mark which pages, components, endpoints, connections, and menus are public, so internal files stay internal and renaming one does not break consumers.
+            Three mechanisms keep modules working at scale. **Auto-scoping** prefixes every page, connection, API endpoint, notification, websocket, and menu item ID with the entry's `id`, so module authors write plain IDs and installing the same module twice under different entry IDs produces no collisions. **`_module.var`** lets any file in the module read the entry's vars at any depth, without the app threading values through nested `_ref`s. **Typed exports** declared in `exports:` mark which pages, components, endpoints, connections, and menus are public, so internal files stay internal and renaming one does not break consumers.
 
             ## Writing module.lowdefy.yaml
 
@@ -132,6 +132,9 @@ _ref:
 
             notifications:
               - _ref: notifications/invite-user.yaml
+
+            websockets:
+              - _ref: websockets/user-changes.yaml
 
             components:
               - id: user-avatar
@@ -260,7 +263,7 @@ _ref:
 
             ## Using ID Operators
 
-            Module authors use [`_module.pageId`](/_module), [`_module.connectionId`](/_module), [`_module.endpointId`](/_module), and [`_module.notificationId`](/_module) to reference sibling resources. These resolve to the fully scoped ID at build time:
+            Module authors use [`_module.pageId`](/_module), [`_module.connectionId`](/_module), [`_module.endpointId`](/_module), [`_module.notificationId`](/_module), and [`_module.websocketId`](/_module) to reference sibling resources. These resolve to the fully scoped ID at build time:
 
             ```yaml
             # Link to a sibling page
@@ -290,6 +293,44 @@ _ref:
                 - _module.id: true
                 - " - User Admin"
             ```
+
+            ## Shipping Websockets
+
+            A module declares the websockets its pages subscribe to in `websockets:`, so an app that installs the module needs no websocket config of its own. Each item takes the same fields as an app's top-level [`websockets`](/websockets-introduction) (`id`, `type`, `connectionId`, `properties`, `tenant`). Write `connectionId` with `_module.connectionId`, so a connection the app remaps resolves to the app's connection:
+
+            ```yaml
+            # websockets/user-changes.yaml
+            id: user-changes
+            type: MongoDBChangeStream
+            connectionId:
+              _module.connectionId: users-db
+            properties:
+              pipeline:
+                - $match:
+                    operationType: update
+            ```
+
+            Module pages subscribe with `_module.websocketId`:
+
+            ```yaml
+            subscriptions:
+              - websocketId:
+                  _module.websocketId: user-changes
+            ```
+
+            The id is scoped like every other module id: in an entry with `id: user-admin` it is `user-admin/user-changes`. The app's `auth.websockets` rules match the scoped id, so `user-admin/**` under `auth.websockets.roles` restricts every websocket the entry ships. A `_secret` in a websocket's properties must be declared in the manifest's `secrets`, as for connections.
+
+            In an app with auth configured, a module websocket needs a signed-in caller unless the module or the app makes it public. The module lists the websockets anyone may subscribe to under `auth.websockets.public` in its manifest:
+
+            ```yaml
+            # module.lowdefy.yaml
+            auth:
+              websockets:
+                public:
+                  - status-feed
+            ```
+
+            The app makes a module websocket public with `auth.websockets.public: true`, or by naming it in an `auth.websockets.public` list. Otherwise it stays protected, also with no `auth.websockets` rule or under a `protected` list that does not name it, where an app websocket would be public. A role in `auth.websockets.roles` restricts a module websocket whether it is public or not. In an app without auth, module websockets follow the app's rules like any other.
 
             ## Exposing Components
 
