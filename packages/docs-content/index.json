@@ -3314,7 +3314,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "823d71aa21275db72897e737d15cdd404f11a2c1819649ddd05f153370dedf3e"
+      "hash": "df8f8251ff616999dd8ee31989cf14faa1e6dc66a005dece9d864854978ea18d"
     },
     "concepts/notifications": {
       "files": [
@@ -3686,7 +3686,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "9b2c4e355bfe24b58c1ea0be49c8a5cee35e874ae4ab2b98d6fd0f216a78ab51"
+      "hash": "47572b51a2c42475f4e7d845074d3fd84d9dab3852b914e94f6364f4eb9a615d"
     },
     "user-authentication/users-introduction": {
       "files": [
@@ -3930,7 +3930,7 @@
         "testing/config-tests.yaml",
         "version.yaml"
       ],
-      "hash": "76d7bb849f9583689004b54d75acf8f06431aed3b76060cd5da120b41ec40cba"
+      "hash": "006303636c6a192ad9a685c90f3f1ea71eb71d647a0eb8bbd2e12f89b65eb33d"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -6875,7 +6875,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "9dd513f2bdce67d595163ca15f0ad22b3a29055878990a45f18e6901f079f955"
+      "hash": "e52b52b7c8670a00732cc1a8ad16769442786bc73842b54bf91f14cc5cca4e45"
     },
     "actions/posthogoptin": {
       "files": [
