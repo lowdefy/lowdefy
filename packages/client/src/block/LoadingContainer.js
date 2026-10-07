@@ -17,6 +17,7 @@
 import React from 'react';
 import { Area, BlockLayout } from '@lowdefy/layout';
 import LoadingBlock from './LoadingBlock.js';
+import loadingBlockMethods from './loadingBlockMethods.js';
 
 const LoadingContainer = ({
   blockClass,
@@ -67,7 +68,7 @@ const LoadingContainer = ({
         content={content}
         key={skeleton.id}
         menus={lowdefy.menus}
-        methods={{}}
+        methods={loadingBlockMethods}
         pageId={lowdefy.pageId}
         properties={skeleton.properties ?? blockProperties}
       />
