@@ -35,6 +35,7 @@ import createContext from '../../createContext.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import lowdefySchema from '../../lowdefySchema.js';
 import { tagRefDeep } from '../buildRefs/walker.js';
+import warnUnsetEnvReads from '../buildRefs/warnUnsetEnvReads.js';
 import testSchema from '../testSchema.js';
 import validateIconNames from '../icons/validateIconNames.js';
 import createPageBuildContext from './createPageBuildContext.js';
@@ -126,6 +127,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       pageEntry,
       buildContext,
     });
+    warnUnsetEnvReads({ context: buildContext });
 
     // Tag all objects with ~r for ref provenance (normally done inside _ref
     // resolution by the walker; JIT resolves the page file directly).

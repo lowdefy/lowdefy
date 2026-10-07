@@ -17,7 +17,7 @@
 import path from 'path';
 
 import { get, ReservedKeyError, type } from '@lowdefy/helpers';
-import { ConfigError, ConfigWarning } from '@lowdefy/errors';
+import { ConfigError } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
 import makeRefDefinition from './makeRefDefinition.js';
 import rebaseModuleRefPaths from './rebaseModuleRefPaths.js';
@@ -218,28 +218,35 @@ function tagRefDeep(node, refId) {
   }
 }
 
+// Operator nodes in a ref walk have no ~k yet (addKeys runs after buildRefs), so their
+// errors locate by the file being walked and the ~l line addLineNumbers stamped at parse.
+function nodeLocation(node, ctx) {
+  return { filePath: ctx.currentFile, lineNumber: node['~l'] };
+}
+
 // A _build.env read is inlined here, so a name the environment does not set
-// becomes a literal null in the artifact before any check can see it. Warn at
-// the inline site on every build: unlike a _secret, which is read where the app
-// runs, the value is frozen in the environment the build runs in.
-function warnUnsetEnvReference(node, ctx) {
+// becomes a literal null in the artifact before any check can see it. Record
+// the read site on every build: unlike a _secret, which is read where the app
+// runs, the value is frozen in the environment the build runs in. The reads are
+// warned once per variable when the walk ends (warnUnsetEnvReads), so a variable
+// read in many places does not bury the other warnings.
+function recordUnsetEnvRead(node, ctx) {
   const params = node['_build.env'];
   const name = type.isString(params) ? params : params?.key;
   if (!type.isString(name)) return;
   if (type.isObject(params) && Object.hasOwn(params, 'default')) return;
   if (!type.isUndefined(process.env[name])) return;
-  ctx.buildContext.handleWarning(
-    new ConfigWarning(
-      `Environment variable "${name}" is not set. _build.env read it at build time and inlined null; set it in the build environment or in .env, or give the operator a default.`,
-      { configKey: node['~k'], checkSlug: 'secrets' }
-    )
-  );
+  const { unsetEnvReads } = ctx.buildContext;
+  if (!unsetEnvReads.has(name)) {
+    unsetEnvReads.set(name, []);
+  }
+  unsetEnvReads.get(name).push(nodeLocation(node, ctx));
 }
 
 // Evaluate a _build.* operator using evaluateOperators
 function evaluateBuildOperator(node, ctx) {
   if (type.isObject(node) && Object.hasOwn(node, '_build.env')) {
-    warnUnsetEnvReference(node, ctx);
+    recordUnsetEnvRead(node, ctx);
   }
   const { output, errors } = evaluateOperators({
     input: node,
@@ -264,14 +271,14 @@ function evaluateBuildOperator(node, ctx) {
 // site below passes no `options` argument at all, so a missing key comes back from `get` as
 // `undefined` instead of a default — resolveVar relies on that `undefined` to tell "var not
 // provided" apart from "var provided as null".
-function readVar(key, ctx, options) {
+function readVar({ key, node, ctx, options }) {
   try {
     return get(ctx.vars, key, options);
   } catch (error) {
     if (!(error instanceof ReservedKeyError)) throw error;
     throw new ConfigError(`_var key "${key}" is a reserved name.`, {
       cause: error,
-      filePath: ctx.currentFile,
+      ...nodeLocation(node, ctx),
     });
   }
 }
@@ -282,13 +289,13 @@ function resolveVar(node, ctx) {
 
   // String form: { _var: "key" }
   if (type.isString(varDef)) {
-    const value = readVar(varDef, ctx, { default: null });
+    const value = readVar({ key: varDef, node, ctx, options: { default: null } });
     return cloneWithMarkers(value, { assignRefId: ctx.sourceRefId });
   }
 
   // Object form: { _var: { key, default } }
   if (type.isObject(varDef) && type.isString(varDef.key)) {
-    const varFromParent = readVar(varDef.key, ctx);
+    const varFromParent = readVar({ key: varDef.key, node, ctx });
 
     // Var provided (even if null) → use parent's sourceRefId for location
     if (!type.isUndefined(varFromParent)) {
@@ -300,9 +307,10 @@ function resolveVar(node, ctx) {
     return cloneWithMarkers(defaultValue);
   }
 
-  throw new ConfigError('_var operator takes a string or object with "key" field as arguments.', {
-    filePath: ctx.currentFile,
-  });
+  throw new ConfigError(
+    '_var operator takes a string or object with "key" field as arguments.',
+    nodeLocation(node, ctx)
+  );
 }
 
 // Resolve a _module.var node via lazy resolution against the module entry.
@@ -310,9 +318,7 @@ async function resolveModuleVar(node, ctx) {
   const key = node['_module.var'];
 
   if (!type.isString(key)) {
-    throw new ConfigError('_module.var operator takes a string argument.', {
-      filePath: ctx.currentFile,
-    });
+    throw new ConfigError('_module.var operator takes a string argument.', nodeLocation(node, ctx));
   }
 
   const value = await resolveEffectiveVar(key, ctx.moduleEntry, ctx);

@@ -1,0 +1,31 @@
+# W1: One Warning Per Unset Environment Variable
+# ==============================================
+# Tests that a _build.env variable the environment does not set, read in three
+# files, gives one warning that names the variable and lists all three places.
+# A second unset variable gets its own warning.
+#
+# Expected:
+#   1 warning for LDF_W1_UNSET_A, located at lowdefy.yaml:25 and listing
+#     lowdefy.yaml:25, pages/one.yaml:7 and pages/two.yaml:7
+#   1 warning for LDF_W1_UNSET_B, located at lowdefy.yaml:30
+#
+# A _build.env object takes the line of the "content" key it is the value of.
+
+lowdefy: local
+
+pages:
+  - _ref: pages/one.yaml
+  - _ref: pages/two.yaml
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Paragraph
+        properties:
+          content:
+            _build.env: LDF_W1_UNSET_A
+      - id: other
+        type: Paragraph
+        properties:
+          content:
+            _build.env: LDF_W1_UNSET_B

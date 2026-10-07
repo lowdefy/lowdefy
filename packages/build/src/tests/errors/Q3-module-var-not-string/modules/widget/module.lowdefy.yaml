@@ -1,0 +1,9 @@
+name: Widget Module
+
+pages:
+  - id: main
+    type: Box
+    properties:
+      title:
+        _module.var:
+          key: title

@@ -56,6 +56,7 @@ function createContext({
     refMap: {},
     refResolver,
     unresolvedRefVars: {},
+    unsetEnvReads: new Map(),
     seenSourceLines: new Set(),
     stage,
     validateOnly,

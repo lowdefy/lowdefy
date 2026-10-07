@@ -1,0 +1,23 @@
+# Q2: Invalid _var Arguments
+# ==========================
+# Tests that a _var whose argument is neither a string nor an object with a
+# "key" field fails the build with a ConfigError located at the _var line.
+#
+# Expected error:
+#   [ConfigError] _var operator takes a string or object with "key" field as arguments.
+#
+# The error points to line 21, the "content" key that holds the _var (an
+# operator object takes the line of the key it is the value of).
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: varRef
+        type: Paragraph
+        properties:
+          content:
+            _var:
+              default: missing key

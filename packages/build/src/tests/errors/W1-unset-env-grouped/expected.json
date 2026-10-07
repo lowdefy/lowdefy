@@ -1,0 +1,16 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "deleteEnv": ["LDF_W1_UNSET_A", "LDF_W1_UNSET_B"],
+      "warnings": [
+        "Environment variable \"LDF_W1_UNSET_A\" is not set",
+        "Environment variable \"LDF_W1_UNSET_B\" is not set"
+      ],
+      "exactWarnings": [
+        "{{fixturesDir}}/W1-unset-env-grouped/lowdefy.yaml:25\n[ConfigWarning] Environment variable \"LDF_W1_UNSET_A\" is not set. _build.env read it at build time in 3 places (lowdefy.yaml:25, pages/one.yaml:7, pages/two.yaml:7) and inlined null; set it in the build environment or in .env, or give the operator a default.",
+        "{{fixturesDir}}/W1-unset-env-grouped/lowdefy.yaml:30\n[ConfigWarning] Environment variable \"LDF_W1_UNSET_B\" is not set. _build.env read it at build time and inlined null; set it in the build environment or in .env, or give the operator a default."
+      ]
+    }
+  ]
+}

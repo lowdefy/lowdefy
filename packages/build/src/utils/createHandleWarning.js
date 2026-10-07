@@ -43,7 +43,7 @@ function createHandleWarning({ context }) {
       warning.config = location.config;
     }
 
-    const dedupKey = warning.source ?? warning.message;
+    const dedupKey = warning.dedupKey ?? warning.source ?? warning.message;
     if (context.seenSourceLines) {
       if (listedKeys.has(dedupKey)) return;
       listedKeys.add(dedupKey);

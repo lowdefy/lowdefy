@@ -1,0 +1,9 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "errors": ["_var operator takes a string or object with \"key\" field as arguments."],
+      "errorContains": ["{{fixturesDir}}/Q2-var-invalid-arguments/lowdefy.yaml:21"]
+    }
+  ]
+}

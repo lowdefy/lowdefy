@@ -19,6 +19,7 @@ import operators from '@lowdefy/operators-js/operators/build';
 import { resolve, WalkContext } from './walker.js';
 import getRefContent from './getRefContent.js';
 import makeRefDefinition from './makeRefDefinition.js';
+import warnUnsetEnvReads from './warnUnsetEnvReads.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import isPageContentPath from '../jit/isPageContentPath.js';
@@ -29,6 +30,7 @@ const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
 async function buildRefs({ context, shallowOptions }) {
   context.unresolvedRefVars = context.unresolvedRefVars ?? {};
+  context.unsetEnvReads = context.unsetEnvReads ?? new Map();
   const refDef = makeRefDefinition('lowdefy.yaml', null, context.refMap);
   // Stash for Phase 3.5 (precomputeRuntimeOperators) so it can resolve error
   // source file paths without creating a new makeId entry.
@@ -71,6 +73,8 @@ async function buildRefs({ context, shallowOptions }) {
   });
 
   const components = await resolve(content, ctx);
+  // Also warns the reads made by the module and auth passes that walked before this one.
+  warnUnsetEnvReads({ context });
   return components ?? {};
 }
 
