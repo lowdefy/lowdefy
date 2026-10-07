@@ -26,7 +26,7 @@ await ldf.block('next_btn').do.click();
 await ldf.waitForPage({ pageId: 'ticket', pathParams: { space: 'support', ticket_id: '1235' } });
 ```
 
-The target is `{ pageId, pathParams, urlQuery }`: `pathParams` gives one string per placeholder, and `urlQuery` adds a query string. A missing placeholder value is an error that names it. Block, state, request and validation helpers always read the page instance on screen, so after `waitForPage` they read the new instance and not the one before it.
+The target is `{ pageId, pathParams, urlQuery }`: `pathParams` gives one string per placeholder, and `urlQuery` adds a query string. The URL includes the app's `basePath`, so the same target works in an app served under one. A missing placeholder value is an error that names it. Block, state, request and validation helpers always read the page instance on screen, so after `waitForPage` they read the new instance and not the one before it.
 
 You can also access the current page ID and the raw Playwright page object:
 

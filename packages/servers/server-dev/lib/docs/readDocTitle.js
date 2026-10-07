@@ -14,18 +14,13 @@
   limitations under the License.
 */
 
-import getDocsIndex from './getDocsIndex.js';
-import readPluginPackages from './readPluginPackages.js';
+import fs from 'node:fs';
 
-function listPlugins() {
-  const slugs = new Set(getDocsIndex().entries.map((entry) => entry.slug));
-  return readPluginPackages().map((plugin) => {
-    const docSlug = `plugins/${plugin.package}`;
-    if (!slugs.has(docSlug)) {
-      return plugin;
-    }
-    return { ...plugin, docSlug };
-  });
+// A markdown file's first level-one heading, else the fallback.
+function readDocTitle({ filePath, fallback }) {
+  const content = fs.readFileSync(filePath, 'utf8');
+  const heading = content.match(/^# +(.+?)\s*$/m);
+  return heading ? heading[1] : fallback;
 }
 
-export default listPlugins;
+export default readDocTitle;

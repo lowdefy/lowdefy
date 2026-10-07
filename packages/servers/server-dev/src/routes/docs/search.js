@@ -14,14 +14,27 @@
   limitations under the License.
 */
 
+import docSources from '../../../lib/docs/docSources.js';
 import searchDocs from '../../../lib/docs/searchDocs.js';
 
 function docsSearchHandler(c) {
   const query = c.req.query('q');
+  const source = c.req.query('source');
   if (!query || query.trim() === '') {
-    return c.json({ error: 'Missing search query. Use GET /lowdefy-docs/search?q=your+keywords.' }, 400);
+    return c.json(
+      { error: 'Missing search query. Use GET /lowdefy-docs/search?q=your+keywords.' },
+      400
+    );
   }
-  return c.json(searchDocs({ query }));
+  if (source !== undefined && !docSources.includes(source)) {
+    return c.json(
+      {
+        error: `Unknown docs source "${source}". Use one of: ${docSources.join(', ')}.`,
+      },
+      400
+    );
+  }
+  return c.json(searchDocs({ query, source }));
 }
 
 export default docsSearchHandler;

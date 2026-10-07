@@ -14,18 +14,8 @@
   limitations under the License.
 */
 
-import getDocsIndex from './getDocsIndex.js';
-import readPluginPackages from './readPluginPackages.js';
+// Where a docs index entry comes from. Search hits name it, and the search
+// source filter takes one of these.
+const docSources = ['core', 'plugin', 'local-plugin', 'module'];
 
-function listPlugins() {
-  const slugs = new Set(getDocsIndex().entries.map((entry) => entry.slug));
-  return readPluginPackages().map((plugin) => {
-    const docSlug = `plugins/${plugin.package}`;
-    if (!slugs.has(docSlug)) {
-      return plugin;
-    }
-    return { ...plugin, docSlug };
-  });
-}
-
-export default listPlugins;
+export default docSources;

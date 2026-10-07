@@ -28,7 +28,7 @@ import getBuildStatus from './getBuildStatus.js';
 import getBuildStatusAfterEdits from './getBuildStatusAfterEdits.js';
 import readJourneySession from './readJourneySession.js';
 import readProxyBuildWait from './readProxyBuildWait.js';
-import getCoreDoc from './getCoreDoc.js';
+import getDoc from './getDoc.js';
 import getExamples from './getExamples.js';
 import getOverview from './getOverview.js';
 import getPageConfig from './getPageConfig.js';
@@ -420,7 +420,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
   });
 
   registerDevTool('lowdefy_get_doc', ({ slug, kind, type }) => {
-    const doc = getCoreDoc({ slug, kind, type });
+    const doc = getDoc({ slug, kind, type });
     if (doc === null) {
       return notFoundResult(
         `No doc found${slug ? ` for slug "${slug}"` : ''}${
@@ -431,7 +431,9 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
     return textResult(appendHazards(doc));
   });
 
-  registerDevTool('lowdefy_search_docs', ({ query }) => textResult(searchDocs({ query })));
+  registerDevTool('lowdefy_search_docs', ({ query, source }) =>
+    textResult(searchDocs({ query, source }))
+  );
 
   registerDevTool('lowdefy_search_icons', async ({ query, limit }) =>
     textResult(await searchIcons({ query, limit }))

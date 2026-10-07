@@ -16,6 +16,7 @@
 
 import { parsePathPattern } from '@lowdefy/helpers';
 
+import getDocsIndex from './getDocsIndex.js';
 import getDocsManifest from './getDocsManifest.js';
 import lowdefyConfig from '../build/config.js';
 import listPlugins from './listPlugins.js';
@@ -63,6 +64,23 @@ function patternedPageLines() {
   ];
 }
 
+// Plugin and module docs, with each module's pages named so an agent can
+// read them without a search.
+function appDocsLines() {
+  const { entries } = getDocsIndex();
+  const pluginDocs = entries.filter(
+    (entry) => entry.source === 'plugin' || entry.source === 'local-plugin'
+  );
+  const moduleDocs = entries.filter((entry) => entry.source === 'module');
+  const lines = [
+    `- ${pluginDocs.length} plugin doc pages and ${moduleDocs.length} module doc pages from this app's own plugins and modules (search them with \`source\`, read them with \`lowdefy_get_doc\`).`,
+  ];
+  for (const entry of moduleDocs) {
+    lines.push(`  - \`${entry.slug}\`: ${entry.title}`);
+  }
+  return lines;
+}
+
 function getOverview() {
   const availableTypes = readBuildArtifact({ name: 'plugins/availableTypes.json' }) ?? {};
   const counts = countKinds({ availableTypes });
@@ -85,6 +103,7 @@ function getOverview() {
     manifest
       ? `- ${manifest.docs.length} core documentation pages (sections: ${sections.join(', ')}).`
       : '- Core documentation package (@lowdefy/docs-content) is not installed.',
+    ...appDocsLines(),
     '',
     '## How to use this (recommended order)',
     '',
@@ -92,9 +111,9 @@ function getOverview() {
     '2. **Get the exact contract**: `GET /lowdefy-docs/schema/{kind}/{type}` (e.g. `/lowdefy-docs/schema/blocks/Button`) — or `lowdefy_get_schema`. JSON Schema of all properties.',
     '3. **See real usage**: `GET /lowdefy-docs/examples/{type}` — or `lowdefy_get_examples`. YAML examples for block types.',
     '4. **Read concept docs**: `GET /lowdefy-docs/content/{slug}` (e.g. `/lowdefy-docs/content/operators/_get`) — or `lowdefy_get_doc`. Start with `concepts/lowdefy-schema`, `concepts/blocks`, `concepts/events-and-actions`, `concepts/connections-and-requests`, `concepts/operators`.',
-    '5. **Search**: `GET /lowdefy-docs/search?q=...` — or `lowdefy_search_docs`.',
+    '5. **Search**: `GET /lowdefy-docs/search?q=...` — or `lowdefy_search_docs`. The query is split into words and pages are ranked by how many match, title matches first. Each hit names its `source` (`core`, `plugin`, `local-plugin` or `module`), package and version; `&source=` narrows the search to one source.',
     '6. **Icons**: `GET /lowdefy-docs/icons?q=...` — or `lowdefy_search_icons`. Use a semantic name (`icon: edit`); otherwise use a Lucide name in PascalCase (`icon: Receipt`) found by search. Never invent a name. In HTML use `<i data-icon="edit"></i>`, `data-tooltip` and `data-popover`.',
-    '7. **Plugin packages**: `GET /lowdefy-docs/plugins` lists every installed plugin; `GET /lowdefy-docs/plugin-doc/{package}` returns markdown a plugin ships itself (READMEs, guides).',
+    "7. **Plugin and module docs**: search and `lowdefy_get_doc` also cover the docs this app's own plugins and modules ship, local ones included: each README (`plugins/{package}`, `modules/{id}`), each `docs/*.md` file (`plugins/{package}/{file}`, `modules/{id}/{file}`), and for each module a generated page of the components, exports and vars its `module.lowdefy.yaml` declares (`modules/{id}/manifest`). `GET /lowdefy-docs/plugins` lists every installed plugin; `GET /lowdefy-docs/plugin-doc/{package}` returns all the markdown one plugin ships as one page.",
     '',
     'A `stale` field on a JSON response, a `> STALE:` banner on markdown, or an `X-Lowdefy-Stale` header means the last build FAILED and the served build is behind the source — this answer predates your latest edits. Call `GET /lowdefy-docs/build-status` and fix the errors before trusting anything else.',
     '',
@@ -134,8 +153,8 @@ function getOverview() {
     '| `GET /lowdefy-docs/plugins` | Installed plugin packages and the types each provides |',
     '| `GET /lowdefy-docs/schema/{kind}/{type}` | JSON schema for a type |',
     '| `GET /lowdefy-docs/examples/{type}` | Example yaml for a block type |',
-    '| `GET /lowdefy-docs/content/{slug}` | Core doc page as markdown |',
-    '| `GET /lowdefy-docs/search?q={query}` | Search core docs |',
+    '| `GET /lowdefy-docs/content/{slug}` | A doc page as markdown: core, plugin or module |',
+    '| `GET /lowdefy-docs/search?q={query}&source={source}` | Search the docs, ranked by matching words |',
     '| `GET /lowdefy-docs/icons?q={query}` | Search icon names (semantic names first, then Lucide names, then installed icon sets) |',
     '| `GET /lowdefy-docs/plugin-doc/{package}` | Markdown shipped inside a plugin package |',
     '| `GET /lowdefy-docs/build-status` | Current build errors/warnings, failing pages + recent browser errors |',

@@ -3370,7 +3370,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "ed01ec5b2866e2356d1086be0b2b89036b01d82dfaf8d080b6d82036985a82c2"
+      "hash": "4a11c0da1fac58e8aa7e9730c1c6dac961d03a787d9ef8fa1d2a9709e3ed7672"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3797,7 +3797,7 @@
         "users/organizations.yaml",
         "version.yaml"
       ],
-      "hash": "1a6c79bd7cf5dcdebdb4dae1b56001eaf7741c0a438dfb291b20c910a3defb9e"
+      "hash": "8cd06d120370a7b00bd5ee16d46a86bdc924ad371c03fc2fd1ca1e2647b3f8af"
     },
     "user-authentication/auth-steps": {
       "files": [
@@ -4013,7 +4013,7 @@
         "testing/e2e-writing-tests.yaml",
         "version.yaml"
       ],
-      "hash": "720ac4477bd812375fc026e84821478bff2fecc31e1798b6062b5fe4e5789246"
+      "hash": "5d96e5b7f579442a78c220e13b2147d3c61cb6a6858b9191c39e9d21aa073b45"
     },
     "testing/e2e-mocking": {
       "files": [
