@@ -463,7 +463,7 @@ function AgentChat({
     } else {
       objectUrl = getLegacyObjectUrl({ descriptor });
     }
-    return { url: objectUrl, mediaType: fileType, filename: name };
+    return { url: objectUrl, mediaType: fileType, filename: name, key: descriptor.key };
   }
 
   // One intake for every way a file arrives — the paperclip picker, a
@@ -538,11 +538,15 @@ function AgentChat({
             attachedFiles.map((file) => uploadFileToStorage(file))
           );
           for (const result of uploadResults) {
+            // The storage key goes under providerMetadata: the AI SDK drops any other extra
+            // field on a file part when the server validates the messages, and the key has to
+            // reach saved conversations and the tool endpoints that read `_agent: files`.
             parts.push({
               type: 'file',
               url: result.url,
               mediaType: result.mediaType,
               filename: result.filename,
+              providerMetadata: { lowdefy: { key: result.key } },
             });
           }
         } catch (error) {

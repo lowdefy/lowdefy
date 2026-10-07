@@ -97,6 +97,7 @@ async function handleAgentCall(context, routineContext, { step }) {
       agentId,
       agentContext,
       endpointDepth: routineContext.endpointDepth,
+      files: [],
       mode: 'generate',
     }
   );

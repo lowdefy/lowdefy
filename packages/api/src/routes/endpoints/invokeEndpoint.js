@@ -59,9 +59,9 @@ async function invokeEndpoint(
     // Called from inside a :try with a :catch: an expected error the called endpoint does not
     // catch itself is handled by the caller's :catch, so it is logged at debug (runRoutine).
     caught,
-    // The agent ({ id, conversationId }) whose tool call started this chain of endpoint calls, or
-    // null. Set by the engine from the running agent, never from the payload, so `_agent` can mark
-    // agent work.
+    // The agent ({ id, conversationId, files }) whose tool call started this chain of endpoint
+    // calls, or null. Set by the engine from the running agent, never from the payload, so
+    // `_agent` can mark agent work.
     agent,
     // Set only for the endpoint a Dynamic block calls: its :return becomes page
     // config, so data read into it must not carry operators. Nested CallApi

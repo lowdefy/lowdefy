@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import collectChatFiles from './collectChatFiles.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import prepareAgent from './prepareAgent.js';
 
@@ -53,7 +54,13 @@ async function callAgent(
 
   const { agentConfig, connectionInstance, agentType, resolverContext } = await prepareAgent(
     context,
-    { agentId, agentContext, endpointDepth: 0, mode: 'chat' }
+    {
+      agentId,
+      agentContext,
+      endpointDepth: 0,
+      files: collectChatFiles({ messages }),
+      mode: 'chat',
+    }
   );
 
   // Call the agent resolver

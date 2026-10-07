@@ -16,9 +16,9 @@
 
 import { getFromObject } from '@lowdefy/operators';
 
-// Reads the agent ({ id, conversationId }) the engine put on the routine when an agent called the
-// endpoint as a tool or hook. On any other call there is no agent, and every read resolves to null
-// or its default, the way `_error` does outside a catch.
+// Reads the agent ({ id, conversationId, files }) the engine put on the routine when an agent
+// called the endpoint as a tool or hook. On any other call there is no agent, and every read
+// resolves to null or its default, the way `_error` does outside a catch.
 function _agent({ agent, arrayIndices, location, params }) {
   return getFromObject({
     arrayIndices,
