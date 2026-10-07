@@ -853,6 +853,20 @@ The Hono app is mounted into Vite via `@hono/vite-dev-server`. There is no compr
 5. **Page catch-all**: `GET /` and `GET /:rest{.+}` — every page path renders the same shell via `renderDevPage`; the client fetches config and handles home/404 routing.
 6. **`app.onError`** — Hono routes every handler error to the app-level error handler (upstream middleware try/catch never sees them). API paths get serialized error JSON (with `received`/`stack`/`configKey` stripped); page paths get a plain 500. Same contract as production — see [server.md](./server.md#error-handling).
 
+### Docs Index
+
+**Files:** `lib/docs/getDocsIndex.js`, `searchDocs.js`, `getDoc.js`, `listPluginDocEntries.js`, `listModuleDocEntries.js`, `makeModuleManifestDoc.js`, `readDocEntry.js`
+
+The doc tools (`lowdefy_search_docs`, `lowdefy_get_doc`, `/lowdefy-docs/search`, `/lowdefy-docs/content/{slug}`) read one index in the server process. `getDocsIndex()` returns `{ entries, typeDocs }`. Each entry is `{ slug, title, section, kind?, typeName?, source, package, version }` plus where its markdown comes from (a file path, or the module entry a page is generated from). Content is read when asked for: core docs once per process, plugin and module docs on every read.
+
+- **Core** (`source: core`): the `@lowdefy/docs-content` manifest.
+- **Plugins** (`plugin`, or `local-plugin` when the package's real directory is outside every `node_modules`), from the plugin packages the build lists (`plugins/availableTypes.json`, `customTypesMap.json`, `installedPluginPackages.json`), `@lowdefy/*` left out: the `README.md` as `plugins/<package>`, and each `docs/*.md` (else `dist/docs/*.md`) as `plugins/<package>/<stem>`. `typeDocs` maps `"<kind>:<type>"` to the doc whose stem is the type name, else to the README.
+- **Modules** (`module`), from `build/modules.json`: the `README.md` as `modules/<id>`, each `docs/*.md` as `modules/<id>/<stem>`, and `modules/<id>/manifest`, generated from the module's `varDefs` and manifest (vars with type, required, description and default; components; exports). The package is the module source without its ref, the version the ref, or `local` for `file:`.
+
+The index is built when `src/app.js` is created and rebuilt on the first docs call after its key changes. The key is the stats of the three plugin artifacts (an artifact a build leaves byte-identical keeps its mtime), the docs-relevant parts of `modules.json`, and the README and doc files of local plugins and modules. A config-only edit changes none of them.
+
+`searchDocs` splits the query into terms (lowercased; one- and two-letter terms and common words dropped; a query of only dropped words is searched whole). Each term scores once, by its best field: title or slug 3, type name 2, body 1. Hits come best first, ties in index order, at most 20, and `source` narrows them. `getDoc` looks up a slug in the core docs, then the rest; a type in its plugin's docs first (the core lookup falls back to a type-name prefix match), then the core docs.
+
 ### Page Config (JIT Build Trigger)
 
 **File:** `src/routes/jitPage.js`
