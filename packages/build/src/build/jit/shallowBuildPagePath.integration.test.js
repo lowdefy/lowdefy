@@ -104,7 +104,37 @@ pages:
         path: 'items/{item_id}'
   - _ref: pages/about.yaml
   - _ref: pages/links.yaml
+  - _ref: pages/unbuilt.yaml
+  - _ref:
+      path: pages/transformed.yaml
+      transformer: transformers/contentPath.js
 `
+  );
+  // Its content refs a file that does not exist: only a page build reads it.
+  write(
+    'pages/unbuilt.yaml',
+    `id: unbuilt
+type: Box
+path: unbuilt/{id}
+blocks:
+  _ref: blocks/missing.js
+`
+  );
+  // The skeleton build runs a page's transformer without its content, so its
+  // path in routes.json is the one it gives a page with no content.
+  write(
+    'pages/transformed.yaml',
+    `id: transformed
+type: Box
+blocks:
+  - id: title
+    type: Box
+`
+  );
+  write('package.json', JSON.stringify({ type: 'module' }));
+  write(
+    'transformers/contentPath.js',
+    "export default function transform(page) {\n  return { ...page, path: page.blocks ? 'with-content' : 'without-content' };\n}\n"
   );
   write('pages/home.yaml', 'id: home\ntype: Box\n');
   write(
@@ -219,6 +249,8 @@ test('the skeleton build writes routes.json with each page path resolved and mod
     { pageId: 'item', path: 'items/{item_id}' },
     { pageId: 'about', path: 'company/about-us' },
     { pageId: 'links', path: 'links' },
+    { pageId: 'unbuilt', path: 'unbuilt/{id}' },
+    { pageId: 'transformed', path: 'without-content' },
     { pageId: 'support/ticket', path: 'support/{space}/tickets/{ticket_id}' },
     { pageId: 'support/board', path: 'support/boards/{board_id}' },
     { pageId: '404', path: '404' },
@@ -300,4 +332,37 @@ test('resolvePagePath reads the path a page file declares now', async () => {
   expect(await resolvePagePath({ pageId: 'ticket', pageRegistry, context })).toEqual('ticket');
   write('pages/home.yaml', 'id: home\ntype: Box\npath: start\n');
   expect(await resolvePagePath({ pageId: 'home', pageRegistry, context })).toEqual('start');
+});
+
+test('resolvePagePath does not read the files a page content refs', async () => {
+  const { pageRegistry, context } = result;
+  const importAppCode = context.importAppCode;
+  const imported = [];
+  context.importAppCode = (filePath) => {
+    imported.push(filePath);
+    return importAppCode(filePath);
+  };
+  try {
+    expect(await resolvePagePath({ pageId: 'unbuilt', pageRegistry, context })).toEqual(
+      'unbuilt/{id}'
+    );
+  } finally {
+    context.importAppCode = importAppCode;
+  }
+  expect(imported).toEqual([]);
+});
+
+test('resolvePagePath runs a page transformer without the content, as the skeleton build does', async () => {
+  const { pageRegistry, context } = result;
+  expect(await resolvePagePath({ pageId: 'transformed', pageRegistry, context })).toEqual(
+    'without-content'
+  );
+});
+
+test('resolvePagePath leaves the kept context refMap unchanged', async () => {
+  const { pageRegistry, context } = result;
+  const refMap = { ...context.refMap };
+  await resolvePagePath({ pageId: 'report', pageRegistry, context });
+  await resolvePagePath({ pageId: 'item', pageRegistry, context });
+  expect(context.refMap).toEqual(refMap);
 });
