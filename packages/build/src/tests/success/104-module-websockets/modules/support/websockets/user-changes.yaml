@@ -1,0 +1,8 @@
+id: user-changes
+type: MongoDBChangeStream
+connectionId:
+  _module.connectionId: users
+properties:
+  pipeline:
+    - $match:
+        operationType: update

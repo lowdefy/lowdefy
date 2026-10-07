@@ -262,3 +262,48 @@ test('properties are evaluated with the subscriber payload and user', async () =
   const res = await prepareChannel(context, { websocketId: 'ws1', payload: { room: 7 } });
   expect(res.properties).toEqual({ room: 7, user: 'id' });
 });
+
+function moduleWebsocketReadConfigImp(path) {
+  if (path === 'connections/help/messages.json') {
+    return {
+      id: 'connection:help/messages',
+      type: 'NonScopableConnection',
+      connectionId: 'help/messages',
+      properties: { collection: 'support_messages' },
+    };
+  }
+  if (path === 'websockets/help/thread-messages.json') {
+    return {
+      id: 'websocket:help/thread-messages',
+      type: 'TestSource',
+      websocketId: 'help/thread-messages',
+      connectionId: 'help/messages',
+      auth: { public: false, roles: ['agent'] },
+      properties: { ticket_id: { _payload: 'ticket_id' } },
+    };
+  }
+  return null;
+}
+
+test('module websocket loads its scoped config and module connection', async () => {
+  mockReadConfigFile.mockImplementation(moduleWebsocketReadConfigImp);
+  const context = createTestContext({ user: { id: 'id', roles: ['agent'] } });
+
+  const res = await prepareChannel(context, {
+    websocketId: 'help/thread-messages',
+    payload: { ticket_id: 't-1' },
+  });
+  expect(res.websocketConfig.websocketId).toBe('help/thread-messages');
+  expect(res.connectionProperties).toEqual({ collection: 'support_messages' });
+  expect(res.properties).toEqual({ ticket_id: 't-1' });
+  expect(res.websocketResolver).toBe(mockResolver);
+});
+
+test('module websocket refuses a caller without the role its scoped id requires', async () => {
+  mockReadConfigFile.mockImplementation(moduleWebsocketReadConfigImp);
+  const context = createTestContext({ user: { id: 'id', roles: ['customer'] } });
+
+  await expect(
+    prepareChannel(context, { websocketId: 'help/thread-messages', payload: {} })
+  ).rejects.toThrow('Websocket "help/thread-messages" does not exist.');
+});

@@ -919,6 +919,39 @@ notifications:
   ]);
 });
 
+test('resolveFullManifest filters null entries from websockets', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+websockets:
+  - id: thread-messages
+    type: Channel
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await resolveLocalManifest({
+    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  context.modules['my-mod'].manifest.websockets.push(null);
+
+  await resolveFullManifest({ entryId: 'my-mod', context });
+
+  expect(context.modules['my-mod'].manifest.websockets).toEqual([
+    expect.objectContaining({ id: 'thread-messages', type: 'Channel' }),
+  ]);
+});
+
 describe('operator-generated components sections', () => {
   // Components are record-ified by the exportables pass (Phase C.5), which
   // runs after the header parse — drive both, as buildModuleDefs does.

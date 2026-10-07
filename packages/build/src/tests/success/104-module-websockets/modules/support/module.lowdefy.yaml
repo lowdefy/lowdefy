@@ -1,0 +1,17 @@
+name: Support
+description: Module that ships the change streams its pages subscribe to
+
+secrets:
+  - name: SUPPORT_MONGODB_URI
+    description: MongoDB URI for support messages
+
+connections:
+  - _ref: connections/messages.yaml
+  - _ref: connections/users.yaml
+
+websockets:
+  - _ref: websockets/thread-messages.yaml
+  - _ref: websockets/user-changes.yaml
+
+pages:
+  - _ref: pages/thread.yaml

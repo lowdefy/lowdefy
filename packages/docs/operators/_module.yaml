@@ -31,13 +31,15 @@ _ref:
       _module.endpointId: (arguments: { id: string, module: string }): string
       _module.notificationId: (notificationId: string): string
       _module.notificationId: (arguments: { id: string, module: string }): string
+      _module.websocketId: (websocketId: string): string
+      _module.websocketId: (arguments: { id: string, module: string }): string
       _module.id: (true): string
       _module.id: (arguments: { module: string }): string
       ```
     description: |
       The `_module` operator family provides access to module-scoped values during the build. `_module.var` and the string forms of the ID operators only make sense inside module config files — the build throws a clear error if you use them at the app level.
 
-      The object form of `_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.notificationId`, and `_module.id` also works at the app level, resolving by entry ID instead of a dependency name — useful for linking, calling, or labelling a specific module instance from app-level config without hardcoding the scoped ID. See each method below for an app-level example.
+      The object form of `_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.notificationId`, `_module.websocketId`, and `_module.id` also works at the app level, resolving by entry ID instead of a dependency name — useful for linking, calling, or labelling a specific module instance from app-level config without hardcoding the scoped ID. See each method below for an app-level example.
 
       All `_module` operators resolve during the walker pass — the same phase as `_var` and `_ref`. Inside module files, they work at any depth.
 
@@ -293,6 +295,56 @@ _ref:
                   module: user-admin
           ```
           At the app level, `module` is the module entry ID. The build resolves this to `user-admin/invite-user`.
+
+      - name: websocketId
+        types: |
+          ```
+          (websocketId: string): string
+          (arguments: { id: string, module: string }): string
+          ```
+        description: |
+          Resolves a websocket ID to its fully scoped ID, for a page's `subscriptions[].websocketId` and the `Subscribe`, `Unsubscribe` and `Publish` actions. The string form references the current module's websockets and only works inside module content.
+
+          The object form references a target by entry ID. Inside module content, `module` is the abstract dependency name declared in `module.lowdefy.yaml`. At the app level, `module` is the concrete module entry ID from `lowdefy.yaml`, for an app page that subscribes to a websocket a module ships.
+
+        arguments: |
+          ###### string
+          The module-local websocket ID (as declared in the module's `websockets:` section).
+
+          ###### object
+            - `id: string`: The websocket ID in the target module.
+            - `module: string`: The abstract dependency name (in module content) or the module entry ID (in app-level config).
+
+        examples: |
+          ###### Subscribe a module page to the module's own websocket:
+          ```yaml
+          subscriptions:
+            - websocketId:
+                _module.websocketId: thread-messages
+              payload:
+                ticket_id:
+                  _state: ticket_id
+          ```
+          In a module entry with `id: support`, resolves to `support/thread-messages`.
+
+          ###### Read the channel state of a module websocket:
+          ```yaml
+          _websocket:
+            _string.concat:
+              - _module.websocketId: thread-messages
+              - .messages
+          ```
+
+          ###### Subscribe an app page to a module's websocket:
+          ```yaml
+          # lowdefy.yaml (app level)
+          subscriptions:
+            - websocketId:
+                _module.websocketId:
+                  id: thread-messages
+                  module: support
+          ```
+          At the app level, `module` is the module entry ID. The build resolves this to `support/thread-messages`.
 
       - name: id
         types: |

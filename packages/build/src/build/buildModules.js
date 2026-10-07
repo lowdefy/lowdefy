@@ -100,6 +100,9 @@ function buildModules({ components, context }) {
     for (const notification of manifest.notifications ?? []) {
       validateModuleSecrets({ content: notification, manifest, entryId: entry.id });
     }
+    for (const websocket of manifest.websockets ?? []) {
+      validateModuleSecrets({ content: websocket, manifest, entryId: entry.id });
+    }
 
     // Process pages
     for (const page of manifest.pages ?? []) {
@@ -139,6 +142,13 @@ function buildModules({ components, context }) {
       notification.id = `${entry.id}/${notification.id}`;
       components.notifications = components.notifications ?? [];
       components.notifications.push(notification);
+    }
+
+    // Process websockets
+    for (const websocket of manifest.websockets ?? []) {
+      websocket.id = `${entry.id}/${websocket.id}`;
+      components.websockets = components.websockets ?? [];
+      components.websockets.push(websocket);
     }
   }
 

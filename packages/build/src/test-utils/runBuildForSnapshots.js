@@ -36,7 +36,9 @@ const snapshotTypesMap = {
     SetFocus: { package: '@lowdefy/actions-core' },
     SetGlobal: { package: '@lowdefy/actions-core' },
     SetState: { package: '@lowdefy/actions-core' },
+    Subscribe: { package: '@lowdefy/actions-core' },
     Throw: { package: '@lowdefy/actions-core' },
+    Unsubscribe: { package: '@lowdefy/actions-core' },
     Validate: { package: '@lowdefy/actions-core' },
     Wait: { package: '@lowdefy/actions-core' },
     Return: { package: '@lowdefy/api' },
@@ -165,6 +167,9 @@ const snapshotTypesMap = {
   },
   notifications: {
     NotificationEmail: { package: '@lowdefy/email-templates' },
+  },
+  websockets: {
+    MongoDBChangeStream: { package: '@lowdefy/connection-mongodb' },
   },
   auth: {
     adapters: {

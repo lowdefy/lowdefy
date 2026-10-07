@@ -84,9 +84,7 @@ test('buildModules adds module connections with scoped IDs', () => {
   const moduleEntry = makeModuleEntry({
     id: 'team-users',
     manifest: {
-      connections: [
-        { id: 'users-db', type: 'MongoDBCollection', properties: {} },
-      ],
+      connections: [{ id: 'users-db', type: 'MongoDBCollection', properties: {} }],
     },
   });
   const context = makeContext([moduleEntry]);
@@ -220,6 +218,101 @@ test('buildModules throws ConfigError when _secret references undeclared secret 
   );
 });
 
+test('buildModules adds module websockets with scoped IDs', () => {
+  const moduleEntry = makeModuleEntry({
+    id: 'support',
+    manifest: {
+      websockets: [
+        {
+          id: 'thread-messages',
+          type: 'MongoDBChangeStream',
+          connectionId: 'support/messages',
+          properties: { pipeline: [] },
+        },
+      ],
+    },
+  });
+  const context = makeContext([moduleEntry]);
+  const components = {
+    modules: [{ id: 'support' }],
+  };
+
+  const result = buildModules({ components, context });
+
+  expect(result.websockets).toEqual([
+    {
+      id: 'support/thread-messages',
+      type: 'MongoDBChangeStream',
+      connectionId: 'support/messages',
+      properties: { pipeline: [] },
+    },
+  ]);
+});
+
+test('buildModules appends module websockets to existing app websockets', () => {
+  const moduleEntry = makeModuleEntry({
+    id: 'support',
+    manifest: {
+      websockets: [{ id: 'thread-messages', type: 'MongoDBChangeStream', connectionId: 'msgs' }],
+    },
+  });
+  const context = makeContext([moduleEntry]);
+  const components = {
+    modules: [{ id: 'support' }],
+    websockets: [{ id: 'ticker', type: 'Interval' }],
+  };
+
+  const result = buildModules({ components, context });
+
+  expect(result.websockets.map((w) => w.id)).toEqual(['ticker', 'support/thread-messages']);
+});
+
+test('buildModules processes same module package with different entry IDs — two scoped websockets', () => {
+  const entryA = makeModuleEntry({
+    id: 'support-a',
+    manifest: { websockets: [{ id: 'thread-messages', type: 'Channel' }] },
+  });
+  const entryB = makeModuleEntry({
+    id: 'support-b',
+    manifest: { websockets: [{ id: 'thread-messages', type: 'Channel' }] },
+  });
+  const context = makeContext([entryA, entryB]);
+  const components = {
+    modules: [{ id: 'support-a' }, { id: 'support-b' }],
+  };
+
+  const result = buildModules({ components, context });
+
+  expect(result.websockets.map((w) => w.id)).toEqual([
+    'support-a/thread-messages',
+    'support-b/thread-messages',
+  ]);
+});
+
+test('buildModules throws ConfigError when _secret references undeclared secret in websocket', () => {
+  const moduleEntry = makeModuleEntry({
+    id: 'support',
+    manifest: {
+      secrets: [{ name: 'DECLARED_SECRET' }],
+      websockets: [
+        {
+          id: 'thread-messages',
+          type: 'Channel',
+          properties: { token: { _secret: 'UNDECLARED_SECRET' } },
+        },
+      ],
+    },
+  });
+  const context = makeContext([moduleEntry]);
+  const components = {
+    modules: [{ id: 'support' }],
+  };
+
+  expect(() => buildModules({ components, context })).toThrow(
+    /references secret "UNDECLARED_SECRET"/
+  );
+});
+
 test('buildModules skips remapped connections', () => {
   const moduleEntry = makeModuleEntry({
     id: 'team-users',
@@ -239,9 +332,7 @@ test('buildModules skips remapped connections', () => {
   const result = buildModules({ components, context });
 
   // Only cache-db should be added; users-db is remapped
-  expect(result.connections).toEqual([
-    { id: 'team-users/cache-db', type: 'MongoDBCollection' },
-  ]);
+  expect(result.connections).toEqual([{ id: 'team-users/cache-db', type: 'MongoDBCollection' }]);
 });
 
 test('buildModules preserves pre-resolved _module.pageId strings in pages', () => {
@@ -279,9 +370,7 @@ test('buildModules preserves pre-resolved _module.pageId strings in pages', () =
 
   const result = buildModules({ components, context });
 
-  expect(result.pages[0].blocks[0].events.onClick[0].params.pageId).toBe(
-    'team-users/user-detail'
-  );
+  expect(result.pages[0].blocks[0].events.onClick[0].params.pageId).toBe('team-users/user-detail');
 });
 
 test('buildModules preserves pre-resolved connectionId strings', () => {
@@ -537,11 +626,7 @@ test('buildModules processes modules in order they appear', () => {
 
   const result = buildModules({ components, context });
 
-  expect(result.pages.map((p) => p.id)).toEqual([
-    'home',
-    'alpha/page-a',
-    'beta/page-b',
-  ]);
+  expect(result.pages.map((p) => p.id)).toEqual(['home', 'alpha/page-a', 'beta/page-b']);
 });
 
 // Secret whitelist validation tests

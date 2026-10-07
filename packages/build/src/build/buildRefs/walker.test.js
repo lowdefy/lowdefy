@@ -456,6 +456,61 @@ describe('_module.notificationId resolution', () => {
   });
 });
 
+describe('_module.websocketId resolution', () => {
+  test('string form resolves to scoped websocket id', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: testModuleEntry,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve({ '_module.websocketId': 'thread-messages' }, ctx);
+    expect(result).toBe('entry-id/thread-messages');
+  });
+
+  test('object form resolves cross-module websocket', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: testModuleEntry,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve(
+      { '_module.websocketId': { id: 'event-feed', module: 'events' } },
+      ctx
+    );
+    expect(result).toBe('events-entry/event-feed');
+  });
+
+  test('throws for invalid argument type', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: testModuleEntry,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.websocketId': 7 }, ctx)).rejects.toThrow(
+      '_module.websocketId requires a string or object { id, module }.'
+    );
+  });
+
+  test('string form throws at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.websocketId': 'thread-messages' }, ctx)).rejects.toThrow(
+      '_module.websocketId string form is ambiguous at the app level'
+    );
+  });
+
+  test('object form resolves at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve(
+      { '_module.websocketId': { id: 'thread-messages', module: 'events-entry' } },
+      ctx
+    );
+    expect(result).toBe('events-entry/thread-messages');
+  });
+});
+
 describe('_module.id resolution', () => {
   test('non-object form returns own module id', async () => {
     const ctx = createWalkContext({
