@@ -147,7 +147,10 @@ blocks:
     type: Box
 `
   );
-  write('pages/report.yaml', 'id: report\ntype: Box\npath:\n  _ref: paths/report.yaml\n');
+  write(
+    'pages/report.yaml',
+    'id: report\ntype: Box\npath:\n  _ref:\n    path: paths/report.yaml\n    vars:\n      unused: true\n'
+  );
   write('paths/report.yaml', "'reports/{year}'\n");
   write(
     'pages/docs.yaml',
@@ -359,10 +362,12 @@ test('resolvePagePath runs a page transformer without the content, as the skelet
   );
 });
 
-test('resolvePagePath leaves the kept context refMap unchanged', async () => {
+test('resolvePagePath leaves the kept context refMap and unresolved ref vars unchanged', async () => {
   const { pageRegistry, context } = result;
   const refMap = { ...context.refMap };
+  const unresolvedRefVars = { ...context.unresolvedRefVars };
   await resolvePagePath({ pageId: 'report', pageRegistry, context });
   await resolvePagePath({ pageId: 'item', pageRegistry, context });
   expect(context.refMap).toEqual(refMap);
+  expect(context.unresolvedRefVars).toEqual(unresolvedRefVars);
 });
