@@ -16,6 +16,8 @@
 
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
+import { fileURLToPath } from 'url';
+
 import createShim from './createShim.js';
 import loadDevTools from './loadDevTools.js';
 
@@ -24,7 +26,14 @@ import loadDevTools from './loadDevTools.js';
 // server, and nothing in it names a port. stdout carries the protocol: nothing
 // else may write to it.
 async function mcp({ cliVersion }) {
-  const shim = createShim({ cliVersion, cwd: process.cwd(), devTools: loadDevTools() });
+  const shim = createShim({
+    cliVersion,
+    // The CLI package this shim runs from (dist/commands/mcp/ is three
+    // folders down), which a version mismatch's fix names.
+    cliDirectory: fileURLToPath(new URL('../../..', import.meta.url)),
+    cwd: process.cwd(),
+    devTools: loadDevTools(),
+  });
   const transport = new StdioServerTransport();
   async function exit() {
     await shim.close();
