@@ -719,7 +719,7 @@ test('an unbound system run that writes fails with TenantIntegrityError naming t
           tenant: { field: 'org' },
           properties: { collection: 'notifications' },
         },
-        requestConfig: { ...defaultRequestConfig, stepId: 'mark_sent' },
+        requestConfig: { ...defaultRequestConfig, stepId: 'mark_sent', '~k': 'step.0' },
         writes: true,
       }
     );
@@ -732,6 +732,7 @@ test('an unbound system run that writes fails with TenantIntegrityError naming t
   );
   expect(error).toMatchObject({
     collection: 'notifications',
+    configKey: 'step.0',
     connectionId: 'testConnection',
     endpointId: 'sweep',
     field: 'org',
@@ -775,7 +776,7 @@ test('a signed-in caller with no organization that writes keeps the Authenticati
   ).toThrow(AuthenticationError);
 });
 
-test('the AuthenticationError no longer suggests writing under tenant none', () => {
+test('the AuthenticationError for an anonymous caller that writes says writes and does not suggest CallApi', () => {
   expect(() =>
     resolveTenancy(
       { ...tenantPolicy, user: null },
@@ -783,9 +784,10 @@ test('the AuthenticationError no longer suggests writing under tenant none', () 
         connection: tenantConnection,
         connectionConfig: defaultConnectionConfig,
         requestConfig: defaultRequestConfig,
+        writes: true,
       }
     )
   ).toThrow(
-    /no caller organization resolved\. System-context and strategy callers carry no organization - the wall fails closed for them\. To run this request in one organization from a system run, call its endpoint with a CallApi step that names the "organization"\.$/
+    'Request "requestId" writes to tenant connection "testConnection" but no caller organization resolved. Strategy callers and callers with no active organization carry none - the wall fails closed for them.'
   );
 });

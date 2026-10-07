@@ -53,21 +53,30 @@ async function runWebhookVerify(context, { verify, body, rawBody, query, headers
     connectionId: verify.connectionId,
     requestId: 'webhook.verify',
     properties: verify.properties ?? {},
-    // Webhooks run in system context, so a verifier on a tenant connection
-    // fails closed (caught at resolveTenancy below, verdict false) unless the
-    // verify config opts out with tenant: none.
+    // The verifier runs before the run earns trust, with no caller
+    // organization, so a verifier on a tenant connection fails closed (caught
+    // at resolveTenancy below, verdict false) unless the verify config opts
+    // out with tenant: none - which may only read, like any tenant: none
+    // request.
     tenant: verify.tenant,
     '~k': verify['~k'],
   };
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
   let tenancy;
   try {
-    tenancy = resolveTenancy(context, { connection, connectionConfig, requestConfig });
+    tenancy = resolveTenancy(context, {
+      connection,
+      connectionConfig,
+      requestConfig,
+      writes: requestResolver.meta.checkWrite === true,
+    });
   } catch (error) {
     // Only the org-less-caller refusal is a gate outcome - it must not reach
     // the unauthenticated webhook sender as an error body. Config errors
-    // (tenant declared on a type without the contract) still throw: a
-    // misconfigured verifier breaks loudly, per the contract above.
+    // (tenant declared on a type without the contract, a writing verifier
+    // under tenant: none) still throw: a misconfigured verifier breaks
+    // loudly, per the contract above, rather than failing every webhook as
+    // an unverified one inside the resolver call below.
     if (error.name !== 'AuthenticationError') {
       throw error;
     }

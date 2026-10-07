@@ -41,26 +41,7 @@ export default {
   // Whether each request type reads and writes. The build refuses a write
   // request type under tenant: none on a scoped connection.
   requestMetas,
-  requests: [
-    'MongoDBAggregation',
-    'MongoDBBulkWrite',
-    'MongoDBDeleteMany',
-    'MongoDBDeleteOne',
-    'MongoDBEnrichmentClaim',
-    'MongoDBEnrichmentComplete',
-    'MongoDBEnrichmentEnqueue',
-    'MongoDBFind',
-    'MongoDBFindOne',
-    'MongoDBInsertConsecutiveId',
-    'MongoDBInsertMany',
-    'MongoDBInsertManyConsecutiveIds',
-    'MongoDBInsertOne',
-    'MongoDBTableChanges',
-    'MongoDBTableQuery',
-    'MongoDBUpdateMany',
-    'MongoDBUpdateOne',
-    'MongoDBVersionedUpdateOne',
-  ],
+  requests: Object.keys(requestMetas),
   auth: {
     adapters: ['MongoDBAuthAdapter'],
   },

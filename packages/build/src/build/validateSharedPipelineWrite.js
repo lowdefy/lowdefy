@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import getLiteralWriteTarget from './getLiteralWriteTarget.js';
 import tenantTargetKey from './tenantTargetKey.js';
 
 // Best-effort DX check, like validateTenantPipelineEntry: literal pipelines
@@ -29,22 +30,6 @@ import tenantTargetKey from './tenantTargetKey.js';
 //
 // MongoDB only runs $out and $merge as the last stage of the root pipeline,
 // so only the root stages are read.
-function getLiteralWriteTarget(stage) {
-  if (!type.isObject(stage)) {
-    return null;
-  }
-  if (type.isString(stage.$out)) {
-    return { operator: '$out', collection: stage.$out };
-  }
-  if (type.isString(stage.$merge)) {
-    return { operator: '$merge', collection: stage.$merge };
-  }
-  if (type.isString(stage.$merge?.into)) {
-    return { operator: '$merge', collection: stage.$merge.into };
-  }
-  return null;
-}
-
 function validateSharedPipelineWrite({
   config,
   location,

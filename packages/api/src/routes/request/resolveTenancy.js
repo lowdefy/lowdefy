@@ -175,14 +175,22 @@ function resolveTenancy(context, { connection, connectionConfig, requestConfig, 
         `Request "${location}" writes to tenant connection "${connectionConfig.connectionId}" in a system run bound to no organization, so the row would carry no "${field}" and no walled read could see it. Call its endpoint with a CallApi step that names the "organization".`,
         {
           collection: type.isString(collection) ? collection : null,
+          configKey: requestConfig['~k'],
           connectionId: connectionConfig.connectionId,
           endpointId: context.endpointId,
           field,
         }
       );
     }
+    const verb = writes ? 'writes to' : 'reads';
+    let remedy =
+      'Strategy callers and callers with no active organization carry none - the wall fails closed for them.';
+    if (context.system === true) {
+      remedy =
+        'A system run carries none unless a CallApi bound it to one - the wall fails closed for it. To run this request in one organization from a system run, call its endpoint with a CallApi step that names the "organization".';
+    }
     throw new AuthenticationError(
-      `Request "${location}" reads tenant connection "${connectionConfig.connectionId}" but no caller organization resolved. System-context and strategy callers carry no organization - the wall fails closed for them. To run this request in one organization from a system run, call its endpoint with a CallApi step that names the "organization".`
+      `Request "${location}" ${verb} tenant connection "${connectionConfig.connectionId}" but no caller organization resolved. ${remedy}`
     );
   }
   if (requestConfig.tenant === 'authored') {

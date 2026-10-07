@@ -647,6 +647,31 @@ test.each([
   expect(res.pages[0].requests[0].type).toBe(requestType);
 });
 
+test('a literal $out stage in a tenant none request on a walled connection throws at build', () => {
+  const components = tenantNonePage({
+    id: 'my_request',
+    type: 'MongoDBAggregation',
+    connectionId: 'walled',
+    tenant: 'none',
+    properties: { pipeline: [{ $match: {} }, { $out: 'archive' }] },
+  });
+  expect(() => buildPages({ components, context: tenantNoneContext() })).toThrow(
+    'Request "my_request" at page "page_1" writes into collection "archive" with "$out" on tenant connection "walled" with tenant: none, but tenant: none may only read.'
+  );
+});
+
+test('an operator-named $out stage in a tenant none request on a walled connection builds', () => {
+  const components = tenantNonePage({
+    id: 'my_request',
+    type: 'MongoDBAggregation',
+    connectionId: 'walled',
+    tenant: 'none',
+    properties: { pipeline: [{ $out: { _state: 'target' } }] },
+  });
+  const res = buildPages({ components, context: tenantNoneContext() });
+  expect(res.pages[0].requests[0].type).toBe('MongoDBAggregation');
+});
+
 test('a literal $search pipeline on a walled connection without tenant authored throws at build', () => {
   const contextWithTenant = testContext({ logger });
   contextWithTenant.connectionIds.add('walled');

@@ -14,14 +14,21 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
+
+import getLiteralWriteTarget from './getLiteralWriteTarget.js';
+
+const writeRemedy =
+  'To write rows of one organization from a system run, call an endpoint with a CallApi step that names the "organization": its requests are filtered and stamped with that organization.';
 
 // tenant: none lifts the wall's filter so a request can read rows of every
 // organization; on a scoped connection it may only read. A request type
 // writes when its plugin's requestMetas say so (the table its resolvers carry
-// as meta). The api refuses the same write at runtime (resolveTenancy), and
-// the connection refuses an aggregation's $out/$merge, which no request meta
-// can describe.
+// as meta). An aggregation reads by its meta but writes through a $out or
+// $merge stage, which the build refuses only for a literal target
+// (getLiteralWriteTarget) - the connection refuses every one at runtime, and
+// the api refuses a write request type (resolveTenancy).
 function validateTenantNoneRead({
   config,
   location,
@@ -32,16 +39,29 @@ function validateTenantNoneRead({
   if (config.tenant !== 'none') {
     return;
   }
-  if (!tenantConnectionIds || !tenantConnectionIds.has(config.connectionId)) {
+  if (!tenantConnectionIds.has(config.connectionId)) {
     return;
   }
-  if (requestMetas?.[config.type]?.checkWrite !== true) {
+  if (requestMetas?.[config.type]?.checkWrite === true) {
+    throw new ConfigError(
+      `${location} is a ${config.type} request on tenant connection "${config.connectionId}" with tenant: none, but tenant: none may only read. ${writeRemedy}`,
+      { configKey }
+    );
+  }
+  const pipeline = config.properties?.pipeline;
+  if (!type.isArray(pipeline)) {
     return;
   }
-  throw new ConfigError(
-    `${location} is a ${config.type} request on tenant connection "${config.connectionId}" with tenant: none, but tenant: none may only read. To write rows of one organization from a system run, call an endpoint with a CallApi step that names the "organization": its requests are filtered and stamped with that organization.`,
-    { configKey }
-  );
+  pipeline.forEach((stage) => {
+    const write = getLiteralWriteTarget(stage);
+    if (write === null) {
+      return;
+    }
+    throw new ConfigError(
+      `${location} writes into collection "${write.collection}" with "${write.operator}" on tenant connection "${config.connectionId}" with tenant: none, but tenant: none may only read. ${writeRemedy}`,
+      { configKey }
+    );
+  });
 }
 
 export default validateTenantNoneRead;

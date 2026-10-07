@@ -520,6 +520,13 @@ test('scheduled endpoint CallApi to a protected InternalApi endpoint runs the ch
   expect(result.response).toEqual({ child: 'child_ran' });
 });
 
+// Request resolvers carry meta; the verifier's checkWrite decides whether it may
+// run under tenant: none.
+function verifierResolver(resolver, { checkWrite = false } = {}) {
+  resolver.meta = { checkRead: !checkWrite, checkWrite };
+  return resolver;
+}
+
 // Webhook earn-trust scenarios (Decision 3). A stub verifier plugin exercises
 // the pass/fail branches without a concrete provider verifier (out of scope):
 // it is a request resolver living on a connection, resolved and run through the
@@ -529,15 +536,15 @@ const verifierConnections = {
     schema: true,
     requests: {
       // Passes when the raw request carries query.token === 'good'.
-      StubVerify: ({ request }) => request.token === 'good',
+      StubVerify: verifierResolver(({ request }) => request.token === 'good'),
     },
   },
   StubVerifyOutageConnection: {
     schema: true,
     requests: {
-      StubVerify: () => {
+      StubVerify: verifierResolver(() => {
         throw new Error('connection refused');
-      },
+      }),
     },
   },
 };
@@ -729,7 +736,9 @@ test('webhook whose verify gate passes blanket-passes a nested protected CallApi
 
 // A verifier that records what it was given, standing in for a signature check
 // over the exact bytes the sender posted.
-const recordingVerify = jest.fn(({ request }) => request.rawBody === request.expected);
+const recordingVerify = verifierResolver(
+  jest.fn(({ request }) => request.rawBody === request.expected)
+);
 const recordingVerifierConnections = {
   StubVerifyConnection: {
     schema: true,
@@ -814,12 +823,16 @@ test('webhook verifier gets a body that is not JSON as rawBody and can refuse it
 
 // A verifier connection whose type implements the tenant scoping contract -
 // under policy: tenant the wall engages for it like for any connection.
-const walledStubVerify = jest.fn(({ request }) => request.token === 'good');
+const walledStubVerify = verifierResolver(jest.fn(({ request }) => request.token === 'good'));
+const walledWritingVerify = verifierResolver(
+  jest.fn(() => true),
+  { checkWrite: true }
+);
 const walledVerifierConnections = {
   StubVerifyConnection: {
     ...verifierConnections.StubVerifyConnection,
     meta: { tenant: true },
-    requests: { StubVerify: walledStubVerify },
+    requests: { StubVerify: walledStubVerify, StubWritingVerify: walledWritingVerify },
   },
 };
 
@@ -886,6 +899,39 @@ test('webhook verifier on a walled connection with tenant none opts out, carries
       tenantGuard: { field: 'organization_id', readOnly: true },
     })
   );
+});
+
+test('webhook verifier that writes under tenant none throws the ConfigError instead of rejecting every webhook', async () => {
+  const readConfigFile = createWebhookReadConfigFile({
+    parent: {
+      endpointId: 'parent_hook',
+      type: 'Api',
+      auth: { public: true },
+      webhook: { verify: { ...stubVerify, type: 'StubWritingVerify', tenant: 'none' } },
+      routine: nestedCallRoutine('parent_hook'),
+    },
+  });
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    connections: walledVerifierConnections,
+    organization: { policy: 'tenant' },
+    readConfigFile,
+  });
+  let thrown;
+  try {
+    await runWebhookEndpoint(context, {
+      endpointId: 'parent_hook',
+      rawBody: '{}',
+      query: { token: 'good' },
+      headers: {},
+    });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown).toBeInstanceOf(ConfigError);
+  expect(thrown.message).toContain('tenant: none may only read');
+  expect(walledWritingVerify).not.toHaveBeenCalled();
 });
 
 // Detached carries the dispatcher's identity (Decision 4). The child endpoint
