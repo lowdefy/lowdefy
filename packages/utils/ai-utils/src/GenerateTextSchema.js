@@ -146,6 +146,37 @@ export default {
         minimum: 'GenerateText request property "timeout" should be at least 1.',
       },
     },
+    fileDownload: {
+      type: 'object',
+      description:
+        'Limits for a file link in "messages" the server downloads because the model does not take it as a link.',
+      properties: {
+        maxBytes: {
+          type: 'integer',
+          minimum: 1,
+          description: 'Largest file the server downloads, in bytes. Default: 20971520 (20 MB).',
+          errorMessage: {
+            type: 'GenerateText request property "fileDownload.maxBytes" should be an integer.',
+            minimum: 'GenerateText request property "fileDownload.maxBytes" should be at least 1.',
+          },
+        },
+        timeout: {
+          type: 'integer',
+          minimum: 1,
+          description: 'Milliseconds a file download may take. Default: 30000.',
+          errorMessage: {
+            type: 'GenerateText request property "fileDownload.timeout" should be an integer.',
+            minimum: 'GenerateText request property "fileDownload.timeout" should be at least 1.',
+          },
+        },
+      },
+      additionalProperties: false,
+      errorMessage: {
+        type: 'GenerateText request property "fileDownload" should be an object.',
+        additionalProperties:
+          'GenerateText request property "fileDownload" should only have maxBytes and timeout.',
+      },
+    },
     providerOptions: {
       type: 'object',
       description: 'Provider-specific options, keyed by provider.',

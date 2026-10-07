@@ -3314,7 +3314,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "823d71aa21275db72897e737d15cdd404f11a2c1819649ddd05f153370dedf3e"
+      "hash": "df8f8251ff616999dd8ee31989cf14faa1e6dc66a005dece9d864854978ea18d"
     },
     "concepts/notifications": {
       "files": [
@@ -6213,7 +6213,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "9de3a091e91e79a58847af829dd2fa6b4f334cce5317c0dfca4d8258d7a333d7"
+      "hash": "a76603a6e59a6f812228cf541f78de5d8e37bcd15c3b2a0f9a3ba34f573f71a2"
     },
     "connections/anthropic": {
       "files": [
@@ -6228,7 +6228,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "b6e5f093191b330e916742a5140c64fa7b42341d4b2fd0c9b338bf5603765a93"
+      "hash": "e4aa3ba2cb428715f085825bf0109d407798d3aca879882ff94e498aecc63b8b"
     },
     "connections/google": {
       "files": [
@@ -6243,7 +6243,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "8adfc2c472f9d8d3a4ead032834a75264a05732c8337f71f59629464db96b727"
+      "hash": "f6e55d30a35247736522a67027ea6e1d21c29ef0baeff8440c98882be84962d3"
     },
     "connections/mcp": {
       "files": [
@@ -6272,7 +6272,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "d3813df273d93c50a1f4e05b084e8382f714374c9257c27cd8c6ae54ef963313"
+      "hash": "bed02929d9690a0a6ddf8b179f4b89c58e402d59378cc2b268daec9a02a13ee5"
     },
     "connections/amazonredshift": {
       "files": [

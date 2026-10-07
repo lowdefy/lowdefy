@@ -29,6 +29,7 @@ function createGenerateObject({ createProvider }) {
       model: provider(request.model),
       request,
       limits: buildCallLimits({ connection, request, signal }),
+      signal,
     });
   }
 
