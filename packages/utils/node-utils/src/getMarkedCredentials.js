@@ -14,19 +14,16 @@
   limitations under the License.
 */
 
-import createValueScrubber from './createValueScrubber.js';
 import credentialStorage from './credentialStorage.js';
 
-// Replaces the credentials marked in a scope, by default the current one, with [REDACTED]. A line
-// written outside any scope (server start-up) has none to replace.
-function scrubCredentials(value, scope = credentialStorage.getStore()) {
+// The values marked so far in the current scope, so work the request hands to another request
+// (a detached CallApi) can mark them there too. Outside any scope nothing has been marked.
+function getMarkedCredentials() {
+  const scope = credentialStorage.getStore();
   if (scope === undefined) {
-    return value;
+    return [];
   }
-  if (scope.scrub === null) {
-    scope.scrub = createValueScrubber([...scope.values]);
-  }
-  return scope.scrub(value);
+  return [...scope.values];
 }
 
-export default scrubCredentials;
+export default getMarkedCredentials;

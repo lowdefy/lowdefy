@@ -14,19 +14,17 @@
   limitations under the License.
 */
 
-import createValueScrubber from './createValueScrubber.js';
 import credentialStorage from './credentialStorage.js';
+import scrubCredentials from './scrubCredentials.js';
 
-// Replaces the credentials marked in a scope, by default the current one, with [REDACTED]. A line
-// written outside any scope (server start-up) has none to replace.
-function scrubCredentials(value, scope = credentialStorage.getStore()) {
-  if (scope === undefined) {
-    return value;
-  }
-  if (scope.scrub === null) {
-    scope.scrub = createValueScrubber([...scope.values]);
-  }
-  return scope.scrub(value);
+// Returns a scrub for the current scope's marked credentials that keeps working after the scope
+// has ended, for work a request leaves behind, such as the Sentry transaction sent once the
+// response is written. Values marked later in the scope are scrubbed too.
+function bindCredentialScrub() {
+  const scope = credentialStorage.getStore();
+  return function scrubBoundCredentials(value) {
+    return scrubCredentials(value, scope);
+  };
 }
 
-export default scrubCredentials;
+export default bindCredentialScrub;

@@ -7378,7 +7378,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "61039f335abe840daed4eda75588eddbb382b2c08a57db372c19b903f66d522b"
+      "hash": "5962102dfc879f5b20a79bf713717fa09971ac9adb2494022069aebf9a130466"
     },
     "operators/_cron": {
       "files": [

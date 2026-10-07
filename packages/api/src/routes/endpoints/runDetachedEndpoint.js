@@ -15,6 +15,7 @@
 */
 
 import { serializer, type } from '@lowdefy/helpers';
+import { markCredential } from '@lowdefy/node-utils';
 
 import applySystemTrust from '../../context/applySystemTrust.js';
 import authorizeApiEndpoint from './authorizeApiEndpoint.js';
@@ -39,9 +40,14 @@ import validatePayload from './validatePayload.js';
 // @lowdefy/helpers serializer).
 async function runDetachedEndpoint(
   context,
-  { endpointId, outsideCaller = false, payload, principal }
+  { credentials = [], endpointId, outsideCaller = false, payload, principal }
 ) {
   const { logger } = context;
+
+  // Marked before anything is logged: the payload can hold what the dispatcher marked.
+  if (credentials.length > 0) {
+    markCredential(credentials);
+  }
 
   context.endpointId = endpointId;
 

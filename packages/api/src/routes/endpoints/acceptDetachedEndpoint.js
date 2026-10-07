@@ -34,11 +34,11 @@ import scheduleBackground from './scheduleBackground.js';
 //
 // The outcome exists only in the logs (`detached_run_done` with the routine's
 // status, or `detached_run_failed`), as it already did for the dispatcher.
-function acceptDetachedEndpoint(context, { endpointId, payload, principal }) {
+function acceptDetachedEndpoint(context, { credentials, endpointId, payload, principal }) {
   // The run outlives the 202, so the request closing must not cancel it.
   context.signal = undefined;
   scheduleBackground(context, { event: 'detached_run', endpointId }, () =>
-    runDetachedEndpoint(context, { endpointId, payload, principal })
+    runDetachedEndpoint(context, { credentials, endpointId, payload, principal })
   );
   return { accepted: true };
 }

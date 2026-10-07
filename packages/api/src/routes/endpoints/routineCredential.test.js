@@ -23,6 +23,7 @@ import { operatorsServer } from '@lowdefy/operators-js';
 
 import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
+import runDetachedEndpoint from './runDetachedEndpoint.js';
 import runRoutine from './runRoutine.js';
 import testContext from '../../test/testContext.js';
 
@@ -50,6 +51,12 @@ const endpointConfigs = {
         },
       },
     },
+  },
+  use_key: {
+    endpointId: 'use_key',
+    type: 'Api',
+    auth: { public: true },
+    routine: [{ ':set_state': { key: { _payload: 'key' } } }, { ':return': { done: true } }],
   },
 };
 
@@ -185,4 +192,61 @@ test('_credential outside a credential scope throws', async () => {
   expect(res.error.message).toContain(
     'A credential can only be marked while the server handles a request.'
   );
+});
+
+test('A credential the dispatcher marked is redacted in a detached target that reads it from its payload', async () => {
+  process.env.CRON_SECRET = 'detached-hop-secret';
+  const fetchMock = jest.fn(async () => ({ status: 202 }));
+  global.fetch = fetchMock;
+  const dispatcher = await runInCredentialScope(async () => {
+    const lines = [];
+    const context = createContext(lines);
+    context.origin = 'https://app.test';
+    const res = await runRoutine(
+      context,
+      {
+        arrayIndices: [],
+        endpointDepth: 0,
+        error: null,
+        items: {},
+        payload: {},
+        state: {},
+        steps: {},
+      },
+      {
+        routine: [
+          { ':set_state': { key: { _credential: makeKey } } },
+          {
+            id: 'endpoint:create_app:use',
+            type: 'CallApi',
+            stepId: 'use',
+            properties: {
+              endpointId: 'use_key',
+              detached: true,
+              payload: { key: { _state: 'key' } },
+            },
+          },
+        ],
+      }
+    );
+    await new Promise((resolve) => setImmediate(resolve));
+    return { lines, res };
+  });
+  delete process.env.CRON_SECRET;
+  expect(dispatcher.res.status).toEqual('continue');
+  expect(fetchMock).toHaveBeenCalledTimes(1);
+  const body = JSON.parse(fetchMock.mock.calls[0][1].body);
+  expect(body.credentials).toEqual([newKey]);
+
+  // The target runs as a new request, in a scope of its own.
+  const target = await runInCredentialScope(async () => {
+    const lines = [];
+    const context = createContext(lines);
+    const result = await runDetachedEndpoint(context, { endpointId: 'use_key', ...body });
+    return { lines, result };
+  });
+  expect(target.result.success).toBe(true);
+  const setState = target.lines.find((line) => line.includes('debug_control_set_state'));
+  expect(JSON.parse(setState).evaluated.key).toEqual('[REDACTED]');
+  target.lines.forEach((line) => expect(line).not.toContain(newKey));
 });

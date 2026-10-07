@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import bindCredentialScrub from './bindCredentialScrub.js';
+import getMarkedCredentials from './getMarkedCredentials.js';
 import markCredential from './markCredential.js';
 import runInCredentialScope from './runInCredentialScope.js';
 import scrubCredentials from './scrubCredentials.js';
@@ -101,4 +103,23 @@ test('markCredential keeps scrubbing every value when one is marked many times',
       '[REDACTED] [REDACTED]'
     );
   });
+});
+
+test('bindCredentialScrub scrubs its scope after the scope has ended, values marked late included', () => {
+  const scrub = runInCredentialScope(() => {
+    markCredential('runtime-made-key-0001');
+    const bound = bindCredentialScrub();
+    markCredential('webhook-secret-0002');
+    return bound;
+  });
+  expect(scrubCredentials('runtime-made-key-0001')).toEqual('runtime-made-key-0001');
+  expect(scrub('runtime-made-key-0001 webhook-secret-0002')).toEqual('[REDACTED] [REDACTED]');
+});
+
+test('getMarkedCredentials lists the values marked in the current scope', () => {
+  runInCredentialScope(() => {
+    markCredential({ key: 'runtime-made-key-0001', secrets: ['webhook-secret-0002'] });
+    expect(getMarkedCredentials()).toEqual(['runtime-made-key-0001', 'webhook-secret-0002']);
+  });
+  expect(getMarkedCredentials()).toEqual([]);
 });

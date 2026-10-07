@@ -15,6 +15,7 @@
 */
 
 import acquireMachineSlot from './acquireMachineSlot.js';
+import bindCredentialScrub from './bindCredentialScrub.js';
 import checkEnvironmentGuards from './checkEnvironmentGuards.js';
 import cleanDirectory from './cleanDirectory.js';
 import collectEnvironmentGuards from './collectEnvironmentGuards.js';
@@ -29,6 +30,7 @@ import findPnpmWorkspaceRoot from './findPnpmWorkspaceRoot.js';
 import findWorkspacePackages from './findWorkspacePackages.js';
 import getDevInstancePath from './getDevInstancePath.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
+import getMarkedCredentials from './getMarkedCredentials.js';
 import getLowdefyHome from './getLowdefyHome.js';
 import getProcessStartTime from './getProcessStartTime.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
@@ -91,6 +93,7 @@ import validateTraceRecord from './journeyTrace/validateTraceRecord.js';
 
 export {
   acquireMachineSlot,
+  bindCredentialScrub,
   buildSessionReport,
   checkEnvironmentGuards,
   cleanDirectory,
@@ -114,6 +117,7 @@ export {
   getDevInstancePath,
   getFileExtension,
   getFileSubExtension,
+  getMarkedCredentials,
   getLowdefyHome,
   getProcessStartTime,
   getSecretsFromEnv,

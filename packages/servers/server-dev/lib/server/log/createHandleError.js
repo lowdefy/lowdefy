@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { inspect } from 'node:util';
+
 import { LowdefyInternalError, loadAndResolveErrorLocation } from '@lowdefy/errors';
 import { scrubCredentials } from '@lowdefy/node-utils';
 
@@ -79,9 +81,10 @@ function createHandleError({ context }) {
 
       context.logger.error(error);
     } catch (e) {
-      console.error(error);
+      // Written past the logger, so past its streamWrite scrub of marked credentials.
+      console.error(scrubCredentials(inspect(error)));
       console.error('An error occurred while logging the error.');
-      console.error(e);
+      console.error(scrubCredentials(inspect(e)));
     }
   };
 }
