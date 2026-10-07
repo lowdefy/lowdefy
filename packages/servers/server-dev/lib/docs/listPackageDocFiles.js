@@ -17,21 +17,38 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-function listMarkdownFiles({ dir }) {
+// Docs are served from inside the package only: a file, or a docs folder,
+// that links outside it is left out, as is a link that points nowhere or a
+// directory named like a markdown file.
+function isFileInside({ realDir, filePath }) {
+  if (!fs.existsSync(filePath)) {
+    return false;
+  }
+  const realPath = fs.realpathSync(filePath);
+  return realPath.startsWith(`${realDir}${path.sep}`) && fs.statSync(realPath).isFile();
+}
+
+function listMarkdownFiles({ realDir, dir }) {
   return fs
     .readdirSync(dir)
     .filter((fileName) => fileName.endsWith('.md'))
     .sort()
-    .map((fileName) => path.join(dir, fileName));
+    .map((fileName) => path.join(dir, fileName))
+    .filter((filePath) => isFileInside({ realDir, filePath }));
 }
 
 // The markdown a plugin or module ships: its README, and the files in docs/
 // (a plugin that builds its docs may only have dist/docs/).
 function listPackageDocFiles({ dir }) {
+  // A local plugin or module can be removed while the server runs.
+  if (!fs.existsSync(dir)) {
+    return { readme: null, docs: [] };
+  }
+  const realDir = fs.realpathSync(dir);
   let readme = null;
   for (const fileName of ['README.md', 'readme.md']) {
     const filePath = path.join(dir, fileName);
-    if (fs.existsSync(filePath)) {
+    if (isFileInside({ realDir, filePath })) {
       readme = filePath;
       break;
     }
@@ -40,7 +57,7 @@ function listPackageDocFiles({ dir }) {
   for (const docsDir of ['docs', 'dist/docs']) {
     const dirPath = path.join(dir, docsDir);
     if (fs.existsSync(dirPath) && fs.statSync(dirPath).isDirectory()) {
-      docs = listMarkdownFiles({ dir: dirPath });
+      docs = listMarkdownFiles({ realDir, dir: dirPath });
       break;
     }
   }
