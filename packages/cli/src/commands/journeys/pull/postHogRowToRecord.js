@@ -53,8 +53,11 @@ function pathnameOf({ values }) {
 // from the elements chain, whose blocks have no type. `block_ids` feeds the
 // pairing rule and never goes into the record. Clicked text is never kept:
 // it is stored as a salted token, which readers resolve only to config text.
+// The text is the control's (`lowdefy_text`), as the dev recorder reads it;
+// events captured before the plugin sent it fall back to `$el_text`, the
+// clicked element's own text.
 function resolveTarget({ values, salt }) {
-  const textToken = tokenText({ salt, text: values.elText });
+  const textToken = tokenText({ salt, text: values.controlText ?? values.elText });
   if (!type.isNone(values.blockId)) {
     return {
       chainFallback: false,

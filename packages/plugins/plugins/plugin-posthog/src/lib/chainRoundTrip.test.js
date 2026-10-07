@@ -21,13 +21,42 @@ import { targetFixtures } from '@lowdefy/e2e-utils/targets';
 import { filterElementsChain, targetFromElementsChain } from '@lowdefy/helpers';
 import { autocapturePropertiesForElement } from 'posthog-js/lib/src/autocapture.js';
 
+import enrichEvent from './enrichEvent.js';
+import postHogState from './postHogState.js';
+import createFakeTrace from '../test/createFakeTrace.js';
+import resetPostHogState from '../test/resetPostHogState.js';
+
 // The chain posthog-js itself records for a click on the element, with the version this plugin
 // pins. A posthog-js upgrade that changes the chain format fails here.
-function chainOf(element) {
+function propsOf(element) {
   return autocapturePropertiesForElement(element, {
     e: { type: 'click' },
     elementsChainAsString: true,
-  }).props.$elements_chain;
+  }).props;
+}
+
+function chainOf(element) {
+  return propsOf(element).$elements_chain;
+}
+
+// The production event posthog-js captures for a click on the element, through enrichEvent with a
+// trace whose describeChain reads the chain as the engine's does, and `configTexts` as the page's
+// config text.
+function enrichedClick({ element, configTexts }) {
+  resetPostHogState();
+  postHogState.trace = createFakeTrace({
+    configTexts,
+    describeChain: (chain) => ({
+      ...targetFromElementsChain(chain),
+      page_id: 'orders',
+      block_type: null,
+      nth: null,
+    }),
+  });
+  const { $elements_chain: chain, $el_text: elText } = propsOf(element);
+  const properties = { $elements_chain: chain };
+  if (typeof elText === 'string') properties.$el_text = elText;
+  return enrichEvent({ event: '$autocapture', properties }).properties;
 }
 
 // The fixture's canonical target without nth, which the chain cannot carry. The engine's tests
@@ -67,3 +96,43 @@ test.each(targetFixtures.map((fixture) => [fixture.name, fixture]))(
     expect(filterElementsChain({ chain, filterAttribute: ({ value }) => value })).toBe(chain);
   }
 );
+
+test.each(
+  targetFixtures
+    .filter((fixture) => fixture.target.text !== null)
+    .map((fixture) => [fixture.name, fixture])
+)(
+  'enrichEvent sends the control text the dev recorder reads as lowdefy_text: %s',
+  (name, fixture) => {
+    document.body.innerHTML = fixture.html;
+    const properties = enrichedClick({
+      element: document.querySelector(fixture.clicked ?? fixture.element),
+      configTexts: [fixture.target.text],
+    });
+    expect(properties.lowdefy_text).toBe(fixture.target.text);
+  }
+);
+
+// posthog-js reads only the clicked element's direct text, so a click on a button's icon has no
+// $el_text; the chain still holds the button's text.
+const ICON_BUTTON =
+  '<div id="bl-save_button"><button type="button"><span class="anticon"><svg></svg></span><span>Save</span></button></div>';
+
+test('enrichEvent sends the control text when the click lands on a child without text', () => {
+  document.body.innerHTML = ICON_BUTTON;
+  const properties = enrichedClick({
+    element: document.querySelector('.anticon'),
+    configTexts: ['Save'],
+  });
+  expect(properties.$el_text).toBeUndefined();
+  expect(properties.lowdefy_text).toBe('Save');
+});
+
+test('enrichEvent masks lowdefy_text as it masks $el_text', () => {
+  document.body.innerHTML = ICON_BUTTON.replace('Save', 'Jane Customer');
+  const properties = enrichedClick({
+    element: document.querySelector('.anticon'),
+    configTexts: ['Save'],
+  });
+  expect(properties).not.toHaveProperty('lowdefy_text');
+});

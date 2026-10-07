@@ -99,6 +99,33 @@ test('postHogRowToRecord drops a click with neither block nor text as no_target'
   });
 });
 
+test('postHogRowToRecord tokenises the control text from lowdefy_text, not the clicked element text', () => {
+  // A click on a button's icon: posthog-js has no $el_text, the plugin sends the button's text.
+  const enriched = {
+    eventType: 'click',
+    lowdefy_block_id: 'save_button',
+    lowdefy_block_type: 'Button',
+  };
+  const fromIcon = map({ ...enriched, elText: null, lowdefy_text: ' Save\n' });
+  const fromLabel = map({ ...enriched, elText: 'Save', lowdefy_text: 'Save' });
+  const wrapper = map({ ...enriched, elText: 'Save changes now', lowdefy_text: 'Save' });
+  // The dev recorder's text for the same click is "Save", tokenised the same way.
+  const devToken = tokenText({ salt, text: 'Save' });
+  expect(fromIcon.record.target.text_token).toBe(devToken);
+  expect(fromLabel.record.target.text_token).toBe(devToken);
+  expect(wrapper.record.target.text_token).toBe(devToken);
+});
+
+test('postHogRowToRecord falls back to $el_text for an event captured without lowdefy_text', () => {
+  const { record } = map({
+    eventType: 'click',
+    elText: 'Review',
+    lowdefy_block_id: 'review_button',
+    lowdefy_text: null,
+  });
+  expect(record.target.text_token).toBe(tokenText({ salt, text: 'Review' }));
+});
+
 test('postHogRowToRecord takes the build from lowdefy_build_id, null without one', () => {
   expect(map({ event: '$pageview' }).record.build).toBe('build-2026-10-01T09:00:00.000Z');
   expect(map({ event: '$pageview', lowdefy_build_id: null }).record.build).toBeNull();

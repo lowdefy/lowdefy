@@ -96,11 +96,11 @@ test('enrichEvent marks a dropdown option', () => {
   expect(event.properties.lowdefy_option).toBe(true);
 });
 
-test('enrichEvent leaves out null, false and empty fields and never the text', () => {
+test('enrichEvent leaves out null, false and empty fields and stamps config control text', () => {
   useTrace(target({ page_id: null, text: 'Save' }));
   const event = { event: '$autocapture', properties: { $elements_chain: CHAIN } };
   enrichEvent(event);
-  expect(event.properties).toEqual({ $elements_chain: CHAIN });
+  expect(event.properties).toEqual({ $elements_chain: CHAIN, lowdefy_text: 'Save' });
 });
 
 test('enrichEvent gives every other event the page id from its URL', () => {
@@ -207,6 +207,19 @@ test('enrichEvent sends the event unchanged when maskDataText is false', () => {
   expect(event.properties.$elements_chain).toBe(DATA_CHAIN);
   expect(event.properties.$el_text).toBe('Jane Customer');
   expect(trace.isConfigText).not.toHaveBeenCalled();
+});
+
+test('enrichEvent sends data control text as lowdefy_text only when maskDataText is false, like $el_text', () => {
+  const described = target({ block_id: 'grid', text: 'Jane Customer', block_ids: ['grid'] });
+  useTrace(described);
+  const masked = { event: '$autocapture', properties: { $elements_chain: DATA_CHAIN } };
+  enrichEvent(masked);
+  expect(masked.properties).not.toHaveProperty('lowdefy_text');
+  useTrace(described);
+  postHogState.maskDataText = false;
+  const unmasked = { event: '$autocapture', properties: { $elements_chain: DATA_CHAIN } };
+  enrichEvent(unmasked);
+  expect(unmasked.properties.lowdefy_text).toBe('Jane Customer');
 });
 
 test('enrichEvent masks by default', () => {

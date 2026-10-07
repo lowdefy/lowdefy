@@ -98,6 +98,7 @@ function row({
     lowdefy_error_name: null,
     lowdefy_config_key: null,
     lowdefy_invalid_blocks: null,
+    lowdefy_text: null,
     elements_chain: elementsChain,
     ...lowdefy,
   };

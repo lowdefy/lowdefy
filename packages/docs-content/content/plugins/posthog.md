@@ -63,7 +63,7 @@ A later `PostHogInit` call with `enabled: true` and an `apiKey` still loads Post
 
 Autocapture records the DOM: which element was clicked, and its text. The plugin adds what that element means in the Lowdefy app, so analysis can work in pages, blocks and events instead of CSS selectors:
 
-- __Autocaptured clicks, rage clicks and dead clicks__ get `lowdefy_page_id`, `lowdefy_block_id` (the block clicked), `lowdefy_block_type` (for example `Button`), `lowdefy_block_ids` (every enclosing block, innermost first, so a click on a title inside a clickable card also names the card), `lowdefy_option: true` when a dropdown option was picked and, inside a grid, `lowdefy_row` (the displayed row index) and `lowdefy_column` (the column id).
+- __Autocaptured clicks, rage clicks and dead clicks__ get `lowdefy_page_id`, `lowdefy_block_id` (the block clicked), `lowdefy_block_type` (for example `Button`), `lowdefy_block_ids` (every enclosing block, innermost first, so a click on a title inside a clickable card also names the card), `lowdefy_option: true` when a dropdown option was picked, `lowdefy_text` (the text of the control the click reached, such as a button or menu item, even when the click landed on its icon or a wrapper, where `$el_text` holds only the clicked element's own text) and, inside a grid, `lowdefy_row` (the displayed row index) and `lowdefy_column` (the column id).
 - __Every other event__, pageviews and [`PostHogCapture`](/PostHogCapture) events included, gets `lowdefy_page_id`, read from the URL it was captured on, and `lowdefy_path_params`, the path values of a page with a `path` pattern (`{}` otherwise).
 - __Super properties__: `lowdefy_build_id` and `lowdefy_app_version` (the app's `version`) on every event, beside `environment`.
 
@@ -128,13 +128,13 @@ By default, `posthog-js` sends the text of every element a person clicks. In a b
 
 On every event, whatever its name (autocaptured clicks, rage clicks, dead clicks and swipes, copy events and any event `posthog-js` adds later):
 
-- __Text that is not config text.__ Each clicked text (`$el_text`, the `text` entries of `$elements_chain` and `$elements`, `$selected_content` and link targets) is kept only when it equals, after whitespace is collapsed, a string in the config of the page the event was captured on, in the app's menus, in the i18n messages or in the antd locale. Everything else is removed: grid and table cell values, options and menu items a request fills, labels built from records, and anything a `Dynamic` block's endpoint returned. A link whose target is not config text keeps its `href` attribute, emptied, so the click still reads as a link click.
+- __Text that is not config text.__ Each clicked text (`$el_text`, `lowdefy_text`, the `text` entries of `$elements_chain` and `$elements`, `$selected_content` and link targets) is kept only when it equals, after whitespace is collapsed, a string in the config of the page the event was captured on, in the app's menus, in the i18n messages or in the antd locale. Everything else is removed: grid and table cell values, options and menu items a request fills, labels built from records, and anything a `Dynamic` block's endpoint returned. A link whose target is not config text keeps its `href` attribute, emptied, so the click still reads as a link click.
 - __Element attributes outside a structural allow-list.__ Only the tag, classes, `class`, `role`, `type`, `row-index`, `col-id`, `nth-child` and `nth-of-type` are kept, and `id` only when it is a block's wrapper id (`bl-<blockId>`). Other ids are removed, because ids that libraries generate can embed runtime keys: an antd tab is `rc-tabs-<n>-tab-<key>`, so a `Tabs` block keyed by record would send the record. Every other attribute is removed, including `title` (antd select options carry their label there), `aria-label`, `value`, `placeholder`, `alt` and every `data-*` attribute.
 
 ###### What stays
 
 - Config labels: button titles, menu and tab labels, column headers, card titles, literal option labels, and antd's own strings such as modal __OK__ and __Cancel__ or pagination.
-- Every `lowdefy_*` property, so a click on data still records its page, block, row, column and whether it picked an option.
+- Every other `lowdefy_*` property, so a click on data still records its page, block, row, column and whether it picked an option.
 
 A data value that happens to equal a config string, such as a status `Active` that is also a literal option, is kept: that string is already in config shipped to every visitor of the page.
 
