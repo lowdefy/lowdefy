@@ -15,6 +15,7 @@
 */
 
 import * as Sentry from '@sentry/node';
+import { bindCredentialScrub } from '@lowdefy/node-utils';
 
 // Every request becomes an http.server transaction. Handler errors never propagate through
 // middleware in Hono — captureException happens in the app error handler.
@@ -23,6 +24,11 @@ function sentryMiddleware() {
     if (!process.env.SENTRY_DSN) {
       return next();
     }
+    // The request's transaction is sent once the response is written, after its credential scope
+    // has ended, so the scope's scrub rides on the request's isolation scope to scrubEvent.
+    Sentry.getIsolationScope().setSDKProcessingMetadata({
+      scrubRequestCredentials: bindCredentialScrub(),
+    });
     return Sentry.startSpan({ name: `${c.req.method} ${c.req.path}`, op: 'http.server' }, () =>
       next()
     );

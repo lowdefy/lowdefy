@@ -317,9 +317,16 @@ Under `auth.organizations.policy: tenant`, `MongoDBCollection` implements the sc
 `tenantGuard` (`resolveTenancy`), and passes both to the resolver. Helpers live in
 `src/connections/MongoDBCollection/tenant/`.
 
-**Unscoped write guard** (`guardUnscopedWrite.js`). Given to `tenant: none` requests on a scoped
-connection and to `tenant: shared` connections whose collection a scoped connection reads (the
-build marks those `walled`, reusing `validateSharedChangeLog`'s target matching). Every row the
+**`tenant: none` is read-only** (`assertTenantWritable.js`). A `tenant: none` request on a scoped
+connection gets no verdict and the guard `{ field, readOnly: true }`: it reads rows of every
+organization, and every write request type, every write method of the walled client, and an
+aggregation's `$out`/`$merge` are refused before anything is written. The api refuses the write
+request types first (`resolveTenancy`), and the build before that (`validateTenantNoneRead`, from
+`requestMetas` in `types.js`); this is the connection's own repeat.
+
+**Unscoped write guard** (`guardUnscopedWrite.js`). Given to `tenant: shared` connections whose
+collection a scoped connection reads (the build marks those `walled`, reusing
+`validateSharedChangeLog`'s target matching), as `{ field, readOnly: false }`. Every row the
 write leaves behind must carry a non-empty string organization id: insert and replacement
 documents are checked, updates are walked as a state machine over the tenant field, and
 aggregations may not contain `$out`/`$merge` (return the rows and write them with
@@ -327,13 +334,13 @@ aggregations may not contain `$out`/`$merge` (return the rows and write them wit
 shared connection into a walled collection of the same database (`validateSharedPipelineWrite`,
 best effort: operator-built targets and `{ db, coll }` targets are not resolved).
 
-**Change-log records** (`stampTenantOnLogRecord.js`). Scoped writes stamp the verdict. Under
-`tenant: none` (`tenantGuard.stampChangeLog`), the record carries the organization of the rows it
-records: the inserted, updated (after) or deleted (before) row for single-document writes, with
-no record when nothing matched; for multi-document writes the one organization the write was
-held to before running (`changeLogOrganizationOfDocs` / `changeLogOrganizationOfFilter`) —
-otherwise the write is refused. Shared connections keep unstamped records, since the build keeps
-their change log out of walled collections.
+**Change-log records** (`stampTenantOnLogRecord.js`). Scoped writes stamp the verdict. Shared
+connections keep unstamped records, since the build keeps their change log out of walled
+collections.
+
+**Request metas** (`requestMetas.js`). `checkRead` / `checkWrite` per request type, in one file
+that both the resolvers (`meta`) and `types.js` (`requestMetas`) read, so the build and the
+runtime classify a write the same way.
 
 **Preflight** (`tenantPreflight.js`). Probes a walled collection for rows missing the field; the
 api refuses to serve while any exist.

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { AuthenticationError, ConfigError } from '@lowdefy/errors';
+import { AuthenticationError, ConfigError, TenantIntegrityError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 // The engine computes the tenant verdict, the connection enforces it. This is
@@ -54,13 +54,14 @@ import { type } from '@lowdefy/helpers';
 // unscoped connection must never be reachable.
 //
 // The request-level sentinel is unchanged by the inversion (amendment-1):
-// - `tenant: 'none'` on the request/step/websocket -> no verdict, and the
-//   write guard. A visible, reviewable statement at the point of use - the
-//   request-level opt-out for caller-less contexts. The opt-out lifts the
-//   filter and the stamp, not the invariant that every walled row carries an
-//   organization: the connection refuses a write that would leave a row
-//   without one, and stamps the change-log record with the organization of
-//   the row it records (stampChangeLog).
+// - `tenant: 'none'` on the request/step/websocket -> no verdict, read only.
+//   A visible, reviewable statement at the point of use that lifts the filter
+//   so the request reads rows of every organization. A request type that
+//   writes (its resolver's meta.checkWrite, passed in as `writes`) is refused
+//   here, repeating the build error; the guard carries readOnly: true so the
+//   connection refuses the writes no request meta describes (an aggregation's
+//   $out/$merge, a plugin's walled client). Caller-less work writes as one
+//   organization instead, through CallApi `organization`.
 // - `tenant: 'authored'` on the request -> the verdict resolves exactly as
 //   the default (an org-less caller is still rejected) and carries
 //   authored: true, telling the connection resolver to AUDIT the request's
@@ -71,7 +72,10 @@ import { type } from '@lowdefy/helpers';
 //   jobs, verified webhooks) has one only when a CallApi bound it to one
 //   (context.boundOrganizationId); unbound system runs and strategy callers
 //   have none, so they fail here by design - the wall never degrades to
-//   unscoped access.
+//   unscoped access. An unbound system run that writes is a data fault, not
+//   an authentication one: it fails that request with TenantIntegrityError,
+//   logged at error level and captured, since a write with no organization
+//   would leave a row no walled read can see.
 const unscoped = { tenant: null, tenantGuard: null };
 
 // The scoping contract is enforced by the connection package itself (the
@@ -110,13 +114,10 @@ function resolveSharedTenancy({ runtimeCapability, connectionConfig }) {
   assertRuntimeContract({ runtimeCapability, connectionConfig });
   const { field } = connectionConfig.walled;
   assertTenantField({ field, connectionConfig });
-  // A shared connection's change log is kept out of walled collections by the
-  // build (validateSharedChangeLog), and its records belong to no
-  // organization - so they are not stamped.
-  return { tenant: null, tenantGuard: { field, stampChangeLog: false } };
+  return { tenant: null, tenantGuard: { field, readOnly: false } };
 }
 
-function resolveTenancy(context, { connection, connectionConfig, requestConfig }) {
+function resolveTenancy(context, { connection, connectionConfig, requestConfig, writes = false }) {
   // Capability resolves from the runtime connection export first, then from
   // the tenantCapability the build stamped onto the connection artifact
   // (buildConnections) — the same types.js declaration the build check
@@ -153,17 +154,43 @@ function resolveTenancy(context, { connection, connectionConfig, requestConfig }
     ? connectionConfig.tenant.field
     : 'organization_id';
   assertTenantField({ field, connectionConfig });
+  const location = requestConfig.stepId ?? requestConfig.requestId ?? requestConfig.websocketId;
   if (requestConfig.tenant === 'none') {
-    return { tenant: null, tenantGuard: { field, stampChangeLog: true } };
+    if (writes) {
+      throw new ConfigError(
+        `Request "${location}" is a ${requestConfig.type} request on tenant connection "${connectionConfig.connectionId}" with tenant: none, but tenant: none may only read. To write rows of one organization from a system run, call an endpoint with a CallApi step that names the "organization": its requests are filtered and stamped with that organization.`,
+        { configKey: requestConfig['~k'] }
+      );
+    }
+    return { tenant: null, tenantGuard: { field, readOnly: true } };
   }
   // A system run's organization is the one a CallApi bound it to; it has no
   // other. Every other run's is the caller's.
   const value =
     context.system === true ? context.boundOrganizationId : context.user?.organization_id;
   if (!type.isString(value) || value === '') {
-    const location = requestConfig.stepId ?? requestConfig.requestId ?? requestConfig.websocketId;
+    if (writes && context.system === true) {
+      const collection = connectionConfig.properties?.collection;
+      throw new TenantIntegrityError(
+        `Request "${location}" writes to tenant connection "${connectionConfig.connectionId}" in a system run bound to no organization, so the row would carry no "${field}" and no walled read could see it. Call its endpoint with a CallApi step that names the "organization".`,
+        {
+          collection: type.isString(collection) ? collection : null,
+          configKey: requestConfig['~k'],
+          connectionId: connectionConfig.connectionId,
+          endpointId: context.endpointId,
+          field,
+        }
+      );
+    }
+    const verb = writes ? 'writes to' : 'reads';
+    let remedy =
+      'Strategy callers and callers with no active organization carry none - the wall fails closed for them.';
+    if (context.system === true) {
+      remedy =
+        'A system run carries none unless a CallApi bound it to one - the wall fails closed for it. To run this request in one organization from a system run, call its endpoint with a CallApi step that names the "organization".';
+    }
     throw new AuthenticationError(
-      `Request "${location}" reads tenant connection "${connectionConfig.connectionId}" but no caller organization resolved. System-context and strategy callers carry no organization - the wall fails closed for them. To run this request in one organization from a system run, call its endpoint with a CallApi step that names the "organization". To run it outside the wall, declare tenant: none on it and author the organization value explicitly.`
+      `Request "${location}" ${verb} tenant connection "${connectionConfig.connectionId}" but no caller organization resolved. ${remedy}`
     );
   }
   if (requestConfig.tenant === 'authored') {

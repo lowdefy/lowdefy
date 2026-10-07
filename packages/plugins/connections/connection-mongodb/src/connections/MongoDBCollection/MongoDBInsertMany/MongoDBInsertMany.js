@@ -16,11 +16,13 @@
 
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import verifyStoredTenant, { idsOfMap } from '../tenant/verifyStoredTenant.js';
 import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
-import { assertUnscopedDoc, changeLogOrganizationOfDocs } from '../tenant/guardUnscopedWrite.js';
+import { assertUnscopedDoc } from '../tenant/guardUnscopedWrite.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 async function MongodbInsertMany({
@@ -35,6 +37,7 @@ async function MongodbInsertMany({
   tenant,
   tenantGuard,
 }) {
+  assertTenantWritable({ tenantGuard, requestType: 'MongoDBInsertMany' });
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { docs } = deserializedRequest;
@@ -45,10 +48,6 @@ async function MongodbInsertMany({
     docs.forEach((doc) => assertUnscopedDoc({ doc, field: tenantGuard.field }));
   }
   const { collection, logCollection } = await getCollection({ connection });
-  let logOrganizationId = null;
-  if (tenantGuard?.stampChangeLog && logCollection) {
-    logOrganizationId = changeLogOrganizationOfDocs({ docs, field: tenantGuard.field });
-  }
   let response;
   try {
     response = await collection.insertMany(docs, options);
@@ -68,8 +67,6 @@ async function MongodbInsertMany({
             meta: connection.changeLog?.meta,
           },
           tenant,
-          tenantGuard,
-          organizationId: logOrganizationId,
         })
       );
     }
@@ -91,9 +88,6 @@ async function MongodbInsertMany({
 }
 
 MongodbInsertMany.schema = schema;
-MongodbInsertMany.meta = {
-  checkRead: false,
-  checkWrite: true,
-};
+MongodbInsertMany.meta = requestMetas.MongoDBInsertMany;
 
 export default MongodbInsertMany;

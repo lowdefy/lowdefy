@@ -49,9 +49,12 @@ async function detachedHandler(c) {
   }
 
   const endpointId = getPathSegments(c, '/api/detached/').join('/');
-  const { payload, principal } = parseRequestBody({ text: await c.req.text() });
+  const { credentials, payload, principal } = parseRequestBody({ text: await c.req.text() });
   context.logger.info({ event: 'call_detached_endpoint', endpointId });
-  return c.json(acceptDetachedEndpoint(context, { endpointId, payload, principal }), 202);
+  return c.json(
+    acceptDetachedEndpoint(context, { credentials, endpointId, payload, principal }),
+    202
+  );
 }
 
 export default detachedHandler;

@@ -14,11 +14,13 @@
   limitations under the License.
 */
 
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 async function MongodbDeleteOne({
@@ -32,6 +34,7 @@ async function MongodbDeleteOne({
   tenant,
   tenantGuard,
 }) {
+  assertTenantWritable({ tenantGuard, requestType: 'MongoDBDeleteOne' });
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { filter } = deserializedRequest;
@@ -53,29 +56,23 @@ async function MongodbDeleteOne({
         acknowledged: true,
         deletedCount: result.lastErrorObject?.n ?? 0,
       };
-      // An unscoped record belongs to the organization of the row it records;
-      // a delete that matched no row has none, and records nothing.
-      if (!(tenantGuard?.stampChangeLog && before === null)) {
-        await logCollection.insertOne(
-          stampTenantOnLogRecord({
-            record: {
-              args: { filter, options },
-              blockId,
-              connectionId,
-              pageId,
-              payload,
-              requestId,
-              before,
-              timestamp: new Date(),
-              type: 'MongoDBDeleteOne',
-              meta: connection.changeLog?.meta,
-            },
-            tenant,
-            tenantGuard,
-            organizationId: tenantGuard && before?.[tenantGuard.field],
-          })
-        );
-      }
+      await logCollection.insertOne(
+        stampTenantOnLogRecord({
+          record: {
+            args: { filter, options },
+            blockId,
+            connectionId,
+            pageId,
+            payload,
+            requestId,
+            before,
+            timestamp: new Date(),
+            type: 'MongoDBDeleteOne',
+            meta: connection.changeLog?.meta,
+          },
+          tenant,
+        })
+      );
     } else {
       response = await collection.deleteOne(filter, options);
     }
@@ -86,9 +83,6 @@ async function MongodbDeleteOne({
 }
 
 MongodbDeleteOne.schema = schema;
-MongodbDeleteOne.meta = {
-  checkRead: false,
-  checkWrite: true,
-};
+MongodbDeleteOne.meta = requestMetas.MongoDBDeleteOne;
 
 export default MongodbDeleteOne;

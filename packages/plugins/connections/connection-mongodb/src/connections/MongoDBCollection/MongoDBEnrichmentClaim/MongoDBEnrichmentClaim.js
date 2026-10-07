@@ -17,11 +17,13 @@
 import { randomBytes } from 'node:crypto';
 
 import getCollection from '../getCollection.js';
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import writeEnrichmentLog from '../enrichment/writeEnrichmentLog.js';
 import compileEnrichmentClaim from './compileEnrichmentClaim.js';
 import runClaim from './runClaim.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 const requestType = 'MongoDBEnrichmentClaim';
@@ -36,6 +38,7 @@ function generateToken() {
 // the row (its `fields` only) and the inputs resolved from `columnDefs`.
 async function MongoDBEnrichmentClaim(context) {
   const { connection, request, tenant, tenantGuard } = context;
+  assertTenantWritable({ tenantGuard, requestType });
   const properties = deserialize(request);
   const compiled = compileEnrichmentClaim({ properties, tenantScoped: Boolean(tenant) });
   if (compiled.targets.length === 0) return [];
@@ -46,7 +49,6 @@ async function MongoDBEnrichmentClaim(context) {
       collection,
       compiled,
       generateToken,
-      logCollection,
       now: new Date(),
       tenant,
       tenantGuard,
@@ -68,7 +70,6 @@ async function MongoDBEnrichmentClaim(context) {
         },
         context,
         logCollection,
-        organizationId: run.organizationId,
         response: { claimed: run.claims.length, written: run.written },
         type: requestType,
       });
@@ -80,9 +81,6 @@ async function MongoDBEnrichmentClaim(context) {
 }
 
 MongoDBEnrichmentClaim.schema = schema;
-MongoDBEnrichmentClaim.meta = {
-  checkRead: true,
-  checkWrite: true,
-};
+MongoDBEnrichmentClaim.meta = requestMetas.MongoDBEnrichmentClaim;
 
 export default MongoDBEnrichmentClaim;

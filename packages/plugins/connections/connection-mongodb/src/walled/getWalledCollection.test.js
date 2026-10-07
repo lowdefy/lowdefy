@@ -178,15 +178,45 @@ test('the change log records are stamped with the caller org', async () => {
   log.forEach((r) => expect(r.organization_id).toBe('org_a'));
 });
 
-test('tenantGuard refuses a write that would leave a row without an organization', async () => {
+test('the write guard of a shared connection refuses a write that would leave a row without an organization', async () => {
   const c = 'walledGuard';
   await populateTestMongoDb({ collection: c, documents: seed });
-  const walled = clientFor(c, { tenant: null, tenantGuard: { field: 'organization_id' } });
+  const walled = clientFor(c, {
+    tenant: null,
+    tenantGuard: { field: 'organization_id', readOnly: false },
+  });
   await expect(walled.insertOne({ _id: 'g1' })).rejects.toThrow();
   await walled.insertOne({ _id: 'g2', organization_id: 'org_b' });
   await expect(
     walled.updateOne({ _id: 'a1' }, { $unset: { organization_id: '' } })
   ).rejects.toThrow();
+});
+
+test('under tenant: none the walled client reads every organization and refuses every write', async () => {
+  const c = 'walledReadOnly';
+  await populateTestMongoDb({ collection: c, documents: seed });
+  const walled = clientFor(c, {
+    tenant: null,
+    tenantGuard: { field: 'organization_id', readOnly: true },
+  });
+  expect((await walled.find({})).map((doc) => doc._id)).toEqual(['a1', 'a2', 'b1']);
+  expect(await walled.countDocuments({})).toBe(3);
+  const writes = [
+    ['insertOne', () => walled.insertOne({ _id: 'n1', organization_id: 'org_a' })],
+    ['insertMany', () => walled.insertMany([{ _id: 'n1', organization_id: 'org_a' }])],
+    ['updateOne', () => walled.updateOne({ _id: 'a1' }, { $set: { n: 9 } })],
+    ['updateMany', () => walled.updateMany({}, { $set: { n: 9 } })],
+    ['findOneAndUpdate', () => walled.findOneAndUpdate({ _id: 'a1' }, { $set: { n: 9 } })],
+    ['deleteOne', () => walled.deleteOne({ _id: 'a1' })],
+    ['deleteMany', () => walled.deleteMany({})],
+    ['bulkWrite', () => walled.bulkWrite([{ deleteOne: { filter: { _id: 'a1' } } }])],
+  ];
+  for (const [method, write] of writes) {
+    await expect(write()).rejects.toThrow(
+      `The walled MongoDB client's "${method}" writes, and a request with tenant: none may only read.`
+    );
+  }
+  expect(await readAll(c)).toEqual(seed);
 });
 
 test('a broken stamp is caught by verifyStoredTenant and the row removed', async () => {

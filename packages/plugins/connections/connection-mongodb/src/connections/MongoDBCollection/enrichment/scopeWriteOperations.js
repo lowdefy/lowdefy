@@ -18,7 +18,7 @@ import applyTenantToBulkOperations from '../tenant/applyTenantToBulkOperations.j
 import { assertUnscopedBulkOperations } from '../tenant/guardUnscopedWrite.js';
 
 // Write operations with the tenant wall merged into every filter on a tenant connection, and
-// checked by the unscoped write guard on a tenant: none request or a walled shared connection.
+// checked by the unscoped write guard on a walled shared connection.
 function scopeWriteOperations({ operations, tenant, tenantGuard }) {
   let scoped = operations;
   if (tenant) {

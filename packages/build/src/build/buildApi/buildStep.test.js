@@ -179,6 +179,119 @@ test('request step tenant none is accepted', () => {
   expect(res.api[0].routine[0].tenant).toBe('none');
 });
 
+function tenantNoneContext() {
+  const context = testContext({ logger });
+  context.tenantConnectionIds.add('walled');
+  context.typesMap = {
+    requestMetas: {
+      MongoDBAggregation: { checkRead: true, checkWrite: false },
+      MongoDBUpdateOne: { checkRead: false, checkWrite: true },
+    },
+  };
+  return context;
+}
+
+function tenantNoneApi(step) {
+  return { api: [{ id: 'sweep', type: 'Api', routine: [step] }] };
+}
+
+test('a write step with tenant none on a walled connection throws at build', () => {
+  const components = tenantNoneApi({
+    id: 'mark_sent',
+    type: 'MongoDBUpdateOne',
+    connectionId: 'walled',
+    tenant: 'none',
+  });
+  expect(() => buildApi({ components, context: tenantNoneContext() })).toThrow(
+    'Step "mark_sent" at endpoint "sweep" is a MongoDBUpdateOne request on tenant connection "walled" with tenant: none, but tenant: none may only read. To write rows of one organization from a system run, call an endpoint with a CallApi step that names the "organization"'
+  );
+});
+
+test('a write step with tenant none inside a :for control on a walled connection throws at build', () => {
+  const components = tenantNoneApi({
+    ':for': 'organization',
+    ':in': { _payload: 'organizations' },
+    ':do': [{ id: 'mark_sent', type: 'MongoDBUpdateOne', connectionId: 'walled', tenant: 'none' }],
+  });
+  expect(() => buildApi({ components, context: tenantNoneContext() })).toThrow(
+    'Step "mark_sent" at endpoint "sweep" is a MongoDBUpdateOne request on tenant connection "walled" with tenant: none'
+  );
+});
+
+test('a read step with tenant none on a walled connection builds', () => {
+  const components = tenantNoneApi({
+    id: 'organizations',
+    type: 'MongoDBAggregation',
+    connectionId: 'walled',
+    tenant: 'none',
+  });
+  const res = buildApi({ components, context: tenantNoneContext() });
+  expect(res.api[0].routine[0].tenant).toBe('none');
+});
+
+test('a literal $out stage in a tenant none step on a walled connection throws at build', () => {
+  const components = tenantNoneApi({
+    id: 'copy',
+    type: 'MongoDBAggregation',
+    connectionId: 'walled',
+    tenant: 'none',
+    properties: { pipeline: [{ $match: {} }, { $out: 'archive' }] },
+  });
+  expect(() => buildApi({ components, context: tenantNoneContext() })).toThrow(
+    'Step "copy" at endpoint "sweep" writes into collection "archive" with "$out" on tenant connection "walled" with tenant: none, but tenant: none may only read. To write rows of one organization from a system run, call an endpoint with a CallApi step that names the "organization"'
+  );
+});
+
+test('a literal $merge into stage in a tenant none step on a walled connection throws at build', () => {
+  const components = tenantNoneApi({
+    id: 'copy',
+    type: 'MongoDBAggregation',
+    connectionId: 'walled',
+    tenant: 'none',
+    properties: { pipeline: [{ $merge: { into: 'archive' } }] },
+  });
+  expect(() => buildApi({ components, context: tenantNoneContext() })).toThrow(
+    'Step "copy" at endpoint "sweep" writes into collection "archive" with "$merge" on tenant connection "walled" with tenant: none'
+  );
+});
+
+test('a literal $out stage in a tenant none step on an unscoped connection builds', () => {
+  const components = tenantNoneApi({
+    id: 'copy',
+    type: 'MongoDBAggregation',
+    connectionId: 'shared',
+    tenant: 'none',
+    properties: { pipeline: [{ $out: 'archive' }] },
+  });
+  const res = buildApi({ components, context: tenantNoneContext() });
+  expect(res.api[0].routine[0].tenant).toBe('none');
+});
+
+function webhookApi(verify) {
+  return { api: [{ id: 'hook', type: 'Api', routine: [], webhook: { verify } }] };
+}
+
+test('a write webhook verifier with tenant none on a walled connection throws at build', () => {
+  const components = webhookApi({
+    type: 'MongoDBUpdateOne',
+    connectionId: 'walled',
+    tenant: 'none',
+  });
+  expect(() => buildApi({ components, context: tenantNoneContext() })).toThrow(
+    'Webhook verifier at endpoint "hook" is a MongoDBUpdateOne request on tenant connection "walled" with tenant: none, but tenant: none may only read.'
+  );
+});
+
+test('a read webhook verifier with tenant none on a walled connection builds', () => {
+  const components = webhookApi({
+    type: 'MongoDBAggregation',
+    connectionId: 'walled',
+    tenant: 'none',
+  });
+  const res = buildApi({ components, context: tenantNoneContext() });
+  expect(res.api[0].webhook.verify.tenant).toBe('none');
+});
+
 test('request step tenant authored is accepted', () => {
   const context = testContext({ logger });
   const components = {

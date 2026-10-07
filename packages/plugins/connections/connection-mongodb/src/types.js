@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import requestMetas from './connections/MongoDBCollection/requestMetas.js';
+
 export default {
   connections: ['MongoDBCollection'],
   // MongoDBCollection implements the tenant scoping contract: under
@@ -36,26 +38,10 @@ export default {
       },
     },
   },
-  requests: [
-    'MongoDBAggregation',
-    'MongoDBBulkWrite',
-    'MongoDBDeleteMany',
-    'MongoDBDeleteOne',
-    'MongoDBEnrichmentClaim',
-    'MongoDBEnrichmentComplete',
-    'MongoDBEnrichmentEnqueue',
-    'MongoDBFind',
-    'MongoDBFindOne',
-    'MongoDBInsertConsecutiveId',
-    'MongoDBInsertMany',
-    'MongoDBInsertManyConsecutiveIds',
-    'MongoDBInsertOne',
-    'MongoDBTableChanges',
-    'MongoDBTableQuery',
-    'MongoDBUpdateMany',
-    'MongoDBUpdateOne',
-    'MongoDBVersionedUpdateOne',
-  ],
+  // Whether each request type reads and writes. The build refuses a write
+  // request type under tenant: none on a scoped connection.
+  requestMetas,
+  requests: Object.keys(requestMetas),
   auth: {
     adapters: ['MongoDBAuthAdapter'],
   },

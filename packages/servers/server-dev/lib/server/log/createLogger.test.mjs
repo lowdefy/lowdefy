@@ -16,6 +16,7 @@
 
 import { jest } from '@jest/globals';
 import { createNodeLogger } from '@lowdefy/logger/node';
+import { markCredential, runInCredentialScope } from '@lowdefy/node-utils';
 import { serializer } from '@lowdefy/helpers';
 
 const secret = 'planted-dev-secret-value';
@@ -59,4 +60,18 @@ test('dev logger writes an axios error with full default serialization and no sc
   expect(err.config.params.api_key).toBe('planted-config-param');
   expect(err.config.headers.Authorization).toBe('Bearer planted-config-header');
   expect(msg).toBe(`Request failed for key ${secret}`);
+});
+
+test('dev logger redacts a value the request marked as a credential and keeps secrets', () => {
+  lines.length = 0;
+  runInCredentialScope(() => {
+    markCredential('runtime-made-app-key-0001');
+    createLogger({ rid: 'req-1' }).info({
+      event: 'debug_control_set_state',
+      evaluated: { key: 'runtime-made-app-key-0001', secret },
+    });
+  });
+  expect(lines).toHaveLength(1);
+  const { evaluated } = JSON.parse(lines[0]);
+  expect(evaluated).toEqual({ key: '[REDACTED]', secret });
 });

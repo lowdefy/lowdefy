@@ -168,6 +168,18 @@ function createPluginTypesMap({ packageName, packageTypes, typePrefix = '', type
       typesMap.connectionMetas[`${typePrefix}${connectionType}`] = meta;
     });
   }
+
+  // Request read and write metadata (eg. { checkWrite: true } for request
+  // types that write), the same table the request resolvers carry as their
+  // meta. Same flow as connectionMetas.
+  if (type.isObject(packageTypes.requestMetas)) {
+    if (!type.isObject(typesMap.requestMetas)) {
+      typesMap.requestMetas = {};
+    }
+    Object.entries(packageTypes.requestMetas).forEach(([requestType, meta]) => {
+      typesMap.requestMetas[`${typePrefix}${requestType}`] = meta;
+    });
+  }
 }
 
 export default createPluginTypesMap;

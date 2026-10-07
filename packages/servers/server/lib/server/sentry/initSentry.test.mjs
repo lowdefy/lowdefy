@@ -17,7 +17,10 @@
 import http from 'node:http';
 
 import { jest } from '@jest/globals';
+import { Hono } from 'hono';
+import { serve } from '@hono/node-server';
 import * as RealSentry from '@sentry/node';
+import { markCredential, runInCredentialScope } from '@lowdefy/node-utils';
 
 const secret = 'planted/secret+value=1';
 
@@ -45,12 +48,15 @@ jest.unstable_mockModule('@sentry/node', () => ({
     return integration;
   },
 }));
-jest.unstable_mockModule('../../build/logger.js', () => ({ default: { sentry: {} } }));
+jest.unstable_mockModule('../../build/logger.js', () => ({
+  default: { sentry: { tracesSampleRate: 1 } },
+}));
 
 process.env.SENTRY_DSN = 'https://public@o0.ingest.sentry.io/1';
 process.env.LOWDEFY_SECRET_API_KEY = secret;
 
 const { default: initSentryServer } = await import('./initSentry.js');
+const { default: sentryMiddleware } = await import('../../../src/middleware/sentry.js');
 
 const enabled = initSentryServer();
 const client = RealSentry.getClient();
@@ -60,6 +66,22 @@ function sentEvents() {
   return envelopes.flatMap(([, items]) =>
     items.filter(([header]) => header.type === 'event').map(([, payload]) => payload)
   );
+}
+
+function sentTransactions() {
+  return envelopes.flatMap(([, items]) =>
+    items.filter(([header]) => header.type === 'transaction').map(([, payload]) => payload)
+  );
+}
+
+function listen(server) {
+  return new Promise((resolve) => {
+    if (server.listening) {
+      resolve(server.address().port);
+      return;
+    }
+    server.once('listening', () => resolve(server.address().port));
+  });
 }
 
 beforeEach(() => {
@@ -234,4 +256,103 @@ test('an error event captured during a request with a JSON body carries no reque
   expect(events[0].request.url).toMatch(/\/api\/endpoints\/sign-in$/);
   expect(events[0].request.data).toBeUndefined();
   expect(JSON.stringify(events[0])).not.toContain('planted-user-password');
+});
+
+test('a transaction sent after the response is scrubbed of the credentials its request marked', async () => {
+  const markedKey = 'runtime-made-app-key-0001';
+  const upstream = http.createServer((req, res) => res.end('{}'));
+  upstream.listen(0, '127.0.0.1');
+  const upstreamPort = await listen(upstream);
+
+  // The two middlewares the production app runs first, in its order.
+  const app = new Hono();
+  app.use('*', (c, next) => runInCredentialScope(next));
+  app.use('*', sentryMiddleware());
+  app.post('/api/endpoints/create-app', async (c) => {
+    markCredential(markedKey);
+    const upstreamResponse = await fetch(
+      `http://127.0.0.1:${upstreamPort}/v1/apps?key=${markedKey}`
+    );
+    await upstreamResponse.text();
+    return c.json({ ok: true });
+  });
+  // @hono/node-server writes the response after the middleware chain has returned, so the
+  // request's root span ends, and its transaction is sent, outside the credential scope.
+  const server = serve({ fetch: app.fetch, port: 0, hostname: '127.0.0.1' });
+  const port = await listen(server);
+  try {
+    const response = await fetch(`http://127.0.0.1:${port}/api/endpoints/create-app`, {
+      method: 'POST',
+    });
+    await response.text();
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+    await new Promise((resolve) => upstream.close(resolve));
+  }
+  await RealSentry.flush();
+  const transaction = sentTransactions().find(
+    ({ transaction: name }) => name === 'POST /api/endpoints/create-app'
+  );
+  expect(transaction).toBeDefined();
+  const clientSpan = transaction.spans.find(({ op }) => op === 'http.client');
+  expect(clientSpan.data['url.full']).toEqual(
+    `http://127.0.0.1:${upstreamPort}/v1/apps?key=[REDACTED]`
+  );
+  expect(clientSpan.data['http.query']).toEqual('key=[REDACTED]');
+  expect(JSON.stringify(transaction)).not.toContain(markedKey);
+});
+
+test('concurrent requests each scrub their transaction with their own marked credentials', async () => {
+  const keyA = 'runtime-made-app-key-aaaa';
+  const keyB = 'runtime-made-app-key-bbbb';
+  const upstream = http.createServer((req, res) => res.end('{}'));
+  upstream.listen(0, '127.0.0.1');
+  const upstreamPort = await listen(upstream);
+
+  let markedB;
+  const bMarked = new Promise((resolve) => {
+    markedB = resolve;
+  });
+  const app = new Hono();
+  app.use('*', (c, next) => runInCredentialScope(next));
+  app.use('*', sentryMiddleware());
+  // The first request's middleware runs before the second's, and its fetch after the second
+  // has marked its own key, so a scrub shared between them would miss the first key.
+  app.post('/api/endpoints/first', async (c) => {
+    markCredential(keyA);
+    await bMarked;
+    await (await fetch(`http://127.0.0.1:${upstreamPort}/v1/first?key=${keyA}`)).text();
+    return c.json({ ok: true });
+  });
+  app.post('/api/endpoints/second', async (c) => {
+    markCredential(keyB);
+    markedB();
+    await (await fetch(`http://127.0.0.1:${upstreamPort}/v1/second?key=${keyB}`)).text();
+    return c.json({ ok: true });
+  });
+  const server = serve({ fetch: app.fetch, port: 0, hostname: '127.0.0.1' });
+  const port = await listen(server);
+  try {
+    const first = fetch(`http://127.0.0.1:${port}/api/endpoints/first`, { method: 'POST' });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    const second = fetch(`http://127.0.0.1:${port}/api/endpoints/second`, { method: 'POST' });
+    await Promise.all([(await first).text(), (await second).text()]);
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+    await new Promise((resolve) => upstream.close(resolve));
+  }
+  await RealSentry.flush();
+  const transactions = sentTransactions();
+  const firstTransaction = transactions.find(
+    ({ transaction: name }) => name === 'POST /api/endpoints/first'
+  );
+  const secondTransaction = transactions.find(
+    ({ transaction: name }) => name === 'POST /api/endpoints/second'
+  );
+  expect(JSON.stringify(firstTransaction)).toContain('/v1/first?key=[REDACTED]');
+  expect(JSON.stringify(secondTransaction)).toContain('/v1/second?key=[REDACTED]');
+  expect(JSON.stringify([firstTransaction, secondTransaction])).not.toContain(keyA);
+  expect(JSON.stringify([firstTransaction, secondTransaction])).not.toContain(keyB);
 });

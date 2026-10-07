@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { AuthenticationError, ConfigError } from '@lowdefy/errors';
+import { AuthenticationError, ConfigError, TenantIntegrityError } from '@lowdefy/errors';
 
 import resolveTenancy from './resolveTenancy.js';
 
@@ -528,14 +528,53 @@ const walledSharedConnectionConfig = {
   walled: { connectionId: 'scopedConnection', field: 'organization_id' },
 };
 
-test('tenant none returns the write guard with change-log stamping and no verdict', () => {
+test('tenant none returns the read-only guard and no verdict', () => {
   expect(
     resolveTenancy(tenantPolicy, {
       connection: tenantConnection,
       connectionConfig: defaultConnectionConfig,
       requestConfig: noneRequestConfig,
     })
-  ).toEqual({ tenant: null, tenantGuard: { field: 'organization_id', stampChangeLog: true } });
+  ).toEqual({ tenant: null, tenantGuard: { field: 'organization_id', readOnly: true } });
+});
+
+test('tenant none refuses a request type that writes and names CallApi organization', () => {
+  const resolve = () =>
+    resolveTenancy(tenantPolicy, {
+      connection: tenantConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: { ...noneRequestConfig, type: 'MongoDBUpdateOne', stepId: 'mark_sent' },
+      writes: true,
+    });
+  expect(resolve).toThrow(ConfigError);
+  expect(resolve).toThrow(
+    'Request "mark_sent" is a MongoDBUpdateOne request on tenant connection "testConnection" with tenant: none, but tenant: none may only read. To write rows of one organization from a system run, call an endpoint with a CallApi step that names the "organization"'
+  );
+});
+
+test.each([
+  ['the pinned policy', { organization: { policy: 'pinned' } }, defaultConnectionConfig],
+  ['a shared connection', tenantPolicy, { ...defaultConnectionConfig, tenant: 'shared' }],
+])('tenant none does not refuse a write under %s, where it is inert', (_, context, config) => {
+  expect(
+    resolveTenancy(context, {
+      connection: tenantConnection,
+      connectionConfig: config,
+      requestConfig: noneRequestConfig,
+      writes: true,
+    })
+  ).toEqual({ tenant: null, tenantGuard: null });
+});
+
+test('tenant none does not refuse a write on a non-scopable connection type', () => {
+  expect(
+    resolveTenancy(tenantPolicy, {
+      connection: nonScopableConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: noneRequestConfig,
+      writes: true,
+    })
+  ).toEqual({ tenant: null, tenantGuard: null });
 });
 
 test('tenant none guards the declared tenant field', () => {
@@ -545,7 +584,7 @@ test('tenant none guards the declared tenant field', () => {
       connectionConfig: { ...defaultConnectionConfig, tenant: { field: 'org' } },
       requestConfig: noneRequestConfig,
     }).tenantGuard
-  ).toEqual({ field: 'org', stampChangeLog: true });
+  ).toEqual({ field: 'org', readOnly: true });
 });
 
 test('tenant none with a dotted tenant field throws instead of guarding an unmatchable key', () => {
@@ -558,7 +597,7 @@ test('tenant none with a dotted tenant field throws instead of guarding an unmat
   ).toThrow('Connection "tenant.field" should be a non-empty top-level field name');
 });
 
-test('a shared connection over a walled collection gets the write guard without change-log stamping', () => {
+test('a shared connection over a walled collection gets the write guard', () => {
   expect(
     resolveTenancy(
       { ...tenantPolicy, user: null },
@@ -568,7 +607,7 @@ test('a shared connection over a walled collection gets the write guard without 
         requestConfig: defaultRequestConfig,
       }
     )
-  ).toEqual({ tenant: null, tenantGuard: { field: 'organization_id', stampChangeLog: false } });
+  ).toEqual({ tenant: null, tenantGuard: { field: 'organization_id', readOnly: false } });
 });
 
 test('a shared connection over a walled collection refuses a runtime that can not enforce the guard', () => {
@@ -645,5 +684,110 @@ test('an unbound system run fails closed and names CallApi organization as the w
     )
   ).toThrow(
     'To run this request in one organization from a system run, call its endpoint with a CallApi step that names the "organization".'
+  );
+});
+
+test('an unbound system run that reads keeps the AuthenticationError', () => {
+  expect(() =>
+    resolveTenancy(
+      { ...tenantPolicy, system: true, boundOrganizationId: null, user: null },
+      {
+        connection: tenantConnection,
+        connectionConfig: defaultConnectionConfig,
+        requestConfig: defaultRequestConfig,
+        writes: false,
+      }
+    )
+  ).toThrow(AuthenticationError);
+});
+
+test('an unbound system run that writes fails with TenantIntegrityError naming the collection, connection and field', () => {
+  let error;
+  try {
+    resolveTenancy(
+      {
+        ...tenantPolicy,
+        endpointId: 'sweep',
+        system: true,
+        boundOrganizationId: null,
+        user: null,
+      },
+      {
+        connection: tenantConnection,
+        connectionConfig: {
+          ...defaultConnectionConfig,
+          tenant: { field: 'org' },
+          properties: { collection: 'notifications' },
+        },
+        requestConfig: { ...defaultRequestConfig, stepId: 'mark_sent', '~k': 'step.0' },
+        writes: true,
+      }
+    );
+  } catch (err) {
+    error = err;
+  }
+  expect(error).toBeInstanceOf(TenantIntegrityError);
+  expect(error.message).toBe(
+    'Request "mark_sent" writes to tenant connection "testConnection" in a system run bound to no organization, so the row would carry no "org" and no walled read could see it. Call its endpoint with a CallApi step that names the "organization".'
+  );
+  expect(error).toMatchObject({
+    collection: 'notifications',
+    configKey: 'step.0',
+    connectionId: 'testConnection',
+    endpointId: 'sweep',
+    field: 'org',
+    organizationId: null,
+  });
+});
+
+test('an unbound system run that writes names no collection when the collection resolves at runtime', () => {
+  let error;
+  try {
+    resolveTenancy(
+      { ...tenantPolicy, system: true, boundOrganizationId: null, user: null },
+      {
+        connection: tenantConnection,
+        connectionConfig: {
+          ...defaultConnectionConfig,
+          properties: { collection: { _secret: 'COLLECTION' } },
+        },
+        requestConfig: defaultRequestConfig,
+        writes: true,
+      }
+    );
+  } catch (err) {
+    error = err;
+  }
+  expect(error).toBeInstanceOf(TenantIntegrityError);
+  expect(error.collection).toBe(null);
+});
+
+test('a signed-in caller with no organization that writes keeps the AuthenticationError', () => {
+  expect(() =>
+    resolveTenancy(
+      { ...tenantPolicy, user: { id: 'id' } },
+      {
+        connection: tenantConnection,
+        connectionConfig: defaultConnectionConfig,
+        requestConfig: defaultRequestConfig,
+        writes: true,
+      }
+    )
+  ).toThrow(AuthenticationError);
+});
+
+test('the AuthenticationError for an anonymous caller that writes says writes and does not suggest CallApi', () => {
+  expect(() =>
+    resolveTenancy(
+      { ...tenantPolicy, user: null },
+      {
+        connection: tenantConnection,
+        connectionConfig: defaultConnectionConfig,
+        requestConfig: defaultRequestConfig,
+        writes: true,
+      }
+    )
+  ).toThrow(
+    'Request "requestId" writes to tenant connection "testConnection" but no caller organization resolved. Strategy callers and callers with no active organization carry none - the wall fails closed for them.'
   );
 });

@@ -23,9 +23,9 @@ import tenantTargetKey from './tenantTargetKey.js';
 // connection writes there lands behind the wall: a row without the tenant
 // field is invisible to every walled read and makes the tenant preflight
 // refuse to serve the app. The connection artifact is marked (walled) so the
-// runtime gives the shared connection the same write guard as a tenant: none
-// request (resolveTenancy): every row it writes must carry a non-empty
-// organization id. Reads stay unscoped - that is what shared is for.
+// runtime gives the shared connection the unscoped write guard
+// (resolveTenancy): every row it writes must carry a non-empty organization
+// id. Reads stay unscoped - that is what shared is for.
 //
 // A collection name resolved at runtime (_secret, _payload) can not be
 // compared, so such a connection is not marked.

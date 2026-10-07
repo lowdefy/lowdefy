@@ -23,6 +23,7 @@ import resolveEndpointSchedules from './resolveEndpointSchedules.js';
 import validateDecideBranches from './validateDecideBranches.js';
 import validateEndpoint from './validateEndpoint.js';
 import validateStepReferences from './validateStepReferences.js';
+import validateTenantNoneRead from '../validateTenantNoneRead.js';
 
 function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId, environments }) {
   validateEndpoint({ endpoint, index, checkDuplicateEndpointId, environments });
@@ -30,6 +31,18 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId, env
   resolveEndpointSchedules({ endpoint, environments });
 
   const isWebhook = !type.isNone(endpoint.webhook) && endpoint.webhook !== false;
+  const verify = type.isObject(endpoint.webhook) ? endpoint.webhook.verify : undefined;
+  if (!type.isNone(verify)) {
+    // The verifier is a request run in a system context before the routine, so
+    // it is held to the same tenant: none read-only rule as a step.
+    validateTenantNoneRead({
+      config: verify,
+      location: `Webhook verifier at endpoint "${endpoint.endpointId}"`,
+      requestMetas: context.typesMap?.requestMetas ?? {},
+      tenantConnectionIds: context.tenantConnectionIds,
+      configKey: verify['~k'],
+    });
+  }
   buildRoutine(endpoint.routine, {
     endpointId: endpoint.endpointId,
     // A webhook route answers the HTTP status a :reject sets, also from an InternalApi endpoint
@@ -38,6 +51,7 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId, env
     dynamicPolicies: context.dynamicPolicies,
     typeCounters: context.typeCounters,
     stepTypes: context.typesMap?.steps ?? {},
+    requestMetas: context.typesMap?.requestMetas ?? {},
     tenantConnectionIds: context.tenantConnectionIds,
     sharedTargets: context.sharedTargets,
     walledTargets: context.walledTargets,

@@ -17,11 +17,13 @@
 import getCollection from '../getCollection.js';
 import getConsecutiveIdIndex from '../getConsecutiveIdIndex.js';
 import mapMongoError from '../mapMongoError.js';
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import verifyStoredTenant, { idsOfMap } from '../tenant/verifyStoredTenant.js';
 import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
-import { assertUnscopedDoc, changeLogOrganizationOfDocs } from '../tenant/guardUnscopedWrite.js';
+import { assertUnscopedDoc } from '../tenant/guardUnscopedWrite.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 async function MongoDBInsertManyConsecutiveIds({
@@ -36,6 +38,7 @@ async function MongoDBInsertManyConsecutiveIds({
   tenant,
   tenantGuard,
 }) {
+  assertTenantWritable({ tenantGuard, requestType: 'MongoDBInsertManyConsecutiveIds' });
   const deserializedRequest = deserialize(request);
   const { options, prefix, length } = deserializedRequest;
   let { docs } = deserializedRequest;
@@ -46,10 +49,6 @@ async function MongoDBInsertManyConsecutiveIds({
     docs.forEach((doc) => assertUnscopedDoc({ doc, field: tenantGuard.field }));
   }
   const { client, collection, logCollection } = await getCollection({ connection });
-  let logOrganizationId = null;
-  if (tenantGuard?.stampChangeLog && logCollection) {
-    logOrganizationId = changeLogOrganizationOfDocs({ docs, field: tenantGuard.field });
-  }
 
   // The id read and insert run in a transaction so concurrent requests cannot
   // claim the same ids. Transactions require MongoDB to run as a replica set.
@@ -83,8 +82,6 @@ async function MongoDBInsertManyConsecutiveIds({
               meta: connection.changeLog?.meta,
             },
             tenant,
-            tenantGuard,
-            organizationId: logOrganizationId,
           }),
           { session }
         );
@@ -110,9 +107,6 @@ async function MongoDBInsertManyConsecutiveIds({
 }
 
 MongoDBInsertManyConsecutiveIds.schema = schema;
-MongoDBInsertManyConsecutiveIds.meta = {
-  checkRead: false,
-  checkWrite: true,
-};
+MongoDBInsertManyConsecutiveIds.meta = requestMetas.MongoDBInsertManyConsecutiveIds;
 
 export default MongoDBInsertManyConsecutiveIds;
