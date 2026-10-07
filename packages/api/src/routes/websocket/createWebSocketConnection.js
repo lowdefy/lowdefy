@@ -15,6 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { runInCredentialScope } from '@lowdefy/node-utils';
 
 import redactErrorResponse from '../../response/redactErrorResponse.js';
 
@@ -134,7 +135,9 @@ function createWebSocketConnection(context, { registry, send }) {
       sendError({ message: 'Frame "websocketId" should be a string.', requestId: frame.requestId });
       return;
     }
-    await enqueue(frame.websocketId, () => processFrame(frame));
+    // A frame arrives outside any HTTP request, so it gets its own credential scope for the
+    // routines it runs.
+    await enqueue(frame.websocketId, () => runInCredentialScope(() => processFrame(frame)));
   }
 
   function close() {

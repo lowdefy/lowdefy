@@ -14,19 +14,10 @@
   limitations under the License.
 */
 
-import { createNodeLogger } from '@lowdefy/logger/node';
-import { scrubCredentials } from '@lowdefy/node-utils';
+import { AsyncLocalStorage } from 'node:async_hooks';
 
-const logger = createNodeLogger({
-  name: 'lowdefy_server_dev',
-  level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
-  base: { pid: undefined, hostname: undefined },
-  // Secrets stay in these logs, but a value a request marked with _credential does not.
-  hooks: { streamWrite: scrubCredentials },
-});
+// Holds the credentials marked while one request is handled, so a log line written anywhere in
+// that request, by any logger, can be scrubbed of them. The store is { values, scrub }.
+const credentialStorage = new AsyncLocalStorage();
 
-function createLogger(metadata = {}) {
-  return logger.child(metadata);
-}
-
-export default createLogger;
+export default credentialStorage;

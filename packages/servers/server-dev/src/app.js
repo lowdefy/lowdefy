@@ -17,6 +17,7 @@
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { serveStatic } from '@hono/node-server/serve-static';
+import { runInCredentialScope } from '@lowdefy/node-utils';
 
 import agentHandler from './routes/agent.js';
 import apiContext from './middleware/apiContext.js';
@@ -97,6 +98,10 @@ const requestTimeoutMs = lowdefyConfig.requestTimeout ?? 30000;
 function createApp() {
   const app = basePath ? new Hono().basePath(basePath) : new Hono();
   const logger = createLogger({ server: 'lowdefy-dev' });
+
+  // Each request runs in its own credential scope: what it marks with _credential is scrubbed
+  // from every log line written while it is handled.
+  app.use('*', (c, next) => runInCredentialScope(next));
 
   // No api context: SSE/health routes had no apiWrapper before.
   app.get('/api/reload', reloadHandler);

@@ -25,7 +25,7 @@ Dot notation is supported for reading fields of the error, such as `_error: stat
 Inside a `:catch`, `_error` is an Error rebuilt from the caught error with only these fields:
 
 - `name`: The error class name, such as `RequestError`.
-- `message`: The real error message, with the values of known secrets (`_secret` values, `CRON_SECRET` and `BETTER_AUTH_SECRET`) replaced by `[REDACTED]`.
+- `message`: The real error message, with the values of known secrets (`_secret` values, `CRON_SECRET`, `BETTER_AUTH_SECRET` and values marked with [`_credential`](/_credential)) replaced by `[REDACTED]`.
 - `code`: The error's `code`, if it has one.
 - `statusCode`: The error's HTTP status, if it has one.
 - `handled`: `true` once the server has logged the error.

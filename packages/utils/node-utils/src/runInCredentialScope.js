@@ -14,19 +14,11 @@
   limitations under the License.
 */
 
-import { createNodeLogger } from '@lowdefy/logger/node';
-import { scrubCredentials } from '@lowdefy/node-utils';
+import credentialStorage from './credentialStorage.js';
 
-const logger = createNodeLogger({
-  name: 'lowdefy_server_dev',
-  level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
-  base: { pid: undefined, hostname: undefined },
-  // Secrets stay in these logs, but a value a request marked with _credential does not.
-  hooks: { streamWrite: scrubCredentials },
-});
-
-function createLogger(metadata = {}) {
-  return logger.child(metadata);
+// Runs fn, and everything it starts, with its own empty set of marked credentials.
+function runInCredentialScope(fn) {
+  return credentialStorage.run({ values: [], scrub: (value) => value }, fn);
 }
 
-export default createLogger;
+export default runInCredentialScope;

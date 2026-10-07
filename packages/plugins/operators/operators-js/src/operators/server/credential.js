@@ -14,19 +14,13 @@
   limitations under the License.
 */
 
-import { createNodeLogger } from '@lowdefy/logger/node';
-import { scrubCredentials } from '@lowdefy/node-utils';
-
-const logger = createNodeLogger({
-  name: 'lowdefy_server_dev',
-  level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
-  base: { pid: undefined, hostname: undefined },
-  // Secrets stay in these logs, but a value a request marked with _credential does not.
-  hooks: { streamWrite: scrubCredentials },
-});
-
-function createLogger(metadata = {}) {
-  return logger.child(metadata);
+// Marks every string in its value as a credential: the server writes [REDACTED] in its place in
+// every log line for the rest of the request. The value itself is returned unchanged.
+function _credential({ markCredential, params }) {
+  markCredential(params);
+  return params;
 }
 
-export default createLogger;
+_credential.dynamic = true;
+
+export default _credential;

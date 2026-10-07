@@ -84,6 +84,7 @@ export default {
       '_array',
       '_base64',
       '_boolean',
+      '_credential',
       '_date',
       '_divide',
       '_eq',

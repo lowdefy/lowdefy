@@ -18,6 +18,7 @@ import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { compress } from 'hono/compress';
 import { serveStatic } from '@hono/node-server/serve-static';
+import { runInCredentialScope } from '@lowdefy/node-utils';
 
 import agentHandler from './routes/agent.js';
 import apiContext from './middleware/apiContext.js';
@@ -70,6 +71,10 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   // Liveness endpoint for container health checks and orchestrator probes. Registered
   // before all middleware so probes skip auth, session, request logging, and Sentry.
   app.get('/api/lowdefy-health', (c) => c.json({ status: 'ok' }));
+
+  // Each request runs in its own credential scope: what it marks with _credential is scrubbed
+  // from every log line written while it is handled.
+  app.use('*', (c, next) => runInCredentialScope(next));
 
   app.use('*', sentryMiddleware());
 

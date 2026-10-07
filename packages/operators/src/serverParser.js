@@ -49,11 +49,22 @@ function isStackOverflow(error) {
 }
 
 class ServerParser {
-  constructor({ env, i18n, jsMap, lowdefyApp, operators, organization, secrets, user }) {
+  constructor({
+    env,
+    i18n,
+    jsMap,
+    lowdefyApp,
+    markCredential,
+    operators,
+    organization,
+    secrets,
+    user,
+  }) {
     this.env = env;
     this.i18n = i18n;
     this.jsMap = jsMap;
     this.lowdefyApp = lowdefyApp;
+    this.markCredential = markCredential;
     this.operators = operators;
     this.organization = organization;
     this.parse = this.parse.bind(this);
@@ -166,6 +177,7 @@ class ServerParser {
           jsMap: this.jsMap,
           location,
           lowdefyApp: this.lowdefyApp,
+          markCredential: this.markCredential,
           methodName,
           operatorPrefix,
           operators: this.operators,

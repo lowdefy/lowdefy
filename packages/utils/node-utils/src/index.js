@@ -53,6 +53,8 @@ import readServerRegistry from './readServerRegistry.js';
 import registerServer from './registerServer.js';
 import listRecordingFiles, { RECORDING_SOURCES } from './recordings/listRecordingFiles.js';
 import readRecordings from './recordings/readRecordings.js';
+import runInCredentialScope from './runInCredentialScope.js';
+import scrubCredentials from './scrubCredentials.js';
 import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
@@ -69,6 +71,7 @@ import normaliseBlockId from './journeyGrammar/normaliseBlockId.js';
 import hashSequence from './journeyCompiler/hashSequence.js';
 import journeySequence from './journeyCompiler/journeySequence.js';
 import listFailurePaths from './journeyCompiler/listFailurePaths.js';
+import markCredential from './markCredential.js';
 import parseTraceLines from './journeyCompiler/parseTraceLines.js';
 import profileProduction from './journeyEvidence/profileProduction.js';
 import buildSessionReport from './sessionLog/buildSessionReport.js';
@@ -128,6 +131,7 @@ export {
   parseDataSet,
   listFailurePaths,
   listRecordingFiles,
+  markCredential,
   matchPagePath,
   normaliseBlockId,
   normaliseClickText,
@@ -143,6 +147,8 @@ export {
   registerServer,
   readRecordings,
   RECORDING_SOURCES,
+  runInCredentialScope,
+  scrubCredentials,
   spawnProcess,
   stepIdentity,
   summariseSessions,

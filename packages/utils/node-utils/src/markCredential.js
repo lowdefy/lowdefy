@@ -14,23 +14,18 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
 import collectStringLeaves from './collectStringLeaves.js';
 import createValueScrubber from './createValueScrubber.js';
-import scrubCredentials from './scrubCredentials.js';
+import credentialStorage from './credentialStorage.js';
 
-// The scrub replaces the app's secrets, and the values the current request marked as
-// credentials (markCredential), with [REDACTED].
-function createSecretScrubber({ secrets, env = process.env }) {
-  const values = collectStringLeaves(secrets);
-  if (!type.isNone(env.CRON_SECRET)) values.push(env.CRON_SECRET);
-  if (!type.isNone(env.BETTER_AUTH_SECRET)) values.push(env.BETTER_AUTH_SECRET);
-  const scrubValues = createValueScrubber(values);
-
-  return function scrub(value) {
-    return scrubCredentials(scrubValues(value));
-  };
+// Every string in value is scrubbed from the log lines of the rest of the current scope.
+function markCredential(value) {
+  const scope = credentialStorage.getStore();
+  if (scope === undefined) {
+    throw new Error('A credential can only be marked while the server handles a request.');
+  }
+  scope.values.push(...collectStringLeaves(value));
+  scope.scrub = createValueScrubber(scope.values);
 }
 
-export default createSecretScrubber;
+export default markCredential;

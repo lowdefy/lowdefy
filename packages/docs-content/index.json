@@ -2148,6 +2148,14 @@
       "typeName": "_change_case"
     },
     {
+      "slug": "operators/_credential",
+      "title": "_credential",
+      "section": "Operators",
+      "path": "content/operators/_credential.md",
+      "kind": "operator",
+      "typeName": "_credential"
+    },
+    {
       "slug": "operators/_cron",
       "title": "_cron",
       "section": "Operators",
@@ -3314,7 +3322,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "823d71aa21275db72897e737d15cdd404f11a2c1819649ddd05f153370dedf3e"
+      "hash": "df8f8251ff616999dd8ee31989cf14faa1e6dc66a005dece9d864854978ea18d"
     },
     "concepts/notifications": {
       "files": [
@@ -7357,6 +7365,21 @@
       ],
       "hash": "f75e96f7f7fbdd0b16162530e9c0c2bfd3afb1dd20a4201ee315b5029d812740"
     },
+    "operators/_credential": {
+      "files": [
+        "operators/_credential.yaml",
+        "requests/discord_message.yaml.njk",
+        "requests/insert_feedback.yaml",
+        "requests/insert_newsletter.yaml",
+        "templates/footer.yaml.njk",
+        "templates/general.yaml.njk",
+        "templates/header.yaml",
+        "templates/operators.yaml.njk",
+        "templates/validate_email.yaml",
+        "version.yaml"
+      ],
+      "hash": "61039f335abe840daed4eda75588eddbb382b2c08a57db372c19b903f66d522b"
+    },
     "operators/_cron": {
       "files": [
         "operators/_cron.yaml",
@@ -7445,7 +7468,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "7bd4a5d6dc3733343e6ee8a5d3af7da1a1f945b9a0b21a9e7007effc801b60b2"
+      "hash": "b7108d4b74251206859f43394fd005a983589601e3ab9c5708737652884066b1"
     },
     "operators/_event": {
       "files": [
