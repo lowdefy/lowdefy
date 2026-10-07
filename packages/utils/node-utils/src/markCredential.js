@@ -15,7 +15,6 @@
 */
 
 import collectStringLeaves from './collectStringLeaves.js';
-import createValueScrubber from './createValueScrubber.js';
 import credentialStorage from './credentialStorage.js';
 
 // Every string in value is scrubbed from the log lines of the rest of the current scope.
@@ -24,8 +23,13 @@ function markCredential(value) {
   if (scope === undefined) {
     throw new Error('A credential can only be marked while the server handles a request.');
   }
-  scope.values.push(...collectStringLeaves(value));
-  scope.scrub = createValueScrubber(scope.values);
+  const count = scope.values.size;
+  collectStringLeaves(value).forEach((leaf) => scope.values.add(leaf));
+  // The scrub is rebuilt from every marked value on the next log line, not here, so a routine that
+  // marks many values pays for one build, and one that writes no line pays for none.
+  if (scope.values.size !== count) {
+    scope.scrub = null;
+  }
 }
 
 export default markCredential;

@@ -15,6 +15,7 @@
 */
 
 import { LowdefyInternalError, loadAndResolveErrorLocation } from '@lowdefy/errors';
+import { scrubCredentials } from '@lowdefy/node-utils';
 
 import errorRecordingStamp from '../recording/errorRecordingStamp.js';
 import serverErrorStore from '../../docs/serverErrorStore.js';
@@ -64,7 +65,8 @@ function createHandleError({ context }) {
         serverErrorStore.push({
           timestamp: new Date().toISOString(),
           name: error.name,
-          message: error.message,
+          // Agents read the store through build-status, after this request's scope has ended.
+          message: scrubCredentials(error.message),
           source: error.source ?? null,
           config: error.config ?? null,
           hint: error.hint ?? null,

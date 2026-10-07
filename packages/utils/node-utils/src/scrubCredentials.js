@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import createValueScrubber from './createValueScrubber.js';
 import credentialStorage from './credentialStorage.js';
 
 // Replaces the credentials marked in the current scope with [REDACTED]. A line written outside
@@ -22,6 +23,9 @@ function scrubCredentials(value) {
   const scope = credentialStorage.getStore();
   if (scope === undefined) {
     return value;
+  }
+  if (scope.scrub === null) {
+    scope.scrub = createValueScrubber([...scope.values]);
   }
   return scope.scrub(value);
 }

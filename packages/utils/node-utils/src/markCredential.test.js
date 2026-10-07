@@ -89,3 +89,16 @@ test('markCredential leaves a value shorter than 8 characters alone', () => {
     expect(scrubCredentials('a short line')).toEqual('a short line');
   });
 });
+
+test('markCredential keeps scrubbing every value when one is marked many times', () => {
+  runInCredentialScope(() => {
+    for (let i = 0; i < 1000; i += 1) {
+      markCredential('runtime-made-key-0001');
+    }
+    expect(scrubCredentials('runtime-made-key-0001')).toEqual('[REDACTED]');
+    markCredential('webhook-secret-0002');
+    expect(scrubCredentials('runtime-made-key-0001 webhook-secret-0002')).toEqual(
+      '[REDACTED] [REDACTED]'
+    );
+  });
+});

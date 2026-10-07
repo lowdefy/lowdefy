@@ -18,7 +18,7 @@ import credentialStorage from './credentialStorage.js';
 
 // Runs fn, and everything it starts, with its own empty set of marked credentials.
 function runInCredentialScope(fn) {
-  return credentialStorage.run({ values: [], scrub: (value) => value }, fn);
+  return credentialStorage.run({ values: new Set(), scrub: null }, fn);
 }
 
 export default runInCredentialScope;

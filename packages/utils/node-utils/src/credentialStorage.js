@@ -17,7 +17,9 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
 
 // Holds the credentials marked while one request is handled, so a log line written anywhere in
-// that request, by any logger, can be scrubbed of them. The store is { values, scrub }.
+// that request, by any logger, can be scrubbed of them. The store is { values, scrub }: values is
+// the Set of marked strings, and scrub the scrubber built from them, or null until the next line
+// needs it.
 const credentialStorage = new AsyncLocalStorage();
 
 export default credentialStorage;

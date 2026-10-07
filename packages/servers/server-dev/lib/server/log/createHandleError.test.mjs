@@ -16,6 +16,7 @@
 
 import { jest } from '@jest/globals';
 import { ConfigError, LowdefyInternalError, UserError } from '@lowdefy/errors';
+import { markCredential, runInCredentialScope } from '@lowdefy/node-utils';
 
 jest.unstable_mockModule('../../docs/serverErrorStore.js', () => ({
   default: { push: jest.fn(), list: jest.fn(() => []) },
@@ -217,4 +218,13 @@ test('handleError stamps a developer request error with a null recording', async
   context.recording = null;
   await createHandleError({ context })(new ConfigError('Bad config.', { configKey: 'key_1' }));
   expect(serverErrorStore.push.mock.calls[0][0].recording).toBeNull();
+});
+
+test('handleError stores a message with the credentials the request marked redacted', async () => {
+  const handleError = createHandleError({ context: testContext() });
+  await runInCredentialScope(async () => {
+    markCredential('runtime-made-app-key-0001');
+    await handleError(new ConfigError('Upstream refused runtime-made-app-key-0001.'));
+  });
+  expect(serverErrorStore.push.mock.calls[0][0].message).toBe('Upstream refused [REDACTED].');
 });
