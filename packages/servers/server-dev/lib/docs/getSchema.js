@@ -15,6 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { JOURNEY_STEP_SCHEMAS, journeyStepSchema } from '@lowdefy/node-utils';
 
 import getHazards from './getHazards.js';
 import normalizeTypeKind from './normalizeTypeKind.js';
@@ -28,13 +29,40 @@ const SCHEMA_ARTIFACTS = {
   requests: 'plugins/requestSchemas.json',
 };
 
+const JOURNEY_STEP_KINDS = ['journey-step', 'journey-steps'];
+
+// kind journey-step returns the journey step grammar: every step, or the one
+// step `type` names.
+function getJourneyStepSchema({ typeName }) {
+  if (type.isNone(typeName) || typeName === '' || typeName === 'all') {
+    return { kind: 'journey-step', schema: journeyStepSchema };
+  }
+  const schema = JOURNEY_STEP_SCHEMAS[typeName];
+  if (type.isNone(schema)) {
+    return null;
+  }
+  return { kind: 'journey-step', type: typeName, schema };
+}
+
 function getSchema({ kind, type: typeName }) {
+  if (JOURNEY_STEP_KINDS.includes(String(kind ?? '').toLowerCase())) {
+    return getJourneyStepSchema({ typeName });
+  }
   const normalizedKind = normalizeTypeKind({ kind });
   if (type.isNone(SCHEMA_ARTIFACTS[normalizedKind])) {
     throw new Error(
       `No schemas available for type kind. Received ${JSON.stringify(
         kind
-      )}. Use one of: blocks, operators, actions, connections, requests.`
+      )}. Use one of: blocks, operators, actions, connections, requests, or journey-step for the journey step grammar.`
+    );
+  }
+  // type is optional only for journey-step, so a type kind without one is
+  // refused rather than looked up as "undefined".
+  if (type.isNone(typeName) || typeName === '') {
+    throw new Error(
+      `Getting a ${normalizedKind} schema requires a "type", the exact type name. Received ${JSON.stringify(
+        typeName
+      )}.`
     );
   }
   const schemas = readBuildArtifact({ name: SCHEMA_ARTIFACTS[normalizedKind] }) ?? {};

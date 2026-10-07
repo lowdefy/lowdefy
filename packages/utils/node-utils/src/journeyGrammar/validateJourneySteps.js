@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import JOURNEY_STEP_EXAMPLES from './journeyStepExamples.js';
+
 const STEP_KEYS = [
   'click',
   'open',
@@ -267,7 +269,11 @@ function validateBlockValue({ key, params }) {
   });
 }
 
+// wait takes { ms }, { request } or { state }; a bare number is read as { ms }.
 function validateWait(params) {
+  if (type.isNumber(params)) {
+    return undefined;
+  }
   if (!type.isObject(params)) {
     return `Step "wait" requires one of { ms }, { request }, { state }. Received ${describe(
       params
@@ -515,6 +521,24 @@ function validatePlacement({ step, previous }) {
   return undefined;
 }
 
+// The examples an error about this step ends with: the expect kind's own when
+// the step names a known one.
+function getExamplesKey(step) {
+  const key = getStepKey(step);
+  if (key === 'expect' && type.isObject(step.expect)) {
+    const expectKey = getStepKey(step.expect);
+    if (EXPECT_KEYS.includes(expectKey)) {
+      return `expect.${expectKey}`;
+    }
+  }
+  return key;
+}
+
+function withExamples({ message, step }) {
+  const examples = JOURNEY_STEP_EXAMPLES[getExamplesKey(step)];
+  return `${message} Example: ${examples.map(describe).join(' or ')}.`;
+}
+
 // Validates one step's shape. Returns an error message, or undefined when the
 // step is well-formed.
 function validateStep(step) {
@@ -526,7 +550,14 @@ function validateStep(step) {
     const received = type.isUndefined(key) ? Object.keys(step).join(', ') : key;
     return `Unknown journey step "${received}". Steps are: ${STEP_KEYS.join(', ')}.`;
   }
-  const params = step[key];
+  const message = validateStepParams({ key, params: step[key] });
+  if (type.isUndefined(message)) {
+    return undefined;
+  }
+  return withExamples({ message, step });
+}
+
+function validateStepParams({ key, params }) {
   switch (key) {
     case 'click':
       return validateClick(params);

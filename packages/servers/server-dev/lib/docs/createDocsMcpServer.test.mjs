@@ -423,6 +423,39 @@ test('MCP tools/call with an unknown type returns isError with guidance', async 
   await client.close();
 });
 
+test('MCP lowdefy_get_schema returns the journey step grammar for kind journey-step without a type', async () => {
+  const client = await connectClient();
+  const { tools } = await client.listTools();
+  const getSchemaTool = tools.find((tool) => tool.name === 'lowdefy_get_schema');
+  expect(getSchemaTool.inputSchema.properties.kind.enum).toContain('journey-step');
+  expect(getSchemaTool.inputSchema.required).toEqual(['kind']);
+  const runJourneyTool = tools.find((tool) => tool.name === 'lowdefy_run_journey');
+  expect(runJourneyTool.inputSchema.properties.steps.description).toContain(
+    'lowdefy_get_schema with kind "journey-step"'
+  );
+
+  const all = await client.callTool({
+    name: 'lowdefy_get_schema',
+    arguments: { kind: 'journey-step' },
+  });
+  expect(all.isError).toBeUndefined();
+  expect(JSON.parse(all.content[0].text).schema.title).toEqual('Journey step');
+
+  const wait = await client.callTool({
+    name: 'lowdefy_get_schema',
+    arguments: { kind: 'journey-step', type: 'wait' },
+  });
+  expect(JSON.parse(wait.content[0].text)).toMatchObject({ kind: 'journey-step', type: 'wait' });
+
+  const noType = await client.callTool({
+    name: 'lowdefy_get_schema',
+    arguments: { kind: 'blocks' },
+  });
+  expect(noType.isError).toBe(true);
+  expect(noType.content[0].text).toContain('requires a "type"');
+  await client.close();
+});
+
 // The dev server keeps serving the previous build when a rebuild fails, so
 // every tool result must announce that its answer predates the caller's edits.
 test('MCP tools/call prepends a STALE notice while the last build failed', async () => {

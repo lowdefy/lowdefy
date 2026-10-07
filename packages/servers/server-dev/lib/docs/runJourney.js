@@ -17,7 +17,11 @@
 import path from 'node:path';
 import { type } from '@lowdefy/helpers';
 import { getState } from '@lowdefy/e2e-utils/runtime';
-import { findPlaceholderStep, validateJourneySteps } from '@lowdefy/node-utils';
+import {
+  findPlaceholderStep,
+  normaliseJourneySteps,
+  validateJourneySteps,
+} from '@lowdefy/node-utils';
 
 import collectExercised from './collectExercised.js';
 import createDataSetRails from './rails/createDataSetRails.js';
@@ -79,7 +83,7 @@ async function runJourney({
   origin,
   pageId,
   pathParams,
-  steps,
+  steps: inputSteps,
   user,
   urlQuery,
   state: stateSelection,
@@ -121,10 +125,11 @@ async function runJourney({
       )}.`,
     };
   }
-  const { error: stepsError } = validateJourneySteps({ steps });
+  const { error: stepsError } = validateJourneySteps({ steps: inputSteps });
   if (!type.isUndefined(stepsError)) {
     return { error: stepsError };
   }
+  const steps = normaliseJourneySteps({ steps: inputSteps });
   // A placeholder step or a mail step with no sink is the caller's to fix, like
   // a data set problem: refused, so the route answers 400 and lowdefy test does
   // not repeat it.

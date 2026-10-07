@@ -103,12 +103,32 @@ const {
   rowAttribute: ROW_ATTRIBUTE,
 } = journeyTargetSelectors;
 
-// Waits for the block (or its control) to show before counting, so a block
-// that renders a moment after the step starts is clicked through its control,
-// not at its wrapper's centre. A block that never shows fails the wait.
+// A lazy block (createLazyBlock in @lowdefy/block-utils) shows its wrapper and
+// a fallback before its implementation, and counts itself in
+// window.__lowdefyLazyLoads from mount until the implementation has rendered.
+// Waits for that count to reach 0, so a block's controls are counted once they
+// exist; with no lazy block on screen it passes at once.
+async function waitForLazyBlocks({ page, timeout }) {
+  try {
+    await page.waitForFunction(() => (window.__lowdefyLazyLoads ?? 0) === 0, undefined, {
+      timeout,
+    });
+  } catch (error) {
+    throw new JourneyStepError(`A lazy block was still loading after ${timeout} ms.`, {
+      expected: 'every lazy block on the page to have loaded',
+      actual: cleanMessage(error),
+    });
+  }
+}
+
+// Waits for the block (or its control) to show, and for a lazy block's
+// implementation, before counting, so a block that renders a moment after the
+// step starts is clicked through its control, not at its wrapper's centre or
+// on its fallback. A block that never shows fails the wait.
 async function resolveClickTarget({ scope, timeout }) {
   const control = scope.locator(INTERACTIVE_CONTROL).first();
   await control.or(scope).first().waitFor({ state: 'visible', timeout });
+  await waitForLazyBlocks({ page: scope.page(), timeout });
   if ((await control.count()) > 0) {
     return control;
   }
@@ -379,8 +399,10 @@ async function runOpen({ page, step, timeout }) {
       action: async () => {
         const located = await resolveActionTarget({ page, target, timeout });
         const trigger = located.locator(POPUP_TRIGGER).first();
-        // The input renders its trigger with the block; counted once either shows.
+        // The input renders its trigger with the block (a lazy block once its
+        // implementation has rendered); counted once either shows.
         await trigger.or(located).first().waitFor({ state: 'visible', timeout });
+        await waitForLazyBlocks({ page, timeout });
         if ((await trigger.count()) > 0) {
           await trigger.click({ timeout });
         } else {

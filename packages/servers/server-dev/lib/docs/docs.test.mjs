@@ -158,6 +158,29 @@ test('getSchema returns null for unknown type', () => {
 
 test('getSchema throws for kinds without schemas', () => {
   expect(() => getSchema({ kind: 'websockets', type: 'X' })).toThrow('No schemas available');
+  expect(() => getSchema({ kind: 'tool', type: 'run_journey' })).toThrow(
+    'or journey-step for the journey step grammar'
+  );
+});
+
+test('getSchema throws when a type kind is given no type', () => {
+  expect(() => getSchema({ kind: 'blocks' })).toThrow(
+    'Getting a blocks schema requires a "type", the exact type name. Received undefined.'
+  );
+});
+
+test('getSchema returns the journey step grammar for kind journey-step', () => {
+  const result = getSchema({ kind: 'journey-step' });
+  expect(result.kind).toEqual('journey-step');
+  expect(result.schema.title).toEqual('Journey step');
+  expect(result.schema.oneOf.map((step) => step.required[0])).toContain('wait');
+});
+
+test('getSchema returns one journey step schema when type names the step', () => {
+  const result = getSchema({ kind: 'journey-step', type: 'wait' });
+  expect(result).toMatchObject({ kind: 'journey-step', type: 'wait' });
+  expect(result.schema.properties.wait.examples).toContainEqual({ wait: { ms: 500 } });
+  expect(getSchema({ kind: 'journey-step', type: 'hover' })).toBeNull();
 });
 
 test('getExamples reads example yaml from plugin dist by convention', () => {

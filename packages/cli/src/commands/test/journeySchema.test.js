@@ -183,7 +183,8 @@ test('validateJourney reports a malformed step with the grammar error naming the
   const journey = { ...minimalJourney, steps: [{ click: 'a' }, { fill: { blockId: 'title' } }] };
   expect(validateJourney({ journey })).toEqual({
     valid: false,
-    message: 'Step 1: Step "fill" requires a "value". Received {"blockId":"title"}.',
+    message:
+      'Step 1: Step "fill" requires a "value". Received {"blockId":"title"}. Example: {"fill":{"blockId":"name_input","value":"Ada"}} or {"fill":{"blockId":"code_input","fromEmail":{"to":"ada@example.com","match":"\\\\d{6}"}}}.',
   });
 });
 

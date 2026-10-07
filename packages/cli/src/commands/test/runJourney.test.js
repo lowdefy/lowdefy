@@ -129,7 +129,7 @@ test('runJourney reports a malformed step as an invalid journey file without cal
     passed: false,
     stepCount: 0,
     message:
-      'Invalid journey file: Step 0: Step "fill" requires a "value". Received {"blockId":"title"}.',
+      'Invalid journey file: Step 0: Step "fill" requires a "value". Received {"blockId":"title"}. Example: {"fill":{"blockId":"name_input","value":"Ada"}} or {"fill":{"blockId":"code_input","fromEmail":{"to":"ada@example.com","match":"\\\\d{6}"}}}.',
   });
 });
 
