@@ -180,6 +180,86 @@ test('computeCoverage counts a journey without a user as signed out', () => {
   expect(coverage([signedOut]).role.uncovered.map((item) => item.roles)).not.toContainEqual([]);
 });
 
+function roleCoverage({ journeys, dataSetUsers }) {
+  return computeCoverage({
+    journeys,
+    segments,
+    profile: profileProduction({ segments }),
+    groupFlows: true,
+    dataSetUsers,
+  }).role;
+}
+
+const ticketUsers = new Map([
+  [
+    'tickets',
+    {
+      alice: { id: 'u_1', roles: ['member'] },
+      boss: { id: 'u_2', roles: ['member', 'admin'] },
+    },
+  ],
+]);
+
+test("computeCoverage counts a journey naming a data set user as that user's role set", () => {
+  const asAlice = committed({
+    name: 'alice-edits',
+    pageId: 'tickets',
+    data: 'tickets',
+    user: 'alice',
+    steps: [{ click: 'edit' }],
+  });
+  const role = roleCoverage({ journeys: [asAlice], dataSetUsers: ticketUsers });
+  expect(role).toMatchObject({ covered: 1, total: 3 });
+  expect(role.uncovered.map((item) => item.roles)).toEqual([['admin', 'member'], []]);
+});
+
+test("computeCoverage counts a journey naming a list of data set users as each user's role set", () => {
+  const asBoth = committed({
+    name: 'both-edit',
+    pageId: 'tickets',
+    data: 'tickets',
+    user: ['alice', 'boss'],
+    steps: [{ click: 'edit' }],
+  });
+  const role = roleCoverage({ journeys: [asBoth], dataSetUsers: ticketUsers });
+  expect(role).toMatchObject({ covered: 2, total: 3 });
+  expect(role.uncovered.map((item) => item.roles)).toEqual([[]]);
+});
+
+test('computeCoverage counts no role set for a data set user it cannot resolve', () => {
+  const unknownUser = committed({
+    name: 'ghost',
+    pageId: 'tickets',
+    data: 'tickets',
+    user: 'ghost',
+    steps: [{ click: 'edit' }],
+  });
+  const unreadSet = committed({
+    name: 'unread',
+    pageId: 'tickets',
+    data: 'missing',
+    user: 'alice',
+    steps: [{ click: 'edit' }],
+  });
+  expect(
+    roleCoverage({ journeys: [unknownUser, unreadSet], dataSetUsers: ticketUsers })
+  ).toMatchObject({ covered: 0, total: 3 });
+});
+
+test('computeCoverage counts no role set for user none', () => {
+  const signsIn = committed({
+    name: 'signs-in',
+    pageId: 'tickets',
+    data: 'tickets',
+    user: 'none',
+    steps: [{ click: 'edit' }],
+  });
+  expect(roleCoverage({ journeys: [signsIn], dataSetUsers: ticketUsers })).toMatchObject({
+    covered: 0,
+    total: 3,
+  });
+});
+
 test('computeCoverage covers nothing without journeys', () => {
   const measures = coverage([]);
   Object.values(measures).forEach((entry) => {
