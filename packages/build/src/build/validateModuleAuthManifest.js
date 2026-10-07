@@ -19,18 +19,85 @@ import { ConfigError } from '@lowdefy/errors';
 
 import authPageRoles from './buildAuth/authPageRoles.js';
 
-const allowedKeys = ['hooks', 'pages', 'public', 'websockets'];
+const allowedKeys = ['agents', 'api', 'hooks', 'pages', 'public', 'websockets'];
+
+const publicSections = [
+  { entity: 'agents', label: 'agent' },
+  { entity: 'api', label: 'endpoint' },
+  { entity: 'websockets', label: 'websocket' },
+];
 
 function contentKeys(object) {
   return Object.keys(object).filter((key) => !key.startsWith('~'));
+}
+
+// The app's auth.api rules govern agents too, so a module author may list an
+// agent under auth.api.public. Name the section the id belongs in.
+function otherSectionHint({ entity, itemId, shipped }) {
+  const other = publicSections.find(
+    (section) =>
+      section.entity !== entity &&
+      (shipped[section.entity] ?? []).some((item) => item.id === itemId)
+  );
+  if (type.isNone(other)) {
+    return '';
+  }
+  return ` "${itemId}" is one of the module's ${other.label}s: list it under "auth.${other.entity}.public".`;
+}
+
+// Validates auth.agents, auth.api or auth.websockets: an object whose only
+// key, public, lists ids of items the manifest ships.
+function validatePublicItems({ auth, entity, entryId, filePath, label, shipped }) {
+  const section = auth[entity];
+  if (type.isNone(section)) {
+    return;
+  }
+  if (!type.isObject(section)) {
+    throw new ConfigError(`Module "${entryId}" manifest "auth.${entity}" must be an object.`, {
+      received: section,
+      filePath,
+    });
+  }
+  for (const key of contentKeys(section)) {
+    if (key !== 'public') {
+      throw new ConfigError(
+        `Module "${entryId}" manifest "auth.${entity}" has unknown key "${key}". Allowed keys are: public.`,
+        { filePath }
+      );
+    }
+  }
+  if (type.isNone(section.public)) {
+    return;
+  }
+  if (!type.isArray(section.public)) {
+    throw new ConfigError(
+      `Module "${entryId}" manifest "auth.${entity}.public" must be an array of ${label} ids.`,
+      { received: section.public, filePath }
+    );
+  }
+  for (const itemId of section.public) {
+    if (!type.isString(itemId)) {
+      throw new ConfigError(
+        `Module "${entryId}" manifest "auth.${entity}.public" entries must be ${label} id strings.`,
+        { received: itemId, filePath }
+      );
+    }
+    if (!(shipped[entity] ?? []).some((item) => item.id === itemId)) {
+      const hint = otherSectionHint({ entity, itemId, shipped });
+      throw new ConfigError(
+        `Module "${entryId}" manifest "auth.${entity}.public" lists "${itemId}", but the module ships no ${label} with that id.${hint}`,
+        { filePath }
+      );
+    }
+  }
 }
 
 // Validates the shape of a module manifest's auth section. Ids are unscoped
 // module-local ids here - buildModuleAuth resolves them to scoped ids per
 // module entry, and the merged result is validated again by buildAuth
 // (hook points, endpoint existence and type) exactly as hand-written config.
-// Each public websocket id must name a websocket the manifest ships.
-function validateModuleAuthManifest({ auth, entryId, filePath, websockets }) {
+// Each public agent, endpoint or websocket id must name one the manifest ships.
+function validateModuleAuthManifest({ agents, api, auth, entryId, filePath, websockets }) {
   if (type.isNone(auth)) {
     return;
   }
@@ -118,43 +185,9 @@ function validateModuleAuthManifest({ auth, entryId, filePath, websockets }) {
     }
   }
 
-  if (!type.isNone(auth.websockets)) {
-    if (!type.isObject(auth.websockets)) {
-      throw new ConfigError(`Module "${entryId}" manifest "auth.websockets" must be an object.`, {
-        received: auth.websockets,
-        filePath,
-      });
-    }
-    for (const key of contentKeys(auth.websockets)) {
-      if (key !== 'public') {
-        throw new ConfigError(
-          `Module "${entryId}" manifest "auth.websockets" has unknown key "${key}". Allowed keys are: public.`,
-          { filePath }
-        );
-      }
-    }
-    if (!type.isNone(auth.websockets.public)) {
-      if (!type.isArray(auth.websockets.public)) {
-        throw new ConfigError(
-          `Module "${entryId}" manifest "auth.websockets.public" must be an array of websocket ids.`,
-          { received: auth.websockets.public, filePath }
-        );
-      }
-      for (const websocketId of auth.websockets.public) {
-        if (!type.isString(websocketId)) {
-          throw new ConfigError(
-            `Module "${entryId}" manifest "auth.websockets.public" entries must be websocket id strings.`,
-            { received: websocketId, filePath }
-          );
-        }
-        if (!(websockets ?? []).some((websocket) => websocket.id === websocketId)) {
-          throw new ConfigError(
-            `Module "${entryId}" manifest "auth.websockets.public" lists "${websocketId}", but the module ships no websocket with that id.`,
-            { filePath }
-          );
-        }
-      }
-    }
+  const shipped = { agents, api, websockets };
+  for (const { entity, label } of publicSections) {
+    validatePublicItems({ auth, entity, entryId, filePath, label, shipped });
   }
 }
 

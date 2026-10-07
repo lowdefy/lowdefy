@@ -1,0 +1,7 @@
+id: escalate
+type: ClaudeAgent
+connectionId:
+  _module.connectionId: ai
+properties:
+  model: claude-haiku-4-5
+  instructions: You hand difficult tickets to a person.

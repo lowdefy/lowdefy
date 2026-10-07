@@ -3017,7 +3017,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "7fc85cbdeee5ed5f7cae3d6b09d1775160f6ff098b4823832da5a4b28341b5ad"
+      "hash": "70fbef0a2f228b3ebc71ca1f84f9a064f7c747ea9e91ebbd63c75184ba24b1d4"
     },
     "concepts/page-and-app-state": {
       "files": [
@@ -3760,7 +3760,7 @@
         "users/protected-pages-apis.yaml",
         "version.yaml"
       ],
-      "hash": "0e1d2c2f9b9338e5aba214c5241318d04e1a948cb8cb7235631cc8f36178ffe3"
+      "hash": "92695ffb47068d23a541dee46968646f1dc20cc076329ab4c8954fccd04b9f83"
     },
     "user-authentication/roles": {
       "files": [

@@ -1,0 +1,7 @@
+id: concierge
+type: ClaudeAgent
+connectionId:
+  _module.connectionId: ai
+properties:
+  model: claude-haiku-4-5
+  instructions: You answer questions from visitors.

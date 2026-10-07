@@ -383,7 +383,7 @@ test('buildEntityAuth api: the roles-and-public conflict names the endpoint', ()
     },
     api: [{ id: 'ep1', type: 'Api' }],
   };
-  expect(() => buildEntityAuth({ components, entity: 'api' })).toThrow(
+  expect(() => buildEntityAuth({ components, context: {}, entity: 'api' })).toThrow(
     'Endpoint "ep1" is both protected by roles and public.'
   );
 });
@@ -399,7 +399,7 @@ test('buildEntityAuth api: throws when a webhook endpoint is only implicitly pub
   };
   // Defaulted public is not explicit public - the developer must acknowledge
   // the public transport by listing the endpoint in auth.api.public.
-  expect(() => buildEntityAuth({ components, entity: 'api' })).toThrow(
+  expect(() => buildEntityAuth({ components, context: {}, entity: 'api' })).toThrow(
     'Endpoint "hook" is a webhook receiver and must be declared explicitly public'
   );
 });
@@ -414,7 +414,7 @@ test('buildEntityAuth api: throws when a webhook endpoint is protected by auth.a
     },
     api: [{ id: 'hook', type: 'Api', webhook: true }],
   };
-  expect(() => buildEntityAuth({ components, entity: 'api' })).toThrow(
+  expect(() => buildEntityAuth({ components, context: {}, entity: 'api' })).toThrow(
     'Endpoint "hook" is a webhook receiver and must be declared explicitly public'
   );
 });
@@ -429,7 +429,7 @@ test('buildEntityAuth api: throws when a webhook endpoint is listed in auth.api.
     },
     api: [{ id: 'hook', type: 'Api', webhook: true }],
   };
-  expect(() => buildEntityAuth({ components, entity: 'api' })).toThrow(
+  expect(() => buildEntityAuth({ components, context: {}, entity: 'api' })).toThrow(
     'Endpoint "hook" is a webhook receiver and must be declared explicitly public'
   );
 });
@@ -445,7 +445,7 @@ test('buildEntityAuth api: throws when a webhook endpoint is protected by roles'
     },
     api: [{ id: 'hook', type: 'Api', webhook: true }],
   };
-  expect(() => buildEntityAuth({ components, entity: 'api' })).toThrow(
+  expect(() => buildEntityAuth({ components, context: {}, entity: 'api' })).toThrow(
     'Endpoint "hook" is a webhook receiver and must be declared explicitly public'
   );
 });
@@ -460,7 +460,7 @@ test('buildEntityAuth api: a webhook endpoint explicitly listed in auth.api.publ
     },
     api: [{ id: 'hook', type: 'Api', webhook: true }],
   };
-  const res = buildEntityAuth({ components, entity: 'api' });
+  const res = buildEntityAuth({ components, context: {}, entity: 'api' });
   expect(res.api).toEqual([{ id: 'hook', type: 'Api', webhook: true, auth: { public: true } }]);
 });
 
@@ -478,7 +478,7 @@ test('buildEntityAuth api: a webhook endpoint listed in auth.api.public builds u
       { id: 'ep1', type: 'Api' },
     ],
   };
-  const res = buildEntityAuth({ components, entity: 'api' });
+  const res = buildEntityAuth({ components, context: {}, entity: 'api' });
   expect(res.api).toEqual([
     { id: 'hook', type: 'Api', webhook: true, auth: { public: true } },
     { id: 'ep1', type: 'Api', auth: { public: false } },
@@ -500,14 +500,14 @@ test('buildEntityAuth api: a webhook: { verify } object is accepted via truthine
     },
     api: [verifying],
   };
-  const res = buildEntityAuth({ components, entity: 'api' });
+  const res = buildEntityAuth({ components, context: {}, entity: 'api' });
   expect(res.api[0].auth).toEqual({ public: true });
 
   const implicit = {
     auth: { api: { roles: {} } },
     api: [{ id: 'hook', type: 'Api', webhook: { verify: { type: 'VerifyGithubWebhook' } } }],
   };
-  expect(() => buildEntityAuth({ components: implicit, entity: 'api' })).toThrow(
+  expect(() => buildEntityAuth({ components: implicit, context: {}, entity: 'api' })).toThrow(
     'Endpoint "hook" is a webhook receiver and must be declared explicitly public'
   );
 });
@@ -550,7 +550,7 @@ test('buildEntityAuth api: a reserved endpoint id with no roles configured throw
   };
   let thrown;
   try {
-    buildEntityAuth({ components, entity: 'api' });
+    buildEntityAuth({ components, context: {}, entity: 'api' });
   } catch (error) {
     thrown = error;
   }
@@ -576,98 +576,125 @@ test('buildEntityAuth websockets: a reserved websocket id throws a located Confi
   );
 });
 
-function moduleWebsocketsComponents(websocketsAuth) {
-  return {
-    auth: {
-      configured: true,
-      websockets: { roles: {}, ...websocketsAuth },
-    },
-    websockets: [
-      { id: 'ticker', type: 'Channel' },
-      { id: 'support/thread-messages', type: 'Channel' },
-    ],
+describe.each([
+  ['api', 'endpoint', 'ticker', 'Api'],
+  ['websockets', 'websocket', 'ticker', 'Channel'],
+])('buildEntityAuth %s from a module', (entity, label, appId, itemType) => {
+  const moduleId = 'support/thread-messages';
+
+  function moduleComponents(entityAuth) {
+    return {
+      auth: {
+        configured: true,
+        [entity]: { roles: {}, ...entityAuth },
+      },
+      [entity]: [
+        { id: appId, type: itemType },
+        { id: moduleId, type: itemType },
+      ],
+    };
+  }
+
+  function moduleContext({ declaredPublic = [] } = {}) {
+    return {
+      moduleEntityIds: { [entity]: [moduleId] },
+      moduleAuthPublicEntities: { [entity]: declaredPublic },
+    };
+  }
+
+  function resolvedAuth(components) {
+    return components[entity].map((item) => item.auth);
+  }
+
+  test(`a module ${label} is protected when auth is configured and the app sets no rule`, () => {
+    const components = moduleComponents({});
+    buildEntityAuth({ components, context: moduleContext(), entity });
+    expect(resolvedAuth(components)).toEqual([{ public: true }, { public: false }]);
+  });
+
+  test(`a module ${label} a protected list does not name stays protected`, () => {
+    const components = moduleComponents({ protected: [appId] });
+    buildEntityAuth({ components, context: moduleContext(), entity });
+    expect(resolvedAuth(components)).toEqual([{ public: false }, { public: false }]);
+  });
+
+  test(`app public true makes a module ${label} public`, () => {
+    const components = moduleComponents({ public: true });
+    buildEntityAuth({ components, context: moduleContext(), entity });
+    expect(resolvedAuth(components)).toEqual([{ public: true }, { public: true }]);
+  });
+
+  test(`an app public list naming a module ${label} makes it public`, () => {
+    const components = moduleComponents({ public: ['support/**'] });
+    buildEntityAuth({ components, context: moduleContext(), entity });
+    expect(resolvedAuth(components)).toEqual([{ public: false }, { public: true }]);
+  });
+
+  test(`app roles on a module ${label} apply as for an app ${label}`, () => {
+    const components = moduleComponents({ roles: { agent: ['support/**'] } });
+    buildEntityAuth({ components, context: moduleContext(), entity });
+    expect(components[entity][1].auth).toEqual({ public: false, roles: ['agent'] });
+  });
+
+  test(`a module-declared public ${label} is public with no app rule`, () => {
+    const components = moduleComponents({});
+    buildEntityAuth({
+      components,
+      context: moduleContext({ declaredPublic: [moduleId] }),
+      entity,
+    });
+    expect(components[entity][1].auth).toEqual({ public: true });
+  });
+
+  test(`a module-declared public ${label} stays public under protected true`, () => {
+    const components = moduleComponents({ protected: true });
+    buildEntityAuth({
+      components,
+      context: moduleContext({ declaredPublic: [moduleId] }),
+      entity,
+    });
+    expect(resolvedAuth(components)).toEqual([{ public: false }, { public: true }]);
+  });
+
+  test(`a module ${label} follows the app rules when auth is not configured`, () => {
+    const components = moduleComponents({});
+    components.auth.configured = false;
+    buildEntityAuth({ components, context: moduleContext(), entity });
+    expect(resolvedAuth(components)).toEqual([{ public: true }, { public: true }]);
+  });
+});
+
+test('buildEntityAuth api: a module webhook endpoint the module declares public still needs the app public list', () => {
+  const components = {
+    auth: { configured: true, api: { roles: {} } },
+    api: [{ id: 'billing/stripe-events', type: 'Api', webhook: true }],
   };
-}
-
-const moduleWebsocketsContext = { moduleWebsocketIds: ['support/thread-messages'] };
-
-test('buildEntityAuth websockets: a module websocket is protected when auth is configured and the app sets no rule', () => {
-  const components = moduleWebsocketsComponents({});
-  buildEntityAuth({ components, context: moduleWebsocketsContext, entity: 'websockets' });
-  expect(components.websockets.map((websocket) => websocket.auth)).toEqual([
-    { public: true },
-    { public: false },
-  ]);
+  expect(() =>
+    buildEntityAuth({
+      components,
+      context: {
+        moduleEntityIds: { api: ['billing/stripe-events'] },
+        moduleAuthPublicEntities: { api: ['billing/stripe-events'] },
+      },
+      entity: 'api',
+    })
+  ).toThrow(
+    'Endpoint "billing/stripe-events" is a webhook receiver and must be declared explicitly public'
+  );
 });
 
-test('buildEntityAuth websockets: a module websocket a protected list does not name stays protected', () => {
-  const components = moduleWebsocketsComponents({ protected: ['ticker'] });
-  buildEntityAuth({ components, context: moduleWebsocketsContext, entity: 'websockets' });
-  expect(components.websockets.map((websocket) => websocket.auth)).toEqual([
-    { public: false },
-    { public: false },
-  ]);
-});
-
-test('buildEntityAuth websockets: app public true makes a module websocket public', () => {
-  const components = moduleWebsocketsComponents({ public: true });
-  buildEntityAuth({ components, context: moduleWebsocketsContext, entity: 'websockets' });
-  expect(components.websockets.map((websocket) => websocket.auth)).toEqual([
-    { public: true },
-    { public: true },
-  ]);
-});
-
-test('buildEntityAuth websockets: an app public list naming a module websocket makes it public', () => {
-  const components = moduleWebsocketsComponents({ public: ['support/**'] });
-  buildEntityAuth({ components, context: moduleWebsocketsContext, entity: 'websockets' });
-  expect(components.websockets.map((websocket) => websocket.auth)).toEqual([
-    { public: false },
-    { public: true },
-  ]);
-});
-
-test('buildEntityAuth websockets: app roles on a module websocket apply as for an app websocket', () => {
-  const components = moduleWebsocketsComponents({ roles: { agent: ['support/**'] } });
-  buildEntityAuth({ components, context: moduleWebsocketsContext, entity: 'websockets' });
-  expect(components.websockets[1].auth).toEqual({ public: false, roles: ['agent'] });
-});
-
-test('buildEntityAuth websockets: a module-declared public websocket is public with no app rule', () => {
-  const components = moduleWebsocketsComponents({});
+test('buildEntityAuth pages: module endpoint and websocket ids leave pages untouched', () => {
+  const components = {
+    auth: { configured: true, pages: { roles: {} } },
+    pages: [{ id: 'support/inbox', type: 'Box' }],
+  };
   buildEntityAuth({
     components,
     context: {
-      ...moduleWebsocketsContext,
-      moduleAuthPublicWebsockets: ['support/thread-messages'],
+      ...routesContext(components),
+      moduleEntityIds: { api: ['support/inbox'], websockets: ['support/inbox'] },
     },
-    entity: 'websockets',
+    entity: 'pages',
   });
-  expect(components.websockets[1].auth).toEqual({ public: true });
-});
-
-test('buildEntityAuth websockets: a module-declared public websocket stays public under protected true', () => {
-  const components = moduleWebsocketsComponents({ protected: true });
-  buildEntityAuth({
-    components,
-    context: {
-      ...moduleWebsocketsContext,
-      moduleAuthPublicWebsockets: ['support/thread-messages'],
-    },
-    entity: 'websockets',
-  });
-  expect(components.websockets.map((websocket) => websocket.auth)).toEqual([
-    { public: false },
-    { public: true },
-  ]);
-});
-
-test('buildEntityAuth websockets: a module websocket follows the app rules when auth is not configured', () => {
-  const components = moduleWebsocketsComponents({});
-  components.auth.configured = false;
-  buildEntityAuth({ components, context: moduleWebsocketsContext, entity: 'websockets' });
-  expect(components.websockets.map((websocket) => websocket.auth)).toEqual([
-    { public: true },
-    { public: true },
-  ]);
+  expect(components.pages[0].auth).toEqual({ public: true });
 });

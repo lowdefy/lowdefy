@@ -1,0 +1,5 @@
+id: reply
+type: Api
+routine:
+  - ':return':
+      ok: true

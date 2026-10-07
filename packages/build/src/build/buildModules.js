@@ -57,7 +57,7 @@ function validateModuleSecrets({ content, manifest, entryId }) {
 function buildModules({ components, context }) {
   const moduleEntries = components.modules ?? [];
   delete components.modules;
-  context.moduleWebsocketIds = [];
+  context.moduleEntityIds = { agents: [], api: [], websockets: [] };
 
   for (const entry of moduleEntries) {
     const moduleEntry = context.modules[entry.id];
@@ -129,6 +129,7 @@ function buildModules({ components, context }) {
       endpoint.id = `${entry.id}/${endpoint.id}`;
       components.api = components.api ?? [];
       components.api.push(endpoint);
+      context.moduleEntityIds.api.push(endpoint.id);
     }
 
     // Process agents
@@ -136,6 +137,7 @@ function buildModules({ components, context }) {
       agent.id = `${entry.id}/${agent.id}`;
       components.agents = components.agents ?? [];
       components.agents.push(agent);
+      context.moduleEntityIds.agents.push(agent.id);
     }
 
     // Process notifications
@@ -150,13 +152,13 @@ function buildModules({ components, context }) {
       websocket.id = `${entry.id}/${websocket.id}`;
       components.websockets = components.websockets ?? [];
       components.websockets.push(websocket);
-      context.moduleWebsocketIds.push(websocket.id);
+      context.moduleEntityIds.websockets.push(websocket.id);
     }
   }
 
-  // Contribute manifest auth wiring (hooks, authPages roles, public pages and
-  // websockets) with scoped ids - buildAuth validates the merged result
-  // downstream.
+  // Contribute manifest auth wiring (hooks, authPages roles, public pages,
+  // agents, endpoints and websockets) with scoped ids - buildAuth validates the
+  // merged result downstream.
   buildModuleAuth({ components, context, moduleEntries });
 
   validateTenantRemaps({ components, context, moduleEntries });

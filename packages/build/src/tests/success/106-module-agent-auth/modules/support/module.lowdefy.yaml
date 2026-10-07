@@ -1,0 +1,19 @@
+name: Support
+description: Module that ships agents, one of them public
+
+secrets:
+  - name: ANTHROPIC_API_KEY
+    description: Anthropic API key
+
+auth:
+  agents:
+    public:
+      - concierge
+
+connections:
+  - _ref: connections/ai.yaml
+
+agents:
+  - _ref: agents/triage.yaml
+  - _ref: agents/concierge.yaml
+  - _ref: agents/escalate.yaml

@@ -394,6 +394,8 @@ async function resolveFullManifest({ entryId, context }) {
   // The auth section is fully resolved now - validate its shape before
   // buildModules contributes it to the app's auth config.
   validateModuleAuthManifest({
+    agents: resolved.agents,
+    api: resolved.api,
     auth: resolved.auth,
     entryId,
     filePath: moduleYamlPath,

@@ -249,20 +249,30 @@ test('buildModules adds module websockets with scoped IDs', () => {
   ]);
 });
 
-test('buildModules records the scoped ids of module websockets on the context', () => {
+test('buildModules records the scoped ids of module agents, endpoints and websockets on the context', () => {
   const moduleEntry = makeModuleEntry({
     id: 'support',
-    manifest: { websockets: [{ id: 'thread-messages', type: 'Channel' }] },
+    manifest: {
+      agents: [{ id: 'triage', type: 'ClaudeAgent' }],
+      api: [{ id: 'reply', type: 'Api' }],
+      websockets: [{ id: 'thread-messages', type: 'Channel' }],
+    },
   });
   const context = makeContext([moduleEntry]);
   const components = {
     modules: [{ id: 'support' }],
+    agents: [{ id: 'app-agent', type: 'ClaudeAgent' }],
+    api: [{ id: 'app-endpoint', type: 'Api' }],
     websockets: [{ id: 'ticker', type: 'Interval' }],
   };
 
   buildModules({ components, context });
 
-  expect(context.moduleWebsocketIds).toEqual(['support/thread-messages']);
+  expect(context.moduleEntityIds).toEqual({
+    agents: ['support/triage'],
+    api: ['support/reply'],
+    websockets: ['support/thread-messages'],
+  });
 });
 
 test('buildModules appends module websockets to existing app websockets', () => {
