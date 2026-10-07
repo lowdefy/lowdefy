@@ -377,7 +377,7 @@ test('CallAgent step returns error status when files does not evaluate to an arr
       properties: {
         agentId: 'research_agent',
         prompt: 'Go.',
-        files: { url: 'https://files.example.com/one.png', mediaType: 'image/png' },
+        files: { url: 'https://files.example.com/one.png?sig=secret', mediaType: 'image/png' },
       },
     },
   });
@@ -385,8 +385,9 @@ test('CallAgent step returns error status when files does not evaluate to an arr
   expect(res.status).toBe('error');
   expect(res.error.name).toBe('ConfigError');
   expect(res.error.message).toContain(
-    'CallAgent step "run_agent" properties.files must evaluate to an array.'
+    'CallAgent step "run_agent" properties.files must evaluate to an array. Received a value of type "object".'
   );
+  expect(res.error.message).not.toContain('sig=secret');
   expect(mockResolver).not.toHaveBeenCalled();
 });
 
@@ -402,15 +403,16 @@ test('CallAgent step returns error status when a file has no mediaType or no val
       properties: {
         agentId: 'research_agent',
         prompt: 'Go.',
-        files: [{ url: 'https://files.example.com/one.png' }],
+        files: [{ url: 'https://files.example.com/one.png?sig=secret' }],
       },
     },
   });
   expect(missingMediaType.status).toBe('error');
   expect(missingMediaType.error.name).toBe('ConfigError');
   expect(missingMediaType.error.message).toContain(
-    'CallAgent step "run_agent" properties.files[0] must have a url and a mediaType string.'
+    'CallAgent step "run_agent" properties.files[0] must have a url and a mediaType string. Received a url of type "string" and a mediaType of type "undefined".'
   );
+  expect(missingMediaType.error.message).not.toContain('sig=secret');
 
   const badUrl = await runRoutine(context, createRoutineContext(), {
     routine: {

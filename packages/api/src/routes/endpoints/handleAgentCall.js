@@ -53,11 +53,13 @@ async function handleAgentCall(context, routineContext, { step }) {
       { configKey: step['~k'] }
     );
   }
+  // A file url is usually a signed link, and these errors reach the server log, so they name
+  // the type received rather than the value.
   if (!type.isArray(files)) {
     throw new ConfigError(
       `CallAgent step "${
         step.stepId
-      }" properties.files must evaluate to an array. Received ${JSON.stringify(files)}.`,
+      }" properties.files must evaluate to an array. Received a value of type "${typeof files}".`,
       { configKey: step['~k'] }
     );
   }
@@ -68,12 +70,11 @@ async function handleAgentCall(context, routineContext, { step }) {
       !URL.canParse(file.url) ||
       !type.isString(file.mediaType)
     ) {
+      const received = type.isObject(file)
+        ? `a url of type "${typeof file.url}" and a mediaType of type "${typeof file.mediaType}"`
+        : `a value of type "${typeof file}"`;
       throw new ConfigError(
-        `CallAgent step "${
-          step.stepId
-        }" properties.files[${index}] must have a url and a mediaType string. Received ${JSON.stringify(
-          file
-        )}.`,
+        `CallAgent step "${step.stepId}" properties.files[${index}] must have a url and a mediaType string. Received ${received}.`,
         { configKey: step['~k'] }
       );
     }

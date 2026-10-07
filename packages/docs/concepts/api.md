@@ -576,7 +576,7 @@ A `CallAgent` step has:
 - `type: CallAgent`: **Required** - Identifies this as an agent call step.
 - `properties.agentId: string`: **Required** - The id of the agent to run. **Operators are evaluated**.
 - `properties.prompt: string`: **Required** - The task prompt for the agent run. **Operators are evaluated**.
-- `properties.files: object[]`: Images and documents the model reads beside the prompt. Each entry is `{ url, mediaType }`: `url` is a link the model provider can fetch (a presigned link to a private file), and `mediaType` its type, like `image/png` or `application/pdf`. An `image/*` file is sent as an image, anything else as a document. The prompt and the files go to the model as one user message. The server does not download the files; the provider fetches each link, so it must still be valid when the step runs. Which media types a model reads depends on the provider. **Operators are evaluated**.
+- `properties.files: object[]`: Images and documents the model reads beside the prompt. Each entry is `{ url, mediaType }`: `url` is a link the model provider can fetch (a presigned link to a private file), and `mediaType` its type, like `image/png` or `application/pdf`. An `image/*` file is sent as an image, anything else as a document. The prompt and the files go to the model as one user message. A provider that takes that media type as a link fetches it itself (the main providers do for images and PDFs); for any other media type the server downloads the file first and sends its content, refusing a link to a private or local address. Either way the link must still be valid when the step runs. Which media types a model reads depends on the provider. **Operators are evaluated**.
 
 The step result contains:
 
