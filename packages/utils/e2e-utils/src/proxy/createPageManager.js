@@ -48,12 +48,13 @@ function createPageManager({ page, manifest, helperRegistry, mockManager, assert
   let currentBlockMap = null;
   let currentPageId = null;
 
-  // A { pageId, pathParams, urlQuery } target gets the page's path pattern from the manifest.
+  // A { pageId, pathParams, urlQuery } target gets the app's basePath and the page's path
+  // pattern from the manifest.
   function withPagePath(target) {
     if (type.isString(target)) {
       return target;
     }
-    return { path: manifest.paths?.[target.pageId], ...target };
+    return { basePath: manifest.basePath, path: manifest.paths?.[target.pageId], ...target };
   }
 
   function ensurePageLoaded() {
@@ -195,7 +196,11 @@ function createPageManager({ page, manifest, helperRegistry, mockManager, assert
               ...opts,
             }),
           toHaveResponse: (response, opts) =>
-            requireAssertion(expectRequest, 'expectRequest')(page, { requestId, response, ...opts }),
+            requireAssertion(expectRequest, 'expectRequest')(page, {
+              requestId,
+              response,
+              ...opts,
+            }),
           toHavePayload: (payload, opts) =>
             requireAssertion(expectRequest, 'expectRequest')(page, { requestId, payload, ...opts }),
         },
@@ -244,7 +249,8 @@ function createPageManager({ page, manifest, helperRegistry, mockManager, assert
     url() {
       return {
         expect: {
-          toBe: (path, opts) => requireAssertion(expectUrl, 'expectUrl')(page, { url: path, ...opts }),
+          toBe: (path, opts) =>
+            requireAssertion(expectUrl, 'expectUrl')(page, { url: path, ...opts }),
           toMatch: (pattern, opts) =>
             requireAssertion(expectUrl, 'expectUrl')(page, { url: pattern, ...opts }),
         },

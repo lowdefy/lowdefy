@@ -35,6 +35,23 @@ test('createPageUrl fills the placeholders and adds the query', () => {
   ).toBe('/tickets/s/a%20b?tab=a');
 });
 
+test('createPageUrl prefixes the basePath of an app served under one', () => {
+  expect(
+    createPageUrl({
+      basePath: '/app',
+      pageId: 'ticket',
+      path: 'tickets/{space}/{ticket_id}',
+      pathParams: { space: 'support', ticket_id: '1234' },
+      urlQuery: { tab: 'a' },
+    })
+  ).toBe('/app/tickets/support/1234?tab=a');
+  expect(createPageUrl({ basePath: '/app', pageId: 'items' })).toBe('/app/items');
+});
+
+test('createPageUrl builds a root URL for an empty basePath', () => {
+  expect(createPageUrl({ basePath: '', pageId: 'items' })).toBe('/items');
+});
+
 test('createPageUrl writes non-string query values as the app serialises them', () => {
   expect(createPageUrl({ pageId: 'items', urlQuery: { page: 2, filter: { open: true } } })).toBe(
     '/items?page=2&filter=%7B%22open%22%3Atrue%7D'

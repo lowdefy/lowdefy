@@ -46,7 +46,7 @@ The e2e server variant (`--server e2e`) exposes `window.lowdefy` in the browser 
 
 - Reads `types.json` for block type → package mapping
 - Walks page configs to build block lookup table
-- Produces `e2e-manifest.json` with helper import paths
+- Produces `e2e-manifest.json` with helper import paths, each page's path pattern (from `routes.json`) and the app's `basePath` (from `config.json`), which `ldf.goto` and `ldf.waitForPage` use to build the URL of a `{ pageId, pathParams, urlQuery }` target
 
 ```json
 {
