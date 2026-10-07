@@ -18,7 +18,8 @@
 */
 
 import { jest } from '@jest/globals';
-import { validateTraceRecord } from '@lowdefy/node-utils';
+// Only the validator: the package index loads undici, which needs Node globals jsdom lacks.
+import validateTraceRecord from '@lowdefy/node-utils/journeyTrace/validateTraceRecord.js';
 
 import createPairingBuffer, { HOLD_MS } from './createPairingBuffer.js';
 import createPasswordRedactor from './createPasswordRedactor.js';

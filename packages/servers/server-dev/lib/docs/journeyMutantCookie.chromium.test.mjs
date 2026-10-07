@@ -118,13 +118,13 @@ chromiumTest(
       expect(bystanderRequests).toHaveLength(3);
       journeyRequests.forEach((request) => {
         expect(readMutantRun(request.cookie)).toBe(opened.run);
-        expect(forwardJourneyCookies(request.cookie)).toEqual(
+        expect(forwardJourneyCookies({ cookieHeader: request.cookie })).toEqual(
           `lowdefy_journey_mutant=${journeyActorToken}.${opened.cookiePayload}`
         );
       });
       bystanderRequests.forEach((request) => {
         expect(readMutantRun(request.cookie)).toBeNull();
-        expect(forwardJourneyCookies(request.cookie)).toEqual('');
+        expect(forwardJourneyCookies({ cookieHeader: request.cookie })).toEqual('');
       });
     } finally {
       await bystander?.context.close();
