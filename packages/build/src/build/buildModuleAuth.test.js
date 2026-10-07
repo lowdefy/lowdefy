@@ -295,24 +295,37 @@ test('buildModuleAuth returns components unchanged when no module declares auth'
   expect(components.auth.authPages).toBe(undefined);
 });
 
-test('buildModuleAuth records scoped public websockets on the context', () => {
+test('buildModuleAuth records scoped public endpoints and websockets on the context', () => {
   const context = makeContext([
-    { id: 'crm', manifest: { auth: { websockets: { public: ['status'] } } } },
+    {
+      id: 'crm',
+      manifest: { auth: { api: { public: ['sign-up'] }, websockets: { public: ['status'] } } },
+    },
   ]);
   const components = { auth: configuredAuth() };
   buildModuleAuth({ components, context, moduleEntries: [{ id: 'crm' }] });
-  expect(context.moduleAuthPublicWebsockets).toEqual(['crm/status']);
+  expect(context.moduleAuthPublicEntities).toEqual({
+    api: ['crm/sign-up'],
+    websockets: ['crm/status'],
+  });
+  expect(components.auth.api).toBe(undefined);
   expect(components.auth.websockets).toBe(undefined);
+  expect(context.logger.info).toHaveBeenCalledWith(
+    'Module "crm" declared endpoint "crm/sign-up" public.'
+  );
   expect(context.logger.info).toHaveBeenCalledWith(
     'Module "crm" declared websocket "crm/status" public.'
   );
 });
 
-test('buildModuleAuth public websockets are inert without app auth', () => {
+test('buildModuleAuth public endpoints and websockets are inert without app auth', () => {
   const context = makeContext([
-    { id: 'crm', manifest: { auth: { websockets: { public: ['status'] } } } },
+    {
+      id: 'crm',
+      manifest: { auth: { api: { public: ['sign-up'] }, websockets: { public: ['status'] } } },
+    },
   ]);
   const components = { auth: {} };
   buildModuleAuth({ components, context, moduleEntries: [{ id: 'crm' }] });
-  expect(context.moduleAuthPublicWebsockets).toBe(undefined);
+  expect(context.moduleAuthPublicEntities).toBe(undefined);
 });

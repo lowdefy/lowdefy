@@ -3017,7 +3017,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "7fc85cbdeee5ed5f7cae3d6b09d1775160f6ff098b4823832da5a4b28341b5ad"
+      "hash": "ebf25821ff97148d51c316d1461f23bc247f36cf77326e80b26c4ec25e2d63a3"
     },
     "concepts/page-and-app-state": {
       "files": [
@@ -3314,7 +3314,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "823d71aa21275db72897e737d15cdd404f11a2c1819649ddd05f153370dedf3e"
+      "hash": "df8f8251ff616999dd8ee31989cf14faa1e6dc66a005dece9d864854978ea18d"
     },
     "concepts/notifications": {
       "files": [
@@ -3760,7 +3760,7 @@
         "users/protected-pages-apis.yaml",
         "version.yaml"
       ],
-      "hash": "0e1d2c2f9b9338e5aba214c5241318d04e1a948cb8cb7235631cc8f36178ffe3"
+      "hash": "bde20a8f357b2fa05129c5c9719f13bab0764171c05e8b13e7119c4ae12524ed"
     },
     "user-authentication/roles": {
       "files": [

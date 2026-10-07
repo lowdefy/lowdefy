@@ -18,7 +18,7 @@ import { isReserved, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 import getAlwaysPublicPageIds from './getAlwaysPublicPageIds.js';
 import getEntityRoles from './getEntityRoles.js';
-import getModuleWebsocketAuth from './getModuleWebsocketAuth.js';
+import getModuleEntityAuth from './getModuleEntityAuth.js';
 import getProtectedEntities from './getProtectedEntities.js';
 import { isInPatternList } from './matchPattern.js';
 
@@ -56,8 +56,8 @@ function buildEntityAuth({ components, context, entity }) {
     const alwaysPublicIds = getAlwaysPublicPageIds({ components, context });
     protectedIds = protectedIds.filter((id) => !alwaysPublicIds.includes(id));
   }
-  if (entity === 'websockets') {
-    const moduleAuth = getModuleWebsocketAuth({ components, context });
+  if (entity === 'api' || entity === 'websockets') {
+    const moduleAuth = getModuleEntityAuth({ components, context, entity });
     protectedIds = [...protectedIds, ...moduleAuth.protectedIds].filter(
       (id) => !moduleAuth.publicIds.includes(id)
     );

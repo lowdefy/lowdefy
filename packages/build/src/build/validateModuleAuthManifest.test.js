@@ -49,7 +49,7 @@ test('validateModuleAuthManifest throws on an unknown auth key', () => {
   expect(() =>
     validateModuleAuthManifest({ auth: { authPages: { signIn: 'login' } }, entryId: 'crm' })
   ).toThrow(
-    'Module "crm" manifest "auth" has unknown key "authPages". Allowed keys are: hooks, pages, public, websockets.'
+    'Module "crm" manifest "auth" has unknown key "authPages". Allowed keys are: api, hooks, pages, public, websockets.'
   );
 });
 
@@ -158,53 +158,58 @@ test('validateModuleAuthManifest throws when a public entry is not a string', ()
   ).toThrow('Module "crm" manifest "auth.public" entries must be page id strings.');
 });
 
-test('validateModuleAuthManifest passes public websockets the module ships', () => {
-  expect(() =>
-    validateModuleAuthManifest({
-      auth: { websockets: { public: ['status'] } },
-      entryId: 'crm',
-      websockets: [{ id: 'status', type: 'Channel' }],
-    })
-  ).not.toThrow();
-});
+describe.each([
+  ['api', 'endpoint', 'Api'],
+  ['websockets', 'websocket', 'Channel'],
+])('validateModuleAuthManifest auth.%s', (entity, label, itemType) => {
+  test(`passes public ${label}s the module ships`, () => {
+    expect(() =>
+      validateModuleAuthManifest({
+        auth: { [entity]: { public: ['status'] } },
+        entryId: 'crm',
+        [entity]: [{ id: 'status', type: itemType }],
+      })
+    ).not.toThrow();
+  });
 
-test('validateModuleAuthManifest throws when websockets is not an object', () => {
-  expect(() =>
-    validateModuleAuthManifest({ auth: { websockets: ['status'] }, entryId: 'crm' })
-  ).toThrow('Module "crm" manifest "auth.websockets" must be an object.');
-});
+  test('throws when it is not an object', () => {
+    expect(() =>
+      validateModuleAuthManifest({ auth: { [entity]: ['status'] }, entryId: 'crm' })
+    ).toThrow(`Module "crm" manifest "auth.${entity}" must be an object.`);
+  });
 
-test('validateModuleAuthManifest throws on an unknown websockets key', () => {
-  expect(() =>
-    validateModuleAuthManifest({ auth: { websockets: { protected: ['status'] } }, entryId: 'crm' })
-  ).toThrow(
-    'Module "crm" manifest "auth.websockets" has unknown key "protected". Allowed keys are: public.'
-  );
-});
+  test('throws on an unknown key', () => {
+    expect(() =>
+      validateModuleAuthManifest({ auth: { [entity]: { protected: ['status'] } }, entryId: 'crm' })
+    ).toThrow(
+      `Module "crm" manifest "auth.${entity}" has unknown key "protected". Allowed keys are: public.`
+    );
+  });
 
-test('validateModuleAuthManifest throws when websockets public is not an array', () => {
-  expect(() =>
-    validateModuleAuthManifest({ auth: { websockets: { public: 'status' } }, entryId: 'crm' })
-  ).toThrow('Module "crm" manifest "auth.websockets.public" must be an array of websocket ids.');
-});
+  test('throws when public is not an array', () => {
+    expect(() =>
+      validateModuleAuthManifest({ auth: { [entity]: { public: 'status' } }, entryId: 'crm' })
+    ).toThrow(`Module "crm" manifest "auth.${entity}.public" must be an array of ${label} ids.`);
+  });
 
-test('validateModuleAuthManifest throws when a websockets public entry is not a string', () => {
-  expect(() =>
-    validateModuleAuthManifest({
-      auth: { websockets: { public: [{ id: 'status' }] } },
-      entryId: 'crm',
-    })
-  ).toThrow('Module "crm" manifest "auth.websockets.public" entries must be websocket id strings.');
-});
+  test('throws when a public entry is not a string', () => {
+    expect(() =>
+      validateModuleAuthManifest({
+        auth: { [entity]: { public: [{ id: 'status' }] } },
+        entryId: 'crm',
+      })
+    ).toThrow(`Module "crm" manifest "auth.${entity}.public" entries must be ${label} id strings.`);
+  });
 
-test('validateModuleAuthManifest throws when a public websocket is not one the module ships', () => {
-  expect(() =>
-    validateModuleAuthManifest({
-      auth: { websockets: { public: ['statuss'] } },
-      entryId: 'crm',
-      websockets: [{ id: 'status', type: 'Channel' }],
-    })
-  ).toThrow(
-    'Module "crm" manifest "auth.websockets.public" lists "statuss", but the module ships no websocket with that id.'
-  );
+  test(`throws when a public ${label} is not one the module ships`, () => {
+    expect(() =>
+      validateModuleAuthManifest({
+        auth: { [entity]: { public: ['statuss'] } },
+        entryId: 'crm',
+        [entity]: [{ id: 'status', type: itemType }],
+      })
+    ).toThrow(
+      `Module "crm" manifest "auth.${entity}.public" lists "statuss", but the module ships no ${label} with that id.`
+    );
+  });
 });

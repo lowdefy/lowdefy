@@ -1,0 +1,12 @@
+name: Support
+description: Module that ships endpoints, one of them public
+
+auth:
+  api:
+    public:
+      - ticket-status
+
+api:
+  - _ref: api/reply.yaml
+  - _ref: api/ticket-status.yaml
+  - _ref: api/close-ticket.yaml

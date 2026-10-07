@@ -294,6 +294,20 @@ _ref:
                 - " - User Admin"
             ```
 
+            ## Endpoint Access
+
+            In an app with auth configured, an API endpoint a module ships needs a signed-in caller unless the module or the app makes it public. The module lists the endpoints anyone may call, such as a sign-up or status check, under `auth.api.public` in its manifest:
+
+            ```yaml
+            # module.lowdefy.yaml
+            auth:
+              api:
+                public:
+                  - ticket-status
+            ```
+
+            The app makes a module endpoint public with `auth.api.public: true`, or by naming it in an `auth.api.public` list. Otherwise it stays protected, also with no `auth.api` rule or under a `protected` list that does not name it, where an app endpoint would be public. A role in `auth.api.roles` restricts a module endpoint whether it is public or not. A webhook endpoint must still be listed in the app's `auth.api.public`. In an app without auth, module endpoints follow the app's rules like any other.
+
             ## Shipping Websockets
 
             A module declares the websockets its pages subscribe to in `websockets:`, so an app that installs the module needs no websocket config of its own. Each item takes the same fields as an app's top-level [`websockets`](/websockets-introduction) (`id`, `type`, `connectionId`, `properties`, `tenant`). Write `connectionId` with `_module.connectionId`, so a connection the app remaps resolves to the app's connection:

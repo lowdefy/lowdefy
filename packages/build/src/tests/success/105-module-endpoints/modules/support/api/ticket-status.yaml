@@ -1,0 +1,5 @@
+id: ticket-status
+type: Api
+routine:
+  - ':return':
+      ok: true
