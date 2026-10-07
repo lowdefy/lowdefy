@@ -70,3 +70,19 @@ fixtureTest(
     expect(result.passed).toBe(true);
   }
 );
+
+fixtureTest(
+  'a lazy block that renders after the step starts is clicked through its control, not its fallback',
+  async () => {
+    const result = await postJourney({
+      pageId: 'timing',
+      steps: [
+        { click: 'reveal_table_button' },
+        { click: 'late_table' },
+        { expect: { state: { path: 'late_table_picked', equals: true } } },
+      ],
+    });
+    expect(result.failure).toBeUndefined();
+    expect(result.passed).toBe(true);
+  }
+);

@@ -1,8 +1,9 @@
 id: timing
 type: Box
 # The step timing fixture tests (packages/servers/server-dev/test/journeyFixture/timing.test.mjs):
-# a request the page calls on open, a button that calls nothing, and a block
-# that renders a moment after the click that reveals it.
+# a request the page calls on open, a button that calls nothing, a block that
+# renders a moment after the click that reveals it, and a lazy block revealed
+# the same way.
 requests:
   - id: load_items
     type: MongoDBFind
@@ -87,3 +88,55 @@ blocks:
               content: Below the late button.
               style:
                 minHeight: 300px
+  # A lazy block (Table loads its code on first mount) revealed after the next
+  # step has started: the trailing-edge debounce is longer than the settle
+  # after a click at the default 5s step timeout, and the reveal waits on a
+  # request. Its wrapper and fallback show before its controls do, so a click
+  # on the block must wait for the implementation before it picks a control.
+  - id: reveal_table_button
+    type: Button
+    properties:
+      title: Reveal table
+    events:
+      onClick:
+        debounce:
+          ms: 5500
+        try:
+          - id: load_for_table
+            type: Request
+            params: load_items
+          - id: show_late_table
+            type: SetState
+            params:
+              show_late_table: true
+  - id: late_table
+    type: Table
+    visible:
+      _eq:
+        - _state: show_late_table
+        - true
+    properties:
+      headerMenu: false
+      reorderable: false
+      columns:
+        - key: actions
+          type: buttons
+          title: ''
+          width: 96
+          sortable: false
+          cell:
+            buttons:
+              - eventName: onPick
+                title: Pick
+        - key: name
+          title: Name
+          sortable: false
+      data:
+        - _id: t1
+          name: Late row
+    events:
+      onPick:
+        - id: set_table_picked
+          type: SetState
+          params:
+            late_table_picked: true

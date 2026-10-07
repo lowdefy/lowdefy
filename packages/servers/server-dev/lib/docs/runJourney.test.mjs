@@ -128,6 +128,7 @@ function createLocator({ selector, page }) {
       return fn(page.elementsFor(selector), arg);
     }),
     allInnerTexts: jest.fn(async () => [page.texts[selector] ?? '']),
+    page: jest.fn(() => page),
   };
   return locator;
 }
@@ -1601,9 +1602,32 @@ test('runJourney settles the page after an interaction before the next step', as
     steps: [{ click: 'open' }, { expect: { visible: 'modal' } }],
   });
 
-  // openPage owns the readiness wait; the runner waits once after the click.
-  expect(page.waitForFunction).toHaveBeenCalledTimes(1);
-  expect(page.waitForFunction.mock.calls[0][1]).toBeUndefined();
+  // openPage owns the readiness wait; the runner waits for lazy blocks before
+  // the click picks a control, and settles once after the click.
+  expect(page.waitForFunction).toHaveBeenCalledTimes(2);
+  expect(page.waitForFunction.mock.calls[1][1]).toBeUndefined();
+});
+
+test('runJourney waits for lazy blocks to load before it picks the control a click lands on', async () => {
+  const window = createLowdefyWindow();
+  window.__lowdefyLazyLoads = 1;
+  const page = createPage({ window });
+  openWith(page);
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ click: 'table' }] });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    index: 0,
+    message: 'A lazy block was still loading after 5000 ms.',
+    expected: 'every lazy block on the page to have loaded',
+  });
+  expect(page.clicks).toEqual([]);
+
+  window.__lowdefyLazyLoads = 0;
+  const loaded = await runJourney({ origin, pageId: 'form', steps: [{ click: 'table' }] });
+  expect(loaded.passed).toBe(true);
+  expect(page.clicks).toEqual(['#bl-table']);
 });
 
 test('runJourney opens pages with the journey timeout when it is longer than 15000 ms', async () => {
