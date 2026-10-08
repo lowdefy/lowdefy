@@ -48,12 +48,18 @@ async function endpointsHandler(c) {
   }
   if (endpointConfig?.webhook) {
     context.logger.info({ event: 'call_webhook_endpoint', endpointId });
-    const { status, body } = await runWebhookEndpoint(context, {
+    const { status, body, contentType } = await runWebhookEndpoint(context, {
       endpointId,
       rawBody: await c.req.text(),
       query: c.req.query(),
       headers: c.req.header(),
     });
+    if (contentType === 'text/plain') {
+      // A text answer often echoes a value from the request (a handshake token), so the browser
+      // must not sniff it into HTML.
+      c.header('X-Content-Type-Options', 'nosniff');
+      return c.text(body, status);
+    }
     return c.json(body, status);
   }
 

@@ -32,7 +32,8 @@ import runWebhookVerify from './runWebhookVerify.js';
 // Lowdefy's { payload } envelope, so the routine receives
 // { body, query, headers } as its payload and its return value is sent back
 // verbatim (handshakes require exact response shapes). It returns the HTTP
-// answer, { status, body }, that the route sends (see createWebhookAnswer).
+// answer, { status, body, contentType? }, that the route sends (see
+// createWebhookAnswer): JSON, or text when contentType is text/plain.
 // Only endpoints that opt in are runnable here (a missing flag reads as a
 // missing endpoint — no probing).
 //
@@ -103,11 +104,11 @@ async function runWebhookEndpoint(context, { endpointId, rawBody, query, headers
     endpointDepth: 0,
   };
 
-  const { error, response, status } = await runRoutine(context, routineContext, {
+  const { contentType, error, response, status } = await runRoutine(context, routineContext, {
     routine: endpointConfig.routine,
   });
 
-  return createWebhookAnswer(context, { error, response, status });
+  return createWebhookAnswer(context, { contentType, error, response, status });
 }
 
 export default runWebhookEndpoint;

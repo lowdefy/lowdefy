@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
+
 import checkLiteralContent from '../../page/dynamic/checkLiteralContent.js';
 import evaluateRoutineOperators from '../evaluateRoutineOperators.js';
 
@@ -33,6 +36,21 @@ async function controlReturn(context, routineContext, { control }) {
     event: 'debug_control_return',
     response,
   });
+  // :content_type sends a webhook's answer as text (createWebhookAnswer). The build allows it only
+  // in a webhook endpoint, and only as text/plain.
+  if (':content_type' in control) {
+    if (!type.isString(response)) {
+      throw new ConfigError(':return with :content_type text/plain must evaluate to a string.', {
+        received: response,
+        configKey: control['~k'],
+      });
+    }
+    return {
+      status: 'return',
+      response,
+      contentType: control[':content_type'],
+    };
+  }
   return {
     status: 'return',
     response,
