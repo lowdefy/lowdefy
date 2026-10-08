@@ -8,7 +8,7 @@ overrides:
   better-sqlite3: 12.11.1
   '@hono/node-server@<2': ^1.19.15
   dompurify: 3.4.13
-  hono: 4.13.5
+  hono: 4.13.7
   js-yaml@<4: ^3.15.2
   js-yaml@>=4 <5: ^4.3.2
   postcss: 8.5.23
@@ -2295,13 +2295,13 @@ importers:
         version: 0.41.3
       '@hono/auth-js':
         specifier: 1.1.1
-        version: 1.1.1(@auth/core@0.41.3)(hono@4.13.5)(react@18.2.0)
+        version: 1.1.1(@auth/core@0.41.3)(hono@4.13.7)(react@18.2.0)
       '@hono/mcp':
         specifier: 0.3.0
-        version: 0.3.0(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))(hono-rate-limiter@0.5.3(hono@4.13.5))(hono@4.13.5)(zod@4.3.6)
+        version: 0.3.0(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))(hono-rate-limiter@0.5.3(hono@4.13.7))(hono@4.13.7)(zod@4.3.6)
       '@hono/node-server':
         specifier: 2.0.10
-        version: 2.0.10(hono@4.13.5)
+        version: 2.0.10(hono@4.13.7)
       '@lowdefy/actions-core':
         specifier: 6.0.0
         version: link:../../plugins/actions/actions-core
@@ -2387,8 +2387,8 @@ importers:
         specifier: 1.11.20
         version: 1.11.20
       hono:
-        specifier: 4.13.5
-        version: 4.13.5
+        specifier: 4.13.7
+        version: 4.13.7
       pino:
         specifier: 10.3.1
         version: 10.3.1
@@ -2440,16 +2440,16 @@ importers:
         version: 0.41.3
       '@hono/auth-js':
         specifier: 1.1.1
-        version: 1.1.1(@auth/core@0.41.3)(hono@4.13.5)(react@18.2.0)
+        version: 1.1.1(@auth/core@0.41.3)(hono@4.13.7)(react@18.2.0)
       '@hono/mcp':
         specifier: 0.3.0
-        version: 0.3.0(@modelcontextprotocol/sdk@1.29.0(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.13.5))(hono@4.13.5)(zod@3.25.76)
+        version: 0.3.0(@modelcontextprotocol/sdk@1.29.0(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.13.7))(hono@4.13.7)(zod@3.25.76)
       '@hono/node-server':
         specifier: 2.0.10
-        version: 2.0.10(hono@4.13.5)
+        version: 2.0.10(hono@4.13.7)
       '@hono/vite-dev-server':
         specifier: 0.26.0
-        version: 0.26.0(hono@4.13.5)
+        version: 0.26.0(hono@4.13.7)
       '@lowdefy/actions-core':
         specifier: 6.0.0
         version: link:../../plugins/actions/actions-core
@@ -2565,8 +2565,8 @@ importers:
         specifier: 16.3.1
         version: 16.3.1
       hono:
-        specifier: 4.13.5
-        version: 4.13.5
+        specifier: 4.13.7
+        version: 4.13.7
       html-to-image:
         specifier: 1.11.13
         version: 1.11.13
@@ -2636,7 +2636,7 @@ importers:
         version: 2.7.0(antd@6.3.1(date-fns@2.29.3)(moment@2.29.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@hono/node-server':
         specifier: 2.0.10
-        version: 2.0.10(hono@4.13.5)
+        version: 2.0.10(hono@4.13.7)
       '@lowdefy/actions-core':
         specifier: 6.0.0
         version: link:../../plugins/actions/actions-core
@@ -2719,8 +2719,8 @@ importers:
         specifier: 1.11.20
         version: 1.11.20
       hono:
-        specifier: 4.13.5
-        version: 4.13.5
+        specifier: 4.13.7
+        version: 4.13.7
       pino:
         specifier: 10.3.1
         version: 10.3.1
@@ -4173,14 +4173,14 @@ packages:
     engines: {node: '>=18.4.0'}
     peerDependencies:
       '@auth/core': '>=0.35.0'
-      hono: 4.13.5
+      hono: 4.13.7
       react: ^18 || ^19 || ^19.0.0-rc
 
   '@hono/mcp@0.3.0':
     resolution: {integrity: sha512-UhSWFbZwRxHBdptOn2r1HyB8Vt6gU+BL3AbTis2t8TBW69ZhG4soJQ09yEL/t/ymxszJnWp5Rq6tOXXOjuK1qg==}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.25.1
-      hono: 4.13.5
+      hono: 4.13.7
       hono-rate-limiter: ^0.5.3
       zod: ^3.25.0 || ^4.0.0
 
@@ -4188,19 +4188,19 @@ packages:
     resolution: {integrity: sha512-dSneS5qhiauZWGDCeK4o695Xd9nUNjviSZCMQrj10eetr8Uln1ucn6bbphOM6UynAMMtNIzZNSpL9vnASJwrPQ==}
     engines: {node: '>=18.14.1'}
     peerDependencies:
-      hono: 4.13.5
+      hono: 4.13.7
 
   '@hono/node-server@2.0.10':
     resolution: {integrity: sha512-ZcnNVhKTmyDJeg0UlnZjvM73JBsTAuhrH/J4fjwGOw59PwOW51r4J+p6CsKZWXdKSme4MFqU62CZMOsdDrU4CA==}
     engines: {node: '>=20'}
     peerDependencies:
-      hono: 4.13.5
+      hono: 4.13.7
 
   '@hono/vite-dev-server@0.26.0':
     resolution: {integrity: sha512-DYHht1lge/SRGd1dpOgwhS6DpamSaDtxAOlwl2RkcYyLFy769DZPEX6CeRaUzeDNgClO9JAuT83VptxB5mH5jA==}
     engines: {node: '>=18.14.1'}
     peerDependencies:
-      hono: 4.13.5
+      hono: 4.13.7
       miniflare: '*'
       wrangler: '*'
     peerDependenciesMeta:
@@ -9414,14 +9414,14 @@ packages:
   hono-rate-limiter@0.5.3:
     resolution: {integrity: sha512-M0DxbVMpPELEzLi0AJg1XyBHLGJXz7GySjsPoK+gc5YeeBsdGDGe+2RvVuCAv8ydINiwlbxqYMNxUEyYfRji/A==}
     peerDependencies:
-      hono: 4.13.5
+      hono: 4.13.7
       unstorage: ^1.17.3
     peerDependenciesMeta:
       unstorage:
         optional: true
 
-  hono@4.13.5:
-    resolution: {integrity: sha512-O6+/eCYRkzzzy0rPWwKLiGBR1nFuUPZynnwjxN1MBA62NNqbT0wQEzQyK2gSO5yDIDB336sXQleAhOHrzlYyKw==}
+  hono@4.13.7:
+    resolution: {integrity: sha512-c8/gF9ac8Y78/agExVocyLevgR+JlpNB444Py0FSX8pJoPdYUfUzRcXtYEYGwt6l19qIlVZPN5Mfsw9jFShmQQ==}
     engines: {node: '>=16.9.0'}
 
   hosted-git-info@4.1.0:
@@ -14895,40 +14895,40 @@ snapshots:
       fast-deep-equal: 3.1.3
       supercluster: 8.0.1
 
-  '@hono/auth-js@1.1.1(@auth/core@0.41.3)(hono@4.13.5)(react@18.2.0)':
+  '@hono/auth-js@1.1.1(@auth/core@0.41.3)(hono@4.13.7)(react@18.2.0)':
     dependencies:
       '@auth/core': 0.41.3
-      hono: 4.13.5
+      hono: 4.13.7
       react: 18.2.0
 
-  '@hono/mcp@0.3.0(@modelcontextprotocol/sdk@1.29.0(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.13.5))(hono@4.13.5)(zod@3.25.76)':
+  '@hono/mcp@0.3.0(@modelcontextprotocol/sdk@1.29.0(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.13.7))(hono@4.13.7)(zod@3.25.76)':
     dependencies:
       '@modelcontextprotocol/sdk': 1.29.0(zod@3.25.76)
-      hono: 4.13.5
-      hono-rate-limiter: 0.5.3(hono@4.13.5)
+      hono: 4.13.7
+      hono-rate-limiter: 0.5.3(hono@4.13.7)
       pkce-challenge: 5.0.1
       zod: 3.25.76
 
-  '@hono/mcp@0.3.0(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))(hono-rate-limiter@0.5.3(hono@4.13.5))(hono@4.13.5)(zod@4.3.6)':
+  '@hono/mcp@0.3.0(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))(hono-rate-limiter@0.5.3(hono@4.13.7))(hono@4.13.7)(zod@4.3.6)':
     dependencies:
       '@modelcontextprotocol/sdk': 1.29.0(zod@4.3.6)
-      hono: 4.13.5
-      hono-rate-limiter: 0.5.3(hono@4.13.5)
+      hono: 4.13.7
+      hono-rate-limiter: 0.5.3(hono@4.13.7)
       pkce-challenge: 5.0.1
       zod: 4.3.6
 
-  '@hono/node-server@1.19.17(hono@4.13.5)':
+  '@hono/node-server@1.19.17(hono@4.13.7)':
     dependencies:
-      hono: 4.13.5
+      hono: 4.13.7
 
-  '@hono/node-server@2.0.10(hono@4.13.5)':
+  '@hono/node-server@2.0.10(hono@4.13.7)':
     dependencies:
-      hono: 4.13.5
+      hono: 4.13.7
 
-  '@hono/vite-dev-server@0.26.0(hono@4.13.5)':
+  '@hono/vite-dev-server@0.26.0(hono@4.13.7)':
     dependencies:
-      '@hono/node-server': 1.19.17(hono@4.13.5)
-      hono: 4.13.5
+      '@hono/node-server': 1.19.17(hono@4.13.7)
+      hono: 4.13.7
       minimatch: 9.0.5
 
   '@humanwhocodes/config-array@0.11.13':
@@ -15340,7 +15340,7 @@ snapshots:
 
   '@modelcontextprotocol/sdk@1.29.0(zod@3.25.76)':
     dependencies:
-      '@hono/node-server': 1.19.17(hono@4.13.5)
+      '@hono/node-server': 1.19.17(hono@4.13.7)
       ajv: 8.20.0
       ajv-formats: 3.0.1(ajv@8.20.0)
       content-type: 1.0.5
@@ -15350,7 +15350,7 @@ snapshots:
       eventsource-parser: 3.0.8
       express: 5.2.1
       express-rate-limit: 8.5.2(express@5.2.1)
-      hono: 4.13.5
+      hono: 4.13.7
       jose: 6.2.3
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.1
@@ -15362,7 +15362,7 @@ snapshots:
 
   '@modelcontextprotocol/sdk@1.29.0(zod@4.3.6)':
     dependencies:
-      '@hono/node-server': 1.19.17(hono@4.13.5)
+      '@hono/node-server': 1.19.17(hono@4.13.7)
       ajv: 8.20.0
       ajv-formats: 3.0.1(ajv@8.20.0)
       content-type: 1.0.5
@@ -15372,7 +15372,7 @@ snapshots:
       eventsource-parser: 3.0.8
       express: 5.2.1
       express-rate-limit: 8.5.2(express@5.2.1)
-      hono: 4.13.5
+      hono: 4.13.7
       jose: 6.2.3
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.1
@@ -19770,7 +19770,7 @@ snapshots:
       eslint: 8.54.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint@8.54.0))(eslint@8.54.0)
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint@8.54.0))(eslint@8.54.0))(eslint@8.54.0)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.54.0)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@8.54.0)
       eslint-plugin-react: 7.37.5(eslint@8.54.0)
       eslint-plugin-react-hooks: 5.2.0(eslint@8.54.0)
@@ -19804,7 +19804,7 @@ snapshots:
       tinyglobby: 0.2.17
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint@8.54.0))(eslint@8.54.0))(eslint@8.54.0)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.54.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -19853,7 +19853,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint@8.54.0))(eslint@8.54.0))(eslint@8.54.0):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.54.0):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -20822,11 +20822,11 @@ snapshots:
 
   highlightjs-vue@1.0.0: {}
 
-  hono-rate-limiter@0.5.3(hono@4.13.5):
+  hono-rate-limiter@0.5.3(hono@4.13.7):
     dependencies:
-      hono: 4.13.5
+      hono: 4.13.7
 
-  hono@4.13.5: {}
+  hono@4.13.7: {}
 
   hosted-git-info@4.1.0:
     dependencies:
