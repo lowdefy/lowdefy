@@ -48,6 +48,8 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId, env
     // A webhook route answers the HTTP status a :reject sets, also from an InternalApi endpoint
     // the webhook calls. No other route sends one.
     rejectSetsStatus: isWebhook || endpoint.type === 'InternalApi',
+    // Only the webhook's own :return is its answer: a called endpoint's :return is a step result.
+    returnSetsContentType: isWebhook,
     dynamicPolicies: context.dynamicPolicies,
     typeCounters: context.typeCounters,
     stepTypes: context.typesMap?.steps ?? {},

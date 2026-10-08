@@ -3322,7 +3322,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "df8f8251ff616999dd8ee31989cf14faa1e6dc66a005dece9d864854978ea18d"
+      "hash": "2780f7ed9c2c411fcad3613f536030de5f74efbce0b85e4e45bc0c882eaab269"
     },
     "concepts/notifications": {
       "files": [
@@ -3797,7 +3797,7 @@
         "users/organizations.yaml",
         "version.yaml"
       ],
-      "hash": "8cd06d120370a7b00bd5ee16d46a86bdc924ad371c03fc2fd1ca1e2647b3f8af"
+      "hash": "b261600fc231a1abea1e856d44277e9fd0a1b6f559f8fea87b006f16b5242cc5"
     },
     "user-authentication/auth-steps": {
       "files": [
@@ -8443,7 +8443,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "7b7d4ca8f3c605972ac42d3e0085a07664030079c885147d7c6884461f153912"
+      "hash": "4a12dcbb233707d699f387589c4118ff6d9bdd686be30f622a9ff620284bc8dc"
     },
     "controls/set_state": {
       "files": [

@@ -264,3 +264,60 @@ test(':reject :status outside 400 to 499 is a build error', () => {
     ':status in :reject must be an integer from 400 to 499 at endpoint hook.'
   );
 });
+
+test(':return :content_type text/plain builds in a webhook endpoint', () => {
+  const components = {
+    api: [
+      {
+        id: 'hook',
+        type: 'Api',
+        webhook: true,
+        routine: {
+          ':if': { _ne: [{ _payload: 'query.validationToken' }, null] },
+          ':then': {
+            ':return': { _payload: 'query.validationToken' },
+            ':content_type': 'text/plain',
+          },
+        },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test.each(['Api', 'InternalApi'])(
+  ':return :content_type in a %s endpoint that is not a webhook is a build error',
+  (endpointType) => {
+    const components = {
+      api: [
+        {
+          id: 'plain',
+          type: endpointType,
+          routine: [{ ':return': 'ok', ':content_type': 'text/plain' }],
+        },
+      ],
+    };
+    expect(() => buildApi({ components, context })).toThrow(
+      ':return in endpoint plain sets :content_type, which only a webhook endpoint answers with.'
+    );
+  }
+);
+
+test.each(['text/html', 'application/json', { _string: 'text/plain' }])(
+  ':return :content_type %p is a build error',
+  (contentType) => {
+    const components = {
+      api: [
+        {
+          id: 'hook',
+          type: 'Api',
+          webhook: true,
+          routine: { ':return': 'ok', ':content_type': contentType },
+        },
+      ],
+    };
+    expect(() => buildApi({ components, context })).toThrow(
+      ':content_type in :return must be "text/plain" at endpoint hook.'
+    );
+  }
+);

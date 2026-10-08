@@ -343,6 +343,7 @@ A webhook endpoint answers with an HTTP status that says how the run ended, so t
 | Outcome | Status | Body |
 | --- | --- | --- |
 | The routine finished | `200` | Its `:return` value, or `{ "ok": true }` when it returned nothing |
+| A [`:return`](/:return) with `:content_type: text/plain` | `200` | The returned string as plain text (see [Answering with plain text](#answering-with-plain-text)) |
 | A [`:reject`](/:reject) with `:status` | That status (400 to 499) | `:body` as given, or the error body below |
 | A [`:reject`](/:reject) without `:status` | `400` | `{ "error": { "code": "rejected", "message": <the reject message> } }`, or `:body` when given |
 | A failed [`ValidateSchema` step](#validating-data-as-a-routine-step) (with `throwOnInvalid` on) | `400` | `{ "error": { "code": "invalid_request", "message": <names the failing path> } }` |
@@ -388,6 +389,30 @@ routine:
       ticket:
         _step: find_ticket
 ```
+
+### Answering with plain text
+
+Some senders check a new subscription with a handshake that wants a plain-text reply. Microsoft Graph, for one, posts to the notification URL with `?validationToken=<token>` and expects a `200` whose body is exactly the token, with `Content-Type: text/plain`, within 10 seconds. Set `:content_type: text/plain` on the [`:return`](/:return) that answers it: the endpoint answers `200` with the returned string as the body, `Content-Type: text/plain; charset=UTF-8` and `X-Content-Type-Options: nosniff`.
+
+```yaml
+id: graph-notifications
+type: Api
+webhook: true
+routine:
+  - :if:
+      _ne:
+        - _payload: query.validationToken
+        - null
+    :then:
+      :return:
+        _payload: query.validationToken
+      :content_type: text/plain
+  # A change notification: check its clientState, then handle body.value.
+  - :return:
+      received: true
+```
+
+`text/plain` is the only content type, and the returned value must be a string; any other value fails the run with the `500` answer above. `:content_type` is accepted only on a `:return` in a webhook endpoint, since the `:return` of an endpoint the webhook calls with `CallApi` is a step result, not the answer. Anywhere else it is a build error. A `:return` without `:content_type` answers JSON as before.
 
 Endpoints without the flag are completely unaffected — the standard CallAPI envelope, auth config, and response shape apply exactly as before.
 

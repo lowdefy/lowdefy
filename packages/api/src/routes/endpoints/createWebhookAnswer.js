@@ -32,8 +32,9 @@ function errorBody({ code, message }) {
 // The HTTP status and body a webhook route answers with, from the routine's outcome. A :reject
 // answers the :status and :body it set (400 and an error body by default), also when it was
 // raised in an endpoint the routine called. A failed ValidateSchema step answers 400. Any other
-// failure answers 500 with a fixed message, so nothing from the error reaches the caller.
-function createWebhookAnswer(context, { error, response, status }) {
+// failure answers 500 with a fixed message, so nothing from the error reaches the caller. A :return
+// with :content_type answers its string as is, for a handshake that wants a text reply.
+function createWebhookAnswer(context, { contentType, error, response, status }) {
   if (status === 'reject') {
     return {
       status: error.webhookStatus ?? 400,
@@ -53,6 +54,9 @@ function createWebhookAnswer(context, { error, response, status }) {
       status: 500,
       body: errorBody({ code: 'internal_error', message: 'Webhook failed.' }),
     };
+  }
+  if (contentType === 'text/plain') {
+    return { status: 200, body: response, contentType };
   }
   return { status: 200, body: toPlainJson(context, response) ?? { ok: true } };
 }

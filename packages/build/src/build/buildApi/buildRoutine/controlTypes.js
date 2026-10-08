@@ -45,7 +45,13 @@ const controlTypes = {
     description:
       'Ends the routine with a reject status. Not caught by :try/:catch — use :throw for failures a :catch should handle. In a webhook endpoint, or an InternalApi endpoint a webhook calls, :status (400 to 499) and :body set the HTTP answer.',
   },
-  ':return': { required: [':return'], routine: [], optional: [] },
+  ':return': {
+    required: [':return'],
+    routine: [],
+    optional: [':content_type'],
+    description:
+      'Ends the routine with a success status and the given value. In a webhook endpoint, :content_type: text/plain sends the value, which must be a string, as the plain-text body of the answer.',
+  },
   ':set_state': { required: [':set_state'], routine: [], optional: [] },
   ':switch': {
     required: [':switch', ':case', ':then'],
@@ -153,6 +159,26 @@ function checkRejectAnswer(control, endpointContext) {
   }
 }
 
+// :content_type sends a webhook's answer as text, so it is refused where the :return is not a
+// webhook's answer. text/plain is the only type: a routine that echoes a request value as HTML
+// would serve it on the app's origin.
+function checkReturnContentType(control, endpointContext) {
+  const { endpointId, returnSetsContentType } = endpointContext;
+  if (!(':content_type' in control)) return;
+  if (returnSetsContentType !== true) {
+    throw new ConfigError(
+      `:return in endpoint ${endpointId} sets :content_type, which only a webhook endpoint answers with.`,
+      { received: [':content_type'], configKey: control['~k'] }
+    );
+  }
+  if (control[':content_type'] !== 'text/plain') {
+    throw new ConfigError(
+      `:content_type in :return must be "text/plain" at endpoint ${endpointId}.`,
+      { received: control[':content_type'], configKey: control['~k'] }
+    );
+  }
+}
+
 // A literal :concurrency must be a positive integer; an operator is checked when it evaluates.
 function checkConcurrency(control, endpointContext) {
   const concurrency = control[':concurrency'];
@@ -192,6 +218,7 @@ function validateControl(control, endpointContext) {
   checkInvalidControls({ controlType, keys, control }, endpointContext);
   if (controlType === ':parallel_for') checkConcurrency(control, endpointContext);
   if (controlType === ':reject') checkRejectAnswer(control, endpointContext);
+  if (controlType === ':return') checkReturnContentType(control, endpointContext);
 
   return controlType;
 }
