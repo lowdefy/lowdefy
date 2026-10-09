@@ -59,6 +59,7 @@ export default {
   steps: [
     'BanUser',
     'CancelInvitation',
+    'CreateMcpToken',
     'CreateOrganization',
     'DeleteUser',
     'InviteMember',
@@ -68,6 +69,8 @@ export default {
     'RemoveMember',
     'ResetUserTwoFactor',
     'RevokeMcpGrant',
+    'RevokeMcpToken',
+    'RevokeOrgMcpToken',
     'RevokeUserPasskeys',
     'RevokeUserSessions',
     'UnbanUser',

@@ -324,6 +324,95 @@ routine:
 
 Because the `/api/mcp` route reads the live consent row on every call, every affected assistant is refused on its next call, not at token expiry.
 
+## Tokens for scripts
+
+An assistant a person connects from a browser holds an OAuth grant. A script that runs on its own — a worker loop, a CI job — has no browser to sign in again when something goes wrong, so it uses a **member token** instead: a long-lived bearer a member creates for themselves, stored hashed, that the script sends on every call to `/api/mcp`.
+
+A member token needs the authorization server above (`auth.oauthProvider`). Without it the route authenticates nobody, so a token would reach nothing, and `CreateMcpToken` refuses.
+
+A call with a member token is served as the member who made it: their roles, attributes and organization, read live on every call, and `_user.auth_method` is `'mcp'`, the same as an assistant. A token carries both `mcp:read` and `mcp:write`, so the member's roles alone decide which tools it reaches.
+
+### Creating a token
+
+A member creates a token for themselves, in their active organization, from a signed-in session. `CreateMcpToken` refuses any other caller — an assistant, another token, an API strategy caller — so nothing that holds a narrower or shorter-lived credential can turn it into a token.
+
+```yaml
+id: create-mcp-token
+type: Api
+payloadSchema:
+  type: object
+  additionalProperties: false
+  required: [name, expires_in_days]
+  properties:
+    name:
+      type: string
+      minLength: 1
+    expires_in_days:
+      type: [integer, 'null']
+      minimum: 1
+routine:
+  - id: create
+    type: CreateMcpToken
+    properties:
+      name:
+        _payload: name
+      expiresInDays:
+        _payload: expires_in_days
+  - ':return':
+      _step: create
+```
+
+`expiresInDays` is a positive whole number of days, or `null` for a token that never expires. The step sets no ceiling: an app that wants one checks the payload before the step. It returns `{ id, token, start, expiresAt }`. `token` appears here and nowhere else — only its SHA-256 and `start`, its first 12 characters, are stored — so show it once and tell the person to copy it.
+
+A token starts with `ldf_mcp_`, so secret scanners and people can recognise a leaked one.
+
+### Calling with a token
+
+The script sends the token as a bearer:
+
+```bash
+curl https://app.example.com/api/mcp \
+  -H "Authorization: Bearer ldf_mcp_..." \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+```
+
+A refused token gets a `401` whose challenge says why, with no `resource_metadata`, since a script cannot sign in:
+
+```
+WWW-Authenticate: Bearer error="invalid_token", error_description="This token has expired."
+```
+
+The three reasons are *This token was switched off or does not exist*, *This token has expired*, and *This token's member can no longer use it*. The last covers a member who left or was removed, a deleted or banned user, and a token for an organization other than a pinned app's own. A token works only for the member row it was made for, so a member who leaves and rejoins holds none of their old tokens.
+
+### Switching a token off
+
+`RevokeMcpToken` deletes one of the caller's own tokens by `id`. `RevokeOrgMcpToken` deletes any token in the organization, for owners and admins (`member: [update]`). Both return the token's `{ id, userId, memberId, name, start }` for an audit event, and the token is refused on its next call. `RemoveMember` and `DeleteUser` delete the member's tokens too.
+
+### Listing tokens
+
+Tokens live in the `user-mcp-tokens` collection, one document per token with `_id`, `organization_id`, `user_id`, `member_id`, `name`, `hash`, `start`, `created_at`, `expires_at` and `last_used_at` (written at most once an hour). Read them through a MongoDB connection, as the [disconnect example](#disconnecting-assistants-from-the-app) reads the OAuth collections, and always project out `hash`:
+
+```yaml
+id: get_my_mcp_tokens
+type: MongoDBFind
+connectionId: mcp-tokens
+properties:
+  query:
+    user_id:
+      _user: id
+    organization_id:
+      _user: organization_id
+  options:
+    projection:
+      hash: 0
+    sort:
+      created_at: -1
+```
+
+For an owner's or admin's list, filter on `organization_id` alone. Pass a document's `_id` as `id` to the revoke steps.
+
 ## Summary
 
 - The app is an OAuth 2.1 authorization server; enable it with `auth.oauthProvider`.
@@ -332,3 +421,4 @@ Because the `/api/mcp` route reads the live consent row on every call, every aff
 - **Never list an MCP endpoint id in `auth.api.public`** — one public tool suppresses the challenge for the whole route.
 - Consent is per `(client, user, organization)` and read live on every call, so `RevokeMcpGrant` and disconnecting take effect immediately.
 - `_user.auth_method` is `'mcp'` for assistant callers.
+- A script uses a member token (`CreateMcpToken`), served as its member and switched off with `RevokeMcpToken` or `RevokeOrgMcpToken`.

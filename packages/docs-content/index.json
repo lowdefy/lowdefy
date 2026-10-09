@@ -3811,7 +3811,7 @@
         "users/auth-steps.yaml",
         "version.yaml"
       ],
-      "hash": "b1cd665edd1493946408b20e7dc3d58a0c3b96dd7678f90e7ed09730bb1488ee"
+      "hash": "54eb7117ff20b0d498d9fae8b19a682abca5afeae5b83b8fc3cab25ad01ddfcd"
     },
     "user-authentication/mcp-oauth": {
       "files": [
@@ -3825,7 +3825,7 @@
         "users/mcp-oauth.yaml",
         "version.yaml"
       ],
-      "hash": "e591379f6c4f934ca05c6e5a8bddabc43fe69602a0964097287647e2dd225555"
+      "hash": "a45d1c215546816f8a0e01489217751f2118ba5618ce90173e5fb83bf0cc23e3"
     },
     "user-authentication/user-object": {
       "files": [

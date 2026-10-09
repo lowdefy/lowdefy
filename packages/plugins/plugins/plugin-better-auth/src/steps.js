@@ -16,6 +16,7 @@
 
 export { default as BanUser } from './steps/BanUser.js';
 export { default as CancelInvitation } from './steps/CancelInvitation.js';
+export { default as CreateMcpToken } from './steps/CreateMcpToken.js';
 export { default as CreateOrganization } from './steps/CreateOrganization.js';
 export { default as DeleteUser } from './steps/DeleteUser.js';
 export { default as InviteMember } from './steps/InviteMember.js';
@@ -25,6 +26,8 @@ export { default as ListUsers } from './steps/ListUsers.js';
 export { default as RemoveMember } from './steps/RemoveMember.js';
 export { default as ResetUserTwoFactor } from './steps/ResetUserTwoFactor.js';
 export { default as RevokeMcpGrant } from './steps/RevokeMcpGrant.js';
+export { default as RevokeMcpToken } from './steps/RevokeMcpToken.js';
+export { default as RevokeOrgMcpToken } from './steps/RevokeOrgMcpToken.js';
 export { default as RevokeUserPasskeys } from './steps/RevokeUserPasskeys.js';
 export { default as RevokeUserSessions } from './steps/RevokeUserSessions.js';
 export { default as UnbanUser } from './steps/UnbanUser.js';

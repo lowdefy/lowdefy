@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import callPluginEndpoint from './support/callPluginEndpoint.js';
+import hasMcpTokenModel from './support/hasMcpTokenModel.js';
 
 // The design routes member and invitation cleanup "via the org plugin's APIs",
 // but at better-auth 1.7.0 removeMember refuses once the user row is gone (it
@@ -64,6 +65,15 @@ async function DeleteUser({ acting, auth, properties }) {
     await adapter.delete({
       model: 'member',
       where: [{ field: 'id', value: member.id }],
+    });
+  }
+
+  // The MCP route already refuses a token whose member row is gone - this
+  // second write only keeps token lists tidy.
+  if (hasMcpTokenModel({ auth })) {
+    await adapter.deleteMany({
+      model: 'mcpToken',
+      where: [{ field: 'userId', value: userId }],
     });
   }
 

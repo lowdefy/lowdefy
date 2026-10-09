@@ -22,6 +22,7 @@ import * as steps from './steps.js';
 const authorities = {
   BanUser: { scope: 'org', permissions: { user: ['ban'] }, targetUser: 'userId' },
   CancelInvitation: { scope: 'org', permissions: { invitation: ['cancel'] } },
+  CreateMcpToken: { scope: 'caller' },
   CreateOrganization: { scope: 'system' },
   DeleteUser: { scope: 'org', permissions: { user: ['delete'] }, targetUser: 'userId' },
   InviteMember: { scope: 'org', permissions: { invitation: ['create'] } },
@@ -30,6 +31,8 @@ const authorities = {
   ListUsers: { scope: 'system' },
   RemoveMember: { scope: 'org', permissions: { member: ['delete'] } },
   RevokeMcpGrant: { scope: 'caller' },
+  RevokeMcpToken: { scope: 'caller' },
+  RevokeOrgMcpToken: { scope: 'org', permissions: { member: ['update'] } },
   ResetUserTwoFactor: {
     scope: 'org',
     permissions: { user: ['reset-two-factor'] },

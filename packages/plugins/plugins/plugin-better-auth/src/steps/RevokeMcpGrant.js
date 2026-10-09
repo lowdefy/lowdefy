@@ -45,6 +45,11 @@ async function RevokeMcpGrant({ acting, auth, mcp }) {
       'RevokeMcpGrant can only run for a caller authenticated over MCP - it revokes the grant behind the calling access token.'
     );
   }
+  if (!type.isNone(mcp.tokenId)) {
+    throw new Error(
+      'RevokeMcpGrant cannot run for a member token caller - a member token has no OAuth grant to revoke. Switch the token off with RevokeMcpToken.'
+    );
+  }
   const { clientId, organizationId } = mcp;
   const userId = acting.user.id;
   const { adapter } = await auth.$context;
