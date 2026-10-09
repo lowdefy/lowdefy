@@ -583,7 +583,7 @@ async function listedTool(name) {
 // ready at the fake dev server, as a hub reports what it read from the
 // instance record. With writeRecord false the record is not left for the shim
 // to read, as when the shim's read of it disagrees with the hub's.
-async function listenAsHub({ app, devServer, writeRecord = true }) {
+async function listenAsHub({ app, devServer, writeRecord = true, state = 'ready' }) {
   const { hubDirectory, socketPath } = getHubPaths();
   fs.mkdirSync(hubDirectory, { recursive: true });
   const methods = [];
@@ -606,7 +606,7 @@ async function listenAsHub({ app, devServer, writeRecord = true }) {
             }
             result = {
               configDirectory: app,
-              state: 'ready',
+              state,
               owner: 'hub',
               url: `http://127.0.0.1:${devServer.address().port}`,
               pid: process.pid,
@@ -978,6 +978,29 @@ test('lowdefy mcp sends the call to the server the hub reports on another versio
     expect(result.isError).toBeFalsy();
     expect(text(result)).toContain('lowdefy_build_status answered');
     expect(text(result)).toContain('lowdefy mcp is 7.1.0 but this dev server is 7.2.0');
+  } finally {
+    await client.close();
+    await shim.close();
+    await hub.close();
+    await stopFakeDevServer(devServer);
+  }
+});
+
+test('lowdefy mcp names both versions when the hub reports a dev server on another version still starting', async () => {
+  const devServer = await startFakeDevServer({
+    version: '7.2.0',
+    tools: [fakeTool('lowdefy_build_status')],
+  });
+  const app = makeApp('.');
+  const hub = await listenAsHub({ app, devServer, writeRecord: false, state: 'starting' });
+  try {
+    await connect({ cwd: root, cliVersion: '7.1.0' });
+
+    const result = await client.callTool({ name: 'lowdefy_build_status', arguments: {} });
+
+    expect(result.isError).toBe(true);
+    expect(text(result)).toContain('the dev server is still starting.');
+    expect(text(result)).toContain('Note: lowdefy mcp is 7.1.0 but this dev server is 7.2.0');
   } finally {
     await client.close();
     await shim.close();
