@@ -14,20 +14,14 @@
   limitations under the License.
 */
 
-// Fixed mapping from BetterAuth models to physical collection names - the
-// user-* convention. Not configurable: modules that read auth collections
-// natively are portable across apps only if these names are stable.
-const modelNames = {
-  user: 'users',
-  session: 'user-sessions',
-  account: 'user-accounts',
-  verification: 'user-verifications',
-  organization: 'user-organizations',
-  member: 'user-members',
-  invitation: 'user-invitations',
-  twoFactor: 'user-two-factors',
-  passkey: 'user-passkeys',
-  mcpToken: 'user-mcp-tokens',
-};
+import hasMcpTokenModel from './hasMcpTokenModel.js';
 
-export default modelNames;
+function assertMcpTokenModel({ auth, stepName }) {
+  if (!hasMcpTokenModel({ auth })) {
+    throw new Error(
+      `${stepName} needs the MCP authorization server - set "auth.oauthProvider". Without it the MCP route authenticates nobody, so member tokens reach nothing.`
+    );
+  }
+}
+
+export default assertMcpTokenModel;

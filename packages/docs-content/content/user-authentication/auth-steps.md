@@ -56,7 +56,7 @@ A `system`-scoped step (`CreateOrganization`, `ListUsers`) has no organization t
 
 ### `caller` — acts on the caller's own records
 
-A `caller`-scoped step (`RevokeMcpGrant`, `LeaveOrganization`) acts only on rows the caller owns, so it needs no organization authority — but it is meaningless without a caller, and the system has no rows of its own. It requires a real caller and refuses `system: true`.
+A `caller`-scoped step (`RevokeMcpGrant`, `CreateMcpToken`, `RevokeMcpToken`, `LeaveOrganization`) acts only on rows the caller owns, so it needs no organization authority — but it is meaningless without a caller, and the system has no rows of its own. It requires a real caller and refuses `system: true`.
 
 ### Leaving an organization from a routine
 
@@ -122,6 +122,7 @@ Scope, required permission, and target for every auth step. Permissions are chec
 | `UpdateMemberOrgRole` | org | `member: [update]` | — | Set the **org tier** (`owner`/`admin`/`member`). |
 | `UpdateMemberAttributes` | org | `member: [update]` | — | Set the membership's per-organization attributes. |
 | `UpdateOrganization` | org | `organization: [update]` | — | Update the organization row (name, slug, metadata). |
+| `RevokeOrgMcpToken` | org | `member: [update]` | — | Switch off any [member token](/mcp-oauth#tokens-for-scripts) in the organization (`id`). |
 | `UpdateUserProfile` | org | `user: [update]` | `userId` (self-exempt) | Update a member's display name/image (per-organization copy). Self-service save is exempt. |
 | `UpdateUserAttributes` | org | `user: [set-attributes]` | `userId` | Set global user attributes. |
 | `BanUser` | org | `user: [ban]` | `userId` | Ban a user. |
@@ -134,5 +135,7 @@ Scope, required permission, and target for every auth step. Permissions are chec
 | `ListUsers` | system | — | — | List every user in the deployment. |
 | `LeaveOrganization` | caller | — | — | End the caller's own membership of the named organization (`organizationId`, required). [Leaving from a routine](#leaving-an-organization-from-a-routine). |
 | `RevokeMcpGrant` | caller | — | — | Revoke the calling assistant's own [MCP grant](/mcp-oauth#switching-organization-from-the-assistant). |
+| `CreateMcpToken` | caller | — | — | Create a [member token](/mcp-oauth#tokens-for-scripts) for the caller in their active organization (`name`, `expiresInDays` or `null`). Session callers only. |
+| `RevokeMcpToken` | caller | — | — | Switch off one of the caller's own [member tokens](/mcp-oauth#tokens-for-scripts) (`id`). |
 
 The two role tiers a member carries — the `owner`/`admin`/`member` org tier and the app's own role strings — are explained in [Organizations & Multi-Tenancy](/organizations#the-owner-admin-member-tier-vs-app-roles). Recovering a user who lost their second factor is a worked routine on the [Two-Factor Authentication](/two-factor#recovering-a-user-who-has-lost-their-factor) page.

@@ -16,6 +16,8 @@
   limitations under the License.
 */
 
+import { createHash } from 'node:crypto';
+
 import { decodeJwt, jwtVerify } from 'jose';
 import { normalizeCaller, type } from '@lowdefy/helpers';
 
@@ -101,7 +103,11 @@ function passkeyConfigured({ auth }) {
 // The membership wall and the caller assembly, shared verbatim by the session
 // and MCP bearer branches so the two ways to become a member caller cannot
 // drift - one member read, one role source, one caller shape.
-async function resolveMemberCaller(context, { adapter, auth, organizationId, user }) {
+//
+// memberId is passed only by the member token branch: a token works for the
+// member row it was made for, so a member who left and rejoined - a new row -
+// holds no old tokens.
+async function resolveMemberCaller(context, { adapter, auth, memberId, organizationId, user }) {
   const member = await adapter.findOne({
     model: 'member',
     where: [
@@ -112,6 +118,12 @@ async function resolveMemberCaller(context, { adapter, auth, organizationId, use
   if (type.isNone(member)) {
     context.logger.debug(
       `User "${user.id}" has no member row in organization "${organizationId}" - resolved unauthenticated.`
+    );
+    return null;
+  }
+  if (!type.isUndefined(memberId) && member.id !== memberId) {
+    context.logger.debug(
+      `User "${user.id}" holds member row "${member.id}" in organization "${organizationId}", not the row "${memberId}" the token was made for - resolved unauthenticated.`
     );
     return null;
   }
@@ -226,10 +238,157 @@ function hasMcpAudienceBearer({ context, headers }) {
   return rejected;
 }
 
-// The MCP bearer branch. The route accepts exactly one credential kind: an
-// access token this app's authorization server minted for the MCP resource -
-// a session cookie or a strategy credential never authenticates here. The
-// token is verified in-process with jose against the AS's own signing keys.
+// A banned user is refused on every MCP bearer, OAuth or member token: a ban
+// deletes the user's sessions, but nothing else on the bearer path would read
+// it. A ban with an expiry in the past no longer applies.
+function isBanned({ user }) {
+  if (user.banned !== true) {
+    return false;
+  }
+  return type.isNone(user.banExpires) || new Date(user.banExpires) > new Date();
+}
+
+// The user read, ban check and membership wall both MCP bearers share once
+// each has settled which user and organization it acts for. Returns the
+// resolved caller, or null when the user is gone, banned or not a member.
+async function resolveBearerMember(context, { adapter, auth, memberId, organizationId, userId }) {
+  // The bearer carries only the user id - the caller's user fields are read live.
+  const user = await adapter.findOne({
+    model: 'user',
+    where: [{ field: 'id', value: userId }],
+  });
+  if (type.isNone(user)) {
+    context.logger.debug(
+      { event: 'auth_mcp_no_user', organizationId },
+      `MCP bearer rejected: user "${userId}" has no user row.`
+    );
+    return null;
+  }
+  if (isBanned({ user })) {
+    context.logger.debug(
+      { event: 'auth_mcp_user_banned', organizationId },
+      `MCP bearer rejected: user "${userId}" is banned.`
+    );
+    return null;
+  }
+  const member = await resolveMemberCaller(context, {
+    adapter,
+    auth,
+    memberId,
+    organizationId,
+    user,
+  });
+  if (type.isNone(member)) {
+    context.logger.debug(
+      { event: 'auth_mcp_no_membership', organizationId },
+      `MCP bearer rejected: user "${userId}" is not a member of organization "${organizationId}".`
+    );
+    return null;
+  }
+  return member;
+}
+
+// Member tokens are the long-lived bearer a script sends in place of an OAuth
+// access token. The prefix tells them apart from a JWT without parsing, and
+// lets secret scanners and people recognise a leaked one.
+const MEMBER_TOKEN_PREFIX = 'ldf_mcp_';
+
+// lastUsedAt is display data, not an audit trail: written at most once an hour
+// per token so a script calling several times a minute costs no write per call.
+const LAST_USED_INTERVAL_MS = 60 * 60 * 1000;
+
+function refuseMemberToken(context, { description }) {
+  context.user = null;
+  context.mcpAuth = { tokenStatus: 'invalid', memberToken: true, description };
+}
+
+const MEMBER_GONE = "This token's member can no longer use it.";
+
+async function touchMemberToken(context, { adapter, row }) {
+  const lastUsedAt = type.isNone(row.lastUsedAt) ? 0 : new Date(row.lastUsedAt).getTime();
+  if (Date.now() - lastUsedAt < LAST_USED_INTERVAL_MS) {
+    return;
+  }
+  try {
+    await adapter.update({
+      model: 'mcpToken',
+      where: [{ field: 'id', value: row.id }],
+      update: { lastUsedAt: new Date() },
+    });
+  } catch (error) {
+    context.logger.warn(
+      { event: 'auth_mcp_token_last_used_failed', err: error, tokenId: row.id },
+      `Could not record when member token "${row.id}" was last used: ${error.message}`
+    );
+  }
+}
+
+// The member token branch. The token is looked up by its SHA-256 - the token
+// itself is never stored - and acts as the member row it was made for, in the
+// organization it was made in. Every refusal carries a description the route
+// returns in the challenge, since a script cannot sign in and needs to know
+// why: switched off, expired, or its member can no longer use it.
+async function resolveMemberTokenCaller(context, { auth, token }) {
+  const { adapter } = await auth.$context;
+  const row = await adapter.findOne({
+    model: 'mcpToken',
+    where: [{ field: 'hash', value: createHash('sha256').update(token).digest('hex') }],
+  });
+  if (type.isNone(row)) {
+    context.logger.debug(
+      { event: 'auth_mcp_member_token_rejected' },
+      'MCP member token rejected: no token matches.'
+    );
+    refuseMemberToken(context, { description: 'This token was switched off or does not exist.' });
+    return;
+  }
+  if (!type.isNone(row.expiresAt) && new Date(row.expiresAt) <= new Date()) {
+    context.logger.debug(
+      { event: 'auth_mcp_member_token_rejected', tokenId: row.id },
+      `MCP member token "${row.id}" rejected: it expired at ${new Date(
+        row.expiresAt
+      ).toISOString()}.`
+    );
+    refuseMemberToken(context, { description: 'This token has expired.' });
+    return;
+  }
+  const registered = getRegisteredOrganization({ auth });
+  if (registered?.policy === 'pinned' && row.organizationId !== registered.slug) {
+    context.logger.debug(
+      { event: 'auth_mcp_member_token_rejected', tokenId: row.id },
+      `MCP member token "${row.id}" rejected: its organization "${row.organizationId}" is not this app's pinned organization "${registered.slug}".`
+    );
+    refuseMemberToken(context, { description: MEMBER_GONE });
+    return;
+  }
+  const member = await resolveBearerMember(context, {
+    adapter,
+    auth,
+    memberId: row.memberId,
+    organizationId: row.organizationId,
+    userId: row.userId,
+  });
+  if (type.isNone(member)) {
+    refuseMemberToken(context, { description: MEMBER_GONE });
+    return;
+  }
+  await touchMemberToken(context, { adapter, row });
+  context.mcpAuth = {
+    tokenStatus: 'valid',
+    tokenId: row.id,
+    organizationId: row.organizationId,
+    // Every MCP scope: the token acts as the member who made it, and the
+    // member's roles still gate every tool.
+    grantedScopes: MCP_SCOPES,
+  };
+  context.user = { ...member, auth_method: 'mcp' };
+}
+
+// The MCP bearer branch. The route accepts two credential kinds: an access
+// token this app's authorization server minted for the MCP resource, and a
+// member token (see resolveMemberTokenCaller) - a session cookie or a strategy
+// credential never authenticates here. The access token is verified in-process
+// with jose against the AS's own signing keys.
 // The organization the token acts in is its organization_id claim - the
 // consent referenceId the member chose at authorization, stamped by the AS
 // (buildOauthPostLogin) - never a path segment or a request parameter. The
@@ -244,6 +403,10 @@ async function resolveMcpCaller(context, { auth, headers }) {
     // The anonymous caller - public tools only, never a challenge here.
     context.user = null;
     context.mcpAuth = { tokenStatus: 'none', parseableJwt: true };
+    return;
+  }
+  if (token.startsWith(MEMBER_TOKEN_PREFIX)) {
+    await resolveMemberTokenCaller(context, { auth, token });
     return;
   }
   let payload;
@@ -336,40 +499,26 @@ async function resolveMcpCaller(context, { auth, headers }) {
     context.mcpAuth = validMcpAuth;
     return;
   }
-  // A token whose subject is no longer a member of its organization - removed,
-  // left, or the user deleted - resolves invalid, not to the anonymous caller:
-  // the route answers invalid with the sign-in challenge, so the client
-  // re-runs authorization and its organization choice instead of holding a
-  // token that works for nothing.
-  const invalidNoMembership = {
-    clientId,
+  const member = await resolveBearerMember(context, {
+    adapter,
+    auth,
     organizationId,
-    tokenStatus: 'invalid',
-    parseableJwt: true,
-    noMembership: true,
-  };
-  // The bearer carries only sub - the caller's user fields are read live.
-  const user = await adapter.findOne({
-    model: 'user',
-    where: [{ field: 'id', value: payload.sub }],
+    userId: payload.sub,
   });
-  if (type.isNone(user)) {
-    context.logger.debug(
-      { event: 'auth_mcp_no_membership', clientId, organizationId },
-      `MCP bearer token rejected: subject "${payload.sub}" has no user row.`
-    );
-    context.user = null;
-    context.mcpAuth = invalidNoMembership;
-    return;
-  }
-  const member = await resolveMemberCaller(context, { adapter, auth, organizationId, user });
   if (type.isNone(member)) {
-    context.logger.debug(
-      { event: 'auth_mcp_no_membership', clientId, organizationId },
-      `MCP bearer token rejected: user "${user.id}" is not a member of organization "${organizationId}".`
-    );
+    // A token whose subject is no longer a member of its organization -
+    // removed, left, banned, or the user deleted - resolves invalid, not to the
+    // anonymous caller: the route answers invalid with the sign-in challenge,
+    // so the client re-runs authorization and its organization choice instead
+    // of holding a token that works for nothing.
     context.user = null;
-    context.mcpAuth = invalidNoMembership;
+    context.mcpAuth = {
+      clientId,
+      organizationId,
+      tokenStatus: 'invalid',
+      parseableJwt: true,
+      noMembership: true,
+    };
     return;
   }
   context.mcpAuth = validMcpAuth;

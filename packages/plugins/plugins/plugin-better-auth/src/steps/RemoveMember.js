@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import callPluginEndpoint from './support/callPluginEndpoint.js';
+import hasMcpTokenModel from './support/hasMcpTokenModel.js';
 
 // organizationId is part of the authored property surface but the step never
 // resolves it: the floor resolves the target organization (defaulting to the
@@ -26,13 +27,23 @@ async function RemoveMember({ acting, auth, organizationId, properties }) {
   if (type.isNone(memberIdOrEmail)) {
     throw new Error('RemoveMember requires a "memberIdOrEmail" property.');
   }
-  return callPluginEndpoint({
+  const result = await callPluginEndpoint({
     acting,
     auth,
     body: { memberIdOrEmail, organizationId },
     endpointKey: 'removeMember',
     pluginId: 'organization',
   });
+  // The MCP route already refuses a token whose member row is gone - this
+  // second write only keeps token lists tidy.
+  if (hasMcpTokenModel({ auth })) {
+    const { adapter } = await auth.$context;
+    await adapter.deleteMany({
+      model: 'mcpToken',
+      where: [{ field: 'memberId', value: result.member.id }],
+    });
+  }
+  return result;
 }
 
 // Deleting a member row needs member:delete authority in the organization the
