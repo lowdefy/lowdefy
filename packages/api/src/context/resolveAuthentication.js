@@ -259,7 +259,7 @@ async function resolveBearerMember(context, { adapter, auth, memberId, organizat
   });
   if (type.isNone(user)) {
     context.logger.debug(
-      { event: 'auth_mcp_no_membership', organizationId },
+      { event: 'auth_mcp_no_user', organizationId },
       `MCP bearer rejected: user "${userId}" has no user row.`
     );
     return null;

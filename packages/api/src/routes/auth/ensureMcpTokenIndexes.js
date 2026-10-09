@@ -21,16 +21,19 @@ import { type } from '@lowdefy/helpers';
 // mint, which refuses to run while it fails, and a token index problem must
 // never block sign-ups. The MCP route's lookup by hash is correct without the
 // index, only slower, so a failure is logged and nothing waits on it.
+//
+// The caller fires this without awaiting it, so everything that can reject -
+// the auth context included - sits inside the try.
 async function ensureMcpTokenIndexes({ auth, logger }) {
-  const { adapter } = await auth.$context;
-  const ensureUniqueIndexes = adapter.options?.ensureUniqueIndexes;
-  if (!type.isFunction(ensureUniqueIndexes)) {
-    logger.warn(
-      `Auth database adapter "${adapter.id}" can not create indexes. Create a unique index on the member token hash, or each MCP call with a member token scans the token collection.`
-    );
-    return;
-  }
   try {
+    const { adapter } = await auth.$context;
+    const ensureUniqueIndexes = adapter.options?.ensureUniqueIndexes;
+    if (!type.isFunction(ensureUniqueIndexes)) {
+      logger.warn(
+        `Auth database adapter "${adapter.id}" can not create indexes. Create a unique index on the member token hash, or each MCP call with a member token scans the token collection.`
+      );
+      return;
+    }
     await ensureUniqueIndexes({ indexes: [{ model: 'mcpToken', fields: ['hash'] }] });
   } catch (error) {
     logger.error(

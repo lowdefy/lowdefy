@@ -51,3 +51,10 @@ test('ensureMcpTokenIndexes warns when the adapter can not create indexes', asyn
   await ensureMcpTokenIndexes({ auth: createAuth({}), logger });
   expect(logger.warn).toHaveBeenCalledTimes(1);
 });
+
+test('ensureMcpTokenIndexes logs a failed auth context and does not throw', async () => {
+  const logger = createLogger();
+  const auth = { $context: Promise.reject(new Error('adapter init failed')) };
+  await expect(ensureMcpTokenIndexes({ auth, logger })).resolves.toBeUndefined();
+  expect(logger.error).toHaveBeenCalledTimes(1);
+});
