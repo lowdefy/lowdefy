@@ -27,8 +27,13 @@ import normalizeMcpProtocolVersionHeader from './normalizeMcpProtocolVersionHead
 // resource parameter, and those can never verify here - the description names
 // the parameter, never app state. A revoked grant (the member switched
 // organization or disconnected the assistant) is told to reconnect, which
-// re-runs the authorization and its organization choice.
-function getChallengeHeader({ context, parseableJwt, revoked }) {
+// re-runs the authorization and its organization choice. A refused member
+// token gets its reason and no resource_metadata: a script cannot sign in, so
+// pointing it at the authorization server would only mislead it.
+function getChallengeHeader({ context, description, memberToken, parseableJwt, revoked }) {
+  if (memberToken === true) {
+    return `Bearer error="invalid_token", error_description="${description}"`;
+  }
   const metadataUri = getMcpResourceMetadataUri({ config: context.config });
   if (parseableJwt === false) {
     return `Bearer error="invalid_token", error_description="The access token is not a JWT. Connect with a client that sends the RFC 8707 resource parameter.", resource_metadata="${metadataUri}"`;
@@ -78,10 +83,16 @@ async function mcpHandler(c) {
     if (!isOriginAllowed({ c, context })) {
       return c.json({ error: 'Origin not allowed.' }, 403);
     }
-    const { tokenStatus, parseableJwt, revoked } = context.mcpAuth ?? {};
+    const { tokenStatus, description, memberToken, parseableJwt, revoked } = context.mcpAuth ?? {};
     if (tokenStatus === 'invalid') {
       return c.json({ error: 'Unauthorized.' }, 401, {
-        'WWW-Authenticate': getChallengeHeader({ context, parseableJwt, revoked }),
+        'WWW-Authenticate': getChallengeHeader({
+          context,
+          description,
+          memberToken,
+          parseableJwt,
+          revoked,
+        }),
       });
     }
     // Nothing to serve anonymously - challenge instead of an empty tool list.

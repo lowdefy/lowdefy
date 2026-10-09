@@ -27,6 +27,7 @@ const modelNames = {
   invitation: 'user-invitations',
   twoFactor: 'user-two-factors',
   passkey: 'user-passkeys',
+  mcpToken: 'user-mcp-tokens',
 };
 
 export default modelNames;

@@ -17,6 +17,7 @@
 import { betterAuth } from 'better-auth';
 
 import ensureAuthIndexes from './organizations/ensureAuthIndexes.js';
+import ensureMcpTokenIndexes from './ensureMcpTokenIndexes.js';
 import ensureOrganization from './organizations/ensureOrganization.js';
 import getBetterAuthConfig from './getBetterAuthConfig.js';
 import { getMcpResourceUri } from '../mcp/getMcpUri.js';
@@ -85,6 +86,12 @@ function getBetterAuth({
   // cool-down, so nothing is left to handle here.
   if (authJson.database) {
     ensureAuthIndexes({ auth: instance, logger }).catch(() => {});
+  }
+
+  // Member tokens exist only beside the MCP authorization server. Their index
+  // ensure logs its own failure and never throws.
+  if (authJson.database && authJson.oauthProvider) {
+    ensureMcpTokenIndexes({ auth: instance, logger });
   }
 
   // Ensure the pinned organization exists at startup - created if missing,

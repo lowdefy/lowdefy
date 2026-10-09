@@ -36,6 +36,7 @@ import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 import getCanonicalUrl from '../../context/getCanonicalUrl.js';
 import buildAdminPlugin from './buildAdminPlugin.js';
 import buildCaptchaPlugin from './buildCaptchaPlugin.js';
+import buildMcpTokenPlugin from './buildMcpTokenPlugin.js';
 import buildHooks from './hooks/buildHooks.js';
 import buildOrganizationPlugin from './organizations/buildOrganizationPlugin.js';
 import buildOauthPostLogin from './buildOauthPostLogin.js';
@@ -595,7 +596,11 @@ function getBetterAuthConfig({
       // HTTPS client_id URL serving its metadata document. Registers its
       // client discovery on the oauth-provider and advertises
       // client_id_metadata_document_supported in the AS metadata.
-      cimd({ fetchClientMetadataResource })
+      cimd({ fetchClientMetadataResource }),
+      // Member tokens - the long-lived bearer a script sends to /api/mcp in
+      // place of an OAuth access token. Only meaningful beside the AS: without
+      // it the route authenticates nobody.
+      buildMcpTokenPlugin()
     );
   }
 
