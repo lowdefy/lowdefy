@@ -597,6 +597,26 @@ test.each([
   }
 );
 
+// A server on a Lowdefy version that records its start time in a format this
+// hub reads as another process's: it serves, but its record never verifies.
+const UNVERIFIABLE_DEV_SERVER = FAKE_DEV_SERVER.replace(
+  "version: '6.0.0',",
+  "version: '7.0.0',\n  processStartTime: 1,"
+);
+
+test('hub status names the version of a running server whose record it cannot verify', async () => {
+  hub = createTestHub({ readyTimeoutMs: 1000 });
+  const app = makeApp({ script: UNVERIFIABLE_DEV_SERVER });
+
+  await hub.start({ configDirectory: app });
+
+  expect(await hub.status({ configDirectory: app })).toMatchObject({
+    state: 'starting',
+    version: '7.0.0',
+    managed: true,
+  });
+});
+
 function makeSlowApp() {
   return makeApp({ script: SLOW_DEV_SERVER });
 }

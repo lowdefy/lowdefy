@@ -214,7 +214,13 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
       env: process.env,
     });
     if (status?.state !== 'ready') {
-      throw new Error(describeNotReady({ label: app.label, status }));
+      const message = describeNotReady({ label: app.label, status });
+      // A server on another Lowdefy version can stay "starting" to this hub
+      // while it serves, so the versions are the first thing to check.
+      const note = type.isNone(status)
+        ? null
+        : versionNote({ app, instance: status, isError: true });
+      throw new Error(note === null ? message : `${message}\n\n${note}`);
     }
     return status;
   }

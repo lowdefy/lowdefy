@@ -53,6 +53,7 @@ import parseSince from './parseSince.js';
 import parsePsStartTime from './parsePsStartTime.js';
 import readDevInstance from './readDevInstance.js';
 import readDevInstanceAsync from './readDevInstanceAsync.js';
+import readDevInstanceRecord from './readDevInstanceRecord.js';
 import readProcessStartTime from './readProcessStartTime.js';
 import readServerRegistry from './readServerRegistry.js';
 import registerServer from './registerServer.js';
@@ -156,6 +157,7 @@ export {
   profileProduction,
   readDevInstance,
   readDevInstanceAsync,
+  readDevInstanceRecord,
   readProcessStartTime,
   readServerRegistry,
   registerServer,

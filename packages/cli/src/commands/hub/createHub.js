@@ -23,6 +23,7 @@ import {
   isProcessStartTime,
   readDevInstance,
   readDevInstanceAsync,
+  readDevInstanceRecord,
   readProcessStartTime,
 } from '@lowdefy/node-utils';
 
@@ -180,12 +181,17 @@ function createHub({
       };
     }
     if (!type.isUndefined(managed) && (await isManagedAlive(managed))) {
+      // A record this hub cannot verify (a Lowdefy version that records process
+      // start times another way) reads as starting for as long as the server
+      // runs. Its version lets the shim tell the agent the versions differ.
+      const unverified = readDevInstanceRecord({ configDirectory });
       return {
         configDirectory,
         owner: 'hub',
         state: 'starting',
         pid: managed.pid,
         startedAt: managed.startedAt,
+        version: unverified?.version,
         managed: true,
         command: managed.command,
       };
