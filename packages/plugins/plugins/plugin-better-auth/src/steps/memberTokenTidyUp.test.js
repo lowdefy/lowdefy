@@ -17,6 +17,7 @@
 import { jest } from '@jest/globals';
 
 import DeleteUser from './DeleteUser.js';
+import LeaveOrganization from './LeaveOrganization.js';
 import RemoveMember from './RemoveMember.js';
 import RevokeMcpGrant from './RevokeMcpGrant.js';
 import createMockAuth from '../../test/createMockAuth.js';
@@ -25,7 +26,7 @@ import createMockAuth from '../../test/createMockAuth.js';
 // route's memberId check is what ends a token, these writes keep lists tidy.
 
 function withTokenModel(auth) {
-  auth.options.plugins.push({ id: 'lowdefy-mcp-token' });
+  auth.options.plugins.push({ id: 'lowdefy-mcp-token', schema: { mcpToken: {} } });
   return auth;
 }
 
@@ -65,6 +66,25 @@ test('RemoveMember touches no token model in an app without one', async () => {
     properties: { memberIdOrEmail: 'member_1' },
   });
   expect(deleteMany).not.toHaveBeenCalled();
+});
+
+test('LeaveOrganization deletes the leaving member tokens', async () => {
+  const leaveOrganization = jest.fn().mockResolvedValue({ id: 'member_1', userId: 'user_1' });
+  const deleteMany = jest.fn(async () => 1);
+  const { auth } = createMockAuth({
+    adapter: { deleteMany },
+    organizationEndpoints: { leaveOrganization },
+  });
+  withTokenModel(auth);
+  await LeaveOrganization({
+    acting: { system: false, user: { id: 'user_1' } },
+    auth,
+    properties: { organizationId: 'org_1' },
+  });
+  expect(deleteMany).toHaveBeenCalledWith({
+    model: 'mcpToken',
+    where: [{ field: 'memberId', value: 'member_1' }],
+  });
 });
 
 test('DeleteUser deletes the user tokens in every organization', async () => {

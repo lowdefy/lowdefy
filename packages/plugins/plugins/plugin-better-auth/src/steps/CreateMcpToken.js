@@ -60,6 +60,17 @@ async function CreateMcpToken({ acting, auth, properties }) {
       )}.`
     );
   }
+  const createdAt = new Date();
+  const expiresAt = type.isNull(expiresInDays)
+    ? null
+    : new Date(createdAt.getTime() + expiresInDays * DAY_MS);
+  if (!type.isNull(expiresAt) && Number.isNaN(expiresAt.getTime())) {
+    throw new Error(
+      `CreateMcpToken "expiresInDays" is past the latest date that can be stored. Received ${JSON.stringify(
+        expiresInDays
+      )}. Use null for a token that never expires.`
+    );
+  }
   const userId = acting.user.id;
   const organizationId = acting.user.organization_id;
   if (type.isNone(organizationId)) {
@@ -80,10 +91,6 @@ async function CreateMcpToken({ acting, auth, properties }) {
   }
   const token = `ldf_mcp_${randomBytes(32).toString('base64url')}`;
   const start = token.slice(0, 12);
-  const createdAt = new Date();
-  const expiresAt = type.isNull(expiresInDays)
-    ? null
-    : new Date(createdAt.getTime() + expiresInDays * DAY_MS);
   const row = await adapter.create({
     model: 'mcpToken',
     data: {

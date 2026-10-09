@@ -35,7 +35,7 @@ function createAuth({ found = row, tokenModel = true } = {}) {
     findOne: jest.fn(async () => found),
     delete: jest.fn(async () => {}),
   };
-  const plugins = tokenModel ? [{ id: 'lowdefy-mcp-token' }] : [];
+  const plugins = tokenModel ? [{ id: 'lowdefy-mcp-token', schema: { mcpToken: {} } }] : [];
   return { auth: { $context: Promise.resolve({ adapter }), options: { plugins } }, adapter };
 }
 

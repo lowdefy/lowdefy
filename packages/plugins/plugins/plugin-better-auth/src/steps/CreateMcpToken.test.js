@@ -27,7 +27,9 @@ function createAuth({ member = { id: 'member_1' }, tokenModel = true } = {}) {
     findOne: jest.fn(async () => member),
     create: jest.fn(async ({ data }) => ({ id: 'token_1', ...data })),
   };
-  const plugins = tokenModel ? [{ id: 'oauth-provider' }, { id: 'lowdefy-mcp-token' }] : [];
+  const plugins = tokenModel
+    ? [{ id: 'oauth-provider' }, { id: 'lowdefy-mcp-token', schema: { mcpToken: {} } }]
+    : [];
   return { auth: { $context: Promise.resolve({ adapter }), options: { plugins } }, adapter };
 }
 
@@ -165,4 +167,16 @@ test.each([[0], [-5], [1.5], ['30']])('CreateMcpToken refuses expiresInDays %p',
       properties: { name: 'build-01', expiresInDays: days },
     })
   ).rejects.toThrow(`Received ${JSON.stringify(days)}.`);
+});
+
+test('CreateMcpToken refuses an expiresInDays past the latest storable date', async () => {
+  const { auth, adapter } = createAuth();
+  await expect(
+    CreateMcpToken({
+      acting: sessionCaller,
+      auth,
+      properties: { name: 'build-01', expiresInDays: 200000000 },
+    })
+  ).rejects.toThrow('is past the latest date that can be stored');
+  expect(adapter.create).not.toHaveBeenCalled();
 });

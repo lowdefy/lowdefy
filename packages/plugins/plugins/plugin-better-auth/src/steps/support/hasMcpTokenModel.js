@@ -14,12 +14,15 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 // The mcpToken model is declared only beside the MCP authorization server -
 // getBetterAuthConfig registers it with auth.oauthProvider. Without the AS the
 // MCP route authenticates nobody, so a token would reach nothing, and there is
-// no model for the adapter to read or write.
+// no model for the adapter to read or write. Keyed on the model name every
+// adapter call already uses, not on the declaring plugin's id.
 function hasMcpTokenModel({ auth }) {
-  return (auth.options?.plugins ?? []).some((plugin) => plugin?.id === 'lowdefy-mcp-token');
+  return (auth.options?.plugins ?? []).some((plugin) => !type.isNone(plugin?.schema?.mcpToken));
 }
 
 export default hasMcpTokenModel;

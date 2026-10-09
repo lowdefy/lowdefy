@@ -388,7 +388,7 @@ The three reasons are *This token was switched off or does not exist*, *This tok
 
 ### Switching a token off
 
-`RevokeMcpToken` deletes one of the caller's own tokens by `id`. `RevokeOrgMcpToken` deletes any token in the organization, for owners and admins (`member: [update]`). Both return the token's `{ id, userId, memberId, name, start }` for an audit event, and the token is refused on its next call. `RemoveMember` and `DeleteUser` delete the member's tokens too.
+`RevokeMcpToken` deletes one of the caller's own tokens by `id`. `RevokeOrgMcpToken` deletes any token in the organization, for owners and admins (`member: [update]`). Both return the token's `{ id, userId, memberId, name, start }` for an audit event, and the token is refused on its next call. `RemoveMember`, `LeaveOrganization` and `DeleteUser` delete the member's tokens too.
 
 ### Listing tokens
 

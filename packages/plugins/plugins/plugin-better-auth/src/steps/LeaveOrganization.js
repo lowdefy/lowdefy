@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import callPluginEndpoint from './support/callPluginEndpoint.js';
+import hasMcpTokenModel from './support/hasMcpTokenModel.js';
 
 // Ends the caller's own membership of the named organization through the
 // organization plugin's leave endpoint, so its checks run: the caller must hold
@@ -35,13 +36,23 @@ async function LeaveOrganization({ acting, auth, properties }) {
   if (type.isNone(organizationId)) {
     throw new Error('LeaveOrganization requires an "organizationId" property.');
   }
-  return callPluginEndpoint({
+  const member = await callPluginEndpoint({
     acting,
     auth,
     body: { organizationId },
     endpointKey: 'leaveOrganization',
     pluginId: 'organization',
   });
+  // The MCP route already refuses a token whose member row is gone - this
+  // second write only keeps token lists tidy.
+  if (hasMcpTokenModel({ auth })) {
+    const { adapter } = await auth.$context;
+    await adapter.deleteMany({
+      model: 'mcpToken',
+      where: [{ field: 'memberId', value: member.id }],
+    });
+  }
+  return member;
 }
 
 // Leaving touches only the caller's own member row, which every member may
