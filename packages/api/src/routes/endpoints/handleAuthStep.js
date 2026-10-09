@@ -16,6 +16,7 @@
 
 import { AuthorizationError, ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
+import { markCredential } from '@lowdefy/node-utils';
 
 import addStepResult from './addStepResult.js';
 import authorizeRole from '../auth/organizations/authorizeRole.js';
@@ -207,9 +208,12 @@ async function handleAuthStep(context, routineContext, { step }) {
   // mcp is the MCP route's token outcome (client, organization, scopes) for a
   // caller that arrived over /api/mcp, null on every other surface - the
   // caller-scoped grant steps read it to find the grant behind the call.
+  // markCredential lets a step that makes a credential (a member token) keep
+  // it out of every log line for the rest of the request.
   const result = await stepFn({
     acting,
     auth: context.auth,
+    markCredential,
     mcp: context.mcpAuth ?? null,
     organization: context.organization ?? null,
     organizationId,
