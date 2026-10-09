@@ -131,6 +131,7 @@ test('AuthStep step runs the step function and stores the result in steps', asyn
   expect(stepFn).toHaveBeenCalledWith({
     acting: { system: false, user: { id: 'user_1' } },
     auth: context.auth,
+    markCredential: expect.any(Function),
     mcp: null,
     organization: pinnedOrganization,
     organizationId: 'org_pinned',
@@ -148,6 +149,7 @@ test('AuthStep step does not pass a userAdminRole key to the step function', asy
   expect(Object.keys(stepFn.mock.calls[0][0]).sort()).toEqual([
     'acting',
     'auth',
+    'markCredential',
     'mcp',
     'organization',
     'organizationId',
