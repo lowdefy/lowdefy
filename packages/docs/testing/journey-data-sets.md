@@ -55,10 +55,31 @@ users:
 
 | Key        | Description                                                                                                                                                                                                                                                                                                                                        |
 | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `extends`  | Data sets to load first, by name, e.g. `[base]`. See [Extending a data set](#extending-a-data-set).                                                                                                                                                                                                                                                |
 | `fixtures` | Documents to load, keyed by connection id. Dates use the serializer's `{ "~d": "2026-01-02T00:00:00.000Z" }` marker and ObjectIds use `{ _oid: '<hex>' }`. A fixture with an `_id` replaces any earlier document with that `_id`; one without is inserted.                                                                                         |
 | `generate` | Documents made from a small spec with a fixed seed, keyed by connection id like `fixtures`. See [Generated documents](#generated-documents).                                                                                                                                                                                                       |
 | `users`    | The people journeys act as, keyed by name. Each is an inline user object, the shape a journey's inline `user:` takes. They are injected callers and carry no credentials: `password` is refused.                                                                                                                                                   |
 | `indexes`  | Indexes to create, keyed by connection id, in the shape MongoDB's `listIndexes()` returns: `key`, an optional `name`, and any other option (`unique`, `sparse`, `partialFilterExpression`, `collation`, `weights`, …), passed to `createIndexes` as given. `v` and `ns` are refused. Two connections that load one collection merge their indexes. |
+
+## Extending a data set
+
+A data set can load other data sets first with `extends`, so a set that is "the base tenant plus a second tenant" does not copy the base tenant's rows:
+
+```yaml
+# tests/data/two-orgs.yaml
+extends: [base]
+fixtures:
+  organizations:
+    - { _id: org_b, name: Beta Test Co }
+users:
+  outsider: { id: u_9, roles: [admin], organizationId: org_b }
+```
+
+- **Order.** Each extended set loads first, in the order `extends` lists them, then this file. An extended set can extend others; a set reached twice loads once, at its first place. A cycle is refused.
+- **Fixtures and indexes** add up per connection. The usual rules then apply across files: a later fixture with an `_id` replaces an earlier one, and a later index with the same `key` replaces an earlier one.
+- **Users** with the same name: the later file's user replaces the earlier one.
+- **`generate` stays per file.** Only the named data set's own `generate` runs. Its `ref` fields and `_id` checks see every fixture, including the extended sets' fixtures.
+- `lowdefy data list`, the `lowdefy journeys` commands and journey runs all read the merged data set.
 
 ## Generated documents
 
@@ -107,7 +128,7 @@ Each key under `generate` other than `seed` is a connection id, with `count` (ho
 
 Rules, checked before any browser opens:
 
-- **Plain YAML.** No `_ref` and no operators: a data set is test input, not app config.
+- **Plain YAML.** No `_ref` and no operators: a data set is test input, not app config. Share rows between data sets with `extends`.
 - **Connections.** Every connection id in `fixtures`, `generate` and `indexes` must be a `MongoDBCollection` connection whose `collection` is a literal string, and whose `databaseName` is a literal string or not set. Two connections that name one collection load into it together.
 - **One database.** Under a data set every redirected connection reads one database. Two connections that name the same collection in different databases (a different `databaseName` or `databaseUri` secret) would share one collection. When the data set names either of them, the journey is refused. When it names neither, the result carries a warning. A connection whose `collection` is computed per request cannot be checked.
 - **Indexes first.** Each collection's indexes are created before any document is loaded, so a fixture or generated document that breaks a unique index fails the load and names the document, the index and the duplicate key. A TTL index is loaded as a plain index, so old fixture dates are never deleted mid-run.
