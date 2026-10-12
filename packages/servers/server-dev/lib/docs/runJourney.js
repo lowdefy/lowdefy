@@ -35,6 +35,7 @@ import openDataSession from './dataSets/openDataSession.js';
 import openJourney from './openJourney.js';
 import readBuildArtifact from './readBuildArtifact.js';
 import readDevAuthMode from './readDevAuthMode.js';
+import readConnectionPlugins from './readConnectionPlugins.js';
 import readPagePath from './readPagePath.js';
 import { registerRunBuffer, releaseRunBuffer } from './runErrorBuffers.js';
 import resolveJourneyDataSet from './dataSets/resolveJourneyDataSet.js';
@@ -283,6 +284,7 @@ async function runJourneyInBrowser({
     if (!type.isUndefined(dataSet)) {
       journey.dataSetRails = createDataSetRails({
         buildDirectory: path.join(process.cwd(), 'build'),
+        connections: await readConnectionPlugins(),
       });
     }
     const { results, screenshots, failure } = await runJourneySteps({ journey, steps });

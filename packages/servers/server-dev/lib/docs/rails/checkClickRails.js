@@ -27,8 +27,9 @@ async function readClickedBlockId({ locator }) {
 }
 
 // On a data-set run (journey.dataSetRails), refuses a click that would reach a
-// connection the data set does not redirect or run an auth-engine action,
-// before it acts. Journeys without a data set click anything.
+// connection whose type does not declare a data-set mode the session can run
+// (redirect or walled), or run an auth-engine action, before it acts. Journeys
+// without a data set click anything.
 async function checkClickRails({ journey, page, locator }) {
   if (type.isUndefined(journey.dataSetRails)) {
     return;

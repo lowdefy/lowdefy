@@ -19,6 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
+import createReadConfigFile from '../../context/createReadConfigFile.js';
 
 // Finds the unwalled connections that hold a MongoDB URI to a walled
 // connection's database. A non-scopable connection (SMTP, object storage, a
@@ -38,6 +39,11 @@ import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 // that connection's requests; every other connection is served. The check reads config and
 // secrets only, so it runs once per config build artifact, independent of the
 // tenant preflight's database probes. A check that throws is not memoized.
+//
+// The verdict is a property of the build, never of a request, so it reads the build directory
+// through a fresh base reader, not context.readConfigFile. A data session or a mutant run wraps
+// that reader per request; read through it, whichever request evaluated first would decide the
+// verdict for every later one, journey or not.
 const reachByConfig = new WeakMap();
 
 function parseMongoUri(value) {
@@ -62,8 +68,8 @@ function collectUris(value, uris) {
   return uris;
 }
 
-async function evaluateConnectionProperties(context, { connectionId, evaluateOperators }) {
-  const connectionConfig = await context.readConfigFile(`connections/${connectionId}.json`);
+async function evaluateConnectionProperties({ connectionId, evaluateOperators, readConfigFile }) {
+  const connectionConfig = await readConfigFile(`connections/${connectionId}.json`);
   if (!connectionConfig) return null;
   try {
     return evaluateOperators({
@@ -78,13 +84,14 @@ async function evaluateConnectionProperties(context, { connectionId, evaluateOpe
   }
 }
 
-async function collectWalledDatabases(context, { evaluateOperators }) {
-  const tenantConnections = await context.readConfigFile('tenantConnections.json');
+async function collectWalledDatabases({ evaluateOperators, readConfigFile }) {
+  const tenantConnections = await readConfigFile('tenantConnections.json');
   const walled = new Map();
   for (const entry of tenantConnections ?? []) {
-    const properties = await evaluateConnectionProperties(context, {
+    const properties = await evaluateConnectionProperties({
       connectionId: entry.connectionId,
       evaluateOperators,
+      readConfigFile,
     });
     const parsed = parseMongoUri(properties?.databaseUri);
     if (!parsed) continue;
@@ -97,17 +104,19 @@ async function collectWalledDatabases(context, { evaluateOperators }) {
 
 async function findUnwalledReach(context) {
   const reach = new Map();
-  const unwalledConnections = await context.readConfigFile('unwalledConnections.json');
+  const readConfigFile = createReadConfigFile(context);
+  const unwalledConnections = await readConfigFile('unwalledConnections.json');
   if (!type.isArray(unwalledConnections) || unwalledConnections.length === 0) return reach;
   // Caller-less, like the tenant preflight: the verdict is memoized per
   // process, so it must not resolve against whichever caller arrives first.
   const evaluateOperators = createEvaluateOperators({ ...context, user: null });
-  const walled = await collectWalledDatabases(context, { evaluateOperators });
+  const walled = await collectWalledDatabases({ evaluateOperators, readConfigFile });
   if (walled.size === 0) return reach;
   for (const entry of unwalledConnections) {
-    const properties = await evaluateConnectionProperties(context, {
+    const properties = await evaluateConnectionProperties({
       connectionId: entry.connectionId,
       evaluateOperators,
+      readConfigFile,
     });
     const reached = collectUris(properties, []).find(({ hosts, database }) =>
       walled.has(`${hosts}/${database}`)

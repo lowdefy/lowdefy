@@ -202,8 +202,9 @@ A data set journey runs on the running dev server, beside your own browser tabs:
 **What is redirected:** every connection read under a data set journey goes through one check, for requests, endpoint routines, background and detached endpoint calls, websocket change stream sources, and module connections alike. The check reads the connection type's `meta.dataSet` declaration:
 
 - `redirect`: the run's database URI and name are merged over the connection's `properties`, whether or not the data set lists the connection. Core `MongoDBCollection` declares it.
-- `external`: the type reaches an outside service, not your app's data, and keeps its real target. Core `AxiosHttp`, `SendGridMail`, `SMTP`, `Stripe`, `AIGateway`, `Anthropic`, `OpenAI`, `Google`, `Mcp` and `TregConnection` declare it.
-- No declaration: the journey fails with `Connection "<id>" (type <type>) cannot run under data set "<name>": its type does not say how to redirect it.` Core `Knex`, `Redis`, `Elasticsearch`, `GoogleSheet`, `TestConnection`, `AwsS3Bucket`, `AzureBlobContainer` and `GoogleCloudStorageBucket` refuse, and so does any plugin type that has not declared.
+- `walled`: the type holds no database address and reaches MongoDB only through the walled client, by naming walled `MongoDBCollection` connections. Its connection passes unchanged, and each walled connection it names is read through the same check, so it takes the run's database as any `redirect` connection does. Plugin types declare it; no core type does.
+- `external`: the type reaches an outside service, not your app's data, and keeps its real target. Core `AxiosHttp`, `SendGridMail`, `SMTP`, `Stripe`, `AIGateway`, `Anthropic`, `OpenAI`, `Google`, `Mcp`, `TregConnection`, `AwsS3Bucket`, `AzureBlobContainer` and `GoogleCloudStorageBucket` declare it.
+- No declaration: the journey fails with `Connection "<id>" (type <type>) cannot run under data set "<name>": its type does not say how to redirect it.` Core `Knex`, `Redis`, `Elasticsearch`, `GoogleSheet` and `TestConnection` refuse, and so does any plugin type that has not declared.
 
 A `redirect` connection whose whole `properties` is an operator (a top-level key starting with `_`, such as `_if` or `_ref` evaluated at runtime) also refuses, because the check cannot see what it evaluates to. Operators inside the properties are fine: `databaseUri: { _secret: MONGODB_URI }` is replaced by the run's URI before any operator runs.
 
@@ -211,7 +212,7 @@ The browsers a data set journey opens stay on one host of the dev server. A requ
 
 **What is not redirected:**
 
-- Connection types declared `external` (HTTP APIs, email, payments, AI providers, MCP) keep their real targets.
+- Connection types declared `external` (HTTP APIs, email, payments, AI providers, MCP, object storage) keep their real targets.
 - Code that reads a database URI from anywhere but its connection's `properties`, such as a secret or environment variable read directly. A plugin type that declares `redirect` and does this breaks its declaration.
 - The auth engine. Data set journeys never reach it: their requests carry injected users, and `/api/auth/*` answers 404 for them.
 - Atlas Search (`$search`, `$vectorSearch`): pages whose requests use it fail on the in-memory database, which has no search engine.
@@ -228,13 +229,43 @@ export default {
 };
 ```
 
-Declare `redirect` only when the type takes its database from `properties.databaseUri` and `properties.databaseName` and nothing else. It must honour `databaseName`, as `MongoDBCollection` does, and key any client it keeps between requests by the URI it is given, never by connection id alone: a client cached by connection id keeps the database it first opened, which can be your real one. Declare `external` only for a type that reaches an outside service and holds none of your app's data. Leave it undeclared for any other data store: data set journeys that use it are refused rather than run against your real data.
+Declare `redirect` only when the type takes its database from `properties.databaseUri` and `properties.databaseName` and nothing else. It must honour `databaseName`, as `MongoDBCollection` does, and key any client it keeps between requests by the URI it is given, never by connection id alone: a client cached by connection id keeps the database it first opened, which can be your real one.
+
+Declare `walled` when the type holds no database URI and reaches MongoDB only through the walled client: its requests call the resolver's `walled(connectionId)` argument and pass what it returns to `getWalledCollection` from `@lowdefy/connection-mongodb/walled`. The walled connections it names follow the data set on their own, so its writes land in the run's database:
+
+```js
+// connection export
+export default {
+  schema,
+  meta: { tenant: false, dataSet: 'walled' },
+  requests: { AcceptMatch },
+};
+
+// request resolver
+import { getWalledCollection } from '@lowdefy/connection-mongodb/walled';
+
+async function AcceptMatch({ connection, request, walled }) {
+  const matches = getWalledCollection(await walled(connection.mongoConnectionId));
+  return matches.updateOne({ _id: request.matchId }, { $set: { accepted: true } });
+}
+```
+
+A type that also calls an outside service declares `external` instead, and clicks that reach it are refused. Declare `external` only for a type that reaches an outside service and holds none of your app's data. Leave it undeclared for any other data store: data set journeys that use it are refused rather than run against your real data.
+
+The dev server cannot check a `walled` or `external` declaration, since a connection's properties are evaluated later and may read secrets. It is your promise as the plugin author.
 
 ## Clicks a data set journey refuses
 
 A data set journey refuses two kinds of click, so that it never reaches a real service and never fails for a reason that is not the app's. The step fails before the click acts, naming the block and why:
 
-- A click on a block whose events reach a connection that is not a `MongoDBCollection`, through a `Request` action or a `CallAPI` into an endpoint routine. That connection is not redirected (an `external` HTTP API, email or payment service), so the click would reach it for real: `Block "send_invoice" reaches connection "billing_api" (AxiosHttp), which a journey data set does not redirect, so a data-set journey cannot click it.`
+- A click on a block whose events reach a connection, through a `Request` action or a `CallAPI` into an endpoint routine, whose type declares `meta.dataSet: 'external'`, declares nothing, or that has no connection artifact. Connections whose type declares `redirect` or `walled` (such as `MongoDBCollection`) run against the run's database and can be clicked. The message names the declaration, so you know what to change:
+
+  - `external`: the click would reach a real service. `Block "send_invoice" reaches connection "billing_api" (AxiosHttp, dataSet: external), which reaches a real service, so a data-set journey cannot click it.`
+  - No declaration: `Block "export_rows" reaches connection "warehouse" (Knex, no dataSet declaration), which a data set cannot redirect, so a data-set journey cannot click it.`
+  - No artifact: `Block "sync" reaches connection "legacy" (no connection artifact), which a data set cannot redirect, so a data-set journey cannot click it.`
+
+  The rails read the declaration only. A `redirect` connection whose `properties` the check above refuses passes the rails, and the step fails with that check's message when the request runs.
+
 - A click on a block whose events run an action that calls the auth engine (`Logout`, `Login`, `ChangePassword` and the other auth actions). Data set users are injected and have no auth session, so these fail every time.
 
 The block is the one the click lands on: the target's block, or for a `text` or `containing` target, the nearest block around the element it matched. Request and endpoint ids computed by operators are not followed. Journeys without `data:` click anything. Cover such controls with a journey that runs off data sets, against a test database.

@@ -30,11 +30,17 @@ function hasLiteralKeys(properties) {
 
 // The one gate for connections under a data session, for this request only. It fails closed: a
 // connection is either verifiably pointed at the session's database or the read throws. A type
-// declares how it behaves through meta.dataSet on its plugin: 'redirect' takes its database from
-// databaseUri and databaseName, so the session's are merged over its properties whether or not the
-// data set lists it; 'external' reaches an outside service and keeps its target; anything else,
-// including no declaration, refuses. Returns a new artifact and never mutates the one it read, so it
-// stays correct if reads are ever cached.
+// declares how it behaves through meta.dataSet on its plugin, in one of three modes:
+// - 'redirect' takes its database from databaseUri and databaseName, so the session's are merged
+//   over its properties whether or not the data set lists it.
+// - 'walled' holds no database address and reaches MongoDB only through the walled client (the
+//   resolver's walled(connectionId) argument), so it passes unchanged: the walled connections it
+//   names are read through this same gate and take the session database as redirect connections.
+// - 'external' reaches an outside service and keeps its target.
+// Anything else, including no declaration, refuses. The gate cannot verify a walled or external
+// declaration, since properties are evaluated later and may read secrets: it is the plugin
+// author's promise. Returns a new artifact and never mutates the one it read, so it stays correct if
+// reads are ever cached.
 function applyDataSetRedirect({ context, session, connections }) {
   const readConfigFile = context.readConfigFile;
   context.readConfigFile = async function readConfigFileForDataSet(filePath) {
@@ -47,7 +53,7 @@ function applyDataSetRedirect({ context, session, connections }) {
       throw new Error(`Data session ${session.id} has ended.`);
     }
     const mode = connections[artifact.type]?.meta?.dataSet;
-    if (mode === 'external') {
+    if (mode === 'external' || mode === 'walled') {
       return artifact;
     }
     if (mode !== 'redirect') {
