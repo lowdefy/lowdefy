@@ -262,6 +262,9 @@ test('agentSetup replaces a lowdefy entry that runs the CLI from node_modules', 
   expect(context.logger.info).toHaveBeenCalledWith(
     "Updated the 'lowdefy' MCP server in '.mcp.json'."
   );
+  expect(context.logger.info).toHaveBeenCalledWith(
+    "Its command changed from 'node node_modules/lowdefy/dist/index.js mcp' to 'npx --prefer-offline --yes lowdefy@7.1.0 mcp': the pinned npx command also starts in a worktree that is not installed yet."
+  );
 });
 
 test('agentSetup renames a lowdefy-docs entry that already runs the pinned command', async () => {
@@ -288,6 +291,48 @@ test('agentSetup swaps a lowdefy-docs approval in .claude/settings.json for lowd
 
   const settings = JSON.parse(read(path.join('.claude', 'settings.json')));
   expect(settings.enabledMcpjsonServers).toEqual(['lowdefy', 'other-server']);
+});
+
+test('agentSetup renames a lowdefy-docs entry, keeps other servers and carries tool approvals over', async () => {
+  installCli(configDirectory);
+  const remote = { type: 'http', url: 'https://staging.example.com/api/mcp' };
+  fs.writeFileSync(
+    path.join(configDirectory, '.mcp.json'),
+    JSON.stringify({
+      mcpServers: {
+        'lowdefy-docs': {
+          type: 'stdio',
+          command: 'node',
+          args: ['node_modules/lowdefy/dist/index.js', 'mcp'],
+        },
+        remote,
+      },
+    })
+  );
+  const claudeDir = path.join(configDirectory, '.claude');
+  fs.mkdirSync(claudeDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(claudeDir, 'settings.local.json'),
+    JSON.stringify({
+      permissions: {
+        allow: ['mcp__lowdefy-docs__lowdefy_get_schema', 'mcp__remote__search', 'Bash(ls:*)'],
+      },
+      enabledMcpjsonServers: ['lowdefy-docs', 'remote'],
+    })
+  );
+
+  await agentSetup({ context });
+
+  expect(JSON.parse(read('.mcp.json')).mcpServers).toEqual({ remote, lowdefy: STDIO_ENTRY });
+  expect(JSON.parse(read(path.join('.claude', 'settings.local.json')))).toEqual({
+    permissions: {
+      allow: ['mcp__lowdefy__lowdefy_get_schema', 'mcp__remote__search', 'Bash(ls:*)'],
+    },
+    enabledMcpjsonServers: ['lowdefy', 'remote'],
+  });
+  expect(context.logger.info).toHaveBeenCalledWith(
+    "Its command changed from 'node node_modules/lowdefy/dist/index.js mcp' to 'npx --prefer-offline --yes lowdefy@7.1.0 mcp': the pinned npx command also starts in a worktree that is not installed yet."
+  );
 });
 
 test('agentSetup renames the MCP server in a skill and AGENTS.md section it wrote, keeping edits', async () => {
