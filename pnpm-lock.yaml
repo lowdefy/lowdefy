@@ -136,6 +136,9 @@ importers:
       '@lowdefy/connection-mongodb':
         specifier: 6.0.0
         version: link:../plugins/connections/connection-mongodb
+      '@lowdefy/plugin-better-auth':
+        specifier: 6.0.0
+        version: link:../plugins/plugins/plugin-better-auth
       '@opentelemetry/api':
         specifier: 1.9.1
         version: 1.9.1

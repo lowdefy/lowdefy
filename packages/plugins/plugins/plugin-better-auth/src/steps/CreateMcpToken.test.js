@@ -35,16 +35,19 @@ function createAuth({ member = { id: 'member_1' }, tokenModel = true } = {}) {
 
 test('CreateMcpToken writes a hashed token for the caller member and returns the token once', async () => {
   const { auth, adapter } = createAuth();
+  const markCredential = jest.fn();
   const before = Date.now();
   const result = await CreateMcpToken({
     acting: sessionCaller,
     auth,
+    markCredential,
     properties: { name: ' nightly worker ', expiresInDays: 90 },
   });
 
   expect(result.token).toMatch(/^ldf_mcp_[A-Za-z0-9_-]{43}$/);
   expect(result.start).toBe(result.token.slice(0, 12));
   expect(result.id).toBe('token_1');
+  expect(markCredential).toHaveBeenCalledWith(result.token);
   const expiresInMs = result.expiresAt.getTime() - before;
   expect(expiresInMs).toBeGreaterThanOrEqual(90 * 24 * 60 * 60 * 1000);
   expect(expiresInMs).toBeLessThan(90 * 24 * 60 * 60 * 1000 + 5000);
@@ -77,6 +80,7 @@ test('CreateMcpToken with expiresInDays null makes a token that never expires', 
   const result = await CreateMcpToken({
     acting: sessionCaller,
     auth,
+    markCredential: jest.fn(),
     properties: { name: 'build-01', expiresInDays: null },
   });
   expect(result.expiresAt).toBe(null);
@@ -85,9 +89,10 @@ test('CreateMcpToken with expiresInDays null makes a token that never expires', 
 
 test('CreateMcpToken makes a different token each time', async () => {
   const { auth } = createAuth();
+  const markCredential = jest.fn();
   const properties = { name: 'build-01', expiresInDays: null };
-  const first = await CreateMcpToken({ acting: sessionCaller, auth, properties });
-  const second = await CreateMcpToken({ acting: sessionCaller, auth, properties });
+  const first = await CreateMcpToken({ acting: sessionCaller, auth, markCredential, properties });
+  const second = await CreateMcpToken({ acting: sessionCaller, auth, markCredential, properties });
   expect(first.token).not.toBe(second.token);
 });
 

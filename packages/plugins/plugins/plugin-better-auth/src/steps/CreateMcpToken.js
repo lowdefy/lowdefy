@@ -25,7 +25,8 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 // Creates a member token for the caller in their active organization - the
 // long-lived bearer a script sends to /api/mcp to be served as that member.
 // The token is returned here and nowhere else: only its SHA-256 and its first
-// 12 characters are stored.
+// 12 characters are stored. It is marked as a credential, so no log line of
+// the request prints it.
 //
 // Only a person signed in with a session creates one. Every other caller
 // carries auth_method - an MCP caller (OAuth grant or member token) "mcp", an
@@ -37,7 +38,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 //
 // The token records the member row it was made for: the MCP route accepts it
 // only while that row stands, so leaving, removal or deletion ends it.
-async function CreateMcpToken({ acting, auth, properties }) {
+async function CreateMcpToken({ acting, auth, markCredential, properties }) {
   if (!type.isNone(acting.user.auth_method)) {
     throw new Error(
       'CreateMcpToken only runs for a person signed in with a session - member tokens are created from a signed-in session, never by an agent, a script or another token.'
@@ -90,6 +91,7 @@ async function CreateMcpToken({ acting, auth, properties }) {
     );
   }
   const token = `ldf_mcp_${randomBytes(32).toString('base64url')}`;
+  markCredential(token);
   const start = token.slice(0, 12);
   const row = await adapter.create({
     model: 'mcpToken',

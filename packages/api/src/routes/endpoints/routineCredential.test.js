@@ -20,6 +20,7 @@
 import { jest } from '@jest/globals';
 import { runInCredentialScope, scrubCredentials } from '@lowdefy/node-utils';
 import { operatorsServer } from '@lowdefy/operators-js';
+import { CreateMcpToken } from '@lowdefy/plugin-better-auth/steps';
 
 import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
@@ -51,6 +52,20 @@ const endpointConfigs = {
         },
       },
     },
+  },
+  create_token: {
+    endpointId: 'create_token',
+    type: 'Api',
+    auth: { public: true },
+    routine: [
+      {
+        id: 'auth:create_token:make',
+        type: 'CreateMcpToken',
+        stepId: 'make',
+        properties: { name: 'nightly worker', expiresInDays: null },
+      },
+      { ':return': { _step: 'make' } },
+    ],
   },
   use_key: {
     endpointId: 'use_key',
@@ -249,4 +264,63 @@ test('A credential the dispatcher marked is redacted in a detached target that r
   const setState = target.lines.find((line) => line.includes('debug_control_set_state'));
   expect(JSON.parse(setState).evaluated.key).toEqual('[REDACTED]');
   target.lines.forEach((line) => expect(line).not.toContain(newKey));
+});
+
+test('A member token CreateMcpToken makes is redacted in every log line and returned whole', async () => {
+  const adapter = {
+    findOne: jest.fn(async () => ({ id: 'member_1' })),
+    create: jest.fn(async ({ data }) => ({ id: 'token_1', ...data })),
+  };
+  const { lines, res } = await runInCredentialScope(() => {
+    const lines = [];
+    const context = createContext(lines);
+    context.auth = {
+      $context: Promise.resolve({ adapter }),
+      options: {
+        plugins: [{ id: 'oauth-provider' }, { id: 'lowdefy-mcp-token', schema: { mcpToken: {} } }],
+      },
+    };
+    context.steps = { CreateMcpToken };
+    context.user = { id: 'user_1', organization_id: 'org_1' };
+    return runRoutine(
+      context,
+      {
+        arrayIndices: [],
+        endpointDepth: 0,
+        error: null,
+        items: {},
+        payload: {},
+        state: {},
+        steps: {},
+      },
+      {
+        routine: [
+          {
+            id: 'endpoint:create_app:call',
+            type: 'CallApi',
+            stepId: 'call',
+            properties: { endpointId: 'create_token' },
+          },
+          {
+            id: 'request:create_app:save',
+            type: 'Echo',
+            stepId: 'save',
+            connectionId: 'test',
+            properties: { token: { _step: 'call.token' } },
+          },
+          { ':return': { _step: 'call' } },
+        ],
+      }
+    ).then((res) => ({ lines, res }));
+  });
+  const token = res.response.token;
+  expect(token).toMatch(/^ldf_mcp_/);
+  const events = lines.map((line) => JSON.parse(line).event);
+  expect(events).toEqual(
+    expect.arrayContaining(['debug_end_endpoint_call', 'debug_end_request', 'debug_control_return'])
+  );
+  lines.forEach((line) => expect(line).not.toContain(token));
+  const endCall = JSON.parse(lines.find((line) => line.includes('debug_end_endpoint_call')));
+  expect(endCall.response.token).toEqual('[REDACTED]');
+  expect(endCall.response.start).toEqual(token.slice(0, 12));
 });
