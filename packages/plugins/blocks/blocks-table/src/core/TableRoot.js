@@ -169,7 +169,13 @@ function TableRoot({
   api.dataRows = dataRows;
   const fragments = useFeatureFragments({ api, config, data, state, table });
   const { leadingColumns, regions, trailingColumns } = fragments;
-  const summary = useSummary({ api, config, state, table });
+  const summary = useSummary({
+    api,
+    config,
+    state,
+    summaryRow: properties.summaryRow,
+    table,
+  });
 
   // D17: which loading state the table is in, and the skeleton's timing.
   const viewPending = isPending || fragments.pending;

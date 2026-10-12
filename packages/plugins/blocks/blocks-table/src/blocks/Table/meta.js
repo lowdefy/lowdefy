@@ -1074,7 +1074,13 @@ export default {
         type: 'boolean',
         default: true,
         description:
-          'Show the summary footer when any aggregate is in effect: a column `aggregate`, or one the view sets in `view.aggregates`. `false` hides it.',
+          'Show the summary footer when `summaryRow` is set or any aggregate is in effect: a column `aggregate`, or one the view sets in `view.aggregates`. `false` hides it.',
+      },
+      summaryRow: {
+        type: ['object', 'null'],
+        description:
+          'A row the app computed, such as a report total from the request, shown in the summary footer in place of the aggregates. Each column renders it like a body row, with its `type`, `cell` and `rules`; action columns stay empty. It is not a data row: sorting, filtering, search, selection and the record count leave it out, and `exportCsv` adds it as the last line (in server mode `onExport` produces the file). Group headers keep their aggregates.',
+        docs: { displayType: 'yaml' },
       },
     },
   },

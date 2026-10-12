@@ -43,6 +43,7 @@ const TABLE_ONLY_KEYS = {
     addRow: 'adding rows',
     addRowText: 'adding rows',
     importCsv: 'CSV import',
+    summaryRow: 'a summary row from data',
     inputFieldPrefix: 'adding columns',
   },
   columns: {

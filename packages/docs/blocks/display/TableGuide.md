@@ -52,7 +52,7 @@ A `Table` with only `columns` and `data` already does what users expect of a tab
 | Copy with Cmd/Ctrl+C                                                              | on                                                                        | always on, also with `keyboard: false`                                                        |
 | Text wrap                                                                         | off: text stays on one line                                               | `wrap` or `ellipsis` on a column, `view.wrap`, or the toolbar Wrap toggle (`toolbar.density`) |
 | Hover highlight, empty state, loading states                                      | on                                                                        | `emptyText`, the `empty` slot, `loading`, the block's `skeleton`                              |
-| Summary footer                                                                    | on when a column has an `aggregate` (or the view has `aggregates`)        | `summary: false`                                                                              |
+| Summary footer                                                                    | on when a column has an `aggregate` (or the view has `aggregates`)        | `summary: false`; `summaryRow` shows a row the app computed instead                           |
 | Height                                                                            | grows with its rows up to `maxHeight` (600px), then scrolls               | `height` for a fixed height                                                                   |
 | Toolbar                                                                           | off                                                                       | `toolbar: true` (every item) or `toolbar: { search: true, ... }`                              |
 | Row selection                                                                     | off                                                                       | `rowSelection: { type: checkbox }`                                                            |
@@ -690,6 +690,31 @@ Aggregates: `sum`, `avg`, `min`, `max`, `count`, `countDistinct`, `countEmpty`, 
 
 Server mode groups the same way through `MongoDBTableQuery`: the first request returns the groups with their counts and aggregates, and a group's rows load when it is opened. Server groups start collapsed, open one at a time, and have no group checkbox.
 
+#### A total row from the request
+
+Some totals can not be computed from the rows: a response rate's total is the total responses over the total invited, not the sum or average of the rows' rates. Compute the row in the request and pass it as `summaryRow`:
+
+```yaml
+- id: outcomes
+  type: Table
+  properties:
+    data:
+      _request: outcomes.0.rows
+    summaryRow:
+      _request: outcomes.0.total
+    columns:
+      - key: region
+      - key: invited
+        type: number
+      - key: rate
+        type: percent
+```
+
+- The footer shows the row in place of the aggregates. Each column renders it as it renders a body row, with its `type`, `cell`, `rules` and tooltip; action columns (`buttons`, `menu`) stay empty. Group headers keep their aggregates.
+- It is not a data row. Sorting, filtering, search, selection and the record count leave it out, and it stays in view under `height` like the aggregate footer.
+- `exportCsv` adds it as the last line. In server mode the app writes the file in `onExport`, so the app adds it there.
+- `summary: false` hides it, as it hides the aggregates.
+
 ### Tree
 
 Rows nested under a parent, with a chevron in the first column.
@@ -1296,4 +1321,4 @@ fields:
 ## Moving from TableLight or AgGrid
 
 - **From TableLight:** change `type: TableLight` to `type: Table`. Every property keeps its meaning; set `pagination: true` if you relied on TableLight's automatic pager.
-- **From AgGrid:** move column config by hand. `field` stays `field`, `headerName` becomes `title`, `cell.type` becomes the column's `type` and the rest of `cell` stays. Row events carry `{ row, rowKey, index }`, and button and menu events the same payloads as AgGrid's button and menu cells. `AgGridInput*` holds the rows as its value; `TableInput` holds the changes, saved with `MongoDBTableChanges`.
+- **From AgGrid:** move column config by hand. `field` stays `field`, `headerName` becomes `title`, `cell.type` becomes the column's `type` and the rest of `cell` stays. Row events carry `{ row, rowKey, index }`, and button and menu events the same payloads as AgGrid's button and menu cells. A total row in `pinnedBottomRowData` becomes `summaryRow`. `AgGridInput*` holds the rows as its value; `TableInput` holds the changes, saved with `MongoDBTableChanges`.

@@ -447,6 +447,31 @@
             amount: 9000
             probability: 0.4
 
+- title: Total row from data
+  blocks:
+    - id: response_totals
+      type: Table
+      properties:
+        columns:
+          - key: region
+          - key: invited
+            type: number
+          - key: completed
+            type: number
+          - key: rate
+            title: Response rate
+            type: percent
+            cell:
+              decimals: 1
+        data:
+          - { _id: r1, region: North, invited: 400, completed: 120, rate: 0.3 }
+          - { _id: r2, region: South, invited: 100, completed: 60, rate: 0.6 }
+        summaryRow:
+          region: Total
+          invited: 500
+          completed: 180
+          rate: 0.36
+
 - title: Tree
   blocks:
     - id: accounts_tree

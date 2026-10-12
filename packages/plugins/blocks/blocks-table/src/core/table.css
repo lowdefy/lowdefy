@@ -572,6 +572,12 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* A summary row from data has the weight of the aggregate values; a column rule's style, set on
+     the cell content, still wins. */
+  .lf-table-summary-row[data-summary='row'] .lf-table-gridcell {
+    font-weight: 600;
+  }
+
   /* Toolbar and bulk bar slots: the blocks sit side by side, like the table's own buttons. A
      slot is a Lowdefy area (an .lf-row) whose blocks default to span 24 (.lf-col), which would
      stack them; here span blocks take their content width instead, since a toolbar row has no
