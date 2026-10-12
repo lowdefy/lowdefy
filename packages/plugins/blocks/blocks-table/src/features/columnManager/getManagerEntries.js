@@ -14,17 +14,22 @@
   limitations under the License.
 */
 
-// The column manager's lists from table state: visible columns in the order the table shows them
-// (start-pinned, centre, end-pinned), then hidden columns in view order.
-function getManagerEntries({ state }) {
+// The column manager's lists from table state: displayed columns in the order the table shows
+// them (start-pinned, centre, end-pinned), then the columns the view hides, then the columns a
+// column group's state hides (`unavailable`: the view shows them, a collapsed or expanded group
+// does not), each in view order. `displayedVisibility` is the view's visibility with the
+// column groups applied (core/getDisplayedVisibility.js).
+function getManagerEntries({ state, displayedVisibility }) {
   const { columnOrder, columnPinning, columnVisibility } = state;
-  const isVisible = (key) => columnVisibility[key] !== false;
+  const isDisplayed = (key) => displayedVisibility[key] !== false;
+  const isHidden = (key) => columnVisibility[key] === false;
   const pinned = new Set([...columnPinning.start, ...columnPinning.end]);
   return {
-    start: columnPinning.start.filter(isVisible),
-    center: columnOrder.filter((key) => isVisible(key) && !pinned.has(key)),
-    end: columnPinning.end.filter(isVisible),
-    hidden: columnOrder.filter((key) => !isVisible(key)),
+    start: columnPinning.start.filter(isDisplayed),
+    center: columnOrder.filter((key) => isDisplayed(key) && !pinned.has(key)),
+    end: columnPinning.end.filter(isDisplayed),
+    hidden: columnOrder.filter(isHidden),
+    unavailable: columnOrder.filter((key) => !isDisplayed(key) && !isHidden(key)),
   };
 }
 

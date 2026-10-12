@@ -103,6 +103,7 @@ function Grid({
       state.columnPinning,
       state.columnSizing,
       state.columnVisibility,
+      state.collapsedColumnGroups,
       viewport.width,
     ]
   );

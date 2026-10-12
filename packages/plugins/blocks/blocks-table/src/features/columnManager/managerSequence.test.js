@@ -31,27 +31,44 @@ function ids(sequence) {
 }
 
 test('getManagerEntries lists visible columns in table order, then hidden ones', () => {
-  expect(getManagerEntries({ state })).toEqual({
+  expect(getManagerEntries({ state, displayedVisibility: state.columnVisibility })).toEqual({
     start: ['b'],
     center: ['a', 'c'],
     end: ['d'],
     hidden: ['h'],
+    unavailable: [],
+  });
+});
+
+test('getManagerEntries lists columns a column group hides as unavailable, apart from hidden ones', () => {
+  expect(
+    getManagerEntries({
+      state,
+      displayedVisibility: { ...state.columnVisibility, a: false, h: false },
+    })
+  ).toEqual({
+    start: ['b'],
+    center: ['c'],
+    end: ['d'],
+    hidden: ['h'],
+    unavailable: ['a'],
   });
 });
 
 test('buildManagerSequence places the pinned boundaries between the regions', () => {
-  expect(ids(buildManagerSequence(getManagerEntries({ state })))).toEqual([
-    'b',
-    '|start',
-    'a',
-    'c',
-    '|end',
-    'd',
-  ]);
+  expect(
+    ids(
+      buildManagerSequence(
+        getManagerEntries({ state, displayedVisibility: state.columnVisibility })
+      )
+    )
+  ).toEqual(['b', '|start', 'a', 'c', '|end', 'd']);
 });
 
 test('moveSequenceEntry moves an entry to an insertion position', () => {
-  const sequence = buildManagerSequence(getManagerEntries({ state }));
+  const sequence = buildManagerSequence(
+    getManagerEntries({ state, displayedVisibility: state.columnVisibility })
+  );
   expect(ids(moveSequenceEntry({ sequence, from: 3, to: 0 }))).toEqual([
     'c',
     'b',
@@ -72,7 +89,9 @@ test('moveSequenceEntry moves an entry to an insertion position', () => {
 });
 
 test('sequenceToRegions reads pinning from the boundaries, even when they cross', () => {
-  const sequence = buildManagerSequence(getManagerEntries({ state }));
+  const sequence = buildManagerSequence(
+    getManagerEntries({ state, displayedVisibility: state.columnVisibility })
+  );
   expect(sequenceToRegions(sequence)).toEqual({ start: ['b'], center: ['a', 'c'], end: ['d'] });
   const dragged = moveSequenceEntry({ sequence, from: 1, to: 4 });
   expect(sequenceToRegions(dragged)).toEqual({ start: ['b', 'a', 'c'], center: [], end: ['d'] });
@@ -84,10 +103,23 @@ test('sequenceToRegions reads pinning from the boundaries, even when they cross'
 test('applyManagerRegions reorders visible columns around hidden ones and keeps hidden pins', () => {
   const next = applyManagerRegions({
     state: { ...state, columnPinning: { start: ['h', 'b'], end: ['d'] } },
+    displayedVisibility: state.columnVisibility,
     regions: { start: [], center: ['c', 'b', 'a'], end: ['d'] },
   });
   expect(next).toEqual({
     columnOrder: ['c', 'b', 'h', 'a', 'd'],
     columnPinning: { start: ['h'], end: ['d'] },
+  });
+});
+
+test('applyManagerRegions keeps the pins and slots of columns a column group hides', () => {
+  const next = applyManagerRegions({
+    state: { ...state, columnPinning: { start: ['a', 'b'], end: ['d'] } },
+    displayedVisibility: { h: false, a: false },
+    regions: { start: [], center: ['c', 'b'], end: ['d'] },
+  });
+  expect(next).toEqual({
+    columnOrder: ['a', 'c', 'h', 'b', 'd'],
+    columnPinning: { start: ['a'], end: ['d'] },
   });
 });

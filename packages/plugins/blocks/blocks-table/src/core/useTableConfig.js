@@ -25,6 +25,7 @@ import readTemplateCompiler from '@lowdefy/blocks-antd/table/readTemplateCompile
 
 import createColumnDefs from './createColumnDefs.js';
 import densityHeights from './densityHeights.js';
+import getColumnGroupRules from './getColumnGroupRules.js';
 import getHeaderLevels from './getHeaderLevels.js';
 import getProviderIds from './getProviderIds.js';
 import normalizeEnrichment from '../features/enrichment/normalizeEnrichment.js';
@@ -114,6 +115,7 @@ function useTableConfig({ properties }) {
       columns,
       columnsByKey: new Map(columns.map((column) => [column.key, column])),
       columnDefs: createColumnDefs({ columns }),
+      columnGroups: getColumnGroupRules({ headerGroups: normalized.headerGroups }),
       expandable: normalizeExpandable({ expandable, columns, user: configUser, compileTemplate }),
       headerLevels: getHeaderLevels({ headerGroups: normalized.headerGroups }),
       rowRules: compileRules({

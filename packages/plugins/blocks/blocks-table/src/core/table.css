@@ -519,6 +519,36 @@
     z-index: 1;
   }
 
+  /* A collapsible column group's chevron: right while collapsed, left while expanded. */
+  .lf-table-group-toggle {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+    background: transparent;
+    border: 0;
+    border-radius: var(--ant-border-radius-sm, 4px);
+    cursor: pointer;
+  }
+
+  .lf-table-group-toggle:hover {
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
+    background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  }
+
+  .lf-table-group-toggle:focus-visible {
+    outline: 2px solid var(--ant-color-primary, #1677ff);
+    outline-offset: -2px;
+  }
+
+  .lf-table-group-toggle:not([data-collapsed]) svg {
+    transform: rotate(180deg);
+  }
+
   /* Summary footer: sticky at the bottom of the scroller, like the header at the top. */
   .lf-table-footer {
     position: sticky;

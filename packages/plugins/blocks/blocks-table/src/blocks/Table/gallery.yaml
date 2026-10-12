@@ -472,6 +472,33 @@
           completed: 180
           rate: 0.36
 
+- title: Collapsible column groups
+  blocks:
+    - id: outcomes_groups
+      type: Table
+      properties:
+        columns:
+          - key: region
+          - key: outcomes
+            title: Outcomes
+            collapsible: true
+            collapsed: true
+            children:
+              - key: total
+                type: number
+                showWhen: closed
+              - key: completed
+                type: number
+              - key: refused
+                type: number
+                showWhen: open
+              - key: not_reached
+                type: number
+                showWhen: open
+        data:
+          - { _id: r1, region: North, total: 400, completed: 120, refused: 80, not_reached: 200 }
+          - { _id: r2, region: South, total: 100, completed: 60, refused: 10, not_reached: 30 }
+
 - title: Tree
   blocks:
     - id: accounts_tree

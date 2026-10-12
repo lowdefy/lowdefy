@@ -344,6 +344,7 @@ Any other save path works too: the value is plain data, so a request can read `_
 | `defaultView.columns.$.width` | number | - |  |
 | `defaultView.columns.$.pinned` | string | - | Pin the column to the start or end, where it stays visible while scrolling. Enum: `start`, `end`. |
 | `defaultView.columns.$.hidden` | boolean | - |  |
+| `defaultView.collapsedColumnGroups` | array | - | Keys of the collapsed collapsible column groups, over the groups' own `collapsed`. A group's key is its `key`, else `group:<index>` (`group:2.0` for the first group inside the third). |
 | `defaultView.sort` | array | - | Sort order: `[{ key, desc }]`. |
 | `defaultView.sort.$.key` | string | - |  |
 | `defaultView.sort.$.desc` | boolean | - |  |
@@ -412,7 +413,8 @@ Any other save path works too: the value is plain data, so a request can read `_
 | `pageSize` | integer | `50` | Rows per page when `pagination` is on (`view.pageSize` overrides it). |
 | `addRow` | boolean | `false` | Show a "+ Add row" row under the table. A new row gets each column `default` (and, with `rowDrag.positionField`, a position after the last row), and opens its first editable cell. |
 | `addRowText` | string | `"Add row"` | Text of the add-row row. |
-| `summary` | boolean | `true` | Show the summary footer when any aggregate is in effect: a column `aggregate`, or one the view sets in `view.aggregates`. `false` hides it. |
+| `summary` | boolean | `true` | Show the summary footer when `summaryRow` is set or any aggregate is in effect: a column `aggregate`, or one the view sets in `view.aggregates`. `false` hides it. |
+| `summaryRow` | object \| null | - | A row the app computed, such as a report total from the request, shown in the summary footer in place of the aggregates. Each column renders it like a body row, with its `type`, `cell` and `rules`; action columns stay empty. It is not a data row: sorting, filtering, search, selection and the record count leave it out, and `exportCsv` adds it as the last line (in server mode `onExport` produces the file). Group headers keep their aggregates. |
 | `deleteRows` | boolean | `false` | Delete the focused row with the Delete or Backspace key. |
 | `rowActions` | object | - | Row controls shown in a leading column. |
 | `rowActions.delete` | boolean | `false` | A delete button on every row. |

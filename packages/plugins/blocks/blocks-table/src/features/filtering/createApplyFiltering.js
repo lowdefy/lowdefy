@@ -64,7 +64,7 @@ function createApplyFiltering(api) {
       context: api.table.options.lowdefyFiltering,
       searchColumns: getSearchColumns({
         columns: api.config.columns,
-        columnVisibility: api.state.columnVisibility,
+        columnVisibility: api.displayedVisibility,
       }),
     }).then(() => {
       if (call !== latest) return;

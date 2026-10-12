@@ -1072,8 +1072,41 @@ columns:
 | `rules`                                                        | Conditional formatting (below).                                                                                                                                                      |
 | `validate`, `required`, `default`                              | Editing: checks before an edit commits, and a `TableInput` new row's value (ignored on the key column, which always gets a new temporary key).                                       |
 | `children`                                                     | Columns grouped under a shared header (the group needs a `title`).                                                                                                                   |
+| `collapsible`, `collapsed`                                     | On a group: a chevron in its header collapses and expands it, and `collapsed: true` starts it collapsed (below).                                                                     |
+| `showWhen`                                                     | In a collapsible group: `open`, `closed` or `always` (the default), when the column or inner group shows (below).                                                                    |
 
 `columns` is data, so it can come from a request: `columns: { _request: deal_fields }`. Columns added to config later appear in stored views as hidden, and unknown keys in a stored view are dropped.
+
+### Collapsible column groups
+
+A wide report can open narrow: a group with `collapsible: true` collapses to a summary column and expands to its breakdown columns from the chevron in its header.
+
+```yaml
+columns:
+  - key: project
+  - key: outcomes
+    title: Outcomes
+    collapsible: true
+    collapsed: true
+    children:
+      - key: total
+        type: number
+        showWhen: closed
+      - key: completed
+        type: number
+      - key: opted_out
+        type: number
+        showWhen: open
+      - key: not_reached
+        type: number
+        showWhen: open
+```
+
+- A collapsed group shows its children with `showWhen: closed` or `always`; an expanded one those with `open` or `always`. Here the table opens with Project, Total and Completed, and the chevron swaps Total for Opted out and Not reached.
+- `showWhen` follows the nearest collapsible group above it. An inner group with `showWhen: open` hides with every column under it while the outer group is collapsed, and can be collapsible itself.
+- A collapsible group needs a child that shows when it is collapsed, so its header and chevron stay on the table.
+- The collapsed groups are the view's `collapsedColumnGroups`, by group `key` (without one, `group:<index>`). They are saved and persisted with the view, and `SetState` on it collapses and expands groups.
+- A column its group hides is not displayed, searched or exported, and stays visible in the view. The column manager lists it as unavailable rather than letting the user tick it on.
 
 ### Cell types
 
@@ -1178,18 +1211,19 @@ Every rule whose `when` holds applies, in order: class names add up, and a later
 
 The view is one serialisable object, the `view` part of the value:
 
-| Key               | Holds                                                                                                                                                                                                        |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `columns`         | `[{ key, width, pinned, hidden }]` in display order                                                                                                                                                          |
-| `sort`            | `[{ key, desc }]`, outermost first                                                                                                                                                                           |
-| `filter`          | a condition, or null                                                                                                                                                                                         |
-| `search`          | the search text: rows match when every word appears (ignoring case) in the display text of the searched columns                                                                                              |
-| `group`           | `[{ key }]` of groupable columns, outermost first                                                                                                                                                            |
-| `collapsedGroups` | keys of collapsed groups                                                                                                                                                                                     |
-| `aggregates`      | `{ <columnKey>: <fn> \| null }` over the columns' own `aggregate`                                                                                                                                            |
-| `density`         | `compact` (32px rows), `default` (40px) or `comfortable` (52px); starts from `size`                                                                                                                          |
-| `wrap`            | `true` wraps the text of text-like columns (text, email, phone, url, link, html, relation) without their own `wrap` or `ellipsis`; rows grow to their content. The toolbar density control has a Wrap toggle |
-| `pageSize`        | rows per page with `pagination`; defaults to the `pageSize` property                                                                                                                                         |
+| Key                     | Holds                                                                                                                                                                                                        |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `columns`               | `[{ key, width, pinned, hidden }]` in display order                                                                                                                                                          |
+| `collapsedColumnGroups` | keys of collapsed column groups (`collapsible` groups)                                                                                                                                                       |
+| `sort`                  | `[{ key, desc }]`, outermost first                                                                                                                                                                           |
+| `filter`                | a condition, or null                                                                                                                                                                                         |
+| `search`                | the search text: rows match when every word appears (ignoring case) in the display text of the searched columns                                                                                              |
+| `group`                 | `[{ key }]` of groupable columns, outermost first                                                                                                                                                            |
+| `collapsedGroups`       | keys of collapsed row groups                                                                                                                                                                                 |
+| `aggregates`            | `{ <columnKey>: <fn> \| null }` over the columns' own `aggregate`                                                                                                                                            |
+| `density`               | `compact` (32px rows), `default` (40px) or `comfortable` (52px); starts from `size`                                                                                                                          |
+| `wrap`                  | `true` wraps the text of text-like columns (text, email, phone, url, link, html, relation) without their own `wrap` or `ellipsis`; rows grow to their content. The toolbar density control has a Wrap toggle |
+| `pageSize`              | rows per page with `pagination`; defaults to the `pageSize` property                                                                                                                                         |
 
 - `defaultView` sets the initial view and the one `Reset` returns to. Each part missing from the value falls back to `defaultView`, then to the column defaults. `defaultView.columns` entries merge over the column config, and columns it leaves out keep their defaults.
 - While the column layout equals the configured one, the derived view leaves `columns` out, so columns added to config keep appearing until the user changes the layout.

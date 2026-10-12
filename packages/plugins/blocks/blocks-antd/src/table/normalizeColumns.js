@@ -115,6 +115,7 @@ function normalizeLeaf({ column, defaults, path }) {
     options: normalizeOptions(column.options ?? kindOptions),
     tooltip: column.tooltip,
     headerTooltip: column.headerTooltip,
+    showWhen: column.showWhen,
     rules: [...(column.rules ?? []), ...(cell.rules ?? [])],
     validate: column.validate ?? [],
     path,
@@ -261,6 +262,9 @@ function walkColumns({
         key,
         title,
         headerTooltip: column.headerTooltip,
+        collapsible: column.collapsible,
+        collapsed: column.collapsed,
+        showWhen: column.showWhen,
         path,
         children: walkColumns({
           entries: column.children,
@@ -301,8 +305,9 @@ function walkColumns({
 // order
 // (`columns`), the same leaves by key (`columnsByKey`), and the header tree
 // (`headerGroups`): the top-level entries, where a group is
-// `{ group: true, key, title, headerTooltip, path, children }` and a leaf is
-// the same object as in `columns`.
+// `{ group: true, key, title, headerTooltip, collapsible, collapsed, showWhen, path, children }`
+// and a leaf is the same object as in `columns`. `collapsible`, `collapsed` and `showWhen` (on
+// leaves too) are passed through as written for Table's collapsible column groups.
 function normalizeColumns({ columns, defaultColumn, providerIds }) {
   if (!type.isNone(columns) && !type.isArray(columns)) {
     throw new Error(`Table columns must be an array. Received ${JSON.stringify(columns)}.`);

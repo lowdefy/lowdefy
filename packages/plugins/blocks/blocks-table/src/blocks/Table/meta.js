@@ -266,6 +266,25 @@ const column = {
       items: { type: ['object', 'string'] },
       docs: { displayType: 'yaml' },
     },
+    collapsible: {
+      type: 'boolean',
+      default: false,
+      description:
+        'On a group: show a chevron in the group header that collapses the group to its columns with `showWhen: always` or `closed` and expands it to those with `always` or `open`. The collapsed groups are the view `collapsedColumnGroups`.',
+    },
+    collapsed: {
+      type: 'boolean',
+      default: false,
+      description:
+        'On a collapsible group: start collapsed. The view `collapsedColumnGroups` overrides it.',
+    },
+    showWhen: {
+      type: 'string',
+      enum: ['always', 'open', 'closed'],
+      default: 'always',
+      description:
+        "In a collapsible group: when this column (or inner group) shows. `open` while the group is expanded, `closed` while it is collapsed, `always` in both. It follows the nearest collapsible group above it, so collapsing an outer group also hides an inner group with `showWhen: open`. A collapsible group needs a child that shows when it is collapsed. A column a group's state hides is not displayed, searched or exported, and the column picker lists it as unavailable.",
+    },
   },
 };
 
@@ -649,6 +668,12 @@ export default {
             type: 'array',
             description: 'Column order, widths, pinning and visibility.',
             items: viewColumn,
+          },
+          collapsedColumnGroups: {
+            type: 'array',
+            description:
+              "Keys of the collapsed collapsible column groups, over the groups' own `collapsed`. A group's key is its `key`, else `group:<index>` (`group:2.0` for the first group inside the third).",
+            items: { type: 'string' },
           },
           sort: {
             type: 'array',
