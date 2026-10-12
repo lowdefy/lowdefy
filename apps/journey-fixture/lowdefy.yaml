@@ -25,6 +25,7 @@ connections:
     type: AxiosHttp
     properties:
       baseURL: http://127.0.0.1:9
+  - _ref: connections/storage_bucket.yaml
 
 # Auth exists only to gate auditor_only, so a journey can be refused by a real
 # auth gate. An API key strategy is the one auth mechanism that needs no
@@ -71,3 +72,4 @@ pages:
   - _ref: pages/generated.yaml
   - _ref: pages/shared_alpha.yaml
   - _ref: pages/shared_beta.yaml
+  - _ref: pages/storage.yaml

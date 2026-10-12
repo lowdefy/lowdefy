@@ -27,6 +27,10 @@ test('All requests are present', () => {
   expect(GoogleCloudStorageBucket.requests.GcsSignedPostPolicy).toBeDefined();
 });
 
+test('GoogleCloudStorageBucket declares it reaches an outside service under a journey data set', () => {
+  expect(GoogleCloudStorageBucket.meta).toEqual({ dataSet: 'external' });
+});
+
 test('valid connection schema', () => {
   const connection = {
     bucket: 'bucket',
