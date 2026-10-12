@@ -14,86 +14,27 @@
   limitations under the License.
 */
 
-import path from 'path';
-import { type } from '@lowdefy/helpers';
-import YAML from 'yaml';
-
 import adviseDataSetSize from './adviseDataSetSize.js';
-import dataSetNamePattern from './dataSetNamePattern.js';
-import findRefPath from './findRefPath.js';
 import generateDataSetDocuments from './generateDataSetDocuments.js';
-import listDataSetFiles from './listDataSetFiles.js';
-import readFile from './readFile.js';
-import validateDataSetFixtures from './validateDataSetFixtures.js';
+import mergeDataSetFiles from './mergeDataSetFiles.js';
+import readDataSetFiles from './readDataSetFiles.js';
 import validateDataSetGenerate from './validateDataSetGenerate.js';
-import validateDataSetIndexes from './validateDataSetIndexes.js';
-import validateDataSetUsers from './validateDataSetUsers.js';
 
-const topLevelKeys = ['fixtures', 'generate', 'users', 'indexes'];
-
-// Reads and checks tests/data/<name>.yaml with no build, no server and no database driver, so the
-// dev server and the CLI read data sets the same way. The checks that need the built connections
-// belong to the dev server's readDataSet.
+// Reads and checks tests/data/<name>.yaml, with the data sets it extends, with no build, no server
+// and no database driver, so the dev server and the CLI read data sets the same way. The checks that
+// need the built connections belong to the dev server's readDataSet.
+//
+// generate stays per file: only the named data set's own generate runs, and its refs and _id checks
+// see the merged fixtures.
 async function parseDataSet({ configDirectory, name }) {
-  if (!type.isString(name) || !dataSetNamePattern.test(name)) {
-    throw new Error(
-      `Data set name ${JSON.stringify(
-        name
-      )} is not valid. Use lowercase letters, digits, "-" and "_".`
-    );
-  }
-  const allFiles = await listDataSetFiles({ configDirectory });
-  const files = allFiles.filter((file) => file.name === name);
-  if (files.length === 0) {
-    const declared = [...new Set(allFiles.map((file) => file.name))];
-    throw new Error(
-      `Data set "${name}" not found in tests/data. ${
-        declared.length === 0 ? 'No data sets are declared.' : `Declared: ${declared.join(', ')}.`
-      }`
-    );
-  }
-  if (files.length > 1) {
-    throw new Error(`Data set "${name}" has both tests/data/${name}.yaml and .yml; keep one.`);
-  }
-  const { filePath } = files[0];
-  const relativePath = path.relative(configDirectory, filePath);
-  function fail(message) {
-    throw new Error(`Data set ${relativePath}: ${message}`);
-  }
-
-  let content;
-  try {
-    content = YAML.parse(await readFile(filePath));
-  } catch (error) {
-    fail(`could not parse YAML. ${error.message}`);
-  }
-  content = content ?? {};
-  if (!type.isObject(content)) {
-    fail('should be an object with fixtures, generate, users and indexes.');
-  }
-  if (Object.hasOwn(content, 'snapshot')) {
-    fail(
-      'snapshot is no longer supported: data sets hold committed documents only. Move the documents journeys need into fixtures or generate.'
-    );
-  }
-  Object.keys(content).forEach((key) => {
-    if (!topLevelKeys.includes(key)) {
-      fail(`unknown key "${key}". Allowed: ${topLevelKeys.join(', ')}.`);
-    }
-  });
-  const refPath = findRefPath({ value: content, path: '' });
-  if (!type.isNone(refPath)) {
-    fail(`_ref at ${refPath}. Data sets are plain YAML; _ref and operators are not evaluated.`);
-  }
-
-  const fixtures = validateDataSetFixtures({ fixtures: content.fixtures, fail });
-  const users = validateDataSetUsers({ users: content.users, fail });
-  const indexes = validateDataSetIndexes({ indexes: content.indexes, fail });
-  const generate = validateDataSetGenerate({ generate: content.generate, fixtures, fail });
-  const generated = generateDataSetDocuments({ generate, fixtures, fail });
+  const files = await readDataSetFiles({ configDirectory, name });
+  const file = files[files.length - 1];
+  const { fixtures, users, indexes } = mergeDataSetFiles({ files });
+  const generate = validateDataSetGenerate({ generate: file.generate, fixtures, fail: file.fail });
+  const generated = generateDataSetDocuments({ generate, fixtures, fail: file.fail });
   const warnings = adviseDataSetSize({ name, fixtures, generated });
 
-  return { name, filePath, fixtures, generated, users, indexes, warnings };
+  return { name, filePath: file.filePath, fixtures, generated, users, indexes, warnings };
 }
 
 export default parseDataSet;
