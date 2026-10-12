@@ -27,6 +27,10 @@ test('All requests are present', () => {
   expect(AzureBlobContainer.requests.AzureBlobUploadSas).toBeDefined();
 });
 
+test('AzureBlobContainer declares it reaches an outside service under a journey data set', () => {
+  expect(AzureBlobContainer.meta).toEqual({ dataSet: 'external' });
+});
+
 test('valid connection schema', () => {
   const connection = {
     account: 'account',

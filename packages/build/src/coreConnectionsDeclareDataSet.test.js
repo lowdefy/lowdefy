@@ -21,16 +21,7 @@ import defaultPackages from './defaultPackages.js';
 // outside service). Every other type refuses. These core types hold app data the dev server cannot
 // redirect, so they refuse on purpose. A new core connection type must either declare meta.dataSet
 // or be added here.
-const refusedTypes = [
-  'AwsS3Bucket',
-  'AzureBlobContainer',
-  'Elasticsearch',
-  'GoogleCloudStorageBucket',
-  'GoogleSheet',
-  'Knex',
-  'Redis',
-  'TestConnection',
-];
+const refusedTypes = ['Elasticsearch', 'GoogleSheet', 'Knex', 'Redis', 'TestConnection'];
 
 async function readCoreConnectionTypes() {
   const connectionTypes = {};

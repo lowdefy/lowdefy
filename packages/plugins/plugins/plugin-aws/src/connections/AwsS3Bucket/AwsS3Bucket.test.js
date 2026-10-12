@@ -29,6 +29,10 @@ test('All requests are present', () => {
   expect(AwsS3Bucket.requests.AwsS3PutObject).toBeDefined();
 });
 
+test('AwsS3Bucket declares it reaches an outside service under a journey data set', () => {
+  expect(AwsS3Bucket.meta).toEqual({ dataSet: 'external' });
+});
+
 test('valid connection schema', () => {
   const connection = {
     accessKeyId: 'accessKeyId',
