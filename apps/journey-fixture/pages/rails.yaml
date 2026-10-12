@@ -1,8 +1,9 @@
 # The page the data-set rails test drives
 # (packages/servers/server-dev/test/journeyFixture/rails.test.mjs): on a
-# data-set journey a click on external_button (a request on a connection the
-# data set does not redirect) or logout_button (an auth action) is refused,
-# and save_rail_button (a request on the data set's MongoDB connection) works.
+# data-set journey a click on external_button (a request on an AxiosHttp
+# connection, whose type declares dataSet: external) or logout_button (an auth
+# action) is refused, and save_rail_button (a request on the data set's MongoDB
+# connection, whose type declares dataSet: redirect) works.
 id: rails
 type: Box
 requests:

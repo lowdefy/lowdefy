@@ -42,6 +42,10 @@ jest.unstable_mockModule('./readDevAuthMode.js', () => ({
   default: () => ({ authConfigured: true, mockUserActive: false }),
 }));
 jest.unstable_mockModule('./collectExercised.js', () => ({ default: async () => ({}) }));
+// The plugin connection map lives in a running server's build directory.
+jest.unstable_mockModule('./readConnectionPlugins.js', () => ({
+  default: async () => ({ MongoDBCollection: { meta: { dataSet: 'redirect' } } }),
+}));
 
 jest.unstable_mockModule('./observe/waitForClientErrorReports.js', () => ({
   default: async () => {},

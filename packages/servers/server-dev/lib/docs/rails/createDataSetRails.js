@@ -28,25 +28,37 @@ function findListed({ blocks, blockId }) {
   return type.isUndefined(listed) ? undefined : blocks[listed];
 }
 
-function describeConnections(connections) {
-  return connections
-    .map(({ connectionId, type: connectionType }) => `"${connectionId}" (${connectionType})`)
-    .join(', ');
+// What the connection's type declares, as the author would fix it.
+function describeDeclaration({ type: connectionType, dataSet }) {
+  if (type.isNone(connectionType)) return 'no connection artifact';
+  if (type.isNone(dataSet)) return `${connectionType}, no dataSet declaration`;
+  return `${connectionType}, dataSet: ${dataSet}`;
+}
+
+function describeReason({ dataSet }) {
+  if (dataSet === 'external') return 'which reaches a real service';
+  return 'which a data set cannot redirect';
+}
+
+function describeConnection(connection) {
+  return `"${connection.connectionId}" (${describeDeclaration(connection)})`;
 }
 
 // The rails of a data-set journey run: a click on a block whose events reach a
-// connection the data set does not redirect (any type but MongoDBCollection)
-// would reach a real service, and one on a block that runs an auth-engine
-// action fails for a harness reason (the journey's callers are injected and
-// have no auth session). refusal({ pageId, blockId }) says why such a click
-// is refused, or null when the block may be clicked. Each page's lists are
-// read from the build once per run.
-function createDataSetRails({ buildDirectory }) {
+// connection whose type declares meta.dataSet 'external', declares nothing, or
+// has no artifact would reach a real service or be refused by the gate, and
+// one on a block that runs an auth-engine action fails for a harness reason
+// (the journey's callers are injected and have no auth session). Declarations
+// are read from connections, the plugin connection map the gate reads.
+// refusal({ pageId, blockId }) says why such a click is refused, or null when
+// the block may be clicked. Each page's lists are read from the build once per
+// run.
+function createDataSetRails({ buildDirectory, connections }) {
   const pages = new Map();
   function readPage(pageId) {
     if (!pages.has(pageId)) {
       pages.set(pageId, {
-        external: findExternalBlocks({ buildDirectory, pageId }).blocks,
+        external: findExternalBlocks({ buildDirectory, pageId, connections }).blocks,
         auth: findAuthActionBlocks({ buildDirectory, pageId }),
       });
     }
@@ -54,11 +66,17 @@ function createDataSetRails({ buildDirectory }) {
   }
   function refusal({ pageId, blockId }) {
     const { external, auth } = readPage(pageId);
-    const connections = findListed({ blocks: external, blockId });
-    if (!type.isUndefined(connections)) {
-      const named = describeConnections(connections);
+    const refused = findListed({ blocks: external, blockId });
+    if (!type.isUndefined(refused)) {
+      const reasons = refused
+        .map(
+          (connection) =>
+            `connection ${describeConnection(connection)}, ${describeReason(connection)}`
+        )
+        .join(', and ');
+      const named = refused.map(describeConnection).join(', ');
       return {
-        message: `Block "${blockId}" reaches connection ${named}, which a journey data set does not redirect, so a data-set journey cannot click it.`,
+        message: `Block "${blockId}" reaches ${reasons}, so a data-set journey cannot click it.`,
         actual: `a click that reaches connection ${named}`,
       };
     }

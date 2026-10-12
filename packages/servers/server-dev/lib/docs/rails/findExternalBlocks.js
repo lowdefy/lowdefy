@@ -20,9 +20,11 @@ import pageBlocks from '../pageBlocks.js';
 import readBuiltArtifact from './readBuiltArtifact.js';
 import readRoutineSteps from '../readRoutineSteps.js';
 
-// The one connection type a journey data set redirects; every other type
-// would be reached for real.
-const DATA_SET_CONNECTION_TYPE = 'MongoDBCollection';
+// The meta.dataSet declarations a data session runs against the session's database (see
+// lib/server/applyDataSetRedirect.js): 'redirect' takes the session database, 'walled' reaches it
+// only through walled connections. Every other declaration, or none, would reach a real service or
+// is refused by the gate.
+const CLICKABLE_DATA_SET_MODES = new Set(['redirect', 'walled']);
 
 function requestedIds({ params, pageRequestIds }) {
   if (type.isString(params)) return [params];
@@ -71,13 +73,23 @@ function endpointConnections({ buildDirectory, endpointId }) {
   return connections;
 }
 
-// The blocks of a page whose events reach a connection a data set does not
-// redirect (any type but MongoDBCollection), through a Request action or a
-// CallAPI into endpoint routines, with the connections each reaches as
-// { connectionId, type } (type null for a connection with no artifact). A
-// data-set journey may not click them (see createDataSetRails). Ids computed
-// by operators are not followed.
-function findExternalBlocks({ buildDirectory, pageId }) {
+// The declared data-set mode of a connection type, from the plugin connection map the gate reads.
+function dataSetMode({ connections, connectionType }) {
+  if (type.isNone(connectionType)) return null;
+  return connections[connectionType]?.meta?.dataSet ?? null;
+}
+
+// The blocks of a page whose events reach a connection a data set cannot run
+// against its database, through a Request action or a CallAPI into endpoint
+// routines. A connection is refused when its type declares meta.dataSet
+// 'external', declares nothing (or any value but 'redirect' and 'walled'), or
+// it has no artifact. Each block lists the connections it reaches as
+// { connectionId, type, dataSet } (type null for a connection with no
+// artifact, dataSet the declared value or null). The rails mirror the
+// declaration only: a redirect connection whose properties the gate refuses
+// fails when its request runs. A data-set journey may not click these blocks
+// (see createDataSetRails). Ids computed by operators are not followed.
+function findExternalBlocks({ buildDirectory, pageId, connections }) {
   const page = readBuiltArtifact({ buildDirectory, name: `pages/${pageId}.json` });
   if (page === null) {
     throw new Error(`Page "${pageId}" has no build artifact in ${buildDirectory}.`);
@@ -86,7 +98,7 @@ function findExternalBlocks({ buildDirectory, pageId }) {
   const connectionType = createConnectionReader({ buildDirectory });
   const blocks = {};
   pageBlocks(page).forEach(({ blockId, actions }) => {
-    const connections = new Set();
+    const reached = new Set();
     actions.forEach((action) => {
       if (action.type === 'Request') {
         requestedIds({ params: action.params, pageRequestIds }).forEach((requestId) => {
@@ -94,19 +106,26 @@ function findExternalBlocks({ buildDirectory, pageId }) {
             buildDirectory,
             name: `pages/${pageId}/requests/${requestId}.json`,
           });
-          if (type.isString(request?.connectionId)) connections.add(request.connectionId);
+          if (type.isString(request?.connectionId)) reached.add(request.connectionId);
         });
       }
       if (action.type === 'CallAPI' && type.isString(action.params?.endpointId)) {
         endpointConnections({ buildDirectory, endpointId: action.params.endpointId }).forEach(
-          (connectionId) => connections.add(connectionId)
+          (connectionId) => reached.add(connectionId)
         );
       }
     });
-    const external = [...connections]
+    const external = [...reached]
       .sort()
-      .map((connectionId) => ({ connectionId, type: connectionType(connectionId) }))
-      .filter((connection) => connection.type !== DATA_SET_CONNECTION_TYPE);
+      .map((connectionId) => {
+        const reachedType = connectionType(connectionId);
+        return {
+          connectionId,
+          type: reachedType,
+          dataSet: dataSetMode({ connections, connectionType: reachedType }),
+        };
+      })
+      .filter((connection) => !CLICKABLE_DATA_SET_MODES.has(connection.dataSet));
     if (external.length > 0) blocks[blockId] = external;
   });
   return { blocks };

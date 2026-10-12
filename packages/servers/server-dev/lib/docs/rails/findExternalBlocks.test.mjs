@@ -23,6 +23,15 @@ import findExternalBlocks from './findExternalBlocks.js';
 
 let buildDirectory;
 
+const connections = {
+  MongoDBCollection: { meta: { tenant: true, dataSet: 'redirect' } },
+  AxiosHttp: { meta: { dataSet: 'external' } },
+  FolderRuntime: { meta: { dataSet: 'redirect' } },
+  WalledRuntime: { meta: { tenant: false, dataSet: 'walled' } },
+  Knex: {},
+  PluginStore: { meta: { dataSet: 'mongo' } },
+};
+
 function write(name, value) {
   const filePath = path.join(buildDirectory, name);
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
@@ -87,6 +96,11 @@ beforeEach(() => {
                 onClick({ id: 'c', type: 'CallAPI', params: { endpointId: { _state: 'id' } } })
               ),
             ]),
+            block('accept', onClick({ id: 'r', type: 'Request', params: 'accept_match' })),
+            block('archive', onClick({ id: 'r', type: 'Request', params: 'move_folder' })),
+            block('report', onClick({ id: 'r', type: 'Request', params: 'run_sql' })),
+            block('stash', onClick({ id: 'r', type: 'Request', params: 'store_row' })),
+            block('orphan', onClick({ id: 'r', type: 'Request', params: 'orphan' })),
             block('sign_out', onClick({ id: 'l', type: 'Logout' })),
             block('change_password', {
               onSubmit: { try: [], catch: [{ id: 'p', type: 'ChangePassword' }] },
@@ -108,6 +122,17 @@ beforeEach(() => {
     requestId: 'post_hook',
     connectionId: 'webhook',
   });
+  write('pages/tickets/requests/accept_match.json', {
+    requestId: 'accept_match',
+    connectionId: 'runtime',
+  });
+  write('pages/tickets/requests/move_folder.json', {
+    requestId: 'move_folder',
+    connectionId: 'folders',
+  });
+  write('pages/tickets/requests/run_sql.json', { requestId: 'run_sql', connectionId: 'sql' });
+  write('pages/tickets/requests/store_row.json', { requestId: 'store_row', connectionId: 'store' });
+  write('pages/tickets/requests/orphan.json', { requestId: 'orphan', connectionId: 'gone' });
   write('api/assign.json', {
     endpointId: 'assign',
     routine: {
@@ -153,28 +178,56 @@ beforeEach(() => {
   write('connections/tickets_db.json', { connectionId: 'tickets_db', type: 'MongoDBCollection' });
   write('connections/mailer.json', { connectionId: 'mailer', type: 'AxiosHttp' });
   write('connections/webhook.json', { connectionId: 'webhook', type: 'AxiosHttp' });
+  write('connections/runtime.json', { connectionId: 'runtime', type: 'WalledRuntime' });
+  write('connections/folders.json', { connectionId: 'folders', type: 'FolderRuntime' });
+  write('connections/sql.json', { connectionId: 'sql', type: 'Knex' });
+  write('connections/store.json', { connectionId: 'store', type: 'PluginStore' });
 });
 
 afterEach(() => {
   fs.rmSync(buildDirectory, { recursive: true, force: true });
 });
 
-test('findExternalBlocks lists blocks whose events reach a connection a data set does not redirect', () => {
-  expect(findExternalBlocks({ buildDirectory, pageId: 'tickets' })).toEqual({
+const mailer = { connectionId: 'mailer', type: 'AxiosHttp', dataSet: 'external' };
+const webhook = { connectionId: 'webhook', type: 'AxiosHttp', dataSet: 'external' };
+
+test('findExternalBlocks lists blocks whose events reach a connection declaring external, nothing, or with no artifact', () => {
+  expect(findExternalBlocks({ buildDirectory, pageId: 'tickets', connections })).toEqual({
     blocks: {
-      invite: [{ connectionId: 'mailer', type: 'AxiosHttp' }],
-      hook: [{ connectionId: 'webhook', type: 'AxiosHttp' }],
-      all: [
-        { connectionId: 'mailer', type: 'AxiosHttp' },
-        { connectionId: 'webhook', type: 'AxiosHttp' },
-      ],
-      assign: [{ connectionId: 'mailer', type: 'AxiosHttp' }],
+      invite: [mailer],
+      hook: [webhook],
+      all: [mailer, webhook],
+      assign: [mailer],
+      report: [{ connectionId: 'sql', type: 'Knex', dataSet: null }],
+      stash: [{ connectionId: 'store', type: 'PluginStore', dataSet: 'mongo' }],
+      orphan: [{ connectionId: 'gone', type: null, dataSet: null }],
     },
   });
 });
 
+test('findExternalBlocks lets a block reach plugin types that declare redirect or walled', () => {
+  const { blocks } = findExternalBlocks({ buildDirectory, pageId: 'tickets', connections });
+  expect(blocks.accept).toBeUndefined();
+  expect(blocks.archive).toBeUndefined();
+  expect(blocks.refresh).toBeUndefined();
+  expect(blocks.save).toBeUndefined();
+});
+
+test('findExternalBlocks refuses MongoDBCollection when the connection map does not declare it', () => {
+  const { MongoDBCollection, ...withoutMongo } = connections;
+  const { blocks } = findExternalBlocks({
+    buildDirectory,
+    pageId: 'tickets',
+    connections: withoutMongo,
+  });
+  const ticketsDb = { connectionId: 'tickets_db', type: 'MongoDBCollection', dataSet: null };
+  expect(blocks.refresh).toEqual([ticketsDb]);
+  expect(blocks.save).toEqual([ticketsDb]);
+  expect(blocks.assign).toEqual([mailer, ticketsDb]);
+});
+
 test('findExternalBlocks throws for a page with no build artifact', () => {
-  expect(() => findExternalBlocks({ buildDirectory, pageId: 'missing' })).toThrow(
+  expect(() => findExternalBlocks({ buildDirectory, pageId: 'missing', connections })).toThrow(
     `Page "missing" has no build artifact in ${buildDirectory}.`
   );
 });

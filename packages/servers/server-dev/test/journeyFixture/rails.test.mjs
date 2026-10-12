@@ -17,15 +17,16 @@
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
 
 // The data-set rails: on a journey with a data set, a click that would reach a
-// connection the data set does not redirect, or run an auth action, is refused
-// at that step before it acts. A click whose request uses the data set's
-// MongoDB connection still works.
+// connection whose type declares meta.dataSet external, declares nothing, or
+// has no artifact, or run an auth action, is refused at that step before it
+// acts. A click whose request uses the data set's MongoDB connection (which
+// declares redirect) still works.
 
 fixtureTest.each([
   [
     'external_button',
-    'a click that reaches connection "rails_external" (AxiosHttp)',
-    /Block "external_button" reaches connection "rails_external" \(AxiosHttp\)/,
+    'a click that reaches connection "rails_external" (AxiosHttp, dataSet: external)',
+    /Block "external_button" reaches connection "rails_external" \(AxiosHttp, dataSet: external\), which reaches a real service/,
   ],
   [
     'logout_button',
@@ -56,7 +57,7 @@ fixtureTest('a data-set journey clicking a button found by its text is refused t
   });
   expect(result.passed).toBe(false);
   expect(result.failure.actual).toBe(
-    'a click that reaches connection "rails_external" (AxiosHttp)'
+    'a click that reaches connection "rails_external" (AxiosHttp, dataSet: external)'
   );
 });
 
