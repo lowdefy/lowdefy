@@ -56,6 +56,52 @@ function migrateSettings({ settings, enable }) {
   return migrated;
 }
 
+// Tool approvals name the server inside each rule (mcp__lowdefy-docs__lowdefy_get_schema,
+// or mcp__lowdefy-docs for all its tools), so a rename that missed them would
+// prompt for every tool again.
+function renameLegacyRule(rule) {
+  if (!type.isString(rule)) {
+    return rule;
+  }
+  for (const legacy of LEGACY_MCP_SERVER_NAMES) {
+    const prefix = `mcp__${legacy}__`;
+    if (rule === `mcp__${legacy}`) {
+      return `mcp__${MCP_SERVER_NAME}`;
+    }
+    if (rule.startsWith(prefix)) {
+      return `mcp__${MCP_SERVER_NAME}__${rule.slice(prefix.length)}`;
+    }
+  }
+  return rule;
+}
+
+const PERMISSION_LISTS = ['allow', 'ask', 'deny'];
+
+function migratePermissions({ settings }) {
+  if (!type.isObject(settings.permissions)) {
+    return { settings, renamed: 0 };
+  }
+  let renamed = 0;
+  const permissions = { ...settings.permissions };
+  PERMISSION_LISTS.forEach((list) => {
+    if (!type.isArray(permissions[list])) {
+      return;
+    }
+    const rules = permissions[list].map((rule) => {
+      const next = renameLegacyRule(rule);
+      if (next !== rule) {
+        renamed += 1;
+      }
+      return next;
+    });
+    permissions[list] = [...new Set(rules)];
+  });
+  if (renamed === 0) {
+    return { settings, renamed };
+  }
+  return { settings: { ...settings, permissions }, renamed };
+}
+
 async function upsertSettingsFile({ context, projectDirectory, fileName, enable }) {
   const settingsRelativePath = path.join('.claude', fileName);
   const settingsPath = path.join(projectDirectory, settingsRelativePath);
@@ -86,8 +132,10 @@ async function upsertSettingsFile({ context, projectDirectory, fileName, enable 
     return;
   }
 
-  const migrated = migrateSettings({ settings, enable });
-  if (JSON.stringify(migrated) === JSON.stringify(settings)) {
+  const withServers = migrateSettings({ settings, enable });
+  const serversChanged = JSON.stringify(withServers) !== JSON.stringify(settings);
+  const { settings: migrated, renamed } = migratePermissions({ settings: withServers });
+  if (!serversChanged && renamed === 0) {
     if (enable) {
       context.logger.info(
         `'${settingsRelativePath}' already ${
@@ -98,11 +146,20 @@ async function upsertSettingsFile({ context, projectDirectory, fileName, enable 
     return;
   }
   await writeFile(settingsPath, `${JSON.stringify(migrated, null, 2)}\n`);
-  context.logger.info(
-    migrated.disabledMcpjsonServers?.includes(MCP_SERVER_NAME)
-      ? `Kept the '${MCP_SERVER_NAME}' MCP server disabled in '${settingsRelativePath}' under its new name.`
-      : `Enabled the '${MCP_SERVER_NAME}' MCP server in '${settingsRelativePath}'.`
-  );
+  if (serversChanged) {
+    context.logger.info(
+      migrated.disabledMcpjsonServers?.includes(MCP_SERVER_NAME)
+        ? `Kept the '${MCP_SERVER_NAME}' MCP server disabled in '${settingsRelativePath}' under its new name.`
+        : `Enabled the '${MCP_SERVER_NAME}' MCP server in '${settingsRelativePath}'.`
+    );
+  }
+  if (renamed > 0) {
+    context.logger.info(
+      `Renamed ${renamed} '${LEGACY_MCP_SERVER_NAMES.join("', '")}' tool permission rule${
+        renamed === 1 ? '' : 's'
+      } in '${settingsRelativePath}' to '${MCP_SERVER_NAME}'.`
+    );
+  }
 }
 
 // Pre-approves the lowdefy MCP server for Claude Code so no developer is

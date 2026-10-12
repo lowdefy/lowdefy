@@ -46,6 +46,13 @@ function isPortPinned(entry) {
   return type.isString(entry?.url) && PORT_PINNED_URL.test(entry.url);
 }
 
+function describeCommand(entry) {
+  if (type.isString(entry.url)) {
+    return entry.url;
+  }
+  return [entry.command, ...(entry.args ?? [])].join(' ');
+}
+
 // Points the "lowdefy" server at `lowdefy mcp` over stdio, renames the server
 // earlier runs wrote as "lowdefy-docs", and removes port-pinned Lowdefy
 // entries, which the stdio server replaces for every app and worktree. Other
@@ -94,6 +101,7 @@ async function upsertMcpServer({ context, projectDirectory }) {
 
   mcpJson.mcpServers = mcpJson.mcpServers ?? {};
   const renamed = LEGACY_MCP_SERVER_NAMES.filter((name) => !type.isNone(mcpJson.mcpServers[name]));
+  const previous = mcpJson.mcpServers[MCP_SERVER_NAME] ?? mcpJson.mcpServers[renamed[0]];
   renamed.forEach((name) => delete mcpJson.mcpServers[name]);
   const removed = Object.keys(mcpJson.mcpServers).filter(
     (name) => name !== MCP_SERVER_NAME && isPortPinned(mcpJson.mcpServers[name])
@@ -128,6 +136,17 @@ async function upsertMcpServer({ context, projectDirectory }) {
     );
   } else {
     context.logger.info(`Updated the '${MCP_SERVER_NAME}' MCP server in '.mcp.json'.`);
+  }
+  // The command is committed for the whole team, so a changed one is named,
+  // with why the pinned npx form replaces it.
+  if (!type.isNone(previous) && !isPortPinned(previous)) {
+    const before = describeCommand(previous);
+    const after = describeCommand(entry);
+    if (before !== after) {
+      context.logger.info(
+        `Its command changed from '${before}' to '${after}': the pinned npx command also starts in a worktree that is not installed yet.`
+      );
+    }
   }
   if (removed.length > 0) {
     context.logger.info(
