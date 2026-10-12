@@ -4,6 +4,8 @@ packages:
   - packages/servers/*
   - packages/utils/*
   - packages/ides/*
+  # The journey fixture app's local plugin, linked into its dev server as workspace:*.
+  - apps/journey-fixture/plugins/*
 
 onlyBuiltDependencies:
   - '@sentry/cli'
