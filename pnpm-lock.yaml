@@ -76,7 +76,7 @@ importers:
   apps/journey-fixture/plugins/walled-fixture:
     dependencies:
       '@lowdefy/connection-mongodb':
-        specifier: 6.0.0
+        specifier: workspace:*
         version: link:../../../../packages/plugins/connections/connection-mongodb
 
   packages/api:

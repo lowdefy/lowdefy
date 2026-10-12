@@ -38,23 +38,23 @@ const session = {
   databaseName: 'ld_000000000001',
 };
 
-const resolver = async ({ connection, walled }) => {
+async function WalledRead({ connection, walled }) {
   const bound = await walled(connection.mongoConnectionId);
   return {
     databaseUri: bound.connection.databaseUri,
     databaseName: bound.connection.databaseName ?? null,
     tenant: bound.tenant,
   };
-};
-resolver.schema = {};
-resolver.meta = { checkRead: true, checkWrite: false };
+}
+WalledRead.schema = {};
+WalledRead.meta = { checkRead: true, checkWrite: false };
 
 const connections = {
   MongoDBCollection: { meta: { tenant: true, dataSet: 'redirect' }, schema: {}, requests: {} },
   WalledRuntime: {
     meta: { tenant: false, dataSet: 'walled' },
     schema: {},
-    requests: { WalledRead: resolver },
+    requests: { WalledRead },
   },
 };
 

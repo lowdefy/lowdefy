@@ -30,7 +30,7 @@ import resolveTenancy from './resolveTenancy.js';
 // is the argument bag of getWalledCollection in
 // @lowdefy/connection-mongodb/walled, so the plugin never sees the raw client:
 //
-//   const walled = getWalledCollection(await resolvers.walled('mongo'));
+//   const collection = getWalledCollection(await walled('mongo'));
 //
 // Only a connection type that implements the scoping contract (meta.tenant)
 // can be named; anything else has no wall to apply.

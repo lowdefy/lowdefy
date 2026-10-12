@@ -10,6 +10,6 @@
     "./types": "./src/types.js"
   },
   "dependencies": {
-    "@lowdefy/connection-mongodb": "6.0.0"
+    "@lowdefy/connection-mongodb": "workspace:*"
   }
 }
