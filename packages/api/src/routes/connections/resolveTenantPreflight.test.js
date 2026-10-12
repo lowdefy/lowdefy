@@ -17,11 +17,20 @@
 import { jest } from '@jest/globals';
 import { ConfigError, TenantIntegrityError } from '@lowdefy/errors';
 
-import getConnectionConfig from './getConnectionConfig.js';
-import resolveTenantPreflight, { getTenantIntegrityStatus } from './resolveTenantPreflight.js';
 import testContext from '../../test/testContext.js';
 
 const mockReadConfigFile = jest.fn();
+
+// The unwalled-reach verdict reads the build through a fresh base reader, not
+// context.readConfigFile; both serve the same mocked build here.
+jest.unstable_mockModule('../../context/createReadConfigFile.js', () => ({
+  default: () => mockReadConfigFile,
+}));
+
+const { default: getConnectionConfig } = await import('./getConnectionConfig.js');
+const { default: resolveTenantPreflight, getTenantIntegrityStatus } = await import(
+  './resolveTenantPreflight.js'
+);
 const mockProbe = jest.fn();
 
 const logger = {
