@@ -63,7 +63,9 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
     >
       <Component
         methods={Object.assign(block.methods, {
+          getAppStorageKey: lowdefy._internal.storage.appKey,
           getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
+          getUserStorageKey: lowdefy._internal.storage.userKey,
           moveItemDown: block.moveItemDown,
           moveItemUp: block.moveItemUp,
           pushItem: block.pushItem,

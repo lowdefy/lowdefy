@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { appStorageKey } from '@lowdefy/helpers';
+
 import safeScriptJson from '../lib/safeScriptJson.js';
 
 const HTML_ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
@@ -33,13 +35,15 @@ const layerOrderScript = `(function(){var s=document.createElement("style");s.id
 // Synchronous pre-hydration script setting the <html> background and
 // color-scheme — prevents a mode-mismatch flash of the page and of browser
 // chrome (scrollbars, form controls) on page load. Mirrors useDarkMode.js
-// resolution order: configDarkMode → localStorage → prefers-color-scheme.
-function darkModeScript({ configColorMode, darkBg, lightBg }) {
+// resolution order: configDarkMode → localStorage → prefers-color-scheme. The preference is
+// kept under the app's storage key; a value under the bare key from before keys were kept per
+// app is read until useDarkMode moves it.
+function darkModeScript({ configColorMode, darkBg, lightBg, storageKey }) {
   return `(function(){var c=${safeScriptJson(configColorMode)};var db=${safeScriptJson(
     darkBg
-  )};var lb=${safeScriptJson(
-    lightBg
-  )};var d;if(c==="dark")d=true;else if(c==="light")d=false;else{try{var p=localStorage.getItem("lowdefy_darkMode");if(p==="dark")d=true;else if(p==="light")d=false;else d=window.matchMedia("(prefers-color-scheme:dark)").matches}catch(e){d=window.matchMedia("(prefers-color-scheme:dark)").matches}}var bg=d?db:lb;document.documentElement.style.colorScheme=d?"dark":"light";if(bg)document.documentElement.style.backgroundColor=bg})();`;
+  )};var lb=${safeScriptJson(lightBg)};var k=${safeScriptJson(
+    storageKey
+  )};var d;if(c==="dark")d=true;else if(c==="light")d=false;else{try{var p=localStorage.getItem(k);if(p===null)p=localStorage.getItem("lowdefy_darkMode");if(p==="dark")d=true;else if(p==="light")d=false;else d=window.matchMedia("(prefers-color-scheme:dark)").matches}catch(e){d=window.matchMedia("(prefers-color-scheme:dark)").matches}}var bg=d?db:lb;document.documentElement.style.colorScheme=d?"dark":"light";if(bg)document.documentElement.style.backgroundColor=bg})();`;
 }
 
 function template({
@@ -49,6 +53,7 @@ function template({
   basePath = '',
   config,
   pageAssets,
+  slug,
   themeConfig = {},
   title,
 }) {
@@ -82,7 +87,12 @@ function template({
   <head>
     <meta charset="utf-8" />
     <script>${layerOrderScript}</script>
-    <script>${darkModeScript({ configColorMode, darkBg, lightBg })}</script>
+    <script>${darkModeScript({
+      configColorMode,
+      darkBg,
+      lightBg,
+      storageKey: appStorageKey({ basePath, name: 'lowdefy_darkMode', slug }),
+    })}</script>
     <link rel="manifest" href="${basePath}/manifest.webmanifest" />
     <link rel="icon" type="image/svg+xml" href="${basePath}/icon.svg" />
     <link rel="apple-touch-icon" href="${basePath}/apple-touch-icon.png" />

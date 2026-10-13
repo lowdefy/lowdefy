@@ -184,7 +184,7 @@ export default {
         type: 'string',
         default: 'sider',
         description:
-          "localStorage key suffix for sider state persistence. Produces key 'lf-{siderStorageKey}-open'.",
+          "localStorage key suffix for sider state persistence. Produces key 'lf-{siderStorageKey}-open', kept per app.",
       },
       toggleSiderButton: {
         type: 'object',

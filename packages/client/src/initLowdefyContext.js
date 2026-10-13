@@ -25,6 +25,7 @@ import createCallRequest from './createCallRequest.js';
 import createWebSocketClient from './websocket/createWebSocketClient.js';
 import createIcon from './createIcon.js';
 import createShortcutBadge from './createShortcutBadge.js';
+import createStorage from './storage/createStorage.js';
 import createLinkComponent from './createLinkComponent.js';
 import createHandleError from './createHandleError.js';
 import getActiveLocale from './getActiveLocale.js';
@@ -97,6 +98,12 @@ function initLowdefyContext({
     lowdefy.lowdefyApp = config.rootConfig.lowdefyApp;
     lowdefy.lowdefyGlobal = config.rootConfig.lowdefyGlobal;
     lowdefy.theme = config.rootConfig.theme ?? {};
+    lowdefy._internal.storage = createStorage({
+      basePath: lowdefy.basePath,
+      getUserId: () => lowdefy.user?.id ?? null,
+      slug: lowdefy.lowdefyApp?.slug,
+      window,
+    });
 
     lowdefy._internal.callAPI = createCallAPI(lowdefy);
     lowdefy._internal.auth = createAuthMethods(lowdefy, auth);
@@ -152,6 +159,8 @@ function initLowdefyContext({
   lowdefy.pageId = config.pageConfig.pageId;
   lowdefy.pagePaths = config.rootConfig.pagePaths;
   lowdefy.user = auth?.user ?? null;
+  // Runs on every render, so it sees the person signed in on load and any later change.
+  lowdefy._internal.storage.clearUserStorageOnOwnerChange();
 
   // The shown page's path joins the path memory before its context is built,
   // so the first load's page is known before any plugin reads the memory.

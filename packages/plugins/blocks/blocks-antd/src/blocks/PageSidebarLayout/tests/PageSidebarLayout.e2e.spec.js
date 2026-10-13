@@ -23,7 +23,12 @@ test.describe('PageSidebarLayout Block', () => {
     // Clear stored sider state once per test. Using page.evaluate (rather
     // than addInitScript) means `page.reload()` doesn't re-wipe the key,
     // so restore-from-localStorage tests actually exercise the behaviour.
-    await page.evaluate(() => localStorage.removeItem('lf-psl_e2e-open'));
+    // The key is kept per app, so it ends in the name the block gives it.
+    await page.evaluate(() =>
+      Object.keys(localStorage)
+        .filter((key) => key.endsWith(':lf-psl_e2e-open'))
+        .forEach((key) => localStorage.removeItem(key))
+    );
     // Set desktop viewport for most tests
     await page.setViewportSize({ width: 1200, height: 800 });
   });
@@ -249,7 +254,10 @@ test.describe('PageSidebarLayout Block', () => {
     await expect(sider).toHaveClass(/ant-layout-sider-collapsed/);
 
     // Check localStorage was written
-    const storedValue = await page.evaluate(() => localStorage.getItem('lf-psl_e2e-open'));
+    const storedValue = await page.evaluate(() => {
+      const key = Object.keys(localStorage).find((k) => k.endsWith(':lf-psl_e2e-open'));
+      return localStorage.getItem(key);
+    });
     expect(storedValue).toBe('false');
   });
 
@@ -501,7 +509,10 @@ test.describe('PageSidebarLayout Block', () => {
     await expect(sider).not.toHaveClass(/ant-layout-sider-collapsed/);
     await sider.locator('.ant-layout-sider-trigger').click();
     await expect(sider).toHaveClass(/ant-layout-sider-collapsed/);
-    const storedValue = await page.evaluate(() => localStorage.getItem('lf-psl_e2e-open'));
+    const storedValue = await page.evaluate(() => {
+      const key = Object.keys(localStorage).find((k) => k.endsWith(':lf-psl_e2e-open'));
+      return localStorage.getItem(key);
+    });
     expect(storedValue).toBe('false');
   });
 });

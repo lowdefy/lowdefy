@@ -79,6 +79,7 @@ async function renderPage(c, { path, matchedPath, status = 200 }) {
       rootConfig,
       user: user ?? null,
     },
+    slug: rootConfig.lowdefyApp?.slug,
     themeConfig,
     // A title written as an operator is evaluated on the client, which replaces this one.
     title: type.isString(pageConfig.properties?.title) ? pageConfig.properties.title : pageId,

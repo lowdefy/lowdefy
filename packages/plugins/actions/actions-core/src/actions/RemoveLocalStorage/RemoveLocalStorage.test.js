@@ -19,14 +19,15 @@ import RemoveLocalStorage from './RemoveLocalStorage.js';
 
 const mockRemoveItem = jest.fn();
 const globals = { window: { localStorage: { removeItem: mockRemoveItem } } };
+const methods = { getAppStorageKey: (key) => `lowdefy:app::${key}` };
 
 beforeEach(() => {
   mockRemoveItem.mockReset();
 });
 
-test('RemoveLocalStorage removes the key from local storage', () => {
-  RemoveLocalStorage({ globals, params: { key: 'settings' } });
-  expect(mockRemoveItem.mock.calls).toEqual([['settings']]);
+test('RemoveLocalStorage removes the app key and the key set before keys were kept per app', () => {
+  RemoveLocalStorage({ globals, methods, params: { key: 'settings' } });
+  expect(mockRemoveItem.mock.calls).toEqual([['lowdefy:app::settings'], ['settings']]);
 });
 
 test('RemoveLocalStorage throws a UserError when the browser blocks storage access', () => {
@@ -39,7 +40,7 @@ test('RemoveLocalStorage throws a UserError when the browser blocks storage acce
   };
   let error;
   try {
-    RemoveLocalStorage({ globals: blockedGlobals, params: { key: 'settings' } });
+    RemoveLocalStorage({ globals: blockedGlobals, methods, params: { key: 'settings' } });
   } catch (e) {
     error = e;
   }
@@ -51,26 +52,26 @@ test('RemoveLocalStorage throws a UserError when the browser blocks storage acce
 });
 
 test('RemoveLocalStorage throws when params is not an object', () => {
-  expect(() => RemoveLocalStorage({ globals, params: ['settings'] })).toThrow(
+  expect(() => RemoveLocalStorage({ globals, methods, params: ['settings'] })).toThrow(
     'RemoveLocalStorage params should be an object.'
   );
   expect(mockRemoveItem.mock.calls).toEqual([]);
 });
 
 test('RemoveLocalStorage throws when key is not a string', () => {
-  expect(() => RemoveLocalStorage({ globals, params: { key: 1 } })).toThrow(
+  expect(() => RemoveLocalStorage({ globals, methods, params: { key: 1 } })).toThrow(
     'RemoveLocalStorage "key" should be a non-empty string.'
   );
 });
 
 test('RemoveLocalStorage throws when key is an empty string', () => {
-  expect(() => RemoveLocalStorage({ globals, params: { key: '' } })).toThrow(
+  expect(() => RemoveLocalStorage({ globals, methods, params: { key: '' } })).toThrow(
     'RemoveLocalStorage "key" should be a non-empty string.'
   );
 });
 
 test('RemoveLocalStorage throws when key uses a reserved Lowdefy prefix', () => {
-  expect(() => RemoveLocalStorage({ globals, params: { key: 'lowdefy_locale' } })).toThrow(
+  expect(() => RemoveLocalStorage({ globals, methods, params: { key: 'lowdefy_locale' } })).toThrow(
     'RemoveLocalStorage "key" "lowdefy_locale" is reserved. Keys starting with "lowdefy_" or "lf-" are used internally by Lowdefy.'
   );
   expect(mockRemoveItem.mock.calls).toEqual([]);

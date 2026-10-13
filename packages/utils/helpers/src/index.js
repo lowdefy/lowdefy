@@ -15,6 +15,7 @@
 */
 
 import applyArrayIndices from './applyArrayIndices.js';
+import appStorageKey from './appStorageKey.js';
 import builtinMessages from './builtinMessages.js';
 import buildPagePath from './buildPagePath.js';
 import cachedPromises from './cachedPromises.js';
@@ -63,6 +64,7 @@ import wait from './wait.js';
 
 export {
   applyArrayIndices,
+  appStorageKey,
   buildPagePath,
   builtinMessages,
   cachedPromises,

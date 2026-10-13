@@ -17,6 +17,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { appStorageKey } from '@lowdefy/helpers';
+
 import isRecordingEnabled from '../../lib/server/recording/isRecordingEnabled.js';
 import safeScriptJson from '../lib/safeScriptJson.js';
 
@@ -43,6 +45,9 @@ function renderDevPage(c, { basePath = '' }) {
   const user = c.get('lowdefyContext')?.user ?? null;
   const themeConfig = readBuildJson('theme');
   const appJson = readBuildJson('app');
+  // The client reads the slug before root config arrives, to key the dark mode and locale
+  // preferences per app.
+  const slug = readBuildJson('appMeta').slug ?? null;
   const recording = { enabled: isRecordingEnabled(c.req.header('cookie')) };
 
   const VALID_COLOR_MODES = ['system', 'light', 'dark'];
@@ -52,11 +57,13 @@ function renderDevPage(c, { basePath = '' }) {
   const darkBg = themeConfig?.antd?.darkToken?.colorBgLayout ?? '#000';
   const lightBg = themeConfig?.antd?.lightToken?.colorBgLayout ?? '';
 
+  const darkModeStorageKey = appStorageKey({ basePath, name: 'lowdefy_darkMode', slug });
+
   const darkModeScript = `(function(){var c=${safeScriptJson(
     configColorMode
-  )};var db=${safeScriptJson(darkBg)};var lb=${safeScriptJson(
-    lightBg
-  )};var d;if(c==="dark")d=true;else if(c==="light")d=false;else{try{var p=localStorage.getItem("lowdefy_darkMode");if(p==="dark")d=true;else if(p==="light")d=false;else d=window.matchMedia("(prefers-color-scheme:dark)").matches}catch(e){d=window.matchMedia("(prefers-color-scheme:dark)").matches}}var bg=d?db:lb;document.documentElement.style.colorScheme=d?"dark":"light";if(bg)document.documentElement.style.backgroundColor=bg})();`;
+  )};var db=${safeScriptJson(darkBg)};var lb=${safeScriptJson(lightBg)};var k=${safeScriptJson(
+    darkModeStorageKey
+  )};var d;if(c==="dark")d=true;else if(c==="light")d=false;else{try{var p=localStorage.getItem(k);if(p===null)p=localStorage.getItem("lowdefy_darkMode");if(p==="dark")d=true;else if(p==="light")d=false;else d=window.matchMedia("(prefers-color-scheme:dark)").matches}catch(e){d=window.matchMedia("(prefers-color-scheme:dark)").matches}}var bg=d?db:lb;document.documentElement.style.colorScheme=d?"dark":"light";if(bg)document.documentElement.style.backgroundColor=bg})();`;
 
   const html = `<!DOCTYPE html>
 <html class="lowdefy">
@@ -81,8 +88,9 @@ window.__vite_plugin_react_preamble_installed__ = true;
     <div id="root"></div>
     <script id="__LOWDEFY_CONFIG__" type="application/json">${safeScriptJson({
       basePath,
-      user,
       recording,
+      slug,
+      user,
     })}</script>
     ${appJson.html?.appendBody ?? ''}
     <script type="module" src="${basePath}/client/main.jsx"></script>
