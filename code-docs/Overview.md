@@ -81,7 +81,7 @@ Lowdefy is extensible via npm packages. Everything the user sees or interacts wi
 These ship with Lowdefy and don't need explicit installation:
 
 - `@lowdefy/blocks-antd` - Primary UI components (Ant Design based)
-- `@lowdefy/blocks-antd-x` - AI chat components (AgentChat, AgentConversations)
+- `@lowdefy/blocks-antd-x` - AI components (AgentChat, AgentConversations, IntentInput)
 - `@lowdefy/blocks-basic` - HTML primitives
 - `@lowdefy/blocks-table` - Table and TableInput data tables (see [plugins/blocks/table.md](./plugins/blocks/table.md))
 - `@lowdefy/operators-js` - Core JavaScript operators

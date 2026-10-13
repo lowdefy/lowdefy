@@ -19,7 +19,7 @@ import { type } from '@lowdefy/helpers';
 // The question shapes a Decide request accepts, and the one place that knows
 // how each shape reads back. A question is exactly one of:
 //
-//   choice: <instructions>   options: { <name>: <description>, ... }
+//   choice: <instructions>   options: { <name>: <description> | { description, ... }, ... }
 //   yesno:  <instructions>   criteria: { yes: <description>, no: <description> }  (optional)
 //   score:  <instructions>   levels: [<lowest>, ..., <highest>]
 //
@@ -42,6 +42,18 @@ export function questionKind(question) {
   if (question?.yesno !== undefined) return 'yesno';
   if (question?.score !== undefined) return 'score';
   return null;
+}
+
+// An option is its description, or an object carrying one alongside keys Decide
+// ignores (label, icon, ...), so one intents file can feed a Decide request and
+// the block that shows the answer.
+export function optionDescriptions(question) {
+  return Object.fromEntries(
+    Object.entries(question.options ?? {}).map(([name, option]) => [
+      name,
+      type.isObject(option) ? option.description ?? null : option,
+    ])
+  );
 }
 
 // The values a branch may compare a field against — the options of a choice,

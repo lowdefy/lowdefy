@@ -16,7 +16,7 @@
 
 import { generateText, jsonSchema, Output } from 'ai';
 
-import { fromStructuredAnswer, questionKind } from './decideQuestions.js';
+import { fromStructuredAnswer, optionDescriptions, questionKind } from './decideQuestions.js';
 
 const INSTRUCTIONS = [
   'You make typed decisions about the STATE below. Answer every question from the state alone.',
@@ -48,7 +48,7 @@ function answerSchema(question) {
 function describeQuestion(id, question) {
   const kind = questionKind(question);
   if (kind === 'choice') {
-    const options = Object.entries(question.options).map(
+    const options = Object.entries(optionDescriptions(question)).map(
       ([name, description]) => `    - ${name}${description ? `: ${description}` : ''}`
     );
     return [`- ${id} (pick one option): ${question.choice}`, ...options].join('\n');

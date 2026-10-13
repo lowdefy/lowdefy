@@ -17,12 +17,16 @@
 import { experimental_evaluate as evaluate } from 'ai';
 import { type } from '@lowdefy/helpers';
 
-import { fromEvaluationAnswer, questionKind } from './decideQuestions.js';
+import { fromEvaluationAnswer, optionDescriptions, questionKind } from './decideQuestions.js';
 
 function toEvaluationQuestion(question) {
   const kind = questionKind(question);
   if (kind === 'choice') {
-    return { type: 'choice', instructions: question.choice, criteria: question.options };
+    return {
+      type: 'choice',
+      instructions: question.choice,
+      criteria: optionDescriptions(question),
+    };
   }
   if (kind === 'yesno') {
     return {

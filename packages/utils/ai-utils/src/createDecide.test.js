@@ -267,3 +267,56 @@ test('Decide schema requires state and questions', async () => {
     'Decide request property "questions" should have at least one question.'
   );
 });
+
+test('Decide sends only the descriptions of object options to the evaluation model', async () => {
+  const { default: createDecide } = await import('./createDecide.js');
+  const { provider } = gateway();
+  mockEvaluate.mockResolvedValue({
+    answers: {
+      intent: { type: 'choice', choice: 'event', probabilities: { event: 0.8, timer: 0.2 } },
+    },
+  });
+  const Decide = createDecide({
+    createProvider: () => provider,
+    backends: ['evaluation', 'structured-output'],
+  });
+  await Decide({
+    connection: { apiKey: 'k' },
+    request: {
+      model: 'typesafe-ai/jev',
+      state: 'lunch friday',
+      questions: {
+        intent: {
+          choice: 'What the person wants to make',
+          options: {
+            event: { label: 'Event', icon: 'Calendar', description: 'A meeting at a time' },
+            timer: { label: 'Timer' },
+          },
+        },
+      },
+    },
+  });
+  expect(mockEvaluate.mock.calls[0][0].questions.intent.criteria).toEqual({
+    event: 'A meeting at a time',
+    timer: null,
+  });
+});
+
+test('Decide schema accepts object options with extra keys', async () => {
+  const { default: createDecide } = await import('./createDecide.js');
+  const Decide = createDecide({ createProvider: jest.fn() });
+  const result = validate({
+    schema: Decide.schema,
+    data: {
+      model: 'm',
+      state: 'text',
+      questions: {
+        intent: {
+          choice: 'Which',
+          options: { event: { label: 'Event', description: 'A meeting' }, none: null },
+        },
+      },
+    },
+  });
+  expect(result).toEqual({ valid: true });
+});

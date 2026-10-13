@@ -598,6 +598,14 @@
       "typeName": "DateTimeSelector"
     },
     {
+      "slug": "input-blocks/intentinput",
+      "title": "IntentInput",
+      "section": "Input Blocks",
+      "path": "content/input-blocks/intentinput.md",
+      "kind": "block",
+      "typeName": "IntentInput"
+    },
+    {
       "slug": "input-blocks/monthselector",
       "title": "MonthSelector",
       "section": "Input Blocks",
@@ -4228,6 +4236,24 @@
       ],
       "hash": "6de9788ed7d75e565428f401c3bdc30c384aeee2764c675c56ae6acf3f6bbafd"
     },
+    "input-blocks/intentinput": {
+      "files": [
+        "../plugins/blocks/blocks-antd-x/src/blocks/IntentInput/gallery.yaml",
+        "../plugins/blocks/blocks-antd-x/src/blocks/IntentInput/meta.js",
+        "blocks/input/IntentInput.yaml",
+        "blocks/input/IntentInputGuide.md",
+        "requests/discord_message.yaml.njk",
+        "requests/insert_feedback.yaml",
+        "requests/insert_newsletter.yaml",
+        "templates/blocks/gallery.yaml.njk",
+        "templates/footer.yaml.njk",
+        "templates/general.yaml.njk",
+        "templates/header.yaml",
+        "templates/validate_email.yaml",
+        "version.yaml"
+      ],
+      "hash": "4b4ff3af43281ca129c0309b0c301d157af22d2e6cd7c6c8561842c62f3b7066"
+    },
     "input-blocks/monthselector": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/MonthSelector/gallery.yaml",
@@ -6221,7 +6247,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "a76603a6e59a6f812228cf541f78de5d8e37bcd15c3b2a0f9a3ba34f573f71a2"
+      "hash": "8da623deb6da413693d9b28a83a3f13e37a1772e8e7370349cdc2865ab0c1e5a"
     },
     "connections/anthropic": {
       "files": [
@@ -6236,7 +6262,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "e4aa3ba2cb428715f085825bf0109d407798d3aca879882ff94e498aecc63b8b"
+      "hash": "4707a9529fe6085a433225ae48908f202352fdcf05589f819e298f317cd6ae37"
     },
     "connections/google": {
       "files": [
@@ -6251,7 +6277,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "f6e55d30a35247736522a67027ea6e1d21c29ef0baeff8440c98882be84962d3"
+      "hash": "6ac9330f40f0ce4760b17329241a934644dbb995a53189270de7411836ea9c68"
     },
     "connections/mcp": {
       "files": [
@@ -6280,7 +6306,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "bed02929d9690a0a6ddf8b179f4b89c58e402d59378cc2b268daec9a02a13ee5"
+      "hash": "2efcf9e28d2cbf96549e9a01072fc701999caf6382da8dc5acc1f20c3c2ae3d8"
     },
     "connections/amazonredshift": {
       "files": [

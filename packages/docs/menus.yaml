@@ -528,6 +528,9 @@
         - id: DateTimeSelector
           type: MenuLink
           pageId: DateTimeSelector
+        - id: IntentInput
+          type: MenuLink
+          pageId: IntentInput
         - id: MonthSelector
           type: MenuLink
           pageId: MonthSelector
