@@ -23,6 +23,7 @@ import ErrorBoundary from './ErrorBoundary.js';
 import ErrorPage from './ErrorPage.js';
 import extractBlockTypes from './extractBlockTypes.js';
 import getLazyBlockLoadsInFlight from './getLazyBlockLoadsInFlight.js';
+import getSafeHref from './getSafeHref.js';
 import HtmlComponent from './HtmlComponent.js';
 import isEventFromDomDescendant from './isEventFromDomDescendant.js';
 import registerHtmlEnhancements, { getHtmlEnhancements } from './registerHtmlEnhancements.js';
@@ -40,6 +41,7 @@ export {
   extractBlockTypes,
   getHtmlEnhancements,
   getLazyBlockLoadsInFlight,
+  getSafeHref,
   HtmlComponent,
   isEventFromDomDescendant,
   registerHtmlEnhancements,
