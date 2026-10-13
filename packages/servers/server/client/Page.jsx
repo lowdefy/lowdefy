@@ -136,13 +136,13 @@ function Page({ auth, config, lowdefy }) {
         // renders the server's caller instead of mixing the two. A second
         // difference within the reload interval throws to the catch below,
         // whose full page load also renders the server's caller.
-        const reloadForCaller = await shouldReloadForCaller({
-          serverCaller: res.headers.get('x-lowdefy-caller'),
-          user: lowdefy.user,
-          window,
-        });
-        if (token !== latestNavRef.current) return;
-        if (reloadForCaller) {
+        if (
+          shouldReloadForCaller({
+            serverCaller: res.headers.get('x-lowdefy-caller'),
+            user: lowdefy.user,
+            window,
+          })
+        ) {
           window.location.reload();
           return;
         }

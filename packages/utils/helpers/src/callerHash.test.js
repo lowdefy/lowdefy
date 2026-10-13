@@ -18,31 +18,37 @@ import { createHash } from 'node:crypto';
 
 import callerHash from './callerHash.js';
 
-function expected(text) {
-  return createHash('sha256').update(text).digest('hex').slice(0, 16);
-}
+// Fixed vectors: the same values are asserted by the server's stampCaller and
+// the client's isOtherCaller tests, so both sides are pinned to one hash.
+const vectors = [
+  [{ id: 'user_1', organization_id: 'org_1' }, '82e92667feb5824d'],
+  [{ id: 'user_1' }, '881f96c3592f330e'],
+  [{ id: 'user_1', organization_id: null }, '881f96c3592f330e'],
+  [{ id: 'ü漢😀', organization_id: 'o' }, '29da7252950344e9'],
+];
 
-test('callerHash is empty for an anonymous caller', async () => {
-  await expect(callerHash({ user: null })).resolves.toBe('');
-  await expect(callerHash({ user: undefined })).resolves.toBe('');
+test.each(vectors)('callerHash of %j is %s', (user, expected) => {
+  expect(callerHash({ user })).toBe(expected);
 });
 
-test('callerHash is the first 16 hex characters of SHA-256 of user id and organization id', async () => {
-  await expect(callerHash({ user: { id: 'user_1', organization_id: 'org_1' } })).resolves.toBe(
-    expected('user_1:org_1')
-  );
+test('callerHash is empty for an anonymous caller', () => {
+  expect(callerHash({ user: null })).toBe('');
+  expect(callerHash({ user: undefined })).toBe('');
 });
 
-test('callerHash uses an empty organization when the caller has none', async () => {
-  await expect(callerHash({ user: { id: 'user_1' } })).resolves.toBe(expected('user_1:'));
-  await expect(callerHash({ user: { id: 'user_1', organization_id: null } })).resolves.toBe(
-    expected('user_1:')
-  );
+test('callerHash is the first 16 hex characters of SHA-256 of user id and organization id', () => {
+  // Lengths around the 55, 56 and 64 byte padding boundaries, and several blocks.
+  [1, 20, 53, 54, 55, 56, 62, 63, 64, 65, 119, 120, 128, 300].forEach((length) => {
+    const id = 'u'.repeat(length);
+    expect(callerHash({ user: { id, organization_id: 'org' } })).toBe(
+      createHash('sha256').update(`${id}:org`).digest('hex').slice(0, 16)
+    );
+  });
 });
 
-test('callerHash differs when only the organization changes', async () => {
-  const first = await callerHash({ user: { id: 'user_1', organization_id: 'org_1' } });
-  const second = await callerHash({ user: { id: 'user_1', organization_id: 'org_2' } });
+test('callerHash differs when only the organization changes', () => {
+  const first = callerHash({ user: { id: 'user_1', organization_id: 'org_1' } });
+  const second = callerHash({ user: { id: 'user_1', organization_id: 'org_2' } });
   expect(first).not.toBe(second);
   expect(first).toHaveLength(16);
 });

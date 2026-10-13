@@ -24,8 +24,8 @@ import isOtherCaller from './isOtherCaller.js';
 // switched, in another tab - so the page never shows two callers' data. A
 // second difference within the reload interval throws instead of reloading
 // again (see claimCallerReload).
-async function shouldReloadForCaller({ serverCaller, user, window }) {
-  if (!(await isOtherCaller({ serverCaller, user }))) {
+function shouldReloadForCaller({ serverCaller, user, window }) {
+  if (!isOtherCaller({ serverCaller, user })) {
     return false;
   }
   if (claimCallerReload({ window })) {

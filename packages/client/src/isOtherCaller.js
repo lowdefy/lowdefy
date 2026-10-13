@@ -19,18 +19,13 @@ import { callerHash, type } from '@lowdefy/helpers';
 // True when the server answered as another caller than the one this page
 // renders: serverCaller is the response's x-lowdefy-caller header (see the
 // server's stampCaller), user the rendered caller.
-async function isOtherCaller({ serverCaller, user }) {
+function isOtherCaller({ serverCaller, user }) {
   // A response with no header was not answered by a route that resolved a
   // caller (it failed before, or came from a proxy), so it claims no caller.
   if (type.isNone(serverCaller)) {
     return false;
   }
-  // Browsers expose WebCrypto only in secure contexts (https and localhost).
-  // A page served over plain http elsewhere cannot hash its caller to compare.
-  if (type.isNone(globalThis.crypto?.subtle)) {
-    return false;
-  }
-  return serverCaller !== (await callerHash({ user }));
+  return serverCaller !== callerHash({ user });
 }
 
 export default isOtherCaller;

@@ -55,7 +55,7 @@ async function request({
     body: JSON.stringify(body),
   });
   if (
-    await shouldReloadForCaller({
+    shouldReloadForCaller({
       serverCaller: res.headers.get('x-lowdefy-caller'),
       user,
       window,

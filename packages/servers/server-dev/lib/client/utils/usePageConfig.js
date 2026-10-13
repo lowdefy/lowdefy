@@ -84,7 +84,7 @@ export async function fetchPageConfig(url, { user }) {
     throw new Error(data.message || 'Request error');
   }
   if (
-    await shouldReloadForCaller({
+    shouldReloadForCaller({
       serverCaller: res.headers.get('x-lowdefy-caller'),
       user,
       window,

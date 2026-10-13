@@ -26,7 +26,7 @@ function stampCaller() {
   return async function stampCallerMiddleware(c, next) {
     await next();
     const context = c.get('lowdefyContext');
-    c.header('x-lowdefy-caller', await callerHash({ user: context.user }));
+    c.header('x-lowdefy-caller', callerHash({ user: context.user }));
   };
 }
 

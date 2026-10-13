@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import { createHash } from 'node:crypto';
 import { Hono } from 'hono';
 
 import stampCaller from './stampCaller.js';
@@ -41,9 +40,8 @@ test.each([
   const app = createApp({ user: { id: 'user_1', organization_id: 'org_1' } });
   const res = await app.request(path, { method: 'POST' });
   expect(res.status).toBe(status);
-  expect(res.headers.get('x-lowdefy-caller')).toBe(
-    createHash('sha256').update('user_1:org_1').digest('hex').slice(0, 16)
-  );
+  // The fixed vector callerHash's own tests pin, so server and client agree.
+  expect(res.headers.get('x-lowdefy-caller')).toBe('82e92667feb5824d');
 });
 
 test('stampCaller sends an empty x-lowdefy-caller for an anonymous caller', async () => {

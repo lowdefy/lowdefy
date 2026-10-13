@@ -14,24 +14,10 @@
   limitations under the License.
 */
 
-import { webcrypto } from 'node:crypto';
-import { TextEncoder } from 'node:util';
 import { callerHash } from '@lowdefy/helpers';
 import { AuthenticationError } from '@lowdefy/errors';
 
 import shouldReloadForCaller from './shouldReloadForCaller.js';
-
-const originalCrypto = globalThis.crypto;
-
-beforeEach(() => {
-  Object.defineProperty(globalThis, 'crypto', { value: webcrypto, configurable: true });
-  // jsdom carries neither WebCrypto's digest nor TextEncoder; browsers carry both.
-  globalThis.TextEncoder = TextEncoder;
-});
-
-afterEach(() => {
-  Object.defineProperty(globalThis, 'crypto', { value: originalCrypto, configurable: true });
-});
 
 function createWindow() {
   const stored = {};
@@ -47,18 +33,14 @@ function createWindow() {
 
 const user = { id: 'user_1', organization_id: 'org_1' };
 
-test('shouldReloadForCaller is false when the server answered as the rendered caller', async () => {
-  const serverCaller = await callerHash({ user });
-  await expect(shouldReloadForCaller({ serverCaller, user, window: createWindow() })).resolves.toBe(
-    false
-  );
+test('shouldReloadForCaller is false when the server answered as the rendered caller', () => {
+  const serverCaller = callerHash({ user });
+  expect(shouldReloadForCaller({ serverCaller, user, window: createWindow() })).toBe(false);
 });
 
-test('shouldReloadForCaller reloads once, then throws an AuthenticationError on a second difference', async () => {
+test('shouldReloadForCaller reloads once, then throws an AuthenticationError on a second difference', () => {
   const window = createWindow();
-  const serverCaller = await callerHash({ user: { id: 'user_2', organization_id: 'org_1' } });
-  await expect(shouldReloadForCaller({ serverCaller, user, window })).resolves.toBe(true);
-  await expect(shouldReloadForCaller({ serverCaller, user, window })).rejects.toBeInstanceOf(
-    AuthenticationError
-  );
+  const serverCaller = callerHash({ user: { id: 'user_2', organization_id: 'org_1' } });
+  expect(shouldReloadForCaller({ serverCaller, user, window })).toBe(true);
+  expect(() => shouldReloadForCaller({ serverCaller, user, window })).toThrow(AuthenticationError);
 });

@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import { webcrypto } from 'node:crypto';
-import { TextEncoder } from 'node:util';
 import { jest } from '@jest/globals';
 import { getDevError } from '@lowdefy/engine';
 import {
@@ -176,21 +174,16 @@ describe('build check', () => {
 
 describe('caller check', () => {
   const originalLocation = window.location;
-  const originalCrypto = globalThis.crypto;
   const userA = { id: 'user_a', organization_id: 'org_1' };
 
   beforeEach(() => {
     window.sessionStorage.clear();
     delete window.location;
     window.location = { reload: jest.fn() };
-    Object.defineProperty(globalThis, 'crypto', { value: webcrypto, configurable: true });
-    // jsdom carries neither WebCrypto's digest nor TextEncoder; browsers carry both.
-    globalThis.TextEncoder = TextEncoder;
   });
 
   afterEach(() => {
     window.location = originalLocation;
-    Object.defineProperty(globalThis, 'crypto', { value: originalCrypto, configurable: true });
   });
 
   async function expectReloadWithoutSettling(args) {
@@ -205,7 +198,7 @@ describe('caller check', () => {
     mockFetchResponse({
       ok: true,
       body: { value: 1 },
-      headers: { 'x-lowdefy-caller': await callerHash({ user: userA }) },
+      headers: { 'x-lowdefy-caller': callerHash({ user: userA }) },
     });
     await expect(request({ url: '/api/request/p/r', user: userA })).resolves.toEqual({ value: 1 });
     expect(window.location.reload).not.toHaveBeenCalled();
@@ -216,7 +209,7 @@ describe('caller check', () => {
       ok: true,
       body: { value: 1 },
       headers: {
-        'x-lowdefy-caller': await callerHash({ user: { id: 'user_b', organization_id: 'org_1' } }),
+        'x-lowdefy-caller': callerHash({ user: { id: 'user_b', organization_id: 'org_1' } }),
       },
     });
     await expectReloadWithoutSettling({ url: '/api/request/p/r', user: userA });
@@ -227,7 +220,7 @@ describe('caller check', () => {
       ok: true,
       body: { value: 1 },
       headers: {
-        'x-lowdefy-caller': await callerHash({ user: { id: 'user_a', organization_id: 'org_2' } }),
+        'x-lowdefy-caller': callerHash({ user: { id: 'user_a', organization_id: 'org_2' } }),
       },
     });
     await expectReloadWithoutSettling({ url: '/api/request/p/r', user: userA });
@@ -272,7 +265,7 @@ describe('caller check', () => {
 
   test('request reloads on a request 403 and throws an endpoint 403', async () => {
     const body = { name: 'AuthorizationError', message: 'Request "r" does not exist.' };
-    const headers = { 'x-lowdefy-caller': await callerHash({ user: userA }) };
+    const headers = { 'x-lowdefy-caller': callerHash({ user: userA }) };
     mockFetchResponse({ ok: false, status: 403, body, headers });
     await expectReloadWithoutSettling({
       url: '/api/request/p/r',
@@ -293,7 +286,7 @@ describe('caller check', () => {
       ok: false,
       status: 403,
       body: { name: 'TwoFactorEnrolmentRequiredError', message: 'Enrol a second factor.' },
-      headers: { 'x-lowdefy-caller': await callerHash({ user: userA }) },
+      headers: { 'x-lowdefy-caller': callerHash({ user: userA }) },
     });
     await expect(
       request({ url: '/api/request/p/r', reloadOnAuthorizationError: true, user: userA })

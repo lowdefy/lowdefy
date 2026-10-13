@@ -14,54 +14,35 @@
   limitations under the License.
 */
 
-import { webcrypto } from 'node:crypto';
-import { TextEncoder } from 'node:util';
 import { callerHash } from '@lowdefy/helpers';
 
 import isOtherCaller from './isOtherCaller.js';
 
-const originalCrypto = globalThis.crypto;
-
-beforeEach(() => {
-  Object.defineProperty(globalThis, 'crypto', { value: webcrypto, configurable: true });
-  // jsdom carries neither WebCrypto's digest nor TextEncoder; browsers carry both.
-  globalThis.TextEncoder = TextEncoder;
-});
-
-afterEach(() => {
-  Object.defineProperty(globalThis, 'crypto', { value: originalCrypto, configurable: true });
-});
-
 const user = { id: 'user_1', organization_id: 'org_1' };
 
-test('isOtherCaller is false when the server answered as the rendered caller', async () => {
-  const serverCaller = await callerHash({ user });
-  await expect(isOtherCaller({ serverCaller, user })).resolves.toBe(false);
+test('isOtherCaller is false when the server answered as the rendered caller', () => {
+  // The fixed vector callerHash's own tests pin, so server and client agree.
+  expect(isOtherCaller({ serverCaller: '82e92667feb5824d', user })).toBe(false);
 });
 
-test('isOtherCaller is false for an anonymous page whose caller stays anonymous', async () => {
-  await expect(isOtherCaller({ serverCaller: '', user: null })).resolves.toBe(false);
+test('isOtherCaller is false for an anonymous page whose caller stays anonymous', () => {
+  expect(isOtherCaller({ serverCaller: '', user: null })).toBe(false);
 });
 
-test('isOtherCaller is true when the server answered as another person', async () => {
-  const serverCaller = await callerHash({ user: { id: 'user_2', organization_id: 'org_1' } });
-  await expect(isOtherCaller({ serverCaller, user })).resolves.toBe(true);
+test('isOtherCaller is true when the server answered as another person', () => {
+  const serverCaller = callerHash({ user: { id: 'user_2', organization_id: 'org_1' } });
+  expect(isOtherCaller({ serverCaller, user })).toBe(true);
 });
 
-test('isOtherCaller is true when the server answered in another organization', async () => {
-  const serverCaller = await callerHash({ user: { id: 'user_1', organization_id: 'org_2' } });
-  await expect(isOtherCaller({ serverCaller, user })).resolves.toBe(true);
+test('isOtherCaller is true when the server answered in another organization', () => {
+  const serverCaller = callerHash({ user: { id: 'user_1', organization_id: 'org_2' } });
+  expect(isOtherCaller({ serverCaller, user })).toBe(true);
 });
 
-test('isOtherCaller is true when the server answered as nobody to a signed-in page', async () => {
-  await expect(isOtherCaller({ serverCaller: '', user })).resolves.toBe(true);
+test('isOtherCaller is true when the server answered as nobody to a signed-in page', () => {
+  expect(isOtherCaller({ serverCaller: '', user })).toBe(true);
 });
 
-test('isOtherCaller is false when the response names no caller', async () => {
-  await expect(isOtherCaller({ serverCaller: null, user })).resolves.toBe(false);
-});
-
-test('isOtherCaller is false when the browser has no WebCrypto (an insecure context)', async () => {
-  Object.defineProperty(globalThis, 'crypto', { value: {}, configurable: true });
-  await expect(isOtherCaller({ serverCaller: 'aaaaaaaaaaaaaaaa', user })).resolves.toBe(false);
+test('isOtherCaller is false when the response names no caller', () => {
+  expect(isOtherCaller({ serverCaller: null, user })).toBe(false);
 });
