@@ -20,21 +20,22 @@ export default {
     oneOf: [
       {
         type: 'string',
-        enum: ['id', 'conversationId', 'files'],
+        enum: ['id', 'conversationId', 'files', 'sharedState'],
         description:
-          'Field of the calling agent to return: its id in agents, the id of the conversation it runs in, or the files attached in that conversation.',
+          'Field of the calling agent to return: its id in agents, the id of the conversation it runs in, the files attached in that conversation, or the shared state of the chat.',
       },
       {
         type: 'boolean',
         enum: [true],
-        description: 'Return the calling agent as { id, conversationId, files }, or null.',
+        description:
+          'Return the calling agent as { id, conversationId, files, sharedState }, or null.',
       },
       {
         type: 'object',
         properties: {
           key: {
             type: 'string',
-            enum: ['id', 'conversationId', 'files'],
+            enum: ['id', 'conversationId', 'files', 'sharedState'],
             description: 'Field of the calling agent to return.',
           },
           default: {
@@ -42,7 +43,8 @@ export default {
           },
           all: {
             type: 'boolean',
-            description: 'Return the calling agent as { id, conversationId, files }, or null.',
+            description:
+              'Return the calling agent as { id, conversationId, files, sharedState }, or null.',
           },
         },
         additionalProperties: false,

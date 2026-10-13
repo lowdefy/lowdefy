@@ -55,3 +55,17 @@ test('_agent returns the default when not called by an agent', () => {
     _agent({ agent: null, location: 'location', params: { key: 'id', default: 'person' } })
   ).toBe('person');
 });
+
+test('_agent: sharedState returns the chat shared state, or null when absent', () => {
+  const sharedState = { browser: { userAgent: 'test' } };
+  expect(
+    _agent({ agent: { ...agent, sharedState }, location: 'location', params: 'sharedState' })
+  ).toEqual(sharedState);
+  expect(
+    _agent({
+      agent: { ...agent, sharedState: null },
+      location: 'location',
+      params: 'sharedState',
+    })
+  ).toBe(null);
+});
