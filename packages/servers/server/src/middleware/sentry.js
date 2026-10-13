@@ -14,14 +14,17 @@
   limitations under the License.
 */
 
-import * as Sentry from '@sentry/node';
 import { bindCredentialScrub } from '@lowdefy/node-utils';
 
-// Every request becomes an http.server transaction. Handler errors never propagate through
-// middleware in Hono — captureException happens in the app error handler.
+import sentrySdk from '../../lib/server/sentry/sentrySdk.js';
+
+// Every request becomes an http.server transaction when the server traces requests. Handler
+// errors never propagate through middleware in Hono — captureException happens in the app error
+// handler.
 function sentryMiddleware() {
   return async function sentry(c, next) {
-    if (!process.env.SENTRY_DSN) {
+    const Sentry = sentrySdk.current;
+    if (!Sentry) {
       return next();
     }
     // The request's transaction is sent once the response is written, after its credential scope

@@ -25,13 +25,13 @@ const checkEnvironmentGuards = jest.fn(() => {
 });
 const captureException = jest.fn();
 const flush = jest.fn(async () => true);
-const initSentryServer = jest.fn(() => {
+const sentry = { captureException, flush };
+const initSentryServer = jest.fn(async () => {
   calls.push('initSentryServer');
-  return false;
+  return null;
 });
 const createApp = jest.fn();
 
-jest.unstable_mockModule('@sentry/node', () => ({ captureException, flush }));
 jest.unstable_mockModule('@lowdefy/node-utils/checkEnvironmentGuards.js', () => ({
   default: checkEnvironmentGuards,
 }));
@@ -78,6 +78,7 @@ test('initServer throws when the current environment guards fail', async () => {
 
 test('initServer sends a guard failure to Sentry and flushes it before throwing', async () => {
   const error = new Error('Environment "prod" guards failed.');
+  initSentryServer.mockResolvedValueOnce(sentry);
   checkEnvironmentGuards.mockImplementationOnce(() => {
     throw error;
   });
@@ -86,15 +87,30 @@ test('initServer sends a guard failure to Sentry and flushes it before throwing'
   expect(flush).toHaveBeenCalled();
 });
 
-test('initServer logs that Sentry is enabled when Sentry was initialised', async () => {
-  initSentryServer.mockReturnValueOnce(true);
-  const { sentryEnabled } = await initServer();
-  expect(sentryEnabled).toBe(true);
+test('initServer throws a guard failure without Sentry when Sentry was not started', async () => {
+  const error = new Error('Environment "prod" guards failed.');
+  checkEnvironmentGuards.mockImplementationOnce(() => {
+    throw error;
+  });
+  await expect(initServer()).rejects.toBe(error);
+  expect(captureException).not.toHaveBeenCalled();
+});
+
+test('initServer starts Sentry for a long-running server unless the entry is serverless', async () => {
+  await initServer();
+  await initServer({ serverless: true });
+  expect(initSentryServer.mock.calls).toEqual([[{ serverless: false }], [{ serverless: true }]]);
+});
+
+test('initServer logs that Sentry is enabled and returns its SDK when Sentry was started', async () => {
+  initSentryServer.mockResolvedValueOnce(sentry);
+  const result = await initServer();
+  expect(result.sentry).toBe(sentry);
   expect(info.mock.calls).toEqual([['Sentry enabled: server']]);
 });
 
-test('initServer does not log Sentry when Sentry was not initialised', async () => {
-  const { sentryEnabled } = await initServer();
-  expect(sentryEnabled).toBe(false);
+test('initServer does not log Sentry when Sentry was not started', async () => {
+  const result = await initServer();
+  expect(result.sentry).toBe(null);
   expect(info).not.toHaveBeenCalled();
 });

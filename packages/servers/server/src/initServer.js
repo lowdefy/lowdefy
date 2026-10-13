@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import * as Sentry from '@sentry/node';
-
 import checkEnvironmentGuards from '@lowdefy/node-utils/checkEnvironmentGuards.js';
 
 import initSentryServer from '../lib/server/sentry/initSentry.js';
@@ -23,9 +21,10 @@ import initSentryServer from '../lib/server/sentry/initSentry.js';
 // The startup every production entry runs before it serves: the Node server (src/index.js) and the
 // Vercel function entry that `lowdefy vercel-output` generates. Keeping it in one place stops the
 // entries drifting apart. The build artifacts are read relative to process.cwd(), so an entry that
-// has to change directory imports this module dynamically, after the chdir.
-async function initServer() {
-  const sentryEnabled = initSentryServer();
+// has to change directory imports this module dynamically, after the chdir. A serverless entry
+// passes serverless: true, so Sentry reports errors only unless the app turns tracing on.
+async function initServer({ serverless = false } = {}) {
+  const sentry = await initSentryServer({ serverless });
 
   // The build checked the current environment's guards, but an image built once can be started
   // with different variables, so they are checked again before the server takes any traffic — and
@@ -40,8 +39,10 @@ async function initServer() {
       guards: config.environments?.[config.environment]?.guards,
     });
   } catch (error) {
-    Sentry.captureException(error);
-    await Sentry.flush(2000);
+    if (sentry) {
+      sentry.captureException(error);
+      await sentry.flush(2000);
+    }
     throw error;
   }
 
@@ -50,11 +51,11 @@ async function initServer() {
   const { default: createLogger } = await import('../lib/server/log/createLogger.js');
 
   const logger = createLogger({ server: 'lowdefy' });
-  if (sentryEnabled) {
+  if (sentry) {
     logger.info('Sentry enabled: server');
   }
 
-  return { createApp, logger, sentryEnabled };
+  return { createApp, logger, sentry };
 }
 
 export default initServer;

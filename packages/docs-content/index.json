@@ -3211,7 +3211,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "005f51b87f139c77c7627f1763d334f625e5d033b34c7d215bf3f26225851340"
+      "hash": "d9f7aed0a8f7307a142942d973e42f9eb2ad8adf5fcf463a0a05591270373e85"
     },
     "concepts/lists": {
       "files": [
@@ -3585,7 +3585,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "37c8e282969571cb13e99b5021a700a776a40b93d00a1c3f1906ce68ea2160ef"
+      "hash": "be5eb6aae68bfe32479e43bdbda4f2cbd568f40d3c84acadf7dc21bcab396762"
     },
     "deployment/deployment-environments": {
       "files": [

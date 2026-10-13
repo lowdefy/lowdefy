@@ -22,8 +22,8 @@ import { jest } from '@jest/globals';
 // the Sentry capture tested at the bottom of this file. Keep the three in sync
 // when changing any of them.
 const captureException = jest.fn();
-jest.unstable_mockModule('@sentry/node', () => ({ captureException }));
 
+const { default: sentrySdk } = await import('../../lib/server/sentry/sentrySdk.js');
 const { default: createErrorHandler } = await import('./errorHandler.js');
 
 // A string that must never reach a client. It is put on `received` at every
@@ -407,7 +407,7 @@ test('errorHandler treats a basePath prefixed page path as a page path', async (
 // context.handleError captures to Sentry itself (createHandleError ->
 // captureSentryError), so the handler must not capture the same fault again.
 test('errorHandler does not capture to Sentry when a lowdefyContext handled the error', async () => {
-  process.env.SENTRY_DSN = 'https://key@example.ingest.sentry.io/1';
+  sentrySdk.current = { captureException };
   const context = { handleError: jest.fn() };
   await createApp({
     context,
@@ -417,21 +417,21 @@ test('errorHandler does not capture to Sentry when a lowdefyContext handled the 
 
   expect(context.handleError).toHaveBeenCalledTimes(1);
   expect(captureException).not.toHaveBeenCalled();
-  delete process.env.SENTRY_DSN;
+  sentrySdk.current = null;
 });
 
 test('errorHandler captures to Sentry when there is no lowdefyContext to handle the error', async () => {
-  process.env.SENTRY_DSN = 'https://key@example.ingest.sentry.io/1';
+  sentrySdk.current = { captureException };
   const error = createErrorWithCause();
   await createApp({ error, logger: createLogger() }).request('/api/request/getUsers');
 
   expect(captureException).toHaveBeenCalledTimes(1);
   expect(captureException).toHaveBeenCalledWith(error);
-  delete process.env.SENTRY_DSN;
+  sentrySdk.current = null;
 });
 
-test('errorHandler does not capture to Sentry when SENTRY_DSN is unset', async () => {
-  delete process.env.SENTRY_DSN;
+test('errorHandler does not capture to Sentry when Sentry was not started', async () => {
+  sentrySdk.current = null;
   await createApp({ error: createErrorWithCause(), logger: createLogger() }).request(
     '/api/request/getUsers'
   );

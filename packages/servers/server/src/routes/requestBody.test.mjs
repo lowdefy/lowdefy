@@ -20,7 +20,6 @@ import { jest } from '@jest/globals';
 import { isSameOriginRequest, parseRequestBody } from '@lowdefy/api';
 
 const mockCallEndpoint = jest.fn();
-jest.unstable_mockModule('@sentry/node', () => ({ captureException: jest.fn() }));
 const mockGetEndpointConfig = jest.fn().mockRejectedValue(new Error('not found'));
 const mockRunWebhookEndpoint = jest.fn();
 jest.unstable_mockModule('@lowdefy/api', () => ({

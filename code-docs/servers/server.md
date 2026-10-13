@@ -54,7 +54,7 @@ lowdefy build
 - `hono` + `@hono/node-server` - HTTP server (Web Standards Request/Response)
 - `@auth/core` + `@hono/auth-js` - Auth.js engine and Hono integration
 - `vite` + `@vitejs/plugin-react` - Client bundling
-- `@sentry/node` + `@sentry/browser` + `@sentry/vite-plugin` - Error tracking
+- `@sentry/node` (tracing) or `@sentry/node-core/light` (errors only), loaded only when `SENTRY_DSN` is set, + `@sentry/browser` + `@sentry/vite-plugin` - Error tracking
 - `react` (18.2.0)
 - `pino` (via `@lowdefy/logger`)
 
@@ -98,7 +98,7 @@ server/
 │   │   │   ├── getAuthConfig.js  # Wires build auth plugins into api getAuthConfig
 │   │   │   └── session.js        # getAuthUser(c) → session
 │   │   ├── log/               # createLogger, createHandleError, logRequest
-│   │   └── sentry/            # initSentry, captureSentryError, setSentryUser
+│   │   └── sentry/            # initSentry, sentrySdk, captureSentryError, setSentryUser
 │   └── client/
 │       ├── createLogUsage.js
 │       ├── sentry/            # @sentry/browser init + helpers
@@ -151,7 +151,7 @@ c.set('lowdefyContext', context);
 - Page paths: plain `Internal Server Error` 500.
 - `context.handleError(error)` (structured pino log + Sentry capture) runs for both.
 
-**Every production entry starts through `initServer`.** `src/initServer.js` runs the startup both production entries need, in order: `initSentryServer()`, `checkEnvironmentGuards` for the current environment, then the app import (after Sentry, so instrumentation observes the module graph). Guards run before the app loads so a misconfigured start fails without importing every plugin under the wrong variables. A guard failure is captured and flushed to Sentry explicitly before it is rethrown: the Vercel launcher catches errors thrown while it imports the function entry, so no global handler would report it. The entries are `src/index.js` (Node and `lowdefy docker-output`) and the Vercel function entry that `lowdefy vercel-output` generates (`packages/cli/src/commands/vercelOutput/apiHandler.js`), which imports it dynamically after its chdir because the build artifacts are read relative to the cwd. A step added to only one entry drifts: `captureSentryError` only checks `SENTRY_DSN`, so an entry that skips Sentry init silently drops every server event. The Vercel entry also flushes Sentry once each request settles, including one that fails, through Vercel's `waitUntil`, because the function can be suspended once the response ends. WebSocket upgrades are not flushed per request. A failed guard throws out of the Vercel entry's module init, so the function fails every request rather than serving with the wrong variables. `server-dev` and `server-e2e` have no Sentry.
+**Every production entry starts through `initServer`.** `src/initServer.js` runs the startup both production entries need, in order: `initSentryServer()`, `checkEnvironmentGuards` for the current environment, then the app import (after Sentry, so instrumentation observes the module graph). Guards run before the app loads so a misconfigured start fails without importing every plugin under the wrong variables. A guard failure is captured and flushed to Sentry explicitly before it is rethrown: the Vercel launcher catches errors thrown while it imports the function entry, so no global handler would report it. The entries are `src/index.js` (Node and `lowdefy docker-output`) and the Vercel function entry that `lowdefy vercel-output` generates (`packages/cli/src/commands/vercelOutput/apiHandler.js`), which imports it dynamically after its chdir because the build artifacts are read relative to the cwd. A step added to only one entry drifts: Sentry reporting reads the SDK `initSentryServer` stored, so an entry that skips Sentry init silently drops every server event. The Vercel entry passes `initServer({ serverless: true })`, so Sentry reports errors only (light SDK, no OpenTelemetry, no client reports) unless `logger.sentry.serverTracing` is `true` — see [Sentry Integration](../architecture/error-tracing.md#which-server-sdk-starts). It also flushes Sentry once each request settles and its response closes, including one that fails, through Vercel's `waitUntil`, because the function can be suspended once the response ends; the flush settles at once when the request queued nothing. WebSocket upgrades are not flushed per request. A failed guard throws out of the Vercel entry's module init, so the function fails every request rather than serving with the wrong variables. `server-dev` and `server-e2e` have no Sentry.
 
 ## Page Rendering
 
