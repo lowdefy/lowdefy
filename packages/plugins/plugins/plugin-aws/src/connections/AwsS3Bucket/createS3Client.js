@@ -22,6 +22,9 @@ function createS3Client({ connection }) {
   const config = {
     credentials: { accessKeyId, secretAccessKey },
     region,
+    // Streamed bodies (AwsS3PutObject "url") reach the SDK in the chunks the source sends. The SDK's
+    // aws-chunked upload rejects any non-final chunk under 8192 bytes unless it buffers the stream.
+    requestStreamBufferSize: 65536,
   };
   if (!type.isNone(endpoint)) {
     config.endpoint = endpoint;
