@@ -37,8 +37,12 @@ import {
 import getPageSpacing from '../getPageSpacing.js';
 import withPageTheme from '../withPageTheme.js';
 
-function getInitialSiderState({ properties }) {
-  const storageKey = `lf-${properties.siderStorageKey ?? 'sider'}-open`;
+function getSiderStorageKey({ methods, properties }) {
+  return methods.getAppStorageKey(`lf-${properties.siderStorageKey ?? 'sider'}-open`);
+}
+
+function getInitialSiderState({ methods, properties }) {
+  const storageKey = getSiderStorageKey({ methods, properties });
   try {
     const stored = localStorage.getItem(storageKey);
     if (stored === 'true') return true;
@@ -49,8 +53,8 @@ function getInitialSiderState({ properties }) {
   return !properties.sider?.initialCollapsed;
 }
 
-function writeSiderState({ properties, open }) {
-  const storageKey = `lf-${properties.siderStorageKey ?? 'sider'}-open`;
+function writeSiderState({ methods, properties, open }) {
+  const storageKey = getSiderStorageKey({ methods, properties });
   try {
     localStorage.setItem(storageKey, String(open));
   } catch {
@@ -72,7 +76,9 @@ const PageSiderMenu = ({
   styles = {},
 }) => {
   const spacing = getPageSpacing({ padding: properties.padding });
-  const [openSiderState, setSiderOpen] = useState(() => getInitialSiderState({ properties }));
+  const [openSiderState, setSiderOpen] = useState(() =>
+    getInitialSiderState({ methods, properties })
+  );
   useEffect(() => {
     registerDarkModeMethod(methods);
     registerLocaleMethod(methods);
@@ -80,12 +86,12 @@ const PageSiderMenu = ({
       const next = !openSiderState;
       methods._setSiderOpen({ open: next });
       setSiderOpen(next);
-      writeSiderState({ properties, open: next });
+      writeSiderState({ methods, properties, open: next });
     });
     methods.registerMethod('setSiderOpen', ({ open }) => {
       methods._setSiderOpen({ open });
       setSiderOpen(open);
-      writeSiderState({ properties, open });
+      writeSiderState({ methods, properties, open });
     });
   });
 

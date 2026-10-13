@@ -122,9 +122,14 @@ function collectConsoleMessages(page) {
 
 test.describe('AG Grid theming', () => {
   test.beforeEach(async ({ page }) => {
-    // SetDarkMode persists the preference in localStorage, so clear it on every navigation to keep
-    // the tests independent of the order they run in.
-    await page.addInitScript(() => window.localStorage.removeItem('lowdefy_darkMode'));
+    // SetDarkMode persists the preference in localStorage (under the app's key, ending in
+    // lowdefy_darkMode), so clear it on every navigation to keep the tests independent of the
+    // order they run in.
+    await page.addInitScript(() =>
+      Object.keys(window.localStorage)
+        .filter((key) => key.endsWith('lowdefy_darkMode'))
+        .forEach((key) => window.localStorage.removeItem(key))
+    );
   });
 
   // ============================================

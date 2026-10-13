@@ -16,13 +16,17 @@
 
 import request from './request.js';
 
-function createCallAPI({ basePath, buildId }) {
+function createCallAPI(lowdefy) {
+  const { basePath, buildId } = lowdefy;
   function callAPI({ payload, endpointId, pageId, blockId }) {
     return request({
       buildId,
       url: `${basePath}/api/endpoints/${endpointId}`,
       method: 'POST',
       body: { payload, pageId, blockId },
+      reloadOnAuthorizationError: false,
+      // Read per call: the rendered caller changes with the session.
+      user: lowdefy.user,
     });
   }
   return callAPI;

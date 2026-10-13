@@ -14,10 +14,14 @@
   limitations under the License.
 */
 
-// localStorage keys are shared by the whole origin; the prefix keeps table views apart from
-// anything else the app stores.
-function getStorageKey(key) {
-  return `lowdefy-table:${key}`;
+// Pages and API responses carry the caller's data, so neither the browser nor a
+// shared proxy may store them. Set after next() so redirects and error responses
+// carry it too.
+function noStore() {
+  return async function noStoreMiddleware(c, next) {
+    await next();
+    c.header('Cache-Control', 'private, no-store');
+  };
 }
 
-export default getStorageKey;
+export default noStore;

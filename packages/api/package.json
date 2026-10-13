@@ -28,6 +28,7 @@
   "exports": {
     ".": "./dist/index.js",
     "./context/*": "./dist/context/*",
+    "./csp/*": "./dist/csp/*",
     "./routes/*": "./dist/routes/*"
   },
   "files": [

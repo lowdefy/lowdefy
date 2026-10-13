@@ -142,7 +142,7 @@ test('_media darkMode defaults to false when __lowdefy_isDark is not set', () =>
   ).toEqual(false);
 });
 
-test('_media darkModePreference returns system when no localStorage', () => {
+test('_media darkModePreference returns system when the client has set no preference', () => {
   expect(
     media({
       params: 'darkModePreference',
@@ -152,7 +152,7 @@ test('_media darkModePreference returns system when no localStorage', () => {
   ).toEqual('system');
 });
 
-test('_media darkModePreference returns stored preference', () => {
+test('_media darkModePreference returns the preference the client read', () => {
   expect(
     media({
       params: 'darkModePreference',
@@ -161,7 +161,7 @@ test('_media darkModePreference returns stored preference', () => {
         window: {
           innerHeight: 300,
           innerWidth: 500,
-          localStorage: { getItem: () => 'dark' },
+          __lowdefy_darkModePreference: 'dark',
         },
       },
     })
@@ -174,7 +174,7 @@ test('_media darkModePreference returns stored preference', () => {
         window: {
           innerHeight: 300,
           innerWidth: 500,
-          localStorage: { getItem: () => 'light' },
+          __lowdefy_darkModePreference: 'light',
         },
       },
     })

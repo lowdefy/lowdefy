@@ -22,7 +22,7 @@ import { StyleProvider } from '@ant-design/cssinjs';
 import { App as AntdApp, theme as antdTheme } from 'antd';
 import { XProvider } from '@ant-design/x';
 
-import { serializer } from '@lowdefy/helpers';
+import { appStorageKey, serializer } from '@lowdefy/helpers';
 
 import antdLocaleLoaders from '../build/i18n/antdLocales.js';
 import appMeta from '../build/appMeta.json';
@@ -31,12 +31,17 @@ import dayjsLocaleMap from '../build/i18n/dayjsLocales.js';
 import rawLoggerConfig from '../build/logger.json';
 import Auth from '../lib/client/auth/Auth.jsx';
 import createLogUsage from '../lib/client/createLogUsage.js';
+import getCspNonce from '../lib/client/getCspNonce.js';
 import initSentryClient from '../lib/client/sentry/initSentryClient.js';
 import setSentryUser from '../lib/client/sentry/setSentryUser.js';
 import Page from './Page.jsx';
 
 // Deserialize to restore arrays (e.g. sentry.userFields) from ~arr markers.
 const loggerConfig = serializer.deserialize(rawLoggerConfig);
+
+// antd and antd X put this nonce on the style tags they add, so the page's
+// Content-Security-Policy applies them. Empty (no nonce) when the policy is off.
+const csp = { nonce: getCspNonce() };
 
 function ThemeTokenResolver({ lowdefyRef, children }) {
   const { token } = antdTheme.useToken();
@@ -68,9 +73,12 @@ function App({ config }) {
     lowdefyRef.current.theme = rootConfig.theme;
   }
 
+  // Device preferences, kept per app (the same key the HTML template's dark mode script reads).
+  const storageScope = { basePath: config.basePath ?? '', slug: rootConfig.lowdefyApp?.slug };
   const { algorithm, token, components } = useDarkMode({
     antd: lowdefyRef.current.theme?.antd,
     configDarkMode: lowdefyRef.current.theme?.darkMode,
+    storageKey: appStorageKey({ ...storageScope, name: 'lowdefy_darkMode' }),
   });
 
   const {
@@ -82,6 +90,7 @@ function App({ config }) {
     antdLocaleLoaders,
     antdXLocaleLoaders,
     dayjsLocaleMap,
+    storageKey: appStorageKey({ ...storageScope, name: 'lowdefy_locale' }),
   });
 
   if (rootConfig?.i18n?.defaultLocale) {
@@ -114,6 +123,7 @@ function App({ config }) {
   return (
     <StyleProvider layer>
       <XProvider
+        csp={csp}
         locale={mergedLocale}
         form={
           antdLocale?.Form?.defaultValidateMessages

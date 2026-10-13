@@ -16,8 +16,9 @@
 
 import { getFromObject, getMediaViewport, getObjectReadKeys } from '@lowdefy/operators';
 
+// The client keeps the preference it reads from storage, under the app's key.
 function getDarkModePreference(window) {
-  return window.localStorage?.getItem('lowdefy_darkMode') ?? 'system';
+  return window.__lowdefy_darkModePreference ?? 'system';
 }
 
 function getDarkMode(window) {

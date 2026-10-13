@@ -16,6 +16,8 @@
 
 import React from 'react';
 
+import getCspNonce from './getCspNonce.js';
+
 const BuildingPage = () => {
   return (
     <div
@@ -32,7 +34,7 @@ const BuildingPage = () => {
           "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
       }}
     >
-      <style>
+      <style nonce={getCspNonce()}>
         {`
           @keyframes building-progress {
             0% { transform: translateX(-100%); }

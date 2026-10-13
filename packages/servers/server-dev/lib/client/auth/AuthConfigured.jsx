@@ -27,6 +27,7 @@ import {
 import { oauthProviderClient } from '@better-auth/oauth-provider/client';
 import { passkeyClient } from '@better-auth/passkey/client';
 
+import claimCallerReload from '@lowdefy/client/claimCallerReload.js';
 import { normalizeCaller } from '@lowdefy/helpers';
 
 import bundleBuildId from '../bundleBuildId.js';
@@ -101,14 +102,33 @@ function Session({ children, reloadSuppressedRef, serverUser }) {
     if (session) {
       wasAuthenticated.current = true;
     }
+    // An auth call that navigates away (a logout or sign-in with a callback)
+    // suppresses both reloads below - its own navigation would otherwise race
+    // them.
+    if (reloadSuppressedRef.current) {
+      return;
+    }
     // Reload after sign-out (or session revocation) so the server can apply
     // the page auth fork - a protected page redirects to the login page.
-    // A logout with a callbackUrl suppresses the reload - its own navigation
-    // would otherwise race this one.
-    if (wasAuthenticated.current && !isPending && !session && !reloadSuppressedRef.current) {
+    if (wasAuthenticated.current && !isPending && !session) {
+      window.location.reload();
+      return;
+    }
+    // The session now names another person than the caller this page renders
+    // (a sign-in as someone else, here or in another tab). Reload so the server
+    // renders the page for the new person, rather than keep showing the
+    // previous person's page and data. At most once per reload interval
+    // (claimCallerReload): past it the previous caller stays rendered, and its
+    // requests fail when the server answers as the new person.
+    if (
+      session?.user &&
+      resolvedUser &&
+      session.user.id !== resolvedUser.id &&
+      claimCallerReload({ window })
+    ) {
       window.location.reload();
     }
-  }, [session, isPending]);
+  }, [session, isPending, resolvedUser]);
 
   if (isPending) {
     return children(resolvedUser, setResolvedUser);
@@ -121,15 +141,12 @@ function Session({ children, reloadSuppressedRef, serverUser }) {
     return children({ roles: [], ...normalizeCaller(session.user) }, setResolvedUser);
   }
   if (resolved.id !== session.user.id) {
-    // The ref has not caught up with a changed session user - a sign-in as a
-    // different person lands between the session refetch and the /api/user
-    // result. Render the last resolved caller whole rather than mixing the new
-    // session user with the previous person's resolved fields, or falling back
-    // to a caller with no roles - blocks re-evaluate operators on render, so a
-    // role-guarded page would act on an empty role list. UpdateSession closes
-    // the window when it lands the new caller; a flow that changes the session
-    // user without chaining it leaves the previous caller rendered until the
-    // next page load.
+    // The session names another person than the resolved caller; the effect
+    // above reloads the page. Until it unloads, render the last resolved
+    // caller whole rather than mixing the new session user with the previous
+    // person's resolved fields, or falling back to a caller with no roles -
+    // blocks re-evaluate operators on render, so a role-guarded page would act
+    // on an empty role list.
     return children(resolved, setResolvedUser);
   }
   // _user is one object with one meaning on both sides: the resolved caller is
@@ -175,7 +192,7 @@ function AuthConfigured({ authConfig, children, serverUser }) {
       }
       return response.json();
     },
-    suppressSignOutReload: () => {
+    suppressSessionReload: () => {
       reloadSuppressedRef.current = true;
     },
     acceptInvitation: (params) => authClient.organization.acceptInvitation(sessionScoped(params)),

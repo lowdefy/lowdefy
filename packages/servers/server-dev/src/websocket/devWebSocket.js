@@ -41,7 +41,7 @@ async function handleWebSocketUpgrade({ app, request, socket, head, wss }) {
   });
 
   const url = `http://${request.headers.host ?? 'localhost'}${request.url}`;
-  const websocketUpgrade = { context: null };
+  const websocketUpgrade = { context: null, strategies: null };
   const response = await app.fetch(new Request(url, { headers }), { websocketUpgrade });
 
   if (response.status !== 200) {
@@ -58,7 +58,7 @@ async function handleWebSocketUpgrade({ app, request, socket, head, wss }) {
 
   // A 200 without a context means the request reached another handler than
   // the websocket route (a route or middleware answered first).
-  const { context } = websocketUpgrade;
+  const { context, strategies } = websocketUpgrade;
   if (type.isNone(context)) {
     logger.warn(
       { event: 'ws_upgrade_refused', status: response.status },
@@ -69,9 +69,14 @@ async function handleWebSocketUpgrade({ app, request, socket, head, wss }) {
   }
 
   wss.handleUpgrade(request, socket, head, (ws) => {
+    // The upgrade's headers stay with the connection: its caller is resolved
+    // from them again while the socket is open.
     const connection = createWebSocketConnection(context, {
+      closeSocket: ({ code, reason }) => ws.close(code, reason),
+      headers,
       registry,
       send: (message) => ws.send(message),
+      strategies,
     });
     ws.on('message', (data) => {
       connection.handleMessage(data.toString());

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { getSafeHref } from '@lowdefy/helpers';
+
 import blockDefaultProps from './blockDefaultProps.js';
 import blockSchema from './blockSchema.js';
 import buildBlockSchema from './buildBlockSchema.js';
@@ -40,6 +42,7 @@ export {
   extractBlockTypes,
   getHtmlEnhancements,
   getLazyBlockLoadsInFlight,
+  getSafeHref,
   HtmlComponent,
   isEventFromDomDescendant,
   registerHtmlEnhancements,

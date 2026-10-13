@@ -19,15 +19,23 @@ import GetLocalStorage from '../GetLocalStorage/GetLocalStorage.js';
 import SetLocalStorage from './SetLocalStorage.js';
 
 const mockSetItem = jest.fn();
-const globals = { window: { localStorage: { setItem: mockSetItem } } };
+const mockRemoveItem = jest.fn();
+const globals = { window: { localStorage: { removeItem: mockRemoveItem, setItem: mockSetItem } } };
+const methods = { getAppStorageKey: (key) => `lowdefy:app::${key}` };
 
 beforeEach(() => {
   mockSetItem.mockReset();
+  mockRemoveItem.mockReset();
 });
 
-test('SetLocalStorage writes the serialized value to the key', () => {
-  SetLocalStorage({ globals, params: { key: 'settings', value: { theme: 'dark' } } });
-  expect(mockSetItem.mock.calls).toEqual([['settings', '{"theme":"dark"}']]);
+test('SetLocalStorage writes the serialized value under the app key', () => {
+  SetLocalStorage({ globals, methods, params: { key: 'settings', value: { theme: 'dark' } } });
+  expect(mockSetItem.mock.calls).toEqual([['lowdefy:app::settings', '{"theme":"dark"}']]);
+});
+
+test('SetLocalStorage removes a value left under the key set before keys were kept per app', () => {
+  SetLocalStorage({ globals, methods, params: { key: 'settings', value: 'a' } });
+  expect(mockRemoveItem.mock.calls).toEqual([['settings']]);
 });
 
 test('SetLocalStorage stores dates so they are read back as Date objects', () => {
@@ -39,14 +47,22 @@ test('SetLocalStorage stores dates so they are read back as Date objects', () =>
           store[key] = value;
         },
         getItem: (key) => store[key] ?? null,
+        removeItem: (key) => {
+          delete store[key];
+        },
       },
     },
   };
   SetLocalStorage({
     globals: dateGlobals,
+    methods,
     params: { key: 'lastSeen', value: { at: new Date(1600000000000) } },
   });
-  const result = GetLocalStorage({ globals: dateGlobals, params: { key: 'lastSeen' } });
+  const result = GetLocalStorage({
+    globals: dateGlobals,
+    methods,
+    params: { key: 'lastSeen' },
+  });
   expect(result.at).toBeInstanceOf(Date);
   expect(result.at.valueOf()).toEqual(1600000000000);
 });
@@ -57,7 +73,7 @@ test('SetLocalStorage throws a UserError when the storage quota is exceeded', ()
   });
   let error;
   try {
-    SetLocalStorage({ globals, params: { key: 'settings', value: 'a' } });
+    SetLocalStorage({ globals, methods, params: { key: 'settings', value: 'a' } });
   } catch (e) {
     error = e;
   }
@@ -78,7 +94,7 @@ test('SetLocalStorage throws a UserError when the browser blocks storage access'
   };
   let error;
   try {
-    SetLocalStorage({ globals: blockedGlobals, params: { key: 'settings', value: 'a' } });
+    SetLocalStorage({ globals: blockedGlobals, methods, params: { key: 'settings', value: 'a' } });
   } catch (e) {
     error = e;
   }
@@ -87,33 +103,35 @@ test('SetLocalStorage throws a UserError when the browser blocks storage access'
 });
 
 test('SetLocalStorage throws when params is not an object', () => {
-  expect(() => SetLocalStorage({ globals, params: 'settings' })).toThrow(
+  expect(() => SetLocalStorage({ globals, methods, params: 'settings' })).toThrow(
     'SetLocalStorage params should be an object.'
   );
   expect(mockSetItem.mock.calls).toEqual([]);
 });
 
 test('SetLocalStorage throws when key is not a string', () => {
-  expect(() => SetLocalStorage({ globals, params: { key: 1, value: 'a' } })).toThrow(
+  expect(() => SetLocalStorage({ globals, methods, params: { key: 1, value: 'a' } })).toThrow(
     'SetLocalStorage "key" should be a non-empty string.'
   );
 });
 
 test('SetLocalStorage throws when key is an empty string', () => {
-  expect(() => SetLocalStorage({ globals, params: { key: '', value: 'a' } })).toThrow(
+  expect(() => SetLocalStorage({ globals, methods, params: { key: '', value: 'a' } })).toThrow(
     'SetLocalStorage "key" should be a non-empty string.'
   );
 });
 
 test('SetLocalStorage throws when key uses a reserved Lowdefy prefix', () => {
-  expect(() => SetLocalStorage({ globals, params: { key: 'lf-sider-open', value: 'a' } })).toThrow(
+  expect(() =>
+    SetLocalStorage({ globals, methods, params: { key: 'lf-sider-open', value: 'a' } })
+  ).toThrow(
     'SetLocalStorage "key" "lf-sider-open" is reserved. Keys starting with "lowdefy_" or "lf-" are used internally by Lowdefy.'
   );
   expect(mockSetItem.mock.calls).toEqual([]);
 });
 
 test('SetLocalStorage throws when value is undefined', () => {
-  expect(() => SetLocalStorage({ globals, params: { key: 'settings' } })).toThrow(
+  expect(() => SetLocalStorage({ globals, methods, params: { key: 'settings' } })).toThrow(
     'SetLocalStorage "value" is required.'
   );
 });

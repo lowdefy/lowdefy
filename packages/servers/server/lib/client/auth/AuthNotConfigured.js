@@ -58,7 +58,7 @@ function AuthNotConfigured({ authConfig, children, user = null }) {
     signInSocial: authNotConfigured,
     signOut: authNotConfigured,
     signUpEmail: authNotConfigured,
-    suppressSignOutReload: authNotConfigured,
+    suppressSessionReload: authNotConfigured,
     twoFactorDisable: authNotConfigured,
     twoFactorEnable: authNotConfigured,
     twoFactorGenerateBackupCodes: authNotConfigured,

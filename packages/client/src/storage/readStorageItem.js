@@ -16,16 +16,20 @@
 
 import { type } from '@lowdefy/helpers';
 
-// An href for a `url` cell, or null when the value must not become a link.
-// http(s), protocol-relative and root-relative URLs pass; a bare domain gets
-// https://; any other scheme (javascript:, data:, ...) is shown as text only.
-function getSafeUrl(value) {
-  if (!type.isString(value)) return null;
-  const text = value.trim();
-  if (text === '') return null;
-  if (/^(https?:)?\/\//i.test(text) || text.startsWith('/')) return text;
-  if (/^[a-z][a-z0-9+.-]*:/i.test(text)) return null;
-  return `https://${text}`;
+// Reads key, moving a value left under legacyKey (written before keys were kept per app) to it
+// the first time. Returns null when neither holds a value or the browser blocks storage.
+function readStorageItem({ key, legacyKey, storage }) {
+  try {
+    const value = storage.getItem(key);
+    if (!type.isNone(value)) return value;
+    const legacyValue = storage.getItem(legacyKey);
+    if (type.isNone(legacyValue)) return null;
+    storage.setItem(key, legacyValue);
+    storage.removeItem(legacyKey);
+    return legacyValue;
+  } catch {
+    return null;
+  }
 }
 
-export default getSafeUrl;
+export default readStorageItem;

@@ -54,6 +54,7 @@ import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.
 import resolveAuthConfigProjection from '../buildAuth/resolveAuthConfigProjection.js';
 import { serializeRegistry } from '../buildRefs/deferredRegistry.js';
 import buildTypes from '../buildTypes.js';
+import buildSecurity from '../buildSecurity/buildSecurity.js';
 import buildWebsockets from '../buildWebsockets.js';
 import validateCallAgentSteps from '../validateCallAgentSteps.js';
 import validateRenderNotificationSteps from '../validateRenderNotificationSteps.js';
@@ -67,6 +68,7 @@ import writeAppEvents from '../writeAppEvents.js';
 import writeAppMeta from '../writeAppMeta.js';
 import writeAuth from '../writeAuth.js';
 import writeConfig from '../writeConfig.js';
+import writeSecurity from '../writeSecurity.js';
 import writeConnections from '../writeConnections.js';
 import writeDynamicPolicies from '../writeDynamicPolicies.js';
 import writeTenantTargets from '../writeTenantTargets.js';
@@ -193,6 +195,8 @@ async function shallowBuild(options) {
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
     tryBuildStep(buildMcp, 'buildMcp', { components, context });
     tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
+    // After buildWebsockets: the policy allows the page's websocket when the app has websockets.
+    tryBuildStep(buildSecurity, 'buildSecurity', { components, context });
     tryBuildStep(buildNotifications, 'buildNotifications', { components, context });
     // Cross-config validations — need buildApi (stepIds) and the buildAgents/
     // buildNotifications id sets. Match the full build (index.js).
@@ -245,6 +249,7 @@ async function shallowBuild(options) {
     await writeWebsockets({ components, context });
     await writeNotifications({ components, context });
     await writeConfig({ components, context });
+    await writeSecurity({ context });
     await writeGlobal({ components, context });
     await writeTheme({ components, context });
     await writeI18n({ components, context });

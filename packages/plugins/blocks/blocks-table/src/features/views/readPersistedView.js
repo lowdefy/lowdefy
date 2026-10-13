@@ -17,7 +17,6 @@
 import { type } from '@lowdefy/helpers';
 
 import decodeViewParam from './decodeViewParam.js';
-import getStorageKey from './getStorageKey.js';
 
 function readStored({ persist }) {
   if (persist.storage === 'url') {
@@ -26,7 +25,7 @@ function readStored({ persist }) {
   // A private window, blocked site data or a malformed entry means no persisted view, never an
   // error.
   try {
-    const text = window.localStorage.getItem(getStorageKey(persist.key));
+    const text = window.localStorage.getItem(persist.storageKey);
     if (type.isNone(text)) return null;
     const payload = JSON.parse(text);
     return type.isObject(payload) ? payload : null;

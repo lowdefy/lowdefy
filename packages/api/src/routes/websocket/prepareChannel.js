@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import authorizeWebsocket from './authorizeWebsocket.js';
+import checkConnectionRead from '../request/checkConnectionRead.js';
 import getConnection from '../connections/getConnection.js';
 import getConnectionConfig from '../connections/getConnectionConfig.js';
 import getWebsocketConfig from './getWebsocketConfig.js';
@@ -64,6 +65,16 @@ async function prepareChannel(context, { websocketId, payload }) {
       payload,
       state: {},
       steps: {},
+    });
+    // A subscription reads the connection, so a connection that refuses reads
+    // refuses subscriptions, as it refuses read requests. Unlike a request
+    // type, a websocket type is checked unless its meta opts out with
+    // checkRead: false - a type that declares nothing still reads.
+    checkConnectionRead(context, {
+      connectionConfig,
+      connectionProperties,
+      requestConfig: websocketConfig,
+      requestResolver: { meta: { checkRead: websocketResolver.meta?.checkRead !== false } },
     });
   }
 

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import addNonceToElements from './csp/addNonceToElements.js';
 import buildEndpointResult from './response/buildEndpointResult.js';
 import callAgent from './routes/agent/callAgent.js';
 import callEndpoint from './routes/endpoints/callEndpoint.js';
@@ -22,6 +23,7 @@ import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
 import createAsMetadataHandler from './routes/auth/createAsMetadataHandler.js';
 import createChannelRegistry from './routes/websocket/createChannelRegistry.js';
+import createContentSecurityPolicy from './csp/createContentSecurityPolicy.js';
 import createMcpServer from './routes/mcp/createMcpServer.js';
 import createRequestSignal from './context/createRequestSignal.js';
 import createSystemContext from './context/createSystemContext.js';
@@ -62,6 +64,7 @@ import runWebhookEndpoint from './routes/endpoints/runWebhookEndpoint.js';
 import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
 
 export {
+  addNonceToElements,
   buildEndpointResult,
   callAgent,
   callEndpoint,
@@ -70,6 +73,7 @@ export {
   createApiContext,
   createAsMetadataHandler,
   createChannelRegistry,
+  createContentSecurityPolicy,
   createMcpServer,
   createRequestSignal,
   createSystemContext,

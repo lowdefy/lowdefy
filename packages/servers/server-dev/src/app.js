@@ -72,6 +72,7 @@ import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
 import mountDevPageRoutes from './routes/mountDevPageRoutes.js';
 import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
+import noStore from './middleware/noStore.js';
 import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import pingHandler from './routes/ping.js';
 import reloadHandler from './routes/reload.js';
@@ -80,6 +81,7 @@ import requestHandler from './routes/request.js';
 import requestTimeout from './middleware/requestTimeout.js';
 import rootHandler from './routes/root.js';
 import staleFlag from './middleware/staleFlag.js';
+import stampCaller from './middleware/stampCaller.js';
 import startIdleGc from '../lib/server/startIdleGc.js';
 import getDocsIndex from '../lib/docs/getDocsIndex.js';
 import usageHandler from './routes/usage.js';
@@ -215,6 +217,13 @@ function createApp() {
   }
 
   app.use('/api/*', apiContext());
+  // Responses that carry the caller's data are never stored by a browser or proxy cache,
+  // as in the production server. /api/root is the dev form of the root config the
+  // production page embeds. The page routes use the same middleware.
+  const noStoreMiddleware = noStore();
+  ['/api/root', '/api/page/*', '/api/user', '/api/request/*', '/api/endpoints/*'].forEach((route) =>
+    app.use(route, noStoreMiddleware)
+  );
   // Unified dev get-session: createLowdefyContext resolves the mock or headless
   // caller into context.user on every path, so read it here rather than
   // re-deriving the precedence. context.user is only absent in the real-engine
@@ -227,6 +236,11 @@ function createApp() {
     return next();
   });
   app.use('/api/auth/*', authMiddleware({ logger }));
+  // The caller each page, request and endpoint response was answered as: the
+  // client reloads when it differs from the caller it renders (stampCaller).
+  app.use('/api/request/*', stampCaller());
+  app.use('/api/endpoints/*', stampCaller());
+  app.use('/api/page/*', stampCaller());
   app.get('/api/root', rootHandler);
   app.get('/api/page/*', jitPageHandler);
   app.all('/api/request/*', requestHandler);
@@ -258,6 +272,8 @@ function createApp() {
   // so the shell can inject the resolved caller — without it the client's
   // _user never carries roles/organization_id under `lowdefy dev`.
   app.use('/*', apiContext());
+  // Registered after the static middleware, which answers a file without calling next().
+  app.use('/*', noStoreMiddleware);
   mountDevPageRoutes({ app, renderPage: (c) => renderDevPage(c, { basePath }) });
 
   app.onError(createErrorHandler({ basePath, logger }));

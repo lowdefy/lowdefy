@@ -79,7 +79,9 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
         >
           <Component
             methods={Object.assign(block.methods, {
+              getAppStorageKey: lowdefy._internal.storage.appKey,
               getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
+              getUserStorageKey: lowdefy._internal.storage.userKey,
               registerEvent: block.registerEvent,
               registerMethod: block.registerMethod,
               setValue: block.setValue,
@@ -125,7 +127,9 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
         >
           <Component
             methods={Object.assign(block.methods, {
+              getAppStorageKey: lowdefy._internal.storage.appKey,
               getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
+              getUserStorageKey: lowdefy._internal.storage.userKey,
               registerEvent: block.registerEvent,
               registerMethod: block.registerMethod,
               translate: lowdefy._internal.translate,

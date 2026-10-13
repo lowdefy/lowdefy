@@ -30,7 +30,11 @@ const upgrade = upgradeWebSocket((c) => {
   let connection;
   return {
     onOpen(event, ws) {
+      // No auth engine runs in the e2e server, so the connection keeps the
+      // cookie caller it was opened with.
       connection = createWebSocketConnection(context, {
+        closeSocket: ({ code, reason }) => ws.close(code, reason),
+        headers: c.req.raw.headers,
         registry,
         send: (message) => ws.send(message),
       });

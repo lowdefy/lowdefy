@@ -36,8 +36,12 @@ import {
 import getPageSpacing from '../getPageSpacing.js';
 import withPageTheme from '../withPageTheme.js';
 
-function getInitialSiderState({ properties }) {
-  const storageKey = `lf-${properties.siderStorageKey ?? 'sider'}-open`;
+function getSiderStorageKey({ methods, properties }) {
+  return methods.getAppStorageKey(`lf-${properties.siderStorageKey ?? 'sider'}-open`);
+}
+
+function getInitialSiderState({ methods, properties }) {
+  const storageKey = getSiderStorageKey({ methods, properties });
   try {
     const stored = localStorage.getItem(storageKey);
     if (stored === 'true') return true;
@@ -48,8 +52,8 @@ function getInitialSiderState({ properties }) {
   return !properties.sider?.initialCollapsed;
 }
 
-function writeSiderState({ properties, open }) {
-  const storageKey = `lf-${properties.siderStorageKey ?? 'sider'}-open`;
+function writeSiderState({ methods, properties, open }) {
+  const storageKey = getSiderStorageKey({ methods, properties });
   try {
     localStorage.setItem(storageKey, String(open));
   } catch {
@@ -71,7 +75,9 @@ const PageSidebarLayout = ({
   styles = {},
 }) => {
   const spacing = getPageSpacing({ padding: properties.padding });
-  const [openSiderState, setSiderOpen] = useState(() => getInitialSiderState({ properties }));
+  const [openSiderState, setSiderOpen] = useState(() =>
+    getInitialSiderState({ methods, properties })
+  );
   // Re-read localStorage on mount: during SSR localStorage is unavailable, so
   // the lazy initializer falls back to properties.sider.initialCollapsed. Once
   // hydrated we pick up the stored value so a reload restores the state the
@@ -79,7 +85,7 @@ const PageSidebarLayout = ({
   // also push the restored value through the registered sync method once it's
   // available.
   useEffect(() => {
-    setSiderOpen(getInitialSiderState({ properties }));
+    setSiderOpen(getInitialSiderState({ methods, properties }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
@@ -89,12 +95,12 @@ const PageSidebarLayout = ({
       const next = !openSiderState;
       methods._toggleSiderOpen({ open: next });
       setSiderOpen(next);
-      writeSiderState({ properties, open: next });
+      writeSiderState({ methods, properties, open: next });
     });
     methods.registerMethod('setSiderOpen', ({ open }) => {
       methods._toggleSiderOpen({ open });
       setSiderOpen(open);
-      writeSiderState({ properties, open });
+      writeSiderState({ methods, properties, open });
     });
   });
   const siderHeader = openSiderState ? content.siderHeader : content.siderHeaderClosed;

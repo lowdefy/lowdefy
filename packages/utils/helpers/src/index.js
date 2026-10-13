@@ -15,9 +15,11 @@
 */
 
 import applyArrayIndices from './applyArrayIndices.js';
+import appStorageKey from './appStorageKey.js';
 import builtinMessages from './builtinMessages.js';
 import buildPagePath from './buildPagePath.js';
 import cachedPromises from './cachedPromises.js';
+import callerHash from './callerHash.js';
 import cleanBuildArtifact from './cleanBuildArtifact.js';
 import createTraceId from './createTraceId.js';
 import extractErrorProps from './extractErrorProps.js';
@@ -29,6 +31,7 @@ import getLocaleDateFormat from './getLocaleDateFormat.js';
 import getLocaleDecimalSeparator from './getLocaleDecimalSeparator.js';
 import getLocaleGroupSeparator from './getLocaleGroupSeparator.js';
 import getOperatorType from './getOperatorType.js';
+import getSafeHref from './getSafeHref.js';
 import isInteractiveControl from './isInteractiveControl.js';
 import isMountEventName from './isMountEventName.js';
 import isTraceId from './isTraceId.js';
@@ -63,9 +66,11 @@ import wait from './wait.js';
 
 export {
   applyArrayIndices,
+  appStorageKey,
   buildPagePath,
   builtinMessages,
   cachedPromises,
+  callerHash,
   cleanBuildArtifact,
   createTraceId,
   extractErrorProps,
@@ -77,6 +82,7 @@ export {
   getLocaleDecimalSeparator,
   getLocaleGroupSeparator,
   getOperatorType,
+  getSafeHref,
   isInteractiveControl,
   isMountEventName,
   isTraceId,
