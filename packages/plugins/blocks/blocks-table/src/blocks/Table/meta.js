@@ -982,7 +982,7 @@ export default {
             enum: ['local', 'url'],
             default: 'local',
             description:
-              '`local` keeps the view in localStorage (none in a private window or with blocked storage); `url` writes a compact encoding to the query string, replacing history.',
+              '`local` keeps the view in localStorage, per app and per signed-in user and cleared at sign-out (none in a private window or with blocked storage); `url` writes a compact encoding to the query string, replacing history.',
           },
         },
       },

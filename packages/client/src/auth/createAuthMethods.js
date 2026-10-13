@@ -463,6 +463,9 @@ function createAuthMethods(lowdefy, auth) {
       auth.suppressSignOutReload();
     }
     const data = await unwrap(auth.signOut());
+    // The next person on this browser must not read the signed-out person's data. Clearing
+    // before the navigation or the session provider's reload keeps it from any later page.
+    lowdefy._internal.storage.clearUserStorage({ keepUserId: null });
     if (willNavigate) {
       navigateToTarget(callbackTarget);
     }

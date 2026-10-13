@@ -465,7 +465,7 @@ Dashboard Overview
 | `sider.initialCollapsed` | boolean | `false` | Set the initial collapsed state. |
 | `sider.width` | string \| number | - | Width of the sidebar. |
 | `sider.hideToggleButton` | boolean | `false` | Hide toggle button in sider. |
-| `siderStorageKey` | string | `"sider"` | localStorage key suffix for sider state persistence. Produces key 'lf-{siderStorageKey}-open'. |
+| `siderStorageKey` | string | `"sider"` | localStorage key suffix for sider state persistence. Produces key 'lf-{siderStorageKey}-open', kept per app. |
 | `header` | object | - | Header properties. |
 | `header.contentStyle` | object | - | Header content css style object. |
 | `toggleSiderButton` | object | - | Toggle sider button properties. |

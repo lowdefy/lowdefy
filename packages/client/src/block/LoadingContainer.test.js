@@ -30,7 +30,12 @@ function Card({ blockId, content, methods }) {
 }
 
 test('LoadingContainer renders a Card skeleton that can be clicked without an error', () => {
-  const lowdefy = { _internal: { components: {} }, basePath: '', menus: [], pageId: 'page' };
+  const lowdefy = {
+    _internal: { components: {}, storage: { appKey: jest.fn(), userKey: jest.fn() } },
+    basePath: '',
+    menus: [],
+    pageId: 'page',
+  };
   const skeleton = { id: 'skeleton', type: 'Card', slots: { content: { blocks: [] } } };
   const onError = jest.fn();
   window.addEventListener('error', onError);

@@ -46,6 +46,7 @@ beforeEach(() => {
   document.documentElement.removeAttribute('style');
   delete window.__lowdefy_setDarkMode;
   delete window.__lowdefy_isDark;
+  delete window.__lowdefy_darkModePreference;
   setupMatchMedia(false);
 });
 
@@ -200,4 +201,37 @@ test('exposes setDarkMode via window.__lowdefy_setDarkMode and toggles token/bac
   expect(result.current.token.colorBgLayout).toBe('#0f1117');
   expect(document.documentElement.style.backgroundColor).toBe('rgb(15, 17, 23)');
   expect(document.documentElement.style.colorScheme).toBe('dark');
+});
+
+const storageKey = 'lowdefy:app::lowdefy_darkMode';
+
+test('reads the dark mode preference from the app key', () => {
+  window.localStorage.setItem(storageKey, 'dark');
+  renderHook(() => useDarkMode({ antd: {}, storageKey }));
+  expect(window.__lowdefy_isDark).toBe(true);
+  expect(window.__lowdefy_darkModePreference).toBe('dark');
+});
+
+test('moves a dark mode preference stored before keys were kept per app to the app key', () => {
+  window.localStorage.setItem('lowdefy_darkMode', 'dark');
+  renderHook(() => useDarkMode({ antd: {}, storageKey }));
+  expect(window.__lowdefy_isDark).toBe(true);
+  expect(window.localStorage.getItem(storageKey)).toBe('dark');
+  expect(window.localStorage.getItem('lowdefy_darkMode')).toBeNull();
+});
+
+test('ignores the dark mode preference of another app', () => {
+  window.localStorage.setItem('lowdefy:other::lowdefy_darkMode', 'dark');
+  renderHook(() => useDarkMode({ antd: {}, storageKey }));
+  expect(window.__lowdefy_isDark).toBe(false);
+  expect(window.__lowdefy_darkModePreference).toBe('system');
+});
+
+test('setPreference writes the dark mode preference to the app key', () => {
+  renderHook(() => useDarkMode({ antd: {}, storageKey }));
+  act(() => {
+    window.__lowdefy_setDarkMode('light');
+  });
+  expect(window.localStorage.getItem(storageKey)).toBe('light');
+  expect(window.__lowdefy_darkModePreference).toBe('light');
 });

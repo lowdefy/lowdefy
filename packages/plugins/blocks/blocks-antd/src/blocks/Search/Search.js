@@ -70,6 +70,7 @@ function SearchBlock({
 
   const recentSearches = useRecentSearches({
     enabled: properties.recentSearches !== false,
+    getUserStorageKey: methods.getUserStorageKey,
     storageKey: properties.recentSearchesKey,
     maxCount: properties.recentSearchesCount,
   });

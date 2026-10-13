@@ -145,3 +145,35 @@ test('initLowdefyContext keeps the path memory when the context is initialised a
   });
   expect([...lowdefy.pathMemory.keys()]).toEqual(['home', 'other']);
 });
+
+test('initLowdefyContext keys storage by the app slug, base path and signed-in user', () => {
+  const args = baseArgs({ lowdefyApp: { slug: 'sales' } });
+  args.router.basePath = '/crm';
+  args.auth = { user: { id: 'u1' } };
+  const result = initLowdefyContext(args);
+  expect(result._internal.storage.appKey('lf-sider-open')).toBe('lowdefy:sales:/crm:lf-sider-open');
+  expect(result._internal.storage.userKey('views')).toBe(
+    'lowdefy:sales:/crm:lowdefy_user:u1:views'
+  );
+});
+
+test('initLowdefyContext clears user storage another person left on the browser', () => {
+  window.localStorage.clear();
+  window.localStorage.setItem('lowdefy:sales::lowdefy_user:u1:views', '{}');
+  window.localStorage.setItem('lowdefy:sales::lowdefy_darkMode', 'dark');
+  const args = baseArgs({ lowdefyApp: { slug: 'sales' } });
+  args.auth = { user: { id: 'u2' } };
+  args.window = window;
+  initLowdefyContext(args);
+  expect(Object.keys(window.localStorage)).toEqual(['lowdefy:sales::lowdefy_darkMode']);
+});
+
+test('initLowdefyContext keeps user storage of the person signed in', () => {
+  window.localStorage.clear();
+  window.localStorage.setItem('lowdefy:sales::lowdefy_user:u1:views', '{}');
+  const args = baseArgs({ lowdefyApp: { slug: 'sales' } });
+  args.auth = { user: { id: 'u1' } };
+  args.window = window;
+  initLowdefyContext(args);
+  expect(window.localStorage.getItem('lowdefy:sales::lowdefy_user:u1:views')).toBe('{}');
+});

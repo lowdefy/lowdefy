@@ -600,7 +600,7 @@ Profile from _menu
 | `sider.reverseArrow` | boolean | `false` | Direction of arrow, for a sider that expands from the right. |
 | `sider.width` | string \| number | - | Width of the sidebar. |
 | `sider.hideToggleButton` | boolean | `false` | Hide toggle button in sider. |
-| `siderStorageKey` | string | `"sider"` | localStorage key suffix for sider state persistence. Produces key 'lf-{siderStorageKey}-open'. |
+| `siderStorageKey` | string | `"sider"` | localStorage key suffix for sider state persistence. Produces key 'lf-{siderStorageKey}-open', kept per app. |
 | `toggleSiderButton` | object | - | Toggle sider button properties. |
 | `footer` | object | - | Footer properties. |
 | `padding` | string | `"default"` | Space around the page content. `compact` tightens it to 16px for dense, data-heavy pages. `none` removes it so content such as a table or grid runs edge to edge; the breadcrumb keeps its own inset. Enum: `default`, `compact`, `none`. |

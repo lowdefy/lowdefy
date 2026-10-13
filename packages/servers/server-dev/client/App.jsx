@@ -22,7 +22,7 @@ import { IconProvider, useDarkMode, useLocale } from '@lowdefy/client';
 import { StyleProvider } from '@ant-design/cssinjs';
 import { App as AntdApp, theme as antdTheme } from 'antd';
 import { XProvider } from '@ant-design/x';
-import { serializer } from '@lowdefy/helpers';
+import { appStorageKey, serializer } from '@lowdefy/helpers';
 
 import antdLocaleLoaders from '../build/i18n/antdLocales.js';
 import antdXLocaleLoaders from '../build/i18n/antdXLocales.js';
@@ -56,9 +56,12 @@ function App({ config, router }) {
     lowdefyRef.current.theme = rootConfig.theme;
   }
 
+  // Device preferences, kept per app (the same key the HTML template's dark mode script reads).
+  const storageScope = { basePath: router.basePath, slug: config.slug };
   const { algorithm, token, components } = useDarkMode({
     antd: lowdefyRef.current.theme?.antd,
     configDarkMode: lowdefyRef.current.theme?.darkMode,
+    storageKey: appStorageKey({ ...storageScope, name: 'lowdefy_darkMode' }),
   });
 
   const {
@@ -70,6 +73,7 @@ function App({ config, router }) {
     antdLocaleLoaders,
     antdXLocaleLoaders,
     dayjsLocaleMap,
+    storageKey: appStorageKey({ ...storageScope, name: 'lowdefy_locale' }),
   });
 
   if (rootConfig?.i18n?.defaultLocale) {

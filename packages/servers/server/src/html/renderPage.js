@@ -114,6 +114,7 @@ async function renderPage(c, { path, matchedPath, status = 200 }) {
       sentryDsn: process.env.SENTRY_DSN ?? null,
       user: user ?? null,
     },
+    slug: rootConfig.lowdefyApp?.slug,
     themeConfig,
     // A title written as an operator is evaluated on the client, which replaces this one.
     title: type.isString(pageConfig.properties?.title) ? pageConfig.properties.title : pageId,

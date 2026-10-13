@@ -70,3 +70,17 @@ test('template writes no prefetch links for a page without lazy blocks', () => {
   });
   expect(html).not.toContain('rel="prefetch"');
 });
+
+test('template dark mode script reads the preference under the app key', () => {
+  const html = template({
+    assets,
+    basePath: '/app',
+    config: { pageConfig: {} },
+    pageAssets: { js: [], css: [], prefetch: [] },
+    slug: 'sales',
+  });
+  expect(html).toContain('var k="lowdefy:sales:/app:lowdefy_darkMode";');
+  expect(html).toContain(
+    'var p=localStorage.getItem(k);if(p===null)p=localStorage.getItem("lowdefy_darkMode");'
+  );
+});

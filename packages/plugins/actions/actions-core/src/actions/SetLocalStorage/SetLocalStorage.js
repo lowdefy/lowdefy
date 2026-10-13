@@ -19,7 +19,7 @@ import { serializer, type } from '@lowdefy/helpers';
 
 import validateStorageKey from '../../localStorage/validateStorageKey.js';
 
-function SetLocalStorage({ globals, params }) {
+function SetLocalStorage({ globals, methods, params }) {
   if (!type.isObject(params)) {
     throw new Error('SetLocalStorage params should be an object.');
   }
@@ -30,7 +30,9 @@ function SetLocalStorage({ globals, params }) {
   }
   const serialized = serializer.serializeToString(value);
   try {
-    globals.window.localStorage.setItem(key, serialized);
+    globals.window.localStorage.setItem(methods.getAppStorageKey(key), serialized);
+    // A value set before keys were kept per app must not outlive the new one.
+    globals.window.localStorage.removeItem(key);
   } catch (error) {
     // Blocked storage (SecurityError) or a full quota (QuotaExceededError) comes from the
     // user's browser, not the app config.

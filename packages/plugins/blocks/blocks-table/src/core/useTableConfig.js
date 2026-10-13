@@ -65,7 +65,7 @@ function normalizePagination({ pagination, pageSize, server }) {
 // identity, so a re-evaluated but unchanged property set leaves the column model alone. Columns
 // go through the shared column core (`@lowdefy/blocks-antd/table`), the same normalisation and
 // compiled rules, tooltips and templates TableLight uses.
-function useTableConfig({ properties }) {
+function useTableConfig({ methods, properties }) {
   const columnsConfig = useStableConfig(properties.columns);
   const defaultColumn = useStableConfig(properties.defaultColumn);
   const defaultView = useStableConfig(properties.defaultView);
@@ -158,7 +158,7 @@ function useTableConfig({ properties }) {
         pageSize: properties.pageSize,
         server,
       }),
-      persist: normalizePersist(persist),
+      persist: normalizePersist({ getUserStorageKey: methods.getUserStorageKey, persist }),
       reorderable: properties.reorderable !== false,
       rowHeight: properties.rowHeight,
       rowLink: type.isObject(rowLink) ? rowLink : null,
@@ -178,6 +178,7 @@ function useTableConfig({ properties }) {
     getKey,
     properties.bordered,
     keyboard,
+    methods.getUserStorageKey,
     persist,
     properties.addRow,
     properties.addRowText,

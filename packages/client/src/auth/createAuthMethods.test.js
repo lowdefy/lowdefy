@@ -27,6 +27,7 @@ function setup({ signInResult, signUpResult } = {}) {
       globals: {
         window: { location: { assign, origin: 'https://app.lowdefy.test', search: '' } },
       },
+      storage: { clearUserStorage: jest.fn() },
     },
     home: { configured: false, pageId: 'home-page' },
     linkPaths: {},
@@ -246,6 +247,31 @@ test('logout without a callbackUrl signs out without navigating or suppressing t
   await logout();
   expect(auth.suppressSignOutReload).not.toHaveBeenCalled();
   expect(assign).not.toHaveBeenCalled();
+});
+
+test('logout clears user storage after signing out and before navigating', async () => {
+  const { auth, lowdefy, assign } = setup();
+  const order = [];
+  auth.signOut = jest.fn(() => {
+    order.push('signOut');
+    return Promise.resolve({ data: { success: true }, error: null });
+  });
+  lowdefy._internal.storage.clearUserStorage = jest.fn(() => order.push('clearUserStorage'));
+  assign.mockImplementation(() => order.push('navigate'));
+  const { logout } = createAuthMethods(lowdefy, auth);
+  await logout({ callbackUrl: { pageId: 'goodbye' } });
+  expect(lowdefy._internal.storage.clearUserStorage.mock.calls).toEqual([[{ keepUserId: null }]]);
+  expect(order).toEqual(['signOut', 'clearUserStorage', 'navigate']);
+});
+
+test('logout keeps user storage when signing out fails', async () => {
+  const { auth, lowdefy } = setup();
+  auth.signOut = jest.fn(() =>
+    Promise.resolve({ data: null, error: { message: 'Sign out failed.' } })
+  );
+  const { logout } = createAuthMethods(lowdefy, auth);
+  await expect(logout()).rejects.toThrow();
+  expect(lowdefy._internal.storage.clearUserStorage).not.toHaveBeenCalled();
 });
 
 test('login no longer handles signUp - a signUp-only call is rejected', async () => {

@@ -14,10 +14,12 @@
   limitations under the License.
 */
 
-// localStorage keys are shared by the whole origin; the prefix keeps table views apart from
-// anything else the app stores.
-function getStorageKey(key) {
-  return `lowdefy-table:${key}`;
+import userStoragePrefix from './userStoragePrefix.js';
+
+// The user id is encoded so the owner always ends at the next ":", whatever the id holds. An
+// anonymous visitor owns the empty id.
+function userStorageKey({ basePath, name, slug, userId }) {
+  return `${userStoragePrefix({ basePath, slug })}${encodeURIComponent(userId ?? '')}:${name}`;
 }
 
-export default getStorageKey;
+export default userStorageKey;

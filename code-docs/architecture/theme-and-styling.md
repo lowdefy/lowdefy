@@ -118,7 +118,7 @@ Key settings:
 Dark mode is managed by the `useDarkMode` hook with a three-tier resolution:
 
 1. **Config lock** — `theme.darkMode` in `lowdefy.yaml` (`'system'` | `'light'` | `'dark'`, defaults to `'system'`). When set to `'light'` or `'dark'`, overrides all user preferences.
-2. **User preference** — stored in `localStorage` (`lowdefy_darkMode`) as `'system'`, `'light'`, or `'dark'`. Set by the `SetDarkMode` action.
+2. **User preference** — stored in `localStorage` under the app key for `lowdefy_darkMode` (`appStorageKey`, `lowdefy:<slug>:<basePath>:lowdefy_darkMode`) as `'system'`, `'light'`, or `'dark'`. Set by the `SetDarkMode` action.
 3. **System preference** — `matchMedia('(prefers-color-scheme: dark)')` with a live `change` event listener that updates in real time when the OS theme changes.
 
 ```javascript
@@ -145,7 +145,7 @@ The server returns an HTML shell with no SSR — React renders entirely client-s
 
 This is solved with two coordinating pieces:
 
-1. **Synchronous inline script in the HTML shell** — Runs before first paint. Reads `configColorMode`, `darkBg` (from `themeConfig.antd.darkToken.colorBgLayout`, default `'#000'`) and `lightBg` (from `themeConfig.antd.lightToken.colorBgLayout`, default `''`) — interpolated server-side via `safeScriptJson` from the `theme.json` build artifact. Mirrors the `useDarkMode` resolution: config → `localStorage('lowdefy_darkMode')` → `prefers-color-scheme: dark`. Applies the resolved bg color to `document.documentElement.style.backgroundColor`. An empty string means no inline style (browser default white).
+1. **Synchronous inline script in the HTML shell** — Runs before first paint. Reads `configColorMode`, `darkBg` (from `themeConfig.antd.darkToken.colorBgLayout`, default `'#000'`) and `lightBg` (from `themeConfig.antd.lightToken.colorBgLayout`, default `''`) — interpolated server-side via `safeScriptJson` from the `theme.json` build artifact. Mirrors the `useDarkMode` resolution: config → `localStorage` (the app key, then the bare `lowdefy_darkMode` key from before keys were kept per app) → `prefers-color-scheme: dark`. Applies the resolved bg color to `document.documentElement.style.backgroundColor`. An empty string means no inline style (browser default white).
 
 2. **`useEffect` in `useDarkMode`** — Once React hydrates, actively manages the `<html>` inline background on every `isDark` change: sets the resolved `colorBgLayout` from `antd.darkToken` / `antd.lightToken` (falling back to `'#000'` in dark and unset in light). This handles dark/light toggling and ensures the background stays correct across client-side navigations.
 

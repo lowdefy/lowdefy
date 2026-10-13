@@ -70,7 +70,11 @@ const LoadingList = ({
         components={lowdefy._internal.components}
         list={contentList}
         menus={lowdefy.menus}
-        methods={loadingBlockMethods}
+        methods={{
+          ...loadingBlockMethods,
+          getAppStorageKey: lowdefy._internal.storage.appKey,
+          getUserStorageKey: lowdefy._internal.storage.userKey,
+        }}
         pageId={lowdefy.pageId}
         properties={skeleton.properties ?? blockProperties}
       />

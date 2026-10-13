@@ -17,7 +17,6 @@
 import { type } from '@lowdefy/helpers';
 
 import encodeViewParam from './encodeViewParam.js';
-import getStorageKey from './getStorageKey.js';
 
 function isEmptyPayload(payload) {
   return Object.keys(payload.view).length === 0 && type.isNone(payload.activeView);
@@ -39,7 +38,7 @@ function writePersistedView({ persist, payload }) {
     return;
   }
   try {
-    window.localStorage.setItem(getStorageKey(persist.key), JSON.stringify(payload));
+    window.localStorage.setItem(persist.storageKey, JSON.stringify(payload));
   } catch {
     // Blocked or full storage: the view lives for the session only.
   }
