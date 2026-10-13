@@ -17,7 +17,7 @@
 import recordCallerStamp from './recordCallerStamp.js';
 
 const FULL_STAMP =
-  '82e92667feb5824d; session=3a1d7b6848ba4816; roles=e7019efa6ab2bf1d; memberships=476954726056d64d';
+  '82e92667feb5824d; session=3a1d7b6848ba4816; roles=228d50a09b1b1e2b; memberships=476954726056d64d';
 
 test('recordCallerStamp keeps the parsed stamp on lowdefy._internal', () => {
   const lowdefy = { _internal: {} };
@@ -25,7 +25,7 @@ test('recordCallerStamp keeps the parsed stamp on lowdefy._internal', () => {
   expect(lowdefy._internal.callerStamp).toEqual({
     caller: '82e92667feb5824d',
     session: '3a1d7b6848ba4816',
-    roles: 'e7019efa6ab2bf1d',
+    roles: '228d50a09b1b1e2b',
     memberships: '476954726056d64d',
   });
 });

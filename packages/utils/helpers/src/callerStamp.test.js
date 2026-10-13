@@ -28,18 +28,18 @@ const authSession = { id: 'session_1', memberOrganizationIds: ['org_2', 'org_1']
 // Fixed vector: the same header is asserted by the server's stampCaller and the
 // client's shouldReloadForCaller tests, so both sides are pinned to one stamp.
 const FULL_STAMP =
-  '82e92667feb5824d; session=3a1d7b6848ba4816; roles=e7019efa6ab2bf1d; memberships=476954726056d64d';
+  '82e92667feb5824d; session=3a1d7b6848ba4816; roles=228d50a09b1b1e2b; memberships=476954726056d64d';
 
 test('callerStamp names the caller, session, roles and memberships of a session caller', () => {
   expect(callerStamp({ user, authSession })).toBe(FULL_STAMP);
 });
 
-test('callerStamp hashes the session id and the sorted, JSON-encoded roles and organization ids', () => {
+test('callerStamp hashes the session id, the sorted roles and the sorted organization ids', () => {
   expect(callerStamp({ user, authSession })).toBe(
     [
       sha256Prefix('user_1:org_1'),
       `session=${sha256Prefix('session_1')}`,
-      `roles=${sha256Prefix('["admin","editor"]')}`,
+      `roles=${sha256Prefix('{"roles":["admin","editor"],"org_roles":[]}')}`,
       `memberships=${sha256Prefix('["org_1","org_2"]')}`,
     ].join('; ')
   );
@@ -51,25 +51,25 @@ test('callerStamp is empty for an anonymous caller, session or not', () => {
 });
 
 test('callerStamp leaves out session and memberships for a caller with no session', () => {
-  expect(callerStamp({ user })).toBe('82e92667feb5824d; roles=e7019efa6ab2bf1d');
-  expect(callerStamp({ user, authSession: null })).toBe('82e92667feb5824d; roles=e7019efa6ab2bf1d');
+  expect(callerStamp({ user })).toBe('82e92667feb5824d; roles=228d50a09b1b1e2b');
+  expect(callerStamp({ user, authSession: null })).toBe('82e92667feb5824d; roles=228d50a09b1b1e2b');
 });
 
 test('callerStamp leaves out memberships when the member rows were not read', () => {
   expect(callerStamp({ user, authSession: { id: 'session_1', memberOrganizationIds: null } })).toBe(
-    '82e92667feb5824d; session=3a1d7b6848ba4816; roles=e7019efa6ab2bf1d'
+    '82e92667feb5824d; session=3a1d7b6848ba4816; roles=228d50a09b1b1e2b'
   );
 });
 
 test('callerStamp hashes no roles as an empty list', () => {
   expect(callerStamp({ user: { id: 'user_1', organization_id: 'org_1', roles: [] } })).toBe(
-    `82e92667feb5824d; roles=${sha256Prefix('[]')}`
+    `82e92667feb5824d; roles=${sha256Prefix('{"roles":[],"org_roles":[]}')}`
   );
 });
 
 test('callerStamp hashes memberships of a person in no organization as an empty list', () => {
   expect(callerStamp({ user, authSession: { id: 'session_1', memberOrganizationIds: [] } })).toBe(
-    `82e92667feb5824d; session=3a1d7b6848ba4816; roles=e7019efa6ab2bf1d; memberships=${sha256Prefix(
+    `82e92667feb5824d; session=3a1d7b6848ba4816; roles=228d50a09b1b1e2b; memberships=${sha256Prefix(
       '[]'
     )}`
   );

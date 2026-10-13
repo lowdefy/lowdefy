@@ -14,13 +14,23 @@
   limitations under the License.
 */
 
-import listHash from './listHash.js';
+import stampHash from './stampHash.js';
 
-// The stamp hash of a caller's roles in their active organization. The server
-// stamps it on every response (callerStamp) and the client compares it with
-// the roles of the caller it renders, so both sides use this one function.
+// The stamp hash of a caller's roles in their active organization: the app
+// roles (_user.roles, which page and endpoint auth gates match) and the
+// organization role tier (_user.org_roles: owner, admin or member), since app
+// config can gate blocks on either. Each list is sorted, so the same set always
+// hashes the same, and the pair is JSON-encoded, so no separator inside a role
+// can make two lists read as one. The server stamps it on every response
+// (callerStamp) and the client compares it with the roles of the caller it
+// renders, so both sides use this one function.
 function rolesHash({ user }) {
-  return listHash({ values: user.roles ?? [] });
+  return stampHash(
+    JSON.stringify({
+      roles: [...(user.roles ?? [])].sort(),
+      org_roles: [...(user.org_roles ?? [])].sort(),
+    })
+  );
 }
 
 export default rolesHash;

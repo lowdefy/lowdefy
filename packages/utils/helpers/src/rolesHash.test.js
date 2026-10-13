@@ -18,19 +18,36 @@ import { createHash } from 'node:crypto';
 
 import rolesHash from './rolesHash.js';
 
-test('rolesHash is the stamp hash of the sorted, JSON-encoded roles', () => {
-  expect(rolesHash({ user: { roles: ['editor', 'admin'] } })).toBe('e7019efa6ab2bf1d');
-  expect(rolesHash({ user: { roles: ['editor', 'admin'] } })).toBe(
-    createHash('sha256').update('["admin","editor"]').digest('hex').slice(0, 16)
+test('rolesHash is the stamp hash of the sorted app roles and organization role tier', () => {
+  expect(rolesHash({ user: { roles: ['editor', 'admin'] } })).toBe('228d50a09b1b1e2b');
+  expect(rolesHash({ user: { roles: ['editor', 'admin'], org_roles: ['member'] } })).toBe(
+    createHash('sha256')
+      .update('{"roles":["admin","editor"],"org_roles":["member"]}')
+      .digest('hex')
+      .slice(0, 16)
   );
 });
 
-test('rolesHash hashes a caller with no roles as an empty list', () => {
-  expect(rolesHash({ user: { roles: [] } })).toBe(rolesHash({ user: {} }));
+test('rolesHash hashes a caller with no roles as empty lists', () => {
+  expect(rolesHash({ user: { roles: [], org_roles: [] } })).toBe(rolesHash({ user: {} }));
+});
+
+test('rolesHash changes when only the organization role tier changes', () => {
+  const member = rolesHash({ user: { roles: ['editor'], org_roles: ['member'] } });
+  const admin = rolesHash({ user: { roles: ['editor'], org_roles: ['admin'] } });
+  expect(member).not.toBe(admin);
+});
+
+test('rolesHash does not mistake an app role for an organization role', () => {
+  expect(rolesHash({ user: { roles: ['admin'], org_roles: [] } })).not.toBe(
+    rolesHash({ user: { roles: [], org_roles: ['admin'] } })
+  );
 });
 
 test('rolesHash does not reorder the caller roles', () => {
   const roles = ['editor', 'admin'];
-  rolesHash({ user: { roles } });
+  const orgRoles = ['owner', 'admin'];
+  rolesHash({ user: { roles, org_roles: orgRoles } });
   expect(roles).toEqual(['editor', 'admin']);
+  expect(orgRoles).toEqual(['owner', 'admin']);
 });

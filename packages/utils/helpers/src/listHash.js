@@ -16,9 +16,10 @@
 
 import stampHash from './stampHash.js';
 
-// The stamp hash of a list whose order carries no meaning (roles, organization
-// ids): sorted first, so the same set always hashes the same, and JSON-encoded,
-// so no separator inside an entry can make two lists read as one.
+// The stamp hash of a list whose order carries no meaning (the organization ids
+// a person belongs to): sorted first, so the same set always hashes the same,
+// and JSON-encoded, so no separator inside an entry can make two lists read as
+// one.
 function listHash({ values }) {
   return stampHash(JSON.stringify([...values].sort()));
 }

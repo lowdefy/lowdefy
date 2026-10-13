@@ -351,7 +351,7 @@ describe('caller check', () => {
       body: { value: 1 },
       headers: {
         'x-lowdefy-caller':
-          '82e92667feb5824d; session=3a1d7b6848ba4816; roles=e7019efa6ab2bf1d; memberships=476954726056d64d',
+          '82e92667feb5824d; session=3a1d7b6848ba4816; roles=228d50a09b1b1e2b; memberships=476954726056d64d',
       },
     });
     await expect(request({ url: '/api/request/p/r', lowdefy })).resolves.toEqual({ value: 1 });
@@ -359,7 +359,7 @@ describe('caller check', () => {
     expect(lowdefy._internal.callerStamp).toEqual({
       caller: '82e92667feb5824d',
       session: '3a1d7b6848ba4816',
-      roles: 'e7019efa6ab2bf1d',
+      roles: '228d50a09b1b1e2b',
       memberships: '476954726056d64d',
     });
   });

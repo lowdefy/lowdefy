@@ -26,12 +26,14 @@ import type from './type.js';
 //   <caller>; session=<hash>; roles=<hash>; memberships=<hash>
 //
 // caller is callerHash (user and active organization), session the hash of the
-// session id, roles the hash of the caller's roles in the active organization,
-// memberships the hash of the ids of every organization the person is a member
-// of. An anonymous caller is the empty string with no fields. A field the server
-// does not know is left out: session for a caller with no session (an API
-// strategy, an injected dev caller), memberships when the server did not read
-// the person's member rows. parseCallerStamp reads it back.
+// session id, roles the hash of the caller's app roles and organization role
+// tier in the active organization (rolesHash), memberships the hash of the ids
+// of every organization the person is a member of (under a pinned app, of this
+// app's organization alone - see resolveAuthentication). An anonymous caller is
+// the empty string with no fields. A field the server does not know is left
+// out: session for a caller with no session (an API strategy, an injected dev
+// caller), memberships when the server did not read the person's member rows.
+// parseCallerStamp reads it back.
 //
 // authSession is the session the caller was resolved from, as
 // resolveAuthentication records it: { id, memberOrganizationIds }.

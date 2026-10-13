@@ -58,3 +58,10 @@ test('hasOtherRoles compares a rendered caller with no roles as an empty list', 
   const noRoles = { id: 'user_1', organization_id: 'org_1' };
   expect(hasOtherRoles({ stamp: stampFor({ ...noRoles, roles: [] }), user: noRoles })).toBe(false);
 });
+
+test('hasOtherRoles is true when only the organization role tier changed', () => {
+  const member = { ...user, org_roles: ['member'] };
+  expect(
+    hasOtherRoles({ stamp: stampFor({ ...member, org_roles: ['admin'] }), user: member })
+  ).toBe(true);
+});

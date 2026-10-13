@@ -27,7 +27,7 @@ function stampFor(header) {
 test('isOtherCaller is false when the server answered as the rendered caller', () => {
   // The fixed vector callerStamp's own tests pin, so server and client agree.
   const stamp = stampFor(
-    '82e92667feb5824d; session=3a1d7b6848ba4816; roles=e7019efa6ab2bf1d; memberships=476954726056d64d'
+    '82e92667feb5824d; session=3a1d7b6848ba4816; roles=228d50a09b1b1e2b; memberships=476954726056d64d'
   );
   expect(isOtherCaller({ stamp, user })).toBe(false);
 });
