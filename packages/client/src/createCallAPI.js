@@ -25,8 +25,7 @@ function createCallAPI(lowdefy) {
       method: 'POST',
       body: { payload, pageId, blockId },
       reloadOnAuthorizationError: false,
-      // Read per call: the rendered caller changes with the session.
-      user: lowdefy.user,
+      lowdefy,
     });
   }
   return callAPI;

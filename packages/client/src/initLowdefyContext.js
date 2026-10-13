@@ -65,6 +65,10 @@ function initLowdefyContext({
       actions: types.actions,
       blockComponents: types.blocks,
       blockMetas: types.blockMetas ?? {},
+      // The last caller stamp a response carried (recordCallerStamp). It names
+      // the session, not the page context, so it outlives a dev config reload,
+      // and the dev server records the first page config's before this runs.
+      callerStamp: lowdefy._internal?.callerStamp ?? null,
       components: {
         Icon: createIcon({ icons: types.icons, loadAllIcons }),
         ShortcutBadge: createShortcutBadge(lowdefy),

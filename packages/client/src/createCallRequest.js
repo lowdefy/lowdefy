@@ -25,8 +25,7 @@ function createCallRequest(lowdefy) {
       method: 'POST',
       body: { actionId, blockId, payload },
       reloadOnAuthorizationError: true,
-      // Read per call: the rendered caller changes with the session.
-      user: lowdefy.user,
+      lowdefy,
     });
   }
   return callRequest;

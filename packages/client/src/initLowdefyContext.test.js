@@ -146,6 +146,21 @@ test('initLowdefyContext keeps the path memory when the context is initialised a
   expect([...lowdefy.pathMemory.keys()]).toEqual(['home', 'other']);
 });
 
+test('initLowdefyContext starts with no caller stamp', () => {
+  const lowdefy = initLowdefyContext(baseArgs());
+  expect(lowdefy._internal.callerStamp).toBe(null);
+});
+
+test('initLowdefyContext keeps the caller stamp when the context is initialised again', () => {
+  const args = baseArgs();
+  const lowdefy = initLowdefyContext(args);
+  const stamp = { caller: 'abc', session: null, roles: null, memberships: null };
+  lowdefy._internal.callerStamp = stamp;
+  lowdefy._internal.initialised = false;
+  initLowdefyContext({ ...args, lowdefy });
+  expect(lowdefy._internal.callerStamp).toBe(stamp);
+});
+
 test('initLowdefyContext keys storage by the app slug, base path and signed-in user', () => {
   const args = baseArgs({ lowdefyApp: { slug: 'sales' } });
   args.router.basePath = '/crm';

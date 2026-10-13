@@ -14,19 +14,24 @@
   limitations under the License.
 */
 
-import { callerHash } from '@lowdefy/helpers';
+import { callerStamp } from '@lowdefy/helpers';
 
 // Stamps page, request and endpoint responses with the caller the server
-// answered as (see callerHash). The client compares it with the caller it
-// renders and reloads on a difference, so a tab never shows one caller's data
-// after the session moved to another person or organization. Registered after
-// apiContext, so the resolved caller is always on the context here; set after
-// next() so error responses carry it too.
+// answered as, in full (see callerStamp): user and organization, session, roles
+// there and every organization the person belongs to. The client compares it
+// with the caller it renders and reloads when the person, organization or
+// roles differ, so a tab never shows one caller's data or access after the
+// session moved on. Registered after apiContext, so the resolved caller is
+// always on the context here; set after next() so error responses carry it
+// too.
 function stampCaller() {
   return async function stampCallerMiddleware(c, next) {
     await next();
     const context = c.get('lowdefyContext');
-    c.header('x-lowdefy-caller', callerHash({ user: context.user }));
+    c.header(
+      'x-lowdefy-caller',
+      callerStamp({ user: context.user, authSession: context.authSession })
+    );
   };
 }
 
