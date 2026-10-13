@@ -4090,6 +4090,14 @@ export default {
                 type: 'App "logger.sentry.server" should be a boolean.',
               },
             },
+            serverTracing: {
+              type: 'boolean',
+              description:
+                'Trace server requests as Sentry transactions, sampled at tracesSampleRate. Defaults to true on the Node server and false on Vercel, where the server reports errors only: tracing sets up OpenTelemetry on every cold start, and the function stays billed while each sampled transaction uploads.',
+              errorMessage: {
+                type: 'App "logger.sentry.serverTracing" should be a boolean.',
+              },
+            },
             tracesSampleRate: {
               type: 'number',
               minimum: 0,

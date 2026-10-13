@@ -379,7 +379,7 @@ Everything else is dropped: axios's `config`, `request` and `response`, pg's `de
 - **Which forms:** the raw value, its `encodeURIComponent` form, its JSON-escaped form, and its base64 and base64url forms at all three byte alignments, each replaced with `[REDACTED]`. A secret inside a larger base64 payload — a Basic auth header built from `user:password` — only matches the secret's own base64 when both start on the same 3-byte boundary, so the scrubber encodes the value at each offset and keeps only the characters whose bits fall wholly inside the secret. Forms are replaced longest first, so a form is removed whole before a shorter form it contains can break it up.
 - **Where, for the log:** pino's `hooks.streamWrite` on the prod logger, through `createNodeLogger`'s `hooks` option. It sees each finished JSON line, so it covers every field of every log call — `err`, debug payloads, request results — with no walker to miss one.
 - **Where, for Sentry:** `initSentry` sets `beforeSend`, `beforeSendTransaction`, `beforeSendSpan` and `beforeBreadcrumb`, each running `scrubEvent`, which scrubs every string in the event. `beforeSend` covers error events with their cause chain; the transaction and span hooks cover outgoing request URLs with their query strings, sent on every sampled request whether it failed or not; `beforeBreadcrumb` covers the outgoing request URLs the HTTP integration records. `captureSentryError` sends `serializeErrorForLog(error)` as `extra.error` — Sentry's own serialization carries only names, messages and stacks — and adds `requestId` as a tag.
-- **Incoming request bodies are off.** `@sentry/node` attaches incoming request bodies to error events by default — an endpoint payload, a sign-in password — and no value scrub can recognise them. `initSentry` passes `httpIntegration({ maxIncomingRequestBodySize: 'none' })`, which replaces the default HTTP integration by name.
+- **Incoming request bodies are off.** `@sentry/node` attaches incoming request bodies to error events by default — an endpoint payload, a sign-in password — and no value scrub can recognise them. `initSentry` passes `httpIntegration({ maxIncomingRequestBodySize: 'none' })` to `@sentry/node`, and `httpIntegration({ maxRequestBodySize: 'none' })` to the light SDK, either replacing the default HTTP integration by name.
 - **The error sink's fallback.** When location resolution or the log call throws, the prod `createHandleError` falls back to `console.error`, which writes to stderr past pino and its line scrub. It writes `scrubSecrets(JSON.stringify(serializeErrorForLog(error)))` so the fallback gets both layers by hand.
 
 **The dev and e2e servers keep the full default.** `server-dev` builds its logger with `createNodeLogger`'s default `err` serializer and no secret scrub, because the CLI's dev terminal is parsed from that pino output and the developer needs the full error. `server-e2e`'s logs belong to a test run and never reach a log drain. Both still build `scrubSecrets`, because `_error` reads it off the context and must behave identically in every mode. Their loggers do run `scrubCredentials` as their `streamWrite` hook, so a value marked with `_credential` never prints there either: agents read the dev log.
@@ -774,10 +774,21 @@ logger:
   sentry:
     client: true
     server: true
+    serverTracing: true # default: true on the Node server, false on Vercel
     tracesSampleRate: 0.1
     replaysOnErrorSampleRate: 0.1
     userFields: ['id', '_id']
 ```
+
+### Which server SDK starts
+
+`initSentryServer` (`lib/server/sentry/initSentry.js`) imports a Sentry SDK only when `SENTRY_DSN` is set and `server` is not `false`, and stores it in `lib/server/sentry/sentrySdk.js`; every server module that reports to Sentry reads it from there, so no module imports a Sentry package statically.
+
+- **Tracing** (`serverTracing`, default `true` for the Node server): `@sentry/node`, with `tracesSampleRate`. It sets up OpenTelemetry and registers ESM loader hooks that wrap every module the app imports after it.
+- **Errors only** (`serverTracing: false`, the default for a serverless entry, which passes `initServer({ serverless: true })`): the SDK's light mode, `@sentry/node-core/light`, with no OpenTelemetry and no loader hooks. It isolates each request's scope through Node's `http.server.request.start` diagnostics channel (Node 22.12+), so `setSentryUser` and the credential scrub stay per request on a function serving several requests at once.
+- **Serverless** also turns `sendClientReports` off. A function stays billed until the flush after each response settles, and with client reports on every flush posted one (the outcome of each unsampled transaction), so every request waited on an upload. The Vercel entry starts its flush once the response closes, which is when the request's server span ends and queues its transaction, so a flush waits only on what that request queued: a captured error, or a sampled transaction.
+
+Importing a small app's Vercel function entry locally (median of 11 to 21 cold imports), light mode added about 80 ms and 4 MB of resident memory over no Sentry, where `@sentry/node` without tracing still added about 270 ms and 110 MB, most of it from its loader hooks.
 
 ### Error Context
 
@@ -790,7 +801,7 @@ Every event, transaction, span and breadcrumb passes through the secret scrub, a
 
 ### Graceful Degradation
 
-All Sentry functions are no-ops when `SENTRY_DSN` is not set.
+All Sentry functions are no-ops when Sentry was not started (`sentrySdk.current` is `null`): `SENTRY_DSN` unset or `logger.sentry.server: false`.
 
 ## Error Serialization
 

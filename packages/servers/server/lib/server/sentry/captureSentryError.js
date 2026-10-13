@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import * as Sentry from '@sentry/node';
 import { type } from '@lowdefy/helpers';
 
 import serializeErrorForLog from '../log/serializeErrorForLog.js';
+import sentrySdk from './sentrySdk.js';
 
 function captureSentryError({ error, context, configLocation }) {
-  // No-op if Sentry not initialized (DSN not set)
-  if (!process.env.SENTRY_DSN) {
+  const Sentry = sentrySdk.current;
+  if (!Sentry) {
     return;
   }
 

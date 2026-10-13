@@ -15,7 +15,6 @@
 */
 
 import { serve } from '@hono/node-server';
-import * as Sentry from '@sentry/node';
 import { WebSocketServer } from 'ws';
 
 import registerServer from '@lowdefy/node-utils/registerServer.js';
@@ -23,7 +22,7 @@ import watchOwner from '@lowdefy/node-utils/watchOwner.js';
 
 import initServer from './initServer.js';
 
-const { createApp, logger } = await initServer();
+const { createApp, logger, sentry } = await initServer();
 const { default: appMeta } = await import('../lib/build/appMeta.js');
 
 const app = createApp();
@@ -65,8 +64,12 @@ function shutdown() {
   // Drop idle keep-alive connections so close() only waits on in-flight requests.
   server.closeIdleConnections?.();
   server.close(() => {
-    // Flush queued Sentry events; resolves immediately when Sentry is not enabled.
-    Sentry.close(2000).finally(() => process.exit(0));
+    if (!sentry) {
+      process.exit(0);
+      return;
+    }
+    // Send queued Sentry events before exiting.
+    sentry.close(2000).finally(() => process.exit(0));
   });
   // In-flight requests that outlive the grace period would otherwise hold the
   // process open until SIGKILL — exit first so shutdown stays clean.

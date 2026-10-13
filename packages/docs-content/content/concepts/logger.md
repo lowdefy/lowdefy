@@ -36,6 +36,8 @@ logger:
     client: true
     # Enable/disable server-side logging (default: true)
     server: true
+    # Trace server requests (default: true on the Node server, false on Vercel)
+    serverTracing: true
     # Sample rate for performance traces (default: 0.1)
     tracesSampleRate: 0.1
     # Sample rate for session replay (default: 0)
@@ -60,11 +62,27 @@ If you only set `SENTRY_DSN` without any `logger.sentry` configuration, these de
 |--------|---------|-------------|
 | `client` | `true` | Client-side error capture enabled |
 | `server` | `true` | Server-side error capture enabled |
+| `serverTracing` | `true` on the Node server, `false` on Vercel | Server requests traced as transactions |
 | `tracesSampleRate` | `0.1` | 10% of transactions traced |
 | `replaysSessionSampleRate` | `0` | Session replay disabled by default |
 | `replaysOnErrorSampleRate` | `0.1` | 10% of error sessions replayed |
 | `feedback` | `false` | User feedback widget disabled |
 | `userFields` | `['id', '_id']` | Only user ID fields logged |
+
+### Server Tracing on Vercel
+
+On Vercel, the server reports errors only by default. Tracing sets up OpenTelemetry when a function instance starts, which adds to every cold start, and the function stays billed after each response while a sampled transaction uploads. Without tracing, a request that captures no error ends as soon as its response is sent, and one that captures an error waits only for that error to reach Sentry.
+
+To trace server requests on Vercel anyway, set `serverTracing: true`:
+
+```yaml
+logger:
+  sentry:
+    serverTracing: true
+    tracesSampleRate: 0.1
+```
+
+`tracesSampleRate` still sets the browser's trace sampling either way. Set `serverTracing: false` to report errors only from the Node server too.
 
 ### User Context
 

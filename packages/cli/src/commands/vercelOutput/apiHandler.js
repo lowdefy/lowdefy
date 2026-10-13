@@ -20,8 +20,9 @@
 // template file) so it ships verbatim — a real source file would be transpiled by the CLI's swc
 // build, stripping these comments. Its `../src/initServer.js` import and the chdir to `..` resolve
 // to the server directory inside the function, where the assembly places src/, build/, lib/ and the
-// traced dependency closure. Its `ws`, `@hono/node-server` and `@sentry/node` imports resolve
-// because the traced src/index.js imports all three.
+// traced dependency closure. Its `ws` and `@hono/node-server` imports resolve because the traced
+// src/index.js imports both. It imports no Sentry package: initServer loads the SDK only when
+// SENTRY_DSN is set.
 const apiHandler = `/*
   Vercel Serverless Function entry for a Lowdefy (Hono) app — generated into the Vercel Build Output
   by lowdefy vercel-output.
@@ -48,7 +49,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { createAdaptorServer } from '@hono/node-server';
-import * as Sentry from '@sentry/node';
 import { WebSocketServer } from 'ws';
 
 // The app reads its build artifacts relative to process.cwd(). On Vercel the function's cwd is the
@@ -59,9 +59,10 @@ process.chdir(path.join(path.dirname(fileURLToPath(import.meta.url)), '..'));
 
 // The same startup as the Node entry (src/index.js): Sentry, then the environment guards before the
 // app loads. A failed guard throws here, so the function fails every request instead of serving
-// with the wrong variables.
+// with the wrong variables. As a serverless function, Sentry reports errors only unless the app
+// sets logger.sentry.serverTracing: tracing's start-up cost would land on every cold start.
 const { default: initServer } = await import('../src/initServer.js');
-const { createApp, sentryEnabled } = await initServer();
+const { createApp, sentry } = await initServer({ serverless: true });
 // Vercel's edge sets x-real-ip to the client address on every request, replacing any value the
 // client sent, so the app takes the address from it instead of the connection (which is Vercel's
 // own proxy).
@@ -121,10 +122,20 @@ async function handleRequest(req, res) {
 // The function can be suspended once the response ends, stranding queued Sentry events. Vercel's
 // waitUntil keeps it alive until they are sent without delaying the response. Its Node runtime
 // exposes waitUntil on this global, which is what @vercel/functions reads; Sentry's own
-// vercelWaitUntil only acts on the Edge runtime.
-function flushSentry() {
-  if (!sentryEnabled) return;
-  const flushed = Sentry.flush(2000);
+// vercelWaitUntil only acts on the Edge runtime. The function is billed until the flush settles.
+// The flush waits only on what the SDK has queued: an error the request captured, or its
+// transaction when tracing is on and sampled it. Otherwise it settles at once, since the SDK
+// sends no client reports here (initSentryServer). The request's server span ends, queuing its
+// transaction, when the response closes, so the flush starts after that.
+function responseClosed(res) {
+  if (res.closed) return Promise.resolve();
+  return new Promise((resolve) => res.once('close', resolve));
+}
+
+function flushSentry(res) {
+  if (!sentry) return;
+  const flushed = responseClosed(res).then(() => sentry.flush(2000));
+  // Read in the request's own async context: a close listener runs in the socket's.
   const vercelContext = globalThis[Symbol.for('@vercel/request-context')]?.get?.();
   if (vercelContext?.waitUntil) {
     vercelContext.waitUntil(flushed);
@@ -148,7 +159,7 @@ function requestListener(req, res) {
       res.statusCode = 500;
       res.end();
     })
-    .finally(flushSentry);
+    .finally(() => flushSentry(res));
 }
 
 // 256 KiB max frame, matching the Node server (src/index.js) and Vercel's documented default for
