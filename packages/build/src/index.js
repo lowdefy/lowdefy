@@ -54,6 +54,7 @@ import buildRoutes from './build/buildRoutes/buildRoutes.js';
 import validateAuthPagePaths from './build/buildRoutes/validateAuthPagePaths.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
 import resolveAuthConfigProjection from './build/buildAuth/resolveAuthConfigProjection.js';
+import buildSecurity from './build/buildSecurity/buildSecurity.js';
 import buildWebsockets from './build/buildWebsockets.js';
 import collectPageContent from './build/collectPageContent.js';
 import buildTypes from './build/buildTypes.js';
@@ -73,6 +74,7 @@ import writeAppEvents from './build/writeAppEvents.js';
 import writeAppMeta from './build/writeAppMeta.js';
 import writeAuth from './build/writeAuth.js';
 import writeConfig from './build/writeConfig.js';
+import writeSecurity from './build/writeSecurity.js';
 import writeConnections from './build/writeConnections.js';
 import writeDynamicPolicies from './build/writeDynamicPolicies.js';
 import writeApi from './build/writeApi.js';
@@ -185,6 +187,8 @@ async function build(options) {
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
     tryBuildStep(buildMcp, 'buildMcp', { components, context });
     tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
+    // After buildWebsockets: the policy allows the page's websocket when the app has websockets.
+    tryBuildStep(buildSecurity, 'buildSecurity', { components, context });
     tryBuildStep(buildNotifications, 'buildNotifications', { components, context });
     // Cross-config step validations — need buildApi (stepIds) and the
     // buildAgents/buildNotifications id sets
@@ -246,6 +250,7 @@ async function build(options) {
     await writeRequests({ components, context });
     await writePages({ components, context });
     await writeConfig({ components, context });
+    await writeSecurity({ context });
     await writeGlobal({ components, context });
     await writeTheme({ components, context });
     await writeI18n({ components, context });

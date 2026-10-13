@@ -3626,6 +3626,66 @@ export default {
             type: 'App "config.requestTimeout" should be a number.',
           },
         },
+        security: {
+          type: 'object',
+          additionalProperties: false,
+          description: 'Opt-in browser security settings for the app.',
+          errorMessage: {
+            type: 'App "config.security" should be an object.',
+          },
+          properties: {
+            '~k': {},
+            '~r': {},
+            '~l': {},
+            contentSecurityPolicy: {
+              type: ['boolean', 'object'],
+              additionalProperties: false,
+              description:
+                'Send a Content-Security-Policy header with app pages. Set true for the default policy, or an object to send it report-only or add sources per directive. Inline scripts and styles Lowdefy writes carry a fresh nonce on every page render. Defaults to off.',
+              errorMessage: {
+                type: 'App "config.security.contentSecurityPolicy" should be a boolean or an object.',
+              },
+              properties: {
+                '~k': {},
+                '~r': {},
+                '~l': {},
+                reportOnly: {
+                  type: 'boolean',
+                  description:
+                    'Send the policy as Content-Security-Policy-Report-Only: the browser reports what the policy would block, without blocking it. Defaults to false.',
+                  errorMessage: {
+                    type: 'App "config.security.contentSecurityPolicy.reportOnly" should be a boolean.',
+                  },
+                },
+                directives: {
+                  type: 'object',
+                  description:
+                    'Sources to add to the default policy, keyed by directive name (for example "script-src" or "img-src"). Sources are added to the defaults; a directive the defaults do not set is added.',
+                  errorMessage: {
+                    type: 'App "config.security.contentSecurityPolicy.directives" should be an object.',
+                  },
+                  properties: {
+                    '~k': {},
+                    '~r': {},
+                    '~l': {},
+                  },
+                  additionalProperties: {
+                    type: 'array',
+                    errorMessage: {
+                      type: 'App "config.security.contentSecurityPolicy.directives" values should be arrays of source strings.',
+                    },
+                    items: {
+                      type: 'string',
+                      errorMessage: {
+                        type: 'App "config.security.contentSecurityPolicy.directives" sources should be strings.',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
         trustedProxies: {
           type: 'array',
           items: {
