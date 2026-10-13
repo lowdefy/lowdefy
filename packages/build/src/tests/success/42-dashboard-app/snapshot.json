@@ -1954,7 +1954,7 @@
             "siderStorageKey": {
               "type": "string",
               "default": "sider",
-              "description": "localStorage key suffix for sider state persistence. Produces key 'lf-{siderStorageKey}-open'."
+              "description": "localStorage key suffix for sider state persistence. Produces key 'lf-{siderStorageKey}-open', kept per app."
             },
             "toggleSiderButton": {
               "type": "object",
