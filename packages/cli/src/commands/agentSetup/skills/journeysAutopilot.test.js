@@ -179,3 +179,36 @@ test('journeys-autopilot is blocked by a missing variable, a mock user, a closed
   expect(blocked).toContain('(`auth.dev.mockUser`), which refuses every data set journey');
   expect(blocked).toContain('a closed journeys pull request (closed unmerged), or a rejected push');
 });
+
+test('journeys-autopilot names secrets by their environment variable and how a missing one shows', () => {
+  const skill = journeysAutopilot({ appPath: '' });
+  expect(skill).toContain('`_secret: NAME` reads the variable\n  `LOWDEFY_SECRET_NAME`');
+  expect(skill).toContain('"Development server was not ready"');
+  expect(skill).toContain('(a `_secret` as\n  `LOWDEFY_SECRET_<NAME>`)');
+});
+
+test('journeys-autopilot never lets its branch track the default branch', () => {
+  const skill = journeysAutopilot({ appPath: '' });
+  expect(skill).toContain('`git worktree add --no-track -b journeys-autopilot/main');
+  expect(skill).toContain('`git switch --no-track -C journeys-autopilot/main');
+  expect(skill).toContain('(commit only if that changed the ledger)');
+  expect(skill).toContain('(`git push -u origin journeys-autopilot/main`)');
+  expect(skill).not.toContain('git switch -C journeys-autopilot/main');
+});
+
+test('journeys-autopilot handles findings in a cycle with nothing left to do', () => {
+  const skill = journeysAutopilot({ appPath: '' });
+  expect(skill).toContain(
+    "When no `todo` items remain, go to step 6\n(a finding's fix may be ready), then step 7."
+  );
+  expect(skill).toContain('Then handle findings (step 6): their fixes may now go ahead.');
+  expect(skill).toContain('fix pull request url (with no `gh`, the\n  fix branch)');
+});
+
+test('journeys-autopilot says where harden ids are and what to do with a duplicate variant', () => {
+  const skill = journeysAutopilot({ appPath: '' });
+  expect(skill).toContain('`.lowdefy/test/mutation.json`');
+  expect(skill).toContain('discard its candidate\nfile, which never joined the suite');
+  expect(skill).toContain('wait on a request of the page it\n  lands on');
+  expect(skill).toContain('the runner calls every 0/3 run a finding');
+});

@@ -68,7 +68,12 @@ you open pull requests and never merge, and how to run you unattended:
   \`lowdefy journeys pull\`.
 - **Secrets come from your environment only.** \`lowdefy test\` passes your process environment to
   its server, and data set journeys swap every MongoDB connection for the in-memory database, so the
-  app needs little more than its auth secret. Run every command with \`LOWDEFY_DEV_USER\` unset
+  app needs little more than its auth settings. \`_secret: NAME\` reads the variable
+  \`LOWDEFY_SECRET_NAME\`. The auth secret and the auth database's address must be set even though
+  data set journeys never reach the auth engine. A missing one shows as \`lowdefy test\` failing
+  after two minutes with "Development server was not ready", after server lines that name the
+  setting (\`Auth "secret" did not resolve\`, \`requires "uri"\`): Blocked, naming the variable.
+  Run every command with \`LOWDEFY_DEV_USER\` unset
   (\`env -u LOWDEFY_DEV_USER <command>\`): a dev mock user refuses every data set journey.
 - **Never ask a question mid-run.** Decide, or record the blocker (see Blocked) and stop.
 - **Never weaken or delete a journey** to make it pass or stay green, and never propose deleting
@@ -121,8 +126,9 @@ the repository's install command there once (a fresh worktree has no dependencie
   machine or a teammate's run picks up the pushed ledger: \`git worktree add --track -b
   journeys-autopilot/main ../<repo>-journeys-autopilot origin/journeys-autopilot/main\` (or, when
   the local branch exists, \`git worktree add ../<repo>-journeys-autopilot journeys-autopilot/main\`).
-- **Neither exists**: \`git worktree add -b journeys-autopilot/main ../<repo>-journeys-autopilot
-  origin/<default branch>\`. Only then is the branch made from the default branch.
+- **Neither exists**: \`git worktree add --no-track -b journeys-autopilot/main
+  ../<repo>-journeys-autopilot origin/<default branch>\` (\`--no-track\`, so the branch never tracks
+  the default branch). Only then is the branch made from the default branch.
 - When \`origin/journeys-autopilot/main\` exists, fast-forward to it:
   \`git merge --ff-only origin/journeys-autopilot/main\`. If that is not a fast-forward, another
   runner moved the branch: Blocked.
@@ -136,8 +142,10 @@ merge, so without \`gh\` only a merge commit or a rebase reads as merged.
 
 - **Open, or none yet**: carry on.
 - **Merged**: start the branch afresh from the default branch, which now holds the ledger. This is
-  the one time the branch moves: \`git switch -C journeys-autopilot/main origin/<default branch>\`,
-  set \`pr: null\`, commit and push at once, so the next cycle finds the fresh branch on the remote.
+  the one time the branch moves: \`git switch --no-track -C journeys-autopilot/main
+  origin/<default branch>\`, set \`pr: null\` (commit only if that changed the ledger) and push at
+  once (\`git push -u origin journeys-autopilot/main\`), so the next cycle finds the fresh branch on
+  the remote. Then handle findings (step 6): their fixes may now go ahead.
   After a squash merge the fresh branch is not a fast-forward of the old remote tip, so this push may
   replace that tip, and only that tip, once you have confirmed it merged: \`git push
   --force-with-lease=journeys-autopilot/main:<old tip> origin journeys-autopilot/main\`.
@@ -184,7 +192,8 @@ journey to the suite), nothing else, then ship. Otherwise take up to 8
 control, and the other tenant's rows, proved between signed-in data set users); **writes** (create, edit, status
 changes, deletes by the app); the **views** people use most (home, lists, the pages the menu leads to);
 then **edge cases** (empty state, bad input, a reload mid-flow). Within a tier, take the page
-that is the most-used first: the \`value: high\` items. When no \`todo\` items remain, go to step 7.
+that is the most-used first: the \`value: high\` items. When no \`todo\` items remain, go to step 6
+(a finding's fix may be ready), then step 7.
 
 ### 4. Write each journey
 
@@ -201,6 +210,8 @@ Follow the format in [config tests](/config-tests): \`name\` (at most 100 charac
 - A write ends by asserting the stored result: the new value shown, or \`expect.state\` after
   \`wait: { request }\`. A refusal asserts the landing page (\`expect.url\`) or \`expect.hidden\`
   paired with a presence check that proves the page loaded.
+- After a click whose chain moves to another page (a \`Link\`), wait on a request of the page it
+  lands on: the page you left is gone, so its requests are not found.
 - Address blocks by \`blockId\`, wait on \`{ request }\` or \`{ state }\`, and prefer \`urlQuery\` /
   \`pathParams\` / state to typing into fiddly inputs (date pickers and autocompletes flake). Never
   assert an id the app generated.
@@ -217,7 +228,8 @@ Run \`${cd}lowdefy test --lint tests/journeys/_candidates\` and fix errors, then
 - **FLAKY**: fix the cause (a missing \`wait: { request }\`, two matching targets, a date that
   depends on today) and run three more. After two fixes still flaky, move it to
   \`tests/journeys/_quarantine/\`, set \`quarantined\` with the cause in \`note\`.
-- **FAIL**: read the failing step. Journeys stop at the first failed step, so it tells you where to
+- **FAIL**: read the failing step (the runner calls every 0/3 run a finding, even when the journey
+  is what is wrong). Journeys stop at the first failed step, so it tells you where to
   look, not the whole story. If your journey is wrong (misspelt block, wrong expectation), fix it
   and run again. If the app is wrong, it is a **finding**: move the journey to
   \`tests/journeys/_findings/\`, set \`finding\` with the step, expected and actual in \`note\`.
@@ -240,8 +252,8 @@ For each finding, decide:
   tests/journeys/<area>/\`, so the pull request shows the journey turning green and leaves one copy.
   Run \`${cd}lowdefy test --repeat 3 <file>\` before pushing, open a pull request titled \`fix: ...\`
   that says what broke, where, and which journey proves it (with no \`gh\`, push the branch and put
-  that title and body in the cycle report), then \`git switch journeys-autopilot/main\`. The item stays \`finding\`, with the fix pull request url in \`note\`,
-  until that pull request merges; then set it \`covered\` with the journey's new path.
+  that title and body in the cycle report), then \`git switch journeys-autopilot/main\`. The item stays \`finding\`, with the fix pull request url (with no \`gh\`, the
+  fix branch) in \`note\`, until that pull request merges; then set it \`covered\` with the journey's new path.
 - **Anything else**: leave it a \`finding\` and write it up in the journeys pull request for a person:
   the goal, the journey file, the failing step, what it expected and found, and the source line.
 
@@ -252,9 +264,12 @@ Follow the [journeys-harden skill](.claude/skills/journeys-harden/SKILL.md), una
 budget, \`${cd}lowdefy journeys harden --workers 1\` on a few pages at a time (\`--page <pageId>\`),
 one worker so only one journey runs at a time; for each
 survivor add the assertion that would catch it, then confirm with \`harden --mutant <id>\` and
-\`lowdefy test --repeat 3\`. Add edge cases with \`${cd}lowdefy journeys variants <file>\` and keep what
+\`lowdefy test --repeat 3\`. The printed report has no ids: read them from
+\`.lowdefy/test/mutation.json\` (each \`mutants\` entry has \`id\`, \`status\` and \`describe\`). Add edge cases with \`${cd}lowdefy journeys variants <file>\` and keep what
 passes as the skill describes (granted roles join the original journey's \`user\` list, the rest
-become their own journeys; a failing variant is a finding). Add each as a ledger item.
+become their own journeys; a failing variant is a finding). Add each as a ledger item. A variant that proves only what a
+covered journey already proves (same page, user and outcome) adds nothing: discard its candidate
+file, which never joined the suite, and name it in the report, so \`_candidates/\` is left empty.
 A survivor whose config is dead is a finding about the app. If the app already has production
 analytics cached (\`${cd}lowdefy journeys coverage\` reads them), add \`todo\` items for the flows and
 role sets it names that no journey covers. Re-check \`quarantined\` items: replay each three times, and
@@ -291,7 +306,8 @@ the pull request title and body you would have used in the cycle report.
 If the environment is broken, do not guess and do not ask. Blocked covers:
 
 - the install fails, or the dev server will not start;
-- a variable the build or server needs is missing from your environment: name it, and say how to
+- a variable the build or server needs is missing from your environment: name it (a \`_secret\` as
+  \`LOWDEFY_SECRET_<NAME>\`), and say how to
   start you with it (export it in the shell that starts the agent, or start the agent through the
   wrapper that injects the app's secrets, such as \`infisical run -- claude\`);
 - a stale \`.lowdefy/dev\` that a restart does not cure (see Traps);
