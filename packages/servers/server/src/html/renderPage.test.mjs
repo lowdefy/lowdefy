@@ -21,6 +21,7 @@ const { default: getPageConfig } = await import('@lowdefy/api/routes/page/getPag
 
 const mockGetRootConfig = jest.fn();
 jest.unstable_mockModule('@lowdefy/api', () => ({
+  createContentSecurityPolicy: jest.fn(),
   getPageConfig,
   getRootConfig: mockGetRootConfig,
 }));
@@ -30,6 +31,9 @@ jest.unstable_mockModule('../../lib/build/auth.js', () => ({
   default: { authPages: { signIn: '/auth/login', twoFactorEnrol: '/two-factor-enrol' } },
 }));
 jest.unstable_mockModule('../../lib/build/config.js', () => ({ default: { basePath: '' } }));
+jest.unstable_mockModule('../../lib/build/security.js', () => ({
+  default: { contentSecurityPolicy: null },
+}));
 jest.unstable_mockModule('../../lib/build/theme.js', () => ({ default: {} }));
 jest.unstable_mockModule('./getAssets.js', () => ({ default: () => ({}) }));
 jest.unstable_mockModule('./getPageAssets.js', () => ({ default: () => ({}) }));

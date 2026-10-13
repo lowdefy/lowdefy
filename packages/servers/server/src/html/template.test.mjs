@@ -84,3 +84,43 @@ test('template dark mode script reads the preference under the app key', () => {
     'var p=localStorage.getItem(k);if(p===null)p=localStorage.getItem("lowdefy_darkMode");'
   );
 });
+
+const pageAssets = { js: [], css: [], prefetch: [] };
+
+test('template puts the nonce on every script element, the appended ones included', () => {
+  const html = template({
+    appendHead: '<script src="https://cdn.example.com/a.js"></script><style>p{}</style>',
+    appendBody: '<script>window.b = 1;</script>',
+    assets,
+    config: { pageConfig: {} },
+    nonce: 'bm9uY2U=',
+    pageAssets,
+  });
+  const scripts = html.match(/<script\b[^>]*>/g);
+  expect(scripts.length).toEqual(6);
+  scripts.forEach((tag) => expect(tag).toContain(' nonce="bm9uY2U="'));
+  expect(html).toContain('<style nonce="bm9uY2U=">p{}</style>');
+  expect(html).toContain('<meta property="csp-nonce" nonce="bm9uY2U=" />');
+});
+
+test('template has the layer order style take the nonce of its script', () => {
+  const html = template({ assets, config: { pageConfig: {} }, nonce: 'bm9uY2U=', pageAssets });
+  expect(html).toContain(
+    'var n=document.currentScript&&document.currentScript.nonce;if(n)s.nonce=n;'
+  );
+});
+
+test('template writes no nonce without a Content-Security-Policy', () => {
+  const html = template({
+    appendHead: '<script src="https://cdn.example.com/a.js"></script>',
+    appendBody: '<script>window.b = 1;</script>',
+    assets,
+    config: { pageConfig: {} },
+    nonce: null,
+    pageAssets,
+  });
+  expect(html).not.toContain(' nonce="');
+  expect(html).not.toContain('csp-nonce');
+  expect(html).toContain('<script src="https://cdn.example.com/a.js"></script>');
+  expect(html).toContain('<script>window.b = 1;</script>');
+});

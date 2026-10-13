@@ -20,6 +20,7 @@ import { createPortal } from 'react-dom';
 import { blockAncestorChain, nearestBlock } from '../feedback/elementInspect.js';
 import { highlightBox, labelChip, overlayContainer } from '../feedback/feedbackStyles.js';
 import findBlockLocation from './findBlockLocation.js';
+import getCspNonce from '../../lib/client/getCspNonce.js';
 
 const STYLE_TAG_ID = 'lowdefy-open-in-editor-style-tag';
 const BODY_CLASS = 'lowdefy-open-in-editor-target';
@@ -32,6 +33,7 @@ function injectStyleTag() {
   }
   const style = document.createElement('style');
   style.id = STYLE_TAG_ID;
+  style.nonce = getCspNonce();
   style.textContent = `
     .${BODY_CLASS}, .${BODY_CLASS} * {
       cursor: pointer !important;

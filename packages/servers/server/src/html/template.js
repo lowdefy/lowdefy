@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import { appStorageKey } from '@lowdefy/helpers';
+import { addNonceToElements } from '@lowdefy/api';
+import { appStorageKey, type } from '@lowdefy/helpers';
 
 import safeScriptJson from '../lib/safeScriptJson.js';
 
@@ -29,8 +30,9 @@ function escapeHtml(value) {
 // prependQueue to inject <style> tags at the top of <head>, which would
 // otherwise make @layer antd the first (lowest priority) layer.
 // MutationObserver fires before paint, so the browser never sees the wrong
-// cascade order.
-const layerOrderScript = `(function(){var s=document.createElement("style");s.id="__lf-layer-order";s.textContent="@layer theme, base, antd, components, utilities;";document.head.prepend(s);new MutationObserver(function(){if(document.head.firstChild!==s)document.head.prepend(s)}).observe(document.head,{childList:true})})();`;
+// cascade order. The style element takes the script's own nonce, which a
+// Content-Security-Policy needs to apply it.
+const layerOrderScript = `(function(){var s=document.createElement("style");s.id="__lf-layer-order";var n=document.currentScript&&document.currentScript.nonce;if(n)s.nonce=n;s.textContent="@layer theme, base, antd, components, utilities;";document.head.prepend(s);new MutationObserver(function(){if(document.head.firstChild!==s)document.head.prepend(s)}).observe(document.head,{childList:true})})();`;
 
 // Synchronous pre-hydration script setting the <html> background and
 // color-scheme — prevents a mode-mismatch flash of the page and of browser
@@ -52,6 +54,7 @@ function template({
   assets,
   basePath = '',
   config,
+  nonce = null,
   pageAssets,
   slug,
   themeConfig = {},
@@ -79,6 +82,15 @@ function template({
     .map((file) => `<link rel="prefetch" href="${basePath}/${file}" crossorigin />`)
     .join('\n    ');
 
+  // With a Content-Security-Policy, every script and style element Lowdefy writes
+  // or the app appends carries the render's nonce. The csp-nonce meta tag is
+  // where the client (antd's style tags) and Vite read it.
+  const hasNonce = !type.isNull(nonce);
+  const nonceAttribute = hasNonce ? ` nonce="${nonce}"` : '';
+  const nonceMeta = hasNonce ? `<meta property="csp-nonce" nonce="${nonce}" />` : '';
+  const head = hasNonce ? addNonceToElements({ html: appendHead, nonce }) : appendHead;
+  const body = hasNonce ? addNonceToElements({ html: appendBody, nonce }) : appendBody;
+
   // appendHead and appendBody are intentionally raw HTML from app config
   // (analytics snippets, font links) — they must not be escaped. The config
   // JSON and pre-hydration interpolations go through safeScriptJson.
@@ -86,8 +98,9 @@ function template({
 <html class="lowdefy">
   <head>
     <meta charset="utf-8" />
-    <script>${layerOrderScript}</script>
-    <script>${darkModeScript({
+    ${nonceMeta}
+    <script${nonceAttribute}>${layerOrderScript}</script>
+    <script${nonceAttribute}>${darkModeScript({
       configColorMode,
       darkBg,
       lightBg,
@@ -101,13 +114,15 @@ function template({
     ${cssLinks}
     ${modulePreloads}
     ${prefetches}
-    ${appendHead}
+    ${head}
   </head>
   <body>
     <div id="root"></div>
-    <script id="__LOWDEFY_CONFIG__" type="application/json">${safeScriptJson(config)}</script>
-    ${appendBody}
-    <script type="module" src="${basePath}/${assets.js}"></script>
+    <script id="__LOWDEFY_CONFIG__" type="application/json"${nonceAttribute}>${safeScriptJson(
+      config
+    )}</script>
+    ${body}
+    <script type="module" src="${basePath}/${assets.js}"${nonceAttribute}></script>
   </body>
 </html>`;
 }
