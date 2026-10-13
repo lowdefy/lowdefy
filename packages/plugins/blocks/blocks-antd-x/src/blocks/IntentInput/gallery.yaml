@@ -1,0 +1,81 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# A keyword classifier stands in for a Decide request so the example runs
+# without a model. Try "fix the login bug", "sync with Sam friday 2pm" or
+# "standup".
+- title: Capture box
+  blocks:
+    - id: capture_demo
+      type: IntentInput
+      properties:
+        placeholder: Try "fix the login bug" or "sync with Sam friday 2pm"
+        intents:
+          task:
+            label: Task
+            icon: CircleCheck
+            color: '#6366f1'
+          meeting:
+            label: Meeting
+            icon: Calendar
+            color: '#0ea5e9'
+        answer:
+          _state: capture_demo_answer
+      events:
+        onClassify:
+          - id: classify
+            type: SetState
+            params:
+              capture_demo_answer:
+                _js:
+                  fn: |
+                    const text = args.text.toLowerCase();
+                    const probabilities = { task: 0.05, meeting: 0.05 };
+                    if (/^(fix|add|build|update|remove)\b/.test(text)) probabilities.task = 0.9;
+                    if (/\b(sync|meeting|call|standup)\b/.test(text)) {
+                      probabilities.meeting = /\d|today|tomorrow|day\b/.test(text) ? 0.9 : 0.4;
+                    }
+                    return { probabilities };
+                  args:
+                    text:
+                      _event: text
+      slots:
+        task:
+          blocks:
+            - id: capture_demo_task
+              type: Paragraph
+              properties:
+                content:
+                  _string.concat:
+                    - 'New task: '
+                    - _state: capture_demo.text
+            - id: capture_demo_create
+              type: Button
+              properties:
+                title: Create task
+                type: primary
+        meeting:
+          blocks:
+            - id: capture_demo_meeting
+              type: Paragraph
+              properties:
+                content:
+                  _string.concat:
+                    - 'New meeting: '
+                    - _state: capture_demo.text
+            - id: capture_demo_invite
+              type: Button
+              properties:
+                title: Send invite
+                type: primary

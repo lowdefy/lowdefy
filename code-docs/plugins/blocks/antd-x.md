@@ -1,6 +1,6 @@
 ---
 title: '@lowdefy/blocks-antd-x'
-updated: 2026-05-05
+updated: 2026-10-13
 package: '@lowdefy/blocks-antd-x'
 ---
 
@@ -10,7 +10,7 @@ AI-focused blocks built on Ant Design X components.
 
 ## Purpose
 
-Provides `AgentChat` (a production-grade chat UI) and `AgentConversations` (a standalone conversation list sidebar) for Lowdefy's agent system.
+Provides `AgentChat` (a production-grade chat UI) and `AgentConversations` (a standalone conversation list sidebar) for Lowdefy's agent system, and `IntentInput` (a text input that becomes the card for what the user means).
 
 ## Blocks
 
@@ -66,6 +66,18 @@ Standalone conversation list sidebar, decoupled from AgentChat.
 - `width` — Panel width
 
 **Events:** `onSelect`, `onNew`, `onMenuClick`
+
+### IntentInput
+
+**Category:** input-container (value `{ text, intent, mode }`, one slot per intent)
+
+A text box that grows into the card for the intent the text means. Like `AgentChat`, it holds no AI config: it fires `onClassify` (debounced) and takes the answer back through `answer`, in the shape of a `Decide` choice answer, so any classifier fits (a `Decide` request, a keyword `_js`).
+
+- `answerScores` turns the answer into a score per intent. Options that are not intents drop out (a `none` escape option), and the provider's calibrated `confidence` is the chosen intent's score.
+- `nextIntentState` is the anti-flicker state machine. The shown intent changes only when a challenger leads two answers in a row or reaches `confidence.switch`; the block re-runs a round with unchanged scores after a pause, so a challenger that keeps the lead while the user stops typing also wins. It also derives the mode: `idle`, `preview` (faded card), `choose` (the two leading intents are within 0.15 and neither is shown solid) or `card`.
+- The last non-null answer is held in a ref, so a request that goes null while loading does not reset the card.
+- A choice the user picks is pinned until the scores commit to a different intent on their own.
+- The height morph is a `ResizeObserver` on the inner content driving a CSS height transition; cards enter with a keyframe. Exit animations are not implemented.
 
 ## Architecture
 
@@ -141,3 +153,6 @@ The `useChat` hook from `@ai-sdk/react` manages messages, status, and streaming.
 | `src/blocks/AgentChat/WelcomeScreen.js`               | Welcome screen                |
 | `src/blocks/AgentChat/DrawerWrapper.js`               | Drawer mode wrapper           |
 | `src/blocks/AgentConversations/AgentConversations.js` | Conversation list             |
+| `src/blocks/IntentInput/IntentInput.js`               | Intent input component        |
+| `src/blocks/IntentInput/nextIntentState.js`           | Anti-flicker state machine    |
+| `src/blocks/IntentInput/answerScores.js`              | Decide answer to scores       |

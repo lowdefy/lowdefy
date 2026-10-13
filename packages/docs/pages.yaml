@@ -102,6 +102,7 @@
 - _ref: blocks/input/DateRangeSelector.yaml
 - _ref: blocks/input/DateSelector.yaml
 - _ref: blocks/input/DateTimeSelector.yaml
+- _ref: blocks/input/IntentInput.yaml
 - _ref: blocks/input/MonthSelector.yaml
 - _ref: blocks/input/MultipleSelector.yaml
 - _ref: blocks/input/NumberInput.yaml
