@@ -1341,20 +1341,20 @@ test('login with a social provider forwards newUserCallbackUrl and errorCallback
   ]);
 });
 
-test('login with a GenericOAuth provider forwards newUserCallbackUrl and errorCallbackUrl', async () => {
+test('login with a GenericOAuth provider signs in through signInSocial keyed by the provider id', async () => {
   const { auth, lowdefy } = setup();
   auth.authConfig.providers = [{ id: 'keycloak', type: 'GenericOAuth' }];
-  auth.signInOauth2 = jest.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
+  auth.signInSocial = jest.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({
     providerId: 'keycloak',
     newUserCallbackUrl: { pageId: 'welcome' },
     errorCallbackUrl: { pageId: 'sign-in-failed' },
   });
-  expect(auth.signInOauth2.mock.calls).toEqual([
+  expect(auth.signInSocial.mock.calls).toEqual([
     [
       {
-        providerId: 'keycloak',
+        provider: 'keycloak',
         callbackURL: '/home-page',
         newUserCallbackURL: '/welcome',
         errorCallbackURL: '/sign-in-failed',

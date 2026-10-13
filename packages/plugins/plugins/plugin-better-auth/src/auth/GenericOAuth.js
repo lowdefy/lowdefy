@@ -15,9 +15,11 @@
 */
 
 // GenericOAuth covers any OAuth 2.0 / OIDC provider BetterAuth does not ship
-// built-in. The Lowdefy provider id becomes the generic OAuth providerId.
+// built-in. The Lowdefy provider id becomes the generic OAuth providerId, over
+// any providerId in properties: the client signs in, and the build keys
+// two-factor and account-linking trust, by the Lowdefy id.
 function GenericOAuth({ id, properties }) {
-  return { kind: 'generic', config: { providerId: id, ...properties } };
+  return { kind: 'generic', config: { ...properties, providerId: id } };
 }
 
 export default GenericOAuth;

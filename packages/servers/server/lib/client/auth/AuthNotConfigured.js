@@ -53,7 +53,6 @@ function AuthNotConfigured({ authConfig, children, user = null }) {
     setActiveOrganization: authNotConfigured,
     signInEmail: authNotConfigured,
     signInMagicLink: authNotConfigured,
-    signInOauth2: authNotConfigured,
     signInPasskey: authNotConfigured,
     signInPhoneNumber: authNotConfigured,
     signInSocial: authNotConfigured,

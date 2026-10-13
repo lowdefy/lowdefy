@@ -344,20 +344,14 @@ function createAuthMethods(lowdefy, auth) {
       if (type.isNone(provider)) {
         throw new ConfigError(`Login provider "${providerId}" is not a configured auth provider.`);
       }
-      if (provider.type === 'GenericOAuth') {
-        return unwrap(
-          auth.signInOauth2({
-            providerId,
-            callbackURL,
-            ...routingCallbacks,
-            ...rest,
-            ...captchaOptions,
-          })
-        );
-      }
+      // BetterAuth registers a GenericOAuth provider as a social provider keyed
+      // by its providerId, the Lowdefy provider id; built-in ones are keyed by
+      // their lowercase type.
+      const socialProvider =
+        provider.type === 'GenericOAuth' ? provider.id : provider.type.toLowerCase();
       return unwrap(
         auth.signInSocial({
-          provider: provider.type.toLowerCase(),
+          provider: socialProvider,
           callbackURL,
           ...routingCallbacks,
           ...rest,
