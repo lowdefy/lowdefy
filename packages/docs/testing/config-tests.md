@@ -474,6 +474,14 @@ Each file starts with a header line naming the journey file it came from and hol
 
 `lowdefy agent-setup` installs a `journeys-harden` skill that runs this section with you. It replays the journeys and candidates three times, lints them, sizes a `journeys harden` run with `--list` and asks before it starts, then takes each surviving mutant to you one at a time with the assertion that would catch it, confirming each with `--mutant <id>` and `lowdefy test --repeat 3`. It writes variants for the journeys you pick, refreshes `journeys evidence`, and reports journeys with no production backing (with their mutation kills), duplicate journeys and pages no journey reaches. It never deletes a journey or suggests deleting one, writes no step except an assertion you approved, and commits nothing.
 
+## Journeys on autopilot
+
+`lowdefy agent-setup` installs a `journeys-autopilot` skill for an app with no journeys, or with some. Start it once and leave it running: in Claude Code, `/loop /journeys-autopilot` (or a background session running `/journeys-autopilot`). It is one agent, with no sub-agents, one dev server and one test run at a time, in its own git worktree and branch, so your checkout and dev server are untouched.
+
+The first cycle writes a [data set](/journey-data-sets) with made-up fixtures and a test user for each role, maps every page by role and every control that writes data, and records them in a ledger, `tests/autopilot.yaml`, committed in your app. Each later cycle reads the ledger and takes the next gaps by value: refusals and permissions, then writes, then the pages people use most, then edge cases. A journey is kept only after three clean runs in a row (`lowdefy test --repeat 3`) and must assert a value only the fixtures hold. A flaky journey moves to `tests/journeys/_quarantine/` with its cause; a journey that exposes an app bug moves to `tests/journeys/_findings/` as a finding. Neither is deleted, and no journey is ever weakened to pass. Once every item is covered, the cycles turn to `lowdefy journeys harden` and `variants`, and to `coverage` when production analytics are pulled.
+
+Each cycle ends with the ledger committed and its servers stopped, so you can interrupt it any time. It opens one pull request of journeys with a plain-language summary, a separate small pull request for an obvious, local app fix that carries the failing journey turning green, and writes up any other finding for you. It never merges, never pushes to the default branch, and never runs against production or a shared database. When the environment is broken it records why in the ledger and stops.
+
 ## Dev recordings
 
 `lowdefy dev` records how you use your app in the browser, so an agent can read what you just tried and write journeys for it. Recording is on by default and stays on your machine:
