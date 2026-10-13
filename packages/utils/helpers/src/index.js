@@ -20,6 +20,7 @@ import builtinMessages from './builtinMessages.js';
 import buildPagePath from './buildPagePath.js';
 import cachedPromises from './cachedPromises.js';
 import callerHash from './callerHash.js';
+import callerStamp from './callerStamp.js';
 import cleanBuildArtifact from './cleanBuildArtifact.js';
 import createTraceId from './createTraceId.js';
 import extractErrorProps from './extractErrorProps.js';
@@ -45,10 +46,12 @@ import normalizeCaller from './normalizeCaller.js';
 import omit from './omit.js';
 import pageInstanceKey from './pageInstanceKey.js';
 import pairTraceEvents from './pairTraceEvents.js';
+import parseCallerStamp from './parseCallerStamp.js';
 import parsePageId from './parsePageId.js';
 import parsePathPattern from './parsePathPattern.js';
 import parseRowIndex from './parseRowIndex.js';
 import projectCaughtError from './projectCaughtError.js';
+import rolesHash from './rolesHash.js';
 import serializer from './serializer.js';
 import set from './set.js';
 import setKey from './setKey.js';
@@ -71,6 +74,7 @@ export {
   builtinMessages,
   cachedPromises,
   callerHash,
+  callerStamp,
   cleanBuildArtifact,
   createTraceId,
   extractErrorProps,
@@ -96,11 +100,13 @@ export {
   omit,
   pageInstanceKey,
   pairTraceEvents,
+  parseCallerStamp,
   parsePageId,
   parsePathPattern,
   parseRowIndex,
   projectCaughtError,
   ReservedKeyError,
+  rolesHash,
   serializer,
   set,
   setKey,
