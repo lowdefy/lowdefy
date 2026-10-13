@@ -40,10 +40,11 @@ const whoamiReturn = {
   id: { _agent: 'id' },
   conversationId: { _agent: 'conversationId' },
   files: { _agent: 'files' },
+  sharedState: { _agent: 'sharedState' },
   all: { _agent: true },
 };
 
-const noAgent = { id: null, conversationId: null, files: null, all: null };
+const noAgent = { id: null, conversationId: null, files: null, sharedState: null, all: null };
 
 // A spoofing payload: fields a model could put in a tool call's input.
 const spoofPayload = {
@@ -194,7 +195,13 @@ function createContext({ user = { id: 'user_1', sub: 'user_1' } } = {}) {
   return context;
 }
 
-async function chatToolCall({ endpointId, input = {}, conversationId = 'conv_1', messages = [] }) {
+async function chatToolCall({
+  endpointId,
+  input = {},
+  conversationId = 'conv_1',
+  messages = [],
+  sharedState,
+}) {
   toolCall = { endpointId, input };
   const context = createContext();
   const { response } = await callAgent(context, {
@@ -202,6 +209,7 @@ async function chatToolCall({ endpointId, input = {}, conversationId = 'conv_1',
     conversationId,
     messages,
     pageId: 'chat',
+    sharedState,
   });
   expect(response.success).toBe(true);
   return response.response;
@@ -211,7 +219,8 @@ const supportAgent = {
   id: 'support_agent',
   conversationId: 'conv_1',
   files: [],
-  all: { id: 'support_agent', conversationId: 'conv_1', files: [] },
+  sharedState: {},
+  all: { id: 'support_agent', conversationId: 'conv_1', files: [], sharedState: {} },
 };
 
 // A chat whose first message carries an upload and whose third carries a pasted, inline image.
@@ -278,7 +287,8 @@ test('a chat without a conversation id gives a null conversationId', async () =>
     id: 'support_agent',
     conversationId: null,
     files: [],
-    all: { id: 'support_agent', conversationId: null, files: [] },
+    sharedState: {},
+    all: { id: 'support_agent', conversationId: null, files: [], sharedState: {} },
   });
 });
 
@@ -327,7 +337,8 @@ test('a tool called by a headless CallAgent step reads the agent with a null con
     id: 'support_agent',
     conversationId: null,
     files: [],
-    all: { id: 'support_agent', conversationId: null, files: [] },
+    sharedState: null,
+    all: { id: 'support_agent', conversationId: null, files: [], sharedState: null },
   });
 });
 
@@ -395,6 +406,7 @@ test('a detached CallApi from a tool endpoint carries the agent to the detached 
     id: 'support_agent',
     conversationId: 'conv_1',
     files: [],
+    sharedState: {},
   });
 
   const detachedContext = createContext();
@@ -415,4 +427,26 @@ test('a detached run dispatched without an agent reads no agent', async () => {
     principal: { user: null, system: true, agent: null },
   });
   expect(result.response).toEqual(noAgent);
+});
+
+test('a tool endpoint reads the shared state the chat request carried', async () => {
+  const sharedState = { browser: { userAgent: 'test', viewport: '800x600' } };
+  const result = await chatToolCall({ endpointId: 'whoami', sharedState });
+  expect(result.sharedState).toEqual(sharedState);
+  expect(result.all.sharedState).toEqual(sharedState);
+});
+
+test('an endpoint a tool endpoint calls through CallApi reads the same shared state', async () => {
+  const sharedState = { page: 'tickets' };
+  const result = await chatToolCall({ endpointId: 'nested_call_api', sharedState });
+  expect(result.sharedState).toEqual(sharedState);
+});
+
+test('a tool payload naming sharedState changes nothing', async () => {
+  const result = await chatToolCall({
+    endpointId: 'whoami',
+    input: { sharedState: { forged: true } },
+    sharedState: { real: true },
+  });
+  expect(result.sharedState).toEqual({ real: true });
 });

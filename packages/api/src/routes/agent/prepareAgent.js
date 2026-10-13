@@ -42,7 +42,14 @@ async function prepareAgent(
   // What `_agent` reads in the tool and hook endpoints this agent calls. Built here from the
   // agent being run, its conversation and the files of the chat request, so no tool input can
   // set or change it.
-  const agent = { id: agentId, conversationId: agentContext.conversationId ?? null, files };
+  // sharedState is the chat's shared state the browser sent with the request, the same value
+  // the agent's own context reads.
+  const agent = {
+    id: agentId,
+    conversationId: agentContext.conversationId ?? null,
+    files,
+    sharedState: agentContext.sharedState ?? null,
+  };
 
   // Evaluate operators in agent properties (e.g. _user, _secret, _payload)
   agentConfig.properties = context.evaluateOperators({
