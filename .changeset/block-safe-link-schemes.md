@@ -1,4 +1,7 @@
 ---
+'@lowdefy/helpers': patch
+'@lowdefy/engine': patch
+'@lowdefy/client': patch
 '@lowdefy/block-utils': patch
 '@lowdefy/blocks-antd': patch
 '@lowdefy/blocks-antd-x': patch
@@ -8,6 +11,6 @@
 
 Allow only safe link schemes in block hrefs
 
-`Button`, `Tag` and `FloatButton`, table link, avatar, relation and url cells, ag-grid link cells, AgentChat message and tool result links, and `TiptapMentionInput` mention links now use an `href` only when it is an `http`, `https`, `mailto` or `tel` URL, a relative path, a query or a fragment. Any other value, including one with leading whitespace or control characters, renders the element without a link. A table or ag-grid link whose `href` is refused no longer falls back to its `pageId`.
+An `href` is used only when it is an `http`, `https`, `mailto` or `tel` URL, a relative path, a query or a fragment. Any other value, including one with leading whitespace or control characters, renders no link. This applies to `Button`, `Tag` and `FloatButton`, the url cell of table, AgentChat message and tool result links, `TiptapMentionInput` mention links, and every `href` given to the Lowdefy `Link` component, which covers table and ag-grid link, avatar and relation cells. A `Link` whose `href` is refused renders a span without navigating, and does not fall back to its `pageId` or `url`; the `Link` action with such an `href` throws "Invalid Link: no target resolved." as it does for a `url` it cannot resolve.
 
-`@lowdefy/block-utils` exports the check as `getSafeHref(href)`, which returns the href or `undefined`.
+`@lowdefy/helpers` exports the check as `getSafeHref(href)`, which returns the href or `undefined`; `@lowdefy/block-utils` re-exports it.

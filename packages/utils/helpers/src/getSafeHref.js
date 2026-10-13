@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import type from './type.js';
 
 const safeSchemes = new Set(['http', 'https', 'mailto', 'tel']);
 const schemePattern = /^([a-z][a-z0-9+.-]*):/i;

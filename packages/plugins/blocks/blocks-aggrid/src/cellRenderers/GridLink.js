@@ -15,8 +15,6 @@
 */
 
 import React from 'react';
-import { getSafeHref } from '@lowdefy/block-utils';
-import { type } from '@lowdefy/helpers';
 
 const wrapperStyle = { display: 'contents' };
 
@@ -30,9 +28,6 @@ function isPlainClick(event) {
 // seed the target's input, never runs. Modified and new-tab clicks are left to the Link.
 function GridLink({ link, components, methods, row, value, style, children }) {
   const { Link } = components;
-  const href = getSafeHref(link.href);
-  // href overrides pageId, so a refused href renders no link rather than the page link.
-  const hrefRefused = !type.isNone(link.href) && type.isNone(href);
   function onClickCapture(event) {
     if (link.newTab === true || !isPlainClick(event)) return;
     event.preventDefault();
@@ -45,11 +40,10 @@ function GridLink({ link, components, methods, row, value, style, children }) {
   return (
     <span style={wrapperStyle} onClickCapture={onClickCapture}>
       <Link
-        disabled={hrefRefused}
         pageId={link.pageId}
         pathParams={link.pathParams}
         urlQuery={link.urlQuery}
-        href={href}
+        href={link.href}
         home={link.home}
         back={link.back}
         newTab={link.newTab}

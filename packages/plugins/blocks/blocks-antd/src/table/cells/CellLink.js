@@ -15,24 +15,18 @@
 */
 
 import React from 'react';
-import { getSafeHref } from '@lowdefy/block-utils';
-import { type } from '@lowdefy/helpers';
 
 // A resolved link (see resolveLink) through the Lowdefy Link component, which
 // navigates with the router on a plain click and leaves modified clicks to the
 // browser.
 function CellLink({ link, components, className, onClick, children }) {
   const { Link } = components;
-  const href = getSafeHref(link.href);
-  // href overrides pageId, so a refused href renders no link rather than the page link.
-  const hrefRefused = !type.isNone(link.href) && type.isNone(href);
   return (
     <Link
-      disabled={hrefRefused}
       pageId={link.pageId}
       pathParams={link.pathParams}
       urlQuery={link.urlQuery}
-      href={href}
+      href={link.href}
       home={link.home}
       back={link.back}
       newTab={link.newTab}

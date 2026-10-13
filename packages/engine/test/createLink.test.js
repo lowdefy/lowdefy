@@ -810,3 +810,59 @@ test('createLink seeds no input for a url link', () => {
   expect(lowdefy.inputs).toEqual({});
   expect(lowdefy.pathMemory.size).toBe(0);
 });
+
+function createMockedLink() {
+  return createLink({
+    backLink: mockBackLink,
+    disabledLink: mockDisabledLink,
+    lowdefy: createLowdefy(),
+    newOriginLink: mockNewOriginLink,
+    noLink: mockNoLink,
+    sameOriginLink: mockSameOriginLink,
+  });
+}
+
+test('createLink passes an href with a safe scheme or a relative href to newOriginLink', () => {
+  const link = createMockedLink();
+  const hrefs = [
+    'https://lowdefy.com',
+    'http://lowdefy.com',
+    'mailto:someone@example.com',
+    'tel:+27123456789',
+    '/reports?a=1',
+    'reports',
+    '?tab=2',
+    '#section',
+    '//lowdefy.com',
+  ];
+  hrefs.forEach((href) => link({ href }));
+  expect(mockNewOriginLink.mock.calls.map(([props]) => props.href)).toEqual(hrefs);
+  expect(mockNoLink.mock.calls).toEqual([]);
+});
+
+test('createLink calls noLink for an href with another scheme', () => {
+  const link = createMockedLink();
+  const hrefs = [
+    'javascript:alert(1)',
+    'JavaScript:alert(1)',
+    'vbscript:msgbox(1)',
+    'data:text/html,x',
+    'ftp://lowdefy.com',
+    ' javascript:alert(1)',
+    'java\tscript:alert(1)',
+    '',
+  ];
+  hrefs.forEach((href) => link({ href }));
+  expect(mockNoLink.mock.calls.map(([props]) => props.href)).toEqual(hrefs);
+  expect(mockNewOriginLink.mock.calls).toEqual([]);
+  expect(mockSameOriginLink.mock.calls).toEqual([]);
+});
+
+test('createLink does not fall back to pageId or url when an href is refused', () => {
+  const link = createMockedLink();
+  link({ href: 'javascript:alert(1)', pageId: 'page_1' });
+  link({ href: 'javascript:alert(1)', url: 'https://lowdefy.com' });
+  expect(mockNoLink.mock.calls).toHaveLength(2);
+  expect(mockNewOriginLink.mock.calls).toEqual([]);
+  expect(mockSameOriginLink.mock.calls).toEqual([]);
+});

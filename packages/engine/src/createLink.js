@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { getSafeHref, type } from '@lowdefy/helpers';
 
 import rememberTarget from './rememberTarget.js';
 import resolveTarget from './resolveTarget.js';
@@ -29,8 +29,13 @@ function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sa
       return backLink(props);
     }
     // href is an HTML-attribute passthrough the <Link> component reads, not a
-    // navigation target, so it never enters the grammar resolver.
+    // navigation target, so it never enters the grammar resolver. It is used only
+    // with a safe scheme; any other href resolves no link, and does not fall back
+    // to the link's pageId or url.
     if (type.isString(props.href)) {
+      if (type.isNone(getSafeHref(props.href))) {
+        return noLink(props);
+      }
       return newOriginLink(props);
     }
     const target = resolveTarget({
