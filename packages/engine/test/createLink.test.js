@@ -847,7 +847,7 @@ test('createLink calls noLink for an href with another scheme', () => {
     'JavaScript:alert(1)',
     'vbscript:msgbox(1)',
     'data:text/html,x',
-    'ftp://lowdefy.com',
+    'file:///etc/hosts',
     ' javascript:alert(1)',
     'java\tscript:alert(1)',
     '',

@@ -37,7 +37,7 @@ test('getUrlCellHref returns undefined for other schemes and empty values', () =
   expect(getUrlCellHref(' javascript:alert(1)')).toBeUndefined();
   expect(getUrlCellHref('java\tscript:alert(1)')).toBeUndefined();
   expect(getUrlCellHref('data:text/html,x')).toBeUndefined();
-  expect(getUrlCellHref('ftp://a.test')).toBeUndefined();
+  expect(getUrlCellHref('file:///etc/hosts')).toBeUndefined();
   expect(getUrlCellHref('')).toBeUndefined();
   expect(getUrlCellHref('   ')).toBeUndefined();
 });

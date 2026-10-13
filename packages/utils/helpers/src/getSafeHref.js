@@ -16,7 +16,21 @@
 
 import type from './type.js';
 
-const safeSchemes = new Set(['http', 'https', 'mailto', 'tel']);
+// DOMPurify's default allowed URI schemes, so an href set as a block property
+// links exactly when the same URL would survive in sanitised HTML.
+const safeSchemes = new Set([
+  'callto',
+  'cid',
+  'ftp',
+  'ftps',
+  'http',
+  'https',
+  'mailto',
+  'matrix',
+  'sms',
+  'tel',
+  'xmpp',
+]);
 const schemePattern = /^([a-z][a-z0-9+.-]*):/i;
 // The browser's URL parser drops leading spaces and controls, and tabs and
 // newlines anywhere, before it reads the scheme. A value it would read
@@ -26,8 +40,8 @@ const leadingSpacePattern = /^\s/;
 const controlCharacterPattern = /[\u0000-\u001f\u007f]/;
 
 // The href a block renders, or undefined when the value must not become a link:
-// http(s), mailto and tel URLs pass, as do relative paths, query-only and
-// fragment URLs. Any other scheme renders the element without an href.
+// URLs with a scheme DOMPurify allows by default pass, as do relative paths,
+// query-only and fragment URLs. Any other scheme renders the element without an href.
 function getSafeHref(href) {
   if (!type.isString(href) || href === '') return undefined;
   if (leadingSpacePattern.test(href) || controlCharacterPattern.test(href)) return undefined;

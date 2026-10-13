@@ -29,6 +29,16 @@ test('getSafeHref passes mailto and tel URLs', () => {
   expect(getSafeHref('tel:+27123456789')).toBe('tel:+27123456789');
 });
 
+test('getSafeHref passes the other schemes DOMPurify allows by default', () => {
+  expect(getSafeHref('ftp://a.test/file')).toBe('ftp://a.test/file');
+  expect(getSafeHref('ftps://a.test/file')).toBe('ftps://a.test/file');
+  expect(getSafeHref('sms:+27123456789')).toBe('sms:+27123456789');
+  expect(getSafeHref('callto:someone')).toBe('callto:someone');
+  expect(getSafeHref('cid:part1@a.test')).toBe('cid:part1@a.test');
+  expect(getSafeHref('xmpp:a@b.test')).toBe('xmpp:a@b.test');
+  expect(getSafeHref('matrix:u/a:b.test')).toBe('matrix:u/a:b.test');
+});
+
 test('getSafeHref passes protocol relative and root relative URLs', () => {
   expect(getSafeHref('//a.test')).toBe('//a.test');
   expect(getSafeHref('/docs')).toBe('/docs');
@@ -64,7 +74,6 @@ test('getSafeHref returns undefined for script schemes in any case', () => {
 });
 
 test('getSafeHref returns undefined for other schemes', () => {
-  expect(getSafeHref('ftp://a.test')).toBeUndefined();
   expect(getSafeHref('file:///etc/hosts')).toBeUndefined();
   expect(getSafeHref('blob:https://a.test/1')).toBeUndefined();
   expect(getSafeHref('slack://open')).toBeUndefined();
