@@ -15,7 +15,7 @@
 */
 
 import { LowdefyInternalError } from '@lowdefy/errors';
-import { pageInstanceKey } from '@lowdefy/helpers';
+import { pageInstanceKey, type } from '@lowdefy/helpers';
 
 import createContext from './createContext.js';
 import keepPageInstance from './keepPageInstance.js';
@@ -36,6 +36,16 @@ function getContext({
   const { pageId } = config;
   const instanceKey = pageInstanceKey({ pageId, path: config.path, pathParams });
   keepPageInstance({ lowdefy, pageId, instanceKey });
+  // A page instance belongs to the organization its caller acted in: after an
+  // organization switch it is rebuilt, never rendered with the previous
+  // organization's state and request results. Kept under the same instance
+  // key, which path memory and Link input already name. A context built while
+  // the caller had no organization holds no organization's data, so it is kept
+  // when the caller gains one (accepting an invitation activates it) and
+  // belongs to that organization from then on.
+  const organizationId = lowdefy.user?.organization_id ?? null;
+  const keptOrganizationId = lowdefy.contexts[instanceKey]?._internal.organizationId;
+  const sameOrganization = type.isNone(keptOrganizationId) || keptOrganizationId === organizationId;
   // Dynamic pages are server-resolved per request — a context memoized across
   // navigations would render the previous request's content. Rebuild when a
   // new config object arrives (a fresh fetch), but stay memoized across
@@ -43,10 +53,16 @@ function getContext({
   // rebuilding per render would loop.
   const sameDynamicConfig =
     config.dynamic !== true || lowdefy.contexts[instanceKey]?._internal.pageConfig === config;
-  if (lowdefy.contexts[instanceKey] && !resetContext.reset && sameDynamicConfig) {
+  if (
+    lowdefy.contexts[instanceKey] &&
+    !resetContext.reset &&
+    sameDynamicConfig &&
+    sameOrganization
+  ) {
     // memoize context if already created, eg between page transitions, unless the reset flag is
     // raised. A full pass: this render-time update is how changes with no reporting hook reach the
     // page - user, i18n, theme, menus, inputs and the URL.
+    lowdefy.contexts[instanceKey]._internal.organizationId = organizationId;
     lowdefy.contexts[instanceKey]._internal.update();
     return lowdefy.contexts[instanceKey];
   }
@@ -60,7 +76,7 @@ function getContext({
   if (!lowdefy.inputs[instanceKey]) {
     lowdefy.inputs[instanceKey] = {};
   }
-  const ctx = createContext({ config, instanceKey, jsMap, lowdefy, pathParams });
+  const ctx = createContext({ config, instanceKey, jsMap, lowdefy, organizationId, pathParams });
   lowdefy.contexts[instanceKey] = ctx;
   return ctx;
 }

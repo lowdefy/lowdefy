@@ -19,6 +19,7 @@ import getContext from '@lowdefy/engine';
 
 import createPageLifecycleManager from './createPageLifecycleManager.js';
 import createShortcutManager from './createShortcutManager.js';
+import getContextKey from './getContextKey.js';
 import MountEvents from './MountEvents.js';
 
 const ShortcutEffect = ({ context }) => {
@@ -56,6 +57,7 @@ const Context = ({ appContext, children, config, jsMap, lowdefy, pathParams, res
   };
   return (
     <MountEvents
+      key={getContextKey(context)}
       context={context}
       triggerEvent={async () => {
         // The app events run once per app load, when the first page mounts. The
