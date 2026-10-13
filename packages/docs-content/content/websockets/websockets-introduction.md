@@ -93,6 +93,8 @@ auth:
 
 Unauthorized subscriptions receive the same response as subscriptions to channels that do not exist.
 
+An open connection follows the session. The server checks the caller again on every subscribe and at least once a minute. When the user signs out, the session ends, the membership is removed, the roles change or the user switches organization, the server closes the connection and the client reconnects straight away as the current caller. Subscriptions the current caller may not hold fail as they would on a freshly loaded page.
+
 ## What's Next
 
 - [Page Subscriptions](/websocket-subscriptions) — Subscribe pages to channels, handle messages with events, and read channel state with `_websocket`.

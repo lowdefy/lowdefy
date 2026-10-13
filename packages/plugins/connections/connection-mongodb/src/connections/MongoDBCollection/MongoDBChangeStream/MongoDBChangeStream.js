@@ -74,6 +74,8 @@ async function MongoDBChangeStream({ connection, properties, publish, signal, te
 
 MongoDBChangeStream.schema = schema;
 MongoDBChangeStream.meta = {
+  checkRead: true,
+  checkWrite: false,
   publish: false,
 };
 

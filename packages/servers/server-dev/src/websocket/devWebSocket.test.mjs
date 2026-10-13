@@ -28,6 +28,10 @@ jest.unstable_mockModule('@lowdefy/api', () => ({
   createWebSocketConnection: mockCreateWebSocketConnection,
   isWebSocketOriginAllowed: () => true,
 }));
+const mockStrategies = [];
+jest.unstable_mockModule('../../lib/server/auth/getStrategies.js', () => ({
+  default: () => mockStrategies,
+}));
 const mockLogger = { warn: jest.fn(), debug: jest.fn() };
 jest.unstable_mockModule('../../lib/server/log/createLogger.js', () => ({
   default: () => mockLogger,
@@ -53,8 +57,13 @@ function createApp({ status } = {}) {
 
 function createUpgrade() {
   const socket = { end: jest.fn() };
-  const ws = { on: jest.fn(), send: jest.fn() };
-  const wss = { handleUpgrade: jest.fn((request, socket, head, callback) => callback(ws)) };
+  const ws = { close: jest.fn(), on: jest.fn(), send: jest.fn() };
+  const wss = {
+    handleUpgrade: jest.fn((request, socket, head, callback) => {
+      callback(ws);
+      return ws;
+    }),
+  };
   const request = {
     headers: { host: 'localhost:3000', cookie: 'session=1' },
     url: '/api/websocket',
@@ -73,6 +82,27 @@ test('an upgrade hands the context the route built to the websocket connection',
     logger: mockLogger,
   });
   expect(upgrade.socket.end).not.toHaveBeenCalled();
+});
+
+test('an upgrade hands its headers and the auth strategies to the websocket connection', async () => {
+  const upgrade = createUpgrade();
+
+  await handleWebSocketUpgrade({ app: createApp(), ...upgrade });
+
+  const options = mockCreateWebSocketConnection.mock.calls[0][1];
+  expect(options.headers.get('cookie')).toBe('session=1');
+  expect(options.strategies).toBe(mockStrategies);
+});
+
+test('the websocket connection closes its socket with the code and reason it is given', async () => {
+  const upgrade = createUpgrade();
+
+  await handleWebSocketUpgrade({ app: createApp(), ...upgrade });
+
+  const ws = upgrade.wss.handleUpgrade.mock.results[0].value;
+  const { closeSocket } = mockCreateWebSocketConnection.mock.calls[0][1];
+  closeSocket({ code: 4401, reason: 'caller-changed' });
+  expect(ws.close).toHaveBeenCalledWith(4401, 'caller-changed');
 });
 
 test('concurrent upgrades through different app instances each get a connection', async () => {

@@ -15,10 +15,15 @@
 */
 
 import { Hono } from 'hono';
+import { jest } from '@jest/globals';
 import { serve } from '@hono/node-server';
 import WebSocket, { WebSocketServer } from 'ws';
 
-import websocketHandler from './websocket.js';
+jest.unstable_mockModule('../../lib/server/auth/getStrategies.js', () => ({
+  default: () => [],
+}));
+
+const { default: websocketHandler } = await import('./websocket.js');
 
 let server;
 let port;
@@ -29,10 +34,17 @@ let port;
 beforeAll(async () => {
   const app = new Hono().basePath('/app');
   app.use('*', async (c, next) => {
+    // The caller the upgrade resolved: signed in when the test says so.
+    const signedIn = c.req.header('x-test-signed-in') === 'true';
     c.set('lowdefyContext', {
+      // The auth engine finds no session for the socket's cookie on a re-check.
+      auth: { api: { getSession: async () => null } },
       config: {},
+      i18n: { active: 'en-US', messages: {} },
       rid: 'request',
-      logger: { debug: () => {}, warn: () => {} },
+      logger: { debug: () => {}, info: () => {}, warn: () => {} },
+      handleError: () => {},
+      user: signedIn ? { id: 'user-1', organization_id: 'org-1', roles: [] } : null,
     });
     await next();
   });
@@ -77,4 +89,18 @@ test.each([
   ],
 ])('a websocket upgrade %s when %s', async (_, __, headers, expected) => {
   expect(await open({ headers: { host: 'app.test', ...headers } })).toEqual(expected);
+});
+
+test('a websocket whose session ended closes with 4401 on its next subscribe', async () => {
+  const socket = new WebSocket(`ws://127.0.0.1:${port}/app/api/websocket`, {
+    headers: { host: 'app.test', 'x-test-signed-in': 'true' },
+  });
+  await new Promise((resolve) => socket.once('open', resolve));
+  const closed = new Promise((resolve) => {
+    socket.once('close', (code, reason) => resolve({ code, reason: reason.toString() }));
+  });
+
+  socket.send(JSON.stringify({ type: 'subscribe', websocketId: 'ticker', requestId: 's1' }));
+
+  expect(await closed).toEqual({ code: 4401, reason: 'caller-changed' });
 });

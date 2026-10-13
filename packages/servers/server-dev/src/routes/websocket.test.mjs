@@ -15,8 +15,14 @@
 */
 
 import { Hono } from 'hono';
+import { jest } from '@jest/globals';
 
-import websocketHandler from './websocket.js';
+const mockStrategies = [];
+jest.unstable_mockModule('../../lib/server/auth/getStrategies.js', () => ({
+  default: () => mockStrategies,
+}));
+
+const { default: websocketHandler } = await import('./websocket.js');
 
 // The dev upgrade listener (src/websocket/devWebSocket.js) runs this route
 // through the app and opens the websocket only on a 200 that carries the
@@ -28,16 +34,24 @@ async function upgrade({ headers }) {
     await next();
   });
   app.get('/api/websocket', websocketHandler);
-  const websocketUpgrade = { context: null };
+  const websocketUpgrade = { context: null, strategies: null };
   const res = await app.request('/app/api/websocket', { headers }, { websocketUpgrade });
-  return { status: res.status, context: websocketUpgrade.context };
+  return {
+    status: res.status,
+    context: websocketUpgrade.context,
+    strategies: websocketUpgrade.strategies,
+  };
 }
 
 test.each([
   ['the dev app page opens it', { host: 'localhost:4100', origin: 'http://localhost:4100' }],
   ['a client sends no origin', { host: 'localhost:4100' }],
 ])('the dev websocket route opens the upgrade when %s', async (_, headers) => {
-  expect(await upgrade({ headers })).toEqual({ status: 200, context: expect.any(Object) });
+  expect(await upgrade({ headers })).toEqual({
+    status: 200,
+    context: expect.any(Object),
+    strategies: mockStrategies,
+  });
 });
 
 test.each([
@@ -47,5 +61,5 @@ test.each([
     { host: 'rebound.test:4100', origin: 'http://rebound.test:4100' },
   ],
 ])('the dev websocket route refuses the upgrade when %s', async (_, headers) => {
-  expect(await upgrade({ headers })).toEqual({ status: 403, context: null });
+  expect(await upgrade({ headers })).toEqual({ status: 403, context: null, strategies: null });
 });

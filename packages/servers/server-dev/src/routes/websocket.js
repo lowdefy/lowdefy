@@ -17,14 +17,15 @@
 import { isWebSocketOriginAllowed } from '@lowdefy/api';
 import { type } from '@lowdefy/helpers';
 
+import getStrategies from '../../lib/server/auth/getStrategies.js';
 import isRebindingSafeHost from '../middleware/isRebindingSafeHost.js';
 
 // In dev, Vite owns the HTTP server, so websocket upgrades can't flow through
 // @hono/node-server. The upgrade handler (src/websocket/devWebSocket.js) runs
 // this route with the upgrade request's headers so the full middleware chain
 // (auth session, apiContext) builds the request context, and passes a
-// websocketUpgrade object in the Hono env; this handler puts the context on
-// it. A plain HTTP request to this route carries no such object.
+// websocketUpgrade object in the Hono env; this handler puts the context and
+// auth strategies on it. A plain HTTP request to this route carries no such object.
 function websocketHandler(c) {
   const websocketUpgrade = c.env?.websocketUpgrade;
   if (type.isNone(websocketUpgrade)) {
@@ -44,6 +45,9 @@ function websocketHandler(c) {
     return c.json({ error: 'Forbidden' }, 403);
   }
   websocketUpgrade.context = context;
+  // The connection resolves its caller again while the socket is open, with
+  // the upgrade's headers and the strategies of the current build.
+  websocketUpgrade.strategies = getStrategies({ logger: context.logger });
   return c.json({ ok: true });
 }
 
