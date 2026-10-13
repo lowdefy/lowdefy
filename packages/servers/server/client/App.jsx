@@ -31,12 +31,17 @@ import dayjsLocaleMap from '../build/i18n/dayjsLocales.js';
 import rawLoggerConfig from '../build/logger.json';
 import Auth from '../lib/client/auth/Auth.jsx';
 import createLogUsage from '../lib/client/createLogUsage.js';
+import getCspNonce from '../lib/client/getCspNonce.js';
 import initSentryClient from '../lib/client/sentry/initSentryClient.js';
 import setSentryUser from '../lib/client/sentry/setSentryUser.js';
 import Page from './Page.jsx';
 
 // Deserialize to restore arrays (e.g. sentry.userFields) from ~arr markers.
 const loggerConfig = serializer.deserialize(rawLoggerConfig);
+
+// antd and antd X put this nonce on the style tags they add, so the page's
+// Content-Security-Policy applies them. Empty (no nonce) when the policy is off.
+const csp = { nonce: getCspNonce() };
 
 function ThemeTokenResolver({ lowdefyRef, children }) {
   const { token } = antdTheme.useToken();
@@ -114,6 +119,7 @@ function App({ config }) {
   return (
     <StyleProvider layer>
       <XProvider
+        csp={csp}
         locale={mergedLocale}
         form={
           antdLocale?.Form?.defaultValidateMessages

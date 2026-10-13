@@ -39,6 +39,7 @@ import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
 import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
 import mountPageRoutes from './routes/mountPageRoutes.js';
+import noStore from './middleware/noStore.js';
 import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
@@ -124,6 +125,12 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   app.all('/.well-known/*', wellKnownFallbackHandler);
 
   app.use('/api/*', apiContext({ clientAddressHeader }));
+  // Responses that carry the caller's data are never stored by a browser or proxy cache.
+  // Static assets keep their own caching below; the page routes use the same middleware.
+  const noStoreMiddleware = noStore();
+  ['/api/page/*', '/api/user', '/api/request/*', '/api/endpoints/*'].forEach((route) =>
+    app.use(route, noStoreMiddleware)
+  );
   // A tab left open across a deploy (or restored from the browser cache) runs
   // the old bundle against this build: see refuseOtherBuild and stampBuildId.
   app.use('/api/auth/*', stampBuildId({ buildId: appMeta.buildId }));
@@ -172,6 +179,8 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   }
 
   app.use('/*', apiContext({ clientAddressHeader }));
+  // Registered after the static middleware, which answers a file without calling next().
+  app.use('/*', noStoreMiddleware);
   mountPageRoutes({ app, basePath, renderPage });
 
   app.onError(createErrorHandler({ basePath, logger }));

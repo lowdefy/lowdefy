@@ -14,12 +14,13 @@
   limitations under the License.
 */
 
-import { getPageConfig, getRootConfig } from '@lowdefy/api';
+import { createContentSecurityPolicy, getPageConfig, getRootConfig } from '@lowdefy/api';
 import { type } from '@lowdefy/helpers';
 
 import appJson from '../../lib/build/app.js';
 import authJson from '../../lib/build/auth.js';
 import lowdefyConfig from '../../lib/build/config.js';
+import securityJson from '../../lib/build/security.js';
 import themeConfig from '../../lib/build/theme.js';
 import getAssets from './getAssets.js';
 import getHomePath from './getHomePath.js';
@@ -97,6 +98,19 @@ async function renderPage(c, { path, matchedPath, status = 200 }) {
 
   logger.info({ event: 'page_view', pageId, path: pagePath });
 
+  // Off unless config.security.contentSecurityPolicy is set. Each render gets its own nonce.
+  let nonce = null;
+  const { contentSecurityPolicy } = securityJson;
+  if (!type.isNull(contentSecurityPolicy)) {
+    const policy = createContentSecurityPolicy({
+      policy: contentSecurityPolicy,
+      requestUrl: c.req.url,
+      allowWebSocket: contentSecurityPolicy.websockets,
+    });
+    c.header(policy.name, policy.value);
+    nonce = policy.nonce;
+  }
+
   const assets = getAssets();
   const html = template({
     appendBody: appJson.html?.appendBody ?? '',
@@ -104,6 +118,7 @@ async function renderPage(c, { path, matchedPath, status = 200 }) {
     assets,
     pageAssets: getPageAssets({ assets, pageConfig }),
     basePath,
+    nonce,
     config: {
       basePath,
       matchedPath,

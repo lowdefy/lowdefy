@@ -30,12 +30,17 @@ import dayjsLocaleMap from '../build/i18n/dayjsLocales.js';
 import rawTheme from '../build/theme.json';
 import Auth from '../lib/client/auth/Auth.jsx';
 import ErrorBar from '../lib/client/ErrorBar.jsx';
+import getCspNonce from '../lib/client/getCspNonce.js';
 import request from '../lib/client/utils/request.js';
 import Routing from './Routing.jsx';
 
 // rootConfig arrives after the first render; the build-written theme gives
 // the icon provider its settings until then.
 const buildTheme = serializer.deserialize(rawTheme);
+
+// antd and antd X put this nonce on the style tags they add, so the page's
+// Content-Security-Policy applies them. Empty (no nonce) when the policy is off.
+const csp = { nonce: getCspNonce() };
 
 function ThemeTokenResolver({ lowdefyRef, children }) {
   const { token } = antdTheme.useToken();
@@ -122,6 +127,7 @@ function App({ config, router }) {
   return (
     <StyleProvider layer>
       <XProvider
+        csp={csp}
         locale={mergedLocale}
         form={
           antdLocale?.Form?.defaultValidateMessages
