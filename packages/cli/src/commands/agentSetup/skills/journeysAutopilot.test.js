@@ -137,7 +137,7 @@ test('journeys-autopilot fixes a finding only after the journeys pull request me
   );
   expect(skill).toContain('`git mv tests/journeys/_findings/<file>\n  tests/journeys/<area>/`');
   expect(skill).toContain('origin/<default branch>:tests/journeys/_findings/<file>');
-  expect(skill).toContain('Run `lowdefy test --repeat 3 <file>` before pushing');
+  expect(skill).toContain('Before pushing, run `lowdefy test --repeat 3 <file>`');
   expect(skill).not.toContain('git checkout journeys-autopilot/main --');
   expect(skill).toContain(
     'with no `gh`, push the branch and put\n  that title and body in the cycle report'
@@ -211,4 +211,28 @@ test('journeys-autopilot says where harden ids are and what to do with a duplica
   expect(skill).toContain('discard its candidate\nfile, which never joined the suite');
   expect(skill).toContain('wait on a request of the page it\n  lands on');
   expect(skill).toContain('the runner calls every 0/3 run a finding');
+});
+
+test('journeys-autopilot extends an existing data set and takes existing journeys into the ledger', () => {
+  const skill = journeysAutopilot({ appPath: '' });
+  expect(skill).toContain('it starts `extends: [<name>]` and adds only what that set lacks');
+  expect(skill).toContain('never edit\n   the existing file');
+  expect(skill).toContain('**Journeys already in the suite**');
+  expect(skill).toContain('Never rewrite, move, rename or duplicate one');
+  expect(skill).toContain('A failing or flaky one stays where it is');
+});
+
+test('journeys-autopilot never edits a developer journey when a variant grants a role', () => {
+  const skill = journeysAutopilot({ appPath: '' });
+  expect(skill).toContain("`note: developer's journey`");
+  expect(skill).toContain("A developer's journey is never edited");
+  expect(skill).toContain('its granted role becomes a journey of its own instead');
+  expect(skill).toContain('gets no tenant variant');
+});
+
+test('journeys-autopilot runs the whole suite on a fix branch before pushing it', () => {
+  const skill = journeysAutopilot({ appPath: '' });
+  expect(skill).toContain(
+    'then the whole suite once\n  (`lowdefy test`: a fix can break a journey'
+  );
 });

@@ -161,8 +161,9 @@ journey.
 
 1. Run \`${cd}lowdefy test --help\` and \`${cd}lowdefy journeys --help\`. If they fail, you are blocked
    (see Traps for a stale \`.lowdefy/dev\`).
-2. Run \`${cd}lowdefy data list\`. If a data set already has users and fixtures, extend it with
-   \`extends: [<name>]\` rather than editing it. Otherwise write \`tests/data/autopilot.yaml\`:
+2. Run \`${cd}lowdefy data list\`. Write \`tests/data/autopilot.yaml\`. If a data set already has
+   users and fixtures, it starts \`extends: [<name>]\` and adds only what that set lacks; never edit
+   the existing file. Otherwise it holds
    one \`users\` entry per role the app's pages allow, named by role (read each page's \`auth\` and the
    app's \`auth.roles\`), the organization or tenant they belong to, and \`fixtures\` for every
    \`MongoDBCollection\` connection the pages' requests read, with fields taken from the requests'
@@ -178,9 +179,17 @@ journey.
    user: its items (a protected page's bounce, a public page opened signed out) are \`skipped\` with
    the reason "signed-out runs stay on the auth harness" (\`user: none\` on a data set is refused
    while auth is configured, because signing in would write to the real auth database).
-4. Prove the harness with one journey: the first page, as its first role, \`expect.text\` of a value only
-   a fixture holds. Run \`${cd}lowdefy test --repeat 3 <file>\`. This is your first covered item.
-5. Commit the data set, ledger and first journey. Push the branch and open the pull request
+4. **Journeys already in the suite** (the app has journeys but no ledger): they are the developer's.
+   Replay them once with \`${cd}lowdefy test --repeat 3\` (the whole suite). Read each one's
+   \`pageId\`, \`user\` and steps, and set every item it proves (each user in a \`user\` list, the
+   page it opens, the write it asserts) \`covered\` with its file and \`note: developer's journey\`.
+   Never rewrite, move, rename or duplicate one, and never write a second journey for an item one
+   already covers. A failing or flaky one stays where it is: set its item \`finding\` or
+   \`quarantined\` with the reason, and name it in the pull request. These items count as your
+   first covered ones.
+5. Prove the harness with one journey of your own: the first \`todo\` page and role, as that role,
+   \`expect.text\` of a value only a fixture holds. Run \`${cd}lowdefy test --repeat 3 <file>\`.
+6. Commit the data set, ledger and first journey. Push the branch and open the pull request
    (step 8).
 
 ### 3. Pick the work
@@ -250,8 +259,9 @@ For each finding, decide:
   is clean, then in the same worktree \`git switch -c journeys-autopilot/fix-<slug>
   origin/<default branch>\`, make the fix, and \`git mv tests/journeys/_findings/<file>
   tests/journeys/<area>/\`, so the pull request shows the journey turning green and leaves one copy.
-  Run \`${cd}lowdefy test --repeat 3 <file>\` before pushing, open a pull request titled \`fix: ...\`
-  that says what broke, where, and which journey proves it (with no \`gh\`, push the branch and put
+  Before pushing, run \`${cd}lowdefy test --repeat 3 <file>\`, then the whole suite once
+  (\`${cd}lowdefy test\`: a fix can break a journey that asserted the old behaviour). Open a pull
+  request titled \`fix: ...\` that says what broke, where, and which journey proves it (with no \`gh\`, push the branch and put
   that title and body in the cycle report), then \`git switch journeys-autopilot/main\`. The item stays \`finding\`, with the fix pull request url (with no \`gh\`, the
   fix branch) in \`note\`, until that pull request merges; then set it \`covered\` with the journey's new path.
 - **Anything else**: leave it a \`finding\` and write it up in the journeys pull request for a person:
@@ -267,7 +277,10 @@ survivor add the assertion that would catch it, then confirm with \`harden --mut
 \`lowdefy test --repeat 3\`. The printed report has no ids: read them from
 \`.lowdefy/test/mutation.json\` (each \`mutants\` entry has \`id\`, \`status\` and \`describe\`). Add edge cases with \`${cd}lowdefy journeys variants <file>\` and keep what
 passes as the skill describes (granted roles join the original journey's \`user\` list, the rest
-become their own journeys; a failing variant is a finding). Add each as a ledger item. A variant that proves only what a
+become their own journeys; a failing variant is a finding). A developer's journey is never edited,
+whatever the variant file's comment says: its granted role becomes a journey of its own instead.
+Variants run on the journey's own data set, so a journey whose data set has no user in another
+organization gets no tenant variant; a tenant refusal on your data set covers that. Add each as a ledger item. A variant that proves only what a
 covered journey already proves (same page, user and outcome) adds nothing: discard its candidate
 file, which never joined the suite, and name it in the report, so \`_candidates/\` is left empty.
 A survivor whose config is dead is a finding about the app. If the app already has production
