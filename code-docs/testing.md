@@ -99,7 +99,8 @@ starts its own `mongod` on a free port, so worktrees can run it at the same time
 The tenant auth reference app (`apps/auth-reference-tenant`) carries config tests for the
 real auth path: sign-up with email verification, sign-in refusals, sign-out, magic link,
 invitations (including expired and cancelled ones), tenant isolation, organization
-switching and member removal (`tests/journeys/*.yaml`, all `user: none`). Run them with:
+switching, member removal and a role change seen by an open page (`tests/journeys/*.yaml`,
+all `user: none`). Run them with:
 
 ```bash
 pnpm test:journeys:auth                      # builds first, like pnpm dev

@@ -49,6 +49,17 @@ blocks:
     properties:
       content: Organization notes (tenant-scoped)
       level: 2
+  # Gated on the organization role the page renders. When an owner changes a
+  # member's role while their page is open, the member's next request answers
+  # with the new roles and the page reloads, so this follows the change.
+  - id: manage_members_note
+    type: Html
+    visible:
+      _array.includes:
+        - _user: org_roles
+        - admin
+    properties:
+      html: <p>You can manage this organization's members.</p>
   - id: notes_list
     type: Html
     properties:
