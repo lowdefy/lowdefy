@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Tag } from 'antd';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { getSafeHref, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import withTheme from '../withTheme.js';
@@ -68,7 +68,7 @@ const TagBlock = ({
       className={classNames.element}
       classNames={{ close: classNames.closeIcon }}
       disabled={properties.disabled}
-      href={properties.href}
+      href={getSafeHref(properties.href)}
       style={styles.element}
       styles={{ close: styles.closeIcon }}
       target={properties.target}

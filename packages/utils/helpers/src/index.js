@@ -29,6 +29,7 @@ import getLocaleDateFormat from './getLocaleDateFormat.js';
 import getLocaleDecimalSeparator from './getLocaleDecimalSeparator.js';
 import getLocaleGroupSeparator from './getLocaleGroupSeparator.js';
 import getOperatorType from './getOperatorType.js';
+import getSafeHref from './getSafeHref.js';
 import isInteractiveControl from './isInteractiveControl.js';
 import isMountEventName from './isMountEventName.js';
 import isTraceId from './isTraceId.js';
@@ -77,6 +78,7 @@ export {
   getLocaleDecimalSeparator,
   getLocaleGroupSeparator,
   getOperatorType,
+  getSafeHref,
   isInteractiveControl,
   isMountEventName,
   isTraceId,

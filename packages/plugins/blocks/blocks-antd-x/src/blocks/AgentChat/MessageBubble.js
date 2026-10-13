@@ -17,6 +17,7 @@
 import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import Markdown from '@ant-design/x-markdown';
 import { Actions, FileCard, Sources, ThoughtChain, Think } from '@ant-design/x';
+import { getSafeHref } from '@lowdefy/block-utils';
 
 import { getFileCardType, getFileCardIcon, getFileName } from './fileCardUtils.js';
 import formatToolResult from './formatToolResult.js';
@@ -177,7 +178,8 @@ function linkText(children) {
 // new tab for the same reason. Both still report the click, so an app that handles
 // onLinkClick can show the target in place instead.
 function MarkdownLink({ Link, onLinkClick }) {
-  return function MarkdownAnchor({ href, children, ...props }) {
+  return function MarkdownAnchor({ href: rawHref, children, ...props }) {
+    const href = getSafeHref(rawHref);
     if (!href) return <span {...props}>{children}</span>;
     const text = linkText(children);
     const handleClick = (domEvent) => onLinkClick?.({ href, text, domEvent });

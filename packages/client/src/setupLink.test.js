@@ -216,3 +216,19 @@ test('a url link writes no path memory', () => {
   expect(lowdefy.calls.push).toEqual([{ pathname: '/tickets/s/1', query: '', scroll: undefined }]);
   expect(lowdefy.pathMemory.size).toBe(0);
 });
+
+test('an href with another scheme throws and does not navigate', () => {
+  const lowdefy = createFakeLowdefy();
+  const link = setupLink(lowdefy);
+
+  expect(() => link({ href: 'javascript:alert(1)' })).toThrow('Invalid Link: no target resolved.');
+  expect(() => link({ href: 'java\tscript:alert(1)', newTab: true })).toThrow(
+    'Invalid Link: no target resolved.'
+  );
+  expect(() => link({ href: 'data:text/html,x', pageId: 'reports' })).toThrow(
+    'Invalid Link: no target resolved.'
+  );
+  expect(lowdefy.calls.assign).toEqual([]);
+  expect(lowdefy.calls.open).toEqual([]);
+  expect(lowdefy.calls.push).toEqual([]);
+});

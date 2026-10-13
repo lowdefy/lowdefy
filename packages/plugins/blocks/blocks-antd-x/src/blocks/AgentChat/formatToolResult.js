@@ -15,6 +15,7 @@
 */
 
 import React, { useState } from 'react';
+import { getSafeHref } from '@lowdefy/block-utils';
 
 const URL_REGEX = /^https?:\/\/\S+$/;
 const ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2})/;
@@ -44,9 +45,7 @@ function CollapsibleText({ text, limit, translate }) {
         onClick={() => setExpanded(!expanded)}
         style={{ marginLeft: 4, fontSize: '0.85em', cursor: 'pointer' }}
       >
-        {expanded
-          ? translate('agent.toolResult.showLess')
-          : translate('agent.toolResult.showMore')}
+        {expanded ? translate('agent.toolResult.showLess') : translate('agent.toolResult.showMore')}
       </a>
     </span>
   );
@@ -64,7 +63,12 @@ function formatValue(value, depth, translate) {
   }
   if (isUrl(value)) {
     return (
-      <a href={value} target="_blank" rel="noopener noreferrer" style={{ wordBreak: 'break-all' }}>
+      <a
+        href={getSafeHref(value)}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ wordBreak: 'break-all' }}
+      >
         {value}
       </a>
     );
@@ -160,9 +164,7 @@ function formatObject(obj, depth, translate) {
 
 function formatToolResult(output, translate) {
   if (output === null || output === undefined) {
-    return (
-      <span style={{ color: '#999' }}>{translate('agent.toolResult.completedNoData')}</span>
-    );
+    return <span style={{ color: '#999' }}>{translate('agent.toolResult.completedNoData')}</span>;
   }
   return (
     <div style={{ fontSize: '0.9em', lineHeight: 1.5, maxHeight: 400, overflowY: 'auto' }}>
