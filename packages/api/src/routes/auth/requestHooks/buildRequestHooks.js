@@ -23,7 +23,6 @@ import createExpiredInvitationGate from '../organizations/createExpiredInvitatio
 import createOauthPostLoginHook from './createOauthPostLoginHook.js';
 import createTwoFactorChallengeHook from './createTwoFactorChallengeHook.js';
 import dispatchRequestHooks from './dispatchRequestHooks.js';
-import matchOAuthCallback from './matchOAuthCallback.js';
 import redirectToChallenge from './redirectToChallenge.js';
 import resolveTwoFactorPageUrl from './resolveTwoFactorPageUrl.js';
 
@@ -149,12 +148,10 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
   }
 
   // https://github.com/better-auth/better-auth/issues/10322 - the two-factor
-  // plugin's sign-in matcher covers neither OAuth callback, so an enrolled user
-  // signing in through any IdP walks past their second factor. Both callbacks are
-  // hooked: matching only /callback/:id would exempt every non-built-in IdP,
-  // because a Lowdefy GenericOAuth provider routes through the genericOAuth
-  // plugin's /oauth2/callback/:providerId instead - exactly the enterprise-IdP
-  // case the trust declaration exists for.
+  // plugin's sign-in matcher does not cover the OAuth callback, so an enrolled
+  // user signing in through any IdP walks past their second factor. Built-in and
+  // GenericOAuth providers alike return on /callback/:id, so this one hook covers
+  // the enterprise-IdP case the trust declaration exists for.
   //
   // Challenged unless the provider is declared trusted for 2FA. Double-challenging
   // a user who has already cleared Google's own MFA is a functionality loss, and
@@ -176,10 +173,11 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
     after.push(
       createTwoFactorChallengeHook({
         id: 'oauthTwoFactorChallenge',
-        matches: (path) => {
-          const { matched, providerKey } = matchOAuthCallback(path);
-          return matched && !trustedProviderKeys.includes(providerKey);
-        },
+        // The provider key is the lowercase type for a built-in provider and
+        // the Lowdefy provider id for a GenericOAuth one, as
+        // buildTwoFactorTrustedProviders writes mfaTrustedProviderKeys.
+        matches: (path, ctx) =>
+          path === '/callback/:id' && !trustedProviderKeys.includes(ctx.params.id),
         trustDeviceMaxAge,
         // Mid-redirect with no JS caller, exactly like /magic-link/verify, so the
         // same shared exit carries the destination the user asked for. Here that
