@@ -160,6 +160,26 @@ function validateAuthConfig({ components }) {
     }
   });
 
+  // BetterAuth registers GenericOAuth providers as social providers keyed by id,
+  // in the same namespace as the built-in keys (the lowercase type). A
+  // GenericOAuth id equal to a configured built-in key takes over that
+  // provider's sign-in and callback, and BetterAuth only logs a warning.
+  const builtInTypesByKey = {};
+  Object.keys(seenProviderTypes).forEach((providerType) => {
+    builtInTypesByKey[providerType.toLowerCase()] = providerType;
+  });
+  (auth.providers ?? []).forEach((provider) => {
+    if (provider.type !== 'GenericOAuth' || !Object.hasOwn(builtInTypesByKey, provider.id)) {
+      return;
+    }
+    throw new ConfigError(
+      `GenericOAuth provider id "${provider.id}" is the provider key of the configured "${
+        builtInTypesByKey[provider.id]
+      }" provider. Use a different id.`,
+      { configKey: provider['~k'] ?? configKey }
+    );
+  });
+
   // An enabled phone login with no way to send codes is dead config - there
   // is no fallback SMS transport, so a "phone.otp.send" binding is required.
   // This runs on the merged hooks array (module contributions + app entries),
