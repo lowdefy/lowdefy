@@ -80,6 +80,16 @@ is a first visit (`onInit` runs again, input is empty). The limit is fixed, not 
 **Dynamic pages** (`config.dynamic`) are rebuilt whenever a new config object arrives (a fresh
 fetch), under their own instance key, so going back to one starts fresh.
 
+**Per organization.** A context records `_internal.organizationId`, the caller's
+`lowdefy.user.organization_id` (`null` without one). `getContext` rebuilds a kept context whose
+organization differs, under the same instance key, so after `SetActiveOrganization` and
+`UpdateSession` no page renders the previous organization's state or request results. A context
+built with no organization is kept when the caller gains one (accepting an invitation activates
+it) and takes that organization from then on. The instance key itself stays organization-free,
+since path memory, Link input and the e2e helpers name it; `@lowdefy/client`'s `Context.js` keys
+the page tree by the context object (`getContextKey`), so a context rebuilt in place remounts the
+tree.
+
 `lowdefy.contexts`, `lowdefy.inputs`, `lowdefy.pageInstances` and `lowdefy.pathMemory` are set
 by the client's `initLowdefyContext`, with `lowdefy.pagePaths` (root config) and
 `lowdefy.linkPaths` (the current page's config). The build and api always write both lists, `{}`
