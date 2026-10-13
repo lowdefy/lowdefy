@@ -19,6 +19,7 @@ import appStorageKey from './appStorageKey.js';
 import builtinMessages from './builtinMessages.js';
 import buildPagePath from './buildPagePath.js';
 import cachedPromises from './cachedPromises.js';
+import callerHash from './callerHash.js';
 import cleanBuildArtifact from './cleanBuildArtifact.js';
 import createTraceId from './createTraceId.js';
 import extractErrorProps from './extractErrorProps.js';
@@ -69,6 +70,7 @@ export {
   buildPagePath,
   builtinMessages,
   cachedPromises,
+  callerHash,
   cleanBuildArtifact,
   createTraceId,
   extractErrorProps,

@@ -46,6 +46,7 @@ import refuseOtherBuild from './middleware/refuseOtherBuild.js';
 import requestTimeout from './middleware/requestTimeout.js';
 import sentryMiddleware from './middleware/sentry.js';
 import stampBuildId from './middleware/stampBuildId.js';
+import stampCaller from './middleware/stampCaller.js';
 import usageHandler from './routes/usage.js';
 import userHandler from './routes/user.js';
 import websocketHandler from './routes/websocket.js';
@@ -129,6 +130,11 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   app.use('/api/auth/*', stampBuildId({ buildId: appMeta.buildId }));
   app.use('/api/user', stampBuildId({ buildId: appMeta.buildId }));
   app.use('/api/auth/*', authMiddleware({ logger }));
+  // The caller each page, request and endpoint response was answered as: the
+  // client reloads when it differs from the caller it renders (stampCaller).
+  app.use('/api/request/*', stampCaller());
+  app.use('/api/endpoints/*', stampCaller());
+  app.use('/api/page/*', stampCaller());
   app.all('/api/request/*', refuseOtherBuild({ buildId: appMeta.buildId }), requestHandler);
   // Endpoint payloads may carry base64 file content (emitFileContent + CallAPI);
   // cap bodies at 10 MiB to match the agent route.

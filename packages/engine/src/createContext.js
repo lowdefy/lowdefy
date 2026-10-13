@@ -83,8 +83,9 @@ const blockData = (config) => {
 
 // Builds an engine context around one root block: the page's root block for a
 // page context, and a block-less root carrying the app events for the app context.
-// instanceKey is where the context and its input are stored.
-function createContext({ config, instanceKey, jsMap, lowdefy, pathParams }) {
+// instanceKey is where the context and its input are stored. organizationId is
+// the caller's organization a page context was built for (see getContext).
+function createContext({ config, instanceKey, jsMap, lowdefy, organizationId, pathParams }) {
   const { id } = config;
   const ctx = {
     id,
@@ -103,6 +104,7 @@ function createContext({ config, instanceKey, jsMap, lowdefy, pathParams }) {
       // The viewport the page's blocks last evaluated _media against, or null without a window.
       // updateMedia diffs a resize against it.
       media: readMediaViewport({ lowdefy }),
+      organizationId,
       // The read recorder of the block evaluating itself, or null. Managed by DependencyTracker.
       readRecorder: null,
       rootBlock: blockData(config), // filter block to prevent circular structure

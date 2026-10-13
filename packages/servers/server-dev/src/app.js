@@ -80,6 +80,7 @@ import requestHandler from './routes/request.js';
 import requestTimeout from './middleware/requestTimeout.js';
 import rootHandler from './routes/root.js';
 import staleFlag from './middleware/staleFlag.js';
+import stampCaller from './middleware/stampCaller.js';
 import startIdleGc from '../lib/server/startIdleGc.js';
 import getDocsIndex from '../lib/docs/getDocsIndex.js';
 import usageHandler from './routes/usage.js';
@@ -227,6 +228,11 @@ function createApp() {
     return next();
   });
   app.use('/api/auth/*', authMiddleware({ logger }));
+  // The caller each page, request and endpoint response was answered as: the
+  // client reloads when it differs from the caller it renders (stampCaller).
+  app.use('/api/request/*', stampCaller());
+  app.use('/api/endpoints/*', stampCaller());
+  app.use('/api/page/*', stampCaller());
   app.get('/api/root', rootHandler);
   app.get('/api/page/*', jitPageHandler);
   app.all('/api/request/*', requestHandler);

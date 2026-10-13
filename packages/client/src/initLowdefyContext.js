@@ -30,6 +30,7 @@ import createLinkComponent from './createLinkComponent.js';
 import createHandleError from './createHandleError.js';
 import getActiveLocale from './getActiveLocale.js';
 import { createBrowserLogger } from '@lowdefy/logger/browser';
+import setLowdefyUser from './setLowdefyUser.js';
 import setupLink from './setupLink.js';
 import { createUrl } from './adapters/url.js';
 
@@ -158,7 +159,7 @@ function initLowdefyContext({
   lowdefy.menus = config.rootConfig.menus;
   lowdefy.pageId = config.pageConfig.pageId;
   lowdefy.pagePaths = config.rootConfig.pagePaths;
-  lowdefy.user = auth?.user ?? null;
+  setLowdefyUser({ lowdefy, user: auth?.user });
   // Runs on every render, so it sees the person signed in on load and any later change.
   lowdefy._internal.storage.clearUserStorageOnOwnerChange();
 
