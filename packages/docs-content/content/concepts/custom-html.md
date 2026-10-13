@@ -13,6 +13,8 @@ The content loaded into the `head` and `body` tag can be any valid HTML. Be sure
 
 Most often it is convenient to abstract this HTML out to a separate file using the [`_ref`](/_ref) operator.
 
+When the app sends a [Content Security Policy](/lowdefy-schema#security), every `<script>` and `<style>` element in `appendHead` and `appendBody` gets the page's nonce, so they keep running. Scripts and styles they load from other hosts need those hosts added to the policy.
+
 > __Warning__: Code imported using `appendHead` or `appendBody` will be loaded, and can execute JavaScript on every page of your Lowdefy app.
 
 #### Examples
