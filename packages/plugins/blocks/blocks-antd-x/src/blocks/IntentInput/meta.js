@@ -15,11 +15,11 @@
 */
 
 const level = { type: 'number', minimum: 0, maximum: 1 };
-const mode = '`idle` (nothing recognised), `preview`, `choose` or `card`.';
+const mode = '`idle` (nothing recognised), `preview`, `choose` or `committed`.';
 
 export default {
-  // An input with slots: its value is { text, intent, mode }, and each intent's card is
-  // the slot named after the intent, so slot names are authored and cannot be enumerated.
+  // An input with slots: its value is { text, intent, mode }, and each intent shows the
+  // slot named after it, so slot names are authored and cannot be enumerated.
   category: 'input-container',
   icons: [],
   valueType: 'object',
@@ -55,7 +55,7 @@ export default {
       intents: {
         type: 'object',
         description:
-          'The intents the text can become, by name. Each name is also the slot that holds its card. The same object can be the options of the Decide question that classifies the text.',
+          'The intents the text can become, by name. Each name is also the slot shown for it. The same object can be the options of the Decide question that classifies the text.',
         docs: { displayType: 'yaml' },
         additionalProperties: {
           type: 'object',
@@ -66,7 +66,7 @@ export default {
               type: ['string', 'object'],
               description: 'Icon name or Icon block properties for the badge and choices.',
             },
-            color: { type: 'string', description: 'Accent color of the card edge and badge.' },
+            color: { type: 'string', description: 'Accent color of the edge and badge.' },
             description: {
               type: 'string',
               description: 'What the intent means. Read by the classifier, not shown.',
@@ -88,24 +88,24 @@ export default {
       confidence: {
         type: 'object',
         additionalProperties: false,
-        description: 'How sure the answer must be before the card changes how it looks.',
+        description: 'How sure the answer must be before the slot changes how it looks.',
         docs: { displayType: 'yaml' },
         properties: {
           preview: {
             ...level,
             default: 0.3,
-            description: 'Show a faded preview of the card from this confidence.',
+            description: 'Show a faded preview of the slot from this confidence.',
           },
           show: {
             ...level,
             default: 0.6,
-            description: 'Show the card solid from this confidence.',
+            description: 'Commit to the intent and show its slot solid from this confidence.',
           },
           switch: {
             ...level,
             default: 0.85,
             description:
-              'Replace the shown card at once from this confidence. Below it, another intent must lead twice in a row, or hold the lead while the user pauses.',
+              'Replace the shown intent at once from this confidence. Below it, another intent must lead twice in a row, or hold the lead while the user pauses.',
           },
         },
       },

@@ -27,10 +27,10 @@ const IDLE = { intent: null, challenger: undefined, mode: 'idle', choices: [] };
 const CLASSIFY_DELAY = 150;
 const SETTLE_DELAY = 450;
 
-// A text input that becomes the card for what the user means. The app classifies
-// the text on onClassify (typically a Decide request) and passes the answer back;
-// each intent's card is the slot of the same name. The block only decides which
-// card to show and how sure to look, and animates between them.
+// A text input that becomes what the user means. The app classifies the text on
+// onClassify (typically a Decide request) and passes the answer back; each intent
+// has a slot of the same name. The block only decides which slot to show and how
+// sure to look, and animates between them.
 const IntentInput = ({
   blockId,
   classNames = {},
@@ -50,7 +50,7 @@ const IntentInput = ({
   };
   const text = value?.text ?? '';
 
-  // Keep the last answer while the next one loads, so the card does not drop out
+  // Keep the last answer while the next one loads, so the slot does not drop out
   // between keystrokes.
   const heldAnswer = useRef(null);
   if (!type.isNone(properties.answer)) heldAnswer.current = properties.answer;
@@ -92,11 +92,11 @@ const IntentInput = ({
 
   // A picked choice holds until the scores commit to a different intent on their own.
   useEffect(() => {
-    if (pinned && state.mode === 'card' && state.intent !== pinned) setPinned(null);
+    if (pinned && state.mode === 'committed' && state.intent !== pinned) setPinned(null);
   }, [state]);
 
   const intent = pinned ?? state.intent;
-  const mode = pinned ? 'card' : state.mode;
+  const mode = pinned ? 'committed' : state.mode;
 
   useEffect(() => {
     if (value?.intent === intent && value?.mode === mode) return;
@@ -153,7 +153,7 @@ const IntentInput = ({
               <Icon blockId={`${blockId}_badge_icon`} properties={intents[intent].icon} />
             )}
             {labelOf(intent)}
-            {mode !== 'card' && '?'}
+            {mode !== 'committed' && '?'}
           </span>
         )}
       </div>
@@ -182,7 +182,7 @@ const IntentInput = ({
             </div>
           )}
           {intent && content[intent] && (
-            <div key={intent} className={css.card} data-preview={mode !== 'card'}>
+            <div key={intent} className={css.slot} data-preview={mode !== 'committed'}>
               {content[intent]()}
             </div>
           )}

@@ -1,6 +1,6 @@
 # IntentInput
 
-A text input that becomes the card for what the user means. The user types in their own words, a classifier (typically a `Decide` request) picks the intent, and the box grows into that intent's card: a faded preview while unsure, a choice between two intents when they are close, and the solid card when sure. Each card is a slot of ordinary blocks.
+A text input that becomes what the user means. The user types in their own words, a classifier (typically a `Decide` request) picks the intent, and the box grows to show that intent's slot: a faded preview while unsure, a choice between two intents when they are close, and the slot solid when sure. Each intent's slot holds ordinary blocks.
 
 ## How it works
 
@@ -8,9 +8,9 @@ A text input that becomes the card for what the user means. The user types in th
 
 1. The user types. Shortly after the text changes, the block fires `onClassify` with the text.
 2. `onClassify` runs a classifier, typically a [`Decide`](/AIGenerateRequests) request with one `choice` question, and its answer comes back through the `answer` property.
-3. The block shows the card for the answer: the slot named after the intent.
+3. The block shows the slot named after the intent in the answer.
 
-Scores move while the user is mid-word, so the shown card only changes when another intent leads two answers in a row, keeps the lead while the user pauses, or is near certain. Until a new answer arrives the block keeps the last one, so the card does not drop out between keystrokes.
+Scores move while the user is mid-word, so the shown intent only changes when another intent leads two answers in a row, keeps the lead while the user pauses, or is near certain. Until a new answer arrives the block keeps the last one, so the slot does not drop out between keystrokes.
 
 ## Define intents once
 
@@ -70,18 +70,18 @@ blocks:
           params: classify
     slots:
       task:
-        blocks: [] # the task card
+        blocks: [] # what a task shows
       ticket:
-        blocks: [] # the ticket card
+        blocks: [] # what a ticket shows
 ```
 
 An evaluation model such as TypeSafe's Jev (`typesafe-ai/jev` on the [AI Gateway](/AIGateway)) answers in well under a second with a probability for every option, which suits classifying as the user types. Any language model works with `backend: structured-output`. A classifier of your own works too: `answer` takes any `{ choice, confidence, probabilities }` object, such as a keyword match in [`_js`](/_js) for offline use.
 
-## Cards
+## Slots
 
-A card is a slot of ordinary blocks, so it can hold a form, a summary and the button that saves it. Let the model pick the intent and let code read the fields: parse the text in `onClassify` with [`_js`](/_js), or run a [`GenerateObject`](/AIGenerateRequests) request for the fields of the intent that was chosen.
+Each intent's slot holds ordinary blocks, so it can hold a form, a summary and the button that saves it. Let the model pick the intent and let code read the fields: parse the text in `onClassify` with [`_js`](/_js), or run a [`GenerateObject`](/AIGenerateRequests) request for the fields of the intent that was chosen.
 
-Cards are shown while the user is still unsure too (faded, and not clickable), so give fields a fallback such as `_if_none` for text that is not complete yet.
+A slot is shown while the user is still unsure too (faded, and not clickable), so give fields a fallback such as `_if_none` for text that is not complete yet.
 
 ## The value
 
@@ -89,19 +89,19 @@ The value is `{ text, intent, mode }`:
 
 - `text`: what the user typed. Set `capture.text` with `SetState` to fill the box; it classifies like typed text.
 - `intent`: the intent shown, or `null`.
-- `mode`: `idle` (nothing recognised), `preview` (a faded card), `choose` (the user is offered the two leading intents) or `card` (the solid card). A choice the user picks shows as `card` until the answers settle on a different intent.
+- `mode`: `idle` (nothing recognised), `preview` (the slot, faded), `choose` (the user is offered the two leading intents) or `committed` (the slot, solid). A choice the user picks is `committed` until the answers settle on a different intent.
 
 Use `_state: capture.intent` in other blocks and requests, and `SetState` `capture: null` after saving to clear the box.
 
 ## Confidence
 
-`confidence` sets how sure the answer must be before the card changes how it looks. The defaults suit most classifiers:
+`confidence` sets how sure the answer must be before the slot changes how it looks. The defaults suit most classifiers:
 
 ```yaml
 confidence:
   preview: 0.3 # show a faded preview from here
-  show: 0.6 # show the card solid from here
-  switch: 0.85 # replace the shown card at once from here
+  show: 0.6 # commit and show the slot solid from here
+  switch: 0.85 # replace the shown intent at once from here
 ```
 
 The block uses the provider's calibrated `confidence` for the chosen intent where the answer has one, and `probabilities` for the rest.
@@ -180,15 +180,15 @@ The block uses the provider's calibrated `confidence` for the chosen intent wher
 | --- | --- | --- | --- |
 | `autoFocus` | boolean | - | Focus the input on mount. |
 | `placeholder` | string | - | Placeholder text. |
-| `intents` | object | - | The intents the text can become, by name. Each name is also the slot that holds its card. The same object can be the options of the Decide question that classifies the text. |
+| `intents` | object | - | The intents the text can become, by name. Each name is also the slot shown for it. The same object can be the options of the Decide question that classifies the text. |
 | `answer` | object \| null | - | The classification of the current text, in the shape of a Decide choice answer: `_request: classify.intent`. Options that are not intents, such as a `none` option, are ignored. While a new answer loads, the last one is kept. |
 | `answer.choice` | string \| null | - |  |
 | `answer.confidence` | number \| null | - |  |
 | `answer.probabilities` | object \| null | - |  |
-| `confidence` | object | - | How sure the answer must be before the card changes how it looks. |
-| `confidence.preview` | number | `0.3` | Show a faded preview of the card from this confidence. |
-| `confidence.show` | number | `0.6` | Show the card solid from this confidence. |
-| `confidence.switch` | number | `0.85` | Replace the shown card at once from this confidence. Below it, another intent must lead twice in a row, or hold the lead while the user pauses. |
+| `confidence` | object | - | How sure the answer must be before the slot changes how it looks. |
+| `confidence.preview` | number | `0.3` | Show a faded preview of the slot from this confidence. |
+| `confidence.show` | number | `0.6` | Commit to the intent and show its slot solid from this confidence. |
+| `confidence.switch` | number | `0.85` | Replace the shown intent at once from this confidence. Below it, another intent must lead twice in a row, or hold the lead while the user pauses. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |

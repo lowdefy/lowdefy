@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-// When the two leading intents are this close and neither is shown solid, offer both.
+// When the two leading intents are this close and neither is committed, offer both.
 const CHOICE_MARGIN = 0.15;
 
 // Classifier scores jump around while the user is mid-word, so the shown intent
@@ -52,7 +52,7 @@ function nextIntentState({ state, scores, confidence }) {
   ) {
     return { intent, challenger, mode: 'choose', choices: [intent, rival[0]] };
   }
-  return { intent, challenger, mode: p >= confidence.show ? 'card' : 'preview', choices: [] };
+  return { intent, challenger, mode: p >= confidence.show ? 'committed' : 'preview', choices: [] };
 }
 
 export default nextIntentState;
