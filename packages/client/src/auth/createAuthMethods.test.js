@@ -2017,6 +2017,32 @@ test('login with a provider and an idToken navigates to authPages.twoFactor on a
   expect(assign.mock.calls).toEqual([['/two-factor-challenge?callbackUrl=%2Fdashboard']]);
 });
 
+test('login with a provider and an idToken navigates to the callback when the sign-in completes', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.authConfig.providers = [{ id: 'google-sign-in', type: 'Google' }];
+  auth.signInSocial = jest.fn(() =>
+    Promise.resolve({ data: { redirect: false, token: 't', url: undefined }, error: null })
+  );
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    providerId: 'google-sign-in',
+    idToken: { token: 'id-token' },
+    callbackUrl: { url: '/dashboard' },
+  });
+  expect(assign.mock.calls).toEqual([['/dashboard']]);
+});
+
+test('login with a provider leaves the redirect to the IdP to BetterAuth', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.authConfig.providers = [{ id: 'google-sign-in', type: 'Google' }];
+  auth.signInSocial = jest.fn(() =>
+    Promise.resolve({ data: { redirect: true, url: 'https://idp.test/authorize' }, error: null })
+  );
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ providerId: 'google-sign-in', callbackUrl: { url: '/dashboard' } });
+  expect(assign).not.toHaveBeenCalled();
+});
+
 test('login basePath-prefixes the authPages.twoFactor challenge destination', async () => {
   const { auth, lowdefy, assign } = setup({ signInResult: challenge });
   lowdefy.basePath = '/base';
