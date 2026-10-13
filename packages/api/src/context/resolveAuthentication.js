@@ -540,10 +540,11 @@ async function resolveMcpCaller(context, { auth, headers }) {
 }
 
 // context.authSession is the session the caller was resolved from, for the
-// response's caller stamp: { id, memberOrganizationIds }, with
-// memberOrganizationIds null when the member rows were not read (a session
-// with no active organization) or did not fit one read. null for every caller
-// that is not a session caller.
+// response's caller stamp: { id, memberOrganizationIds }. memberOrganizationIds
+// is every organization the person belongs to under tenant, this app's
+// organization alone under pinned, and null when the member rows were not read
+// (a session with no active organization) or did not fit one read. null for
+// every caller that is not a session caller.
 async function resolveAuthentication(context, { auth, headers, strategies, mcp }) {
   context.authSession = null;
   if (type.isNone(auth)) {
@@ -671,9 +672,16 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
     organizationId: activeOrganizationId,
     user: session.user,
   });
-  if (!type.isNone(context.user)) {
-    context.authSession = { id: session.session.id, memberOrganizationIds: organizationIds };
+  if (type.isNone(context.user)) {
+    return;
   }
+  // A pinned app serves one organization, and this caller reached here as a
+  // member of it, so that is the one membership its stamp names: rows the same
+  // auth database holds for other apps' organizations never change this app's
+  // stamp. Under tenant every organization the person belongs to counts.
+  const memberOrganizationIds =
+    registered?.policy === 'pinned' ? [registered.slug] : organizationIds;
+  context.authSession = { id: session.session.id, memberOrganizationIds };
 }
 
 export default resolveAuthentication;

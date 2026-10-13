@@ -793,6 +793,40 @@ test('records the session id and every organization the session caller belongs t
   expect(context.user.org_roles).toEqual(['member']);
 });
 
+test('records only the pinned organization as a membership under pinned', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'team' },
+    },
+    member: { id: 'member_1', role: 'member', appRoles: ['editor'] },
+    // Rows another app's organization holds in the same auth database.
+    memberRows: [{ id: 'member_2', organizationId: 'customer-portal', role: 'owner' }],
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.authSession).toEqual({ id: 'sess_1', memberOrganizationIds: ['team'] });
+});
+
+test('records every organization as a membership when no organization binding is registered', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member', appRoles: [] },
+    memberRows: [{ id: 'member_2', organizationId: 'org_2', role: 'owner' }],
+  });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.authSession).toEqual({ id: 'sess_1', memberOrganizationIds: ['org_1', 'org_2'] });
+});
+
 test('reads the memberships and the active member row in one round trip', async () => {
   const { auth, count, findMany, findOne } = mockAuth({
     session: {
