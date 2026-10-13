@@ -1999,6 +1999,24 @@ test('login navigates to authPages.twoFactor on a two-factor challenge, carrying
   expect(assign.mock.calls).toEqual([['/two-factor-challenge?callbackUrl=%2Fdashboard']]);
 });
 
+test('login with a provider and an idToken navigates to authPages.twoFactor on a two-factor challenge', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
+  auth.authConfig.providers = [{ id: 'google-sign-in', type: 'Google' }];
+  auth.signInSocial = jest.fn(() => Promise.resolve({ data: challenge, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    providerId: 'google-sign-in',
+    idToken: { token: 'id-token' },
+    callbackUrl: { url: '/dashboard' },
+  });
+  expect(auth.signInSocial.mock.calls[0][0]).toMatchObject({
+    provider: 'google',
+    idToken: { token: 'id-token' },
+  });
+  expect(assign.mock.calls).toEqual([['/two-factor-challenge?callbackUrl=%2Fdashboard']]);
+});
+
 test('login basePath-prefixes the authPages.twoFactor challenge destination', async () => {
   const { auth, lowdefy, assign } = setup({ signInResult: challenge });
   lowdefy.basePath = '/base';

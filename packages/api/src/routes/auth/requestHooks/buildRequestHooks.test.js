@@ -364,6 +364,41 @@ function createPhoneHooks(authConfig) {
   });
 }
 
+// An id token posted straight to /sign-in/social, which mints the session in
+// the request itself.
+function createIdTokenCtx(provider) {
+  const ctx = createEnrolledCtx();
+  ctx.path = '/sign-in/social';
+  ctx.body = { provider, idToken: { token: 'id-token' } };
+  return ctx;
+}
+
+test('buildRequestHooks challenges an id token sign-in with a JSON response', async () => {
+  const hooks = createOAuthHooks([]);
+
+  expect(await hooks.after(createIdTokenCtx('my-idp'))).toEqual({
+    jsonBody: { twoFactorRedirect: true, twoFactorMethods: ['totp'] },
+  });
+  expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(1);
+});
+
+test('buildRequestHooks skips an id token sign-in for a provider trusted for two-factor', async () => {
+  const hooks = createOAuthHooks(['my-idp']);
+
+  expect(await hooks.after(createIdTokenCtx('my-idp'))).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
+test('buildRequestHooks leaves the redirect branch of /sign-in/social untouched', async () => {
+  const hooks = createOAuthHooks([]);
+  const ctx = createIdTokenCtx('my-idp');
+  ctx.body = { provider: 'my-idp', callbackURL: '/home' };
+  ctx.context.newSession = null;
+
+  expect(await hooks.after(ctx)).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
 function createPhoneVerifyCtx(path = '/phone-number/verify') {
   const ctx = createEnrolledCtx();
   ctx.path = path;

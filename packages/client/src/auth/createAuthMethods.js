@@ -349,7 +349,7 @@ function createAuthMethods(lowdefy, auth) {
       // their lowercase type.
       const socialProvider =
         provider.type === 'GenericOAuth' ? provider.id : provider.type.toLowerCase();
-      return unwrap(
+      const data = await unwrap(
         auth.signInSocial({
           provider: socialProvider,
           callbackURL,
@@ -358,6 +358,12 @@ function createAuthMethods(lowdefy, auth) {
           ...captchaOptions,
         })
       );
+      // An idToken passed through rest signs in within this request, so a
+      // 2FA-enrolled user gets the challenge here, as on the password paths.
+      if (data?.twoFactorRedirect) {
+        return navigateToTwoFactorChallenge({ callbackTarget }) ? stopChain(data) : data;
+      }
+      return data;
     }
     if (magicLink === true) {
       assertCallbackUrlNavigable({ callbackUrl, method: 'Login with magicLink' });
