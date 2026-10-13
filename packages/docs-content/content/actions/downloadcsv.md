@@ -14,7 +14,7 @@ The `DownloadCsv` action is used to generate and download a CSV file from a set 
 
 ###### object
   - `filename: string`: __Required__ - The name for the generated CSV file.
-  - `data: any[]`: __Required__ - The set of data used to generate the CSV file.
+  - `data: any[]`: __Required__ - The set of data used to generate the CSV file, as an array of objects. If it is empty or missing, the file contains only the header row from `fields`.
   - `fields: string[]`: __Required__ - The field definitions the set of data will be mapped to in the generated CSV file.
 
 #### Examples
