@@ -44,6 +44,7 @@ function setup({ signInResult, signUpResult } = {}) {
   lowdefy._internal.router = { basePath: '', push, replace: jest.fn() };
   const auth = {
     authConfig: { providers: [] },
+    suppressSessionReload: jest.fn(),
     acceptInvitation: jest.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
     addPasskey: jest.fn(() => Promise.resolve({ data: { id: 'passkey-1' }, error: null })),
     changePassword: jest.fn(() =>
@@ -211,6 +212,26 @@ test('signUp lands the verification link on the callback ladder without authPage
   expect(auth.signUpEmail.mock.calls[0][0].callbackURL).toBe('/home-page');
 });
 
+test('login suppresses the session reload before navigating to its callback', async () => {
+  const { auth, lowdefy, assign } = setup();
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123', callbackUrl: '/dashboard' });
+  expect(auth.suppressSessionReload).toHaveBeenCalledTimes(1);
+  expect(auth.suppressSessionReload.mock.invocationCallOrder[0]).toBeLessThan(
+    assign.mock.invocationCallOrder[0]
+  );
+});
+
+test('login does not suppress the session reload when the sign-in fails', async () => {
+  const { auth, lowdefy } = setup();
+  auth.signInEmail = jest.fn(() =>
+    Promise.resolve({ data: null, error: { message: 'Invalid email or password' } })
+  );
+  const { login } = createAuthMethods(lowdefy, auth);
+  await expect(login({ email: 'user@example.com', password: 'wrong' })).rejects.toThrow();
+  expect(auth.suppressSessionReload).not.toHaveBeenCalled();
+});
+
 test('signUp passes through rest params to signUpEmail', async () => {
   const { auth, lowdefy } = setup();
   const { signUp } = createAuthMethods(lowdefy, auth);
@@ -222,10 +243,12 @@ test('logout prefixes basePath onto a relative callbackUrl and suppresses the si
   const { auth, lowdefy, assign } = setup();
   lowdefy.basePath = '/base';
   auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
-  auth.suppressSignOutReload = jest.fn();
+  auth.suppressSessionReload = jest.fn();
   const { logout } = createAuthMethods(lowdefy, auth);
   await logout({ callbackUrl: { pageId: 'goodbye' } });
-  expect(auth.suppressSignOutReload).toHaveBeenCalledTimes(1);
+  expect(auth.suppressSessionReload.mock.invocationCallOrder[0]).toBeLessThan(
+    auth.signOut.mock.invocationCallOrder[0]
+  );
   expect(assign.mock.calls).toEqual([['/base/goodbye']]);
 });
 
@@ -241,10 +264,10 @@ test('logout navigates to an absolute callbackUrl without prefixing basePath', a
 test('logout without a callbackUrl signs out without navigating or suppressing the reload', async () => {
   const { auth, lowdefy, assign } = setup();
   auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
-  auth.suppressSignOutReload = jest.fn();
+  auth.suppressSessionReload = jest.fn();
   const { logout } = createAuthMethods(lowdefy, auth);
   await logout();
-  expect(auth.suppressSignOutReload).not.toHaveBeenCalled();
+  expect(auth.suppressSessionReload).not.toHaveBeenCalled();
   expect(assign).not.toHaveBeenCalled();
 });
 
@@ -1665,13 +1688,13 @@ test('logout with a home callbackUrl does not navigate when the home config name
   const { auth, lowdefy, assign } = setup();
   lowdefy.home = { configured: false, pageId: null };
   auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
-  auth.suppressSignOutReload = jest.fn();
+  auth.suppressSessionReload = jest.fn();
   const { logout } = createAuthMethods(lowdefy, auth);
   // logout gains no default and no throw, but inherits the correctness fix -
   // the post-sign-out reload takes over instead of navigating to /undefined.
   await logout({ callbackUrl: { home: true } });
   expect(assign).not.toHaveBeenCalled();
-  expect(auth.suppressSignOutReload).not.toHaveBeenCalled();
+  expect(auth.suppressSessionReload).not.toHaveBeenCalled();
 });
 
 test('login with email and callbackUrl false mints the session without navigating', async () => {
@@ -1758,13 +1781,13 @@ test('logout with an empty url callbackUrl neither navigates nor suppresses the 
   const { auth, lowdefy, assign } = setup();
   lowdefy.basePath = '/base';
   auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
-  auth.suppressSignOutReload = jest.fn();
+  auth.suppressSessionReload = jest.fn();
   const { logout } = createAuthMethods(lowdefy, auth);
   // The one input where resolving through resolveTargetURL changes when the
   // basePath prefix is applied - willNavigate must stay false either way.
   await logout({ callbackUrl: { url: '' } });
   expect(assign).not.toHaveBeenCalled();
-  expect(auth.suppressSignOutReload).not.toHaveBeenCalled();
+  expect(auth.suppressSessionReload).not.toHaveBeenCalled();
 });
 
 // The ?callbackUrl= query is attacker-supplied - a crafted sign-in link is the

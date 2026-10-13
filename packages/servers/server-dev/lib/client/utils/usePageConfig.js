@@ -14,6 +14,7 @@
 import useSWR from 'swr';
 
 import { serializer, type } from '@lowdefy/helpers';
+import shouldReloadForCaller from '@lowdefy/client/shouldReloadForCaller.js';
 
 import { getNavVersion, getReloadVersion } from './useMutateCache.js';
 
@@ -29,7 +30,9 @@ function parseJsModule(text) {
   return mod.default ?? {};
 }
 
-export async function fetchPageConfig(url) {
+// user is the caller the page renders: a page config the server answered as
+// another caller reloads the tab (shouldReloadForCaller).
+export async function fetchPageConfig(url, { user }) {
   const basePath = url.replace(/\/api\/page\/.*$/, '');
   // A stalled request (server restart mid-request, exhausted sockets) must
   // become a visible error, never an eternal Suspense fallback — the reload
@@ -80,6 +83,17 @@ export async function fetchPageConfig(url) {
     }
     throw new Error(data.message || 'Request error');
   }
+  if (
+    await shouldReloadForCaller({
+      serverCaller: res.headers.get('x-lowdefy-caller'),
+      user,
+      window,
+    })
+  ) {
+    // The page unloads; settling would render the other caller's config.
+    window.location.reload();
+    return new Promise(() => {});
+  }
 
   // A page response is { pageId, pathParams, matchedPath, pageConfig }: the page
   // the server matched the path to, the values it carries and the path it was
@@ -125,7 +139,8 @@ export function getPageConfigKey({ pageUrl, search }) {
 
 // path is the page's URL path without basePath and the leading "/", still
 // encoded; the server matches it to a page.
-function usePageConfig(path, basePath) {
+// user is the caller the page renders.
+function usePageConfig(path, basePath, user) {
   const pageUrl = `${basePath}/api/page/${path}`;
   const search = window.location.search;
   // The fetch always forwards the current query string, so server-side Dynamic
@@ -133,7 +148,7 @@ function usePageConfig(path, basePath) {
   const { data } = useSWR(
     getPageConfigKey({ pageUrl, search }),
     async () => {
-      const data = await fetchPageConfig(`${pageUrl}${search}`);
+      const data = await fetchPageConfig(`${pageUrl}${search}`, { user });
       recordDynamicPage({ data, pageUrl });
       return data;
     },

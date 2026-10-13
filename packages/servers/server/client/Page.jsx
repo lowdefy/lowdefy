@@ -22,6 +22,7 @@ import createLinkComponent from '@lowdefy/client/adapters/Link.js';
 import { createUrl } from '@lowdefy/client/adapters/url.js';
 import Head from '@lowdefy/client/adapters/Head.js';
 import shouldReloadForBuild from '@lowdefy/client/shouldReloadForBuild.js';
+import shouldReloadForCaller from '@lowdefy/client/shouldReloadForCaller.js';
 import { buildPagePath } from '@lowdefy/helpers';
 
 import blockMetas from '../build/plugins/blockMetas.json';
@@ -127,6 +128,21 @@ function Page({ auth, config, lowdefy }) {
           // reference _js functions and plugins this bundle does not carry.
           // The router has already pushed the target URL, so a reload lands
           // on the requested page with the current bundle.
+          window.location.reload();
+          return;
+        }
+        // The server answered as another caller than this page renders (a
+        // sign-in or organization switch in another tab): reload so the page
+        // renders the server's caller instead of mixing the two. A second
+        // difference within the reload interval throws to the catch below,
+        // whose full page load also renders the server's caller.
+        const reloadForCaller = await shouldReloadForCaller({
+          serverCaller: res.headers.get('x-lowdefy-caller'),
+          user: lowdefy.user,
+          window,
+        });
+        if (token !== latestNavRef.current) return;
+        if (reloadForCaller) {
           window.location.reload();
           return;
         }

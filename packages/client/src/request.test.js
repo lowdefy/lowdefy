@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { webcrypto } from 'node:crypto';
+import { TextEncoder } from 'node:util';
 import { jest } from '@jest/globals';
 import { getDevError } from '@lowdefy/engine';
 import {
@@ -22,14 +24,16 @@ import {
   TwoFactorEnrolmentRequiredError,
   UserError,
 } from '@lowdefy/errors';
+import { callerHash } from '@lowdefy/helpers';
 
 import request from './request.js';
 
-function mockFetchResponse({ ok, status = ok ? 200 : 500, body }) {
+function mockFetchResponse({ ok, status = ok ? 200 : 500, body, headers = {} }) {
   global.fetch = jest.fn(() =>
     Promise.resolve({
       ok,
       status,
+      headers: { get: (name) => headers[name] ?? null },
       json: () => Promise.resolve(body),
     })
   );
@@ -166,6 +170,134 @@ describe('build check', () => {
     await expect(
       request({ buildId: 'build-1', url: '/api/test', method: 'POST', body: {} })
     ).rejects.toBeInstanceOf(AuthorizationError);
+    expect(window.location.reload).not.toHaveBeenCalled();
+  });
+});
+
+describe('caller check', () => {
+  const originalLocation = window.location;
+  const originalCrypto = globalThis.crypto;
+  const userA = { id: 'user_a', organization_id: 'org_1' };
+
+  beforeEach(() => {
+    window.sessionStorage.clear();
+    delete window.location;
+    window.location = { reload: jest.fn() };
+    Object.defineProperty(globalThis, 'crypto', { value: webcrypto, configurable: true });
+    // jsdom carries neither WebCrypto's digest nor TextEncoder; browsers carry both.
+    globalThis.TextEncoder = TextEncoder;
+  });
+
+  afterEach(() => {
+    window.location = originalLocation;
+    Object.defineProperty(globalThis, 'crypto', { value: originalCrypto, configurable: true });
+  });
+
+  async function expectReloadWithoutSettling(args) {
+    const settled = jest.fn();
+    request(args).then(settled, settled);
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(window.location.reload).toHaveBeenCalledTimes(1);
+    expect(settled).not.toHaveBeenCalled();
+  }
+
+  test('request returns the response when the server answered as the rendered caller', async () => {
+    mockFetchResponse({
+      ok: true,
+      body: { value: 1 },
+      headers: { 'x-lowdefy-caller': await callerHash({ user: userA }) },
+    });
+    await expect(request({ url: '/api/request/p/r', user: userA })).resolves.toEqual({ value: 1 });
+    expect(window.location.reload).not.toHaveBeenCalled();
+  });
+
+  test('request reloads when the server answered as another person', async () => {
+    mockFetchResponse({
+      ok: true,
+      body: { value: 1 },
+      headers: {
+        'x-lowdefy-caller': await callerHash({ user: { id: 'user_b', organization_id: 'org_1' } }),
+      },
+    });
+    await expectReloadWithoutSettling({ url: '/api/request/p/r', user: userA });
+  });
+
+  test('request reloads when the server answered in another organization', async () => {
+    mockFetchResponse({
+      ok: true,
+      body: { value: 1 },
+      headers: {
+        'x-lowdefy-caller': await callerHash({ user: { id: 'user_a', organization_id: 'org_2' } }),
+      },
+    });
+    await expectReloadWithoutSettling({ url: '/api/request/p/r', user: userA });
+  });
+
+  test('request does not reload on an anonymous page whose caller stays anonymous', async () => {
+    mockFetchResponse({ ok: true, body: { value: 1 }, headers: { 'x-lowdefy-caller': '' } });
+    await expect(request({ url: '/api/request/p/r', user: null })).resolves.toEqual({ value: 1 });
+    expect(window.location.reload).not.toHaveBeenCalled();
+  });
+
+  test('request throws an AuthenticationError on a second difference within the reload interval', async () => {
+    window.sessionStorage.setItem('lowdefy.reloadedForCaller', String(Date.now()));
+    mockFetchResponse({ ok: true, body: { value: 1 }, headers: { 'x-lowdefy-caller': '' } });
+    await expect(request({ url: '/api/request/p/r', user: userA })).rejects.toBeInstanceOf(
+      AuthenticationError
+    );
+    expect(window.location.reload).not.toHaveBeenCalled();
+  });
+
+  test('request reloads on a 401 while the page renders a user', async () => {
+    mockFetchResponse({
+      ok: false,
+      status: 401,
+      body: { name: 'AuthenticationError', message: 'Authentication required.' },
+    });
+    await expectReloadWithoutSettling({ url: '/api/endpoints/e', user: userA });
+  });
+
+  test('request throws a 401 as today when the page renders no user', async () => {
+    mockFetchResponse({
+      ok: false,
+      status: 401,
+      body: { name: 'AuthenticationError', message: 'Authentication required.' },
+      headers: { 'x-lowdefy-caller': '' },
+    });
+    await expect(request({ url: '/api/request/p/r', user: null })).rejects.toBeInstanceOf(
+      AuthenticationError
+    );
+    expect(window.location.reload).not.toHaveBeenCalled();
+  });
+
+  test('request reloads on a request 403 and throws an endpoint 403', async () => {
+    const body = { name: 'AuthorizationError', message: 'Request "r" does not exist.' };
+    const headers = { 'x-lowdefy-caller': await callerHash({ user: userA }) };
+    mockFetchResponse({ ok: false, status: 403, body, headers });
+    await expectReloadWithoutSettling({
+      url: '/api/request/p/r',
+      reloadOnAuthorizationError: true,
+      user: userA,
+    });
+    window.sessionStorage.clear();
+    window.location.reload.mockClear();
+    mockFetchResponse({ ok: false, status: 403, body, headers });
+    await expect(
+      request({ url: '/api/endpoints/e', reloadOnAuthorizationError: false, user: userA })
+    ).rejects.toBeInstanceOf(AuthorizationError);
+    expect(window.location.reload).not.toHaveBeenCalled();
+  });
+
+  test('request never reloads on a two-factor enrolment refusal', async () => {
+    mockFetchResponse({
+      ok: false,
+      status: 403,
+      body: { name: 'TwoFactorEnrolmentRequiredError', message: 'Enrol a second factor.' },
+      headers: { 'x-lowdefy-caller': await callerHash({ user: userA }) },
+    });
+    await expect(
+      request({ url: '/api/request/p/r', reloadOnAuthorizationError: true, user: userA })
+    ).rejects.toBeInstanceOf(TwoFactorEnrolmentRequiredError);
     expect(window.location.reload).not.toHaveBeenCalled();
   });
 });

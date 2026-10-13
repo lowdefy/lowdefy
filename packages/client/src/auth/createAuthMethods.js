@@ -174,11 +174,15 @@ function createAuthMethods(lowdefy, auth) {
   // half-applied. An external target leaves the app, so it cannot route through
   // the in-app router. A resolved page target is un-prefixed; the router
   // re-applies basePath, so nothing double-prefixes. A page target that names a
-  // page joins the path memory before the push, as a followed link does.
+  // page joins the path memory before the push, as a followed link does. The
+  // session provider's reloads on a session change are suppressed first: the
+  // full load renders the new session anyway, and a reload racing it would
+  // land back on the page being left.
   function navigateToTarget(target) {
     if (type.isNone(target)) {
       return;
     }
+    auth.suppressSessionReload();
     if (target.kind === 'external') {
       lowdefy._internal.globals.window.location.assign(target.href);
       return;
@@ -457,10 +461,10 @@ function createAuthMethods(lowdefy, auth) {
     const callbackTarget = resolveTarget({ lowdefy, target: callbackUrl });
     const window = lowdefy._internal?.globals?.window;
     const willNavigate = Boolean(callbackTarget && window);
-    if (willNavigate && auth.suppressSignOutReload) {
+    if (willNavigate && auth.suppressSessionReload) {
       // The sign-out reload in the session provider would race the callback
       // navigation - suppress it for this sign-out.
-      auth.suppressSignOutReload();
+      auth.suppressSessionReload();
     }
     const data = await unwrap(auth.signOut());
     if (willNavigate) {
