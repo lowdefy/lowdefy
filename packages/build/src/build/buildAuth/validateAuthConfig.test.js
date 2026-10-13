@@ -413,6 +413,36 @@ test('validateAuthConfig passes with multiple GenericOAuth providers with distin
   expect(() => validateAuthConfig({ components, context })).not.toThrow();
 });
 
+test('validateAuthConfig throws when a GenericOAuth id is the key of a configured built-in provider', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      providers: [
+        { id: 'google', type: 'GenericOAuth', properties: {} },
+        { id: 'google-sign-in', type: 'Google', properties: {} },
+      ],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'GenericOAuth provider id "google" is the provider key of the configured "Google" provider. Use a different id.'
+  );
+});
+
+test('validateAuthConfig passes with a GenericOAuth id that is a built-in key no provider configures', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      providers: [
+        { id: 'google', type: 'GenericOAuth', properties: {} },
+        { id: 'github', type: 'GitHub', properties: {} },
+      ],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
 test('validateAuthConfig passes with an OAuth provider mechanism', () => {
   const components = {
     auth: {

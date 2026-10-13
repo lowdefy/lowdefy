@@ -55,7 +55,6 @@ function Auth({ children, user }) {
     setActiveOrganization: e2eNotSupported,
     signInEmail: e2eNotSupported,
     signInMagicLink: e2eNotSupported,
-    signInOauth2: e2eNotSupported,
     signInSocial: e2eNotSupported,
     signOut: e2eNotSupported,
     signUpEmail: e2eNotSupported,

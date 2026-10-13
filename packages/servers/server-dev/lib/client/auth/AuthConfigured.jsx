@@ -41,13 +41,11 @@ const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 const fetchCheckingBuild = createFetchCheckingBuild({ buildId: bundleBuildId });
 
 // GenericOAuth providers have no client plugin here. BetterAuth 1.7.0 dropped
-// genericOAuthClient from better-auth/client/plugins, and nothing replaces it:
-// through 1.6.x it was a marker plugin carrying only an id, a version, an empty
-// $InferServerPlugin for TypeScript inference, and the generic-oauth error
-// codes - no actions, atoms, fetch plugins or path methods. signIn.oauth2 is
-// resolved by the client's dynamic path proxy from the call itself
-// (signIn.oauth2 -> POST /sign-in/oauth2, POST because providerId is always
-// sent), so the sign-in a Lowdefy GenericOAuth provider makes is unaffected.
+// genericOAuthClient, and the server plugin's own routes with it: a generic
+// provider is registered as a social provider keyed by its providerId, so it
+// signs in through signIn.social and returns on /callback/:id like any
+// built-in one. The client's path proxy would still turn a signIn.oauth2 call
+// into POST /sign-in/oauth2, a route no 1.7 server serves.
 const authClient = createAuthClient({
   baseURL: `${window.location.origin}${basePath}/api/auth`,
   fetchOptions: { customFetchImpl: fetchCheckingBuild },
@@ -218,7 +216,6 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     setActiveOrganization: (params) => authClient.organization.setActive(sessionScoped(params)),
     signInEmail: (params) => authClient.signIn.email(params),
     signInMagicLink: (params) => authClient.signIn.magicLink(params),
-    signInOauth2: (params) => authClient.signIn.oauth2(params),
     signInPasskey: (params) => authClient.signIn.passkey(params),
     signInPhoneNumber: (params) => authClient.signIn.phoneNumber(params),
     signInSocial: (params) => authClient.signIn.social(params),

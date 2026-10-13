@@ -130,7 +130,8 @@ function validateAuthConfig({ components }) {
   // provider types allow one configuration each in BetterAuth; GenericOAuth
   // entries are keyed by id, so several may coexist.
   const seenProviderIds = {};
-  const seenProviderTypes = {};
+  // Built-in types by their BetterAuth provider key, the lowercase type.
+  const builtInTypesByKey = {};
   (auth.providers ?? []).forEach((provider) => {
     const providerKey = provider['~k'] ?? configKey;
     // The provider id keys seenProviderIds below, a plain object: assigning
@@ -150,14 +151,31 @@ function validateAuthConfig({ components }) {
     }
     seenProviderIds[provider.id] = true;
     if (provider.type !== 'GenericOAuth') {
-      if (seenProviderTypes[provider.type] === true) {
+      const builtInKey = provider.type.toLowerCase();
+      if (Object.hasOwn(builtInTypesByKey, builtInKey)) {
         throw new ConfigError(
           `Auth provider type "${provider.type}" is configured more than once. BetterAuth supports one configuration per built-in provider; use GenericOAuth for additional configurations.`,
           { configKey: providerKey }
         );
       }
-      seenProviderTypes[provider.type] = true;
+      builtInTypesByKey[builtInKey] = provider.type;
     }
+  });
+
+  // BetterAuth registers GenericOAuth providers as social providers keyed by id,
+  // in the same namespace as the built-in keys (the lowercase type). A
+  // GenericOAuth id equal to a configured built-in key takes over that
+  // provider's sign-in and callback, and BetterAuth only logs a warning.
+  (auth.providers ?? []).forEach((provider) => {
+    if (provider.type !== 'GenericOAuth' || !Object.hasOwn(builtInTypesByKey, provider.id)) {
+      return;
+    }
+    throw new ConfigError(
+      `GenericOAuth provider id "${provider.id}" is the provider key of the configured "${
+        builtInTypesByKey[provider.id]
+      }" provider. Use a different id.`,
+      { configKey: provider['~k'] ?? configKey }
+    );
   });
 
   // An enabled phone login with no way to send codes is dead config - there

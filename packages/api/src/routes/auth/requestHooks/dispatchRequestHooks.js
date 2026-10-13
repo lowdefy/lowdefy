@@ -35,7 +35,9 @@ async function dispatchRequestHooks({ ctx, registrations }) {
     return undefined;
   }
   for (const registration of registrations) {
-    if (!registration.matches(ctx.path)) {
+    // ctx.path is the endpoint's route template (/callback/:id), not the
+    // request URL, so a matcher that needs a path parameter reads ctx.params.
+    if (!registration.matches(ctx.path, ctx)) {
       continue;
     }
     const result = await registration.handler(ctx);

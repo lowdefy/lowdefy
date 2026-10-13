@@ -22,7 +22,7 @@
 // buildTrustedProviders.js performs, and for the same reason: a deployment names
 // providers one way throughout (the Lowdefy provider id), and the build maps to
 // BetterAuth's vocabulary.
-// - GenericOAuth entries -> the entry id      (/oauth2/callback/:providerId)
+// - GenericOAuth entries -> the entry id      (/callback/:id)
 // - built-in providers   -> the lowercase type (/callback/:id)
 //
 // This list and account.accountLinking.trustedProviders are unrelated - one
