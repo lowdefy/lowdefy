@@ -19,6 +19,7 @@ import { ConfigError, UserError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import { createUrl } from '../adapters/url.js';
+import setLowdefyUser from '../setLowdefyUser.js';
 
 // Accepts only a path-absolute URL from the ?callbackUrl= query. A bare
 // startsWith('/') is not enough: "//evil.com" and "/\evil.com" also start with
@@ -502,7 +503,7 @@ function createAuthMethods(lowdefy, auth) {
     if (auth.updateResolvedUser) {
       auth.updateResolvedUser(user ?? null);
     }
-    lowdefy.user = user ?? null;
+    setLowdefyUser({ lowdefy, user });
   }
 
   // Accepts an organization invitation. BetterAuth's endpoint enforces the

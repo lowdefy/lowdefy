@@ -88,7 +88,8 @@ built with no organization is kept when the caller gains one (accepting an invit
 it) and takes that organization from then on. The instance key itself stays organization-free,
 since path memory, Link input and the e2e helpers name it; `@lowdefy/client`'s `Context.js` keys
 the page tree by the context object (`getContextKey`), so a context rebuilt in place remounts the
-tree.
+tree. `CallAPI` results (`lowdefy.apiResponses`) are app-level and follow the same rule:
+`@lowdefy/client`'s `setLowdefyUser` drops them when the organization changes.
 
 `lowdefy.contexts`, `lowdefy.inputs`, `lowdefy.pageInstances` and `lowdefy.pathMemory` are set
 by the client's `initLowdefyContext`, with `lowdefy.pagePaths` (root config) and

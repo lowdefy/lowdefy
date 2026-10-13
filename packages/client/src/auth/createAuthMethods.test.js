@@ -1921,6 +1921,20 @@ test('updateSession updates the resolved user ref and lowdefy.user from /api/use
   expect(lowdefy.user).toEqual(resolved);
 });
 
+test('updateSession drops CallAPI results when the organization changes', async () => {
+  const { auth, lowdefy } = setup();
+  lowdefy._internal.apiResponsesOrganizationId = 'org-1';
+  lowdefy.apiResponses = { list: [{ response: ['org one'] }] };
+  lowdefy.lowdefyGlobal = { theme: 'dark' };
+  const resolved = { id: 'user-1', organization_id: 'org-2', roles: [] };
+  auth.getResolvedUser = jest.fn(() => Promise.resolve({ user: resolved }));
+  const { updateSession } = createAuthMethods(lowdefy, auth);
+  await updateSession();
+  expect(lowdefy.apiResponses).toEqual({});
+  expect(lowdefy.lowdefyGlobal).toEqual({ theme: 'dark' });
+  expect(lowdefy.user).toEqual(resolved);
+});
+
 test('updateSession throws when the session refresh fails and never reaches /api/user', async () => {
   const { auth, lowdefy } = setup();
   auth.refreshSession = jest.fn(() =>
