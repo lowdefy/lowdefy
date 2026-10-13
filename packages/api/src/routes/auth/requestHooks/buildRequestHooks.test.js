@@ -389,6 +389,30 @@ test('buildRequestHooks skips an id token sign-in for a provider trusted for two
   expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
 });
 
+test('buildRequestHooks skips an id token sign-in for a trusted built-in provider by its lowercase type key and still challenges a generic provider', async () => {
+  const hooks = createOAuthHooks(['google']);
+
+  expect(await hooks.after(createIdTokenCtx('google'))).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+
+  expect(await hooks.after(createIdTokenCtx('my-idp'))).toEqual({
+    jsonBody: { twoFactorRedirect: true, twoFactorMethods: ['totp'] },
+  });
+  expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(1);
+});
+
+test('buildRequestHooks does not challenge an id token sign-in when twoFactor is disabled', async () => {
+  const hooks = buildRequestHooks({
+    authConfig: { ...twoFactorAuthConfig, twoFactor: { enabled: false } },
+    basePath: '/app',
+    baseUrlOrigin: 'https://app.example.com',
+    getAuth: jest.fn(),
+  });
+
+  expect(await hooks.after(createIdTokenCtx('google'))).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
 test('buildRequestHooks leaves the redirect branch of /sign-in/social untouched', async () => {
   const hooks = createOAuthHooks([]);
   const ctx = createIdTokenCtx('my-idp');
