@@ -25,6 +25,10 @@ const { _payload, _user } = operatorsServer;
 
 const mockReadConfigFile = jest.fn();
 const mockResolver = jest.fn();
+// A change stream reads its connection, as the MongoDB source declares.
+mockResolver.meta = { checkRead: true, checkWrite: false, publish: false };
+const mockNoReadResolver = jest.fn();
+mockNoReadResolver.meta = { checkRead: false, checkWrite: false, publish: false };
 
 const connections = {
   TestConnection: {
@@ -53,6 +57,7 @@ function createTestContext({ organization = { policy: 'tenant' }, user } = {}) {
   });
   context.websockets = {
     TestSource: mockResolver,
+    NoReadSource: mockNoReadResolver,
   };
   return context;
 }
@@ -306,4 +311,64 @@ test('module websocket refuses a caller without the role its scoped id requires'
   await expect(
     prepareChannel(context, { websocketId: 'help/thread-messages', payload: {} })
   ).rejects.toThrow('Websocket "help/thread-messages" does not exist.');
+});
+
+test('a connection with read false refuses a subscription that reads it', async () => {
+  mockReadConfigFile.mockImplementation(
+    defaultReadConfigImp({
+      connectionConfig: {
+        id: 'connection:testConnection',
+        type: 'NonScopableConnection',
+        connectionId: 'testConnection',
+        properties: { read: false },
+      },
+    })
+  );
+  const context = createTestContext({ user: { id: 'id' } });
+
+  await expect(prepareChannel(context, { websocketId: 'ws1', payload: {} })).rejects.toThrow(
+    new ConfigError('Connection "testConnection" does not allow reads.')
+  );
+});
+
+test('a connection with read false accepts a websocket type that does not declare checkRead', async () => {
+  mockReadConfigFile.mockImplementation(
+    defaultReadConfigImp({
+      connectionConfig: {
+        id: 'connection:testConnection',
+        type: 'NonScopableConnection',
+        connectionId: 'testConnection',
+        properties: { read: false },
+      },
+      websocketConfig: {
+        id: 'websocket:ws1',
+        type: 'NoReadSource',
+        websocketId: 'ws1',
+        connectionId: 'testConnection',
+        auth: { public: true },
+        properties: {},
+      },
+    })
+  );
+  const context = createTestContext({ user: { id: 'id' } });
+
+  const res = await prepareChannel(context, { websocketId: 'ws1', payload: {} });
+  expect(res.connectionProperties).toEqual({ read: false });
+});
+
+test('a connection with read true accepts a subscription that reads it', async () => {
+  mockReadConfigFile.mockImplementation(
+    defaultReadConfigImp({
+      connectionConfig: {
+        id: 'connection:testConnection',
+        type: 'NonScopableConnection',
+        connectionId: 'testConnection',
+        properties: { read: true },
+      },
+    })
+  );
+  const context = createTestContext({ user: { id: 'id' } });
+
+  const res = await prepareChannel(context, { websocketId: 'ws1', payload: {} });
+  expect(res.connectionProperties).toEqual({ read: true });
 });
