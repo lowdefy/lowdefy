@@ -23,6 +23,16 @@ jest.unstable_mockModule('./prepareChannel.js', () => ({
   default: mockPrepareChannel,
 }));
 
+// Stands in for the session read: each call resolves the caller the test has
+// set as current, the way resolveAuthentication writes it to the object passed.
+let mockCurrentCaller = null;
+const mockResolveAuthentication = jest.fn(async (target) => {
+  target.user = mockCurrentCaller;
+});
+jest.unstable_mockModule('../../context/resolveAuthentication.js', () => ({
+  default: mockResolveAuthentication,
+}));
+
 let createChannelRegistry;
 let createWebSocketConnection;
 
@@ -316,6 +326,14 @@ test('subscriber is created with the connection rid, the context i18n and an emp
   expect(connection.subscriber.i18n).toBe(context.i18n);
 });
 
+// Lets queued frames run until the held subscribe reaches its channel
+// preparation.
+async function untilPreparing(releases) {
+  for (let tick = 0; tick < 20 && releases.length === 0; tick += 1) {
+    await Promise.resolve();
+  }
+}
+
 function setupHeldSubscribe() {
   const releases = [];
   const resolver = jest.fn(() => new Promise(() => {}));
@@ -353,7 +371,7 @@ test('an unsubscribe sent while its subscribe is being prepared removes the subs
   const unsubscribed = connection.handleMessage(
     JSON.stringify({ type: 'unsubscribe', websocketId: 'chat' })
   );
-  await Promise.resolve();
+  await untilPreparing(releases);
   releases[0]();
   await Promise.all([subscribed, unsubscribed]);
 
@@ -374,7 +392,7 @@ test('a connection that closes while a subscribe is being prepared leaves no sub
   const queuedBeforeClose = connection.handleMessage(
     JSON.stringify({ type: 'subscribe', websocketId: 'chat', requestId: 's2' })
   );
-  await Promise.resolve();
+  await untilPreparing(releases);
   connection.close();
   const sentAfterClose = connection.handleMessage(
     JSON.stringify({ type: 'subscribe', websocketId: 'news', requestId: 's3' })
@@ -402,4 +420,239 @@ test('a slow publish on one feed does not hold up a subscribe to another feed', 
   expect(sentFrames(send)).toEqual([
     { type: 'subscribed', websocketId: 'ticker', requestId: 's1' },
   ]);
+});
+
+describe('caller re-check', () => {
+  const member = {
+    id: 'user-1',
+    name: 'Ada',
+    organization_id: 'org-1',
+    roles: ['editor', 'admin'],
+  };
+
+  beforeEach(() => {
+    jest.useFakeTimers({ doNotFake: ['performance'] });
+    mockResolveAuthentication.mockClear();
+    mockCurrentCaller = member;
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  async function flush() {
+    for (let tick = 0; tick < 10; tick += 1) {
+      await Promise.resolve();
+    }
+  }
+
+  function setupWithAuth({ user = member } = {}) {
+    const registry = {
+      subscribe: jest.fn(async () => {}),
+      unsubscribe: jest.fn(),
+      unsubscribeAll: jest.fn(),
+      publish: jest.fn(async () => {}),
+    };
+    const send = jest.fn();
+    const closeSocket = jest.fn();
+    const headers = new Headers({ cookie: 'session=1' });
+    const strategies = [];
+    const context = {
+      rid: 'r',
+      mode: 'prod',
+      auth: { api: {} },
+      config: {},
+      user,
+      i18n: { active: 'en-US', messages: {} },
+      logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() },
+      handleError: jest.fn(),
+    };
+    const connection = createWebSocketConnection(context, {
+      closeSocket,
+      headers,
+      registry,
+      send,
+      strategies,
+    });
+    return { closeSocket, connection, context, headers, registry, send, strategies };
+  }
+
+  test('a subscribe resolves the caller from the upgrade headers before the channel is prepared', async () => {
+    const { connection, context, headers, registry, strategies } = setupWithAuth();
+
+    await connection.handleMessage(
+      JSON.stringify({ type: 'subscribe', websocketId: 'ticker', requestId: 's1' })
+    );
+
+    expect(mockResolveAuthentication).toHaveBeenCalledTimes(1);
+    expect(mockResolveAuthentication).toHaveBeenCalledWith(
+      { config: context.config, logger: context.logger, user: member },
+      { auth: context.auth, headers, strategies }
+    );
+    expect(mockResolveAuthentication.mock.invocationCallOrder[0]).toBeLessThan(
+      registry.subscribe.mock.invocationCallOrder[0]
+    );
+  });
+
+  test('a re-check leaves the caller on the connection context as it was at upgrade', async () => {
+    const { connection, context } = setupWithAuth();
+    mockCurrentCaller = { ...member, name: 'Ada L.' };
+
+    await connection.handleMessage(
+      JSON.stringify({ type: 'subscribe', websocketId: 'ticker', requestId: 's1' })
+    );
+
+    expect(context.user).toBe(member);
+  });
+
+  test('a subscribe from a caller that signed out closes the socket with 4401 and is not subscribed', async () => {
+    const { closeSocket, connection, registry, send } = setupWithAuth();
+    mockCurrentCaller = null;
+
+    await connection.handleMessage(
+      JSON.stringify({ type: 'subscribe', websocketId: 'ticker', requestId: 's1' })
+    );
+
+    expect(closeSocket).toHaveBeenCalledWith({ code: 4401, reason: 'caller-changed' });
+    expect(registry.subscribe).not.toHaveBeenCalled();
+    expect(registry.unsubscribeAll).toHaveBeenCalledWith({ subscriber: connection.subscriber });
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  test.each([
+    ['the caller signs out', null],
+    ['the session is revoked', null],
+    ['the membership is removed', null],
+    ['a role is removed', { ...member, roles: ['editor'] }],
+    ['a role is added', { ...member, roles: ['editor', 'admin', 'owner'] }],
+    ['the caller switches organization', { ...member, organization_id: 'org-2' }],
+    ['another user signs in on the same browser', { ...member, id: 'user-2' }],
+  ])('the socket closes with 4401 within 60 seconds when %s', async (_, caller) => {
+    const { closeSocket, connection, registry } = setupWithAuth();
+    mockCurrentCaller = caller;
+
+    jest.advanceTimersByTime(59 * 1000);
+    await flush();
+    expect(closeSocket).not.toHaveBeenCalled();
+
+    jest.advanceTimersByTime(1000);
+    await flush();
+    expect(closeSocket).toHaveBeenCalledTimes(1);
+    expect(closeSocket).toHaveBeenCalledWith({ code: 4401, reason: 'caller-changed' });
+    expect(registry.unsubscribeAll).toHaveBeenCalledWith({ subscriber: connection.subscriber });
+  });
+
+  test('an anonymous socket closes with 4401 when a session appears', async () => {
+    const { closeSocket } = setupWithAuth({ user: null });
+    mockCurrentCaller = member;
+
+    jest.advanceTimersByTime(60 * 1000);
+    await flush();
+
+    expect(closeSocket).toHaveBeenCalledWith({ code: 4401, reason: 'caller-changed' });
+  });
+
+  test.each([
+    ['the caller is unchanged', member],
+    ['the roles come back in another order', { ...member, roles: ['admin', 'editor'] }],
+    ['only the name changed', { ...member, name: 'Ada L.' }],
+  ])('the socket stays open when %s', async (_, caller) => {
+    const { closeSocket, connection, registry, send } = setupWithAuth();
+    mockCurrentCaller = caller;
+
+    jest.advanceTimersByTime(3 * 60 * 1000);
+    await flush();
+    await connection.handleMessage(
+      JSON.stringify({ type: 'subscribe', websocketId: 'ticker', requestId: 's1' })
+    );
+
+    expect(mockResolveAuthentication).toHaveBeenCalledTimes(4);
+    expect(closeSocket).not.toHaveBeenCalled();
+    expect(registry.subscribe).toHaveBeenCalledTimes(1);
+    expect(sentFrames(send)).toEqual([
+      { type: 'subscribed', websocketId: 'ticker', requestId: 's1' },
+    ]);
+  });
+
+  test('an anonymous socket stays open while no session appears', async () => {
+    const { closeSocket } = setupWithAuth({ user: null });
+    mockCurrentCaller = null;
+
+    jest.advanceTimersByTime(60 * 1000);
+    await flush();
+
+    expect(mockResolveAuthentication).toHaveBeenCalledTimes(1);
+    expect(closeSocket).not.toHaveBeenCalled();
+  });
+
+  test('a connection runs one re-check timer however many feeds it subscribes', async () => {
+    const { connection } = setupWithAuth();
+
+    await connection.handleMessage(JSON.stringify({ type: 'subscribe', websocketId: 'a' }));
+    await connection.handleMessage(JSON.stringify({ type: 'subscribe', websocketId: 'b' }));
+    await connection.handleMessage(JSON.stringify({ type: 'subscribe', websocketId: 'c' }));
+
+    expect(jest.getTimerCount()).toBe(1);
+  });
+
+  test('close clears the re-check timer', async () => {
+    const { closeSocket, connection } = setupWithAuth();
+    mockCurrentCaller = null;
+
+    connection.close();
+    expect(jest.getTimerCount()).toBe(0);
+    jest.advanceTimersByTime(60 * 1000);
+    await flush();
+
+    expect(mockResolveAuthentication).not.toHaveBeenCalled();
+    expect(closeSocket).not.toHaveBeenCalled();
+  });
+
+  test('a re-check that fails reports the error and closes the socket with 1011', async () => {
+    const { closeSocket, context } = setupWithAuth();
+    const error = new Error('Session store unreachable.');
+    mockResolveAuthentication.mockRejectedValueOnce(error);
+
+    jest.advanceTimersByTime(60 * 1000);
+    await flush();
+
+    expect(context.handleError).toHaveBeenCalledWith(error);
+    expect(closeSocket).toHaveBeenCalledWith({ code: 1011, reason: 'caller-check-failed' });
+  });
+
+  test('a re-check that finishes after the socket closed does not close it again', async () => {
+    const { closeSocket, connection } = setupWithAuth();
+    let finish;
+    mockResolveAuthentication.mockImplementationOnce(
+      (target) =>
+        new Promise((resolve) => {
+          finish = () => {
+            target.user = null;
+            resolve();
+          };
+        })
+    );
+
+    jest.advanceTimersByTime(60 * 1000);
+    await flush();
+    connection.close();
+    finish();
+    await flush();
+
+    expect(closeSocket).not.toHaveBeenCalled();
+  });
+
+  test('a context without an auth engine keeps the caller it was built with', async () => {
+    const { closeSocket, connection, context } = setupWithAuth();
+    context.auth = null;
+
+    jest.advanceTimersByTime(60 * 1000);
+    await flush();
+    await connection.handleMessage(
+      JSON.stringify({ type: 'subscribe', websocketId: 'ticker', requestId: 's1' })
+    );
+
+    expect(mockResolveAuthentication).not.toHaveBeenCalled();
+    expect(closeSocket).not.toHaveBeenCalled();
+  });
 });
