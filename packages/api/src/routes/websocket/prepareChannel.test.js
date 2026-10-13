@@ -29,6 +29,9 @@ const mockResolver = jest.fn();
 mockResolver.meta = { checkRead: true, checkWrite: false, publish: false };
 const mockNoReadResolver = jest.fn();
 mockNoReadResolver.meta = { checkRead: false, checkWrite: false, publish: false };
+const mockNoMetaResolver = jest.fn();
+const mockUndeclaredReadResolver = jest.fn();
+mockUndeclaredReadResolver.meta = { publish: false };
 
 const connections = {
   TestConnection: {
@@ -58,6 +61,8 @@ function createTestContext({ organization = { policy: 'tenant' }, user } = {}) {
   context.websockets = {
     TestSource: mockResolver,
     NoReadSource: mockNoReadResolver,
+    NoMetaSource: mockNoMetaResolver,
+    UndeclaredReadSource: mockUndeclaredReadResolver,
   };
   return context;
 }
@@ -331,7 +336,39 @@ test('a connection with read false refuses a subscription that reads it', async 
   );
 });
 
-test('a connection with read false accepts a websocket type that does not declare checkRead', async () => {
+test.each([
+  ['has no meta', 'NoMetaSource'],
+  ['has meta without checkRead', 'UndeclaredReadSource'],
+])(
+  'a connection with read false refuses a subscription from a websocket type that %s',
+  async (_, websocketType) => {
+    mockReadConfigFile.mockImplementation(
+      defaultReadConfigImp({
+        connectionConfig: {
+          id: 'connection:testConnection',
+          type: 'NonScopableConnection',
+          connectionId: 'testConnection',
+          properties: { read: false },
+        },
+        websocketConfig: {
+          id: 'websocket:ws1',
+          type: websocketType,
+          websocketId: 'ws1',
+          connectionId: 'testConnection',
+          auth: { public: true },
+          properties: {},
+        },
+      })
+    );
+    const context = createTestContext({ user: { id: 'id' } });
+
+    await expect(prepareChannel(context, { websocketId: 'ws1', payload: {} })).rejects.toThrow(
+      new ConfigError('Connection "testConnection" does not allow reads.')
+    );
+  }
+);
+
+test('a connection with read false accepts a websocket type whose meta sets checkRead false', async () => {
   mockReadConfigFile.mockImplementation(
     defaultReadConfigImp({
       connectionConfig: {
@@ -354,6 +391,31 @@ test('a connection with read false accepts a websocket type that does not declar
 
   const res = await prepareChannel(context, { websocketId: 'ws1', payload: {} });
   expect(res.connectionProperties).toEqual({ read: false });
+});
+
+test('a connection with read true accepts a subscription from a websocket type with no meta', async () => {
+  mockReadConfigFile.mockImplementation(
+    defaultReadConfigImp({
+      connectionConfig: {
+        id: 'connection:testConnection',
+        type: 'NonScopableConnection',
+        connectionId: 'testConnection',
+        properties: { read: true },
+      },
+      websocketConfig: {
+        id: 'websocket:ws1',
+        type: 'NoMetaSource',
+        websocketId: 'ws1',
+        connectionId: 'testConnection',
+        auth: { public: true },
+        properties: {},
+      },
+    })
+  );
+  const context = createTestContext({ user: { id: 'id' } });
+
+  const res = await prepareChannel(context, { websocketId: 'ws1', payload: {} });
+  expect(res.websocketResolver).toBe(mockNoMetaResolver);
 });
 
 test('a connection with read true accepts a subscription that reads it', async () => {

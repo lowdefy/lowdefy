@@ -67,12 +67,14 @@ async function prepareChannel(context, { websocketId, payload }) {
       steps: {},
     });
     // A subscription reads the connection, so a connection that refuses reads
-    // refuses subscriptions, as it refuses read requests.
+    // refuses subscriptions, as it refuses read requests. Unlike a request
+    // type, a websocket type is checked unless its meta opts out with
+    // checkRead: false - a type that declares nothing still reads.
     checkConnectionRead(context, {
       connectionConfig,
       connectionProperties,
       requestConfig: websocketConfig,
-      requestResolver: websocketResolver,
+      requestResolver: { meta: { checkRead: websocketResolver.meta?.checkRead !== false } },
     });
   }
 
