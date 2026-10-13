@@ -712,3 +712,13 @@ test('agentSetup writes the journeys-harden skill, skips it edited and keeps it 
   expect(read(skillPath)).toEqual(written);
   expect(context.logger.info).toHaveBeenCalledWith(`'${skillPath}' is up to date.`);
 });
+
+test('agentSetup writes the journeys-autopilot skill and lists it in AGENTS.md', async () => {
+  const skillPath = path.join('.claude', 'skills', 'journeys-autopilot', 'SKILL.md');
+  await agentSetup({ context });
+  const written = read(skillPath);
+  expect(written).toContain('name: journeys-autopilot');
+  expect(written).toContain('tests/autopilot.yaml');
+  expect(written).toMatch(/lowdefy-skill-hash: [a-f0-9]{64}/);
+  expect(read('AGENTS.md')).toContain('`journeys-autopilot`');
+});
