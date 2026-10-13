@@ -168,8 +168,8 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
   // Registered on twoFactor.enabled alone, not on any provider being configured,
   // so adding a provider later cannot find the hook silently unregistered. The
   // predicate costs nothing on paths that do not match.
+  const trustedProviderKeys = authConfig.twoFactor?.mfaTrustedProviderKeys ?? [];
   if (authConfig.twoFactor?.enabled === true && type.isString(twoFactorPageUrl)) {
-    const trustedProviderKeys = authConfig.twoFactor.mfaTrustedProviderKeys ?? [];
     after.push(
       createTwoFactorChallengeHook({
         id: 'oauthTwoFactorChallenge',
@@ -185,6 +185,33 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
         // which is why the exit reads the pending redirect's location instead of
         // ctx.query.callbackURL.
         exit: (ctx) => redirectToChallenge({ baseUrlOrigin, ctx, twoFactorPageUrl }),
+      })
+    );
+  }
+
+  // https://github.com/better-auth/better-auth/issues/10322 - POST /sign-in/social
+  // with an idToken body verifies the token and mints a session in the request
+  // itself (sign-in.mjs signInSocial), with no /callback/:id round trip, and the
+  // two-factor plugin's matcher does not cover it. Every provider BetterAuth can
+  // verify id tokens for takes this path - built-ins such as Google and Apple,
+  // and a GenericOAuth provider configured by discovery - so anyone holding an
+  // enrolled user's IdP credentials could mint an id token and skip the second
+  // factor. A direct caller can post one; Login passes one through only when an
+  // app sets the idToken param.
+  //
+  // The same trust rule as the callback, on the same provider key, carried in
+  // the body here. The redirect branch of /sign-in/social mints no session, so
+  // the challenge hook's newSession guard passes it through untouched.
+  if (authConfig.twoFactor?.enabled === true) {
+    after.push(
+      createTwoFactorChallengeHook({
+        id: 'idTokenTwoFactorChallenge',
+        matches: (path, ctx) =>
+          path === '/sign-in/social' && !trustedProviderKeys.includes(ctx.body?.provider),
+        trustDeviceMaxAge,
+        // A JS caller posted the id token, so the password path's JSON shape,
+        // as on the phone-number and email-otp paths.
+        exit: (ctx) => ctx.json({ twoFactorRedirect: true, twoFactorMethods: ['totp'] }),
       })
     );
   }
