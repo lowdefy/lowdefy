@@ -3513,7 +3513,7 @@
         "version.yaml",
         "websockets/introduction.yaml"
       ],
-      "hash": "0d800a9b67a4ec5e33990d0163a7190fb3dfb57309668b64de26f7b3c5ef58db"
+      "hash": "6edae0d69c4745f10c5283f97983d785911ea2a10a96e4d8b466de76e8797ba0"
     },
     "websockets/websocket-subscriptions": {
       "files": [
@@ -6449,7 +6449,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "0e1fb9466c525726db004120f7c1131b5aa8286410ecef6d1a56e19c813b4e49"
+      "hash": "18d25beb9e4abbe3341fcdc3488429d1bb78eb08be86ef72662de830206a3fe1"
     },
     "connections/mssql": {
       "files": [

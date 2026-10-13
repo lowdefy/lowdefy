@@ -1700,6 +1700,8 @@ The `MongoDBChangeStream` [websocket](/websockets-introduction) opens a MongoDB 
 
 Properties are evaluated per subscription, so `_user` and `_payload` operators in the `pipeline` produce user-specific streams.
 
+A change stream reads the collection, so a connection with `read: false` refuses subscriptions, as it refuses read requests.
+
 > Change streams require MongoDB to run as a replica set — they are not available on standalone deployments. MongoDB Atlas clusters support them out of the box.
 
 #### Properties
