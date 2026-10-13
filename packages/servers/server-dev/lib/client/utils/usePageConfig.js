@@ -14,6 +14,7 @@
 import useSWR from 'swr';
 
 import { serializer, type } from '@lowdefy/helpers';
+import recordCallerStamp from '@lowdefy/client/recordCallerStamp.js';
 import shouldReloadForCaller from '@lowdefy/client/shouldReloadForCaller.js';
 
 import { getNavVersion, getReloadVersion } from './useMutateCache.js';
@@ -31,8 +32,9 @@ function parseJsModule(text) {
 }
 
 // user is the caller the page renders: a page config the server answered as
-// another caller reloads the tab (shouldReloadForCaller).
-export async function fetchPageConfig(url, { user }) {
+// another caller, or with other roles, reloads the tab (shouldReloadForCaller).
+// Otherwise its caller stamp is kept on lowdefy (recordCallerStamp).
+export async function fetchPageConfig(url, { lowdefy, user }) {
   const basePath = url.replace(/\/api\/page\/.*$/, '');
   // A stalled request (server restart mid-request, exhausted sockets) must
   // become a visible error, never an eternal Suspense fallback — the reload
@@ -83,17 +85,13 @@ export async function fetchPageConfig(url, { user }) {
     }
     throw new Error(data.message || 'Request error');
   }
-  if (
-    shouldReloadForCaller({
-      serverCaller: res.headers.get('x-lowdefy-caller'),
-      user,
-      window,
-    })
-  ) {
+  const serverCaller = res.headers.get('x-lowdefy-caller');
+  if (shouldReloadForCaller({ serverCaller, user, window })) {
     // The page unloads; settling would render the other caller's config.
     window.location.reload();
     return new Promise(() => {});
   }
+  recordCallerStamp({ lowdefy, serverCaller });
 
   // A page response is { pageId, pathParams, matchedPath, pageConfig }: the page
   // the server matched the path to, the values it carries and the path it was
@@ -139,8 +137,8 @@ export function getPageConfigKey({ pageUrl, search }) {
 
 // path is the page's URL path without basePath and the leading "/", still
 // encoded; the server matches it to a page.
-// user is the caller the page renders.
-function usePageConfig(path, basePath, user) {
+// user is the caller the page renders; lowdefy keeps the last caller stamp.
+function usePageConfig(path, basePath, user, lowdefy) {
   const pageUrl = `${basePath}/api/page/${path}`;
   const search = window.location.search;
   // The fetch always forwards the current query string, so server-side Dynamic
@@ -148,7 +146,7 @@ function usePageConfig(path, basePath, user) {
   const { data } = useSWR(
     getPageConfigKey({ pageUrl, search }),
     async () => {
-      const data = await fetchPageConfig(`${pageUrl}${search}`, { user });
+      const data = await fetchPageConfig(`${pageUrl}${search}`, { lowdefy, user });
       recordDynamicPage({ data, pageUrl });
       return data;
     },

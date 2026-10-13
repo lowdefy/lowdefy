@@ -18,6 +18,7 @@ import { decodeServerError } from '@lowdefy/engine';
 import { expectedErrorNames, lowdefyErrorTypes } from '@lowdefy/errors';
 import { translate, type } from '@lowdefy/helpers';
 
+import recordCallerStamp from './recordCallerStamp.js';
 import shouldReloadForAuthError from './shouldReloadForAuthError.js';
 import shouldReloadForBuild from './shouldReloadForBuild.js';
 import shouldReloadForCaller from './shouldReloadForCaller.js';
@@ -31,10 +32,12 @@ import shouldReloadForCaller from './shouldReloadForCaller.js';
 // production client carries a build id; the server lets a call naming none
 // through (dev and e2e pages, third-party webhooks).
 //
-// user is the caller the page renders. The tab also reloads when the server
-// answered as another caller, or refused the rendered caller in a way that
-// means the page itself is no longer theirs (shouldReloadForCaller,
-// shouldReloadForAuthError), so it never shows one caller's data to another.
+// lowdefy.user is the caller the page renders. The tab also reloads when the
+// server answered as another caller or with other roles, or refused the
+// rendered caller in a way that means the page itself is no longer theirs
+// (shouldReloadForCaller, shouldReloadForAuthError), so it never shows one
+// caller's data to another. Otherwise the response's caller stamp is kept as
+// the last one seen (recordCallerStamp).
 // reloadOnAuthorizationError is set for page requests, which share the page's
 // auth, and not for endpoints, which carry their own.
 async function request({
@@ -43,8 +46,10 @@ async function request({
   method = 'GET',
   body,
   reloadOnAuthorizationError = false,
-  user,
+  lowdefy,
 }) {
+  // Read per call: the rendered caller changes with the session.
+  const { user } = lowdefy;
   const headers = { 'Content-Type': 'application/json' };
   if (!type.isNone(buildId)) {
     headers['x-lowdefy-build'] = buildId;
@@ -54,16 +59,12 @@ async function request({
     headers,
     body: JSON.stringify(body),
   });
-  if (
-    shouldReloadForCaller({
-      serverCaller: res.headers.get('x-lowdefy-caller'),
-      user,
-      window,
-    })
-  ) {
+  const serverCaller = res.headers.get('x-lowdefy-caller');
+  if (shouldReloadForCaller({ serverCaller, user, window })) {
     window.location.reload();
     return new Promise(() => {});
   }
+  recordCallerStamp({ lowdefy, serverCaller });
   if (!res.ok) {
     const body = await res.json();
     if (

@@ -21,6 +21,7 @@ import createRouter from '@lowdefy/client/adapters/createRouter.js';
 import createLinkComponent from '@lowdefy/client/adapters/Link.js';
 import { createUrl } from '@lowdefy/client/adapters/url.js';
 import Head from '@lowdefy/client/adapters/Head.js';
+import recordCallerStamp from '@lowdefy/client/recordCallerStamp.js';
 import shouldReloadForBuild from '@lowdefy/client/shouldReloadForBuild.js';
 import shouldReloadForCaller from '@lowdefy/client/shouldReloadForCaller.js';
 import { buildPagePath } from '@lowdefy/helpers';
@@ -132,20 +133,16 @@ function Page({ auth, config, lowdefy }) {
           return;
         }
         // The server answered as another caller than this page renders (a
-        // sign-in or organization switch in another tab): reload so the page
-        // renders the server's caller instead of mixing the two. A second
-        // difference within the reload interval throws to the catch below,
-        // whose full page load also renders the server's caller.
-        if (
-          shouldReloadForCaller({
-            serverCaller: res.headers.get('x-lowdefy-caller'),
-            user: lowdefy.user,
-            window,
-          })
-        ) {
+        // sign-in or organization switch in another tab), or with other roles:
+        // reload so the page renders the server's caller instead of mixing the
+        // two. A second difference within the reload interval throws to the
+        // catch below, whose full page load also renders the server's caller.
+        const serverCaller = res.headers.get('x-lowdefy-caller');
+        if (shouldReloadForCaller({ serverCaller, user: lowdefy.user, window })) {
           window.location.reload();
           return;
         }
+        recordCallerStamp({ lowdefy, serverCaller });
         // A failed chunk load falls to the catch below: a full page load.
         await loadPageTypes({ pageConfig: response.pageConfig });
         if (token !== latestNavRef.current) return;

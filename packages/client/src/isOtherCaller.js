@@ -17,15 +17,15 @@
 import { callerHash, type } from '@lowdefy/helpers';
 
 // True when the server answered as another caller than the one this page
-// renders: serverCaller is the response's x-lowdefy-caller header (see the
-// server's stampCaller), user the rendered caller.
-function isOtherCaller({ serverCaller, user }) {
+// renders: stamp is the response's parsed x-lowdefy-caller header (see the
+// server's stampCaller and parseCallerStamp), user the rendered caller.
+function isOtherCaller({ stamp, user }) {
   // A response with no header was not answered by a route that resolved a
   // caller (it failed before, or came from a proxy), so it claims no caller.
-  if (type.isNone(serverCaller)) {
+  if (type.isNone(stamp)) {
     return false;
   }
-  return serverCaller !== callerHash({ user });
+  return stamp.caller !== callerHash({ user });
 }
 
 export default isOtherCaller;

@@ -35,7 +35,7 @@ const Page = ({
   router,
   types,
 }) => {
-  const { data } = usePageConfig(path, router.basePath, auth.user);
+  const { data } = usePageConfig(path, router.basePath, auth.user, lowdefy);
   const pageConfig = data?.pageConfig;
   // Past the config fetch (which suspends), this render shows the page the
   // URL names, so a navigation Routing marked has landed. Set during render,
