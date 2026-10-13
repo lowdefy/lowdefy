@@ -3,7 +3,7 @@
 `IntentInput` only shows. Your app classifies:
 
 1. The user types. Shortly after the text changes, the block fires `onClassify` with the text.
-2. `onClassify` runs a classifier, typically a [`Decide`](/AIGenerateRequests) request with one `choice` question, and its answer comes back through the `answer` property.
+2. `onClassify` runs a classifier, typically a [`Decide`](/AIGenerateRequests) request with one `choice` question, and its answer comes back through the `answer` property. The block reads `answer` when the `onClassify` actions finish, so set it in those actions (a `Request` does).
 3. The block shows the slot named after the intent in the answer.
 
 Scores move while the user is mid-word, so the shown intent only changes when another intent leads two answers in a row, keeps the lead while the user pauses, or is near certain. Until a new answer arrives the block keeps the last one, so the slot does not drop out between keystrokes.
@@ -79,6 +79,8 @@ Each intent's slot holds ordinary blocks, so it can hold a form, a summary and t
 
 A slot is shown while the user is still unsure too (faded, and not clickable), so give fields a fallback such as `_if_none` for text that is not complete yet.
 
+The blocks of every slot exist while only one is shown, so a `Validate` with no params also checks the required fields of the slots that are hidden. Pass the shown slot's block ids, such as `params: [task_title, task_due]`.
+
 ## The value
 
 The value is `{ text, intent, mode }`:
@@ -100,4 +102,4 @@ confidence:
   switch: 0.85 # replace the shown intent at once from here
 ```
 
-The block uses the provider's calibrated `confidence` for the chosen intent where the answer has one, and `probabilities` for the rest.
+The block uses the provider's calibrated `confidence` for the chosen intent where the answer has one, and scales the `probabilities` of the other intents to keep their ratio to it, so the chosen intent always leads.

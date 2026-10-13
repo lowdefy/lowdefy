@@ -17,16 +17,20 @@
 // A Decide choice answer ({ choice, confidence, probabilities }) as a score per
 // intent. Options without an intent (such as a `none` escape option) drop out.
 // The provider's calibrated confidence, where it reports one, is the chosen
-// intent's score.
+// intent's score, and the other intents keep their ratio to it: mixing calibrated
+// and raw scores could rank a rival above the intent the model chose.
 function answerScores({ answer, intents }) {
+  const probabilities = answer?.probabilities ?? {};
+  const chosen = Object.hasOwn(intents, answer?.choice ?? '') ? answer.choice : null;
+  let scale = 1;
+  if (chosen && Number.isFinite(answer.confidence) && probabilities[chosen] > 0) {
+    scale = answer.confidence / probabilities[chosen];
+  }
   const scores = {};
   Object.keys(intents).forEach((key) => {
-    const probability = answer?.probabilities?.[key];
-    if (Number.isFinite(probability)) scores[key] = probability;
+    if (Number.isFinite(probabilities[key])) scores[key] = probabilities[key] * scale;
   });
-  if (Object.hasOwn(intents, answer?.choice ?? '') && Number.isFinite(answer.confidence)) {
-    scores[answer.choice] = answer.confidence;
-  }
+  if (chosen && Number.isFinite(answer.confidence)) scores[chosen] = answer.confidence;
   return scores;
 }
 

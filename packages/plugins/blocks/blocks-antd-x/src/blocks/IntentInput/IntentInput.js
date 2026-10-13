@@ -31,7 +31,7 @@ const SETTLE_DELAY = 450;
 // onClassify (typically a Decide request) and passes the answer back; each intent
 // has a slot of the same name. The block only decides which slot to show and how
 // sure to look, and animates between them.
-const IntentInput = ({
+function IntentInput({
   blockId,
   classNames = {},
   components: { Icon },
@@ -40,7 +40,7 @@ const IntentInput = ({
   properties,
   styles = {},
   value,
-}) => {
+}) {
   const { token } = theme.useToken();
   const intents = properties.intents ?? {};
   const confidence = {
@@ -55,32 +55,38 @@ const IntentInput = ({
   const heldAnswer = useRef(null);
   if (!type.isNone(properties.answer)) heldAnswer.current = properties.answer;
   const scores = answerScores({ answer: heldAnswer.current, intents });
-  const scoresKey = JSON.stringify(scores);
 
   const [state, setState] = useState(IDLE);
   const [pinned, setPinned] = useState(null);
 
-  useEffect(() => {
-    if (text) return undefined;
-    setState(IDLE);
-    setPinned(null);
-    return undefined;
-  }, [text]);
+  // A round runs each time the latest classification finishes, not when the scores
+  // change: an answer that repeats the last one (the same text typed again after a
+  // clear) still counts, and a classification a newer one replaced does not.
+  const [round, setRound] = useState(0);
+  const latestClassify = useRef(0);
 
   useEffect(() => {
-    if (!text) return undefined;
-    const timer = setTimeout(
-      () => methods.triggerEvent({ name: 'onClassify', event: { text } }),
-      CLASSIFY_DELAY
-    );
+    latestClassify.current += 1;
+    if (!text) {
+      setState(IDLE);
+      setPinned(null);
+      return undefined;
+    }
+    const classify = latestClassify.current;
+    const timer = setTimeout(async () => {
+      const result = await methods.triggerEvent({ name: 'onClassify', event: { text } });
+      if (classify === latestClassify.current && result.success) setRound((n) => n + 1);
+    }, CLASSIFY_DELAY);
     return () => clearTimeout(timer);
   }, [text]);
 
   useEffect(() => {
     if (!text) return;
     setState((current) => nextIntentState({ state: current, scores, confidence }));
-  }, [scoresKey]);
+  }, [round]);
 
+  // Typing restarts the pause, so a challenger only wins on a pause while the user
+  // is not typing.
   useEffect(() => {
     if (state.challenger === undefined) return undefined;
     const timer = setTimeout(
@@ -88,7 +94,7 @@ const IntentInput = ({
       SETTLE_DELAY
     );
     return () => clearTimeout(timer);
-  }, [state.challenger, scoresKey]);
+  }, [state.challenger, round, text]);
 
   // A picked choice holds until the scores commit to a different intent on their own.
   useEffect(() => {
@@ -98,9 +104,12 @@ const IntentInput = ({
   const intent = pinned ?? state.intent;
   const mode = pinned ? 'committed' : state.mode;
 
+  // onIntentChange fires when the shown intent or mode changes, not on mount.
+  const shown = useRef({ intent: null, mode: 'idle' });
   useEffect(() => {
-    if (value?.intent === intent && value?.mode === mode) return;
-    methods.setValue({ text, intent, mode });
+    if (value?.intent !== intent || value?.mode !== mode) methods.setValue({ text, intent, mode });
+    if (shown.current.intent === intent && shown.current.mode === mode) return;
+    shown.current = { intent, mode };
     methods.triggerEvent({ name: 'onIntentChange', event: { intent, mode } });
   }, [intent, mode]);
 
@@ -143,7 +152,8 @@ const IntentInput = ({
             methods.triggerEvent({ name: 'onChange', event: { text: event.target.value } });
           }}
           onKeyDown={(event) => {
-            if (event.key !== 'Enter') return;
+            // Enter while an IME is composing picks a candidate; it must not submit.
+            if (event.key !== 'Enter' || event.nativeEvent.isComposing) return;
             methods.triggerEvent({ name: 'onSubmit', event: { text, intent, mode } });
           }}
         />
@@ -190,6 +200,6 @@ const IntentInput = ({
       </div>
     </div>
   );
-};
+}
 
 export default withBlockDefaults(IntentInput);
