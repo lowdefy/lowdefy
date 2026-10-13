@@ -562,6 +562,54 @@ describe('subscribe ack timers', () => {
     ]);
   });
 
+  test('a connection closed for a caller change again within 30 seconds of opening backs off as usual', () => {
+    Math.random.mockReturnValue(0.99);
+    const { client, close, open, sockets } = createTestClient();
+    client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
+    open();
+
+    close({ code: 4401 });
+    // The first reconnect after a caller change: up to 500 ms.
+    jest.advanceTimersByTime(500);
+    expect(sockets).toHaveLength(2);
+    open();
+    jest.advanceTimersByTime(5000);
+
+    close({ code: 4401 });
+    // Closed again soon after opening: up to 1000 ms.
+    jest.advanceTimersByTime(500);
+    expect(sockets).toHaveLength(2);
+    jest.advanceTimersByTime(500);
+    expect(sockets).toHaveLength(3);
+    open();
+
+    close({ code: 4401 });
+    // And up to 2000 ms after that.
+    jest.advanceTimersByTime(1000);
+    expect(sockets).toHaveLength(3);
+    jest.advanceTimersByTime(1000);
+    expect(sockets).toHaveLength(4);
+  });
+
+  test('a caller change after a connection closed for another reason reconnects without backing off', () => {
+    Math.random.mockReturnValue(0.99);
+    const { client, close, open, sockets } = createTestClient();
+    client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
+    open();
+    close({ code: 4401 });
+    jest.advanceTimersByTime(500);
+    open();
+    // Dropped straight after opening: up to 1000 ms.
+    close();
+    jest.advanceTimersByTime(1000);
+    expect(sockets).toHaveLength(3);
+    open();
+
+    close({ code: 4401 });
+    jest.advanceTimersByTime(500);
+    expect(sockets).toHaveLength(4);
+  });
+
   test('a subscription the new caller may not hold reports the refusal after a caller change', () => {
     const { client, close, open, receive } = createTestClient();
     const handlers = createHandlers();
