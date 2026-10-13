@@ -63,6 +63,7 @@ test('AwsS3PresignedGetObject', async () => {
           secretAccessKey: 'secretAccessKey',
         },
         region: 'region',
+        requestStreamBufferSize: 65536,
       },
     ],
   ]);
@@ -97,6 +98,7 @@ test('AwsS3PresignedGetObject options', async () => {
           secretAccessKey: 'secretAccessKey',
         },
         region: 'region',
+        requestStreamBufferSize: 65536,
       },
     ],
   ]);
@@ -130,6 +132,7 @@ test('AwsS3PresignedGetObject passes endpoint and forcePathStyle to the S3 clien
           secretAccessKey: 'secretAccessKey',
         },
         region: 'auto',
+        requestStreamBufferSize: 65536,
         endpoint: 'https://account.r2.cloudflarestorage.com',
         forcePathStyle: true,
       },
