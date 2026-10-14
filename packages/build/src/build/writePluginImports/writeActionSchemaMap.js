@@ -19,10 +19,20 @@ import loadPluginTypeSchema from './loadPluginTypeSchema.js';
 async function writeActionSchemaMap({ components, context }) {
   const schemas = {};
 
+  const actionsByPackage = {};
   for (const action of components.imports.actions) {
-    const { schema } = await loadPluginTypeSchema({ context, kind: 'actions', type: action });
-    if (schema) {
-      schemas[action.typeName] = schema;
+    if (!actionsByPackage[action.package]) {
+      actionsByPackage[action.package] = [];
+    }
+    actionsByPackage[action.package].push(action);
+  }
+
+  for (const actions of Object.values(actionsByPackage)) {
+    for (const action of actions) {
+      const { schema } = await loadPluginTypeSchema({ context, kind: 'actions', type: action });
+      if (schema) {
+        schemas[action.typeName] = schema;
+      }
     }
   }
 

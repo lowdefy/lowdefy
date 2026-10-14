@@ -20,13 +20,23 @@ async function writeBlockSchemaMap({ components, context }) {
   const schemas = {};
   const allMetas = {};
 
+  const blocksByPackage = {};
   for (const block of components.imports.blocks) {
-    const { schema, meta } = await loadPluginTypeSchema({ context, kind: 'blocks', type: block });
-    if (schema) {
-      schemas[block.typeName] = schema;
+    if (!blocksByPackage[block.package]) {
+      blocksByPackage[block.package] = [];
     }
-    if (meta) {
-      allMetas[block.typeName] = meta;
+    blocksByPackage[block.package].push(block);
+  }
+
+  for (const blocks of Object.values(blocksByPackage)) {
+    for (const block of blocks) {
+      const { schema, meta } = await loadPluginTypeSchema({ context, kind: 'blocks', type: block });
+      if (schema) {
+        schemas[block.typeName] = schema;
+      }
+      if (meta) {
+        allMetas[block.typeName] = meta;
+      }
     }
   }
 
