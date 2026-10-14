@@ -82,7 +82,7 @@
     "@lowdefy/operators-yaml": "6.0.0",
     "@lowdefy/plugin-next-auth": "6.0.0",
     "@lowdefy/websockets-core": "6.0.0",
-    "@modelcontextprotocol/sdk": "1.29.0",
+    "@modelcontextprotocol/sdk": "1.31.0",
     "@tailwindcss/postcss": "4.3.1",
     "@vitejs/plugin-react": "6.0.2",
     "antd": "6.3.1",

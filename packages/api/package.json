@@ -48,7 +48,7 @@
     "@lowdefy/nunjucks": "6.0.0",
     "@lowdefy/operators": "6.0.0",
     "@lowdefy/operators-js": "6.0.0",
-    "@modelcontextprotocol/sdk": "1.29.0"
+    "@modelcontextprotocol/sdk": "1.31.0"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
