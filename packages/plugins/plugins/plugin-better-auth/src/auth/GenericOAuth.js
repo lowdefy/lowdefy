@@ -18,8 +18,18 @@
 // built-in. The Lowdefy provider id becomes the generic OAuth providerId, over
 // any providerId in properties: the client signs in, and the build keys
 // two-factor and account-linking trust, by the Lowdefy id.
+//
+// BetterAuth reads emailVerified from the issuer's email_verified claim and
+// falls back to false, and the organization plugin refuses invitations to an
+// unverified email. trustEmail marks this provider's users verified for an
+// issuer that never sends the claim; mapProfileToUser is a function, so YAML
+// could not set it.
 function GenericOAuth({ id, properties }) {
-  return { kind: 'generic', config: { ...properties, providerId: id } };
+  const { trustEmail, ...config } = properties;
+  if (trustEmail === true) {
+    config.mapProfileToUser = () => ({ emailVerified: true });
+  }
+  return { kind: 'generic', config: { ...config, providerId: id } };
 }
 
 export default GenericOAuth;

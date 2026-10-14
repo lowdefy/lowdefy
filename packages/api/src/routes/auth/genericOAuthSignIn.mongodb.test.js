@@ -86,7 +86,9 @@ function signIdToken({ email }) {
 }
 
 // The token endpoint hands the code back as the access token, and the userinfo
-// endpoint reads the email from it, so each test picks its user by the code.
+// endpoint reads the email from it, so each test picks its user by the code. An
+// email at unverified.example.com gets userinfo with no email_verified claim, as
+// some issuers send.
 function startIssuer() {
   const server = http.createServer((req, res) => {
     const url = new URL(req.url, 'http://issuer');
@@ -123,8 +125,12 @@ function startIssuer() {
     }
     if (req.method === 'GET' && url.pathname === '/userinfo') {
       const email = req.headers.authorization.replace('Bearer ', '');
+      const userInfo = { id: `sub-${email}`, email, name: email };
+      if (!email.endsWith('@unverified.example.com')) {
+        userInfo.email_verified = true;
+      }
       res.writeHead(200, { 'content-type': 'application/json' });
-      res.end(JSON.stringify({ id: `sub-${email}`, email, email_verified: true, name: email }));
+      res.end(JSON.stringify(userInfo));
       return;
     }
     res.writeHead(404);
@@ -163,7 +169,7 @@ function createLogger() {
   };
 }
 
-async function setup({ organizations, twoFactor }) {
+async function setup({ organizations, twoFactor, trustEmail }) {
   run += 1;
   const database = `genericOAuthSignIn${run}`;
   const logger = createLogger();
@@ -189,6 +195,7 @@ async function setup({ organizations, twoFactor }) {
             tokenUrl: `${issuerUrl}/token`,
             userInfoUrl: `${issuerUrl}/userinfo`,
             scopes: ['profile', 'email'],
+            trustEmail,
           },
         },
         {
@@ -376,6 +383,61 @@ test('a GenericOAuth callback signs in an invited email under invite-only', asyn
 
   const { data: session } = await browser.authClient.getSession();
   expect(session.user.email).toBe('invited@example.com');
+});
+
+async function inviteAndSignIn({ adapter, auth, email }) {
+  const organization = await ensureOrganization({ auth, slug: 'default' });
+  const invitation = await adapter.create({
+    model: 'invitation',
+    data: {
+      organizationId: organization.id,
+      email,
+      role: 'member',
+      status: 'pending',
+      inviterId: 'operator',
+      expiresAt: new Date(Date.now() + 3600 * 1000),
+      createdAt: new Date(),
+    },
+  });
+  const browser = createBrowser(auth);
+  await signIn({ auth, browser, email });
+  const { data: session } = await browser.authClient.getSession();
+  const accepted = await browser.authClient.$fetch('/organization/accept-invitation', {
+    method: 'POST',
+    body: { invitationId: invitation.id },
+  });
+  const member = await adapter.findOne({
+    model: 'member',
+    where: [{ field: 'userId', value: session.user.id }],
+  });
+  return { accepted, member, session };
+}
+
+test('a GenericOAuth user whose issuer sends no email_verified can not accept an invitation', async () => {
+  const { adapter, auth } = await setup({ organizations: pinnedInviteOnly });
+  const { accepted, member, session } = await inviteAndSignIn({
+    adapter,
+    auth,
+    email: 'plain@unverified.example.com',
+  });
+  expect(session.user.emailVerified).toBe(false);
+  expect(accepted.error.status).toBe(403);
+  expect(accepted.error.code).toBe(
+    'EMAIL_VERIFICATION_REQUIRED_BEFORE_ACCEPTING_OR_REJECTING_INVITATION'
+  );
+  expect(member).toBeNull();
+});
+
+test('a GenericOAuth provider with trustEmail creates a verified user who accepts an invitation', async () => {
+  const { adapter, auth } = await setup({ organizations: pinnedInviteOnly, trustEmail: true });
+  const { accepted, member, session } = await inviteAndSignIn({
+    adapter,
+    auth,
+    email: 'trusted@unverified.example.com',
+  });
+  expect(session.user.emailVerified).toBe(true);
+  expect(accepted.error).toBeNull();
+  expect(member.role).toBe('member');
 });
 
 // A user enrolled in two-factor: signs in once to exist, then has two-factor

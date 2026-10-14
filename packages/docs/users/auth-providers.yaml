@@ -30,6 +30,31 @@ _ref:
 
             Auth.js supports a large number of OAuth identity providers. During the OAuth flow, a user is redirected to a webpage hosted by the provider, where they usually authenticate using their credentials if not already signed in. They are then redirected back to the Lowdefy application, and the Lowdefy application interacts with the providers's API to verify the login and get the user details like name and email address.
 
+            ### Trusting a GenericOAuth provider's email
+
+            A user's email counts as verified only when the issuer sends the `email_verified` claim as `true`. Some issuers never send the claim, so every user they sign in stays unverified and cannot accept an organization invitation. Set `trustEmail: true` on a `GenericOAuth` provider to mark the users it signs in as verified:
+
+            ```yaml
+            auth:
+              providers:
+                - id: company-sso
+                  type: GenericOAuth
+                  properties:
+                    discoveryUrl:
+                      _secret: SSO_DISCOVERY_URL
+                    clientId:
+                      _secret: SSO_CLIENT_ID
+                    clientSecret:
+                      _secret: SSO_CLIENT_SECRET
+                    scopes: [openid, profile, email]
+                    trustEmail: true
+              account:
+                accountLinking:
+                  enabled: false
+            ```
+
+            Only set `trustEmail` for an issuer that controls the emails it hands out. A verified email also lets a new sign-in link to an existing user with the same email, so an app that sets `trustEmail` should normally also set `auth.account.accountLinking.enabled: false`.
+
             ## Email Provider
 
             Auth.js supports email login, where a link with a token is sent to the user's email address and the user can click on the link to log in (often called "magic links"). To use email authentication an Adapter must be configured, since the verification tokens need to be stored in a database.
