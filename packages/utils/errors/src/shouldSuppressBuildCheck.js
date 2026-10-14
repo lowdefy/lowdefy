@@ -38,16 +38,25 @@ export const VALID_CHECK_SLUGS = {
 };
 
 /**
+ * Group slug for every plugin build check rule. Errors raised by plugin rules
+ * carry it as checkGroup beside the rule's own checkSlug.
+ */
+export const PLUGIN_CHECKS_SLUG = 'plugin-checks';
+
+/**
  * Checks if a build check should be suppressed based on ~ignoreBuildChecks.
  * Walks up the parent chain looking for suppressions that cover this check.
  * This walk happens ONLY when an error/warning is about to be logged.
  *
- * @param {Object} error - Error/warning object with configKey and optional checkSlug
+ * A listed slug matches the error's checkSlug or its checkGroup, so
+ * `plugin-checks` silences every plugin rule.
+ *
+ * @param {Object} error - Error/warning object with configKey and optional checkSlug and checkGroup
  * @param {Object} keyMap - The keyMap from build context
  * @returns {boolean} True if the check should be suppressed
  */
 function shouldSuppressBuildCheck(error, keyMap) {
-  const { configKey, checkSlug } = error;
+  const { configKey, checkSlug, checkGroup } = error;
   if (!configKey || !keyMap) return false;
 
   let currentKey = configKey;
@@ -64,8 +73,9 @@ function shouldSuppressBuildCheck(error, keyMap) {
       return true;
     }
 
-    if (Array.isArray(ignoredChecks) && checkSlug && ignoredChecks.includes(checkSlug)) {
-      return true;
+    if (Array.isArray(ignoredChecks)) {
+      if (checkSlug && ignoredChecks.includes(checkSlug)) return true;
+      if (checkGroup && ignoredChecks.includes(checkGroup)) return true;
     }
 
     currentKey = entry['~k_parent'];

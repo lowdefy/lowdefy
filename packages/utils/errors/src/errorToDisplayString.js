@@ -21,7 +21,11 @@ function errorToDisplayString(error) {
   const name = error.name || 'Error';
   // Prod-gated build warnings are not fatal in dev but fail `lowdefy build`, so
   // the name segment says so wherever the error is displayed.
-  const nameSegment = error.prodError === true ? `${name} · fails in prod` : name;
+  const segments = [name];
+  if (error.prodError === true) segments.push('fails in prod');
+  // The slug is what ~ignoreBuildChecks takes to silence this check.
+  if (error.checkSlug) segments.push(error.checkSlug);
+  const nameSegment = segments.join(' · ');
   let msg = `[${nameSegment}] ${error.message}`;
 
   if (error.received !== undefined) {

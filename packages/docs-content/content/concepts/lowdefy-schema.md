@@ -375,6 +375,12 @@ The `~ignoreBuildChecks` property suppresses build-time validation errors and wa
 
 ### Available Check Slugs
 
+Every build error or warning from a check that the build prints shows its slug after the error name, so the slug to silence is on screen:
+
+```
+[ConfigWarning · state-refs] _state references "dynamicState" but no block with id "dynamicState" exists
+```
+
 | Slug | What it suppresses |
 |------|-------------------|
 | `state-refs` | Undefined `_state` reference warnings |
@@ -382,10 +388,33 @@ The `~ignoreBuildChecks` property suppresses build-time validation errors and wa
 | `step-refs` | Undefined `_step` reference warnings |
 | `link-refs` | Invalid Link action page reference warnings |
 | `request-refs` | Invalid Request action reference warnings |
-| `callmethod-refs` | CallMethod actions targeting blocks not defined on the page |
 | `connection-refs` | Nonexistent connection ID references |
+| `callapi-refs` | Invalid CallAPI action endpoint reference warnings |
+| `callapi-internal-refs` | CallAPI actions targeting InternalApi endpoints |
+| `dynamic-endpoint-refs` | Invalid Dynamic block endpoint reference warnings |
+| `websocket-refs` | Invalid websocket action reference warnings |
+| `callmethod-refs` | CallMethod actions targeting blocks not defined on the page |
+| `icons` | Unresolvable icon name warnings |
 | `types` | All type validation (blocks, operators, actions, requests, connections) |
 | `schema` | JSON schema validation errors |
+| `secrets` | Environment variable names that are not set in the build environment |
+| `plugin-checks` | Every plugin build check rule |
+
+### Plugin Check Rules
+
+Plugins can ship build check rules for their operators, blocks, actions, requests and connections. A plugin rule's id is its slug: list it in `~ignoreBuildChecks` to silence that one rule, or list `plugin-checks` to silence every plugin rule. `true` silences plugin rules too.
+
+```yaml
+# Silence one plugin rule on this block and its descendants
+~ignoreBuildChecks:
+  - if-test
+
+# Silence every plugin rule on this block and its descendants
+~ignoreBuildChecks:
+  - plugin-checks
+```
+
+Check slugs are kebab-case: lowercase letters and digits joined by single dashes.
 
 ### Example: Dynamic State
 
@@ -404,7 +433,7 @@ blocks:
 
 Without `~ignoreBuildChecks`, the build would warn:
 ```
-[Config Warning] _state references "dynamicState" but no block with id "dynamicState" exists
+[ConfigWarning · state-refs] _state references "dynamicState" but no block with id "dynamicState" exists
 ```
 
 ### Example: Page-Level Suppression
