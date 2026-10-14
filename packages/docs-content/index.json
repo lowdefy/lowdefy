@@ -3732,7 +3732,7 @@
         "users/auth-providers.yaml",
         "version.yaml"
       ],
-      "hash": "1b1953d0443462d78de12f7ab5be413b43c8d39e6c6be5cc0d76c6c054a57e8a"
+      "hash": "18d84eeb35fc8b961fde487a9719d20bae079e183e885c1493f9f904ddd086c2"
     },
     "user-authentication/login-and-logout": {
       "files": [

@@ -169,9 +169,9 @@ function createLogger() {
   };
 }
 
-async function setup({ organizations, twoFactor, trustEmail }) {
+async function setup({ organizations, twoFactor, trustEmail, database: reuse }) {
   run += 1;
-  const database = `genericOAuthSignIn${run}`;
+  const database = reuse ?? `genericOAuthSignIn${run}`;
   const logger = createLogger();
   let auth;
   const options = getBetterAuthConfig({
@@ -234,7 +234,7 @@ async function setup({ organizations, twoFactor, trustEmail }) {
   auth = betterAuth(options);
   await ensureAuthIndexes({ auth, logger });
   const { adapter } = await auth.$context;
-  return { adapter, auth, db: client.db(database) };
+  return { adapter, auth, database, db: client.db(database) };
 }
 
 // The browser's cookie jar after a response: its Set-Cookie values replace
@@ -438,6 +438,27 @@ test('a GenericOAuth provider with trustEmail creates a verified user who accept
   expect(session.user.emailVerified).toBe(true);
   expect(accepted.error).toBeNull();
   expect(member.role).toBe('member');
+});
+
+test('setting trustEmail verifies an existing user of the provider on their next sign-in', async () => {
+  const before = await setup({ organizations: pinnedOpen });
+  await signIn({
+    auth: before.auth,
+    browser: createBrowser(before.auth),
+    email: 'existing@unverified.example.com',
+  });
+  const { adapter, auth } = await setup({
+    organizations: pinnedOpen,
+    trustEmail: true,
+    database: before.database,
+  });
+  await signIn({ auth, browser: createBrowser(auth), email: 'existing@unverified.example.com' });
+
+  const users = await adapter.findMany({
+    model: 'user',
+    where: [{ field: 'email', value: 'existing@unverified.example.com' }],
+  });
+  expect(users.map((user) => user.emailVerified)).toEqual([true]);
 });
 
 // A user enrolled in two-factor: signs in once to exist, then has two-factor

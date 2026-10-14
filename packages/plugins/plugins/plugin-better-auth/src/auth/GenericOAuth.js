@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 // GenericOAuth covers any OAuth 2.0 / OIDC provider BetterAuth does not ship
 // built-in. The Lowdefy provider id becomes the generic OAuth providerId, over
 // any providerId in properties: the client signs in, and the build keys
@@ -26,6 +28,11 @@
 // could not set it.
 function GenericOAuth({ id, properties }) {
   const { trustEmail, ...config } = properties;
+  if (!type.isNone(trustEmail) && !type.isBoolean(trustEmail)) {
+    throw new Error(
+      `GenericOAuth property "trustEmail" is not a boolean. Received ${JSON.stringify(trustEmail)}.`
+    );
+  }
   if (trustEmail === true) {
     config.mapProfileToUser = () => ({ emailVerified: true });
   }

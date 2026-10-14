@@ -37,3 +37,9 @@ test('GenericOAuth without trustEmail sets no profile mapping', () => {
   const { config } = GenericOAuth({ id: 'idp', properties: { trustEmail: false } });
   expect(config).toEqual({ providerId: 'idp' });
 });
+
+test('GenericOAuth throws when trustEmail is not a boolean', () => {
+  expect(() => GenericOAuth({ id: 'idp', properties: { trustEmail: 'true' } })).toThrow(
+    'GenericOAuth property "trustEmail" is not a boolean. Received "true".'
+  );
+});

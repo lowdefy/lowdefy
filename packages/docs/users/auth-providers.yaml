@@ -32,7 +32,7 @@ _ref:
 
             ### Trusting a GenericOAuth provider's email
 
-            A user's email counts as verified only when the issuer sends the `email_verified` claim as `true`. Some issuers never send the claim, so every user they sign in stays unverified and cannot accept an organization invitation. Set `trustEmail: true` on a `GenericOAuth` provider to mark the users it signs in as verified:
+            A `GenericOAuth` provider marks a user's email as verified only when the issuer sends the `email_verified` claim as `true`. Some issuers never send the claim, so every user they sign in stays unverified and cannot accept an organization invitation. Set `trustEmail: true` on the provider to mark every user it signs in as verified, whatever the issuer sends (also when it sends `email_verified: false`). Users it signed in before are marked verified on their next sign-in:
 
             ```yaml
             auth:
