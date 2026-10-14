@@ -18,8 +18,11 @@
 // client makes, through an engine-configured BetterAuth instance on the MongoDB
 // auth adapter, against a stub OAuth issuer (pnpm test:mongodb). The issuer's
 // authorize step is skipped: the test reads the authorization URL and calls the
-// callback with a code, as the issuer's redirect would.
+// callback with a code, as the issuer's redirect would. A second provider is
+// configured by discovery, so BetterAuth also verifies id tokens the issuer
+// signs.
 
+import crypto from 'node:crypto';
 import http from 'node:http';
 
 import { jest } from '@jest/globals';
@@ -47,12 +50,40 @@ const { default: ensureOrganization } = await import('./organizations/ensureOrga
 
 const ORIGIN = 'http://localhost:3263';
 const PROVIDER_ID = 'my-idp';
+const OIDC_PROVIDER_ID = 'oidc-idp';
 const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
 
 let client;
 let issuer;
 let issuerUrl;
 let run = 0;
+
+const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', { modulusLength: 2048 });
+const jwk = { ...publicKey.export({ format: 'jwk' }), kid: 'test-key', alg: 'RS256', use: 'sig' };
+
+function encode(value) {
+  return Buffer.from(JSON.stringify(value)).toString('base64url');
+}
+
+// An id token as the issuer would mint it for the discovery-configured client.
+function signIdToken({ email }) {
+  const now = Math.floor(Date.now() / 1000);
+  const header = encode({ alg: 'RS256', kid: jwk.kid, typ: 'JWT' });
+  const payload = encode({
+    iss: issuerUrl,
+    aud: 'oidc-client-id',
+    sub: `sub-${email}`,
+    email,
+    email_verified: true,
+    name: email,
+    iat: now,
+    exp: now + 300,
+  });
+  const signature = crypto
+    .sign('sha256', Buffer.from(`${header}.${payload}`), privateKey)
+    .toString('base64url');
+  return `${header}.${payload}.${signature}`;
+}
 
 // The token endpoint hands the code back as the access token, and the userinfo
 // endpoint reads the email from it, so each test picks its user by the code.
@@ -69,6 +100,25 @@ function startIssuer() {
         res.writeHead(200, { 'content-type': 'application/json' });
         res.end(JSON.stringify({ access_token: code, token_type: 'Bearer', expires_in: 3600 }));
       });
+      return;
+    }
+    if (req.method === 'GET' && url.pathname === '/.well-known/openid-configuration') {
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(
+        JSON.stringify({
+          issuer: issuerUrl,
+          authorization_endpoint: `${issuerUrl}/authorize`,
+          token_endpoint: `${issuerUrl}/token`,
+          userinfo_endpoint: `${issuerUrl}/userinfo`,
+          jwks_uri: `${issuerUrl}/jwks`,
+          id_token_signing_alg_values_supported: ['RS256'],
+        })
+      );
+      return;
+    }
+    if (req.method === 'GET' && url.pathname === '/jwks') {
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ keys: [jwk] }));
       return;
     }
     if (req.method === 'GET' && url.pathname === '/userinfo') {
@@ -139,6 +189,16 @@ async function setup({ organizations, twoFactor }) {
             tokenUrl: `${issuerUrl}/token`,
             userInfoUrl: `${issuerUrl}/userinfo`,
             scopes: ['profile', 'email'],
+          },
+        },
+        {
+          id: OIDC_PROVIDER_ID,
+          type: 'GenericOAuth',
+          properties: {
+            clientId: 'oidc-client-id',
+            clientSecret: 'oidc-client-secret',
+            discoveryUrl: `${issuerUrl}/.well-known/openid-configuration`,
+            scopes: ['openid', 'profile', 'email'],
           },
         },
       ],
@@ -368,4 +428,82 @@ test('a GenericOAuth callback skips the second factor when the provider is trust
 
   const { data: session } = await browser.authClient.getSession();
   expect(session.user.email).toBe('trusted@example.com');
+});
+
+// What a direct caller holding an id token does: no redirect, no callback - the
+// token goes straight to /sign-in/social and the session comes back on the
+// response.
+async function signInWithIdToken({ browser, email }) {
+  return browser.authClient.signIn.social({
+    provider: OIDC_PROVIDER_ID,
+    idToken: { token: signIdToken({ email }) },
+  });
+}
+
+test('an id token sign-in creates a session for a user not enrolled in two-factor', async () => {
+  const { auth } = await setup({
+    organizations: pinnedOpen,
+    twoFactor: { enabled: true, mfaTrustedProviderKeys: [] },
+  });
+  const browser = createBrowser(auth);
+  const { data, error } = await signInWithIdToken({ browser, email: 'plain@example.com' });
+  expect(error).toBeNull();
+  expect(data.redirect).toBe(false);
+
+  const { data: session } = await browser.authClient.getSession();
+  expect(session.user.email).toBe('plain@example.com');
+});
+
+test('an id token sign-in challenges a user enrolled in two-factor', async () => {
+  const { adapter, auth, db } = await setup({
+    organizations: pinnedOpen,
+    twoFactor: { enabled: true, mfaTrustedProviderKeys: [] },
+  });
+  const first = createBrowser(auth);
+  await signInWithIdToken({ browser: first, email: 'enrolled-id-token@example.com' });
+  const { data: firstSession } = await first.authClient.getSession();
+  await adapter.update({
+    model: 'user',
+    where: [{ field: 'id', value: firstSession.user.id }],
+    update: { twoFactorEnabled: true },
+  });
+
+  const browser = createBrowser(auth);
+  const { data, error } = await signInWithIdToken({
+    browser,
+    email: 'enrolled-id-token@example.com',
+  });
+  expect(error).toBeNull();
+  expect(data).toEqual({ twoFactorRedirect: true, twoFactorMethods: ['totp'] });
+
+  const { data: session } = await browser.authClient.getSession();
+  expect(session).toBeNull();
+  // The cookie jar keeps only the expiring cookie, so check the row itself: the
+  // challenged sign-in's session is gone and only the first one remains.
+  const sessions = await db
+    .collection('user-sessions')
+    .countDocuments({ user_id: firstSession.user.id });
+  expect(sessions).toBe(1);
+});
+
+test('an id token sign-in skips the second factor when the provider is trusted for two-factor', async () => {
+  const { adapter, auth } = await setup({
+    organizations: pinnedOpen,
+    twoFactor: { enabled: true, mfaTrustedProviderKeys: [OIDC_PROVIDER_ID] },
+  });
+  const first = createBrowser(auth);
+  await signInWithIdToken({ browser: first, email: 'trusted-id-token@example.com' });
+  const { data: firstSession } = await first.authClient.getSession();
+  await adapter.update({
+    model: 'user',
+    where: [{ field: 'id', value: firstSession.user.id }],
+    update: { twoFactorEnabled: true },
+  });
+
+  const browser = createBrowser(auth);
+  const { error } = await signInWithIdToken({ browser, email: 'trusted-id-token@example.com' });
+  expect(error).toBeNull();
+
+  const { data: session } = await browser.authClient.getSession();
+  expect(session.user.email).toBe('trusted-id-token@example.com');
 });

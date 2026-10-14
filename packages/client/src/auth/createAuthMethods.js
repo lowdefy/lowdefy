@@ -354,7 +354,7 @@ function createAuthMethods(lowdefy, auth) {
       // their lowercase type.
       const socialProvider =
         provider.type === 'GenericOAuth' ? provider.id : provider.type.toLowerCase();
-      return unwrap(
+      const data = await unwrap(
         auth.signInSocial({
           provider: socialProvider,
           callbackURL,
@@ -363,6 +363,19 @@ function createAuthMethods(lowdefy, auth) {
           ...captchaOptions,
         })
       );
+      // An idToken passed through rest signs in within this request, so a
+      // 2FA-enrolled user gets the challenge here, as on the password paths.
+      if (data?.twoFactorRedirect) {
+        return navigateToTwoFactorChallenge({ callbackTarget }) ? stopChain(data) : data;
+      }
+      // The redirect branch leaves navigation to BetterAuth's redirect to the
+      // IdP; a completed id token sign-in answers redirect: false with no url,
+      // so navigate to the callback as the password paths do.
+      const window = lowdefy._internal?.globals?.window;
+      if (data?.redirect === false && callbackTarget && window) {
+        navigateToTarget(callbackTarget);
+      }
+      return data;
     }
     if (magicLink === true) {
       assertCallbackUrlNavigable({ callbackUrl, method: 'Login with magicLink' });
