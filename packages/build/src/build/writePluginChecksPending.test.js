@@ -35,12 +35,24 @@ test('writePluginChecksPending writes the pending packages', async () => {
   const writeBuildArtifact = jest.fn();
   await writePluginChecksPending({
     context: { directories: { build: buildDir }, writeBuildArtifact },
-    packages: ['@lowdefy/a', '@lowdefy/b'],
+    packages: [
+      { name: '@lowdefy/a', schemaChecked: true },
+      { name: '@lowdefy/b', schemaChecked: false },
+    ],
   });
   expect(writeBuildArtifact.mock.calls).toEqual([
     [
       'plugin-checks-pending.json',
-      JSON.stringify({ packages: ['@lowdefy/a', '@lowdefy/b'] }, null, 2),
+      JSON.stringify(
+        {
+          packages: [
+            { name: '@lowdefy/a', schemaChecked: true },
+            { name: '@lowdefy/b', schemaChecked: false },
+          ],
+        },
+        null,
+        2
+      ),
     ],
   ]);
 });

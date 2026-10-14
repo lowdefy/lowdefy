@@ -340,7 +340,7 @@ test('runPluginChecks fails each node listing a slug no loaded rule has', async 
   ]);
 });
 
-test('runPluginChecks returns a used package that is not installed as pending, and checks no slugs', async () => {
+test('runPluginChecks returns a used package that is not installed as pending, and warns on a slug it cannot check', async () => {
   const serverDir = createServer();
   const context = createTestContext({
     serverDir,
@@ -352,8 +352,9 @@ test('runPluginChecks returns a used package that is not installed as pending, a
   const { pending } = await runPluginChecks({ context });
 
   expect(context.errors).toEqual([]);
-  expect(pending).toEqual(['@lowdefy-test/not-installed']);
+  expect(pending).toEqual([{ name: '@lowdefy-test/not-installed', schemaChecked: true }]);
   expect(messages(context.warnings)).toEqual([
+    '~ignoreBuildChecks slug "some-rule" is not a built-in check or a rule of any loaded plugin. It may be a rule of a plugin whose rules did not load: @lowdefy-test/not-installed.',
     'Plugin checks for @lowdefy-test/not-installed did not run: package not installed.',
   ]);
 });
@@ -521,4 +522,47 @@ test('runPluginChecks with allSlugPackages reports no load failure or clash for 
 
   expect(context.errors).toEqual([]);
   expect(context.warnings).toEqual([]);
+});
+
+test('runPluginChecks reports a rule at the configKey an operator was counted at when it has no ~k of its own', async () => {
+  const serverDir = createServer();
+  const pkg = addPlugin(serverDir, { checks: ifTestChecks });
+  const context = createTestContext({
+    serverDir,
+    typesMap: { operators: { client: { _if: { package: pkg } } } },
+  });
+  // countOperators counts an operator object with no ~k under its parent's ~k.
+  context.keyMap.parent = { key: 'parent' };
+  context.typeCounters.operators.client.increment('_if', 'parent', { _if: { then: 1 } });
+
+  await runPluginChecks({ context });
+
+  expect(context.errors.map((error) => [error.configKey, error.checkSlug])).toEqual([
+    ['parent', 'if-test'],
+  ]);
+});
+
+test('runPluginChecks in a dev build loads only the used packages when no node names a plugin slug', async () => {
+  const serverDir = createServer();
+  const used = addPlugin(serverDir, { checks: ifTestChecks });
+  const unused = addPlugin(serverDir, { checks: ifTestChecks });
+  const context = createTestContext({
+    serverDir,
+    typesMap: {
+      operators: { client: { _if: { package: used }, _unused: { package: unused } } },
+    },
+  });
+  context.typeCounters.operators.client.increment(
+    '_if',
+    'c',
+    keyed(context, 'c', { _if: { test: true } })
+  );
+
+  await runPluginChecks({ context, allSlugPackages: true });
+  expect([...context.pluginChecksCache.keys()]).toEqual([used]);
+
+  context.pluginCheckSlugRefs.set('if-test', ['c']);
+  await runPluginChecks({ context, allSlugPackages: true });
+  expect([...context.pluginChecksCache.keys()].sort()).toEqual([used, unused].sort());
+  expect(context.errors).toEqual([]);
 });

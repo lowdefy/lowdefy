@@ -27,11 +27,11 @@ The build pipeline is an 8-phase process (Phases 0–7) that:
 4. installServer() - Run npm install
 5. runLowdefyBuild() - Execute core build (pnpm run build:lowdefy)
 6. installServer() - Second install for updated deps
-7. runLowdefyBuild() - Again, only when build/plugin-checks-pending.json exists and plugin checks are not skipped
+7. runLowdefyBuild() - Again, only when pluginChecksNeedRebuild() says the install gave something new to check, and plugin checks are not skipped
 8. runClientBuild() - Vite client build (pnpm run build:client → vite build)
 ```
 
-A plugin the app uses that is not installed has no rules to run, so the build lists it in `build/plugin-checks-pending.json`. Step 6 installs it, and step 7 builds once more so its rules run. There is no third pass. `--skip-plugin-checks` sets `LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS=true` for the build process, which `lowdefy/build.mjs` passes to `build()` as `skipPluginChecks`.
+A plugin the app uses that is not installed can't be checked, so the build lists it in `build/plugin-checks-pending.json` as `{ name, schemaChecked }`, `schemaChecked` being whether it owns a block, action or operator type. Step 6 installs it. Step 7 builds once more only when that checks something new: `pluginChecksNeedRebuild` (`@lowdefy/node-utils`) is true when a listed package is schema-checked or now resolves `./checks` from the server directory. A plugin that only adds connections or requests and ships no rules costs no second build. There is no third pass. `--skip-plugin-checks` sets `LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS=true` for the build process, which `lowdefy/build.mjs` passes to `build()` as `skipPluginChecks`.
 
 The client build is skipped with `--no-client-build` (`--no-next-build` is kept as a deprecated, hidden alias). `runClientBuild` (`packages/cli/src/utils/runClientBuild.js`) spawns `pnpm run build:client` in the server directory and parses the gzip bundle size from the Vite output.
 

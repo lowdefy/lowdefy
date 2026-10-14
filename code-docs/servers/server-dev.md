@@ -598,7 +598,10 @@ function initialBuild(context) {
     await context.installPlugins();
     if (
       !context.options.skipPluginChecks &&
-      fs.existsSync(path.join(context.directories.build, 'plugin-checks-pending.json'))
+      pluginChecksNeedRebuild({
+        buildDirectory: context.directories.build,
+        serverDirectory: context.directories.server,
+      })
     ) {
       await context.lowdefyBuild();
     }
@@ -606,7 +609,9 @@ function initialBuild(context) {
 }
 ```
 
-The first build cannot run the rules of a plugin that is not installed yet, so it lists the plugin in `plugin-checks-pending.json`. Once `installPlugins` has installed it, the build runs once more so its rules run.
+The first build cannot check a plugin that is not installed yet, so it lists the plugin in `plugin-checks-pending.json`. Once `installPlugins` has installed it, the build runs once more when that checks something new (see `pluginChecksNeedRebuild` in [build-pipeline.md](../architecture/build-pipeline.md)).
+
+A plugin's `./checks` and schemas are imported once per dev server process. Rules are functions, so they can't come back from `importFresh`'s worker, which copies its result by structured clone. An edit to a local plugin's rules or schemas takes effect when the dev server restarts.
 
 There is no client build step — Vite compiles client modules on demand when the browser requests them.
 

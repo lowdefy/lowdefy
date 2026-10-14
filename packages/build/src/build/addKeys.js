@@ -19,10 +19,10 @@ import { ConfigError, PLUGIN_CHECKS_SLUG, VALID_CHECK_SLUGS } from '@lowdefy/err
 
 import collectExceptions from '../utils/collectExceptions.js';
 import makeId from '../utils/makeId.js';
+import isKebabCaseSlug from '../utils/isKebabCaseSlug.js';
 import setNonEnumerableProperty from '../utils/setNonEnumerableProperty.js';
 
 const builtInSlugs = Object.keys(VALID_CHECK_SLUGS);
-const kebabCase = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 function isBuiltInSlug(slug) {
   return builtInSlugs.includes(slug) || slug === PLUGIN_CHECKS_SLUG;
@@ -31,7 +31,7 @@ function isBuiltInSlug(slug) {
 // Plugin rule ids are only known once the rules runner loads each plugin's
 // ./checks, so any kebab-case slug is accepted here.
 function isCheckSlug(slug) {
-  return typeof slug === 'string' && (isBuiltInSlug(slug) || kebabCase.test(slug));
+  return typeof slug === 'string' && (isBuiltInSlug(slug) || isKebabCaseSlug(slug));
 }
 
 // Records a slug that may be a plugin rule id, so the rules runner can report
@@ -139,7 +139,11 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
           collectExceptions(
             context,
             new ConfigError(
-              `Invalid check slug(s): "${invalid.join('", "')}". Check slugs are kebab-case: a built-in slug (${builtInSlugs.join(', ')}), ${PLUGIN_CHECKS_SLUG}, or a plugin rule id.`,
+              `Invalid check slug(s): "${invalid.join(
+                '", "'
+              )}". Check slugs are kebab-case: a built-in slug (${builtInSlugs.join(
+                ', '
+              )}), ${PLUGIN_CHECKS_SLUG}, or a plugin rule id.`,
               { configKey: keyMapId }
             )
           );

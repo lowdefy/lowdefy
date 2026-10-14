@@ -31,7 +31,7 @@ function createContext({ installPlugins, skipPluginChecks } = {}) {
       if (impl) await impl();
     });
   return {
-    directories: { build: buildDirectory },
+    directories: { build: buildDirectory, server: buildDirectory },
     options: { skipPluginChecks },
     readDotEnv: jest.fn(() => calls.push('readDotEnv')),
     lowdefyBuild: record('lowdefyBuild'),
@@ -61,7 +61,7 @@ test('initialBuild builds again after installing plugins when plugin checks are 
     installPlugins: () =>
       fs.writeFileSync(
         path.join(buildDirectory, 'plugin-checks-pending.json'),
-        JSON.stringify({ packages: ['@acme/plugin'] })
+        JSON.stringify({ packages: [{ name: '@acme/plugin', schemaChecked: true }] })
       ),
   });
   await initialBuild(context)();
@@ -81,7 +81,19 @@ test('initialBuild builds once with skipPluginChecks, even when plugin checks ar
     installPlugins: () =>
       fs.writeFileSync(
         path.join(buildDirectory, 'plugin-checks-pending.json'),
-        JSON.stringify({ packages: ['@acme/plugin'] })
+        JSON.stringify({ packages: [{ name: '@acme/plugin', schemaChecked: true }] })
+      ),
+  });
+  await initialBuild(context)();
+  expect(context.lowdefyBuild).toHaveBeenCalledTimes(1);
+});
+
+test('initialBuild builds once when the pending plugins give nothing new to check', async () => {
+  const context = createContext({
+    installPlugins: () =>
+      fs.writeFileSync(
+        path.join(buildDirectory, 'plugin-checks-pending.json'),
+        JSON.stringify({ packages: [{ name: '@acme/connection', schemaChecked: false }] })
       ),
   });
   await initialBuild(context)();

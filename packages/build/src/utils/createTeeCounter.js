@@ -15,13 +15,14 @@
 */
 
 // Feeds each increment to the app counter that every build step reads, and to
-// a second counter that records what one page uses.
+// a second counter that records what one page uses. Only the app counter keeps
+// the config node: the page counter is read for its counts alone.
 function createTeeCounter({ counter, pageCounter }) {
   return {
     ...counter,
     increment: (key, configKey, node) => {
       counter.increment(key, configKey, node);
-      pageCounter.increment(key, configKey, node);
+      pageCounter.increment(key, configKey);
     },
   };
 }

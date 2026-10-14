@@ -17,17 +17,17 @@
 import { type } from '@lowdefy/helpers';
 
 import importPluginModule from '../writePluginImports/importPluginModule.js';
+import isKebabCaseSlug from '../../utils/isKebabCaseSlug.js';
 import isPluginPackageInstalled from './isPluginPackageInstalled.js';
 import pluginCheckKinds from './pluginCheckKinds.js';
 
-const kebabCase = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const LEVELS = new Set(['error', 'warning']);
 
 function findRuleProblem(rule) {
   if (!type.isObject(rule)) {
     return `a rule is not an object. Received ${JSON.stringify(rule)}.`;
   }
-  if (!type.isString(rule.id) || !kebabCase.test(rule.id)) {
+  if (!isKebabCaseSlug(rule.id)) {
     return `rule id ${JSON.stringify(rule.id)} is not a kebab-case string.`;
   }
   if (!LEVELS.has(rule.level)) {

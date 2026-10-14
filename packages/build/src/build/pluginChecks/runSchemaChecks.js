@@ -18,39 +18,7 @@ import { formatSchemaError, getConfigSchemaErrors } from '@lowdefy/ajv';
 import { type } from '@lowdefy/helpers';
 
 import loadPluginTypeSchema from '../writePluginImports/loadPluginTypeSchema.js';
-import getOperatorParams from './getOperatorParams.js';
-
-// What each kind's schema covers. Connections and requests are not checked:
-// their schemas are statics on the connection classes, which load database
-// drivers, and the server validates them on every call.
-const schemaKinds = {
-  blocks: {
-    // Block schemas cover the whole block; the plugin's properties schema
-    // sits at schema.properties.properties.
-    getSchema: (schema) => schema?.properties?.properties,
-    // As dynamic pages check them: a block whose properties are not an object
-    // literal is left to the runtime.
-    getData: (node) => (type.isObject(node.properties) ? node.properties : undefined),
-    getDisplayName: ({ typeName }) => typeName,
-    pluginLabel: 'Block',
-    fieldLabel: 'property',
-  },
-  actions: {
-    getSchema: (schema) => schema?.params,
-    getData: (node) => node.params,
-    getDisplayName: ({ typeName }) => typeName,
-    pluginLabel: 'Action',
-    fieldLabel: 'param',
-  },
-  operators: {
-    getSchema: (schema) => schema?.params,
-    getData: getOperatorParams,
-    // The key as written, so a method operator reads _string.concat.
-    getDisplayName: ({ node }) => Object.keys(node).find((key) => !key.startsWith('~')),
-    pluginLabel: 'Operator',
-    fieldLabel: 'param',
-  },
-};
+import schemaCheckKinds from './schemaCheckKinds.js';
 
 function unescapePointerSegment(segment) {
   return segment.replace(/~1/g, '/').replace(/~0/g, '~');
@@ -58,8 +26,8 @@ function unescapePointerSegment(segment) {
 
 // The configKey of the deepest node on the error's path that has one, so a
 // finding points at the line of the field rather than the block.
-function findConfigKey({ node, data, error }) {
-  let configKey = data?.['~k'] ?? node['~k'];
+function findConfigKey({ nodeConfigKey, data, error }) {
+  let configKey = data?.['~k'] ?? nodeConfigKey;
   const segments = error.instancePath.split('/').slice(1).map(unescapePointerSegment);
   if (error.keyword === 'additionalProperties') {
     segments.push(error.params.additionalProperty);
@@ -81,7 +49,7 @@ function findConfigKey({ node, data, error }) {
 async function runSchemaChecks({ context, targets, loaded }) {
   const findings = [];
   for (const { kind, typeName, originalTypeName, packageName, nodes } of targets) {
-    const schemaKind = schemaKinds[kind];
+    const schemaKind = schemaCheckKinds[kind];
     const result = loaded.get(packageName);
     if (!schemaKind || result.status === 'pending') continue;
     const { schema: typeSchema } = await loadPluginTypeSchema({
@@ -92,7 +60,7 @@ async function runSchemaChecks({ context, targets, loaded }) {
     const schema = schemaKind.getSchema(typeSchema);
     if (type.isNone(schema)) continue;
     const level = result.schemaLevel ?? 'warning';
-    for (const node of nodes) {
+    for (const [node, nodeConfigKey] of nodes) {
       const data = schemaKind.getData(node);
       if (type.isUndefined(data)) continue;
       const displayName = schemaKind.getDisplayName({ typeName, node });
@@ -104,7 +72,7 @@ async function runSchemaChecks({ context, targets, loaded }) {
         // it, and the type's other nodes are not checked.
         findings.push({
           level,
-          configKey: node['~k'],
+          configKey: nodeConfigKey,
           message: `${schemaKind.pluginLabel} "${typeName}" schema (${packageName}) could not be checked: ${error.message}`,
         });
         break;
@@ -112,7 +80,7 @@ async function runSchemaChecks({ context, targets, loaded }) {
       for (const error of errors) {
         findings.push({
           level,
-          configKey: findConfigKey({ node, data, error }),
+          configKey: findConfigKey({ nodeConfigKey, data, error }),
           message: formatSchemaError({
             ajvError: error,
             pluginLabel: schemaKind.pluginLabel,

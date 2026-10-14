@@ -19,8 +19,10 @@ import path from 'path';
 
 const FILE_NAME = 'plugin-checks-pending.json';
 
-// Names the packages whose rules did not run because they were not installed,
-// so the CLI installs them and builds again; removes the file when none is.
+// Names the packages whose checks did not run because they were not
+// installed, each as { name, schemaChecked }, so the CLI installs them and
+// decides whether to build again (pluginChecksNeedRebuild in
+// @lowdefy/node-utils); removes the file when none is.
 async function writePluginChecksPending({ context, packages }) {
   if (context.validateOnly) return;
   if (packages.length === 0) {

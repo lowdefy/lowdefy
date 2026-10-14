@@ -27,6 +27,7 @@ import collectRuleTargets from './pluginChecks/collectRuleTargets.js';
 import loadPluginChecks from './pluginChecks/loadPluginChecks.js';
 import runRule from './pluginChecks/runRule.js';
 import runSchemaChecks from './pluginChecks/runSchemaChecks.js';
+import schemaCheckKinds from './pluginChecks/schemaCheckKinds.js';
 
 // The packages whose rule ids ~ignoreBuildChecks may name. The full build
 // counts every type, so its used packages are all of them. A dev build counts
@@ -34,11 +35,11 @@ import runSchemaChecks from './pluginChecks/runSchemaChecks.js';
 // one page), so it passes allSlugPackages to take every package the types map
 // names. A slug valid in the full build must not fail a dev build because the
 // rule's package is used on another page.
-// A package that is not installed loads as pending, which leaves the slugs
-// unchecked rather than failing them.
+// Those packages are loaded only when a node names a slug that is not
+// built-in, since only then is there a slug to look up.
 function collectSlugPackages({ context, targetPackages, allSlugPackages }) {
   const packages = new Set(targetPackages);
-  if (!allSlugPackages) {
+  if (!allSlugPackages || context.pluginCheckSlugRefs.size === 0) {
     return packages;
   }
   const { typesMap } = context;
@@ -58,16 +59,19 @@ function collectSlugPackages({ context, targetPackages, allSlugPackages }) {
   return packages;
 }
 
+// Loads every package at once. The cache holds each package's load as a
+// promise, so page builds running together load a package once.
 async function loadPackages({ context, packageNames }) {
-  context.pluginChecksCache ??= new Map();
-  const loaded = new Map();
-  for (const packageName of [...packageNames].sort()) {
+  const sorted = [...packageNames].sort();
+  for (const packageName of sorted) {
     if (!context.pluginChecksCache.has(packageName)) {
-      context.pluginChecksCache.set(packageName, await loadPluginChecks({ context, packageName }));
+      context.pluginChecksCache.set(packageName, loadPluginChecks({ context, packageName }));
     }
-    loaded.set(packageName, context.pluginChecksCache.get(packageName));
   }
-  return loaded;
+  const results = await Promise.all(
+    sorted.map((packageName) => context.pluginChecksCache.get(packageName))
+  );
+  return new Map(sorted.map((packageName, index) => [packageName, results[index]]));
 }
 
 function reportLoadFailures({ context, loaded, targetPackages }) {
@@ -126,14 +130,28 @@ function warnClashes({ context, loaded, targetPackages }) {
   return knownIds;
 }
 
-function validateSlugs({ context, knownIds }) {
-  for (const [slug, configKeys] of context.pluginCheckSlugRefs ?? []) {
+// A slug no loaded rule has fails the build. While some package's rules are
+// unknown (not installed, or ./checks failed to load) it may be one of theirs,
+// so it warns instead, naming those packages.
+function validateSlugs({ context, knownIds, unknownPackages }) {
+  for (const [slug, configKeys] of context.pluginCheckSlugRefs) {
     if (knownIds.has(slug)) continue;
     for (const configKey of configKeys) {
-      collectExceptions(
-        context,
-        new ConfigError(
-          `~ignoreBuildChecks slug "${slug}" is not a built-in check or a rule of any plugin the app uses.`,
+      if (unknownPackages.length === 0) {
+        collectExceptions(
+          context,
+          new ConfigError(
+            `~ignoreBuildChecks slug "${slug}" is not a built-in check or a rule of any plugin the app uses.`,
+            { configKey }
+          )
+        );
+        continue;
+      }
+      context.handleWarning(
+        new ConfigWarning(
+          `~ignoreBuildChecks slug "${slug}" is not a built-in check or a rule of any loaded plugin. It may be a rule of a plugin whose rules did not load: ${unknownPackages.join(
+            ', '
+          )}.`,
           { configKey }
         )
       );
@@ -163,14 +181,14 @@ function runRules({ context, targets, loaded }) {
     const result = loaded.get(packageName);
     if (result.status !== 'loaded') continue;
     const rules = result.checks[kind]?.[originalTypeName] ?? [];
-    for (const node of nodes) {
+    for (const [node, configKey] of nodes) {
       for (const rule of rules) {
         for (const message of runRule({ rule, packageName, kind, typeName, node })) {
           reportFinding({
             context,
             level: rule.level,
             slug: rule.id,
-            configKey: node['~k'],
+            configKey,
             message,
           });
         }
@@ -183,8 +201,9 @@ function runRules({ context, targets, loaded }) {
 // operators against their plugin schemas, on the config nodes the type
 // counters recorded. Runs once the counting steps are done and before buildJs
 // replaces the counted objects. Returns the packages the app uses that are not
-// installed yet, for writePluginChecksPending. A dev build passes
-// allSlugPackages (see collectSlugPackages).
+// installed yet, for writePluginChecksPending, each with whether it owns a type
+// the schema check covers. A dev build passes allSlugPackages (see
+// collectSlugPackages).
 async function runPluginChecks({ context, allSlugPackages = false }) {
   const targets = collectRuleTargets({ context });
   const targetPackages = new Set(targets.map((target) => target.packageName));
@@ -195,19 +214,22 @@ async function runPluginChecks({ context, allSlugPackages = false }) {
 
   reportLoadFailures({ context, loaded, targetPackages });
   const knownIds = warnClashes({ context, loaded, targetPackages });
-  const rulesUnknown = [...loaded.values()].some(
-    (result) => result.status === 'pending' || result.status === 'failed'
-  );
-  if (!rulesUnknown) {
-    validateSlugs({ context, knownIds });
-  }
+  const unknownPackages = [...loaded]
+    .filter(([, result]) => result.status === 'pending' || result.status === 'failed')
+    .map(([packageName]) => packageName);
+  validateSlugs({ context, knownIds, unknownPackages });
 
-  const pending = [...targetPackages].filter(
-    (packageName) => loaded.get(packageName).status === 'pending'
-  );
-  pending.forEach((packageName) =>
+  const pending = [...targetPackages]
+    .filter((packageName) => loaded.get(packageName).status === 'pending')
+    .map((name) => ({
+      name,
+      schemaChecked: targets.some(
+        (target) => target.packageName === name && Object.hasOwn(schemaCheckKinds, target.kind)
+      ),
+    }));
+  pending.forEach(({ name }) =>
     context.handleWarning(
-      new ConfigWarning(`Plugin checks for ${packageName} did not run: package not installed.`)
+      new ConfigWarning(`Plugin checks for ${name} did not run: package not installed.`)
     )
   );
 

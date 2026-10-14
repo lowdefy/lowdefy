@@ -17,9 +17,10 @@
 function createCounter() {
   const counts = new Map();
   const locations = new Map();
-  // The config nodes behind each count, held by reference, so plugin build
-  // check rules run on exactly the nodes the build counted. A node reached
-  // twice is recorded once.
+  // The config nodes behind each count, held by reference with the configKey
+  // they were counted at, so plugin checks run on exactly the nodes the build
+  // counted and report where it counted them (an operator object counted under
+  // its parent's ~k has none of its own). A node reached twice is recorded once.
   const nodes = new Map();
 
   function increment(key, configKey, node) {
@@ -29,11 +30,14 @@ function createCounter() {
     if (configKey && !locations.has(key)) {
       locations.set(key, configKey);
     }
+    // Mandatory and implied types are counted with no config node behind them.
     if (node) {
       if (!nodes.has(key)) {
-        nodes.set(key, new Set());
+        nodes.set(key, new Map());
       }
-      nodes.get(key).add(node);
+      if (!nodes.get(key).has(node)) {
+        nodes.get(key).set(node, configKey);
+      }
     }
   }
 
@@ -54,11 +58,18 @@ function createCounter() {
   }
 
   function getNodes(key) {
-    return [...(nodes.get(key) ?? [])];
+    return [...(nodes.get(key)?.keys() ?? [])];
   }
 
+  // [type, Map(node -> configKey)] for each type with nodes, without copying.
   function getNodeEntries() {
-    return [...nodes].map(([key, keyNodes]) => [key, [...keyNodes]]);
+    return nodes.entries();
+  }
+
+  // Drops the recorded nodes, so the counted config is not kept alive once
+  // the plugin checks have run on it.
+  function clearNodes() {
+    nodes.clear();
   }
 
   return {
@@ -69,6 +80,7 @@ function createCounter() {
     getLocations,
     getNodes,
     getNodeEntries,
+    clearNodes,
   };
 }
 

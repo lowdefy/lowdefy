@@ -109,7 +109,10 @@ test('createCounter records each node once, and only when given', () => {
   expect(counter.getNodes('Box')[0]).toBe(node);
   expect(counter.getNodes('Card')).toEqual([]);
   expect(counter.getNodes('Missing')).toEqual([]);
-  expect(counter.getNodeEntries()).toEqual([['Box', [node]]]);
+  expect([...counter.getNodeEntries()]).toEqual([['Box', new Map([[node, 'k1']])]]);
+  counter.clearNodes();
+  expect(counter.getNodes('Box')).toEqual([]);
+  expect(counter.getCount('Box')).toBe(3);
 });
 
 test('operator nodes are recorded on the counter for the side they run on', () => {
@@ -187,18 +190,13 @@ test('blocks, actions, requests, steps and connections are recorded once in thei
   expect(components.connections[0].connectionId).toBe('db');
 });
 
-test('page type counters record the same nodes as the app counters', () => {
+test('page type counters count types and keep no nodes, which only the app counters keep', () => {
   const { context } = buildApp();
   const pageCounters = context.pageTypeCounters.get('page');
-  expect(pageCounters.blocks.getNodes('Title')).toEqual(
-    context.typeCounters.blocks.getNodes('Title')
-  );
-  expect(pageCounters.actions.getNodes('SetState')).toEqual(
-    context.typeCounters.actions.getNodes('SetState')
-  );
-  expect(stateNames(pageCounters.operators.getNodes('_if'))).toEqual([
-    'action',
-    'block',
-    'payload',
-  ]);
+  expect(pageCounters.blocks.getCount('Title')).toBe(1);
+  expect(pageCounters.blocks.getNodes('Title')).toEqual([]);
+  expect(pageCounters.actions.getCount('SetState')).toBe(1);
+  expect(pageCounters.actions.getNodes('SetState')).toEqual([]);
+  expect(pageCounters.operators.getNodes('_if')).toEqual([]);
+  expect(context.typeCounters.blocks.getNodes('Title')).toHaveLength(1);
 });

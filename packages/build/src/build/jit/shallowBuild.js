@@ -54,6 +54,7 @@ import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.
 import resolveAuthConfigProjection from '../buildAuth/resolveAuthConfigProjection.js';
 import { serializeRegistry } from '../buildRefs/deferredRegistry.js';
 import buildTypes from '../buildTypes.js';
+import clearRuleTargetNodes from '../pluginChecks/clearRuleTargetNodes.js';
 import runPluginChecks from '../runPluginChecks.js';
 import buildSecurity from '../buildSecurity/buildSecurity.js';
 import buildWebsockets from '../buildWebsockets.js';
@@ -223,6 +224,7 @@ async function shallowBuild(options) {
       context,
       allSlugPackages: true,
     });
+    clearRuleTargetNodes({ context });
     // Now, so a build that fails later leaves no stale list behind.
     await writePluginChecksPending({ context, packages: pluginChecksPending });
     tryBuildStep(validateApiHtmlLinks, 'validateApiHtmlLinks', { components, context });

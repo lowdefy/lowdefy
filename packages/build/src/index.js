@@ -51,6 +51,7 @@ import precomputeRuntimeOperators from './build/buildRefs/precomputeRuntimeOpera
 import buildPageTypes from './build/full/buildPageTypes.js';
 import buildPages from './build/full/buildPages.js';
 import buildRoutes from './build/buildRoutes/buildRoutes.js';
+import clearRuleTargetNodes from './build/pluginChecks/clearRuleTargetNodes.js';
 import runPluginChecks from './build/runPluginChecks.js';
 import validateAuthPagePaths from './build/buildRoutes/validateAuthPagePaths.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
@@ -205,6 +206,7 @@ async function build(options) {
     // Every type is counted by now, and buildJs has not yet replaced the
     // counted objects with copies.
     const { pending: pluginChecksPending } = await runPluginChecks({ components, context });
+    clearRuleTargetNodes({ context });
     // Now, so a build that fails later leaves no stale list behind.
     await writePluginChecksPending({ context, packages: pluginChecksPending });
     tryBuildStep(validateApiHtmlLinks, 'validateApiHtmlLinks', { components, context });

@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-import getOperatorParams from './getOperatorParams.js';
+import getOperatorParams from '../../utils/getOperatorParams.js';
 
 // The messages one rule gives for one node. A rule that throws, or returns
 // anything but null, a string or a list of strings, gives one message saying

@@ -58,9 +58,12 @@ function pendingPath() {
   return path.join(serverDirectory, 'build', 'plugin-checks-pending.json');
 }
 
-function writePending() {
+function writePending({ schemaChecked = true } = {}) {
   fs.mkdirSync(path.join(serverDirectory, 'build'), { recursive: true });
-  fs.writeFileSync(pendingPath(), JSON.stringify({ packages: ['@acme/plugin'] }));
+  fs.writeFileSync(
+    pendingPath(),
+    JSON.stringify({ packages: [{ name: '@acme/plugin', schemaChecked }] })
+  );
 }
 
 function createContext() {
@@ -100,7 +103,7 @@ test('build runs the Lowdefy build once when no plugin checks are pending', asyn
     'runClientBuild',
   ]);
   expect(context.logger.info).not.toHaveBeenCalledWith(
-    'Building again to run the rules of newly installed plugins.'
+    'Building again to run the checks of newly installed plugins.'
   );
 });
 
@@ -128,7 +131,7 @@ test('build runs the Lowdefy build again after the install when plugin checks ar
     'runClientBuild',
   ]);
   expect(context.logger.info).toHaveBeenCalledWith(
-    'Building again to run the rules of newly installed plugins.'
+    'Building again to run the checks of newly installed plugins.'
   );
 });
 
@@ -173,4 +176,14 @@ test('build runs the Lowdefy build once with --skip-plugin-checks, even when che
     'installServer',
     'runClientBuild',
   ]);
+});
+
+test('build runs the Lowdefy build once when the pending plugins give nothing new to check', async () => {
+  mockRunLowdefyBuild.mockImplementation(async () => {
+    calls.push('runLowdefyBuild');
+    writePending({ schemaChecked: false });
+  });
+  const context = createContext();
+  await build({ context });
+  expect(mockRunLowdefyBuild).toHaveBeenCalledTimes(1);
 });

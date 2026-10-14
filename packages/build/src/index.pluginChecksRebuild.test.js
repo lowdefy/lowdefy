@@ -133,7 +133,7 @@ test('a build before the install lists the plugin as pending; the build after it
     `Plugin checks for ${packageName} did not run: package not installed.`
   );
   expect(JSON.parse(fs.readFileSync(pendingPath(), 'utf8'))).toEqual({
-    packages: [packageName],
+    packages: [{ name: packageName, schemaChecked: true }],
   });
 
   installPlugin();
