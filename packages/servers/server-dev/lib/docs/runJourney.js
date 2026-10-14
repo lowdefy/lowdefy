@@ -310,6 +310,11 @@ async function runJourneyInBrowser({
       result.data = describeDataSetResult({ dataSet, loadMs });
       result.warnings = dataSet.warnings;
     }
+    // Requests of external connections (mail, HTTP, ...) a data set run recorded instead of
+    // sending, in the order they ran.
+    if (session !== null && (session.sunk?.length ?? 0) > 0) {
+      result.sunk = session.sunk;
+    }
     // openPage already waited for the page's async lifecycle; an unsettled page
     // still runs its steps and reports `ready: false` alongside the result.
     if (!opened.main.ready) {
