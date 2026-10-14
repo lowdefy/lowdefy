@@ -16,7 +16,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
-import { get } from '@lowdefy/helpers';
+import { get, journeyTargetSelectors } from '@lowdefy/helpers';
 import { Modal } from 'antd';
 
 import getMask from '../getMask.js';
@@ -92,6 +92,7 @@ const ModalBlock = ({
         width={properties.width ?? undefined}
         zIndex={properties.zIndex}
         className={classNames.element}
+        rootClassName={journeyTargetSelectors.portalClass(blockId)}
         classNames={{
           header: classNames.header,
           title: classNames.title,

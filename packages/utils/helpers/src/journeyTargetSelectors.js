@@ -55,6 +55,13 @@ const interactiveControlRules = [
     .map((role) => ({ selector: `[role="${role}"]` })),
 ];
 
+// A block that renders into a portal (Modal, Drawer) puts this class on the portal's root, so a
+// journey target scoped to the block reaches the portal content, which is outside the block's
+// #bl- wrapper. The class is a CSS selector-safe form of the block id.
+function portalClass(blockId) {
+  return `ldf-portal-${String(blockId).replace(/[^\w-]/g, '_')}`;
+}
+
 const journeyTargetSelectors = {
   // Every block renders a wrapper with id `bl-<blockId>`.
   blockWrapperPrefix: 'bl-',
@@ -69,6 +76,7 @@ const journeyTargetSelectors = {
   // Portal layers, front-most first: an open dropdown menu covers a dialog, a dialog covers the
   // page.
   layers: ['[role="menu"]', '[role="dialog"]'],
+  portalClass,
   radioOption,
   rowAttribute: 'row-index',
 };

@@ -204,6 +204,21 @@ function resolveScope({ page, target }) {
   return scope;
 }
 
+// The scope a `text` or `containing` target searches. A Modal or Drawer renders its content and
+// footer in a portal outside its #bl- wrapper, marked with a class naming the block, so a target
+// scoped to the block alone (no row or column) searches the wrapper and that portal's root.
+function resolveMatchScope({ page, target }) {
+  const scope = resolveScope({ page, target });
+  if (
+    type.isUndefined(scope) ||
+    !type.isUndefined(target.row) ||
+    !type.isUndefined(target.column)
+  ) {
+    return scope;
+  }
+  return scope.or(page.locator(`.${journeyTargetSelectors.portalClass(target.blockId)}`));
+}
+
 function controlsWithText({ root, text }) {
   return root
     .locator(INTERACTIVE_CONTROL)
@@ -243,7 +258,7 @@ function namesMatches(target) {
 // when there is no blockId — portal-rendered controls live outside every
 // block.
 async function locateMatches({ page, target }) {
-  const scope = resolveScope({ page, target });
+  const scope = resolveMatchScope({ page, target });
   const where = type.isUndefined(scope) ? 'the page' : describeScopeParts(target).join(' ');
   if (!type.isUndefined(target.containing)) {
     return {
@@ -805,7 +820,11 @@ async function expectCalls({ journey, page, params }) {
 // centre, pinned right), so a row target legitimately matches more than one
 // element; joining them reads the whole row.
 async function readTargetText({ page, target, timeout }) {
-  const located = await resolveTarget({ page, target });
+  // A block's text includes its Modal or Drawer portal's (see resolveMatchScope).
+  const located =
+    !namesMatches(target) && type.isUndefined(target.nth) && !type.isUndefined(target.blockId)
+      ? resolveMatchScope({ page, target })
+      : await resolveTarget({ page, target });
   await located.first().waitFor({ state: 'attached', timeout });
   const texts = await located.allInnerTexts();
   return texts.join('\n');

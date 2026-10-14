@@ -146,3 +146,19 @@ fixtureTest('a step that finds no match still reports it as not actionable', asy
   expect(result.passed).toBe(false);
   expect(result.failure.message).toMatch(/^Control "No such button" was not actionable: /);
 });
+
+fixtureTest('a block-scoped text target reaches the footer button of its open Modal', async () => {
+  const result = await postJourney({
+    pageId: 'targets',
+    steps: [
+      { click: 'open_footer_modal_button' },
+      { expect: { visible: 'footer_modal' } },
+      { expect: { text: { blockId: 'footer_modal', contains: 'Pick a reason first' } } },
+      { expect: { text: { blockId: 'footer_modal', contains: 'Keep' } } },
+      { click: { blockId: 'footer_modal', text: 'Unlink' } },
+      { expect: { state: { path: 'deleted', equals: 'unlinked' } } },
+    ],
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+});
