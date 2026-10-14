@@ -119,7 +119,7 @@ function walkAndCount(value, counter, parentConfigKey) {
 
   const operator = getOperatorType(value);
   if (operator) {
-    counter.increment(operator, configKey);
+    counter.increment(operator, configKey, value);
   }
   if (operator === '_operator') {
     countNamedOperators(value, counter, configKey);

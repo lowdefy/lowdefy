@@ -195,7 +195,7 @@ function buildConnections({ components, context }) {
     validateTenant(connection, context, { tenantPolicy });
 
     // Track type usage for buildTypes validation
-    context.typeCounters.connections.increment(connection.type, configKey);
+    context.typeCounters.connections.increment(connection.type, configKey, connection);
 
     // Store connectionId for request validation and rename id
     connection.connectionId = connection.id;

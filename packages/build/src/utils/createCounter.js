@@ -17,13 +17,23 @@
 function createCounter() {
   const counts = new Map();
   const locations = new Map();
+  // The config nodes behind each count, held by reference, so plugin build
+  // check rules run on exactly the nodes the build counted. A node reached
+  // twice is recorded once.
+  const nodes = new Map();
 
-  function increment(key, configKey) {
+  function increment(key, configKey, node) {
     const count = counts.get(key) || 0;
     counts.set(key, count + 1);
     // Store first occurrence location for error reporting
     if (configKey && !locations.has(key)) {
       locations.set(key, configKey);
+    }
+    if (node) {
+      if (!nodes.has(key)) {
+        nodes.set(key, new Set());
+      }
+      nodes.get(key).add(node);
     }
   }
 
@@ -43,12 +53,22 @@ function createCounter() {
     return Object.fromEntries(locations);
   }
 
+  function getNodes(key) {
+    return [...(nodes.get(key) ?? [])];
+  }
+
+  function getNodeEntries() {
+    return [...nodes].map(([key, keyNodes]) => [key, [...keyNodes]]);
+  }
+
   return {
     increment,
     getCount,
     getCounts,
     getLocation,
     getLocations,
+    getNodes,
+    getNodeEntries,
   };
 }
 

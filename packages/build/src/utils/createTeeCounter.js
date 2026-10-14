@@ -19,9 +19,9 @@
 function createTeeCounter({ counter, pageCounter }) {
   return {
     ...counter,
-    increment: (key, configKey) => {
-      counter.increment(key, configKey);
-      pageCounter.increment(key, configKey);
+    increment: (key, configKey, node) => {
+      counter.increment(key, configKey, node);
+      pageCounter.increment(key, configKey, node);
     },
   };
 }
