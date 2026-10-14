@@ -24,12 +24,11 @@ auth:
           _secret: SSO_CLIENT_SECRET
         scopes: [openid, profile, email]
         trustEmail: true
-  account:
-    accountLinking:
-      enabled: false
 ```
 
-Only set `trustEmail` for an issuer that controls the emails it hands out. A verified email also lets a new sign-in link to an existing user with the same email, so an app that sets `trustEmail` should normally also set `auth.account.accountLinking.enabled: false`.
+Only set `trustEmail` for an issuer that controls the emails it hands out. A verified email lets a sign-in through the provider link to an existing user with the same verified email, as it would for a provider listed in `auth.account.accountLinking.trustedProviders`. That is safe when the issuer controls its emails, since the issuer's user then owns the address. To stop all linking, set `auth.account.accountLinking.enabled: false`. That applies to every provider: a user who already has an account with the same email, through another provider or email and password, can then no longer sign in through this one.
+
+With `session.cookieCache.enabled: true`, the session from the sign-in that marks an existing user verified still reads unverified until the cache expires (`session.cookieCache.maxAge`), so accepting an invitation straight after that sign-in can still be refused.
 
 ## Email Provider
 
