@@ -33,7 +33,7 @@ function GenericOAuth({ id, properties }) {
       `GenericOAuth property "trustEmail" is not a boolean. Received ${JSON.stringify(trustEmail)}.`
     );
   }
-  if (trustEmail === true) {
+  if (trustEmail) {
     config.mapProfileToUser = () => ({ emailVerified: true });
   }
   return { kind: 'generic', config: { ...config, providerId: id } };
