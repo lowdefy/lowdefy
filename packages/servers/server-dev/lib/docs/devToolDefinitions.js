@@ -386,6 +386,12 @@ const devToolDefinitions = {
         .describe(
           'What the result carries of the final page state. Omitted: the whole state when it is at most 10000 characters of JSON, otherwise stateOmitted (its size and each top-level key with its size). An array of state paths, e.g. ["form.name", "rows"]: state is {path: value} for each, null where undefined. true: the whole state, however large. false: no state.'
         ),
+      exercised: z
+        .boolean()
+        .optional()
+        .describe(
+          "What the result carries of what the run exercised (every request, endpoint, event and rendered block it touched). Omitted: only a count of each. true: the full block, e.g. to check that a block rendered or which requests ran. false: leave it out. `lowdefy test` and the journey lints always read the full block; this only shapes this tool's response."
+        ),
     },
   },
 
