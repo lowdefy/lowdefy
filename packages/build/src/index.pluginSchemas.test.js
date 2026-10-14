@@ -74,7 +74,7 @@ const schemas = {
 
 // A plugin package in the server's node_modules that owns Title, SetState and
 // the client _if, with the schemas above.
-function writeFixture({ name, config, checks }) {
+function writeFixture({ name, config, checks, badTitleSchema = false }) {
   const packageName = `@lowdefy-test/schemas-${name}`;
   const root = path.join(tempDirectory, name);
   const configDir = path.join(root, 'config');
@@ -98,7 +98,14 @@ function writeFixture({ name, config, checks }) {
   );
   fs.writeFileSync(
     path.join(pkgDir, 'metas.js'),
-    `export const Title = ${JSON.stringify(metas.Title)};\n`
+    `export const Title = ${JSON.stringify(
+      badTitleSchema
+        ? {
+            ...metas.Title,
+            properties: { type: 'object', properties: { content: { pattern: '(' } } },
+          }
+        : metas.Title
+    )};\n`
   );
   fs.writeFileSync(
     path.join(pkgDir, 'schemas.js'),
@@ -118,8 +125,13 @@ function display(line) {
   return `${line.err.source?.split(path.sep).join('/') ?? ''}\n${message}`;
 }
 
-async function runFixture({ name, config, checks, skipPluginChecks = false }) {
-  const { configDir, serverDir, packageName } = writeFixture({ name, config, checks });
+async function runFixture({ name, config, checks, skipPluginChecks = false, badTitleSchema }) {
+  const { configDir, serverDir, packageName } = writeFixture({
+    name,
+    config,
+    checks,
+    badTitleSchema,
+  });
   const { logger, lines } = createTestLogger();
   const typesMap = {
     ...testTypesMap,
@@ -260,4 +272,19 @@ test('build refuses a ./checks schemaLevel that is not error or warning', async 
   });
 
   expect(thrownError?.message).toMatch(/Build failed/);
+});
+
+test('build reports a plugin schema that cannot compile, naming the type and package', async () => {
+  const { thrownError, warnings } = await runFixture({
+    name: 'bad-schema',
+    config: brokenConfig,
+    badTitleSchema: true,
+  });
+
+  expect(thrownError).toBe(null);
+  expect(warnings).toContainEqual(
+    expect.stringMatching(
+      /\[ConfigWarning · plugin-schema\] Block "Title" schema \(@lowdefy-test\/schemas-bad-schema\) could not be checked: /
+    )
+  );
 });

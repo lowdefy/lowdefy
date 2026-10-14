@@ -93,13 +93,61 @@ test('getConfigSchemaErrors reports a misspelt key whose value is an operator', 
   expect(errors[0].params.additionalProperty).toBe('titel');
 });
 
-test('getConfigSchemaErrors drops a oneOf above an operator', () => {
+test('getConfigSchemaErrors drops a oneOf above an operator, with its branch errors', () => {
+  const schema = {
+    type: 'object',
+    properties: {
+      key: { oneOf: [{ type: 'string' }, { type: 'integer' }] },
+    },
+  };
+  expect(
+    getConfigSchemaErrors({ schema, data: { key: { '_string.concat': ['a', 'b'] } } })
+  ).toEqual([]);
+});
+
+test('getConfigSchemaErrors drops an anyOf branch error on an array holding an operator', () => {
+  const schema = {
+    type: 'object',
+    properties: {
+      value: { anyOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }] },
+    },
+  };
+  expect(getConfigSchemaErrors({ schema, data: { value: [{ _state: 'x' }] } })).toEqual([]);
   expect(
     getConfigSchemaErrors({
-      schema: propertiesSchema,
-      data: { content: { text: { _state: 'text' }, extra: 1 } },
+      schema: {
+        ...schema,
+        properties: { value: { ...schema.properties.value, errorMessage: 'bad' } },
+      },
+      data: { value: [{ _state: 'x' }] },
     })
   ).toEqual([]);
+});
+
+test('getConfigSchemaErrors drops the then and else errors of an if above an operator', () => {
+  const schema = {
+    type: 'object',
+    if: { properties: { mode: { const: 'a' } } },
+    then: { required: ['a'] },
+    else: { required: ['b'] },
+  };
+  expect(getConfigSchemaErrors({ schema, data: { mode: { _state: 'mode' } } })).toEqual([]);
+});
+
+test('getConfigSchemaErrors keeps errors beside a dropped oneOf', () => {
+  const schema = {
+    type: 'object',
+    required: ['name'],
+    properties: {
+      key: { oneOf: [{ type: 'string' }, { type: 'integer' }] },
+      size: { type: 'number' },
+    },
+  };
+  const errors = getConfigSchemaErrors({
+    schema,
+    data: { key: { _state: 'k' }, size: 'big' },
+  });
+  expect(summarize(errors)).toEqual(['required ', 'type /size']);
 });
 
 test('getConfigSchemaErrors reports a oneOf with no operator under it', () => {

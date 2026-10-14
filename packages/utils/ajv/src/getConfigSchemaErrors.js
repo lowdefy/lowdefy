@@ -63,26 +63,70 @@ function isAtOrUnder(instancePath, path) {
   return instancePath === path || instancePath.startsWith(`${path}/`);
 }
 
-function isDecidedByOperator(error, operatorPaths) {
+function hasOperatorUnder(error, operatorPaths) {
+  return operatorPaths.some((path) => isAtOrUnder(path, error.instancePath));
+}
+
+// Every error, with the errors an errorMessage rewords.
+function flattenErrors(errors) {
+  return errors.flatMap((error) =>
+    error.keyword === 'errorMessage'
+      ? [error, ...flattenErrors(error.params?.errors ?? [])]
+      : [error]
+  );
+}
+
+// The branches of each whole-value keyword left out: a failed anyOf, oneOf or
+// if keeps the errors of the branches it tried, under its own schema path (an
+// if's under its sibling then and else). Plugin block, action and operator
+// schemas use no $ref, so a branch error's schema path sits under its keyword.
+function findUndecidedBranches(errors, operatorPaths) {
+  return errors
+    .filter((error) => WHOLE_VALUE_KEYWORDS.has(error.keyword))
+    .filter((error) => hasOperatorUnder(error, operatorPaths))
+    .map((error) => {
+      if (error.keyword === 'if') {
+        const parent = error.schemaPath.slice(0, -'/if'.length);
+        return {
+          instancePath: error.instancePath,
+          schemaPaths: [`${parent}/then/`, `${parent}/else/`],
+        };
+      }
+      return { instancePath: error.instancePath, schemaPaths: [`${error.schemaPath}/`] };
+    });
+}
+
+function isInBranch(error, branches) {
+  return branches.some(
+    (branch) =>
+      isAtOrUnder(error.instancePath, branch.instancePath) &&
+      branch.schemaPaths.some((schemaPath) => error.schemaPath.startsWith(schemaPath))
+  );
+}
+
+function isDecidedByOperator(error, { operatorPaths, branches }) {
   if (error.keyword === 'errorMessage') {
     // ajv-errors replaces the errors it rewords; the message stands only if
     // one of them does.
     const originals = error.params?.errors ?? [];
-    return originals.every((original) => isDecidedByOperator(original, operatorPaths));
+    return originals.every((original) =>
+      isDecidedByOperator(original, { operatorPaths, branches })
+    );
   }
   if (operatorPaths.some((path) => isAtOrUnder(error.instancePath, path))) {
     return true;
   }
-  if (WHOLE_VALUE_KEYWORDS.has(error.keyword)) {
-    return operatorPaths.some((path) => isAtOrUnder(path, error.instancePath));
+  if (WHOLE_VALUE_KEYWORDS.has(error.keyword) && hasOperatorUnder(error, operatorPaths)) {
+    return true;
   }
-  return false;
+  return isInBranch(error, branches);
 }
 
 // The schema errors of config data that hold before its operators evaluate.
 // Config data can hold operators anywhere, and an operator may evaluate to any
 // value, so { _state: columns } may sit where the schema wants an array. Errors
-// at or under an operator, and whole-value keywords above one, are left out.
+// at or under an operator, and whole-value keywords above one with the errors
+// of their branches, are left out.
 // required and additionalProperties on a literal object still stand.
 // Data that is itself one operator cannot be judged at all.
 // The shared ajv instance keeps at most 20 errors per validation, and errors
@@ -98,7 +142,8 @@ function getConfigSchemaErrors({ schema, data }) {
   if (result.valid) {
     return [];
   }
-  return result.errors.filter((error) => !isDecidedByOperator(error, operatorPaths));
+  const branches = findUndecidedBranches(flattenErrors(result.errors), operatorPaths);
+  return result.errors.filter((error) => !isDecidedByOperator(error, { operatorPaths, branches }));
 }
 
 export default getConfigSchemaErrors;

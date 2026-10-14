@@ -96,7 +96,20 @@ async function runSchemaChecks({ context, targets, loaded }) {
       const data = schemaKind.getData(node);
       if (type.isUndefined(data)) continue;
       const displayName = schemaKind.getDisplayName({ typeName, node });
-      for (const error of getConfigSchemaErrors({ schema, data })) {
+      let errors;
+      try {
+        errors = getConfigSchemaErrors({ schema, data });
+      } catch (error) {
+        // A schema ajv cannot compile is the plugin's fault: one finding names
+        // it, and the type's other nodes are not checked.
+        findings.push({
+          level,
+          configKey: node['~k'],
+          message: `${schemaKind.pluginLabel} "${typeName}" schema (${packageName}) could not be checked: ${error.message}`,
+        });
+        break;
+      }
+      for (const error of errors) {
         findings.push({
           level,
           configKey: findConfigKey({ node, data, error }),
