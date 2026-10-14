@@ -14,32 +14,15 @@
   limitations under the License.
 */
 
-import importPluginModule from './importPluginModule.js';
+import loadPluginTypeSchema from './loadPluginTypeSchema.js';
 
 async function writeActionSchemaMap({ components, context }) {
   const schemas = {};
 
-  const typesMapSchemas = context.typesMap.schemas?.actions ?? {};
-
-  const actionsByPackage = {};
   for (const action of components.imports.actions) {
-    if (!actionsByPackage[action.package]) {
-      actionsByPackage[action.package] = [];
-    }
-    actionsByPackage[action.package].push(action);
-  }
-
-  for (const [packageName, actions] of Object.entries(actionsByPackage)) {
-    const packageSchemas = await importPluginModule({
-      context,
-      specifier: `${packageName}/schemas`,
-    });
-    for (const action of actions) {
-      if (typesMapSchemas[action.typeName]) {
-        schemas[action.typeName] = typesMapSchemas[action.typeName];
-      } else if (packageSchemas?.[action.originalTypeName]) {
-        schemas[action.typeName] = packageSchemas[action.originalTypeName];
-      }
+    const { schema } = await loadPluginTypeSchema({ context, kind: 'actions', type: action });
+    if (schema) {
+      schemas[action.typeName] = schema;
     }
   }
 

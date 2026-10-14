@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-function formatValidationError({ ajvError, pluginLabel, typeName, fieldLabel }) {
+function formatSchemaError({ ajvError, pluginLabel, typeName, fieldLabel }) {
   const path = ajvError.instancePath
     ? ajvError.instancePath.substring(1).replace(/\//g, '.')
     : null;
@@ -36,4 +36,4 @@ function formatValidationError({ ajvError, pluginLabel, typeName, fieldLabel }) 
   }
 }
 
-export default formatValidationError;
+export default formatSchemaError;

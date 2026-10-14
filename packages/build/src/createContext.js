@@ -74,6 +74,8 @@ function createContext({
     pluginCheckSlugRefs: new Map(),
     // Each plugin's loaded ./checks, by package. Dev page builds share it.
     pluginChecksCache: new Map(),
+    // Each plugin module imported for its schemas, by specifier. Dev page builds share it.
+    pluginModuleCache: new Map(),
     typeCounters: createTypeCounters(),
     typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
     messagesMap: mergeObjects([defaultMessagesMap, customMessagesMap]),

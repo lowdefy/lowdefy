@@ -45,7 +45,11 @@ function findChecksProblem(checks) {
   if (!type.isObject(checks)) {
     return 'the default export is not an object.';
   }
-  for (const [kind, rulesByType] of Object.entries(checks)) {
+  const { schemaLevel, ...rulesByKind } = checks;
+  if (!type.isUndefined(schemaLevel) && !LEVELS.has(schemaLevel)) {
+    return `schemaLevel must be "error" or "warning". Received ${JSON.stringify(schemaLevel)}.`;
+  }
+  for (const [kind, rulesByType] of Object.entries(rulesByKind)) {
     if (!pluginCheckKinds.includes(kind)) {
       return `"${kind}" is not one of ${pluginCheckKinds.join(', ')}.`;
     }
@@ -68,7 +72,8 @@ function findChecksProblem(checks) {
 }
 
 // One package's `./checks`, as one of:
-// - { status: 'loaded', checks }: the rules, keyed by kind and type;
+// - { status: 'loaded', checks, schemaLevel }: the rules, keyed by kind and
+//   type, and the level of the package's schema findings (undefined: warning);
 // - { status: 'none' }: installed, with no `./checks`;
 // - { status: 'pending' }: not installed, so its rules are unknown;
 // - { status: 'failed', message }: `./checks` threw on load or has the wrong shape.
@@ -90,7 +95,8 @@ async function loadPluginChecks({ context, packageName }) {
   if (problem) {
     return { status: 'failed', message: problem };
   }
-  return { status: 'loaded', checks };
+  const { schemaLevel, ...rulesByKind } = checks;
+  return { status: 'loaded', checks: rulesByKind, schemaLevel };
 }
 
 export default loadPluginChecks;

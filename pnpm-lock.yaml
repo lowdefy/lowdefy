@@ -3173,6 +3173,9 @@ importers:
 
   packages/utils/ajv:
     dependencies:
+      '@lowdefy/helpers':
+        specifier: 6.0.0
+        version: link:../helpers
       '@lowdefy/nunjucks':
         specifier: 6.0.0
         version: link:../nunjucks

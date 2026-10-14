@@ -15,12 +15,11 @@
 */
 
 import importPluginModule from './importPluginModule.js';
+import loadPluginTypeSchema from './loadPluginTypeSchema.js';
 
 async function writeOperatorSchemaMap({ components, context }) {
   const schemas = {};
   const metas = {};
-
-  const typesMapSchemas = context.typesMap.schemas?.operators ?? {};
 
   const allOperators = new Map();
   for (const op of components.imports.operators.client) {
@@ -39,10 +38,6 @@ async function writeOperatorSchemaMap({ components, context }) {
   }
 
   for (const [packageName, operators] of Object.entries(operatorsByPackage)) {
-    const packageSchemas = await importPluginModule({
-      context,
-      specifier: `${packageName}/schemas`,
-    });
     // Operators have no meta beyond hazards, so `./metas` is optional for a
     // package — most ship schemas only and contribute nothing here.
     const packageMetas = await importPluginModule({
@@ -50,10 +45,9 @@ async function writeOperatorSchemaMap({ components, context }) {
       specifier: `${packageName}/metas`,
     });
     for (const op of operators) {
-      if (typesMapSchemas[op.typeName]) {
-        schemas[op.typeName] = typesMapSchemas[op.typeName];
-      } else if (packageSchemas?.[op.originalTypeName]) {
-        schemas[op.typeName] = packageSchemas[op.originalTypeName];
+      const { schema } = await loadPluginTypeSchema({ context, kind: 'operators', type: op });
+      if (schema) {
+        schemas[op.typeName] = schema;
       }
       const meta = packageMetas?.[op.originalTypeName];
       if (meta) {

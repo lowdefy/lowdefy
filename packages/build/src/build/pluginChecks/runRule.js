@@ -16,10 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-function getOperatorParams(node) {
-  const [operatorKey] = Object.keys(node).filter((key) => !key.startsWith('~'));
-  return node[operatorKey];
-}
+import getOperatorParams from './getOperatorParams.js';
 
 // The messages one rule gives for one node. A rule that throws, or returns
 // anything but null, a string or a list of strings, gives one message saying

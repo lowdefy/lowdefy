@@ -14,10 +14,8 @@
   limitations under the License.
 */
 
-import { validate } from '@lowdefy/ajv';
+import { formatSchemaError, validate } from '@lowdefy/ajv';
 import { ConfigError } from '@lowdefy/errors';
-
-import formatValidationError from '../log/formatValidationError.js';
 
 function validateSchemas(
   context,
@@ -34,7 +32,7 @@ function validateSchemas(
   if (!connectionResult.valid) {
     for (const ajvError of connectionResult.errors) {
       messages.push(
-        formatValidationError({
+        formatSchemaError({
           ajvError,
           pluginLabel: 'Connection',
           typeName: requestConfig.connectionId,
@@ -52,7 +50,7 @@ function validateSchemas(
   if (!requestResult.valid) {
     for (const ajvError of requestResult.errors) {
       messages.push(
-        formatValidationError({
+        formatSchemaError({
           ajvError,
           pluginLabel: 'Request',
           typeName: requestConfig.type,

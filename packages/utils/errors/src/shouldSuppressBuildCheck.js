@@ -35,6 +35,8 @@ export const VALID_CHECK_SLUGS = {
   types: 'All type validation (blocks, operators, actions, requests, connections)',
   schema: 'JSON schema validation errors',
   secrets: 'Environment variable names that are not set in the build environment',
+  'plugin-schema':
+    'Block properties, action params and operator params that break their plugin schema',
 };
 
 /**
@@ -42,6 +44,12 @@ export const VALID_CHECK_SLUGS = {
  * carry it as checkGroup beside the rule's own checkSlug.
  */
 export const PLUGIN_CHECKS_SLUG = 'plugin-checks';
+
+/**
+ * Slug of the plugin schema check. Its findings also carry PLUGIN_CHECKS_SLUG
+ * as checkGroup, so `plugin-checks` silences them with the plugin rules.
+ */
+export const PLUGIN_SCHEMA_SLUG = 'plugin-schema';
 
 /**
  * Checks if a build check should be suppressed based on ~ignoreBuildChecks.

@@ -14,38 +14,14 @@
   limitations under the License.
 */
 
-import { validate } from '@lowdefy/ajv';
-import { getOperatorType, type } from '@lowdefy/helpers';
+import { getConfigSchemaErrors } from '@lowdefy/ajv';
+import { type } from '@lowdefy/helpers';
 
-function escapePointerSegment(segment) {
-  return segment.replace(/~/g, '~0').replace(/\//g, '~1');
-}
-
-function collectOperatorPaths(value, path, paths) {
-  if (type.isArray(value)) {
-    value.forEach((item, index) => collectOperatorPaths(item, `${path}/${index}`, paths));
-    return;
-  }
-  if (!type.isObject(value)) {
-    return;
-  }
-  if (getOperatorType(value) !== null) {
-    paths.push(path);
-    return;
-  }
-  Object.keys(value).forEach((key) => {
-    if (key.startsWith('~')) return;
-    collectOperatorPaths(value[key], `${path}/${escapePointerSegment(key)}`, paths);
-  });
-}
-
-// Returns "properties/... message" strings for a block's schema violations.
-// A violation at or under an operator node cannot be judged before the
-// operator evaluates on the client — { _state: columns } may legitimately sit
-// where the schema wants an array. Violations on operator-free paths stand.
+// Returns "properties/... message" strings for a block's schema violations,
+// judged as the build judges config: see getConfigSchemaErrors.
 function getPropertiesSchemaErrors({ block, blockSchemas }) {
   const properties = block.properties;
-  if (!type.isObject(properties) || getOperatorType(properties) !== null) {
+  if (!type.isObject(properties)) {
     return [];
   }
   // Block schemas validate the whole pre-build block shape; the plugin's
@@ -54,20 +30,9 @@ function getPropertiesSchemaErrors({ block, blockSchemas }) {
   if (type.isNone(propertiesSchema)) {
     return [];
   }
-  const result = validate({ schema: propertiesSchema, data: properties, returnErrors: true });
-  if (result.valid) {
-    return [];
-  }
-  const operatorPaths = [];
-  collectOperatorPaths(properties, '', operatorPaths);
-  return result.errors
-    .filter(
-      (error) =>
-        !operatorPaths.some(
-          (path) => error.instancePath === path || error.instancePath.startsWith(`${path}/`)
-        )
-    )
-    .map((error) => `properties${error.instancePath || ''} ${error.message}`);
+  return getConfigSchemaErrors({ schema: propertiesSchema, data: properties }).map(
+    (error) => `properties${error.instancePath || ''} ${error.message}`
+  );
 }
 
 export default getPropertiesSchemaErrors;

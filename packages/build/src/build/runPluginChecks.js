@@ -14,12 +14,19 @@
   limitations under the License.
 */
 
-import { ConfigError, ConfigWarning, PLUGIN_CHECKS_SLUG, VALID_CHECK_SLUGS } from '@lowdefy/errors';
+import {
+  ConfigError,
+  ConfigWarning,
+  PLUGIN_CHECKS_SLUG,
+  PLUGIN_SCHEMA_SLUG,
+  VALID_CHECK_SLUGS,
+} from '@lowdefy/errors';
 
 import collectExceptions from '../utils/collectExceptions.js';
 import collectRuleTargets from './pluginChecks/collectRuleTargets.js';
 import loadPluginChecks from './pluginChecks/loadPluginChecks.js';
 import runRule from './pluginChecks/runRule.js';
+import runSchemaChecks from './pluginChecks/runSchemaChecks.js';
 
 // The packages whose rule ids ~ignoreBuildChecks may name. The full build
 // counts every type, so its used packages are all of them. A dev build counts
@@ -134,17 +141,17 @@ function validateSlugs({ context, knownIds }) {
   }
 }
 
-function reportMessage({ context, rule, node, message }) {
+function reportFinding({ context, level, slug, configKey, message }) {
   const options = {
-    configKey: node['~k'],
-    checkSlug: rule.id,
+    configKey,
+    checkSlug: slug,
     checkGroup: PLUGIN_CHECKS_SLUG,
   };
-  if (rule.level === 'warning') {
+  if (level === 'warning') {
     const warning = new ConfigWarning(message, options);
-    // Warnings are listed once per source line by default; each rule message
-    // at a node is its own warning.
-    warning.dedupKey = `${node['~k']}\n${rule.id}\n${message}`;
+    // Warnings are listed once per source line by default; each message at a
+    // node is its own warning.
+    warning.dedupKey = `${configKey}\n${slug}\n${message}`;
     context.handleWarning(warning);
     return;
   }
@@ -159,14 +166,21 @@ function runRules({ context, targets, loaded }) {
     for (const node of nodes) {
       for (const rule of rules) {
         for (const message of runRule({ rule, packageName, kind, typeName, node })) {
-          reportMessage({ context, rule, node, message });
+          reportFinding({
+            context,
+            level: rule.level,
+            slug: rule.id,
+            configKey: node['~k'],
+            message,
+          });
         }
       }
     }
   }
 }
 
-// Runs each used plugin's build check rules on the config nodes the type
+// Runs each used plugin's build check rules, and checks blocks, actions and
+// operators against their plugin schemas, on the config nodes the type
 // counters recorded. Runs once the counting steps are done and before buildJs
 // replaces the counted objects. Returns the packages the app uses that are not
 // installed yet, for writePluginChecksPending. A dev build passes
@@ -202,6 +216,10 @@ async function runPluginChecks({ context, allSlugPackages = false }) {
     return { pending };
   }
   runRules({ context, targets, loaded });
+  const schemaFindings = await runSchemaChecks({ context, targets, loaded });
+  schemaFindings.forEach((finding) =>
+    reportFinding({ context, slug: PLUGIN_SCHEMA_SLUG, ...finding })
+  );
   return { pending };
 }
 

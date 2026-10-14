@@ -466,7 +466,21 @@ _ref:
             | `types` | All type validation (blocks, operators, actions, requests, connections) |
             | `schema` | JSON schema validation errors |
             | `secrets` | Environment variable names that are not set in the build environment |
-            | `plugin-checks` | Every plugin build check rule |
+            | `plugin-checks` | Every plugin build check rule, and the plugin schema check |
+            | `plugin-schema` | Block properties, action params and operator params that break their plugin schema |
+
+            ### Plugin Schema Checks
+
+            The build also checks each block's `properties`, each action's `params` and each operator's params against the schema the plugin ships for that type, after `_ref` and `_build` operators resolve. Config that breaks a schema gives a warning with the type, the field and its file and line:
+
+            ```
+            [ConfigWarning · plugin-schema] Block "Button" property "colr" is not allowed.
+            [ConfigWarning · plugin-schema] Operator "_if" required param "test" is missing.
+            ```
+
+            A value an operator gives at runtime is not checked, since the build cannot know it: `columns: { _state: columns }` passes where the schema wants an array. Keys still are, so a missing `test` or a misspelt key reports even when its neighbours are operators. Connections and requests are checked by the server on every call, not by the build.
+
+            Schema findings are warnings, unless the plugin makes them errors. List `plugin-schema` in `~ignoreBuildChecks` to silence them on a node and its descendants; `plugin-checks` and `--skip-plugin-checks` cover them too.
 
             ### Plugin Check Rules
 
