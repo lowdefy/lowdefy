@@ -39,7 +39,9 @@ function escapePointerSegment(segment) {
 // A copy of the data without ~ keys (~k, ~r, ~l, ~ignoreBuildChecks), with
 // each operator node replaced by null, and the JSON pointer of each operator
 // node. null keeps the operator's key, so additionalProperties still reports a
-// misspelt key whose value is an operator.
+// misspelt key whose value is an operator. A key whose config value is null
+// is left out: Lowdefy reads a null property as unset, and an unset module var
+// or _build.env gives null where the schema wants a value.
 function prepareData(value, path, operatorPaths) {
   if (type.isArray(value)) {
     return value.map((item, index) => prepareData(item, `${path}/${index}`, operatorPaths));
@@ -53,7 +55,7 @@ function prepareData(value, path, operatorPaths) {
   }
   const prepared = {};
   for (const key of Object.keys(value)) {
-    if (key.startsWith('~')) continue;
+    if (key.startsWith('~') || value[key] === null) continue;
     prepared[key] = prepareData(value[key], `${path}/${escapePointerSegment(key)}`, operatorPaths);
   }
   return prepared;

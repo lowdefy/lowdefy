@@ -209,3 +209,11 @@ test('getConfigSchemaErrors escapes keys in operator paths', () => {
     getConfigSchemaErrors({ schema, data: { 'a/b': { _state: 'x' }, 'c~d': { _state: 'y' } } })
   ).toEqual([]);
 });
+
+test('getConfigSchemaErrors reads a null value as unset', () => {
+  expect(
+    getConfigSchemaErrors({ schema: propertiesSchema, data: { title: null, size: null } })
+  ).toEqual([]);
+  const errors = getConfigSchemaErrors({ schema: ifSchema, data: { test: null } });
+  expect(summarize(errors)).toEqual(['required ']);
+});
