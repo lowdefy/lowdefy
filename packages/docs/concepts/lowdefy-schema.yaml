@@ -484,6 +484,12 @@ _ref:
 
             Check slugs are kebab-case: lowercase letters and digits joined by single dashes.
 
+            The `@lowdefy/operators-js` plugin ships these rules:
+
+            | Slug | Level | What it checks |
+            |------|-------|----------------|
+            | `if-test` | error | An `_if` needs its condition under `test`. `_if: { _eq: [1, 1], then: a, else: b }` fails the build; write `_if: { test: { _eq: [1, 1] }, then: a, else: b }`. Params that are one operator, such as `_if: { _state: ifParams }`, pass. |
+
             ### Example: Dynamic State
 
             Custom blocks can register state at runtime using `methods.registerEvent`. Since this state doesn't exist during build, you can suppress the validation warning:
