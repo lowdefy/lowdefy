@@ -49,7 +49,10 @@ function writeFixture({ name, config }) {
   fs.mkdirSync(configDir, { recursive: true });
   fs.mkdirSync(pkgDir, { recursive: true });
   fs.writeFileSync(path.join(configDir, 'lowdefy.yaml'), config);
-  fs.writeFileSync(path.join(serverDir, 'package.json'), '{ "name": "server", "dependencies": {} }\n');
+  fs.writeFileSync(
+    path.join(serverDir, 'package.json'),
+    '{ "name": "server", "dependencies": {} }\n'
+  );
   fs.writeFileSync(
     path.join(pkgDir, 'package.json'),
     JSON.stringify({ name: packageName, type: 'module', exports: { './checks': './checks.js' } })
@@ -85,7 +88,11 @@ async function runFixture({ name, config }) {
   try {
     await build({
       customTypesMap: typesMap,
-      directories: { config: configDir, build: path.join(configDir, '.lowdefy'), server: serverDir },
+      directories: {
+        config: configDir,
+        build: path.join(configDir, '.lowdefy'),
+        server: serverDir,
+      },
       logger,
       stage: 'prod',
       // Every check runs; nothing is written.

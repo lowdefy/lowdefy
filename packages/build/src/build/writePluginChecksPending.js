@@ -14,15 +14,20 @@
   limitations under the License.
 */
 
+import fs from 'fs';
+import path from 'path';
+
+const FILE_NAME = 'plugin-checks-pending.json';
+
 // Names the packages whose rules did not run because they were not installed,
-// so the CLI installs them and builds again. cleanBuildDirectory empties the
-// build directory first, so the file is gone when no package is pending.
+// so the CLI installs them and builds again; removes the file when none is.
 async function writePluginChecksPending({ context, packages }) {
-  if (packages.length === 0) return;
-  await context.writeBuildArtifact(
-    'plugin-checks-pending.json',
-    JSON.stringify({ packages }, null, 2)
-  );
+  if (context.validateOnly) return;
+  if (packages.length === 0) {
+    await fs.promises.rm(path.join(context.directories.build, FILE_NAME), { force: true });
+    return;
+  }
+  await context.writeBuildArtifact(FILE_NAME, JSON.stringify({ packages }, null, 2));
 }
 
 export default writePluginChecksPending;

@@ -445,3 +445,80 @@ test('runPluginChecks ignores a type the types map does not define', async () =>
   expect(context.errors).toEqual([]);
   expect(pending).toEqual([]);
 });
+
+test('runPluginChecks lists each warning message at one node', async () => {
+  const serverDir = createServer();
+  const pkg = addPlugin(serverDir, {
+    checks: `
+export default {
+  blocks: {
+    Box: [{ id: 'box-warns', level: 'warning', description: '', check: () => ['One.', 'Two.'] }],
+  },
+};
+`,
+  });
+  const context = createTestContext({ serverDir, typesMap: { blocks: { Box: { package: pkg } } } });
+  context.typeCounters.blocks.increment('Box', 'b', keyed(context, 'b', { blockId: 'box' }));
+  // Both warnings resolve to the same source line.
+  context.handleWarning = jest.fn();
+
+  await runPluginChecks({ context });
+
+  const warnings = context.handleWarning.mock.calls.map(([warning]) => warning);
+  expect(warnings.map((warning) => warning.dedupKey)).toEqual([
+    'b\nbox-warns\nOne.',
+    'b\nbox-warns\nTwo.',
+  ]);
+});
+
+test('runPluginChecks with allSlugPackages accepts a slug for a rule of a package this build does not use', async () => {
+  const serverDir = createServer();
+  const usedPkg = addPlugin(serverDir);
+  const otherPkg = addPlugin(serverDir, { checks: ifTestChecks });
+  const typesMap = {
+    blocks: { Box: { package: usedPkg } },
+    operators: { client: { _if: { package: otherPkg } } },
+  };
+  const devContext = createTestContext({ serverDir, typesMap });
+  devContext.pluginCheckSlugRefs.set('if-test', ['k1']);
+  devContext.typeCounters.blocks.increment('Box', 'b', keyed(devContext, 'b', { blockId: 'b' }));
+
+  await runPluginChecks({ context: devContext, allSlugPackages: true });
+
+  expect(devContext.errors).toEqual([]);
+
+  const fullContext = createTestContext({ serverDir, typesMap });
+  fullContext.pluginCheckSlugRefs.set('if-test', ['k1']);
+  fullContext.typeCounters.blocks.increment('Box', 'b', keyed(fullContext, 'b', { blockId: 'b' }));
+
+  await runPluginChecks({ context: fullContext });
+
+  expect(messages(fullContext.errors)).toEqual([
+    '~ignoreBuildChecks slug "if-test" is not a built-in check or a rule of any plugin the app uses.',
+  ]);
+});
+
+test('runPluginChecks with allSlugPackages reports no load failure or clash for a package it only reads ids from', async () => {
+  const serverDir = createServer();
+  const usedPkg = addPlugin(serverDir);
+  const brokenPkg = addPlugin(serverDir, { checks: 'export default 42;' });
+  const clashingPkg = addPlugin(serverDir, {
+    checks: `export default { blocks: { Card: [{ id: 'state-refs', level: 'error', description: '', check: () => null }] } };`,
+  });
+  const context = createTestContext({
+    serverDir,
+    typesMap: {
+      blocks: {
+        Box: { package: usedPkg },
+        Broken: { package: brokenPkg },
+        Card: { package: clashingPkg },
+      },
+    },
+  });
+  context.typeCounters.blocks.increment('Box', 'b', keyed(context, 'b', { blockId: 'b' }));
+
+  await runPluginChecks({ context, allSlugPackages: true });
+
+  expect(context.errors).toEqual([]);
+  expect(context.warnings).toEqual([]);
+});

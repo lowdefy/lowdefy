@@ -218,7 +218,13 @@ async function shallowBuild(options) {
     // After buildShallowPages: Link actions in app events are checked against the page ids.
     tryBuildStep(buildAppEvents, 'buildAppEvents', { components, context });
     // App-level config and inline pages; page builds check their own pages.
-    const { pending: pluginChecksPending } = await runPluginChecks({ components, context });
+    const { pending: pluginChecksPending } = await runPluginChecks({
+      components,
+      context,
+      allSlugPackages: true,
+    });
+    // Now, so a build that fails later leaves no stale list behind.
+    await writePluginChecksPending({ context, packages: pluginChecksPending });
     tryBuildStep(validateApiHtmlLinks, 'validateApiHtmlLinks', { components, context });
 
     tryBuildStep(buildJsShallow, 'buildJsShallow', { components, context });
@@ -240,6 +246,7 @@ async function shallowBuild(options) {
 
     // Write all build artifacts
     await cleanBuildDirectory({ context });
+    // Again: cleanBuildDirectory removed it.
     await writePluginChecksPending({ context, packages: pluginChecksPending });
     await writeSourcelessPages({ sourcelessPageArtifacts, context });
     await writeApp({ components, context });

@@ -15,13 +15,26 @@
 */
 
 import { jest } from '@jest/globals';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 
 import writePluginChecksPending from './writePluginChecksPending.js';
+
+let buildDir;
+
+beforeEach(() => {
+  buildDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-plugin-checks-pending-'));
+});
+
+afterEach(() => {
+  fs.rmSync(buildDir, { recursive: true, force: true });
+});
 
 test('writePluginChecksPending writes the pending packages', async () => {
   const writeBuildArtifact = jest.fn();
   await writePluginChecksPending({
-    context: { writeBuildArtifact },
+    context: { directories: { build: buildDir }, writeBuildArtifact },
     packages: ['@lowdefy/a', '@lowdefy/b'],
   });
   expect(writeBuildArtifact.mock.calls).toEqual([
@@ -32,8 +45,24 @@ test('writePluginChecksPending writes the pending packages', async () => {
   ]);
 });
 
-test('writePluginChecksPending writes nothing when no package is pending', async () => {
+test('writePluginChecksPending removes the file when no package is pending', async () => {
+  const filePath = path.join(buildDir, 'plugin-checks-pending.json');
+  fs.writeFileSync(filePath, '{ "packages": ["@lowdefy/a"] }');
   const writeBuildArtifact = jest.fn();
-  await writePluginChecksPending({ context: { writeBuildArtifact }, packages: [] });
+  await writePluginChecksPending({
+    context: { directories: { build: buildDir }, writeBuildArtifact },
+    packages: [],
+  });
   expect(writeBuildArtifact).not.toHaveBeenCalled();
+  expect(fs.existsSync(filePath)).toBe(false);
+});
+
+test('writePluginChecksPending does nothing in a check run', async () => {
+  const filePath = path.join(buildDir, 'plugin-checks-pending.json');
+  fs.writeFileSync(filePath, '{ "packages": ["@lowdefy/a"] }');
+  await writePluginChecksPending({
+    context: { directories: { build: buildDir }, validateOnly: true },
+    packages: [],
+  });
+  expect(fs.existsSync(filePath)).toBe(true);
 });

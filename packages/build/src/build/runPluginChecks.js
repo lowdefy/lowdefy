@@ -14,25 +14,24 @@
   limitations under the License.
 */
 
-import {
-  ConfigError,
-  ConfigWarning,
-  PLUGIN_CHECKS_SLUG,
-  VALID_CHECK_SLUGS,
-} from '@lowdefy/errors';
+import { ConfigError, ConfigWarning, PLUGIN_CHECKS_SLUG, VALID_CHECK_SLUGS } from '@lowdefy/errors';
 
 import collectExceptions from '../utils/collectExceptions.js';
 import collectRuleTargets from './pluginChecks/collectRuleTargets.js';
 import loadPluginChecks from './pluginChecks/loadPluginChecks.js';
 import runRule from './pluginChecks/runRule.js';
 
-// The packages whose rule ids ~ignoreBuildChecks may name. A dev page build
-// sees only its own page's types, so it also takes every installed plugin
-// package the app's types map names: a slug valid in the full build must not
-// fail one page in dev because that page does not use the rule's package.
-function collectSlugPackages({ context, targetPackages }) {
+// The packages whose rule ids ~ignoreBuildChecks may name. The full build
+// counts every type, so its used packages are all of them. A dev build counts
+// only part of the app (the skeleton strips ref-backed pages; a page build sees
+// one page), so it passes allSlugPackages to take every package the types map
+// names. A slug valid in the full build must not fail a dev build because the
+// rule's package is used on another page.
+// A package that is not installed loads as pending, which leaves the slugs
+// unchecked rather than failing them.
+function collectSlugPackages({ context, targetPackages, allSlugPackages }) {
   const packages = new Set(targetPackages);
-  if (!context.installedPluginPackages) {
+  if (!allSlugPackages) {
     return packages;
   }
   const { typesMap } = context;
@@ -46,9 +45,7 @@ function collectSlugPackages({ context, targetPackages }) {
   ];
   for (const definitions of sections) {
     for (const definition of Object.values(definitions ?? {})) {
-      if (context.installedPluginPackages.has(definition.package)) {
-        packages.add(definition.package);
-      }
+      packages.add(definition.package);
     }
   }
   return packages;
@@ -66,9 +63,11 @@ async function loadPackages({ context, packageNames }) {
   return loaded;
 }
 
-function reportLoadFailures({ context, loaded }) {
+function reportLoadFailures({ context, loaded, targetPackages }) {
   for (const [packageName, result] of loaded) {
-    if (result.status !== 'failed') continue;
+    // A package loaded only for its rule ids runs no rule here, so its
+    // failure only leaves the slugs unchecked.
+    if (result.status !== 'failed' || !targetPackages.has(packageName)) continue;
     const message = `Plugin checks for ${packageName} could not load: ${result.message}`;
     // The skip flag is the escape hatch for a broken plugin, so a ./checks
     // that does not load must not stop a build that skips plugin rules.
@@ -80,8 +79,9 @@ function reportLoadFailures({ context, loaded }) {
   }
 }
 
-// Warns once for each id two sources share, and returns every known id.
-function warnClashes({ context, loaded }) {
+// Warns once for each id two sources of running rules share, and returns every
+// id a slug may name.
+function warnClashes({ context, loaded, targetPackages }) {
   const sources = new Map();
   const addSource = (id, source) => {
     if (!sources.has(id)) {
@@ -92,11 +92,17 @@ function warnClashes({ context, loaded }) {
   for (const slug of [...Object.keys(VALID_CHECK_SLUGS), PLUGIN_CHECKS_SLUG]) {
     addSource(slug, 'a built-in check');
   }
+  const knownIds = new Set(sources.keys());
   for (const [packageName, result] of loaded) {
     if (result.status !== 'loaded') continue;
     for (const rulesByType of Object.values(result.checks)) {
       for (const rules of Object.values(rulesByType)) {
-        rules.forEach((rule) => addSource(rule.id, packageName));
+        rules.forEach((rule) => {
+          knownIds.add(rule.id);
+          if (targetPackages.has(packageName)) {
+            addSource(rule.id, packageName);
+          }
+        });
       }
     }
   }
@@ -110,7 +116,7 @@ function warnClashes({ context, loaded }) {
       )
     );
   }
-  return new Set(sources.keys());
+  return knownIds;
 }
 
 function validateSlugs({ context, knownIds }) {
@@ -135,7 +141,11 @@ function reportMessage({ context, rule, node, message }) {
     checkGroup: PLUGIN_CHECKS_SLUG,
   };
   if (rule.level === 'warning') {
-    context.handleWarning(new ConfigWarning(message, options));
+    const warning = new ConfigWarning(message, options);
+    // Warnings are listed once per source line by default; each rule message
+    // at a node is its own warning.
+    warning.dedupKey = `${node['~k']}\n${rule.id}\n${message}`;
+    context.handleWarning(warning);
     return;
   }
   collectExceptions(context, new ConfigError(message, options));
@@ -159,17 +169,18 @@ function runRules({ context, targets, loaded }) {
 // Runs each used plugin's build check rules on the config nodes the type
 // counters recorded. Runs once the counting steps are done and before buildJs
 // replaces the counted objects. Returns the packages the app uses that are not
-// installed yet, for writePluginChecksPending.
-async function runPluginChecks({ context }) {
+// installed yet, for writePluginChecksPending. A dev build passes
+// allSlugPackages (see collectSlugPackages).
+async function runPluginChecks({ context, allSlugPackages = false }) {
   const targets = collectRuleTargets({ context });
   const targetPackages = new Set(targets.map((target) => target.packageName));
   const loaded = await loadPackages({
     context,
-    packageNames: collectSlugPackages({ context, targetPackages }),
+    packageNames: collectSlugPackages({ context, targetPackages, allSlugPackages }),
   });
 
-  reportLoadFailures({ context, loaded });
-  const knownIds = warnClashes({ context, loaded });
+  reportLoadFailures({ context, loaded, targetPackages });
+  const knownIds = warnClashes({ context, loaded, targetPackages });
   const rulesUnknown = [...loaded.values()].some(
     (result) => result.status === 'pending' || result.status === 'failed'
   );

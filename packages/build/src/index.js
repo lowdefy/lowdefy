@@ -205,6 +205,8 @@ async function build(options) {
     // Every type is counted by now, and buildJs has not yet replaced the
     // counted objects with copies.
     const { pending: pluginChecksPending } = await runPluginChecks({ components, context });
+    // Now, so a build that fails later leaves no stale list behind.
+    await writePluginChecksPending({ context, packages: pluginChecksPending });
     tryBuildStep(validateApiHtmlLinks, 'validateApiHtmlLinks', { components, context });
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
     // Collect page content strings for Tailwind to scan. Must run before
@@ -241,6 +243,7 @@ async function build(options) {
 
     // Write steps - only if no errors
     await cleanBuildDirectory({ context });
+    // Again: cleanBuildDirectory removed it.
     await writePluginChecksPending({ context, packages: pluginChecksPending });
     await writeApp({ components, context });
     await writeAppEvents({ components, context });

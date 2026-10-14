@@ -173,7 +173,11 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
 
     // After the missing-package return: a page waiting on an install runs its
     // rules once the server restarts with the package.
-    await runPluginChecks({ components: processed, context: buildContext });
+    await runPluginChecks({
+      components: processed,
+      context: buildContext,
+      allSlugPackages: true,
+    });
 
     // Detect icons in the JIT-resolved page that weren't discovered during skeleton build.
     // Placed after detectMissingPluginPackages so we skip this when packages are being
