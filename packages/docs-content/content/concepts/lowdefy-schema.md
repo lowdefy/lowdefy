@@ -404,6 +404,8 @@ Every build error or warning from a check that the build prints shows its slug a
 
 Plugins can ship build check rules for their operators, blocks, actions, requests and connections. A plugin rule's id is its slug: list it in `~ignoreBuildChecks` to silence that one rule, or list `plugin-checks` to silence every plugin rule. `true` silences plugin rules too.
 
+A plugin's rules run once the plugin is installed. When a build uses a plugin that is not installed yet, `lowdefy build` and `lowdefy dev` install it and build again, so its rules run on a fresh checkout too. To skip every plugin rule for one run, pass `--skip-plugin-checks` to `lowdefy build`, `lowdefy dev` or `lowdefy journeys scope`.
+
 ```yaml
 # Silence one plugin rule on this block and its descendants
 ~ignoreBuildChecks:
@@ -415,6 +417,12 @@ Plugins can ship build check rules for their operators, blocks, actions, request
 ```
 
 Check slugs are kebab-case: lowercase letters and digits joined by single dashes.
+
+The `@lowdefy/operators-js` plugin ships these rules:
+
+| Slug | Level | What it checks |
+|------|-------|----------------|
+| `if-test` | error | An `_if` needs its condition under `test`. `_if: { _eq: [1, 1], then: a, else: b }` fails the build; write `_if: { test: { _eq: [1, 1] }, then: a, else: b }`. Params that are one operator, such as `_if: { _state: ifParams }`, pass. |
 
 ### Example: Dynamic State
 

@@ -472,6 +472,8 @@ _ref:
 
             Plugins can ship build check rules for their operators, blocks, actions, requests and connections. A plugin rule's id is its slug: list it in `~ignoreBuildChecks` to silence that one rule, or list `plugin-checks` to silence every plugin rule. `true` silences plugin rules too.
 
+            A plugin's rules run once the plugin is installed. When a build uses a plugin that is not installed yet, `lowdefy build` and `lowdefy dev` install it and build again, so its rules run on a fresh checkout too. To skip every plugin rule for one run, pass `--skip-plugin-checks` to `lowdefy build`, `lowdefy dev` or `lowdefy journeys scope`.
+
             ```yaml
             # Silence one plugin rule on this block and its descendants
             ~ignoreBuildChecks:

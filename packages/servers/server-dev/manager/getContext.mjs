@@ -65,6 +65,7 @@ async function getContext() {
       owner: env.LOWDEFY_DEV_OWNER === 'hub' ? 'hub' : 'terminal',
       port: Number(argv.port ?? env.PORT ?? 3000),
       refResolver: argv.refResolver ?? env.LOWDEFY_BUILD_REF_RESOLVER,
+      skipPluginChecks: env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS === 'true',
       strictPort: env.LOWDEFY_SERVER_DEV_STRICT_PORT === 'true',
       watch:
         argv.watch ?? env.LOWDEFY_SERVER_DEV_WATCH ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH) : [],

@@ -15,12 +15,24 @@
   limitations under the License.
 */
 
+import fs from 'fs';
+import path from 'path';
+
 function initialBuild(context) {
   return async () => {
     context.readDotEnv();
     await context.lowdefyBuild();
     await context.checkMockUserWarning();
     await context.installPlugins();
+    // The build lists the plugins it used but could not load rules from. The
+    // install above added them, so build once more to run their rules, unless
+    // no rules run this time anyway.
+    if (
+      !context.options.skipPluginChecks &&
+      fs.existsSync(path.join(context.directories.build, 'plugin-checks-pending.json'))
+    ) {
+      await context.lowdefyBuild();
+    }
   };
 }
 

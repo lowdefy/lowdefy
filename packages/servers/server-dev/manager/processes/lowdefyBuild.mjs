@@ -47,6 +47,7 @@ function lowdefyBuild({ directories, logger, options }) {
         directories: { ...directories, build: directories.buildStaging },
         logger,
         refResolver: options.refResolver,
+        skipPluginChecks: options.skipPluginChecks,
         stage: 'dev',
       });
       await publishBuildDirectory({

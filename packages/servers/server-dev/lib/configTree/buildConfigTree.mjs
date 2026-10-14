@@ -48,6 +48,7 @@ async function buildConfigTree() {
     devDirectory: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..'),
     logger,
     refResolver: process.env.LOWDEFY_BUILD_REF_RESOLVER,
+    skipPluginChecks: process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS === 'true',
   });
   if (result.status !== 'ok') {
     process.exitCode = 1;

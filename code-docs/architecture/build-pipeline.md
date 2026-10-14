@@ -27,8 +27,11 @@ The build pipeline is an 8-phase process (Phases 0–7) that:
 4. installServer() - Run npm install
 5. runLowdefyBuild() - Execute core build (pnpm run build:lowdefy)
 6. installServer() - Second install for updated deps
-7. runClientBuild() - Vite client build (pnpm run build:client → vite build)
+7. runLowdefyBuild() - Again, only when build/plugin-checks-pending.json exists and plugin checks are not skipped
+8. runClientBuild() - Vite client build (pnpm run build:client → vite build)
 ```
+
+A plugin the app uses that is not installed has no rules to run, so the build lists it in `build/plugin-checks-pending.json`. Step 6 installs it, and step 7 builds once more so its rules run. There is no third pass. `--skip-plugin-checks` sets `LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS=true` for the build process, which `lowdefy/build.mjs` passes to `build()` as `skipPluginChecks`.
 
 The client build is skipped with `--no-client-build` (`--no-next-build` is kept as a deprecated, hidden alias). `runClientBuild` (`packages/cli/src/utils/runClientBuild.js`) spawns `pnpm run build:client` in the server directory and parses the gzip bundle size from the Vite output.
 
@@ -650,6 +653,7 @@ There is no compiled CSS artifact in dev. `globals.css` is in Vite's dev module 
 ## Customization Points
 
 1. **Custom Ref Resolvers**: `--refResolver` or `LOWDEFY_BUILD_REF_RESOLVER`
+   (`--skip-plugin-checks` sets `LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS` beside it, read by every entry point that reads the resolver: both servers' `lowdefy/build.mjs`, the dev manager, the dev server's JIT page builder, the journeys config-tree build and `build/src/scripts/run.js`.)
 2. **Custom Transformers**: Define in `_ref` object
 3. **Custom Plugins**: Via dependencies in package.json
 4. **Build Operators**: `_build.*` operators during buildRefs
