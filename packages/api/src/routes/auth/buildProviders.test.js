@@ -154,6 +154,23 @@ test('throws ConfigError when a built-in provider is configured more than once',
   }
 });
 
+test('throws ConfigError with the provider id and location when a provider plugin throws', () => {
+  const authConfig = {
+    providers: [{ id: 'sso', type: 'Broken', properties: {}, '~k': 'auth.providers[0]' }],
+  };
+  const Broken = () => {
+    throw new Error('Property "x" is not a boolean.');
+  };
+  const call = () => buildProviders({ authConfig, plugins: { providers: { Broken } } });
+  expect(call).toThrow(ConfigError);
+  expect(call).toThrow('Auth provider "sso" is invalid: Property "x" is not a boolean.');
+  try {
+    call();
+  } catch (e) {
+    expect(e.configKey).toBe('auth.providers[0]');
+  }
+});
+
 test('does not throw when multiple GenericOAuth providers share different ids', () => {
   const authConfig = {
     providers: [
