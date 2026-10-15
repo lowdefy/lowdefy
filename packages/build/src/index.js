@@ -51,6 +51,8 @@ import precomputeRuntimeOperators from './build/buildRefs/precomputeRuntimeOpera
 import buildPageTypes from './build/full/buildPageTypes.js';
 import buildPages from './build/full/buildPages.js';
 import buildRoutes from './build/buildRoutes/buildRoutes.js';
+import clearRuleTargetNodes from './build/pluginChecks/clearRuleTargetNodes.js';
+import runPluginChecks from './build/runPluginChecks.js';
 import validateAuthPagePaths from './build/buildRoutes/validateAuthPagePaths.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
 import resolveAuthConfigProjection from './build/buildAuth/resolveAuthConfigProjection.js';
@@ -92,6 +94,7 @@ import writeRoutes from './build/writeRoutes.js';
 import writeNotifications from './build/writeNotifications.js';
 import writePages from './build/full/writePages.js';
 import writePageTypes from './build/full/writePageTypes.js';
+import writePluginChecksPending from './build/writePluginChecksPending.js';
 import writePluginImports from './build/writePluginImports/writePluginImports.js';
 import writeRequests from './build/full/writeRequests.js';
 import writeTypes from './build/full/writeTypes.js';
@@ -200,6 +203,12 @@ async function build(options) {
     tryBuildStep(buildPages, 'buildPages', { components, context });
     // After buildPages: Link actions in app events are checked against the page ids.
     tryBuildStep(buildAppEvents, 'buildAppEvents', { components, context });
+    // Every type is counted by now, and buildJs has not yet replaced the
+    // counted objects with copies.
+    const { pending: pluginChecksPending } = await runPluginChecks({ components, context });
+    clearRuleTargetNodes({ context });
+    // Now, so a build that fails later leaves no stale list behind.
+    await writePluginChecksPending({ context, packages: pluginChecksPending });
     tryBuildStep(validateApiHtmlLinks, 'validateApiHtmlLinks', { components, context });
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
     // Collect page content strings for Tailwind to scan. Must run before
@@ -236,6 +245,8 @@ async function build(options) {
 
     // Write steps - only if no errors
     await cleanBuildDirectory({ context });
+    // Again: cleanBuildDirectory removed it.
+    await writePluginChecksPending({ context, packages: pluginChecksPending });
     await writeApp({ components, context });
     await writeAppEvents({ components, context });
     await writeAppMeta({ components, context });

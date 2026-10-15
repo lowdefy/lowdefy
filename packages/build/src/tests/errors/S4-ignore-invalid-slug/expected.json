@@ -6,8 +6,8 @@
         "Invalid check slug(s)"
       ],
       "errorContains": [
-        "Invalid check slug(s): \"invalid-slug\". Valid slugs: state-refs, payload-refs, step-refs, link-refs, request-refs, connection-refs, callapi-refs, callapi-internal-refs, dynamic-endpoint-refs, websocket-refs, callmethod-refs, icons, types, schema",
-        "lowdefy.yaml:10"
+        "Invalid check slug(s): \"Invalid_Slug\". Check slugs are kebab-case",
+        "lowdefy.yaml:12"
       ],
       "expectThrow": true
     }

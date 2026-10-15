@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import formatValidationError from './formatValidationError.js';
+import formatSchemaError from './formatSchemaError.js';
 
 test('formats type error', () => {
-  const result = formatValidationError({
+  const result = formatSchemaError({
     ajvError: {
       keyword: 'type',
       instancePath: '/title',
@@ -32,7 +32,7 @@ test('formats type error', () => {
 });
 
 test('formats enum error', () => {
-  const result = formatValidationError({
+  const result = formatSchemaError({
     ajvError: {
       keyword: 'enum',
       instancePath: '/size',
@@ -47,7 +47,7 @@ test('formats enum error', () => {
 });
 
 test('formats additionalProperties error', () => {
-  const result = formatValidationError({
+  const result = formatSchemaError({
     ajvError: {
       keyword: 'additionalProperties',
       instancePath: '',
@@ -62,7 +62,7 @@ test('formats additionalProperties error', () => {
 });
 
 test('formats required error', () => {
-  const result = formatValidationError({
+  const result = formatSchemaError({
     ajvError: {
       keyword: 'required',
       instancePath: '',
@@ -77,7 +77,7 @@ test('formats required error', () => {
 });
 
 test('formats default case with unknown keyword', () => {
-  const result = formatValidationError({
+  const result = formatSchemaError({
     ajvError: {
       keyword: 'minLength',
       instancePath: '/name',
@@ -92,7 +92,7 @@ test('formats default case with unknown keyword', () => {
 });
 
 test('handles nested instancePath', () => {
-  const result = formatValidationError({
+  const result = formatSchemaError({
     ajvError: {
       keyword: 'type',
       instancePath: '/options/behavior',
@@ -107,7 +107,7 @@ test('handles nested instancePath', () => {
 });
 
 test('uses missingProperty as fallback fieldName when instancePath is empty', () => {
-  const result = formatValidationError({
+  const result = formatSchemaError({
     ajvError: {
       keyword: 'required',
       instancePath: '',
@@ -122,7 +122,7 @@ test('uses missingProperty as fallback fieldName when instancePath is empty', ()
 });
 
 test('uses "unknown" as fieldName when instancePath is empty and no missingProperty', () => {
-  const result = formatValidationError({
+  const result = formatSchemaError({
     ajvError: {
       keyword: 'minItems',
       instancePath: '',

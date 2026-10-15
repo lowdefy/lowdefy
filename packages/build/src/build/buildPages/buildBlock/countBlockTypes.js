@@ -15,7 +15,7 @@
 */
 
 function countBlockTypes(block, { typeCounters }) {
-  typeCounters.blocks.increment(block.type, block['~k']);
+  typeCounters.blocks.increment(block.type, block['~k'], block);
 }
 
 export default countBlockTypes;

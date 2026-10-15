@@ -51,6 +51,7 @@ import parseDataSet from './parseDataSet.js';
 import parseIpRange from './parseIpRange.js';
 import parseSince from './parseSince.js';
 import parsePsStartTime from './parsePsStartTime.js';
+import pluginChecksNeedRebuild from './pluginChecksNeedRebuild.js';
 import readDevInstance from './readDevInstance.js';
 import readDevInstanceAsync from './readDevInstanceAsync.js';
 import readDevInstanceRecord from './readDevInstanceRecord.js';
@@ -153,6 +154,7 @@ export {
   parseIpRange,
   parseSince,
   parsePsStartTime,
+  pluginChecksNeedRebuild,
   parseTraceLines,
   profileProduction,
   readDevInstance,

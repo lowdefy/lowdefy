@@ -123,6 +123,9 @@ function createBuildContext(buildDirectory, configDirectory) {
       server: path.resolve(buildDirectory, '..'),
     },
     logger: jitLogger,
+    // The manager's shallowBuild() reads the same variable; the page builds
+    // run in the server process and build their own context.
+    skipPluginChecks: process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS === 'true',
     stage: 'dev',
   });
   pageBuildRecords.trackFileReads({ context, configDirectory });

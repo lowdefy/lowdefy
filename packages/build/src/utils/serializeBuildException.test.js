@@ -30,6 +30,7 @@ test('serializeBuildException extracts message, name and location fields', () =>
     config: 'root.pages[0:home]',
     configKey: 'abc123',
     checkSlug: 'my-check',
+    checkGroup: null,
     prodError: false,
   });
 });
@@ -44,6 +45,7 @@ test('serializeBuildException defaults unresolved location fields to null', () =
     config: null,
     configKey: null,
     checkSlug: null,
+    checkGroup: null,
     prodError: false,
   });
 });
@@ -74,6 +76,7 @@ test('serializeBuildException carries prodError true for a prod-gated warning', 
     configKey: 'abc123',
     prodError: true,
     checkSlug: 'state-refs',
+    checkGroup: null,
   });
 
   expect(serializeBuildException(warning).prodError).toBe(true);

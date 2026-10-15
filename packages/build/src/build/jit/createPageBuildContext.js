@@ -73,6 +73,7 @@ function createPageBuildContext(keptContext) {
     modules: copyModules(keptContext.modules),
     deferred: copyDeferredRecords(keptContext.deferred),
     unsetEnvReads: new Map(),
+    pluginCheckSlugRefs: new Map(),
   };
   pageBuildContext.handleError = createBuildHandleError({ context: pageBuildContext });
   pageBuildContext.handleWarning = createHandleWarning({ context: pageBuildContext });

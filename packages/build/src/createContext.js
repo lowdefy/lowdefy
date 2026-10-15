@@ -32,6 +32,7 @@ function createContext({
   directories,
   logger,
   refResolver,
+  skipPluginChecks = false,
   stage = 'prod',
   validateOnly = false,
 }) {
@@ -61,12 +62,20 @@ function createContext({
     readConfigFile: createReadConfigFile({ directories }),
     refMap: {},
     refResolver,
+    skipPluginChecks,
     unresolvedRefVars: {},
     unsetEnvReads: new Map(),
     seenSourceLines: new Set(),
     stage,
     validateOnly,
     pageTypeCounters: new Map(),
+    // ~ignoreBuildChecks slugs that are not built-in, mapped to the ~k of each
+    // node listing them. The plugin rules runner checks them once rules load.
+    pluginCheckSlugRefs: new Map(),
+    // Each plugin's loaded ./checks, by package. Dev page builds share it.
+    pluginChecksCache: new Map(),
+    // Each plugin module imported for its schemas, by specifier. Dev page builds share it.
+    pluginModuleCache: new Map(),
     typeCounters: createTypeCounters(),
     typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
     messagesMap: mergeObjects([defaultMessagesMap, customMessagesMap]),

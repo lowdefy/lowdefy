@@ -596,9 +596,22 @@ function initialBuild(context) {
     await context.lowdefyBuild();
     await context.checkMockUserWarning();
     await context.installPlugins();
+    if (
+      !context.options.skipPluginChecks &&
+      pluginChecksNeedRebuild({
+        buildDirectory: context.directories.build,
+        serverDirectory: context.directories.server,
+      })
+    ) {
+      await context.lowdefyBuild();
+    }
   };
 }
 ```
+
+The first build cannot check a plugin that is not installed yet, so it lists the plugin in `plugin-checks-pending.json`. Once `installPlugins` has installed it, the build runs once more when that checks something new (see `pluginChecksNeedRebuild` in [build-pipeline.md](../architecture/build-pipeline.md)).
+
+A plugin's `./checks` and schemas are imported once per dev server process. Rules are functions, so they can't come back from `importFresh`'s worker, which copies its result by structured clone. An edit to a local plugin's rules or schemas takes effect when the dev server restarts.
 
 There is no client build step — Vite compiles client modules on demand when the browser requests them.
 
@@ -1211,16 +1224,17 @@ If a user configures a plugin package that isn't installed in the dev server:
 
 ## Environment Variables
 
-| Variable                           | Purpose                                                    |
-| ---------------------------------- | ---------------------------------------------------------- |
-| `LOWDEFY_SERVER_DEV_OPEN_BROWSER`  | Open browser on start when set to `'true'`                 |
-| `LOWDEFY_DIRECTORY_CONFIG`         | Config directory path                                      |
-| `PORT` (or `--port`)               | Server port (default: 3000)                                |
-| `LOWDEFY_LOG_LEVEL`                | Log level (default: info)                                  |
-| `LOWDEFY_BUILD_REF_RESOLVER`       | Custom ref resolver                                        |
-| `LOWDEFY_DEV_USER`                 | Mock user JSON for testing                                 |
-| `LOWDEFY_DEV_SMTP_PORT`            | Capture app mail over SMTP (journeys)                      |
-| `LOWDEFY_SERVER_DEV_WATCH`         | Extra watch paths (JSON array)                             |
-| `LOWDEFY_SERVER_DEV_WATCH_IGNORE`  | Watch ignore paths (JSON array)                            |
-| `LOWDEFY_BROWSER_TAG`              | Set by the manager per child start; tags the agent browser |
-| `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD` | Turns off the headless shell download on first use         |
+| Variable                           | Purpose                                                                                                        |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `LOWDEFY_SERVER_DEV_OPEN_BROWSER`  | Open browser on start when set to `'true'`                                                                     |
+| `LOWDEFY_DIRECTORY_CONFIG`         | Config directory path                                                                                          |
+| `PORT` (or `--port`)               | Server port (default: 3000)                                                                                    |
+| `LOWDEFY_LOG_LEVEL`                | Log level (default: info)                                                                                      |
+| `LOWDEFY_BUILD_REF_RESOLVER`       | Custom ref resolver                                                                                            |
+| `LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS` | `'true'` skips plugin build check rules (`--skip-plugin-checks`); read by the manager and the JIT page builder |
+| `LOWDEFY_DEV_USER`                 | Mock user JSON for testing                                                                                     |
+| `LOWDEFY_DEV_SMTP_PORT`            | Capture app mail over SMTP (journeys)                                                                          |
+| `LOWDEFY_SERVER_DEV_WATCH`         | Extra watch paths (JSON array)                                                                                 |
+| `LOWDEFY_SERVER_DEV_WATCH_IGNORE`  | Watch ignore paths (JSON array)                                                                                |
+| `LOWDEFY_BROWSER_TAG`              | Set by the manager per child start; tags the agent browser                                                     |
+| `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD` | Turns off the headless shell download on first use                                                             |

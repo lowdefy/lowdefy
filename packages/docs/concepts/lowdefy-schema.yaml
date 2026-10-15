@@ -443,6 +443,12 @@ _ref:
 
             ### Available Check Slugs
 
+            Every build error or warning from a check that the build prints shows its slug after the error name, so the slug to silence is on screen:
+
+            ```
+            [ConfigWarning · state-refs] _state references "dynamicState" but no block with id "dynamicState" exists
+            ```
+
             | Slug | What it suppresses |
             |------|-------------------|
             | `state-refs` | Undefined `_state` reference warnings |
@@ -450,10 +456,55 @@ _ref:
             | `step-refs` | Undefined `_step` reference warnings |
             | `link-refs` | Invalid Link action page reference warnings |
             | `request-refs` | Invalid Request action reference warnings |
-            | `callmethod-refs` | CallMethod actions targeting blocks not defined on the page |
             | `connection-refs` | Nonexistent connection ID references |
+            | `callapi-refs` | Invalid CallAPI action endpoint reference warnings |
+            | `callapi-internal-refs` | CallAPI actions targeting InternalApi endpoints |
+            | `dynamic-endpoint-refs` | Invalid Dynamic block endpoint reference warnings |
+            | `websocket-refs` | Invalid websocket action reference warnings |
+            | `callmethod-refs` | CallMethod actions targeting blocks not defined on the page |
+            | `icons` | Unresolvable icon name warnings |
             | `types` | All type validation (blocks, operators, actions, requests, connections) |
             | `schema` | JSON schema validation errors |
+            | `secrets` | Environment variable names that are not set in the build environment |
+            | `plugin-checks` | Every plugin build check rule, and the plugin schema check |
+            | `plugin-schema` | Block properties, action params and operator params that break their plugin schema |
+
+            ### Plugin Schema Checks
+
+            The build also checks each block's `properties`, each action's `params` and each operator's params against the schema the plugin ships for that type, after `_ref` and `_build` operators resolve. Config that breaks a schema gives a warning with the type, the field and its file and line:
+
+            ```
+            [ConfigWarning · plugin-schema] Block "Button" property "colr" is not allowed.
+            [ConfigWarning · plugin-schema] Operator "_if" required param "test" is missing.
+            ```
+
+            A value an operator gives at runtime is not checked, since the build cannot know it: `columns: { _state: columns }` passes where the schema wants an array. Keys still are, so a missing `test` or a misspelt key reports even when its neighbours are operators. Connections and requests are checked by the server on every call, not by the build.
+
+            Schema findings are warnings, unless the plugin makes them errors. List `plugin-schema` in `~ignoreBuildChecks` to silence them on a node and its descendants; `plugin-checks` and `--skip-plugin-checks` cover them too.
+
+            ### Plugin Check Rules
+
+            Plugins can ship build check rules for their operators, blocks, actions, requests and connections. A plugin rule's id is its slug: list it in `~ignoreBuildChecks` to silence that one rule, or list `plugin-checks` to silence every plugin rule. `true` silences plugin rules too.
+
+            A plugin's rules run once the plugin is installed. When a build uses a plugin that is not installed yet, `lowdefy build` and `lowdefy dev` install it and build again, so its rules run on a fresh checkout too. To skip every plugin rule for one run, pass `--skip-plugin-checks` to `lowdefy build`, `lowdefy dev` or `lowdefy journeys scope`.
+
+            ```yaml
+            # Silence one plugin rule on this block and its descendants
+            ~ignoreBuildChecks:
+              - if-test
+
+            # Silence every plugin rule on this block and its descendants
+            ~ignoreBuildChecks:
+              - plugin-checks
+            ```
+
+            Check slugs are kebab-case: lowercase letters and digits joined by single dashes.
+
+            The `@lowdefy/operators-js` plugin ships these rules:
+
+            | Slug | Level | What it checks |
+            |------|-------|----------------|
+            | `if-test` | error | An `_if` needs its condition under `test`. `_if: { _eq: [1, 1], then: a, else: b }` fails the build; write `_if: { test: { _eq: [1, 1] }, then: a, else: b }`. Params that are one operator, such as `_if: { _state: ifParams }`, pass. |
 
             ### Example: Dynamic State
 
@@ -472,7 +523,7 @@ _ref:
 
             Without `~ignoreBuildChecks`, the build would warn:
             ```
-            [Config Warning] _state references "dynamicState" but no block with id "dynamicState" exists
+            [ConfigWarning · state-refs] _state references "dynamicState" but no block with id "dynamicState" exists
             ```
 
             ### Example: Page-Level Suppression

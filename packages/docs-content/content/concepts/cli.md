@@ -41,6 +41,7 @@ The `build` command runs a Lowdefy build. This builds a production Lowdefy app i
 - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
 - `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
 - `--skip-codemod-check`: Suppress warnings about pending codemod upgrades.
+- `--skip-plugin-checks`: Skip every [plugin build check rule](/lowdefy-schema#plugin-check-rules) for this run. Each build logs a warning that they were skipped. Built-in build checks still run. Use it while a fix ships for a plugin rule that is wrong or too strict.
 
 
 ## data list
@@ -68,6 +69,7 @@ The `dev` command starts a Lowdefy development server, running locally. It can b
 - `--watch <paths...>`: A list of paths to files or directories that should be watched for changes. Globs are supported. Specify each path to watch separated by spaces.
 - `--watch-ignore <patterns...>`: A list of paths to files or directories that should be ignored by the file watcher. Globs are supported. Specify each path to watch separated by spaces.
 - `--skip-codemod-check`: Suppress warnings about pending codemod upgrades.
+- `--skip-plugin-checks`: Skip every [plugin build check rule](/lowdefy-schema#plugin-check-rules) for this run. Each build logs a warning that they were skipped. Built-in build checks still run. Use it while a fix ships for a plugin rule that is wrong or too strict.
 
 The server stops when the `lowdefy dev` process stops, however it stops, including when it is killed outright.
 
@@ -204,6 +206,7 @@ The `journeys scope` command prints what a change touched, for a coding agent ex
 - `--base <ref>`: Compare with the merge base of this branch or commit and `HEAD`, such as the pull request's base branch. Without it, every page of the head is listed.
 - `--json`: Print the scope as JSON instead of the summary.
 - `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `test`.
+- `--skip-plugin-checks`: Skip every plugin build check rule in both builds. As for `build`.
 
 ## journeys session
 

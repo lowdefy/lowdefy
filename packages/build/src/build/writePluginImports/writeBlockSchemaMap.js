@@ -14,15 +14,11 @@
   limitations under the License.
 */
 
-import { buildBlockSchema } from '@lowdefy/block-utils';
-
-import importPluginModule from './importPluginModule.js';
+import loadPluginTypeSchema from './loadPluginTypeSchema.js';
 
 async function writeBlockSchemaMap({ components, context }) {
   const schemas = {};
   const allMetas = {};
-
-  const typesMapSchemas = context.typesMap.schemas?.blocks ?? {};
 
   const blocksByPackage = {};
   for (const block of components.imports.blocks) {
@@ -32,17 +28,11 @@ async function writeBlockSchemaMap({ components, context }) {
     blocksByPackage[block.package].push(block);
   }
 
-  for (const [packageName, blocks] of Object.entries(blocksByPackage)) {
-    let packageMetas = await importPluginModule({ context, specifier: `${packageName}/metas` });
-    if (!packageMetas) {
-      packageMetas = await importPluginModule({ context, specifier: `${packageName}/schemas` });
-    }
+  for (const blocks of Object.values(blocksByPackage)) {
     for (const block of blocks) {
-      const meta = packageMetas?.[block.originalTypeName];
-      if (typesMapSchemas[block.typeName]) {
-        schemas[block.typeName] = typesMapSchemas[block.typeName];
-      } else if (meta) {
-        schemas[block.typeName] = buildBlockSchema(meta);
+      const { schema, meta } = await loadPluginTypeSchema({ context, kind: 'blocks', type: block });
+      if (schema) {
+        schemas[block.typeName] = schema;
       }
       if (meta) {
         allMetas[block.typeName] = meta;

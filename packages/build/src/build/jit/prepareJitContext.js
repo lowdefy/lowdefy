@@ -80,6 +80,9 @@ function prepareJitContext(context) {
   context.deferred ??= {};
   context.unresolvedRefVars ??= {};
   context.dynamicIconData ??= {};
+  // Page builds share the loaded ./checks and schema modules of each plugin.
+  context.pluginChecksCache ??= new Map();
+  context.pluginModuleCache ??= new Map();
 
   // buildSubscriptions validates against websocketIds — the dev server
   // restores the set from the websocketIds.json skeleton artifact. Fill it

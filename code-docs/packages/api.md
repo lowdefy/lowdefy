@@ -355,11 +355,11 @@ Processes client errors:
 
 ### `/routes/log/` — Plugin Schema Validation
 
-| Module                     | Purpose                                                            |
-| -------------------------- | ------------------------------------------------------------------ |
-| `validatePluginSchema.js`  | Validates data against a plugin's JSON schema using `@lowdefy/ajv` |
-| `formatValidationError.js` | Converts AJV errors into human-readable messages                   |
-| `logClientError.js`        | Orchestrates error logging with optional schema validation         |
+| Module                               | Purpose                                                            |
+| ------------------------------------ | ------------------------------------------------------------------ |
+| `validatePluginSchema.js`            | Validates data against a plugin's JSON schema using `@lowdefy/ajv` |
+| `formatSchemaError` (`@lowdefy/ajv`) | Converts AJV errors into human-readable messages                   |
+| `logClientError.js`                  | Orchestrates error logging with optional schema validation         |
 
 **Validation flow in `logClientError`:**
 
@@ -378,7 +378,7 @@ Client sends error (e.g., BlockError with received: { title: 123 })
     │ (if invalid)
     ▼
 ┌──────────────────────────┐
-│ formatValidationError()  │  ◀── Convert AJV errors to readable messages
+│   formatSchemaError()    │  ◀── Convert AJV errors to readable messages
 └──────────────────────────┘
     │
     ▼

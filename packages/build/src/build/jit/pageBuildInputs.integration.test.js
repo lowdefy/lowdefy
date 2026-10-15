@@ -618,7 +618,9 @@ test('pages built concurrently on one context keep their own errors and warnings
   expect(warns.status).toBe('fulfilled');
   expect(warns.value._warnings.map((warning) => warning.message).join('\n')).toMatch('propertys');
   expect(templated.status).toBe('fulfilled');
-  expect(templated.value._warnings).toBeUndefined();
+  expect(
+    (templated.value._warnings ?? []).map((warning) => warning.message).join('\n')
+  ).not.toMatch('propertys');
 });
 
 test('a page built again lists its warnings again', async () => {

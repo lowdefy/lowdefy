@@ -15,11 +15,37 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError, VALID_CHECK_SLUGS } from '@lowdefy/errors';
+import { ConfigError, PLUGIN_CHECKS_SLUG, VALID_CHECK_SLUGS } from '@lowdefy/errors';
 
 import collectExceptions from '../utils/collectExceptions.js';
 import makeId from '../utils/makeId.js';
+import isKebabCaseSlug from '../utils/isKebabCaseSlug.js';
 import setNonEnumerableProperty from '../utils/setNonEnumerableProperty.js';
+
+const builtInSlugs = Object.keys(VALID_CHECK_SLUGS);
+
+function isBuiltInSlug(slug) {
+  return builtInSlugs.includes(slug) || slug === PLUGIN_CHECKS_SLUG;
+}
+
+// Plugin rule ids are only known once the rules runner loads each plugin's
+// ./checks, so any kebab-case slug is accepted here.
+function isCheckSlug(slug) {
+  return typeof slug === 'string' && (isBuiltInSlug(slug) || isKebabCaseSlug(slug));
+}
+
+// Records a slug that may be a plugin rule id, so the rules runner can report
+// it once rules load if no rule has it. addKeys runs more than once per build,
+// so a node is recorded once per slug.
+function recordPluginCheckSlug({ context, slug, configKey }) {
+  if (!context.pluginCheckSlugRefs.has(slug)) {
+    context.pluginCheckSlugRefs.set(slug, []);
+  }
+  const configKeys = context.pluginCheckSlugRefs.get(slug);
+  if (!configKeys.includes(configKey)) {
+    configKeys.push(configKey);
+  }
+}
 
 function recArray({ array, arrayKey, keyMap, parentKeyMapId, context }) {
   let arrayKeyMapId;
@@ -108,17 +134,23 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
       const checks = object['~ignoreBuildChecks'];
 
       if (Array.isArray(checks)) {
-        const validSlugs = Object.keys(VALID_CHECK_SLUGS);
-        const invalid = checks.filter((slug) => !validSlugs.includes(slug));
+        const invalid = checks.filter((slug) => !isCheckSlug(slug));
         if (invalid.length > 0) {
           collectExceptions(
             context,
             new ConfigError(
-              `Invalid check slug(s): "${invalid.join('", "')}". Valid slugs: ${validSlugs.join(', ')}`,
+              `Invalid check slug(s): "${invalid.join(
+                '", "'
+              )}". Check slugs are kebab-case: a built-in slug (${builtInSlugs.join(
+                ', '
+              )}), ${PLUGIN_CHECKS_SLUG}, or a plugin rule id.`,
               { configKey: keyMapId }
             )
           );
         }
+        checks
+          .filter((slug) => isCheckSlug(slug) && !isBuiltInSlug(slug))
+          .forEach((slug) => recordPluginCheckSlug({ context, slug, configKey: keyMapId }));
       } else if (checks !== true) {
         collectExceptions(
           context,

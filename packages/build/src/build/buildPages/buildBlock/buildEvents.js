@@ -82,7 +82,7 @@ function checkAction(
       { received: action.type, configKey }
     );
   }
-  typeCounters.actions.increment(action.type, configKey);
+  typeCounters.actions.increment(action.type, configKey, action);
 
   // Collect static Request action references for validation
   if (action.type === 'Request' && !type.isNone(action.params)) {

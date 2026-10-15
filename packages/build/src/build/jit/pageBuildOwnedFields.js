@@ -29,6 +29,7 @@ const pageBuildOwnedFields = [
   'modules',
   'deferred',
   'unsetEnvReads',
+  'pluginCheckSlugRefs',
   'handleError',
   'handleWarning',
 ];

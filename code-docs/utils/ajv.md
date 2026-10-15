@@ -70,6 +70,22 @@ if (!result.valid) {
 }
 ```
 
+### getConfigSchemaErrors({ schema, data })
+
+The schema errors of Lowdefy config data that hold before its operators evaluate. The build's plugin schema check and dynamic pages both use it, so they agree on what valid config is.
+
+- `~` keys (`~k`, `~r`, `~l`, `~ignoreBuildChecks`) are left out of the data.
+- Each operator node is replaced by `null` before validating, and every error at or under it is dropped: an operator may evaluate to any value.
+- `required` and `additionalProperties` on a literal object still report. Keeping the operator's key (as `null`) is what lets `additionalProperties` catch a misspelt key whose value is an operator.
+- Whole-value keywords (`anyOf`, `oneOf`, `not`, `if`, `contains`, `enum`, `const`, `uniqueItems`) are dropped when an operator sits under their path, and an `errorMessage` is dropped when every error it rewords is.
+- Data that is itself one operator returns `[]`.
+
+Returns the remaining ajv error objects. The shared instance keeps at most 20 errors per validation and dropped errors count toward it, so many operator values can hide a real error past the cap; it never adds a false one.
+
+### formatSchemaError({ ajvError, pluginLabel, typeName, fieldLabel })
+
+Turns one ajv error into a sentence such as `Block "Button" property "size" must be one of ["small","large"].` Used by the build's plugin schema check, client error logging and request validation.
+
 ## Configuration
 
 AJV is configured with:
@@ -194,7 +210,7 @@ function validatePluginSchema({ data, schema, schemaKey }) {
 }
 ```
 
-The `returnErrors: true` mode is essential here — it returns all AJV errors instead of throwing, allowing `formatValidationError` to convert them into human-readable messages for each violation.
+The `returnErrors: true` mode is essential here — it returns all AJV errors instead of throwing, allowing `formatSchemaError` to convert them into human-readable messages for each violation.
 
 See [api.md](../packages/api.md#client-error-logging--plugin-schema-validation) for the full validation flow.
 
@@ -203,10 +219,13 @@ See [api.md](../packages/api.md#client-error-logging--plugin-schema-validation) 
 - `ajv` (8.12.0)
 - `ajv-errors` (3.0.0)
 - `@lowdefy/nunjucks` (4.4.0)
+- `@lowdefy/helpers` (operator detection in `getConfigSchemaErrors`)
 
 ## Key Files
 
-| File              | Purpose                    |
-| ----------------- | -------------------------- |
-| `src/validate.js` | Main validation function   |
-| `src/ajv.js`      | AJV instance configuration |
+| File                           | Purpose                                  |
+| ------------------------------ | ---------------------------------------- |
+| `src/validate.js`              | Main validation function                 |
+| `src/ajv.js`                   | AJV instance configuration               |
+| `src/getConfigSchemaErrors.js` | Operator-aware validation of config data |
+| `src/formatSchemaError.js`     | Readable messages for ajv errors         |

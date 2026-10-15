@@ -112,6 +112,7 @@ throw new ConfigError('Operator evaluation failed.', {
 | `isLowdefyError` | boolean | `true`                                             |
 | `configKey`      | string  | `~k` value for location resolution                 |
 | `checkSlug`      | string  | For `~ignoreBuildChecks` matching                  |
+| `checkGroup`     | string  | Group slug, e.g. `plugin-checks` for plugin rules  |
 | `received`       | any     | Debug value (extracted from cause)                 |
 | `filePath`       | string  | For pre-addKeys errors (YAML parse, operator eval) |
 | `lineNumber`     | number  | For pre-addKeys errors                             |
@@ -276,7 +277,10 @@ function errorToDisplayString(error) {
   if (error?.message === undefined) return String(error);
 
   const name = error.name || 'Error';
-  let msg = `[${name}] ${error.message}`;
+  const segments = [name];
+  if (error.prodError === true) segments.push('fails in prod');
+  if (error.checkSlug) segments.push(error.checkSlug);
+  let msg = `[${segments.join(' · ')}] ${error.message}`;
 
   if (error.received !== undefined) {
     try {
@@ -288,6 +292,8 @@ function errorToDisplayString(error) {
   return msg;
 }
 ```
+
+The name segment carries `fails in prod` for a prod-gated warning and the `checkSlug` when there is one: `[ConfigWarning · fails in prod · state-refs] message`. The slug is what `~ignoreBuildChecks` takes to silence the check.
 
 Works on ANY error — Lowdefy errors, plain JS errors, deserialized error-like objects from pino JSON.
 
@@ -363,12 +369,14 @@ if (shouldSuppressBuildCheck(error, context.keyMap)) {
 }
 ```
 
-**Signature:** `shouldSuppressBuildCheck(error, keyMap)` — takes the error object (reads `configKey` and `checkSlug`) and the keyMap.
+**Signature:** `shouldSuppressBuildCheck(error, keyMap)` — takes the error object (reads `configKey`, `checkSlug` and `checkGroup`) and the keyMap.
 
 **Walk logic:** Starting from `error.configKey`, walks up `~k_parent` entries (max 100 depth). At each entry, checks `~ignoreBuildChecks`:
 
 - `true` → suppress all checks
-- `['state-refs', 'types', ...]` → suppress if `error.checkSlug` is in the array
+- `['state-refs', 'types', ...]` → suppress if `error.checkSlug` or `error.checkGroup` is in the array
+
+Plugin rule errors carry the rule id as `checkSlug` and `PLUGIN_CHECKS_SLUG` (`plugin-checks`) as `checkGroup`, so a node can silence one rule or all of them. `VALID_CHECK_SLUGS` lists only the built-in slugs and is never mutated; `addKeys` accepts any kebab-case slug and records the ones that are not built-in on `context.pluginCheckSlugRefs` for the plugin rules runner.
 
 ## Serialization
 
