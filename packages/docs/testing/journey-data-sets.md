@@ -252,6 +252,25 @@ async function AcceptMatch({ connection, request, walled }) {
 
 A type that also calls an outside service declares `external` instead, and its requests are sunk under a data set journey. Declare `external` only for a type that reaches an outside service and holds none of your app's data. Leave it undeclared for any other data store: data set journeys that use it are refused rather than run against your real data.
 
+A `walled` type can have some request types that reach an outside service, such as one that downloads files or calls an AI provider. Declare `meta.dataSet: 'external'` on those request resolvers. Under a data set journey only those requests are sunk; the type's other requests run for real against the run's database:
+
+```js
+// request resolver
+async function GenerateAnswers({ connection, request, walled }) {
+  // calls an AI gateway
+}
+GenerateAnswers.meta = { checkRead: true, dataSet: 'external' };
+
+// connection export
+export default {
+  schema,
+  meta: { tenant: false, dataSet: 'walled' },
+  requests: { AcceptMatch, GenerateAnswers },
+};
+```
+
+The sunk request is recorded in `sunk` like any other, with its `connectionType` and `requestType`. A request-level `external` is honoured on any connection type that has request resolvers, not only `walled` ones.
+
 The dev server cannot check a `walled` or `external` declaration, since a connection's properties are evaluated later and may read secrets. It is your promise as the plugin author.
 
 ## Clicks a data set journey refuses
@@ -272,7 +291,7 @@ The block is the one the click lands on: the target's block, or for a `text` or 
 
 ## Requests to outside services are sunk
 
-Under a data set journey, every request of a connection type that declares `meta.dataSet: 'external'` is replaced by a sink, in the dev server process that would have sent it. The request is still validated, read-checked and write-checked as for real, then recorded and answered with `null`; the service (mail, HTTP, payments, an AI provider, object storage) never sees it. Because the sink sits where the request runs, it holds for a branch of an endpoint the click does not take, a connection id an operator computes, and detached or background endpoint calls alike, which a check on the config could not promise.
+Under a data set journey, every request of a connection type that declares `meta.dataSet: 'external'`, and every request type that declares `meta.dataSet: 'external'` on its own resolver, is replaced by a sink, in the dev server process that would have sent it. The request is still validated, read-checked and write-checked as for real, then recorded and answered with `null`; the service (mail, HTTP, payments, an AI provider, object storage) never sees it. Because the sink sits where the request runs, it holds for a branch of an endpoint the click does not take, a connection id an operator computes, and detached or background endpoint calls alike, which a check on the config could not promise.
 
 A run that sank requests returns them, in the order they ran, as `sunk` beside its result:
 
