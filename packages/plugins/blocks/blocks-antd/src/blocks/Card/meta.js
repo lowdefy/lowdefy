@@ -141,12 +141,13 @@ export default {
             description: 'Text color for the extra content area in the header.',
           },
           bodyPadding: {
-            type: 'number',
+            type: ['number', 'string'],
             default: 24,
-            description: 'Padding of the card body.',
+            description:
+              'Padding of the card body: a number of pixels, or a CSS padding string such as `28px 32px`.',
           },
           bodyPaddingSM: {
-            type: 'number',
+            type: ['number', 'string'],
             default: 12,
             description: 'Padding of the card body for small cards.',
           },

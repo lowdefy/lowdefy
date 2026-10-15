@@ -3680,12 +3680,18 @@
                   "description": "Text color for the extra content area in the header."
                 },
                 "bodyPadding": {
-                  "type": "number",
+                  "type": [
+                    "number",
+                    "string"
+                  ],
                   "default": 24,
-                  "description": "Padding of the card body."
+                  "description": "Padding of the card body: a number of pixels, or a CSS padding string such as `28px 32px`."
                 },
                 "bodyPaddingSM": {
-                  "type": "number",
+                  "type": [
+                    "number",
+                    "string"
+                  ],
                   "default": 12,
                   "description": "Padding of the card body for small cards."
                 },
@@ -7334,8 +7340,11 @@
               "description": "An image decoding hint to the browser. Sync for atomic presentation with other content, async,  to reduce delay in presenting other content and auto leave to browser to decide."
             },
             "height": {
-              "type": "number",
-              "description": "Height of the image."
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Height of the image: a number of pixels, or a string such as `100%` or `auto` that the browser reads as the height attribute."
             },
             "loading": {
               "type": "string",
@@ -7358,8 +7367,11 @@
               }
             },
             "width": {
-              "type": "number",
-              "description": "Width of the image."
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Width of the image: a number of pixels, or a string such as `100%` that the browser reads as the width attribute."
             }
           }
         },

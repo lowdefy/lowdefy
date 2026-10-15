@@ -3097,8 +3097,11 @@
               "description": "An image decoding hint to the browser. Sync for atomic presentation with other content, async,  to reduce delay in presenting other content and auto leave to browser to decide."
             },
             "height": {
-              "type": "number",
-              "description": "Height of the image."
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Height of the image: a number of pixels, or a string such as `100%` or `auto` that the browser reads as the height attribute."
             },
             "loading": {
               "type": "string",
@@ -3121,8 +3124,11 @@
               }
             },
             "width": {
-              "type": "number",
-              "description": "Width of the image."
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Width of the image: a number of pixels, or a string such as `100%` that the browser reads as the width attribute."
             }
           }
         },
