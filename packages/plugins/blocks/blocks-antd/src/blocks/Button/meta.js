@@ -100,9 +100,9 @@ export default {
       },
       size: {
         type: 'string',
-        enum: ['small', 'default', 'large'],
+        enum: ['small', 'default', 'middle', 'large'],
         default: 'default',
-        description: 'Size of the button.',
+        description: "Size of the button. `middle` is antd's name for the default size.",
       },
       title: {
         type: 'string',

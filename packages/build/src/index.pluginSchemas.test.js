@@ -288,3 +288,30 @@ test('build reports a plugin schema that cannot compile, naming the type and pac
     )
   );
 });
+
+test('build does not flag the title of a page root, but flags a title on a nested block', async () => {
+  const { thrownError, warnings } = await runFixture({
+    name: 'page-title',
+    config: `lowdefy: local
+pages:
+  - id: home
+    type: Title
+    properties:
+      title: Home
+      content: Hello
+    blocks:
+      - id: nested
+        type: Title
+        properties:
+          title: Nested
+          content: Hello
+`,
+  });
+
+  expect(thrownError).toBe(null);
+  expect(warnings).toEqual([
+    expect.stringMatching(
+      /lowdefy\.yaml:11\n\[ConfigWarning · plugin-schema\] Block "Title" property "title" is not allowed\.$/
+    ),
+  ]);
+});
