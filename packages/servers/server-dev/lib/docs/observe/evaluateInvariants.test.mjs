@@ -248,3 +248,52 @@ test('findings with the same key in one window are reported once', async () => {
   });
   expect(findings).toHaveLength(1);
 });
+
+describe('a fetch failure the runner caused by navigating away', () => {
+  const failedFetch = {
+    store: 'client',
+    name: 'TypeError',
+    message: 'Failed to fetch at onboarding-step-2.',
+    source: null,
+  };
+  const aborted = [{ time: 1, url: `${origin}/api/request/step/get_header` }];
+
+  test('a goto step that aborted requests in flight does not fail on the page reporting them', async () => {
+    const findings = await evaluate({
+      step: { goto: 'onboarding-step-connect' },
+      window: quietWindow({
+        errors: [failedFetch],
+        pageErrors: [{ name: 'TypeError', message: 'Failed to fetch' }],
+        abortedRequests: aborted,
+      }),
+    });
+    expect(findings).toEqual([]);
+  });
+
+  test('a failed fetch outside a goto is still a client-error, aborted requests or not', async () => {
+    const findings = await evaluate({
+      step: { click: { blockId: 'next_button' } },
+      window: quietWindow({ mutationCount: 1, errors: [failedFetch], abortedRequests: aborted }),
+    });
+    expect(findings.map(({ kind }) => kind)).toEqual(['client-error']);
+  });
+
+  test('a failed fetch in a goto that aborted nothing is still a client-error', async () => {
+    const findings = await evaluate({
+      step: { goto: 'onboarding-step-connect' },
+      window: quietWindow({ errors: [failedFetch] }),
+    });
+    expect(findings.map(({ kind }) => kind)).toEqual(['client-error']);
+  });
+
+  test('another error in a goto that aborted requests still fails the step', async () => {
+    const findings = await evaluate({
+      step: { goto: 'onboarding-step-connect' },
+      window: quietWindow({
+        errors: [failedFetch, { store: 'client', name: 'OperatorError', message: 'Ticket boom' }],
+        abortedRequests: aborted,
+      }),
+    });
+    expect(findings.map(({ message }) => message)).toEqual(['Ticket boom']);
+  });
+});
