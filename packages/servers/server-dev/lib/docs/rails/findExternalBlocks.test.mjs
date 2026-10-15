@@ -238,3 +238,14 @@ test('findAuthActionBlocks lists blocks whose events run an auth-engine action',
     change_password: ['ChangePassword'],
   });
 });
+
+test('findExternalBlocks lets a block reach an external type with request resolvers, which a data session sinks', () => {
+  const sinkable = { ...connections, AxiosHttp: { ...connections.AxiosHttp, requests: { AxiosHttp: () => {} } } };
+  const { blocks } = findExternalBlocks({ buildDirectory, pageId: 'tickets', connections: sinkable });
+  expect(blocks.invite).toBeUndefined();
+  expect(blocks.hook).toBeUndefined();
+  expect(blocks.all).toBeUndefined();
+  expect(blocks.assign).toBeUndefined();
+  // An undeclared type is still refused.
+  expect(blocks.report).toEqual([{ connectionId: 'sql', type: 'Knex', dataSet: null }]);
+});

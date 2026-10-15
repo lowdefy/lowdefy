@@ -52,6 +52,7 @@ import readDataSession from '../docs/dataSets/readDataSession.js';
 import readMergedMaps from './readMergedMaps.js';
 import readRecordingCookie from './recording/readRecordingCookie.js';
 import scrubSecrets from './scrubSecrets.js';
+import sinkExternalConnections from './sinkExternalConnections.js';
 import notifications, {
   interpolateProperties,
   renderEmail,
@@ -223,6 +224,12 @@ async function createLowdefyContext({ c, user, dataSession: callDataSession }) {
   }
   if (!type.isNone(dataSession)) {
     applyDataSetRedirect({ context, session: dataSession, connections });
+    // Requests of connections that reach an outside service are recorded, never sent.
+    context.connections = sinkExternalConnections({
+      context,
+      connections,
+      session: dataSession,
+    });
     context.dataSet = dataSession.name;
     context.waitUntil = trackSessionWork({ session: dataSession });
   }

@@ -26,6 +26,15 @@ import readRoutineSteps from '../readRoutineSteps.js';
 // is refused by the gate.
 const CLICKABLE_DATA_SET_MODES = new Set(['redirect', 'walled']);
 
+// An 'external' type with request resolvers is clickable too: under a data session its requests
+// are sunk (recorded, never sent), see lib/server/sinkExternalConnections.js. An external type
+// with none (an Mcp config container) has nothing to sink and stays refused.
+function isSunk({ connections, connectionType, dataSet }) {
+  if (dataSet !== 'external') return false;
+  const requests = connections[connectionType]?.requests;
+  return type.isObject(requests) && Object.keys(requests).length > 0;
+}
+
 function requestedIds({ params, pageRequestIds }) {
   if (type.isString(params)) return [params];
   if (type.isArray(params)) return params.filter((id) => type.isString(id));
@@ -125,7 +134,11 @@ function findExternalBlocks({ buildDirectory, pageId, connections }) {
           dataSet: dataSetMode({ connections, connectionType: reachedType }),
         };
       })
-      .filter((connection) => !CLICKABLE_DATA_SET_MODES.has(connection.dataSet));
+      .filter(
+        (connection) =>
+          !CLICKABLE_DATA_SET_MODES.has(connection.dataSet) &&
+          !isSunk({ connections, connectionType: connection.type, dataSet: connection.dataSet })
+      );
     if (external.length > 0) blocks[blockId] = external;
   });
   return { blocks };
