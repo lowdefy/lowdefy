@@ -29,6 +29,7 @@ function takeJourneyEvents({ events, since, until }) {
     pageErrors: take(events.pageErrors, { since, until }),
     requests: take(events.requests, { since, until }),
     responses: take(events.responses, { since, until }),
+    abortedRequests: take(events.abortedRequests, { since, until }),
   };
 }
 

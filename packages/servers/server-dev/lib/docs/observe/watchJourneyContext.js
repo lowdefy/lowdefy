@@ -22,6 +22,8 @@ import isAppApiUrl from './isAppApiUrl.js';
 // Hooked in before the context's first request, so the first page load is
 // watched too. Client error reports still in flight are counted, so a step's
 // window waits for them before it closes.
+const ABORTED_ERROR_TEXT = /ERR_ABORTED|NS_BINDING_ABORTED|cancelled/i;
+
 function watchJourneyContext({ context, events, origin, basePath }) {
   const clientErrorPath = `${basePath}/api/client-error`;
   function isClientErrorPost(request) {
@@ -36,7 +38,15 @@ function watchJourneyContext({ context, events, origin, basePath }) {
     if (isClientErrorPost(request)) events.pendingClientErrors.delete(request);
   }
   context.on('requestfinished', settleClientErrorPost);
-  context.on('requestfailed', settleClientErrorPost);
+  context.on('requestfailed', (request) => {
+    settleClientErrorPost(request);
+    // A request the browser cancelled, which is what leaving a page does to the
+    // page's requests in flight. An invariant reads it to tell that a fetch
+    // failure came from the runner's own navigation.
+    if (ABORTED_ERROR_TEXT.test(request.failure()?.errorText ?? '')) {
+      events.abortedRequests.push({ time: Date.now(), url: request.url() });
+    }
+  });
   context.on('weberror', (webError) => {
     const error = webError.error();
     events.pageErrors.push({
