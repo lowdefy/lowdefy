@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import JourneyStepError from '../JourneyStepError.js';
+import { armAuthActionRecorder } from './checkAuthActionsRan.js';
 
 // The Lowdefy block a click lands on: the nearest #bl-<blockId> wrapper of the
 // element the click resolved to, the element itself included. A `text` or
@@ -28,20 +29,23 @@ async function readClickedBlockId({ locator }) {
 
 // On a data-set run (journey.dataSetRails), refuses a click that would reach a
 // connection whose type does not declare a data-set mode the session can run
-// (redirect or walled), or run an auth-engine action, before it acts. Journeys
+// (redirect or walled) before it acts, and starts recording the auth-engine
+// actions the click runs (checkAuthActionsRan fails the step if one does).
+// Returns the clicked block's id, or null when it is not known. Journeys
 // without a data set click anything.
 async function checkClickRails({ journey, page, locator }) {
   if (type.isUndefined(journey.dataSetRails)) {
-    return;
+    return null;
   }
+  await armAuthActionRecorder({ journey, page });
   const pageId = await page.evaluate(() => window.lowdefy?.pageId);
   const blockId = await readClickedBlockId({ locator });
   if (type.isNone(pageId) || blockId === null) {
-    return;
+    return blockId;
   }
   const refused = journey.dataSetRails.refusal({ pageId, blockId });
   if (refused === null) {
-    return;
+    return blockId;
   }
   throw new JourneyStepError(refused.message, {
     expected: 'a click a data-set journey can make',

@@ -205,7 +205,7 @@ A data set journey runs on the running dev server, beside your own browser tabs:
 
 - `redirect`: the run's database URI and name are merged over the connection's `properties`, whether or not the data set lists the connection. Core `MongoDBCollection` declares it.
 - `walled`: the type holds no database address and reaches MongoDB only through the walled client, by naming walled `MongoDBCollection` connections. Its connection passes unchanged, and each walled connection it names is read through the same check, so it takes the run's database as any `redirect` connection does. Plugin types declare it; no core type does.
-- `external`: the type reaches an outside service, not your app's data, and keeps its real target. Core `AxiosHttp`, `SendGridMail`, `SMTP`, `Stripe`, `AIGateway`, `Anthropic`, `OpenAI`, `Google`, `Mcp`, `TregConnection`, `AwsS3Bucket`, `AzureBlobContainer` and `GoogleCloudStorageBucket` declare it.
+- `external`: the type reaches an outside service, not your app's data. Under a data set journey every request of the type is sunk: it is recorded and answers `null`, and nothing is sent (see [Requests to outside services are sunk](#requests-to-outside-services-are-sunk)). Core `AxiosHttp`, `SendGridMail`, `SMTP`, `Stripe`, `AIGateway`, `Anthropic`, `OpenAI`, `Google`, `Mcp`, `TregConnection`, `AwsS3Bucket`, `AzureBlobContainer` and `GoogleCloudStorageBucket` declare it.
 - No declaration: the journey fails with `Connection "<id>" (type <type>) cannot run under data set "<name>": its type does not say how to redirect it.` Core `Knex`, `Redis`, `Elasticsearch`, `GoogleSheet` and `TestConnection` refuse, and so does any plugin type that has not declared.
 
 A `redirect` connection whose whole `properties` is an operator (a top-level key starting with `_`, such as `_if` or `_ref` evaluated at runtime) also refuses, because the check cannot see what it evaluates to. Operators inside the properties are fine: `databaseUri: { _secret: MONGODB_URI }` is replaced by the run's URI before any operator runs.
@@ -214,7 +214,7 @@ The browsers a data set journey opens stay on one host of the dev server. A requ
 
 **What is not redirected:**
 
-- Connection types declared `external` (HTTP APIs, email, payments, AI providers, MCP, object storage) keep their real targets.
+- Connection types declared `external` (HTTP APIs, email, payments, AI providers, MCP, object storage) are never given the run's database. Their requests are sunk, as described below. What does not go through a request resolver still reaches the real service: an agent calling its model provider through its connection is not sunk, and an `external` type with no request resolvers (such as `Mcp`) is refused by the click rails.
 - Code that reads a database URI from anywhere but its connection's `properties`, such as a secret or environment variable read directly. A plugin type that declares `redirect` and does this breaks its declaration.
 - The auth engine. Data set journeys never reach it: their requests carry injected users, and `/api/auth/*` answers 404 for them.
 - Atlas Search (`$search`, `$vectorSearch`): pages whose requests use it fail on the in-memory database, which has no search engine.
@@ -252,25 +252,48 @@ async function AcceptMatch({ connection, request, walled }) {
 }
 ```
 
-A type that also calls an outside service declares `external` instead, and clicks that reach it are refused. Declare `external` only for a type that reaches an outside service and holds none of your app's data. Leave it undeclared for any other data store: data set journeys that use it are refused rather than run against your real data.
+A type that also calls an outside service declares `external` instead, and its requests are sunk under a data set journey. Declare `external` only for a type that reaches an outside service and holds none of your app's data. Leave it undeclared for any other data store: data set journeys that use it are refused rather than run against your real data.
 
 The dev server cannot check a `walled` or `external` declaration, since a connection's properties are evaluated later and may read secrets. It is your promise as the plugin author.
 
 ## Clicks a data set journey refuses
 
-A data set journey refuses two kinds of click, so that it never reaches a real service and never fails for a reason that is not the app's. The step fails before the click acts, naming the block and why:
+A data set journey fails two kinds of click, so that it never reaches a real service and never fails for a reason that is not the app's. A click on a connection the data set cannot run is refused before it acts, naming the block and why; a click that runs an auth action fails once it has run:
 
-- A click on a block whose events reach a connection, through a `Request` action or a `CallAPI` into an endpoint routine, whose type declares `meta.dataSet: 'external'`, declares nothing, or that has no connection artifact. Connections whose type declares `redirect` or `walled` (such as `MongoDBCollection`) run against the run's database and can be clicked. The message names the declaration, so you know what to change:
+- A click on a block whose events reach a connection, through a `Request` action or a `CallAPI` into an endpoint routine, whose type declares nothing, declares `external` but has no request resolvers, or that has no connection artifact. Connections whose type declares `redirect` or `walled` (such as `MongoDBCollection`) run against the run's database, and connections whose type declares `external` have their requests sunk, so both can be clicked. The message names the declaration, so you know what to change:
 
-  - `external`: the click would reach a real service. `Block "send_invoice" reaches connection "billing_api" (AxiosHttp, dataSet: external), which reaches a real service, so a data-set journey cannot click it.`
   - No declaration: `Block "export_rows" reaches connection "warehouse" (Knex, no dataSet declaration), which a data set cannot redirect, so a data-set journey cannot click it.`
   - No artifact: `Block "sync" reaches connection "legacy" (no connection artifact), which a data set cannot redirect, so a data-set journey cannot click it.`
+  - `external` with no request resolvers: `Block "connect" reaches connection "tools" (Mcp, dataSet: external), which reaches a real service, so a data-set journey cannot click it.`
 
   The rails read the declaration only. A `redirect` connection whose `properties` the check above refuses passes the rails, and the step fails with that check's message when the request runs.
 
-- A click on a block whose events run an action that calls the auth engine (`Logout`, `Login`, `ChangePassword` and the other auth actions). Data set users are injected and have no auth session, so these fail every time.
+- A click that runs an action that calls the auth engine (`Logout`, `Login`, `ChangePassword` and the other auth actions). Data set users are injected and have no auth session, so these fail every time. Unlike the connection check, this one is made while the click runs: the step fails only if the action executes, and the message names the block and the action (`Block "logout_button" ran the auth action Logout, which a data-set journey cannot run: ...`). A click whose auth action is skipped works, so you can test the paths that stop before it: a `Validate` that throws on an empty form, an endpoint that refuses a duplicate, an action with a `skip:` condition that is true.
 
-The block is the one the click lands on: the target's block, or for a `text` or `containing` target, the nearest block around the element it matched. Request and endpoint ids computed by operators are not followed. Journeys without `data:` click anything. Cover such controls with a journey that runs off data sets, against a test database.
+The block is the one the click lands on: the target's block, or for a `text` or `containing` target, the nearest block around the element it matched. Request and endpoint ids computed by operators are not followed by the connection check. Journeys without `data:` click anything. Cover such controls with a journey that runs off data sets, against a test database.
+
+## Requests to outside services are sunk
+
+Under a data set journey, every request of a connection type that declares `meta.dataSet: 'external'` is replaced by a sink, in the dev server process that would have sent it. The request is still validated, read-checked and write-checked as for real, then recorded and answered with `null`; the service (mail, HTTP, payments, an AI provider, object storage) never sees it. Because the sink sits where the request runs, it holds for a branch of an endpoint the click does not take, a connection id an operator computes, and detached or background endpoint calls alike, which a check on the config could not promise.
+
+A run that sank requests returns them, in the order they ran, as `sunk` beside its result:
+
+```yaml
+sunk:
+  - connectionId: notifications-email
+    connectionType: SMTP
+    requestType: SMTPMailSend
+    requestId: send
+    pageId: evidence/review
+    endpointId: null
+    request: { to: owner@example.test, subject: ... }
+```
+
+`request` is the request's evaluated properties with the app's secrets scrubbed. The connection's own properties, which hold its credentials, are never recorded.
+
+A routine that reads a sunk request's response gets `null`, so a step that needs the response (an order id from a payment API) reads nothing: give such a branch a journey off data sets, or an endpoint that tolerates a missing response.
+
+One request is not sunk: an `SMTP` request whose connection points at the dev server's mail capture (`LOWDEFY_DEV_SMTP_PORT`, on `127.0.0.1`, `localhost` or `::1`), so the `email` step keeps reading the mail a journey sends there. Nothing leaves the machine.
 
 ## Auth journeys stay on their harness
 

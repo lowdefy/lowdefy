@@ -224,8 +224,9 @@ Follow the format in [config tests](/config-tests): \`name\` (at most 100 charac
 - Address blocks by \`blockId\`, wait on \`{ request }\` or \`{ state }\`, and prefer \`urlQuery\` /
   \`pathParams\` / state to typing into fiddly inputs (date pickers and autocompletes flake). Never
   assert an id the app generated.
-- A control whose events reach a connection that is not a \`MongoDBCollection\`, or an auth action, fails
-  on a data set: leave it out and mark the item \`skipped\` with the reason.
+- A control whose events reach a connection that is not a \`MongoDBCollection\` fails on a data set,
+  and so does a click that runs an auth action (one that skips it, such as a form that stops at its
+  validation, is fine): leave it out and mark the item \`skipped\` with the reason.
 
 ### 5. Prove before keeping
 

@@ -256,7 +256,7 @@ The dev server cannot check a `walled` or `external` declaration, since a connec
 
 ## Clicks a data set journey refuses
 
-A data set journey refuses two kinds of click, so that it never reaches a real service and never fails for a reason that is not the app's. The step fails before the click acts, naming the block and why:
+A data set journey fails two kinds of click, so that it never reaches a real service and never fails for a reason that is not the app's. A click on a connection the data set cannot run is refused before it acts, naming the block and why; a click that runs an auth action fails once it has run:
 
 - A click on a block whose events reach a connection, through a `Request` action or a `CallAPI` into an endpoint routine, whose type declares nothing, declares `external` but has no request resolvers, or that has no connection artifact. Connections whose type declares `redirect` or `walled` (such as `MongoDBCollection`) run against the run's database, and connections whose type declares `external` have their requests sunk, so both can be clicked. The message names the declaration, so you know what to change:
 
@@ -266,9 +266,9 @@ A data set journey refuses two kinds of click, so that it never reaches a real s
 
   The rails read the declaration only. A `redirect` connection whose `properties` the check above refuses passes the rails, and the step fails with that check's message when the request runs.
 
-- A click on a block whose events run an action that calls the auth engine (`Logout`, `Login`, `ChangePassword` and the other auth actions). Data set users are injected and have no auth session, so these fail every time.
+- A click that runs an action that calls the auth engine (`Logout`, `Login`, `ChangePassword` and the other auth actions). Data set users are injected and have no auth session, so these fail every time. Unlike the connection check, this one is made while the click runs: the step fails only if the action executes, and the message names the block and the action (`Block "logout_button" ran the auth action Logout, which a data-set journey cannot run: ...`). A click whose auth action is skipped works, so you can test the paths that stop before it: a `Validate` that throws on an empty form, an endpoint that refuses a duplicate, an action with a `skip:` condition that is true.
 
-The block is the one the click lands on: the target's block, or for a `text` or `containing` target, the nearest block around the element it matched. Request and endpoint ids computed by operators are not followed. Journeys without `data:` click anything. Cover such controls with a journey that runs off data sets, against a test database.
+The block is the one the click lands on: the target's block, or for a `text` or `containing` target, the nearest block around the element it matched. Request and endpoint ids computed by operators are not followed by the connection check. Journeys without `data:` click anything. Cover such controls with a journey that runs off data sets, against a test database.
 
 ## Requests to outside services are sunk
 

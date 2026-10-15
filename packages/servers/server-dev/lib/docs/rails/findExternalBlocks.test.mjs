@@ -18,7 +18,6 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import findAuthActionBlocks from './findAuthActionBlocks.js';
 import findExternalBlocks from './findExternalBlocks.js';
 
 let buildDirectory;
@@ -232,16 +231,16 @@ test('findExternalBlocks throws for a page with no build artifact', () => {
   );
 });
 
-test('findAuthActionBlocks lists blocks whose events run an auth-engine action', () => {
-  expect(findAuthActionBlocks({ buildDirectory, pageId: 'tickets' })).toEqual({
-    sign_out: ['Logout'],
-    change_password: ['ChangePassword'],
-  });
-});
-
 test('findExternalBlocks lets a block reach an external type with request resolvers, which a data session sinks', () => {
-  const sinkable = { ...connections, AxiosHttp: { ...connections.AxiosHttp, requests: { AxiosHttp: () => {} } } };
-  const { blocks } = findExternalBlocks({ buildDirectory, pageId: 'tickets', connections: sinkable });
+  const sinkable = {
+    ...connections,
+    AxiosHttp: { ...connections.AxiosHttp, requests: { AxiosHttp: () => {} } },
+  };
+  const { blocks } = findExternalBlocks({
+    buildDirectory,
+    pageId: 'tickets',
+    connections: sinkable,
+  });
   expect(blocks.invite).toBeUndefined();
   expect(blocks.hook).toBeUndefined();
   expect(blocks.all).toBeUndefined();
