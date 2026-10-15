@@ -831,6 +831,10 @@ async function expectText({ page, params, timeout }) {
   const expected = `${description} text to contain "${contains}"`;
   const deadline = Date.now() + timeout;
   let read = await tryReadTargetText({ page, target, timeout });
+  // The last text actually read. The final poll runs with whatever is left of
+  // the timeout (1ms at the end), which can fail on its own latency: that
+  // failure must not hide the text the earlier reads found.
+  let lastText = read.text;
   while (read.text?.includes(contains) !== true && Date.now() < deadline) {
     await page.waitForTimeout(50);
     read = await tryReadTargetText({
@@ -838,19 +842,24 @@ async function expectText({ page, params, timeout }) {
       target,
       timeout: Math.max(deadline - Date.now(), 1),
     });
+    lastText = read.text ?? lastText;
   }
-  if (!type.isUndefined(read.error)) {
+  if (!type.isUndefined(read.error) && type.isUndefined(lastText)) {
     throw new JourneyStepError(`Expected ${description} to contain text "${contains}".`, {
       expected,
       actual: cleanMessage(read.error),
     });
   }
-  if (!read.text.includes(contains)) {
+  if (!lastText.includes(contains)) {
+    // innerText is the text as rendered, so CSS text-transform applies to it.
+    const hint = lastText.toLowerCase().includes(String(contains).toLowerCase())
+      ? ' It matches ignoring case: the block may render its text transformed (text-transform).'
+      : '';
     throw new JourneyStepError(
       `Expected ${description} text to contain "${contains}" but found ${JSON.stringify(
-        read.text
-      )}.`,
-      { expected, actual: read.text }
+        lastText
+      )}.${hint}`,
+      { expected, actual: lastText }
     );
   }
 }

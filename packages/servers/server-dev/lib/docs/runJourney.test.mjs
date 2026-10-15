@@ -2215,3 +2215,28 @@ test('runJourney passes a wait on a request the interaction before it called', a
   expect(result.failure).toBeUndefined();
   expect(result.passed).toBe(true);
 });
+
+test('runJourney reports the text it read when the last poll of expect.text fails', async () => {
+  const page = createPage();
+  const locator = page.locator('#bl-label');
+  locator.allInnerTexts.mockResolvedValue(['1 LAPSED']);
+  let attached = 0;
+  locator.waitFor.mockImplementation(async () => {
+    attached += 1;
+    if (attached > 1) throw new Error('locator.waitFor: Timeout 1ms exceeded.');
+  });
+  page.locator = jest.fn(() => locator);
+  openWith(page);
+  const spy = advanceClockOnEveryRead();
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ expect: { text: { blockId: 'label', contains: 'lapsed' } } }],
+  });
+
+  spy.mockRestore();
+
+  expect(result.failure.actual).toEqual('1 LAPSED');
+  expect(result.failure.message).toContain('matches ignoring case');
+});
