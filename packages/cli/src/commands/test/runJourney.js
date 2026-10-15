@@ -51,7 +51,11 @@ async function runJourney({ context, item, url, recordRun, mutant }) {
       message: item.error,
     };
   }
-  const validation = validateJourney({ journey });
+  // A persona run is named `<name> [<user>]`; the name limit applies to the
+  // name as authored, which expandPersonas validated, never to the run name.
+  const validation = validateJourney({
+    journey: type.isNone(item.personaOf) ? journey : { ...journey, name: item.personaOf.name },
+  });
   if (!validation.valid) {
     return {
       name,
