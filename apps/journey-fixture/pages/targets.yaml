@@ -78,6 +78,36 @@ blocks:
                 method: setOpen
                 args:
                   - open: false
+  - id: open_footer_modal_button
+    type: Button
+    properties:
+      title: Open footer modal
+    events:
+      onClick:
+        - id: open_footer_modal
+          type: CallMethod
+          params:
+            blockId: footer_modal
+            method: setOpen
+            args:
+              - open: true
+  - id: footer_modal
+    type: Modal
+    properties:
+      title: Unlink item?
+      okText: Unlink
+      cancelText: Keep
+    events:
+      onOk:
+        - id: set_unlinked
+          type: SetState
+          params:
+            deleted: unlinked
+    blocks:
+      - id: footer_modal_body
+        type: Paragraph
+        properties:
+          content: Pick a reason first
   - id: notes
     type: Box
     blocks:
