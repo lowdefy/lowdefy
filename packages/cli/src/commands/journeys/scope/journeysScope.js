@@ -22,6 +22,7 @@ import buildConfigTrees from './buildConfigTrees.js';
 import createScope from './createScope.js';
 import describeEmptyScope from './describeEmptyScope.js';
 import diffBuilds from './diffBuilds.js';
+import ensureDevServer from './ensureDevServer.js';
 import formatPageRoleLines from './formatPageRoleLines.js';
 import formatScopeLines from './formatScopeLines.js';
 import materialiseTree from './materialiseTree.js';
@@ -98,13 +99,14 @@ function printScope({ context, scope, warnings, builds }) {
 // (blocks, requests, endpoints, connections; changes that travel through
 // _ref show on every page that refs them) and who can open it, with the data
 // set users under tests/data it admits. Without --base it lists every head
-// page. Needs no running dev server; base trees and clean builds are cached
-// under .lowdefy/scope/.
+// page. Needs no running dev server, and installs one (without starting it)
+// when none is; base trees and clean builds are cached under .lowdefy/scope/.
 async function journeysScope({ context }) {
   const scopeDirectory = path.join(context.directories.config, '.lowdefy', 'scope');
   // A dirty head is built for this run alone, so its build is removed after.
   const runDirectory = path.join(scopeDirectory, createTraceId());
   try {
+    await ensureDevServer({ context });
     await pruneScopeDirectory({ scopeDirectory });
     const revisions = await resolveRevisions({
       base: context.options.base,

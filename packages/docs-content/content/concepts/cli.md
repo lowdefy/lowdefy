@@ -173,11 +173,11 @@ The `test` command runs the app's config tests — every journey in `tests/journ
 
 ## journeys harden
 
-The `journeys harden` command measures whether journeys fail when the feature they walk breaks. It runs each journey once, lists the config mutants on what the runs exercised, runs each mutant against the journeys that reached it, only in their own browsers, and reports every mutant no journey noticed with its source line, and a score per journey, in `.lowdefy/test/mutation.json`. It exits with code `0` even with survivors. See [Mutants](/config-tests#mutants-lowdefy-journeys-harden).
+The `journeys harden` command measures whether journeys fail when the feature they walk breaks. It runs each journey once, lists the config mutants on what the runs exercised, runs each mutant against the journeys that reached it, only in their own browsers, and prints progress lines as it goes, reports every mutant no journey noticed with its source line, and a score per journey, in `.lowdefy/test/mutation.json`. It exits with code `0` even with survivors. See [Mutants](/config-tests#mutants-lowdefy-journeys-harden).
 
 - `[paths...]`: Journey files, directories or globs to harden instead of the whole suite, as for `test`.
 - `--filter <name>`: Only journeys whose `name` contains this string.
-- `--page <pageId...>`: Only mutants on these pages, and endpoint mutants a journey touching them called.
+- `--page <pageId...>`: Only mutants on these pages, and endpoint mutants a journey touching them called. Journeys whose last measured run touched none of the pages are left out of the baseline too (never when there is no record for them, the journey changed, or the record was measured on a different config; the log says which). Records match by a hash of the built config, not by server start, so run `lowdefy test` after your last config edit.
 - `--operators <list>`: Only these operators, comma separated: `drop-action`, `skip-validate`, `flip-visible`, `swap-if`, `drop-payload`, `retarget-link`, `drop-block`, `drop-step`.
 - `--max <n>`: Run at most `n` mutants. The default is `200`; `0` means no cap.
 - `--seed <n>`: The sample's seed; another seed draws another sample. The default is `0`.
@@ -201,7 +201,7 @@ The `journeys variants` command writes edge-case candidates of one journey — o
 
 ## journeys scope
 
-The `journeys scope` command prints what a change touched, for a coding agent exploring a pull request: each page the change reached, why (its own config, a request, an endpoint, a connection or a websocket it uses, an app-wide artifact; changes that travel through `_ref` show on every page that refs them), the blocks added, changed or removed, and who can open the page, with the data set users under `tests/data/` it admits. It builds the merge base and the working tree in full with the installed dev server's builder and needs no running dev server. See [Exploring a pull request](/explore-pull-request).
+The `journeys scope` command prints what a change touched, for a coding agent exploring a pull request: each page the change reached, why (its own config, a request, an endpoint, a connection or a websocket it uses, an app-wide artifact; changes that travel through `_ref` show on every page that refs them), the blocks added, changed or removed, and who can open the page, with the data set users under `tests/data/` it admits. It builds the merge base and the working tree in full with the installed dev server's builder and needs no running dev server; when none is installed, it installs one first without starting it. See [Exploring a pull request](/explore-pull-request).
 
 - `--base <ref>`: Compare with the merge base of this branch or commit and `HEAD`, such as the pull request's base branch. Without it, every page of the head is listed.
 - `--json`: Print the scope as JSON instead of the summary.

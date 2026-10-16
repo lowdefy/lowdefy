@@ -14,31 +14,18 @@
   limitations under the License.
 */
 
-import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
 import checkNoRunningInstance from './checkNoRunningInstance.js';
-import ensurePnpmWorkspaceYaml from '../../utils/ensurePnpmWorkspaceYaml.js';
-import getServer from '../../utils/getServer.js';
-import installServer from '../../utils/installServer.js';
+import installDevServer from '../../utils/installDevServer.js';
 import resolveDevPort from './resolveDevPort.js';
 import runDevServer from './runDevServer.js';
 
 async function dev({ context }) {
-  const directory = context.directories.dev;
   context.logger.info('Starting development server.');
   checkNoRunningInstance({ context });
   await resolveDevPort({ context });
-  await getServer({ context, packageName: '@lowdefy/server-dev', directory });
-  // Dev keeps the plugin dependency set accumulated by previous sessions —
-  // resetting package.json to package.original.json here would uninstall
-  // JIT-added plugin packages, churn the lockfile (invalidating Vite's
-  // optimizer cache), and force reinstalls on first navigation. The full
-  // `lowdefy build` recomputes the complete set, and getServer replaces
-  // package.json when the lowdefy version changes.
-  await addCustomPluginsAsDeps({ context, directory });
-  await ensurePnpmWorkspaceYaml({ context, directory });
-  await installServer({ context, directory });
+  await installDevServer({ context });
   context.sendTelemetry();
-  await runDevServer({ context, directory });
+  await runDevServer({ context, directory: context.directories.dev });
 }
 
 export default dev;
