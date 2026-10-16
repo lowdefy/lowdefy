@@ -1,0 +1,19 @@
+id: selectors
+type: Box
+# A CheckboxSelector a journey's select step ticks option by option
+# (packages/servers/server-dev/test/journeyFixture/selectors.test.mjs).
+blocks:
+  - id: selectors_title
+    type: Title
+    properties:
+      content: Selectors
+      level: 2
+  - id: regions
+    type: CheckboxSelector
+    properties:
+      title: Regions
+      options:
+        - North
+        - North East
+        - South
+        - West

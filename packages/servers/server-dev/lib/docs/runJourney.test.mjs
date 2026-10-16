@@ -119,6 +119,7 @@ function createLocator({ selector, page }) {
     nth: jest.fn(() => locator),
     filter: jest.fn(() => locator),
     count: jest.fn(async () => 0),
+    isChecked: jest.fn(async () => false),
     selectOption: jest.fn(),
     waitFor: jest.fn(async () => {
       page.waits.push(selector);
@@ -1325,6 +1326,91 @@ test('runJourney reports a radio option that is not in the block by its text', a
     actual: 'locator.click: Timeout 5000ms exceeded.',
     message: 'No option with text "Decade" in block "period".',
   });
+});
+
+function withCheckboxOptions({ page, checked = false, waitError } = {}) {
+  const filters = [];
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.locator.mockImplementation((child) => {
+      const inner = createLocator({ selector: `${selector} ${child}`, page });
+      if (child === 'label:has(input[type="checkbox"])') {
+        inner.count.mockResolvedValue(3);
+        inner.filter.mockImplementation((filter) => {
+          filters.push(filter);
+          return inner;
+        });
+        if (waitError) {
+          inner.waitFor.mockRejectedValue(waitError);
+        }
+        inner.locator.mockImplementation((input) => {
+          const box = createLocator({ selector: `${inner.selector} ${input}`, page });
+          box.isChecked.mockResolvedValue(checked);
+          return box;
+        });
+      }
+      return inner;
+    });
+    return locator;
+  });
+  return filters;
+}
+
+test('runJourney ticks a checkbox option in the block by its exact label', async () => {
+  const page = createPage();
+  openWith(page);
+  const filters = withCheckboxOptions({ page });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'reports',
+    steps: [{ select: { blockId: 'regions', value: 'North' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual(['#bl-regions label:has(input[type="checkbox"])']);
+  expect(filters[0].hasText.test('North')).toBe(true);
+  expect(filters[0].hasText.test('North East')).toBe(false);
+  expect(filters[1]).toEqual({ visible: true });
+});
+
+test('runJourney leaves a checkbox option that is already ticked', async () => {
+  const page = createPage();
+  openWith(page);
+  withCheckboxOptions({ page, checked: true });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'reports',
+    steps: [{ select: { blockId: 'regions', value: 'North' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([]);
+});
+
+test('runJourney reports a checkbox option that is not in the block by its text', async () => {
+  const page = createPage();
+  openWith(page);
+  withCheckboxOptions({
+    page,
+    waitError: new Error('locator.waitFor: Timeout 5000ms exceeded.'),
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'reports',
+    steps: [{ select: { blockId: 'regions', value: 'West' } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    index: 0,
+    expected: 'option "West" in block "regions"',
+    actual: 'locator.waitFor: Timeout 5000ms exceeded.',
+    message: 'No option with text "West" in block "regions".',
+  });
+  expect(page.clicks).toEqual([]);
 });
 
 test('runJourney reports a dropdown option that never appears by its text', async () => {
