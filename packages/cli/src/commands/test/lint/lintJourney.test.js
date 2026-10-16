@@ -227,3 +227,49 @@ test('a compiled candidate, with event-less clicks and a final wait for a reques
   });
   expect(problems.filter(({ severity }) => severity === 'error')).toEqual([]);
 });
+
+test('L7 warns on an as that names the person already acting', () => {
+  const problems = lintJourney({
+    journey: journey([
+      { as: 'main' },
+      { as: 'owner' },
+      { expect: { visible: 'inbox' } },
+      { as: 'owner' },
+      { as: 'main' },
+      { as: 'main' },
+      { expect: { visible: 'inbox' } },
+    ]),
+    exercisedEntry: entry(),
+  });
+  expect(rules(problems, 'L7')).toEqual([
+    {
+      rule: 'L7',
+      severity: 'warning',
+      stepIndex: 0,
+      message:
+        'step 0 (as "main") switches to the journey\'s own user (main), who is already acting: name the other person, or drop the step.',
+    },
+    {
+      rule: 'L7',
+      severity: 'warning',
+      stepIndex: 3,
+      message:
+        'step 3 (as "owner") switches to "owner", who is already acting: name the other person, or drop the step.',
+    },
+    {
+      rule: 'L7',
+      severity: 'warning',
+      stepIndex: 5,
+      message:
+        'step 5 (as "main") switches to the journey\'s own user (main), who is already acting: name the other person, or drop the step.',
+    },
+  ]);
+});
+
+test('L7 accepts switching to a second person and back', () => {
+  const problems = lintJourney({
+    journey: journey([{ as: 'owner' }, { as: 'main' }, { expect: { visible: 'inbox' } }]),
+    exercisedEntry: entry(),
+  });
+  expect(rules(problems, 'L7')).toEqual([]);
+});

@@ -58,3 +58,9 @@ test('journeys-from-dev runs commands from the app directory in a monorepo', () 
     'cd apps/crm && lowdefy journeys session'
   );
 });
+
+test('journeys-from-dev proves what a second person sees with as: on one data set', () => {
+  const skill = journeysFromDev({ appPath: '' });
+  expect(skill).toContain('`as: <second data set user>`');
+  expect(skill).toContain('on the same database');
+});

@@ -100,6 +100,9 @@ Write each goal as a journey in \`tests/journeys/<area>/<name>.yaml\`:
   selects, clicks by text or asserts comes from the data set's fixtures or users, or is UI text.
 - Steps that reach the goal and \`expect\` steps that check it: the state, text, URL or calls the
   goal is about. After a click that must do something, \`expect: { effect: true }\`.
+- When someone else feels the change (a notification, an assignment, a mention), act as the first
+  user, then \`as: <second data set user>\` and \`goto\` the page they look at: the second person's
+  browser reads the same database, so one journey proves both sides.
 
 A data set journey cannot click a block whose events reach a connection the data set does not
 redirect (any connection that is not a \`MongoDBCollection\`) or run an auth action: that step
