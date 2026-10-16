@@ -42,7 +42,7 @@ steps:
 
 ## Clicks a data set journey refuses
 
-Journeys on a data set never reach a real service. A click on a block whose events reach a connection whose type declares `meta.dataSet: 'external'` or declares nothing, fails at that step and names the block and the connection's declaration. A click that runs an auth action such as `Logout` fails at that step and names the action; a click that skips it does not. Connections that declare `redirect` or `walled`, such as `MongoDBCollection`, can be clicked. See [Clicks a data set journey refuses](/journey-data-sets#clicks-a-data-set-journey-refuses).
+Journeys on a data set never reach a real service. A click on a block whose events reach a connection whose type declares nothing, or declares `meta.dataSet: 'external'` but has no request resolvers, fails at that step and names the block and the connection's declaration. Requests of other `external` connection types are sunk: recorded and answered with `null`. A click that runs an auth action such as `Logout` fails at that step and names the action; a click that skips it does not. Connections that declare `redirect` or `walled`, such as `MongoDBCollection`, can be clicked. See [Clicks a data set journey refuses](/journey-data-sets#clicks-a-data-set-journey-refuses).
 
 ## lowdefy journeys scope
 

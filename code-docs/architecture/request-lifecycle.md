@@ -1,6 +1,6 @@
 # Request Lifecycle Architecture
 
-How data flows from user action to database and back in Lowdefy.
+How data flows from user action to database and back in Lowdefy. How a whole page loads and refreshes its data (parallel requests, no cache, page instances, websocket subscriptions, measured costs) is in [page-data-loading.md](./page-data-loading.md).
 
 ## Overview
 
