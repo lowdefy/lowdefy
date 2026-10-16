@@ -16,21 +16,28 @@
 
 import path from 'path';
 
+import createProgress from './createProgress.js';
 import readsMail from './readsMail.js';
 import runJourney from '../../test/runJourney.js';
 
 // Runs every selected journey once, unmutated, as `lowdefy test` does. A
 // journey that fails is left out of the harden run and listed: its path is
 // not a baseline any mutant can be measured against.
-async function runBaseline({ items, url, configDirectory }) {
+async function runBaseline({ items, url, configDirectory, log = () => {} }) {
   const baselines = [];
   const failed = [];
+  const tick = createProgress({
+    total: items.length,
+    log,
+    format: ({ done, total }) => `Baseline ${done}/${total} journeys (${failed.length} failed)`,
+  });
   for (const item of items) {
     const result = await runJourney({ item, url });
     const file = path.relative(configDirectory, item.filePath);
     const name = result.name;
     if (!result.passed) {
       failed.push({ file, name, message: result.message });
+      tick();
       continue;
     }
     baselines.push({
@@ -42,6 +49,7 @@ async function runBaseline({ items, url, configDirectory }) {
       durationMs: result.durationMs,
       readsMail: readsMail(item.journey),
     });
+    tick();
   }
   return { baselines, failed };
 }

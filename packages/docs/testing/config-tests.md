@@ -419,12 +419,14 @@ SCORE     12/14 killed, 3 unique  member assigns an open ticket  (tests/journeys
 42 mutants run · 38 killed · 4 survived · 0 unapplied · 0 errors · sampled 42 of 42 (seed 0) · 19 not exercised · 0 rebuilds · 3m 10s
 ```
 
+While it runs, harden prints a line as the baseline runs (`Baseline 37/412 journeys (2 failed)`) and as mutants finish (`Mutants 12/45 run (3 survived)`), every few journeys or about every 15 seconds, so a long run is not silent.
+
 A survivor is a change no journey noticed, with the source line it changed: add the assertion that would catch it (`expect.text` of the message, `expect.state`, `expect.visible`, `expect.hidden` or `expect.calls`) after the step that exercises it, and confirm with `lowdefy journeys harden --mutant <id>`. A mutant listed as **unapplied** never reached the journey's browser: that is a defect in harden, not a gap in the journey. Mutants no journey exercised are counted, not run.
 
 The report is written to `.lowdefy/test/mutation.json`: each mutant with the journeys that ran it, the suite's score, and each journey's `killed` out of `total` and its `unique` kills (mutants no other journey kills). It is merged per journey: a run over some journeys replaces their scores and keeps every other journey's from earlier runs, until that journey is removed. An earlier mutant is kept only while the development server still lists it, so a removed or edited block, action or request stops counting, and each journey's score is recounted without it. `--mutant` runs write nothing. Survivors are findings, so the exit code is `0`; it is `1` only when the run could not finish. Editing the config during a run is fine: harden re-lists the mutants, keeps the verdicts no changed file touched and runs the rest again. The third change in one run stops it. harden never writes or deletes a journey.
 
 - `[paths...]`, `--filter <name>`: The journeys to harden, as for `lowdefy test` (one `--filter`, and no `--tag`).
-- `--page <pageId...>`: Only mutants on these pages, and the endpoint mutants a journey touching them called.
+- `--page <pageId...>`: Only mutants on these pages, and the endpoint mutants a journey touching them called. The baseline run also skips journeys that cannot reach these pages: ones whose last measured run in `.lowdefy/test/exercised.json` touched none of them and whose `pageId` and `goto` steps name none. A journey with no record, a changed journey, or a record measured on another build is always run, so run `lowdefy test` first to get the saving. The log says how many were left out.
 - `--operators <list>`: Only these operators, comma separated: `drop-action`, `skip-validate`, `flip-visible`, `swap-if`, `drop-payload`, `retarget-link`, `drop-block`, `drop-step`.
 - `--max <n>`: Run at most `n` mutants, sampled the same way on every machine. The default is 200; `0` runs every mutant.
 - `--seed <n>`: The sample's seed. Another seed draws another sample, so repeated runs can cover the rest. The default is `0`, recorded in the report.

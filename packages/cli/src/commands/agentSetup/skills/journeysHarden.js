@@ -72,7 +72,10 @@ page and operator and the time estimate, and ask whether to run all of it or onl
 
 ## 4. Harden
 
-Run \`${cd}lowdefy journeys harden\` (with the pages the developer picked). It breaks the config
+Run \`${cd}lowdefy journeys harden\` (with the pages the developer picked; it then runs only
+the baseline of journeys that can reach them, and the replay in step 1 is what lets it tell). It
+prints \`Baseline n/N journeys\` and \`Mutants n/N run\` lines while it works: a long baseline is
+not a hang, so let it finish. It breaks the config
 one change at a time, only in the test's own browser, and reports each change no journey
 noticed as \`SURVIVED\`, with its source line. Take survivors one at a time, ranked by the
 production use of their page when \`.lowdefy/test/coverage.json\` has it, else in report order.

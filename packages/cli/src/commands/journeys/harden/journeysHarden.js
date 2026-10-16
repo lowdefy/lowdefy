@@ -19,7 +19,9 @@ import { type } from '@lowdefy/helpers';
 
 import buildMutationReport from './buildMutationReport.js';
 import formatHardenReport from './formatHardenReport.js';
+import fetchBuildId from '../../test/fetchBuildId.js';
 import formatMutantList from './formatMutantList.js';
+import narrowBaseline from './narrowBaseline.js';
 import parseHardenOptions from './parseHardenOptions.js';
 import requestMutants from './requestMutants.js';
 import resolveJourneyPaths from '../../test/resolveJourneyPaths.js';
@@ -108,10 +110,22 @@ function listedOperators({ options, listing }) {
 // and report. Returns the exit code.
 async function hardenOnServer({ context, options, items, url }) {
   const started = Date.now();
-  const { baselines, failed } = await runBaseline({
+  const narrowed = narrowBaseline({
     items,
+    pages: options.pages,
+    directories: context.directories,
+    buildId: (options.pages ?? []).length === 0 ? null : await fetchBuildId({ url }),
+  });
+  if (narrowed.skipped > 0) {
+    context.logger.info(
+      `Baseline: ${narrowed.skipped} of ${items.length} journeys left out as off-path for --page (their last run touched none of the pages).`
+    );
+  }
+  const { baselines, failed } = await runBaseline({
+    items: narrowed.items,
     url,
     configDirectory: context.directories.config,
+    log: (line) => context.logger.info(line),
   });
   failed.forEach(({ file, name, message }) =>
     context.logger.warn(
@@ -152,7 +166,15 @@ async function hardenOnServer({ context, options, items, url }) {
     }).forEach((line) => context.logger.info(line));
     return 0;
   }
-  const run = await runWithCarryOver({ context, options, items, url, baselines, listing, mutants });
+  const run = await runWithCarryOver({
+    context,
+    options,
+    items: narrowed.items,
+    url,
+    baselines,
+    listing,
+    mutants,
+  });
   const exitCode = run.stopped ? 1 : 0;
   const score = scoreMutants({
     mutants: run.mutants,

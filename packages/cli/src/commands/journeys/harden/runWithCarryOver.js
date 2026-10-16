@@ -14,12 +14,41 @@
   limitations under the License.
 */
 
+import createProgress from './createProgress.js';
 import carryOverVerdicts from './carryOverVerdicts.js';
 import requestMutants from './requestMutants.js';
 import runBaseline from './runBaseline.js';
 import runMutantPair from './runMutantPair.js';
 import runMutantWorkers from './runMutantWorkers.js';
 import waitForOkBuild from './waitForOkBuild.js';
+
+// Counts a mutant as run once every journey on its path has a verdict, and as
+// survived when none of those verdicts killed it.
+function createMutantProgress({ pairs, log }) {
+  const remaining = new Map();
+  pairs.forEach(({ mutant }) => remaining.set(mutant.id, (remaining.get(mutant.id) ?? 0) + 1));
+  const killed = new Set();
+  let survived = 0;
+  const tick = createProgress({
+    total: remaining.size,
+    log,
+    everyCount: 10,
+    format: ({ done, total }) => `Mutants ${done}/${total} run (${survived} survived)`,
+  });
+  return function onVerdict(verdict) {
+    if (verdict.verdict === 'killed') {
+      killed.add(verdict.mutantId);
+    }
+    const left = remaining.get(verdict.mutantId) - 1;
+    remaining.set(verdict.mutantId, left);
+    if (left === 0) {
+      if (!killed.has(verdict.mutantId)) {
+        survived += 1;
+      }
+      tick();
+    }
+  };
+}
 
 function toPairs({ mutants, baselines }) {
   const byKey = new Map(baselines.map((baseline) => [baseline.key, baseline]));
@@ -43,12 +72,15 @@ async function runWithCarryOver({ context, options, items, url, baselines, listi
   let rebuilds = 0;
   for (;;) {
     const buildId = current.listing.buildId;
+    const progress = createMutantProgress({ pairs, log: (line) => context.logger.info(line) });
     const run = await runMutantWorkers({
       pairs,
       workers: options.workers,
       runPair: (pair) => runMutantPair({ pair, url, buildId }),
-      onVerdict: (verdict) =>
-        context.logger.debug(`${verdict.verdict} ${verdict.mutantId} ${verdict.journey}`),
+      onVerdict: (verdict) => {
+        context.logger.debug(`${verdict.verdict} ${verdict.mutantId} ${verdict.journey}`);
+        progress(verdict);
+      },
     });
     verdicts = [...verdicts, ...run.verdicts];
     if (!run.buildChanged) {
@@ -67,6 +99,7 @@ async function runWithCarryOver({ context, options, items, url, baselines, listi
       items: items.filter((item) => current.baselines.some((baseline) => baseline.item === item)),
       url,
       configDirectory: context.directories.config,
+      log: (line) => context.logger.info(line),
     });
     rerun.failed.forEach(({ name }) =>
       context.logger.warn(`Left out "${name}": its baseline fails after the config change.`)
