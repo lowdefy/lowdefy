@@ -235,3 +235,67 @@ test('send closes the transport and rethrows when sendMail rejects', async () =>
   await expect(send({ connection, mail })).rejects.toThrow('Connection refused.');
   expect(mockClose).toHaveBeenCalledTimes(1);
 });
+
+test('send drops .invalid recipients when the filter is unset', async () => {
+  const send = (await import('./send.js')).default;
+  const connection = {
+    host: 'smtp.example.com',
+    from: 'from@example.com',
+  };
+  const mail = {
+    to: ['a@smoke.invalid', 'b@real.com'],
+    subject: 'A',
+  };
+  const result = await send({ connection, mail });
+  expect(mockSendMail.mock.calls[0][0].to).toEqual(['b@real.com']);
+  expect(result.to).toEqual(['b@real.com']);
+});
+
+test('send drops .invalid recipients when the filter is false', async () => {
+  const send = (await import('./send.js')).default;
+  const connection = {
+    host: 'smtp.example.com',
+    from: 'from@example.com',
+    filter: false,
+  };
+  const mail = {
+    to: ['a@smoke.invalid', 'b@real.com'],
+    subject: 'A',
+  };
+  const result = await send({ connection, mail });
+  expect(mockSendMail.mock.calls[0][0].to).toEqual(['b@real.com']);
+  expect(result.to).toEqual(['b@real.com']);
+});
+
+test('send returns filtered without creating a transport when replaceAddress is set and every to is on .invalid', async () => {
+  const send = (await import('./send.js')).default;
+  const connection = {
+    host: 'smtp.example.com',
+    from: 'from@example.com',
+    filter: { replaceAddress: 'catchall@example.com' },
+  };
+  const mail = {
+    to: 'x@audit.invalid',
+    subject: 'A',
+  };
+  const result = await send({ connection, mail });
+  expect(result).toEqual({ messageId: null, to: null, filtered: true });
+  expect(mockCreateTransport).not.toHaveBeenCalled();
+  expect(mockSendMail).not.toHaveBeenCalled();
+});
+
+test('send redirects to replaceAddress when a to recipient is not on .invalid', async () => {
+  const send = (await import('./send.js')).default;
+  const connection = {
+    host: 'smtp.example.com',
+    from: 'from@example.com',
+    filter: { replaceAddress: 'catchall@example.com' },
+  };
+  const mail = {
+    to: ['x@audit.invalid', 'y@real.com'],
+    subject: 'A',
+  };
+  const result = await send({ connection, mail });
+  expect(mockSendMail.mock.calls[0][0].to).toEqual('catchall@example.com');
+  expect(result.to).toEqual('catchall@example.com');
+});

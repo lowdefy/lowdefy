@@ -16,7 +16,60 @@
 
 import { type } from '@lowdefy/helpers';
 
-function applyMailFilter({ filter, mail }) {
+function getBareAddress(recipient) {
+  if (type.isObject(recipient)) {
+    return recipient.email.toLowerCase();
+  }
+  const match = recipient.match(/<([^>]+)>/);
+  if (match) {
+    return match[1].toLowerCase();
+  }
+  return recipient.toLowerCase();
+}
+
+function isInvalid(recipient) {
+  const address = getBareAddress(recipient);
+  // A string holding several comma-separated addresses is kept whole, so a real recipient in it
+  // is never dropped.
+  if (address.indexOf('@') !== address.lastIndexOf('@')) {
+    return false;
+  }
+  const domain = address.slice(address.lastIndexOf('@') + 1);
+  return domain === 'invalid' || domain.endsWith('.invalid');
+}
+
+function dropInvalid(recipients) {
+  if (type.isNone(recipients)) {
+    return recipients;
+  }
+  if (!type.isArray(recipients)) {
+    return isInvalid(recipients) ? undefined : recipients;
+  }
+  if (!recipients.some(isInvalid)) {
+    return recipients;
+  }
+  const kept = recipients.filter((recipient) => !isInvalid(recipient));
+  if (kept.length === 0) {
+    return undefined;
+  }
+  return kept;
+}
+
+// .invalid is reserved and never resolves (RFC 6761), so mail to it is dropped on every send.
+// Returns null when every to recipient is dropped.
+function dropInvalidRecipients(mail) {
+  const to = dropInvalid(mail.to);
+  if (!type.isNone(mail.to) && type.isUndefined(to)) {
+    return null;
+  }
+  return { ...mail, to, cc: dropInvalid(mail.cc), bcc: dropInvalid(mail.bcc) };
+}
+
+function applyMailFilter({ filter, mail: received }) {
+  const mail = dropInvalidRecipients(received);
+  if (mail === null) {
+    return null;
+  }
   if (type.isNone(filter)) {
     return mail;
   }
@@ -32,17 +85,6 @@ function applyMailFilter({ filter, mail }) {
     ? null
     : allowlist.map((domain) => domain.toLowerCase());
   const addressRegex = type.isNone(regex) ? null : new RegExp(regex);
-
-  function getBareAddress(recipient) {
-    if (type.isObject(recipient)) {
-      return recipient.email.toLowerCase();
-    }
-    const match = recipient.match(/<([^>]+)>/);
-    if (match) {
-      return match[1].toLowerCase();
-    }
-    return recipient.toLowerCase();
-  }
 
   function isAllowed(recipient) {
     const address = getBareAddress(recipient);

@@ -43,6 +43,8 @@ Declared in `src/types.js`:
 
 `allowlist` and `regex` combine. When every `to` recipient is filtered out, `send()` returns without sending (`applyMailFilter` returns `null`).
 
+Before any of these, `applyMailFilter` drops recipients on the reserved `.invalid` domain (RFC 6761: it never resolves) from `to`, `cc` and `bcc`. This runs on every send, with no filter, with `filter: false` and for auth mail (which calls `send()` directly), so test users never reach a `replaceAddress` catch-all. When every `to` recipient is dropped, it returns `null`. Only `.invalid` is dropped: journey tests read mail sent to `example.com` and `.test` users from the dev server's SMTP catcher. `connection-sendgrid` has its own copy of the filter with the same drop.
+
 ## Key Implementations
 
 ### SMTPMailSend

@@ -27,6 +27,41 @@ function getBareEmail(entry) {
   return String(entry).toLowerCase();
 }
 
+function isInvalid(entry) {
+  const email = getBareEmail(entry);
+  // A string holding several comma-separated addresses is kept whole, so a real recipient in it
+  // is never dropped.
+  if (email.indexOf('@') !== email.lastIndexOf('@')) {
+    return false;
+  }
+  const domain = email.slice(email.lastIndexOf('@') + 1);
+  return domain === 'invalid' || domain.endsWith('.invalid');
+}
+
+function dropInvalid(entries) {
+  if (type.isNone(entries)) {
+    return entries;
+  }
+  if (!type.isArray(entries)) {
+    return isInvalid(entries) ? undefined : entries;
+  }
+  if (!entries.some(isInvalid)) {
+    return entries;
+  }
+  const kept = entries.filter((entry) => !isInvalid(entry));
+  return kept.length === 0 ? undefined : kept;
+}
+
+// .invalid is reserved and never resolves (RFC 6761), so mail to it is dropped on every send.
+// Returns null when every to recipient is dropped.
+function dropInvalidRecipients(mail) {
+  const to = dropInvalid(mail.to);
+  if (!type.isNone(mail.to) && type.isUndefined(to)) {
+    return null;
+  }
+  return { ...mail, to, cc: dropInvalid(mail.cc), bcc: dropInvalid(mail.bcc) };
+}
+
 function createMatcher({ allowlist, regex }) {
   const allowedDomains = type.isNone(allowlist)
     ? null
@@ -54,7 +89,11 @@ function filterEntries({ entries, matches }) {
   return (type.isArray(entries) ? entries : [entries]).filter(matches);
 }
 
-function applyMailFilter({ filter, mail }) {
+function applyMailFilter({ filter, mail: received }) {
+  const mail = dropInvalidRecipients(received);
+  if (mail === null) {
+    return null;
+  }
   if (type.isNone(filter)) {
     return mail;
   }

@@ -171,3 +171,77 @@ test('applyMailFilter leaves undefined cc and bcc undefined', () => {
   });
   expect(result).toEqual({ to: 'a@allowed.com', cc: undefined, bcc: undefined });
 });
+
+test('applyMailFilter drops .invalid recipients from to, cc and bcc with no filter', () => {
+  const result = applyMailFilter({
+    filter: undefined,
+    mail: {
+      to: ['x@audit.invalid', 'a@real.com'],
+      cc: ['c@smoke.invalid', 'c@real.com'],
+      bcc: ['b@audit.invalid'],
+    },
+  });
+  expect(result).toEqual({ to: ['a@real.com'], cc: ['c@real.com'], bcc: undefined });
+});
+
+test('applyMailFilter drops .invalid recipients case-insensitively in every address form', () => {
+  const result = applyMailFilter({
+    filter: null,
+    mail: {
+      to: [
+        'X@Audit.INVALID',
+        'Test User <x@AUDIT.INVALID>',
+        { name: 'Test User', email: 'y@smoke.invalid' },
+        'user@invalid',
+        'Real <real@real.com>',
+      ],
+    },
+  });
+  expect(result).toEqual({ to: ['Real <real@real.com>'], cc: undefined, bcc: undefined });
+});
+
+test('applyMailFilter keeps example.com and .test recipients with no filter', () => {
+  const mail = { to: ['ada@example.com', 'ada@example.test', 'b@invalid.org'] };
+  expect(applyMailFilter({ filter: null, mail })).toEqual(mail);
+});
+
+test('applyMailFilter keeps a comma-separated address string whole when it ends on .invalid', () => {
+  const mail = { to: 'a@real.com, x@audit.invalid' };
+  expect(applyMailFilter({ filter: null, mail })).toEqual(mail);
+});
+
+test('applyMailFilter returns null when every to recipient is on .invalid with no filter', () => {
+  expect(
+    applyMailFilter({
+      filter: undefined,
+      mail: { to: ['x@audit.invalid', 'y@smoke.invalid'], cc: 'c@real.com' },
+    })
+  ).toBe(null);
+});
+
+test('applyMailFilter returns null for an .invalid to before replaceAddress redirects', () => {
+  expect(
+    applyMailFilter({
+      filter: { replaceAddress: 'catchall@real.com' },
+      mail: { to: 'x@audit.invalid' },
+    })
+  ).toBe(null);
+});
+
+test('applyMailFilter replaceAddress redirects when a to recipient survives the .invalid drop', () => {
+  expect(
+    applyMailFilter({
+      filter: { replaceAddress: 'catchall@real.com' },
+      mail: { to: ['x@audit.invalid', 'y@real.com'], subject: 'A' },
+    })
+  ).toEqual({ to: 'catchall@real.com', cc: undefined, bcc: undefined, subject: 'A' });
+});
+
+test('applyMailFilter drops .invalid recipients before the allowlist runs', () => {
+  expect(
+    applyMailFilter({
+      filter: { allowlist: ['real.com', 'smoke.invalid'] },
+      mail: { to: ['x@smoke.invalid', 'a@real.com'], cc: 'c@smoke.invalid' },
+    })
+  ).toEqual({ to: ['a@real.com'], cc: undefined, bcc: undefined });
+});

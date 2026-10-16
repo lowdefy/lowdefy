@@ -43,6 +43,8 @@ Request types:
   - `regex: string`: A regular expression. Only recipient addresses matching the pattern are sent to.
   When the connection sets no `filter`, or every field of it resolves to `null`, the current environment's `email.filter` from [`config.environments`](/lowdefy-schema) applies instead. A connection's own `filter` wins when it sets at least one field, and `filter: false` turns filtering off entirely, the environment's too. With `email.enabled: false` on the current environment, mail requests send nothing and report each message as `{ disabled: true }`.
 
+  Addresses on the reserved `.invalid` domain, which never resolves (RFC 6761), are always dropped from `to`, `cc` and `bcc` before the filter runs, in every environment, with no filter and with `filter: false` too. Case is ignored. When every `to` recipient is dropped, the message is not sent and reports `{ messageId: null, to: null, filtered: true }`. So test users with addresses such as `user@audit.invalid` never reach a `replaceAddress` catch-all. Use `.invalid` for test users that must never receive mail, and `example.com` or `.test` for journey users whose mail a journey reads.
+
 ### SendGridMailSend
 
 #### Properties
