@@ -126,6 +126,17 @@ describe('Claude import', () => {
     expect(check('7.1.0')).toEqual([]);
   });
 
+  test('the import is looked for beside an AGENTS.md below the git root', () => {
+    fs.mkdirSync(path.join(root, '.git'));
+    write('CLAUDE.md', '@AGENTS.md\n');
+    write('apps/web/AGENTS.md', block('7.1.0'));
+    expect(check('7.1.0', path.join(root, 'apps/web')).map((notice) => notice.code)).toEqual([
+      'claude_import_missing',
+    ]);
+    write('apps/web/CLAUDE.md', '@AGENTS.md\n');
+    expect(check('7.1.0', path.join(root, 'apps/web'))).toEqual([]);
+  });
+
   test('applies to an app on local', () => {
     checkout();
     fs.rmSync(path.join(root, 'CLAUDE.md'));
@@ -136,7 +147,7 @@ describe('Claude import', () => {
 describe('finding the block', () => {
   test('a block in the app folder below the git root is found', () => {
     fs.mkdirSync(path.join(root, '.git'));
-    write('CLAUDE.md', '@AGENTS.md\n');
+    write('apps/web/CLAUDE.md', '@AGENTS.md\n');
     write('.mcp.json', JSON.stringify({ mcpServers: { lowdefy: {} } }));
     write('apps/web/AGENTS.md', block('7.0.0'));
     expect(check('7.1.0', path.join(root, 'apps/web')).map((notice) => notice.code)).toEqual([

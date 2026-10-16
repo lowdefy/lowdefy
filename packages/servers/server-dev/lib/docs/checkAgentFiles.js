@@ -55,7 +55,11 @@ function findBlock({ configDirectory, projectRoot }) {
       const text = readText(path.join(directory, name));
       if (text?.includes(BLOCK_BEGIN)) {
         const attributes = text.match(MARKER)?.[1] ?? '';
-        return { name, version: attributes.match(/\bversion=(\S+)/)?.[1] ?? null };
+        return {
+          directory,
+          name,
+          version: attributes.match(/\bversion=(\S+)/)?.[1] ?? null,
+        };
       }
     }
     if (directory === projectRoot) {
@@ -74,8 +78,8 @@ function majorMinor(version) {
   return match ? `${match[1]}.${match[2]}` : null;
 }
 
-function hasClaudeImport(projectRoot) {
-  const text = readText(path.join(projectRoot, 'CLAUDE.md'));
+function hasClaudeImport(directory) {
+  const text = readText(path.join(directory, 'CLAUDE.md'));
   return text !== null && text.split(/\r?\n/).some((line) => line.trim() === '@AGENTS.md');
 }
 
@@ -93,7 +97,7 @@ function hasLowdefyMcpServer(projectRoot) {
 
 // Checks Lowdefy's agent block that `lowdefy agent-setup` writes: missing,
 // from a different major.minor version than the app runs, or in AGENTS.md
-// while the root CLAUDE.md lacks its import. Returns notices for build status's
+// while the CLAUDE.md beside it lacks its import. Returns notices for build status's
 // agentFiles field, never build warnings. Only reads; computed on every call,
 // since the root files are not watched.
 function checkAgentFiles({ configDirectory, lowdefyVersion }) {
@@ -128,7 +132,10 @@ function checkAgentFiles({ configDirectory, lowdefyVersion }) {
     });
   }
 
-  if (block.name === 'AGENTS.md' && !hasClaudeImport(projectRoot)) {
+  // agent-setup writes CLAUDE.md beside the AGENTS.md it chose, and `@AGENTS.md`
+  // resolves relative to the file holding it, so the import is looked for
+  // there: the project root, or a --project-directory below it.
+  if (block.name === 'AGENTS.md' && !hasClaudeImport(block.directory)) {
     notices.push({
       code: 'claude_import_missing',
       message:
