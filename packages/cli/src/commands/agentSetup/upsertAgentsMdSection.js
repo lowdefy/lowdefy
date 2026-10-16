@@ -61,7 +61,7 @@ function upsertSkillsList({ content, section, skills }) {
 // an existing CLAUDE.md, and only when neither exists is an AGENTS.md
 // created. Never overwrites — the file may already document the rest of the
 // project.
-async function upsertAgentsMdSection({ context, projectDirectory, appPath, devCommand, skills }) {
+async function upsertAgentsMdSection({ context, projectDirectory, skills }) {
   const candidates = ['AGENTS.md', 'CLAUDE.md'].map((fileName) => ({
     fileName,
     filePath: path.join(projectDirectory, fileName),
@@ -74,7 +74,7 @@ async function upsertAgentsMdSection({ context, projectDirectory, appPath, devCo
     }
   }
 
-  const section = agentsMd({ devCommand, appPath, skills });
+  const section = agentsMd({ skills });
 
   const withSection = existingFiles.find((file) => lowdefyHeadingPattern.test(file.content));
   if (withSection) {

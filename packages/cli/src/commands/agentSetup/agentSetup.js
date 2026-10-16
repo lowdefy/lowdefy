@@ -20,16 +20,15 @@ import { type } from '@lowdefy/helpers';
 
 import findDevScripts from '../../utils/findDevScripts.js';
 import findProjectRoot from './findProjectRoot.js';
-import getDevCommand from './getDevCommand.js';
 import upsertAgentsMdSection from './upsertAgentsMdSection.js';
 import upsertClaudeSettings from './upsertClaudeSettings.js';
 import upsertMcpServer from './upsertMcpServer.js';
 import skills from './skills/index.js';
 import writeSkillFiles from './writeSkillFiles.js';
 
-// Resolves where agent files should be written (the project root an agent is
-// launched from, not the app config directory) and the app's path relative
-// to it, so generated instructions work from that root.
+// Resolves where agent files should be written: the project root an agent is
+// launched from, not the app config directory. The files name no app, so the
+// app's place in the project is only logged.
 function resolveDirectories({ context }) {
   const configDirectory = context.directories.config;
   const projectDirectory = context.options.projectDirectory
@@ -41,9 +40,16 @@ function resolveDirectories({ context }) {
     context.logger.warn(
       `Project directory '${projectDirectory}' does not contain the config directory '${configDirectory}' - writing agent files into the config directory instead.`
     );
-    return { projectDirectory: configDirectory, appPath: '' };
+    return { projectDirectory: configDirectory };
   }
-  return { projectDirectory, appPath: relative.split(path.sep).join('/') };
+  if (relative !== '') {
+    context.logger.info(
+      `Project root detected at '${projectDirectory}' - writing agent files there. The Lowdefy config is in '${relative
+        .split(path.sep)
+        .join('/')}/'.`
+    );
+  }
+  return { projectDirectory };
 }
 
 // lowdefy mcp starts the dev server with the app's own dev script. When several
@@ -66,28 +72,12 @@ function warnAmbiguousDevScript({ context }) {
 async function agentSetup({ context }) {
   context.logger.info('Setting up this project for AI coding agents.');
 
-  const { projectDirectory, appPath } = resolveDirectories({ context });
-  if (appPath !== '') {
-    context.logger.info(
-      `Project root detected at '${projectDirectory}' - writing agent files there. The Lowdefy config is in '${appPath}/'.`
-    );
-  }
-  const devCommand = getDevCommand({
-    configDirectory: context.directories.config,
-    projectDirectory,
-  });
-  const runCommand = appPath === '' ? devCommand : `cd ${appPath} && ${devCommand}`;
+  const { projectDirectory } = resolveDirectories({ context });
 
   await upsertMcpServer({ context, projectDirectory });
   await upsertClaudeSettings({ context, projectDirectory });
-  await writeSkillFiles({ context, projectDirectory, appPath, skills });
-  await upsertAgentsMdSection({
-    context,
-    projectDirectory,
-    appPath,
-    devCommand: runCommand,
-    skills,
-  });
+  await writeSkillFiles({ context, projectDirectory, skills });
+  await upsertAgentsMdSection({ context, projectDirectory, skills });
   warnAmbiguousDevScript({ context });
 
   await context.sendTelemetry();

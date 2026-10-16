@@ -96,12 +96,13 @@ test('agentSetup creates .mcp.json, the Claude Code skill, and AGENTS.md from sc
 
   const agentsMd = read('AGENTS.md');
   expect(agentsMd).toContain('## Lowdefy');
-  expect(agentsMd).toContain('npx lowdefy dev');
+  expect(agentsMd).not.toContain('Developers start it');
+  expect(agentsMd).toContain('A Lowdefy app is a folder containing `lowdefy.yaml`.');
   expect(agentsMd).toContain('lowdefy_dev_start');
   expect(agentsMd).toContain('When you finish work in a git worktree you created for the task');
   expect(agentsMd).toContain('### Testing a change');
   expect(agentsMd).toContain('Run `tier: common` first');
-  expect(agentsMd).toContain('`lowdefy test --tier common`');
+  expect(agentsMd).toContain('`lowdefy test --config-directory <app> --tier common`');
   expect(agentsMd).not.toContain('localhost:');
 
   const settings = JSON.parse(read(path.join('.claude', 'settings.json')));
@@ -504,18 +505,6 @@ test('agentSetup writes one AGENTS.md line per skill in the list', async () => {
   });
 });
 
-test('agentSetup prefers a package.json dev script that runs lowdefy dev', async () => {
-  fs.writeFileSync(
-    path.join(configDirectory, 'package.json'),
-    JSON.stringify({ scripts: { dev: 'lowdefy dev' } })
-  );
-  fs.writeFileSync(path.join(configDirectory, 'pnpm-lock.yaml'), '');
-
-  await agentSetup({ context });
-
-  expect(read('AGENTS.md')).toContain('pnpm dev');
-});
-
 describe('monorepo layout (app in a subdirectory of the git root)', () => {
   let projectDirectory;
 
@@ -542,12 +531,10 @@ describe('monorepo layout (app in a subdirectory of the git root)', () => {
 
     const mcpJson = JSON.parse(readRoot('.mcp.json'));
     expect(mcpJson.mcpServers.lowdefy).toEqual(STDIO_ENTRY);
-    expect(readRoot(path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md'))).toContain(
-      'lives in `apps/myapp/`'
+    expect(readRoot(path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md'))).not.toContain(
+      'apps/myapp'
     );
-    const agentsMd = readRoot('AGENTS.md');
-    expect(agentsMd).toContain('Lowdefy](https://lowdefy.com) app in `apps/myapp/`');
-    expect(agentsMd).toContain('cd apps/myapp && npx lowdefy dev');
+    expect(readRoot('AGENTS.md')).not.toContain('apps/myapp');
 
     expect(fs.existsSync(path.join(configDirectory, '.mcp.json'))).toBe(false);
     expect(fs.existsSync(path.join(configDirectory, 'AGENTS.md'))).toBe(false);
@@ -601,16 +588,31 @@ describe('monorepo layout (app in a subdirectory of the git root)', () => {
     );
   });
 
-  test('agentSetup uses a root lockfile for the dev command', async () => {
-    fs.writeFileSync(
-      path.join(configDirectory, 'package.json'),
-      JSON.stringify({ scripts: { dev: 'lowdefy dev' } })
-    );
-    fs.writeFileSync(path.join(projectDirectory, 'pnpm-lock.yaml'), '');
+  test('agentSetup writes the same skills and guidance from either of two apps in one repository', async () => {
+    const otherProject = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-agent-setup-test-'));
+    try {
+      fs.mkdirSync(path.join(otherProject, '.git'));
+      const otherApp = path.join(otherProject, 'apps', 'other');
+      fs.mkdirSync(otherApp, { recursive: true });
+      fs.mkdirSync(path.join(otherProject, 'apps', 'myapp'), { recursive: true });
+      fs.mkdirSync(path.join(projectDirectory, 'apps', 'other'), { recursive: true });
 
-    await agentSetup({ context });
+      await agentSetup({ context });
+      await agentSetup({ context: { ...context, directories: { config: otherApp } } });
 
-    expect(readRoot('AGENTS.md')).toContain('cd apps/myapp && pnpm dev');
+      const files = [
+        'AGENTS.md',
+        ...fs
+          .readdirSync(path.join(projectDirectory, '.claude', 'skills'))
+          .map((name) => path.join('.claude', 'skills', name, 'SKILL.md')),
+      ];
+      expect(files.length).toBeGreaterThan(2);
+      files.forEach((file) => {
+        expect(fs.readFileSync(path.join(otherProject, file), 'utf8')).toEqual(readRoot(file));
+      });
+    } finally {
+      fs.rmSync(otherProject, { recursive: true, force: true });
+    }
   });
 
   test('agentSetup warns about a stale .mcp.json left in the app directory', async () => {
@@ -660,7 +662,9 @@ test('agentSetup writes the journeys-from-pr skill, with the bug bash folded in,
   await agentSetup({ context });
   const written = read(path.join('.claude', 'skills', 'journeys-from-pr', 'SKILL.md'));
   expect(written).toContain('name: journeys-from-pr');
-  expect(written).toContain('lowdefy journeys scope --base <base branch> --json');
+  expect(written).toContain(
+    'lowdefy journeys scope --config-directory <app> --base <base branch> --json'
+  );
   expect(written).toContain('**A bug bash**');
   expect(written).toMatch(/lowdefy-skill-hash: [a-f0-9]{64}/);
   expect(fs.existsSync(path.join(configDirectory, '.claude', 'skills', 'journeys-bug-bash'))).toBe(

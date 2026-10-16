@@ -18,16 +18,15 @@ import writeGeneratedSkill from './writeGeneratedSkill.js';
 import writeLowdefyConfigSkill from './writeLowdefyConfigSkill.js';
 
 // Writes every skill in the list to .claude/skills/<name>/SKILL.md.
-async function writeSkillFiles({ context, projectDirectory, appPath, skills }) {
+async function writeSkillFiles({ context, projectDirectory, skills }) {
   for (const skill of skills) {
     if (skill.name === 'lowdefy-config') {
-      await writeLowdefyConfigSkill({ context, projectDirectory, appPath, render: skill.render });
+      await writeLowdefyConfigSkill({ context, projectDirectory, render: skill.render });
       continue;
     }
     await writeGeneratedSkill({
       context,
       projectDirectory,
-      appPath,
       name: skill.name,
       render: skill.render,
     });

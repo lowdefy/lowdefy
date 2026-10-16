@@ -14,13 +14,14 @@
   limitations under the License.
 */
 
+import appFolder from './appFolder.js';
+
 // The journeys-harden skill: a thin workflow over the CLI that proves the
 // app's journeys are worth keeping. It replays and lints them, runs config
 // mutants to find what no journey would notice, writes edge-case variants,
 // and turns each finding into an assertion the developer approves. It never
 // deletes a journey, or proposes deleting one.
-function journeysHarden({ appPath }) {
-  const cd = appPath === '' ? '' : `cd ${appPath} && `;
+function journeysHarden() {
   return `---
 name: journeys-harden
 description: Use when the developer wants to know whether the app's journeys would catch a broken feature, wants edge-case journeys, or wants candidates proven before committing them. Replays, lints and mutation-tests journeys and writes edge-case variants; never deletes a journey.
@@ -30,7 +31,9 @@ description: Use when the developer wants to know whether the app's journeys wou
 
 Journeys (tests in \`tests/journeys/\`) pass, but a journey that passes may check nothing, may
 pass only some of the time, and leaves the edge cases unwritten. This skill proves them with the
-developer, one finding at a time. Run every command below from the app directory (\`${cd}…\`).
+developer, one finding at a time.
+
+${appFolder()}
 
 Two rules hold throughout:
 
@@ -43,7 +46,7 @@ Two rules hold throughout:
 
 ## 1. Replay
 
-Run \`${cd}lowdefy test --repeat 3\`, and \`${cd}lowdefy test --repeat 3 tests/journeys/_candidates/\`
+Run \`lowdefy test --config-directory <app> --repeat 3\`, and \`lowdefy test --config-directory <app> --repeat 3 <app>/tests/journeys/_candidates/\`
 when that directory has files. Replay first: each run records what the journey exercised in
 \`.lowdefy/test/exercised.json\`, which the lints read.
 
@@ -55,7 +58,7 @@ when that directory has files. Replay first: each run records what the journey e
 
 ## 2. Lint
 
-Run \`${cd}lowdefy test --lint\`, and \`${cd}lowdefy test --lint tests/journeys/_candidates/\`.
+Run \`lowdefy test --config-directory <app> --lint\`, and \`lowdefy test --config-directory <app> --lint <app>/tests/journeys/_candidates/\`.
 Fix lint errors in candidates within the two rules above. Take any you cannot fix, and every fix
 to a committed journey, to the developer one at a time.
 
@@ -66,13 +69,13 @@ connections, and without a data set that is the developer's own database. harden
 every journey without \`data:\` and names it. Tell the developer which ones were left out; moving
 a journey onto a data set is their call.
 
-Run \`${cd}lowdefy journeys harden --list\`. Show the developer how many mutants it would run per
+Run \`lowdefy journeys harden --config-directory <app> --list\`. Show the developer how many mutants it would run per
 page and operator and the time estimate, and ask whether to run all of it or only some pages
 (\`--page <pageId>\`). Wait for the answer.
 
 ## 4. Harden
 
-Run \`${cd}lowdefy journeys harden\` (with the pages the developer picked; it then runs only
+Run \`lowdefy journeys harden --config-directory <app>\` (with the pages the developer picked; it then runs only
 the baseline of journeys that can reach them, and the replay in step 1 is what lets it tell, but only
 when the config has not changed since that replay: a journey recorded on other config is kept, and
 the log says why, so replay again after any edit). It
@@ -88,8 +91,8 @@ For each survivor:
   \`expect.text\` of the message, \`expect.state\`, \`expect.visible\`, \`expect.hidden\` or
   \`expect.calls\`.
 - On the developer's yes, edit the journey, then confirm with
-  \`${cd}lowdefy journeys harden --mutant <id>\` (it is now killed) and
-  \`${cd}lowdefy test --repeat 3 <file>\` (still green).
+  \`lowdefy journeys harden --config-directory <app> --mutant <id>\` (it is now killed) and
+  \`lowdefy test --config-directory <app> --repeat 3 <file>\` (still green).
 - If no assertion can catch it because the config is dead, say so: that is a finding about the
   app, not about the test.
 
@@ -98,7 +101,7 @@ report, never an assertion to add.
 
 ## 5. Variants
 
-Run \`${cd}lowdefy journeys variants <file>\` for the journeys the developer picks; offer the most
+Run \`lowdefy journeys variants --config-directory <app> <file>\` for the journeys the developer picks; offer the most
 production-backed ones first. It writes edge-case candidates (other roles, another organization,
 empty and large data, bad input, a reload mid-flow, a double click) to
 \`tests/journeys/_candidates/variants/<source>/\` and replays each three times. Present failures one at a
@@ -117,7 +120,7 @@ When the developer keeps a variant:
 
 ## 6. Evidence
 
-Run \`${cd}lowdefy journeys evidence --refresh\`, so the mutation scores land in each journey's
+Run \`lowdefy journeys evidence --config-directory <app> --refresh\`, so the mutation scores land in each journey's
 \`evidence:\`.
 
 ## 7. Report
