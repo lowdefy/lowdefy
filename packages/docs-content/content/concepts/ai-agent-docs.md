@@ -193,6 +193,20 @@ Nothing is refused — the last-known-good schema or page config is often exactl
 
 Some build warnings are only warnings in `lowdefy dev` — they fail `lowdefy build`. Those carry `"prodError": true` in `lowdefy_build_status`, are printed in the dev terminal as `[ConfigWarning · fails in prod] …`, and are badged **fails in prod** on a dark-orange bar in the browser error bar. Treat them as errors: the production build will not pass until they are fixed.
 
+### Agent instructions are checked, and said once
+
+`lowdefy agent-setup` writes Lowdefy's guidance for coding agents as a marked block in `AGENTS.md` (or `CLAUDE.md`), stamped with the Lowdefy version that wrote it. The dev server checks that block and reports what it finds under `agentFiles` in `lowdefy_build_status`, as `{ code, message }` notices, never among the build's warnings:
+
+| `code`                  | When                                                                                                    |
+| ----------------------- | ------------------------------------------------------------------------------------------------------- |
+| `version_mismatch`      | The block comes from a different Lowdefy minor version than `lowdefy.yaml` (a patch difference is fine) |
+| `claude_import_missing` | The block is in `AGENTS.md`, but the root `CLAUDE.md` is missing or has no `@AGENTS.md` line            |
+| `block_missing`         | No block, but `.mcp.json` registers the `lowdefy` server, so the project set up agents                  |
+
+The check reads the nearest `AGENTS.md` or `CLAUDE.md` holding the block, from the app folder up to the git root, and runs on every read, so a fix shows at once. It never changes a file. Apps on `lowdefy: local` get no version or missing-block notice. The dev server also prints the notices once when it starts.
+
+`lowdefy mcp` passes each notice on once per agent session for each app, and again only if its text changes; later build-status results in that session leave `agentFiles` out. `GET /lowdefy-docs/build-status` reports it on every read. Each notice tells the agent to tell you rather than fix it: the fix (`npx lowdefy@<app version> agent-setup`) rewrites committed files on whatever branch is open, and in a repository whose apps pin different Lowdefy versions only you know which version the files should follow.
+
 ## Live state — the agent sees what you see
 
 When you have a page open in your browser, the agent can read its **actual live state** — page state, request results, and the event log of recent actions — via `lowdefy_inspect_state`. Reproduce a problem by clicking through the app, then ask the agent to look: it inspects your exact tab, not a guess. `lowdefy_eval_operator` then evaluates any operator expression (like `{"_state": "customer.name"}`) against that same live context, so `_state`/`_request` binding bugs get debugged against real data. With no tab open, both tools run the page headless instead.
