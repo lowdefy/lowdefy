@@ -196,7 +196,7 @@ const STEPS = {
   select: {
     ...valueTarget(),
     description:
-      'Pick an option by exact text: a dropdown option, or a radio, button or segmented option in the block.',
+      'Pick an option by exact text: a dropdown option, a radio, button or segmented option in the block, or a checkbox option in the block, which it ticks and never unticks.',
   },
   press: {
     type: 'string',

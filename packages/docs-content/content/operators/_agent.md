@@ -3,11 +3,10 @@
 ```
 (key: 'id' | 'conversationId'): string | null
 (key: 'files'): { key: string, filename: string, mediaType: string }[] | null
-(key: 'sharedState'): object | null
-(all: boolean): { id: string, conversationId: string | null, files: object[], sharedState: object | null } | null
+(all: boolean): { id: string, conversationId: string | null, files: object[] } | null
 (arguments: {
   all?: boolean,
-  key?: 'id' | 'conversationId' | 'files' | 'sharedState',
+  key?: 'id' | 'conversationId' | 'files',
   default?: any,
 }): any
 ```
@@ -17,8 +16,7 @@ The `_agent` operator returns the [agent](/agents-introduction) that called the 
 - `_agent: id` returns the agent's `id` in the `agents` section.
 - `_agent: conversationId` returns the id of the chat conversation the agent runs in. It is `null` for an agent run by a [`CallAgent`](/api) routine step, which has no conversation.
 - `_agent: files` returns the files the person attached in the chat, as `[{ key, filename, mediaType }]`: every file the [`AgentChat`](/AgentChat) block uploaded to storage, from every message of the conversation the chat request carried, in message order. `key` is the file's storage key. Files pasted inline (no upload policy) have no key and are left out. It is `[]` for an agent run by a `CallAgent` step.
-- `_agent: sharedState` returns the shared state of the chat, the value the [`AgentChat`](/AgentChat) block's `sharedState` property evaluated to in the browser when it sent the message. It is `{}` when the block sets none, and `null` for an agent run by a `CallAgent` step. The browser evaluates it, so treat it as the person's own input: use it for context such as the page or browser details, never as proof of identity or permission, and take such context from here rather than from the tool's input, which the model writes.
-- `_agent: true` returns all four as `{ id, conversationId, files, sharedState }`.
+- `_agent: true` returns all three as `{ id, conversationId, files }`.
 
 The model sees each attached file with its name (`Attached file: screenshot.png`), so it can pass the name to a tool. Have the tool take file names and look each one up in `_agent: files`, never a storage key from the tool's input: the model can then only reach files of its own conversation. The files come from the person's own chat request, so the browser decides what they hold; before reading one, check that its key is one the caller may read, for example that it starts with the prefix the upload policy gives the caller's uploads.
 
@@ -31,15 +29,15 @@ Tools that a sub-agent calls see the agent the chat or `CallAgent` step runs, no
 #### Arguments
 
 ###### string
-The field of the calling agent to return: `id`, `conversationId`, `files` or `sharedState`.
+The field of the calling agent to return: `id`, `conversationId` or `files`.
 
 ###### boolean
-If `true`, returns the calling agent as `{ id, conversationId, files, sharedState }`, or `null` when no agent called the endpoint.
+If `true`, returns the calling agent as `{ id, conversationId, files }`, or `null` when no agent called the endpoint.
 
 ###### object
-  - `key: string`: The field to return, `id`, `conversationId`, `files` or `sharedState`.
+  - `key: string`: The field to return, `id`, `conversationId` or `files`.
   - `default: any`: A value to return when no agent called the endpoint.
-  - `all: boolean`: If `true`, returns the calling agent as `{ id, conversationId, files, sharedState }`.
+  - `all: boolean`: If `true`, returns the calling agent as `{ id, conversationId, files }`.
 
 #### Examples
 
