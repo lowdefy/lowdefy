@@ -157,8 +157,10 @@ If the branch has uncommitted files from an interrupted cycle, finish proving th
 \`tests/journeys/_candidates/\`) or leave them in \`_candidates/\` unproven; never lose a committed
 journey.
 
-### 2. Bootstrap (only when there is no \`tests/autopilot.yaml\`, or it has no \`items\` yet because
-bootstrap stopped as Blocked)
+### 2. Bootstrap
+
+Only when there is no \`tests/autopilot.yaml\`, or it has no \`items\` yet because bootstrap stopped
+as Blocked.
 
 1. Run \`${cd}lowdefy test --help\` and \`${cd}lowdefy journeys --help\`. If they fail, you are blocked
    (see Traps for a stale \`.lowdefy/dev\`).
