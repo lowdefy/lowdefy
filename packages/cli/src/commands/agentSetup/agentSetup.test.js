@@ -215,7 +215,7 @@ test('agentSetup keeps a lowdefy-docs entry beside lowdefy and carries tool appr
   });
 });
 
-test('agentSetup renames the MCP server in a skill it wrote, keeping edits, and leaves an old Lowdefy section as it is', async () => {
+test('agentSetup leaves an old Lowdefy section and a hashless lowdefy-config skill as they are', async () => {
   const skillDir = path.join(configDirectory, '.claude', 'skills', 'lowdefy-config');
   fs.mkdirSync(skillDir, { recursive: true });
   fs.writeFileSync(
@@ -229,11 +229,14 @@ test('agentSetup renames the MCP server in a skill it wrote, keeping edits, and 
 
   await agentSetup({ context });
 
+  // Earlier output is not migrated: the hashless skill reads as edited and
+  // freezes its twin, and the block is appended after the unmarked section.
   expect(read(path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md'))).toEqual(
-    'Edited.\nYour Lowdefy tools come from the `lowdefy` MCP server (`lowdefy mcp`).\n'
+    'Edited.\nYour Lowdefy tools come from the `lowdefy-docs` MCP server (`lowdefy mcp`).\n'
   );
-  // An unmarked section from an earlier agent-setup is not migrated: the
-  // block is appended after it.
+  expect(
+    fs.existsSync(path.join(configDirectory, '.agents', 'skills', 'lowdefy-config', 'SKILL.md'))
+  ).toBe(false);
   expect(
     read('AGENTS.md').startsWith(
       '# Project\n\n## Lowdefy\n\nYour Lowdefy tools come from the `lowdefy-docs` MCP server.\n\n<!-- BEGIN:lowdefy-agent-rules version=6.0.0 -->\n'
@@ -265,21 +268,6 @@ test('agentSetup warns and leaves .mcp.json unchanged when it is not valid JSON'
   expect(context.logger.warn).toHaveBeenCalledWith(expect.stringContaining('Could not parse'));
 });
 
-test('agentSetup skips the skill file when it already exists', async () => {
-  const skillDir = path.join(configDirectory, '.claude', 'skills', 'lowdefy-config');
-  fs.mkdirSync(skillDir, { recursive: true });
-  fs.writeFileSync(path.join(skillDir, 'SKILL.md'), 'custom content');
-
-  await agentSetup({ context });
-
-  expect(read(path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md'))).toEqual(
-    'custom content'
-  );
-  expect(context.logger.info).toHaveBeenCalledWith(
-    expect.stringContaining('already exists - skipping.')
-  );
-});
-
 test('agentSetup appends the Lowdefy block to an existing AGENTS.md', async () => {
   fs.writeFileSync(path.join(configDirectory, 'AGENTS.md'), '# My Project\n\nSome instructions.\n');
 
@@ -291,19 +279,13 @@ test('agentSetup appends the Lowdefy block to an existing AGENTS.md', async () =
   expect(agentsMd).toContain('<!-- BEGIN:lowdefy-agent-rules version=6.0.0 -->\n## Lowdefy');
 });
 
-test('agentSetup replaces a skill file it wrote before lowdefy mcp', async () => {
-  const skillDir = path.join(configDirectory, '.claude', 'skills', 'lowdefy-config');
-  fs.mkdirSync(skillDir, { recursive: true });
-  fs.writeFileSync(
-    path.join(skillDir, 'SKILL.md'),
-    'The dev server serves docs for everything installed in this project at\n`http://localhost:3000/lowdefy-docs`'
-  );
-
+test('agentSetup writes lowdefy-config to both skills folders under the hash rule', async () => {
   await agentSetup({ context });
 
-  const skill = read(path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md'));
-  expect(skill).toContain('lowdefy_dev_start');
-  expect(skill).not.toContain('localhost:3000');
+  const skillPath = path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md');
+  const written = read(skillPath);
+  expect(written).toMatch(/lowdefy-skill-hash: [a-f0-9]{64}/);
+  expect(read(path.join('.agents', 'skills', 'lowdefy-config', 'SKILL.md'))).toEqual(written);
 });
 
 test('agentSetup warns when several scripts run lowdefy dev and cli.devScript is not set', async () => {
@@ -428,9 +410,11 @@ describe('monorepo layout (app in a subdirectory of the git root)', () => {
 
       const files = [
         'AGENTS.md',
-        ...fs
-          .readdirSync(path.join(projectDirectory, '.claude', 'skills'))
-          .map((name) => path.join('.claude', 'skills', name, 'SKILL.md')),
+        ...['.agents', '.claude'].flatMap((folder) =>
+          fs
+            .readdirSync(path.join(projectDirectory, folder, 'skills'))
+            .map((name) => path.join(folder, 'skills', name, 'SKILL.md'))
+        ),
       ];
       expect(files.length).toBeGreaterThan(2);
       files.forEach((file) => {

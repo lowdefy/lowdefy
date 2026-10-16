@@ -15,12 +15,12 @@
 */
 
 // The list of installed skills inside Lowdefy's block in AGENTS.md, for
-// agents that read AGENTS.md rather than .claude/skills.
+// agents that read AGENTS.md rather than a skills folder.
 function agentsMdSkills({ skills }) {
   const lines = skills.map((skill) => `- ${skill.agentsMdLine}`).join('\n');
   return `### Agent skills
 
-These skills are installed in \`.claude/skills/\`:
+These skills are installed in \`.agents/skills/\` and \`.claude/skills/\`:
 
 ${lines}
 `;
