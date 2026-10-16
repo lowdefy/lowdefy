@@ -65,7 +65,7 @@ lowdefy journeys scope
 | `--dev-directory`       | The installed dev server, whose builder builds both revisions. Default is `<config-directory>/.lowdefy/dev`.                           |
 | `--ref-resolver <path>` | A `_ref` resolver function for both builds.                                                                                            |
 
-The command needs no running dev server and no data set. It needs the dev server installed once (run `lowdefy dev` once in the app), because that is where the full builder and your plugins live.
+The command needs no running dev server and no data set. It builds with the installed dev server, where the full builder and your plugins live, and installs it first when the app has none, without starting it.
 
 ### What is in scope
 
