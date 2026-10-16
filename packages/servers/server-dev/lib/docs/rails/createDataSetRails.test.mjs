@@ -159,18 +159,14 @@ test('a list item block is matched through its template id', () => {
   );
 });
 
-test('a block that runs an auth action is refused, naming the action', () => {
+test('a block that runs an auth action is not refused: the auth rail acts at runtime', () => {
   const rails = createDataSetRails({ buildDirectory, connections });
-  expect(rails.refusal({ pageId: 'orders', blockId: 'logout_button' })).toEqual({
-    message:
-      'Block "logout_button" runs the auth action Logout, so a data-set journey cannot click it: its users are injected and have no auth session.',
-    actual: 'a click that runs the auth action Logout',
-  });
+  expect(rails.refusal({ pageId: 'orders', blockId: 'logout_button' })).toBeNull();
 });
 
 test("a page's lists are read once per run", () => {
   const rails = createDataSetRails({ buildDirectory, connections });
   expect(rails.refusal({ pageId: 'orders', blockId: 'save_button' })).toBeNull();
   fs.rmSync(path.join(buildDirectory, 'pages'), { recursive: true });
-  expect(rails.refusal({ pageId: 'orders', blockId: 'logout_button' })).not.toBeNull();
+  expect(rails.refusal({ pageId: 'orders', blockId: 'notify_button' })).not.toBeNull();
 });

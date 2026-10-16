@@ -16,8 +16,8 @@
 
 // The actions-core action types that call the auth engine. A data-set journey
 // acts as an injected caller, which has no auth engine session, so these fail
-// every time for a harness reason, not the app's: a click that runs one is
-// refused (see createDataSetRails). A new actions-core action must be
+// every time for a harness reason, not the app's: a click that runs one fails
+// its step (see checkAuthActionsRan). A new actions-core action must be
 // classified here or in the test's list of the rest.
 const authEngineActions = new Set([
   'AcceptInvitation',

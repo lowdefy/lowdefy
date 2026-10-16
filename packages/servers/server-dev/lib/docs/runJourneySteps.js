@@ -23,6 +23,7 @@ import {
 } from '@lowdefy/e2e-utils/runtime';
 import { getStepKey } from '@lowdefy/node-utils';
 
+import checkAuthActionsRan from './rails/checkAuthActionsRan.js';
 import checkClickRails from './rails/checkClickRails.js';
 import checkStepReferences from './checkStepReferences.js';
 import createLeftOriginError from './createLeftOriginError.js';
@@ -447,15 +448,17 @@ async function runOpen({ page, step, timeout }) {
 // double click is never turned into a second submit after the first settled.
 async function runClick({ journey, page, step, timeout }) {
   const { count = 1, ...target } = normaliseTarget(step.click);
+  let blockId = null;
   await actOnTarget({
     target,
     action: async () => {
       const located = await resolveActionTarget({ page, target, timeout });
       const locator = await resolveClickLocator({ located, target, timeout });
-      await checkClickRails({ journey, page, locator });
+      blockId = await checkClickRails({ journey, page, locator });
       await locator.click({ timeout, clickCount: count });
     },
   });
+  return { blockId };
 }
 
 // A fill types `value`, or text read from an email (`fromEmail`) - the way a
@@ -1016,8 +1019,7 @@ async function runStep({ journey, step, index, screenshots, requestWindowStart }
   await checkStepReferences({ journey, page, step });
   switch (getStepKey(step)) {
     case 'click':
-      await runClick({ journey, page, step, timeout });
-      return;
+      return runClick({ journey, page, step, timeout });
     case 'open':
       await runOpen({ page, step, timeout });
       return;
@@ -1111,11 +1113,18 @@ async function runJourneySteps({ journey, steps }) {
     }
     await appErrors?.openWindow({ page: journey.actors.current().page });
     try {
-      await runStep({ journey, step, index, screenshots, requestWindowStart });
+      const ran = await runStep({ journey, step, index, screenshots, requestWindowStart });
       if (INTERACTION_STEPS.includes(getStepKey(step))) {
         await settlePage({
           page: journey.actors.current().page,
           timeout: Math.min(journey.stepTimeout, SETTLE_TIMEOUT_MS),
+        });
+      }
+      if (getStepKey(step) === 'click') {
+        await checkAuthActionsRan({
+          journey,
+          page: journey.actors.current().page,
+          blockId: ran?.blockId,
         });
       }
       await journey.actors.sampleRendered();

@@ -102,9 +102,10 @@ Write each goal as a journey in \`tests/journeys/<area>/<name>.yaml\`:
   goal is about. After a click that must do something, \`expect: { effect: true }\`.
 
 A data set journey cannot click a block whose events reach a connection the data set does not
-redirect (any connection that is not a \`MongoDBCollection\`) or run an auth action: that step
-fails and names the block. Leave such a control out and tell the developer it needs a journey off
-data sets.
+redirect (any connection that is not a \`MongoDBCollection\`): that step fails and names the block.
+A click that runs an auth action fails the same way, but one that skips it (a validation that stops
+the chain, a \`skip\` that is true) passes. Leave a control that must run an auth action out and tell
+the developer it needs a journey off data sets.
 
 Run \`lowdefy test --lint <path>\`, then \`lowdefy test --repeat 3 <path>\`.
 

@@ -1,9 +1,11 @@
 # The page the data-set rails test drives
 # (packages/servers/server-dev/test/journeyFixture/rails.test.mjs): on a
 # data-set journey a click on external_button (a request on an AxiosHttp
-# connection, whose type declares dataSet: external) or logout_button (an auth
-# action) is refused, and save_rail_button (a request on the data set's MongoDB
-# connection, whose type declares dataSet: redirect) works.
+# connection, whose type declares dataSet: external) is refused, and
+# save_rail_button (a request on the data set's MongoDB connection, whose type
+# declares dataSet: redirect) works. The auth rail acts at runtime:
+# logout_button runs Logout, so its click fails, while skipped_logout_button's
+# Logout is skipped (nothing in state allows it), so its click passes.
 id: rails
 type: Box
 requests:
@@ -42,6 +44,31 @@ blocks:
       onClick:
         - id: sign_out
           type: Logout
+  - id: skipped_logout_button
+    type: Button
+    properties:
+      title: Sign out if allowed
+    events:
+      onClick:
+        - id: set_logout_checked
+          type: SetState
+          params:
+            logout_checked: true
+        - id: skipped_sign_out
+          type: Logout
+          skip:
+            _ne:
+              - _state: allow_logout
+              - true
+  - id: logout_checked_alert
+    type: Alert
+    visible:
+      _eq:
+        - _state: logout_checked
+        - true
+    properties:
+      type: info
+      message: Logout skipped
   - id: save_rail_button
     type: Button
     properties:
