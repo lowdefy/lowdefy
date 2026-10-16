@@ -14,12 +14,13 @@
   limitations under the License.
 */
 
+import appFolder from './appFolder.js';
+
 // The journeys-from-dev skill: a thin workflow over the CLI that reads the
 // session the developer means as a log, decides what they were proving, writes
 // journeys for it and proves each one, leaving the developer to decide what to
 // keep. The pass is decided only by the runner.
-function journeysFromDev({ appPath }) {
-  const cd = appPath === '' ? '' : `cd ${appPath} && `;
+function journeysFromDev() {
   return `---
 name: journeys-from-dev
 description: Use when the developer wants journeys (tests) for something they just tried in the dev server, or says 'turn what I clicked into tests'. Reads their recorded dev session as a log, writes journeys for what they were proving, and proves each one before proposing it.
@@ -29,15 +30,16 @@ description: Use when the developer wants journeys (tests) for something they ju
 
 \`lowdefy dev\` records how the developer uses the app in the browser to \`.lowdefy/traces/\`, on
 their machine. This skill reads one of those sessions as a log and turns what the developer was
-proving into journeys (tests in \`tests/journeys/\`). Run every command below from the app
-directory (\`${cd}…\`).
+proving into journeys (tests in \`tests/journeys/\`).
+
+${appFolder()}
 
 You write the journeys. The runner decides whether they pass: keep only journeys that pass three
 runs in a row.
 
 ## 1. Find the session
 
-Run \`${cd}lowdefy journeys session --since <window>\` (for example \`--since 2h\`), or call the
+Run \`lowdefy journeys session --config-directory <app> --since <window>\` (for example \`--since 2h\`), or call the
 \`lowdefy_journey_session\` tool with \`since\`. Each line is one session: its id, when it ran,
 the pages it visited, how many interactions it holds and how many failed. Describe them in plain
 words ("you tried tickets 3 times; one attempt ended in a validation error on Assign") and ask
@@ -49,7 +51,7 @@ shell or \`.env\`) or the window is wrong, and stop.
 
 ## 2. Read its log
 
-Run \`${cd}lowdefy journeys session <id>\` (or \`lowdefy_journey_session\` with \`id\`). Each line
+Run \`lowdefy journeys session --config-directory <app> <id>\` (or \`lowdefy_journey_session\` with \`id\`). Each line
 is one interaction with what the app did in response:
 
 \`\`\`
@@ -98,12 +100,12 @@ edit made obsolete.
 - If \`tests/data/\` exists, pick its \`data:\` set for any journey that writes. If it writes and
   no data set exists, say that it will write to whatever the app's connections point at, and ask
   before running it.
-- Skip what the suite already proves: run \`${cd}lowdefy test --lint\` and look at the journeys
+- Skip what the suite already proves: run \`lowdefy test --config-directory <app> --lint\` and look at the journeys
   on the same page first.
 
 ## 5. Prove it: three runs
 
-Run \`${cd}lowdefy test --repeat 3 tests/journeys/<file>.yaml\`. It records nothing.
+Run \`lowdefy test --config-directory <app> --repeat 3 <app>/tests/journeys/<file>.yaml\`. It records nothing.
 
 - **PASS** (three passes): keep it.
 - **FLAKY** (one or two failures): fix the cause, a missing \`wait: { request }\` or a data

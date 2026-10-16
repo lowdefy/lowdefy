@@ -29,7 +29,7 @@ const PORT_PINNED_SKILL_MARKER =
 
 // lowdefy-config predates generated-skill hashes: an existing file is left
 // alone unless it is the port-pinned version agent-setup wrote earlier.
-async function writeLowdefyConfigSkill({ context, projectDirectory, appPath, render }) {
+async function writeLowdefyConfigSkill({ context, projectDirectory, render }) {
   const skillPath = path.join(projectDirectory, skillRelativePath);
   if (fs.existsSync(skillPath)) {
     const existing = fs.readFileSync(skillPath, 'utf8');
@@ -43,12 +43,12 @@ async function writeLowdefyConfigSkill({ context, projectDirectory, appPath, ren
       context.logger.info(`'${skillRelativePath}' already exists - skipping.`);
       return;
     }
-    await writeFile(skillPath, render({ appPath }));
+    await writeFile(skillPath, render());
     context.logger.info(`Updated '${skillRelativePath}' for 'lowdefy mcp'.`);
     return;
   }
 
-  await writeFile(skillPath, render({ appPath }));
+  await writeFile(skillPath, render());
   context.logger.info(`Created '${skillRelativePath}'.`);
 }
 

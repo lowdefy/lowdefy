@@ -21,8 +21,8 @@ import { writeFile } from '@lowdefy/node-utils';
 import hashSkill from './hashSkill.js';
 import parseSkillFile from './parseSkillFile.js';
 
-function renderWithHash({ appPath, render, name }) {
-  const { frontmatter, body } = parseSkillFile(render({ appPath }));
+function renderWithHash({ render, name }) {
+  const { frontmatter, body } = parseSkillFile(render());
   if (frontmatter === null) {
     throw new Error(`Skill "${name}" must render a frontmatter block.`);
   }
@@ -34,10 +34,10 @@ function renderWithHash({ appPath, render, name }) {
 // its frontmatter and body still hash to the `lowdefy-skill-hash` it was
 // written with. A file that was edited, or that carries no hash, is left
 // alone.
-async function writeGeneratedSkill({ context, projectDirectory, appPath, name, render }) {
+async function writeGeneratedSkill({ context, projectDirectory, name, render }) {
   const relativePath = path.join('.claude', 'skills', name, 'SKILL.md');
   const skillPath = path.join(projectDirectory, relativePath);
-  const content = renderWithHash({ appPath, render, name });
+  const content = renderWithHash({ render, name });
 
   if (!fs.existsSync(skillPath)) {
     await writeFile(skillPath, content);
