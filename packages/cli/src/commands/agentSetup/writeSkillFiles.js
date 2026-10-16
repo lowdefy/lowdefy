@@ -14,16 +14,13 @@
   limitations under the License.
 */
 
+import removeRetiredSkills from './removeRetiredSkills.js';
 import writeGeneratedSkill from './writeGeneratedSkill.js';
-import writeLowdefyConfigSkill from './writeLowdefyConfigSkill.js';
 
-// Writes every skill in the list to .claude/skills/<name>/SKILL.md.
+// Writes every skill in the list to .agents/skills/<name>/SKILL.md and
+// .claude/skills/<name>/SKILL.md, then removes the skills it no longer lists.
 async function writeSkillFiles({ context, projectDirectory, skills }) {
   for (const skill of skills) {
-    if (skill.name === 'lowdefy-config') {
-      await writeLowdefyConfigSkill({ context, projectDirectory, render: skill.render });
-      continue;
-    }
     await writeGeneratedSkill({
       context,
       projectDirectory,
@@ -31,6 +28,7 @@ async function writeSkillFiles({ context, projectDirectory, skills }) {
       render: skill.render,
     });
   }
+  removeRetiredSkills({ context, projectDirectory, skills });
 }
 
 export default writeSkillFiles;

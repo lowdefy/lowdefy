@@ -98,7 +98,7 @@ Blocks are addressed by their `blockId`. A step that does not complete within th
 | `click: target`                           | Click the block, or the control a [target](#targets) narrows to.                                                                                                                                                                                                                  |
 | `click: { ...target, count: 2 }`          | Click 2 (or 3) times in quick succession, as a person's double click, before the runner waits for the page to settle. `count` defaults to 1.                                                                                                                                      |
 | `open: target`                            | Open an input's dropdown or picker popup (Selector, MultipleSelector, AutoComplete, DateSelector, Cascader...) and wait for it to show, so a following `screenshot` or `select` sees the options. A block with no popup is clicked; one whose click opens nothing fails the step. |
-| `fill: { blockId, value }`                | Type `value` into the input inside the block (or the grid cell a target names).                                                                                                                                                                                                   |
+| `fill: { blockId, value }`                | Type `value` into the input inside the block (or the grid cell a target names). A block that renders its input in a portal, such as a `Search` modal once opened, is reached through the same `blockId`.                                                                          |
 | `fill: { blockId, fromEmail }`            | Type text read from an [email](#emails) instead of a fixed value, such as a one-time sign-in code. The actor stays on the page.                                                                                                                                                   |
 | `select: { blockId, value }`              | Open the selector block (or grid cell) and choose the option whose text is `value`. A radio, button or segmented selector's option is clicked by its label.                                                                                                                       |
 | `press: Enter`                            | Press a key or chord. `Mod` in a chord (`Mod+k`) resolves to Cmd on macOS and Ctrl elsewhere.                                                                                                                                                                                     |
@@ -205,6 +205,8 @@ Some rows are neither a block nor a control, such as the cards of a `ListSelecto
 ```
 
 `fill`, `select` and `expect.text` always need a `blockId`; a value is typed into a block's input, never into a page-wide control. A target with a key the grammar does not know (`colum`) is rejected before the browser opens, so a typo cannot pass as a step that happened to find nothing.
+
+A `Search` block keeps its input in a modal outside its own element. Open it with `click: <blockId>`, then `fill: { blockId, value }` types the query, and `click: { text: <result title> }` picks a result and fires `onSelect`. The result title is the text of the row when the search has no `description` mapped; with a description, pick it with `containing`.
 
 ## Testing sign-up and sign-in
 
@@ -395,7 +397,7 @@ FAIL   admin bulk-imports contacts     (0/3) step 2 (click "import"): ... — fa
 
 A journey is kept, and a candidate moves into `tests/journeys/`, only after `--repeat 3` gives `PASS`. A `FLAKY` journey has a cause to fix, usually a missing `wait: { request }`, data that differs between runs, or a target that matches two elements; never add `wait: { ms }`. A `FAIL` is a finding: it breaks every time, so either the app has a bug or its behaviour changed.
 
-Each run records what the journey exercised (the pages, requests, endpoints, events and blocks it touched) in `.lowdefy/test/exercised.json`, which the lints, `journeys harden` and `journeys variants` read. Only a run of the whole suite, once, records as the suite's journey run.
+Each run records what the journey exercised (the pages, requests, endpoints, events and blocks it touched) and a hash of the config it ran on in `.lowdefy/test/exercised.json`, which the lints, `journeys harden` and `journeys variants` read. Only a run of the whole suite, once, records as the suite's journey run.
 
 ### Lint
 
@@ -439,12 +441,14 @@ SCORE     12/14 killed, 3 unique  member assigns an open ticket  (tests/journeys
 42 mutants run · 38 killed · 4 survived · 0 unapplied · 0 errors · sampled 42 of 42 (seed 0) · 19 not exercised · 0 rebuilds · 3m 10s
 ```
 
+While it runs, harden prints a line as the baseline runs (`Baseline 37/412 journeys (2 failed)`) and as mutants finish (`Mutants 12/45 run (3 survived)`), every few journeys or about every 15 seconds, so a long run is not silent.
+
 A survivor is a change no journey noticed, with the source line it changed: add the assertion that would catch it (`expect.text` of the message, `expect.state`, `expect.visible`, `expect.hidden` or `expect.calls`) after the step that exercises it, and confirm with `lowdefy journeys harden --mutant <id>`. A mutant listed as **unapplied** never reached the journey's browser: that is a defect in harden, not a gap in the journey. Mutants no journey exercised are counted, not run.
 
 The report is written to `.lowdefy/test/mutation.json`: each mutant with the journeys that ran it, the suite's score, and each journey's `killed` out of `total` and its `unique` kills (mutants no other journey kills). It is merged per journey: a run over some journeys replaces their scores and keeps every other journey's from earlier runs, until that journey is removed. An earlier mutant is kept only while the development server still lists it, so a removed or edited block, action or request stops counting, and each journey's score is recounted without it. `--mutant` runs write nothing. Survivors are findings, so the exit code is `0`; it is `1` only when the run could not finish. Editing the config during a run is fine: harden re-lists the mutants, keeps the verdicts no changed file touched and runs the rest again. The third change in one run stops it. harden never writes or deletes a journey.
 
 - `[paths...]`, `--filter <name>`: The journeys to harden, as for `lowdefy test` (one `--filter`, and no `--tag`).
-- `--page <pageId...>`: Only mutants on these pages, and the endpoint mutants a journey touching them called.
+- `--page <pageId...>`: Only mutants on these pages, and the endpoint mutants a journey touching them called. The baseline run also skips journeys that cannot reach these pages: ones whose last measured run in `.lowdefy/test/exercised.json` touched none of them and whose `pageId` and `goto` steps name none. A journey with no record, a changed journey, or a record measured on a different config is always run, so run `lowdefy test` first to get the saving. A record belongs to a config by its content (a hash of the built pages, requests, endpoints and connections), not by when the dev server started, so `lowdefy test` and `lowdefy journeys harden`, which each start their own server, agree as long as the config is unchanged in between. The log says how many journeys were left out, and when journeys were kept whole it says why: no record, the journey changed, or the config changed since the last `lowdefy test`.
 - `--operators <list>`: Only these operators, comma separated: `drop-action`, `skip-validate`, `flip-visible`, `swap-if`, `drop-payload`, `retarget-link`, `drop-block`, `drop-step`.
 - `--max <n>`: Run at most `n` mutants, sampled the same way on every machine. The default is 200; `0` runs every mutant.
 - `--seed <n>`: The sample's seed. Another seed draws another sample, so repeated runs can cover the rest. The default is `0`, recorded in the report.
