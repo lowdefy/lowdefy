@@ -42,6 +42,25 @@ function listFiles(directory, prefix = '') {
   });
 }
 
+// The id an artifact is written for: its path inside folder, less .json.
+function idOf(file, folder) {
+  return file.slice(folder.length, -'.json'.length);
+}
+
+// A page's requests sit in the folder named for the page, as
+// pages/<pageId>/requests/<requestId>.json, and either id may hold '/'. The
+// first split whose page id is a page wins.
+function splitRequest({ file, pageIds }) {
+  if (!file.startsWith('pages/') || !file.endsWith('.json')) return null;
+  const id = idOf(file, 'pages/');
+  const marker = '/requests/';
+  for (let at = id.indexOf(marker); at !== -1; at = id.indexOf(marker, at + 1)) {
+    const pageId = id.slice(0, at);
+    if (pageIds.has(pageId)) return { pageId, requestId: id.slice(at + marker.length) };
+  }
+  return null;
+}
+
 function readJson({ buildDirectory, file }) {
   return JSON.parse(fs.readFileSync(path.join(buildDirectory, file), 'utf8'));
 }
@@ -62,24 +81,30 @@ function readBuildArtifacts({ buildDirectory }) {
     keyMap: readJson({ buildDirectory, file: 'keyMap.json' }),
     refMap: readJson({ buildDirectory, file: 'refMap.json' }),
   };
-  listFiles(buildDirectory).forEach((file) => {
-    if (BUILD_IDENTITY.includes(file)) return;
-    const parts = file.split('/');
-    if (parts.length === 2 && parts[0] === 'pages' && file.endsWith('.json')) {
-      build.pages[path.basename(file, '.json')] = readJson({ buildDirectory, file });
-      return;
-    }
-    if (parts.length === 4 && parts[0] === 'pages' && parts[2] === 'requests') {
-      const pageId = parts[1];
+  const files = listFiles(buildDirectory).filter((file) => !BUILD_IDENTITY.includes(file));
+  // Ids may hold '/' (a module's pages, endpoints, connections and websockets
+  // are scoped as <entryId>/<id>), so an artifact can sit any number of
+  // folders deep.
+  const pageIds = new Set(
+    files.filter((file) => /^pages\/.+\.json$/.test(file)).map((file) => idOf(file, 'pages/'))
+  );
+  files.forEach((file) => {
+    const request = splitRequest({ file, pageIds });
+    if (request) {
+      const { pageId, requestId } = request;
       build.requests[pageId] = build.requests[pageId] ?? {};
-      build.requests[pageId][path.basename(file, '.json')] = readJson({ buildDirectory, file });
+      build.requests[pageId][requestId] = readJson({ buildDirectory, file });
       return;
     }
-    const group = { api: 'endpoints', connections: 'connections', websockets: 'websockets' }[
-      parts[0]
-    ];
-    if (parts.length === 2 && group && file.endsWith('.json')) {
-      build[group][path.basename(file, '.json')] = readJson({ buildDirectory, file });
+    const [folder] = file.split('/');
+    const group = {
+      pages: 'pages',
+      api: 'endpoints',
+      connections: 'connections',
+      websockets: 'websockets',
+    }[folder];
+    if (group && file.endsWith('.json')) {
+      build[group][idOf(file, `${folder}/`)] = readJson({ buildDirectory, file });
       return;
     }
     if (APP_WIDE.includes(file)) {
