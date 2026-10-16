@@ -25,6 +25,7 @@ import { jest } from '@jest/globals';
 // screenshotPage.test.mjs, which exercises the same getBrowser.js singleton.
 jest.unstable_mockModule('playwright-core', () => ({
   chromium: { launch: jest.fn().mockRejectedValue(new Error("Executable doesn't exist")) },
+  selectors: { register: jest.fn(async () => {}) },
 }));
 // A missing shell would otherwise start a real download.
 jest.unstable_mockModule('./installHeadlessShell.js', () => ({ default: () => null }));

@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 import installHeadlessShell from './installHeadlessShell.js';
 import isHeadlessShellIncomplete from './isHeadlessShellIncomplete.js';
+import { registerShownTextEngine } from './shownTextEngine.js';
 
 // The manager tags every browser this child launches, so it can kill one
 // left behind when the child is killed outright (system Chrome runs in its
@@ -50,9 +51,11 @@ async function isShellMissing(error) {
 // memory per page, a launch under a second, and it exits with its parent.
 // System Chrome is the fallback while the shell is missing. playwright-core
 // is imported here, not at the top of the module, so the Vite child does not
-// load it at boot.
+// load it at boot. The journey runner's selector engine is registered first,
+// so every page of the browser can resolve a `containing` target.
 async function launchBrowser() {
-  const { chromium } = await import('playwright-core');
+  const { chromium, selectors } = await import('playwright-core');
+  await registerShownTextEngine(selectors);
   const args = launchArgs();
   try {
     return await chromium.launch({ args });
