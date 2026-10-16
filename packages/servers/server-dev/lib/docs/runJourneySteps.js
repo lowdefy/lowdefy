@@ -495,14 +495,105 @@ async function runFill({ journey, page, step, timeout }) {
     target,
     action: async () => {
       const located = await resolveActionTarget({ page, target, timeout });
-      await fillScope({ page, target, located })
-        .locator('input, textarea')
-        .first()
-        .fill(String(value), {
-          timeout,
-        });
+      const input = fillScope({ page, target, located }).locator('input, textarea').first();
+      const colorTrigger = located.locator(COLOR_PICKER_TRIGGER).first();
+      // A colour picker shows no input until its popup opens, so its trigger counts too.
+      try {
+        await input.or(colorTrigger).first().waitFor({ state: 'visible', timeout });
+      } catch (error) {
+        // A block that never showed fails as not actionable, as any other step on it does.
+        if (!(await located.first().isVisible())) throw error;
+        throw await createNoInputError({ page, target, error });
+      }
+      if ((await input.count()) === 0 && (await colorTrigger.count()) > 0) {
+        await fillColorPicker({ page, target, trigger: colorTrigger, value, timeout });
+        return;
+      }
+      await input.fill(String(value), { timeout });
     },
   });
+}
+
+// The engine's type for the block a fill names, or null when the shown page does not
+// hold it or the tab is between pages.
+async function readBlockType({ page, blockId }) {
+  try {
+    return await page.evaluate((id) => {
+      const lowdefy = window.lowdefy;
+      const shownKey = lowdefy?.pageInstances?.[lowdefy.pageId]?.at(-1);
+      return lowdefy?.contexts?.[shownKey]?._internal?.RootSlots?.map?.[id]?.type ?? null;
+    }, blockId);
+  } catch {
+    return null;
+  }
+}
+
+async function createNoInputError({ page, target, error }) {
+  const description = describeTarget(target);
+  const blockType = await readBlockType({ page, blockId: target.blockId });
+  const named = blockType === null ? description : `${description} (${blockType})`;
+  return new JourneyStepError(
+    `Fill found no input in ${named} to type into: fill types into a text input, textarea or colour picker.`,
+    {
+      expected: `a text input or colour picker in ${description}`,
+      actual: cleanMessage(error),
+    }
+  );
+}
+
+// The antd colour picker (the ColorSelector block): its trigger opens a popup whose hex
+// input sets the colour once it holds a full 6 or 8 digit hex value.
+const COLOR_PICKER_TRIGGER = '.ant-color-picker-trigger';
+const COLOR_PICKER_TRIGGER_ACTIVE = 'ant-color-picker-trigger-active';
+const COLOR_PICKER_TRIGGER_DISABLED = 'ant-color-picker-trigger-disabled';
+const COLOR_PICKER_PANEL = '.ant-popover:not(.ant-popover-hidden) .ant-color-picker-inner';
+const COLOR_PICKER_HEX_INPUT =
+  '.ant-color-picker-hex-input input, input.ant-color-picker-hex-input';
+const HEX_COLOR = /^#?([\da-f]{6}|[\da-f]{8})$/i;
+
+// The hex input shows its "#" as a prefix, so only the digits are typed. Escape closes the
+// picker, leaving the page as a person who picked a colour leaves it.
+async function fillColorPicker({ page, target, trigger, value, timeout }) {
+  const description = describeTarget(target);
+  const hex = String(value);
+  if (!HEX_COLOR.test(hex)) {
+    throw new JourneyStepError(
+      `Fill of the colour picker in ${description} takes a 6 or 8 digit hex colour, such as #1677ff; got "${hex}".`,
+      { expected: 'a 6 or 8 digit hex colour', actual: hex }
+    );
+  }
+  const triggerClass = (await trigger.getAttribute('class', { timeout })) ?? '';
+  if (triggerClass.split(' ').includes(COLOR_PICKER_TRIGGER_DISABLED)) {
+    throw new JourneyStepError(`The colour picker in ${description} is disabled.`, {
+      expected: `an enabled colour picker in ${description}`,
+      actual: 'disabled',
+    });
+  }
+  // The picker's panel is not tied to its trigger in the DOM, so another picker's open
+  // panel is closed first: then the one panel showing is this picker's.
+  const panel = page.locator(COLOR_PICKER_PANEL).filter({ visible: true });
+  if (!triggerClass.split(' ').includes(COLOR_PICKER_TRIGGER_ACTIVE)) {
+    if ((await panel.count()) > 0) {
+      await page.keyboard.press('Escape');
+      await panel.first().waitFor({ state: 'hidden', timeout });
+    }
+    await trigger.click({ timeout });
+  }
+  const hexInput = panel.locator(COLOR_PICKER_HEX_INPUT).first();
+  try {
+    await hexInput.waitFor({ state: 'visible', timeout });
+  } catch (error) {
+    throw new JourneyStepError(
+      `The colour picker in ${description} showed no hex input: fill types a hex colour, and the picker shows another format.`,
+      {
+        expected: `a hex input in the colour picker of ${description}`,
+        actual: cleanMessage(error),
+      }
+    );
+  }
+  await hexInput.fill(hex.replace(/^#/, ''), { timeout });
+  await page.keyboard.press('Escape');
+  await panel.first().waitFor({ state: 'hidden', timeout });
 }
 
 // The options of a radio group, a button selector or a segmented control are
