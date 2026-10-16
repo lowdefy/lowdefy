@@ -157,11 +157,29 @@ If the branch has uncommitted files from an interrupted cycle, finish proving th
 \`tests/journeys/_candidates/\`) or leave them in \`_candidates/\` unproven; never lose a committed
 journey.
 
-### 2. Bootstrap (only when there is no \`tests/autopilot.yaml\`)
+### 2. Bootstrap (only when there is no \`tests/autopilot.yaml\`, or it has no \`items\` yet because
+bootstrap stopped as Blocked)
 
 1. Run \`${cd}lowdefy test --help\` and \`${cd}lowdefy journeys --help\`. If they fail, you are blocked
    (see Traps for a stale \`.lowdefy/dev\`).
-2. Run \`${cd}lowdefy data list\`. Write \`tests/data/autopilot.yaml\`. If a data set already has
+2. **Pick the dev script.** The dev server tools (\`lowdefy_dev_start\`, and every tool that starts
+   a server, such as \`lowdefy_get_page_config\` or \`lowdefy_screenshot_page\`) run the app's own
+   \`package.json\` script that runs \`lowdefy dev\`. When several do and \`lowdefy.yaml\` sets no
+   \`cli.devScript\`, they refuse with \`Several package.json scripts run "lowdefy dev" (...)\`. In
+   that case, before your first dev server tool, choose one of the scripts that refusal lists
+   (the scripts in ${appDirectory}'s \`package.json\` whose command runs \`lowdefy dev\`):
+   - Drop every script whose name or command names production or staging (\`prod\`,
+     \`production\`, \`staging\`, a \`p\` suffix such as \`ldf:p\`, a wrapper's \`--env=prod\`). Never
+     pick one of these.
+   - If one script is left, take it. If several are, take the one whose name marks it the
+     development one (\`dev\`, \`develop\`, \`local\`, a \`d\` suffix such as \`ldf:d\` beside
+     \`ldf:p\`); the words \`lowdefy dev\` in a command mark nothing, since every candidate has them.
+   - Set it in the app's \`lowdefy.yaml\` (under the existing \`cli:\` key if there is one):
+     \`cli: { devScript: <script> }\`. Commit it with the ledger (bootstrap item 7), and name the
+     script and why in the pull request.
+   - When no script is left, or no single name marks the development one, Blocked, naming the
+     scripts: a person sets \`cli.devScript\`.
+3. Run \`${cd}lowdefy data list\`. Write \`tests/data/autopilot.yaml\`. If a data set already has
    users and fixtures, it starts \`extends: [<name>]\` and adds only what that set lacks; never edit
    the existing file. Otherwise it holds
    one \`users\` entry per role the app's pages allow, named by role (read each page's \`auth\` and the
@@ -171,7 +189,7 @@ journey.
    (\`Autopilot Widget Alpha\`), at least two rows wherever order or filtering matters, a second tenant when the
    app has tenants (for refusal journeys), and dates written as explicit values. Read
    [journey data sets](/journey-data-sets) for the file format; \`generate:\` adds volume.
-3. Map the app: \`${cd}lowdefy journeys scope --json\` lists every page with its roles; read each
+4. Map the app: \`${cd}lowdefy journeys scope --json\` lists every page with its roles; read each
    page's requests, endpoints and event chains (\`lowdefy_get_page_config\`, \`lowdefy_app_map\`,
    \`lowdefy_find_config\`). Write one \`todo\` item for each page and role that can open it, one
    \`refusal\` item for each role that cannot, and one \`write\` item for each control that writes data
@@ -179,7 +197,7 @@ journey.
    user: its items (a protected page's bounce, a public page opened signed out) are \`skipped\` with
    the reason "signed-out runs stay on the auth harness" (\`user: none\` on a data set is refused
    while auth is configured, because signing in would write to the real auth database).
-4. **Journeys already in the suite** (the app has journeys but no ledger): they are the developer's.
+5. **Journeys already in the suite** (the app has journeys but no ledger): they are the developer's.
    Replay them once with \`${cd}lowdefy test --repeat 3\` (the whole suite). Read each one's
    \`pageId\`, \`user\` and steps, and set every item it proves (each user in a \`user\` list, the
    page it opens, the write it asserts) \`covered\` with its file and \`note: developer's journey\`.
@@ -187,10 +205,10 @@ journey.
    already covers. A failing or flaky one stays where it is: set its item \`finding\` or
    \`quarantined\` with the reason, and name it in the pull request. These items count as your
    first covered ones.
-5. Prove the harness with one journey of your own: the first \`todo\` page and role, as that role,
+6. Prove the harness with one journey of your own: the first \`todo\` page and role, as that role,
    \`expect.text\` of a value only a fixture holds. Run \`${cd}lowdefy test --repeat 3 <file>\`.
-6. Commit the data set, ledger and first journey. Push the branch and open the pull request
-   (step 8).
+7. Commit the data set, ledger, first journey and \`cli.devScript\` if you set one. Push the branch
+   and open the pull request (step 8).
 
 ### 3. Pick the work
 
@@ -324,6 +342,8 @@ If the environment is broken, do not guess and do not ask. Blocked covers:
   \`LOWDEFY_SECRET_<NAME>\`), and say how to
   start you with it (export it in the shell that starts the agent, or start the agent through the
   wrapper that injects the app's secrets, such as \`infisical run -- claude\`);
+- several \`package.json\` scripts run \`lowdefy dev\` and none is clearly the development one
+  (bootstrap item 2, whenever a dev server tool refuses that way);
 - a stale \`.lowdefy/dev\` that a restart does not cure (see Traps);
 - a dev mock user committed in config (\`auth.dev.mockUser\`), which refuses every data set journey;
 - a closed journeys pull request (closed unmerged), or a rejected push;
