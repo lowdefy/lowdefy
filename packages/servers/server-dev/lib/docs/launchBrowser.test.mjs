@@ -19,7 +19,10 @@ import { jest } from '@jest/globals';
 const mockLaunch = jest.fn();
 const mockInstall = jest.fn();
 const mockIsIncomplete = jest.fn(async () => false);
-jest.unstable_mockModule('playwright-core', () => ({ chromium: { launch: mockLaunch } }));
+jest.unstable_mockModule('playwright-core', () => ({
+  chromium: { launch: mockLaunch },
+  selectors: { register: jest.fn(async () => {}) },
+}));
 jest.unstable_mockModule('./installHeadlessShell.js', () => ({ default: mockInstall }));
 jest.unstable_mockModule('./isHeadlessShellIncomplete.js', () => ({ default: mockIsIncomplete }));
 
