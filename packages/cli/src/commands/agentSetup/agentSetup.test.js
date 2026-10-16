@@ -336,7 +336,7 @@ test('agentSetup renames a lowdefy-docs entry, keeps other servers and carries t
   );
 });
 
-test('agentSetup renames the MCP server in a skill and AGENTS.md section it wrote, keeping edits', async () => {
+test('agentSetup renames the MCP server in a skill it wrote, keeping edits, and leaves an old Lowdefy section as it is', async () => {
   const skillDir = path.join(configDirectory, '.claude', 'skills', 'lowdefy-config');
   fs.mkdirSync(skillDir, { recursive: true });
   fs.writeFileSync(
@@ -353,10 +353,11 @@ test('agentSetup renames the MCP server in a skill and AGENTS.md section it wrot
   expect(read(path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md'))).toEqual(
     'Edited.\nYour Lowdefy tools come from the `lowdefy` MCP server (`lowdefy mcp`).\n'
   );
-  // The section gains the managed skills list after the rename.
+  // An unmarked section from an earlier agent-setup is not migrated: the
+  // block is appended after it.
   expect(
     read('AGENTS.md').startsWith(
-      '# Project\n\n## Lowdefy\n\nYour Lowdefy tools come from the `lowdefy` MCP server.\n\n<!-- lowdefy-skills:start -->'
+      '# Project\n\n## Lowdefy\n\nYour Lowdefy tools come from the `lowdefy-docs` MCP server.\n\n<!-- BEGIN:lowdefy-agent-rules version=6.0.0 -->\n'
     )
   ).toBe(true);
 });
@@ -400,7 +401,7 @@ test('agentSetup skips the skill file when it already exists', async () => {
   );
 });
 
-test('agentSetup appends a Lowdefy section to an existing AGENTS.md', async () => {
+test('agentSetup appends the Lowdefy block to an existing AGENTS.md', async () => {
   fs.writeFileSync(path.join(configDirectory, 'AGENTS.md'), '# My Project\n\nSome instructions.\n');
 
   await agentSetup({ context });
@@ -408,22 +409,7 @@ test('agentSetup appends a Lowdefy section to an existing AGENTS.md', async () =
   const agentsMd = read('AGENTS.md');
   expect(agentsMd).toContain('# My Project');
   expect(agentsMd).toContain('Some instructions.');
-  expect(agentsMd).toContain('## Lowdefy');
-});
-
-test('agentSetup replaces a Lowdefy section it wrote before lowdefy mcp, keeping the rest of the file', async () => {
-  fs.writeFileSync(
-    path.join(configDirectory, 'AGENTS.md'),
-    '# My Project\n\n## Lowdefy\n\n### Running the app\n\nStart the development server with npx lowdefy dev on http://localhost:3000.\n\n## Testing\n\nRun the tests.\n'
-  );
-
-  await agentSetup({ context });
-
-  const agentsMd = read('AGENTS.md');
-  expect(agentsMd).toContain('# My Project');
-  expect(agentsMd).toContain('lowdefy_dev_start');
-  expect(agentsMd).not.toContain('### Running the app');
-  expect(agentsMd).toContain('## Testing\n\nRun the tests.');
+  expect(agentsMd).toContain('<!-- BEGIN:lowdefy-agent-rules version=6.0.0 -->\n## Lowdefy');
 });
 
 test('agentSetup replaces a skill file it wrote before lowdefy mcp', async () => {
@@ -468,22 +454,7 @@ test('agentSetup does not warn about several dev scripts when cli.devScript name
   expect(context.logger.warn).not.toHaveBeenCalledWith(expect.stringContaining('cli.devScript'));
 });
 
-test('agentSetup keeps a person-written Lowdefy section and appends the skills list to it', async () => {
-  fs.writeFileSync(
-    path.join(configDirectory, 'AGENTS.md'),
-    '# My Project\n\n## Lowdefy\n\nCustom lowdefy notes.\n\n## Other\n\nMore.\n'
-  );
-
-  await agentSetup({ context });
-
-  const agentsMd = read('AGENTS.md');
-  expect(agentsMd.startsWith('# My Project\n\n## Lowdefy\n\nCustom lowdefy notes.\n\n')).toBe(true);
-  expect(agentsMd).toContain('<!-- lowdefy-skills:start -->');
-  expect(agentsMd).toContain('- `lowdefy-config`:');
-  expect(agentsMd.endsWith('<!-- lowdefy-skills:end -->\n\n## Other\n\nMore.\n')).toBe(true);
-});
-
-test('agentSetup skips AGENTS.md when its Lowdefy section and skills list are current', async () => {
+test('agentSetup leaves AGENTS.md as it is when its Lowdefy block is current', async () => {
   await agentSetup({ context });
   const first = read('AGENTS.md');
   context.logger.info.mockClear();
@@ -492,7 +463,7 @@ test('agentSetup skips AGENTS.md when its Lowdefy section and skills list are cu
 
   expect(read('AGENTS.md')).toEqual(first);
   expect(context.logger.info).toHaveBeenCalledWith(
-    expect.stringContaining("already has a 'Lowdefy' section")
+    "The Lowdefy block in 'AGENTS.md' is up to date."
   );
 });
 
@@ -548,44 +519,27 @@ describe('monorepo layout (app in a subdirectory of the git root)', () => {
     expect(JSON.parse(readRoot('.mcp.json')).mcpServers.lowdefy).toEqual(STDIO_ENTRY);
   });
 
-  test('agentSetup appends the Lowdefy section to an existing root AGENTS.md', async () => {
+  test('agentSetup appends the Lowdefy block to an existing root AGENTS.md and imports it in a new CLAUDE.md', async () => {
     fs.writeFileSync(path.join(projectDirectory, 'AGENTS.md'), '# Monorepo\n\nRoot docs.\n');
 
     await agentSetup({ context });
 
     const agentsMd = readRoot('AGENTS.md');
     expect(agentsMd).toContain('# Monorepo');
-    expect(agentsMd).toContain('## Lowdefy');
-    expect(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md'))).toBe(false);
+    expect(agentsMd).toContain('<!-- BEGIN:lowdefy-agent-rules version=6.0.0 -->');
+    expect(readRoot('CLAUDE.md')).toEqual('@AGENTS.md\n');
   });
 
-  test('agentSetup appends the Lowdefy section to a root CLAUDE.md instead of creating AGENTS.md', async () => {
+  test('agentSetup appends the Lowdefy block to a root CLAUDE.md instead of creating AGENTS.md', async () => {
     fs.writeFileSync(path.join(projectDirectory, 'CLAUDE.md'), '# Monorepo\n\nClaude docs.\n');
 
     await agentSetup({ context });
 
     const claudeMd = readRoot('CLAUDE.md');
     expect(claudeMd).toContain('# Monorepo');
-    expect(claudeMd).toContain('## Lowdefy');
+    expect(claudeMd).toContain('<!-- BEGIN:lowdefy-agent-rules version=6.0.0 -->');
     expect(fs.existsSync(path.join(projectDirectory, 'AGENTS.md'))).toBe(false);
-    expect(context.logger.info).toHaveBeenCalledWith(
-      expect.stringContaining("Added a 'Lowdefy' section to 'CLAUDE.md'")
-    );
-  });
-
-  test('agentSetup keeps the Lowdefy section in CLAUDE.md, adding only the skills list', async () => {
-    fs.writeFileSync(path.join(projectDirectory, 'CLAUDE.md'), '## Lowdefy\n\nCustom notes.\n');
-
-    await agentSetup({ context });
-
-    const claudeMd = readRoot('CLAUDE.md');
-    expect(
-      claudeMd.startsWith('## Lowdefy\n\nCustom notes.\n\n<!-- lowdefy-skills:start -->')
-    ).toBe(true);
-    expect(fs.existsSync(path.join(projectDirectory, 'AGENTS.md'))).toBe(false);
-    expect(context.logger.info).toHaveBeenCalledWith(
-      "Updated the agent skills list in the 'Lowdefy' section of 'CLAUDE.md'."
-    );
+    expect(context.logger.info).toHaveBeenCalledWith("Added the Lowdefy block to 'CLAUDE.md'.");
   });
 
   test('agentSetup writes the same skills and guidance from either of two apps in one repository', async () => {
@@ -725,4 +679,36 @@ test('agentSetup writes the journeys-autopilot skill and lists it in AGENTS.md',
   expect(written).toContain('tests/autopilot.yaml');
   expect(written).toMatch(/lowdefy-skill-hash: [a-f0-9]{64}/);
   expect(read('AGENTS.md')).toContain('`journeys-autopilot`');
+});
+
+test('agentSetup refuses an app on lowdefy: local and writes nothing', async () => {
+  context.lowdefyVersion = 'local';
+  fs.writeFileSync(path.join(configDirectory, 'AGENTS.md'), '# Project\n');
+
+  await expect(agentSetup({ context })).rejects.toThrow(
+    "agent-setup does not support apps on 'lowdefy: local'."
+  );
+
+  expect(fs.readdirSync(configDirectory).sort()).toEqual(['.git', 'AGENTS.md']);
+  expect(read('AGENTS.md')).toEqual('# Project\n');
+});
+
+test('agentSetup stamps the block with its own version and warns when the app runs another', async () => {
+  context.cliVersion = '7.2.0';
+  context.lowdefyVersion = '7.0.0';
+
+  await agentSetup({ context });
+
+  expect(read('AGENTS.md')).toContain('<!-- BEGIN:lowdefy-agent-rules version=7.2.0 -->');
+  expect(context.logger.warn).toHaveBeenCalledWith(
+    'agent-setup is Lowdefy 7.2.0, this app runs 7.0.0: run `npx lowdefy@7.0.0 agent-setup`.'
+  );
+});
+
+test('agentSetup does not warn about versions when the app runs the CLI version', async () => {
+  context.lowdefyVersion = '6.0.0';
+
+  await agentSetup({ context });
+
+  expect(context.logger.warn).not.toHaveBeenCalledWith(expect.stringContaining('this app runs'));
 });

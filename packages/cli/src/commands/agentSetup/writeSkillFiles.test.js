@@ -21,7 +21,6 @@ import path from 'path';
 
 import hashSkill from './hashSkill.js';
 import parseSkillFile from './parseSkillFile.js';
-import upsertAgentsMdSection from './upsertAgentsMdSection.js';
 import writeSkillFiles from './writeSkillFiles.js';
 
 let projectDirectory;
@@ -104,14 +103,4 @@ test('writeSkillFiles refuses a renderer without frontmatter', async () => {
   await expect(writeSkillFiles({ context, projectDirectory, skills: [skill] })).rejects.toThrow(
     'Skill "bad-skill" must render a frontmatter block.'
   );
-});
-
-test('upsertAgentsMdSection replaces the skills list on a rerun with a changed list', async () => {
-  const args = { context, projectDirectory };
-  await upsertAgentsMdSection({ ...args, skills: [testSkill(1)] });
-  await upsertAgentsMdSection({ ...args, skills: [testSkill(2), testSkill(3)] });
-  const agentsMd = fs.readFileSync(path.join(projectDirectory, 'AGENTS.md'), 'utf8');
-  expect(agentsMd).not.toContain('version 1.');
-  expect(agentsMd).toContain('- `test-skill`: version 2.\n- `test-skill`: version 3.\n');
-  expect(agentsMd.split('<!-- lowdefy-skills:start -->')).toHaveLength(2);
 });

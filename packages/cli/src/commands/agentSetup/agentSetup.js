@@ -20,7 +20,7 @@ import { type } from '@lowdefy/helpers';
 
 import findDevScripts from '../../utils/findDevScripts.js';
 import findProjectRoot from './findProjectRoot.js';
-import upsertAgentsMdSection from './upsertAgentsMdSection.js';
+import upsertAgentRulesBlock from './upsertAgentRulesBlock.js';
 import upsertClaudeSettings from './upsertClaudeSettings.js';
 import upsertMcpServer from './upsertMcpServer.js';
 import skills from './skills/index.js';
@@ -69,7 +69,25 @@ function warnAmbiguousDevScript({ context }) {
   }
 }
 
+// The block and .mcp.json are stamped with this CLI's version. A different
+// app version still gets them, with the command that makes the two match.
+function warnVersionMismatch({ context }) {
+  const { cliVersion, lowdefyVersion } = context;
+  if (type.isNone(lowdefyVersion) || lowdefyVersion === cliVersion) {
+    return;
+  }
+  context.logger.warn(
+    `agent-setup is Lowdefy ${cliVersion}, this app runs ${lowdefyVersion}: run \`npx lowdefy@${lowdefyVersion} agent-setup\`.`
+  );
+}
+
 async function agentSetup({ context }) {
+  // Only apps inside the Lowdefy monorepo run on `lowdefy: local`. There the
+  // block would land in the framework's own instructions, and .mcp.json has
+  // no published version to pin.
+  if (context.lowdefyVersion === 'local') {
+    throw new Error("agent-setup does not support apps on 'lowdefy: local'. Nothing was written.");
+  }
   context.logger.info('Setting up this project for AI coding agents.');
 
   const { projectDirectory } = resolveDirectories({ context });
@@ -77,8 +95,9 @@ async function agentSetup({ context }) {
   await upsertMcpServer({ context, projectDirectory });
   await upsertClaudeSettings({ context, projectDirectory });
   await writeSkillFiles({ context, projectDirectory, skills });
-  await upsertAgentsMdSection({ context, projectDirectory, skills });
+  await upsertAgentRulesBlock({ context, projectDirectory, skills });
   warnAmbiguousDevScript({ context });
+  warnVersionMismatch({ context });
 
   await context.sendTelemetry();
   context.logger.info(

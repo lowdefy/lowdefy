@@ -14,24 +14,16 @@
   limitations under the License.
 */
 
-const SKILLS_START_MARKER = '<!-- lowdefy-skills:start -->';
-const SKILLS_END_MARKER = '<!-- lowdefy-skills:end -->';
-
-// The managed list of installed skills inside the Lowdefy section of
-// AGENTS.md, for agents that read AGENTS.md rather than .claude/skills. The
-// markers let a rerun replace the list without touching the rest of the
-// section.
+// The list of installed skills inside Lowdefy's block in AGENTS.md, for
+// agents that read AGENTS.md rather than .claude/skills.
 function agentsMdSkills({ skills }) {
   const lines = skills.map((skill) => `- ${skill.agentsMdLine}`).join('\n');
-  return `${SKILLS_START_MARKER}
-### Agent skills
+  return `### Agent skills
 
 These skills are installed in \`.claude/skills/\`:
 
 ${lines}
-${SKILLS_END_MARKER}
 `;
 }
 
-export { SKILLS_END_MARKER, SKILLS_START_MARKER };
 export default agentsMdSkills;
