@@ -233,7 +233,7 @@ The PostHog plugin's `before_send` masks clicked text the page config does not s
 
 ## Pull request scope
 
-`lowdefy journeys scope [--base <ref>] [--json]` (`cli/src/commands/journeys/scope/`, driven by `journeysScope.js`) needs no running dev server, only the installed one under `.lowdefy/dev`, and writes only its caches:
+`lowdefy journeys scope [--base <ref>] [--json]` (`cli/src/commands/journeys/scope/`, driven by `journeysScope.js`) needs no running dev server, only the installed one under `.lowdefy/dev`, which it installs first (`ensureDevServer.js`, the installer `lowdefy dev` uses, starting no server) until an install has finished (`node_modules/.lowdefy-install-hash`; a `lowdefy: local` server is left alone), and otherwise writes only its caches:
 
 1. `pruneScopeDirectory` drops cache entries unused for 14 days.
 2. `resolveRevisions`: the merge base with `--base`, the working tree as head (with a `dirty` flag).

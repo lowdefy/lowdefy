@@ -236,3 +236,26 @@ test('journeys-autopilot runs the whole suite on a fix branch before pushing it'
     'then the whole suite once\n  (`lowdefy test`: a fix can break a journey'
   );
 });
+
+test('journeys-autopilot picks the dev script when several run lowdefy dev, never a production one', () => {
+  const skill = journeysAutopilot({ appPath: 'apps/crm' });
+  expect(skill).toContain('2. **Pick the dev script.**');
+  expect(skill).toContain(
+    '### 2. Bootstrap\n\nOnly when there is no `tests/autopilot.yaml`, or it has no `items` yet because bootstrap stopped\nas Blocked.'
+  );
+  expect(skill).toContain('`Several package.json scripts run "lowdefy dev" (...)`');
+  expect(skill).toContain(
+    "choose one of the scripts that refusal lists\n   (the scripts in `apps/crm`'s `package.json`"
+  );
+  expect(skill).toContain("a wrapper's `--env=prod`). Never\n     pick one of these.");
+  expect(skill).toContain('a `d` suffix such as `ldf:d` beside\n     `ldf:p`');
+  expect(skill).toContain('`cli: { devScript: <script> }`. Commit it with the ledger');
+  expect(skill).toContain('name the\n     script and why in the pull request');
+  expect(skill).toContain(
+    '7. Commit the data set, ledger, first journey and `cli.devScript` if you set one.'
+  );
+  const blocked = skill.slice(skill.indexOf('## Blocked'), skill.indexOf('## Traps'));
+  expect(blocked).toContain(
+    'several `package.json` scripts run `lowdefy dev` and none is clearly the development one'
+  );
+});
