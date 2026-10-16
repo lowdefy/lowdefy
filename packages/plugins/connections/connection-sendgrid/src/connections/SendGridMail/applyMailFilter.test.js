@@ -205,18 +205,57 @@ test('applyMailFilter keeps example.com and .test recipients with no filter', ()
   expect(applyMailFilter({ filter: null, mail })).toEqual(mail);
 });
 
-test('applyMailFilter keeps a comma-separated address string whole when it ends on .invalid', () => {
-  const mail = { to: 'a@real.com, x@audit.invalid' };
+test('applyMailFilter keeps a comma-separated address string whole when an address in it is not on .invalid', () => {
+  const mail = { to: 'Test <x@audit.invalid>, a@real.com' };
   expect(applyMailFilter({ filter: null, mail })).toEqual(mail);
 });
 
-test('applyMailFilter returns null when every to recipient is on .invalid with no filter', () => {
+test('applyMailFilter returns null for a comma-separated string of .invalid addresses before replaceAddress redirects', () => {
+  expect(
+    applyMailFilter({
+      filter: { replaceAddress: 'catchall@real.com' },
+      mail: { to: 'a@audit.invalid, b@audit.invalid' },
+    })
+  ).toBe(null);
+});
+
+test('applyMailFilter drops .invalid addresses with surrounding spaces or a trailing dot', () => {
+  const result = applyMailFilter({
+    filter: null,
+    mail: { to: ['x@audit.invalid ', 'x@audit.invalid.', '<x@audit.invalid >', 'a@real.com'] },
+  });
+  expect(result).toEqual({ to: ['a@real.com'], cc: undefined, bcc: undefined });
+});
+
+test('applyMailFilter sends each cc and bcc recipient a copy when every to recipient is on .invalid with no filter', () => {
+  const result = applyMailFilter({
+    filter: undefined,
+    mail: {
+      to: ['x@audit.invalid', 'y@smoke.invalid'],
+      cc: 'c@real.com',
+      bcc: ['b@audit.invalid', 'b@real.com'],
+    },
+  });
+  expect(result).toEqual({
+    to: ['c@real.com', 'b@real.com'],
+    cc: undefined,
+    bcc: undefined,
+    isMultiple: true,
+  });
+});
+
+test('applyMailFilter returns null when every to, cc and bcc recipient is on .invalid', () => {
   expect(
     applyMailFilter({
       filter: undefined,
-      mail: { to: ['x@audit.invalid', 'y@smoke.invalid'], cc: 'c@real.com' },
+      mail: { to: ['x@audit.invalid'], cc: 'c@audit.invalid', bcc: ['b@smoke.invalid'] },
     })
   ).toBe(null);
+});
+
+test('applyMailFilter leaves recipients of an unexpected shape for SendGrid to reject', () => {
+  const mail = { to: ['a@real.com', null, { name: 'No Email' }] };
+  expect(applyMailFilter({ filter: null, mail })).toEqual(mail);
 });
 
 test('applyMailFilter returns null for an .invalid to before replaceAddress redirects', () => {

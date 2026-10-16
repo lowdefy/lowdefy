@@ -226,3 +226,18 @@ test('send redirects to replaceAddress when a to recipient is not on .invalid', 
   expect(mockSend.mock.calls[0][0].to).toEqual('dev@test.com');
   expect(result).toEqual({ messageId: 'message-id-1', to: 'dev@test.com' });
 });
+
+test('send sends a real cc recipient its own copy when every to recipient is on .invalid', async () => {
+  const send = (await import('./send.js')).default;
+  mockSend.mockResolvedValue([{ headers: { 'x-message-id': 'message-id-1' } }]);
+  const result = await send({
+    connection: { apiKey: 'X', from: 'from@x.com' },
+    mail: { to: 'x@audit.invalid', cc: 'manager@real.com', subject: 'A' },
+  });
+  expect(mockSend.mock.calls[0][0]).toMatchObject({
+    to: ['manager@real.com'],
+    cc: undefined,
+    isMultiple: true,
+  });
+  expect(result).toEqual({ messageId: 'message-id-1', to: ['manager@real.com'] });
+});

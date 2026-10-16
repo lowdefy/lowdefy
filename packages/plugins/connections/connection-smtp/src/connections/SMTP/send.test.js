@@ -299,3 +299,19 @@ test('send redirects to replaceAddress when a to recipient is not on .invalid', 
   expect(mockSendMail.mock.calls[0][0].to).toEqual('catchall@example.com');
   expect(result.to).toEqual('catchall@example.com');
 });
+
+test('send still sends to a real cc recipient when every to recipient is on .invalid', async () => {
+  const send = (await import('./send.js')).default;
+  const connection = {
+    host: 'smtp.example.com',
+    from: 'from@example.com',
+  };
+  const mail = {
+    to: 'x@audit.invalid',
+    cc: 'manager@real.com',
+    subject: 'A',
+  };
+  await send({ connection, mail });
+  expect(mockSendMail.mock.calls[0][0].to).toBe(undefined);
+  expect(mockSendMail.mock.calls[0][0].cc).toEqual('manager@real.com');
+});

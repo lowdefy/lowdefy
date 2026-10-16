@@ -6522,7 +6522,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "c328c3028931a5ff298051074e61d291d48611cd06ebf4724567f8070d62bf32"
+      "hash": "2952b49e059e412ffaa2622918be7fb37b14bc0672a449e03bcaae2014cde218"
     },
     "connections/smtp": {
       "files": [
@@ -6536,7 +6536,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "42ef0f0ef5a96adfea7abb232681fef79203758b88a14fecba9dec3087ae39f8"
+      "hash": "924a484260c76f919f8aee6a03825288fdab4d0e2cdde5edbe95da36c9be7a87"
     },
     "connections/sqlite": {
       "files": [
