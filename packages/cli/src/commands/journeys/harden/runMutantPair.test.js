@@ -29,6 +29,8 @@ const footer = {
   operator: 'drop-block',
   artifact: 'pages/a-home.json',
   key: 'k_home',
+  pointer: ['slots', 'content', 'blocks', 0],
+  nodeHash: 'hash-footer',
   arg: null,
   anchor: { type: 'block', pageId: 'a-home', blockId: 'footer', parentBlockId: 'a-home' },
   copies: ['tickets'],
@@ -36,6 +38,7 @@ const footer = {
     {
       artifact: 'pages/tickets.json',
       key: 'k_tickets',
+      pointer: ['slots', 'content', 'blocks', 2],
       anchor: { type: 'block', pageId: 'tickets', blockId: 'footer', parentBlockId: 'tickets' },
     },
   ],
@@ -68,6 +71,37 @@ test('runMutantPair runs a shared layout mutant on the copy the journey rendered
     buildId: 'build-1',
     artifact: 'pages/tickets.json',
     key: 'k_tickets',
+    pointer: ['slots', 'content', 'blocks', 2],
+    nodeHash: 'hash-footer',
+    arg: null,
+    operator: 'drop-block',
+  });
+});
+
+test('runMutantPair sends a single-page mutant its own key, pointer and node hash', async () => {
+  const single = {
+    id: 'name',
+    operator: 'drop-block',
+    artifact: 'pages/settings.json',
+    key: 'k_settings',
+    pointer: ['slots', 'content', 'blocks', 1],
+    nodeHash: 'hash-name',
+    arg: null,
+    anchor: { type: 'block', pageId: 'settings', blockId: 'name', parentBlockId: 'settings' },
+    copies: [],
+    copyTargets: [],
+  };
+  await runMutantPair({
+    pair: { mutant: single, baseline: baseline({ settings: ['name'] }) },
+    url: 'http://localhost:3999',
+    buildId: 'build-1',
+  });
+  expect(runJourney.mock.calls[0][0].mutant).toEqual({
+    buildId: 'build-1',
+    artifact: 'pages/settings.json',
+    key: 'k_settings',
+    pointer: ['slots', 'content', 'blocks', 1],
+    nodeHash: 'hash-name',
     arg: null,
     operator: 'drop-block',
   });

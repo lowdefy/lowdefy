@@ -288,6 +288,30 @@ test('docsJourneyHandler opens a mutant run, passes its cookie to every actor an
   ).toBeNull();
 });
 
+test('docsJourneyHandler opens the run with the mutant pointer and node hash it was sent', async () => {
+  let runDuringJourney;
+  mockRunJourney.mockImplementation(async ({ mutantCookie }) => {
+    runDuringJourney = readMutantRun(`lowdefy_journey_mutant=${journeyActorToken}.${mutantCookie}`);
+    return { pageId: 'form', passed: true, steps: [], screenshots: [], state: {} };
+  });
+  const withPointer = { ...mutant, pointer: ['slots', 'content', 'blocks', 0], nodeHash: 'abc' };
+  const c = createContext({ pageId: 'form', steps: [{ click: 'submit' }], mutant: withPointer });
+  const result = await docsJourneyHandler(c);
+  expect(result.status).toBe(200);
+  expect(runDuringJourney.mutant).toEqual(withPointer);
+});
+
+test('docsJourneyHandler refuses a mutant pointer that is not keys and indexes with 400', async () => {
+  const c = createContext({
+    pageId: 'form',
+    steps: [{ click: 'submit' }],
+    mutant: { ...mutant, pointer: [{ a: 1 }] },
+  });
+  const result = await docsJourneyHandler(c);
+  expect(result.status).toBe(400);
+  expect(result.data.error).toMatch('"mutant.pointer" must be an array of keys and indexes');
+});
+
 test('docsJourneyHandler closes the mutant run when the journey throws', async () => {
   let cookie;
   mockRunJourney.mockImplementation(async ({ mutantCookie }) => {
