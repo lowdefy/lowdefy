@@ -201,7 +201,7 @@ _ref:
 
             - `[paths...]`: Journey files, directories or globs to harden instead of the whole suite, as for `test`.
             - `--filter <name>`: Only journeys whose `name` contains this string.
-            - `--page <pageId...>`: Only mutants on these pages, and endpoint mutants a journey touching them called. Journeys whose last measured run touched none of the pages are left out of the baseline too (never when there is no record for them or it is from another build).
+            - `--page <pageId...>`: Only mutants on these pages, and endpoint mutants a journey touching them called. Journeys whose last measured run touched none of the pages are left out of the baseline too (never when there is no record for them, the journey changed, or the record was measured on a different config; the log says which). Records match by a hash of the built config, not by server start, so run `lowdefy test` after your last config edit.
             - `--operators <list>`: Only these operators, comma separated: `drop-action`, `skip-validate`, `flip-visible`, `swap-if`, `drop-payload`, `retarget-link`, `drop-block`, `drop-step`.
             - `--max <n>`: Run at most `n` mutants. The default is `200`; `0` means no cap.
             - `--seed <n>`: The sample's seed; another seed draws another sample. The default is `0`.

@@ -73,7 +73,9 @@ page and operator and the time estimate, and ask whether to run all of it or onl
 ## 4. Harden
 
 Run \`${cd}lowdefy journeys harden\` (with the pages the developer picked; it then runs only
-the baseline of journeys that can reach them, and the replay in step 1 is what lets it tell). It
+the baseline of journeys that can reach them, and the replay in step 1 is what lets it tell, but only
+when the config has not changed since that replay: a journey recorded on other config is kept, and
+the log says why, so replay again after any edit). It
 prints \`Baseline n/N journeys\` and \`Mutants n/N run\` lines while it works: a long baseline is
 not a hang, so let it finish. It breaks the config
 one change at a time, only in the test's own browser, and reports each change no journey

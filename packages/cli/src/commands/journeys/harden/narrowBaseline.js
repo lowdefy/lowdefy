@@ -17,8 +17,8 @@
 import { type } from '@lowdefy/helpers';
 import path from 'path';
 
-import readExercised from '../../test/readExercised.js';
 import getExercisedPath from '../../test/getExercisedPath.js';
+import hashJourney from '../../test/hashJourney.js';
 import fs from 'fs';
 
 function gotoTargets(journey) {
@@ -36,9 +36,9 @@ function declaredReach({ journey, pages }) {
   );
 }
 
-function recordedBuildId({ directories }) {
+function readRecords({ directories }) {
   try {
-    return JSON.parse(fs.readFileSync(getExercisedPath({ directories }), 'utf8')).buildId ?? null;
+    return JSON.parse(fs.readFileSync(getExercisedPath({ directories }), 'utf8')).journeys ?? {};
   } catch {
     return null;
   }
@@ -47,33 +47,47 @@ function recordedBuildId({ directories }) {
 // With --page, only a journey that can reach one of those pages can kill a
 // mutant on them (scopeMutants keeps a mutant for the journeys whose baseline
 // exercised it), so the rest need no baseline run. A journey stays in the
-// baseline unless its last measured run (.lowdefy/test/exercised.json) is
-// current and shows it touched none of the pages, and its own pageId and goto
-// steps name none either. Any doubt keeps it: no pages given, no record for
-// the journey, a record from a changed journey, or one measured on a build
-// other than the one being served, which keeps every journey.
-function narrowBaseline({ items, pages, directories, buildId }) {
+// baseline unless its own pageId and goto steps name none of the pages and its
+// last measured run (.lowdefy/test/exercised.json) is current and touched none
+// of them. A record is current when the journey has not changed and the record
+// was measured on the same config content as the build being served
+// (`configHash`, not the buildId, which is new on every server start). Any
+// doubt keeps the journey. `reasons` counts why journeys were kept without
+// being judged by their record, so the caller can say why narrowing did little.
+function narrowBaseline({ items, pages, directories, configHash }) {
+  const reasons = { noRecord: 0, journeyChanged: 0, otherConfig: 0, noConfigHash: 0 };
   if (type.isNone(pages) || pages.length === 0) {
-    return { items, skipped: 0 };
+    return { items, skipped: 0, reasons, applicable: false };
   }
-  if (type.isNone(buildId) || recordedBuildId({ directories }) !== buildId) {
-    return { items, skipped: 0 };
-  }
+  const records = readRecords({ directories });
   const kept = items.filter((item) => {
     if (!type.isObject(item.journey) || declaredReach({ journey: item.journey, pages })) {
       return true;
     }
-    const entry = readExercised({
-      directories,
-      file: path.relative(directories.config, item.filePath),
-      journey: item.journey,
-    });
-    if (type.isNone(entry) || !type.isArray(entry.exercised?.pages)) {
+    const entry =
+      records?.[`${path.relative(directories.config, item.filePath)}#${item.journey.name}`];
+    if (type.isNone(entry)) {
+      reasons.noRecord += 1;
+      return true;
+    }
+    if (entry.hash !== hashJourney(item.journey)) {
+      reasons.journeyChanged += 1;
+      return true;
+    }
+    if (type.isNone(configHash) || type.isNone(entry.configHash)) {
+      reasons.noConfigHash += 1;
+      return true;
+    }
+    if (entry.configHash !== configHash) {
+      reasons.otherConfig += 1;
+      return true;
+    }
+    if (!type.isArray(entry.exercised?.pages)) {
       return true;
     }
     return entry.exercised.pages.some((pageId) => pages.includes(pageId));
   });
-  return { items: kept, skipped: items.length - kept.length };
+  return { items: kept, skipped: items.length - kept.length, reasons, applicable: true };
 }
 
 export default narrowBaseline;
