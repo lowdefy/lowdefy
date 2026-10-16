@@ -133,30 +133,47 @@ function childScope({ scope, key, child }) {
 }
 
 // Depth-first walk of one deserialised build artifact, calling visit for every
-// object with its parent, its key in the parent and its scope.
+// object with its parent, its key in the parent, its scope and its pointer:
+// the keys and array indexes that lead from the root to it.
 function walkArtifact({ artifact, root, visit }) {
-  function walk({ node, parent, keyInParent, scope }) {
+  function walk({ node, parent, keyInParent, scope, pointer }) {
     if (type.isArray(node)) {
       node.forEach((child, index) => {
         const next = childScope({ scope, key: index, child });
-        if (next !== null) walk({ node: child, parent: node, keyInParent: index, scope: next });
+        if (next !== null) {
+          walk({
+            node: child,
+            parent: node,
+            keyInParent: index,
+            scope: next,
+            pointer: [...pointer, index],
+          });
+        }
       });
       return;
     }
     if (!type.isObject(node)) {
       return;
     }
-    visit({ node, parent, keyInParent, artifact, scope });
+    visit({ node, parent, keyInParent, artifact, scope, pointer });
     Object.keys(node).forEach((key) => {
       const next = childScope({ scope, key, child: node[key] });
-      if (next !== null) walk({ node: node[key], parent: node, keyInParent: key, scope: next });
+      if (next !== null) {
+        walk({
+          node: node[key],
+          parent: node,
+          keyInParent: key,
+          scope: next,
+          pointer: [...pointer, key],
+        });
+      }
     });
   }
   const scope = rootScope({ artifact, root });
   if (scope === null) {
     return;
   }
-  walk({ node: root, parent: null, keyInParent: null, scope });
+  walk({ node: root, parent: null, keyInParent: null, scope, pointer: [] });
 }
 
 export default walkArtifact;

@@ -16,6 +16,7 @@
 
 import { serializer } from '@lowdefy/helpers';
 
+import applyMutant from './applyMutant.js';
 import hashArtifact from './hashArtifact.js';
 import listMutants from './listMutants.js';
 import mutantId from './mutantId.js';
@@ -170,6 +171,8 @@ test('listMutants answers each mutant with its anchor, source, config and the ar
     describe: 'drop-block Title "title" from tickets',
     copies: [],
     copyTargets: [],
+    pointer: ['slots', 'content', 'blocks', 0],
+    nodeHash: expect.stringMatching(/^[0-9a-f]{40}$/),
   });
 });
 
@@ -246,6 +249,7 @@ test("copies of one _ref'd node on three pages group into one mutant with two co
     ['orders', 'tickets'].map((pageId) => ({
       artifact: `pages/${pageId}.json`,
       key: artifacts[`pages/${pageId}.json`].slots.content.blocks[0]['~k'],
+      pointer: ['slots', 'content', 'blocks', 0],
       anchor: { type: 'block', pageId, blockId: 'footer', parentBlockId: pageId },
     }))
   );
@@ -332,4 +336,167 @@ test('listMutants reads requests, endpoints and app events and skips artifacts t
     refMap: {},
   });
   expect(Object.keys(result.artifacts)).toEqual(['pages/tickets.json']);
+});
+
+function requestPage({ pageId, own }) {
+  return {
+    id: `page:${pageId}`,
+    type: 'Box',
+    pageId,
+    blockId: pageId,
+    requests: [
+      ...own.map((requestId) => ({
+        id: `request:${pageId}:${requestId}`,
+        requestId,
+        pageId,
+        payload: { filter: 'x' },
+      })),
+      {
+        id: `request:${pageId}:unread_count`,
+        requestId: 'unread_count',
+        pageId,
+        payload: { app_name: 'encircle' },
+      },
+    ],
+  };
+}
+
+const requestPages = [
+  ['activity', []],
+  ['lapsing', ['get_a']],
+  ['versions', ['get_a', 'get_b']],
+];
+
+// The pages as one build keys them: the component's request sits at a
+// different position on each page, and has the same source line on all.
+function buildRequestPages({ prefix }) {
+  const artifacts = {};
+  const keyMap = {};
+  requestPages.forEach(([pageId, own], index) => {
+    artifacts[`pages/${pageId}.json`] = keyArtifact({
+      value: requestPage({ pageId, own }),
+      prefix: `${prefix}${index}_`,
+      keyMap,
+    }).root;
+  });
+  Object.values(keyMap).forEach((entry) => {
+    if (entry.key.includes(':unread_count')) {
+      entry['~r'] = 'component';
+      entry['~l'] = 5;
+    }
+  });
+  return { artifacts, keyMap };
+}
+
+async function listRequestPages({ artifacts, keyMap }) {
+  const { mutants } = await listMutants({
+    pages: requestPages.map(([pageId]) => pageId),
+    operators: ['drop-payload'],
+    readConfigFile: reader(artifacts),
+    keyMap,
+    refMap: { component: { path: 'components/unread-count-request.yaml' } },
+  });
+  return mutants.find(({ arg }) => arg === 'app_name');
+}
+
+function dropAppName({ root, target, shared }) {
+  return applyMutant({
+    root: serializer.copy(root),
+    mutant: {
+      operator: 'drop-payload',
+      arg: 'app_name',
+      key: target.key,
+      pointer: target.pointer,
+      nodeHash: shared.nodeHash,
+    },
+  });
+}
+
+test("a request a _ref'd component adds at a different position on each page lists a key and pointer per page", async () => {
+  const { artifacts, keyMap } = buildRequestPages({ prefix: 'a' });
+  const shared = await listRequestPages({ artifacts, keyMap });
+  expect(shared.copies).toEqual(['lapsing', 'versions']);
+  const targets = [{ artifact: shared.artifact, key: shared.key, pointer: shared.pointer }].concat(
+    shared.copyTargets
+  );
+  expect(targets.map(({ artifact }) => artifact)).toEqual([
+    'pages/activity.json',
+    'pages/lapsing.json',
+    'pages/versions.json',
+  ]);
+  expect(targets.map(({ pointer }) => pointer)).toEqual([
+    ['requests', 0, 'payload'],
+    ['requests', 1, 'payload'],
+    ['requests', 2, 'payload'],
+  ]);
+  targets.forEach((target) => {
+    expect(dropAppName({ root: artifacts[target.artifact], target, shared })).toEqual({
+      applied: true,
+    });
+  });
+});
+
+test('a mutant listed before its pages were rebuilt, and so re-keyed, still applies on every page by pointer', async () => {
+  const listed = buildRequestPages({ prefix: 'a' });
+  const shared = await listRequestPages(listed);
+  // The dev server rebuilds a page when its build context is recreated and
+  // issues it new keys; the config, and so the artifact's shape, is unchanged.
+  const rebuilt = buildRequestPages({ prefix: 'b' });
+  const targets = [{ artifact: shared.artifact, key: shared.key, pointer: shared.pointer }].concat(
+    shared.copyTargets
+  );
+  targets.forEach((target) => {
+    const root = rebuilt.artifacts[target.artifact];
+    const copy = serializer.copy(root);
+    expect(
+      applyMutant({
+        root: copy,
+        mutant: { operator: 'drop-payload', arg: 'app_name', key: target.key },
+      })
+    ).toEqual({ applied: false, reason: 'key not found' });
+    const result = dropAppName({ root, target, shared });
+    expect(result).toEqual({ applied: true });
+  });
+});
+
+test('a pointer into content that changed since the listing is a miss, not another node', async () => {
+  const listed = buildRequestPages({ prefix: 'a' });
+  const shared = await listRequestPages(listed);
+  const rebuilt = buildRequestPages({ prefix: 'b' });
+  const root = rebuilt.artifacts['pages/lapsing.json'];
+  root.requests[1].payload.app_name = 'other';
+  const target = shared.copyTargets.find(({ artifact }) => artifact === 'pages/lapsing.json');
+  expect(dropAppName({ root, target, shared })).toEqual({
+    applied: false,
+    reason: 'key not found',
+  });
+  expect(root.requests[1].payload.app_name).toEqual('other');
+});
+
+test('a single-page mutant applies by its key, whatever its pointer says', async () => {
+  const { root, keyMap } = pageFixture({ prefix: 'k1_' });
+  const { mutants } = await listMutants({
+    pages: ['tickets'],
+    operators: ['drop-block'],
+    readConfigFile: reader({ 'pages/tickets.json': root }),
+    keyMap,
+    refMap: {},
+  });
+  expect(mutants.length).toBeGreaterThan(0);
+  mutants.forEach((mutant) => {
+    expect(mutant.copyTargets).toEqual([]);
+    const copy = serializer.copy(root);
+    expect(
+      applyMutant({
+        root: copy,
+        mutant: {
+          operator: mutant.operator,
+          arg: mutant.arg,
+          key: mutant.key,
+          pointer: ['no', 'such', 'node'],
+          nodeHash: 'unrelated',
+        },
+      })
+    ).toEqual({ applied: true });
+  });
 });
