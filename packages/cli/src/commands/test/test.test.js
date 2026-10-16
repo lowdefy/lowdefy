@@ -355,6 +355,7 @@ test("test writes each journey's newest exercised path to .lowdefy/test/exercise
     journeys: {
       [`${path.join('tests', 'journeys', 'a.yaml')}#first journey`]: {
         hash: expect.stringMatching(/^[0-9a-f]{40}$/),
+        configHash: null,
         passed: true,
         exercised,
       },

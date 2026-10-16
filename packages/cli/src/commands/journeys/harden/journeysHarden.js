@@ -19,8 +19,9 @@ import { type } from '@lowdefy/helpers';
 
 import buildMutationReport from './buildMutationReport.js';
 import formatHardenReport from './formatHardenReport.js';
-import fetchBuildId from '../../test/fetchBuildId.js';
+import hashBuild from '../../test/hashBuild.js';
 import formatMutantList from './formatMutantList.js';
+import describeNarrowing from './describeNarrowing.js';
 import narrowBaseline from './narrowBaseline.js';
 import parseHardenOptions from './parseHardenOptions.js';
 import requestMutants from './requestMutants.js';
@@ -114,13 +115,9 @@ async function hardenOnServer({ context, options, items, url }) {
     items,
     pages: options.pages,
     directories: context.directories,
-    buildId: (options.pages ?? []).length === 0 ? null : await fetchBuildId({ url }),
+    configHash: (options.pages ?? []).length === 0 ? null : hashBuild({ context }),
   });
-  if (narrowed.skipped > 0) {
-    context.logger.info(
-      `Baseline: ${narrowed.skipped} of ${items.length} journeys left out as off-path for --page (their last run touched none of the pages).`
-    );
-  }
+  describeNarrowing({ narrowed, total: items.length }).forEach((line) => context.logger.info(line));
   const { baselines, failed } = await runBaseline({
     items: narrowed.items,
     url,

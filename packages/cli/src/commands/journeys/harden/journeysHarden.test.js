@@ -16,6 +16,7 @@
 
 import { jest } from '@jest/globals';
 import fs from 'fs';
+import hashBuild from '../../test/hashBuild.js';
 import hashJourney from '../../test/hashJourney.js';
 import os from 'os';
 import path from 'path';
@@ -147,6 +148,7 @@ beforeEach(() => {
   context = {
     directories: {
       config: configDirectory,
+      dev: path.join(configDirectory, '.lowdefy', 'dev'),
       journeys: path.join(configDirectory, 'tests', 'journeys'),
     },
     options: { url },
@@ -560,7 +562,25 @@ test('journeysHarden counts a failed baseline in the progress line', async () =>
   expect(logs.info).toContain('Baseline 2/2 journeys (1 failed)');
 });
 
-function writeExercisedRecord(buildId) {
+function writeBuild(pageTitle) {
+  const build = path.join(configDirectory, '.lowdefy', 'dev', 'build');
+  fs.mkdirSync(path.join(build, 'plugins'), { recursive: true });
+  fs.mkdirSync(path.join(build, 'pages'), { recursive: true });
+  fs.writeFileSync(path.join(build, 'plugins', 'blockMetas.json'), '{}');
+  fs.writeFileSync(path.join(build, 'keyMap.json'), '{}');
+  fs.writeFileSync(path.join(build, 'refMap.json'), '{}');
+  fs.writeFileSync(
+    path.join(build, 'pages', 'orders.json'),
+    JSON.stringify({ id: 'page:orders', title: pageTitle })
+  );
+  // A fresh timestamp on every server start, not config.
+  fs.writeFileSync(
+    path.join(build, 'appMeta.json'),
+    JSON.stringify({ buildId: new Date().toISOString() })
+  );
+}
+
+function writeExercisedRecord(configHash) {
   const file = path.join(configDirectory, '.lowdefy', 'test', 'exercised.json');
   fs.mkdirSync(path.dirname(file), { recursive: true });
   const journeys = {};
@@ -586,15 +606,19 @@ function writeExercisedRecord(buildId) {
   ].forEach(([name, journey]) => {
     journeys[`tests/journeys/${name}.yaml#${name}`] = {
       hash: hashJourney(journey),
+      configHash,
       passed: true,
       exercised: exercisedFor(name),
     };
   });
-  fs.writeFileSync(file, JSON.stringify({ version: 1, buildId, journeys }));
+  fs.writeFileSync(file, JSON.stringify({ version: 1, buildId: 'timestamp', journeys }));
 }
 
 test('journeysHarden --page runs no baseline for journeys that cannot reach the page', async () => {
-  writeExercisedRecord('build-1');
+  writeBuild('Orders');
+  writeExercisedRecord(hashBuild({ context }));
+  // A new server start rewrites the build timestamp but not the config.
+  writeBuild('Orders');
   await harden({ page: ['refunds'], list: true });
   expect(journeyRuns.map((run) => run.pageId)).toEqual(['refunds']);
   expect(logs.info).toContain(
@@ -603,12 +627,29 @@ test('journeysHarden --page runs no baseline for journeys that cannot reach the 
   expect(logs.info).toContain('Baseline 1/1 journeys (0 failed)');
 });
 
-test('journeysHarden --page runs the full baseline when there is no record or it is from another build', async () => {
+test('journeysHarden --page says why the full baseline runs when there is no record', async () => {
+  writeBuild('Orders');
   await harden({ page: ['refunds'], list: true });
   expect(journeyRuns.map((run) => run.pageId).sort()).toEqual(['orders', 'refunds']);
-  expect(logs.info.some((line) => line.startsWith('Baseline: '))).toBe(false);
-  journeyRuns = [];
-  writeExercisedRecord('older-build');
+  expect(logs.info).toContain('Baseline: --page left no journey out, all 2 run.');
+  expect(logs.info).toContain(
+    'Baseline: kept without a usable record: 1 journey have no exercised record.'
+  );
+});
+
+test('journeysHarden --page says the config changed since the last test', async () => {
+  writeBuild('Orders');
+  writeExercisedRecord(hashBuild({ context }));
+  writeBuild('Orders, edited');
   await harden({ page: ['refunds'], list: true });
   expect(journeyRuns).toHaveLength(2);
+  expect(logs.info).toContain('Baseline: --page left no journey out, all 2 run.');
+  expect(
+    logs.info.some((line) => line.includes('last ran on a different config (it changed since'))
+  ).toBe(true);
+});
+
+test('journeysHarden without --page logs nothing about narrowing', async () => {
+  await harden({ list: true });
+  expect(logs.info.some((line) => line.startsWith('Baseline: '))).toBe(false);
 });

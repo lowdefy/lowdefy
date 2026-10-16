@@ -27,18 +27,19 @@ function item(journey, file = `${journey.name}.yaml`) {
   return { journey, filePath: path.join(directories.config, 'tests', 'journeys', file) };
 }
 
-function record(journeys, buildId = 'b1') {
+function record(journeys, configHash = 'h1') {
   const entries = {};
   journeys.forEach(({ journey, pages }) => {
     entries[`tests/journeys/${journey.name}.yaml#${journey.name}`] = {
       hash: hashJourney(journey),
+      configHash,
       passed: true,
       exercised: { pages },
     };
   });
   const file = path.join(directories.config, '.lowdefy', 'test', 'exercised.json');
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, JSON.stringify({ version: 1, buildId, journeys: entries }));
+  fs.writeFileSync(file, JSON.stringify({ version: 1, buildId: 'timestamp', journeys: entries }));
 }
 
 const orders = { name: 'orders', pageId: 'orders', steps: [{ click: 'a' }] };
@@ -60,8 +61,8 @@ afterEach(() => {
   fs.rmSync(directories.config, { recursive: true, force: true });
 });
 
-function narrow(items, pages = ['lapsing'], buildId = 'b1') {
-  return narrowBaseline({ items: items.map((j) => item(j)), pages, directories, buildId });
+function narrow(items, pages = ['lapsing'], configHash = 'h1') {
+  return narrowBaseline({ items: items.map((j) => item(j)), pages, directories, configHash });
 }
 
 test('leaves out journeys whose last run touched none of the pages', () => {
@@ -86,25 +87,70 @@ test('keeps a journey whose pageId or goto step names a page, even if the record
   expect(result.skipped).toBe(0);
 });
 
-test('keeps a journey with no record or a changed journey', () => {
+test('keeps a journey with no record or a changed journey, and counts why', () => {
   record([{ journey: orders, pages: ['orders'] }]);
   const changed = { ...orders, steps: [{ click: 'b' }] };
-  expect(narrow([changed, viaLink]).skipped).toBe(0);
+  const result = narrow([changed, viaLink]);
+  expect(result.skipped).toBe(0);
+  expect(result.reasons).toEqual({
+    noRecord: 1,
+    journeyChanged: 1,
+    otherConfig: 0,
+    noConfigHash: 0,
+  });
 });
 
 test('runs the full baseline when there is no exercised record', () => {
-  expect(narrow([orders, lapsing]).skipped).toBe(0);
+  const result = narrow([orders, lapsing]);
+  expect(result.skipped).toBe(0);
+  expect(result.reasons.noRecord).toBe(1);
 });
 
-test('runs the full baseline when the record is from another build or the build is unknown', () => {
+test('keeps a journey measured on a different config, whatever the build timestamp', () => {
   record([{ journey: orders, pages: ['orders'] }], 'old');
-  expect(narrow([orders]).skipped).toBe(0);
+  const result = narrow([orders]);
+  expect(result.skipped).toBe(0);
+  expect(result.reasons.otherConfig).toBe(1);
+});
+
+test('narrows on the same config even though the build timestamp differs between servers', () => {
   record([{ journey: orders, pages: ['orders'] }]);
-  expect(narrow([orders], ['lapsing'], null).skipped).toBe(0);
+  expect(narrow([orders]).skipped).toBe(1);
+});
+
+test('keeps every journey when the config hash is unknown or the record has none', () => {
+  record([{ journey: orders, pages: ['orders'] }]);
+  const unknown = narrow([orders], ['lapsing'], null);
+  expect(unknown.skipped).toBe(0);
+  expect(unknown.reasons.noConfigHash).toBe(1);
+  record([{ journey: orders, pages: ['orders'] }], null);
+  expect(narrow([orders]).reasons.noConfigHash).toBe(1);
+});
+
+test('keeps only the stale entries of a record merged from runs on different configs', () => {
+  record([{ journey: orders, pages: ['orders'] }], 'old');
+  const file = path.join(directories.config, '.lowdefy', 'test', 'exercised.json');
+  const content = JSON.parse(fs.readFileSync(file, 'utf8'));
+  content.journeys['tests/journeys/viaLink.yaml#via-link'] = {
+    hash: hashJourney(viaLink),
+    configHash: 'h1',
+    passed: true,
+    exercised: { pages: ['home'] },
+  };
+  fs.writeFileSync(file, JSON.stringify(content));
+  const result = narrowBaseline({
+    items: [item(orders), item(viaLink, 'viaLink.yaml')],
+    pages: ['lapsing'],
+    directories,
+    configHash: 'h1',
+  });
+  expect(result.items.map(({ journey }) => journey.name)).toEqual(['orders']);
+  expect(result.skipped).toBe(1);
 });
 
 test('runs the full baseline without --page', () => {
   record([{ journey: orders, pages: ['orders'] }]);
   expect(narrow([orders], null).skipped).toBe(0);
   expect(narrow([orders], []).skipped).toBe(0);
+  expect(narrow([orders], []).applicable).toBe(false);
 });
