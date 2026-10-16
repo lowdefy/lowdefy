@@ -35,7 +35,7 @@ import nextJourneySequence from './nextJourneySequence.js';
 import openJourneyEmail from './openJourneyEmail.js';
 import readJourneyEmailMatch from './readJourneyEmailMatch.js';
 import readPagePath from './readPagePath.js';
-import { shownTextSelector } from './shownTextEngine.js';
+import shownTextSelector from './shownTextSelector.js';
 
 // Structural equality over values that have already been through the JSON
 // round-trip getState performs in the page (no undefined, no Dates, no
@@ -254,7 +254,7 @@ function namesMatches(target) {
 // Every visible element a `text` or `containing` target matches, before `nth`
 // picks one, and where they were looked for. With `containing` they are the
 // innermost elements whose shown text contains the string, however the markup
-// splits it (shownTextEngine.js), inside the scope or on the page: a
+// splits it (registerShownTextEngine.js), inside the scope or on the page: a
 // list row a person picks by the name or address it shows, which is neither a
 // block nor an interactive control. With `text` they are the interactive
 // controls with exactly that text (a cell button, a confirm dialog's OK, a
@@ -524,8 +524,9 @@ async function readBlockType({ page, blockId }) {
   try {
     return await page.evaluate((id) => {
       const lowdefy = window.lowdefy;
-      const shownKey = lowdefy?.pageInstances?.[lowdefy.pageId]?.at(-1);
-      return lowdefy?.contexts?.[shownKey]?._internal?.RootSlots?.map?.[id]?.type ?? null;
+      if (!lowdefy?.pageId || lowdefy._devNavigating === true) return null;
+      const shownKey = lowdefy.pageInstances?.[lowdefy.pageId]?.at(-1);
+      return lowdefy.contexts?.[shownKey]?._internal?.RootSlots?.map?.[id]?.type ?? null;
     }, blockId);
   } catch {
     return null;
@@ -556,7 +557,8 @@ const COLOR_PICKER_HEX_INPUT =
 const HEX_COLOR = /^#?([\da-f]{6}|[\da-f]{8})$/i;
 
 // The hex input shows its "#" as a prefix, so only the digits are typed. Escape closes the
-// picker, leaving the page as a person who picked a colour leaves it.
+// picker, leaving the page as a person who picked a colour leaves it. The close is waited
+// for briefly and never fails the fill: a picker whose `open` the config holds stays open.
 async function fillColorPicker({ page, target, trigger, value, timeout }) {
   const description = describeTarget(target);
   const hex = String(value);
@@ -597,7 +599,10 @@ async function fillColorPicker({ page, target, trigger, value, timeout }) {
   }
   await hexInput.fill(hex.replace(/^#/, ''), { timeout });
   await page.keyboard.press('Escape');
-  await panel.first().waitFor({ state: 'hidden', timeout });
+  await panel
+    .first()
+    .waitFor({ state: 'hidden', timeout: Math.min(timeout, 1000) })
+    .catch(() => {});
 }
 
 // The options of a radio group, a button selector or a segmented control are
