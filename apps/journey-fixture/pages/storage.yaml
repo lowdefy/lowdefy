@@ -1,8 +1,7 @@
 # The page the data-set storage test drives
 # (packages/servers/server-dev/test/journeyFixture/storage.test.mjs): it signs
 # a file URL on the storage_bucket connection as it loads. Under a data set the
-# request runs on the connection's own bucket rather than being refused, and
-# signed_url_alert shows once the URL names that bucket.
+# request is sunk (recorded, answered null) rather than refused.
 id: storage
 type: Box
 requests:
@@ -22,14 +21,3 @@ blocks:
     properties:
       content: Storage
       level: 2
-  - id: signed_url_alert
-    type: Alert
-    visible:
-      _string.startsWith:
-        - _if_none:
-            - _request: sign_file
-            - ''
-        - http://127.0.0.1:9/fixture-bucket/reports/fixture.txt?
-    properties:
-      type: success
-      message: File URL signed

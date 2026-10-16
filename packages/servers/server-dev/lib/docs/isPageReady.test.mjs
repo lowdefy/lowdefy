@@ -219,3 +219,17 @@ test('isPageReady returns true when no lazy block has mounted and the counter is
   expect(global.window.__lowdefyLazyLoads).toBeUndefined();
   expect(isPageReady()).toBe(true);
 });
+
+test('isPageReady returns false while a table holds its loading skeleton', () => {
+  setWindow(settledContext());
+  global.window.__lowdefySkeletonHolds = 1;
+
+  expect(isPageReady()).toBe(false);
+});
+
+test('isPageReady returns true once no table holds its loading skeleton', () => {
+  setWindow(settledContext());
+  global.window.__lowdefySkeletonHolds = 0;
+
+  expect(isPageReady()).toBe(true);
+});
