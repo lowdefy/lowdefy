@@ -691,7 +691,7 @@ program
   .addOption(
     new Option(
       '--lint',
-      'Lint the journeys (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L5 named data set users, L6 final assertion) and run nothing.'
+      'Lint the journeys (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L5 named data set users, L6 final assertion, L7 pointless as) and run nothing.'
     )
   )
   .addOption(options.logLevel)

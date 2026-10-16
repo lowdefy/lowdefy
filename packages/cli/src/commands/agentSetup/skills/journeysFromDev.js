@@ -90,6 +90,11 @@ edit made obsolete.
   sign-in steps and act as a data set user or an inline \`user:\`. When signing in is the point,
   leave \`data:\` off (auth journeys stay on the auth harness) and use the harness's test
   credential, or ask the developer.
+- When what the developer proved is something a second person sees (a decision someone overrides
+  and the other person's inbox, a task assigned and the assignee's list, a mention, an invitation),
+  write it as one journey on one data set: act as the first user, then \`as: <second data set user>\`
+  opens a second browser on the same database; \`goto\` the page and \`expect\` what they see. Never
+  split it into two journeys that each seed the result by hand.
 - If \`tests/data/\` exists, pick its \`data:\` set for any journey that writes. If it writes and
   no data set exists, say that it will write to whatever the app's connections point at, and ask
   before running it.

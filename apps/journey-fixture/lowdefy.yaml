@@ -84,3 +84,4 @@ pages:
   - _ref: pages/shared_beta.yaml
   - _ref: pages/storage.yaml
   - _ref: pages/walled.yaml
+  - _ref: pages/handoff.yaml

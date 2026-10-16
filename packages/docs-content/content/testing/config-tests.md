@@ -271,6 +271,23 @@ A one-time code is typed, not clicked. `fill` with `fromEmail: { to, subject, ma
 
 `as: invitee` switches the journey to another person with their own browser and cookies: an owner and the person they invite, or a member whose session stays open while the owner removes them. The journey starts as `main`. The first `as` for a name opens the journey's page in a new browser, as the journey's `user`, or as the data set user of that name on a journey with `data` (see [Journey data sets](/journey-data-sets)); switching back returns to that person's tab as they left it.
 
+**Seeing what a second person sees.** On a journey with `data`, every person reads and writes the run's one database, so act as one user and then check, in the same run, what another user sees. The second user is a user of the data set, so no sign-in is needed:
+
+```yaml
+name: overriding a decision tells its owner
+data: reviews
+user: officer
+pageId: review
+steps:
+  - click: override_decision
+  - expect: { state: { path: decision.status, equals: overridden } }
+  - as: owner # a user of the data set, in a browser of their own
+  - goto: notifications/all
+  - expect: { text: { blockId: inbox, contains: Kirsty changed your decision } }
+```
+
+What `officer` wrote is in the database `owner` reads, and nothing of `officer`'s session (the signed-in user, cached requests, page state) reaches `owner`, who has their own browser. `as: main` returns to `officer`'s tab as it was left. Because the run still has one database, a dropped `CallApi` that sends the notification fails the journey, and a [config mutant](#mutants-lowdefy-journeys-harden) that drops it is killed. What the journey exercised is the union over everyone it acted as: the requests, events and blocks `officer` and `owner` each touched are recorded for the journey, so coverage, lint and `journeys harden` need no per-person bookkeeping. An `as` that names the person already acting is a lint warning ([L7](#lint)).
+
 Each person also sends requests from their own client address, so auth rate limits (a few sign-in attempts per address every few seconds) count each person's attempts apart, as they would for people on different devices, instead of one budget for the whole run.
 
 ### The database
@@ -398,6 +415,7 @@ An **assertion step** is any `expect`, or a `wait: { request }`.
 | L4   | A journey whose newest run called a request or endpoint that writes declares `data:`. Unmeasured, it is a warning to run the journey once.                                                                                                                                                                                | error    |
 | L5   | `user` names a user from the journey's data set (or a list of them, each checked), or is `none`. An inline user object, or no `user`, is a warning until the journey moves onto a data set.                                                                                                                               | warning  |
 | L6   | The last step is an assertion step.                                                                                                                                                                                                                                                                                       | error    |
+| L7   | An `as` step names the person who is already acting (`as: main` while still `main`, or the same name twice running), so it switches to nobody.                                                                                                                                                                            | warning  |
 
 A journey written from a [session log](#session-logs), with event-less clicks and a final `wait: { request }`, lints without errors.
 

@@ -97,3 +97,9 @@ test('journeys-from-pr gives no instruction to delete a journey', () => {
 test('journeys-from-pr names the app directory in a monorepo', () => {
   expect(journeysFromPr({ appPath: 'apps/crm' })).toContain('`apps/crm` in the worktree');
 });
+
+test('journeys-from-pr proves what someone else feels with as: on one data set', () => {
+  const skill = journeysFromPr({ appPath: '' });
+  expect(skill).toContain('`as: <second data set user>`');
+  expect(skill).toContain('reads the same database');
+});
