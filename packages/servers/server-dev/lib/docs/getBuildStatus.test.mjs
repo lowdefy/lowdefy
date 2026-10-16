@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 import { jest } from '@jest/globals';
 
 const mockClientErrors = jest.fn();
@@ -24,7 +27,7 @@ jest.unstable_mockModule('./getBuildId.js', () => ({ default: () => 'build-2' })
 const mockGetPageBuildStatus = jest.fn(() => ({ unbuilt: 0 }));
 jest.unstable_mockModule('./getPageBuildStatus.js', () => ({ default: mockGetPageBuildStatus }));
 jest.unstable_mockModule('./readBuildArtifact.js', () => ({
-  default: () => ({ status: 'ok', errors: [], warnings: [] }),
+  default: () => ({ status: 'ok', errors: [], warnings: ['a build warning'] }),
 }));
 
 const { default: getBuildStatus } = await import('./getBuildStatus.js');
@@ -70,4 +73,61 @@ test('getBuildStatus names the build being served as a top-level buildId', async
   mockServerErrors.mockReturnValue([]);
 
   expect((await getBuildStatus()).buildId).toBe('build-2');
+});
+
+describe('agentFiles', () => {
+  let root;
+  let previousConfigDirectory;
+
+  beforeEach(() => {
+    mockClientErrors.mockReturnValue([]);
+    mockServerErrors.mockReturnValue([]);
+    root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-build-status-'));
+    fs.mkdirSync(path.join(root, '.git'));
+    fs.writeFileSync(path.join(root, 'lowdefy.yaml'), 'lowdefy: 7.1.0\n');
+    fs.writeFileSync(path.join(root, 'CLAUDE.md'), '@AGENTS.md\n');
+    previousConfigDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG;
+    process.env.LOWDEFY_DIRECTORY_CONFIG = root;
+  });
+
+  afterEach(() => {
+    if (previousConfigDirectory === undefined) {
+      delete process.env.LOWDEFY_DIRECTORY_CONFIG;
+    } else {
+      process.env.LOWDEFY_DIRECTORY_CONFIG = previousConfigDirectory;
+    }
+    fs.rmSync(root, { recursive: true, force: true });
+  });
+
+  const writeBlock = (version) =>
+    fs.writeFileSync(
+      path.join(root, 'AGENTS.md'),
+      `<!-- BEGIN:lowdefy-agent-rules version=${version} -->\n<!-- END:lowdefy-agent-rules -->\n`
+    );
+
+  test('lists notices apart from the build warnings, and a fix shows on the next call', async () => {
+    writeBlock('7.0.0');
+
+    const before = await getBuildStatus();
+    expect(before.agentFiles).toEqual([
+      {
+        code: 'version_mismatch',
+        message: expect.stringContaining('npx lowdefy@7.1.0 agent-setup'),
+      },
+    ]);
+    expect(before.build.warnings).toEqual(['a build warning']);
+
+    writeBlock('7.1.2');
+
+    const after = await getBuildStatus();
+    expect(after).not.toHaveProperty('agentFiles');
+    expect(after.build.warnings).toEqual(['a build warning']);
+  });
+
+  test('leaves agentFiles out when lowdefy.yaml cannot be read', async () => {
+    writeBlock('6.0.0');
+    fs.rmSync(path.join(root, 'lowdefy.yaml'));
+
+    expect(await getBuildStatus()).not.toHaveProperty('agentFiles');
+  });
 });

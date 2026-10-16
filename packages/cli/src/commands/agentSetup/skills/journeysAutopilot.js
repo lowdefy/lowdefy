@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import appFolder from './appFolder.js';
+
 // The journeys-autopilot skill: one agent, started once and left running, that
 // builds an app's journeys from nothing and keeps hardening them. It keeps a
 // committed ledger (tests/autopilot.yaml) of every page, role and write path,
@@ -21,9 +23,7 @@
 // journey before keeping it, and ships the work as reviewable pull requests.
 // It spawns no agents, never deletes or weakens a journey, and never touches
 // production or a shared database. It draws on the other journey skills inline.
-function journeysAutopilot({ appPath }) {
-  const cd = appPath === '' ? '' : `cd ${appPath} && `;
-  const appDirectory = appPath === '' ? 'the repository root' : `\`${appPath}\``;
+function journeysAutopilot() {
   return `---
 name: journeys-autopilot
 description: Use when the developer wants the app's journeys (tests) built and kept healthy without supervision, says 'just get this app tested', or the app has no journeys yet. Works alone in its own worktree, cycle after cycle, from a committed ledger; proves every journey before keeping it; ships pull requests; never deletes or weakens a journey.
@@ -35,8 +35,9 @@ A **journey** is a short YAML script (\`tests/journeys/\`) that opens a page as 
 types, and checks what the app shows. \`lowdefy test\` runs them against a throwaway database, so
 nothing real is touched. You are the autopilot: one agent that builds the app's journeys from
 nothing, then keeps finding what they miss. Each run is one **cycle** that moves the app forward and
-stops at a clean point, so it can be interrupted at any time and run again. The app is in
-${appDirectory}.
+stops at a clean point, so it can be interrupted at any time and run again.
+
+${appFolder({ unattended: true })}
 
 ## Start it, stop it
 
@@ -159,9 +160,9 @@ journey.
 
 ### 2. Bootstrap (only when there is no \`tests/autopilot.yaml\`)
 
-1. Run \`${cd}lowdefy test --help\` and \`${cd}lowdefy journeys --help\`. If they fail, you are blocked
+1. Run \`lowdefy test --help\` and \`lowdefy journeys --help\`. If they fail, you are blocked
    (see Traps for a stale \`.lowdefy/dev\`).
-2. Run \`${cd}lowdefy data list\`. Write \`tests/data/autopilot.yaml\`. If a data set already has
+2. Run \`lowdefy data list --config-directory <app>\`. Write \`tests/data/autopilot.yaml\`. If a data set already has
    users and fixtures, it starts \`extends: [<name>]\` and adds only what that set lacks; never edit
    the existing file. Otherwise it holds
    one \`users\` entry per role the app's pages allow, named by role (read each page's \`auth\` and the
@@ -171,7 +172,7 @@ journey.
    (\`Autopilot Widget Alpha\`), at least two rows wherever order or filtering matters, a second tenant when the
    app has tenants (for refusal journeys), and dates written as explicit values. Read
    [journey data sets](/journey-data-sets) for the file format; \`generate:\` adds volume.
-3. Map the app: \`${cd}lowdefy journeys scope --json\` lists every page with its roles; read each
+3. Map the app: \`lowdefy journeys scope --config-directory <app> --json\` lists every page with its roles; read each
    page's requests, endpoints and event chains (\`lowdefy_get_page_config\`, \`lowdefy_app_map\`,
    \`lowdefy_find_config\`). Write one \`todo\` item for each page and role that can open it, one
    \`refusal\` item for each role that cannot, and one \`write\` item for each control that writes data
@@ -180,7 +181,7 @@ journey.
    the reason "signed-out runs stay on the auth harness" (\`user: none\` on a data set is refused
    while auth is configured, because signing in would write to the real auth database).
 4. **Journeys already in the suite** (the app has journeys but no ledger): they are the developer's.
-   Replay them once with \`${cd}lowdefy test --repeat 3\` (the whole suite). Read each one's
+   Replay them once with \`lowdefy test --config-directory <app> --repeat 3\` (the whole suite). Read each one's
    \`pageId\`, \`user\` and steps, and set every item it proves (each user in a \`user\` list, the
    page it opens, the write it asserts) \`covered\` with its file and \`note: developer's journey\`.
    Never rewrite, move, rename or duplicate one, and never write a second journey for an item one
@@ -188,7 +189,7 @@ journey.
    \`quarantined\` with the reason, and name it in the pull request. These items count as your
    first covered ones.
 5. Prove the harness with one journey of your own: the first \`todo\` page and role, as that role,
-   \`expect.text\` of a value only a fixture holds. Run \`${cd}lowdefy test --repeat 3 <file>\`.
+   \`expect.text\` of a value only a fixture holds. Run \`lowdefy test --config-directory <app> --repeat 3 <file>\`.
 6. Commit the data set, ledger and first journey. Push the branch and open the pull request
    (step 8).
 
@@ -230,8 +231,8 @@ Follow the format in [config tests](/config-tests): \`name\` (at most 100 charac
 
 ### 5. Prove before keeping
 
-Run \`${cd}lowdefy test --lint tests/journeys/_candidates\` and fix errors, then
-\`${cd}lowdefy test --repeat 3 <file>\` for each candidate, one run at a time.
+Run \`lowdefy test --config-directory <app> --lint <app>/tests/journeys/_candidates\` and fix errors, then
+\`lowdefy test --config-directory <app> --repeat 3 <file>\` for each candidate, one run at a time.
 
 - **PASS** (three in a row): move it with plain \`mv\` into \`tests/journeys/<area>/\` (candidates
   are untracked, so \`git mv\` fails), then \`git add\` it, and set the item \`covered\`.
@@ -260,8 +261,8 @@ For each finding, decide:
   is clean, then in the same worktree \`git switch -c journeys-autopilot/fix-<slug>
   origin/<default branch>\`, make the fix, and \`git mv tests/journeys/_findings/<file>
   tests/journeys/<area>/\`, so the pull request shows the journey turning green and leaves one copy.
-  Before pushing, run \`${cd}lowdefy test --repeat 3 <file>\`, then the whole suite once
-  (\`${cd}lowdefy test\`: a fix can break a journey that asserted the old behaviour). Open a pull
+  Before pushing, run \`lowdefy test --config-directory <app> --repeat 3 <file>\`, then the whole suite once
+  (\`lowdefy test --config-directory <app>\`: a fix can break a journey that asserted the old behaviour). Open a pull
   request titled \`fix: ...\` that says what broke, where, and which journey proves it (with no \`gh\`, push the branch and put
   that title and body in the cycle report), then \`git switch journeys-autopilot/main\`. The item stays \`finding\`, with the fix pull request url (with no \`gh\`, the
   fix branch) in \`note\`, until that pull request merges; then set it \`covered\` with the journey's new path.
@@ -271,12 +272,12 @@ For each finding, decide:
 ### 7. Harden (when no \`todo\` items remain)
 
 Follow the [journeys-harden skill](.claude/skills/journeys-harden/SKILL.md), unattended: replay
-(\`${cd}lowdefy test --repeat 3\`) the whole suite; run \`${cd}lowdefy journeys harden --list\` and, in
-budget, \`${cd}lowdefy journeys harden --workers 1\` on a few pages at a time (\`--page <pageId>\`),
+(\`lowdefy test --config-directory <app> --repeat 3\`) the whole suite; run \`lowdefy journeys harden --config-directory <app> --list\` and, in
+budget, \`lowdefy journeys harden --config-directory <app> --workers 1\` on a few pages at a time (\`--page <pageId>\`),
 one worker so only one journey runs at a time; for each
 survivor add the assertion that would catch it, then confirm with \`harden --mutant <id>\` and
 \`lowdefy test --repeat 3\`. The printed report has no ids: read them from
-\`.lowdefy/test/mutation.json\` (each \`mutants\` entry has \`id\`, \`status\` and \`describe\`). Add edge cases with \`${cd}lowdefy journeys variants <file>\` and keep what
+\`.lowdefy/test/mutation.json\` (each \`mutants\` entry has \`id\`, \`status\` and \`describe\`). Add edge cases with \`lowdefy journeys variants --config-directory <app> <file>\` and keep what
 passes as the skill describes (granted roles join the original journey's \`user\` list, the rest
 become their own journeys; a failing variant is a finding). A developer's journey is never edited,
 whatever the variant file's comment says: its granted role becomes a journey of its own instead.
@@ -285,7 +286,7 @@ organization gets no tenant variant; a tenant refusal on your data set covers th
 covered journey already proves (same page, user and outcome) adds nothing: discard its candidate
 file, which never joined the suite, and name it in the report, so \`_candidates/\` is left empty.
 A survivor whose config is dead is a finding about the app. If the app already has production
-analytics cached (\`${cd}lowdefy journeys coverage\` reads them), add \`todo\` items for the flows and
+analytics cached (\`lowdefy journeys coverage --config-directory <app>\` reads them), add \`todo\` items for the flows and
 role sets it names that no journey covers. Re-check \`quarantined\` items: replay each three times, and
 return one to the suite only when it passes cleanly. Never delete a journey.
 
@@ -296,7 +297,7 @@ Blocked, never forced, apart from step 1's merged case) and open one pull reques
 branch, or update the open one: \`gh pr create\` / \`gh pr edit\`, and record its url in \`pr:\`.
 The body is plain language for someone who has never heard of journeys: what is now covered (pages
 and roles), the findings and fix pull requests, the quarantines with reasons, what the next cycle
-will do, and how to run the suite (\`${cd}lowdefy test\`). Add a changeset or release note only if
+will do, and how to run the suite (\`lowdefy test --config-directory <app>\`). Add a changeset or release note only if
 the repository's convention asks for one for test-only changes.
 
 There is never a second journeys branch. When the open pull request holds about 20 journeys

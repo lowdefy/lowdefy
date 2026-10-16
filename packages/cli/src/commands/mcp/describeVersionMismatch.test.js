@@ -18,7 +18,7 @@ import path from 'path';
 
 import describeVersionMismatch from './describeVersionMismatch.js';
 
-test('describeVersionMismatch tells a shim installed in node_modules to move the app pin', () => {
+test('describeVersionMismatch tells the agent to pass the pinned agent-setup command to the developer', () => {
   expect(
     describeVersionMismatch({
       cliVersion: '7.1.0',
@@ -27,8 +27,19 @@ test('describeVersionMismatch tells a shim installed in node_modules to move the
       appRoot: '/apps/crm',
     })
   ).toEqual(
-    "lowdefy mcp is 7.1.0 but this dev server is 7.2.0, so tools and their options can differ. To match them, run `npx lowdefy agent-setup` in /apps/crm to pin lowdefy mcp to the app's Lowdefy version, then restart the agent session."
+    "lowdefy mcp is 7.1.0 but this dev server is 7.2.0, so tools and their options can differ. Tell the developer; don't run agent-setup yourself. They fix it with `npx lowdefy@7.2.0 agent-setup` in /apps/crm, then restart the agent session."
   );
+});
+
+test('describeVersionMismatch gives the same command for a shim in the npx cache', () => {
+  expect(
+    describeVersionMismatch({
+      cliVersion: '7.1.0',
+      serverVersion: '7.2.0',
+      cliDirectory: path.join('/home', '.npm', '_npx', 'abc123', 'node_modules', 'lowdefy'),
+      appRoot: '/apps/crm',
+    })
+  ).toContain('They fix it with `npx lowdefy@7.2.0 agent-setup` in /apps/crm');
 });
 
 test('describeVersionMismatch tells a shim run from a checkout to install and build it', () => {

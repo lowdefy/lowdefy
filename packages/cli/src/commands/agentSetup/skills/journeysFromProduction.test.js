@@ -24,19 +24,19 @@ test('the skill list includes journeys-from-production with its renderer and AGE
 });
 
 test('journeys-from-production renders a frontmatter with its name and description', () => {
-  const skill = journeysFromProduction({ appPath: '' });
+  const skill = journeysFromProduction();
   expect(skill.startsWith('---\nname: journeys-from-production\ndescription: Use when')).toBe(true);
 });
 
 test('journeys-from-production names the production commands in order', () => {
-  const skill = journeysFromProduction({ appPath: '' });
+  const skill = journeysFromProduction();
   const commands = [
-    'lowdefy journeys pull posthog --since 30d',
-    'lowdefy journeys coverage --source production --since 30d',
-    'lowdefy journeys session --source production --since 30d',
-    'lowdefy journeys session --source production --since 30d <id>',
-    'lowdefy test --repeat 3 tests/journeys/<file>.yaml',
-    'lowdefy journeys evidence --refresh',
+    'lowdefy journeys pull posthog --config-directory <app> --since 30d',
+    'lowdefy journeys coverage --config-directory <app> --source production --since 30d',
+    'lowdefy journeys session --config-directory <app> --source production --since 30d',
+    'lowdefy journeys session --config-directory <app> --source production --since 30d <id>',
+    'lowdefy test --config-directory <app> --repeat 3 <app>/tests/journeys/<file>.yaml',
+    'lowdefy journeys evidence --config-directory <app> --refresh',
   ];
   const positions = commands.map((command) => skill.indexOf(command));
   positions.forEach((position) => expect(position).toBeGreaterThan(-1));
@@ -44,7 +44,7 @@ test('journeys-from-production names the production commands in order', () => {
 });
 
 test('journeys-from-production reads session logs, and grouped flows only at scale', () => {
-  const skill = journeysFromProduction({ appPath: '' });
+  const skill = journeysFromProduction();
   expect(skill).toContain('Below 100,000 rows, read the sessions one by one');
   expect(skill).toContain('From 100,000 rows on, nobody can read them one by one');
   expect(skill).toContain('`--group` and `--no-group`');
@@ -52,14 +52,14 @@ test('journeys-from-production reads session logs, and grouped flows only at sca
 });
 
 test('journeys-from-production never asks for the key in chat', () => {
-  const skill = journeysFromProduction({ appPath: '' });
+  const skill = journeysFromProduction();
   expect(skill).toContain('Never ask for the key in chat');
   expect(skill).toContain('POSTHOG_PERSONAL_API_KEY');
   expect(skill).toContain('Query Read');
 });
 
 test('journeys-from-production gives no instruction to delete a journey', () => {
-  const skill = journeysFromProduction({ appPath: '' });
+  const skill = journeysFromProduction();
   expect(skill).toContain('you never propose deleting one');
   expect(skill).toContain('Make no recommendation to delete any of them.');
   // No step or bullet tells the agent to delete or remove anything.
@@ -68,7 +68,7 @@ test('journeys-from-production gives no instruction to delete a journey', () => 
 });
 
 test('journeys-from-production keeps the fixture, frustration, flake and commit rules', () => {
-  const skill = journeysFromProduction({ appPath: '' });
+  const skill = journeysFromProduction();
   expect(skill).toContain('add a fixture document for the\n  journey.');
   expect(skill).toContain('A dead click on a\n  block that should do nothing is a finding');
   expect(skill).toContain('Never add `wait: { ms }`');
@@ -76,7 +76,7 @@ test('journeys-from-production keeps the fixture, frustration, flake and commit 
 });
 
 test('journeys-from-production has the agent pick a window of at most 30 days and say why', () => {
-  const skill = journeysFromProduction({ appPath: '' });
+  const skill = journeysFromProduction();
   expect(skill).toContain('A mining window is at most 30 UTC days');
   expect(skill).toContain('say which and why in your report');
   expect(skill).toContain('the window and why you chose it');
@@ -85,7 +85,7 @@ test('journeys-from-production has the agent pick a window of at most 30 days an
 });
 
 test('journeys-from-production reads routines with the config and decides what deserves a journey', () => {
-  const skill = journeysFromProduction({ appPath: '' });
+  const skill = journeysFromProduction();
   expect(skill).toContain(
     "read the page's config, the requests and actions it runs, and the block\nplugins' code"
   );
@@ -101,7 +101,7 @@ test('journeys-from-production reads routines with the config and decides what d
 });
 
 test('journeys-from-production never reads production text, secrets or PostHog', () => {
-  const skill = journeysFromProduction({ appPath: '' });
+  const skill = journeysFromProduction();
   expect(skill).toContain(
     "read `.lowdefy/traces/production/salt`, the app's `.env` or any credential;"
   );
@@ -112,26 +112,26 @@ test('journeys-from-production never reads production text, secrets or PostHog',
   expect(skill).not.toMatch(/https:\/\/(?:eu|us|app)\.posthog\.com\/(?:api|project)/);
 });
 
-test('journeys-from-production runs commands from the app directory in a monorepo', () => {
-  expect(journeysFromProduction({ appPath: 'apps/crm' })).toContain(
-    'cd apps/crm && lowdefy journeys pull posthog'
-  );
+test('journeys-from-production passes the app folder as --config-directory instead of naming an app', () => {
+  const skill = journeysFromProduction();
+  expect(skill).toContain('lowdefy journeys pull posthog --config-directory <app>');
+  expect(skill).toContain('the one holding `lowdefy.yaml`');
 });
 
 test('journeys-from-production captures the usage report on either side of the evidence refresh', () => {
-  const skill = journeysFromProduction({ appPath: '' });
-  const usage = 'lowdefy journeys usage --json';
+  const skill = journeysFromProduction();
+  const usage = 'lowdefy journeys usage --config-directory <app> --json';
   const before = skill.indexOf(usage);
-  const refresh = skill.indexOf('lowdefy journeys evidence --refresh');
+  const refresh = skill.indexOf('lowdefy journeys evidence --config-directory <app> --refresh');
   const after = skill.indexOf(usage, refresh);
-  expect(before).toBeGreaterThan(skill.indexOf('lowdefy test --repeat 3'));
+  expect(before).toBeGreaterThan(skill.indexOf('lowdefy test --config-directory <app> --repeat 3'));
   expect(before).toBeLessThan(refresh);
   expect(after).toBeGreaterThan(refresh);
   expect(skill.indexOf('## 7. Report')).toBeGreaterThan(after);
 });
 
 test('journeys-from-production reports deprecated flows still in use and how the tiers moved', () => {
-  const skill = journeysFromProduction({ appPath: '' });
+  const skill = journeysFromProduction();
   const report = skill.slice(skill.indexOf('## 7. Report'));
   expect(report).toContain('the deprecated flows still in use');
   expect(report).toContain('naming the journey whose current steps\n  replaced it');
@@ -142,7 +142,7 @@ test('journeys-from-production reports deprecated flows still in use and how the
 });
 
 test('journeys-from-production narrows a shared-label click, since production records carry no nth', () => {
-  const skill = journeysFromProduction({ appPath: '' });
+  const skill = journeysFromProduction();
   expect(skill).toContain('A production click carries no `nth`');
   expect(skill).toContain('narrow it from what the routine did');
   expect(skill).toContain('Add `nth` only when the config shows which control it must be.');

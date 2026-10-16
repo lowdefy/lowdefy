@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import appFolder from './appFolder.js';
+
 // The journeys-from-pr skill: the coding agent explores a pull request (or,
 // for a bug bash, a goal sentence) itself. It reads the scope with
 // `lowdefy journeys scope`, looks at each changed page as each role that can
@@ -21,8 +23,7 @@
 // the description, and proves each with `lowdefy test --repeat 3`. Passing
 // journeys join the suite; a failing one is a finding, reported with its
 // journey. It runs on pull requests only, never nightly or in CI.
-function journeysFromPr({ appPath }) {
-  const appDirectory = appPath === '' ? 'the worktree root' : `\`${appPath}\` in the worktree`;
+function journeysFromPr() {
   return `---
 name: journeys-from-pr
 description: Use when the developer wants a pull request explored before it merges, wants journeys for what a PR changed, or wants a bug bash. Looks at each changed page as each role, writes a journey for every path a user can take, keeps the ones that pass and reports the ones that fail as findings with their journey.
@@ -60,14 +61,15 @@ If this checkout is already at the PR's head, use it. Otherwise make one beside 
 \`git worktree add --detach ../<repo>-pr-<n>\`, then \`gh pr checkout <n>\` inside it (it handles
 forks and gives a branch to keep journeys on), then the repository's install command.
 
-Call \`lowdefy_dev_start({ directory: <the worktree's app directory> })\`, the app directory being
-${appDirectory}. Call it again until it reports \`ready\`: a fresh worktree's first install can
-outlast one call.
+Call \`lowdefy_dev_start({ directory: <app> })\`, where \`<app>\` is the app's folder in the worktree.
+Call it again until it reports \`ready\`: a fresh worktree's first install can outlast one call.
+
+${appFolder()}
 
 ## 3. The scope
 
-Run \`lowdefy journeys scope --base <base branch> --json\` from the app directory (for a bug bash,
-\`lowdefy journeys scope --json\` lists every page). Each page in it has:
+Run \`lowdefy journeys scope --config-directory <app> --base <base branch> --json\` (for a bug bash,
+\`lowdefy journeys scope --config-directory <app> --json\` lists every page). Each page in it has:
 
 - \`reasons\`: why it is in scope (its own config, a request, an endpoint, a connection, an
   app-wide change);
@@ -110,7 +112,8 @@ A click that runs an auth action fails the same way, but one that skips it (a va
 the chain, a \`skip\` that is true) passes. Leave a control that must run an auth action out and tell
 the developer it needs a journey off data sets.
 
-Run \`lowdefy test --lint <path>\`, then \`lowdefy test --repeat 3 <path>\`.
+Run \`lowdefy test --config-directory <app> --lint <path>\`, then
+\`lowdefy test --config-directory <app> --repeat 3 <path>\`.
 
 - **PASS:** keep it in \`tests/journeys/\`.
 - **FLAKY:** fix the cause, a missing \`wait: { request }\` or a data dependency. Never add

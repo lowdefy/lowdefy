@@ -14,17 +14,15 @@
   limitations under the License.
 */
 
-import { LEGACY_MCP_SERVER_NAMES, MCP_SERVER_NAME } from './mcpServerNames.js';
+import hashSkill from './hashSkill.js';
+import parseSkillFile from './parseSkillFile.js';
 
-// The skill and AGENTS.md section earlier agent-setup runs wrote name the
-// server by its old name. Only that phrase is rewritten, so whatever a person
-// changed elsewhere in the file stands.
-function replaceLegacyServerName(text) {
-  return LEGACY_MCP_SERVER_NAMES.reduce(
-    (current, legacy) =>
-      current.replaceAll(`the \`${legacy}\` MCP server`, `the \`${MCP_SERVER_NAME}\` MCP server`),
-    text
-  );
+// A SKILL.md agent-setup wrote and nobody has edited: its frontmatter and body
+// still hash to the `lowdefy-skill-hash` it carries. A file with no hash is
+// not one agent-setup wrote, and reads as edited.
+function isUneditedSkill(content) {
+  const { frontmatter, hash, body } = parseSkillFile(content);
+  return hash !== null && hash === hashSkill({ frontmatter, body });
 }
 
-export default replaceLegacyServerName;
+export default isUneditedSkill;

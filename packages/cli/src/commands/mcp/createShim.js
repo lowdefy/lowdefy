@@ -252,6 +252,46 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
     })}`;
   }
 
+  // Agent-files notices already passed on, by app and message, so each is
+  // said once a session (and again only when its text changes) rather than on
+  // every build-status read. The dev server reports them on every read.
+  const notedAgentFiles = new Set();
+
+  // Drops from a forwarded lowdefy_build_status result each agentFiles notice
+  // this session has already passed on for the app, leaving the field out when
+  // none is left. The dev server's text is JSON.stringify(value, null, 2); a
+  // text that does not parse, or has no agentFiles, passes through untouched.
+  function dropNotedAgentFiles({ app, content }) {
+    return content.map((item) => {
+      if (item?.type !== 'text' || typeof item.text !== 'string') {
+        return item;
+      }
+      let value;
+      try {
+        value = JSON.parse(item.text);
+      } catch {
+        return item;
+      }
+      if (!type.isObject(value) || !type.isArray(value.agentFiles)) {
+        return item;
+      }
+      const fresh = value.agentFiles.filter((notice) => {
+        const key = `${app.configDirectory}\n${notice?.message}`;
+        if (notedAgentFiles.has(key)) {
+          return false;
+        }
+        notedAgentFiles.add(key);
+        return true;
+      });
+      if (fresh.length > 0) {
+        value.agentFiles = fresh;
+      } else {
+        delete value.agentFiles;
+      }
+      return { ...item, text: JSON.stringify(value, null, 2) };
+    });
+  }
+
   async function callDevTool({ name, args }) {
     const { directory, ...toolArgs } = args;
     const app = await resolve({ directory });
@@ -281,10 +321,11 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
       const note = versionNote({ app, instance, isError: true });
       throw new Error(note === null ? message : `${message}\n\n${note}`);
     }
-    const content = [
-      { type: 'text', text: `${app.label} · ${instance.url}` },
-      ...(result.content ?? []),
-    ];
+    const forwardedContent =
+      name === 'lowdefy_build_status'
+        ? dropNotedAgentFiles({ app, content: result.content ?? [] })
+        : result.content ?? [];
+    const content = [{ type: 'text', text: `${app.label} · ${instance.url}` }, ...forwardedContent];
     // The handlers come from the dev server, whose version follows the app,
     // so a tool or option this CLI lists can differ from the server's.
     const note = versionNote({ app, instance, isError: result.isError === true });
