@@ -15,21 +15,14 @@
 */
 
 import buildNpxMcpCommand from './buildNpxMcpCommand.js';
-import findInstalledCli from '../../utils/findInstalledCli.js';
-import findGitRoot from '../mcp/findGitRoot.js';
 
-// Pins the app's own lowdefy version when it has `lowdefy mcp`, else the
-// version of the CLI running agent-setup.
-function resolveMcpCommand({ cliVersion, configDirectory }) {
-  const installed = findInstalledCli({
-    configDirectory,
-    root: findGitRoot({ directory: configDirectory }),
-  });
-  const version = installed?.hasMcp ? installed.version : cliVersion;
+// Pins the version of the CLI running agent-setup, the same version the
+// AGENTS.md block is stamped with, so every app in a repository writes the same
+// entry whatever it has installed.
+function resolveMcpCommand({ cliVersion }) {
   return {
-    entry: buildNpxMcpCommand({ version }),
-    installed: installed?.hasMcp === true,
-    version,
+    entry: buildNpxMcpCommand({ version: cliVersion }),
+    version: cliVersion,
   };
 }
 
