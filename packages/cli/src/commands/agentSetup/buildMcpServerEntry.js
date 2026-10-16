@@ -16,9 +16,9 @@
 
 import resolveMcpCommand from './resolveMcpCommand.js';
 
-function buildMcpServerEntry({ cliVersion, configDirectory }) {
-  const { entry, installed, version } = resolveMcpCommand({ cliVersion, configDirectory });
-  return { entry: { type: 'stdio', ...entry }, installed, version };
+function buildMcpServerEntry({ cliVersion }) {
+  const { entry, version } = resolveMcpCommand({ cliVersion });
+  return { entry: { type: 'stdio', ...entry }, version };
 }
 
 export default buildMcpServerEntry;

@@ -21,14 +21,15 @@ import findGitRoot from './findGitRoot.js';
 // What to tell an agent whose `lowdefy mcp` and dev server run different
 // Lowdefy versions: both versions and how to bring the shim to the app's.
 // `cliDirectory` is the CLI package `lowdefy mcp` runs from. Installed into
-// node_modules or the npx cache it is a pinned version, which agent-setup
-// moves; anywhere else it is a checkout of Lowdefy, which needs installing and
-// building.
+// node_modules or the npx cache it is a pinned version, which agent-setup run
+// at the dev server's version moves; that rewrites committed files, so the
+// agent passes it to the developer. Anywhere else it is a checkout of Lowdefy,
+// which needs installing and building.
 function describeVersionMismatch({ cliVersion, serverVersion, cliDirectory, appRoot }) {
   const versions = `lowdefy mcp is ${cliVersion} but this dev server is ${serverVersion}, so tools and their options can differ.`;
   const installed = cliDirectory.split(path.sep).includes('node_modules');
   const fix = installed
-    ? `To match them, run \`npx lowdefy agent-setup\` in ${appRoot} to pin lowdefy mcp to the app's Lowdefy version, then restart the agent session.`
+    ? `Tell the developer; don't run agent-setup yourself. They fix it with \`npx lowdefy@${serverVersion} agent-setup\` in ${appRoot}, then restart the agent session.`
     : `To match them, run \`pnpm install\` and \`pnpm build\` in ${findGitRoot({
         directory: cliDirectory,
       })}, then restart the agent session.`;
