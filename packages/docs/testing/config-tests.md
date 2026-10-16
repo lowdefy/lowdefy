@@ -96,7 +96,7 @@ Blocks are addressed by their `blockId`. A step that does not complete within th
 | `click: target`                           | Click the block, or the control a [target](#targets) narrows to.                                                                                                                                                                                                                  |
 | `click: { ...target, count: 2 }`          | Click 2 (or 3) times in quick succession, as a person's double click, before the runner waits for the page to settle. `count` defaults to 1.                                                                                                                                      |
 | `open: target`                            | Open an input's dropdown or picker popup (Selector, MultipleSelector, AutoComplete, DateSelector, Cascader...) and wait for it to show, so a following `screenshot` or `select` sees the options. A block with no popup is clicked; one whose click opens nothing fails the step. |
-| `fill: { blockId, value }`                | Type `value` into the input inside the block (or the grid cell a target names).                                                                                                                                                                                                   |
+| `fill: { blockId, value }`                | Type `value` into the input inside the block (or the grid cell a target names). A block that renders its input in a portal, such as a `Search` modal once opened, is reached through the same `blockId`.                                                                          |
 | `fill: { blockId, fromEmail }`            | Type text read from an [email](#emails) instead of a fixed value, such as a one-time sign-in code. The actor stays on the page.                                                                                                                                                   |
 | `select: { blockId, value }`              | Open the selector block (or grid cell) and choose the option whose text is `value`. A radio, button or segmented selector's option is clicked by its label.                                                                                                                       |
 | `press: Enter`                            | Press a key or chord. `Mod` in a chord (`Mod+k`) resolves to Cmd on macOS and Ctrl elsewhere.                                                                                                                                                                                     |
@@ -203,6 +203,8 @@ Some rows are neither a block nor a control, such as the cards of a `ListSelecto
 ```
 
 `fill`, `select` and `expect.text` always need a `blockId`; a value is typed into a block's input, never into a page-wide control. A target with a key the grammar does not know (`colum`) is rejected before the browser opens, so a typo cannot pass as a step that happened to find nothing.
+
+A `Search` block keeps its input in a modal outside its own element. Open it with `click: <blockId>`, then `fill: { blockId, value }` types the query, and `click: { text: <result title> }` picks a result and fires `onSelect`. The result title is the text of the row when the search has no `description` mapped; with a description, pick it with `containing`.
 
 ## Testing sign-up and sign-in
 

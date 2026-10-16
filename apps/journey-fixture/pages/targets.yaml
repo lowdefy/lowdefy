@@ -119,3 +119,28 @@ blocks:
         type: Paragraph
         properties:
           content: Shared note two
+  # A Search block renders its input in a modal portal outside its own element: the fill
+  # step reaches it through the portal class the block marks its modal with.
+  - id: header_search
+    type: Search
+    properties:
+      label: Search docs
+      documents:
+        - id: doc1
+          title: PAIA Manual
+          body: The manual for the Promotion of Access to Information Act.
+        - id: doc2
+          title: Privacy Policy
+          body: How personal information is handled.
+      fields:
+        - title
+        - body
+      storeFields:
+        - title
+    events:
+      onSelect:
+        - id: set_selected_result
+          type: SetState
+          params:
+            selected_result:
+              _event: title

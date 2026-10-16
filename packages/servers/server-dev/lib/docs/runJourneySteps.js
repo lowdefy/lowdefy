@@ -461,6 +461,21 @@ async function runClick({ journey, page, step, timeout }) {
   return { blockId };
 }
 
+// Where a fill looks for the input. A block that renders its input in a portal (the Search
+// modal) marks the portal root with the block's portal class, so a block-scoped fill also
+// searches that portal. The block's own input comes first in document order, and a closed
+// portal is not in the DOM, so a block with an input of its own is unaffected.
+function fillScope({ page, target, located }) {
+  const isBlockScope =
+    !type.isUndefined(target.blockId) &&
+    type.isUndefined(target.row) &&
+    type.isUndefined(target.column) &&
+    !namesMatches(target) &&
+    type.isUndefined(target.nth);
+  if (!isBlockScope) return located;
+  return located.or(page.locator(`.${journeyTargetSelectors.portalClass(target.blockId)}`));
+}
+
 // A fill types `value`, or text read from an email (`fromEmail`) - the way a
 // person types a one-time code from their inbox into the tab they started in.
 async function runFill({ journey, page, step, timeout }) {
@@ -479,7 +494,12 @@ async function runFill({ journey, page, step, timeout }) {
     target,
     action: async () => {
       const located = await resolveActionTarget({ page, target, timeout });
-      await located.locator('input, textarea').first().fill(String(value), { timeout });
+      await fillScope({ page, target, located })
+        .locator('input, textarea')
+        .first()
+        .fill(String(value), {
+          timeout,
+        });
     },
   });
 }
