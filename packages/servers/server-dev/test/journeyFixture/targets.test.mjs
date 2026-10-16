@@ -162,3 +162,20 @@ fixtureTest('a block-scoped text target reaches the footer button of its open Mo
   expect(result.failure).toBeUndefined();
   expect(result.passed).toBe(true);
 });
+
+fixtureTest(
+  'fill types into the input of a Search block rendered in its modal portal',
+  async () => {
+    const result = await postJourney({
+      pageId: 'targets',
+      steps: [
+        { click: 'header_search' },
+        { fill: { blockId: 'header_search', value: 'PAIA' } },
+        { click: { text: 'PAIA Manual' } },
+        { expect: { state: { path: 'selected_result', equals: 'PAIA Manual' } } },
+      ],
+    });
+    expect(result.failure).toBeUndefined();
+    expect(result.passed).toBe(true);
+  }
+);

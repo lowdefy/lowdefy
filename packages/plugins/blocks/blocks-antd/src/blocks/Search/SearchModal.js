@@ -17,6 +17,7 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Empty, Input, Modal, Spin } from 'antd';
 import { cn } from '@lowdefy/block-utils';
+import { journeyTargetSelectors } from '@lowdefy/helpers';
 
 import SearchResults, { groupResults } from './SearchResults.js';
 import useListKeyboardNav from './useListKeyboardNav.js';
@@ -148,6 +149,7 @@ function SearchModal({
       className={cn(classNames.modal)}
       style={styles.modal}
       destroyOnHidden
+      rootClassName={journeyTargetSelectors.portalClass(blockId)}
     >
       <Input
         ref={inputRef}
@@ -203,6 +205,7 @@ function SearchModal({
           {recentSearches.recentSearches.map((item) => (
             <div
               key={item.query}
+              role="button"
               className={cn('lf-search-item', classNames.item)}
               style={styles.item}
               onClick={() => handleRecentClick(item.query)}

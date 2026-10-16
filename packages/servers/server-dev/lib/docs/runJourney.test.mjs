@@ -111,7 +111,10 @@ function createLocator({ selector, page }) {
     first: jest.fn(() => locator),
     // A union reads as this locator: the fake page shows a block and its
     // control together.
-    or: jest.fn(() => locator),
+    or: jest.fn((other) => {
+      page.unions.push({ selector, other: other?.selector });
+      return locator;
+    }),
     last: jest.fn(() => locator),
     nth: jest.fn(() => locator),
     filter: jest.fn(() => locator),
@@ -138,6 +141,7 @@ function createPage({ window = createLowdefyWindow(), url = 'http://localhost:32
   const page = {
     clicks: [],
     fills: [],
+    unions: [],
     presses: [],
     missingBlocks: [],
     hiddenBlocks: [],
@@ -947,6 +951,32 @@ test('runJourney fails expect.calls with no pageId when no Lowdefy page is showi
     expected: 'a Lowdefy page to count request "save" on',
     actual: null,
   });
+});
+
+test('runJourney fill looks in the block and in its portal for the input', async () => {
+  const page = createPage();
+  openWith(page);
+  await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ fill: { blockId: 'header_search', value: 'PAIA' } }],
+  });
+  expect(page.fills).toEqual([{ selector: '#bl-header_search input, textarea', value: 'PAIA' }]);
+  expect(page.unions).toContainEqual({
+    selector: '#bl-header_search',
+    other: '.ldf-portal-header_search',
+  });
+});
+
+test('runJourney fill of a grid cell does not look in a portal', async () => {
+  const page = createPage();
+  openWith(page);
+  await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ fill: { blockId: 'grid', row: 1, column: 'name', value: 'Ada' } }],
+  });
+  expect(page.unions.filter((union) => union.other?.startsWith('.ldf-portal'))).toEqual([]);
 });
 
 test('runJourney fills a numeric value as a string', async () => {
