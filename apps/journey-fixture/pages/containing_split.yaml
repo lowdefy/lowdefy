@@ -1,0 +1,40 @@
+id: containing_split
+type: Box
+# Texts whose words the markup splits across elements, for the rule that a
+# containing target matches the text a person reads
+# (packages/servers/server-dev/test/journeyFixture/containingSplit.test.mjs).
+# Each variant names a different person, so a page-wide target matches one.
+blocks:
+  - id: containing_split_title
+    type: Title
+    properties:
+      content: Containing split
+      level: 2
+  - id: md_bold
+    type: Markdown
+    properties:
+      content: Assigned to **Jane**
+  - id: html_bold
+    type: Html
+    properties:
+      html: <p>Assigned to <b>Joan</b></p>
+  - id: html_bare
+    type: Html
+    properties:
+      html: Assigned to <b>Jill</b>
+  - id: html_newline
+    type: Html
+    properties:
+      html: "<p>Assigned to\n    <b>June</b></p>"
+  - id: html_nbsp
+    type: Html
+    properties:
+      html: <p>Assigned to&nbsp;<b>Jack</b></p>
+  - id: html_flex
+    type: Html
+    properties:
+      html: <div style="display:flex;gap:4px"><span>Assigned to</span><b>Jude</b></div>
+  - id: html_input
+    type: Html
+    properties:
+      html: <input type="button" value="Assigned to Jim" />

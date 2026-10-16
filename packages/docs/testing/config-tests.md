@@ -168,14 +168,14 @@ The full grammar, including the failure shape the route returns, is documented w
 
 A `blockId` reaches a block's own control — its button, input or link. Some controls are not blocks: the Edit and Delete buttons a grid renders in every row, the OK and Cancel of a confirm dialog, the items of a dropdown menu. Wherever a step takes a `blockId`, it also takes a target object that narrows the search:
 
-| Key          | Meaning                                                                                                     |
-| ------------ | ----------------------------------------------------------------------------------------------------------- |
-| `blockId`    | The block to search inside.                                                                                 |
-| `row`        | A grid row, zero-based as displayed (`AgGrid*` blocks). Needs `blockId`.                                    |
-| `column`     | A grid cell in that row, by the column's `field` or `colId`. Needs `blockId`.                               |
-| `text`       | The interactive control whose visible text is exactly this (a button label, a tab, a menu item).            |
-| `containing` | The element whose visible text contains this: a row of a list a person picks by the name or email it shows. |
-| `nth`        | When several elements match, the zero-based one to use.                                                     |
+| Key          | Meaning                                                                                                                                                                                                                       |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `blockId`    | The block to search inside.                                                                                                                                                                                                   |
+| `row`        | A grid row, zero-based as displayed (`AgGrid*` blocks). Needs `blockId`.                                                                                                                                                      |
+| `column`     | A grid cell in that row, by the column's `field` or `colId`. Needs `blockId`.                                                                                                                                                 |
+| `text`       | The interactive control whose visible text is exactly this (a button label, a tab, a menu item).                                                                                                                              |
+| `containing` | The innermost element whose visible text contains this, as the page shows it, even across elements (`Assigned to <b>Jane</b>`, a label and value side by side): a row of a list a person picks by the name or email it shows. |
+| `nth`        | When several elements match, the zero-based one to use.                                                                                                                                                                       |
 
 `text` on its own, with no `blockId`, searches the whole page — front-most layer first: an open dropdown menu, then an open dialog, then the page. That is how a confirm dialog's button is clicked while the grid behind its mask has a button with the same label.
 
