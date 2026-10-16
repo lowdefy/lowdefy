@@ -41,6 +41,20 @@ function isResolutionError(error) {
   return RESOLUTION_ERROR_CODES.has(error?.code);
 }
 
+// In dev, the page build runs inside Vite's module runner when @lowdefy/build is
+// linked, and Vite's resolver throws plain errors with no code (`Missing
+// "./checks" specifier in "pkg" package`). Node's resolver decides instead: an
+// uncoded error for a specifier Node cannot resolve is a miss, not a fault.
+function isResolutionMiss({ error, specifier }) {
+  if (isResolutionError(error)) return true;
+  try {
+    createRequire(import.meta.url).resolve(specifier);
+    return false;
+  } catch {
+    return true;
+  }
+}
+
 // Import a plugin module (e.g. `${pkg}/schemas`, `${pkg}/connections`) for
 // schema collection. Default packages resolve from the build package itself;
 // custom plugins only exist in the server's node_modules, so fall back to
@@ -51,7 +65,7 @@ async function importPluginModule({ context, specifier }) {
     return await import(/* webpackIgnore: true */ /* @vite-ignore */ specifier);
   } catch (error) {
     // Not resolvable from the build package — try the server's node_modules.
-    if (!isResolutionError(error)) throw error;
+    if (!isResolutionMiss({ error, specifier })) throw error;
   }
   const serverDir = context.directories?.server;
   if (!serverDir) {
