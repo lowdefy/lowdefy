@@ -27,7 +27,11 @@ const connections = {
   MongoDBCollection: { meta: { tenant: true, dataSet: 'redirect' } },
   AxiosHttp: { meta: { dataSet: 'external' } },
   FolderRuntime: { meta: { dataSet: 'redirect' } },
-  WalledRuntime: { meta: { tenant: false, dataSet: 'walled' } },
+  WalledRuntime: {
+    meta: { tenant: false, dataSet: 'walled' },
+    // A request type that declares external is sunk, so the walled connection stays clickable.
+    requests: { Fetch: Object.assign(() => null, { meta: { dataSet: 'external' } }) },
+  },
   Knex: {},
   PluginStore: { meta: { dataSet: 'mongo' } },
 };
@@ -240,8 +244,15 @@ test('findAuthActionBlocks lists blocks whose events run an auth-engine action',
 });
 
 test('findExternalBlocks lets a block reach an external type with request resolvers, which a data session sinks', () => {
-  const sinkable = { ...connections, AxiosHttp: { ...connections.AxiosHttp, requests: { AxiosHttp: () => {} } } };
-  const { blocks } = findExternalBlocks({ buildDirectory, pageId: 'tickets', connections: sinkable });
+  const sinkable = {
+    ...connections,
+    AxiosHttp: { ...connections.AxiosHttp, requests: { AxiosHttp: () => {} } },
+  };
+  const { blocks } = findExternalBlocks({
+    buildDirectory,
+    pageId: 'tickets',
+    connections: sinkable,
+  });
   expect(blocks.invite).toBeUndefined();
   expect(blocks.hook).toBeUndefined();
   expect(blocks.all).toBeUndefined();

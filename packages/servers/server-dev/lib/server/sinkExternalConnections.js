@@ -39,14 +39,18 @@ function describeSunkRequest({ context, args, connectionType }) {
     requestId: args.requestId,
     pageId: args.pageId ?? null,
     endpointId: args.endpointId ?? null,
-    request: type.isUndefined(args.request) ? null : JSON.parse(scrub(JSON.stringify(args.request))),
+    request: type.isUndefined(args.request)
+      ? null
+      : JSON.parse(scrub(JSON.stringify(args.request))),
   };
 }
 
 // The plugin connection map for a data session's requests. A connection type that declares
 // meta.dataSet 'external' reaches an outside service and keeps its real target, so under a data
-// session every one of its request resolvers is replaced by a sink: the request is recorded on
-// the session (session.sunk) and answers null, and nothing reaches the service. This is the one
+// session every one of its request resolvers is replaced by a sink. A single request type can
+// declare meta.dataSet 'external' on its resolver too, and only that resolver is replaced, which
+// suits a walled connection whose other request types read and write the walled database. A sunk
+// request is recorded on the session (session.sunk) and answers null, and nothing reaches the service. This is the one
 // place real mail and HTTP are stopped, in the process that would send them, so a branch a click
 // never takes, or an id an operator computes, cannot reach out either. It leaves the resolver's
 // schema and meta in place, so the request is still validated, read-checked and write-checked
@@ -56,12 +60,21 @@ function sinkExternalConnections({ context, connections, session }) {
   const sunk = {};
   Object.entries(connections).forEach(([connectionType, definition]) => {
     const requests = definition?.requests;
-    if (definition?.meta?.dataSet !== 'external' || !type.isObject(requests)) {
+    if (!type.isObject(requests)) {
       sunk[connectionType] = definition;
       return;
     }
+    const connectionExternal = definition?.meta?.dataSet === 'external';
+    let anySunk = false;
     const sunkRequests = {};
     Object.entries(requests).forEach(([requestType, resolver]) => {
+      // A request type can declare meta.dataSet 'external' itself, so a walled connection that
+      // holds database access can still have request types that reach an outside service sunk.
+      if (!connectionExternal && resolver?.meta?.dataSet !== 'external') {
+        sunkRequests[requestType] = resolver;
+        return;
+      }
+      anySunk = true;
       const sink = async (args) => {
         if (isDevMailCapture({ connectionType, connection: args.connection })) {
           return resolver(args);
@@ -74,7 +87,7 @@ function sinkExternalConnections({ context, connections, session }) {
       };
       sunkRequests[requestType] = Object.assign(sink, resolver);
     });
-    sunk[connectionType] = { ...definition, requests: sunkRequests };
+    sunk[connectionType] = anySunk ? { ...definition, requests: sunkRequests } : definition;
   });
   return sunk;
 }
