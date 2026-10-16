@@ -106,7 +106,7 @@ export default {
       type: ['object', 'null', 'boolean'],
       not: { const: true },
       description:
-        "Filter to restrict or redirect the recipients of outgoing mail. Unset falls back to the current environment's email filter (config.environments); false turns filtering off, the environment's too.",
+        "Filter to restrict or redirect the recipients of outgoing mail. Unset falls back to the current environment's email filter (config.environments); false turns filtering off, the environment's too. Recipients on the reserved .invalid domain are always dropped.",
       additionalProperties: false,
       properties: {
         replaceAddress: {
