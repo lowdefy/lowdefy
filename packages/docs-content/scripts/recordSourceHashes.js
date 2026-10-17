@@ -29,8 +29,12 @@ import hashDocSources from './hashDocSources.js';
 // lists that ref's file and every file referenced below it, and records them
 // with their hash in index.json. A package.json is read for its version, which
 // every release bumps, not for page content, so it is left out: otherwise each
-// release and dependency update would mark every doc stale.
-function collectSourceFiles({ refMap, entryRefId }) {
+// release and dependency update would mark every doc stale. The page frame
+// (pageFrame, with its header, footer and feedback requests) holds no markdown
+// and wraps every page, so it is left out too: otherwise one edit to it would
+// change all the hashes, and two branches doing that would conflict in
+// index.json on every doc.
+function collectSourceFiles({ refMap, entryRefId, pageFrame }) {
   const children = new Map();
   Object.entries(refMap).forEach(([id, ref]) => {
     const siblings = children.get(ref.parent) ?? [];
@@ -42,6 +46,9 @@ function collectSourceFiles({ refMap, entryRefId }) {
   while (queue.length > 0) {
     const id = queue.pop();
     const filePath = refMap[id].path;
+    if (filePath === pageFrame) {
+      continue;
+    }
     if (typeof filePath === 'string' && path.basename(filePath) !== 'package.json') {
       files.add(filePath);
     }
@@ -59,14 +66,14 @@ function findEntryRef({ refMap, refId, pagesFile }) {
   throw new Error(`Ref ${refId} is not below ${pagesFile} in the build's refMap.`);
 }
 
-function recordSourceHashes({ configDirectory, outputDir, pagesFile, refMapPath }) {
+function recordSourceHashes({ configDirectory, outputDir, pageFrame, pagesFile, refMapPath }) {
   const refMap = JSON.parse(fs.readFileSync(refMapPath, 'utf8'));
   const indexPath = path.join(outputDir, 'index.json');
   const index = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
   const sources = {};
   index.docs.forEach(({ slug }) => {
     const entryRefId = findEntryRef({ refMap, refId: index.sources[slug].refId, pagesFile });
-    const files = collectSourceFiles({ refMap, entryRefId });
+    const files = collectSourceFiles({ refMap, entryRefId, pageFrame });
     sources[slug] = { files, hash: hashDocSources({ configDirectory, files }) };
   });
   fs.writeFileSync(indexPath, JSON.stringify({ ...index, sources }, null, 2));
@@ -75,6 +82,7 @@ function recordSourceHashes({ configDirectory, outputDir, pagesFile, refMapPath 
 const { values } = parseArgs({
   options: {
     'config-directory': { type: 'string' },
+    'page-frame': { type: 'string', default: 'templates/general.yaml.njk' },
     'pages-file': { type: 'string', default: 'pages.yaml' },
     'ref-map': { type: 'string' },
   },
@@ -83,6 +91,7 @@ const { values } = parseArgs({
 recordSourceHashes({
   configDirectory: path.resolve(values['config-directory']),
   outputDir: path.resolve(dirname(fileURLToPath(import.meta.url)), '..'),
+  pageFrame: values['page-frame'],
   pagesFile: values['pages-file'],
   refMapPath: path.resolve(values['ref-map']),
 });
