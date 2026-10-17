@@ -1,0 +1,30 @@
+id: fill
+type: Box
+# Blocks a fill step types into without a text input of their own, and one it cannot
+# type into (packages/servers/server-dev/test/journeyFixture/fill.test.mjs).
+blocks:
+  - id: fill_title
+    type: Title
+    properties:
+      content: Fill
+      level: 2
+  - id: theme_color
+    type: ColorSelector
+    properties:
+      title: Theme colour
+  - id: notify_switch
+    type: Switch
+    properties:
+      title: Notify
+  - id: accent_color
+    type: ColorSelector
+    properties:
+      title: Accent colour
+  - id: locked_color
+    type: ColorSelector
+    properties:
+      title: Locked colour
+      disabled: true
+  - id: hidden_input
+    type: TextInput
+    visible: false
