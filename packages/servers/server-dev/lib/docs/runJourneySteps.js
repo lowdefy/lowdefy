@@ -98,6 +98,7 @@ function capitalise(text) {
 // @lowdefy/helpers, where the engine's describe functions read them too.
 const {
   cellAttribute: CELL_ATTRIBUTE,
+  checkboxOption: CHECKBOX_OPTION,
   dropdownOption: DROPDOWN_OPTION,
   interactiveControl: INTERACTIVE_CONTROL,
   layers: LAYERS,
@@ -624,9 +625,31 @@ async function selectRadioOption({ options, target, text, timeout }) {
   }
 }
 
+// A checkbox option is ticked, never toggled: clicking one already ticked would
+// untick it, so a step that selects it reads the same on a rerun.
+async function tickCheckboxOption({ options, target, text, timeout }) {
+  const option = options
+    .filter({ hasText: exactText(text) })
+    .filter({ visible: true })
+    .first();
+  try {
+    await option.waitFor({ state: 'visible', timeout });
+  } catch (error) {
+    const description = describeTarget(target);
+    throw new JourneyStepError(`No option with text "${text}" in ${description}.`, {
+      expected: `option "${text}" in ${description}`,
+      actual: cleanMessage(error),
+    });
+  }
+  if (await option.locator('input[type="checkbox"]').isChecked()) {
+    return;
+  }
+  await actOnTarget({ target, action: () => option.click({ timeout }) });
+}
+
 // A native <select> inside the block is preferred when present (Playwright's
-// selectOption is exact and needs no open dropdown), then radio options
-// labelled in the block. Otherwise the block is clicked to open its dropdown
+// selectOption is exact and needs no open dropdown), then radio and checkbox
+// options labelled in the block. Otherwise the block is clicked to open its dropdown
 // and the option with exactly `value` as text is clicked — Ant Design renders
 // options into a portal, so they are searched page-wide, restricted to visible
 // ones so the hidden accessibility list is never matched.
@@ -638,8 +661,9 @@ async function runSelect({ page, step, timeout }) {
     target,
     action: async () => {
       scope = await resolveActionTarget({ page, target, timeout });
-      // A native select or the radio options render with the block; counted
-      // once it shows, so a late block does not fall through to the dropdown.
+      // A native select or the radio and checkbox options render with the
+      // block; counted once it shows, so a late block does not fall through to
+      // the dropdown.
       await scope.first().waitFor({ state: 'visible', timeout });
     },
   });
@@ -654,6 +678,11 @@ async function runSelect({ page, step, timeout }) {
   const radioOptions = scope.locator(RADIO_OPTION);
   if ((await radioOptions.count()) > 0) {
     await selectRadioOption({ options: radioOptions, target, text, timeout });
+    return;
+  }
+  const checkboxOptions = scope.locator(CHECKBOX_OPTION);
+  if ((await checkboxOptions.count()) > 0) {
+    await tickCheckboxOption({ options: checkboxOptions, target, text, timeout });
     return;
   }
   await actOnTarget({

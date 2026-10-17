@@ -3088,7 +3088,7 @@
         "concepts/ai-agent-docs.yaml",
         "templates/navigation_buttons.yaml"
       ],
-      "hash": "88e809a7452bd57bab30c2c415e5ed7d1c924c41438640ae7edd68eacc85a6dc"
+      "hash": "2657affafc51e4112d5f9ec3b25bfe4aadf701453a89f7ad658a072ed4c128ff"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3363,7 +3363,7 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "deb743a42b1d86336e57b899eb937da9f8de81b338b9c0bc9c5b50372c0bb3cf"
+      "hash": "21cea16248c3ebabe47480c02638bd0c4dd3df61c738372594d839485b796e35"
     },
     "testing/journey-data-sets": {
       "files": [
