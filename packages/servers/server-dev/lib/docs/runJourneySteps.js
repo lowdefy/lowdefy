@@ -35,6 +35,7 @@ import nextJourneySequence from './nextJourneySequence.js';
 import openJourneyEmail from './openJourneyEmail.js';
 import readJourneyEmailMatch from './readJourneyEmailMatch.js';
 import readPagePath from './readPagePath.js';
+import { shownTextSelector } from './shownTextEngine.js';
 
 // Structural equality over values that have already been through the JSON
 // round-trip getState performs in the page (no undefined, no Dates, no
@@ -251,7 +252,8 @@ function namesMatches(target) {
 
 // Every visible element a `text` or `containing` target matches, before `nth`
 // picks one, and where they were looked for. With `containing` they are the
-// elements whose text contains the string, inside the scope or on the page: a
+// innermost elements whose shown text contains the string, however the markup
+// splits it (shownTextEngine.js), inside the scope or on the page: a
 // list row a person picks by the name or address it shows, which is neither a
 // block nor an interactive control. With `text` they are the interactive
 // controls with exactly that text (a cell button, a confirm dialog's OK, a
@@ -263,7 +265,9 @@ async function locateMatches({ page, target }) {
   const where = type.isUndefined(scope) ? 'the page' : describeScopeParts(target).join(' ');
   if (!type.isUndefined(target.containing)) {
     return {
-      matches: (scope ?? page).getByText(target.containing).filter({ visible: true }),
+      matches: (scope ?? page)
+        .locator(shownTextSelector(target.containing))
+        .filter({ visible: true }),
       where,
     };
   }

@@ -86,3 +86,4 @@ pages:
   - _ref: pages/storage.yaml
   - _ref: pages/walled.yaml
   - _ref: pages/handoff.yaml
+  - _ref: pages/containing_split.yaml

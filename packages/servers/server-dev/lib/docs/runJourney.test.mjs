@@ -607,8 +607,8 @@ test('runJourney fails an action whose containing target matches several element
   openWith(page);
   page.locator.mockImplementation((selector) => {
     const locator = createLocator({ selector, page });
-    locator.getByText.mockImplementation((text) => {
-      const found = createLocator({ selector: `${selector} >> text=${text}`, page });
+    locator.locator.mockImplementation((child) => {
+      const found = createLocator({ selector: `${selector} ${child}`, page });
       found.count.mockResolvedValue(2);
       return found;
     });
@@ -2015,9 +2015,9 @@ test.each([
   [
     'inside a block',
     { blockId: 'members_list', containing: 'ada@example.test' },
-    '#bl-members_list >> text=ada@example.test',
+    '#bl-members_list lowdefy-shown-text="ada@example.test"',
   ],
-  ['on the whole page', { containing: 'Invitation sent' }, 'text=Invitation sent'],
+  ['on the whole page', { containing: 'Invitation sent' }, 'lowdefy-shown-text="Invitation sent"'],
 ])(
   'runJourney clicks the element showing the text %s, not the first control in it',
   async (_, target, selector) => {
