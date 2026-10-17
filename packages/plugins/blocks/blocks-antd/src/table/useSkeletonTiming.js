@@ -16,6 +16,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import changeSkeletonHolds from './changeSkeletonHolds.js';
 import getSkeletonPhase from './getSkeletonPhase.js';
 import waitUntil from './waitUntil.js';
 
@@ -60,6 +61,15 @@ function useSkeletonTiming({ active, id, handoff = false }) {
       startTimes.set(id, startRef.current);
     }
   });
+  // A holding skeleton is counted for the page-readiness check (changeSkeletonHolds). The table's
+  // effects run before the lazy wrapper settles its load, so the handoff from the fallback leaves
+  // no moment where neither counts.
+  const holding = phase === 'holding';
+  useEffect(() => {
+    if (!holding) return undefined;
+    changeSkeletonHolds(1);
+    return () => changeSkeletonHolds(-1);
+  }, [holding]);
   useEffect(() => {
     if (until === null) return undefined;
     return waitUntil({
