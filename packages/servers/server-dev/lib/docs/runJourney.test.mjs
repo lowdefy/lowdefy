@@ -607,8 +607,8 @@ test('runJourney fails an action whose containing target matches several element
   openWith(page);
   page.locator.mockImplementation((selector) => {
     const locator = createLocator({ selector, page });
-    locator.getByText.mockImplementation((text) => {
-      const found = createLocator({ selector: `${selector} >> text=${text}`, page });
+    locator.locator.mockImplementation((child) => {
+      const found = createLocator({ selector: `${selector} ${child}`, page });
       found.count.mockResolvedValue(2);
       return found;
     });
@@ -1649,14 +1649,39 @@ test('runJourney waits for lazy blocks to load before it picks the control a cli
   expect(result.passed).toBe(false);
   expect(result.failure).toMatchObject({
     index: 0,
-    message: 'A lazy block was still loading after 5000 ms.',
-    expected: 'every lazy block on the page to have loaded',
+    message: 'A block was still loading after 5000 ms.',
+    expected:
+      'every lazy block on the page to have loaded and every loading skeleton to have cleared',
   });
   expect(page.clicks).toEqual([]);
 
   window.__lowdefyLazyLoads = 0;
   const loaded = await runJourney({ origin, pageId: 'form', steps: [{ click: 'table' }] });
   expect(loaded.passed).toBe(true);
+  expect(page.clicks).toEqual(['#bl-table']);
+});
+
+test('runJourney waits for a table holding its loading skeleton before it picks the control a click lands on', async () => {
+  const window = createLowdefyWindow();
+  window.__lowdefyLazyLoads = 0;
+  window.__lowdefySkeletonHolds = 1;
+  const page = createPage({ window });
+  openWith(page);
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ click: 'table' }] });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    index: 0,
+    message: 'A block was still loading after 5000 ms.',
+    expected:
+      'every lazy block on the page to have loaded and every loading skeleton to have cleared',
+  });
+  expect(page.clicks).toEqual([]);
+
+  window.__lowdefySkeletonHolds = 0;
+  const cleared = await runJourney({ origin, pageId: 'form', steps: [{ click: 'table' }] });
+  expect(cleared.passed).toBe(true);
   expect(page.clicks).toEqual(['#bl-table']);
 });
 
@@ -2015,9 +2040,9 @@ test.each([
   [
     'inside a block',
     { blockId: 'members_list', containing: 'ada@example.test' },
-    '#bl-members_list >> text=ada@example.test',
+    '#bl-members_list lowdefy-shown-text="ada@example.test"',
   ],
-  ['on the whole page', { containing: 'Invitation sent' }, 'text=Invitation sent'],
+  ['on the whole page', { containing: 'Invitation sent' }, 'lowdefy-shown-text="Invitation sent"'],
 ])(
   'runJourney clicks the element showing the text %s, not the first control in it',
   async (_, target, selector) => {

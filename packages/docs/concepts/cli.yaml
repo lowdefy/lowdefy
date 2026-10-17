@@ -225,7 +225,7 @@ _ref:
 
             ## journeys scope
 
-            The `journeys scope` command prints what a change touched, for a coding agent exploring a pull request: each page the change reached, why (its own config, a request, an endpoint, a connection or a websocket it uses, an app-wide artifact; changes that travel through `_ref` show on every page that refs them), the blocks added, changed or removed, and who can open the page, with the data set users under `tests/data/` it admits. It builds the merge base and the working tree in full with the installed dev server's builder and needs no running dev server. See [Exploring a pull request](/explore-pull-request).
+            The `journeys scope` command prints what a change touched, for a coding agent exploring a pull request: each page the change reached, why (its own config, a request, an endpoint, a connection or a websocket it uses, an app-wide artifact; changes that travel through `_ref` show on every page that refs them), the blocks added, changed or removed, and who can open the page, with the data set users under `tests/data/` it admits. It builds the merge base and the working tree in full with the installed dev server's builder and needs no running dev server; when none is installed, it installs one first without starting it. See [Exploring a pull request](/explore-pull-request).
 
             - `--base <ref>`: Compare with the merge base of this branch or commit and `HEAD`, such as the pull request's base branch. Without it, every page of the head is listed.
             - `--json`: Print the scope as JSON instead of the summary.

@@ -77,7 +77,7 @@ Before each step, `checkStepReferences` fails a step whose block, request, endpo
 - `text` matches visible interactive controls whose text is exactly it. With no `blockId` it searches the front-most open layer that holds one: the last open `[role="menu"]`, then the last `[role="dialog"]`, then the page.
 - A `blockId` target without `row` or `column` that uses `text` or `containing`, and `expect.text`, also search the block's Modal or Drawer portal, which carries the class `ldf-portal-<id>` (`journeyTargetSelectors.portalClass`, set in the antd `Modal` and `Drawer` blocks).
 - `containing` matches visible elements whose text contains it. `nth` alone picks the nth interactive control in the scope. A target with none of these is the scope, clicked on its first control.
-- Before choosing, a click or open waits for the control to be visible and for lazy blocks to load (`waitForLazyBlocks` on `window.__lowdefyLazyLoads`).
+- Before choosing, a click or open waits for the control to be visible, for lazy blocks to load and for tables to clear a held loading skeleton (`waitForLoadingBlocks` on `window.__lowdefyLazyLoads` and `window.__lowdefySkeletonHolds`, the same counts `isPageReady` reads). A held skeleton gives way to the rows on a pointer press, so a click started on it would land on nothing.
 - **Action targets must name one element.** For click, open, fill and select, `resolveActionTarget` waits for a first match, looks again and counts. More than one visible match without `nth` fails the step at once, naming the count and where it looked. Expectations accept any match.
 
 The recorder agrees: `describeElement` (engine `trace/createDescribeElement.js`) gives `nth` whenever the scope holds several matches, `0` included, and `null` only for a unique one. `resolveTargetInDocument` (`@lowdefy/e2e-utils/targets`) is the jsdom mirror the round-trip tests use; it resolves an ambiguous target to nothing, and handles `text` only (no `containing`, no portals).
@@ -233,7 +233,7 @@ The PostHog plugin's `before_send` masks clicked text the page config does not s
 
 ## Pull request scope
 
-`lowdefy journeys scope [--base <ref>] [--json]` (`cli/src/commands/journeys/scope/`, driven by `journeysScope.js`) needs no running dev server, only the installed one under `.lowdefy/dev`, and writes only its caches:
+`lowdefy journeys scope [--base <ref>] [--json]` (`cli/src/commands/journeys/scope/`, driven by `journeysScope.js`) needs no running dev server, only the installed one under `.lowdefy/dev`, which it installs first (`ensureDevServer.js`, the installer `lowdefy dev` uses, starting no server) until an install has finished (`node_modules/.lowdefy-install-hash`; a `lowdefy: local` server is left alone), and otherwise writes only its caches:
 
 1. `pruneScopeDirectory` drops cache entries unused for 14 days.
 2. `resolveRevisions`: the merge base with `--base`, the working tree as head (with a `dirty` flag).

@@ -337,6 +337,11 @@ test.describe('Table loading states', () => {
     await expect(table(page, 'table_client')).toHaveAttribute('data-loading-state', 'ready');
   });
 
+  // useSkeletonTiming's count of held skeletons, absent until a table first holds one.
+  function skeletonHolds(page) {
+    return page.evaluate(() => window.__lowdefySkeletonHolds ?? 0);
+  }
+
   test('the skeleton shows after 120 ms and stays at least 300 ms, in Table and TableLight', async ({
     page,
   }) => {
@@ -359,14 +364,19 @@ test.describe('Table loading states', () => {
       await expect(table(page, id).locator('.lf-table-skeleton').first()).toBeVisible();
     }
     // Rows land 10 ms after the skeleton showed: it stays until it has shown for 300 ms.
+    // A loading skeleton is not counted: its request is what the page waits on.
+    expect(await skeletonHolds(page)).toBe(0);
     await page.locator('#load_rows').click();
     await page.clock.runFor(200);
     for (const id of ['table_prop', 'light_prop']) {
       await expect(table(page, id)).toHaveAttribute('data-loading-state', 'initial');
     }
+    // Both holds count for the dev server's page-readiness check, so a journey waits them out.
+    await expect.poll(() => skeletonHolds(page)).toBe(2);
     await page.clock.runFor(120);
     await expect(table(page, 'table_prop')).toHaveAttribute('data-loading-state', 'ready');
     await expect(table(page, 'light_prop')).toHaveAttribute('data-loading-state', 'ready');
+    await expect.poll(() => skeletonHolds(page)).toBe(0);
     await expect(bodyRows(page, 'table_prop')).toHaveText([/Ada/, /Grace/]);
     await expect(lightRows(page, 'light_prop')).toHaveText([/Ada/, /Grace/]);
   });
