@@ -93,3 +93,16 @@ test('importPluginModule returns undefined when the subpath resolves to a direct
   const result = await importPluginModule({ context, specifier: connectionsDir });
   expect(result).toBe(undefined);
 });
+
+// In dev the build runs inside Vite's module runner, whose resolver throws a
+// plain error with no Node code for a subpath missing from an exports map. A
+// data: URL stands in for that loader: import() raises an uncoded error for a
+// specifier Node's resolver cannot resolve.
+test('importPluginModule returns undefined when the loader throws an uncoded error for a specifier Node cannot resolve', async () => {
+  const specifier = `data:text/javascript,${encodeURIComponent(
+    'throw new Error(\'Missing "./checks" specifier in "@lowdefy/plugin-no-checks" package\');'
+  )}`;
+  const context = { directories: {} };
+  const result = await importPluginModule({ context, specifier });
+  expect(result).toBe(undefined);
+});

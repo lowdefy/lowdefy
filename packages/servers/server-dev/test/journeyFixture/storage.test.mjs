@@ -17,25 +17,33 @@
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
 
 // Object storage under a data set: an AwsS3Bucket connection declares
-// meta.dataSet 'external', so a page-load request on it runs against the
-// connection's own bucket instead of being refused as undeclared.
+// meta.dataSet 'external', so a page-load request on it is sunk (recorded and
+// answered null, never sent) instead of being refused as undeclared.
 
 fixtureTest(
-  'a data-set journey whose page signs a file on an AwsS3Bucket connection passes',
+  'a data-set journey whose page signs a file on an AwsS3Bucket connection passes and sinks the request',
   async () => {
     const result = await postJourney({
       pageId: 'storage',
       data: 'storage',
       user: 'member',
-      steps: [
-        { expect: { visible: 'storage_title' } },
-        { expect: { visible: 'signed_url_alert' } },
-      ],
+      steps: [{ expect: { visible: 'storage_title' } }],
     });
     expect(result.failure).toBeUndefined();
     expect(result.passed).toBe(true);
     expect(result.exercised.requests).toEqual([
       { pageId: 'storage', requestId: 'sign_file', calls: 1, write: false },
+    ]);
+    expect(result.sunk).toEqual([
+      {
+        connectionId: 'storage_bucket',
+        connectionType: 'AwsS3Bucket',
+        requestId: 'sign_file',
+        requestType: 'AwsS3PresignedGetObject',
+        pageId: 'storage',
+        endpointId: null,
+        request: { key: 'reports/fixture.txt' },
+      },
     ]);
   }
 );
