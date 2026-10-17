@@ -66,6 +66,10 @@ function isPageReady() {
   // @lowdefy/block-utils). The global is absent until a lazy block first
   // mounts, and absent means none are loading.
   if ((window.__lowdefyLazyLoads ?? 0) > 0) return false;
+  // Tables holding their loading skeleton for its minimum time after the
+  // load (useSkeletonTiming in @lowdefy/blocks-antd): their rows are about to
+  // replace it. Absent, like the lazy count, until a table first holds one.
+  if ((window.__lowdefySkeletonHolds ?? 0) > 0) return false;
 
   return true;
 }

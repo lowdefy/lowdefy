@@ -78,6 +78,7 @@ pages:
   - _ref: pages/app_errors_open.yaml
   - _ref: pages/timing.yaml
   - _ref: pages/targets.yaml
+  - _ref: pages/fill.yaml
   - _ref: pages/rails.yaml
   - _ref: pages/generated.yaml
   - _ref: pages/shared_alpha.yaml
@@ -86,3 +87,4 @@ pages:
   - _ref: pages/walled.yaml
   - _ref: pages/handoff.yaml
   - _ref: pages/selectors.yaml
+  - _ref: pages/containing_split.yaml
