@@ -1270,8 +1270,8 @@ A warm-toned card using theme tokens to customize the background, header, text, 
 | `theme.actionsLiMargin` | string | `"12px 0"` | Margin of each action item in the card actions area. |
 | `theme.tabsMarginBottom` | number | `-17` | Bottom margin adjustment for tabs in the card. |
 | `theme.extraColor` | string | `"rgba(0,0,0,0.88)"` | Text color for the extra content area in the header. |
-| `theme.bodyPadding` | number | `24` | Padding of the card body. |
-| `theme.bodyPaddingSM` | number | `12` | Padding of the card body for small cards. |
+| `theme.bodyPadding` | number \| string | `24` | Padding of the card body: a number of pixels, or a CSS padding string such as `28px 32px`. |
+| `theme.bodyPaddingSM` | number \| string | `12` | Padding of the card body for small cards. |
 | `theme.headerPadding` | number | `24` | Horizontal padding of the card header. |
 | `theme.headerPaddingSM` | number | `12` | Horizontal padding of the card header for small cards. |
 | `theme.borderRadiusLG` | number | `8` | Border radius of the card. |

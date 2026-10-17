@@ -775,7 +775,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
 | `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `iconPlacement` | string | `"start"` | Place the icon before (start) or after (end) the title. Enum: `start`, `end`. |
 | `shape` | string | `"square"` | Shape of the button. Enum: `circle`, `round`, `square`. |
-| `size` | string | `"default"` | Size of the button. Enum: `small`, `default`, `large`. |
+| `size` | string | `"default"` | Size of the button. `middle` is antd's name for the default size. Enum: `small`, `default`, `middle`, `large`. |
 | `title` | string | - | Title text on the button - supports html. |
 | `type` | string | `"primary"` | Deprecated - use color and variant instead. The button type. Enum: `primary`, `default`, `dashed`, `link`, `text`, `danger`. |
 | `variant` | string | - | Button visual variant. When set, takes precedence over type. Enum: `solid`, `outlined`, `dashed`, `filled`, `text`, `link`. |
