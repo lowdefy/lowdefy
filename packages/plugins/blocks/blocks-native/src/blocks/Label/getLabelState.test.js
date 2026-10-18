@@ -16,47 +16,42 @@
 
 import getLabelState from './getLabelState.js';
 
-test('the title defaults to the block id and drops a trailing colon', () => {
-  expect(getLabelState({ blockId: 'name', properties: {} }).title).toBe('name');
-  expect(getLabelState({ blockId: 'name', properties: { title: 'Name:' } }).title).toBe('Name');
-  expect(
-    getLabelState({ blockId: 'name', properties: { title: 'Name:', colon: false } }).title
-  ).toBe('Name:');
+test('an input without a title has no label title, and a title drops a trailing colon', () => {
+  expect(getLabelState({ properties: {} }).title).toBeNull();
+  expect(getLabelState({ properties: { title: 'Name:' } }).title).toBe('Name');
+  expect(getLabelState({ properties: { title: 'Name:', colon: false } }).title).toBe('Name:');
 });
 
 test('an empty or disabled label has no title', () => {
-  expect(getLabelState({ blockId: 'name', properties: { title: '' } }).title).toBeNull();
-  expect(getLabelState({ blockId: 'name', properties: { disabled: true } }).title).toBeNull();
+  expect(getLabelState({ properties: { title: '' } }).title).toBeNull();
+  expect(getLabelState({ properties: { disabled: true } }).title).toBeNull();
 });
 
 test('the colon shows only beside an inline input', () => {
-  expect(getLabelState({ blockId: 'a', properties: {} }).colon).toBe(false);
-  expect(getLabelState({ blockId: 'a', properties: { inline: true } }).colon).toBe(true);
+  expect(getLabelState({ properties: {} }).colon).toBe(false);
+  expect(getLabelState({ properties: { inline: true } }).colon).toBe(true);
 });
 
 test('a failed validation shows its first message in place of the extra text', () => {
   const properties = { extra: 'Help' };
-  expect(getLabelState({ blockId: 'a', properties, validation: { status: null } })).toMatchObject({
+  expect(getLabelState({ properties, validation: { status: null } })).toMatchObject({
     extra: 'Help',
     feedback: null,
   });
   expect(
     getLabelState({
-      blockId: 'a',
       properties,
       validation: { status: 'error', errors: ['Required', 'Too short'], warnings: [] },
     })
   ).toMatchObject({ extra: null, feedback: 'Required' });
   expect(
     getLabelState({
-      blockId: 'a',
       properties,
       validation: { status: 'warning', errors: [], warnings: ['Check this'] },
     })
   ).toMatchObject({ feedback: 'Check this' });
   expect(
     getLabelState({
-      blockId: 'a',
       properties: { hasFeedback: false },
       validation: { status: 'error', errors: ['Required'], warnings: [] },
     }).feedback

@@ -17,23 +17,28 @@
 import React, { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { type } from '@lowdefy/helpers';
+import { withAlpha } from '@lowdefy/client-native';
 import { convertStyle } from '@lowdefy/style-native';
 
+import getIosTextStyle from '../../typography/getIosTextStyle.js';
 import htmlToText from '../../htmlToText.js';
 import meta from './meta.js';
 import useComponentTokens from '../../useComponentTokens.js';
 
+// The colour each type tints the callout with; info takes the app's tint.
 const typeTokens = {
-  error: 'Error',
-  info: 'Info',
-  success: 'Success',
-  warning: 'Warning',
+  error: 'colorError',
+  info: 'colorTint',
+  success: 'colorSuccess',
+  warning: 'colorWarning',
 };
 
-// antd's Alert: a tinted box in the type's colours with its icon, a message, an optional
-// description and an action slot. A closable alert fires onClose, hides, then fires afterClose.
+// antd's Alert as an iOS callout: a rounded box tinted in the type's colour with its icon, the
+// message (a headline over a description, when it has one), an action slot and a close button.
+// `variant: outlined` adds a border of the type colour. A closable alert fires onClose, hides,
+// then fires afterClose.
 function Alert({ blockId, components, content, methods, properties, styles = {} }) {
-  const { tokens } = useComponentTokens(properties.theme);
+  const { isDark, tokens } = useComponentTokens(properties.theme);
   const [closed, setClosed] = useState(false);
   if (closed) {
     return null;
@@ -41,7 +46,7 @@ function Alert({ blockId, components, content, methods, properties, styles = {} 
   const banner = properties.banner === true;
   // antd's default type: a banner warns, anything else informs.
   const alertType = properties.type ?? (banner ? 'warning' : 'info');
-  const colorName = typeTokens[alertType];
+  const typeColor = tokens[typeTokens[alertType]];
   const description = htmlToText(properties.description);
   const hasDescription = type.isString(description) && description !== '';
   const message = htmlToText(properties.message);
@@ -49,12 +54,13 @@ function Alert({ blockId, components, content, methods, properties, styles = {} 
   const closable = properties.closable === true || hasCloseText;
   // The global colorIcon is antd's grey for icons; only the block's own colorIcon replaces the
   // type colour.
-  const iconColor = properties.theme?.colorIcon ?? tokens[`color${colorName}`];
+  const iconColor = properties.theme?.colorIcon ?? typeColor;
   const padding = convertStyle({
     padding: hasDescription
-      ? tokens.withDescriptionPadding ?? '20px 24px'
-      : tokens.defaultPadding ?? '8px 12px',
+      ? tokens.withDescriptionPadding ?? '14px 16px'
+      : tokens.defaultPadding ?? '12px 14px',
   }).style;
+  const outlined = properties.variant === 'outlined' && !banner;
   const close = async () => {
     setClosed(true);
     await methods.triggerEvent({ name: 'onClose' });
@@ -65,13 +71,13 @@ function Alert({ blockId, components, content, methods, properties, styles = {} 
       accessibilityRole="alert"
       style={[
         {
-          alignItems: hasDescription ? 'flex-start' : 'center',
-          backgroundColor: tokens[`color${colorName}Bg`],
-          borderColor: tokens[`color${colorName}Border`],
-          borderRadius: banner ? 0 : tokens.borderRadiusLG,
-          borderWidth: banner || properties.variant === 'filled' ? 0 : tokens.lineWidth,
+          alignItems: 'flex-start',
+          backgroundColor: withAlpha({ alpha: isDark ? 0.2 : 0.1, color: typeColor }),
+          borderColor: withAlpha({ alpha: 0.4, color: typeColor }),
+          borderRadius: banner ? 0 : 12,
+          borderWidth: outlined ? tokens.lineWidth : 0,
           flexDirection: 'row',
-          gap: hasDescription ? tokens.marginSM : tokens.marginXS,
+          gap: 10,
         },
         padding,
         styles.element,
@@ -84,7 +90,8 @@ function Alert({ blockId, components, content, methods, properties, styles = {} 
             element: [
               {
                 color: iconColor,
-                fontSize: hasDescription ? tokens.withDescriptionIconSize ?? 24 : tokens.fontSize,
+                fontSize: hasDescription ? tokens.withDescriptionIconSize ?? 22 : 20,
+                marginTop: 1,
               },
               styles.icon,
             ],
@@ -96,12 +103,8 @@ function Alert({ blockId, components, content, methods, properties, styles = {} 
         {type.isNone(message) ? null : (
           <Text
             style={[
-              {
-                color: hasDescription ? tokens.colorTextHeading : tokens.colorText,
-                fontSize: hasDescription ? tokens.fontSizeLG : tokens.fontSize,
-                lineHeight: tokens.fontSize * tokens.lineHeight,
-                marginBottom: hasDescription ? tokens.marginXS : 0,
-              },
+              getIosTextStyle({ textStyle: hasDescription ? 'headline' : 'subheadline', tokens }),
+              { marginBottom: hasDescription ? 2 : 0, marginTop: hasDescription ? 0 : 1 },
               styles.message,
             ]}
           >
@@ -111,36 +114,40 @@ function Alert({ blockId, components, content, methods, properties, styles = {} 
         {hasDescription ? (
           <Text
             style={[
-              {
-                color: tokens.colorText,
-                fontSize: tokens.fontSize,
-                lineHeight: tokens.fontSize * tokens.lineHeight,
-              },
+              getIosTextStyle({
+                color: tokens.colorSecondaryLabel,
+                textStyle: 'subheadline',
+                tokens,
+              }),
               styles.description,
             ]}
           >
             {description}
           </Text>
         ) : null}
+        {content.action ? (
+          <View style={[{ marginTop: hasDescription ? 10 : 6 }, styles.action]}>
+            {content.action()}
+          </View>
+        ) : null}
       </View>
-      {content.action ? <View style={styles.action}>{content.action()}</View> : null}
       {closable ? (
         <Pressable
           accessibilityLabel={hasCloseText ? properties.closeText : 'Close'}
           accessibilityRole="button"
-          hitSlop={8}
+          hitSlop={10}
           onPress={close}
-          style={styles.closeIcon}
+          style={[{ marginTop: 2 }, styles.closeIcon]}
           testID={`${blockId}_close`}
         >
           {hasCloseText ? (
-            <Text style={{ color: tokens.colorTextDescription, fontSize: tokens.fontSizeSM }}>
+            <Text style={getIosTextStyle({ color: typeColor, textStyle: 'subheadline', tokens })}>
               {properties.closeText}
             </Text>
           ) : (
             <components.Icon
               properties={properties.closeIcon ?? { name: 'close', title: '' }}
-              styles={{ element: { color: tokens.colorIcon, fontSize: tokens.fontSizeSM } }}
+              styles={{ element: { color: tokens.colorSecondaryLabel, fontSize: 16 } }}
             />
           )}
         </Pressable>

@@ -244,10 +244,12 @@ Build artifacts go to `.lowdefy/build/`:
 │   └── operatorSchemas.json # Operator param schemas (for runtime validation)
 ├── mobile/            # What a mobile shell needs (all {} or [] without a mobile key)
 │   ├── config.json    # Home page, menus, shells, minShellVersion
+│   ├── events.json    # mobile.events: the app events a shell runs (not the root events)
 │   ├── pageIndex.json # Mobile pages with path, hash and type-set key
 │   ├── typeSets.json  # Native type sets by key
 │   ├── theme.json     # { darkMode, light, dark }: computed antd tokens per mode
-│   └── classMap.json  # { [className]: reactNativeStyle }: the Tailwind class map
+│   ├── classMap.json  # { [className]: reactNativeStyle }: the Tailwind class map
+│   └── appJs.json     # { jsEntries }: the client _js of mobile.events as module text
 └── js/                # Compiled JavaScript functions
 ```
 

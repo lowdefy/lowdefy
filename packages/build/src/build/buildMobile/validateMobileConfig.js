@@ -20,7 +20,7 @@ import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 import validateShellIcon from './validateShellIcon.js';
 
-const MOBILE_KEYS = ['homePageId', 'minShellVersion', 'menus', 'pages', 'shells', 'auth'];
+const MOBILE_KEYS = ['homePageId', 'minShellVersion', 'menus', 'pages', 'events', 'shells', 'auth'];
 const MENU_KEYS = ['tabs', 'drawer', 'stack'];
 const MENU_ITEM_KEYS = ['pageId', 'icon', 'sfSymbol', 'title', 'role'];
 // iOS 26's search tab: set apart at the right of the tab bar, with a magnifier.

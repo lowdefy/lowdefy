@@ -236,6 +236,10 @@ const typeManifest = {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
+    Avatar: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
     Box: {
       package: '@lowdefy/blocks-native',
       version: 6,
@@ -276,6 +280,10 @@ const typeManifest = {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
+    Menu: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
     NumberInput: {
       package: '@lowdefy/blocks-native',
       version: 6,
@@ -288,7 +296,15 @@ const typeManifest = {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
+    SegmentedControl: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
     Selector: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    Sheet: {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
@@ -297,6 +313,10 @@ const typeManifest = {
       version: 6,
     },
     Spinner: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    StatusIcon: {
       package: '@lowdefy/blocks-native',
       version: 6,
     },

@@ -19,11 +19,18 @@ import { Linking, Pressable, Text, View } from 'react-native';
 import { getSafeHref, type } from '@lowdefy/helpers';
 
 import getTagColors from './getTagColors.js';
+import getTagDotColor from './getTagDotColor.js';
 import htmlToText from '../../htmlToText.js';
 import meta from './meta.js';
 import useComponentTokens from '../../useComponentTokens.js';
 
 const schemePattern = /^[a-z][a-z0-9+.-]*:/i;
+
+// Pill metrics: a small tag in caption (12), the default in footnote (13), both semibold.
+const SIZES = {
+  small: { dot: 6, fontSize: 12, height: 20, lineHeight: 16, paddingHorizontal: 7 },
+  default: { dot: 7, fontSize: 13, height: 24, lineHeight: 18, paddingHorizontal: 9 },
+};
 
 // A phone opens a link outside the app, so only a URL with a safe scheme links; a relative path
 // names nothing outside the app.
@@ -35,22 +42,25 @@ function getExternalHref(href) {
   return undefined;
 }
 
-// antd's Tag: a small coloured label with an optional icon. A closable tag shows a close button
-// that fires onClose and removes the tag; onClick or an href make the tag pressable.
+// antd's Tag as an iOS pill: the title in its tone over a tint of it, with an optional leading
+// dot or icon. A closable tag shows a close button that fires onClose and removes the tag;
+// onClick or an href make the tag pressable.
 function Tag({ blockId, components, events, methods, properties, styles = {} }) {
-  const { tokens } = useComponentTokens(properties.theme);
+  const { isDark, tokens } = useComponentTokens(properties.theme);
   const [closed, setClosed] = useState(false);
   if (closed) {
     return null;
   }
+  const size = SIZES[properties.size === 'small' ? 'small' : 'default'];
   const disabled = properties.disabled === true;
   const colors = getTagColors({
     color: properties.color,
+    isDark,
     tokens,
     variant: properties.variant ?? 'filled',
   });
-  const textColor = disabled ? tokens.colorTextDisabled : colors.color;
-  const iconStyle = { color: textColor, fontSize: tokens.fontSizeSM };
+  const textColor = disabled ? tokens.colorTertiaryLabel : colors.color;
+  const iconStyle = { color: textColor, fontSize: size.fontSize };
   const href = getExternalHref(properties.href);
   const pressable = !disabled && (Boolean(events.onClick) || href !== undefined);
   const onPress = () => {
@@ -61,9 +71,8 @@ function Tag({ blockId, components, events, methods, properties, styles = {} }) 
       Linking.openURL(href);
     }
   };
-  const title = type.isString(properties.title)
-    ? htmlToText(properties.title)
-    : properties.title ?? blockId;
+  const title = type.isString(properties.title) ? htmlToText(properties.title) : null;
+  const hasDot = !type.isNone(properties.dot) && properties.dot !== false;
   const Container = pressable ? Pressable : View;
   let accessibilityRole;
   if (pressable) {
@@ -78,17 +87,36 @@ function Tag({ blockId, components, events, methods, properties, styles = {} }) 
         {
           alignItems: 'center',
           alignSelf: 'flex-start',
-          backgroundColor: disabled ? tokens.colorBgContainerDisabled : colors.backgroundColor,
+          backgroundColor: disabled ? tokens.colorQuaternarySystemFill : colors.backgroundColor,
           borderColor: colors.borderColor,
-          borderRadius: tokens.borderRadiusSM,
-          borderWidth: tokens.lineWidth,
+          borderRadius: size.height / 2,
+          borderWidth: colors.borderWidth,
           flexDirection: 'row',
-          gap: tokens.marginXXS,
-          paddingHorizontal: 7,
+          gap: 5,
+          minHeight: size.height,
+          paddingHorizontal: size.paddingHorizontal,
         },
         styles.element,
       ]}
     >
+      {hasDot ? (
+        <View
+          style={[
+            {
+              backgroundColor: getTagDotColor({
+                accent: colors.accent,
+                dot: properties.dot,
+                tokens,
+              }),
+              borderRadius: size.dot / 2,
+              height: size.dot,
+              width: size.dot,
+            },
+            styles.dot,
+          ]}
+          testID={`${blockId}_dot`}
+        />
+      ) : null}
       {properties.icon ? (
         <components.Icon
           properties={properties.icon}
@@ -96,7 +124,19 @@ function Tag({ blockId, components, events, methods, properties, styles = {} }) 
           testID={`${blockId}_icon`}
         />
       ) : null}
-      <Text style={{ color: textColor, fontSize: tokens.fontSizeSM, lineHeight: 20 }}>{title}</Text>
+      {title === null ? null : (
+        <Text
+          numberOfLines={1}
+          style={{
+            color: textColor,
+            fontSize: size.fontSize,
+            fontWeight: '600',
+            lineHeight: size.lineHeight,
+          }}
+        >
+          {title}
+        </Text>
+      )}
       {properties.closable === true ? (
         <Pressable
           accessibilityLabel="Close"
@@ -111,7 +151,9 @@ function Tag({ blockId, components, events, methods, properties, styles = {} }) 
         >
           <components.Icon
             properties={properties.closeIcon ?? { name: 'close', title: '' }}
-            styles={{ element: [{ color: tokens.colorIcon, fontSize: 10 }, styles.closeIcon] }}
+            styles={{
+              element: [{ color: textColor, fontSize: size.fontSize - 2 }, styles.closeIcon],
+            }}
           />
         </Pressable>
       ) : null}

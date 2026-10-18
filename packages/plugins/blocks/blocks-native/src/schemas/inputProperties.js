@@ -43,7 +43,7 @@ export const disabled = {
 export const inputTitle = {
   type: 'string',
   description:
-    'Title to describe the input. If no title is specified the block id is displayed. Shown as plain text on mobile.',
+    'Title to describe the input. On the web the block id is displayed when no title is specified; on mobile an input without a title has no label. Shown as plain text on mobile.',
 };
 
 export const placeholder = {
@@ -84,7 +84,8 @@ export const theme = {
 export const variant = {
   type: 'string',
   enum: ['outlined', 'filled', 'borderless', 'underlined'],
-  description: 'Input visual variant.',
+  description:
+    'Input visual variant. On mobile an input without a variant (or `filled`) is the iOS filled field, `outlined` a hairline box, `borderless` bare text and `underlined` a hairline under the text.',
 };
 
 export const webIcon = {

@@ -37,8 +37,8 @@ function getSize(size) {
   }
 }
 
-// The platform's activity indicator at the web Spinner's sizes, in antd's faint text colour. iOS
-// draws an indicator only small or large, so other sizes scale the small one.
+// The platform's activity indicator at the web Spinner's sizes, in the secondary label colour iOS
+// draws it in. iOS draws an indicator only small or large, so other sizes scale the small one.
 function Spinner({ blockId, properties, styles = {} }) {
   const { tokens } = useTheme();
   const size = getSize(properties.size);
@@ -51,7 +51,7 @@ function Spinner({ blockId, properties, styles = {} }) {
       style={[{ alignItems: 'center', height: size, justifyContent: 'center' }, styles.element]}
     >
       <ActivityIndicator
-        color={tokens.colorTextQuaternary}
+        color={tokens.colorSecondaryLabel}
         size="small"
         style={{ transform: [{ scale: size / INDICATOR_SIZE }] }}
         testID={`${blockId}_indicator`}

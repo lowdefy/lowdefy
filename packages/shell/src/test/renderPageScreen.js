@@ -19,6 +19,7 @@ import { jest } from '@jest/globals';
 import { render } from '@testing-library/react-native';
 
 import createAppSession from '../session/createAppSession.js';
+import createCoreAuth from '../auth/createCoreAuth.js';
 import createFakeServer from './createFakeServer.js';
 import createMemoryCacheStore from './createMemoryCacheStore.js';
 import createMemoryStore from '../host/createMemoryStore.js';
@@ -85,9 +86,17 @@ async function renderPageScreen({
     session,
     storage,
   });
+  const auth = {
+    coreAuth: createCoreAuth({
+      apiBase,
+      fetch: server.fetch,
+      getSession: () => session,
+      tokenStore: host.tokenStore,
+    }),
+  };
   beforeRender({ session });
   await render(
-    <ShellContext.Provider value={{ host, locale, session, shell }}>
+    <ShellContext.Provider value={{ auth, host, locale, session, shell }}>
       <ShellThemeProvider>
         <PageScreen path={path} query={query} />
       </ShellThemeProvider>

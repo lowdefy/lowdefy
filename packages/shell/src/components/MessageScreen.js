@@ -18,15 +18,29 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import styles from './styles.js';
+import useSurfaceTokens from './useSurfaceTokens.js';
 
 // A full-screen message with an optional action button: update, error and not found screens.
 function MessageScreen({ action, body, testID, title }) {
+  const tokens = useSurfaceTokens();
   return (
-    <View style={styles.centered} testID={testID}>
-      <Text style={styles.title}>{title}</Text>
-      {body ? <Text style={styles.body}>{body}</Text> : null}
+    <View
+      style={[styles.centered, { backgroundColor: tokens.colorGroupedBackground }]}
+      testID={testID}
+    >
+      <Text style={[styles.title, { color: tokens.colorLabel }]}>{title}</Text>
+      {body ? (
+        <Text style={[styles.body, { color: tokens.colorSecondaryLabel }]}>{body}</Text>
+      ) : null}
       {action ? (
-        <Pressable accessibilityRole="button" onPress={action.onPress} style={styles.button}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={action.onPress}
+          style={({ pressed }) => [
+            styles.button,
+            { backgroundColor: tokens.colorTint, opacity: pressed ? 0.7 : 1 },
+          ]}
+        >
           <Text style={styles.buttonText}>{action.title}</Text>
         </Pressable>
       ) : null}

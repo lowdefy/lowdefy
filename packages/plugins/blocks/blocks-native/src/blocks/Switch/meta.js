@@ -48,7 +48,11 @@ export default {
         description: 'The colour of the switch while it is on.',
       },
       disabled,
-      label,
+      label: {
+        ...label,
+        description:
+          'Label properties. On mobile a switch sits beside its title by default (`inline` defaults to true), at the end of the row.',
+      },
       loading: {
         type: 'boolean',
         default: false,

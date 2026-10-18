@@ -18,7 +18,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { CallMethod, SetState, Validate, Wait } from '@lowdefy/actions-core/actions';
-import { LowdefyPage } from '@lowdefy/client-native';
+import { iosColors as ios, LowdefyPage } from '@lowdefy/client-native';
 import {
   _event,
   _if,
@@ -136,4 +136,16 @@ async function press(element) {
   });
 }
 
-export { findAllOfType, iconPaths, icons, page, press, record, renderPage, screen, styleOf, theme };
+export {
+  findAllOfType,
+  iconPaths,
+  icons,
+  ios,
+  page,
+  press,
+  record,
+  renderPage,
+  screen,
+  styleOf,
+  theme,
+};

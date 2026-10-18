@@ -64,31 +64,34 @@ export default {
       },
       icon: {
         type: ['string', 'object'],
-        description: 'Name of an icon, or the properties of an Icon block, shown before the title.',
+        description:
+          'Name of an icon, or the properties of an Icon block, shown before the title (or after it with `iconPlacement: end`). A Button with an icon and no title shows the icon alone.',
       },
       iconPlacement: {
         type: 'string',
         enum: ['start', 'end'],
         default: 'start',
-        nativeIgnored: true,
-        description: 'Ignored on mobile: the icon is shown before the title.',
+        description: 'Place the icon before or after the title.',
       },
       shape: {
         type: 'string',
         enum: ['circle', 'round', 'square'],
         default: 'square',
-        description: 'The Button shape.',
+        description:
+          'The Button shape. On mobile `square` has rounded corners (10 points at the default size), `round` is a capsule and `circle` an icon button.',
       },
       size: {
         type: 'string',
         enum: ['small', 'default', 'middle', 'large'],
         default: 'default',
-        description: 'The Button size.',
+        description:
+          'The Button size. On mobile `small` is 34 points tall, `default` and `middle` 44 and `large` 50.',
       },
       theme,
       title: {
         type: 'string',
-        description: 'The Button title. Defaults to the block id. Shown as plain text on mobile.',
+        description:
+          'The Button title. Defaults to the block id. Shown as plain text on mobile, where a Button with an icon and no title shows only the icon.',
       },
       tooltip: {
         type: 'string',
@@ -103,8 +106,9 @@ export default {
       },
       variant: {
         type: 'string',
-        enum: ['solid', 'outlined', 'dashed', 'filled', 'text', 'link'],
-        description: 'The Button variant. Use with color.',
+        enum: ['solid', 'outlined', 'dashed', 'filled', 'text', 'link', 'tinted', 'gray', 'plain'],
+        description:
+          "The Button variant. Use with color. On mobile the variants are the iOS button styles: `solid` is iOS's filled button, `tinted` the colour over a tint of it, `gray` (and `filled`) the colour over the grey fill, and `plain` (and `text`, `link`) the colour alone. `tinted`, `gray` and `plain` are mobile only and take the tint when no color is set.",
       },
     },
   },

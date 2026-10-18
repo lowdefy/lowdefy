@@ -17,27 +17,26 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 
-// An opacity that fades between full and half while `active`, the pulse a loading placeholder
-// shows. It runs on the native driver.
-function usePulse(active) {
-  const opacity = useRef(new Animated.Value(1)).current;
+const DURATION = 1400;
+
+// A progress that sweeps from 0 to 1 and starts again, the light a loading placeholder shimmers
+// with. Every shape starts its own sweep on mount, at the same pace, so a screen of rows shimmers
+// together. It runs on the native driver.
+function useShimmer() {
+  const progress = useRef(new Animated.Value(0)).current;
   useEffect(() => {
-    if (!active) return undefined;
-    const fade = (toValue) =>
-      Animated.timing(opacity, {
-        duration: 800,
+    const loop = Animated.loop(
+      Animated.timing(progress, {
+        duration: DURATION,
         easing: Easing.inOut(Easing.ease),
-        toValue,
+        toValue: 1,
         useNativeDriver: true,
-      });
-    const loop = Animated.loop(Animated.sequence([fade(0.5), fade(1)]));
+      })
+    );
     loop.start();
-    return () => {
-      loop.stop();
-      opacity.setValue(1);
-    };
-  }, [active, opacity]);
-  return opacity;
+    return () => loop.stop();
+  }, [progress]);
+  return progress;
 }
 
-export default usePulse;
+export default useShimmer;

@@ -42,7 +42,7 @@ function NumberInput({
   value,
 }) {
   const { tokens } = useBlockTokens({ properties });
-  const { accessibilityLabel, labelProperties } = getLabelProperties({ blockId, properties });
+  const { accessibilityLabel, labelProperties } = getLabelProperties({ properties });
   const { decimalSeparator, max, min, precision } = properties;
   const step = properties.step ?? 1;
   const [text, setText] = useState(() => formatNumber({ decimalSeparator, precision, value }));
@@ -95,7 +95,9 @@ function NumberInput({
           />
         ) : null}
         {type.isString(properties.prefix) ? (
-          <Text style={[textStyle, { marginRight: tokens.marginXXS }]}>{properties.prefix}</Text>
+          <Text style={[textStyle, { color: tokens.colorSecondaryLabel, marginRight: 4 }]}>
+            {properties.prefix}
+          </Text>
         ) : null}
         <RNTextInput
           accessibilityLabel={accessibilityLabel}
@@ -120,16 +122,19 @@ function NumberInput({
           onFocus={() => methods.triggerEvent({ name: 'onFocus' })}
           onSubmitEditing={() => methods.triggerEvent({ name: 'onPressEnter' })}
           placeholder={properties.placeholder}
-          placeholderTextColor={tokens.colorTextPlaceholder}
+          placeholderTextColor={tokens.colorTertiaryLabel}
+          selectionColor={tokens.colorTint}
           style={[
             textStyle,
-            { flex: 1, paddingVertical: tokens.paddingXXS, textAlign: spinner ? 'center' : 'left' },
+            { flex: 1, paddingVertical: 0, textAlign: spinner ? 'center' : 'left' },
           ]}
           testID={`${blockId}_input`}
           value={text}
         />
         {type.isString(properties.suffix) ? (
-          <Text style={[textStyle, { marginLeft: tokens.marginXXS }]}>{properties.suffix}</Text>
+          <Text style={[textStyle, { color: tokens.colorSecondaryLabel, marginLeft: 4 }]}>
+            {properties.suffix}
+          </Text>
         ) : null}
         {spinner ? (
           <StepButton

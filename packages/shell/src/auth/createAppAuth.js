@@ -18,6 +18,7 @@ import { AppState } from 'react-native';
 import * as LocalAuthentication from 'expo-local-authentication';
 
 import createAuthApi from './createAuthApi.js';
+import createCoreAuth from './createCoreAuth.js';
 import createSessionStores from './createSessionStores.js';
 import createTokenStore from './createTokenStore.js';
 import getAuthSettings from './getAuthSettings.js';
@@ -266,7 +267,16 @@ function createAppAuth({
     onSessionEnded: () => tokenStore.clear(),
   });
 
+  const coreAuth = createCoreAuth({
+    apiBase,
+    fetch: watchedFetch,
+    getSession: () => session,
+    tokenStore,
+  });
+
   return {
+    // The auth client the core's auth actions call (createCoreAuth).
+    coreAuth,
     dispose,
     fetch: watchedFetch,
     getAppName,

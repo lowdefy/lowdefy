@@ -18,33 +18,42 @@ import React from 'react';
 import { Image, Text, View } from 'react-native';
 import { type } from '@lowdefy/helpers';
 
-// A ListItem's round avatar: its image, or its text on a filled circle.
-function ListItemAvatar({ avatar, size, styles, tokens }) {
+import getAvatarInitials from './getAvatarInitials.js';
+
+/**
+ * A round avatar: the image at `src`, or the person's initials on their colour.
+ *
+ * @param {Object} props
+ * @param {Object} props.avatar `{ name, src, color }`.
+ * @param {number} props.size
+ * @param {Object} props.tokens
+ */
+function InitialsAvatar({ avatar, size, testID, tokens }) {
   const shape = { borderRadius: size / 2, height: size, width: size };
   if (type.isString(avatar.src)) {
     return (
       <Image
         accessibilityIgnoresInvertColors
         source={{ uri: avatar.src }}
-        style={[shape, styles.avatar]}
+        style={shape}
+        testID={testID}
       />
     );
   }
+  const { color, initials } = getAvatarInitials({ avatar, tokens });
   return (
     <View
-      style={[
-        shape,
-        {
-          alignItems: 'center',
-          backgroundColor: avatar.color ?? tokens.colorFillSecondary,
-          justifyContent: 'center',
-        },
-        styles.avatar,
-      ]}
+      style={[shape, { alignItems: 'center', backgroundColor: color, justifyContent: 'center' }]}
+      testID={testID}
     >
-      <Text style={{ color: tokens.colorText, fontSize: tokens.fontSize }}>{avatar.content}</Text>
+      <Text
+        allowFontScaling={false}
+        style={{ color: '#fff', fontSize: Math.round(size * 0.42), fontWeight: '600' }}
+      >
+        {initials}
+      </Text>
     </View>
   );
 }
 
-export default ListItemAvatar;
+export default InitialsAvatar;

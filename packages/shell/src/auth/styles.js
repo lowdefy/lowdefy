@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   },
   appName: {
     fontSize: 28,
-    fontWeight: '600',
+    fontWeight: '700',
     textAlign: 'center',
     marginBottom: 8,
   },
@@ -33,10 +33,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#d9d9d9',
-    borderRadius: 8,
-    paddingHorizontal: 12,
+    borderRadius: 10,
+    paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 17,
   },
@@ -47,23 +45,20 @@ const styles = StyleSheet.create({
   },
   message: {
     fontSize: 15,
-    color: '#595959',
   },
   error: {
     fontSize: 15,
-    color: '#cf1322',
   },
   button: {
     alignItems: 'center',
     paddingVertical: 14,
-    borderRadius: 8,
-    backgroundColor: '#1677ff',
+    borderRadius: 12,
   },
   buttonDisabled: {
     opacity: 0.5,
   },
   buttonText: {
-    color: '#ffffff',
+    color: '#FFFFFF',
     fontSize: 17,
     fontWeight: '600',
   },
@@ -72,12 +67,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   link: {
-    color: '#1677ff',
-    fontSize: 16,
+    fontSize: 17,
     paddingVertical: 8,
-  },
-  linkDisabled: {
-    color: '#8c8c8c',
   },
   centered: {
     alignSelf: 'center',

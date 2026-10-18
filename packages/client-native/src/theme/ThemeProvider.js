@@ -14,19 +14,24 @@
   limitations under the License.
 */
 
-import React, { useCallback, useMemo, useState } from 'react';
-import { useColorScheme } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Appearance, StatusBar, useColorScheme } from 'react-native';
 
+import getSemanticTokens from './getSemanticTokens.js';
 import readDarkModePreference from './readDarkModePreference.js';
+import resolveColorSchemeOverride from './resolveColorSchemeOverride.js';
 import resolveIsDark from './resolveIsDark.js';
 import ThemeContext from './ThemeContext.js';
 
 /**
- * Gives native blocks the computed antd tokens of the theme mode showing, and keeps the mode the
- * way the web client does: `theme.darkMode` ('system', 'light' or 'dark'), the person's
+ * Gives native blocks the tokens of the theme mode showing (antd's computed tokens with the iOS
+ * semantic colours, see getSemanticTokens), and keeps the mode the way the web client does: `theme.darkMode` ('system', 'light' or 'dark'), the person's
  * preference that the SetDarkMode action sets and the store keeps, and the device's colour
  * scheme. It sets the host window members the engine reads for SetDarkMode and
  * `_media: darkMode`.
+ *
+ * The app window takes the mode too, so the navigation bar, tab bar, status bar and SwiftUI
+ * controls match the page when config or the person fixes a mode the device does not show.
  *
  * A shell wraps its pages in one, so every page shows the same mode; a LowdefyPage outside one
  * makes its own.
@@ -66,11 +71,27 @@ const ThemeProvider = ({ children, host, storageKey, theme }) => {
   window.__lowdefy_setDarkMode = setPreference;
   window.__lowdefy_darkModePreference = preference;
   window.__lowdefy_isDark = isDark;
+  const colorSchemeOverride = resolveColorSchemeOverride({
+    configDarkMode: theme.darkMode,
+    preference,
+  });
+  useEffect(() => {
+    Appearance.setColorScheme(colorSchemeOverride);
+  }, [colorSchemeOverride]);
   const value = useMemo(
-    () => ({ isDark, preference, tokens: isDark ? theme.dark : theme.light }),
+    () => ({
+      isDark,
+      preference,
+      tokens: getSemanticTokens({ isDark, tokens: isDark ? theme.dark : theme.light }),
+    }),
     [isDark, preference, theme]
   );
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={value}>
+      <StatusBar animated barStyle={isDark ? 'light-content' : 'dark-content'} />
+      {children}
+    </ThemeContext.Provider>
+  );
 };
 
 export default ThemeProvider;

@@ -16,7 +16,7 @@
 
 import path from 'node:path';
 
-import { type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 import getMobileAuth from './buildMobile/getMobileAuth.js';
 import getMobileHomePageId from './buildMobile/getMobileHomePageId.js';
@@ -117,13 +117,19 @@ async function buildMobileConfig({ components, context }) {
 // class ("dark:bg-gray-900", "sm:flex-row"); in dark mode a shell reads
 // "dark:<class>" before "<class>", which the build adds for classes that use
 // an antd theme colour.
-// mobile/appJs.json: { jsEntries }, the app events' client _js as module text
-// (buildMobileAppJs), or null.
+// mobile/events.json: mobile.events, the app events a shell runs in place of
+// the web app's events, serialized like events.json so their ~k markers reach
+// the shell's error locations.
+// mobile/appJs.json: { jsEntries }, the client _js of mobile.events as module
+// text (buildMobileAppJs), or null.
 async function writeMobile({ components, context }) {
-  const config = type.isNone(components.mobile)
-    ? {}
-    : await buildMobileConfig({ components, context });
+  const hasMobile = !type.isNone(components.mobile);
+  const config = hasMobile ? await buildMobileConfig({ components, context }) : {};
   await context.writeBuildArtifact('mobile/config.json', JSON.stringify(config));
+  await context.writeBuildArtifact(
+    'mobile/events.json',
+    serializer.serializeToString(hasMobile ? components.mobile.events : {})
+  );
   await context.writeBuildArtifact(
     'mobile/pageIndex.json',
     JSON.stringify(context.mobilePageIndex)

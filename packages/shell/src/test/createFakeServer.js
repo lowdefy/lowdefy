@@ -38,8 +38,9 @@ function header(init, name) {
 /**
  * A Lowdefy server for the shell's tests. `state` holds what it serves and may be changed between
  * calls: `caller` (the x-lowdefy-caller stamp), `user`, `root` and its `rootEtag`, `pages`
- * ({ [path]: { pageConfig, etag } }), `buildId`, and `requests` (a function answering
- * /api/request/* calls). A matching If-None-Match gets a 304. Every call is in `fetch.mock.calls`.
+ * ({ [path]: { pageConfig, etag } }), `buildId`, `requests` (a function answering
+ * /api/request/* calls) and `auth` (a function of { path, init } answering /api/auth/* calls with
+ * { body, headers, status }). A matching If-None-Match gets a 304. Every call is in `fetch.mock.calls`.
  */
 function createFakeServer(initial) {
   const state = { buildId: 'build-1', caller: '', user: null, ...initial };
@@ -84,6 +85,9 @@ function createFakeServer(initial) {
         });
       }
       return createResponse({ body: state.requests?.(url, init) ?? { success: true } });
+    }
+    if (pathname.startsWith('/api/auth/') && state.auth !== undefined) {
+      return createResponse(state.auth({ path: pathname.slice('/api/auth'.length), init }));
     }
     return createResponse({ status: 404, body: {} });
   });

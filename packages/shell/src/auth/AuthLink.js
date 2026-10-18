@@ -18,8 +18,10 @@ import React from 'react';
 import { Pressable, Text } from 'react-native';
 
 import styles from './styles.js';
+import useSurfaceTokens from '../components/useSurfaceTokens.js';
 
 function AuthLink({ disabled = false, onPress, style, testID, title }) {
+  const tokens = useSurfaceTokens();
   return (
     <Pressable
       accessibilityRole="link"
@@ -29,7 +31,11 @@ function AuthLink({ disabled = false, onPress, style, testID, title }) {
       style={style}
       testID={testID}
     >
-      <Text style={[styles.link, disabled ? styles.linkDisabled : null]}>{title}</Text>
+      <Text
+        style={[styles.link, { color: disabled ? tokens.colorTertiaryLabel : tokens.colorTint }]}
+      >
+        {title}
+      </Text>
     </Pressable>
   );
 }

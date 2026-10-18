@@ -19,6 +19,7 @@
 const nativeBlockTypes = {
   blocks: [
     'Alert',
+    'Avatar',
     'Box',
     'Button',
     'Card',
@@ -29,12 +30,16 @@ const nativeBlockTypes = {
     'List',
     'ListItem',
     'Markdown',
+    'Menu',
     'NumberInput',
     'Paragraph',
     'Screen',
+    'SegmentedControl',
     'Selector',
+    'Sheet',
     'Skeleton',
     'Spinner',
+    'StatusIcon',
     'Switch',
     'Tabs',
     'Tag',
@@ -44,27 +49,32 @@ const nativeBlockTypes = {
   ],
   icons: {
     Alert: ['success', 'info', 'warning', 'error', 'close'],
+    Avatar: [],
     Box: [],
     Button: [],
     Card: [],
     DateSelector: [],
     Divider: [],
-    Empty: [],
+    Empty: ['Inbox'],
     Icon: ['loading'],
     List: [],
-    ListItem: [],
+    ListItem: ['chevron-right'],
     Markdown: [],
+    Menu: [],
     NumberInput: [],
     Paragraph: [],
     Screen: [],
-    Selector: [],
+    SegmentedControl: [],
+    Selector: ['ChevronsUpDown'],
+    Sheet: ['X'],
     Skeleton: [],
     Spinner: [],
+    StatusIcon: [],
     Switch: [],
     Tabs: ['more'],
     Tag: ['close'],
-    TextArea: [],
-    TextInput: [],
+    TextArea: ['ArrowUp'],
+    TextInput: ['search'],
     Title: [],
   },
   blockMetas: {
@@ -74,6 +84,10 @@ const nativeBlockTypes = {
         action: 'Action area content.',
       },
       cssKeys: ['element', 'icon', 'message', 'description', 'action', 'closeIcon'],
+    },
+    Avatar: {
+      category: 'display',
+      cssKeys: ['element'],
     },
     Box: {
       category: 'container',
@@ -85,7 +99,7 @@ const nativeBlockTypes = {
     Button: {
       category: 'display',
       cssKeys: ['element', 'icon'],
-      nativeIgnored: ['iconPlacement', 'tooltip'],
+      nativeIgnored: ['tooltip'],
     },
     Card: {
       category: 'container',
@@ -126,7 +140,7 @@ const nativeBlockTypes = {
       slots: {
         footer: 'Blocks under the description, such as a button that creates the first item.',
       },
-      cssKeys: ['element', 'image', 'description', 'footer'],
+      cssKeys: ['element', 'image', 'title', 'description', 'footer'],
     },
     Icon: {
       category: 'display',
@@ -138,16 +152,28 @@ const nativeBlockTypes = {
       slots: {
         content: 'Blocks rendered for each list item.',
       },
-      cssKeys: ['element', 'sectionHeader'],
+      cssKeys: ['element', 'cell', 'sectionHeader', 'sectionFooter'],
       nativeIgnored: ['wrap'],
     },
     ListItem: {
-      category: 'display',
-      cssKeys: ['element', 'avatar', 'icon', 'title', 'description', 'extra'],
+      category: 'container',
+      slots: {
+        leading: 'Blocks at the start of the row, in place of the leading property.',
+        trailing: 'Blocks at the end of the row, before the trailing property parts.',
+      },
+      cssKeys: ['element', 'avatar', 'icon', 'title', 'subtitle', 'description', 'extra'],
     },
     Markdown: {
       category: 'display',
       cssKeys: ['element'],
+    },
+    Menu: {
+      category: 'container',
+      slots: {
+        content:
+          'The trigger: blocks that open the menu when tapped. Give them no onClick of their own. Without blocks, the icon and title are drawn as a button.',
+      },
+      cssKeys: ['element', 'icon', 'title'],
     },
     NumberInput: {
       category: 'input',
@@ -184,10 +210,15 @@ const nativeBlockTypes = {
         headerRight: 'Blocks drawn at the right of the screen header.',
       },
     },
+    SegmentedControl: {
+      category: 'input',
+      valueType: 'any',
+      cssKeys: ['element'],
+    },
     Selector: {
       category: 'input',
       valueType: 'any',
-      cssKeys: ['element', 'label', 'extra', 'feedback'],
+      cssKeys: ['element', 'label', 'extra', 'feedback', 'value'],
       nativeIgnored: [
         'label.align',
         'label.lg',
@@ -205,6 +236,15 @@ const nativeBlockTypes = {
         'suffixIcon',
       ],
     },
+    Sheet: {
+      category: 'container',
+      slots: {
+        content: 'Blocks inside the sheet, in a scroll view.',
+        headerRight:
+          'Blocks at the right of the sheet header, such as a Save button. Replaces the close button.',
+      },
+      cssKeys: ['element', 'header', 'title', 'body'],
+    },
     Skeleton: {
       category: 'display',
       cssKeys: ['element'],
@@ -212,6 +252,10 @@ const nativeBlockTypes = {
     Spinner: {
       category: 'display',
       cssKeys: ['element'],
+    },
+    StatusIcon: {
+      category: 'display',
+      cssKeys: ['element', 'label'],
     },
     Switch: {
       category: 'input',
@@ -240,7 +284,7 @@ const nativeBlockTypes = {
     },
     Tag: {
       category: 'display',
-      cssKeys: ['element', 'icon', 'closeIcon'],
+      cssKeys: ['element', 'icon', 'dot', 'closeIcon'],
       nativeIgnored: ['target'],
     },
     TextArea: {

@@ -28,6 +28,9 @@ const mockNavigation = { setOptions: jest.fn() };
 const mockFocus = { focused: true };
 
 jest.mock('expo-router', () => ({
+  DarkTheme: { fonts: {} },
+  DefaultTheme: { fonts: {} },
+  ThemeProvider: ({ children }) => children,
   router: { back: jest.fn(), canGoBack: () => false },
   useFocusEffect: (effect) => {
     const { useEffect: useReactEffect } = jest.requireActual('react');
@@ -287,6 +290,67 @@ test('CopyToClipboard copies through the shell clipboard', async () => {
   });
   fireEvent.press(await screen.findByText('Copy'));
   await waitFor(() => expect(clipboard.setString.mock.calls).toEqual([['JOB-42']]));
+});
+
+test('ListOrganizations and SetActiveOrganization call the app server over the bearer client', async () => {
+  const { server, session } = await renderTodayPage({
+    blocks: [
+      {
+        blockId: 'orgs',
+        type: 'Box',
+        properties: { content: { _if_none: [{ _state: 'org' }, 'none'] } },
+      },
+      {
+        blockId: 'list',
+        type: 'Box',
+        properties: { content: 'List' },
+        events: onClick([
+          { id: 'memberships', type: 'ListOrganizations' },
+          {
+            id: 'state',
+            type: 'SetState',
+            params: { org: { _actions: 'memberships.response.1.name' } },
+          },
+        ]),
+      },
+      {
+        blockId: 'switch',
+        type: 'Box',
+        properties: { content: 'Switch' },
+        events: onClick([
+          { id: 'activate', type: 'SetActiveOrganization', params: { organizationId: 'org-2' } },
+          { id: 'resync', type: 'UpdateSession' },
+        ]),
+      },
+    ],
+  });
+  server.state.auth = ({ path }) => {
+    if (path === '/organization/list') {
+      return {
+        body: [
+          { id: 'org-1', name: 'Acme' },
+          { id: 'org-2', name: 'Globex' },
+        ],
+      };
+    }
+    if (path === '/organization/set-active') {
+      server.state.user = { id: 'ana', organization_id: 'org-2', roles: [] };
+      return { body: { id: 'org-2', name: 'Globex' } };
+    }
+    return { body: { session: { id: 's1' }, user: { id: 'ana' } } };
+  };
+  fireEvent.press(await screen.findByText('List'));
+  expect(await screen.findByText('Globex')).toBeTruthy();
+  fireEvent.press(screen.getByText('Switch'));
+  await waitFor(() => expect(session.getState().user?.organization_id).toBe('org-2'));
+  const authPaths = server.fetch.mock.calls
+    .map(([url]) => new URL(url).pathname)
+    .filter((pathname) => pathname.startsWith('/api/auth/'));
+  expect(authPaths).toEqual([
+    '/api/auth/organization/list',
+    '/api/auth/organization/set-active',
+    '/api/auth/get-session',
+  ]);
 });
 
 function findAll(node, predicate, found = []) {

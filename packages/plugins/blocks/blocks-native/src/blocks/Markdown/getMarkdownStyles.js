@@ -14,93 +14,108 @@
   limitations under the License.
 */
 
-import { Platform } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
+
+import getIosTextStyle from '../../typography/getIosTextStyle.js';
 
 // antd's code font is a CSS font stack, which a phone cannot read.
 const monospace = Platform.select({ ios: 'Menlo', default: 'monospace' });
 
-function getHeadingStyle({ fontSize, lineHeight, tokens }) {
-  return {
-    color: tokens.colorTextHeading,
-    fontSize,
-    fontWeight: String(tokens.fontWeightStrong),
-    lineHeight: fontSize * lineHeight,
-    marginBottom: fontSize * 0.5,
-    marginTop: fontSize * 0.6,
-    paddingBottom: 0,
-    borderBottomWidth: 0,
-  };
-}
+// Headings in the iOS text styles: h1 title1, h2 title2, h3 title3, h4 headline, h5 a semibold
+// subheadline and h6 a semibold footnote in the secondary label colour.
+const HEADINGS = [
+  { level: 1, textStyle: 'title1' },
+  { level: 2, textStyle: 'title2' },
+  { level: 3, textStyle: 'title3' },
+  { level: 4, textStyle: 'headline' },
+  { level: 5, textStyle: 'subheadline', fontWeight: '600' },
+  { level: 6, textStyle: 'footnote', fontWeight: '600', secondary: true },
+];
 
 /**
- * react-native-marked's styles from the app's computed antd tokens: body text as a Paragraph,
- * headings 1 to 5 as a Title of that level (6 at body size), code in the platform's monospace
- * font on the fill colour antd's Typography code uses.
+ * react-native-marked's styles in the iOS typography and the theme's semantic colours, so a
+ * Markdown reads as native text in both modes: body text, headings in the iOS title styles, links
+ * in the tint, code on the tertiary system fill in the platform's monospace font, quotes with a
+ * bar at their start, and tables and rules in the separator colour.
  *
  * @param {Object} params
- * @param {Object} params.tokens The computed antd tokens for the mode showing.
+ * @param {Object} params.tokens The theme tokens for the mode showing.
  * @returns {{ listStyle: Object, styles: Object, theme: Object }} The space below a list, and
  *   react-native-marked's styles and theme colours.
  */
 function getMarkdownStyles({ tokens }) {
-  const lineHeight = tokens.fontSize * tokens.lineHeight;
-  const text = { color: tokens.colorText, fontSize: tokens.fontSize, lineHeight };
+  const text = getIosTextStyle({ textStyle: 'body', tokens });
+  const paragraphSpace = 12;
   const headings = {};
-  [1, 2, 3, 4, 5].forEach((level) => {
-    headings[`h${level}`] = getHeadingStyle({
-      fontSize: tokens[`fontSizeHeading${level}`],
-      lineHeight: tokens[`lineHeightHeading${level}`],
+  HEADINGS.forEach(({ fontWeight, level, secondary, textStyle }) => {
+    const style = getIosTextStyle({
+      color: secondary ? tokens.colorSecondaryLabel : undefined,
+      textStyle,
       tokens,
     });
-  });
-  headings.h6 = getHeadingStyle({
-    fontSize: tokens.fontSize,
-    lineHeight: tokens.lineHeight,
-    tokens,
+    headings[`h${level}`] = {
+      ...style,
+      ...(fontWeight ? { fontWeight } : {}),
+      borderBottomWidth: 0,
+      marginBottom: 6,
+      marginTop: level <= 2 ? 20 : 14,
+      paddingBottom: 0,
+    };
   });
   const codeFont = {
-    color: tokens.colorText,
+    color: tokens.colorLabel,
     fontFamily: monospace,
-    fontSize: tokens.fontSize * 0.85,
     fontStyle: 'normal',
     fontWeight: 'normal',
   };
   return {
-    listStyle: { marginBottom: tokens.fontSize },
+    listStyle: { marginBottom: paragraphSpace },
     theme: {
       colors: {
-        border: tokens.colorBorderSecondary,
-        code: tokens.colorFillTertiary,
-        link: tokens.colorLink,
-        text: tokens.colorText,
+        border: tokens.colorSeparator,
+        code: tokens.colorTertiarySystemFill,
+        link: tokens.colorTint,
+        text: tokens.colorLabel,
       },
     },
     styles: {
       ...headings,
       blockquote: {
-        borderLeftColor: tokens.colorBorder,
-        borderLeftWidth: 4,
-        marginBottom: tokens.fontSize,
+        borderLeftColor: tokens.colorOpaqueSeparator,
+        borderLeftWidth: 3,
+        marginBottom: paragraphSpace,
         opacity: 1,
-        paddingLeft: tokens.paddingSM,
+        paddingLeft: 12,
       },
       code: {
-        backgroundColor: tokens.colorFillTertiary,
-        borderRadius: tokens.borderRadius,
-        marginBottom: tokens.fontSize,
-        padding: tokens.paddingSM,
+        backgroundColor: tokens.colorTertiarySystemFill,
+        borderRadius: 10,
+        marginBottom: paragraphSpace,
+        padding: 12,
       },
-      codeText: { ...codeFont, lineHeight },
-      codespan: { ...codeFont, backgroundColor: tokens.colorFillTertiary },
+      codeText: { ...codeFont, fontSize: 14, lineHeight: 20 },
+      codespan: {
+        ...codeFont,
+        backgroundColor: tokens.colorTertiarySystemFill,
+        fontSize: 15,
+      },
       em: { ...text, fontStyle: 'italic' },
-      hr: { borderBottomColor: tokens.colorSplit, marginVertical: tokens.margin },
+      hr: {
+        borderBottomColor: tokens.colorSeparator,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        marginVertical: 16,
+      },
       li: text,
-      link: { ...text, color: tokens.colorLink, fontStyle: 'normal' },
-      paragraph: { marginBottom: tokens.fontSize, paddingVertical: 0 },
+      link: { ...text, color: tokens.colorTint, fontStyle: 'normal' },
+      paragraph: { marginBottom: paragraphSpace, paddingVertical: 0 },
       strikethrough: { ...text, textDecorationLine: 'line-through' },
-      strong: { ...text, fontWeight: String(tokens.fontWeightStrong) },
-      table: { borderColor: tokens.colorBorderSecondary, marginBottom: tokens.fontSize },
-      tableCell: { paddingHorizontal: tokens.paddingSM, paddingVertical: tokens.paddingXS },
+      strong: { ...text, fontWeight: '600' },
+      table: {
+        borderColor: tokens.colorSeparator,
+        borderWidth: StyleSheet.hairlineWidth,
+        marginBottom: paragraphSpace,
+      },
+      tableCell: { paddingHorizontal: 10, paddingVertical: 8 },
       text,
     },
   };

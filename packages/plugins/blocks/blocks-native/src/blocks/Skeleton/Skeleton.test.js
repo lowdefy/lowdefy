@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import { page, renderPage, screen, styleOf, theme } from '../../test/renderPage.js';
+import { ios, page, renderPage, screen, styleOf, theme } from '../../test/renderPage.js';
 
-test('a Skeleton is a pulsing placeholder of the given size', async () => {
+test('a Skeleton is a shimmering placeholder of the given size', async () => {
   await renderPage({
     pageConfig: page([
       { id: 'bar', type: 'Skeleton', properties: { height: '20px', width: '50%' } },
@@ -24,8 +24,8 @@ test('a Skeleton is a pulsing placeholder of the given size', async () => {
   });
   const shape = await screen.findByTestId('bar_skeleton');
   expect(styleOf(shape)).toMatchObject({
-    backgroundColor: theme.light.colorFillContent,
-    borderRadius: theme.light.borderRadiusSM,
+    backgroundColor: ios.light.colorTertiarySystemFill,
+    borderRadius: 4,
     height: 20,
     width: '50%',
   });
@@ -59,7 +59,21 @@ test('a Skeleton takes the dark fill colour in dark mode, and is not drawn when 
     ]),
   });
   expect(styleOf(await screen.findByTestId('bar_skeleton')).backgroundColor).toBe(
-    theme.dark.colorFillContent
+    ios.dark.colorTertiarySystemFill
   );
   expect(screen.queryByTestId('hidden')).toBeNull();
+});
+
+test('a Skeleton with count draws loading rows of an avatar and its lines', async () => {
+  await renderPage({
+    pageConfig: page([
+      { id: 'rows', type: 'Skeleton', properties: { count: 2 } },
+      { id: 'lines', type: 'Skeleton', properties: { avatar: false, rows: 3 } },
+    ]),
+  });
+  await screen.findByTestId('rows_row_1');
+  // Two rows of an avatar and two lines; three rows (the default count) of three lines.
+  expect(screen.queryByTestId('rows_row_2')).toBeNull();
+  expect(screen.getByTestId('lines_row_2')).toBeTruthy();
+  expect(screen.getAllByRole('progressbar')).toHaveLength(2 * 3 + 3 * 3);
 });

@@ -29,10 +29,10 @@ import {
 
 export default {
   category: 'input',
-  icons: [],
+  icons: ['ArrowUp'],
   valueType: 'string',
   cssKeys: {
-    element: 'The TextArea box.',
+    element: 'The TextArea box (the composer field with `variant: composer`).',
     label: 'The TextArea label.',
     extra: 'The TextArea extra content.',
     feedback: 'The TextArea validation feedback.',
@@ -47,6 +47,11 @@ export default {
     onFocus: 'Trigger actions when the text area gets focus.',
     onPressEnter:
       'Never fires on mobile: the return key adds a new line, as it does in a web text area.',
+    onSend: {
+      description:
+        'Mobile only. With `variant: composer`, the block shows a send button that triggers these actions with the text; the field clears when they succeed.',
+      event: { value: 'The text sent.' },
+    },
   },
   properties: {
     type: 'object',
@@ -79,7 +84,11 @@ export default {
       size: sizeSmallMiddleLarge,
       theme,
       title: inputTitle,
-      variant,
+      variant: {
+        ...variant,
+        enum: [...variant.enum, 'composer'],
+        description: `${variant.description} \`composer\` (mobile only) is a message composer: a rounded field that grows from one line to six, with a send button when the block has onSend.`,
+      },
     },
   },
 };

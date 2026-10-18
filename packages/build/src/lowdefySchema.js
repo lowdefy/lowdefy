@@ -3803,6 +3803,14 @@ export default {
             type: 'App "mobile.pages" should be an array.',
           },
         },
+        events: {
+          type: 'object',
+          description:
+            'App events a native shell runs (onInit, onInitAsync), in place of the root "events", which stay web-only. Each action type must have a native version.',
+          errorMessage: {
+            type: 'App "mobile.events" should be an object.',
+          },
+        },
         shells: {
           type: 'array',
           description:

@@ -16,18 +16,19 @@
 
 import icon from '../../schemas/icon.js';
 
-// Empty has no web block of its name: it is antd's Empty, for a list or screen with nothing to
-// show. A page that uses it is mobile only.
+// Empty has no web block of its name: it is iOS's ContentUnavailableView (antd's Empty on the
+// web), for a list or screen with nothing to show. A page that uses it is mobile only.
 export default {
   category: 'container',
-  icons: [],
+  icons: ['Inbox'],
   valueType: null,
   slots: {
     footer: 'Blocks under the description, such as a button that creates the first item.',
   },
   cssKeys: {
     element: 'The Empty element.',
-    image: 'The image above the description.',
+    image: 'The box around the icon.',
+    title: 'The title text.',
     description: 'The description text.',
     footer: 'The footer under the description.',
   },
@@ -37,20 +38,24 @@ export default {
     properties: {
       description: {
         type: 'string',
-        default: 'No data',
-        description: 'Text under the image. Set to an empty string to show the image alone.',
+        description:
+          'One line of text under the title. Without a title it defaults to "No data"; set it to an empty string to show the icon alone.',
       },
       icon: {
         ...icon,
         description:
-          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to show in place of the image.',
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `CircleCheck`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block, drawn large above the title. Defaults to `Inbox`.',
       },
       image: {
         type: 'string',
         enum: ['default', 'simple'],
         default: 'default',
         description:
-          'The empty tray image: `default` for a screen or card, `simple` (smaller) for inside a list or form.',
+          'The size: `default` for a screen, `simple` (a smaller icon and text) for inside a list or card.',
+      },
+      title: {
+        type: 'string',
+        description: 'The title, such as "You\'re all caught up".',
       },
     },
   },

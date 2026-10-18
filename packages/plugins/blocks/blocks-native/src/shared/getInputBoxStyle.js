@@ -14,71 +14,79 @@
   limitations under the License.
 */
 
+import { StyleSheet } from 'react-native';
+
 import getControlSize from './getControlSize.js';
 
-function getBorderColor({ status, tokens }) {
+function getStatusColor({ status, tokens }) {
   if (status === 'error') return tokens.colorError;
   if (status === 'warning') return tokens.colorWarning;
-  return tokens.colorBorder;
+  return null;
 }
 
-function getVariantStyle({ borderColor, disabled, tokens, variant }) {
-  const background = disabled ? tokens.colorBgContainerDisabled : tokens.colorBgContainer;
+// The default (and `filled`) field is the iOS filled field, a grey fill that reads on a cell and
+// on the grouped background in both modes. `outlined` is a hairline box, `borderless` the bare
+// text, `underlined` a hairline under the text. A failed validation outlines the field.
+function getVariantStyle({ statusColor, tokens, variant }) {
   switch (variant) {
-    case 'filled':
+    case 'outlined':
       return {
-        backgroundColor: disabled ? tokens.colorBgContainerDisabled : tokens.colorFillTertiary,
-        borderColor: borderColor === tokens.colorBorder ? 'transparent' : borderColor,
-        borderWidth: tokens.lineWidth,
+        backgroundColor: 'transparent',
+        borderColor: statusColor ?? tokens.colorOpaqueSeparator,
+        borderWidth: statusColor === null ? StyleSheet.hairlineWidth : tokens.lineWidth,
       };
     case 'borderless':
       return { backgroundColor: 'transparent', borderWidth: 0 };
     case 'underlined':
       return {
         backgroundColor: 'transparent',
-        borderBottomWidth: tokens.lineWidth,
-        borderColor,
+        borderBottomWidth: statusColor === null ? StyleSheet.hairlineWidth : tokens.lineWidth,
+        borderColor: statusColor ?? tokens.colorSeparator,
         borderRadius: 0,
+        paddingHorizontal: 0,
       };
     default:
-      return { backgroundColor: background, borderColor, borderWidth: tokens.lineWidth };
+      return {
+        backgroundColor: tokens.colorTertiarySystemFill,
+        borderColor: statusColor ?? 'transparent',
+        borderWidth: statusColor === null ? 0 : tokens.lineWidth,
+      };
   }
 }
 
 /**
  * The box an input draws its value in (TextInput, TextArea, NumberInput, Selector, DateSelector):
- * a row of the control's height, bordered as its `variant` asks and coloured by its validation
- * status, as antd colours an input with `status`.
+ * a row of the control's height in the iOS field style its `variant` asks for, outlined in the
+ * validation status colour, as antd colours an input with `status`.
  *
  * @param {Object} params
  * @param {boolean} params.disabled
  * @param {Object} params.properties The block's properties (`size`, `variant`, `bordered`).
  * @param {string|null} [params.status] The validation status.
- * @param {Object} params.tokens The block's antd tokens.
+ * @param {Object} params.tokens The block's theme tokens.
  * @returns {{ box: Object, text: Object }} The box style and the style of the text inside it.
  */
 function getInputBoxStyle({ disabled, properties, status, tokens }) {
-  const { height, fontSize, paddingHorizontal } = getControlSize({
+  const { borderRadius, fontSize, height, paddingHorizontal } = getControlSize({
     size: properties.size,
-    tokens,
   });
   const variant = properties.bordered === false ? 'borderless' : properties.variant;
   return {
     box: {
       alignItems: 'center',
-      borderRadius: tokens.borderRadius,
+      borderRadius,
       flexDirection: 'row',
       minHeight: height,
       paddingHorizontal,
       ...getVariantStyle({
-        borderColor: getBorderColor({ status, tokens }),
-        disabled,
+        statusColor: getStatusColor({ status, tokens }),
         tokens,
         variant,
       }),
+      opacity: disabled ? 0.6 : 1,
     },
     text: {
-      color: disabled ? tokens.colorTextDisabled : tokens.colorText,
+      color: disabled ? tokens.colorSecondaryLabel : tokens.colorLabel,
       fontSize,
     },
   };

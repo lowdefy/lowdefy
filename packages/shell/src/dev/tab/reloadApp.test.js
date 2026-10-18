@@ -23,6 +23,9 @@ import renderPageScreen from '../../test/renderPageScreen.js';
 import { createRoot } from '../../test/fixtures.js';
 
 jest.mock('expo-router', () => ({
+  DarkTheme: { fonts: {} },
+  DefaultTheme: { fonts: {} },
+  ThemeProvider: ({ children }) => children,
   router: { back: jest.fn(), canGoBack: () => false },
   useFocusEffect: (effect) => {
     const { useEffect: useReactEffect } = jest.requireActual('react');

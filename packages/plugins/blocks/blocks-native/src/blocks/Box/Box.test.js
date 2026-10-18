@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { page, press, record, renderPage, screen, styleOf, theme } from '../../test/renderPage.js';
+import { ios, page, press, record, renderPage, screen, styleOf } from '../../test/renderPage.js';
 
 test('a Box draws its content slot, with the block id as its testID', async () => {
   await renderPage({
@@ -34,12 +34,12 @@ test('a Box draws its content slot, with the block id as its testID', async () =
 
 test('a Box content string is drawn in the theme text colour, and in dark mode', async () => {
   await renderPage({ pageConfig: page([{ id: 'a', type: 'Box', properties: { content: 'Hi' } }]) });
-  expect(styleOf(await screen.findByText('Hi')).color).toBe(theme.light.colorText);
+  expect(styleOf(await screen.findByText('Hi')).color).toBe(ios.light.colorLabel);
   await renderPage({
     darkMode: 'dark',
     pageConfig: page([{ id: 'a', type: 'Box', properties: { content: 'Hi' } }]),
   });
-  expect(styleOf(await screen.findByText('Hi')).color).toBe(theme.dark.colorText);
+  expect(styleOf(await screen.findByText('Hi')).color).toBe(ios.dark.colorLabel);
 });
 
 test('a Box with onClick is a button that fires onClick', async () => {

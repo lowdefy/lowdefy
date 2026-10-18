@@ -70,7 +70,7 @@ function useSearchAutoFocus({ focused }) {
  * @param {string} [props.query] The route's query string, without "?".
  */
 function PageScreen({ path, query = '' }) {
-  const { host, locale, session, shell } = useShell();
+  const { auth, host, locale, session, shell } = useShell();
   const state = useSessionState();
   // A locale chosen with SetLocale renders every screen again, as the web app re-renders.
   useSyncExternalStore(locale.subscribe, locale.getVersion);
@@ -142,9 +142,10 @@ function PageScreen({ path, query = '' }) {
   locale.apply();
   // The page's icons join the icon map the Icon renderer reads, which every page of the app shares.
   Object.assign(types.icons, view.page.pageConfig._icons);
+  // The core's auth actions call the shell's bearer client (createCoreAuth).
   const core = {
     apiBase: session.apiBase,
-    auth: { authConfig: {}, user: state.user },
+    auth: { ...auth.coreAuth, user: state.user },
     basePath: '',
     lowdefy: state.lowdefy,
   };

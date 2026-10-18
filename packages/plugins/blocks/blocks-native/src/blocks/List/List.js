@@ -19,21 +19,39 @@ import { FlatList, SectionList, Text, View } from 'react-native';
 import { type } from '@lowdefy/helpers';
 
 import getSections from './getSections.js';
+import getSemanticColors from '../../shared/getSemanticColors.js';
+import iosTextStyles from '../../shared/iosTextStyles.js';
+import ListRow, { GROUPED_INSET } from './ListRow.js';
 import meta from './meta.js';
-import SwipeableRow from './SwipeableRow.js';
-import useBlockTokens from '../../shared/useBlockTokens.js';
+import SectionHeader from './SectionHeader.js';
+import SwipeableRow from '../../shared/SwipeableRow.js';
+import useComponentTokens from '../../useComponentTokens.js';
+
+// The List's own swipe actions fire a List event, named by `event`, with the item index.
+function toRowAction(action) {
+  return {
+    ...action,
+    id: action.event,
+    tone: action.tone ?? (action.danger === true ? 'danger' : undefined),
+  };
+}
 
 /**
  * The web List's model on a phone: an array in state at the block id, the `content` slot drawn
  * once per item, and the pushItem, unshiftItem, removeItem, moveItemUp and moveItemDown methods.
- * Items render in a virtualised FlatList, or a SectionList with sticky headers when `sectionKey`
- * is set.
+ *
+ * It draws as iOS lists do. `insetGrouped` (the default) draws each section as a rounded group
+ * of cells inset from the screen edges on the grouped background; `plain` draws edge to edge
+ * rows with sticky section headers. Sections come from `header` (one section) or from
+ * `sectionKey` and `sections` (one per key). A row's separator is inset to a ListItem's text.
  *
  * The List lays out inside the page's scroll view, so it scrolls itself only with `scroll: true`
- * (give it a height); pull to refresh (`onRefresh`) needs a List that scrolls itself.
+ * (give it a height); pull to refresh (`onRefresh`) and sticky headers need a List that scrolls
+ * itself.
  */
-function List({ blockId, events, list, methods, properties, styles, value }) {
-  const { tokens } = useBlockTokens({ properties });
+function List({ blockId, components, events, list, methods, properties, styles, value }) {
+  const { tokens } = useComponentTokens(properties.theme);
+  const colors = getSemanticColors({ tokens });
   useEffect(() => {
     methods.registerMethod('pushItem', methods.pushItem);
     methods.registerMethod('unshiftItem', methods.unshiftItem);
@@ -43,8 +61,13 @@ function List({ blockId, events, list, methods, properties, styles, value }) {
     // Registered once, as the web List does.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const swipeActions = properties.swipeActions ?? [];
-  const renderItem = ({ item: index }) => {
+  const direction = properties.direction ?? 'column';
+  const horizontal = direction.startsWith('row');
+  const grouped = !horizontal && (properties.variant ?? 'insetGrouped') === 'insetGrouped';
+  const background = grouped ? colors.cell : colors.background;
+  const swipeActions = (properties.swipeActions ?? []).map(toRowAction);
+
+  function renderContent(index) {
     const itemTestID = `${blockId}_${index}`;
     const content = <View testID={itemTestID}>{list[index].content()}</View>;
     if (swipeActions.length === 0) {
@@ -52,57 +75,97 @@ function List({ blockId, events, list, methods, properties, styles, value }) {
     }
     return (
       <SwipeableRow
-        actions={swipeActions}
+        background={background}
+        Icon={components.Icon}
         onAction={(action) => methods.triggerEvent({ name: action.event, event: { index } })}
         testID={itemTestID}
         tokens={tokens}
+        trailing={swipeActions}
       >
         {content}
       </SwipeableRow>
     );
-  };
-  const direction = properties.direction ?? 'column';
+  }
+
   const listProps = {
-    horizontal: direction.startsWith('row'),
+    horizontal,
     inverted: direction.endsWith('-reverse'),
     keyExtractor: (index) => `${index}`,
     onRefresh: type.isNone(events.onRefresh)
       ? undefined
       : () => methods.triggerEvent({ name: 'onRefresh' }),
     refreshing: events.onRefresh?.loading === true,
-    renderItem,
     scrollEnabled: properties.scroll === true,
-    style: styles.element,
     testID: `${blockId}_list`,
   };
-  if (type.isString(properties.sectionKey)) {
+  if (horizontal) {
     return (
-      <SectionList
+      <FlatList
         {...listProps}
-        renderSectionHeader={({ section }) => (
-          <Text
-            accessibilityRole="header"
-            style={[
-              {
-                backgroundColor: tokens.colorBgLayout,
-                color: tokens.colorTextSecondary,
-                fontSize: tokens.fontSize,
-                fontWeight: `${tokens.fontWeightStrong}`,
-                paddingHorizontal: tokens.padding,
-                paddingVertical: tokens.paddingXXS,
-              },
-              styles.sectionHeader,
-            ]}
-          >
-            {section.title}
-          </Text>
-        )}
-        sections={getSections({ count: list.length, sectionKey: properties.sectionKey, value })}
-        stickySectionHeadersEnabled
+        data={list.map((item, index) => index)}
+        renderItem={({ item: index }) => renderContent(index)}
+        style={styles.element}
       />
     );
   }
-  return <FlatList {...listProps} data={list.map((item, index) => index)} />;
+  const sections = getSections({
+    count: list.length,
+    header: properties.header,
+    sectionKey: properties.sectionKey,
+    sections: properties.sections,
+    showCount: properties.showCount,
+    value,
+  });
+  const headerVariant = properties.headerVariant ?? (grouped ? 'footnote' : 'headline');
+  return (
+    <SectionList
+      {...listProps}
+      contentContainerStyle={grouped ? { paddingBottom: GROUPED_INSET } : undefined}
+      renderItem={({ item: index, index: position, section }) => (
+        <ListRow
+          background={background}
+          first={position === 0}
+          grouped={grouped}
+          last={position === section.data.length - 1}
+          separatorColor={colors.separator}
+          style={styles.cell}
+        >
+          {renderContent(index)}
+        </ListRow>
+      )}
+      renderSectionFooter={({ section }) =>
+        type.isString(section.footer) ? (
+          <Text
+            style={[
+              iosTextStyles.footnote,
+              {
+                color: colors.secondaryLabel,
+                paddingHorizontal: grouped ? GROUPED_INSET * 2 : GROUPED_INSET,
+                paddingTop: 7,
+              },
+              styles.sectionFooter,
+            ]}
+          >
+            {section.footer}
+          </Text>
+        ) : null
+      }
+      renderSectionHeader={({ section }) => (
+        <SectionHeader
+          colors={colors}
+          first={section === sections[0]}
+          grouped={grouped}
+          headerVariant={headerVariant}
+          section={section}
+          style={styles.sectionHeader}
+          tokens={tokens}
+        />
+      )}
+      sections={sections}
+      stickySectionHeadersEnabled={properties.stickyHeaders ?? !grouped}
+      style={[grouped ? { backgroundColor: colors.groupedBackground } : null, styles.element]}
+    />
+  );
 }
 
 List.meta = meta;

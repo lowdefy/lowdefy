@@ -25,7 +25,7 @@ import { Pressable, Text } from 'react-native';
  * @param {string} props.label '+' or '−'.
  * @param {() => void} props.onPress
  * @param {string} props.testID
- * @param {Object} props.tokens The block's antd tokens.
+ * @param {Object} props.tokens The block's theme tokens.
  */
 function StepButton({ disabled, label, onPress, testID, tokens }) {
   return (
@@ -33,15 +33,16 @@ function StepButton({ disabled, label, onPress, testID, tokens }) {
       accessibilityLabel={label === '+' ? 'Increase' : 'Decrease'}
       accessibilityRole="button"
       disabled={disabled}
-      hitSlop={tokens.paddingXXS}
+      hitSlop={6}
       onPress={onPress}
-      style={{ paddingHorizontal: tokens.paddingXS }}
+      style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1, paddingHorizontal: 8 })}
       testID={testID}
     >
       <Text
         style={{
-          color: disabled ? tokens.colorTextDisabled : tokens.colorPrimary,
-          fontSize: tokens.fontSizeLG,
+          color: disabled ? tokens.colorTertiaryLabel : tokens.colorTint,
+          fontSize: 22,
+          fontWeight: '500',
         }}
       >
         {label}
