@@ -16,8 +16,13 @@
 
 import { MarkedTokenizer } from 'react-native-marked';
 
-// react-native-marked draws no checkbox token, so a GFM task list item would lose its box. The
-// box is put in front of the item's text instead, as a ballot box character.
+// The text a task item's box stands as: MarkdownRenderer draws it as a TaskMark, which has the
+// item draw the box where its marker goes.
+export const TASK_OPEN = '☐';
+export const TASK_DONE = '☑';
+
+// react-native-marked draws no checkbox token, so a GFM task list item would lose its box. A mark
+// token is put in front of the item's text instead.
 class MarkdownTokenizer extends MarkedTokenizer {
   list(src) {
     const token = super.list(src);
@@ -28,9 +33,9 @@ class MarkdownTokenizer extends MarkedTokenizer {
       if (!item.task) {
         return;
       }
-      const box = item.checked ? '☑ ' : '☐ ';
+      const mark = item.checked ? TASK_DONE : TASK_OPEN;
       const text = item.tokens.find((child) => child.type === 'text' || child.type === 'paragraph');
-      text?.tokens.unshift({ type: 'text', raw: box, text: box });
+      text?.tokens.unshift({ type: 'text', raw: mark, text: mark });
     });
     return token;
   }
