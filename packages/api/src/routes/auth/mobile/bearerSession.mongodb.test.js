@@ -467,12 +467,22 @@ function mobileSignInRequest({
   state = 'shell-state-1',
   codeChallenge,
   codeChallengeMethod = 'S256',
+  platform = 'ios',
   cookie,
+  method = 'GET',
+  body,
+  headers: extraHeaders = {},
 } = {}) {
   const headers = new Headers();
   if (cookie) {
     headers.set('cookie', cookie);
   }
+  if (method === 'POST') {
+    headers.set('host', new URL(ORIGIN).host);
+    headers.set('origin', ORIGIN);
+    headers.set('content-type', 'application/x-www-form-urlencoded');
+  }
+  Object.entries(extraHeaders).forEach(([name, value]) => headers.set(name, value));
   const url = new URL(`${ORIGIN}/auth/mobile`);
   if (shell !== null) {
     url.searchParams.set('shell', shell);
@@ -486,23 +496,62 @@ function mobileSignInRequest({
   if (codeChallengeMethod !== null) {
     url.searchParams.set('code_challenge_method', codeChallengeMethod);
   }
-  return new Request(url, { headers });
+  if (platform !== null) {
+    url.searchParams.set('platform', platform);
+  }
+  return new Request(url, { method, headers, body });
 }
 
-// Signs a browser in and has the mobile sign-in page hand its session to the
-// shell: the one-time token from the redirect, and the verifier for it.
-async function handOffToShell({ auth, authJson, email }) {
-  const cookie = cookieOf(await signInByCode({ auth, email, request: browserRequest }));
-  const { codeVerifier, codeChallenge } = createPkce();
-  const redirect = await handleMobileSignIn({
+function joinCookies(...cookies) {
+  return cookies.filter((each) => each).join('; ');
+}
+
+// The confirmation page a signed-in browser is shown, and its CSRF token.
+async function showConfirmation({ auth, authJson, ...options }) {
+  const response = await handleMobileSignIn({
     auth,
     authJson,
     basePath: '',
-    request: mobileSignInRequest({ cookie, codeChallenge }),
+    request: mobileSignInRequest(options),
   });
-  expect(redirect.status).toBe(302);
+  const html = await response.clone().text();
+  const csrfToken = html.match(/name="csrf_token" value="([^"]+)"/)?.[1];
+  return { response, html, csrfToken };
+}
+
+// The confirmation page's Continue (or Cancel) post.
+function confirm({ auth, authJson, csrfToken, decision = 'continue', ...options }) {
+  const body = new URLSearchParams({ decision });
+  if (csrfToken !== undefined) {
+    body.set('csrf_token', csrfToken);
+  }
+  return handleMobileSignIn({
+    auth,
+    authJson,
+    basePath: '',
+    request: mobileSignInRequest({ ...options, method: 'POST', body: body.toString() }),
+  });
+}
+
+async function countOneTimeTokens({ adapter }) {
+  const stored = await adapter.findMany({ model: 'verification' });
+  return stored.filter((each) => each.identifier.startsWith('one-time-token')).length;
+}
+
+async function findSessions({ adapter, userId }) {
+  return adapter.findMany({ model: 'session', where: [{ field: 'userId', value: userId }] });
+}
+
+// Signs a browser in, confirms on the mobile sign-in page and returns the
+// one-time token from the redirect, and the verifier for it.
+async function handOffToShell({ auth, authJson, email, platform = 'ios' }) {
+  const cookie = cookieOf(await signInByCode({ auth, email, request: browserRequest }));
+  const { codeVerifier, codeChallenge } = createPkce();
+  const { csrfToken } = await showConfirmation({ auth, authJson, cookie, codeChallenge, platform });
+  const redirect = await confirm({ auth, authJson, cookie, codeChallenge, csrfToken, platform });
+  expect(redirect.status).toBe(303);
   const oneTimeToken = new URL(redirect.headers.get('location')).searchParams.get('token');
-  return { codeVerifier, oneTimeToken };
+  return { codeVerifier, cookie, oneTimeToken, redirect };
 }
 
 // The shell's exchange of the one-time token for the session token.
@@ -514,21 +563,53 @@ function exchange({ auth, token, codeVerifier }) {
   return auth.handler(nativeRequest({ path: '/one-time-token/verify', body }));
 }
 
-test('the mobile sign-in page hands a signed-in browser session to the shell scheme as a one-time token', async () => {
+test('the mobile sign-in page asks a signed-in browser to confirm, and a GET never mints a token', async () => {
   const { adapter, auth, authJson, internalAdapter } = await setup();
-  const { user } = await createMember({ adapter, internalAdapter, email: 'jo@example.com' });
+  const { user } = await createMember({ adapter, internalAdapter, email: 'gus@example.com' });
+  const cookie = cookieOf(
+    await signInByCode({ auth, email: 'gus@example.com', request: browserRequest })
+  );
+  const sessionsBefore = await findSessions({ adapter, userId: user.id });
+
+  const { response, html, csrfToken } = await showConfirmation({ auth, authJson, cookie });
+  expect(response.status).toBe(200);
+  expect(response.headers.get('cache-control')).toBe('no-store');
+  expect(response.headers.get('content-security-policy')).toContain("frame-ancestors 'none'");
+  expect(html).toContain('Sign in to Test App on this device?');
+  expect(html).toContain('The field app is asking to sign in as gus@example.com.');
+  expect(typeof csrfToken).toBe('string');
+  await showConfirmation({ auth, authJson, cookie });
+
+  expect(await countOneTimeTokens({ adapter })).toBe(0);
+  expect(await findSessions({ adapter, userId: user.id })).toEqual(sessionsBefore);
+});
+
+test('confirming creates a new phone session with the browser organization and hands it to the shell scheme as a one-time token', async () => {
+  const { adapter, auth, authJson, internalAdapter } = await setup();
+  const { user, organizationIds } = await createMember({
+    adapter,
+    internalAdapter,
+    email: 'jo@example.com',
+    orgNames: ['First', 'Second'],
+  });
   const cookie = cookieOf(
     await signInByCode({ auth, email: 'jo@example.com', request: browserRequest })
   );
+  // The person switched to their second organization in the browser.
+  const switched = await auth.handler(
+    browserRequest({
+      path: '/organization/set-active',
+      body: { organizationId: organizationIds[1] },
+      cookie,
+    })
+  );
+  expect(switched.status).toBe(200);
+  const [browserBefore] = await findSessions({ adapter, userId: user.id });
   const { codeVerifier, codeChallenge } = createPkce();
 
-  const redirect = await handleMobileSignIn({
-    auth,
-    authJson,
-    basePath: '',
-    request: mobileSignInRequest({ cookie, codeChallenge }),
-  });
-  expect(redirect.status).toBe(302);
+  const { csrfToken } = await showConfirmation({ auth, authJson, cookie, codeChallenge });
+  const redirect = await confirm({ auth, authJson, cookie, codeChallenge, csrfToken });
+  expect(redirect.status).toBe(303);
   expect(redirect.headers.get('cache-control')).toBe('no-store');
   const location = new URL(redirect.headers.get('location'));
   expect(location.protocol).toBe('com.example.field:');
@@ -553,14 +634,166 @@ test('the mobile sign-in page hands a signed-in browser session to the shell sch
   const verified = await exchange({ auth, token: oneTimeToken, codeVerifier });
   expect(verified.status).toBe(200);
   const token = verified.headers.get('set-auth-token');
-  expect((await resolveCaller({ auth, token })).user).toMatchObject({ id: user.id });
+  const phone = await resolveCaller({ auth, token });
+  expect(phone.user).toMatchObject({ id: user.id, organization_id: organizationIds[1] });
+  // A new session, not the browser's.
+  expect(phone.authSession.id).not.toBe(browserBefore.id);
+  const sessions = await findSessions({ adapter, userId: user.id });
+  expect(sessions).toHaveLength(2);
+  // The browser's session is untouched: not marked, not extended.
+  const browserAfter = sessions.find((session) => session.id === browserBefore.id);
+  expect(browserAfter).toEqual(browserBefore);
   // Nothing is left behind.
-  const left = await adapter.findMany({ model: 'verification' });
-  expect(left.filter((each) => each.identifier.startsWith('one-time-token'))).toEqual([]);
+  expect(await countOneTimeTokens({ adapter })).toBe(0);
 
   // Single use.
   const again = await exchange({ auth, token: oneTimeToken, codeVerifier });
   expect(again.status).toBe(400);
+
+  // Signing out on the phone leaves the browser signed in.
+  const signedOut = await auth.handler(nativeRequest({ path: '/sign-out', token }));
+  expect(signedOut.status).toBe(200);
+  expect((await resolveCaller({ auth, token })).user).toBeNull();
+  expect((await resolveCaller({ auth, cookie })).user).toMatchObject({ id: user.id });
+});
+
+test('a confirmation without the page CSRF token or from another origin is refused and mints nothing', async () => {
+  const { adapter, auth, authJson, internalAdapter } = await setup();
+  const { user } = await createMember({ adapter, internalAdapter, email: 'hal@example.com' });
+  const cookie = cookieOf(
+    await signInByCode({ auth, email: 'hal@example.com', request: browserRequest })
+  );
+  const { codeChallenge } = createPkce();
+  const { csrfToken } = await showConfirmation({ auth, authJson, cookie, codeChallenge });
+  const otherCookie = cookieOf(
+    await signInByCode({ auth, email: 'hal@example.com', request: browserRequest })
+  );
+  const { csrfToken: otherSessionCsrfToken } = await showConfirmation({
+    auth,
+    authJson,
+    cookie: otherCookie,
+    codeChallenge,
+  });
+  const { csrfToken: otherSignInCsrfToken } = await showConfirmation({
+    auth,
+    authJson,
+    cookie,
+  });
+  const sessionsBefore = await findSessions({ adapter, userId: user.id });
+
+  async function statusFor(options) {
+    const response = await confirm({ auth, authJson, cookie, codeChallenge, ...options });
+    return response.status;
+  }
+  expect(await statusFor({})).toBe(403);
+  expect(await statusFor({ csrfToken: 'forged' })).toBe(403);
+  expect(await statusFor({ csrfToken: otherSessionCsrfToken })).toBe(403);
+  expect(await statusFor({ csrfToken: otherSignInCsrfToken })).toBe(403);
+  expect(await statusFor({ csrfToken, headers: { origin: 'https://evil.example.com' } })).toBe(403);
+  expect(await statusFor({ csrfToken, headers: { 'sec-fetch-site': 'cross-site' } })).toBe(403);
+  expect(await statusFor({ csrfToken, cookie: undefined })).toBe(403);
+
+  expect(await countOneTimeTokens({ adapter })).toBe(0);
+  expect(await findSessions({ adapter, userId: user.id })).toEqual(sessionsBefore);
+});
+
+test('a browser session created inside the sheet sign-in is ended once the phone has its own', async () => {
+  const { adapter, auth, authJson, internalAdapter } = await setup();
+  const { user } = await createMember({ adapter, internalAdapter, email: 'ivy@example.com' });
+  const { codeVerifier, codeChallenge } = createPkce();
+
+  // Signed out: sent to sign in, with the time noted.
+  const signInRedirect = await handleMobileSignIn({
+    auth,
+    authJson,
+    basePath: '',
+    request: mobileSignInRequest({ codeChallenge }),
+  });
+  expect(signInRedirect.status).toBe(302);
+  const startedCookie = cookieOf(signInRedirect);
+  expect(startedCookie).toMatch(/^lowdefy_mobile_sign_in_started=\d+$/);
+
+  // Signs in in the sheet, and comes back.
+  const sessionCookie = cookieOf(
+    await signInByCode({ auth, email: 'ivy@example.com', request: browserRequest })
+  );
+  const cookie = joinCookies(sessionCookie, startedCookie);
+  const { csrfToken } = await showConfirmation({ auth, authJson, cookie, codeChallenge });
+  const redirect = await confirm({ auth, authJson, cookie, codeChallenge, csrfToken });
+  expect(redirect.status).toBe(303);
+  expect(redirect.headers.getSetCookie()[0]).toMatch(
+    /^lowdefy_mobile_sign_in_started=; Path=\/auth\/mobile; Max-Age=0/
+  );
+
+  // The sheet's session is gone; the phone's works.
+  expect((await resolveCaller({ auth, cookie: sessionCookie })).user).toBeNull();
+  const oneTimeToken = new URL(redirect.headers.get('location')).searchParams.get('token');
+  const verified = await exchange({ auth, token: oneTimeToken, codeVerifier });
+  expect(verified.status).toBe(200);
+  const token = verified.headers.get('set-auth-token');
+  expect((await resolveCaller({ auth, token })).user).toMatchObject({ id: user.id });
+  expect(await findSessions({ adapter, userId: user.id })).toHaveLength(1);
+});
+
+test('an Android sign-in returns by the https app link on the app origin', async () => {
+  const mobile = {
+    shells: [{ id: 'field', scheme: 'com.example.field', androidAppLink: true }],
+    sessionExpiresIn: null,
+  };
+  const { adapter, auth, authJson, internalAdapter } = await setup({ mobile });
+  const { user } = await createMember({ adapter, internalAdapter, email: 'una@example.com' });
+  const { codeVerifier, redirect } = await handOffToShell({
+    auth,
+    authJson,
+    email: 'una@example.com',
+    platform: 'android',
+  });
+  const location = new URL(redirect.headers.get('location'));
+  expect(`${location.origin}${location.pathname}`).toBe(`${ORIGIN}/auth/mobile/callback`);
+  expect(location.searchParams.get('state')).toBe('shell-state-1');
+
+  const verified = await exchange({
+    auth,
+    token: location.searchParams.get('token'),
+    codeVerifier,
+  });
+  expect(verified.status).toBe(200);
+  const token = verified.headers.get('set-auth-token');
+  expect((await resolveCaller({ auth, token })).user).toMatchObject({ id: user.id });
+});
+
+test('an Android sign-in is refused for a shell with no app link', async () => {
+  const { adapter, auth, authJson, internalAdapter } = await setup();
+  await createMember({ adapter, internalAdapter, email: 'vic@example.com' });
+  const cookie = cookieOf(
+    await signInByCode({ auth, email: 'vic@example.com', request: browserRequest })
+  );
+  const { response } = await showConfirmation({ auth, authJson, cookie, platform: 'android' });
+  expect(response.status).toBe(400);
+});
+
+test('cancelling returns error=cancelled to the shell and creates nothing', async () => {
+  const { adapter, auth, authJson, internalAdapter } = await setup();
+  const { user } = await createMember({ adapter, internalAdapter, email: 'wes@example.com' });
+  const cookie = cookieOf(
+    await signInByCode({ auth, email: 'wes@example.com', request: browserRequest })
+  );
+  const { codeChallenge } = createPkce();
+  const { csrfToken } = await showConfirmation({ auth, authJson, cookie, codeChallenge });
+  const response = await confirm({
+    auth,
+    authJson,
+    cookie,
+    codeChallenge,
+    csrfToken,
+    decision: 'cancel',
+  });
+  expect(response.status).toBe(303);
+  expect(response.headers.get('location')).toBe(
+    'com.example.field://auth?error=cancelled&state=shell-state-1'
+  );
+  expect(await countOneTimeTokens({ adapter })).toBe(0);
+  expect(await findSessions({ adapter, userId: user.id })).toHaveLength(1);
 });
 
 test('an exchange without the code verifier is refused and burns the one-time token', async () => {
@@ -600,8 +833,7 @@ test('an exchange with the wrong code verifier is refused and burns the one-time
   expect(caught.status).toBe(400);
   expect(caught.headers.get('set-auth-token')).toBeNull();
   expect(caught.headers.getSetCookie()).toEqual([]);
-  const left = await adapter.findMany({ model: 'verification' });
-  expect(left.filter((each) => each.identifier.startsWith('one-time-token'))).toEqual([]);
+  expect(await countOneTimeTokens({ adapter })).toBe(0);
 
   // The shell's own exchange then fails closed: the person signs in again.
   const late = await exchange({ auth, token: oneTimeToken, codeVerifier });
@@ -669,12 +901,12 @@ test('the mobile sign-in page sends a signed-out person to sign in and back', as
   expect(response.status).toBe(302);
   expect(response.headers.get('location')).toBe(
     `/login?callbackUrl=${encodeURIComponent(
-      `/auth/mobile?shell=field&state=shell-state-1&code_challenge=${codeChallenge}&code_challenge_method=S256`
+      `/auth/mobile?shell=field&state=shell-state-1&code_challenge=${codeChallenge}&code_challenge_method=S256&platform=ios`
     )}`
   );
 });
 
-test('the mobile sign-in page refuses an unknown shell, a missing state and a missing or non-S256 challenge', async () => {
+test('the mobile sign-in page refuses an unknown shell, a missing state, platform, or a missing or non-S256 challenge', async () => {
   const { adapter, auth, authJson, internalAdapter } = await setup();
   await createMember({ adapter, internalAdapter, email: 'rae@example.com' });
   const cookie = cookieOf(
@@ -694,18 +926,18 @@ test('the mobile sign-in page refuses an unknown shell, a missing state and a mi
 
   expect(await statusFor({ shell: 'other' })).toBe(400);
   expect(await statusFor({ state: null })).toBe(400);
+  expect(await statusFor({ platform: null })).toBe(400);
   expect(await statusFor({ codeChallenge: null })).toBe(400);
   expect(await statusFor({ codeChallengeMethod: null })).toBe(400);
   expect(await statusFor({ codeChallenge: codeVerifier, codeChallengeMethod: 'plain' })).toBe(400);
   expect(await statusFor({ codeChallenge: `${codeChallenge}=` })).toBe(400);
   // Refused before anything was minted.
-  const stored = await adapter.findMany({ model: 'verification' });
-  expect(stored.filter((each) => each.identifier.startsWith('one-time-token'))).toEqual([]);
+  expect(await countOneTimeTokens({ adapter })).toBe(0);
 });
 
 test('phone sessions get mobile.auth.sessionExpiresIn and keep it when they slide forward', async () => {
   const mobile = {
-    shells: [{ id: 'field', scheme: 'com.example.field' }],
+    shells: [{ id: 'field', scheme: 'com.example.field', androidAppLink: false }],
     sessionExpiresIn: 30 * DAY,
   };
   const { adapter, auth, authJson, internalAdapter } = await setup({ mobile });
@@ -714,9 +946,6 @@ test('phone sessions get mobile.auth.sessionExpiresIn and keep it when they slid
   function daysLeft(session) {
     return (new Date(session.expiresAt).getTime() - Date.now()) / (DAY * 1000);
   }
-  async function findSessions() {
-    return adapter.findMany({ model: 'session', where: [{ field: 'userId', value: user.id }] });
-  }
 
   const token = (await signInByCode({ auth, email: 'max@example.com' })).headers.get(
     'set-auth-token'
@@ -724,7 +953,7 @@ test('phone sessions get mobile.auth.sessionExpiresIn and keep it when they slid
   const browserCookie = cookieOf(
     await signInByCode({ auth, email: 'max@example.com', request: browserRequest })
   );
-  let sessions = await findSessions();
+  let sessions = await findSessions({ adapter, userId: user.id });
   const phone = sessions.find((session) => session.mobile === true);
   const browser = sessions.find((session) => session.mobile !== true);
   expect(daysLeft(phone)).toBeCloseTo(30, 1);
@@ -738,21 +967,36 @@ test('phone sessions get mobile.auth.sessionExpiresIn and keep it when they slid
     update: { expiresAt: new Date(Date.now() + 5 * DAY * 1000) },
   });
   expect((await resolveCaller({ auth, token })).user).not.toBeNull();
-  sessions = await findSessions();
+  sessions = await findSessions({ adapter, userId: user.id });
   expect(daysLeft(sessions.find((session) => session.id === phone.id))).toBeCloseTo(30, 1);
 
-  // A browser session handed to a phone by the mobile sign-in page becomes a
-  // phone session.
-  await handleMobileSignIn({
+  // Confirming on the mobile sign-in page gives the phone a new phone session;
+  // the browser's stays a browser session with its own lifetime.
+  const { codeChallenge } = createPkce();
+  const { csrfToken } = await showConfirmation({
     auth,
     authJson,
-    basePath: '',
-    request: mobileSignInRequest({ cookie: browserCookie }),
+    cookie: browserCookie,
+    codeChallenge,
   });
-  sessions = await findSessions();
-  const handed = sessions.find((session) => session.id === browser.id);
-  expect(handed.mobile).toBe(true);
-  expect(daysLeft(handed)).toBeCloseTo(30, 1);
+  const redirect = await confirm({
+    auth,
+    authJson,
+    cookie: browserCookie,
+    codeChallenge,
+    csrfToken,
+  });
+  expect(redirect.status).toBe(303);
+  sessions = await findSessions({ adapter, userId: user.id });
+  expect(sessions).toHaveLength(3);
+  const sheetPhone = sessions.find(
+    (session) => session.id !== phone.id && session.id !== browser.id
+  );
+  expect(sheetPhone.mobile).toBe(true);
+  expect(daysLeft(sheetPhone)).toBeCloseTo(30, 1);
+  const browserAfter = sessions.find((session) => session.id === browser.id);
+  expect(browserAfter.mobile).not.toBe(true);
+  expect(browserAfter.expiresAt).toEqual(browser.expiresAt);
 });
 
 test('a websocket opened with a bearer acts for its session and closes once the session is deleted', async () => {

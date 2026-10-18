@@ -27,7 +27,13 @@ test('buildAuthMobile writes the shells that have a scheme and the phone session
     auth: { configured: true },
     mobile: {
       shells: [
-        { id: 'field', scheme: 'com.example.field', ios: { bundleId: 'com.example.field' } },
+        {
+          id: 'field',
+          scheme: 'com.example.field',
+          ios: { bundleId: 'com.example.field' },
+          android: { package: 'com.example.field', sha256: 'AA:BB' },
+        },
+        { id: 'iosOnly', scheme: 'com.example.ios' },
         { id: 'noScheme' },
       ],
       auth: { sessionExpiresIn: 2592000, unlock: 'biometric' },
@@ -35,7 +41,10 @@ test('buildAuthMobile writes the shells that have a scheme and the phone session
   };
   buildAuthMobile({ components });
   expect(components.auth.mobile).toEqual({
-    shells: [{ id: 'field', scheme: 'com.example.field' }],
+    shells: [
+      { id: 'field', scheme: 'com.example.field', androidAppLink: true },
+      { id: 'iosOnly', scheme: 'com.example.ios', androidAppLink: false },
+    ],
     sessionExpiresIn: 2592000,
   });
 });

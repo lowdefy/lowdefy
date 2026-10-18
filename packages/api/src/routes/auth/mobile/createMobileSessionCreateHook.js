@@ -20,8 +20,9 @@ import isNativeAuthRequest from './isNativeAuthRequest.js';
 // session.create.before, bound when mobile.auth.sessionExpiresIn is set. A
 // session created by a phone signing in natively (the email-code screen) is
 // marked mobile and given the phone lifetime. A session created in the sign-in
-// sheet is a browser's until the mobile sign-in page hands it to a shell,
-// which marks it then (handleMobileSignIn).
+// sheet is the sheet browser's and stays one: the phone gets a new session of
+// its own once the person confirms, marked when it is created
+// (createPhoneSession).
 function createMobileSessionCreateHook({ sessionExpiresIn }) {
   return async function mobileSessionCreate(session, ctx) {
     if (!isNativeAuthRequest({ request: ctx?.request })) {
