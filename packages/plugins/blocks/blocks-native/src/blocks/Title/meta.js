@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import textStyle from '../../schemas/textStyle.js';
+
 export default {
   category: 'display',
   icons: [],
@@ -182,7 +184,8 @@ export default {
         type: 'number',
         default: 1,
         enum: [1, 2, 3, 4, 5],
-        description: 'Set title type. Matches with h1, h2, h3 and h4.',
+        description:
+          'Set title type. Matches with h1, h2, h3 and h4. On mobile the levels take the iOS text styles largeTitle (1), title1 (2), title2 (3), title3 (4) and headline (5).',
       },
       mark: {
         type: 'boolean',
@@ -199,6 +202,10 @@ export default {
         type: 'boolean',
         default: false,
         description: 'Apply underline style.',
+      },
+      textStyle: {
+        ...textStyle,
+        description: `${textStyle.description} Defaults to the style of the level.`,
       },
       theme: {
         type: 'object',

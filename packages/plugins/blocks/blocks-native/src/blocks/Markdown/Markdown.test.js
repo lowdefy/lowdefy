@@ -17,7 +17,16 @@
 import { jest } from '@jest/globals';
 import { Linking } from 'react-native';
 
-import { page, press, record, renderPage, screen, styleOf, theme } from '../../test/renderPage.js';
+import {
+  ios,
+  page,
+  press,
+  record,
+  renderPage,
+  screen,
+  styleOf,
+  theme,
+} from '../../test/renderPage.js';
 
 const content = [
   '# Heading one',
@@ -41,23 +50,23 @@ const content = [
   '| Cell | 42 |',
 ].join('\n');
 
-test('a Markdown draws GitHub-flavoured markdown with the theme text and heading styles', async () => {
+test('a Markdown draws GitHub-flavoured markdown in the iOS text styles', async () => {
   await renderPage({
     pageConfig: page([{ id: 'body', type: 'Markdown', properties: { content } }]),
   });
   expect(styleOf(await screen.findByText('Heading one'))).toMatchObject({
-    color: theme.light.colorTextHeading,
-    fontSize: theme.light.fontSizeHeading1,
+    color: ios.light.colorLabel,
+    fontSize: 28,
   });
-  expect(styleOf(screen.getByText('bold')).fontWeight).toBe(String(theme.light.fontWeightStrong));
+  expect(styleOf(screen.getByText('bold')).fontWeight).toBe('600');
   expect(styleOf(screen.getByText('italic')).fontStyle).toBe('italic');
   expect(styleOf(screen.getByText('struck')).textDecorationLine).toBe('line-through');
   expect(styleOf(screen.getByText('inline code')).backgroundColor).toBe(
-    theme.light.colorFillTertiary
+    ios.light.colorTertiarySystemFill
   );
   expect(styleOf(screen.getByText('First'))).toMatchObject({
-    color: theme.light.colorText,
-    fontSize: theme.light.fontSize,
+    color: ios.light.colorLabel,
+    fontSize: 17,
   });
   expect(screen.getByText('☐ Open task')).toBeTruthy();
   expect(screen.getByText('☑ Done task')).toBeTruthy();
@@ -82,7 +91,7 @@ test('a Markdown with onLinkPress passes the href to the actions and opens nothi
     ]),
   });
   const link = await screen.findByText('the design');
-  expect(styleOf(link).color).toBe(theme.light.colorLink);
+  expect(styleOf(link).color).toBe(theme.light.colorPrimary);
   await press(link);
   expect(calls).toEqual([{ name: 'link', event: { href: 'https://example.com/design/1' } }]);
   expect(openURL).not.toHaveBeenCalled();
@@ -131,5 +140,5 @@ test('a Markdown takes the dark text colour in dark mode', async () => {
     darkMode: 'dark',
     pageConfig: page([{ id: 'body', type: 'Markdown', properties: { content: 'Night' } }]),
   });
-  expect(styleOf(await screen.findByText('Night')).color).toBe(theme.dark.colorText);
+  expect(styleOf(await screen.findByText('Night')).color).toBe(ios.dark.colorLabel);
 });

@@ -19,13 +19,15 @@ import { Pressable, Text, View } from 'react-native';
 import { type } from '@lowdefy/helpers';
 import { useTheme } from '@lowdefy/client-native';
 
+import getIosTextStyle from '../../typography/getIosTextStyle.js';
 import meta from './meta.js';
 
-// A plain container. With an onClick event it is pressable, and a content string is drawn as text.
+// A plain container. With an onClick event it is pressable, and a content string is drawn as body
+// text.
 function Box({ content, events, methods, properties, styles = {} }) {
   const { tokens } = useTheme();
   const children = type.isString(properties.content) ? (
-    <Text style={{ color: tokens.colorText, fontSize: tokens.fontSize }}>{properties.content}</Text>
+    <Text style={getIosTextStyle({ textStyle: 'body', tokens })}>{properties.content}</Text>
   ) : (
     content.content?.()
   );

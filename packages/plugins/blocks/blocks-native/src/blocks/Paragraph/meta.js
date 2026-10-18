@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import textStyle from '../../schemas/textStyle.js';
+
 export default {
   category: 'display',
   icons: [],
@@ -196,6 +198,10 @@ export default {
         type: 'boolean',
         default: false,
         description: 'Apply underline style.',
+      },
+      textStyle: {
+        ...textStyle,
+        default: 'body',
       },
       theme: {
         type: 'object',

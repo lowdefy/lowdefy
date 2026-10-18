@@ -15,7 +15,7 @@
 */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { convertStyle } from '@lowdefy/style-native';
 
 import htmlToText from '../../htmlToText.js';
@@ -32,21 +32,41 @@ function getTabs({ content, properties }) {
   return tabs.filter((tab) => tab.key !== properties.extraAreaKey);
 }
 
+// iOS sizes: subheadline (15) tabs, body (17) for large, footnote (13) for small.
 function getTitleFontSize({ size, tokens }) {
-  if (size === 'large') return tokens.titleFontSizeLG ?? tokens.fontSizeLG;
-  if (size === 'small') return tokens.titleFontSizeSM ?? tokens.fontSize;
-  return tokens.titleFontSize ?? tokens.fontSize;
+  if (size === 'large') return tokens.titleFontSizeLG ?? 17;
+  if (size === 'small') return tokens.titleFontSizeSM ?? 13;
+  return tokens.titleFontSize ?? 15;
 }
 
 function getItemPadding({ card, size, tokens }) {
   if (card) {
-    if (size === 'large') return tokens.cardPaddingLG ?? '11px 16px';
-    if (size === 'small') return tokens.cardPaddingSM ?? '4px 8px';
-    return tokens.cardPadding ?? '8px 16px';
+    if (size === 'large') return tokens.cardPaddingLG ?? '8px 14px';
+    if (size === 'small') return tokens.cardPaddingSM ?? '3px 10px';
+    return tokens.cardPadding ?? '6px 12px';
   }
-  if (size === 'large') return tokens.horizontalItemPaddingLG ?? '16px 0';
+  if (size === 'large') return tokens.horizontalItemPaddingLG ?? '14px 0';
   if (size === 'small') return tokens.horizontalItemPaddingSM ?? '8px 0';
-  return tokens.horizontalItemPadding ?? '12px 0';
+  return tokens.horizontalItemPadding ?? '11px 0';
+}
+
+// A card tab bar is drawn as the iOS segmented control: the selected segment a raised cell on a
+// grey track. In dark mode the raised segment is lighter than the cell, as iOS draws it.
+function getSegmentStyle({ active, isDark, tokens }) {
+  if (!active) {
+    return { backgroundColor: 'transparent', borderRadius: 7, flex: 1, justifyContent: 'center' };
+  }
+  return {
+    backgroundColor: tokens.cardBg ?? (isDark ? '#636366' : tokens.colorCell),
+    borderRadius: 7,
+    elevation: 1,
+    flex: 1,
+    justifyContent: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { height: 1, width: 0 },
+    shadowOpacity: 0.12,
+    shadowRadius: 2,
+  };
 }
 
 function getIndicatorAlign(align) {
@@ -56,13 +76,14 @@ function getIndicatorAlign(align) {
 }
 
 /**
- * antd's Tabs as phone top tabs: a scrolling tab bar (line or card type) over the active tab's
- * slot, or under it with `tabPlacement: bottom`. Changing tab fires onChange with `{ activeKey }`
+ * antd's Tabs as phone top tabs: a scrolling tab bar over the active tab's slot, or under it with
+ * `tabPlacement: bottom`. Line tabs are tinted titles over a hairline with an indicator under the
+ * active one; card tabs are an iOS segmented control. Changing tab fires onChange with `{ activeKey }`
  * and the tab's own eventName with `{ key }`; the setActiveKey method changes tab from actions.
  * Inactive tabs stay mounted, hidden, so their blocks keep their state, unless destroyOnHidden.
  */
 function Tabs({ blockId, components, content, methods, properties, styles = {} }) {
-  const { tokens } = useComponentTokens(properties.theme);
+  const { isDark, tokens } = useComponentTokens(properties.theme);
   const tabs = getTabs({ content, properties });
   const [activeKey, setActiveKey] = useState(properties.defaultActiveKey ?? tabs[0].key);
 
@@ -95,21 +116,29 @@ function Tabs({ blockId, components, content, methods, properties, styles = {} }
   const fontSize = getTitleFontSize({ size, tokens });
   const itemPadding = convertStyle({ padding: getItemPadding({ card, size, tokens }) }).style;
   const gutter =
-    properties.tabBarGutter ?? (card ? tokens.cardGutter ?? 2 : tokens.horizontalItemGutter ?? 32);
-  const selectedColor = tokens.itemSelectedColor ?? tokens.colorPrimary;
+    properties.tabBarGutter ?? (card ? tokens.cardGutter ?? 2 : tokens.horizontalItemGutter ?? 24);
+  const selectedColor = tokens.itemSelectedColor ?? (card ? tokens.colorLabel : tokens.colorTint);
   const bottom = properties.tabPlacement === 'bottom';
   const extra = properties.extraAreaKey ? content[properties.extraAreaKey] : undefined;
 
   const tabBar = (
     <View
       style={[
-        {
-          alignItems: 'center',
-          borderBottomWidth: bottom ? 0 : tokens.lineWidth,
-          borderColor: tokens.colorBorderSecondary,
-          borderTopWidth: bottom ? tokens.lineWidth : 0,
-          flexDirection: 'row',
-        },
+        card
+          ? {
+              alignItems: 'center',
+              backgroundColor: tokens.colorTertiarySystemFill,
+              borderRadius: 9,
+              flexDirection: 'row',
+              padding: 2,
+            }
+          : {
+              alignItems: 'center',
+              borderBottomWidth: bottom ? 0 : StyleSheet.hairlineWidth,
+              borderColor: tokens.colorSeparator,
+              borderTopWidth: bottom ? StyleSheet.hairlineWidth : 0,
+              flexDirection: 'row',
+            },
         styles.tabBar,
       ]}
     >
@@ -126,8 +155,8 @@ function Tabs({ blockId, components, content, methods, properties, styles = {} }
         {tabs.map((tab, index) => {
           const active = tab.key === activeKey;
           const disabled = tab.disabled === true;
-          let color = tokens.itemColor ?? tokens.colorText;
-          if (disabled) color = tokens.colorTextDisabled;
+          let color = tokens.itemColor ?? (card ? tokens.colorLabel : tokens.colorSecondaryLabel);
+          if (disabled) color = tokens.colorTertiaryLabel;
           else if (active) color = selectedColor;
           return (
             <Pressable
@@ -142,19 +171,11 @@ function Tabs({ blockId, components, content, methods, properties, styles = {} }
                 {
                   alignItems: 'center',
                   flexDirection: 'row',
-                  gap: tokens.marginXS,
+                  gap: 6,
                   marginLeft: index === 0 ? 0 : gutter,
                 },
                 itemPadding,
-                card && {
-                  backgroundColor: active
-                    ? tokens.colorBgContainer
-                    : tokens.cardBg ?? tokens.colorFillAlter,
-                  borderColor: tokens.colorBorderSecondary,
-                  borderTopLeftRadius: tokens.borderRadiusLG,
-                  borderTopRightRadius: tokens.borderRadiusLG,
-                  borderWidth: tokens.lineWidth,
-                },
+                card && getSegmentStyle({ active, isDark, tokens }),
                 styles.item,
               ]}
               testID={`${blockId}_${tab.key}`}
@@ -166,7 +187,16 @@ function Tabs({ blockId, components, content, methods, properties, styles = {} }
                   testID={`${blockId}_${tab.key}_icon`}
                 />
               ) : null}
-              <Text style={{ color, fontSize }}>{tab.title ? htmlToText(tab.title) : tab.key}</Text>
+              <Text
+                style={{
+                  color,
+                  fontSize,
+                  fontWeight: active ? '600' : '500',
+                  lineHeight: Math.round(fontSize * 1.3),
+                }}
+              >
+                {tab.title ? htmlToText(tab.title) : tab.key}
+              </Text>
               {active && !card ? (
                 <View
                   style={[
@@ -183,8 +213,9 @@ function Tabs({ blockId, components, content, methods, properties, styles = {} }
                   <View
                     style={[
                       {
-                        backgroundColor: tokens.inkBarColor ?? tokens.colorPrimary,
-                        height: tokens.lineWidthBold,
+                        backgroundColor: tokens.inkBarColor ?? tokens.colorTint,
+                        borderRadius: 1.5,
+                        height: 3,
                         width: properties.indicator?.size ?? '100%',
                       },
                       styles.inkBar,
@@ -220,7 +251,7 @@ function Tabs({ blockId, components, content, methods, properties, styles = {} }
   return (
     <View style={styles.element}>
       {bottom ? null : tabBar}
-      <View style={{ [bottom ? 'marginBottom' : 'marginTop']: tokens.margin }}>{panes}</View>
+      <View style={{ [bottom ? 'marginBottom' : 'marginTop']: 16 }}>{panes}</View>
       {bottom ? tabBar : null}
     </View>
   );

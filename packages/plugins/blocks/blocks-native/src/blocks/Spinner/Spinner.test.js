@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { page, renderPage, screen, styleOf, theme } from '../../test/renderPage.js';
+import { ios, page, renderPage, screen, styleOf } from '../../test/renderPage.js';
 
 test('a Spinner shows the activity indicator at the web sizes', async () => {
   await renderPage({
@@ -29,7 +29,7 @@ test('a Spinner shows the activity indicator at the web sizes', async () => {
     screen.getByTestId(`${id}_indicator`)
   );
   expect(indicators.map((indicator) => styleOf(indicator).transform[0].scale)).toEqual([1, 1.6, 2]);
-  expect(indicators[0].props.color).toBe(theme.light.colorTextQuaternary);
+  expect(indicators[0].props.color).toBe(ios.light.colorSecondaryLabel);
   expect(screen.getAllByRole('progressbar')).toHaveLength(3);
 });
 
@@ -42,6 +42,6 @@ test('a Spinner takes the dark colour in dark mode, and is not drawn when not vi
     ]),
   });
   await screen.findByTestId('spin');
-  expect(screen.getByTestId('spin_indicator').props.color).toBe(theme.dark.colorTextQuaternary);
+  expect(screen.getByTestId('spin_indicator').props.color).toBe(ios.dark.colorSecondaryLabel);
   expect(screen.queryByTestId('hidden')).toBeNull();
 });
