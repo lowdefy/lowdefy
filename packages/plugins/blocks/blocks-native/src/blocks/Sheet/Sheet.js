@@ -140,7 +140,13 @@ function Sheet({ blockId, components, content, methods, properties, styles = {} 
               </Text>
             )}
             <View style={{ alignItems: 'flex-end', flex: 1 }}>
-              {content.headerRight ? content.headerRight() : null}
+              {content.headerRight
+                ? content.headerRight({
+                    alignItems: 'center',
+                    flexWrap: 'nowrap',
+                    justifyContent: 'flex-end',
+                  })
+                : null}
               {!content.headerRight && closable ? (
                 <CloseButton
                   blockId={blockId}
