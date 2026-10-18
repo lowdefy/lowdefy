@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-import React, { useEffect, useRef, useState } from 'react';
-import { Platform, ScrollView, Text, View, useColorScheme } from 'react-native';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Platform, ScrollView, Text, View } from 'react-native';
 import { BottomSheet } from '@expo/ui/community/bottom-sheet';
+import { iosColors, NaturalSizeContext, ThemeContext, useTheme } from '@lowdefy/client-native';
 import { type } from '@lowdefy/helpers';
 
 import getSheetDetents from './getSheetDetents.js';
@@ -38,7 +39,16 @@ const HEADER_HEIGHT = 44;
  */
 function Sheet({ blockId, components, content, methods, properties, styles = {} }) {
   const { isDark, tokens } = useComponentTokens(properties.theme);
-  const systemScheme = useColorScheme();
+  // The sheet's content is drawn on the elevated grouped surfaces, as a presented sheet is on iOS,
+  // so a grouped List in it stands off the sheet rather than taking the screen's colours.
+  const theme = useTheme();
+  const elevatedTheme = useMemo(
+    () => ({
+      ...theme,
+      tokens: { ...theme.tokens, ...iosColors.elevated[isDark ? 'dark' : 'light'] },
+    }),
+    [isDark, theme]
+  );
   const [index, setIndex] = useState(CLOSED);
   const isOpen = index !== CLOSED;
 
@@ -64,13 +74,12 @@ function Sheet({ blockId, components, content, methods, properties, styles = {} 
   });
   const dragToDismiss = properties.dragToDismiss !== false;
   const closable = properties.closable ?? !dragToDismiss;
-  const showsSystemMode = (systemScheme === 'dark') === isDark;
   const title = type.isString(properties.title) ? properties.title : null;
   const hasHeader = title !== null || closable || Boolean(content.headerRight);
 
   return (
     <BottomSheet
-      backgroundStyle={showsSystemMode ? undefined : { backgroundColor: tokens.colorBgElevated }}
+      backgroundStyle={{ backgroundColor: elevatedTheme.tokens.colorGroupedBackground }}
       enableDynamicSizing={false}
       enablePanDownToClose={dragToDismiss}
       handleComponent={resizable ? undefined : null}
@@ -82,61 +91,67 @@ function Sheet({ blockId, components, content, methods, properties, styles = {} 
       }}
       snapPoints={snapPoints}
     >
-      <View style={[{ flex: 1 }, styles.element]} testID={blockId}>
-        {hasHeader ? (
-          <View
-            style={[
-              {
-                alignItems: 'center',
-                flexDirection: 'row',
-                minHeight: HEADER_HEIGHT,
-                paddingHorizontal: 16,
-              },
-              styles.header,
-            ]}
-          >
-            {/* Balances the right side so the title sits in the centre, as a navigation bar's. */}
-            <View style={{ flex: 1 }} />
-            {title === null ? null : (
-              <Text
-                accessibilityRole="header"
-                numberOfLines={1}
-                style={[
-                  { color: tokens.colorText, fontSize: 17, fontWeight: '600', textAlign: 'center' },
-                  styles.title,
-                ]}
-              >
-                {title}
-              </Text>
-            )}
-            <View style={{ alignItems: 'flex-end', flex: 1 }}>
-              {content.headerRight
-                ? content.headerRight({
-                    alignItems: 'center',
-                    flexWrap: 'nowrap',
-                    justifyContent: 'flex-end',
-                  })
-                : null}
-              {!content.headerRight && closable ? (
-                <SheetCloseButton
-                  components={components}
-                  onPress={() => setIndex(CLOSED)}
-                  testID={`${blockId}_close`}
-                  tokens={tokens}
-                />
-              ) : null}
+      <ThemeContext.Provider value={elevatedTheme}>
+        <View style={[{ flex: 1 }, styles.element]} testID={blockId}>
+          {hasHeader ? (
+            <View
+              style={[
+                {
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  minHeight: HEADER_HEIGHT,
+                  paddingHorizontal: 16,
+                },
+                styles.header,
+              ]}
+            >
+              {/* Balances the right side so the title sits in the centre, as a navigation bar's. */}
+              <View style={{ flex: 1 }} />
+              {title === null ? null : (
+                <Text
+                  accessibilityRole="header"
+                  numberOfLines={1}
+                  style={[
+                    {
+                      color: tokens.colorText,
+                      fontSize: 17,
+                      fontWeight: '600',
+                      textAlign: 'center',
+                    },
+                    styles.title,
+                  ]}
+                >
+                  {title}
+                </Text>
+              )}
+              <View style={{ alignItems: 'flex-end', flex: 1 }}>
+                {/* Header blocks are as wide as their content, as a navigation bar's items are. */}
+                {content.headerRight ? (
+                  <NaturalSizeContext.Provider value={true}>
+                    {content.headerRight({ alignItems: 'center', flexWrap: 'nowrap' })}
+                  </NaturalSizeContext.Provider>
+                ) : null}
+                {!content.headerRight && closable ? (
+                  <SheetCloseButton
+                    components={components}
+                    onPress={() => setIndex(CLOSED)}
+                    testID={`${blockId}_close`}
+                    tokens={tokens}
+                  />
+                ) : null}
+              </View>
             </View>
-          </View>
-        ) : null}
-        <ScrollView
-          contentContainerStyle={[{ padding: 16, paddingBottom: 32 }, styles.body]}
-          keyboardDismissMode="interactive"
-          keyboardShouldPersistTaps="handled"
-          style={{ flex: 1 }}
-        >
-          {content.content ? content.content() : null}
-        </ScrollView>
-      </View>
+          ) : null}
+          <ScrollView
+            contentContainerStyle={[{ padding: 16, paddingBottom: 32 }, styles.body]}
+            keyboardDismissMode="interactive"
+            keyboardShouldPersistTaps="handled"
+            style={{ flex: 1 }}
+          >
+            {content.content ? content.content() : null}
+          </ScrollView>
+        </View>
+      </ThemeContext.Provider>
     </BottomSheet>
   );
 }

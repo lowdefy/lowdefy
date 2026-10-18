@@ -29,6 +29,7 @@ export { default as Icon } from './icon/Icon.js';
 export { default as iosColors } from './theme/iosColors.js';
 export { default as layoutStyles } from './layout/layoutStyles.js';
 export { default as LowdefyPage } from './LowdefyPage.js';
+export { default as NaturalSizeContext } from './layout/NaturalSizeContext.js';
 export { default as Screen } from './screen/Screen.js';
 export { default as textStyles } from './theme/textStyles.js';
 export { default as ThemeContext } from './theme/ThemeContext.js';
