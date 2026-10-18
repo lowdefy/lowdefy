@@ -228,13 +228,20 @@ function createAppAuth({
     const appStateSubscription = appState.addEventListener('change', handleAppStateChange);
     cleanups.push(() => appStateSubscription.remove());
     cleanups.push(session.subscribe(rememberRoot));
+    const sharedDevice = state.settings?.sharedDevice === true;
     if (tokenStore.isProtected()) {
+      if (sharedDevice) {
+        // A token stored behind biometrics before the app became a shared device: it is never
+        // unlocked into, and its sign-out needs no prompt.
+        await signOut();
+        return;
+      }
       setState({ status: 'locked' });
       return;
     }
     await tokenStore.load();
     const signedIn = tokenStore.get() !== null;
-    if (signedIn && state.settings?.sharedDevice === true) {
+    if (signedIn && sharedDevice) {
       // A shared phone whose app was killed without going to the background first.
       await signOut();
       return;

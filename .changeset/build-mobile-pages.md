@@ -28,4 +28,4 @@ mobile:
 - The build writes `mobile/config.json` (home page, minimum shell version, menus with their icon data, shells), `mobile/pageIndex.json` (each mobile page's path, id, content hash and type set key) and `mobile/typeSets.json` (each type set's types with their plugin package and major version). An app without a `mobile:` key gets `{}` and `[]`. Mobile pages over 1 MB of JSON in total give a warning.
 - Every built page now carries `target`: `web`, `mobile` or `both`.
 
-`@lowdefy/blocks-native` is new: the native block set's types and metas, starting with `Box`, `Title`, `Paragraph` and `Button`. The React Native components come in a later release.
+`@lowdefy/blocks-native` is new: the native block set's types, metas and React Native components.

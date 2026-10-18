@@ -135,9 +135,12 @@ function instanceMatches({ instance, pageId, pathParams }) {
 //   - else the requested page's most recently rendered instance (with those values) in any tab,
 //     whose context that tab still holds.
 // A request naming no page reads the instance on screen in the most recently connected tab.
-// Automated tabs are skipped.
+// Automated tabs and phones are skipped: a phone is read only when a tool names it (`device`,
+// findTabInstance), so a request meant for the browser never reads a phone on the same page.
 function findPageInstance({ pageId, pathParams } = {}) {
-  const candidates = Array.from(tabs.values()).filter((tab) => !tab.automated);
+  const candidates = Array.from(tabs.values()).filter(
+    (tab) => !tab.automated && type.isNone(tab.device)
+  );
   const onScreen = candidates.filter(
     (tab) => !type.isNone(tab.page) && instanceMatches({ instance: tab.page, pageId, pathParams })
   );

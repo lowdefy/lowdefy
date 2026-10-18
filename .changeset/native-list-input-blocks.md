@@ -5,7 +5,7 @@
 
 feat(blocks-native): Native List, ListItem, TextInput, TextArea, NumberInput, Selector, Switch, DateSelector and Button
 
-`@lowdefy/blocks-native` now has components, exported from `./blocks`, for the phase 1 list, input and action blocks. They keep the web blocks' names, properties, events, methods and value types, so a page shared with the web works on a phone; web properties a phone cannot honour are accepted and described as ignored on mobile.
+`@lowdefy/blocks-native` now has components, exported from `./blocks`, for the first list, input and action blocks. They keep the web blocks' names, properties, events, methods and value types, so a page shared with the web works on a phone; web properties a phone cannot honour are accepted and described as ignored on mobile.
 
 - `TextInput`, `TextArea` and `NumberInput` use React Native's text input with the keyboard each input needs (email, phone, URL, number or decimal pad, hidden password entry). `NumberInput` keeps its value within `min` and `max` and rounds to `precision` when it loses focus, and shows step buttons with `mode: spinner`.
 - `Selector`, `Switch` and `DateSelector` use `@expo/ui`'s native picker, switch and date picker, now a dependency of the shell. `Selector` options may hold any value, as on the web, and `appearance: wheel` shows the iOS scroll wheel. `DateSelector` sets the picked day at midnight UTC, as on the web, and takes `disabledDates.min` and `max`.

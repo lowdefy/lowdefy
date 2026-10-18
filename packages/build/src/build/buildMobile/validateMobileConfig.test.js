@@ -194,14 +194,20 @@ test.each([
   expect(() => validateMobileConfig({ mobile: { auth } })).toThrow(message);
 });
 
-test.each([['https'], ['http'], ['javascript'], ['My App'], ['MyApp'], ['1app']])(
-  'validateMobileConfig refuses the shell scheme "%s"',
-  (scheme) => {
-    expect(() => validateMobileConfig({ mobile: { shells: [{ id: 'field', scheme }] } })).toThrow(
-      'App "mobile.shells[0].scheme" should be the shell\'s own URL scheme in lowercase, like "myapp", and not a web scheme.'
-    );
-  }
-);
+test.each([
+  ['https'],
+  ['http'],
+  ['javascript'],
+  ['intent'],
+  ['wss'],
+  ['My App'],
+  ['MyApp'],
+  ['1app'],
+])('validateMobileConfig refuses the shell scheme "%s"', (scheme) => {
+  expect(() => validateMobileConfig({ mobile: { shells: [{ id: 'field', scheme }] } })).toThrow(
+    'App "mobile.shells[0].scheme" should be the shell\'s own URL scheme in lowercase, like "myapp", and not a web scheme.'
+  );
+});
 
 test('validateMobileConfig accepts a reverse-domain shell scheme', () => {
   expect(() =>

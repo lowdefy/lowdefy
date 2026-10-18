@@ -40,6 +40,20 @@ test('a connect link from lowdefy dev --ios has no pairing token', () => {
   ).toEqual({ kind: 'connect', url: 'http://localhost:3000', host: 'localhost:3000', pair: null });
 });
 
+test('a connect link whose url carries userinfo is invalid, so it never passes for loopback', () => {
+  [
+    'http://localhost:3000@evil.example',
+    'http://[::1]:1@evil.example',
+    'http://localhost\\@evil.example',
+  ].forEach((url) => {
+    const result = parseDevLink({
+      link: `lowdefy-dev://connect?url=${encodeURIComponent(url)}`,
+      scheme,
+    });
+    expect(result.kind).toBe('invalid');
+  });
+});
+
 test('a menu link opens the dev menu', () => {
   expect(parseDevLink({ link: 'lowdefy-dev://menu', scheme })).toEqual({ kind: 'menu' });
 });
