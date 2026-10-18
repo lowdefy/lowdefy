@@ -114,6 +114,11 @@ export default {
           properties: {
             value: { type: 'string', description: 'The person’s id.' },
             label: { type: 'string', description: 'The person’s name.' },
+            picture: {
+              type: ['string', 'null'],
+              description:
+                'The person’s picture, an image url or SVG data URI, drawn in the picker. Initials show without one.',
+            },
             sees: { type: 'boolean', description: 'Whether the person can see the record.' },
           },
         },

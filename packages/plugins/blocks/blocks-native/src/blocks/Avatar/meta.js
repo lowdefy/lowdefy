@@ -17,7 +17,7 @@
 import avatar from '../../schemas/avatar.js';
 import { theme } from '../../schemas/inputProperties.js';
 
-// A mobile-only block: a person's initials avatar, or several stacked.
+// A mobile-only block: a person's avatar (their picture, or initials), or several stacked.
 export default {
   category: 'display',
   icons: [],

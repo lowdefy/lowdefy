@@ -17,7 +17,7 @@
 import React from 'react';
 import { type } from '@lowdefy/helpers';
 
-import InitialsAvatar from './InitialsAvatar.js';
+import AvatarCircle from '../blocks/Avatar/AvatarCircle.js';
 import SystemIcon from './SystemIcon.js';
 
 /**
@@ -26,17 +26,20 @@ import SystemIcon from './SystemIcon.js';
  * option has none of them for the platform.
  *
  * @param {Object} props
- * @param {Object} [props.avatar] `{ name, src, color }`.
+ * @param {Object} [props.avatar] `{ name, src, color }`, drawn as the Avatar block draws it.
  * @param {string} [props.color] The glyph colour; secondary text by default.
  * @param {Object} props.components
  * @param {string} [props.icon] An icon name from the app's icon data.
+ * @param {boolean} props.isDark
  * @param {number} props.size
  * @param {string} [props.symbol] An SF Symbol name.
  * @param {Object} props.tokens
  */
-function OptionGlyph({ avatar, color, components, icon, size, symbol, testID, tokens }) {
+function OptionGlyph({ avatar, color, components, icon, isDark, size, symbol, testID, tokens }) {
   if (type.isObject(avatar)) {
-    return <InitialsAvatar avatar={avatar} size={size} testID={testID} tokens={tokens} />;
+    return (
+      <AvatarCircle avatar={avatar} isDark={isDark} size={size} testID={testID} tokens={tokens} />
+    );
   }
   return (
     <SystemIcon

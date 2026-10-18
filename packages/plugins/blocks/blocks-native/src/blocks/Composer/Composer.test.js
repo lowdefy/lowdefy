@@ -55,6 +55,34 @@ test('a Composer offers people who see the record for an @ and stores the picked
   expect(screen.queryByTestId('composer_suggestions')).toBeNull();
 });
 
+test('a Composer shows the picture of a person in the mention picker', async () => {
+  await renderPage({
+    pageConfig: formPage({
+      blocks: [
+        {
+          id: 'comment',
+          type: 'Composer',
+          properties: {
+            mentions: [
+              {
+                value: 'u1',
+                label: 'Sam Tolmay',
+                sees: true,
+                picture: 'https://img.example/sam.png',
+              },
+            ],
+          },
+        },
+      ],
+      mirrorKey: 'comment',
+    }),
+  });
+  await type(await screen.findByTestId('comment_input'), '@sa');
+  expect(screen.getByTestId('expo-image').props.source).toEqual({
+    uri: 'https://img.example/sam.png',
+  });
+});
+
 test('a Composer sends the body and reply_to with onSubmit and clears when the actions succeed', async () => {
   await renderPage({
     pageConfig: formPage({
