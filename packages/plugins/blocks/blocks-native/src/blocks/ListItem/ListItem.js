@@ -73,6 +73,11 @@ function Leading({ blockId, colors, components, content, isDark, leading, styles
   }
 }
 
+// The trailing parts keep their natural width and the title column takes what is left, shrinking
+// and ending its title with an ellipsis, so a long title never pushes a badge off the row.
+const TITLE_COLUMN = { flexBasis: 0, flexGrow: 1, flexShrink: 1, gap: 1, minWidth: 0 };
+const TRAILING = { alignItems: 'center', flexDirection: 'row', flexShrink: 0, gap: 8 };
+
 function Trailing({ blockId, colors, components, content, isDark, styles, tokens, trailing }) {
   const parts = [];
   if (!type.isNone(content.trailing)) {
@@ -85,7 +90,7 @@ function Trailing({ blockId, colors, components, content, isDark, styles, tokens
     parts.push(
       <View
         key={`badge-${index}`}
-        style={{ alignItems: 'center', flexDirection: 'row', gap: 3 }}
+        style={{ alignItems: 'center', flexDirection: 'row', flexShrink: 0, gap: 3 }}
         testID={`${blockId}_badge_${index}`}
       >
         {type.isNone(badge.icon) ? null : (
@@ -167,7 +172,7 @@ function Trailing({ blockId, colors, components, content, isDark, styles, tokens
     return null;
   }
   return (
-    <View style={{ alignItems: 'center', flexDirection: 'row', flexShrink: 0, gap: 8 }}>
+    <View style={TRAILING} testID={`${blockId}_trailing`}>
       {parts}
     </View>
   );
@@ -272,9 +277,11 @@ function ListItem({ blockId, components, content, events, methods, properties, s
             ? (event) => row.setSeparatorInset(event.nativeEvent.layout.x)
             : undefined
         }
-        style={{ flex: 1, gap: 1, minWidth: 0 }}
+        style={TITLE_COLUMN}
+        testID={`${blockId}_text`}
       >
         <Text
+          ellipsizeMode="tail"
           numberOfLines={properties.titleLines ?? 2}
           style={[
             hasSubtitle ? iosTextStyles.headline : iosTextStyles.body,
@@ -286,6 +293,7 @@ function ListItem({ blockId, components, content, events, methods, properties, s
         </Text>
         {hasSubtitle ? (
           <Text
+            ellipsizeMode="tail"
             numberOfLines={properties.subtitleLines ?? 1}
             style={[
               iosTextStyles.footnote,
