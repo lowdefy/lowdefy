@@ -24,6 +24,8 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 | `screen/Screen.js`                                               | The `Screen` page type; reports header options to `onScreenOptions`          |
 | `screen/HeaderActionButton.js`                                   | A header action as a natural-size icon button                                |
 | `screen/HeaderBottom.js`, `getHeaderBottomMotion.js`             | A Screen's headerBottom, pinned under the header by the page's scroll offset |
+| `screen/HeaderBackdrop.js`                                       | A Screen's headerBackdrop, lifted above the content behind the large title   |
+| `screen/useScreenFocused.js`                                     | Whether the block's screen is shown, for work that runs only while it is     |
 | `screen/ScreenTint.js`, `createTintStore.js`                     | A Screen's backgroundTint, a gradient fixed behind the page, cross-faded     |
 | `screen/getBackgroundTint.js`, `getTintStops.js`                 | The tint's colour and opacity in the mode showing; its eased gradient stops  |
 | `layout/EdgeInsetContext.js`                                     | An area's horizontal padding, which an edge-to-edge block cancels            |
@@ -108,7 +110,10 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   buttons with an SF Symbol from `getSfSymbol`, an `onPress`, a `menu` of items (`id`, `title`,
   `symbol`, `destructive`, `disabled`, `onPress`) or null, and a `render` that draws a
   `HeaderActionButton`, which opens the menu in a `Modal` where the shell has no native menu)
-  and `headerSearch` (search bar callbacks; `onSearchChange` is debounced).
+  and `headerSearch` (search bar callbacks; `onSearchChange` is debounced). It reports them in a
+  layout effect, so they reach the router in the same update as the page's first content: the
+  bar is in large-title mode when the scroll view first lays out its automatic insets, and a page
+  opens with its large title expanded however long its first content takes to mount.
   Header slots render inside `NaturalSizeContext`, so `BlockLayout` gives their blocks their
   content's size rather than a column width; a span-24 block would stretch the native bar item
   across the header and truncate the title. `ScreenContext` carries the screen's `focused` flag
@@ -126,6 +131,13 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   a page uses one or the other. What onFocus has fired for is kept
   per page context (`getFocusMemory`, through `FocusMemoryContext`), not in the Screen's refs, so
   the page tree mounting again onto a kept context does not fire it again.
+- A Screen's `headerBackdrop` slot is drawn by the Screen block before everything else
+  (`HeaderBackdrop`): an absolute view at the top of the content, out of its flow, lifted by its
+  own height with `translateY: '-100%'`, so its blocks sit behind the large title and the clear bar
+  and scroll away with the title. Only a transform takes it above the content: its layout stays
+  inside the content, as `PageTint`'s does, so nothing in the scroll view's content has a negative
+  frame. It never takes touches. `useScreenFocused` (exported) reads `ScreenContext.focused` for
+  a block, such as an Illustration that stops its animations on a hidden screen.
 - A Screen's `headerBottom` slot is drawn by the Screen block itself, as the page's first content
   (`HeaderBottom`, `zIndex: 1` over the content after it), not by the router: React Native's
   `stickyHeaderIndices` pin at the scroll view's top, which on iOS is under the translucent bar.

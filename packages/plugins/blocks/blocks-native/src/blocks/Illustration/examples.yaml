@@ -60,16 +60,17 @@
 
 - title: Pixel frames beside a large title, scrolling away with it
   blocks:
-    # The Screen's first content block. It takes no room, and draws its box up beside the large
-    # title: its bottom edge 24pt below the top of the content.
+    # In a Screen's headerBackdrop slot it sits behind the large title, at the right edge, its
+    # bottom 24pt below the top of the content.
     - id: corner_art
       type: Illustration
+      style:
+        .element:
+          alignSelf: flex-end
+          marginBottom: -24
       properties:
         width: 120
         height: 90
-        position:
-          right: 0
-          bottom: -24
         svg: |
           <svg viewBox="0 0 40 30">
             <g id="bird">

@@ -164,3 +164,19 @@ test('Illustration runs its animations on the native driver, one clock per durat
   });
   timing.mockRestore();
 });
+
+test('Illustration draws each drawn layer only over the part of the drawing it draws in', async () => {
+  await renderPage({ pageConfig: page([art({ animations: ANIMATIONS })]) });
+  const box = await screen.findByTestId('art_illustration', HIDDEN);
+  // The ground (y 16 to 20, a unit of margin round it) at two points a unit.
+  const [ground] = findAllOfType(box, 'RNSVGSvgView');
+  expect(styleOf(ground)).toMatchObject({ height: 10, left: 0, top: 30, width: 80 });
+});
+
+test('Illustration runs no animations while its screen is not the one shown', async () => {
+  const timing = jest.spyOn(Animated, 'timing');
+  await renderPage({ focused: false, pageConfig: page([art({ animations: ANIMATIONS })]) });
+  await screen.findByTestId('art_bird', HIDDEN);
+  expect(timing.mock.calls.filter(([, config]) => config.duration === 4000)).toHaveLength(0);
+  timing.mockRestore();
+});

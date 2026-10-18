@@ -34,18 +34,20 @@ function startClock(clock) {
 }
 
 /**
- * Runs an Illustration's animations on the native driver while it is mounted, and returns each
- * target's view style. With Reduce Motion on nothing runs, and the drawing holds the pose of each
- * animation's start.
+ * Runs an Illustration's animations on the native driver while it is mounted on the screen shown,
+ * and returns each target's view style. They stop when the screen is hidden (another tab, a
+ * screen over it) and start again from the start of their cycles when it shows. With Reduce
+ * Motion on nothing runs, and the drawing holds the pose of each animation's start.
  *
  * @param {Object} params
  * @param {Object[]} params.animations The block's animations.
+ * @param {boolean} params.focused Whether the block's screen is the one shown.
  * @param {boolean} params.reduceMotion Whether Reduce Motion is on.
  * @param {number} params.scale Points per unit of the drawing.
  * @param {number[]} params.viewBox The drawing's `[minX, minY, width, height]`.
  * @returns {Object} A view style per target id (createIllustrationMotion).
  */
-function useIllustrationMotion({ animations, reduceMotion, scale, viewBox }) {
+function useIllustrationMotion({ animations, focused, reduceMotion, scale, viewBox }) {
   const animationsKey = JSON.stringify(animations);
   const viewBoxKey = viewBox.join(' ');
   const motion = useMemo(
@@ -55,13 +57,13 @@ function useIllustrationMotion({ animations, reduceMotion, scale, viewBox }) {
     [animationsKey, scale, viewBoxKey]
   );
   useEffect(() => {
-    if (reduceMotion) return undefined;
+    if (reduceMotion || !focused) return undefined;
     const running = motion.clocks.map(startClock);
     return () => {
       running.forEach((animation) => animation.stop());
       motion.clocks.forEach((clock) => clock.value.setValue(0));
     };
-  }, [motion, reduceMotion]);
+  }, [focused, motion, reduceMotion]);
   return motion.styles;
 }
 

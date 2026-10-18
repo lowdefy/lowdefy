@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { type } from '@lowdefy/helpers';
 
 import BreakpointContext from '../layout/BreakpointContext.js';
@@ -22,6 +22,7 @@ import FocusMemoryContext from './FocusMemoryContext.js';
 import formatIconTitle from '../icon/formatIconTitle.js';
 import getSfSymbol from '../icon/getSfSymbol.js';
 import HeaderActionButton from './HeaderActionButton.js';
+import HeaderBackdrop from './HeaderBackdrop.js';
 import HeaderBottom from './HeaderBottom.js';
 import NaturalSizeContext from '../layout/NaturalSizeContext.js';
 import PageContexts from '../style/PageContexts.js';
@@ -218,8 +219,14 @@ function useRefreshEvent({ events, methodsRef, setRefresh }) {
  * - `backgroundTint`: whether the page draws a backgroundTint, so the router makes the bar clear
  *   over it and the page scrolls under the bar.
  *
- * The headerBottom slot is drawn here, as the page's first content, pinned under the bar as the
- * page scrolls (HeaderBottom, from the page's scroll offset and header inset). The footer slot is
+ * The options are reported as the Screen is laid out, before the native views are drawn, so the
+ * router enables a large title in the same update as the page's first content: the scroll view
+ * then starts at the top of a large title's inset, with the title expanded.
+ *
+ * The headerBackdrop slot is drawn here, as the page's first content, lifted above the top of the
+ * content behind the large title (HeaderBackdrop). The headerBottom slot is drawn after it,
+ * pinned under the bar as the page scrolls (HeaderBottom, from the page's scroll offset and
+ * header inset). The footer slot is
  * drawn by the page below its scroll view, pinned above the tab bar and the keyboard.
  * Pull-to-refresh (onRefresh) and onFocus come from the page's screen too (ScreenContext), and
  * the page draws the Screen's backgroundTint (`{ color, colorDark, height }`) in its scroll view,
@@ -256,7 +263,7 @@ function Screen({ blockId, components, content, events, loading, methods, proper
   const largeTitle = properties.largeTitle === true;
   const headerBottom = typeof content.headerBottom === 'function';
   const backgroundTint = !type.isNone(properties.backgroundTint);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (onScreenOptions === null) return;
     onScreenOptions({
       backgroundTint,
@@ -281,16 +288,17 @@ function Screen({ blockId, components, content, events, loading, methods, proper
     presentation,
     title,
   ]);
-  const page = content.content ? content.content() : null;
-  if (!headerBottom) {
-    return page;
-  }
   return (
     <>
-      <HeaderBottom blockId={blockId} headerInset={headerInset} scrollY={scrollY} tint={tint}>
-        {content.headerBottom({ rowGap: 8 })}
-      </HeaderBottom>
-      {page}
+      {typeof content.headerBackdrop === 'function' ? (
+        <HeaderBackdrop blockId={blockId}>{content.headerBackdrop()}</HeaderBackdrop>
+      ) : null}
+      {headerBottom ? (
+        <HeaderBottom blockId={blockId} headerInset={headerInset} scrollY={scrollY} tint={tint}>
+          {content.headerBottom({ rowGap: 8 })}
+        </HeaderBottom>
+      ) : null}
+      {content.content ? content.content() : null}
     </>
   );
 }

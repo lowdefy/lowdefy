@@ -444,6 +444,35 @@ test('a headerBottom slot draws its blocks first, over the content, and reports 
   expect(flatStyle(screen.getByTestId('home_header_bottom_separator')).opacity).toBe(0);
 });
 
+test('a headerBackdrop slot draws its blocks above the top of the content, taking no touches', async () => {
+  const { view } = renderScreen({
+    page: {
+      id: 'home',
+      type: 'Screen',
+      properties: { title: 'My work', largeTitle: true },
+      slots: {
+        content: { blocks: [{ id: 'body', type: 'Paragraph', properties: { content: 'Body' } }] },
+        headerBackdrop: {
+          blocks: [{ id: 'art', type: 'Paragraph', properties: { content: 'Art' } }],
+        },
+      },
+    },
+  });
+  await view;
+  const backdrop = await screen.findByTestId('home_header_backdrop');
+  expect(within(backdrop).getByText('Art')).toBeTruthy();
+  expect(within(backdrop).queryByText('Body')).toBeNull();
+  expect(backdrop.props.pointerEvents).toBe('none');
+  // Laid out at the top of the content, out of its flow, and lifted by its own height.
+  expect(flatStyle(backdrop)).toMatchObject({
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    transform: [{ translateY: '-100%' }],
+  });
+});
+
 test('a Screen without a headerBottom slot reports none', async () => {
   const { onScreenOptions, view } = renderScreen({
     page: {

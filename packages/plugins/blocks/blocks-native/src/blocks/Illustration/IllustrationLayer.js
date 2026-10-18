@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import Svg from 'react-native-svg';
+
+import getLayerBounds from './getLayerBounds.js';
 
 function renderNode(node, index) {
   if (typeof node === 'string') {
@@ -40,11 +42,40 @@ function wrapInAncestors({ ancestors, content }) {
   }, content);
 }
 
+// A drawn layer's SVG, over the part of the drawing its elements draw in (getLayerBounds), or the
+// whole drawing.
+function DrawnLayer({ definitions, drawing, layer, viewBox }) {
+  const viewBoxKey = viewBox.join(' ');
+  const bounds = useMemo(
+    () => getLayerBounds({ layer, viewBox }) ?? viewBox,
+    // viewBox is read when its key changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [layer, viewBoxKey]
+  );
+  const scale = drawing.width / viewBox[2];
+  const [x, y, width, height] = bounds;
+  return (
+    <Svg
+      height={height * scale}
+      style={{
+        left: (x - viewBox[0]) * scale,
+        position: 'absolute',
+        top: (y - viewBox[1]) * scale,
+      }}
+      viewBox={bounds.join(' ')}
+      width={width * scale}
+    >
+      {definitions.map(renderNode)}
+      {wrapInAncestors({ ancestors: layer.ancestors, content: layer.nodes.map(renderNode) })}
+    </Svg>
+  );
+}
+
 /**
  * One layer of an Illustration (getLayers), filling the drawing's place in the box: a drawn layer
- * is an SVG of the whole viewBox holding its elements in their ancestor groups, with the
- * drawing's definitions; an animated layer is an Animated.View with its target's style, holding
- * its own layers.
+ * is an SVG holding its elements in their ancestor groups, with the drawing's definitions, over
+ * only the part of the drawing they draw in; an animated layer is an Animated.View with its
+ * target's style, holding its own layers.
  *
  * @param {Object} props
  * @param {string} props.blockId The block id, for an animated layer's testID.
@@ -75,17 +106,7 @@ function IllustrationLayer({ blockId, definitions, drawing, layer, motion, viewB
       </Animated.View>
     );
   }
-  return (
-    <Svg
-      height={drawing.height}
-      style={StyleSheet.absoluteFill}
-      viewBox={viewBox.join(' ')}
-      width={drawing.width}
-    >
-      {definitions.map(renderNode)}
-      {wrapInAncestors({ ancestors: layer.ancestors, content: layer.nodes.map(renderNode) })}
-    </Svg>
-  );
+  return <DrawnLayer definitions={definitions} drawing={drawing} layer={layer} viewBox={viewBox} />;
 }
 
 export default IllustrationLayer;

@@ -49,7 +49,7 @@ export default {
         type: 'object',
         additionalProperties: false,
         description:
-          "Draw the box at these offsets from where the block is placed, in points, taking no room in the layout. For art behind other blocks: as a Screen's first block with `{ right: 0, bottom: -24 }` it sits in the space beside the large title and scrolls away with it. A negative offset reaches outside the block's place.",
+          "Draw the box at these offsets from where the block is placed, in points, taking no room in the layout, for art over or under its neighbours. For art beside a large title, put the block in the Screen's `headerBackdrop` slot instead.",
         properties: {
           top: { type: 'number', description: 'Offset of the top edge.' },
           right: { type: 'number', description: 'Offset of the right edge.' },

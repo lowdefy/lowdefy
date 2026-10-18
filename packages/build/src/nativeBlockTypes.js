@@ -312,6 +312,8 @@ const nativeBlockTypes = {
       category: 'container',
       slots: {
         content: 'The page content, in a scroll view.',
+        headerBackdrop:
+          "Blocks drawn in the space above the content, behind the large title and the translucent bar, such as art beside the title. Their box's bottom edge sits at the top of the content, so they scroll away with the title; a negative bottom margin lets a block reach down beside the first content blocks. They take no room in the content and never take touches. Align a block with its own style, such as `alignSelf: flex-end` for the right edge.",
         headerBottom:
           'Blocks pinned directly under the screen header (under the large title or the search field), such as a ChipSelector or a SegmentedControl, which stay in view as the page scrolls. Once the page scrolls they take the screen background and a hairline under them. They sit at the 16pt screen inset; a ChipSelector runs edge to edge.',
         headerLeft:

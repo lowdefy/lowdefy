@@ -16,7 +16,7 @@
 
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
-import { useReduceMotion, useTheme } from '@lowdefy/client-native';
+import { useReduceMotion, useScreenFocused, useTheme } from '@lowdefy/client-native';
 import { type } from '@lowdefy/helpers';
 
 import colorNodes from './colorNodes.js';
@@ -53,12 +53,13 @@ function getAccessibility(title) {
  * a bob, a blink, a hop. Each element an animation targets (by its id) is drawn in a view of its
  * own, which React Native's native driver moves and fades (getLayers), so the animations run off
  * the JavaScript thread. Colours are `var(--name)` references to `colors` and `colorsDark`, so
- * one drawing follows dark mode. With Reduce Motion on, the drawing holds still. It never takes
- * touches.
+ * one drawing follows dark mode. The animations run while the block's screen is shown; with Reduce
+ * Motion on, the drawing holds still. It never takes touches.
  */
 function Illustration({ blockId, properties, styles = {} }) {
   const { isDark, tokens } = useTheme();
   const reduceMotion = useReduceMotion();
+  const focused = useScreenFocused();
   const animations = properties.animations ?? NO_ANIMATIONS;
   const drawing = useMemo(() => parseIllustration({ svg: properties.svg }), [properties.svg]);
   const colorsKey = JSON.stringify([properties.colors, properties.colorsDark]);
@@ -94,6 +95,7 @@ function Illustration({ blockId, properties, styles = {} }) {
   });
   const motion = useIllustrationMotion({
     animations,
+    focused,
     reduceMotion,
     scale: box.scale,
     viewBox: drawing.viewBox,
