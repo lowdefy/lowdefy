@@ -34,10 +34,12 @@
     "app.config.ts",
     "babel.config.js",
     "metro.config.js",
-    "shell.dev.json"
+    "shell.dev.json",
+    "shellVariant.js"
   ],
   "scripts": {
     "dayjs-locales": "node scripts/createDayjsLocales.mjs",
+    "check:release-bundle": "node scripts/checkReleaseBundle.mjs",
     "export:android": "expo export --platform android --output-dir dist/android",
     "export:ios": "expo export --platform ios --output-dir dist/ios",
     "start": "expo start",
@@ -50,6 +52,7 @@
     "@lowdefy/blocks-native": "6.0.0",
     "@lowdefy/client-core": "6.0.0",
     "@lowdefy/client-native": "6.0.0",
+    "@lowdefy/engine": "6.0.0",
     "@lowdefy/helpers": "6.0.0",
     "@lowdefy/node-utils": "6.0.0",
     "@lowdefy/operators-change-case": "6.0.0",
@@ -65,6 +68,7 @@
     "dayjs": "1.11.20",
     "expo": "58.0.14",
     "expo-clipboard": "58.0.3",
+    "expo-camera": "58.0.10",
     "expo-constants": "58.0.12",
     "expo-crypto": "58.0.7",
     "expo-font": "58.0.8",
@@ -74,6 +78,7 @@
     "expo-network": "58.0.3",
     "expo-router": "58.0.23",
     "expo-secure-store": "58.0.2",
+    "expo-sensors": "58.0.4",
     "expo-splash-screen": "58.0.10",
     "expo-sqlite": "58.0.13",
     "expo-updates": "58.0.17",
@@ -82,7 +87,8 @@
     "react-native": "0.88.0",
     "react-native-safe-area-context": "5.10.1",
     "react-native-screens": "4.30.0",
-    "react-native-svg": "15.16.0"
+    "react-native-svg": "15.16.0",
+    "react-native-view-shot": "6.1.1"
   },
   "devDependencies": {
     "@babel/core": "7.29.6",

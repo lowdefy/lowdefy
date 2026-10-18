@@ -67,6 +67,7 @@ import endpointsHandler from './routes/endpoints.js';
 import getAuth from '../lib/server/auth/getAuth.js';
 import getStrategies from '../lib/server/auth/getStrategies.js';
 import getMockUser from '../lib/server/auth/getMockUser.js';
+import isTabAnswer from './lib/isTabAnswer.js';
 import jitPageHandler from './routes/jitPage.js';
 import localDevToolsOnly from './middleware/localDevToolsOnly.js';
 import lowdefyConfig from '../lib/build/config.js';
@@ -189,15 +190,19 @@ function createApp() {
   // targeted SSE events by posting results here; GET lists connected tabs
   // and serves checkpoint parts for the ?_checkpoint bootstrap.
   // The live-tab channel acts on the developer's open tabs and loads recorded
-  // request mocks - the same cross-site guard as the docs tools.
-  app.use('/api/dev-inspect', localDevToolsOnly());
-  app.use('/api/dev-inspect/*', localDevToolsOnly());
+  // request mocks - the same cross-site guard as the docs tools. A phone paired
+  // with `lowdefy dev --lan` is a dev tab too: it may answer what it is asked
+  // and post the page it shows (isTabAnswer), nothing else.
+  const tabChannelOnly = localDevToolsOnly({ allowPaired: isTabAnswer });
+  app.use('/api/dev-inspect', tabChannelOnly);
+  app.use('/api/dev-inspect/*', tabChannelOnly);
   app.all('/api/dev-inspect', devInspectHandler);
   app.all('/api/dev-inspect/*', devInspectHandler);
   // The dev recorder (client/Recorder.jsx) posts interaction records here.
   // It needs no Lowdefy context, and registering it before apiContext keeps
   // it out of the request timeout list.
-  app.use('/api/dev-recording', localDevToolsOnly());
+  // A paired phone's recorder may post too: the route only writes records.
+  app.use('/api/dev-recording', localDevToolsOnly({ allowPaired: (c) => c.req.method === 'POST' }));
   app.post('/api/dev-recording', bodyLimit({ maxSize: 1024 * 1024 }), devRecordingHandler);
   // Built now so the first doc search does not pay for reading every plugin
   // and module's docs.

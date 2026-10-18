@@ -40,7 +40,7 @@ let configDirectory;
 
 function createApp() {
   const app = new Hono();
-  app.use('/api/dev-recording', localDevToolsOnly());
+  app.use('/api/dev-recording', localDevToolsOnly({ allowPaired: (c) => c.req.method === 'POST' }));
   app.post('/api/dev-recording', bodyLimit({ maxSize: 1024 * 1024 }), devRecordingHandler);
   return app;
 }
@@ -118,6 +118,21 @@ test('POST /api/dev-recording refuses a request with no Origin', async () => {
   });
   expect(res.status).toBe(403);
   expect(tracesExist()).toBe(false);
+});
+
+test("POST /api/dev-recording writes a phone shell's records, which carry no Origin", async () => {
+  const res = await createApp().request('/api/dev-recording', {
+    method: 'POST',
+    headers: {
+      host: '192.168.1.20:3001',
+      'content-type': 'application/json',
+      'x-lowdefy-shell': '7.0.0',
+      'x-lowdefy-dev-remote': '1',
+    },
+    body: JSON.stringify({ session: SESSION, records: [record()] }),
+  });
+  expect(res.status).toBe(204);
+  expect(readLines('dev', '2026-10-03', `${SESSION}.jsonl`)).toHaveLength(1);
 });
 
 test('POST /api/dev-recording answers 400 for a session id that is not a trace id', async () => {

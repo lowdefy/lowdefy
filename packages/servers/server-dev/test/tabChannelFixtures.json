@@ -1,0 +1,40 @@
+{
+  "description": "The tab channel's payloads, shared by src/routes/devInspect.test.mjs and @lowdefy/shell's dev-tab client tests (src/dev/tab/createDevTabClient.test.js), so a phone shell answers an agent in the shape a browser tab (client/Inspector.jsx) does.",
+  "page": {
+    "pageId": "ticket",
+    "pathParams": { "ticket_id": "7" },
+    "instanceKey": "page:ticket#tickets/7"
+  },
+  "pageContext": {
+    "state": { "title": "Quarterly", "priority": "high" },
+    "requests": { "get_ticket": [{ "loading": false, "response": { "id": 7 } }] },
+    "eventLog": [{ "blockId": "save", "event": "onClick" }]
+  },
+  "app": {
+    "lowdefyGlobal": { "company": "Example" },
+    "user": { "id": "user-1", "roles": ["agent"] },
+    "input": { "from": "list" },
+    "urlQuery": "?tab=notes"
+  },
+  "inspectRequest": {
+    "event": "inspect-request",
+    "payload": {}
+  },
+  "evalRequest": {
+    "event": "eval-request",
+    "payload": { "expression": { "_state": "title" } }
+  },
+  "inspectResult": {
+    "pageId": "ticket",
+    "pathParams": { "ticket_id": "7" },
+    "instanceKey": "page:ticket#tickets/7",
+    "state": { "title": "Quarterly", "priority": "high" },
+    "requests": { "get_ticket": [{ "loading": false, "response": { "id": 7 } }] },
+    "eventLog": [{ "blockId": "save", "event": "onClick" }],
+    "global": { "company": "Example" },
+    "user": { "id": "user-1", "roles": ["agent"] },
+    "input": { "from": "list" },
+    "urlQuery": "?tab=notes"
+  },
+  "evalResult": { "value": "Quarterly", "errors": [] }
+}

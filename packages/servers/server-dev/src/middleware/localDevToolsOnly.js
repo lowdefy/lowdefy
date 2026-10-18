@@ -28,10 +28,12 @@ const guardSameOrigin = createSameOriginGuard({ allowNoOrigin: true });
 
 // A phone paired with `lowdefy dev --lan` reaches the app, never the dev tools:
 // the pairing token lets a device in, not a second developer. The manager's
-// proxy marks such a request with remoteCallerHeader.
-function localDevToolsOnly() {
+// proxy marks such a request with remoteCallerHeader. allowPaired names the
+// few tab-channel requests a paired phone makes as a dev tab (answering what
+// the dev server asks it, posting its recording), which it may send.
+function localDevToolsOnly({ allowPaired = () => false } = {}) {
   return async function localDevToolsOnlyMiddleware(c, next) {
-    if (c.req.header(remoteCallerHeader) !== undefined) {
+    if (c.req.header(remoteCallerHeader) !== undefined && !allowPaired(c)) {
       return c.json(
         { error: 'The dev tools answer only on the computer running lowdefy dev.' },
         403

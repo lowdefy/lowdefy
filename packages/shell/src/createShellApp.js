@@ -45,8 +45,10 @@ async function createShellApp({ app, onSignedOut, shell }) {
   const apiBase = getAppApiBase({ app, environment: shell.environment });
   const cacheStore = createSqliteCacheStore({ db: getDatabase() });
   const kv = createDeviceStore();
+  // Lowdefy Dev sends a paired dev server's token on every call (src/dev, shell.transport).
+  const transport = shell.transport ?? { fetch: globalThis.fetch, WebSocket: globalThis.WebSocket };
   const fetch = withShellHeader({
-    fetch: withoutCookies(globalThis.fetch),
+    fetch: withoutCookies(transport.fetch),
     shellVersion: shell.version,
   });
 
@@ -67,6 +69,7 @@ async function createShellApp({ app, onSignedOut, shell }) {
     router: createRouterAdapter({ session }),
     session,
     tokenStore: auth.tokenStore,
+    WebSocket: transport.WebSocket,
   });
   const locale = createShellLocale({
     getDeviceLocales,

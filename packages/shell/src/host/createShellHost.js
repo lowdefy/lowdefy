@@ -41,7 +41,7 @@ const clipboard = {
   setString: (text) => Clipboard.setStringAsync(text),
 };
 
-function createShellHost({ fetch, router, session, tokenStore }) {
+function createShellHost({ fetch, router, session, tokenStore, WebSocket }) {
   const storage = createDeviceStore();
   return {
     authTransport: 'bearer',
@@ -65,7 +65,7 @@ function createShellHost({ fetch, router, session, tokenStore }) {
     sessionStorage: createMemoryStore(),
     storage,
     tokenStore,
-    WebSocket: globalThis.WebSocket,
+    WebSocket,
     websocketUrl: (apiPath) => apiPath.replace(/^http/, 'ws'),
   };
 }
