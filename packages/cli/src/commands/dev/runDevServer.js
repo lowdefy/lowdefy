@@ -37,6 +37,10 @@ async function runDevServer({ context, directory }) {
     env.LOWDEFY_DEV_USER = resolveMockUser(context.options.mockUser);
   }
   if (context.options.skipPluginChecks) env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS = 'true';
+  // --lan alone is true; --lan <interface> names the interface.
+  if (context.options.lan) {
+    env.LOWDEFY_SERVER_DEV_LAN = context.options.lan === true ? 'true' : context.options.lan;
+  }
   // Set only when requested, so an inherited LOWDEFY_EXIT_WITH_PID passes through.
   if (context.options.exitWithPid) {
     env.LOWDEFY_EXIT_WITH_PID = String(context.options.exitWithPid);

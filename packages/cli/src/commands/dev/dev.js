@@ -15,17 +15,22 @@
 */
 
 import checkNoRunningInstance from './checkNoRunningInstance.js';
+import connectDevices from './connectDevices.js';
 import installDevServer from '../../utils/installDevServer.js';
+import prepareDevices from './prepareDevices.js';
 import resolveDevPort from './resolveDevPort.js';
 import runDevServer from './runDevServer.js';
 
 async function dev({ context }) {
   context.logger.info('Starting development server.');
   checkNoRunningInstance({ context });
+  const devices = await prepareDevices({ context });
   await resolveDevPort({ context });
   await installDevServer({ context });
   context.sendTelemetry();
-  await runDevServer({ context, directory: context.directories.dev });
+  const server = runDevServer({ context, directory: context.directories.dev });
+  connectDevices({ context, devices, server });
+  await server;
 }
 
 export default dev;
