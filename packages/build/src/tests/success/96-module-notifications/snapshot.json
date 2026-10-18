@@ -1123,8 +1123,10 @@
     ],
     "~k": "2t"
   },
+  "mobile/classMap.json": {},
   "mobile/config.json": {},
   "mobile/pageIndex.json": [],
+  "mobile/theme.json": {},
   "mobile/typeSets.json": {},
   "notifications/invites/invite-user.json": {
     "id": "notification:invites/invite-user",

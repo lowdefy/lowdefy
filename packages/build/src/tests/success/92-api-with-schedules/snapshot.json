@@ -896,8 +896,10 @@
     ],
     "~k": "1u"
   },
+  "mobile/classMap.json": {},
   "mobile/config.json": {},
   "mobile/pageIndex.json": [],
+  "mobile/theme.json": {},
   "mobile/typeSets.json": {},
   "pageTypeSets.json": {
     "404": {
