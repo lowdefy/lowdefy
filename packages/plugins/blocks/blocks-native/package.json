@@ -30,6 +30,7 @@
   "type": "module",
   "exports": {
     "./blocks": "./dist/blocks.js",
+    "./dictation": "./dist/dictation.js",
     "./metas": "./dist/metas.js",
     "./types": "./dist/types.js"
   },

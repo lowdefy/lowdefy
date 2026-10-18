@@ -16,12 +16,12 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
-import { ExpoSpeechRecognitionModule } from 'expo-speech-recognition';
 
 import checkDictationAvailable from './checkDictationAvailable.js';
 import claimMic from './claimMic.js';
 import getDictationLevel from './getDictationLevel.js';
 import getDictationWarning from './getDictationWarning.js';
+import getRecognizer from './getRecognizer.js';
 import getStartOptions from './getStartOptions.js';
 
 const FINISH_MS = 1500;
@@ -34,8 +34,9 @@ function settle(session) {
 }
 
 /**
- * Dictation into a native input, on the phone only. The hook owns the recogniser: whether it can
- * run, the permission prompts, the start options, the input level, the silence timer, ending on
+ * Dictation into a native input, on the phone only. The hook owns the recogniser (getRecognizer:
+ * the phone's, or the one playing Lowdefy Dev's injected transcripts): whether it can run, the
+ * permission prompts, the start options, the input level, the silence timer, ending on
  * background and unmount, the error warning and the one session the app can run at a time. It
  * holds none of the host's text: it reports words still being heard as `partial` and hands each
  * final result to `onFinal`, and the host puts both where they belong.
@@ -113,7 +114,7 @@ function useDictation({ disabled = false, hints, onFinal }) {
     session.stopping = true;
     clearTimeout(session.silence);
     setStatus('stopping');
-    ExpoSpeechRecognitionModule.stop();
+    getRecognizer().stop();
   }, [endSession]);
 
   const stopRef = useRef(stop);
@@ -135,7 +136,7 @@ function useDictation({ disabled = false, hints, onFinal }) {
       endSession(session);
       return;
     }
-    ExpoSpeechRecognitionModule.abort();
+    getRecognizer().abort();
   }, [endSession]);
 
   const finish = useCallback(() => {
@@ -166,7 +167,7 @@ function useDictation({ disabled = false, hints, onFinal }) {
     };
     sessionRef.current = session;
     setWarning(null);
-    const permission = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
+    const permission = await getRecognizer().requestPermissionsAsync();
     if (sessionRef.current !== session) return;
     if (permission.granted !== true) {
       session.cancelled = true;
@@ -188,9 +189,7 @@ function useDictation({ disabled = false, hints, onFinal }) {
     setLevel(0);
     setStatus('listening');
     resetSilence(session);
-    ExpoSpeechRecognitionModule.start(
-      getStartOptions({ hints: latest.current.hints, lang: langRef.current })
-    );
+    getRecognizer().start(getStartOptions({ hints: latest.current.hints, lang: langRef.current }));
   }, [available, endSession, resetSilence]);
 
   const clearWarning = useCallback(() => setWarning(null), []);
@@ -201,8 +200,9 @@ function useDictation({ disabled = false, hints, onFinal }) {
       if (session === null || session.mic === null || !session.mic.owns()) return null;
       return session;
     }
+    const recognizer = getRecognizer();
     const subscriptions = [
-      ExpoSpeechRecognitionModule.addListener('result', (event) => {
+      recognizer.addListener('result', (event) => {
         const session = ownSession();
         if (session === null) return;
         resetSilence(session);
@@ -222,19 +222,19 @@ function useDictation({ disabled = false, hints, onFinal }) {
           settle(session);
         }
       }),
-      ExpoSpeechRecognitionModule.addListener('speechstart', () => {
+      recognizer.addListener('speechstart', () => {
         const session = ownSession();
         if (session !== null) resetSilence(session);
       }),
-      ExpoSpeechRecognitionModule.addListener('volumechange', (event) => {
+      recognizer.addListener('volumechange', (event) => {
         if (ownSession() !== null) setLevel(getDictationLevel({ value: event.value }));
       }),
-      ExpoSpeechRecognitionModule.addListener('error', (event) => {
+      recognizer.addListener('error', (event) => {
         if (ownSession() === null) return;
         const next = getDictationWarning({ error: event.error });
         if (next !== null) setWarning(next);
       }),
-      ExpoSpeechRecognitionModule.addListener('end', () => {
+      recognizer.addListener('end', () => {
         const session = ownSession();
         if (session !== null) endSession(session);
       }),
@@ -262,11 +262,12 @@ function useDictation({ disabled = false, hints, onFinal }) {
       // The host is gone, so nothing can take the words: drop them. The mic is free once the
       // aborted session's own end event arrives, so its late events reach no other input.
       const mic = session.mic;
-      const ended = ExpoSpeechRecognitionModule.addListener('end', () => {
+      const recognizer = getRecognizer();
+      const ended = recognizer.addListener('end', () => {
         ended.remove();
         mic.release();
       });
-      ExpoSpeechRecognitionModule.abort();
+      recognizer.abort();
     };
   }, []);
 

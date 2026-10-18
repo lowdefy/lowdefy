@@ -24,6 +24,7 @@ import {
   setSpeechRecognition,
 } from '../../test/expoSpeechRecognition.js';
 import formPage from '../../test/formPage.js';
+import { installDictationSource } from '../../shared/dictation/getRecognizer.js';
 import { renderPage } from '../../test/renderPage.js';
 
 const mentions = [
@@ -526,5 +527,35 @@ describe('dictation', () => {
     expect(screen.getByText('Microphone access is off.')).toBeTruthy();
     await type(input, '', 0);
     expect(screen.queryByText('Microphone access is off.')).toBeNull();
+  });
+
+  test('a transcript Lowdefy Dev injects dictates into the Composer, and send sends it', async () => {
+    // As the shell's dev build installs it: injected('transcript') takes the next queued one.
+    const queued = [{ partials: ['for', 'for Sam can'], final: 'for Sam, can you look' }];
+    const remove = installDictationSource((name) =>
+      name === 'transcript' ? queued.shift() : undefined
+    );
+    try {
+      setSpeechRecognition({ available: false });
+      await renderComposer();
+      jest.useFakeTimers();
+      await pressMic();
+      await act(async () => {
+        jest.advanceTimersByTime(600);
+      });
+      expect(screen.getByTestId('composer_partial').props.children).toBe('for Sam can');
+      await act(async () => {
+        jest.advanceTimersByTime(300);
+      });
+      expect(screen.queryByTestId('comment_listening')).toBeNull();
+      expect(screen.getByText('[[user:u1]] can you look')).toBeTruthy();
+      await act(async () => {
+        fireEvent.press(screen.getByTestId('composer_send'));
+      });
+      expect(screen.getAllByText('[[user:u1]] can you look')).toHaveLength(1);
+      expect(speech.start).not.toHaveBeenCalled();
+    } finally {
+      remove();
+    }
   });
 });

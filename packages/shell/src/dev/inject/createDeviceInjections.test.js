@@ -44,6 +44,32 @@ test('scan, photo and nfc results are each taken once, in the order they were in
   expect(injections.take('nfc')).toBeUndefined();
 });
 
+test('transcripts queue, each dictation session taking the next one, and clear drops them', () => {
+  const injections = createInjections();
+  expect(
+    injections.inject({
+      kind: 'transcript',
+      value: { partials: ['for', 'for Sam'], final: 'for Sam, can you look' },
+    })
+  ).toEqual({ ok: true, kind: 'transcript', pending: 1 });
+  expect(injections.inject({ kind: 'transcript', value: { error: 'not-allowed' } })).toEqual({
+    ok: true,
+    kind: 'transcript',
+    pending: 2,
+  });
+  injections.inject({ kind: 'permission', name: 'microphone', value: 'denied' });
+  expect(injections.take('transcript')).toEqual({
+    partials: ['for', 'for Sam'],
+    final: 'for Sam, can you look',
+  });
+  expect(injections.take('permission:microphone')).toBe('denied');
+  expect(injections.take('transcript')).toEqual({ error: 'not-allowed' });
+  expect(injections.take('transcript')).toBeUndefined();
+  injections.inject({ kind: 'transcript', value: { final: 'ship it' } });
+  injections.inject({ kind: 'clear' });
+  expect(injections.take('transcript')).toBeUndefined();
+});
+
 test('a location stays after it is read, and a route plays one location per read', () => {
   const injections = createInjections();
   expect(injections.take('location')).toBeUndefined();
@@ -125,13 +151,29 @@ test('a push injection is refused until the shell carries expo-notifications', (
 test.each([
   [
     { kind: 'beep' },
-    'An injection kind is one of scan, photo, nfc, location, permission, network, push, clear. Received "beep".',
+    'An injection kind is one of scan, photo, nfc, transcript, location, permission, network, push, clear. Received "beep".',
   ],
   [{ kind: 'scan', value: 'JOB-1' }, 'A scan injection needs { data }. Received "JOB-1".'],
   [{ kind: 'photo', value: {} }, 'A photo injection needs { base64 }. Received {}.'],
   [
     { kind: 'nfc', value: 'tag' },
     'An nfc injection needs the tag read as an object. Received "tag".',
+  ],
+  [
+    { kind: 'transcript', value: 'for Sam' },
+    'A transcript injection needs { final } with optional { partials } (a list of strings), or { error }. Received "for Sam".',
+  ],
+  [
+    { kind: 'transcript', value: { partials: ['for'] } },
+    'A transcript injection needs { final } with optional { partials } (a list of strings), or { error }. Received {"partials":["for"]}.',
+  ],
+  [
+    { kind: 'transcript', value: { partials: 'for', final: 'for Sam' } },
+    'A transcript injection needs { final } with optional { partials } (a list of strings), or { error }. Received {"partials":"for","final":"for Sam"}.',
+  ],
+  [
+    { kind: 'transcript', value: { error: '' } },
+    'A transcript injection needs { final } with optional { partials } (a list of strings), or { error }. Received {"error":""}.',
   ],
   [
     { kind: 'location', value: { latitude: '1', longitude: 2 } },
@@ -161,6 +203,6 @@ test.each([
 test('reading an injection by a name no device action uses throws', () => {
   const injections = createInjections();
   expect(() => injections.take('barcode')).toThrow(
-    'injected() reads scan, photo, nfc, location, permission:<name>. Received "barcode".'
+    'injected() reads scan, photo, nfc, transcript, location, permission:<name>. Received "barcode".'
   );
 });
