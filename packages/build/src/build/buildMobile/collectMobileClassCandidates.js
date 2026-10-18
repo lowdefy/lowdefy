@@ -14,35 +14,13 @@
   limitations under the License.
 */
 
-import { walkValue } from '../collectPageContent.js';
-import isMobilePage from './isMobilePage.js';
-import walkPageBlocks from './walkPageBlocks.js';
+import getMobileClassCandidates from './getMobileClassCandidates.js';
 
-// The class candidates of every block on a mobile or shared page, from the
-// same walk the web runs for Tailwind (collectPageContent), so strings inside
-// operators count. Strings under "class" are kept apart from strings under
-// "properties": an unsupported class fails the build only when it was written
-// as a class. Runs before buildJs, which replaces _js source with hashes.
+// The class candidates of mobile and shared pages, kept on the context for
+// buildMobileClassMap. Runs before buildJs, which replaces _js source with
+// hashes.
 function collectMobileClassCandidates({ components, context }) {
-  context.mobileClassCandidates = [];
-  (components.pages ?? []).filter(isMobilePage).forEach((page) => {
-    walkPageBlocks(page, (block) => {
-      const classStrings = [];
-      const propertyStrings = [];
-      walkValue(block.class, classStrings);
-      walkValue(block.properties, propertyStrings);
-      if (classStrings.length === 0 && propertyStrings.length === 0) {
-        return;
-      }
-      context.mobileClassCandidates.push({
-        pageId: page.pageId,
-        blockId: block.blockId,
-        configKey: block['~k'],
-        classStrings,
-        propertyStrings,
-      });
-    });
-  });
+  context.mobileClassCandidates = getMobileClassCandidates({ pages: components.pages ?? [] });
   return components;
 }
 

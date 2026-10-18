@@ -39,6 +39,7 @@ import { tagRefDeep } from '../buildRefs/walker.js';
 import warnUnsetEnvReads from '../buildRefs/warnUnsetEnvReads.js';
 import testSchema from '../testSchema.js';
 import validateIconNames from '../icons/validateIconNames.js';
+import buildPageClassMapJit from './buildPageClassMapJit.js';
 import createPageBuildContext from './createPageBuildContext.js';
 import detectMissingIcons from './detectMissingIcons.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
@@ -243,6 +244,10 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     validatePayloadReferences({ page: processed, context: buildContext });
     validateServerStateReferences({ page: processed, context: buildContext });
 
+    // A mobile page's own class map entries, which the skeleton build's class
+    // map does not hold. Before _js extraction, like the web's Tailwind scan.
+    const pageClassMap = await buildPageClassMapJit({ page: processed, context: buildContext });
+
     // Collect Tailwind class candidates before _js extraction — jsMapParser
     // replaces _js source with hashes, so classes used only inside _js source
     // would otherwise never reach the Tailwind scanner.
@@ -258,6 +263,11 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       env: 'server',
     });
     const finalPage = { ...cleanPage, requests: cleanRequests };
+    // Written with the page, so a page served from its last build still has
+    // it; the dev mobile client lays it over the root class map.
+    if (!type.isUndefined(pageClassMap)) {
+      finalPage._classMap = pageClassMap;
+    }
 
     // Check for collected errors from validation steps
     if (buildErrors.length > 0) {
