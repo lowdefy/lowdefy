@@ -180,6 +180,11 @@ function createBuildContext(buildDirectory, configDirectory) {
   // the same metadata the skeleton build computed.
   context.appMeta = readJsonFile(path.join(buildDirectory, 'appMeta.json')) ?? null;
 
+  // The shells and the shell plugins each carries, so a mobile page that uses
+  // a plugin type some shell lacks fails here as in the full build
+  // (validateNativePageTypes).
+  context.mobileShells = readJsonFile(path.join(buildDirectory, 'mobileShells.json')) ?? [];
+
   // Restore api endpoint configs so JIT CallAPI validation (validateCallApiRefs in
   // buildPageJit) can resolve endpointIds. Without this the dev context has no
   // components.api and every CallAPI action is flagged as a non-existent endpoint.

@@ -21,8 +21,9 @@ import path from 'path';
 import { getBuildContext } from './jitPageBuilder.js';
 
 // Mobile pages built on request resolve shell plugin native types as the
-// skeleton build did, from the customTypesMapMobile.json it wrote.
-test('getBuildContext restores the shell plugin native types into the mobile types map', () => {
+// skeleton build did, from the customTypesMapMobile.json it wrote, and refuse
+// a plugin type some shell lacks, from the mobileShells.json it wrote.
+test('getBuildContext restores the shell plugin native types and the shells that carry them', () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'ldf-jit-context-'));
   const buildDirectory = path.join(root, 'build');
   fs.mkdirSync(buildDirectory, { recursive: true });
@@ -47,10 +48,17 @@ test('getBuildContext restores the shell plugin native types into the mobile typ
     })
   );
 
+  const mobileShells = [
+    { id: 'field', plugins: ['@example/lowdefy-printer'] },
+    { id: 'office', plugins: [] },
+  ];
+  fs.writeFileSync(path.join(buildDirectory, 'mobileShells.json'), JSON.stringify(mobileShells));
+
   const context = getBuildContext(buildDirectory, path.join(root, 'config'));
 
   expect(context.typesMapMobile.blocks.PrinterLabel).toEqual(printerLabel);
   expect(context.typesMapMobile.blocks.Box.package).toEqual('@lowdefy/blocks-native');
   expect(context.blockMetasMobile.PrinterLabel).toEqual({ category: 'display' });
   expect(context.typesMapMobile.plugins).toEqual(['@example/lowdefy-printer']);
+  expect(context.mobileShells).toEqual(mobileShells);
 });

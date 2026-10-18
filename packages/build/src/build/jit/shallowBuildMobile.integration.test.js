@@ -271,6 +271,11 @@ test('the skeleton build writes the mobile types map JIT page builds read', () =
   );
 });
 
+test('the skeleton build writes which shell plugins each shell carries for dev page builds', () => {
+  expect(readArtifact('mobileShells.json')).toEqual(result.context.mobileShells);
+  expect(readArtifact('mobileShells.json')).toEqual([{ id: 'field', plugins: [] }]);
+});
+
 test('the web menu leaves mobile-only pages out', () => {
   const menus = readArtifact('menus.json');
   const pageIds = menus[0].links.map((link) => link.pageId);

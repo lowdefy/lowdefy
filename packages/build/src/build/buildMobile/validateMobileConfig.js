@@ -411,15 +411,14 @@ function validateShells({ shells, configKey, context }) {
     }
     shellIds.add(shell.id);
   });
-  checkPluginVersions({ shells, rootPlugins: context?.plugins, configKey });
+  checkPluginVersions({ shells, rootPlugins: context.plugins, configKey });
   // validateNativePageTypes reads which shells carry which plugins. buildPage
-  // has no components, and a JIT page build runs on a copy of this context.
-  if (context) {
-    context.mobileShells = shells.map((shell) => ({
-      id: shell.id,
-      plugins: (shell.plugins ?? []).map((plugin) => plugin.name),
-    }));
-  }
+  // has no components. An in-process JIT page build runs on a copy of this
+  // context; the dev server's page builds restore it from mobileShells.json.
+  context.mobileShells = shells.map((shell) => ({
+    id: shell.id,
+    plugins: (shell.plugins ?? []).map((plugin) => plugin.name),
+  }));
 }
 
 function checkOptionalBoolean({ value, path, configKey }) {
