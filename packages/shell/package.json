@@ -59,6 +59,7 @@
     "export:ios": "expo export --platform ios --output-dir dist/ios",
     "start": "expo start",
     "test": "jest && node --test fixtures/hello.test.mjs scripts/createDayjsLocales.test.mjs checkShellConfig.test.mjs checkShellPlugins.test.mjs profiles.test.mjs resolveShellPlugins.test.mjs runtimeVersion.test.mjs shellVariant.test.mjs storeCompliance.test.mjs authCallbackIntentFilters.test.mjs scripts/checkNativeVersion.test.mjs scripts/createTypeManifest.test.mjs",
+    "shell-version": "node scripts/createShellVersion.mjs --write && prettier --config ../../.prettierrc --write src/version/shellVersion.js",
     "type-manifest": "node scripts/createTypeManifest.mjs --write && prettier --config ../../.prettierrc --write src/plugins/typeManifest.js"
   },
   "dependencies": {

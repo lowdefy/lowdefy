@@ -33,15 +33,17 @@ import getRuntimeVersion from './runtimeVersion.js';
 import { getExclusions, getShellProfile, getShellVariant } from './shellVariant.js';
 import withExcludedNativeModules from './withExcludedNativeModules.js';
 
-// The shell's config is its shell.json (readShellConfig.js). Its capability profile and version are
-// added here, at build, so the app reads one object (src/config/getShellConfig.js). The type
-// manifest is not: it travels in the JavaScript bundle (src/plugins/typeManifest.js), since an
-// embedded launch reads the Expo config of the native build, not that of the JavaScript it runs.
+// The shell's config is its shell.json (readShellConfig.js). Its capability profile is added here,
+// at build, so the app reads one object (src/config/getShellConfig.js). The shell's version and
+// type manifest are not: they travel in the JavaScript bundle (src/version/shellVersion.js,
+// src/plugins/typeManifest.js), since an embedded launch reads the Expo config of the native build,
+// not that of the JavaScript it runs.
 //
 // Three versions: `version` is the store version (shell.json `version`, set per build by
-// `lowdefy mobile`); `extra.shell.version` is the @lowdefy/shell package version, which the runtime
-// sends as `x-lowdefy-shell`; `runtimeVersion` is `<nativeVersion>-<profile>[-<plugins hash>]`
-// (runtimeVersion.js), which decides which over-the-air updates a binary takes.
+// `lowdefy mobile`), kept out of `extra.shell`; the shell version is the @lowdefy/shell package
+// version, which the runtime sends as `x-lowdefy-shell`; `runtimeVersion` is
+// `<nativeVersion>-<profile>[-<plugins hash>]` (runtimeVersion.js), which decides which
+// over-the-air updates a binary takes.
 const shellRoot = __dirname;
 
 function readJson(filePath: string) {
@@ -81,8 +83,9 @@ function withSplash({ color, icon, plugins }) {
 
 export default function appConfig({ config }: ConfigContext): ExpoConfig {
   const { configPath, shell } = readShellConfig();
+  const { version: storeVersion, ...shellExtra } = shell;
   const variant = getShellVariant();
-  const { nativeVersion, version } = readJson(path.join(shellRoot, 'package.json'));
+  const { nativeVersion } = readJson(path.join(shellRoot, 'package.json'));
   // The shell carries only its capability profile's native modules (profiles.js). The rest, and
   // Lowdefy Dev's developer features in a release shell, are left out: not linked, their config
   // plugins and permissions not applied (scripts/checkReleaseBundle.mjs checks it).
@@ -107,7 +110,7 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
     name: shell.name,
     slug: shell.id,
     // Lowdefy Dev has no store version of its own here.
-    version: shell.version ?? '0.0.0',
+    version: storeVersion ?? '0.0.0',
     runtimeVersion: getRuntimeVersion({
       nativeVersion,
       profile: profile.name,
@@ -151,11 +154,10 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
     extra: {
       ...(shell.eas ? { eas: { projectId: shell.eas.projectId } } : {}),
       shell: {
-        ...shell,
+        ...shellExtra,
         profile: profile.name,
         capabilities: shell.capabilities ?? profile.capabilities,
         variant,
-        version,
       },
     },
   };
