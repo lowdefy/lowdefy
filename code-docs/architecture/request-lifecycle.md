@@ -154,7 +154,7 @@ class Requests {
 
 ### 5. HTTP Transport
 
-**File:** `packages/client/src/createCallRequest.js`
+**File:** `packages/client-core/src/createCallRequest.js`
 
 ```javascript
 function createCallRequest({ basePath }) {
@@ -591,7 +591,7 @@ Two additive controls decouple routine execution from the response:
 | Event Trigger        | `packages/engine/src/Events.js`                           |
 | Action Runner        | `packages/engine/src/Actions.js`                          |
 | Request Manager      | `packages/engine/src/Requests.js`                         |
-| HTTP Client          | `packages/client/src/createCallRequest.js`                |
+| HTTP Client          | `packages/client-core/src/createCallRequest.js`                |
 | Server Handler       | `packages/api/src/routes/request/callRequest.js`          |
 | Connection Resolver  | `packages/api/src/routes/request/getConnection.js`        |
 | Request Resolver     | `packages/api/src/routes/request/getRequestResolver.js`   |

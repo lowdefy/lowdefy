@@ -14,22 +14,5 @@
   limitations under the License.
 */
 
-import { parseCallerStamp, type } from '@lowdefy/helpers';
-
-// Keeps the last caller stamp a response carried (see the server's stampCaller)
-// on lowdefy._internal.callerStamp, as { caller, session, roles, memberships }:
-// who the server last answered as, in full. A response with no header claims
-// no caller and leaves the last stamp in place.
-function recordCallerStamp({ lowdefy, serverCaller }) {
-  const stamp = parseCallerStamp(serverCaller);
-  if (type.isNone(stamp)) {
-    return;
-  }
-  // The dev server fetches the first page config before the page context exists
-  // (initLowdefyContext), which carries this stamp over when it builds
-  // _internal.
-  lowdefy._internal = lowdefy._internal ?? {};
-  lowdefy._internal.callerStamp = stamp;
-}
-
-export default recordCallerStamp;
+// The server templates import recordCallerStamp from here.
+export { recordCallerStamp as default } from '@lowdefy/client-core';

@@ -15,11 +15,10 @@
 */
 
 import React, { useEffect } from 'react';
+import { createPageLifecycleManager, getContextKey } from '@lowdefy/client-core';
 import getContext from '@lowdefy/engine';
 
-import createPageLifecycleManager from './createPageLifecycleManager.js';
 import createShortcutManager from './createShortcutManager.js';
-import getContextKey from './getContextKey.js';
 import MountEvents from './MountEvents.js';
 
 const ShortcutEffect = ({ context }) => {
