@@ -15,8 +15,10 @@ plugin maps. Pages, menus and theme come from the app's Lowdefy server as data. 
   "id": "field",
   "name": "Field",
   "profile": "field",
+  "version": "1.4.2",
   "scheme": "field",
   "environment": "production",
+  "eas": { "owner": "example", "projectId": "2b6f…" },
   "ios": { "bundleIdentifier": "com.example.field" },
   "android": { "package": "com.example.field" },
   "store": { "ios": "https://apps.apple.com/...", "android": "https://play.google.com/..." },
@@ -38,9 +40,27 @@ the camera). `resolveProfile(name)` flattens one, and throws on a name the table
 config without `profile` is `basic`, or `dev` for Lowdefy Dev. `app.config.ts` applies only the
 profile's config plugins, and sets `capabilities` from it when `shell.json` has none.
 
-It adds the shell's `version` and its type manifest (`scripts/createTypeManifest.mjs`): every block,
+It adds the shell's package version and its type manifest (`scripts/createTypeManifest.mjs`): every block,
 action and operator type the shell registers (`src/plugins/types.js`, listed in
 `src/plugins/shellPlugins.json`), with its plugin package and that package's major version.
+
+## Versions
+
+- `version` in `shell.json` is the store version (`major.minor.patch`), the app config's `version`.
+  Lowdefy Dev has none and builds as `0.0.0`.
+- `extra.shell.version` is the `@lowdefy/shell` package version, which the runtime sends as
+  `x-lowdefy-shell`.
+- `runtimeVersion` is `<nativeVersion>-<profile>`, with `-<hash>` of the shell's `plugins`
+  (`[{ name, version }]`) when it lists any (`runtimeVersion.js`, a pure function `lowdefy mobile`
+  reuses). An over-the-air update reaches only binaries with the same runtime version. Shell
+  identity is not part of it, so every shell on one `nativeVersion` and profile shares it.
+- `nativeVersion` in `package.json` is bumped only when the shell's native dependencies or config
+  plugins change. `pnpm check:native-version` (run by the package's tests) computes Expo's
+  fingerprint of the shell's native inputs for every profile and fails when it differs from the one
+  `native-fingerprint.json` records for the current `nativeVersion`. After a bump,
+  `pnpm check:native-version --write` records the new one.
+- With `eas`, the app config sets `owner`, `updates.url` (`https://u.expo.dev/<projectId>`) and
+  `extra.eas.projectId`.
 
 ## Boot, cache and sync
 
@@ -183,5 +203,6 @@ session` lists and prints phone sessions as it does browser ones.
 pnpm --filter=@lowdefy/shell test         # Jest, and the hello fixture build
 pnpm --filter=@lowdefy/shell export:ios     # Metro and Hermes bundle, no simulator needed
 pnpm --filter=@lowdefy/shell export:android
-pnpm --filter=@lowdefy/shell check:release-bundle   # no dev features or modules in a release shell
+pnpm --filter=@lowdefy/shell check:release-bundle   # each release profile links only its modules
+pnpm --filter=@lowdefy/shell check:native-version   # native code changed only with a nativeVersion bump
 ```

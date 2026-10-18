@@ -57,6 +57,33 @@ function checkShellConfig({ configPath, shell }) {
       }". Received ${JSON.stringify(shell.app.urls)}.`
     );
   }
+  if (shell.profile !== undefined && typeof shell.profile !== 'string') {
+    throw new Error(
+      `${where} "profile" should be the name of a capability profile. Received ${JSON.stringify(
+        shell.profile
+      )}.`
+    );
+  }
+  // The store version, major.minor.patch; `lowdefy mobile build` sets the patch.
+  if (shell.version !== undefined && typeof shell.version !== 'string') {
+    throw new Error(
+      `${where} "version" should be a string. Received ${JSON.stringify(shell.version)}.`
+    );
+  }
+  if (shell.eas !== undefined) {
+    if (!isObject(shell.eas) || typeof shell.eas.projectId !== 'string') {
+      throw new Error(
+        `${where} "eas" should be { owner, projectId }, the shell's Expo account and project. Received ${JSON.stringify(
+          shell.eas
+        )}.`
+      );
+    }
+    if (shell.eas.owner !== undefined && typeof shell.eas.owner !== 'string') {
+      throw new Error(
+        `${where} "eas.owner" should be a string. Received ${JSON.stringify(shell.eas.owner)}.`
+      );
+    }
+  }
   return shell;
 }
 

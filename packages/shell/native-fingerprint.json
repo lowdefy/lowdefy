@@ -1,0 +1,12 @@
+{
+  "nativeVersion": 1,
+  "hash": "6ac187ae30d9daba9f3bfb2b850f5c2fe720c23a",
+  "profiles": {
+    "basic": "3427c20bb3738fbb52eb9535e3eafa73537c14a3",
+    "field": "a569d5174bbccbb34f0f73a4e4c6d050580ee885",
+    "field-nfc": "a569d5174bbccbb34f0f73a4e4c6d050580ee885",
+    "field-tracking": "a569d5174bbccbb34f0f73a4e4c6d050580ee885",
+    "dev": "842206ba31289f9161506aabbae1c525679ab984",
+    "development": "842206ba31289f9161506aabbae1c525679ab984"
+  }
+}

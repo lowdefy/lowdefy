@@ -21,6 +21,7 @@ import path from 'node:path';
 import type { ConfigContext, ExpoConfig } from 'expo/config';
 
 import { getAuthCallbackIntentFilters } from './authCallbackIntentFilters.js';
+import getRuntimeVersion from './runtimeVersion.js';
 import readShellConfig from './readShellConfig.js';
 import { getExclusions, getShellProfile, getShellVariant } from './shellVariant.js';
 import withExcludedNativeModules from './withExcludedNativeModules.js';
@@ -28,6 +29,11 @@ import withExcludedNativeModules from './withExcludedNativeModules.js';
 // The shell's config is its shell.json (readShellConfig.js). Its capability profile, version and
 // type manifest are added here, at build, so the app reads one object
 // (src/config/getShellConfig.js).
+//
+// Three versions: `version` is the store version (shell.json `version`, set per build by
+// `lowdefy mobile`); `extra.shell.version` is the @lowdefy/shell package version, which the runtime
+// sends as `x-lowdefy-shell`; `runtimeVersion` is `<nativeVersion>-<profile>[-<plugins hash>]`
+// (runtimeVersion.js), which decides which over-the-air updates a binary takes.
 const shellRoot = __dirname;
 
 function readJson(filePath: string) {
@@ -46,7 +52,7 @@ function createTypeManifest() {
 export default function appConfig({ config }: ConfigContext): ExpoConfig {
   const { shell } = readShellConfig();
   const variant = getShellVariant();
-  const { version } = readJson(path.join(shellRoot, 'package.json'));
+  const { nativeVersion, version } = readJson(path.join(shellRoot, 'package.json'));
   // The shell carries only its capability profile's native modules (profiles.js). The rest, and
   // Lowdefy Dev's developer features in a release shell, are left out: not linked, their config
   // plugins and permissions not applied (scripts/checkReleaseBundle.mjs checks it).
@@ -56,7 +62,13 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
     ...config,
     name: shell.name,
     slug: shell.id,
-    version,
+    // Lowdefy Dev has no store version of its own here.
+    version: shell.version ?? '0.0.0',
+    runtimeVersion: getRuntimeVersion({
+      nativeVersion,
+      profile: profile.name,
+      plugins: shell.plugins,
+    }),
     platforms: ['ios', 'android'],
     scheme: shell.scheme,
     orientation: 'default',
@@ -74,7 +86,16 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
       ),
     },
     plugins: profile.plugins,
+    // A shell built for the stores is its own EAS project, which serves its over-the-air updates.
+    // Lowdefy Dev's shell.dev.json has none.
+    ...(shell.eas
+      ? {
+          owner: shell.eas.owner,
+          updates: { url: `https://u.expo.dev/${shell.eas.projectId}` },
+        }
+      : {}),
     extra: {
+      ...(shell.eas ? { eas: { projectId: shell.eas.projectId } } : {}),
       shell: {
         ...shell,
         profile: profile.name,

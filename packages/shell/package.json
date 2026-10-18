@@ -27,6 +27,7 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "main": "expo-router/entry",
+  "nativeVersion": 1,
   "files": [
     "app/*",
     "scripts/*",
@@ -36,8 +37,10 @@
     "babel.config.js",
     "checkShellConfig.js",
     "metro.config.js",
+    "native-fingerprint.json",
     "profiles.js",
     "readShellConfig.js",
+    "runtimeVersion.js",
     "shell.dev.json",
     "shellVariant.js",
     "withExcludedNativeModules.js",
@@ -45,11 +48,12 @@
   ],
   "scripts": {
     "dayjs-locales": "node scripts/createDayjsLocales.mjs",
+    "check:native-version": "node scripts/checkNativeVersion.mjs",
     "check:release-bundle": "node scripts/checkReleaseBundle.mjs",
     "export:android": "expo export --platform android --output-dir dist/android",
     "export:ios": "expo export --platform ios --output-dir dist/ios",
     "start": "expo start",
-    "test": "jest && node --test fixtures/hello.test.mjs scripts/createDayjsLocales.test.mjs checkShellConfig.test.mjs profiles.test.mjs shellVariant.test.mjs authCallbackIntentFilters.test.mjs",
+    "test": "jest && node --test fixtures/hello.test.mjs scripts/createDayjsLocales.test.mjs checkShellConfig.test.mjs profiles.test.mjs runtimeVersion.test.mjs shellVariant.test.mjs authCallbackIntentFilters.test.mjs scripts/checkNativeVersion.test.mjs",
     "type-manifest": "node scripts/createTypeManifest.mjs"
   },
   "dependencies": {
@@ -100,6 +104,7 @@
   "devDependencies": {
     "@babel/core": "7.29.6",
     "@babel/plugin-transform-class-static-block": "7.29.7",
+    "@expo/fingerprint": "0.21.5",
     "@jest/globals": "29.7.0",
     "@lowdefy/build": "6.0.0",
     "@lowdefy/logger": "6.0.0",
