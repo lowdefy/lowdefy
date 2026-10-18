@@ -15,13 +15,17 @@
 */
 
 import createDeviceInjections from '../dev/inject/createDeviceInjections.js';
+import createFakeNetwork from '../test/createFakeNetwork.js';
+import createNetworkStatus from '../host/createNetworkStatus.js';
 import GeolocationCurrentPosition from './GeolocationCurrentPosition.js';
 import { installInjector } from '../device/injected.js';
 
 let injections;
 let remove;
 beforeEach(() => {
-  injections = createDeviceInjections();
+  injections = createDeviceInjections({
+    networkStatus: createNetworkStatus({ network: createFakeNetwork() }),
+  });
   remove = installInjector(injections);
 });
 afterEach(() => remove());

@@ -84,15 +84,25 @@ function validateInjection({ kind, name, value }) {
  * - `location` queues too, so a list of locations plays a route one read at a time, but the last
  *   one taken stays: the phone is still there for the next read and for geofences.
  * - `permission` sets the standing answer for one permission, as the phone remembers a choice.
- * - `network: 'offline'` makes the app's every fetch fail as offline (createOfflineFetch) until
- *   `network: 'online'`.
+ * - `network: 'offline'` makes the app's every fetch fail as offline (createOfflineFetch) and
+ *   takes the shell offline (networkStatus), which shows the NoConnection banner and fires the
+ *   app's `offline` events, until `network: 'online'`.
  * - `clear` drops every injection and goes back online.
  * - `push` is refused: showing a payload as a local notification needs expo-notifications.
+ *
+ * @param {Object} params
+ * @param {{ setInjectedOffline: (offline: boolean) => void }} params.networkStatus The shell's
+ *   online state (host/networkStatus.js).
  */
-function createDeviceInjections() {
+function createDeviceInjections({ networkStatus }) {
   let queues = new Map();
   let standing = new Map();
   let offline = false;
+
+  function setOffline(next) {
+    offline = next;
+    networkStatus.setInjectedOffline(next);
+  }
 
   function queue(kind) {
     if (!queues.has(kind)) {
@@ -107,10 +117,10 @@ function createDeviceInjections() {
       case 'clear':
         queues = new Map();
         standing = new Map();
-        offline = false;
+        setOffline(false);
         return { ok: true, kind };
       case 'network':
-        offline = value === 'offline';
+        setOffline(value === 'offline');
         return { ok: true, kind, network: value };
       case 'permission':
         standing.set(`permission:${name}`, value);

@@ -146,7 +146,9 @@ left-out modules and asks for no camera (unless the shell needs it) or motion pe
     read; `location` `{ latitude, longitude, ... }`, or a route as a list, read one at a time with
     the last one staying; `permission` with `name` and `'granted' | 'denied'`, standing until
     changed; `network` `'offline' | 'online'`, which fails the app's every fetch as offline (the tab
-    client keeps its own); `clear`. `push` is refused until the shell carries expo-notifications.
+    client keeps its own) and takes the shell's online state offline (`src/host/networkStatus.js`,
+    which expo-network also feeds), so the NoConnection banner shows and the app's `offline` events
+    fire; `clear`. `push` is refused until the shell carries expo-notifications.
     Device actions read these with `injected(name)` (`src/device/injected.js`), which returns
     nothing in a release shell; `GeolocationCurrentPosition` answers with an injected location.
 - **Recorder** (`src/dev/recorder`). What the developer does is recorded as the web recorder records

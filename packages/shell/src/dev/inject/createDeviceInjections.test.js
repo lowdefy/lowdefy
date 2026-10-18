@@ -15,11 +15,18 @@
 */
 
 import createDeviceInjections from './createDeviceInjections.js';
+import createFakeNetwork from '../../test/createFakeNetwork.js';
+import createNetworkStatus from '../../host/createNetworkStatus.js';
+
+function createInjections() {
+  const networkStatus = createNetworkStatus({ network: createFakeNetwork() });
+  return createDeviceInjections({ networkStatus });
+}
 
 const fixtureImage = { base64: 'iVBORw0KGgo=', mimeType: 'image/png', width: 1, height: 1 };
 
 test('scan, photo and nfc results are each taken once, in the order they were injected', () => {
-  const injections = createDeviceInjections();
+  const injections = createInjections();
   expect(injections.inject({ kind: 'scan', value: { data: 'JOB-1', type: 'qr' } })).toEqual({
     ok: true,
     kind: 'scan',
@@ -38,7 +45,7 @@ test('scan, photo and nfc results are each taken once, in the order they were in
 });
 
 test('a location stays after it is read, and a route plays one location per read', () => {
-  const injections = createDeviceInjections();
+  const injections = createInjections();
   expect(injections.take('location')).toBeUndefined();
   injections.inject({ kind: 'location', value: { latitude: -33.92, longitude: 18.42 } });
   expect(injections.take('location')).toEqual({ latitude: -33.92, longitude: 18.42 });
@@ -58,7 +65,7 @@ test('a location stays after it is read, and a route plays one location per read
 });
 
 test('a permission answer stands for that permission until it changes', () => {
-  const injections = createDeviceInjections();
+  const injections = createInjections();
   expect(injections.take('permission:camera')).toBeUndefined();
   injections.inject({ kind: 'permission', name: 'camera', value: 'denied' });
   expect(injections.take('permission:camera')).toBe('denied');
@@ -69,7 +76,7 @@ test('a permission answer stands for that permission until it changes', () => {
 });
 
 test('network offline holds until the network is turned back on', () => {
-  const injections = createDeviceInjections();
+  const injections = createInjections();
   expect(injections.isOffline()).toBe(false);
   expect(injections.inject({ kind: 'network', value: 'offline' })).toEqual({
     ok: true,
@@ -81,8 +88,21 @@ test('network offline holds until the network is turned back on', () => {
   expect(injections.isOffline()).toBe(false);
 });
 
+// The NoConnection banner and the app's online and offline events read the shell's online state.
+test('network offline takes the shell offline, and online or clear brings it back', () => {
+  const networkStatus = createNetworkStatus({ network: createFakeNetwork() });
+  const injections = createDeviceInjections({ networkStatus });
+  injections.inject({ kind: 'network', value: 'offline' });
+  expect(networkStatus.isOnline()).toBe(false);
+  injections.inject({ kind: 'network', value: 'online' });
+  expect(networkStatus.isOnline()).toBe(true);
+  injections.inject({ kind: 'network', value: 'offline' });
+  injections.inject({ kind: 'clear' });
+  expect(networkStatus.isOnline()).toBe(true);
+});
+
 test('clear drops every injection and goes back online', () => {
-  const injections = createDeviceInjections();
+  const injections = createInjections();
   injections.inject({ kind: 'scan', value: { data: 'JOB-1' } });
   injections.inject({ kind: 'location', value: { latitude: 1, longitude: 2 } });
   injections.take('location');
@@ -96,7 +116,7 @@ test('clear drops every injection and goes back online', () => {
 });
 
 test('a push injection is refused until the shell carries expo-notifications', () => {
-  const injections = createDeviceInjections();
+  const injections = createInjections();
   expect(() => injections.inject({ kind: 'push', value: { title: 'New job' } })).toThrow(
     'Push injection needs expo-notifications to show a local notification, and Lowdefy Dev does not include it yet.'
   );
@@ -134,12 +154,12 @@ test.each([
     'A network injection is "online" or "offline". Received false.',
   ],
 ])('an invalid injection is refused with what was wrong: %j', (injection, message) => {
-  const injections = createDeviceInjections();
+  const injections = createInjections();
   expect(() => injections.inject(injection)).toThrow(message);
 });
 
 test('reading an injection by a name no device action uses throws', () => {
-  const injections = createDeviceInjections();
+  const injections = createInjections();
   expect(() => injections.take('barcode')).toThrow(
     'injected() reads scan, photo, nfc, location, permission:<name>. Received "barcode".'
   );

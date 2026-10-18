@@ -18,12 +18,16 @@ import { jest } from '@jest/globals';
 
 import createDevShellConfig from '../connection/createDevShellConfig.js';
 import createDeviceInjections from './createDeviceInjections.js';
+import createFakeNetwork from '../../test/createFakeNetwork.js';
+import createNetworkStatus from '../../host/createNetworkStatus.js';
 import createOfflineFetch from './createOfflineFetch.js';
 
 const shell = { environment: 'dev', version: '7.4.0', apps: [] };
 
 function setup({ pair = null } = {}) {
-  const injections = createDeviceInjections();
+  const injections = createDeviceInjections({
+    networkStatus: createNetworkStatus({ network: createFakeNetwork() }),
+  });
   const fetch = jest.fn(async () => ({ ok: true }));
   const devShell = createDevShellConfig({
     fetch: createOfflineFetch({ fetch, isOffline: injections.isOffline }),

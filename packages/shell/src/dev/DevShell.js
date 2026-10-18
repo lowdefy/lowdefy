@@ -34,6 +34,7 @@ import Frame from '../components/Frame.js';
 import getShellConfig from '../config/getShellConfig.js';
 import { installInjector } from '../device/injected.js';
 import isLoopbackHost from './connection/isLoopbackHost.js';
+import networkStatus from '../host/networkStatus.js';
 import parseDevLink from './connection/parseDevLink.js';
 import reloadApp from './tab/reloadApp.js';
 import watchShake from './menu/watchShake.js';
@@ -48,7 +49,8 @@ import watchShake from './menu/watchShake.js';
  * - Shaking the phone (or a `lowdefy-dev://menu` link) opens the dev menu.
  * - The open app joins the dev server's tab channel (DevTabClient), which records what is done in
  *   it and takes device injections: the next scan, photo or NFC read, a location, a permission
- *   answer, or no network, which fails the app's every fetch (createDeviceInjections).
+ *   answer, or no network, which fails the app's every fetch and shows the NoConnection banner
+ *   (createDeviceInjections).
  *
  * @param {Object} props
  * @param {Object} [props.accelerometer] expo-sensors' Accelerometer.
@@ -66,7 +68,7 @@ function DevShell({
   const kv = useMemo(() => kvProp ?? createDeviceStore(), [kvProp]);
   const servers = useMemo(() => createServerList({ kv }), [kv]);
   const logs = useMemo(() => createLogBuffer({ console: globalThis.console }), []);
-  const injections = useMemo(() => createDeviceInjections(), []);
+  const injections = useMemo(() => createDeviceInjections({ networkStatus }), []);
   const rootRef = useRef(null);
   const openApp = useRef(null);
   const [server, setServer] = useState(() => servers.last());
