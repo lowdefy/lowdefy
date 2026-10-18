@@ -17,11 +17,11 @@
 import { type, urlQuery } from '@lowdefy/helpers';
 
 import getFromObject from './getFromObject.js';
-import getGlobals from '../getGlobals.js';
+import getContextGlobals from '../getContextGlobals.js';
 
 function createGetUrlQuery({ arrayIndices, blockId, context }) {
   return function getUrlQuery(params) {
-    const { location } = getGlobals(context._internal.lowdefy).window ?? {};
+    const { location } = getContextGlobals(context).window ?? {};
     if (type.isNone(location)) {
       throw new Error(
         `Browser window.location not available for getUrlQuery on blockId: ${blockId}.`

@@ -21,6 +21,7 @@ import { isDecodedServerError } from './decodeServerError.js';
 import { isStopChain } from './stopChain.js';
 import getTrace from './trace/getTrace.js';
 import trackActionMethods from './tracking/trackActionMethods.js';
+import getContextGlobals from './getContextGlobals.js';
 
 const CONTROL_KEYS = [':if', ':switch', ':return'];
 
@@ -451,7 +452,7 @@ class Actions {
     });
     try {
       response = await this.actions[action.type]({
-        globals: this.context._internal.lowdefy._internal.globals,
+        globals: getContextGlobals(this.context),
         // Read-only app metadata (name, slug, version, gitSha, environment) — what _app reads.
         lowdefyApp: this.context._internal.lowdefy.lowdefyApp,
         methods: trackActionMethods({
