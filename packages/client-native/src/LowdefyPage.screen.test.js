@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { jest } from '@jest/globals';
+import { StyleSheet } from 'react-native';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 
 import buildPage from './test/buildPage.js';
@@ -438,4 +439,60 @@ test('a page tree mounted again onto its kept context while shown does not fire 
   await act(async () => undefined);
   expect(record).toHaveBeenCalledTimes(1);
   expect(host.fetch).toHaveBeenCalledTimes(1);
+});
+
+test('a Screen footer is drawn below the scroll view, above the bottom inset', async () => {
+  const { host } = createFakeHost({ path: '/home' });
+  const page = buildPage({
+    id: 'home',
+    type: 'Screen',
+    events: { onInit: [{ id: 'init', type: 'SetState', params: { label: 'Send' } }] },
+    slots: {
+      footer: {
+        blocks: [
+          {
+            id: 'send',
+            type: 'Button',
+            properties: { title: { _state: 'label' } },
+            events: {
+              onClick: [{ id: 'sent', type: 'SetState', params: { label: 'Sent' } }],
+            },
+          },
+        ],
+      },
+    },
+    blocks: [{ id: 'body', type: 'Paragraph', properties: { content: 'Body' } }],
+  });
+  await render(
+    <LowdefyPage
+      bottomInset={83}
+      core={createCore()}
+      host={host}
+      pageConfig={page}
+      rootConfig={rootConfig}
+      types={createTypes()}
+    />
+  );
+  expect(await screen.findByText('Send')).toBeTruthy();
+  const footer = screen.getByTestId('screen-footer');
+  const [scrollView] = findAll(screen.root, (node) => node.type === 'RCTScrollView');
+  expect(findAll(footer, (node) => node.props?.children === 'Send')).not.toHaveLength(0);
+  expect(findAll(scrollView, (node) => node.props?.children === 'Send')).toHaveLength(0);
+  expect(findAll(scrollView, (node) => node.props?.children === 'Body')).not.toHaveLength(0);
+  expect(StyleSheet.flatten(footer.props.style).borderTopWidth).toBe(StyleSheet.hairlineWidth);
+  expect(findAll(footer, (node) => node.props?.style?.paddingBottom === 83)).not.toHaveLength(0);
+  // The footer's blocks update with the page's state.
+  await act(async () => {
+    fireEvent.press(screen.getByText('Send'));
+  });
+  expect(await screen.findByText('Sent')).toBeTruthy();
+});
+
+test('a Screen without a footer draws none', async () => {
+  const { view } = renderScreen({
+    page: { id: 'home', type: 'Screen', blocks: [{ id: 'body', type: 'Paragraph' }] },
+  });
+  await view;
+  await act(async () => undefined);
+  expect(screen.queryByTestId('screen-footer')).toBeNull();
 });

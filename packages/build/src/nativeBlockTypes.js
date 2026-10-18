@@ -240,6 +240,8 @@ const nativeBlockTypes = {
           'Blocks drawn at the left of the screen header, at their natural size. Prefer `headerActions` for icon buttons.',
         headerRight:
           'Blocks drawn at the right of the screen header, at their natural size. Prefer `headerActions` for icon buttons.',
+        footer:
+          'Blocks pinned to the bottom of the screen, outside the scroll view, above the tab bar and the keyboard, on the bar background with a hairline above. For a Composer, or actions that stay in reach.',
       },
     },
     SegmentedControl: {

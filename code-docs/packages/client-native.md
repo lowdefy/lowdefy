@@ -90,9 +90,15 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   Header slots render inside `NaturalSizeContext`, so `BlockLayout` gives their blocks their
   content's size rather than a column width; a span-24 block would stretch the native bar item
   across the header and truncate the title. `ScreenContext` carries the screen's `focused` flag
-  (onFocus fires on each false-to-true change, the first one after onMount) and `setRefresh`,
+  (onFocus fires on each false-to-true change, the first one after onMount), `setRefresh`,
   which turns on the page ScrollView's `RefreshControl` for `onRefresh` and holds `refreshing`
-  until the event's promise settles.
+  until the event's promise settles, and `footer`, the store (`createFooterStore`) the Screen sets
+  its `footer` slot in. `ScreenFooter` draws that slot below the ScrollView, padded by
+  `LowdefyPage`'s `bottomInset` (the shell's bottom safe area: tab bar, home indicator) and kept
+  above the keyboard by a `KeyboardAvoidingView`; only it re-renders when the slot is set, so the
+  Screen's every-render update does not render the page again. What onFocus has fired for is kept
+  per page context (`getFocusMemory`, through `FocusMemoryContext`), not in the Screen's refs, so
+  the page tree mounting again onto a kept context does not fire it again.
 - The engine's `window` and `document` keys hold plain objects. `focus` and `blur` have no
   source on a phone; `online` and `offline` follow the `network` the shell passes.
 

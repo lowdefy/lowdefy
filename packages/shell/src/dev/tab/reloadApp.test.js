@@ -22,6 +22,10 @@ import reloadApp from './reloadApp.js';
 import renderPageScreen from '../../test/renderPageScreen.js';
 import { createRoot } from '../../test/fixtures.js';
 
+jest.mock('react-native-safe-area-context', () => ({
+  useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 34, left: 0 }),
+}));
+
 jest.mock('expo-router', () => ({
   DarkTheme: { fonts: {} },
   DefaultTheme: { fonts: {} },

@@ -24,6 +24,8 @@ const meta = {
     content: 'The page content, in a scroll view.',
     headerLeft: 'Blocks drawn at the left of the screen header, at their natural size.',
     headerRight: 'Blocks drawn at the right of the screen header, at their natural size.',
+    footer:
+      'Blocks pinned to the bottom of the screen, outside the scroll view, above the tab bar and the keyboard.',
   },
 };
 

@@ -141,6 +141,16 @@ function useFocusEvent({ events, focused, focusMemory, loading, methodsRef }) {
   }, [focused, focusMemory, hasOnFocus, loading, methodsRef]);
 }
 
+// The footer slot, for the page to draw below its scroll view (ScreenFooter). It is set on every
+// render, so the footer shows the slot as the Screen last rendered it, and cleared when the
+// Screen goes.
+function useFooterSlot({ footer, slot }) {
+  useEffect(() => {
+    footer.set(typeof slot === 'function' ? () => slot() : null);
+  });
+  useEffect(() => () => footer.set(null), [footer]);
+}
+
 // events.onRefresh as pull-to-refresh on the page's scroll view: the spinner shows until the
 // event's actions finish.
 function useRefreshEvent({ events, methodsRef, setRefresh }) {
@@ -164,11 +174,12 @@ function useRefreshEvent({ events, methodsRef, setRefresh }) {
  * - `headerSearch`: `{ placeholder, autoFocus, hideWhenScrolling, onChangeText, onSearch,
  *   onCancel }` for a native search bar, or undefined.
  *
- * Pull-to-refresh (onRefresh) and onFocus come from the page's screen (ScreenContext).
+ * Pull-to-refresh (onRefresh) and onFocus come from the page's screen (ScreenContext). The footer
+ * slot is drawn by the page below its scroll view, pinned above the tab bar and the keyboard.
  */
 function Screen({ blockId, components, content, events, loading, methods, properties }) {
   const onScreenOptions = useContext(ScreenOptionsContext);
-  const { focused, setRefresh } = useContext(ScreenContext);
+  const { focused, footer, setRefresh } = useContext(ScreenContext);
   const focusMemory = useContext(FocusMemoryContext);
   const methodsRef = useRef(methods);
   methodsRef.current = methods;
@@ -190,6 +201,7 @@ function Screen({ blockId, components, content, events, loading, methods, proper
   const headerSearch = useHeaderSearch({ headerSearch: properties.headerSearch, methodsRef });
   useFocusEvent({ events, focused, focusMemory, loading, methodsRef });
   useRefreshEvent({ events, methodsRef, setRefresh });
+  useFooterSlot({ footer, slot: content.footer });
 
   const { presentation = 'card', title } = properties;
   const largeTitle = properties.largeTitle === true;

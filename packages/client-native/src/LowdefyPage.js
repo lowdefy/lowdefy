@@ -24,12 +24,14 @@ import Block from './block/Block.js';
 import BreakpointContext from './layout/BreakpointContext.js';
 import Context from './Context.js';
 import createScreenGlobals from './globals/createScreenGlobals.js';
+import createFooterStore from './screen/createFooterStore.js';
 import ElementsContext from './elements/ElementsContext.js';
 import FocusMemoryContext from './screen/FocusMemoryContext.js';
 import getFocusMemory from './screen/getFocusMemory.js';
 import initNativeLowdefy from './initNativeLowdefy.js';
 import PageStyleContext from './style/PageStyleContext.js';
 import ScreenContext from './screen/ScreenContext.js';
+import ScreenFooter from './screen/ScreenFooter.js';
 import ScreenOptionsContext from './screen/ScreenOptionsContext.js';
 import ThemeContext from './theme/ThemeContext.js';
 import ThemeProvider from './theme/ThemeProvider.js';
@@ -53,6 +55,7 @@ function useRefresh() {
 }
 
 const Page = ({
+  bottomInset,
   core,
   focused,
   globals,
@@ -98,7 +101,8 @@ const Page = ({
     pageConfig.dynamic === true ? `${screenKey}:${buildRef.current.build}` : screenKey;
 
   const { hasRefresh, onRefresh, refreshing, setRefresh } = useRefresh();
-  const screen = useMemo(() => ({ focused, setRefresh }), [focused, setRefresh]);
+  const [footer] = useState(createFooterStore);
+  const screen = useMemo(() => ({ focused, footer, setRefresh }), [focused, footer, setRefresh]);
 
   const lowdefy = initNativeLowdefy({
     core,
@@ -162,6 +166,7 @@ const Page = ({
                 }}
               </Context>
             </ScrollView>
+            <ScreenFooter bottomInset={bottomInset} footer={footer} />
           </ScreenContext.Provider>
         </ScreenOptionsContext.Provider>
       </PageStyleContext.Provider>
@@ -170,7 +175,7 @@ const Page = ({
 };
 
 /**
- * Renders one Lowdefy page as native views, in a ScrollView.
+ * Renders one Lowdefy page as native views, in a ScrollView, with a Screen's footer slot below it.
  *
  * @param {Object} props
  * @param {Object} props.core What the page needs to build the app's core the first time:
@@ -200,11 +205,14 @@ const Page = ({
  * @param {boolean} [props.focused] Whether the screen is the one shown; a Screen page fires
  *   onFocus each time it becomes true. Defaults to true.
  * @param {Object} [props.resetContext] `{ reset, setReset }`: rebuild the page context once.
+ * @param {number} [props.bottomInset] The screen's bottom safe area: the tab bar and the home
+ *   indicator, which a Screen's footer is drawn above. Defaults to 0.
  *
  * A shell wraps its pages in one ThemeProvider, so they share the theme mode; a page outside one
  * makes its own.
  */
 const LowdefyPage = ({
+  bottomInset = 0,
   core,
   focused = true,
   host,
@@ -241,6 +249,7 @@ const LowdefyPage = ({
   const page = (
     <ElementsContext.Provider value={elements}>
       <Page
+        bottomInset={bottomInset}
         core={core}
         focused={focused}
         globals={globals}

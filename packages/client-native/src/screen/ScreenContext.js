@@ -20,6 +20,12 @@ import React from 'react';
 // - focused: whether the screen is the one shown (the shell's router focus), for onFocus.
 // - setRefresh: sets the function pull-to-refresh runs on the page's scroll view (a function
 //   that returns a promise; the spinner shows until it settles), or null for none.
-const ScreenContext = React.createContext({ focused: true, setRefresh: () => undefined });
+// - footer: the store a Screen sets its footer slot in, which the page draws below its scroll
+//   view (createFooterStore).
+const ScreenContext = React.createContext({
+  focused: true,
+  footer: { get: () => null, set: () => undefined, subscribe: () => () => undefined },
+  setRefresh: () => undefined,
+});
 
 export default ScreenContext;
