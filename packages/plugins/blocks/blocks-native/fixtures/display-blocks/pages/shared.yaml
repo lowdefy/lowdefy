@@ -89,6 +89,27 @@ blocks:
     type: Spinner
     properties:
       size: small
+  - id: notes
+    type: Markdown
+    properties:
+      content: |
+        ## Notes
+
+        Read the [delivery terms](https://example.com/terms) before you ship.
+
+        - [x] Packed
+        - [ ] Collected
+
+        | Box | Weight |
+        | --- | ------ |
+        | A   | 2 kg   |
+    events:
+      onLinkPress:
+        - id: open_terms
+          type: SetState
+          params:
+            last_link:
+              _event: href
   - id: footer
     type: Box
     properties:

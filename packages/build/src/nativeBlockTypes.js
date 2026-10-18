@@ -28,6 +28,7 @@ const nativeBlockTypes = {
     'Icon',
     'List',
     'ListItem',
+    'Markdown',
     'NumberInput',
     'Paragraph',
     'Screen',
@@ -52,6 +53,7 @@ const nativeBlockTypes = {
     Icon: ['loading'],
     List: [],
     ListItem: [],
+    Markdown: [],
     NumberInput: [],
     Paragraph: [],
     Screen: [],
@@ -142,6 +144,10 @@ const nativeBlockTypes = {
     ListItem: {
       category: 'display',
       cssKeys: ['element', 'avatar', 'icon', 'title', 'description', 'extra'],
+    },
+    Markdown: {
+      category: 'display',
+      cssKeys: ['element'],
     },
     NumberInput: {
       category: 'input',

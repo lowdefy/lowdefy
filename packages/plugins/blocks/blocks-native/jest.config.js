@@ -37,8 +37,9 @@ export default {
   },
   setupFiles: ['<rootDir>/src/test/removeWindow.js'],
   // The preset's pattern assumes a flat node_modules; pnpm nests each package under .pnpm.
+  // react-native-marked ships TypeScript source and its parser, marked, ships ES modules.
   transformIgnorePatterns: [
-    'node_modules/(?!(\\.pnpm/[^/]+/node_modules/)?((jest-)?react-native|@react-native(-community)?|react-native-svg|change-case|intl-messageformat|@formatjs)/)',
+    'node_modules/(?!(\\.pnpm/[^/]+/node_modules/)?((jest-)?react-native|@react-native(-community)?|react-native-svg|react-native-marked|react-native-reanimated-table|marked|@jsamr|github-slugger|change-case|intl-messageformat|@formatjs)/)',
   ],
   testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test/'],
 };

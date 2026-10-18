@@ -4,7 +4,7 @@ The native block set: React Native components a Lowdefy mobile shell renders thr
 
 ## Blocks
 
-Layout and display blocks: `Box`, `Card`, `Divider`, `Tabs`, `Title`, `Paragraph`, `Icon`, `Tag`, `Alert`, `Empty`, `Skeleton` and `Spinner`. List, input and action blocks: `List`, `ListItem`, `TextInput`, `TextArea`, `NumberInput`, `Selector`, `Switch`, `DateSelector` and `Button`. `Screen` (the mobile page type) has its meta here and its component in `@lowdefy/client-native`. `Empty` and `ListItem` have no web block; a page that uses one is mobile only.
+Layout and display blocks: `Box`, `Card`, `Divider`, `Tabs`, `Title`, `Paragraph`, `Markdown`, `Icon`, `Tag`, `Alert`, `Empty`, `Skeleton` and `Spinner`. List, input and action blocks: `List`, `ListItem`, `TextInput`, `TextArea`, `NumberInput`, `Selector`, `Switch`, `DateSelector` and `Button`. `Screen` (the mobile page type) has its meta here and its component in `@lowdefy/client-native`. `Empty` and `ListItem` have no web block; a page that uses one is mobile only.
 
 | Block                 | Web source          | Native notes                                                                                  |
 | --------------------- | ------------------- | --------------------------------------------------------------------------------------------- |
@@ -13,6 +13,7 @@ Layout and display blocks: `Box`, `Card`, `Divider`, `Tabs`, `Title`, `Paragraph
 | `Divider`             | blocks-antd         | Dashed and dotted lines are zero-height views with a split border (iOS draws dashes only so). |
 | `Tabs`                | blocks-antd         | Top tabs in a scrolling bar (RN views, not `@expo/ui`); `setActiveKey` method; `bottom` too.  |
 | `Title`, `Paragraph`  | blocks-antd         | Text styles from antd's typography; `ellipsis` with expand/collapse fires `onExpand`.         |
+| `Markdown`            | blocks-markdown     | Read-only GFM drawn with RN views by `react-native-marked` (below); adds `onLinkPress`.       |
 | `Icon`                | blocks-basic        | Drawn by the native icon renderer; a button with `onClick`.                                   |
 | `Tag`                 | blocks-antd         | Status and preset colours from the computed palette tokens; closable; `href` opens outside.   |
 | `Alert`               | blocks-antd         | Type colours and icon; closable fires `onClose` then `afterClose`; `action` slot.             |
@@ -30,6 +31,17 @@ The list, input and action blocks:
 | `List`         | Web model and methods; `FlatList`, or `SectionList` with `sectionKey`. Scrolls itself only with `scroll: true`, since it sits in the page's scroll view. `swipeActions` use a `PanResponder` row (`SwipeableRow`) with accessibility actions. |
 | `ListItem`     | Mobile only. A cell with avatar or icon, title, description, `extra` detail and a chevron that shows by default when it has `onClick`.                                                                                                        |
 | `Button`       | `getButtonColors` follows antd: `color` + `variant`, or the deprecated `type` (where a preset colour has no effect and a custom colour replaces primary). The spinner comes from `events.onClick.loading`.                                    |
+
+## Markdown
+
+`Markdown` draws GitHub-flavoured markdown (headings, emphasis, strikethrough, code, block quotes, ordered, unordered and task lists, tables, images, links) with React Native views. It takes the web block's `content` and `skipHtml`, and adds `onLinkPress`.
+
+- **Library.** `react-native-marked` parses with `marked` and draws with `Text`, `View` and `Image`. Its only native peer is `react-native-svg`, which the `basic` profile already links, so the block adds no native module and reaches shells in an update. `react-native-markdown-display` was not chosen: its last release was in 2023, on `markdown-it` 10. A web-view `Markdown` costs a web view per instance.
+- **Scrolling.** The block uses the `useMarkdown` hook, not the library's `FlatList` component, because a block sits in the page's scroll view.
+- **Theme.** `getMarkdownStyles` maps the computed tokens onto the library's styles: body text as `Paragraph`, headings 1 to 5 as `Title`, code in the platform's monospace font on `colorFillTertiary`.
+- **Links.** `MarkdownRenderer` overrides `link` and `linkImage`. With `onLinkPress` the block triggers the event with `{ href }` and opens nothing; without it, `Linking.openURL(href)` opens the link, as an outside `Link` does. The library reads an href without a scheme from the app root, so `page` passes `/page` and `#notes` passes `/#notes`.
+- **Raw HTML** is drawn as its source text, as the web block escapes it. With `skipHtml` it is left out.
+- **Task lists.** The library draws no checkbox token, so `MarkdownTokenizer` puts ☐ or ☑ in front of a task item's text.
 
 ## Metas
 
