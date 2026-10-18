@@ -16,6 +16,10 @@
 
 import { jest } from '@jest/globals';
 
+import { icons as lucideIcons } from 'lucide';
+
+import createIconSemanticMap from './icons/createIconSemanticMap.js';
+import createLucideIconLayer from './icons/createLucideIconLayer.js';
 import writeMobile from './writeMobile.js';
 import testContext from '../test-utils/testContext.js';
 
@@ -219,4 +223,45 @@ test('writeMobile writes mobile.auth as configured', async () => {
     sharedDevice: true,
     sessionExpiresIn: 2592000,
   });
+});
+
+test('writeMobile writes tab icons with their data, sfSymbol and role, the search tab with the search icon', async () => {
+  const context = createContext();
+  const sets = { lucide: [createLucideIconLayer()] };
+  context.icons = {
+    sets,
+    defaultSet: 'lucide',
+    semantic: createIconSemanticMap({ sets, defaultSet: 'lucide' }),
+  };
+  await writeMobile({
+    components: {
+      mobile: {
+        menus: {
+          tabs: [
+            { pageId: 'today', title: 'Today', icon: 'Inbox' },
+            { pageId: 'jobs', title: 'Jobs', icon: 'edit', sfSymbol: 'square.and.pencil' },
+            { pageId: 'find', title: 'Search', role: 'search' },
+          ],
+        },
+      },
+    },
+    context,
+  });
+  expect(getArtifacts()['mobile/config.json'].menus.tabs).toEqual([
+    { pageId: 'today', title: 'Today', icon: 'Inbox', iconData: { node: lucideIcons.Inbox } },
+    {
+      pageId: 'jobs',
+      title: 'Jobs',
+      icon: 'edit',
+      iconData: { node: lucideIcons.Pencil },
+      sfSymbol: 'square.and.pencil',
+    },
+    {
+      pageId: 'find',
+      title: 'Search',
+      icon: 'search',
+      iconData: { node: lucideIcons.Search },
+      role: 'search',
+    },
+  ]);
 });

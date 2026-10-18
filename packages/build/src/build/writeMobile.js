@@ -22,17 +22,30 @@ import getMobileAuth from './buildMobile/getMobileAuth.js';
 import getMobileHomePageId from './buildMobile/getMobileHomePageId.js';
 import loadIconData from './icons/loadIconData.js';
 
+// The search tab draws the search icon unless it names its own.
+function getItemIcon(item) {
+  if (type.isString(item.icon)) {
+    return item.icon;
+  }
+  return item.role === 'search' ? 'search' : undefined;
+}
+
 function getMenuItems(menus) {
   return [...(menus.tabs ?? []), ...(menus.drawer ?? [])];
 }
 
 function buildMenuItems({ items, iconData }) {
-  return items.map((item) => ({
-    pageId: item.pageId,
-    title: item.title,
-    icon: item.icon,
-    iconData: type.isString(item.icon) ? iconData[item.icon] : undefined,
-  }));
+  return items.map((item) => {
+    const icon = getItemIcon(item);
+    return {
+      pageId: item.pageId,
+      title: item.title,
+      icon,
+      iconData: type.isString(icon) ? iconData[icon] : undefined,
+      sfSymbol: item.sfSymbol,
+      role: item.role,
+    };
+  });
 }
 
 async function buildMenus({ menus, context }) {
@@ -41,7 +54,7 @@ async function buildMenus({ menus, context }) {
   }
   const iconNames = new Set(
     getMenuItems(menus)
-      .map((item) => item.icon)
+      .map(getItemIcon)
       .filter((icon) => type.isString(icon))
   );
   const iconData = await loadIconData({ names: [...iconNames], icons: context.icons });

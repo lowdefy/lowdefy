@@ -2883,9 +2883,18 @@ export default {
         },
         icon: {
           type: 'string',
-          description: 'Icon name, as in web menus and blocks.',
+          description:
+            'Icon name, as in web menus and blocks. A tab bar draws it as its SF Symbol on iOS (Inbox as tray, edit as pencil) and as the icon elsewhere.',
           errorMessage: {
             type: 'Mobile menu item "icon" should be a string.',
+          },
+        },
+        sfSymbol: {
+          type: 'string',
+          description:
+            'The SF Symbol an iOS tab bar draws for the item, such as "tray.full". Defaults to the symbol mapped from icon.',
+          errorMessage: {
+            type: 'Mobile menu item "sfSymbol" should be a string.',
           },
         },
         title: {
@@ -2893,6 +2902,16 @@ export default {
           description: 'Item label.',
           errorMessage: {
             type: 'Mobile menu item "title" should be a string.',
+          },
+        },
+        role: {
+          type: 'string',
+          enum: ['search'],
+          description:
+            'A tab\'s role. "search" makes it the iOS 26 search tab, set apart at the right of the tab bar with a magnifier; elsewhere it is a tab with the search icon. Its page is a Screen with headerSearch (autoFocus). One tab at most.',
+          errorMessage: {
+            type: 'Mobile menu item "role" should be a string.',
+            enum: 'Mobile menu item "role" should be "search".',
           },
         },
       },

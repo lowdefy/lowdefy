@@ -169,7 +169,7 @@ test('validateMobileConfig throws on an unknown menu item key', () => {
       mobile: { menus: { drawer: [{ pageId: 'a', url: 'https://example.com' }] } },
     })
   ).toThrow(
-    'App "mobile.menus.drawer[0]" has unknown key "url". Allowed keys: pageId, icon, title.'
+    'App "mobile.menus.drawer[0]" has unknown key "url". Allowed keys: pageId, icon, sfSymbol, title, role.'
   );
 });
 
@@ -437,4 +437,47 @@ test('validateMobileConfig warns when an iOS-only shell has no android.sha256', 
 test('validateMobileConfig does not warn for a shell with neither ios nor android', () => {
   validateShells([{ id: 'field', scheme: 'field' }]);
   expect(context.handleWarning).not.toHaveBeenCalled();
+});
+
+test('validateMobileConfig accepts a tab with sfSymbol and one search tab', () => {
+  const menus = {
+    tabs: [
+      { pageId: 'today', icon: 'Inbox', sfSymbol: 'tray.full' },
+      { pageId: 'find', role: 'search', title: 'Search' },
+    ],
+  };
+  expect(() => validateMobileConfig({ context, mobile: { menus } })).not.toThrow();
+});
+
+test('validateMobileConfig throws on a tab role other than search', () => {
+  const menus = { tabs: [{ pageId: 'today' }, { pageId: 'find', role: 'favorites' }] };
+  expect(() => validateMobileConfig({ context, mobile: { menus } })).toThrow(
+    'App "mobile.menus.tabs[1].role" should be one of: search. Received "favorites".'
+  );
+});
+
+test('validateMobileConfig throws on two search tabs', () => {
+  const menus = {
+    tabs: [
+      { pageId: 'a', role: 'search' },
+      { pageId: 'b', role: 'search' },
+    ],
+  };
+  expect(() => validateMobileConfig({ context, mobile: { menus } })).toThrow(
+    'App "mobile.menus.tabs" should have at most one item with role "search".'
+  );
+});
+
+test('validateMobileConfig throws on a drawer item with a role', () => {
+  const menus = { drawer: [{ pageId: 'find', role: 'search' }] };
+  expect(() => validateMobileConfig({ context, mobile: { menus } })).toThrow(
+    'App "mobile.menus.drawer[0].role" should be one of: none. Received "search".'
+  );
+});
+
+test('validateMobileConfig throws when a menu item sfSymbol is not a string', () => {
+  const menus = { tabs: [{ pageId: 'a', sfSymbol: 3 }, { pageId: 'b' }] };
+  expect(() => validateMobileConfig({ context, mobile: { menus } })).toThrow(
+    'App "mobile.menus.tabs[0].sfSymbol" should be a string.'
+  );
 });
