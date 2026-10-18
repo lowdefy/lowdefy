@@ -1,5 +1,5 @@
 # The native controls on a mobile-only page: a SegmentedControl, Selector property rows with
-# variant menu, a Menu, and a Sheet holding a form that a button opens.
+# variant menu and variant sheet, a Menu, and a Sheet holding a form that a button opens.
 id: controls
 type: Box
 blocks:
@@ -66,6 +66,50 @@ blocks:
               value: grace
               avatar:
                 name: Grace Hopper
+      - id: reviewer
+        type: Selector
+        properties:
+          title: Reviewer
+          variant: sheet
+          menuTitle: Request review
+          placeholder: No reviewer
+          searchThreshold: 5
+          options:
+            - label: Assign to me
+              value: me
+              pinned: true
+              avatar:
+                name: Gerrie van Wyk
+                src: https://github.com/Gervwyk.png?size=96
+            - label: Sam Tolmay
+              value: sam
+              description: Maintainer
+              avatar:
+                name: Sam Tolmay
+                src: https://github.com/SamTolmay.png?size=96
+            - label: Ada Lovelace
+              value: ada
+              description: ada@example.com
+              avatar:
+                name: Ada Lovelace
+            - label: Grace Hopper
+              value: grace
+              description: grace@example.com
+              avatar:
+                name: Grace Hopper
+            - label: José Núñez
+              value: jose
+              avatar:
+                name: José Núñez
+            - label: Zoë Smit
+              value: zoe
+              avatar:
+                name: Zoë Smit
+            - label: Former member
+              value: former
+              disabled: true
+              avatar:
+                name: Former member
   - id: more
     type: Menu
     properties:

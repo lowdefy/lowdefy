@@ -89,7 +89,7 @@ const nativeBlockTypes = {
     Paragraph: [],
     Screen: [],
     SegmentedControl: [],
-    Selector: ['ChevronsUpDown'],
+    Selector: ['Check', 'ChevronsUpDown', 'Search', 'X'],
     Sheet: ['X'],
     Skeleton: [],
     Spinner: [],
