@@ -1362,3 +1362,18 @@ test('falls back to the global user row for name and image when the member row c
   expect(context.user.name).toBe('Alice Anderson');
   expect(context.user.image).toBe('data:image/svg;a');
 });
+
+test('a bearer caller reads its session past the cookie cache', async () => {
+  const { auth } = mockAuth({ session: null });
+  const headers = new Headers({ authorization: 'Bearer tok.sig' });
+
+  await resolveAuthentication(
+    { logger: mockLogger(), config: {} },
+    { auth, headers, strategies: [] }
+  );
+
+  expect(auth.api.getSession).toHaveBeenCalledWith({
+    headers,
+    query: { disableCookieCache: true },
+  });
+});
