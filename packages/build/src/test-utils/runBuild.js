@@ -115,7 +115,8 @@ const testTypesMap = {
 
 /**
  * Native types map for error tests: blocks from the native skeleton and one
- * shell plugin block, the actions-core actions, and the web client operators.
+ * installed shell plugin's block, the actions-core actions, and the web client
+ * operators.
  */
 const testTypesMapMobile = {
   actions: Object.fromEntries(
@@ -134,6 +135,8 @@ const testTypesMapMobile = {
   operators: {
     client: testTypesMap.operators.client,
   },
+  // The shell plugins the server installed, as createPluginTypesMap lists them.
+  plugins: ['@example/lowdefy-printer'],
 };
 
 // Mirrors the CLI logger's name segment (errorToDisplayString) so fixtures assert
