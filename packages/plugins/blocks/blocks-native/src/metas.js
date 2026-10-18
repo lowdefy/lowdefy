@@ -15,6 +15,7 @@
 */
 
 export { default as Alert } from './blocks/Alert/meta.js';
+export { default as Avatar } from './blocks/Avatar/meta.js';
 export { default as Box } from './blocks/Box/meta.js';
 export { default as Button } from './blocks/Button/meta.js';
 export { default as Card } from './blocks/Card/meta.js';
@@ -31,6 +32,7 @@ export { default as Screen } from './blocks/Screen/meta.js';
 export { default as Selector } from './blocks/Selector/meta.js';
 export { default as Skeleton } from './blocks/Skeleton/meta.js';
 export { default as Spinner } from './blocks/Spinner/meta.js';
+export { default as StatusIcon } from './blocks/StatusIcon/meta.js';
 export { default as Switch } from './blocks/Switch/meta.js';
 export { default as Tabs } from './blocks/Tabs/meta.js';
 export { default as Tag } from './blocks/Tag/meta.js';

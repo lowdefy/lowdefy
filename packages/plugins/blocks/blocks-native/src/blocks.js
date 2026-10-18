@@ -15,6 +15,7 @@
 */
 
 export { default as Alert } from './blocks/Alert/Alert.js';
+export { default as Avatar } from './blocks/Avatar/Avatar.js';
 export { default as Box } from './blocks/Box/Box.js';
 export { default as Button } from './blocks/Button/Button.js';
 export { default as Card } from './blocks/Card/Card.js';
@@ -30,6 +31,7 @@ export { default as Paragraph } from './blocks/Paragraph/Paragraph.js';
 export { default as Selector } from './blocks/Selector/Selector.js';
 export { default as Skeleton } from './blocks/Skeleton/Skeleton.js';
 export { default as Spinner } from './blocks/Spinner/Spinner.js';
+export { default as StatusIcon } from './blocks/StatusIcon/StatusIcon.js';
 export { default as Switch } from './blocks/Switch/Switch.js';
 export { default as Tabs } from './blocks/Tabs/Tabs.js';
 export { default as Tag } from './blocks/Tag/Tag.js';
