@@ -22,11 +22,15 @@ module.exports = {
   coveragePathIgnorePatterns: ['<rootDir>/src/test/'],
   coverageReporters: [['lcov', { projectRoot: '../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
-  // @expo/ui reaches native modules Jest does not have, so the native blocks' pickers, switch and
-  // date picker are stand-ins (src/test/expoUi.js) that keep their props.
+  // @expo/ui reaches native modules Jest does not have, so the native blocks' pickers, switch,
+  // icon, date picker, menu, segmented control and bottom sheet are stand-ins (src/test/expoUi*.js)
+  // that keep their props.
   moduleNameMapper: {
     '^@expo/ui$': '<rootDir>/src/test/expoUi.js',
+    '^@expo/ui/community/bottom-sheet$': '<rootDir>/src/test/expoUiBottomSheet.js',
     '^@expo/ui/community/datetime-picker$': '<rootDir>/src/test/expoUiDateTimePicker.js',
+    '^@expo/ui/community/menu$': '<rootDir>/src/test/expoUiMenu.js',
+    '^@expo/ui/community/segmented-control$': '<rootDir>/src/test/expoUiSegmentedControl.js',
   },
   // The preset's pattern assumes a flat node_modules; pnpm nests each package under .pnpm. The
   // native Markdown block's react-native-marked ships TypeScript source and marked ES modules.
