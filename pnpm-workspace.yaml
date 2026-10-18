@@ -29,11 +29,22 @@ overrides:
   js-yaml@<4: ^3.15.2
   js-yaml@>=4 <5: ^4.3.2
   postcss: 8.5.23
+  # @lowdefy/build only loads twrnc/create, which never imports react-native. Its react-native
+  # peer otherwise pulls in a react-native bound to the build's React 18, a second copy that
+  # pnpm's hidden hoist can hand to native test tooling.
+  twrnc>react-native: '-'
 
 packageExtensions:
   echarts-for-react:
     dependencies:
       tslib: '*'
+  # The preset maps every `react-native` import to require.resolve('react-native') from its own
+  # folder but does not declare it, so pnpm resolved it through the hidden hoist to whichever
+  # react-native instance won, sometimes one bound to the web packages' React. As a peer it gets
+  # the test package's own react-native and React.
+  '@react-native/jest-preset':
+    peerDependencies:
+      react-native: '*'
 
 patchedDependencies:
   buffer-equal-constant-time@1.0.1: patches/buffer-equal-constant-time@1.0.1.patch

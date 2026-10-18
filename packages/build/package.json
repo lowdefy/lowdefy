@@ -76,6 +76,7 @@
     "lucide": "1.48.0",
     "picomatch": "4.0.4",
     "react": "18.2.0",
+    "react-dom": "18.2.0",
     "semver": "7.7.4",
     "tailwindcss": "4.3.3",
     "tar": "7.5.21",
