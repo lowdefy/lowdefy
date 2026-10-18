@@ -17,6 +17,7 @@
 import { createLowdefyCore, updateLowdefyPage } from '@lowdefy/client-core';
 
 import createIcon from './icon/createIcon.js';
+import createStreamFetch from './block/createStreamFetch.js';
 import createLinkComponent from './link/createLinkComponent.js';
 import getBlockMetas from './getBlockMetas.js';
 import getMatchedPath from './getMatchedPath.js';
@@ -48,6 +49,7 @@ function initNativeLowdefy({ core, host, pageConfig, pathname, pathParams, rootC
     });
     lowdefy._internal.components.Link = createLinkComponent(lowdefy);
     lowdefy._internal.components.handleError = lowdefy._internal.handleError;
+    lowdefy._internal.streamFetch = createStreamFetch({ lowdefy });
     // The classes a development build has warned are missing from the class map, once each.
     lowdefy._internal.missingClasses = new Set();
   }

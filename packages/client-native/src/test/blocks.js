@@ -17,6 +17,7 @@
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
+import useScreenFooter from '../screen/useScreenFooter.js';
 import useTheme from '../theme/useTheme.js';
 
 // Small stand-ins for the native block set, with the block metas the skeleton of
@@ -93,4 +94,19 @@ function Icon({ components, properties }) {
 }
 Icon.meta = { category: 'display' };
 
-export { Box, Button, Icon, List, Paragraph, TextInput, Themed, Title };
+// Draws its own chrome in the page's footer (useScreenFooter), as AgentChat draws its composer, and
+// calls the server through methods.streamFetch when pressed.
+function FooterBar({ blockId, methods, properties }) {
+  useScreenFooter(() => <Text testID={`${blockId}-footer`}>{properties.label}</Text>);
+  return (
+    <Pressable
+      onPress={() => methods.streamFetch('/api/agent/home/assistant', { method: 'POST' })}
+      testID={`${blockId}-press`}
+    >
+      <Text>Body of {blockId}</Text>
+    </Pressable>
+  );
+}
+FooterBar.meta = { category: 'display' };
+
+export { Box, Button, FooterBar, Icon, List, Paragraph, TextInput, Themed, Title };

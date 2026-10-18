@@ -165,12 +165,17 @@ function useFocusEvent({ events, focused, focusMemory, loading, methodsRef }) {
 
 // The footer slot, for the page to draw below its scroll view (ScreenFooter). It is set on every
 // render, so the footer shows the slot as the Screen last rendered it, and cleared when the
-// Screen goes.
+// Screen goes. A Screen with no footer slot leaves the footer alone, for a block that draws its
+// own chrome there (useScreenFooter).
 function useFooterSlot({ footer, slot }) {
+  const hasSlot = typeof slot === 'function';
   useEffect(() => {
-    footer.set(typeof slot === 'function' ? () => slot() : null);
+    if (hasSlot) footer.set(() => slot());
   });
-  useEffect(() => () => footer.set(null), [footer]);
+  useEffect(() => {
+    if (!hasSlot) return undefined;
+    return () => footer.set(null);
+  }, [footer, hasSlot]);
 }
 
 // events.onRefresh as pull-to-refresh on the page's scroll view: the spinner shows until the

@@ -115,6 +115,7 @@ async function setup({
   kv = createMemoryStore(),
   server = createServer().server,
   shell = standardShell,
+  streamFetch = jest.fn(),
 } = {}) {
   const clock = { now: 0 };
   const appState = createFakeAppState();
@@ -131,6 +132,7 @@ async function setup({
     now: () => clock.now,
     onSignedOut,
     shell,
+    streamFetch,
   });
   const session = createAppSession({
     apiBase,
@@ -234,6 +236,25 @@ test('a 401 to a call that carried the token removes the person and asks for sig
   expectPurged(context);
   // The session was already gone: the shell does not call sign-out.
   expect(server.fetch.mock.calls.some(([url]) => url.endsWith('/api/auth/sign-out'))).toBe(false);
+});
+
+test('a 401 to a streamed chat call that carried the token ends the session too', async () => {
+  const { server } = createServer();
+  const streamFetch = jest.fn(async () => response({ status: 401 }));
+  const context = await setup({ server, streamFetch });
+  await signIn(context);
+  keepPersonData(context.kv);
+  const res = await context.auth.streamFetch(`${apiBase}/api/agent/chat/assistant`, {
+    method: 'POST',
+    headers: { Authorization: 'Bearer token-1' },
+  });
+  expect(res.status).toBe(401);
+  expect(streamFetch).toHaveBeenCalledWith(`${apiBase}/api/agent/chat/assistant`, {
+    method: 'POST',
+    headers: { Authorization: 'Bearer token-1' },
+  });
+  await until(() => context.onSignedOut.mock.calls.length === 1);
+  expectPurged(context);
 });
 
 test('an answer as the signed-out caller to a call with the token ends the session', async () => {

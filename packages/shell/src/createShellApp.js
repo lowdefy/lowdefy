@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { fetch as expoFetch } from 'expo/fetch';
 import { openDatabaseSync } from 'expo-sqlite';
 
 import createAppAuth from './auth/createAppAuth.js';
@@ -47,15 +48,34 @@ async function createShellApp({ onSignedOut, shell }) {
   const cacheStore = createSqliteCacheStore({ db: getDatabase() });
   const kv = createDeviceStore();
   // Lowdefy Dev sends a paired dev server's token on every call (src/dev, shell.transport).
-  const transport = shell.transport ?? { fetch: globalThis.fetch, WebSocket: globalThis.WebSocket };
+  const transport = shell.transport ?? {
+    fetch: globalThis.fetch,
+    WebSocket: globalThis.WebSocket,
+    wrapFetch: (baseFetch) => baseFetch,
+  };
   const fetch = withShellHeader({
     fetch: withoutCookies(transport.fetch),
     shellVersion: shell.version,
   });
+  // React Native's fetch buffers a response body; a block that reads its answer as a stream (the
+  // AgentChat block's chat stream) calls through expo/fetch, sent the same way.
+  const streamFetch = withShellHeader({
+    fetch: withoutCookies(transport.wrapFetch(expoFetch)),
+    shellVersion: shell.version,
+  });
 
-  // Sign-in, unlock and sign-out (src/auth): the token store, the fetch that watches it and the
+  // Sign-in, unlock and sign-out (src/auth): the token store, the fetches that watch it and the
   // stores a signed-out session can no longer write to.
-  const auth = createAppAuth({ apiBase, app, cacheStore, fetch, kv, onSignedOut, shell });
+  const auth = createAppAuth({
+    apiBase,
+    app,
+    cacheStore,
+    fetch,
+    kv,
+    onSignedOut,
+    shell,
+    streamFetch,
+  });
 
   const session = createAppSession({
     apiBase,
@@ -69,6 +89,7 @@ async function createShellApp({ onSignedOut, shell }) {
     fetch: createShellFetch({ fetch: auth.fetch, session }),
     router: createRouterAdapter({ session }),
     session,
+    streamFetch: auth.streamFetch,
     tokenStore: auth.tokenStore,
     WebSocket: transport.WebSocket,
   });
