@@ -16,14 +16,15 @@
 
 import { openDatabaseSync } from 'expo-sqlite';
 
+import createAppAuth from './auth/createAppAuth.js';
 import createAppSession from './session/createAppSession.js';
 import createDeviceStore from './host/createDeviceStore.js';
 import createRouterAdapter from './host/createRouterAdapter.js';
 import createShellFetch from './host/createShellFetch.js';
 import createShellHost from './host/createShellHost.js';
 import createSqliteCacheStore from './cache/createSqliteCacheStore.js';
-import createTokenStore from './host/createTokenStore.js';
 import getAppApiBase from './config/getAppApiBase.js';
+import withoutCookies from './auth/withoutCookies.js';
 import withShellHeader from './host/withShellHeader.js';
 
 let db = null;
@@ -35,27 +36,37 @@ function getDatabase() {
   return db;
 }
 
-// Everything one app needs in the shell: its session and core host. The token is read from the
-// Keychain or Keystore before the session starts.
-async function createShellApp({ app, shell }) {
-  const tokenStore = createTokenStore({ appId: app.id });
-  await tokenStore.load();
-  const fetch = withShellHeader({ fetch: globalThis.fetch, shellVersion: shell.version });
+// Everything one app needs in the shell: its auth, session and core host. auth.start reads the
+// session token and starts the session; onSignedOut is called once a sign-out removed the person's
+// data, to open the app afresh.
+async function createShellApp({ app, onSignedOut, shell }) {
+  const apiBase = getAppApiBase({ app, environment: shell.environment });
+  const cacheStore = createSqliteCacheStore({ db: getDatabase() });
+  const kv = createDeviceStore();
+  const fetch = withShellHeader({
+    fetch: withoutCookies(globalThis.fetch),
+    shellVersion: shell.version,
+  });
+
+  // Sign-in, unlock and sign-out (src/auth): the token store, the fetch that watches it and the
+  // stores a signed-out session can no longer write to.
+  const auth = createAppAuth({ apiBase, app, cacheStore, fetch, kv, onSignedOut, shell });
+
   const session = createAppSession({
-    apiBase: getAppApiBase({ app, environment: shell.environment }),
+    apiBase,
     app,
-    cacheStore: createSqliteCacheStore({ db: getDatabase() }),
-    fetch,
-    kv: createDeviceStore(),
-    tokenStore,
+    cacheStore: auth.sessionStores.cacheStore,
+    fetch: auth.fetch,
+    kv: auth.sessionStores.kv,
+    tokenStore: auth.tokenStore,
   });
   const host = createShellHost({
-    fetch: createShellFetch({ fetch, session }),
+    fetch: createShellFetch({ fetch: auth.fetch, session }),
     router: createRouterAdapter({ session }),
     session,
-    tokenStore,
+    tokenStore: auth.tokenStore,
   });
-  return { host, session };
+  return { auth, host, session };
 }
 
 export default createShellApp;

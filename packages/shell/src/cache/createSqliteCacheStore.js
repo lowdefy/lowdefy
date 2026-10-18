@@ -79,6 +79,25 @@ function createSqliteCacheStore({ db }) {
         [cacheKey, pageId, JSON.stringify(page)]
       );
     },
+    // One caller's cache: an organisation that refused the person.
+    async removeEntry({ cacheKey }) {
+      await init();
+      await db.runAsync('DELETE FROM roots WHERE cache_key = ?', [cacheKey]);
+      await db.runAsync('DELETE FROM pages WHERE cache_key = ?', [cacheKey]);
+    },
+    // Every caller's cache of one app (getCacheKey starts each key with the app id): sign-out.
+    async removeApp({ appId }) {
+      await init();
+      const prefix = `${appId}:`;
+      await db.runAsync('DELETE FROM roots WHERE substr(cache_key, 1, length(?)) = ?', [
+        prefix,
+        prefix,
+      ]);
+      await db.runAsync('DELETE FROM pages WHERE substr(cache_key, 1, length(?)) = ?', [
+        prefix,
+        prefix,
+      ]);
+    },
     async removePages({ cacheKey, pageIds }) {
       await init();
       for (const pageId of pageIds) {

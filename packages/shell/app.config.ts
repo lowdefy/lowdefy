@@ -65,7 +65,20 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
     android: {
       package: shell.android?.package,
     },
-    plugins: ['expo-router', 'expo-secure-store', 'expo-splash-screen', 'expo-sqlite'],
+    plugins: [
+      'expo-router',
+      [
+        'expo-local-authentication',
+        { faceIDPermission: 'Allow $(PRODUCT_NAME) to use Face ID to unlock the app.' },
+      ],
+      [
+        'expo-secure-store',
+        { faceIDPermission: 'Allow $(PRODUCT_NAME) to use Face ID to unlock the app.' },
+      ],
+      'expo-splash-screen',
+      'expo-sqlite',
+      'expo-web-browser',
+    ],
     extra: {
       shell: {
         ...shell,

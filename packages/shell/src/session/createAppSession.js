@@ -21,14 +21,11 @@ import fetchPage from '../sync/fetchPage.js';
 import fetchRoot from '../sync/fetchRoot.js';
 import fetchUser from '../sync/fetchUser.js';
 import getCacheKey from '../cache/getCacheKey.js';
+import getLastCacheKeyName from '../cache/getLastCacheKeyName.js';
 import runLimited from '../sync/runLimited.js';
 import toRootConfig from '../sync/toRootConfig.js';
 
 const PAGE_FETCH_LIMIT = 4;
-
-function lastCacheKeyName(appId) {
-  return `lowdefy-shell:last-cache-key:${appId}`;
-}
 
 // Pages kept for the new root: those still in its page index. A page whose hash changed stays, and
 // is shown, until its new version arrives.
@@ -162,7 +159,7 @@ function createAppSession({ apiBase, app, cacheStore, fetch, kv, tokenStore }) {
     const removed = Object.keys(heldPages).filter((pageId) => pages[pageId] === undefined);
     await cacheStore.writeRoot({ cacheKey, entry: { root, rootEtag: rootResult.etag, user } });
     await cacheStore.removePages({ cacheKey, pageIds: removed });
-    kv.set(lastCacheKeyName(app.id), cacheKey);
+    kv.set(getLastCacheKeyName(app.id), cacheKey);
     const buildId = root.lowdefyApp?.buildId ?? null;
     setState({
       status: 'ready',
@@ -193,7 +190,7 @@ function createAppSession({ apiBase, app, cacheStore, fetch, kv, tokenStore }) {
   // Renders the last pages this app showed at once, then syncs with the server in the background.
   // With nothing cached (first launch, a new caller) the shell waits for the sync.
   async function start() {
-    const lastCacheKey = kv.get(lastCacheKeyName(app.id));
+    const lastCacheKey = kv.get(getLastCacheKeyName(app.id));
     const entry = type.isNone(lastCacheKey) ? null : await cacheStore.read(lastCacheKey);
     if (entry !== null) {
       const buildId = entry.root.lowdefyApp?.buildId ?? null;
