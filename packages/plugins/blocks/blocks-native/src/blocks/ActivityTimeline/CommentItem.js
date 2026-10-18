@@ -213,7 +213,10 @@ function CommentItem({ comment, ctx, first, thread }) {
           <CommentBody
             body={view.body}
             colors={colors}
+            hasLinkPress={ctx.hasLinkPress}
+            Icon={Icon}
             isDark={isDark}
+            linkChips={ctx.linkChips}
             mentions={view.mentions}
             onLinkPress={ctx.onLinkPress}
             onRecordPress={ctx.onRecordPress}

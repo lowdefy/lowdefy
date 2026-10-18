@@ -169,8 +169,10 @@ function ActivityTimeline({
   const ctx = useMemo(
     () => ({
       colors,
+      hasLinkPress,
       Icon: components.Icon,
       isDark,
+      linkChips: properties.linkChips,
       maxLength: properties.maxLength ?? 4000,
       members: properties.members,
       mentionFormat,

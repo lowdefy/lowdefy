@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import linkChips from '../../schemas/linkChips.js';
 import { theme } from '../../schemas/inputProperties.js';
 
 const actor = {
@@ -214,6 +215,11 @@ export default {
             text: { type: 'string', description: 'The line, instead of the counted one.' },
           },
         },
+      },
+      linkChips: {
+        ...linkChips,
+        description:
+          "Links in comment bodies drawn as inline chips by their address scheme, as the Markdown block's `linkChips`: a pressed chip fires onLinkPress, and without onLinkPress chips are not pressable. Mentions and `[[KEY]]` record links keep their own chips.",
       },
       maxLength: {
         type: 'integer',

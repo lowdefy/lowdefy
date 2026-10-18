@@ -219,3 +219,34 @@ test('an ActivityTimeline cuts a long event line and note short with an ellipsis
   });
   expect(lineOf(screen.getByText(title)).props.numberOfLines).toEqual(2);
 });
+
+test('an ActivityTimeline draws linkChips links in comment bodies as chips that fire onLinkPress', async () => {
+  const { calls } = await renderPage({
+    pageConfig: page([
+      {
+        id: 'activity',
+        type: 'ActivityTimeline',
+        properties: {
+          entries: [
+            {
+              id: 'c9',
+              type: 'comment',
+              at: minutesAgo(5),
+              by: ada,
+              body: 'See [PEL-12 Sign in with a passkey](pelican:PEL-12)',
+            },
+          ],
+          linkChips: [{ scheme: 'pelican', icon: 'FileText', tone: 'primary' }],
+          user: { id: 'u1' },
+        },
+        events: { onLinkPress: record('link') },
+      },
+    ]),
+  });
+  const chip = await screen.findByLabelText('PEL-12 Sign in with a passkey');
+  expect(screen.getByText('PEL-12')).toBeTruthy();
+  await act(async () => {
+    fireEvent.press(chip);
+  });
+  expect(calls).toEqual([{ name: 'link', event: { href: 'pelican:PEL-12' } }]);
+});
