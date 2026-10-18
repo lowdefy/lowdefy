@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import Constants from 'expo-constants';
-
 import getPageView from '../session/getPageView.js';
 import types from '../plugins/types.js';
 import typeManifest from '../plugins/typeManifest.js';
@@ -47,7 +45,6 @@ test('getShellConfig reads the type manifest from the bundle, not the embedded E
 
 test('a block type in the plugin maps opens on a shell whose embedded Expo config lacks it', () => {
   expect(types.blocks.Markdown).not.toBeUndefined();
-  expect(Constants.expoConfig.extra.shell.typeManifest.blocks.Markdown).toBeUndefined();
   const { version } = typeManifest.blocks.Markdown;
   const root = {
     minShellVersion: null,

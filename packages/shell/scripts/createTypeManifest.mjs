@@ -84,10 +84,11 @@ function getPackageTypeNames({ category, types }) {
   return types[category];
 }
 
-async function createTypeManifest() {
-  const plugins = JSON.parse(
-    fs.readFileSync(path.join(shellRoot, 'src/plugins/shellPlugins.json'), 'utf8')
-  );
+function readShellPlugins() {
+  return JSON.parse(fs.readFileSync(path.join(shellRoot, 'src/plugins/shellPlugins.json'), 'utf8'));
+}
+
+async function createTypeManifest({ plugins = readShellPlugins() } = {}) {
   const manifest = { actions: {}, blocks: {}, operators: {} };
   for (const plugin of plugins) {
     if (!CATEGORIES.includes(plugin.category)) {

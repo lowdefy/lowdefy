@@ -50,7 +50,7 @@
     "web:start": "pnpm --filter=@lowdefy/website start",
     "release:version": "pnpm changeset version && pnpm install --no-frozen-lockfile && pnpm --filter=@lowdefy/shell type-manifest",
     "release:publish": "changeset publish",
-    "release:version-experimental": "pnpm changeset version --snapshot experimental && pnpm install --no-frozen-lockfile && pnpm --filter=@lowdefy/shell type-manifest && pnpm build",
+    "release:version-experimental": "pnpm changeset version --snapshot experimental && pnpm install --no-frozen-lockfile && pnpm build && pnpm --filter=@lowdefy/shell type-manifest",
     "release:publish-experimental": "pnpm -r --filter=!lowdefy-vscode publish --tag experimental --no-git-checks",
     "release:experimental": "node scripts/pull-before-release.mjs && (npm whoami || npm login) && pnpm release:version-experimental && pnpm release:publish-experimental && git checkout -- . && git clean -f '**/CHANGELOG.md'"
   },

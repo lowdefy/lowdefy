@@ -55,7 +55,7 @@
     "export:android": "expo export --platform android --output-dir dist/android",
     "export:ios": "expo export --platform ios --output-dir dist/ios",
     "start": "expo start",
-    "test": "jest && node --test fixtures/hello.test.mjs scripts/createDayjsLocales.test.mjs checkShellConfig.test.mjs profiles.test.mjs runtimeVersion.test.mjs shellVariant.test.mjs storeCompliance.test.mjs authCallbackIntentFilters.test.mjs scripts/checkNativeVersion.test.mjs",
+    "test": "jest && node --test fixtures/hello.test.mjs scripts/createDayjsLocales.test.mjs scripts/createTypeManifest.test.mjs checkShellConfig.test.mjs profiles.test.mjs runtimeVersion.test.mjs shellVariant.test.mjs storeCompliance.test.mjs authCallbackIntentFilters.test.mjs scripts/checkNativeVersion.test.mjs",
     "type-manifest": "node scripts/createTypeManifest.mjs --write && prettier --config ../../.prettierrc --write src/plugins/typeManifest.js"
   },
   "dependencies": {
