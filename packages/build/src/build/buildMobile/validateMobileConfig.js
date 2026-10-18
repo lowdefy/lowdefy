@@ -24,6 +24,14 @@ const MENU_ITEM_KEYS = ['pageId', 'icon', 'title'];
 const SHELL_KEYS = ['id', 'scheme', 'ios', 'android'];
 const IOS_KEYS = ['bundleId', 'teamId'];
 const ANDROID_KEYS = ['package', 'sha256'];
+const AUTH_KEYS = ['emailCode', 'unlock', 'unlockAfter', 'sharedDevice', 'sessionExpiresIn'];
+const UNLOCK_MODES = ['none', 'biometric'];
+
+// RFC 3986 scheme syntax. Web schemes are refused: the mobile sign-in page sends
+// a one-time sign-in token to <scheme>://auth, which must reach the shell app,
+// never a website.
+const SCHEME_PATTERN = /^[a-z][a-z0-9+.-]*$/;
+const REFUSED_SCHEMES = ['http', 'https', 'javascript', 'data', 'file', 'blob'];
 
 // Keys starting with "~" are build markers (~k, ~r, ~l, ~ignoreBuildChecks).
 function checkKeys({ object, allowed, path, configKey }) {
@@ -123,6 +131,15 @@ function validateShell({ shell, path, configKey }) {
     });
   }
   checkOptionalString({ value: shell.scheme, path: `${path}.scheme`, configKey: shellConfigKey });
+  if (
+    type.isString(shell.scheme) &&
+    (!SCHEME_PATTERN.test(shell.scheme) || REFUSED_SCHEMES.includes(shell.scheme))
+  ) {
+    throw new ConfigError(
+      `App "${path}.scheme" should be the shell's own URL scheme in lowercase, like "myapp", and not a web scheme.`,
+      { received: shell.scheme, configKey: shellConfigKey }
+    );
+  }
   if (!type.isUndefined(shell.ios)) {
     checkObject({ value: shell.ios, path: `${path}.ios`, configKey: shellConfigKey });
     checkKeys({
@@ -187,6 +204,58 @@ function validateShells({ shells, configKey }) {
   });
 }
 
+function checkOptionalBoolean({ value, path, configKey }) {
+  if (!type.isUndefined(value) && !type.isBoolean(value)) {
+    throw new ConfigError(`App "${path}" should be a boolean.`, { received: value, configKey });
+  }
+}
+
+function checkOptionalInteger({ value, path, minimum, configKey }) {
+  if (type.isUndefined(value)) {
+    return;
+  }
+  if (!type.isInt(value) || value < minimum) {
+    throw new ConfigError(`App "${path}" should be an integer of ${minimum} or more.`, {
+      received: value,
+      configKey,
+    });
+  }
+}
+
+function validateAuth({ auth, configKey }) {
+  checkObject({ value: auth, path: 'mobile.auth', configKey });
+  const authConfigKey = auth['~k'] ?? configKey;
+  checkKeys({ object: auth, allowed: AUTH_KEYS, path: 'mobile.auth', configKey: authConfigKey });
+  checkOptionalBoolean({
+    value: auth.emailCode,
+    path: 'mobile.auth.emailCode',
+    configKey: authConfigKey,
+  });
+  if (!type.isUndefined(auth.unlock) && !UNLOCK_MODES.includes(auth.unlock)) {
+    throw new ConfigError(`App "mobile.auth.unlock" should be one of ${UNLOCK_MODES.join(', ')}.`, {
+      received: auth.unlock,
+      configKey: authConfigKey,
+    });
+  }
+  checkOptionalInteger({
+    value: auth.unlockAfter,
+    path: 'mobile.auth.unlockAfter',
+    minimum: 0,
+    configKey: authConfigKey,
+  });
+  checkOptionalBoolean({
+    value: auth.sharedDevice,
+    path: 'mobile.auth.sharedDevice',
+    configKey: authConfigKey,
+  });
+  checkOptionalInteger({
+    value: auth.sessionExpiresIn,
+    path: 'mobile.auth.sessionExpiresIn',
+    minimum: 1,
+    configKey: authConfigKey,
+  });
+}
+
 // The schema check (testSchema) only warns, and a shell cannot open an app
 // whose mobile config it does not understand, so the mobile key is checked
 // here and an unknown key fails the build.
@@ -221,7 +290,7 @@ function validateMobileConfig({ mobile }) {
     validateShells({ shells: mobile.shells, configKey });
   }
   if (!type.isUndefined(mobile.auth)) {
-    checkObject({ value: mobile.auth, path: 'mobile.auth', configKey });
+    validateAuth({ auth: mobile.auth, configKey });
   }
 }
 

@@ -153,3 +153,58 @@ test('validateMobileConfig throws when auth is not an object', () => {
     'App "mobile.auth" should be an object.'
   );
 });
+
+test('validateMobileConfig accepts a complete mobile.auth', () => {
+  expect(() =>
+    validateMobileConfig({
+      mobile: {
+        auth: {
+          emailCode: false,
+          unlock: 'biometric',
+          unlockAfter: 0,
+          sharedDevice: true,
+          sessionExpiresIn: 2592000,
+        },
+      },
+    })
+  ).not.toThrow();
+});
+
+test('validateMobileConfig throws on an unknown mobile.auth key', () => {
+  expect(() => validateMobileConfig({ mobile: { auth: { refreshToken: true } } })).toThrow(
+    'App "mobile.auth" has unknown key "refreshToken". Allowed keys: emailCode, unlock, unlockAfter, sharedDevice, sessionExpiresIn.'
+  );
+});
+
+test.each([
+  [{ emailCode: 'yes' }, 'App "mobile.auth.emailCode" should be a boolean.'],
+  [{ unlock: 'pin' }, 'App "mobile.auth.unlock" should be one of none, biometric.'],
+  [{ unlockAfter: -1 }, 'App "mobile.auth.unlockAfter" should be an integer of 0 or more.'],
+  [{ unlockAfter: 1.5 }, 'App "mobile.auth.unlockAfter" should be an integer of 0 or more.'],
+  [{ sharedDevice: 1 }, 'App "mobile.auth.sharedDevice" should be a boolean.'],
+  [
+    { sessionExpiresIn: 0 },
+    'App "mobile.auth.sessionExpiresIn" should be an integer of 1 or more.',
+  ],
+  [
+    { sessionExpiresIn: '30d' },
+    'App "mobile.auth.sessionExpiresIn" should be an integer of 1 or more.',
+  ],
+])('validateMobileConfig refuses mobile.auth %j', (auth, message) => {
+  expect(() => validateMobileConfig({ mobile: { auth } })).toThrow(message);
+});
+
+test.each([['https'], ['http'], ['javascript'], ['My App'], ['MyApp'], ['1app']])(
+  'validateMobileConfig refuses the shell scheme "%s"',
+  (scheme) => {
+    expect(() => validateMobileConfig({ mobile: { shells: [{ id: 'field', scheme }] } })).toThrow(
+      'App "mobile.shells[0].scheme" should be the shell\'s own URL scheme in lowercase, like "myapp", and not a web scheme.'
+    );
+  }
+);
+
+test('validateMobileConfig accepts a reverse-domain shell scheme', () => {
+  expect(() =>
+    validateMobileConfig({ mobile: { shells: [{ id: 'field', scheme: 'com.example.field' }] } })
+  ).not.toThrow();
+});

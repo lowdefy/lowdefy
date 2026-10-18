@@ -35,6 +35,7 @@ import getAuthStrategies from './routes/auth/strategies/getAuthStrategies.js';
 import getBetterAuth from './routes/auth/getBetterAuth.js';
 import { MCP_OAUTH_SCOPES } from './routes/auth/getBetterAuthConfig.js';
 import handleAuthRequest from './routes/auth/handleAuthRequest.js';
+import handleMobileSignIn from './routes/auth/mobile/handleMobileSignIn.js';
 import {
   getAsIssuer,
   getMcpResourceMetadataUri,
@@ -92,6 +93,7 @@ export {
   getHomeAndMenus,
   getMobileRootConfig,
   handleAuthRequest,
+  handleMobileSignIn,
   getMcpResourceBinding,
   getMcpResourceMetadataUri,
   getMcpResourceUri,

@@ -56,3 +56,20 @@ test('isWebSocketOriginAllowed logs the Origin and Host of a refused upgrade', (
     expect.stringContaining('X-Forwarded-Host')
   );
 });
+
+test('isWebSocketOriginAllowed accepts a phone shell upgrade that sends a bearer and no Origin', () => {
+  const context = createContext();
+  const headers = { host: 'app.example.com', authorization: 'Bearer tok.sig' };
+  expect(check({ context, headers })).toBe(true);
+  expect(context.logger.warn).not.toHaveBeenCalled();
+});
+
+test('isWebSocketOriginAllowed refuses a foreign page even when it names a bearer', () => {
+  const context = createContext();
+  const headers = {
+    host: 'app.example.com',
+    origin: 'https://evil.example.org',
+    authorization: 'Bearer tok.sig',
+  };
+  expect(check({ context, headers })).toBe(false);
+});

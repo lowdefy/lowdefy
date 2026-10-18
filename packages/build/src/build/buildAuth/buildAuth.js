@@ -19,6 +19,7 @@
 import buildAuthHooks from './buildAuthHooks.js';
 import buildAuthPlugins from './buildAuthPlugins.js';
 import buildAgentAuth from './buildAgentAuth.js';
+import buildAuthMobile from './buildAuthMobile.js';
 import buildAuthStrategies from './buildAuthStrategies.js';
 import buildEntityAuth from './buildEntityAuth.js';
 import buildRoleCatalog from './buildRoleCatalog.js';
@@ -57,6 +58,7 @@ function buildAuth({ components, context }) {
   });
 
   buildAuthPlugins({ components, context });
+  buildAuthMobile({ components });
 
   return components;
 }

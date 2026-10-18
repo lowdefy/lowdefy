@@ -15,8 +15,13 @@
 */
 
 import { Hono } from 'hono';
+import { jest } from '@jest/globals';
 
-import mountDevPageRoutes from './mountDevPageRoutes.js';
+jest.unstable_mockModule('./mobileSignIn.js', () => ({
+  default: (c) => c.text('mobile sign-in'),
+}));
+
+const { default: mountDevPageRoutes } = await import('./mountDevPageRoutes.js');
 
 test.each([
   ['/app', '/app'],
@@ -28,3 +33,13 @@ test.each([
   const res = await app.request(path);
   expect(await res.text()).toEqual('shell');
 });
+
+test.each([[''], ['/app']])(
+  'with basePath "%s", /auth/mobile is the mobile sign-in route, not the dev shell',
+  async (basePath) => {
+    const app = basePath === '' ? new Hono() : new Hono().basePath(basePath);
+    mountDevPageRoutes({ app, renderPage: (c) => c.text('shell') });
+    const res = await app.request(`${basePath}/auth/mobile?shell=field&state=s`);
+    expect(await res.text()).toEqual('mobile sign-in');
+  }
+);

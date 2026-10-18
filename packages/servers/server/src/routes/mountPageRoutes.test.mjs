@@ -15,8 +15,13 @@
 */
 
 import { Hono } from 'hono';
+import { jest } from '@jest/globals';
 
-import mountPageRoutes from './mountPageRoutes.js';
+jest.unstable_mockModule('./mobileSignIn.js', () => ({
+  default: (c) => c.json({ mobileSignIn: c.req.query('shell') }),
+}));
+
+const { default: mountPageRoutes } = await import('./mountPageRoutes.js');
 
 function request({ basePath, path }) {
   const app = basePath === '' ? new Hono() : new Hono().basePath(basePath);
@@ -52,5 +57,13 @@ test.each([[''], ['/app']])(
     const res = await request({ basePath, path: `${basePath}/404` });
     expect(res.status).toEqual(404);
     expect(await res.json()).toEqual({ path: '404', matchedPath: '404' });
+  }
+);
+
+test.each([[''], ['/app']])(
+  'with basePath "%s", /auth/mobile is the mobile sign-in route, not a page',
+  async (basePath) => {
+    const res = await request({ basePath, path: `${basePath}/auth/mobile?shell=field&state=s` });
+    expect(await res.json()).toEqual({ mobileSignIn: 'field' });
   }
 );

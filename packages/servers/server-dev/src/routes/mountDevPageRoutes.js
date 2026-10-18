@@ -14,11 +14,15 @@
   limitations under the License.
 */
 
+import mobileSignInHandler from './mobileSignIn.js';
+
 // Every page path renders the same dev shell; the client reads the page from
-// the URL. `.*`, not `.+`: under a basePath, `<basePath>/` arrives with an
-// empty rest, and is the app root like `<basePath>` itself.
+// the URL. `/auth/mobile`, the sign-in page a phone shell opens, is a server
+// route ahead of it. `.*`, not `.+`: under a basePath, `<basePath>/` arrives
+// with an empty rest, and is the app root like `<basePath>` itself.
 function mountDevPageRoutes({ app, renderPage }) {
   app.get('/', renderPage);
+  app.get('/auth/mobile', mobileSignInHandler);
   app.get('/:rest{.*}', renderPage);
 }
 

@@ -59,6 +59,13 @@ test('writeMobile defaults to a stack frame and the first mobile page as home', 
       minShellVersion: null,
       menus: { stack: true },
       shells: [],
+      auth: {
+        emailCode: true,
+        unlock: 'none',
+        unlockAfter: 300,
+        sharedDevice: false,
+        sessionExpiresIn: null,
+      },
     },
     'mobile/pageIndex.json': [{ path: 'today', pageId: 'today', hash: 'h1', typesKey: 't1' }],
     'mobile/typeSets.json': { t1: { actions: [], blocks: [], operators: [] } },
@@ -81,6 +88,13 @@ test('writeMobile takes the home page from the first menu item', async () => {
     minShellVersion: '7.4.0',
     menus: { drawer: [{ pageId: 'jobs', title: 'Jobs' }] },
     shells: [],
+    auth: {
+      emailCode: true,
+      unlock: 'none',
+      unlockAfter: 300,
+      sharedDevice: false,
+      sessionExpiresIn: null,
+    },
   });
 });
 
@@ -111,4 +125,29 @@ test('writeMobile writes shells with sha256 as a list', async () => {
     },
     { id: 'ops', ios: { bundleId: 'com.example.ops', teamId: 'T1' } },
   ]);
+});
+
+test('writeMobile writes mobile.auth as configured', async () => {
+  const context = createContext();
+  await writeMobile({
+    components: {
+      mobile: {
+        auth: {
+          emailCode: false,
+          unlock: 'biometric',
+          unlockAfter: 60,
+          sharedDevice: true,
+          sessionExpiresIn: 2592000,
+        },
+      },
+    },
+    context,
+  });
+  expect(getArtifacts()['mobile/config.json'].auth).toEqual({
+    emailCode: false,
+    unlock: 'biometric',
+    unlockAfter: 60,
+    sharedDevice: true,
+    sessionExpiresIn: 2592000,
+  });
 });
