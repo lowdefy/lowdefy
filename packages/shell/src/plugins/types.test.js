@@ -21,32 +21,38 @@ import * as nativeBlocks from '@lowdefy/blocks-native/blocks';
 import { Screen } from '@lowdefy/client-native';
 
 import nativeActions from '../actions/nativeActions.js';
+import typeManifest from './typeManifest.js';
 import types from './types.js';
 
-// The manifest pages are checked against must name exactly the types the shell registers.
-test('the type manifest lists every type the shell registers, and no other', () => {
-  const manifest = JSON.parse(
+function createTypeManifest() {
+  return JSON.parse(
     execFileSync(process.execPath, [path.join(__dirname, '../../scripts/createTypeManifest.mjs')], {
       encoding: 'utf8',
     })
   );
+}
+
+// The committed manifest the bundle carries must be the one shellPlugins.json and the plugin
+// packages make: run `pnpm --filter=@lowdefy/shell type-manifest` after changing either.
+test('src/plugins/typeManifest.js matches the manifest made from shellPlugins.json', () => {
+  expect(typeManifest).toEqual(createTypeManifest());
+});
+
+// The manifest pages are checked against must name exactly the types the shell registers.
+test('the type manifest lists every type the shell registers, and no other', () => {
   ['actions', 'blocks', 'operators'].forEach((category) => {
-    expect(Object.keys(manifest[category]).sort()).toEqual(Object.keys(types[category]).sort());
+    expect(Object.keys(typeManifest[category]).sort()).toEqual(Object.keys(types[category]).sort());
   });
-  expect(manifest.blocks.Box).toEqual({ package: '@lowdefy/blocks-native', version: 6 });
-  expect(manifest.blocks.Screen).toEqual({ package: '@lowdefy/blocks-native', version: 6 });
-  expect(manifest.blocks.TextInput).toEqual({ package: '@lowdefy/blocks-native', version: 6 });
-  expect(manifest.actions.SetState.package).toBe('@lowdefy/actions-core');
-  expect(manifest.operators._state.package).toBe('@lowdefy/operators-js');
+  expect(typeManifest.blocks.Box).toEqual({ package: '@lowdefy/blocks-native', version: 6 });
+  expect(typeManifest.blocks.Screen).toEqual({ package: '@lowdefy/blocks-native', version: 6 });
+  expect(typeManifest.blocks.TextInput).toEqual({ package: '@lowdefy/blocks-native', version: 6 });
+  expect(typeManifest.blocks.Markdown).toEqual({ package: '@lowdefy/blocks-native', version: 6 });
+  expect(typeManifest.actions.SetState.package).toBe('@lowdefy/actions-core');
+  expect(typeManifest.operators._state.package).toBe('@lowdefy/operators-js');
 });
 
 // The build's mobile type map allows the client operators of every default operator package.
 test('the shell registers the client operators of every default operator package', () => {
-  const manifest = JSON.parse(
-    execFileSync(process.execPath, [path.join(__dirname, '../../scripts/createTypeManifest.mjs')], {
-      encoding: 'utf8',
-    })
-  );
   [
     ['_change_case', 'change-case'],
     ['_cron', 'cron'],
@@ -59,7 +65,7 @@ test('the shell registers the client operators of every default operator package
     ['_yaml', 'yaml'],
   ].forEach(([operator, name]) => {
     expect(typeof types.operators[operator]).toBe('function');
-    expect(manifest.operators[operator].package).toBe(`@lowdefy/operators-${name}`);
+    expect(typeManifest.operators[operator].package).toBe(`@lowdefy/operators-${name}`);
   });
 });
 
