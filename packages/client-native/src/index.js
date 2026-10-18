@@ -23,3 +23,6 @@ export { default as describeBlock } from './trace/describeBlock.js';
 export { default as layoutStyles } from './layout/layoutStyles.js';
 export { default as LowdefyPage } from './LowdefyPage.js';
 export { default as Screen } from './screen/Screen.js';
+export { default as ThemeContext } from './theme/ThemeContext.js';
+export { default as ThemeProvider } from './theme/ThemeProvider.js';
+export { default as useTheme } from './theme/useTheme.js';

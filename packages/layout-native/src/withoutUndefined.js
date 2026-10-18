@@ -16,19 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
-import resolveBreakpointValue from './resolveBreakpointValue.js';
-
-// gap is a number for both axes, [x, y], or either of those per breakpoint. Returns the column
-// (x) and row (y) gaps in points.
-function resolveGap({ breakpoint, gap }) {
-  if (type.isArray(gap)) {
-    return {
-      columnGap: resolveBreakpointValue({ breakpoint, value: gap[0] }),
-      rowGap: resolveBreakpointValue({ breakpoint, value: gap[1] }),
-    };
-  }
-  const value = resolveBreakpointValue({ breakpoint, value: gap });
-  return { columnGap: value, rowGap: value };
+function withoutUndefined(style) {
+  return Object.fromEntries(Object.entries(style).filter(([, value]) => !type.isUndefined(value)));
 }
 
-export default resolveGap;
+export default withoutUndefined;

@@ -109,6 +109,7 @@ mobile:
     - _ref: mobile/today.yaml
     - _ref: mobile/jobs.yaml
     - _ref: mobile/grid.yaml
+    - _ref: mobile/hover.yaml
     - _ref: pages/about.yaml
     - id: profile
       type: Box
@@ -129,6 +130,7 @@ type: Box
 blocks:
   - id: title
     type: Title
+    class: px-3 bg-primary
     properties:
       content: Today
   - id: go
@@ -162,6 +164,18 @@ blocks:
     type: Box
     style:
       display: grid
+`
+  );
+
+  // A hover class has no React Native form.
+  write(
+    'mobile/hover.yaml',
+    `id: hover
+type: Box
+blocks:
+  - id: link
+    type: Title
+    class: hover:underline
 `
   );
 
@@ -215,6 +229,7 @@ test('the skeleton build writes the mobile config and a page index without hashe
     { path: 'today', pageId: 'today' },
     { path: 'jobs/{job_id}', pageId: 'jobs' },
     { path: 'grid', pageId: 'grid' },
+    { path: 'hover', pageId: 'hover' },
     { path: 'profile', pageId: 'profile' },
   ]);
   expect(readArtifact('mobile/typeSets.json')).toEqual({});
@@ -281,6 +296,55 @@ test('a JIT build of a mobile page with a style React Native cannot honour fails
     buildErrors: expect.arrayContaining([
       expect.objectContaining({
         message: expect.stringContaining('Style "display" in slot "block" on block "cards"'),
+      }),
+    ]),
+  });
+});
+
+test('a JIT build of a mobile page carries the class map entries of its own classes', async () => {
+  expect(Object.keys(readArtifact('mobile/classMap.json'))).not.toContain('px-3');
+  const page = await buildPageJit({
+    pageId: 'today',
+    pageRegistry: result.pageRegistry,
+    context: result.context,
+  });
+  expect(page._classMap).toEqual({
+    'bg-primary': { backgroundColor: expect.any(String) },
+    'dark:bg-primary': { backgroundColor: expect.any(String) },
+    'px-3': { paddingLeft: 12, paddingRight: 12 },
+  });
+  expect(page._classMap['bg-primary']).not.toEqual(page._classMap['dark:bg-primary']);
+  expect(readArtifact('pages/today.json')._classMap).toEqual(page._classMap);
+});
+
+test('a JIT build of a shared page carries a class map, and a web page none', async () => {
+  const about = await buildPageJit({
+    pageId: 'about',
+    pageRegistry: result.pageRegistry,
+    context: result.context,
+  });
+  expect(about._classMap).toEqual({});
+  const home = await buildPageJit({
+    pageId: 'home',
+    pageRegistry: result.pageRegistry,
+    context: result.context,
+  });
+  expect(home._classMap).toBeUndefined();
+});
+
+test('a JIT build of a mobile page with a class React Native cannot honour fails', async () => {
+  await expect(
+    buildPageJit({
+      pageId: 'hover',
+      pageRegistry: result.pageRegistry,
+      context: result.context,
+    })
+  ).rejects.toMatchObject({
+    buildErrors: expect.arrayContaining([
+      expect.objectContaining({
+        message: expect.stringContaining(
+          'Class "hover:underline" on block "link" on page "hover" has no native form'
+        ),
       }),
     ]),
   });

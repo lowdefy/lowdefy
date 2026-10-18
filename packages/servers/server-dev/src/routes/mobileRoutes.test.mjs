@@ -57,7 +57,14 @@ const routes = [
 const pages = {
   home: { id: 'page:home', pageId: 'home', target: 'web', auth: { public: true } },
   today: { id: 'page:today', pageId: 'today', target: 'mobile', auth: { public: true } },
-  jobs: { id: 'page:jobs', pageId: 'jobs', target: 'mobile', auth: { public: true } },
+  // A page built on request carries its own classes' class map entries.
+  jobs: {
+    id: 'page:jobs',
+    pageId: 'jobs',
+    target: 'mobile',
+    auth: { public: true },
+    _classMap: { 'text-lg': { fontSize: 18, lineHeight: 28 } },
+  },
   admin: {
     id: 'page:admin',
     pageId: 'admin',
@@ -86,6 +93,13 @@ const configFiles = {
     { path: 'admin', pageId: 'admin' },
   ],
   'mobile/typeSets.json': {},
+  // The skeleton build writes the theme and the class map of the pages it compiles.
+  'mobile/theme.json': {
+    darkMode: 'system',
+    light: { colorPrimary: '#1677ff' },
+    dark: { colorPrimary: '#1668dc' },
+  },
+  'mobile/classMap.json': { 'p-4': { paddingTop: 16 } },
 };
 
 function authorizeOutcome(user) {
@@ -131,7 +145,7 @@ function createApp() {
 
 const shell = { 'x-lowdefy-shell': 'dev' };
 
-test('the dev mobile root lists the paths of the pages the caller may open', async () => {
+test('the dev mobile root lists the paths of the pages the caller may open, with the theme and class map', async () => {
   const res = await createApp().request('/api/mobile/root', { headers: shell });
   expect(res.status).toEqual(200);
   expect(await res.json()).toEqual({
@@ -144,7 +158,8 @@ test('the dev mobile root lists the paths of the pages the caller may open', asy
       { path: 'jobs/{job_id}', pageId: 'jobs' },
     ],
     typeSets: {},
-    theme: { light: {}, dark: {} },
+    theme: configFiles['mobile/theme.json'],
+    classMap: configFiles['mobile/classMap.json'],
   });
   const admin = await createApp().request('/api/mobile/root', {
     headers: { ...shell, 'x-test-roles': 'admin' },
@@ -169,13 +184,14 @@ test('the dev mobile root answers 304 to a matching If-None-Match', async () => 
   expect(second.headers.get('x-lowdefy-caller')).not.toBeNull();
 });
 
-test('a shell gets a mobile page with its _jsEntries', async () => {
+test('a shell gets a mobile page with its _jsEntries and _classMap', async () => {
   const res = await createApp().request('/api/page/jobs/42', { headers: shell });
   expect(res.status).toEqual(200);
   const body = await res.json();
   expect(body.pageId).toEqual('jobs');
   expect(body.pathParams).toEqual({ job_id: '42' });
   expect(body.pageConfig._jsEntries).toEqual('export default {};');
+  expect(body.pageConfig._classMap).toEqual({ 'text-lg': { fontSize: 18, lineHeight: 28 } });
   expect(body.pageConfig.target).toEqual('mobile');
 });
 

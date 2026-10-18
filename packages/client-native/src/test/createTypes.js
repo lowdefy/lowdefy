@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { Link, Request, SetState } from '@lowdefy/actions-core/actions';
+import { Link, Request, SetDarkMode, SetState } from '@lowdefy/actions-core/actions';
 import {
   _if,
   _location,
@@ -22,16 +22,17 @@ import {
   _request,
   _state,
   _string,
+  _theme,
 } from '@lowdefy/operators-js/operators/client';
 
-import { Box, Button, List, Paragraph, TextInput, Title } from './blocks.js';
+import { Box, Button, List, Paragraph, TextInput, Themed, Title } from './blocks.js';
 
 // Record is a test action that logs its params, to see the order events run in.
 function createTypes({ record = () => undefined } = {}) {
   return {
-    actions: { Link, Record: ({ params }) => record(params), Request, SetState },
-    blocks: { Box, Button, List, Paragraph, TextInput, Title },
-    operators: { _if, _location, _media, _request, _state, _string },
+    actions: { Link, Record: ({ params }) => record(params), Request, SetDarkMode, SetState },
+    blocks: { Box, Button, List, Paragraph, TextInput, Themed, Title },
+    operators: { _if, _location, _media, _request, _state, _string, _theme },
   };
 }
 

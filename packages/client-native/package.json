@@ -44,7 +44,8 @@
     "@lowdefy/engine": "6.0.0",
     "@lowdefy/errors": "6.0.0",
     "@lowdefy/helpers": "6.0.0",
-    "@lowdefy/operators": "6.0.0"
+    "@lowdefy/layout-native": "6.0.0",
+    "@lowdefy/style-native": "6.0.0"
   },
   "peerDependencies": {
     "react": "^19.2.0",

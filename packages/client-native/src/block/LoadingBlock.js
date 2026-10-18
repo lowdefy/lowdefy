@@ -20,6 +20,8 @@ import Area from './Area.js';
 import BlockLayout from './BlockLayout.js';
 import loadingBlockMethods from './loadingBlockMethods.js';
 
+const getSkeletonLayout = (skeleton) => skeleton.layout;
+
 // The skeleton a loading block shows in its place. A skeleton with slots is drawn as a container
 // of skeletons. The build checks skeleton types, so the component is always in the type map.
 const LoadingBlock = ({ blockId, blockLayout, blockProperties, blockStyle, lowdefy, skeleton }) => {
@@ -30,19 +32,20 @@ const LoadingBlock = ({ blockId, blockLayout, blockProperties, blockStyle, lowde
       <Area
         area={skeleton.slots[slotKey]}
         areaKey={slotKey}
+        blocks={skeleton.slots[slotKey].blocks}
+        getLayout={getSkeletonLayout}
         key={`s-ar-${blockId}-${skeleton.id}-${slotKey}`}
         layout={skeleton.layout ?? blockLayout}
-        style={skeleton.slots[slotKey]?.style}
-      >
-        {skeleton.slots[slotKey].blocks.map((skl, k) => (
+        renderBlock={(skl, k) => (
           <LoadingBlock
             blockId={blockId}
             key={`s-co-${skl.id}-${k}`}
             lowdefy={lowdefy}
             skeleton={skl}
           />
-        ))}
-      </Area>
+        )}
+        style={skeleton.slots[slotKey]?.style}
+      />
     );
   });
   return (

@@ -16,22 +16,10 @@
 
 import { type } from '@lowdefy/helpers';
 
-import breakpoints from './breakpoints.js';
-
-// A layout value may be set per breakpoint ({ xs: 8, md: 16 }). The value of the largest
-// breakpoint at or below the current one applies; a plain value applies at every breakpoint.
-function resolveBreakpointValue({ breakpoint, value }) {
-  if (!type.isObject(value)) {
-    return value;
-  }
-  const current = breakpoints.indexOf(breakpoint);
-  let resolved;
-  breakpoints.forEach((name, index) => {
-    if (index <= current && !type.isNone(value[name])) {
-      resolved = value[name];
-    }
-  });
-  return resolved;
+// A block that sets flex, grow, shrink or size is placed by flex, not by grid columns, and its
+// breakpoint layouts are ignored, as on the web (deriveLayout).
+function isFlexChild({ flex, grow, shrink, size }) {
+  return !type.isNone(flex) || !type.isNone(grow) || !type.isNone(shrink) || !type.isNone(size);
 }
 
-export default resolveBreakpointValue;
+export default isFlexChild;

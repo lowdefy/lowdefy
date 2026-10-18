@@ -17,6 +17,8 @@
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
+import useTheme from '../theme/useTheme.js';
+
 // Small stand-ins for the native block set, with the block metas the skeleton of
 // @lowdefy/blocks-native declares.
 function Box({ blockId, content, events, methods }) {
@@ -67,4 +69,22 @@ function List({ list }) {
 }
 List.meta = { category: 'list', valueType: 'array', slots: { content: 'Each item.' } };
 
-export { Box, Button, List, Paragraph, TextInput, Title };
+// Shows the theme tokens it is given, styled the way native blocks style themselves: its own
+// defaults, then theme tokens, then the element slot's classes and style.
+function Themed({ blockId, styles }) {
+  const { tokens } = useTheme();
+  return (
+    <Text
+      style={[
+        { backgroundColor: tokens.colorBgContainer, color: tokens.colorText, padding: 4 },
+        styles.element,
+      ]}
+      testID={`${blockId}-element`}
+    >
+      {JSON.stringify(tokens)}
+    </Text>
+  );
+}
+Themed.meta = { category: 'display' };
+
+export { Box, Button, List, Paragraph, TextInput, Themed, Title };

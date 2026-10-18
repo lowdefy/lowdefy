@@ -1,0 +1,19 @@
+{
+  "darkMode": "system",
+  "light": {
+    "colorPrimary": "#6366f1",
+    "colorBgContainer": "#ffffff",
+    "colorBgLayout": "#f5f5f5",
+    "colorText": "rgba(0,0,0,0.88)",
+    "borderRadius": 6,
+    "fontSize": 14
+  },
+  "dark": {
+    "colorPrimary": "#575ad0",
+    "colorBgContainer": "#141414",
+    "colorBgLayout": "#000000",
+    "colorText": "rgba(255,255,255,0.85)",
+    "borderRadius": 6,
+    "fontSize": 14
+  }
+}

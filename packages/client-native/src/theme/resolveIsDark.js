@@ -14,8 +14,15 @@
   limitations under the License.
 */
 
-// The size classes of the _media operator (@lowdefy/operators getMediaViewport), smallest first.
-// A layout value set for a breakpoint applies from that breakpoint up, as on the web.
-const breakpoints = ['xs', 'sm', 'md', 'lg', 'xl', '2xl'];
+// Whether the dark theme shows, as the web client decides it (useDarkMode): theme.darkMode
+// 'dark' or 'light' fixes the mode; 'system' leaves it to the person's preference, and a
+// 'system' preference follows the device.
+function resolveIsDark({ configDarkMode, preference, systemIsDark }) {
+  if (configDarkMode === 'dark') return true;
+  if (configDarkMode === 'light') return false;
+  if (preference === 'dark') return true;
+  if (preference === 'light') return false;
+  return systemIsDark;
+}
 
-export default breakpoints;
+export default resolveIsDark;

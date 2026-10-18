@@ -5,6 +5,7 @@ The Lowdefy configuration compiler. Transforms YAML/JSON config files into optim
 ## Purpose
 
 This package is responsible for:
+
 - Parsing YAML/JSON configuration files
 - Resolving `_ref` imports to compose config from multiple files
 - Validating config against the Lowdefy schema
@@ -15,13 +16,13 @@ This package is responsible for:
 
 Lowdefy apps are fast because expensive operations happen once at build time:
 
-| Build Time | Runtime |
-|------------|---------|
-| YAML parsing | Load JSON artifacts |
-| Schema validation | Already validated |
-| Ref resolution | Already resolved |
-| Menu generation | Serve pre-built menus |
-| Type checking | Types already resolved |
+| Build Time        | Runtime                |
+| ----------------- | ---------------------- |
+| YAML parsing      | Load JSON artifacts    |
+| Schema validation | Already validated      |
+| Ref resolution    | Already resolved       |
+| Menu generation   | Serve pre-built menus  |
+| Type checking     | Types already resolved |
 
 ## Build Pipeline
 
@@ -32,36 +33,36 @@ async function build(options) {
   const context = createContext(options);
 
   // Phase 0-1: Module processing
-  await fetchModules({ context });                       // Fetch GitHub tarballs, resolve local paths
-  await buildModuleDefs({ components, context });        // Local resolve → validate deps → full resolve
+  await fetchModules({ context }); // Fetch GitHub tarballs, resolve local paths
+  await buildModuleDefs({ components, context }); // Local resolve → validate deps → full resolve
 
   // Phase 2: Parse and compose configuration
-  const components = await buildRefs({ context });       // Resolve _ref imports (incl. module refs)
+  const components = await buildRefs({ context }); // Resolve _ref imports (incl. module refs)
 
   // Phase 3: Module integration
-  buildModules({ components, context });                 // Scope IDs, resolve _module operators, merge
+  buildModules({ components, context }); // Scope IDs, resolve _module operators, merge
 
   // Phase 4: Schema warnings + validate
-  testSchema({ components, context });                   // Emit schema warnings (non-blocking)
+  testSchema({ components, context }); // Emit schema warnings (non-blocking)
 
   // Phase 5: Build specific domains (each has its own focused validation)
-  buildApp({ components, context });                     // Process app config
-  validateConfig({ components, context });               // Business rule validation
-  addDefaultPages({ components, context });              // Add 404, etc.
-  buildRoutes({ components, context });                  // Route table from page paths, tie checks
-  buildAuth({ components, context });                    // Auth providers/adapters (wildcard matching)
-  validateAuthPagePaths({ components, context });        // Auth pages have no placeholders
-  buildConnections({ components, context });             // Connection configs
-  buildApi({ components, context });                     // API endpoints
-  buildPages({ components, context });                   // Page definitions
-  buildAgents({ components, context });                  // Agent config validation + normalization
-  buildMenu({ components, context });                    // Navigation menus
-  buildJs({ components, context });                      // Custom JS functions
+  buildApp({ components, context }); // Process app config
+  validateConfig({ components, context }); // Business rule validation
+  addDefaultPages({ components, context }); // Add 404, etc.
+  buildRoutes({ components, context }); // Route table from page paths, tie checks
+  buildAuth({ components, context }); // Auth providers/adapters (wildcard matching)
+  validateAuthPagePaths({ components, context }); // Auth pages have no placeholders
+  buildConnections({ components, context }); // Connection configs
+  buildApi({ components, context }); // API endpoints
+  buildPages({ components, context }); // Page definitions
+  buildAgents({ components, context }); // Agent config validation + normalization
+  buildMenu({ components, context }); // Navigation menus
+  buildJs({ components, context }); // Custom JS functions
 
   // Phase 6: Finalize
-  addKeys({ components, context });                      // Add unique keys
-  buildTypes({ components, context });                   // Resolve block/operator types
-  buildImports({ components, context });                 // Track plugin imports
+  addKeys({ components, context }); // Add unique keys
+  buildTypes({ components, context }); // Resolve block/operator types
+  buildImports({ components, context }); // Track plugin imports
 
   // Phase 7: Write output files
   await cleanBuildDirectory({ context });
@@ -76,10 +77,10 @@ async function build(options) {
   await writeMaps({ components, context });
   await writeMenus({ components, context });
   await writeTypes({ components, context });
-  await writeAgents({ components, context });             // Agent config artifacts
-  await writePluginImports({ components, context });  // includes writeGlobalsCss, writeAgentImports
+  await writeAgents({ components, context }); // Agent config artifacts
+  await writePluginImports({ components, context }); // includes writeGlobalsCss, writeAgentImports
   await writeJs({ components, context });
-  await copyAgentFileSystems({ components, context });   // Copy fileSystem basePaths to server
+  await copyAgentFileSystems({ components, context }); // Copy fileSystem basePaths to server
   await updateServerPackageJson({ components, context });
   await copyPublicFolder({ components, context });
 }
@@ -89,32 +90,32 @@ async function build(options) {
 
 ### Core Build Steps
 
-| Module | Purpose |
-|--------|---------|
-| `fetchModules.js` | Fetch module sources (GitHub tarballs, local paths) |
-| `buildModuleDefs.js` | Three-phase module processing: local resolve → validate wiring → full resolve |
-| `resolveModuleDependencies.js` | Auto-wire and validate cross-module dependency mappings |
-| `buildModules.js` | Scope module IDs, resolve `_module.*` operators (string + object form), merge |
-| `resolveModuleOperators.js` | Resolve `_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.id` |
-| `buildRefs/` | Resolve `_ref` operators to compose config from multiple files |
-| `buildRefs/getModuleRefContent.js` | Resolve `_ref: { module, component/menu }` from resolved manifests |
-| `buildPages/` | Process page definitions, blocks, and areas |
-| `buildAuth/` | Process authentication providers and adapters (wildcard matching) |
-| `buildConnections.js` | Validate and process connection definitions |
-| `buildApi/` | Process API endpoint definitions (incl. the `RenderNotification` routine step) |
-| `buildNotifications.js` | Validate the `notifications:` section, namespace ids to `notification:<id>` |
-| `writeNotifications.js` | Write `notifications/<id>.json` artifacts |
-| `validateRenderNotificationSteps.js` | Validate `RenderNotification` steps reference existing notifications |
-| `buildMenu.js` | Generate navigation menus from page structure |
-| `buildJs/` | Compile custom JavaScript functions |
-| `buildTypes.js` | Resolve and validate block/operator types |
-| `buildImports/` | Track which plugins need to be imported |
-| `writePluginImports/` | Write import files and schema maps for runtime validation |
-| `shallowBuild.js` | Dev-only: skeleton build with `_shallow` markers |
-| `buildPageJit.js` | Dev-only: resolve page content on demand |
-| `createPageRegistry.js` | Dev-only: extract page metadata for JIT |
-| `createFileDependencyMap.js` | Dev-only: map files → pages for invalidation |
-| `collectSkeletonSourceFiles.js` | Dev-only: derive skeleton source file set from refMap |
+| Module                               | Purpose                                                                              |
+| ------------------------------------ | ------------------------------------------------------------------------------------ |
+| `fetchModules.js`                    | Fetch module sources (GitHub tarballs, local paths)                                  |
+| `buildModuleDefs.js`                 | Three-phase module processing: local resolve → validate wiring → full resolve        |
+| `resolveModuleDependencies.js`       | Auto-wire and validate cross-module dependency mappings                              |
+| `buildModules.js`                    | Scope module IDs, resolve `_module.*` operators (string + object form), merge        |
+| `resolveModuleOperators.js`          | Resolve `_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.id` |
+| `buildRefs/`                         | Resolve `_ref` operators to compose config from multiple files                       |
+| `buildRefs/getModuleRefContent.js`   | Resolve `_ref: { module, component/menu }` from resolved manifests                   |
+| `buildPages/`                        | Process page definitions, blocks, and areas                                          |
+| `buildAuth/`                         | Process authentication providers and adapters (wildcard matching)                    |
+| `buildConnections.js`                | Validate and process connection definitions                                          |
+| `buildApi/`                          | Process API endpoint definitions (incl. the `RenderNotification` routine step)       |
+| `buildNotifications.js`              | Validate the `notifications:` section, namespace ids to `notification:<id>`          |
+| `writeNotifications.js`              | Write `notifications/<id>.json` artifacts                                            |
+| `validateRenderNotificationSteps.js` | Validate `RenderNotification` steps reference existing notifications                 |
+| `buildMenu.js`                       | Generate navigation menus from page structure                                        |
+| `buildJs/`                           | Compile custom JavaScript functions                                                  |
+| `buildTypes.js`                      | Resolve and validate block/operator types                                            |
+| `buildImports/`                      | Track which plugins need to be imported                                              |
+| `writePluginImports/`                | Write import files and schema maps for runtime validation                            |
+| `shallowBuild.js`                    | Dev-only: skeleton build with `_shallow` markers                                     |
+| `buildPageJit.js`                    | Dev-only: resolve page content on demand                                             |
+| `createPageRegistry.js`              | Dev-only: extract page metadata for JIT                                              |
+| `createFileDependencyMap.js`         | Dev-only: map files → pages for invalidation                                         |
+| `collectSkeletonSourceFiles.js`      | Dev-only: derive skeleton source file set from refMap                                |
 
 ### Reference Resolution (`buildRefs/`)
 
@@ -123,16 +124,17 @@ The `_ref` operator enables modular configuration:
 ```yaml
 # lowdefy.yaml
 pages:
-  _ref: pages/   # Load all YAML files from pages/ directory
+  _ref: pages/ # Load all YAML files from pages/ directory
 
 # pages/home.yaml
 id: home
 type: PageHeaderMenu
 blocks:
-  _ref: ../components/header.yaml  # Relative path reference
+  _ref: ../components/header.yaml # Relative path reference
 ```
 
 **Ref types:**
+
 - Directory refs: `_ref: pages/` - loads all `.yaml`/`.json` files
 - File refs: `_ref: header.yaml` - loads single file
 - JSON5 refs: `_ref: config.json5` - supports JSON5 format
@@ -143,6 +145,7 @@ blocks:
 Ref resolution uses a single-pass async tree walker that handles `_ref`, `_var`, `_module.var`, and `_build.*` operators in one traversal, eliminating the JSON round-trips from the old `serializer.copy`-based pipeline.
 
 **Key components:**
+
 - `resolve(node, ctx)` — core recursive walk function
 - `resolveRef(refNode, parentCtx)` — full 12-step ref handling (load, walk content, transform, tag `~r`)
   - For `_ref: { module, component/menu }` — calls `getModuleRefContent()` to look up exports in resolved manifests
@@ -164,22 +167,23 @@ Critical structural checks (required id/type, correct types) are handled by **fo
 
 **Validation ownership:**
 
-| Check | Validated by | Error quality |
-|-------|-------------|---------------|
-| Block id/type required | `validateBlock.js` | Includes pageId |
-| Connection id/type required | `buildConnections.js` | Includes connectionId |
-| Request id/type required | `buildRequests.js` | Includes requestId, pageId |
-| Action id/type required | `buildEvents.js` | Includes eventId, blockId, pageId |
-| Endpoint id/type required | `validateEndpoint.js` | Includes endpointId |
-| Menu id required | `buildMenu.js` | Includes menuId |
-| Menu item id/type required | `buildMenu.js` | Includes menuItemId, menuId |
-| Auth plugin id/type required | `buildAuthPlugins.js` | Includes plugin type class |
-| Additional properties (typos) | `testSchema.js` (warning) | Generic AJV message |
-| Property type checks | `testSchema.js` (warning) | Generic AJV message |
+| Check                         | Validated by              | Error quality                     |
+| ----------------------------- | ------------------------- | --------------------------------- |
+| Block id/type required        | `validateBlock.js`        | Includes pageId                   |
+| Connection id/type required   | `buildConnections.js`     | Includes connectionId             |
+| Request id/type required      | `buildRequests.js`        | Includes requestId, pageId        |
+| Action id/type required       | `buildEvents.js`          | Includes eventId, blockId, pageId |
+| Endpoint id/type required     | `validateEndpoint.js`     | Includes endpointId               |
+| Menu id required              | `buildMenu.js`            | Includes menuId                   |
+| Menu item id/type required    | `buildMenu.js`            | Includes menuItemId, menuId       |
+| Auth plugin id/type required  | `buildAuthPlugins.js`     | Includes plugin type class        |
+| Additional properties (typos) | `testSchema.js` (warning) | Generic AJV message               |
+| Property type checks          | `testSchema.js` (warning) | Generic AJV message               |
 
 ### Page Building (`buildPages/`)
 
 Processes page definitions:
+
 - Validates block hierarchy
 - Resolves area/slot definitions
 - Processes skeleton configurations
@@ -211,6 +215,7 @@ The `breakpointKeys` used for validation are: `['xs', 'sm', 'md', 'lg', 'xl', '2
 ### Menu Building (`buildMenu.js`)
 
 Generates navigation from:
+
 - Explicit menu definitions
 - Auto-generated from page structure
 - Role-based menu filtering
@@ -267,6 +272,7 @@ Build artifacts go to `.lowdefy/build/`:
 ```
 
 Used by `resolveConfigLocation()` to produce human-readable errors:
+
 ```
 [Config Error] Block type "Buton" not found.
   pages/home.yaml:15 at pages.0.blocks.0.type
@@ -280,6 +286,7 @@ See [architecture/error-tracing.md](../architecture/error-tracing.md) for detail
 ### Why JSON Output?
 
 Build output is JSON (not YAML) because:
+
 - Faster to parse at runtime
 - No YAML parser needed in production bundle
 - Consistent serialization format
@@ -287,6 +294,7 @@ Build output is JSON (not YAML) because:
 ### Why Separate Files?
 
 Each page/request/connection is a separate file:
+
 - Load only what's needed per request
 - Better caching granularity
 - Smaller memory footprint
@@ -294,6 +302,7 @@ Each page/request/connection is a separate file:
 ### Why Build-Time Operator Evaluation?
 
 Some operators run at build time:
+
 - `_ref` - must compose config before runtime
 - `_var` - build-time variables
 - `_build` - environment-specific config
@@ -303,6 +312,7 @@ This keeps runtime fast and allows static analysis.
 ### Plugin Type Resolution
 
 Block and operator types are resolved at build time:
+
 - Validates types exist in configured plugins
 - Generates import map for code splitting
 - Catches typos early (build fails, not runtime)
@@ -322,6 +332,7 @@ Replaces the old `writeStyleImports`. Generates `globals.css` which is imported 
 7. **Antd-to-Tailwind theme bridge** — `@theme inline` block that maps `--ant-*` CSS variables to Tailwind design tokens (colors, radius, font-size, font-family). Users can override these via `theme.tailwind` in `lowdefy.yaml`.
 
 Also writes:
+
 - Per-page tailwind HTML files from `context.tailwindContentMap` to `lowdefy-build/tailwind/{pageId}.html`
 - Block plugin JS content via `collectBlockSourceContent()` to `lowdefy-build/tailwind/_blocks.html` (follows pnpm/yarn symlinks to resolve real paths)
 
@@ -334,9 +345,11 @@ Native blocks have no CSS, so the build turns the app's theme, styles and Tailwi
 - **`buildMobileTheme`** runs antd's `theme.getDesignToken` twice, configured as the web client's `useDarkMode` configures antd: the shared `token` with `lightToken`/`darkToken` over it, and the app's algorithm with `dark` taken out for light and added for dark. `writeMobile` writes `mobile/theme.json` as `{ darkMode, light, dark }`.
 - **`validateMobileStyles`** (after `buildPages`, so `style` is keyed by slot) checks every literal style on mobile and shared pages with `convertStyle` from `@lowdefy/style-native`. Keys React Native cannot honour (`display: grid`, selectors, `calc()`, `position: fixed`, `transition*`, `cursor`, unitless `lineHeight`) fail the build, naming page, block, slot and key. Mobile-only pages are converted in place (px and rem to numbers, shorthands expanded). Shared pages, and any slot that is or holds an operator, stay as written: the web reads the same page JSON, and the shell converts those slots with the same function after operators run.
 - **`collectMobileClassCandidates`** (before `buildJs`, like the web's Tailwind scan) walks blocks with `collectPageContent`'s `walkValue`, keeping strings under `class` apart from strings under `properties`.
-- **`buildMobileClassMap`** compiles each token with twrnc's parser, once per colour mode. The twrnc config is Tailwind 3's defaults, Tailwind 4's colours (converted from oklch) and radii from `tailwindcss/theme.css`, and the app's theme vars (`getTailwindThemeVars`: the antd bridge plus `theme.tailwind`) mapped by Tailwind 4 namespace, with `var(--ant-*)` resolved to that mode's tokens. Supported variants are `dark:`, `sm:`, `md:` and `lg:`. A token under `class` that does not compile but that Tailwind 4 itself writes CSS for is a class with no native form and fails the build; every other token is skipped, so prose never fails.
+- **`buildMobileClassMap`** (through `compileMobileClassMap`) compiles each token with twrnc's parser, once per colour mode. The twrnc config is Tailwind 3's defaults, Tailwind 4's colours (converted from oklch) and radii from `tailwindcss/theme.css`, and the app's theme vars (`getTailwindThemeVars`: the antd bridge plus `theme.tailwind`) mapped by Tailwind 4 namespace, with `var(--ant-*)` resolved to that mode's tokens. Supported variants are `dark:`, `sm:`, `md:` and `lg:`. A token under `class` that does not compile but that Tailwind 4 itself writes CSS for is a class with no native form and fails the build; every other token is skipped, so prose never fails.
 
-`mobile/classMap.json` is flat: `{ "p-4": { "paddingTop": 16, ... }, "dark:bg-gray-900": {...}, "sm:flex-row": {...} }`, variants keyed by their full class. A class whose style differs in dark mode because it uses an antd colour (`bg-primary`) also gets a `dark:<class>` entry, so in dark mode a shell reads `dark:<class>` before `<class>`.
+`mobile/classMap.json` is flat: `{ "p-4": { "paddingTop": 16, ... }, "dark:bg-gray-900": {...}, "sm:flex-row": {...} }`, variants keyed by their full class. A class whose style differs in dark mode because it uses an antd colour (`bg-primary`) also gets a `dark:<class>` entry, so in dark mode a shell reads `dark:<class>` before `<class>`. The server sends `theme.json` and `classMap.json` in the mobile root (`/api/mobile/root`).
+
+In the dev build the skeleton's class map holds only the pages it builds inline. `buildPageJit` compiles a mobile or shared page's own classes (`buildPageClassMapJit`, with the mobile theme and `theme.tailwind` that `prepareJitContext` reads back from the skeleton's artifacts) and writes them on the page as `_classMap`, which the native renderer lays over the root class map. A class with no native form fails the JIT page build as it fails the full build.
 
 ### Plugin Schema Map Generation
 
@@ -345,6 +358,7 @@ During `writePluginImports`, schema maps are generated for runtime validation:
 **Files:** `packages/build/src/build/writePluginImports/write{Action,Block,Operator}SchemaMap.js`
 
 Each function:
+
 1. Groups used plugin types by package
 2. Imports metadata/schemas from each package
 3. Prioritizes custom schemas from `context.typesMap.schemas` over package schemas
@@ -378,42 +392,48 @@ These schema maps are consumed by `logClientError` in `@lowdefy/api` for runtime
 
 ## Configuration Files Supported
 
-| Extension | Format |
-|-----------|--------|
-| `.yaml`, `.yml` | YAML (recommended) |
-| `.json` | JSON |
-| `.json5` | JSON5 (comments allowed) |
-| `.njk` | Nunjucks template |
+| Extension       | Format                   |
+| --------------- | ------------------------ |
+| `.yaml`, `.yml` | YAML (recommended)       |
+| `.json`         | JSON                     |
+| `.json5`        | JSON5 (comments allowed) |
+| `.njk`          | Nunjucks template        |
 
 ## Build Utilities
 
 Located in `packages/build/src/utils/`:
 
-| Utility | Purpose |
-|---------|---------|
-| `traverseConfig.js` | Depth-first config traversal for validation |
-| `findSimilarString.js` | "Did you mean?" suggestions using Levenshtein distance |
-| `createCheckDuplicateId.js` | Factory for duplicate ID detection |
-| `createCounter.js` | Factory for counting type usage |
+| Utility                     | Purpose                                                |
+| --------------------------- | ------------------------------------------------------ |
+| `traverseConfig.js`         | Depth-first config traversal for validation            |
+| `findSimilarString.js`      | "Did you mean?" suggestions using Levenshtein distance |
+| `createCheckDuplicateId.js` | Factory for duplicate ID detection                     |
+| `createCounter.js`          | Factory for counting type usage                        |
 
 **Error handling pattern:**
+
 ```javascript
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 // Fatal error — collected via collectExceptions, build continues
-collectExceptions(context, new ConfigError({
-  message: `Block type "${type}" not found.`,
-  configKey: block['~k'],
-  checkSlug: 'types',
-}));
+collectExceptions(
+  context,
+  new ConfigError({
+    message: `Block type "${type}" not found.`,
+    configKey: block['~k'],
+    checkSlug: 'types',
+  })
+);
 
 // Warning — suppression, dedup, location resolution via handleWarning
-context.handleWarning(new ConfigWarning({
-  message: `Deprecated feature used.`,
-  configKey: obj['~k'],
-  checkSlug: 'state-refs',
-  prodError: true,
-}));
+context.handleWarning(
+  new ConfigWarning({
+    message: `Deprecated feature used.`,
+    configKey: obj['~k'],
+    checkSlug: 'state-refs',
+    prodError: true,
+  })
+);
 ```
 
 **context.handleError** and **context.handleWarning** are explicit functions wired in `createContext.js` — not logger methods. `context.logger` is plain pino with zero monkey-patching.
@@ -455,35 +475,39 @@ const { components, pageRegistry, context } = await shallowBuild({
 
 // Phase 2: Build a single page on demand
 const buildContext = createContext({ directories, logger, stage: 'dev' });
-Object.assign(buildContext.refMap, refMap);    // Restore from skeleton
+Object.assign(buildContext.refMap, refMap); // Restore from skeleton
 Object.assign(buildContext.keyMap, keyMap);
 buildContext.jsMap = jsMap;
 // Names the context's jitMaps/ files (the dev server uses <processId>-<generation>)
-buildContext.jitMaps = createJitMaps({ keyMap: buildContext.keyMap, refMap: buildContext.refMap, name });
+buildContext.jitMaps = createJitMaps({
+  keyMap: buildContext.keyMap,
+  refMap: buildContext.refMap,
+  name,
+});
 
 await buildPageJit({
   pageId: 'tasks',
-  pageRegistry,          // From shallowBuild or deserialized from pageRegistry.json
+  pageRegistry, // From shallowBuild or deserialized from pageRegistry.json
   context: buildContext,
 });
 ```
 
 ## Dev Build Modules
 
-| Module | File | Purpose |
-|--------|------|---------|
-| `shallowBuild` | `jit/shallowBuild.js` | Skeleton build with `~shallow` markers at page content |
-| `buildPageJit` | `jit/buildPageJit.js` | Resolve page content via walker, run page build steps, write artifacts |
-| `createPageRegistry` | `jit/createPageRegistry.js` | Extract page metadata + raw content from shallow-built components |
-| `createFileDependencyMap` | `jit/createFileDependencyMap.js` | Map config files → page IDs for targeted invalidation |
-| `writePageRegistry` | `jit/writePageRegistry.js` | Serialize page registry to JSON |
-| `writePageJit` | `jit/writePageJit.js` | Write page/request JSONs + JS files + per-page tailwind HTML |
-| `createJitMaps` | `jit/createJitMaps.js` | Start a context's log of the key/ref ids JIT builds add (the skeleton's ids are its baseline) |
-| `writeJitMaps` | `jit/writeJitMaps.js` | Write the entries added during one page build to `jitMaps/<name>-<n>.json`, on success and on failure |
-| `collectPageContent` | `collectPageContent.js` | Extract all string content from page blocks for Tailwind scanning |
-| `collectSkeletonSourceFiles` | `jit/collectSkeletonSourceFiles.js` | Walk `~r` markers on non-page components to derive skeleton source files |
-| `isPageContentPath` | `jit/isPageContentPath.js` | Semantic segment matching for shallow build stop paths |
-| `pageContentKeys` | `jit/pageContentKeys.js` | List of page content keys used by `isPageContentPath` |
+| Module                       | File                                | Purpose                                                                                               |
+| ---------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `shallowBuild`               | `jit/shallowBuild.js`               | Skeleton build with `~shallow` markers at page content                                                |
+| `buildPageJit`               | `jit/buildPageJit.js`               | Resolve page content via walker, run page build steps, write artifacts                                |
+| `createPageRegistry`         | `jit/createPageRegistry.js`         | Extract page metadata + raw content from shallow-built components                                     |
+| `createFileDependencyMap`    | `jit/createFileDependencyMap.js`    | Map config files → page IDs for targeted invalidation                                                 |
+| `writePageRegistry`          | `jit/writePageRegistry.js`          | Serialize page registry to JSON                                                                       |
+| `writePageJit`               | `jit/writePageJit.js`               | Write page/request JSONs + JS files + per-page tailwind HTML                                          |
+| `createJitMaps`              | `jit/createJitMaps.js`              | Start a context's log of the key/ref ids JIT builds add (the skeleton's ids are its baseline)         |
+| `writeJitMaps`               | `jit/writeJitMaps.js`               | Write the entries added during one page build to `jitMaps/<name>-<n>.json`, on success and on failure |
+| `collectPageContent`         | `collectPageContent.js`             | Extract all string content from page blocks for Tailwind scanning                                     |
+| `collectSkeletonSourceFiles` | `jit/collectSkeletonSourceFiles.js` | Walk `~r` markers on non-page components to derive skeleton source files                              |
+| `isPageContentPath`          | `jit/isPageContentPath.js`          | Semantic segment matching for shallow build stop paths                                                |
+| `pageContentKeys`            | `jit/pageContentKeys.js`            | List of page content keys used by `isPageContentPath`                                                 |
 
 ### Shallow Build Stop Paths
 
@@ -512,9 +536,10 @@ registry.set(pageId, {
   pageId: page.id,
   auth: page.auth,
   type: page.type,
-  refId: page['~r'] ?? null,    // For file dependency tracking
-  rawContent: serializer.copy({  // Deep copy of unresolved content
-    blocks: page.blocks,         // Contains _shallow markers
+  refId: page['~r'] ?? null, // For file dependency tracking
+  rawContent: serializer.copy({
+    // Deep copy of unresolved content
+    blocks: page.blocks, // Contains _shallow markers
     areas: page.areas,
     events: page.events,
     requests: page.requests,

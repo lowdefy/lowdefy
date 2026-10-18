@@ -81,6 +81,12 @@ const configFiles = {
     { path: 'admin', pageId: 'admin', hash: 'h-admin', typesKey: 't2' },
   ],
   'mobile/typeSets.json': { t1: { blocks: [] }, t2: { blocks: [] } },
+  'mobile/theme.json': {
+    darkMode: 'system',
+    light: { colorPrimary: '#1677ff' },
+    dark: { colorPrimary: '#1668dc' },
+  },
+  'mobile/classMap.json': { 'p-4': { paddingTop: 16 } },
 };
 
 function authorizeOutcome(user) {
@@ -180,6 +186,13 @@ describe('GET /api/mobile/root', () => {
     expect(adminBody.pageIndex.map((entry) => entry.pageId)).toEqual(['today', 'shared', 'admin']);
     expect(adminBody.menus.tabs.map((item) => item.pageId)).toEqual(['today', 'admin']);
     expect(adminBody.minShellVersion).toEqual('7.4.0');
+  });
+
+  test('sends the theme and class map the build wrote', async () => {
+    const res = await app.request('/api/mobile/root', { headers: shell });
+    const body = await res.json();
+    expect(body.theme).toEqual(configFiles['mobile/theme.json']);
+    expect(body.classMap).toEqual(configFiles['mobile/classMap.json']);
   });
 
   test('sends a strong ETag, no-store and the caller stamp', async () => {

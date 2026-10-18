@@ -13,7 +13,11 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 | `block/Block.js`                                                 | Updater, parse-error logging, error boundary, onMount, category switch       |
 | `block/Container.js`, `List.js`, `Display.js`, `LoadingBlock.js` | Mirror the web block containers                                              |
 | `block/BlockLayout.js`, `Area.js`                                | Views styled by `layoutStyles`; `testID` and `accessibilityLabel` = block id |
-| `layout/layoutStyles.js`                                         | `layoutStyles(layout, breakpoint) → { container, child }`                    |
+| `layout/layoutStyles.js`                                         | `layoutStyles(layout, breakpoint, columnGap)`, from `@lowdefy/layout-native` |
+| `style/useBlockStyles.js`, `getBlockStyles.js`                   | Each slot's classes (from the class map) with its `style` over them          |
+| `style/classStyle.js`                                            | Class lookup: `dark:` and breakpoint variants, `dark:<class>` entries        |
+| `style/slotStyle.js`                                             | Converts shared-page and operator styles with `@lowdefy/style-native`        |
+| `theme/ThemeProvider.js`, `useTheme.js`                          | Theme mode and the computed antd tokens of that mode                         |
 | `globals/createNativeGlobals.js`                                 | Host globals: route `location`, `Dimensions`, `AppState`, network events     |
 | `link/setupLink.js`                                              | Page links through the host router, others through `Linking`                 |
 | `screen/Screen.js`                                               | The `Screen` page type; reports header options to `onScreenOptions`          |
@@ -23,9 +27,30 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 
 - `visible: false` draws nothing (the web keeps a hidden `div` for its id).
 - There are no class names, `Head`, shortcuts, progress bar or antd providers.
-- `layoutStyles` is temporary. Percentage spans do not subtract a horizontal gap, so spans that
-  share a line on the web wrap when an area sets one. `layout-native` replaces the
-  implementation, not the interface.
+- Layout is `@lowdefy/layout-native` (see its doc). A gapped area is two views (the slot style
+  outside, the widened row inside), and a block in it is two views (the placement with the gap
+  padding outside, the view with its `testID` and `style.block` inside). An area sorts its blocks
+  by layout order, which React Native has no style for. The breakpoint comes from the window's
+  shorter side on a phone, so it is not the `_media: size` of a landscape phone.
+- `class` and `style` reach a block as one `styles` prop, a React Native style per slot: the
+  slot's classes looked up in the class map, then its `style`. A block lays its defaults and
+  theme tokens under it: block defaults, theme, class, style. The class map is the root config's
+  `classMap` with a dev page's own `_classMap` over it. Plain classes always apply, `dark:`
+  classes in dark mode, `sm:`/`md:`/`lg:` classes from their breakpoint up; breakpoint classes go
+  over plain ones and dark classes over both, as Tailwind orders its CSS. In dark mode a class
+  reads its `dark:<class>` entry first (the build adds one for antd colour classes). A class with
+  no entry is ignored, with a development warning once per class.
+- Styles of a shared page (`target: both`) and any style slot that is or holds an operator are
+  converted at render with `convertStyle`; keys React Native cannot honour are left out and
+  reported through `handleError` as a `ConfigError`.
+- `ThemeProvider` holds the theme mode as the web's `useDarkMode` does: `theme.darkMode`, then
+  the stored preference (`appStorageKey` `lowdefy_darkMode`), then the device's colour scheme.
+  It sets `__lowdefy_setDarkMode`, `__lowdefy_darkModePreference` and `__lowdefy_isDark` on the
+  host window for `SetDarkMode` and `_media`. A page re-renders on a mode change, so the
+  engine's render-time full pass re-evaluates `_media: darkMode` and `_theme`, and
+  `lowdefy.theme._resolvedAntdToken` is the mode's tokens. A shell wraps its pages in one
+  provider; a `LowdefyPage` outside one makes its own. A Screen's `headerRight` carries the
+  page's theme, breakpoint and class map into the header the router draws.
 - The engine's `window` and `document` keys hold plain objects. `focus` and `blur` have no
   source on a phone; `online` and `offline` follow the `network` the shell passes.
 

@@ -21,9 +21,13 @@ import Area from './Area.js';
 import Block from './Block.js';
 import BlockLayout from './BlockLayout.js';
 import getBlockProps from './getBlockProps.js';
+import useBlockStyles from '../style/useBlockStyles.js';
+
+const getEvaluatedLayout = (block) => block.eval?.layout;
 
 // A list block: one set of slot functions per item, passed as `list`.
 const List = ({ block, Blocks, category, Component, context, loading, lowdefy }) => {
+  const styles = useBlockStyles({ block, lowdefy });
   const list = Blocks.subSlots[block.id].map((SBlock) => {
     const content = {};
     Object.keys(SBlock.slots).forEach((slotKey) => {
@@ -32,11 +36,11 @@ const List = ({ block, Blocks, category, Component, context, loading, lowdefy })
         <Area
           area={block.eval.slots?.[slotKey]}
           areaKey={slotKey}
+          blocks={SBlock.slots[slotKey].blocks}
+          getLayout={getEvaluatedLayout}
           key={`ar-${block.blockId}-${SBlock.id}-${slotKey}`}
           layout={block.eval.layout}
-          style={[block.eval.slots?.[slotKey]?.style, contentStyle]}
-        >
-          {SBlock.slots[slotKey].blocks.map((bl) => (
+          renderBlock={(bl) => (
             <Block
               block={bl}
               Blocks={SBlock}
@@ -45,16 +49,17 @@ const List = ({ block, Blocks, category, Component, context, loading, lowdefy })
               lowdefy={lowdefy}
               parentLoading={loading}
             />
-          ))}
-        </Area>
+          )}
+          style={[block.eval.slots?.[slotKey]?.style, contentStyle]}
+        />
       );
     });
     return content;
   });
   return (
-    <BlockLayout blockId={block.blockId} layout={block.eval.layout} style={block.eval.style?.block}>
+    <BlockLayout blockId={block.blockId} layout={block.eval.layout} style={styles.block}>
       <Component
-        {...getBlockProps({ block, category, context, loading, lowdefy })}
+        {...getBlockProps({ block, category, context, loading, lowdefy, styles })}
         list={list}
         value={get(context.state, block.blockId) ?? []}
       />

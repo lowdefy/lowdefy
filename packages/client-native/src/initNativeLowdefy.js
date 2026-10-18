@@ -41,6 +41,8 @@ function initNativeLowdefy({ core, host, pageConfig, pathParams, rootConfig, typ
     lowdefy._internal.link = setupLink(lowdefy);
     lowdefy._internal.components.Link = createLinkComponent(lowdefy);
     lowdefy._internal.components.handleError = lowdefy._internal.handleError;
+    // The classes a development build has warned are missing from the class map, once each.
+    lowdefy._internal.missingClasses = new Set();
   }
   updateLowdefyPage({
     config: { pageConfig, rootConfig },

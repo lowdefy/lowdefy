@@ -14,11 +14,15 @@
   limitations under the License.
 */
 
-import { getMediaViewport } from '@lowdefy/operators';
+// The breakpoints of v7's grid.css and the _media operator (Tailwind CSS's), smallest first, with
+// the width each starts at. A layout value set for a breakpoint applies from that breakpoint up.
+const breakpoints = [
+  { name: 'xs', minWidth: 0 },
+  { name: 'sm', minWidth: 640 },
+  { name: 'md', minWidth: 768 },
+  { name: 'lg', minWidth: 1024 },
+  { name: 'xl', minWidth: 1280 },
+  { name: '2xl', minWidth: 1536 },
+];
 
-// The size class of a window width, by the same breakpoints the _media operator uses.
-function getBreakpoint({ width, height }) {
-  return getMediaViewport({ window: { innerWidth: width, innerHeight: height } }).size;
-}
-
-export default getBreakpoint;
+export default breakpoints;
