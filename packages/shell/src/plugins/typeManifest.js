@@ -276,6 +276,10 @@ const typeManifest = {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
+    Menu: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
     NumberInput: {
       package: '@lowdefy/blocks-native',
       version: 6,
@@ -288,7 +292,15 @@ const typeManifest = {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
+    SegmentedControl: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
     Selector: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    Sheet: {
       package: '@lowdefy/blocks-native',
       version: 6,
     },

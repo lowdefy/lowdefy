@@ -1,6 +1,7 @@
 # The phase 1 layout and display blocks on one page shared by web and mobile, and Empty (which has
-# no web block) on a mobile-only page. `lowdefy build` on this folder builds the shared page for
-# both targets: every type it uses has a web and a native version of the same category.
+# no web block) and the native controls (pages/controls.yaml) on mobile-only pages. `lowdefy
+# build` on this folder builds the shared page for both targets: every type it uses has a web and
+# a native version of the same category.
 lowdefy: local
 name: Display blocks
 
@@ -16,8 +17,11 @@ mobile:
         icon: House
       - pageId: nothing
         title: Empty
+      - pageId: controls
+        title: Controls
   pages:
     - _ref: pages/shared.yaml
+    - _ref: pages/controls.yaml
     - id: nothing
       type: Box
       blocks:

@@ -29,10 +29,13 @@ const nativeBlockTypes = {
     'List',
     'ListItem',
     'Markdown',
+    'Menu',
     'NumberInput',
     'Paragraph',
     'Screen',
+    'SegmentedControl',
     'Selector',
+    'Sheet',
     'Skeleton',
     'Spinner',
     'Switch',
@@ -54,10 +57,13 @@ const nativeBlockTypes = {
     List: [],
     ListItem: [],
     Markdown: [],
+    Menu: [],
     NumberInput: [],
     Paragraph: [],
     Screen: [],
-    Selector: [],
+    SegmentedControl: [],
+    Selector: ['ChevronsUpDown'],
+    Sheet: ['X'],
     Skeleton: [],
     Spinner: [],
     Switch: [],
@@ -149,6 +155,14 @@ const nativeBlockTypes = {
       category: 'display',
       cssKeys: ['element'],
     },
+    Menu: {
+      category: 'container',
+      slots: {
+        content:
+          'The trigger: blocks that open the menu when tapped. Give them no onClick of their own. Without blocks, the icon and title are drawn as a button.',
+      },
+      cssKeys: ['element', 'icon', 'title'],
+    },
     NumberInput: {
       category: 'input',
       valueType: 'number',
@@ -184,10 +198,15 @@ const nativeBlockTypes = {
         headerRight: 'Blocks drawn at the right of the screen header.',
       },
     },
+    SegmentedControl: {
+      category: 'input',
+      valueType: 'any',
+      cssKeys: ['element'],
+    },
     Selector: {
       category: 'input',
       valueType: 'any',
-      cssKeys: ['element', 'label', 'extra', 'feedback'],
+      cssKeys: ['element', 'label', 'extra', 'feedback', 'value'],
       nativeIgnored: [
         'label.align',
         'label.lg',
@@ -204,6 +223,15 @@ const nativeBlockTypes = {
         'showSearch',
         'suffixIcon',
       ],
+    },
+    Sheet: {
+      category: 'container',
+      slots: {
+        content: 'Blocks inside the sheet, in a scroll view.',
+        headerRight:
+          'Blocks at the right of the sheet header, such as a Save button. Replaces the close button.',
+      },
+      cssKeys: ['element', 'header', 'title', 'body'],
     },
     Skeleton: {
       category: 'display',
