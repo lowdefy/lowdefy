@@ -26,94 +26,127 @@ function createDomEvent(type, blockIds) {
   return { domEvent, elements };
 }
 
+// A lowdefy whose host globals are dispatching the DOM event.
 function dispatch({ domEvent, elements }, fn) {
-  global.window = { event: domEvent };
-  global.document = {
-    getElementById: (id) => elements.find((element) => element.id === id) ?? null,
+  const lowdefy = {
+    _internal: {
+      globals: {
+        window: { event: domEvent },
+        document: {
+          getElementById: (id) => elements.find((element) => element.id === id) ?? null,
+        },
+      },
+    },
   };
-  try {
-    return fn();
-  } finally {
-    delete global.window;
-    delete global.document;
-  }
+  return fn(lowdefy);
 }
 
 test('claimDomEvent lets the innermost block with actions handle a DOM event', () => {
-  dispatch(createDomEvent('click', ['button', 'card']), () => {
-    expect(claimDomEvent({ blockId: 'button', bubble: false, hasActions: true })).toBeNull();
-    expect(claimDomEvent({ blockId: 'card', bubble: false, hasActions: true })).toBe('button');
+  dispatch(createDomEvent('click', ['button', 'card']), (lowdefy) => {
+    expect(
+      claimDomEvent({ lowdefy, blockId: 'button', bubble: false, hasActions: true })
+    ).toBeNull();
+    expect(claimDomEvent({ lowdefy, blockId: 'card', bubble: false, hasActions: true })).toBe(
+      'button'
+    );
   });
 });
 
 test('claimDomEvent never skips or claims for a block the DOM event did not pass through', () => {
-  dispatch(createDomEvent('click', ['button', 'card']), () => {
-    expect(claimDomEvent({ blockId: 'button', bubble: false, hasActions: true })).toBeNull();
+  dispatch(createDomEvent('click', ['button', 'card']), (lowdefy) => {
+    expect(
+      claimDomEvent({ lowdefy, blockId: 'button', bubble: false, hasActions: true })
+    ).toBeNull();
     // A table next to the button fires onSelectionChange from an effect React flushes inside the
     // click, after the button's CallMethod cleared its selection.
-    expect(claimDomEvent({ blockId: 'table', bubble: false, hasActions: true })).toBeNull();
-    expect(claimDomEvent({ blockId: 'card', bubble: false, hasActions: true })).toBe('button');
+    expect(
+      claimDomEvent({ lowdefy, blockId: 'table', bubble: false, hasActions: true })
+    ).toBeNull();
+    expect(claimDomEvent({ lowdefy, blockId: 'card', bubble: false, hasActions: true })).toBe(
+      'button'
+    );
   });
 });
 
 test('claimDomEvent lets an inner block run after an outer block handled the DOM event', () => {
-  dispatch(createDomEvent('click', ['table', 'card', 'page']), () => {
+  dispatch(createDomEvent('click', ['table', 'card', 'page']), (lowdefy) => {
     // A clickable card runs its onClick in the click, the table inside it fires
     // onSelectionChange for the checkbox from an effect afterwards.
-    expect(claimDomEvent({ blockId: 'card', bubble: false, hasActions: true })).toBeNull();
-    expect(claimDomEvent({ blockId: 'table', bubble: false, hasActions: true })).toBeNull();
+    expect(claimDomEvent({ lowdefy, blockId: 'card', bubble: false, hasActions: true })).toBeNull();
+    expect(
+      claimDomEvent({ lowdefy, blockId: 'table', bubble: false, hasActions: true })
+    ).toBeNull();
     // The innermost handler holds the claim for the blocks further out.
-    expect(claimDomEvent({ blockId: 'page', bubble: false, hasActions: true })).toBe('table');
+    expect(claimDomEvent({ lowdefy, blockId: 'page', bubble: false, hasActions: true })).toBe(
+      'table'
+    );
   });
 });
 
 test('claimDomEvent lets a block without actions or with bubble: true pass the DOM event on', () => {
-  dispatch(createDomEvent('click', ['text', 'button', 'card']), () => {
-    expect(claimDomEvent({ blockId: 'text', bubble: false, hasActions: false })).toBeNull();
-    expect(claimDomEvent({ blockId: 'button', bubble: true, hasActions: true })).toBeNull();
-    expect(claimDomEvent({ blockId: 'card', bubble: false, hasActions: true })).toBeNull();
+  dispatch(createDomEvent('click', ['text', 'button', 'card']), (lowdefy) => {
+    expect(
+      claimDomEvent({ lowdefy, blockId: 'text', bubble: false, hasActions: false })
+    ).toBeNull();
+    expect(
+      claimDomEvent({ lowdefy, blockId: 'button', bubble: true, hasActions: true })
+    ).toBeNull();
+    expect(claimDomEvent({ lowdefy, blockId: 'card', bubble: false, hasActions: true })).toBeNull();
   });
 });
 
 test('claimDomEvent never skips a block an action called a method on', () => {
-  dispatch(createDomEvent('click', ['button', 'table', 'card']), () => {
+  dispatch(createDomEvent('click', ['button', 'table', 'card']), (lowdefy) => {
     // A button in the table's bulk action slot runs CallMethod clearSelection on the table.
-    expect(claimDomEvent({ blockId: 'button', bubble: false, hasActions: true })).toBeNull();
-    exemptFromDomEvent({ blockId: 'table' });
-    expect(claimDomEvent({ blockId: 'table', bubble: false, hasActions: true })).toBeNull();
-    expect(claimDomEvent({ blockId: 'card', bubble: false, hasActions: true })).toBe('button');
+    expect(
+      claimDomEvent({ lowdefy, blockId: 'button', bubble: false, hasActions: true })
+    ).toBeNull();
+    exemptFromDomEvent({ lowdefy, blockId: 'table' });
+    expect(
+      claimDomEvent({ lowdefy, blockId: 'table', bubble: false, hasActions: true })
+    ).toBeNull();
+    expect(claimDomEvent({ lowdefy, blockId: 'card', bubble: false, hasActions: true })).toBe(
+      'button'
+    );
   });
 });
 
 test('claimDomEvent never claims a DOM event that passed through no block', () => {
   // React's scheduler runs effects inside MessageChannel `message` events.
-  dispatch(createDomEvent('message', []), () => {
-    expect(claimDomEvent({ blockId: 'a', bubble: false, hasActions: true })).toBeNull();
-    expect(claimDomEvent({ blockId: 'b', bubble: false, hasActions: true })).toBeNull();
+  dispatch(createDomEvent('message', []), (lowdefy) => {
+    expect(claimDomEvent({ lowdefy, blockId: 'a', bubble: false, hasActions: true })).toBeNull();
+    expect(claimDomEvent({ lowdefy, blockId: 'b', bubble: false, hasActions: true })).toBeNull();
   });
 });
 
 test('claimDomEvent never skips an internal event for a DOM event an inner block handled', () => {
-  dispatch(createDomEvent('click', ['button', 'table', 'card']), () => {
-    expect(claimDomEvent({ blockId: 'button', bubble: false, hasActions: true })).toBeNull();
+  dispatch(createDomEvent('click', ['button', 'table', 'card']), (lowdefy) => {
     expect(
-      claimDomEvent({ blockId: 'table', bubble: false, hasActions: true, internal: true })
+      claimDomEvent({ lowdefy, blockId: 'button', bubble: false, hasActions: true })
+    ).toBeNull();
+    expect(
+      claimDomEvent({ lowdefy, blockId: 'table', bubble: false, hasActions: true, internal: true })
     ).toBeNull();
     // The internal event did not take the claim from the button.
-    expect(claimDomEvent({ blockId: 'card', bubble: false, hasActions: true })).toBe('button');
+    expect(claimDomEvent({ lowdefy, blockId: 'card', bubble: false, hasActions: true })).toBe(
+      'button'
+    );
   });
 });
 
 test('claimDomEvent lets an internal event claim an unclaimed DOM event', () => {
-  dispatch(createDomEvent('click', ['header', 'box']), () => {
+  dispatch(createDomEvent('click', ['header', 'box']), (lowdefy) => {
     expect(
-      claimDomEvent({ blockId: 'header', bubble: false, hasActions: true, internal: true })
+      claimDomEvent({ lowdefy, blockId: 'header', bubble: false, hasActions: true, internal: true })
     ).toBeNull();
-    expect(claimDomEvent({ blockId: 'box', bubble: false, hasActions: true })).toBe('header');
+    expect(claimDomEvent({ lowdefy, blockId: 'box', bubble: false, hasActions: true })).toBe(
+      'header'
+    );
   });
 });
 
 test('claimDomEvent ignores events outside a DOM dispatch', () => {
-  expect(claimDomEvent({ blockId: 'button', bubble: false, hasActions: true })).toBeNull();
-  exemptFromDomEvent({ blockId: 'button' });
+  const lowdefy = { _internal: { globals: { window: {} } } };
+  expect(claimDomEvent({ lowdefy, blockId: 'button', bubble: false, hasActions: true })).toBeNull();
+  exemptFromDomEvent({ lowdefy, blockId: 'button' });
 });

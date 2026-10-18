@@ -163,18 +163,14 @@ test('a handledBy return emits nothing for the outer block', async () => {
   const elements = ['button', 'card', 'root'].map((blockId) => ({ id: `bl-${blockId}` }));
   const domEvent = new Event('click');
   domEvent.composedPath = () => elements;
-  global.window = { event: domEvent };
-  global.document = { getElementById: (id) => elements.find((el) => el.id === id) ?? null };
-  let results;
-  try {
-    results = await Promise.all([
-      button.triggerEvent({ name: 'onClick' }),
-      card.triggerEvent({ name: 'onClick' }),
-    ]);
-  } finally {
-    delete global.window;
-    delete global.document;
-  }
+  context._internal.lowdefy._internal.globals = {
+    window: { event: domEvent },
+    document: { getElementById: (id) => elements.find((el) => el.id === id) ?? null },
+  };
+  const results = await Promise.all([
+    button.triggerEvent({ name: 'onClick' }),
+    card.triggerEvent({ name: 'onClick' }),
+  ]);
   expect(results[1].handledBy).toBe('button');
   expect(payloads.map((payload) => payload.blockId)).toEqual(['button']);
 });

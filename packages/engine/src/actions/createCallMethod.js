@@ -40,7 +40,7 @@ function createCallMethod({ arrayIndices, context }) {
         `Failed to call method "${method}" on block "${blockId}". Check if "${method}" is a valid block method for block "${blockId}".`
       );
     }
-    exemptFromDomEvent({ blockId: block.blockId });
+    exemptFromDomEvent({ blockId: block.blockId, lowdefy: context._internal.lowdefy });
     return blockMethod(...args);
   };
 }

@@ -92,6 +92,7 @@ class Events {
       bubble: eventDescription?.bubble === true,
       hasActions: !type.isUndefined(eventDescription),
       internal: eventDescription?.internal === true,
+      lowdefy: this.context._internal.lowdefy,
     });
     if (!type.isNull(handledBy)) {
       result.handledBy = handledBy;

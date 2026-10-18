@@ -66,6 +66,7 @@ function createLowdefy({ pageConfig = ordersPageConfig(), pageId = 'orders' } = 
   return {
     basePath: '',
     home: {},
+    _internal: { globals: { window } },
     contexts: {
       [instanceKey]: { pageId, _internal: { pageConfig } },
     },
