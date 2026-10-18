@@ -70,6 +70,19 @@ function checkShellConfig({ configPath, shell }) {
       `${where} "version" should be a string. Received ${JSON.stringify(shell.version)}.`
     );
   }
+  // The icon is a path relative to shell.json; `lowdefy mobile config` copies it there.
+  if (shell.icon !== undefined && (typeof shell.icon !== 'string' || shell.icon.length === 0)) {
+    throw new Error(
+      `${where} "icon" should be the path of a PNG, relative to the shell config. Received ${JSON.stringify(
+        shell.icon
+      )}.`
+    );
+  }
+  if (shell.color !== undefined && !/^#[0-9a-fA-F]{6}$/.test(shell.color)) {
+    throw new Error(
+      `${where} "color" should be a colour like "#0B5FFF". Received ${JSON.stringify(shell.color)}.`
+    );
+  }
   if (shell.eas !== undefined) {
     if (!isObject(shell.eas) || typeof shell.eas.projectId !== 'string') {
       throw new Error(

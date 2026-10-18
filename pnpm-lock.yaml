@@ -3462,6 +3462,9 @@ importers:
       expo-web-browser:
         specifier: 58.0.6
         version: 58.0.6(expo@58.0.14)(react-native@0.88.0(@babel/core@7.29.6)(@react-native/metro-config@0.88.0(@babel/core@7.29.6))(@types/react@18.2.38)(react@19.3.0))
+      jimp-compact:
+        specifier: 0.16.1
+        version: 0.16.1
       react:
         specifier: 19.3.0
         version: 19.3.0

@@ -16,6 +16,8 @@ plugin maps. Pages, menus and theme come from the app's Lowdefy server as data. 
   "name": "Field",
   "profile": "field",
   "version": "1.4.2",
+  "icon": "./icon.png",
+  "color": "#0B5FFF",
   "scheme": "field",
   "environment": "production",
   "eas": { "owner": "example", "projectId": "2b6f…" },
@@ -43,6 +45,20 @@ profile's config plugins, and sets `capabilities` from it when `shell.json` has 
 It adds the shell's package version and its type manifest (`scripts/createTypeManifest.mjs`): every block,
 action and operator type the shell registers (`src/plugins/types.js`, listed in
 `src/plugins/shellPlugins.json`), with its plugin package and that package's major version.
+
+## Store uploads
+
+`app.config.ts` sets what App Store Connect and Google Play would otherwise ask a person on upload:
+
+- `ios.config.usesNonExemptEncryption: false`: the shell uses only the OS's encryption.
+- `ios.privacyManifests`: the required-reason APIs of the profile's modules (`privacyReasons` in
+  `profiles.js`, where `basic` carries React Native's and expo-sqlite's), each listed once
+  (`getPrivacyManifest.js`).
+- From `shell.json` `icon` (a 1024×1024 PNG, relative to `shell.json`) and `color`: the app icon,
+  the `expo-splash-screen` image on `color`, and the Android adaptive icon on `color`. Its
+  foreground, the icon scaled into the centre 66% of a transparent canvas, is written beside
+  `shell.json` as `adaptive-icon-<hash>.png` (`scripts/createShellAssets.mjs`) once per icon.
+  Without `icon` (Lowdefy Dev) Expo's defaults stay.
 
 ## Versions
 

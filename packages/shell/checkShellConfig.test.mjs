@@ -118,3 +118,19 @@ test('a shell config with an EAS project without a projectId is refused', () => 
     /"eas.owner" should be a string. Received 3./
   );
 });
+
+test('a shell config with an icon and a colour is returned as it is', () => {
+  const iconShell = { ...shell, icon: './icon.png', color: '#0B5FFF' };
+  assert.equal(checkShellConfig({ configPath, shell: iconShell }), iconShell);
+});
+
+test('a shell config with a colour that is not a hex colour is refused', () => {
+  assert.throws(
+    () => checkShellConfig({ configPath, shell: { ...shell, color: 'blue' } }),
+    /^Error: Shell config "shell.json" "color" should be a colour like "#0B5FFF". Received "blue".$/
+  );
+  assert.throws(
+    () => checkShellConfig({ configPath, shell: { ...shell, icon: 3 } }),
+    /"icon" should be the path of a PNG, relative to the shell config/
+  );
+});

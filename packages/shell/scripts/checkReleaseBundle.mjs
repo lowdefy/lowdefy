@@ -95,11 +95,15 @@ function readArgs(argv) {
 }
 
 // The environment of a check of the shell built on one profile and variant: the shell config, set
-// to that profile, written to a temporary shell.json.
-function withShellEnv({ profile, shell, variant }, callback) {
+// to that profile, written to a temporary shell.json, its icon still found where it is.
+function withShellEnv({ configPath: shellConfigPath, profile, shell, variant }, callback) {
   return withTemporaryDirectory(`lowdefy-shell-config-${profile}-`, (directory) => {
     const configPath = path.join(directory, 'shell.json');
-    fs.writeFileSync(configPath, JSON.stringify({ ...shell, profile }, null, 2));
+    const icon =
+      shell.icon === undefined
+        ? undefined
+        : path.resolve(path.dirname(shellConfigPath), shell.icon);
+    fs.writeFileSync(configPath, JSON.stringify({ ...shell, icon, profile }, null, 2));
     return callback({
       ...process.env,
       CI: '1',
@@ -251,8 +255,8 @@ function prebuild({ env, platform }) {
   });
 }
 
-function checkControl({ platform, shell }) {
-  return withShellEnv({ profile: 'dev', shell, variant: 'dev' }, (env) => {
+function checkControl({ configPath, platform, shell }) {
+  return withShellEnv({ configPath, profile: 'dev', shell, variant: 'dev' }, (env) => {
     const problems = [];
     const found = findInBundle({
       env,
@@ -277,13 +281,13 @@ function onPlatform({ permissions, platform }) {
   );
 }
 
-function checkRelease({ platform, profile, shell }) {
+function checkRelease({ configPath, platform, profile, shell }) {
   const exclusions = getExclusions({ shell: { ...shell, profile }, variant: 'release' });
   const excluded = {
     modules: exclusions.modules,
     permissions: onPlatform({ permissions: exclusions.permissions, platform }),
   };
-  return withShellEnv({ profile, shell, variant: 'release' }, (env) => {
+  return withShellEnv({ configPath, profile, shell, variant: 'release' }, (env) => {
     const problems = [];
     const found = findInBundle({
       env,
@@ -310,11 +314,11 @@ function checkRelease({ platform, profile, shell }) {
 
 function main() {
   const { control, platforms, profiles } = readArgs(process.argv.slice(2));
-  const { shell } = readShellConfig();
+  const { configPath, shell } = readShellConfig();
   let failed = false;
   platforms.forEach((platform) => {
     if (control) {
-      const problems = checkControl({ platform, shell });
+      const problems = checkControl({ configPath, platform, shell });
       if (problems.length > 0) {
         problems.forEach((problem) => console.error(`${platform}: ${problem}.`));
         failed = true;
@@ -327,18 +331,22 @@ function main() {
       );
     }
     profiles.forEach((profile) => {
-      const { excluded, problems } = checkRelease({ platform, profile, shell });
+      const { excluded, problems } = checkRelease({ configPath, platform, profile, shell });
       if (problems.length > 0) {
         problems.forEach((problem) => console.error(`${platform} ${profile}: ${problem}.`));
         failed = true;
         return;
       }
+      const permissions =
+        excluded.permissions.length === 0
+          ? 'asks for no permission of a left-out module'
+          : `asks for none of ${excluded.permissions.join(', ')}`;
       console.log(
         `${platform} ${profile}: the release shell "${
           shell.id
         }" holds no dev-tab client, links none of ${Object.keys(excluded.modules).join(
           ', '
-        )}, and asks for none of ${excluded.permissions.join(', ')}.`
+        )}, and ${permissions}.`
       );
     });
   });

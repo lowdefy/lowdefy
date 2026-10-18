@@ -15,14 +15,17 @@
 */
 
 import { execFileSync } from 'node:child_process';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 
 import type { ConfigContext, ExpoConfig } from 'expo/config';
 
 import { getAuthCallbackIntentFilters } from './authCallbackIntentFilters.js';
-import getRuntimeVersion from './runtimeVersion.js';
+import getPrivacyManifest from './getPrivacyManifest.js';
+import { pluginName } from './profiles.js';
 import readShellConfig from './readShellConfig.js';
+import getRuntimeVersion from './runtimeVersion.js';
 import { getExclusions, getShellProfile, getShellVariant } from './shellVariant.js';
 import withExcludedNativeModules from './withExcludedNativeModules.js';
 
@@ -49,8 +52,39 @@ function createTypeManifest() {
   return JSON.parse(output);
 }
 
+// The shell's icon (shell.json `icon`, a 1024×1024 PNG, relative to shell.json) and its Android
+// adaptive-icon foreground: the icon padded into the launcher's safe zone, written beside shell.json
+// once per icon (scripts/createShellAssets.mjs) and reused while the icon is unchanged.
+function createShellIcons({ configPath, shell }) {
+  const directory = path.dirname(configPath);
+  const icon = path.resolve(directory, shell.icon);
+  const iconHash = crypto
+    .createHash('sha256')
+    .update(fs.readFileSync(icon))
+    .digest('hex')
+    .slice(0, 12);
+  const adaptiveForeground = path.join(directory, `adaptive-icon-${iconHash}.png`);
+  if (!fs.existsSync(adaptiveForeground)) {
+    execFileSync(process.execPath, [
+      path.join(shellRoot, 'scripts/createShellAssets.mjs'),
+      icon,
+      adaptiveForeground,
+    ]);
+  }
+  return { adaptiveForeground, icon };
+}
+
+// The splash shows the shell's icon on its colour.
+function withSplash({ color, icon, plugins }) {
+  return plugins.map((plugin) =>
+    pluginName(plugin) === 'expo-splash-screen'
+      ? ['expo-splash-screen', { image: icon, imageWidth: 200, backgroundColor: color }]
+      : plugin
+  );
+}
+
 export default function appConfig({ config }: ConfigContext): ExpoConfig {
-  const { shell } = readShellConfig();
+  const { configPath, shell } = readShellConfig();
   const variant = getShellVariant();
   const { nativeVersion, version } = readJson(path.join(shellRoot, 'package.json'));
   // The shell carries only its capability profile's native modules (profiles.js). The rest, and
@@ -58,6 +92,9 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
   // plugins and permissions not applied (scripts/checkReleaseBundle.mjs checks it).
   const profile = getShellProfile({ shell, variant });
   const excluded = getExclusions({ shell, variant });
+  // Lowdefy Dev has no icon of its own and keeps Expo's.
+  const icons = shell.icon === undefined ? null : createShellIcons({ configPath, shell });
+  const color = shell.color ?? '#FFFFFF';
   const appConfigResult: ExpoConfig = {
     ...config,
     name: shell.name,
@@ -73,19 +110,29 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
     scheme: shell.scheme,
     orientation: 'default',
     userInterfaceStyle: 'automatic',
+    ...(icons ? { icon: icons.icon } : {}),
     ios: {
       bundleIdentifier: shell.ios?.bundleIdentifier,
       supportsTablet: true,
+      // The shell uses only the encryption the OS provides (HTTPS, the Keychain), so App Store
+      // Connect asks no export compliance question on upload.
+      config: { usesNonExemptEncryption: false },
+      privacyManifests: getPrivacyManifest({ privacyReasons: profile.privacyReasons }),
     },
     android: {
       package: shell.android?.package,
+      ...(icons
+        ? { adaptiveIcon: { foregroundImage: icons.adaptiveForeground, backgroundColor: color } }
+        : {}),
       // The sign-in sheet returns by a verified app link on Android (src/auth/signInWithSheet.js).
       intentFilters: getAuthCallbackIntentFilters({ shell }),
       blockedPermissions: excluded.permissions.filter((permission) =>
         permission.startsWith('android.permission.')
       ),
     },
-    plugins: profile.plugins,
+    plugins: icons
+      ? withSplash({ color, icon: icons.icon, plugins: profile.plugins })
+      : profile.plugins,
     // A shell built for the stores is its own EAS project, which serves its over-the-air updates.
     // Lowdefy Dev's shell.dev.json has none.
     ...(shell.eas

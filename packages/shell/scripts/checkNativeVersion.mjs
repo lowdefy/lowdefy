@@ -55,6 +55,7 @@ const RECORD_FILE = 'native-fingerprint.json';
 const CONFIG_READERS = [
   'authCallbackIntentFilters.js',
   'checkShellConfig.js',
+  'getPrivacyManifest.js',
   'runtimeVersion.js',
   'profiles.js',
   'readShellConfig.js',

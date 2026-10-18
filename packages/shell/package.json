@@ -36,6 +36,7 @@
     "authCallbackIntentFilters.js",
     "babel.config.js",
     "checkShellConfig.js",
+    "getPrivacyManifest.js",
     "metro.config.js",
     "native-fingerprint.json",
     "profiles.js",
@@ -53,7 +54,7 @@
     "export:android": "expo export --platform android --output-dir dist/android",
     "export:ios": "expo export --platform ios --output-dir dist/ios",
     "start": "expo start",
-    "test": "jest && node --test fixtures/hello.test.mjs scripts/createDayjsLocales.test.mjs checkShellConfig.test.mjs profiles.test.mjs runtimeVersion.test.mjs shellVariant.test.mjs authCallbackIntentFilters.test.mjs scripts/checkNativeVersion.test.mjs",
+    "test": "jest && node --test fixtures/hello.test.mjs scripts/createDayjsLocales.test.mjs checkShellConfig.test.mjs profiles.test.mjs runtimeVersion.test.mjs shellVariant.test.mjs storeCompliance.test.mjs authCallbackIntentFilters.test.mjs scripts/checkNativeVersion.test.mjs",
     "type-manifest": "node scripts/createTypeManifest.mjs"
   },
   "dependencies": {
@@ -94,6 +95,7 @@
     "expo-sqlite": "58.0.13",
     "expo-updates": "58.0.17",
     "expo-web-browser": "58.0.6",
+    "jimp-compact": "0.16.1",
     "react": "19.3.0",
     "react-native": "0.88.0",
     "react-native-safe-area-context": "5.10.1",
