@@ -1,0 +1,5 @@
+[
+  { "category": "actions", "package": "@lowdefy/actions-core" },
+  { "category": "blocks", "package": "@lowdefy/blocks-native", "types": ["Box", "Screen"] },
+  { "category": "operators", "package": "@lowdefy/operators-js" }
+]

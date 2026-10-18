@@ -1,0 +1,12 @@
+# Expo writes the native projects at build time (Continuous Native Generation); none are committed.
+/ios
+/android
+.expo/
+dist/
+web-build/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
