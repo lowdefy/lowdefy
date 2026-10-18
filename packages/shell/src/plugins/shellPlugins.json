@@ -1,6 +1,6 @@
 [
   { "category": "actions", "package": "@lowdefy/actions-core" },
-  { "category": "blocks", "package": "@lowdefy/blocks-native", "types": ["Box", "Screen"] },
+  { "category": "blocks", "package": "@lowdefy/blocks-native" },
   { "category": "operators", "package": "@lowdefy/operators-js" },
   { "category": "operators", "package": "@lowdefy/operators-change-case" },
   { "category": "operators", "package": "@lowdefy/operators-cron" },

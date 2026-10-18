@@ -16,8 +16,8 @@
 
 // Builds the form fixture with the Lowdefy build and renders its page with the native blocks,
 // the native renderer and the engine: a page of the list, input and action blocks, as a shell
-// draws it from what the server sends. The shell registers these blocks in its plugin map later;
-// the test adds them to it.
+// draws it from what the server sends, with the shell's own plugin map. @expo/ui is mapped to the
+// stand-ins in src/test (jest.config.js).
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -26,42 +26,10 @@ import path from 'node:path';
 import React from 'react';
 import { jest } from '@jest/globals';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
-import * as nativeBlocks from '@lowdefy/blocks-native/blocks';
 import { createNativeGlobals, LowdefyPage } from '@lowdefy/client-native';
 
 import createMemoryStore from '../src/host/createMemoryStore.js';
 import shellTypes from '../src/plugins/types.js';
-
-// @expo/ui draws SwiftUI and Jetpack Compose views through native modules Jest does not have.
-// These stand-ins keep the props the blocks pass.
-jest.mock('@expo/ui', () => {
-  const { Text, View } = jest.requireActual('react-native');
-  const mockReact = jest.requireActual('react');
-  function Picker({ children, onValueChange, selectedValue, testID }) {
-    const items = mockReact.Children.toArray(children).map((child) => child.props);
-    return mockReact.createElement(
-      View,
-      { items, onValueChange, selectedValue, testID },
-      items.map((item) => mockReact.createElement(Text, { key: item.value }, item.label))
-    );
-  }
-  Picker.Item = () => null;
-  return {
-    Host: ({ children }) => mockReact.createElement(View, null, children),
-    Picker,
-    Switch: ({ onValueChange, testID, value }) =>
-      mockReact.createElement(View, { onValueChange, testID, value }),
-  };
-});
-jest.mock('@expo/ui/community/datetime-picker', () => {
-  const { View } = jest.requireActual('react-native');
-  const mockReact = jest.requireActual('react');
-  return {
-    __esModule: true,
-    default: ({ onValueChange, testID, value }) =>
-      mockReact.createElement(View, { onValueChange, testID, value }),
-  };
-});
 
 const configDirectory = path.join(__dirname, 'form');
 let buildDirectory;
@@ -133,7 +101,7 @@ async function renderFormPage() {
         pagePaths: { form: 'form' },
         theme: readArtifact('mobile/theme.json'),
       }}
-      types={{ ...shellTypes, blocks: { ...shellTypes.blocks, ...nativeBlocks } }}
+      types={shellTypes}
     />
   );
   return { onScreenOptions };

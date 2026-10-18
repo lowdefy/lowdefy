@@ -22,6 +22,12 @@ module.exports = {
   coveragePathIgnorePatterns: ['<rootDir>/src/test/'],
   coverageReporters: [['lcov', { projectRoot: '../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
+  // @expo/ui reaches native modules Jest does not have, so the native blocks' pickers, switch and
+  // date picker are stand-ins (src/test/expoUi.js) that keep their props.
+  moduleNameMapper: {
+    '^@expo/ui$': '<rootDir>/src/test/expoUi.js',
+    '^@expo/ui/community/datetime-picker$': '<rootDir>/src/test/expoUiDateTimePicker.js',
+  },
   // The preset's pattern assumes a flat node_modules; pnpm nests each package under .pnpm.
   transformIgnorePatterns: [
     'node_modules/(?!(\\.pnpm/[^/]+/node_modules/)?((jest-)?react-native(-svg)?|@react-native(-community)?|expo(nent)?|@expo|expo-[^/]+|change-case|intl-messageformat|@formatjs|mingo|uuid|yaml|cron-parser|cronstrue|luxon|jsonata|deep-diff|nunjucks)/)',
