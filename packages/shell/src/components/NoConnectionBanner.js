@@ -14,12 +14,11 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useSyncExternalStore } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { useNetworkState } from 'expo-network';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import isOnline from '../host/isOnline.js';
+import networkStatus from '../host/networkStatus.js';
 
 const styles = StyleSheet.create({
   banner: {
@@ -33,12 +32,13 @@ const styles = StyleSheet.create({
   },
 });
 
-// Shown in the frame while the phone is offline. Cached pages still open; requests fail with the
-// core's network error, as in a browser that lost its connection.
+// Shown in the frame while the shell is offline (networkStatus: the phone's network, or Lowdefy
+// Dev's network injection). Cached pages still open; requests fail with the core's network
+// error, as in a browser that lost its connection.
 function NoConnectionBanner() {
-  const networkState = useNetworkState();
+  const online = useSyncExternalStore(networkStatus.subscribe, networkStatus.isOnline);
   const insets = useSafeAreaInsets();
-  if (isOnline(networkState)) {
+  if (online) {
     return null;
   }
   return (

@@ -246,7 +246,7 @@ test('dynamic rebuild does not call mounted updaters during construction', () =>
   });
   // Simulate a mounted Block component registered on the live context.
   const updaterSpy = jest.fn();
-  c1._internal.updaters[c1._internal.rootBlock.id] = updaterSpy;
+  c1._internal.updaters.register(c1._internal.rootBlock.id, updaterSpy);
   // getContext runs in the render body — updating mounted Block components
   // during the rebuild would setState mid-render. Updaters are scoped per
   // context, so construction of the new context cannot reach the old ones.
@@ -256,7 +256,7 @@ test('dynamic rebuild does not call mounted updaters during construction', () =>
     resetContext: { reset: false, setReset: () => {} },
   });
   expect(updaterSpy).not.toHaveBeenCalled();
-  expect(c2._internal.updaters).toEqual({});
+  expect(c2._internal.updaters).not.toBe(c1._internal.updaters);
 });
 
 test('static page config memoizes context across different config objects', () => {

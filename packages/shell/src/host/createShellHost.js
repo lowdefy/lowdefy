@@ -16,19 +16,16 @@
 
 import { Linking } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
-import * as Network from 'expo-network';
 
 import createDeviceStore from './createDeviceStore.js';
 import createMemoryStore from './createMemoryStore.js';
 import createShellGlobals from './createShellGlobals.js';
 import getOrigin from './getOrigin.js';
-import isOnline from './isOnline.js';
+import networkStatus from './networkStatus.js';
 
+// The app's `online` and `offline` events follow the shell's one online state.
 const network = {
-  addListener(listener) {
-    const subscription = Network.addNetworkStateListener((state) => listener(isOnline(state)));
-    return () => subscription.remove();
-  },
+  addListener: networkStatus.subscribe,
 };
 
 /**

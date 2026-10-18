@@ -45,6 +45,10 @@ jest.mock('../config/getShellConfig.js', () => () => {
   throw new Error('The tests pass the shell config.');
 });
 jest.mock('expo-splash-screen', () => ({ hideAsync: jest.fn() }));
+jest.mock('expo-network', () => ({
+  addNetworkStateListener: () => ({ remove: () => undefined }),
+  getNetworkStateAsync: async () => ({ isConnected: true, isInternetReachable: true }),
+}));
 jest.mock('expo-sensors', () => ({ Accelerometer: {} }));
 jest.mock('expo-camera', () => ({
   CameraView: () => null,

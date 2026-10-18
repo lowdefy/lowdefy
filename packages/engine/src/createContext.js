@@ -18,6 +18,7 @@ import { serializer } from '@lowdefy/helpers';
 import { WebParser } from '@lowdefy/operators';
 
 import Actions from './Actions.js';
+import createUpdaters from './createUpdaters.js';
 import DependencyTracker from './tracking/DependencyTracker.js';
 import readMediaViewport from './tracking/readMediaViewport.js';
 import Slots from './Slots.js';
@@ -109,11 +110,12 @@ function createContext({ config, instanceKey, jsMap, lowdefy, organizationId, pa
       readRecorder: null,
       rootBlock: blockData(config), // filter block to prevent circular structure
       update: () => {}, // Initialize update since Requests might call it during context creation
-      // React updaters register here per block id when the context's Block
-      // components mount — scoped per context so rebuilding over a live
-      // context (dynamic page navigation, reset) never notifies the previous
-      // context's still-mounted components.
-      updaters: {},
+      // React updaters register here per block id while the context's Block
+      // components are mounted, a set per block since a native shell can show
+      // one page instance on two screens (createUpdaters). Scoped per context
+      // so rebuilding over a live context (dynamic page navigation, reset)
+      // never notifies the previous context's still-mounted components.
+      updaters: createUpdaters(),
     },
   };
   const _internal = ctx._internal;

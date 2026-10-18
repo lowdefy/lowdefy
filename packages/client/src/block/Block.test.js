@@ -17,6 +17,7 @@
 import React from 'react';
 import { jest } from '@jest/globals';
 import { act, render } from '@testing-library/react';
+import { createUpdaters } from '@lowdefy/engine';
 
 const categorySwitchLoading = [];
 
@@ -43,7 +44,7 @@ function createBlock({ events, triggerEvent }) {
 function renderBlock({ block, renderHead }) {
   const progress = { dispatch: jest.fn() };
   const lowdefy = { _internal: { progress } };
-  const context = { _internal: { lowdefy, updaters: {} } };
+  const context = { _internal: { lowdefy, updaters: createUpdaters() } };
   const result = render(
     <Block
       block={block}
@@ -97,7 +98,17 @@ test('Block renders the head again with the new properties when the block update
   expect(container.querySelector('title').textContent).toBe('Task');
   await act(async () => {
     block.eval = { loading: false, properties: { title: 'Loaded task' } };
-    context._internal.updaters.button();
+    context._internal.updaters.update('button');
   });
   expect(container.querySelector('title').textContent).toBe('Loaded task');
+});
+
+test('Block unregisters its updater when it unmounts', async () => {
+  const block = createBlock({ events: {}, triggerEvent: jest.fn(async () => {}) });
+  const { context, unmount } = renderBlock({ block });
+  await act(async () => {});
+  const renders = categorySwitchLoading.length;
+  unmount();
+  context._internal.updaters.update('button');
+  expect(categorySwitchLoading).toHaveLength(renders);
 });
