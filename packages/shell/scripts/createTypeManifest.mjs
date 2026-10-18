@@ -22,8 +22,8 @@
   Made at shell build time (app.config.ts) from src/plugins/shellPlugins.json, the plugin packages
   the shell registers (src/plugins/types.js), and the shell's plugins (shell.json `plugins`, read
   with readShellConfig.js): each one's `./types` `native.blocks` and `native.actions`, named with
-  its typePrefix, as src/plugins/appTypes.js registers them. Prints the manifest as JSON when run
-  directly.
+  its typePrefix, as src/plugins/appTypes.js registers them. A plugin without a `./types` export
+  adds none. Prints the manifest as JSON when run directly.
 */
 
 import fs from 'node:fs';
@@ -72,6 +72,21 @@ function addType({ category, manifest, name, packageName }) {
     );
   }
   manifest[category][name] = { package: packageName, version: readMajorVersion(packageName) };
+}
+
+// A shell plugin need not export "./types": a native-only plugin, such as a wrapped SDK, gives no
+// types. Resolving a missing export throws, so the plugin's own package.json says, found on the
+// lookup paths of `require` (its exports need not list package.json).
+function hasTypesExport(packageName) {
+  const packageJsonPath = require.resolve
+    .paths(packageName)
+    .map((directory) => path.join(directory, packageName, 'package.json'))
+    .find((filePath) => fs.existsSync(filePath));
+  if (packageJsonPath === undefined) {
+    throw new Error(`Shell plugin "${packageName}" is not installed.`);
+  }
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+  return packageJson.exports?.['./types'] !== undefined;
 }
 
 // A shell plugin's native type names, from its `./types` `native: { blocks, actions }`.
@@ -126,7 +141,9 @@ async function createTypeManifest() {
   }
   const { shell } = readShellConfig();
   for (const plugin of shell.plugins ?? []) {
-    await addShellPluginTypes({ manifest, plugin });
+    if (hasTypesExport(plugin.name)) {
+      await addShellPluginTypes({ manifest, plugin });
+    }
   }
   return manifest;
 }

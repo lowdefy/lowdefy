@@ -17,7 +17,7 @@
 
 import { createRequire } from 'node:module';
 import path from 'path';
-import { collectPluginDefinitions, readFile } from '@lowdefy/node-utils';
+import { collectPluginDefinitions, hasTypesExport, readFile } from '@lowdefy/node-utils';
 import { createPluginTypesMap, createPluginTypesMapMobile } from '@lowdefy/build';
 import YAML from 'yaml';
 
@@ -32,6 +32,16 @@ async function getPluginDefinitions({ directories }) {
     return { plugins: [], shellPlugins: [] };
   }
   return collectPluginDefinitions({ lowdefy: YAML.parse(lowdefyYaml) });
+}
+
+// A plugin only shells list may be native-only, with no ./types export: it
+// adds no types. Root plugins must export ./types.
+function readPluginTypes({ plugin }) {
+  if (plugin.shellOnly && !hasTypesExport({ name: plugin.name, require })) {
+    return {};
+  }
+  const types = require(`${plugin.name}/types`);
+  return types.default ?? types;
 }
 
 async function createCustomPluginTypesMap({ directories }) {
@@ -71,8 +81,7 @@ async function createCustomPluginTypesMap({ directories }) {
 
   const packageTypes = new Map();
   for (const plugin of plugins) {
-    const types = require(`${plugin.name}/types`);
-    packageTypes.set(plugin.name, types.default ?? types);
+    packageTypes.set(plugin.name, readPluginTypes({ plugin }));
     createPluginTypesMap({
       packageTypes: packageTypes.get(plugin.name),
       typesMap: customTypesMap,

@@ -29,8 +29,11 @@ jest.unstable_mockModule('@lowdefy/build', () => ({
 // replaced.
 const realNodeUtils = await import('@lowdefy/node-utils');
 const mockReadFile = jest.fn(async () => 'plugins:\n  - name: plugin-a\n  - name: plugin-b\n');
+// @example/lowdefy-mdm exports ./shell alone, a native-only shell plugin.
+const mockHasTypesExport = jest.fn(({ name }) => name !== '@example/lowdefy-mdm');
 jest.unstable_mockModule('@lowdefy/node-utils', () => ({
   ...realNodeUtils,
+  hasTypesExport: mockHasTypesExport,
   readFile: mockReadFile,
 }));
 jest.unstable_mockModule('node:module', () => ({
@@ -135,4 +138,51 @@ mobile:
     ],
   ]);
   expect(customTypesMapMobile.plugins).toEqual(['@example/lowdefy-printer']);
+});
+
+test('createCustomPluginTypesMap skips ./types of a shell-only plugin that does not export it', async () => {
+  mockCreatePluginTypesMap.mockClear();
+  mockCreatePluginTypesMapMobile.mockClear();
+  mockReadFile.mockResolvedValueOnce(`
+mobile:
+  shells:
+    - id: field
+      plugins:
+        - name: '@example/lowdefy-printer'
+          version: 2.1.0
+          typePrefix: Printer
+        - name: '@example/lowdefy-mdm'
+          version: 1.0.3
+`);
+  const printerTypes = { native: { blocks: ['Label'] } };
+  mockImportFresh.mockReset();
+  mockImportFresh.mockResolvedValue(printerTypes);
+
+  const { customTypesMapMobile } = await createCustomPluginTypesMap({ directories, logger });
+
+  expect(mockImportFresh.mock.calls).toEqual([['/plugins/@example/lowdefy-printer/types.js']]);
+  expect(mockCreatePluginTypesMapMobile.mock.calls.map(([args]) => args.packageTypes)).toEqual([
+    printerTypes,
+    {},
+  ]);
+  expect(customTypesMapMobile.plugins).toEqual([
+    '@example/lowdefy-printer',
+    '@example/lowdefy-mdm',
+  ]);
+});
+
+test('createCustomPluginTypesMap reads ./types of a root plugin without asking whether it exports it', async () => {
+  mockHasTypesExport.mockClear();
+  mockReadFile.mockResolvedValueOnce(`
+plugins:
+  - name: '@example/lowdefy-mdm'
+    version: 1.0.3
+`);
+  mockImportFresh.mockReset();
+  mockImportFresh.mockRejectedValue(new Error('No "./types" export.'));
+
+  await expect(createCustomPluginTypesMap({ directories, logger })).rejects.toThrow(
+    'Failed to import plugin "@example/lowdefy-mdm".'
+  );
+  expect(mockHasTypesExport).not.toHaveBeenCalled();
 });
