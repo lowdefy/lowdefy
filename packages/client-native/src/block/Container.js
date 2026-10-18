@@ -20,11 +20,15 @@ import Area from './Area.js';
 import Block from './Block.js';
 import BlockLayout from './BlockLayout.js';
 import getBlockProps from './getBlockProps.js';
+import useBlockStyles from '../style/useBlockStyles.js';
+
+const getEvaluatedLayout = (block) => block.eval?.layout;
 
 // A container or input container: its slots are passed as `content`, a function per slot that
 // renders the slot's blocks in an area. A block may pass the loading its slot's blocks inherit
 // (`{ loading }`), for slots that are its chrome rather than its content.
 const Container = ({ block, Blocks, category, Component, context, loading, lowdefy }) => {
+  const styles = useBlockStyles({ block, lowdefy });
   const content = {};
   const { slots } = Blocks.subSlots[block.id][0];
   Object.keys(slots).forEach((slotKey) => {
@@ -33,11 +37,11 @@ const Container = ({ block, Blocks, category, Component, context, loading, lowde
       <Area
         area={block.eval.slots?.[slotKey]}
         areaKey={slotKey}
+        blocks={slots[slotKey].blocks}
+        getLayout={getEvaluatedLayout}
         key={`ar-${block.blockId}-${slotKey}`}
         layout={block.eval.layout}
-        style={[block.eval.slots?.[slotKey]?.style, contentStyle]}
-      >
-        {slots[slotKey].blocks.map((bl, k) => (
+        renderBlock={(bl, k) => (
           <Block
             block={bl}
             Blocks={Blocks.subSlots[block.id][0]}
@@ -46,14 +50,15 @@ const Container = ({ block, Blocks, category, Component, context, loading, lowde
             lowdefy={lowdefy}
             parentLoading={slotLoading}
           />
-        ))}
-      </Area>
+        )}
+        style={[block.eval.slots?.[slotKey]?.style, contentStyle]}
+      />
     );
   });
   return (
-    <BlockLayout blockId={block.blockId} layout={block.eval.layout} style={block.eval.style?.block}>
+    <BlockLayout blockId={block.blockId} layout={block.eval.layout} style={styles.block}>
       <Component
-        {...getBlockProps({ block, category, context, loading, lowdefy })}
+        {...getBlockProps({ block, category, context, loading, lowdefy, styles })}
         content={content}
         value={category === 'input-container' ? block.value : undefined}
       />

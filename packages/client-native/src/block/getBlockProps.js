@@ -17,8 +17,9 @@
 import getBlockMethods from './getBlockMethods.js';
 
 // The props every block component gets, as the web renderer gives them. There are no class names
-// on a phone.
-function getBlockProps({ block, category, context, loading, lowdefy }) {
+// on a phone: `styles` holds each slot's classes and style as one React Native style
+// (useBlockStyles).
+function getBlockProps({ block, category, context, loading, lowdefy, styles }) {
   return {
     basePath: lowdefy.basePath,
     blockId: block.blockId,
@@ -31,7 +32,7 @@ function getBlockProps({ block, category, context, loading, lowdefy }) {
     pathParams: context.pathParams,
     properties: block.eval.properties,
     required: block.eval.required,
-    styles: block.eval.style ?? {},
+    styles,
     validation: block.eval.validation,
   };
 }

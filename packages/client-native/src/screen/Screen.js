@@ -16,18 +16,32 @@
 
 import React, { useCallback, useContext, useEffect, useRef } from 'react';
 
+import BreakpointContext from '../layout/BreakpointContext.js';
+import PageContexts from '../style/PageContexts.js';
+import PageStyleContext from '../style/PageStyleContext.js';
 import ScreenOptionsContext from './ScreenOptionsContext.js';
+import ThemeContext from '../theme/ThemeContext.js';
 
 // The mobile page type. It draws its content slot; the shell's router draws the header from the
 // options it reports: title, presentation (card, modal or sheet) and headerRight, a function that
 // renders the headerRight slot's blocks. headerRight keeps one identity while the slot exists, so
-// a router that re-renders on new options is not sent new options on every page render.
+// a router that re-renders on new options is not sent new options on every page render. The
+// router draws it outside the page, so it brings the page's theme, breakpoint and class map.
 function Screen({ content, properties }) {
   const onScreenOptions = useContext(ScreenOptionsContext);
   const headerRightRef = useRef(content.headerRight);
   headerRightRef.current = content.headerRight;
+  const pageContextsRef = useRef(null);
+  pageContextsRef.current = {
+    breakpoint: useContext(BreakpointContext),
+    pageStyle: useContext(PageStyleContext),
+    theme: useContext(ThemeContext),
+  };
   const hasHeaderRight = typeof content.headerRight === 'function';
-  const headerRight = useCallback(() => headerRightRef.current(), []);
+  const headerRight = useCallback(
+    () => <PageContexts value={pageContextsRef.current}>{headerRightRef.current()}</PageContexts>,
+    []
+  );
   const { presentation = 'card', title } = properties;
   useEffect(() => {
     if (onScreenOptions === null) return;

@@ -612,9 +612,12 @@ importers:
       '@lowdefy/helpers':
         specifier: 6.0.0
         version: link:../utils/helpers
-      '@lowdefy/operators':
+      '@lowdefy/layout-native':
         specifier: 6.0.0
-        version: link:../operators
+        version: link:../layout-native
+      '@lowdefy/style-native':
+        specifier: 6.0.0
+        version: link:../utils/style-native
     devDependencies:
       '@babel/core':
         specifier: 7.29.6

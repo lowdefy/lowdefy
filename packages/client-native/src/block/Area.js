@@ -19,13 +19,44 @@ import { View } from 'react-native';
 
 import areaLayout from '../layout/areaLayout.js';
 import BreakpointContext from '../layout/BreakpointContext.js';
+import ColumnGapContext from '../layout/ColumnGapContext.js';
 import layoutStyles from '../layout/layoutStyles.js';
+import sortByOrder from '../layout/sortByOrder.js';
 
-// A block's slot, laid out as its slot settings (and, for content, the block's layout) ask.
-const Area = ({ area, areaKey, children, layout, style }) => {
+/**
+ * A block's slot, laid out as its slot settings (and, for content, the block's layout) ask, with
+ * its blocks drawn in layout order.
+ *
+ * A gapped area is two views: the outer one takes the slot's style, the inner one is the row,
+ * widened by its column gap (layout-native containerStyle), so a slot style's margin or padding
+ * never undoes the widening.
+ *
+ * @param {Object} props
+ * @param {Object[]} props.blocks The slot's blocks.
+ * @param {(block: Object) => Object} props.getLayout A block's evaluated layout.
+ * @param {(block: Object, index: number) => React.ReactNode} props.renderBlock Draws a block;
+ *   `index` is its config position.
+ */
+const Area = ({ area, areaKey, blocks, getLayout, layout, renderBlock, style }) => {
   const breakpoint = useContext(BreakpointContext);
-  const { container } = layoutStyles(areaLayout({ area, areaKey, layout }), breakpoint);
-  return <View style={[container, style]}>{children}</View>;
+  const { container, columnGap } = layoutStyles(areaLayout({ area, areaKey, layout }), breakpoint);
+  const children = sortByOrder({ blocks, breakpoint, getLayout }).map(({ block, index }) =>
+    renderBlock(block, index)
+  );
+  if (columnGap === 0) {
+    return (
+      <ColumnGapContext.Provider value={0}>
+        <View style={[container, style]}>{children}</View>
+      </ColumnGapContext.Provider>
+    );
+  }
+  return (
+    <ColumnGapContext.Provider value={columnGap}>
+      <View style={style}>
+        <View style={container}>{children}</View>
+      </View>
+    </ColumnGapContext.Provider>
+  );
 };
 
 export default Area;

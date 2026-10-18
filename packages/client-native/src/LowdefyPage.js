@@ -14,55 +14,46 @@
   limitations under the License.
 */
 
-import React, { useMemo, useRef } from 'react';
+import React, { useContext, useMemo, useRef } from 'react';
 import { ScrollView, useWindowDimensions } from 'react-native';
 import { getAppContext } from '@lowdefy/engine';
-import { pageInstanceKey, serializer } from '@lowdefy/helpers';
+import { appStorageKey, pageInstanceKey, serializer } from '@lowdefy/helpers';
+import { getBreakpoint } from '@lowdefy/layout-native';
 
 import Block from './block/Block.js';
 import BreakpointContext from './layout/BreakpointContext.js';
 import Context from './Context.js';
-import getBreakpoint from './layout/getBreakpoint.js';
 import initNativeLowdefy from './initNativeLowdefy.js';
+import PageStyleContext from './style/PageStyleContext.js';
 import ScreenOptionsContext from './screen/ScreenOptionsContext.js';
+import ThemeContext from './theme/ThemeContext.js';
+import ThemeProvider from './theme/ThemeProvider.js';
 
-/**
- * Renders one Lowdefy page as native views, in a ScrollView.
- *
- * @param {Object} props
- * @param {Object} props.core What the page needs to build the app's core the first time:
- *   `{ lowdefy, apiBase, basePath, auth }`. `lowdefy` is the app-level object every page of the
- *   app shares; `createLowdefyCore` fills it on the first page.
- * @param {Object} props.host The host for `@lowdefy/client-core` (fetch, router, storage,
- *   globals, WebSocket, websocketUrl, onBuildChanged, onCallerChanged). Its globals come from
- *   `createNativeGlobals`, so `location` is the shown route.
- * @param {Object} props.pageConfig The page, as the server sends it (serialized).
- * @param {Object} props.rootConfig The app's root config, as the server sends it (serialized).
- * @param {Object} props.types `{ blocks, actions, operators }`, the native plugin maps. Each
- *   block component carries its `meta`.
- * @param {Object} [props.pathParams] The values of the page path's params, from the router.
- * @param {Object} [props.jsMap] The page's compiled `_js` functions.
- * @param {(options: Object) => void} [props.onScreenOptions] Called by a Screen page with
- *   `{ title, presentation, headerRight }` for the router to draw the header.
- * @param {Object} [props.resetContext] `{ reset, setReset }`: rebuild the page context once.
- */
-const LowdefyPage = ({
+const Page = ({
   core,
   host,
   jsMap,
-  onScreenOptions = null,
-  pageConfig: rawPageConfig,
-  pathParams = {},
-  resetContext = { reset: false, setReset: () => undefined },
-  rootConfig: rawRootConfig,
+  onScreenOptions,
+  pageConfig,
+  pathParams,
+  resetContext,
+  rootConfig,
   types,
 }) => {
-  // Deserialized once per fetched config: the engine keeps dynamic page contexts by config
-  // object identity.
-  const pageConfig = useMemo(() => serializer.deserialize(rawPageConfig), [rawPageConfig]);
-  const rootConfig = useMemo(() => serializer.deserialize(rawRootConfig), [rawRootConfig]);
+  // Read here, so a change of theme mode renders the page again: the engine's render-time full
+  // pass (getContext) then evaluates _media: darkMode and _theme with the new mode.
+  const theme = useContext(ThemeContext);
   const { width, height } = useWindowDimensions();
   const breakpoint = getBreakpoint({ width, height });
+  // In dev, a page built on request carries the class map entries of its own classes, which the
+  // app's class map, built before the page, does not hold.
+  const pageStyle = useMemo(
+    () => ({
+      classMap: { ...rootConfig.classMap, ...pageConfig._classMap },
+      sharedPage: pageConfig.target === 'both',
+    }),
+    [rootConfig.classMap, pageConfig._classMap, pageConfig.target]
+  );
 
   // A new page instance (another set of path values) remounts the page tree; a dynamic page
   // remounts on every fetch, since its context is rebuilt per fetch.
@@ -79,36 +70,111 @@ const LowdefyPage = ({
     pageConfig.dynamic === true ? `${instanceKey}:${buildRef.current.build}` : instanceKey;
 
   const lowdefy = initNativeLowdefy({ core, host, pageConfig, pathParams, rootConfig, types });
+  lowdefy.theme._resolvedAntdToken = theme.tokens;
   const appContext = getAppContext({ events: rootConfig.events, jsMap, lowdefy });
   return (
     <BreakpointContext.Provider value={breakpoint}>
-      <ScreenOptionsContext.Provider value={onScreenOptions}>
-        <ScrollView keyboardShouldPersistTaps="handled">
-          <Context
-            key={contextKey}
-            appContext={appContext}
-            config={pageConfig}
-            jsMap={jsMap}
-            lowdefy={lowdefy}
-            pathParams={pathParams}
-            resetContext={resetContext}
-          >
-            {(context) => {
-              if (!context._internal.onInitDone) return null;
-              return (
-                <Block
-                  block={context._internal.RootSlots.map[pageConfig.blockId]}
-                  Blocks={context._internal.RootSlots}
-                  context={context}
-                  lowdefy={lowdefy}
-                  parentLoading={false}
-                />
-              );
-            }}
-          </Context>
-        </ScrollView>
-      </ScreenOptionsContext.Provider>
+      <PageStyleContext.Provider value={pageStyle}>
+        <ScreenOptionsContext.Provider value={onScreenOptions}>
+          <ScrollView keyboardShouldPersistTaps="handled">
+            <Context
+              key={contextKey}
+              appContext={appContext}
+              config={pageConfig}
+              jsMap={jsMap}
+              lowdefy={lowdefy}
+              pathParams={pathParams}
+              resetContext={resetContext}
+            >
+              {(context) => {
+                if (!context._internal.onInitDone) return null;
+                return (
+                  <Block
+                    block={context._internal.RootSlots.map[pageConfig.blockId]}
+                    Blocks={context._internal.RootSlots}
+                    context={context}
+                    lowdefy={lowdefy}
+                    parentLoading={false}
+                  />
+                );
+              }}
+            </Context>
+          </ScrollView>
+        </ScreenOptionsContext.Provider>
+      </PageStyleContext.Provider>
     </BreakpointContext.Provider>
+  );
+};
+
+/**
+ * Renders one Lowdefy page as native views, in a ScrollView.
+ *
+ * @param {Object} props
+ * @param {Object} props.core What the page needs to build the app's core the first time:
+ *   `{ lowdefy, apiBase, basePath, auth }`. `lowdefy` is the app-level object every page of the
+ *   app shares; `createLowdefyCore` fills it on the first page.
+ * @param {Object} props.host The host for `@lowdefy/client-core` (fetch, router, storage,
+ *   globals, WebSocket, websocketUrl, onBuildChanged, onCallerChanged). Its globals come from
+ *   `createNativeGlobals`, so `location` is the shown route.
+ * @param {Object} props.pageConfig The page, as the server sends it (serialized). A page built
+ *   on request in dev carries `_classMap`, the class map entries of its own classes.
+ * @param {Object} props.rootConfig The app's root config, as the server sends it (serialized),
+ *   with the mobile root's `theme` (`{ darkMode, light, dark }`) and `classMap`.
+ * @param {Object} props.types `{ blocks, actions, operators }`, the native plugin maps. Each
+ *   block component carries its `meta`.
+ * @param {Object} [props.pathParams] The values of the page path's params, from the router.
+ * @param {Object} [props.jsMap] The page's compiled `_js` functions.
+ * @param {(options: Object) => void} [props.onScreenOptions] Called by a Screen page with
+ *   `{ title, presentation, headerRight }` for the router to draw the header.
+ * @param {Object} [props.resetContext] `{ reset, setReset }`: rebuild the page context once.
+ *
+ * A shell wraps its pages in one ThemeProvider, so they share the theme mode; a page outside one
+ * makes its own.
+ */
+const LowdefyPage = ({
+  core,
+  host,
+  jsMap,
+  onScreenOptions = null,
+  pageConfig: rawPageConfig,
+  pathParams = {},
+  resetContext = { reset: false, setReset: () => undefined },
+  rootConfig: rawRootConfig,
+  types,
+}) => {
+  // Deserialized once per fetched config: the engine keeps dynamic page contexts by config
+  // object identity.
+  const pageConfig = useMemo(() => serializer.deserialize(rawPageConfig), [rawPageConfig]);
+  const rootConfig = useMemo(() => serializer.deserialize(rawRootConfig), [rawRootConfig]);
+  const theme = useContext(ThemeContext);
+  const page = (
+    <Page
+      core={core}
+      host={host}
+      jsMap={jsMap}
+      onScreenOptions={onScreenOptions}
+      pageConfig={pageConfig}
+      pathParams={pathParams}
+      resetContext={resetContext}
+      rootConfig={rootConfig}
+      types={types}
+    />
+  );
+  if (theme !== null) {
+    return page;
+  }
+  return (
+    <ThemeProvider
+      host={host}
+      storageKey={appStorageKey({
+        basePath: core.basePath ?? '',
+        name: 'lowdefy_darkMode',
+        slug: rootConfig.lowdefyApp?.slug,
+      })}
+      theme={rootConfig.theme}
+    >
+      {page}
+    </ThemeProvider>
   );
 };
 

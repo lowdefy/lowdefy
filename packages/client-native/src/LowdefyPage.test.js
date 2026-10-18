@@ -18,19 +18,22 @@ import React from 'react';
 import { jest } from '@jest/globals';
 import { Dimensions, Linking, Text } from 'react-native';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { getBreakpoint } from '@lowdefy/layout-native';
 
 import buildPage from './test/buildPage.js';
 import createFakeHost from './test/createFakeHost.js';
 import createTypes from './test/createTypes.js';
 import describeBlock from './trace/describeBlock.js';
-import getBreakpoint from './layout/getBreakpoint.js';
 import LowdefyPage from './LowdefyPage.js';
+import theme from './test/theme.json';
 
 const rootConfig = {
+  classMap: {},
   home: { configured: true, pageId: 'home' },
   lowdefyApp: { slug: 'test-app' },
   menus: [],
   pagePaths: { home: 'home', orders: 'orders' },
+  theme,
 };
 
 async function renderPage({ onScreenOptions, pageConfig, record, response }) {

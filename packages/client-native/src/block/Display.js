@@ -18,15 +18,19 @@ import React from 'react';
 
 import BlockLayout from './BlockLayout.js';
 import getBlockProps from './getBlockProps.js';
+import useBlockStyles from '../style/useBlockStyles.js';
 
 // A display or input block: no slots. An input also gets its value.
-const Display = ({ block, category, Component, context, loading, lowdefy }) => (
-  <BlockLayout blockId={block.blockId} layout={block.eval.layout} style={block.eval.style?.block}>
-    <Component
-      {...getBlockProps({ block, category, context, loading, lowdefy })}
-      value={category === 'input' ? block.value : undefined}
-    />
-  </BlockLayout>
-);
+const Display = ({ block, category, Component, context, loading, lowdefy }) => {
+  const styles = useBlockStyles({ block, lowdefy });
+  return (
+    <BlockLayout blockId={block.blockId} layout={block.eval.layout} style={styles.block}>
+      <Component
+        {...getBlockProps({ block, category, context, loading, lowdefy, styles })}
+        value={category === 'input' ? block.value : undefined}
+      />
+    </BlockLayout>
+  );
+};
 
 export default Display;
