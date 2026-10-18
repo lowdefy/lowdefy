@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { spawn } from 'child_process';
+import { spawn as spawnChild } from 'child_process';
 
 import { wait } from '@lowdefy/helpers';
 
@@ -31,9 +31,9 @@ function listConnectedDevices(output) {
     .map(([serial]) => serial);
 }
 
-async function listAvds({ device }) {
+async function listAvds({ emulator, run }) {
   try {
-    const output = await runDeviceTool({ command: device.emulator, args: ['-list-avds'] });
+    const output = await run({ command: emulator, args: ['-list-avds'] });
     return output
       .split('\n')
       .map((line) => line.trim())
@@ -43,12 +43,12 @@ async function listAvds({ device }) {
   }
 }
 
-async function waitForBoot({ device }) {
+async function waitForBoot({ adb, run }) {
   const deadline = Date.now() + BOOT_TIMEOUT_MS;
-  await runDeviceTool({ command: device.adb, args: ['-e', 'wait-for-device'] });
+  await run({ command: adb, args: ['-e', 'wait-for-device'] });
   while (Date.now() < deadline) {
-    const booted = await runDeviceTool({
-      command: device.adb,
+    const booted = await run({
+      command: adb,
       args: ['-e', 'shell', 'getprop', 'sys.boot_completed'],
     });
     if (booted.trim() === '1') {
@@ -61,26 +61,24 @@ async function waitForBoot({ device }) {
 
 // A phone on USB (with USB debugging on) or a running emulator is used as it
 // is. Otherwise the first Android virtual device is started; it keeps running
-// after the dev server stops, as a booted iOS simulator does.
-async function findAndroidDevice({ context, device }) {
-  const connected = listConnectedDevices(
-    await runDeviceTool({ command: device.adb, args: ['devices'] })
-  );
+// after the dev server stops, as a booted iOS simulator does. `run` runs each
+// device tool command (runDeviceTool) and `spawn` starts the emulator, so a
+// caller can stand in for either.
+async function findAndroidDevice({ adb, emulator, log, run = runDeviceTool, spawn = spawnChild }) {
+  const connected = listConnectedDevices(await run({ command: adb, args: ['devices'] }));
   if (connected.length > 0) {
     return connected[0];
   }
-  const avds = await listAvds({ device });
+  const avds = await listAvds({ emulator, run });
   if (avds.length === 0) {
     throw new Error(
       "No Android phone is connected and no emulator is set up. Connect a phone with USB debugging on, or create a virtual device in Android Studio's Device Manager."
     );
   }
-  context.logger.info(`Starting the ${avds[0]} Android emulator.`);
-  spawn(device.emulator, ['-avd', avds[0]], { detached: true, stdio: 'ignore' }).unref();
-  await waitForBoot({ device });
-  const started = listConnectedDevices(
-    await runDeviceTool({ command: device.adb, args: ['devices'] })
-  );
+  log(`Starting the ${avds[0]} Android emulator.`);
+  spawn(emulator, ['-avd', avds[0]], { detached: true, stdio: 'ignore' }).unref();
+  await waitForBoot({ adb, run });
+  const started = listConnectedDevices(await run({ command: adb, args: ['devices'] }));
   return started[0];
 }
 

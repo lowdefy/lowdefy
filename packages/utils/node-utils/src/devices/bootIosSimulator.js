@@ -29,9 +29,10 @@ function compareRuntimes(a, b) {
 }
 
 // A booted simulator is used as it is. Otherwise the first iPhone on the
-// newest iOS runtime is booted and shown in the Simulator app.
-async function bootIosSimulator({ context }) {
-  const listing = await runDeviceTool({
+// newest iOS runtime is booted and shown in the Simulator app. `run` runs each
+// device tool command (runDeviceTool), so a caller can stand in for it.
+async function bootIosSimulator({ log, run = runDeviceTool }) {
+  const listing = await run({
     command: 'xcrun',
     args: ['simctl', 'list', 'devices', 'available', '--json'],
   });
@@ -50,10 +51,10 @@ async function bootIosSimulator({ context }) {
       'No iPhone simulator is installed. In Xcode, open Settings > Components and install an iOS simulator.'
     );
   }
-  context.logger.info(`Booting the ${iphone.name} simulator.`);
-  await runDeviceTool({ command: 'xcrun', args: ['simctl', 'boot', iphone.udid] });
-  await runDeviceTool({ command: 'open', args: ['-a', 'Simulator'] });
-  await runDeviceTool({ command: 'xcrun', args: ['simctl', 'bootstatus', iphone.udid] });
+  log(`Booting the ${iphone.name} simulator.`);
+  await run({ command: 'xcrun', args: ['simctl', 'boot', iphone.udid] });
+  await run({ command: 'open', args: ['-a', 'Simulator'] });
+  await run({ command: 'xcrun', args: ['simctl', 'bootstatus', iphone.udid] });
   return iphone;
 }
 

@@ -108,7 +108,7 @@ test('prepareDevices uses the SDK tools ANDROID_HOME names', async () => {
 
 test('prepareDevices says which variable names the Lowdefy Dev build when it is unset', async () => {
   await expect(prepareDevices({ context: context({ android: true }) })).rejects.toThrow(
-    'Set LOWDEFY_DEV_APP_ANDROID to the path of a Lowdefy Dev Android build (.apk). Lowdefy Dev release builds are not published yet, so --android installs the build this variable names.'
+    'Set LOWDEFY_DEV_APP_ANDROID to the path of a Lowdefy Dev Android build (.apk). Lowdefy Dev release builds are not published yet, so Lowdefy installs the build this variable names.'
   );
 });
 

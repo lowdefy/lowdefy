@@ -18,8 +18,9 @@ import fs from 'fs';
 
 import { type } from '@lowdefy/helpers';
 
-// Lowdefy Dev release builds are not published yet, so --ios and --android
-// install the build these variables point at.
+// Lowdefy Dev release builds are not published yet, so `lowdefy dev --ios` and
+// `--android` (and the lowdefy_device tool) install the build these variables
+// point at.
 const devApps = {
   ios: { variable: 'LOWDEFY_DEV_APP_IOS', build: 'a Lowdefy Dev simulator build (.app)' },
   android: { variable: 'LOWDEFY_DEV_APP_ANDROID', build: 'a Lowdefy Dev Android build (.apk)' },
@@ -30,7 +31,7 @@ function readDevAppPath({ platform }) {
   const appPath = process.env[variable];
   if (type.isNone(appPath) || appPath === '') {
     throw new Error(
-      `Set ${variable} to the path of ${build}. Lowdefy Dev release builds are not published yet, so --${platform} installs the build this variable names.`
+      `Set ${variable} to the path of ${build}. Lowdefy Dev release builds are not published yet, so Lowdefy installs the build this variable names.`
     );
   }
   if (!fs.existsSync(appPath)) {

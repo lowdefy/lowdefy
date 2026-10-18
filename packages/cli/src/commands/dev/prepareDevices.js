@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
+import { readDevAppPath } from '@lowdefy/node-utils';
+
 import checkAndroidTools from './checkAndroidTools.js';
 import checkIosTools from './checkIosTools.js';
-import readDevAppPath from './readDevAppPath.js';
 
 // Checked before the dev server is installed or started, so a missing tool or
 // build stops `lowdefy dev` at once with the step that fixes it.
