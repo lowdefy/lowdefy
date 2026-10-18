@@ -15,6 +15,7 @@
 */
 
 import CopyToClipboard from './CopyToClipboard.js';
+import GeolocationCurrentPosition from './GeolocationCurrentPosition.js';
 import GetLocalStorage from './GetLocalStorage.js';
 import RemoveLocalStorage from './RemoveLocalStorage.js';
 import ScrollTo from './ScrollTo.js';
@@ -25,8 +26,11 @@ import SetLocalStorage from './SetLocalStorage.js';
 // so pages call them as on the web. They reach the device through the shell's host globals
 // (createShellGlobals). SetDarkMode and SetLocale keep their actions-core bodies: they call the
 // window members the shell sets (client-native's ThemeProvider and the shell's locale).
+// GeolocationCurrentPosition answers with a location Lowdefy Dev injected until the shell carries
+// device location.
 const nativeActions = {
   CopyToClipboard,
+  GeolocationCurrentPosition,
   GetLocalStorage,
   RemoveLocalStorage,
   ScrollTo,

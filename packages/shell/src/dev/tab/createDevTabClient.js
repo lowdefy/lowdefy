@@ -53,7 +53,8 @@ function requestedPage({ request, shownPage }) {
  *   second instead.
  * - It posts the page instance on screen to /api/dev-inspect/page whenever it changes.
  * - `reload` runs onReload. `inspect-request` and `eval-request` are answered on /api/dev-inspect
- *   with the payloads a browser tab posts; `step-request` runs a journey step (onStep).
+ *   with the payloads a browser tab posts; `step-request` runs a journey step (onStep), and
+ *   `inject` fakes the next device result (onInject: `{ requestId, inject: { kind, value, name } }`).
  *
  * @param {Object} params
  * @param {string} params.apiBase The dev server's URL.
@@ -62,6 +63,7 @@ function requestedPage({ request, shownPage }) {
  *   the same headers.
  * @param {() => Object|null} params.getLowdefy The open app's lowdefy object.
  * @param {() => Promise} params.onReload
+ * @param {({ injection }) => Object} params.onInject
  * @param {({ step, page }) => Promise<Object>} params.onStep
  * @param {(message: string) => void} [params.log]
  * @param {number} [params.pollInterval] Ms between polls.
@@ -71,6 +73,7 @@ function createDevTabClient({
   fetch,
   getLowdefy,
   log = () => undefined,
+  onInject,
   onReload,
   onStep,
   pollInterval = 1000,
@@ -117,6 +120,9 @@ function createDevTabClient({
     if (event === 'eval-request') {
       return answerEval({ expression: request.expression, lowdefy, page });
     }
+    if (event === 'inject') {
+      return onInject({ injection: request.inject });
+    }
     return onStep({ step: request.step, page });
   }
 
@@ -147,6 +153,7 @@ function createDevTabClient({
       case 'inspect-request':
       case 'eval-request':
       case 'step-request':
+      case 'inject':
         await answer({ event, data });
         return;
       default:
