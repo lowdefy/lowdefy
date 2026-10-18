@@ -25,23 +25,24 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   title: {
-    fontSize: 20,
-    fontWeight: '600',
+    fontSize: 22,
+    fontWeight: '700',
+    lineHeight: 28,
     textAlign: 'center',
   },
   body: {
-    fontSize: 16,
+    fontSize: 17,
+    lineHeight: 22,
     textAlign: 'center',
   },
   button: {
     paddingHorizontal: 20,
     paddingVertical: 12,
-    borderRadius: 8,
-    backgroundColor: '#1677ff',
+    borderRadius: 12,
   },
   buttonText: {
-    color: '#ffffff',
-    fontSize: 16,
+    color: '#FFFFFF',
+    fontSize: 17,
     fontWeight: '600',
   },
 });

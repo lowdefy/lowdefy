@@ -18,10 +18,12 @@ import React from 'react';
 import { ThemeProvider } from '@lowdefy/client-native';
 import { appStorageKey } from '@lowdefy/helpers';
 
+import NavigationTheme from './NavigationTheme.js';
 import { useSessionState, useShell } from '../ShellContext.js';
 
 // One theme for every screen of the app, so all its pages show the same mode: the mobile root's
-// theme, and the dark mode preference SetDarkMode keeps under the app's key, as on the web.
+// theme, and the dark mode preference SetDarkMode keeps under the app's key, as on the web. The
+// navigators draw their headers, tab bar and screens from it too.
 function ShellThemeProvider({ children }) {
   const { host } = useShell();
   const { rootConfig } = useSessionState();
@@ -35,7 +37,7 @@ function ShellThemeProvider({ children }) {
       })}
       theme={rootConfig.theme}
     >
-      {children}
+      <NavigationTheme>{children}</NavigationTheme>
     </ThemeProvider>
   );
 }
