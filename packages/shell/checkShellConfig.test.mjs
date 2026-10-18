@@ -134,3 +134,35 @@ test('a shell config with a colour that is not a hex colour is refused', () => {
     /"icon" should be the path of a PNG, relative to the shell config/
   );
 });
+
+test('a shell config with plugins is returned as it is', () => {
+  const plugins = [
+    { name: '@example/lowdefy-printer', version: '2.1.0', typePrefix: 'Printer' },
+    { name: '@example/lowdefy-mdm', version: '1.0.3', options: { tenant: 'field-team' } },
+  ];
+  const withPlugins = { ...shell, plugins };
+  assert.equal(checkShellConfig({ configPath, shell: withPlugins }), withPlugins);
+});
+
+test('shell config plugins of the wrong shape are refused', () => {
+  const plugin = { name: '@example/lowdefy-printer', version: '2.1.0' };
+  const check = (plugins) => () => checkShellConfig({ configPath, shell: { ...shell, plugins } });
+  assert.throws(
+    check({ '@example/lowdefy-printer': '2.1.0' }),
+    /^Error: Shell config "shell.json" "plugins" should be an array of \{ name, version, typePrefix\?, options\? \}/
+  );
+  assert.throws(check(['@example/lowdefy-printer']), /"plugins\[0\]" should be \{ name, version/);
+  assert.throws(
+    check([{ ...plugin, version: undefined }]),
+    /^Error: Shell config "shell.json" "plugins\[0\]" "version" should be a string. Received undefined.$/
+  );
+  assert.throws(check([plugin, { version: '1.0.0' }]), /"plugins\[1\]" "name" should be a string/);
+  assert.throws(
+    check([{ ...plugin, typePrefix: 3 }]),
+    /"typePrefix" should be a string. Received 3./
+  );
+  assert.throws(
+    check([{ ...plugin, options: [] }]),
+    /"options" should be an object. Received \[\]./
+  );
+});

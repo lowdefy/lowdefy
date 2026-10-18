@@ -15,21 +15,70 @@
 */
 
 import { execFileSync } from 'node:child_process';
+import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 
 import * as nativeBlocks from '@lowdefy/blocks-native/blocks';
 import { Screen } from '@lowdefy/client-native';
 
 import nativeActions from '../actions/nativeActions.js';
+import prefixTypes from './prefixTypes.js';
 import types from './types.js';
+
+const shellRoot = path.join(__dirname, '../..');
+
+function createTypeManifest(env = process.env) {
+  return JSON.parse(
+    execFileSync(process.execPath, [path.join(shellRoot, 'scripts/createTypeManifest.mjs')], {
+      encoding: 'utf8',
+      env,
+      stdio: ['ignore', 'pipe', 'pipe'],
+    })
+  );
+}
+
+// The test shell plugin (fixtures/printer-plugin) installed as `lowdefy mobile config` installs it,
+// listed in a shell.json, and the types the shell registers with appTypes.js written for it.
+function withPrinterPlugin(plugin, callback) {
+  const directory = fs.mkdtempSync(path.join(fs.realpathSync(os.tmpdir()), 'lowdefy-shell-types-'));
+  try {
+    const nodeModules = path.join(directory, 'node_modules');
+    fs.mkdirSync(path.join(nodeModules, '@example'), { recursive: true });
+    fs.symlinkSync(
+      path.join(shellRoot, 'fixtures/printer-plugin'),
+      path.join(nodeModules, '@example/lowdefy-printer'),
+      'dir'
+    );
+    const devShell = JSON.parse(fs.readFileSync(path.join(shellRoot, 'shell.dev.json'), 'utf8'));
+    const configPath = path.join(directory, 'shell.json');
+    fs.writeFileSync(configPath, JSON.stringify({ ...devShell, plugins: [plugin] }));
+    let pluginTypes;
+    jest.isolateModules(() => {
+      jest.doMock('./appTypes.js', () => {
+        const native = jest.requireActual('../../fixtures/printer-plugin/native.js');
+        return {
+          __esModule: true,
+          default: {
+            actions: prefixTypes({ types: native.actions, typePrefix: plugin.typePrefix }),
+            blocks: prefixTypes({ types: native.blocks, typePrefix: plugin.typePrefix }),
+          },
+        };
+      });
+      pluginTypes = require('./types.js').default;
+    });
+    return callback({
+      env: { ...process.env, LOWDEFY_SHELL_CONFIG: configPath, NODE_PATH: nodeModules },
+      pluginTypes,
+    });
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+}
 
 // The manifest pages are checked against must name exactly the types the shell registers.
 test('the type manifest lists every type the shell registers, and no other', () => {
-  const manifest = JSON.parse(
-    execFileSync(process.execPath, [path.join(__dirname, '../../scripts/createTypeManifest.mjs')], {
-      encoding: 'utf8',
-    })
-  );
+  const manifest = createTypeManifest();
   ['actions', 'blocks', 'operators'].forEach((category) => {
     expect(Object.keys(manifest[category]).sort()).toEqual(Object.keys(types[category]).sort());
   });
@@ -42,11 +91,7 @@ test('the type manifest lists every type the shell registers, and no other', () 
 
 // The build's mobile type map allows the client operators of every default operator package.
 test('the shell registers the client operators of every default operator package', () => {
-  const manifest = JSON.parse(
-    execFileSync(process.execPath, [path.join(__dirname, '../../scripts/createTypeManifest.mjs')], {
-      encoding: 'utf8',
-    })
-  );
+  const manifest = createTypeManifest();
   [
     ['_change_case', 'change-case'],
     ['_cron', 'cron'],
@@ -77,4 +122,46 @@ test('the DOM-bound actions-core actions run their native bodies under the same 
   expect(types.actions.SetLocalStorage).toBe(nativeActions.SetLocalStorage);
   expect(types.actions.RemoveLocalStorage).toBe(nativeActions.RemoveLocalStorage);
   expect(types.actions.SetState).not.toBeUndefined();
+});
+
+test("a shell plugin's native types register and join the manifest, named with its typePrefix", () => {
+  withPrinterPlugin(
+    { name: '@example/lowdefy-printer', version: '2.1.0', typePrefix: 'Printer' },
+    ({ env, pluginTypes }) => {
+      const manifest = createTypeManifest(env);
+      ['actions', 'blocks', 'operators'].forEach((category) => {
+        expect(Object.keys(manifest[category]).sort()).toEqual(
+          Object.keys(pluginTypes[category]).sort()
+        );
+      });
+      const printer = { package: '@example/lowdefy-printer', version: 2 };
+      expect(manifest.blocks.PrinterLabel).toEqual(printer);
+      expect(manifest.blocks.PrinterTag).toEqual(printer);
+      expect(manifest.actions.PrinterPrint).toEqual(printer);
+      expect(manifest.blocks.Label).toBeUndefined();
+      expect(manifest.blocks.Tag).toEqual({ package: '@lowdefy/blocks-native', version: 6 });
+      // The registry jest.isolateModules loads them in is its own, so they are compared by what
+      // they do: the plugin's Label under its prefixed name, the built-in Tag kept.
+      expect(
+        pluginTypes.blocks.PrinterLabel({ blockId: 'label', properties: { text: 'A1' } })
+      ).toEqual({ type: 'PrinterLabel', blockId: 'label', text: 'A1' });
+      expect(pluginTypes.actions.PrinterPrint({ params: { text: 'A1' } })).toEqual({
+        printed: 'A1',
+      });
+      expect(pluginTypes.blocks.Tag.meta).toEqual(nativeBlocks.Tag.meta);
+    }
+  );
+});
+
+test('a shell plugin type named like a built-in one fails the manifest: use typePrefix', () => {
+  withPrinterPlugin({ name: '@example/lowdefy-printer', version: '2.1.0' }, ({ env }) => {
+    expect(() => createTypeManifest(env)).toThrow(
+      'Shell plugin "@example/lowdefy-printer" gives the block type "Tag", which "@lowdefy/blocks-native" already gives. Set a typePrefix on the plugin in mobile.shells[].plugins.'
+    );
+  });
+});
+
+test('appTypes.js ships empty, so a shell without plugins registers only the built-in types', () => {
+  const appTypes = jest.requireActual('./appTypes.js').default;
+  expect(appTypes).toEqual({ actions: {}, blocks: {} });
 });

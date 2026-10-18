@@ -20,16 +20,22 @@
   carries every type its type set names at the same major version (src/types/checkTypeSet.js).
 
   Made at shell build time (app.config.ts) from src/plugins/shellPlugins.json, the plugin packages
-  the shell registers (src/plugins/types.js). Prints the manifest as JSON when run directly.
+  the shell registers (src/plugins/types.js), and the shell's plugins (shell.json `plugins`, read
+  with readShellConfig.js): each one's `./types` `native.blocks` and `native.actions`, named with
+  its typePrefix, as src/plugins/appTypes.js registers them. Prints the manifest as JSON when run
+  directly.
 */
 
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const shellRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const require = createRequire(import.meta.url);
+const readShellConfig = require('../readShellConfig.js');
+
+const NATIVE_CATEGORIES = ['actions', 'blocks'];
 
 const CATEGORIES = ['actions', 'blocks', 'operators'];
 
@@ -55,6 +61,44 @@ function getPackageTypeNames({ category, types }) {
   return types[category];
 }
 
+// Two packages giving one type name would leave one of them unreachable on a page.
+function addType({ category, manifest, name, packageName }) {
+  const existing = manifest[category][name];
+  if (existing !== undefined && existing.package !== packageName) {
+    throw new Error(
+      `Shell plugin "${packageName}" gives the ${category.slice(0, -1)} type "${name}", which "${
+        existing.package
+      }" already gives. Set a typePrefix on the plugin in mobile.shells[].plugins.`
+    );
+  }
+  manifest[category][name] = { package: packageName, version: readMajorVersion(packageName) };
+}
+
+// A shell plugin's native type names, from its `./types` `native: { blocks, actions }`.
+async function addShellPluginTypes({ manifest, plugin }) {
+  const { default: types } = await import(pathToFileURL(require.resolve(`${plugin.name}/types`)));
+  NATIVE_CATEGORIES.forEach((category) => {
+    const names = types.native?.[category] ?? [];
+    if (!Array.isArray(names)) {
+      throw new Error(
+        `Shell plugin "${
+          plugin.name
+        }" "./types" native.${category} should be an array of type names. Received ${JSON.stringify(
+          names
+        )}.`
+      );
+    }
+    names.forEach((name) => {
+      addType({
+        category,
+        manifest,
+        name: `${plugin.typePrefix ?? ''}${name}`,
+        packageName: plugin.name,
+      });
+    });
+  });
+}
+
 async function createTypeManifest() {
   const plugins = JSON.parse(
     fs.readFileSync(path.join(shellRoot, 'src/plugins/shellPlugins.json'), 'utf8')
@@ -77,11 +121,12 @@ async function createTypeManifest() {
           `Shell plugin "${plugin.package}" has no ${plugin.category} type "${name}".`
         );
       }
-      manifest[plugin.category][name] = {
-        package: plugin.package,
-        version: readMajorVersion(plugin.package),
-      };
+      addType({ category: plugin.category, manifest, name, packageName: plugin.package });
     });
+  }
+  const { shell } = readShellConfig();
+  for (const plugin of shell.plugins ?? []) {
+    await addShellPluginTypes({ manifest, plugin });
   }
   return manifest;
 }

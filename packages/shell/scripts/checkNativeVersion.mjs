@@ -35,8 +35,8 @@
     version, names, ids, schemes, icons, the EAS project and `extra` (the `relaxed` preset, and the
     ExpoConfigEASProject and ExpoConfigExtraSection skips).
   - withExcludedNativeModules.js, the shell's one config plugin that edits native files. The files
-    app.config.ts only reads its config with (shell.json reading, profiles, exclusions) are left
-    out: what they change shows in the evaluated config.
+    app.config.ts only reads its config with (shell.json reading, profiles, exclusions, shell
+    plugins) are left out: what they change shows in the evaluated config.
   - Not package.json scripts or .gitignore.
 */
 
@@ -53,9 +53,12 @@ const RECORD_FILE = 'native-fingerprint.json';
 
 // The modules app.config.ts reads its config with. Their effect is in the evaluated config.
 const CONFIG_READERS = [
+  'applyShellPlugins.js',
   'authCallbackIntentFilters.js',
   'checkShellConfig.js',
+  'checkShellPlugins.js',
   'getPrivacyManifest.js',
+  'resolveShellPlugins.js',
   'runtimeVersion.js',
   'profiles.js',
   'readShellConfig.js',
