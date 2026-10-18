@@ -24,6 +24,7 @@ export { default as Empty } from './blocks/Empty/meta.js';
 export { default as Icon } from './blocks/Icon/meta.js';
 export { default as List } from './blocks/List/meta.js';
 export { default as ListItem } from './blocks/ListItem/meta.js';
+export { default as Markdown } from './blocks/Markdown/meta.js';
 export { default as NumberInput } from './blocks/NumberInput/meta.js';
 export { default as Paragraph } from './blocks/Paragraph/meta.js';
 export { default as Screen } from './blocks/Screen/meta.js';

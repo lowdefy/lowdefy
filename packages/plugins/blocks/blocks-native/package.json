@@ -47,7 +47,8 @@
     "@lowdefy/client-native": "6.0.0",
     "@lowdefy/helpers": "6.0.0",
     "@lowdefy/style-native": "6.0.0",
-    "dayjs": "1.11.20"
+    "dayjs": "1.11.20",
+    "react-native-marked": "8.3.2"
   },
   "peerDependencies": {
     "@expo/ui": "^58.0.0",
