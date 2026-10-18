@@ -149,6 +149,7 @@ test('the dev mobile root lists the paths of the pages the caller may open, with
   const res = await createApp().request('/api/mobile/root', { headers: shell });
   expect(res.status).toEqual(200);
   expect(await res.json()).toEqual({
+    auth: null,
     homePageId: 'today',
     lowdefyGlobal: {},
     minShellVersion: null,

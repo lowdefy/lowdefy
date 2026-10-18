@@ -14,10 +14,20 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import filterMobileMenus from './filterMobileMenus.js';
 import getAppEvents from '../rootConfig/getAppEvents.js';
 import getLowdefyGlobal from '../rootConfig/getLowdefyGlobal.js';
 import getOpenablePageIds from './getOpenablePageIds.js';
+
+function getShellAuth({ auth, config }) {
+  if (type.isNone(auth)) {
+    return null;
+  }
+  const { emailCode, unlock, unlockAfter, sharedDevice } = config.auth;
+  return { emailCode, unlock, unlockAfter, sharedDevice };
+}
 
 // What a shell syncs on start: the mobile frame, the index of the pages this
 // caller may open with each page's hash and typesKey, the type set of each of
@@ -33,6 +43,10 @@ import getOpenablePageIds from './getOpenablePageIds.js';
 // sets: the dev server builds pages on demand. Its class map holds the classes
 // of the pages the skeleton build compiles; a page built on request carries
 // its own classes' entries.
+//
+// auth is the mobile.auth a shell signs in and locks by (emailCode, unlock,
+// unlockAfter, sharedDevice), or null for an app without auth, which a shell
+// opens with no sign-in screen. sessionExpiresIn is the server's alone.
 //
 // Returns null for an app without a mobile key: no shell opens it.
 async function getMobileRootConfig(context) {
@@ -58,6 +72,7 @@ async function getMobileRootConfig(context) {
     }
   });
   return {
+    auth: getShellAuth({ auth: context.auth, config }),
     events,
     homePageId: config.homePageId,
     lowdefyApp: context.appMeta,
