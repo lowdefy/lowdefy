@@ -27,14 +27,18 @@ import {
 import { type } from '@lowdefy/helpers';
 import { useElementRef } from '@lowdefy/client-native';
 
+import DictationButton from '../../shared/dictation/DictationButton.js';
+import DictationWarning from '../../shared/dictation/DictationWarning.js';
 import getSendState from './getSendState.js';
 import getSpokenMentionWords from './getSpokenMentionWords.js';
 import getTimelineColors from '../ActivityTimeline/getTimelineColors.js';
+import ListeningRow from '../../shared/dictation/ListeningRow.js';
 import MentionTextInput from './MentionTextInput.js';
 import meta from './meta.js';
 import rankMentions from './rankMentions.js';
 import SuggestionList from './SuggestionList.js';
 import useComponentTokens from '../../useComponentTokens.js';
+import useDictation from '../../shared/dictation/useDictation.js';
 import useMentionEditor from './useMentionEditor.js';
 
 const LINK_SEARCH_MS = 200;
@@ -117,6 +121,10 @@ function SendButton({ colors, disabled, Icon, onPress, sending }) {
  * opens a record picker fed by onLinkSearch and the `links` property, and a pick writes
  * `[[KEY]]`. Spoken addressing, as dictation writes it ("for Sam, can you look"), becomes a
  * mention of that person. The text clears once onSubmit's actions succeed.
+ *
+ * A mic at the field's trailing edge dictates on the phone (useDictation), with the mention
+ * labels as name hints. Words still being heard show grey at the cursor; each final result goes
+ * into the text and through the spoken-mention conversion at once.
  */
 function Composer({
   blockId,
@@ -149,6 +157,48 @@ function Composer({
     spokenWords: getSpokenMentionWords({ spokenMentions: properties.spokenMentions }),
   });
 
+  const hints = useMemo(
+    () => (properties.mentions ?? []).map((person) => person.label).filter(type.isString),
+    [properties.mentions]
+  );
+  const dictation = useDictation({
+    disabled: disabled || properties.dictation === false,
+    hints,
+    onFinal: (words) => editor.commitDictation({ text: words }),
+  });
+  const listening = dictation.status !== 'idle';
+  // The editor reads its dictation calls through refs, so the latest render's are always current.
+  const editorRef = useRef(editor);
+  editorRef.current = editor;
+  useEffect(() => {
+    editorRef.current.setPartial(dictation.partial);
+  }, [dictation.partial]);
+  useEffect(() => {
+    if (!listening) editorRef.current.endDictation();
+  }, [listening]);
+  const clearDictationWarning = dictation.clearWarning;
+  useEffect(() => {
+    if (editor.text === '') clearDictationWarning();
+  }, [editor.text, clearDictationWarning]);
+
+  const toggleDictation = () => {
+    if (listening) {
+      dictation.stop();
+      return;
+    }
+    editor.startDictation();
+    dictation.start();
+  };
+  const cancelDictation = () => {
+    dictation.cancel();
+    editor.cancelDictation();
+  };
+  // Typing ends the session; the editor keeps the words it showed as text.
+  const onChangeText = (next) => {
+    if (listening) dictation.cancel();
+    editor.onChangeText(next);
+  };
+
   const inputRef = useRef(null);
   const registerElement = useElementRef({ blockId, kind: 'input' });
   const setInputRef = useCallback(
@@ -173,12 +223,18 @@ function Composer({
   }, [linkQuery, methods]);
 
   const people =
-    trigger?.kind === 'mention'
+    trigger?.kind === 'mention' && !listening
       ? rankMentions({ people: properties.mentions, query: trigger.query })
       : [];
-  const links = trigger?.kind === 'link' ? (properties.links ?? []).slice(0, 8) : [];
+  const links = trigger?.kind === 'link' && !listening ? (properties.links ?? []).slice(0, 8) : [];
 
   const send = async () => {
+    if (listening) {
+      // Up to 1.5 s for the final words; anything later would land in a sent composer.
+      await dictation.finish();
+      dictation.cancel();
+    }
+    dictation.clearWarning();
     const body = editor.finishSpokenMentions();
     if (getSendState({ value: body, sending, maxLength }).disabled) return;
     setSending(true);
@@ -195,7 +251,9 @@ function Composer({
     }
   };
 
-  const sendState = getSendState({ value: editor.text, sending, maxLength });
+  const pendingText =
+    listening && dictation.partial !== '' ? `${editor.text} ${dictation.partial}` : editor.text;
+  const sendState = getSendState({ value: pendingText, sending, maxLength });
   const hasReply = type.isObject(properties.replyTo) && !type.isNone(properties.replyTo.id);
   const hasWarning = type.isString(properties.warning) && properties.warning !== '';
 
@@ -230,10 +288,28 @@ function Composer({
         />
       ) : null}
       {hasWarning ? <WarningLine colors={colors} Icon={Icon} text={properties.warning} /> : null}
+      <DictationWarning
+        colors={colors}
+        components={components}
+        testID={`${blockId}_dictation_warning`}
+        translate={methods.translate}
+        warning={dictation.warning}
+      />
+      {listening ? (
+        <ListeningRow
+          colors={colors}
+          components={components}
+          level={dictation.level}
+          onCancel={cancelDictation}
+          testID={`${blockId}_listening`}
+          translate={methods.translate}
+        />
+      ) : null}
       <View style={styles.inputRow}>
         <View
           style={[
             styles.field,
+            dictation.available ? styles.fieldWithMic : null,
             { backgroundColor: colors.nested, borderColor: colors.separator },
             blockStyles.input,
           ]}
@@ -246,11 +322,24 @@ function Composer({
             editor={editor}
             inputRef={setInputRef}
             onBlur={() => methods.triggerEvent({ name: 'onBlur' })}
+            onChangeText={onChangeText}
             onFocus={() => methods.triggerEvent({ name: 'onFocus' })}
             placeholder={properties.placeholder ?? 'Add a comment…'}
             style={styles.input}
             testID={`${blockId}_input`}
           />
+          {dictation.available ? (
+            <View style={styles.mic}>
+              <DictationButton
+                colors={colors}
+                components={components}
+                onPress={toggleDictation}
+                status={dictation.status}
+                testID={`${blockId}_dictation`}
+                translate={methods.translate}
+              />
+            </View>
+          ) : null}
         </View>
         <View style={styles.sendColumn}>
           {sendState.counter ? (
@@ -312,12 +401,18 @@ const styles = StyleSheet.create({
   },
   inputRow: { alignItems: 'flex-end', flexDirection: 'row', gap: 8 },
   field: {
+    alignItems: 'flex-end',
     borderRadius: 19,
     borderWidth: StyleSheet.hairlineWidth,
     flex: 1,
+    flexDirection: 'row',
+    gap: 6,
     paddingHorizontal: 14,
   },
+  fieldWithMic: { paddingRight: 6 },
+  mic: { paddingBottom: (LINE_HEIGHT + FIELD_PADDING * 2 - 28) / 2 },
   input: {
+    flex: 1,
     fontSize: 17,
     lineHeight: LINE_HEIGHT,
     maxHeight: LINE_HEIGHT * MAX_LINES + FIELD_PADDING * 2,

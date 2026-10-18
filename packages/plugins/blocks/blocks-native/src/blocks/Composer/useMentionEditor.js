@@ -25,8 +25,10 @@ import insertLink from './insertLink.js';
 import insertMention from './insertMention.js';
 import parseMentionValue from './parseMentionValue.js';
 import shiftOffset from './shiftOffset.js';
+import placeDictation from './placeDictation.js';
 import snapSelection from './snapSelection.js';
 import { toDisplay, toValue } from './segmentText.js';
+import withPartial from './withPartial.js';
 
 // Dictation puts text in a phrase at a time and typing a word at a time; spoken mentions are
 // converted once the text has been still this long, so a name is not taken while it is spoken.
@@ -43,6 +45,12 @@ const SPOKEN_MENTION_MS = 900;
  *
  * With `spokenWords`, spoken addressing ("for Sam, can you look") becomes a mention once the
  * text stops changing, and when it is sent (convertSpokenMentions).
+ *
+ * Dictation (useDictation) writes through `startDictation`, `setPartial`, `commitDictation`,
+ * `cancelDictation` and `endDictation`. The selection when it starts is its anchor. Words still
+ * being heard show at the anchor (`shown`) but are not part of the value, so neither onChangeValue,
+ * the still-timer nor a send sees them. Each final result goes in at the anchor, the conversion
+ * runs on the whole text at once, and the anchor moves after the words for the next result.
  *
  * @param {Object} params
  * @param {string} params.value The markdown value.
@@ -86,15 +94,23 @@ function useMentionEditor({ value, onChangeValue, people, mentionFormat, spokenW
     return () => cancelAnimationFrame(frame);
   }, [forced]);
 
+  // The timer, a send and dictation read what is current when they run, not what was when they
+  // were set up: two final results can arrive before the first one renders.
+  const latest = useRef(null);
+  latest.current = { people, segments, spokenWords, text };
+
   const commit = useCallback(
-    ({ nextSegments, nextCursor, force }) => {
+    ({ nextSegments, nextCursor, force, nextSelection }) => {
       const next = toValue({ segments: nextSegments, format });
+      const placed = nextSelection ?? { start: nextCursor, end: nextCursor };
       lastValue.current = next;
+      latest.current.segments = nextSegments;
+      latest.current.text = next;
       setText(next);
-      selection.current = { start: nextCursor, end: nextCursor };
-      setCursor(nextCursor);
+      selection.current = placed;
+      setCursor(placed.start === placed.end ? placed.start : -1);
       if (force) {
-        setForced({ start: nextCursor, end: nextCursor });
+        setForced(placed);
       }
       onChangeValue(next);
       return next;
@@ -102,33 +118,70 @@ function useMentionEditor({ value, onChangeValue, people, mentionFormat, spokenW
     [format, onChangeValue]
   );
 
-  // The timer reads what is current when it fires, not what was when it was set.
-  const latest = useRef(null);
-  latest.current = { commit, people, segments, spokenWords };
   const spokenTimer = useRef(null);
   useEffect(() => () => clearTimeout(spokenTimer.current), []);
 
-  const convertSpoken = useCallback(({ final }) => {
+  // Spoken addressing in `segments` as mentions, with `cursor` moved by the edits; null when there
+  // is nothing to convert. The still-timer, a send and a dictated final result all convert here.
+  const convertSegments = useCallback(({ segments: from, cursor: at, final }) => {
     const current = latest.current;
     if (current.spokenWords === null) return null;
     const result = convertSpokenMentions({
-      segments: current.segments,
+      segments: from,
       people: current.people,
       words: current.spokenWords,
       final,
     });
     if (result === null) return null;
-    return current.commit({
-      nextSegments: result.segments,
-      nextCursor: shiftOffset({ offset: selection.current.end, edits: result.edits }),
-      force: true,
-    });
+    return {
+      segments: result.segments,
+      cursor: shiftOffset({ offset: at, edits: result.edits }),
+    };
   }, []);
 
+  const convertSpoken = useCallback(
+    ({ final }) => {
+      const converted = convertSegments({
+        segments: latest.current.segments,
+        cursor: selection.current.end,
+        final,
+      });
+      if (converted === null) return null;
+      return commit({
+        nextSegments: converted.segments,
+        nextCursor: converted.cursor,
+        force: true,
+      });
+    },
+    [commit, convertSegments]
+  );
+
+  // The dictation session: its anchor, the text and selection it started with (for cancel), and
+  // the words still being heard. A ref for the handlers, and state to draw the partial.
+  const dictationRef = useRef(null);
+  const [dictation, setDictation] = useState(null);
+  const updateDictation = (next) => {
+    dictationRef.current = next;
+    setDictation(next);
+  };
+  const shown = useMemo(
+    () =>
+      dictation === null || dictation.partial === ''
+        ? { segments, display }
+        : withPartial({ segments, selection: dictation.anchor, partial: dictation.partial }),
+    [dictation, display, segments]
+  );
+
   const onChangeText = (nextDisplay) => {
+    // Typing while words are still being heard ends the session (the host stops the mic); the
+    // words the person saw become text as they were shown.
+    const typedOver = shown.display !== display;
+    if (dictationRef.current !== null) {
+      updateDictation(null);
+    }
     const result = applyDisplayEdit({
-      segments,
-      previous: display,
+      segments: typedOver ? shown.segments.map(asText) : segments,
+      previous: shown.display,
       next: nextDisplay,
       selection: selection.current,
     });
@@ -147,11 +200,74 @@ function useMentionEditor({ value, onChangeValue, people, mentionFormat, spokenW
   // the value to send.
   const finishSpokenMentions = () => {
     clearTimeout(spokenTimer.current);
-    return convertSpoken({ final: true }) ?? text;
+    return convertSpoken({ final: true }) ?? latest.current.text;
+  };
+
+  // A session starts at the selection. A pending still-timer is dropped, so it cannot force the
+  // selection while the anchor is held; the commit of each final result converts instead.
+  const startDictation = () => {
+    clearTimeout(spokenTimer.current);
+    updateDictation({
+      anchor: selection.current,
+      partial: '',
+      startSegments: latest.current.segments,
+      startSelection: selection.current,
+      startText: latest.current.text,
+    });
+  };
+
+  const setPartial = (partial) => {
+    const current = dictationRef.current;
+    if (current === null || current.partial === (partial ?? '')) return;
+    updateDictation({ ...current, partial: partial ?? '' });
+  };
+
+  // A final result: the words go in at the anchor as plain text, then the conversion runs on the
+  // whole text, so a sentence start is judged in context and a name split across two results is
+  // found. A name dictated at the end of the text is whole; one typed at the end still waits.
+  const commitDictation = ({ text: words }) => {
+    const current = dictationRef.current;
+    const anchor = current?.anchor ?? selection.current;
+    const placed = placeDictation({ segments: latest.current.segments, selection: anchor, words });
+    const converted = convertSegments({
+      segments: placed.segments,
+      cursor: placed.cursor,
+      final: placed.atEnd,
+    });
+    const nextSegments = converted?.segments ?? placed.segments;
+    const nextCursor = converted?.cursor ?? placed.cursor;
+    commit({ nextSegments, nextCursor, force: true });
+    if (current !== null) {
+      updateDictation({ ...current, anchor: { start: nextCursor, end: nextCursor }, partial: '' });
+    }
+  };
+
+  // Drops everything the session put in: the text and selection go back to how they were.
+  const cancelDictation = () => {
+    const current = dictationRef.current;
+    if (current === null) return;
+    updateDictation(null);
+    if (current.startText !== latest.current.text) {
+      commit({
+        nextSegments: current.startSegments,
+        nextCursor: current.startSelection.end,
+        nextSelection: current.startSelection,
+        force: true,
+      });
+      return;
+    }
+    selection.current = current.startSelection;
+    setForced(current.startSelection);
+  };
+
+  const endDictation = () => {
+    if (dictationRef.current !== null) {
+      updateDictation(null);
+    }
   };
 
   const onSelectionChange = ({ nativeEvent }) => {
-    const snapped = snapSelection({ segments, selection: nativeEvent.selection });
+    const snapped = snapSelection({ segments: shown.segments, selection: nativeEvent.selection });
     selection.current = snapped;
     setCursor(snapped.start === snapped.end ? snapped.start : -1);
     if (snapped !== nativeEvent.selection) {
@@ -177,7 +293,10 @@ function useMentionEditor({ value, onChangeValue, people, mentionFormat, spokenW
   };
 
   return {
+    cancelDictation,
+    commitDictation,
     display,
+    endDictation,
     finishSpokenMentions,
     onChangeText,
     onSelectionChange,
@@ -185,9 +304,16 @@ function useMentionEditor({ value, onChangeValue, people, mentionFormat, spokenW
     pickMention,
     segments,
     selection: forced,
+    setPartial,
+    shown,
+    startDictation,
     text,
     trigger,
   };
+}
+
+function asText(segment) {
+  return segment.kind === 'partial' ? { kind: 'text', text: segment.text } : segment;
 }
 
 export default useMentionEditor;
