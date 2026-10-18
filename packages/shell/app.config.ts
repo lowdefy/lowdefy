@@ -17,14 +17,18 @@
 import { execFileSync } from 'node:child_process';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 
 import type { ConfigContext, ExpoConfig } from 'expo/config';
 
+import applyShellPlugins from './applyShellPlugins.js';
 import { getAuthCallbackIntentFilters } from './authCallbackIntentFilters.js';
+import checkShellPlugins from './checkShellPlugins.js';
 import getPrivacyManifest from './getPrivacyManifest.js';
 import { pluginName } from './profiles.js';
 import readShellConfig from './readShellConfig.js';
+import resolveShellPlugins from './resolveShellPlugins.js';
 import getRuntimeVersion from './runtimeVersion.js';
 import { getExclusions, getShellProfile, getShellVariant } from './shellVariant.js';
 import withExcludedNativeModules from './withExcludedNativeModules.js';
@@ -90,7 +94,18 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
   // The shell carries only its capability profile's native modules (profiles.js). The rest, and
   // Lowdefy Dev's developer features in a release shell, are left out: not linked, their config
   // plugins and permissions not applied (scripts/checkReleaseBundle.mjs checks it).
-  const profile = getShellProfile({ shell, variant });
+  // Its shell plugins (shell.json `plugins`, installed in the shell project by `lowdefy mobile
+  // config`) add their own modules, config plugins, permissions, privacy reasons and data on top.
+  // Their modules are never excluded: the exclusions name only modules of the shell's own profiles.
+  const shellPlugins = resolveShellPlugins({
+    shell,
+    require: createRequire(path.join(shellRoot, 'package.json')),
+  });
+  checkShellPlugins({ shell, variant, plugins: shellPlugins });
+  const profile = applyShellPlugins({
+    profile: getShellProfile({ shell, variant }),
+    plugins: shellPlugins,
+  });
   const excluded = getExclusions({ shell, variant });
   // Lowdefy Dev has no icon of its own and keeps Expo's.
   const icons = shell.icon === undefined ? null : createShellIcons({ configPath, shell });

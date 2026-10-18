@@ -29,18 +29,20 @@ import * as yamlOperators from '@lowdefy/operators-yaml/operators/client';
 import { Screen } from '@lowdefy/client-native';
 
 import nativeActions from '../actions/nativeActions.js';
+import appTypes from './appTypes.js';
 
-// The plugin maps the shell renders pages with. They hold the packages in shellPlugins.json, from
-// which scripts/createTypeManifest.mjs writes the type manifest pages are checked against; a test
-// keeps the two the same. The blocks are the whole native block set, with the Screen page type
+// The plugin maps the shell renders pages with. They hold the packages in shellPlugins.json and the
+// native types of the app's shell plugins (appTypes.js, from shell.json `plugins`), from which
+// scripts/createTypeManifest.mjs writes the type manifest pages are checked against; a test keeps
+// the two the same. The blocks are the whole native block set, with the Screen page type
 // from the native renderer (blocks-native carries only its meta). The actions-core actions that reach the DOM on the web run native
 // bodies under the same names. The client operators are those of every default operator package,
 // as the build's mobile type map allows. icons is the icon data the native Icon renderer draws
 // from (client-native installs it as components.Icon over this map): each page carries the data
 // of its own icons (_icons) and PageScreen adds them here before the page renders.
 const types = {
-  actions: { ...actions, ...nativeActions },
-  blocks: { ...blocks, Screen },
+  actions: { ...actions, ...nativeActions, ...appTypes.actions },
+  blocks: { ...blocks, Screen, ...appTypes.blocks },
   icons: {},
   operators: {
     ...jsOperators,

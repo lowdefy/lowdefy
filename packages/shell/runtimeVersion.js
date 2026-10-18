@@ -20,7 +20,28 @@ function isPositiveInteger(value) {
   return Number.isInteger(value) && value > 0;
 }
 
+function isObject(value) {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+// JSON with every object's keys sorted, at every depth, so options that differ only in key order
+// give the same text.
+function canonicalJson(value) {
+  if (Array.isArray(value)) {
+    return `[${value.map(canonicalJson).join(',')}]`;
+  }
+  if (isObject(value)) {
+    const entries = Object.keys(value)
+      .sort()
+      .map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`);
+    return `{${entries.join(',')}}`;
+  }
+  return JSON.stringify(value);
+}
+
 // A short hash of the shell plugins a shell carries, the same whatever order they are listed in.
+// Each plugin is keyed on name@version and its options: config plugins bake the options into the
+// native project, so an option change is a native change. No options and {} hash the same.
 function hashPlugins(plugins) {
   const keys = plugins.map((plugin) => {
     if (typeof plugin?.name !== 'string' || typeof plugin?.version !== 'string') {
@@ -30,7 +51,14 @@ function hashPlugins(plugins) {
         )}.`
       );
     }
-    return `${plugin.name}@${plugin.version}`;
+    if (plugin.options !== undefined && !isObject(plugin.options)) {
+      throw new Error(
+        `Shell plugin "${plugin.name}" options should be an object. Received ${JSON.stringify(
+          plugin.options
+        )}.`
+      );
+    }
+    return `${plugin.name}@${plugin.version} ${canonicalJson(plugin.options ?? {})}`;
   });
   return crypto.createHash('sha256').update(keys.sort().join('\n')).digest('hex').slice(0, 8);
 }
@@ -49,7 +77,8 @@ function hashPlugins(plugins) {
  * @param {Object} params
  * @param {number} params.nativeVersion The shell package's nativeVersion.
  * @param {string} params.profile The shell's capability profile.
- * @param {{ name: string, version: string }[]} [params.plugins] The shell plugins it carries.
+ * @param {{ name: string, version: string, options?: Object }[]} [params.plugins] The shell plugins
+ *   it carries (shell.json `plugins`).
  * @returns {string}
  */
 function getRuntimeVersion({ nativeVersion, profile, plugins = [] }) {

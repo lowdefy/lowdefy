@@ -26,12 +26,18 @@ import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import { printerPlugin, withPrinterPlugin } from './fixtures/withPrinterPlugin.mjs';
 import { createAdaptiveIconForeground } from './scripts/createShellAssets.mjs';
 
 const require = createRequire(import.meta.url);
 const Jimp = require('jimp-compact');
+const applyShellPlugins = require('./applyShellPlugins.js');
 const getPrivacyManifest = require('./getPrivacyManifest.js');
 const { mergeProfiles, resolveProfile } = require('./profiles.js');
+const resolveShellPlugins = require('./resolveShellPlugins.js');
+const getRuntimeVersion = require('./runtimeVersion.js');
+const { getShellProfile } = require('./shellVariant.js');
+const shellPackage = require('./package.json');
 
 const shellRoot = path.dirname(fileURLToPath(import.meta.url));
 
@@ -68,14 +74,14 @@ function opaqueBounds(image) {
 
 // The app config `expo config` prints: `introspect` as prebuild sees it, after the config plugins'
 // Info.plist changes; `prebuild` as the config states it.
-function readAppConfig(configPath, type = 'prebuild') {
+function readAppConfig(configPath, type = 'prebuild', env = process.env) {
   const output = execFileSync(
     path.join(shellRoot, 'node_modules', '.bin', 'expo'),
     ['config', '--type', type, '--json'],
     {
       cwd: shellRoot,
       encoding: 'utf8',
-      env: { ...process.env, LOWDEFY_SHELL_CONFIG: configPath, LOWDEFY_SHELL_VARIANT: 'release' },
+      env: { ...env, LOWDEFY_SHELL_CONFIG: configPath, LOWDEFY_SHELL_VARIANT: 'release' },
       stdio: ['ignore', 'pipe', 'ignore'],
     }
   );
@@ -193,4 +199,120 @@ test('a shell config without an icon keeps Expo defaults and still declares comp
     assert.equal(config.android.adaptiveIcon, undefined);
     assert.ok(config.plugins.includes('expo-splash-screen'));
     assert.deepEqual(config.ios.config, { usesNonExemptEncryption: false });
+  }));
+
+const printerShell = {
+  ...fieldShell,
+  icon: undefined,
+  plugins: [{ ...printerPlugin, typePrefix: 'Printer', options: { tenant: 'field-team' } }],
+};
+
+test("a shell plugin's config plugins, permissions, privacy reasons and data join the profile", () =>
+  withPrinterPlugin(({ directory, env, require: shellRequire }) => {
+    const configPath = path.join(directory, 'shell.json');
+    fs.writeFileSync(configPath, JSON.stringify(printerShell));
+    const config = readAppConfig(configPath, 'introspect', env);
+
+    // The plugin's config plugin ran, with the plugin's options.
+    assert.equal(
+      config.ios.infoPlist.NSBluetoothAlwaysUsageDescription,
+      'Print labels for field-team.'
+    );
+    assert.ok(config.android.permissions.includes('android.permission.BLUETOOTH_CONNECT'));
+    assert.ok(!config.android.blockedPermissions.includes('android.permission.BLUETOOTH_CONNECT'));
+    // The profile's own config plugins and permissions stay.
+    assert.equal(
+      config.ios.infoPlist.NSCameraUsageDescription,
+      'Allow $(PRODUCT_NAME) to use the camera.'
+    );
+    assert.deepEqual(config.extra.shell.capabilities, [
+      'biometrics',
+      'sign-in',
+      'camera',
+      'printer',
+    ]);
+
+    // Privacy reasons merge per category: UserDefaults gains the plugin's reason, and its new
+    // category is added once.
+    const reasons = Object.fromEntries(
+      config.ios.privacyManifests.NSPrivacyAccessedAPITypes.map((type) => [
+        type.NSPrivacyAccessedAPIType.replace('NSPrivacyAccessedAPICategory', ''),
+        type.NSPrivacyAccessedAPITypeReasons,
+      ])
+    );
+    assert.deepEqual(reasons, {
+      FileTimestamp: ['C617.1'],
+      UserDefaults: ['CA92.1', '1C8F.1'],
+      SystemBootTime: ['35F9.1'],
+      DiskSpace: ['E174.1'],
+      ActiveKeyboards: ['3EC4.1'],
+    });
+
+    assert.equal(
+      config.runtimeVersion,
+      getRuntimeVersion({
+        nativeVersion: shellPackage.nativeVersion,
+        profile: 'field',
+        plugins: printerShell.plugins,
+      })
+    );
+    assert.match(
+      config.runtimeVersion,
+      new RegExp(`^${shellPackage.nativeVersion}-field-[0-9a-f]{8}$`)
+    );
+
+    // The profile app.config.ts builds with carries the plugin's data, for the store answers.
+    const profile = applyShellPlugins({
+      profile: getShellProfile({ shell: printerShell, variant: 'release' }),
+      plugins: resolveShellPlugins({ shell: printerShell, require: shellRequire }),
+    });
+    assert.equal(profile.name, 'field');
+    assert.deepEqual(profile.dataCollected, [
+      { type: 'emailAddress', purpose: 'appFunctionality' },
+      { type: 'userId', purpose: 'appFunctionality' },
+      { type: 'photos', purpose: 'appFunctionality' },
+      { type: 'deviceId', purpose: 'appFunctionality' },
+    ]);
+    assert.deepEqual(profile.modules['react-native-ble-plx'], 'BlePlx');
+  }));
+
+test('a shell plugin asking for the camera on a basic shell fails the app config', () =>
+  withPrinterPlugin(({ directory, env }) => {
+    const packageDir = path.join(directory, 'node_modules', '@example', 'lowdefy-scanner');
+    fs.mkdirSync(packageDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(packageDir, 'package.json'),
+      JSON.stringify({
+        name: '@example/lowdefy-scanner',
+        version: '1.0.0',
+        exports: { './shell': './shell.cjs' },
+      })
+    );
+    fs.writeFileSync(
+      path.join(packageDir, 'shell.cjs'),
+      "module.exports = { plugins: [], permissions: ['NSCameraUsageDescription'] };"
+    );
+    const configPath = path.join(directory, 'shell.json');
+    fs.writeFileSync(
+      configPath,
+      JSON.stringify({
+        ...fieldShell,
+        icon: undefined,
+        profile: 'basic',
+        plugins: [{ name: '@example/lowdefy-scanner', version: '1.0.0' }],
+      })
+    );
+    assert.throws(
+      () =>
+        execFileSync(path.join(shellRoot, 'node_modules', '.bin', 'expo'), ['config', '--json'], {
+          cwd: shellRoot,
+          encoding: 'utf8',
+          env: { ...env, LOWDEFY_SHELL_CONFIG: configPath, LOWDEFY_SHELL_VARIANT: 'release' },
+          stdio: ['ignore', 'pipe', 'pipe'],
+        }),
+      (error) =>
+        error.stderr.includes(
+          'Shell plugin "@example/lowdefy-scanner" asks for "NSCameraUsageDescription", which the "basic" profile leaves out. Pick the "field" profile, which carries it.'
+        )
+    );
   }));
