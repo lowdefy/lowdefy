@@ -25,6 +25,7 @@ import BreakpointContext from './layout/BreakpointContext.js';
 import Context from './Context.js';
 import createScreenGlobals from './globals/createScreenGlobals.js';
 import createFooterStore from './screen/createFooterStore.js';
+import deserializeConfig from './deserializeConfig.js';
 import ElementsContext from './elements/ElementsContext.js';
 import FocusMemoryContext from './screen/FocusMemoryContext.js';
 import getFocusMemory from './screen/getFocusMemory.js';
@@ -69,6 +70,22 @@ function useScrollY({ screenKey }) {
     [scrollY]
   );
   return { onScroll, scrollY };
+}
+
+const KEEP = { reset: false, setReset: () => undefined };
+const REBUILD = { reset: true, setReset: () => undefined };
+
+// A new version of the page (the shell fetched a changed config while the screen shows the one it
+// held) rebuilds the screen's kept page context once, so the screen shows the new version now,
+// not on the next visit: the engine keeps a page context across renders and mounts by its
+// instance key, whatever config it is given. The rebuilt context runs onInit and onMount again;
+// the screen and its scroll position stay.
+function getContextReset({ lowdefy, pageConfig, resetContext, screenKey }) {
+  const kept = lowdefy.contexts[screenKey];
+  if (resetContext.reset || pageConfig.dynamic === true || kept === undefined) {
+    return resetContext;
+  }
+  return kept._internal.pageConfig === pageConfig ? KEEP : REBUILD;
 }
 
 const Page = ({
@@ -135,6 +152,7 @@ const Page = ({
     rootConfig,
     types,
   });
+  const contextReset = getContextReset({ lowdefy, pageConfig, resetContext, screenKey });
   lowdefy.theme._resolvedAntdToken = theme.tokens;
   const appContext = getAppContext({ events: rootConfig.events, jsMap, lowdefy });
   return (
@@ -178,7 +196,7 @@ const Page = ({
                 jsMap={jsMap}
                 lowdefy={lowdefy}
                 pathParams={pathParams}
-                resetContext={resetContext}
+                resetContext={contextReset}
               >
                 {(context) => {
                   if (!context._internal.onInitDone) return null;
@@ -215,7 +233,9 @@ const Page = ({
  *   globals, WebSocket, websocketUrl, onBuildChanged, onCallerChanged). Its globals come from
  *   `createNativeGlobals`, so `location` is the shown route.
  * @param {Object} props.pageConfig The page, as the server sends it (serialized). A page built
- *   on request in dev carries `_classMap`, the class map entries of its own classes.
+ *   on request in dev carries `_classMap`, the class map entries of its own classes. A host gives
+ *   one object per version of the page: another object is a new version, which rebuilds the
+ *   screen's page context in place.
  * @param {Object} props.rootConfig The app's root config, as the server sends it (serialized),
  *   with the mobile root's `theme` (`{ darkMode, light, dark }`) and `classMap`.
  * @param {Object} props.types `{ blocks, actions, operators, icons }`, the native plugin maps and
@@ -261,9 +281,10 @@ const LowdefyPage = ({
   routePath,
   types,
 }) => {
-  // Deserialized once per fetched config: the engine keeps dynamic page contexts by config
-  // object identity.
-  const pageConfig = useMemo(() => serializer.deserialize(rawPageConfig), [rawPageConfig]);
+  // Deserialized once per fetched config, even across mounts: a page context is rebuilt when its
+  // config object is not the one it was built from (getContextReset, and the engine for a
+  // dynamic page).
+  const pageConfig = deserializeConfig(rawPageConfig);
   const rootConfig = useMemo(() => serializer.deserialize(rawRootConfig), [rawRootConfig]);
   const theme = useContext(ThemeContext);
   // The page's views register here, by block id, for native actions (globals.elements).
