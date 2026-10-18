@@ -16,6 +16,7 @@
 
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
+import { etag } from 'hono/etag';
 import { compress } from 'hono/compress';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { runInCredentialScope } from '@lowdefy/node-utils';
@@ -37,6 +38,9 @@ import getAuth from '../lib/server/auth/getAuth.js';
 import getStrategies from '../lib/server/auth/getStrategies.js';
 import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
+import mobileConfig from '../lib/build/mobileConfig.js';
+import mobileRootHandler from './routes/mobileRoot.js';
+import mountMobileWellKnown from './routes/mountMobileWellKnown.js';
 import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
 import mountPageRoutes from './routes/mountPageRoutes.js';
 import noStore from './middleware/noStore.js';
@@ -123,14 +127,15 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
     app,
     auth: authJson.configured === true ? getAuth({ logger }) : null,
   });
+  mountMobileWellKnown({ app, basePath, mobileConfig });
   app.all('/.well-known/*', wellKnownFallbackHandler);
 
   app.use('/api/*', apiContext({ clientAddressHeader }));
   // Responses that carry the caller's data are never stored by a browser or proxy cache.
   // Static assets keep their own caching below; the page routes use the same middleware.
   const noStoreMiddleware = noStore();
-  ['/api/page/*', '/api/user', '/api/request/*', '/api/endpoints/*'].forEach((route) =>
-    app.use(route, noStoreMiddleware)
+  ['/api/page/*', '/api/mobile/root', '/api/user', '/api/request/*', '/api/endpoints/*'].forEach(
+    (route) => app.use(route, noStoreMiddleware)
   );
   // A tab left open across a deploy (or restored from the browser cache) runs
   // the old bundle against this build: see refuseOtherBuild and stampBuildId.
@@ -142,6 +147,12 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   app.use('/api/request/*', stampCaller());
   app.use('/api/endpoints/*', stampCaller());
   app.use('/api/page/*', stampCaller());
+  app.use('/api/mobile/root', stampCaller());
+  // A shell revalidates the pages and root config it keeps with If-None-Match.
+  // Registered inside noStore and stampCaller, so a 304 still carries both.
+  const etagMiddleware = etag();
+  app.use('/api/page/*', etagMiddleware);
+  app.use('/api/mobile/root', etagMiddleware);
   app.all('/api/request/*', refuseOtherBuild({ buildId: appMeta.buildId }), requestHandler);
   // Endpoint payloads may carry base64 file content (emitFileContent + CallAPI);
   // cap bodies at 10 MiB to match the agent route.
@@ -160,6 +171,7 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   app.all('/api/mcp', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);
   app.get('/api/websocket', websocketHandler);
   app.get('/api/page/*', apiPageHandler);
+  app.get('/api/mobile/root', mobileRootHandler);
   app.get('/api/user', userHandler);
 
   // Vite build output (includes public/ via Vite's publicDir copy). Falls
