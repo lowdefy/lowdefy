@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { Fragment, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Linking, View } from 'react-native';
 import { useMarkdown } from 'react-native-marked';
 
@@ -60,13 +60,7 @@ function Markdown({ events, methods, properties, styles = {} }) {
     theme,
     tokenizer,
   });
-  return (
-    <View style={styles.element}>
-      {elements.map((element, index) => (
-        <Fragment key={index}>{element}</Fragment>
-      ))}
-    </View>
-  );
+  return <View style={styles.element}>{elements}</View>;
 }
 
 Markdown.meta = meta;

@@ -45,6 +45,7 @@ class MarkdownRenderer extends Renderer {
         accessibilityRole="link"
         key={this.getKey()}
         onPress={() => this.onLinkPress(href)}
+        selectable={this.selectable}
         style={styles}
       >
         {children}
