@@ -263,13 +263,13 @@ export default {
   );
 });
 
-test('config checks the installed plugins with the type manifest', async () => {
+test('config writes the type manifest with the installed plugins', async () => {
   await config({ context: createContext() });
   const calls = typeManifestCalls();
   expect(calls).toHaveLength(1);
   const [{ command, args, processOptions }] = calls[0];
   expect(command).toBe(process.execPath);
-  expect(args).toEqual([path.join('scripts', 'createTypeManifest.mjs')]);
+  expect(args).toEqual([path.join('scripts', 'createTypeManifest.mjs'), '--write']);
   expect(processOptions.cwd).toBe(projectPath());
   expect(processOptions.env.LOWDEFY_SHELL_CONFIG).toBe(projectPath('shell.json'));
 });
@@ -288,7 +288,7 @@ test('removing the plugin restores the shell dependencies, appTypes.js and runti
   expect(fs.existsSync(projectPath('node_modules', '@example', 'lowdefy-printer'))).toBe(false);
 });
 
-test('a shell without plugins leaves package.json and appTypes.js as fetched', async () => {
+test('a shell without plugins leaves package.json and appTypes.js as fetched, and writes the type manifest', async () => {
   writeApp({ shells: [fieldShell] });
   const shippedAppTypes = fs.readFileSync(path.join(shellRoot, 'src/plugins/appTypes.js'), 'utf8');
   const { runtimeVersion } = await config({ context: createContext() });
@@ -297,7 +297,7 @@ test('a shell without plugins leaves package.json and appTypes.js as fetched', a
   expect(readProjectFile('src/plugins/appTypes.js')).toBe(shippedAppTypes);
   expect(runtimeVersion).toBe('3-field');
   expect(mockViewNpmPackage).not.toHaveBeenCalled();
-  expect(typeManifestCalls()).toHaveLength(0);
+  expect(typeManifestCalls()).toHaveLength(1);
 });
 
 test('config --dry-run reads and checks the plugins, logs what it would add, writes no dependencies', async () => {

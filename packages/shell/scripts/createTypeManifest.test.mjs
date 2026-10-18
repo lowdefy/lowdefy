@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-// scripts/createTypeManifest.mjs run on a shell with plugins, as app.config.ts and lowdefy mobile
-// config run it: a plugin's native types join the manifest, and a native-only plugin, with no
-// `./types` export, adds none.
+// scripts/createTypeManifest.mjs: a type the shell's plugin list gains reaches the manifest, and on a
+// shell with plugins, as lowdefy mobile config runs it, a plugin's native types join the manifest
+// and a native-only plugin, with no `./types` export, adds none.
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -25,6 +25,7 @@ import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 import { printerPlugin, withPrinterPlugin } from '../fixtures/withPrinterPlugin.mjs';
+import createTypeManifest from './createTypeManifest.mjs';
 
 const script = path.join(path.dirname(fileURLToPath(import.meta.url)), 'createTypeManifest.mjs');
 
@@ -103,3 +104,29 @@ test('a shell plugin type named like a built-in native type is refused', () =>
         )
     );
   }));
+
+// A type the shell's plugin list gains reaches the manifest, which the bundle carries
+// (src/plugins/typeManifest.js); the Expo config plays no part.
+test('a block type added to the shell plugins shows up in the type manifest', async () => {
+  const before = await createTypeManifest({
+    plugins: [{ category: 'blocks', package: '@lowdefy/blocks-native', types: ['Screen'] }],
+  });
+  assert.deepEqual(Object.keys(before.blocks), ['Screen']);
+  const after = await createTypeManifest({
+    plugins: [
+      { category: 'blocks', package: '@lowdefy/blocks-native', types: ['Screen', 'Markdown'] },
+    ],
+  });
+  assert.deepEqual(Object.keys(after.blocks), ['Screen', 'Markdown']);
+  assert.deepEqual(after.blocks.Markdown, after.blocks.Screen);
+  assert.equal(after.blocks.Markdown.package, '@lowdefy/blocks-native');
+});
+
+test('a type the plugin package does not have is refused', async () => {
+  await assert.rejects(
+    createTypeManifest({
+      plugins: [{ category: 'blocks', package: '@lowdefy/blocks-native', types: ['NoSuchBlock'] }],
+    }),
+    /Shell plugin "@lowdefy\/blocks-native" has no blocks type "NoSuchBlock"\./
+  );
+});

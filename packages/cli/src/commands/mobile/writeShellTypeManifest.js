@@ -24,16 +24,18 @@ function getErrorMessage(lines) {
   return lines.find((line) => /^\w*Error: /.test(line))?.replace(/^\w*Error: /, '');
 }
 
-// Runs the copied shell's scripts/createTypeManifest.mjs on the installed
-// project, as app.config.ts does at EAS prebuild, so a shell plugin type name
-// that clashes with a built-in native type (or another plugin's) is refused
-// now, naming the plugin, rather than on EAS.
-async function checkShellTypeManifest({ context, projectDirectory, shell }) {
+// Runs the copied shell's scripts/createTypeManifest.mjs --write on the
+// installed project. It rewrites src/plugins/typeManifest.js, which the shell's
+// JavaScript bundle carries, with the native types of shell.json `plugins`, or
+// back to the shell's own types when the shell has none. A shell plugin type
+// name that clashes with a built-in native type (or another plugin's) is
+// refused, naming the plugin.
+async function writeShellTypeManifest({ context, projectDirectory, shell }) {
   const stderr = [];
   try {
     await spawnProcess({
       command: process.execPath,
-      args: [SCRIPT],
+      args: [SCRIPT, '--write'],
       stdErrLineHandler: (line) => stderr.push(`${line}`),
       processOptions: {
         cwd: projectDirectory,
@@ -46,7 +48,7 @@ async function checkShellTypeManifest({ context, projectDirectory, shell }) {
       { cause: error }
     );
   }
-  context.logger.debug(`Shell "${shell.id}" type manifest checked.`);
+  context.logger.debug(`Shell "${shell.id}" type manifest written.`);
 }
 
-export default checkShellTypeManifest;
+export default writeShellTypeManifest;

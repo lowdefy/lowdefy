@@ -22,7 +22,6 @@ import { writeFileIfChanged } from '@lowdefy/node-utils';
 import addShellPluginDependencies from './addShellPluginDependencies.js';
 import checkShellPluginPeers from './checkShellPluginPeers.js';
 import checkShellPluginSupport from './checkShellPluginSupport.js';
-import checkShellTypeManifest from './checkShellTypeManifest.js';
 import createEasJson from './createEasJson.js';
 import createShellJson from './createShellJson.js';
 import getShellPluginDependencies from './getShellPluginDependencies.js';
@@ -31,6 +30,7 @@ import loadMobileShell from './loadMobileShell.js';
 import readShellPackageJson from './readShellPackageJson.js';
 import readShellPluginPackages from './readShellPluginPackages.js';
 import writeShellAppTypes from './writeShellAppTypes.js';
+import writeShellTypeManifest from './writeShellTypeManifest.js';
 import writeShellWorkspace from './writeShellWorkspace.js';
 
 function getEnvironmentNames(config) {
@@ -44,8 +44,7 @@ async function writeJson({ filePath, value }) {
 // The copied shell loads each plugin's "./shell" entry from the installed
 // project and refuses plugins the shell's profile must not take: modules the
 // shell carries itself, or permissions its profile leaves out. The release
-// variant is checked, since it carries the fewest permissions. Then the type
-// manifest refuses plugin type names that clash.
+// variant is checked, since it carries the fewest permissions.
 async function checkInstalledShellPlugins({ context, projectDirectory, shellJson, shellPackage }) {
   if ((shellJson.plugins ?? []).length === 0) {
     return;
@@ -55,7 +54,6 @@ async function checkInstalledShellPlugins({ context, projectDirectory, shellJson
     require: shellPackage.require,
   });
   shellPackage.checkShellPlugins({ shell: shellJson, variant: 'release', plugins });
-  await checkShellTypeManifest({ context, projectDirectory, shell: shellJson });
 }
 
 function logDryRunDependencies({ context, dependencies }) {
@@ -106,6 +104,7 @@ async function config({ context }) {
   await installShellProject({ context, directory: projectDirectory, dryRun });
   if (!dryRun) {
     await checkInstalledShellPlugins({ context, projectDirectory, shellJson, shellPackage });
+    await writeShellTypeManifest({ context, projectDirectory, shell: shellJson });
   }
   const runtimeVersion = shellPackage.getRuntimeVersion({
     nativeVersion: shellPackage.nativeVersion,

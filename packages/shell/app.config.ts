@@ -33,9 +33,10 @@ import getRuntimeVersion from './runtimeVersion.js';
 import { getExclusions, getShellProfile, getShellVariant } from './shellVariant.js';
 import withExcludedNativeModules from './withExcludedNativeModules.js';
 
-// The shell's config is its shell.json (readShellConfig.js). Its capability profile, version and
-// type manifest are added here, at build, so the app reads one object
-// (src/config/getShellConfig.js).
+// The shell's config is its shell.json (readShellConfig.js). Its capability profile and version are
+// added here, at build, so the app reads one object (src/config/getShellConfig.js). The type
+// manifest is not: it travels in the JavaScript bundle (src/plugins/typeManifest.js), since an
+// embedded launch reads the Expo config of the native build, not that of the JavaScript it runs.
 //
 // Three versions: `version` is the store version (shell.json `version`, set per build by
 // `lowdefy mobile`); `extra.shell.version` is the @lowdefy/shell package version, which the runtime
@@ -45,15 +46,6 @@ const shellRoot = __dirname;
 
 function readJson(filePath: string) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-}
-
-function createTypeManifest() {
-  const output = execFileSync(
-    process.execPath,
-    [path.join(shellRoot, 'scripts/createTypeManifest.mjs')],
-    { encoding: 'utf8' }
-  );
-  return JSON.parse(output);
 }
 
 // The shell's icon (shell.json `icon`, a 1024×1024 PNG, relative to shell.json) and its Android
@@ -164,7 +156,6 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
         capabilities: shell.capabilities ?? profile.capabilities,
         variant,
         version,
-        typeManifest: createTypeManifest(),
       },
     },
   };
