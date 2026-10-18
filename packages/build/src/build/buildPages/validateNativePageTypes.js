@@ -33,6 +33,21 @@ function sharedPageNote({ page }) {
   return ' The page is in both "pages" and "mobile.pages", so each type it uses must exist on web and on mobile.';
 }
 
+// A shell renders a shell plugin's native type only when it carries the
+// plugin, and a page goes to every shell, so each shell must list the package.
+// Built-in @lowdefy/* types are in every shell. An app with no shells skips this.
+function findShellWithoutPlugin({ definition, context }) {
+  const packageName = definition.package;
+  if (!type.isString(packageName) || packageName.startsWith('@lowdefy/')) {
+    return null;
+  }
+  return (context.mobileShells ?? []).find((shell) => !shell.plugins.includes(packageName)) ?? null;
+}
+
+function shellPluginMessage({ packageName, shell }) {
+  return `comes from shell plugin "${packageName}", which mobile shell "${shell.id}" does not list in its "plugins". A mobile page may use a shell plugin's types only when every shell carries the plugin.`;
+}
+
 function walkBlocks(block, visit) {
   visit(block);
   Object.values(block.slots ?? {}).forEach((slot) => {
@@ -84,12 +99,41 @@ function validateNativePageTypes({ page, pageCounters, context }) {
       );
       return;
     }
+    const shell = findShellWithoutPlugin({ definition: nativeTypes.blocks[block.type], context });
+    if (shell) {
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Block type "${block.type}" on block "${block.blockId}" on page "${
+            page.pageId
+          }" ${shellPluginMessage({ packageName: nativeTypes.blocks[block.type].package, shell })}`,
+          { configKey: block['~k'], checkSlug: 'types' }
+        )
+      );
+      return;
+    }
     if (page.target === 'both') {
       checkSharedBlockMeta({ block, page, context });
     }
   });
   Object.keys(pageCounters.actions.getCounts()).forEach((actionType) => {
     if (nativeTypes.actions[actionType]) {
+      const shell = findShellWithoutPlugin({
+        definition: nativeTypes.actions[actionType],
+        context,
+      });
+      if (shell) {
+        collectExceptions(
+          context,
+          new ConfigError(
+            `Action type "${actionType}" on page "${page.pageId}" ${shellPluginMessage({
+              packageName: nativeTypes.actions[actionType].package,
+              shell,
+            })}`,
+            { configKey: pageCounters.actions.getLocation(actionType), checkSlug: 'types' }
+          )
+        );
+      }
       return;
     }
     collectExceptions(
