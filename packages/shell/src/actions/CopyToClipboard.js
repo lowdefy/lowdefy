@@ -14,9 +14,15 @@
   limitations under the License.
 */
 
-// The native body of actions-core's CopyToClipboard, through expo-clipboard (globals.clipboard).
+import { type } from '@lowdefy/helpers';
+
+// The native body of actions-core's CopyToClipboard, with its params ({ copy }), through
+// expo-clipboard (globals.clipboard).
 async function CopyToClipboard({ globals, params }) {
   const { copy } = params;
+  if (!type.isString(copy)) {
+    throw new Error(`CopyToClipboard requires "copy" text. Received ${JSON.stringify(copy)}.`);
+  }
   await globals.clipboard.setString(copy);
 }
 
