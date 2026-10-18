@@ -21,6 +21,7 @@ import { readFile, writeFile } from '@lowdefy/node-utils';
 import createPluginTypesMap from '../utils/createPluginTypesMap.js';
 import defaultPackages from '../defaultPackages.js';
 import defaultPackagesMobile from '../defaultPackagesMobile.js';
+import nativeBlockTypes from '../nativeBlockTypes.js';
 
 function createEmptyTypesMap() {
   return {
@@ -70,16 +71,31 @@ function getMobilePackageTypes({ packageName, types }) {
   return packageTypes;
 }
 
+// The native block packages' types are committed (src/nativeBlockTypes.js) rather than imported,
+// so build does not depend on them: blocks-native depends on client-native, which depends on
+// engine, whose tests depend on build. All @lowdefy packages share one version.
+const nativeBlockPackageTypes = {
+  '@lowdefy/blocks-native': nativeBlockTypes,
+};
+
+async function getTypes({ packageFile, packageName }) {
+  if (nativeBlockPackageTypes[packageName]) {
+    return { types: nativeBlockPackageTypes[packageName], version: packageFile.version };
+  }
+  const { default: types } = await import(`${packageName}/types`);
+  return { types, version: getPackageVersion({ packageFile, packageName }) };
+}
+
 async function generateDefaultTypesMapMobile({ packageFile }) {
   const typesMap = createEmptyTypesMap();
   const packageNames = [...new Set([...defaultPackages, ...defaultPackagesMobile.blocks])];
   for (const packageName of packageNames) {
-    const { default: types } = await import(`${packageName}/types`);
+    const { types, version } = await getTypes({ packageFile, packageName });
     createPluginTypesMap({
       packageTypes: getMobilePackageTypes({ packageName, types }),
       typesMap,
       packageName,
-      version: getPackageVersion({ packageFile, packageName }),
+      version,
     });
   }
   const defaultTypesMapMobile = {
