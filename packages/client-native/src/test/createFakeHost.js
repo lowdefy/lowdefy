@@ -46,6 +46,7 @@ function createFakeHost({ path = '/home', response = {} } = {}) {
     router: { back: jest.fn(), push: jest.fn(), replace: jest.fn() },
     sessionStorage: createMemoryStore(),
     storage: createMemoryStore(),
+    streamFetch: jest.fn(async () => jsonResponse(response)),
     WebSocket: jest.fn(),
     websocketUrl: (apiPath) => apiPath.replace(/^http/, 'ws'),
   };

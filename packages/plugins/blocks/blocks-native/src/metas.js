@@ -15,6 +15,7 @@
 */
 
 export { default as ActivityTimeline } from './blocks/ActivityTimeline/meta.js';
+export { default as AgentChat } from './blocks/AgentChat/meta.js';
 export { default as Alert } from './blocks/Alert/meta.js';
 export { default as Avatar } from './blocks/Avatar/meta.js';
 export { default as Box } from './blocks/Box/meta.js';

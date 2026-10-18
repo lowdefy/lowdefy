@@ -76,6 +76,7 @@ async function renderPageScreen({
     router: { back: jest.fn(), push: jest.fn(), replace: jest.fn() },
     sessionStorage: createMemoryStore(),
     storage,
+    streamFetch: server.fetch,
     tokenStore: { get: () => null, set: jest.fn(), clear: jest.fn() },
     WebSocket: jest.fn(),
     websocketUrl: (apiPath) => apiPath.replace(/^http/, 'ws'),

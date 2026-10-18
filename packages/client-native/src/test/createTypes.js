@@ -28,14 +28,24 @@ import {
   _url_query,
 } from '@lowdefy/operators-js/operators/client';
 
-import { Box, Button, Icon, List, Paragraph, TextInput, Themed, Title } from './blocks.js';
+import {
+  Box,
+  Button,
+  FooterBar,
+  Icon,
+  List,
+  Paragraph,
+  TextInput,
+  Themed,
+  Title,
+} from './blocks.js';
 
 // Record is a test action that logs its params, to see the order events run in.
 // icons is the icon data the native Icon renderer draws from, as a shell gives it.
 function createTypes({ icons = {}, record = () => undefined } = {}) {
   return {
     actions: { Link, Record: ({ params }) => record(params), Request, SetDarkMode, SetState },
-    blocks: { Box, Button, Icon, List, Paragraph, TextInput, Themed, Title },
+    blocks: { Box, Button, FooterBar, Icon, List, Paragraph, TextInput, Themed, Title },
     icons,
     operators: {
       _event,

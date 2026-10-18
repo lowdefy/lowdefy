@@ -36,9 +36,10 @@ module.exports = {
     '^expo-web-browser$': '<rootDir>/src/test/expoWebBrowser.js',
   },
   // The preset's pattern assumes a flat node_modules; pnpm nests each package under .pnpm. The
-  // native Markdown block's react-native-marked ships TypeScript source and marked ES modules.
+  // native Markdown block's react-native-marked ships TypeScript source and marked ES modules, and
+  // the AgentChat block's AI SDK (ai, @ai-sdk/*) and its dependencies ship ES modules.
   transformIgnorePatterns: [
-    'node_modules/(?!(\\.pnpm/[^/]+/node_modules/)?((jest-)?react-native(-svg|-marked|-reanimated-table)?|marked|@jsamr|github-slugger|@react-native(-community)?|expo(nent)?|@expo|expo-[^/]+|change-case|intl-messageformat|@formatjs|mingo|uuid|yaml|cron-parser|cronstrue|luxon|jsonata|deep-diff|nunjucks)/)',
+    'node_modules/(?!(\\.pnpm/[^/]+/node_modules/)?((jest-)?react-native(-svg|-marked|-reanimated-table)?|marked|@jsamr|github-slugger|@react-native(-community)?|expo(nent)?|@expo|expo-[^/]+|change-case|intl-messageformat|@formatjs|mingo|uuid|yaml|cron-parser|cronstrue|luxon|jsonata|deep-diff|nunjucks|ai|@ai-sdk|eventsource-parser|throttleit|swr|zod|@standard-schema|@vercel/oidc|@workflow)/)',
   ],
   testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test/', '<rootDir>/node_modules/'],
 };

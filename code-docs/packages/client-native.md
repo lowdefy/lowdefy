@@ -30,6 +30,8 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 | `motion/FadeInView.js`, `useReduceMotion.js`                     | Content fading in after a skeleton; the system Reduce Motion setting         |
 | `trace/describeBlock.js`                                         | The trace's element description, by block id                                 |
 | `elements/createElementRegistry.js`, `useElementRef.js`          | Native views by page and block id (`globals.elements`), for native actions   |
+| `block/createStreamFetch.js`                                     | `methods.streamFetch`: a block's streamed server call, with the bearer token |
+| `screen/useScreenFooter.js`                                      | A block draws its own chrome in the page footer (AgentChat's composer)       |
 | `icon/Icon.js`                                                   | Draws IconData (the web's icon node data) with `react-native-svg`            |
 | `icon/createIcon.js`                                             | `components.Icon`: an icon by name from `types.icons`, drawn with `Icon`     |
 | `icon/getSfSymbol.js`, `sfSymbolNames.js`                        | The SF Symbol of a Lucide or semantic icon name, for iOS tab and bar buttons |
@@ -118,7 +120,10 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   the Screen sets its `footer` slot in. `ScreenFooter` draws that slot below the ScrollView, padded by
   `LowdefyPage`'s `bottomInset` (the shell's bottom safe area: tab bar, home indicator) and kept
   above the keyboard by a `KeyboardAvoidingView`; only it re-renders when the slot is set, so the
-  Screen's every-render update does not render the page again. What onFocus has fired for is kept
+  Screen's every-render update does not render the page again. A block can draw its own chrome
+  there instead (`useScreenFooter`, exported): AgentChat draws its composer in the footer while
+  the conversation is the page content. A Screen with no footer slot leaves the footer alone, so
+  a page uses one or the other. What onFocus has fired for is kept
   per page context (`getFocusMemory`, through `FocusMemoryContext`), not in the Screen's refs, so
   the page tree mounting again onto a kept context does not fire it again.
 - A Screen's `headerBottom` slot is drawn by the Screen block itself, as the page's first content
@@ -161,6 +166,17 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   seam while rows scrolled under it stay hidden.
 - The engine's `window` and `document` keys hold plain objects. `focus` and `blur` have no
   source on a phone; `online` and `offline` follow the `network` the shell passes.
+
+## Streamed server calls
+
+React Native's `fetch` buffers a response body, so a block that reads its answer as a stream (the
+native AgentChat reads the AI SDK's UI message stream, server-sent events over a POST) calls
+`methods.streamFetch(path, init)`, a native-only block method (`block/createStreamFetch.js`). It
+prefixes `lowdefy.apiBase` and adds the caller's session as the core's requests do
+(`getAuthorizationHeaders`: a bearer host's token as `Authorization`), and calls
+`host.streamFetch`, a Fetch API whose body streams. The shell gives `expo/fetch`, sent as its
+`fetch` is (the `x-lowdefy-shell` header, no cookies, Lowdefy Dev's pairing token) and watched by
+the same session watch, so a 401 ends the session.
 
 ## Tests
 

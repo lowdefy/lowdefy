@@ -53,6 +53,8 @@ import watchSession from './watchSession.js';
  * @param {{ get, set, remove, keys }} params.kv The device store.
  * @param {Function} params.onSignedOut Called once the person's data is gone.
  * @param {{ id, scheme, profile }} params.shell The shell config.
+ * @param {Function} params.streamFetch The shell's streaming fetch (expo/fetch, sent as fetch is),
+ *   watched the same way: a chat stream answered 401 ends the session too.
  */
 function createAppAuth({
   apiBase,
@@ -65,6 +67,7 @@ function createAppAuth({
   now = Date.now,
   onSignedOut,
   shell,
+  streamFetch,
 }) {
   const storedKey = `lowdefy-shell:auth:${app.id}`;
   const stored = JSON.parse(kv.get(storedKey) ?? 'null');
@@ -256,16 +259,19 @@ function createAppAuth({
 
   const sessionStores = createSessionStores({ cacheStore, isEnded: () => ending, kv });
 
-  const watchedFetch = watchSession({
-    fetch,
-    onRefused: () => {
-      const { cacheKey } = session.getState();
-      if (cacheKey !== null) {
-        cacheStore.removeEntry({ cacheKey });
-      }
-    },
-    onSessionEnded: () => tokenStore.clear(),
-  });
+  function watch(baseFetch) {
+    return watchSession({
+      fetch: baseFetch,
+      onRefused: () => {
+        const { cacheKey } = session.getState();
+        if (cacheKey !== null) {
+          cacheStore.removeEntry({ cacheKey });
+        }
+      },
+      onSessionEnded: () => tokenStore.clear(),
+    });
+  }
+  const watchedFetch = watch(fetch);
 
   const coreAuth = createCoreAuth({
     apiBase,
@@ -289,6 +295,8 @@ function createAppAuth({
     signInWithSheet: async () => completeSignIn(await signInWithSheet({ apiBase, authApi, shell })),
     signOut,
     start,
+    // The streaming fetch blocks call through (the host's streamFetch).
+    streamFetch: watch(streamFetch),
     subscribe,
     tokenStore,
     unlock,
