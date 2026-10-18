@@ -19,6 +19,7 @@ export { default as Avatar } from './blocks/Avatar/Avatar.js';
 export { default as Box } from './blocks/Box/Box.js';
 export { default as Button } from './blocks/Button/Button.js';
 export { default as Card } from './blocks/Card/Card.js';
+export { default as ChipSelector } from './blocks/ChipSelector/ChipSelector.js';
 export { default as DateSelector } from './blocks/DateSelector/DateSelector.js';
 export { default as Divider } from './blocks/Divider/Divider.js';
 export { default as Empty } from './blocks/Empty/Empty.js';

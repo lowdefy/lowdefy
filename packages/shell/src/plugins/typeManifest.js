@@ -252,6 +252,10 @@ const typeManifest = {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
+    ChipSelector: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
     DateSelector: {
       package: '@lowdefy/blocks-native',
       version: 6,
