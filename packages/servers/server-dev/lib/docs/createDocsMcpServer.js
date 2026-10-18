@@ -20,6 +20,7 @@ import { validateJourneyUser } from '@lowdefy/node-utils';
 
 import checkpointToMocks from './checkpointToMocks.js';
 import createConfigCheckpoint from './createConfigCheckpoint.js';
+import deviceAction from './device/deviceAction.js';
 import { subscribe as subscribeToDevEvents } from './devEventBus.js';
 import evalOperator from './evalOperator.js';
 import findConfig from './findConfig.js';
@@ -47,6 +48,7 @@ import runEndpoint from './runEndpoint.js';
 import runJourney from './runJourney.js';
 import runJourneyAsUsers from './runJourneyAsUsers.js';
 import selectExercised from './selectExercised.js';
+import runDeviceJourney from './device/runDeviceJourney.js';
 import runRequest from './runRequest.js';
 import snapshotState from './snapshotState.js';
 import { listStateCheckpoints } from './checkpointStore.js';
@@ -54,6 +56,7 @@ import createLogger from '../server/log/createLogger.js';
 import lowdefyConfig from '../build/config.js';
 import devToolDefinitions, { INSTRUCTIONS } from './devToolDefinitions.js';
 import scaffoldPage from './scaffoldPage.js';
+import screenshotDevice from './device/screenshotDevice.js';
 import screenshotPage from './screenshotPage.js';
 import searchDocs from './searchDocs.js';
 import searchIcons from './searchIcons.js';
@@ -80,6 +83,67 @@ function textResult(value) {
 
 function notFoundResult(message) {
   return { content: [{ type: 'text', text: message }], isError: true };
+}
+
+// A screenshot result (screenshotPage, or screenshotDevice for a phone) as MCP
+// content. The final capture shows the page where the steps (or the failing
+// step) left it; the images of `screenshot` steps follow it in step order, named
+// in the JSON. A phone's capture also says how it was taken.
+function imageResult(result) {
+  if (result.error) {
+    return notFoundResult(result.error);
+  }
+  const image = { type: 'image', data: result.data, mimeType: result.mimeType };
+  const fromDevice = !type.isUndefined(result.device);
+  if (!fromDevice && !result.failure && result.screenshots.length === 0) {
+    return { content: [image] };
+  }
+  const summary = { passed: !result.failure, failure: result.failure };
+  if (fromDevice) {
+    summary.device = result.device;
+    summary.capture = result.capture;
+    if (!type.isUndefined(result.note)) {
+      summary.note = result.note;
+    }
+  }
+  if (result.screenshots.length > 0) {
+    summary.screenshots = result.screenshots.map(({ name }) => ({ name }));
+  }
+  return {
+    content: [
+      { type: 'text', text: JSON.stringify(summary, null, 2) },
+      image,
+      ...result.screenshots.map(({ data, mimeType }) => ({ type: 'image', data, mimeType })),
+    ],
+  };
+}
+
+// A journey result's PNGs travel as image content blocks (the shape
+// lowdefy_screenshot_page returns) so an MCP client renders them; the JSON keeps
+// only their names.
+function journeyResult({ summary, screenshots }) {
+  return {
+    content: [
+      { type: 'text', text: JSON.stringify(summary, null, 2) },
+      ...screenshots.map(({ data, mimeType }) => ({ type: 'image', data, mimeType })),
+    ],
+  };
+}
+
+// The params a tool takes for the headless browser mean nothing on a phone:
+// named back to the agent rather than silently dropped.
+function deviceParamsError({ tool, params, names }) {
+  const given = names.filter((name) => !type.isNone(params[name]));
+  if (given.length === 0) {
+    return null;
+  }
+  return notFoundResult(
+    `${tool} with device acts on the phone as it is: ${given.join(', ')} ${
+      given.length === 1 ? 'applies' : 'apply'
+    } to the headless browser only. Leave ${
+      given.length === 1 ? 'it' : 'them'
+    } out, or leave device out.`
+  );
 }
 
 function createDocsMcpServer({ origin, honoContext, version } = {}) {
@@ -130,8 +194,26 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
     });
   }
 
-  registerDevTool('lowdefy_inspect_state', async ({ pageId, pathParams, source, user, data }) => {
-    const result = await inspectState({ origin, pageId, pathParams, source, user, data });
+  registerDevTool(
+    'lowdefy_inspect_state',
+    async ({ pageId, pathParams, source, user, data, device }) => {
+      const result = await inspectState({ origin, pageId, pathParams, source, user, data, device });
+      if (result.error) {
+        return notFoundResult(result.error);
+      }
+      return textResult(result);
+    }
+  );
+
+  registerDevTool('lowdefy_device', async ({ action, platform, device, inject }) => {
+    const result = await deviceAction({
+      action,
+      platform,
+      device,
+      inject,
+      origin,
+      log: (message) => logger.info({ event: 'lowdefy_device' }, message),
+    });
     if (result.error) {
       return notFoundResult(result.error);
     }
@@ -184,7 +266,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
 
   registerDevTool(
     'lowdefy_snapshot_state',
-    async ({ pageId, pathParams, name, notes, source, overwrite }) => {
+    async ({ pageId, pathParams, name, notes, source, overwrite, device }) => {
       const result = await snapshotState({
         origin,
         pageId,
@@ -193,6 +275,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
         notes,
         source,
         overwrite,
+        device,
       });
       if (result.error) {
         return notFoundResult(result.error);
@@ -201,8 +284,8 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
     }
   );
 
-  registerDevTool('lowdefy_load_state', async ({ name, mode, user, data }) => {
-    const result = await loadState({ origin, name, mode, user, data });
+  registerDevTool('lowdefy_load_state', async ({ name, mode, user, data, device }) => {
+    const result = await loadState({ origin, name, mode, user, data, device });
     if (result.error) {
       return notFoundResult(result.error);
     }
@@ -272,7 +355,41 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       width,
       height,
       colorScheme,
+      device,
     }) => {
+      if (!type.isNone(device)) {
+        const refused = deviceParamsError({
+          tool: 'lowdefy_screenshot_page',
+          params: {
+            urlQuery,
+            fullPage,
+            clip,
+            scrollX,
+            scrollY,
+            width,
+            height,
+            colorScheme,
+            user,
+            data,
+          },
+          names: [
+            'urlQuery',
+            'fullPage',
+            'clip',
+            'scrollX',
+            'scrollY',
+            'width',
+            'height',
+            'colorScheme',
+            'user',
+            'data',
+          ],
+        });
+        if (refused !== null) {
+          return refused;
+        }
+        return imageResult(await screenshotDevice({ device, pageId, pathParams, steps }));
+      }
       if (!origin) {
         return notFoundResult('Screenshot unavailable: server origin unknown for this transport.');
       }
@@ -292,33 +409,50 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
         height,
         colorScheme,
       });
-      if (result.error) {
-        return notFoundResult(result.error);
-      }
-      const image = { type: 'image', data: result.data, mimeType: result.mimeType };
-      if (!result.failure && result.screenshots.length === 0) {
-        return { content: [image] };
-      }
-      // The final capture shows the page where the steps (or the failing step)
-      // left it; the images of `screenshot` steps follow it in step order, named
-      // in the JSON.
-      const summary = { passed: !result.failure, failure: result.failure };
-      if (result.screenshots.length > 0) {
-        summary.screenshots = result.screenshots.map(({ name }) => ({ name }));
-      }
-      return {
-        content: [
-          { type: 'text', text: JSON.stringify(summary, null, 2) },
-          image,
-          ...result.screenshots.map(({ data, mimeType }) => ({ type: 'image', data, mimeType })),
-        ],
-      };
+      return imageResult(result);
     }
   );
 
   registerDevTool(
     'lowdefy_run_journey',
-    async ({ pageId, pathParams, steps, user, urlQuery, state, timeout, data, exercised }) => {
+    async ({
+      pageId,
+      pathParams,
+      steps,
+      user,
+      urlQuery,
+      state,
+      timeout,
+      data,
+      exercised,
+      device,
+    }) => {
+      if (!type.isNone(device)) {
+        const refused = deviceParamsError({
+          tool: 'lowdefy_run_journey',
+          params: { urlQuery, user, data, exercised },
+          names: ['urlQuery', 'user', 'data', 'exercised'],
+        });
+        if (refused !== null) {
+          return refused;
+        }
+        const result = await runDeviceJourney({
+          device,
+          pageId,
+          pathParams,
+          steps,
+          stepTimeout: timeout,
+          state,
+        });
+        if (result.error) {
+          return notFoundResult(result.error);
+        }
+        const { screenshots, ...rest } = result;
+        return journeyResult({
+          summary: { ...rest, screenshots: screenshots.map(({ name }) => ({ name })) },
+          screenshots,
+        });
+      }
       if (!origin) {
         return notFoundResult('Journey unavailable: server origin unknown for this transport.');
       }
@@ -374,20 +508,13 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       if (result.error) {
         return notFoundResult(result.error);
       }
-      // The PNGs travel as image content blocks (the shape lowdefy_screenshot_page
-      // returns) so an MCP client renders them; the JSON keeps only their names.
       const { screenshots, exercised: resultExercised, ...rest } = result;
       const summary = {
         ...rest,
         ...selectExercised({ exercised: resultExercised, selection: exercised }),
         screenshots: screenshots.map(({ name }) => ({ name })),
       };
-      return {
-        content: [
-          { type: 'text', text: JSON.stringify(summary, null, 2) },
-          ...screenshots.map(({ data, mimeType }) => ({ type: 'image', data, mimeType })),
-        ],
-      };
+      return journeyResult({ summary, screenshots });
     }
   );
 
@@ -401,7 +528,9 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
 
   registerDevTool('lowdefy_overview', () => textResult(getOverview()));
 
-  registerDevTool('lowdefy_list_types', ({ kind }) => textResult(listTypes({ kind })));
+  registerDevTool('lowdefy_list_types', ({ kind, target }) =>
+    textResult(listTypes({ kind, target }))
+  );
 
   registerDevTool('lowdefy_list_plugins', () => textResult(listPlugins()));
 

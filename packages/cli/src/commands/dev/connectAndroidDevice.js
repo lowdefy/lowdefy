@@ -14,15 +14,23 @@
   limitations under the License.
 */
 
-import createDevAppLink from './createDevAppLink.js';
-import findAndroidDevice from './findAndroidDevice.js';
+import { spawn } from 'child_process';
+
+import { createDevAppLink, findAndroidDevice } from '@lowdefy/node-utils';
+
 import runDeviceTool from './runDeviceTool.js';
 
 // adb reverse makes the device's localhost:<port> the Mac's, for an emulator
 // and a USB phone alike, so Lowdefy Dev reaches the dev server on localhost
 // without the network and without pairing.
 async function connectAndroidDevice({ context, device, ready }) {
-  const serial = await findAndroidDevice({ context, device });
+  const serial = await findAndroidDevice({
+    adb: device.adb,
+    emulator: device.emulator,
+    log: (message) => context.logger.info(message),
+    run: runDeviceTool,
+    spawn,
+  });
   await runDeviceTool({
     command: device.adb,
     args: ['-s', serial, 'install', '-r', device.appPath],

@@ -29,6 +29,7 @@ import checkStepReferences from './checkStepReferences.js';
 import createLeftOriginError from './createLeftOriginError.js';
 import { buildPageUrl } from './getBrowser.js';
 import hasNoEffect from './observe/hasNoEffect.js';
+import isDeepEqual from './isDeepEqual.js';
 import isPageReady from './isPageReady.js';
 import JourneyStepError from './JourneyStepError.js';
 import nextJourneySequence from './nextJourneySequence.js';
@@ -36,24 +37,6 @@ import openJourneyEmail from './openJourneyEmail.js';
 import readJourneyEmailMatch from './readJourneyEmailMatch.js';
 import readPagePath from './readPagePath.js';
 import { shownTextSelector } from './shownTextEngine.js';
-
-// Structural equality over values that have already been through the JSON
-// round-trip getState performs in the page (no undefined, no Dates, no
-// functions) — so key order is the only thing that must not matter.
-function isDeepEqual(a, b) {
-  if (a === b) {
-    return true;
-  }
-  if (type.isArray(a) && type.isArray(b)) {
-    return a.length === b.length && a.every((item, index) => isDeepEqual(item, b[index]));
-  }
-  if (type.isObject(a) && type.isObject(b)) {
-    const keysA = Object.keys(a);
-    const keysB = Object.keys(b);
-    return keysA.length === keysB.length && keysA.every((key) => isDeepEqual(a[key], b[key]));
-  }
-  return false;
-}
 
 // Playwright colours its call log with ANSI escapes; the result is read by an
 // agent as JSON, where they are noise.

@@ -73,7 +73,7 @@ function openPolledTab({ origin, readReloadStamp, now }) {
  *
  * @param {Object} params
  * @param {string} [params.tabId] The tab's id from an earlier poll.
- * @param {Object} params.origin `{ source, automated }` of the tab (routes/reload.js tabOrigin).
+ * @param {Object} params.origin `{ source, automated, device }` of the tab (routes/reload.js tabOrigin).
  * @param {() => string|null} params.readReloadStamp The content of build/reload.
  * @param {number} [params.now]
  */

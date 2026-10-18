@@ -18,6 +18,7 @@ import { logClientError, parseRequestBody } from '@lowdefy/api';
 
 import clientErrorStore from '../../lib/docs/clientErrorStore.js';
 import errorRecordingStamp from '../../lib/server/recording/errorRecordingStamp.js';
+import getRequestSurface from '../lib/getRequestSurface.js';
 import createSameOriginGuard from '../middleware/createSameOriginGuard.js';
 
 // No Origin is allowed in dev: a phone shell (a simulator, a USB phone through
@@ -44,13 +45,17 @@ async function clientErrorHandler(c) {
 
   // Feed the agent-facing feedback loop (GET /lowdefy-docs/build-status) with a
   // serializable summary — not the full error object, which may carry
-  // non-serializable `received` values.
+  // non-serializable `received` values. `surface` tells a phone shell's errors
+  // ('mobile', with its shell version) from a browser's ('web').
+  const surface = getRequestSurface(c);
   clientErrorStore.push({
     timestamp: new Date().toISOString(),
     name: error?.name ?? 'Error',
     message: error?.message ?? null,
     source: response.source ?? null,
     config: response.config ?? null,
+    surface,
+    ...(surface === 'mobile' ? { shell: c.req.header('x-lowdefy-shell') } : {}),
     recording: errorRecordingStamp(context.recording),
   });
 

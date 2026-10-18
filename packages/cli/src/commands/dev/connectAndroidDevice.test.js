@@ -14,12 +14,15 @@
   limitations under the License.
 */
 
+import * as childProcess from 'child_process';
+
 import { jest } from '@jest/globals';
 
 const mockRunDeviceTool = jest.fn();
 const mockSpawn = jest.fn(() => ({ unref: jest.fn() }));
 jest.unstable_mockModule('./runDeviceTool.js', () => ({ default: mockRunDeviceTool }));
-jest.unstable_mockModule('child_process', () => ({ spawn: mockSpawn }));
+// @lowdefy/node-utils imports child_process too, so the rest of it stays real.
+jest.unstable_mockModule('child_process', () => ({ ...childProcess, spawn: mockSpawn }));
 
 const { default: connectAndroidDevice } = await import('./connectAndroidDevice.js');
 

@@ -14,22 +14,9 @@
   limitations under the License.
 */
 
-import { execFile } from 'child_process';
-import { promisify } from 'util';
+import { runDeviceTool } from '@lowdefy/node-utils';
 
-const execFileAsync = promisify(execFile);
-
-// Runs a device tool (xcrun, adb, emulator, open) and returns its stdout. A
-// failing command throws with the tool's own message; the error's cause keeps
-// the spawn error, whose code is ENOENT when the tool is not installed.
-async function runDeviceTool({ command, args }) {
-  try {
-    const { stdout } = await execFileAsync(command, args, { maxBuffer: 16 * 1024 * 1024 });
-    return stdout;
-  } catch (error) {
-    const message = (error.stderr ?? '').trim() || error.message;
-    throw new Error(`${command} ${args.join(' ')} failed: ${message}`, { cause: error });
-  }
-}
-
+// The runner every device step of `lowdefy dev` uses (and passes to the shared
+// device helpers in @lowdefy/node-utils), in one module so tests stand in for
+// all of them at once.
 export default runDeviceTool;

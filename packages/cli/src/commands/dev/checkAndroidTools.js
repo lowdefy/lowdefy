@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import findAndroidTool from './findAndroidTool.js';
+import { findAndroidTool } from '@lowdefy/node-utils';
+
 import runDeviceTool from './runDeviceTool.js';
 
 const INSTALL_ADB =

@@ -19,6 +19,7 @@ import devPassiveHeader from '@lowdefy/node-utils/devPassiveHeader.js';
 
 import answerEval from './answerEval.js';
 import answerInspect from './answerInspect.js';
+import answerLoadState from './answerLoadState.js';
 import DEV_CLIENT_MARKER from './devClientMarker.js';
 import getShownPage from './getShownPage.js';
 import readEventStream from './readEventStream.js';
@@ -29,6 +30,19 @@ const PAGE_CHECK_MS = 500;
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// The phone's platform and app id ride on every registration, so the dev server's device tools
+// know a simulator from an Android device (server-dev src/routes/reload.js).
+function deviceQuery(device) {
+  const params = new URLSearchParams({ client: DEV_CLIENT_MARKER });
+  if (type.isString(device?.platform)) {
+    params.set('platform', device.platform);
+  }
+  if (type.isString(device?.app)) {
+    params.set('app', device.app);
+  }
+  return params.toString();
 }
 
 // The instance a request names (the dev server picks it), else the one on screen.
@@ -52,12 +66,16 @@ function requestedPage({ request, shownPage }) {
  *   stream cannot be read (no `tab` event within 5 s), it polls /api/reload?transport=poll every
  *   second instead.
  * - It posts the page instance on screen to /api/dev-inspect/page whenever it changes.
+ * - It names the phone's platform and app id (`device`) when it registers, for the device tools.
  * - `reload` runs onReload. `inspect-request` and `eval-request` are answered on /api/dev-inspect
- *   with the payloads a browser tab posts; `step-request` runs a journey step (onStep), and
+ *   with the payloads a browser tab posts; `load-state-request` sets a state checkpoint on the page
+ *   (`{ requestId, state, verify }`); `step-request` runs a journey step (onStep), and
  *   `inject` fakes the next device result (onInject: `{ requestId, inject: { kind, value, name } }`).
  *
  * @param {Object} params
  * @param {string} params.apiBase The dev server's URL.
+ * @param {{ platform: string, app: string }} [params.device] The phone's platform ('ios' or
+ *   'android') and app id (bundle id or package).
  * @param {Function} params.fetch The Fetch API for posts and polls (pairing and shell headers).
  * @param {Function} params.streamFetch A Fetch API whose response body streams (expo/fetch), with
  *   the same headers.
@@ -70,6 +88,7 @@ function requestedPage({ request, shownPage }) {
  */
 function createDevTabClient({
   apiBase,
+  device,
   fetch,
   getLowdefy,
   log = () => undefined,
@@ -120,6 +139,9 @@ function createDevTabClient({
     if (event === 'eval-request') {
       return answerEval({ expression: request.expression, lowdefy, page });
     }
+    if (event === 'load-state-request') {
+      return answerLoadState({ lowdefy, page, state: request.state, verify: request.verify });
+    }
     if (event === 'inject') {
       return onInject({ injection: request.inject });
     }
@@ -152,6 +174,7 @@ function createDevTabClient({
         return;
       case 'inspect-request':
       case 'eval-request':
+      case 'load-state-request':
       case 'step-request':
       case 'inject':
         await answer({ event, data });
@@ -178,7 +201,7 @@ function createDevTabClient({
       if (!received) controller.abort();
     }, FIRST_EVENT_MS);
     try {
-      const res = await streamFetch(`${apiBase}/api/reload?client=${DEV_CLIENT_MARKER}`, {
+      const res = await streamFetch(`${apiBase}/api/reload?${deviceQuery(device)}`, {
         headers: { Accept: 'text/event-stream' },
         signal: controller.signal,
       });
@@ -209,7 +232,7 @@ function createDevTabClient({
       const tabQuery = tabId === null ? '' : `&tabId=${encodeURIComponent(tabId)}`;
       try {
         const res = await fetch(
-          `${apiBase}/api/reload?transport=poll&client=${DEV_CLIENT_MARKER}${tabQuery}`,
+          `${apiBase}/api/reload?transport=poll&${deviceQuery(device)}${tabQuery}`,
           { headers: { [devPassiveHeader]: '1' } }
         );
         if (res.ok) {

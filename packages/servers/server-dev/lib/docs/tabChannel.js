@@ -36,7 +36,13 @@ let renderSequence = 0;
 // headless tool) is automated: it is listed, so the hub keeps
 // the server alive while it runs, but findPageInstance never picks it for an
 // agent's or developer's live-tab request.
-function registerTab({ id, send, source = 'dev', automated = false }) {
+//
+// A phone shell (Lowdefy Dev) registers with `device`: { shell, platform, app,
+// paired } - its shell version, 'ios' or 'android', its bundle id, and whether
+// it came in over the network with the pairing token rather than on this
+// computer's localhost (a simulator, or a USB phone through adb reverse). A
+// browser tab has none. The device tools address a phone by its tab id.
+function registerTab({ id, send, source = 'dev', automated = false, device = null }) {
   if (type.isNone(id) || !type.isString(id)) {
     throw new Error(`registerTab requires an "id" string. Received ${JSON.stringify(id)}.`);
   }
@@ -50,8 +56,13 @@ function registerTab({ id, send, source = 'dev', automated = false }) {
     send,
     source,
     automated,
+    device,
     connectedAt: new Date(),
   });
+}
+
+function getTab({ id }) {
+  return tabs.get(id);
 }
 
 // Records the page instance a tab shows, { pageId, pathParams, instanceKey }, and keeps it among
@@ -82,13 +93,14 @@ function unregisterTab({ id }) {
 }
 
 function listTabs() {
-  return Array.from(tabs.values()).map(({ id, page, source, automated, connectedAt }) => ({
+  return Array.from(tabs.values()).map(({ id, page, source, automated, device, connectedAt }) => ({
     id,
     pageId: page?.pageId ?? null,
     pathParams: page?.pathParams ?? null,
     instanceKey: page?.instanceKey ?? null,
     source,
     automated,
+    device,
     connectedAt,
   }));
 }
@@ -154,6 +166,46 @@ function findPageInstance({ pageId, pathParams } = {}) {
   return instance;
 }
 
+// The instance a request to one named tab reads: the one it shows, or with a
+// pageId, that page's instance on screen there or else the most recently
+// rendered one it still holds. A request naming no page and a tab showing none
+// yet (an injection, a step) reads no instance: the tab answers from its own
+// screen. Returns { instance } or { error }.
+function findTabInstance({ tabId, pageId, pathParams }) {
+  const tab = tabs.get(tabId);
+  if (type.isNone(tab)) {
+    return {
+      error: `No tab "${tabId}" is connected. lowdefy_device with action "list" names the connected phones.`,
+    };
+  }
+  if (type.isNone(pageId)) {
+    return { instance: { tab, pageId: null, pathParams: null, instanceKey: null, ...tab.page } };
+  }
+  if (!type.isNone(tab.page) && instanceMatches({ instance: tab.page, pageId, pathParams })) {
+    return { instance: { tab, ...tab.page } };
+  }
+  let found;
+  tab.rendered.forEach((instance) => {
+    if (!instanceMatches({ instance, pageId, pathParams })) {
+      return;
+    }
+    if (type.isNone(found) || instance.sequence > found.sequence) {
+      found = instance;
+    }
+  });
+  if (type.isNone(found)) {
+    const shows = type.isNone(tab.page) ? 'no page yet' : `page "${tab.page.pageId}"`;
+    return {
+      error: `Tab "${tabId}" has not shown ${describeRequestedPage({
+        pageId,
+        pathParams,
+      })}; it shows ${shows}. Open the page on the device first.`,
+    };
+  }
+  const { sequence, ...instance } = found;
+  return { instance: { tab, ...instance } };
+}
+
 function describeRequestedPage({ pageId, pathParams }) {
   if (type.isNone(pageId)) {
     return 'any page';
@@ -164,27 +216,39 @@ function describeRequestedPage({ pageId, pathParams }) {
   return `page "${pageId}" with pathParams ${JSON.stringify(pathParams)}`;
 }
 
-function requestFromTab({ pageId, pathParams, event, payload = {}, timeout = 5000 }) {
+// Sends one request to a tab and resolves with what it answers. With tabId the
+// request goes to that tab (findTabInstance), else to the tab findPageInstance
+// picks for the page.
+function requestFromTab({ tabId, pageId, pathParams, event, payload = {}, timeout = 5000 }) {
   if (type.isNone(event) || !type.isString(event)) {
     throw new Error(
       `requestFromTab requires an "event" string. Received ${JSON.stringify(event)}.`
     );
   }
-  const instance = findPageInstance({ pageId, pathParams });
-  if (type.isNone(instance)) {
-    return Promise.resolve({
-      error: `No browser tab connected on ${describeRequestedPage({
-        pageId,
-        pathParams,
-      })}. Ask the developer to open the page, or use source: "headless".`,
-    });
+  let instance;
+  if (type.isNone(tabId)) {
+    instance = findPageInstance({ pageId, pathParams });
+    if (type.isNone(instance)) {
+      return Promise.resolve({
+        error: `No browser tab connected on ${describeRequestedPage({
+          pageId,
+          pathParams,
+        })}. Ask the developer to open the page, or use source: "headless".`,
+      });
+    }
+  } else {
+    const found = findTabInstance({ tabId, pageId, pathParams });
+    if (!type.isUndefined(found.error)) {
+      return Promise.resolve({ error: found.error });
+    }
+    instance = found.instance;
   }
 
   const requestId = randomUUID();
   return new Promise((resolve) => {
     const timer = setTimeout(() => {
       pendingRequests.delete(requestId);
-      resolve({ error: `Timed out waiting ${timeout}ms for a response from the browser tab.` });
+      resolve({ error: `Timed out waiting ${timeout}ms for a response from the tab.` });
     }, timeout);
 
     pendingRequests.set(requestId, (result) => {
@@ -216,6 +280,7 @@ function resolveTabRequest({ requestId, result }) {
 
 export {
   findPageInstance,
+  getTab,
   listTabs,
   registerTab,
   requestFromTab,

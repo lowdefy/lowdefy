@@ -16,17 +16,21 @@
 
 import acquireMachineSlot from './acquireMachineSlot.js';
 import bindCredentialScrub from './bindCredentialScrub.js';
+import bootIosSimulator from './devices/bootIosSimulator.js';
 import checkEnvironmentGuards from './checkEnvironmentGuards.js';
 import cleanDirectory from './cleanDirectory.js';
 import collectEnvironmentGuards from './collectEnvironmentGuards.js';
 import compareProcessStartTimes from './compareProcessStartTimes.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
 import createConnectPublic from './createConnectPublic.js';
+import createDevAppLink from './devices/createDevAppLink.js';
 import createClientAddressResolver from './createClientAddressResolver.js';
 import createLookupPublicAddress from './createLookupPublicAddress.js';
 import createSecretScrubber from './createSecretScrubber.js';
 import devPassiveHeader from './devPassiveHeader.js';
 import dataSetNamePattern from './dataSetNamePattern.js';
+import findAndroidDevice from './devices/findAndroidDevice.js';
+import findAndroidTool from './devices/findAndroidTool.js';
 import findAvailablePort from './findAvailablePort.js';
 import findPnpmWorkspaceRoot from './findPnpmWorkspaceRoot.js';
 import findWorkspacePackages from './findWorkspacePackages.js';
@@ -52,6 +56,7 @@ import parseIpRange from './parseIpRange.js';
 import parseSince from './parseSince.js';
 import parsePsStartTime from './parsePsStartTime.js';
 import pluginChecksNeedRebuild from './pluginChecksNeedRebuild.js';
+import readDevAppPath from './devices/readDevAppPath.js';
 import readDevInstance from './readDevInstance.js';
 import readDevInstanceAsync from './readDevInstanceAsync.js';
 import readDevInstanceRecord from './readDevInstanceRecord.js';
@@ -62,6 +67,7 @@ import listRecordingFiles, { RECORDING_SOURCES } from './recordings/listRecordin
 import readRecordings from './recordings/readRecordings.js';
 import runInCredentialScope from './runInCredentialScope.js';
 import scrubCredentials from './scrubCredentials.js';
+import runDeviceTool from './devices/runDeviceTool.js';
 import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
@@ -101,9 +107,11 @@ import validateTraceRecord from './journeyTrace/validateTraceRecord.js';
 export {
   acquireMachineSlot,
   bindCredentialScrub,
+  bootIosSimulator,
   buildSessionReport,
   checkEnvironmentGuards,
   cleanDirectory,
+  createDevAppLink,
   collectEnvironmentGuards,
   compareProcessStartTimes,
   compileSegments,
@@ -117,6 +125,8 @@ export {
   devPassiveHeader,
   dataSetNamePattern,
   failurePathKey,
+  findAndroidDevice,
+  findAndroidTool,
   findAvailablePort,
   findPlaceholderStep,
   findPnpmWorkspaceRoot,
@@ -157,6 +167,7 @@ export {
   pluginChecksNeedRebuild,
   parseTraceLines,
   profileProduction,
+  readDevAppPath,
   readDevInstance,
   readDevInstanceAsync,
   readDevInstanceRecord,
@@ -167,6 +178,7 @@ export {
   RECORDING_SOURCES,
   runInCredentialScope,
   scrubCredentials,
+  runDeviceTool,
   spawnProcess,
   stepIdentity,
   summariseSessions,

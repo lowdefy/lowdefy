@@ -68,6 +68,10 @@ function DevTabClient({ injections, kv, logs, onApp, rootRef }) {
     });
     const client = createDevTabClient({
       apiBase: session.apiBase,
+      device: {
+        platform: Platform.OS,
+        app: Platform.OS === 'ios' ? shell.ios?.bundleIdentifier : shell.android?.package,
+      },
       fetch,
       getLowdefy,
       log: (message) => logs.add('info', message),

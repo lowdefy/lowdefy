@@ -14,14 +14,17 @@
   limitations under the License.
 */
 
-import bootIosSimulator from './bootIosSimulator.js';
-import createDevAppLink from './createDevAppLink.js';
+import { bootIosSimulator, createDevAppLink } from '@lowdefy/node-utils';
+
 import runDeviceTool from './runDeviceTool.js';
 
 // A simulator shares the Mac's network, so Lowdefy Dev reaches the dev server
 // on localhost and needs no pairing.
 async function connectIosSimulator({ context, device, ready }) {
-  const simulator = await bootIosSimulator({ context });
+  const simulator = await bootIosSimulator({
+    log: (message) => context.logger.info(message),
+    run: runDeviceTool,
+  });
   await runDeviceTool({
     command: 'xcrun',
     args: ['simctl', 'install', simulator.udid, device.appPath],

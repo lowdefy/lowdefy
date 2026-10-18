@@ -44,6 +44,8 @@ Safety: lowdefy_checkpoint snapshots the config files before risky multi-file ch
 
 Visual feedback: developers can press Cmd/Ctrl+/ in the running app to point at elements, draw, and copy annotated feedback to their clipboard, then paste it to you. Pasted annotation blocks start with "Feedback:" and carry the blockId, the resolved config file:line, drawn shapes, and usually an "Annotated screenshot:" file path — READ that image to see exactly what the developer drew. Treat them as precise UI feedback and use lowdefy_inspect_state for the page's live state.
 
+Phones: an app's mobile pages run in Lowdefy Dev on a phone, an iOS simulator or an Android emulator, which joins this dev server as a tab. lowdefy_device with action "list" names each connected phone by its tab id; action "start" opens Lowdefy Dev on a simulator or emulator. Pass that id as device to lowdefy_screenshot_page, lowdefy_run_journey, lowdefy_inspect_state, lowdefy_snapshot_state and lowdefy_load_state to act on the phone instead of the headless browser: steps (click, fill, select, press, wait, screenshot, expect state) run on it by blockId, on the page it shows. lowdefy_device action "inject" fakes the phone's next scan, photo, NFC read, location, permission answer, push or network state. Use lowdefy_list_types with target "mobile" for the blocks and actions a mobile page can use.
+
 State checkpoints (testing): lowdefy_snapshot_state captures a page's live state AND its request/api responses into .lowdefy/state-checkpoints/<name>/ (one file per part; gitignored — checkpoints contain user/session data). lowdefy_load_state puts the app back into that state: headless for your own verification, or registry-only which returns a ?_checkpoint URL the developer can open to manually test the app in that exact state (recorded request data is served automatically). lowdefy_checkpoint_to_mocks converts a checkpoint into e2e mocks.yaml fixtures — use it when asked to write e2e tests.`;
 
 const HAZARDS_NOTE =
@@ -81,6 +83,14 @@ const pathParamsSchema = z
     'Values for the placeholders of a page whose path has them, read by _path_params, e.g. {"space": "support", "ticket_id": "1234"} for path "tickets/{space}/{ticket_id}" (lowdefy_app_map shows each page\'s path). Required to open such a page headless; a missing placeholder is an error naming it.'
   );
 
+// Shared by every tool that can act on a phone instead of the headless browser.
+const deviceSchema = z
+  .string()
+  .optional()
+  .describe(
+    'A phone to act on instead of the headless browser: its tab id from lowdefy_device with action "list". The phone runs the app in Lowdefy Dev (a simulator, an emulator or a real phone) and is used as it is: on the page it shows, with its own signed-in user and the app\'s real database, so user and data do not apply.'
+  );
+
 // Shared by the request and endpoint runners.
 const saveResponseSchema = z
   .boolean()
@@ -102,7 +112,12 @@ const devToolDefinitions = {
       source: z
         .enum(['tab', 'headless'])
         .optional()
-        .describe('Force a source. Default: live tab if connected, else headless.'),
+        .describe(
+          "Force a source. Default: live tab if connected, else headless. With device, the phone's tab."
+        ),
+      device: deviceSchema.describe(
+        "Read a phone's live state: its tab id from lowdefy_device list. The phone must show, or have shown, the page. Never falls back to headless."
+      ),
       user: userSchema,
       data: dataSchema,
     },
@@ -184,17 +199,23 @@ const devToolDefinitions = {
       name: z.string().describe('Checkpoint name (letters, numbers, - and _).'),
       notes: z.string().optional().describe('What this checkpoint captures.'),
       source: z.enum(['tab', 'headless']).optional(),
+      device: deviceSchema.describe(
+        "Snapshot a phone's live page: its tab id from lowdefy_device list."
+      ),
       overwrite: z.boolean().optional(),
     },
   },
 
   lowdefy_load_state: {
     description:
-      "Put the app back into a saved state checkpoint. mode 'headless' (default) verifies the restored state itself; mode 'registry-only' loads the recorded request data into the dev server and returns a ?_checkpoint URL the developer can open to manually test the app in that exact state." +
+      "Put the app back into a saved state checkpoint. mode 'headless' (default) verifies the restored state itself; mode 'registry-only' loads the recorded request data into the dev server and returns a ?_checkpoint URL the developer can open to manually test the app in that exact state. With device, the recorded state is set on the checkpoint's page on that phone (open the page there first), and its recorded request data is served to it." +
       CALLER_NOTE,
     inputSchema: {
       name: z.string().describe('The checkpoint name.'),
       mode: z.enum(['headless', 'registry-only']).optional(),
+      device: deviceSchema.describe(
+        'Load the checkpoint into a phone: its tab id from lowdefy_device list. Leave mode out.'
+      ),
       user: userSchema,
       data: dataSchema,
     },
@@ -231,7 +252,7 @@ const devToolDefinitions = {
 
   lowdefy_build_status: {
     description:
-      'Call after every config edit. Returns the current build status: errors and warnings from the last config build (with source file locations), the page builds (pages: failed lists the pages whose last build failed with their errors, changedSinceBuild the pages changed since they were built, unbuilt how many pages nothing has built since the dev server started), recent browser runtime errors, and recent server errors — request, endpoint, MCP and agent tool failures with their config source. Errors reported under an earlier build come apart under earlierErrors. The dev server rebuilds automatically on file change — edit, then call this with wait: true to see what broke.',
+      'Call after every config edit. Returns the current build status: errors and warnings from the last config build (with source file locations), the page builds (pages: failed lists the pages whose last build failed with their errors, changedSinceBuild the pages changed since they were built, unbuilt how many pages nothing has built since the dev server started), recent client runtime errors (from browsers, surface "web", and from phones in Lowdefy Dev, surface "mobile" with their shell version), and recent server errors — request, endpoint, MCP and agent tool failures with their config source. Errors reported under an earlier build come apart under earlierErrors. The dev server rebuilds automatically on file change — edit, then call this with wait: true to see what broke.',
     inputSchema: {
       wait: z
         .boolean()
@@ -273,10 +294,14 @@ const devToolDefinitions = {
 
   lowdefy_screenshot_page: {
     description:
-      'Screenshot a page of the running dev server (headless Chromium) to visually verify layout and rendering. Returns a PNG image. Set width (and height) to check a narrow or phone layout, e.g. width 390, and colorScheme "dark" to check dark mode. To capture a state beyond the page as it loads — an OPEN Selector / MultipleSelector / AutoComplete / DateSelector (calendar) / Cascader / TreeSelector dropdown, a modal a button opens — pass steps, e.g. [{"open": "status"}]: they run after the page settles and before the capture. Popups antd renders in a portal are included, also with fullPage. Pass urlQuery for a page that reads _url_query, and pathParams for a page whose path has placeholders.' +
+      'Screenshot a page of the running dev server (headless Chromium) to visually verify layout and rendering. Returns a PNG image. Set width (and height) to check a narrow or phone layout, e.g. width 390, and colorScheme "dark" to check dark mode. To capture a state beyond the page as it loads — an OPEN Selector / MultipleSelector / AutoComplete / DateSelector (calendar) / Cascader / TreeSelector dropdown, a modal a button opens — pass steps, e.g. [{"open": "status"}]: they run after the page settles and before the capture. Popups antd renders in a portal are included, also with fullPage. Pass urlQuery for a page that reads _url_query, and pathParams for a page whose path has placeholders. Pass device (a tab id from lowdefy_device list) to capture a phone instead: its whole screen through xcrun simctl on a simulator or adb on an Android device, else Lowdefy Dev\'s own view; its steps run on the phone (click, fill, select, press, wait, screenshot, expect state; no open), and the result names how it was captured.' +
       CALLER_NOTE,
     inputSchema: {
-      pageId: z.string().describe('The page id to screenshot.'),
+      pageId: z
+        .string()
+        .describe(
+          'The page id to screenshot. With device, the page the phone must show; a phone is not navigated.'
+        ),
       pathParams: pathParamsSchema,
       urlQuery: z
         .record(z.any())
@@ -328,6 +353,9 @@ const devToolDefinitions = {
         .describe(
           'The colour scheme the page\'s prefers-color-scheme reports. Default "light". An app that follows the system theme renders dark with "dark"; a darkMode fixed in the app config wins.'
         ),
+      device: deviceSchema.describe(
+        'Capture a phone instead of the headless browser: its tab id from lowdefy_device list. urlQuery, fullPage, clip, scrollX, scrollY, width, height, colorScheme, user and data apply to the headless browser only.'
+      ),
       user: userSchema,
       data: dataSchema,
     },
@@ -342,8 +370,11 @@ const devToolDefinitions = {
       steps: z
         .array(z.record(z.any()))
         .describe(
-          'Ordered steps, one key each: {"click": target} (a target object may add "count": 2 or 3 for that many clicks in quick succession, a double click, before the runner settles) | {"open": target} (open an input\'s dropdown or picker popup - Selector, MultipleSelector, AutoComplete, DateSelector, Cascader... - and wait for it to show, so a following screenshot step captures it) | {"fill": {...target, "value"}} | {"fill": {...target, "fromEmail": {"to", "subject"?, "match"}}} (type text read from the newest email to that address, like the email step, without leaving the page: the first match of the regular expression "match", or its first capture group, e.g. "\\\\b\\\\d{6}\\\\b" for a one-time sign-in code) | {"select": {...target, "value"}} (option by exact text: a dropdown option, a radio, button or segmented option in the block, or a checkbox option in the block, which it ticks and never unticks) | {"press": "Enter" | "Mod+k"} (Mod is Meta/Control per platform) | {"back": true} (the browser Back button) | {"goto": pageId | {"pageId", "pathParams", "urlQuery"}} (load an app page like a typed URL, its path built from pathParams, one string per placeholder of the page\'s path; a protected page may redirect to sign-in) | {"email": {"to", "subject"?}} (open the newest email to that address, subject containing the text, that arrived during this journey, waiting for it if needed; opening it again opens the same message; then click its links by text, e.g. {"click": {"text": "Verify email address"}}; needs the dev server started with LOWDEFY_DEV_SMTP_PORT and the app\'s SMTP connection pointed at 127.0.0.1 on that port) | {"as": name} (switch to another person, each with their own browser and cookies; the journey starts as "main", and a new name opens the journey\'s page) | {"wait": {"ms": n} | {"request": requestId} (a call started since the last interaction, or since the page opened, has finished) | {"state": path}} | {"screenshot": name?} | {"expect": {"state": {"path", "equals"}} | {"visible": target} | {"hidden": target} (nothing the target names is visible; passes at once when nothing matches yet, so pair it with something that must be present first) | {"text": {...target, "contains"}} | {"url": {"contains"}} | {"title": {"equals"} | {"contains"}} | {"calls": {"request", "pageId"?, "count"} | {"endpoint", "count"}} | {"error": text} | {"effect": true}} (title is the document title; calls compares, once the page settles, how many times this actor called the request - on pageId, default the current page - or the endpoint since the journey started; error must directly follow an interaction step and claims the app errors it raised whose message contains text, with the failed action that reported them; effect must directly follow an interaction step and fails when that interaction did nothing: no event ran, the page did not change, no request or endpoint was called and the URL stayed the same, which proves a dead click). A target is a blockId string, or an object of {"blockId", "row" (zero-based grid row as displayed), "column" (grid col-id), "text" (exact text of the interactive control to use), "containing" (text the element shows, e.g. the email a list row shows; a click on it reaches the row\'s click handler), "nth" (zero-based pick among several matches; a click, open, fill or select whose text or containing matches more than one visible element fails without it)}; "text" without "blockId" searches the whole page, which is how confirm dialog / modal footer buttons, dropdown menu items and email links are reached. fill, select and expect.text need a blockId. Every blockId, requestId, endpoint and goto pageId a step names is checked against the build before it runs (and an "as" name against the data set\'s users on a data set run): an unknown one fails the step and names it. fill, select and expect.state take an optional "from": "recorded" (the value came from a recorded trace) or "shape" (value: null, a placeholder a trace could not hold); a journey holding a from: shape placeholder is refused until it is filled in. Each step gets 5s, or the journey\'s timeout: every wait for something to happen (a control to be actionable, an expect to match, a request, state or email to arrive) is bounded by it; page opens get at least 15s; after an interaction the runner waits at most 5s for the page\'s pending events and requests to settle, without failing; wait.ms is exact. lowdefy_get_schema with kind "journey-step" returns this grammar as a JSON schema, with examples of every step.'
+          'Ordered steps, one key each: {"click": target} (a target object may add "count": 2 or 3 for that many clicks in quick succession, a double click, before the runner settles) | {"open": target} (open an input\'s dropdown or picker popup - Selector, MultipleSelector, AutoComplete, DateSelector, Cascader... - and wait for it to show, so a following screenshot step captures it) | {"fill": {...target, "value"}} | {"fill": {...target, "fromEmail": {"to", "subject"?, "match"}}} (type text read from the newest email to that address, like the email step, without leaving the page: the first match of the regular expression "match", or its first capture group, e.g. "\\\\b\\\\d{6}\\\\b" for a one-time sign-in code) | {"select": {...target, "value"}} (option by exact text: a dropdown option, a radio, button or segmented option in the block, or a checkbox option in the block, which it ticks and never unticks) | {"press": "Enter" | "Mod+k"} (Mod is Meta/Control per platform) | {"back": true} (the browser Back button) | {"goto": pageId | {"pageId", "pathParams", "urlQuery"}} (load an app page like a typed URL, its path built from pathParams, one string per placeholder of the page\'s path; a protected page may redirect to sign-in) | {"email": {"to", "subject"?}} (open the newest email to that address, subject containing the text, that arrived during this journey, waiting for it if needed; opening it again opens the same message; then click its links by text, e.g. {"click": {"text": "Verify email address"}}; needs the dev server started with LOWDEFY_DEV_SMTP_PORT and the app\'s SMTP connection pointed at 127.0.0.1 on that port) | {"as": name} (switch to another person, each with their own browser and cookies; the journey starts as "main", and a new name opens the journey\'s page) | {"wait": {"ms": n} | {"request": requestId} (a call started since the last interaction, or since the page opened, has finished) | {"state": path}} | {"screenshot": name?} | {"expect": {"state": {"path", "equals"}} | {"visible": target} | {"hidden": target} (nothing the target names is visible; passes at once when nothing matches yet, so pair it with something that must be present first) | {"text": {...target, "contains"}} | {"url": {"contains"}} | {"title": {"equals"} | {"contains"}} | {"calls": {"request", "pageId"?, "count"} | {"endpoint", "count"}} | {"error": text} | {"effect": true}} (title is the document title; calls compares, once the page settles, how many times this actor called the request - on pageId, default the current page - or the endpoint since the journey started; error must directly follow an interaction step and claims the app errors it raised whose message contains text, with the failed action that reported them; effect must directly follow an interaction step and fails when that interaction did nothing: no event ran, the page did not change, no request or endpoint was called and the URL stayed the same, which proves a dead click). A target is a blockId string, or an object of {"blockId", "row" (zero-based grid row as displayed), "column" (grid col-id), "text" (exact text of the interactive control to use), "containing" (text the element shows, e.g. the email a list row shows; a click on it reaches the row\'s click handler), "nth" (zero-based pick among several matches; a click, open, fill or select whose text or containing matches more than one visible element fails without it)}; "text" without "blockId" searches the whole page, which is how confirm dialog / modal footer buttons, dropdown menu items and email links are reached. fill, select and expect.text need a blockId. Every blockId, requestId, endpoint and goto pageId a step names is checked against the build before it runs (and an "as" name against the data set\'s users on a data set run): an unknown one fails the step and names it. fill, select and expect.state take an optional "from": "recorded" (the value came from a recorded trace) or "shape" (value: null, a placeholder a trace could not hold); a journey holding a from: shape placeholder is refused until it is filled in. Each step gets 5s, or the journey\'s timeout: every wait for something to happen (a control to be actionable, an expect to match, a request, state or email to arrive) is bounded by it; page opens get at least 15s; after an interaction the runner waits at most 5s for the page\'s pending events and requests to settle, without failing; wait.ms is exact. lowdefy_get_schema with kind "journey-step" returns this grammar as a JSON schema, with examples of every step. With device, a phone runs click, fill, select (by option text), press (Enter, on the input filled last), wait, screenshot and expect state, each by blockId alone; any other step is refused before the first runs.'
         ),
+      device: deviceSchema.describe(
+        'Run the journey on a phone instead of the headless browser: its tab id from lowdefy_device list. It starts on the page the phone shows, which must be pageId; urlQuery, user, data and exercised do not apply.'
+      ),
       user: z
         .union([
           z.literal('none'),
@@ -426,6 +457,12 @@ const devToolDefinitions = {
           'websockets',
         ])
         .describe('The kind of types to list.'),
+      target: z
+        .enum(['web', 'mobile'])
+        .optional()
+        .describe(
+          'Which pages the types are for. Default "web": the types of the installed plugins. "mobile": the blocks, actions and client operators a native shell carries, for pages with target mobile; kinds that run on the server (connections, requests, server operators) are the same for both. Shell types carry no used flag.'
+        ),
     },
   },
 
@@ -507,6 +544,37 @@ const devToolDefinitions = {
       'Get all the markdown an installed plugin package ships (README, docs/*.md) as one page. lowdefy_search_docs and lowdefy_get_doc reach the same files page by page.',
     inputSchema: {
       package: z.string().describe('The package name, e.g. "@lowdefy/blocks-antd".'),
+    },
+  },
+
+  lowdefy_device: {
+    description:
+      'Phones for the app\'s mobile pages, which run in Lowdefy Dev. action "list": the phones connected to this dev server, each with the tab id the other tools take as device, the page it shows and whether it is paired over the network; plus the booted iOS simulators and the Android devices on this computer. action "start" with platform "ios" or "android": boot a simulator or emulator (or use a booted one or a USB phone), install Lowdefy Dev from LOWDEFY_DEV_APP_IOS or LOWDEFY_DEV_APP_ANDROID and open it on this dev server, as `lowdefy dev --ios` or `--android` does; returns the new phone\'s device id once it joins. action "inject" with device and inject {kind, value, name}: fake the phone\'s next device result through Lowdefy Dev - kind "scan" {data}, "photo" {base64}, "nfc" (the tag read), "location" {latitude, longitude} or a list of them as a route, "permission" with name and value "granted" or "denied", "network" "online" or "offline", "push" (an APNs payload with aps; delivered by xcrun simctl push on an iOS simulator, refused elsewhere), or "clear". On an iOS simulator a location and a permission are also set with xcrun simctl location and simctl privacy.',
+    inputSchema: {
+      action: z.enum(['list', 'start', 'inject']).describe('What to do.'),
+      platform: z
+        .enum(['ios', 'android'])
+        .optional()
+        .describe('For start: the iOS simulator or an Android emulator or USB phone.'),
+      device: deviceSchema.describe('For inject: the phone, its tab id from action "list".'),
+      inject: z
+        .object({
+          kind: z
+            .enum(['scan', 'photo', 'nfc', 'location', 'permission', 'network', 'push', 'clear'])
+            .describe('What to fake.'),
+          value: z
+            .any()
+            .optional()
+            .describe(
+              'scan {"data": "ABC-123"}, photo {"base64": "..."}, nfc the tag read as an object, location {"latitude": -33.92, "longitude": 18.42} or a list of them, permission "granted" | "denied", network "online" | "offline", push {"aps": {"alert": {"title", "body"}}}.'
+            ),
+          name: z
+            .string()
+            .optional()
+            .describe('For permission: the permission, e.g. "location" or "camera".'),
+        })
+        .optional()
+        .describe('For inject: the device result to fake.'),
     },
   },
 
