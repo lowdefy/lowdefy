@@ -55,6 +55,7 @@ test('writeMobile writes empty artifacts for an app without a mobile key', async
   await writeMobile({ components: {}, context });
   expect(getArtifacts()).toEqual({
     'mobile/config.json': {},
+    'mobile/events.json': {},
     'mobile/pageIndex.json': [],
     'mobile/typeSets.json': {},
     'mobile/theme.json': {},
@@ -65,7 +66,7 @@ test('writeMobile writes empty artifacts for an app without a mobile key', async
 
 test('writeMobile defaults to a stack frame and the first mobile page as home', async () => {
   const context = createContext();
-  await writeMobile({ components: { mobile: {} }, context });
+  await writeMobile({ components: { mobile: { events: {} } }, context });
   expect(getArtifacts()).toEqual({
     'mobile/config.json': {
       homePageId: 'today',
@@ -80,6 +81,7 @@ test('writeMobile defaults to a stack frame and the first mobile page as home', 
         sessionExpiresIn: null,
       },
     },
+    'mobile/events.json': {},
     'mobile/pageIndex.json': [{ path: 'today', pageId: 'today', hash: 'h1', typesKey: 't1' }],
     'mobile/typeSets.json': { t1: { actions: [], blocks: [], operators: [] } },
     'mobile/theme.json': {
@@ -92,11 +94,21 @@ test('writeMobile defaults to a stack frame and the first mobile page as home', 
   });
 });
 
+test('writeMobile writes mobile.events for the mobile root', async () => {
+  const context = createContext();
+  const events = {
+    onInit: { try: [{ id: 'ready', type: 'SetGlobal', params: { ready: true } }], catch: [] },
+  };
+  await writeMobile({ components: { mobile: { events } }, context });
+  expect(getArtifacts()['mobile/events.json']).toEqual(events);
+});
+
 test('writeMobile takes the home page from the first menu item', async () => {
   const context = createContext();
   await writeMobile({
     components: {
       mobile: {
+        events: {},
         minShellVersion: '7.4.0',
         menus: { drawer: [{ pageId: 'jobs', title: 'Jobs', '~k': 'k1' }] },
       },
@@ -123,6 +135,7 @@ test('writeMobile writes shells with sha256 as a list', async () => {
   await writeMobile({
     components: {
       mobile: {
+        events: {},
         homePageId: 'today',
         shells: [
           {
@@ -158,6 +171,7 @@ test('writeMobile writes the store fields of a shell with the icon as an absolut
   await writeMobile({
     components: {
       mobile: {
+        events: {},
         homePageId: 'today',
         shells: [
           {
@@ -201,6 +215,7 @@ test('writeMobile writes mobile.auth as configured', async () => {
   await writeMobile({
     components: {
       mobile: {
+        events: {},
         auth: {
           emailCode: false,
           unlock: 'biometric',

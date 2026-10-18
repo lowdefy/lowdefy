@@ -112,7 +112,7 @@ test('validateMobileConfig throws on an unknown key', () => {
   expect(() =>
     validateMobileConfig({ context, mobile: { serverUrl: 'https://example.com' } })
   ).toThrow(
-    'App "mobile" has unknown key "serverUrl". Allowed keys: homePageId, minShellVersion, menus, pages, shells, auth.'
+    'App "mobile" has unknown key "serverUrl". Allowed keys: homePageId, minShellVersion, menus, pages, events, shells, auth.'
   );
 });
 

@@ -1,20 +1,19 @@
 # A phone app with two tabs, the first a Screen page: what the shell's fixture test builds and checks
-# against the shell's type manifest. The app events and the Screen page use _js, which reaches the
-# shell as module text (fixtures/hello.jsEntries.json holds what the build writes), and the first
-# tab has an icon.
+# against the shell's type manifest. The app events (mobile.events) and the Screen page use _js,
+# which reaches the shell as module text (fixtures/hello.jsEntries.json holds what the build
+# writes), and the first tab has an icon.
 lowdefy: local
 name: Hello
 
-events:
-  onInit:
-    - id: set_greeting
-      type: SetGlobal
-      params:
-        greeting:
-          _js: return 'Hello from Lowdefy';
-
 mobile:
   homePageId: today
+  events:
+    onInit:
+      - id: set_greeting
+        type: SetGlobal
+        params:
+          greeting:
+            _js: return 'Hello from Lowdefy';
   menus:
     tabs:
       - pageId: today

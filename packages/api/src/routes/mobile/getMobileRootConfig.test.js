@@ -70,6 +70,8 @@ const mobileConfig = {
   },
 };
 
+const webEvents = { onInit: { try: [{ id: 'analytics', type: 'PostHogInit' }] } };
+
 const events = { onInit: { try: [{ id: 'set', type: 'SetGlobal', params: { ready: true } }] } };
 
 const appMeta = { slug: 'field-app', buildId: 'build-1' };
@@ -81,7 +83,8 @@ function createReadConfigFile(files) {
       'mobile/config.json': mobileConfig,
       'mobile/pageIndex.json': pageIndex,
       'mobile/typeSets.json': typeSets,
-      'events.json': events,
+      'events.json': webEvents,
+      'mobile/events.json': events,
       'global.json': { region: 'eu' },
       'mobile/theme.json': theme,
       'mobile/classMap.json': classMap,
@@ -111,6 +114,14 @@ test('getMobileRootConfig gives a signed-out caller only the public mobile pages
     theme,
     classMap,
   });
+});
+
+test('getMobileRootConfig gives a shell mobile.events, never the web app events', async () => {
+  const rootConfig = await getMobileRootConfig(
+    testContext({ readConfigFile: createReadConfigFile() })
+  );
+  expect(rootConfig.events).toEqual(events);
+  expect(rootConfig.events).not.toEqual(webEvents);
 });
 
 test('getMobileRootConfig gives a shell the mobile auth settings of an app with auth', async () => {
@@ -207,7 +218,7 @@ test('getMobileRootConfig returns null for an app without a mobile key', async (
   expect(await getMobileRootConfig(context)).toBeNull();
 });
 
-test('getMobileRootConfig gives a shell the app i18n and the app events _js as module text', async () => {
+test('getMobileRootConfig gives a shell the app i18n and the mobile.events _js as module text', async () => {
   const i18n = {
     defaultLocale: 'en-US',
     locales: [

@@ -19,18 +19,22 @@ import { type } from '@lowdefy/helpers';
 import generateClientJsModule from '../buildJs/generateClientJsModule.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 
-// A shell cannot load the web client's clientJsMap module, so the app events'
-// client _js reaches it as module text in the mobile root, as a mobile page's
-// does (_jsEntries). Runs before buildJs replaces the _js source with hashes:
-// the hashes are the source's, so they match the ones buildJs writes into the
-// events. null for an app without a mobile key or without _js in its events.
+// A shell cannot load the web client's clientJsMap module, so the client _js of
+// mobile.events reaches it as module text in the mobile root, as a mobile
+// page's does (_jsEntries). As with a mobile page, it stays out of the web
+// module: the events' _js source is replaced with its hashes here, not by
+// buildJs. null for an app without a mobile key or without _js in its events.
 function buildMobileAppJs({ components, context }) {
   context.mobileAppJsEntries = null;
   if (type.isNone(components.mobile)) {
     return components;
   }
   const jsMap = {};
-  jsMapParser({ input: components.events, jsMap, env: 'client' });
+  components.mobile.events = jsMapParser({
+    input: components.mobile.events,
+    jsMap,
+    env: 'client',
+  });
   if (Object.keys(jsMap.client).length > 0) {
     context.mobileAppJsEntries = generateClientJsModule(jsMap.client);
   }
