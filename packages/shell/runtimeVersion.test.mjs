@@ -120,7 +120,9 @@ test('a store shell sets its runtime version, store version and EAS project', ()
   const config = readAppConfig(fieldShell);
   assert.equal(config.runtimeVersion, `${shellPackage.nativeVersion}-field`);
   assert.equal(config.version, '1.4.2');
-  assert.equal(config.extra.shell.version, shellPackage.version);
+  // The shell version travels in the JavaScript bundle (src/version/shellVersion.js), and the store
+  // version is not the shell's.
+  assert.equal(config.extra.shell.version, undefined);
   assert.equal(config.owner, 'example');
   assert.deepEqual(config.updates, {
     url: 'https://u.expo.dev/2b6f0000-0000-4000-8000-000000000000',
