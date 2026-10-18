@@ -85,6 +85,15 @@ test('request ids holding a slash are read as requests of their page', () => {
   });
 });
 
+test('requests go to the longest page id that is a page', () => {
+  writeArtifact('pages/crm.json', { id: 'crm' });
+  writeArtifact('pages/crm/requests.json', { id: 'crm/requests' });
+  writeArtifact('pages/crm/requests/requests/list.json', { id: 'list' });
+  const build = readBuildArtifacts({ buildDirectory });
+  expect(Object.keys(build.pages).sort()).toEqual(['crm', 'crm/requests']);
+  expect(build.requests).toEqual({ 'crm/requests': { list: { id: 'list' } } });
+});
+
 test('a requests folder under no page is a page path, not requests', () => {
   writeArtifact('pages/reports/requests/summary.json', { id: 'reports/requests/summary' });
   const build = readBuildArtifacts({ buildDirectory });

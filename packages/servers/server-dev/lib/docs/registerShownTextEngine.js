@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { SHOWN_TEXT_ENGINE } from './shownTextSelector.js';
+
 // The selector engine a `containing` target is found by: the innermost
 // elements whose shown text contains the string. Playwright's getByText reads
 // an element's text nodes joined with nothing between them, so a label and
@@ -99,8 +101,6 @@ function createShownTextEngine() {
   };
 }
 
-const SHOWN_TEXT_ENGINE = 'lowdefy-shown-text';
-
 let registered = null;
 
 // Registers the engine with Playwright once per process. Playwright applies a
@@ -115,8 +115,4 @@ function registerShownTextEngine(selectors) {
   return registered;
 }
 
-function shownTextSelector(text) {
-  return `${SHOWN_TEXT_ENGINE}=${JSON.stringify(text)}`;
-}
-
-export { createShownTextEngine, registerShownTextEngine, shownTextSelector };
+export default registerShownTextEngine;

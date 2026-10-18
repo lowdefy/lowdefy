@@ -18,7 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 import installHeadlessShell from './installHeadlessShell.js';
 import isHeadlessShellIncomplete from './isHeadlessShellIncomplete.js';
-import { registerShownTextEngine } from './shownTextEngine.js';
+import registerShownTextEngine from './registerShownTextEngine.js';
 
 // The manager tags every browser this child launches, so it can kill one
 // left behind when the child is killed outright (system Chrome runs in its
