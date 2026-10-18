@@ -15,6 +15,8 @@
 */
 
 import filterMobileMenus from './filterMobileMenus.js';
+import getAppEvents from '../rootConfig/getAppEvents.js';
+import getLowdefyGlobal from '../rootConfig/getLowdefyGlobal.js';
 import getOpenablePageIds from './getOpenablePageIds.js';
 
 // What a shell syncs on start: the mobile frame, the index of the pages this
@@ -22,16 +24,22 @@ import getOpenablePageIds from './getOpenablePageIds.js';
 // those keys, and minShellVersion. Menu icons carry their node data. The theme
 // fields are placeholders until the native theme is defined.
 //
+// The app's identity (lowdefyApp, with the buildId a shell stamps its page
+// requests with), its global and its app events are what a shell's engine
+// starts from, as the web root config gives them.
+//
 // The dev build writes the page index without hashes or typesKeys, and no type
 // sets: the dev server builds pages on demand.
 //
 // Returns null for an app without a mobile key: no shell opens it.
 async function getMobileRootConfig(context) {
-  const [config, pageIndex, typeSets, openablePageIds] = await Promise.all([
+  const [config, pageIndex, typeSets, openablePageIds, events, lowdefyGlobal] = await Promise.all([
     context.readConfigFile('mobile/config.json'),
     context.readConfigFile('mobile/pageIndex.json'),
     context.readConfigFile('mobile/typeSets.json'),
     getOpenablePageIds(context),
+    getAppEvents(context),
+    getLowdefyGlobal(context),
   ]);
   if (Object.keys(config).length === 0) {
     return null;
@@ -44,7 +52,10 @@ async function getMobileRootConfig(context) {
     }
   });
   return {
+    events,
     homePageId: config.homePageId,
+    lowdefyApp: context.appMeta,
+    lowdefyGlobal,
     minShellVersion: config.minShellVersion,
     menus: filterMobileMenus({ menus: config.menus, openablePageIds }),
     pageIndex: openablePageIndex,

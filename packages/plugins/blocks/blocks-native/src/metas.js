@@ -17,4 +17,5 @@
 export { default as Box } from './blocks/Box/meta.js';
 export { default as Button } from './blocks/Button/meta.js';
 export { default as Paragraph } from './blocks/Paragraph/meta.js';
+export { default as Screen } from './blocks/Screen/meta.js';
 export { default as Title } from './blocks/Title/meta.js';
