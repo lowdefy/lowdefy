@@ -31,6 +31,7 @@ function createContext() {
     dark: { colorPrimary: '#1668dc' },
   };
   context.mobileClassMap = { 'p-4': { padding: 16 } };
+  context.mobileAppJsEntries = 'export default {};';
   return context;
 }
 
@@ -50,6 +51,7 @@ test('writeMobile writes empty artifacts for an app without a mobile key', async
   context.mobileTypeSets = {};
   context.mobileTheme = {};
   context.mobileClassMap = {};
+  context.mobileAppJsEntries = null;
   await writeMobile({ components: {}, context });
   expect(getArtifacts()).toEqual({
     'mobile/config.json': {},
@@ -57,6 +59,7 @@ test('writeMobile writes empty artifacts for an app without a mobile key', async
     'mobile/typeSets.json': {},
     'mobile/theme.json': {},
     'mobile/classMap.json': {},
+    'mobile/appJs.json': { jsEntries: null },
   });
 });
 
@@ -85,6 +88,7 @@ test('writeMobile defaults to a stack frame and the first mobile page as home', 
       dark: { colorPrimary: '#1668dc' },
     },
     'mobile/classMap.json': { 'p-4': { padding: 16 } },
+    'mobile/appJs.json': { jsEntries: 'export default {};' },
   });
 });
 

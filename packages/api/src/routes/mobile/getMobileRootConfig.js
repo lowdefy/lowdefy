@@ -17,6 +17,7 @@
 import filterMobileMenus from './filterMobileMenus.js';
 import getAppEvents from '../rootConfig/getAppEvents.js';
 import getLowdefyGlobal from '../rootConfig/getLowdefyGlobal.js';
+import getLowdefyI18n from '../rootConfig/getLowdefyI18n.js';
 import getOpenablePageIds from './getOpenablePageIds.js';
 
 // What a shell syncs on start: the mobile frame, the index of the pages this
@@ -26,8 +27,9 @@ import getOpenablePageIds from './getOpenablePageIds.js';
 // node data.
 //
 // The app's identity (lowdefyApp, with the buildId a shell stamps its page
-// requests with), its global and its app events are what a shell's engine
-// starts from, as the web root config gives them.
+// requests with), its global, its app events and its i18n are what a shell's
+// engine starts from, as the web root config gives them. The app events' _js
+// comes as _jsEntries, module text a shell evaluates, as a mobile page's does.
 //
 // The dev build writes the page index without hashes or typesKeys, and no type
 // sets: the dev server builds pages on demand. Its class map holds the classes
@@ -36,17 +38,29 @@ import getOpenablePageIds from './getOpenablePageIds.js';
 //
 // Returns null for an app without a mobile key: no shell opens it.
 async function getMobileRootConfig(context) {
-  const [config, pageIndex, typeSets, theme, classMap, openablePageIds, events, lowdefyGlobal] =
-    await Promise.all([
-      context.readConfigFile('mobile/config.json'),
-      context.readConfigFile('mobile/pageIndex.json'),
-      context.readConfigFile('mobile/typeSets.json'),
-      context.readConfigFile('mobile/theme.json'),
-      context.readConfigFile('mobile/classMap.json'),
-      getOpenablePageIds(context),
-      getAppEvents(context),
-      getLowdefyGlobal(context),
-    ]);
+  const [
+    config,
+    pageIndex,
+    typeSets,
+    theme,
+    classMap,
+    appJs,
+    openablePageIds,
+    events,
+    lowdefyGlobal,
+    i18n,
+  ] = await Promise.all([
+    context.readConfigFile('mobile/config.json'),
+    context.readConfigFile('mobile/pageIndex.json'),
+    context.readConfigFile('mobile/typeSets.json'),
+    context.readConfigFile('mobile/theme.json'),
+    context.readConfigFile('mobile/classMap.json'),
+    context.readConfigFile('mobile/appJs.json'),
+    getOpenablePageIds(context),
+    getAppEvents(context),
+    getLowdefyGlobal(context),
+    getLowdefyI18n(context),
+  ]);
   if (Object.keys(config).length === 0) {
     return null;
   }
@@ -58,8 +72,10 @@ async function getMobileRootConfig(context) {
     }
   });
   return {
+    _jsEntries: appJs.jsEntries,
     events,
     homePageId: config.homePageId,
+    i18n,
     lowdefyApp: context.appMeta,
     lowdefyGlobal,
     minShellVersion: config.minShellVersion,

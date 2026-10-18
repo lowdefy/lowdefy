@@ -100,6 +100,7 @@ const configFiles = {
     dark: { colorPrimary: '#1668dc' },
   },
   'mobile/classMap.json': { 'p-4': { paddingTop: 16 } },
+  'mobile/appJs.json': { jsEntries: null },
 };
 
 function authorizeOutcome(user) {
@@ -149,7 +150,9 @@ test('the dev mobile root lists the paths of the pages the caller may open, with
   const res = await createApp().request('/api/mobile/root', { headers: shell });
   expect(res.status).toEqual(200);
   expect(await res.json()).toEqual({
+    _jsEntries: null,
     homePageId: 'today',
+    i18n: {},
     lowdefyGlobal: {},
     minShellVersion: null,
     menus: { tabs: [{ pageId: 'today', title: 'Today' }] },

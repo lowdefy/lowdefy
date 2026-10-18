@@ -994,6 +994,9 @@
     ],
     "~k": "2f"
   },
+  "mobile/appJs.json": {
+    "jsEntries": null
+  },
   "mobile/classMap.json": {},
   "mobile/config.json": {},
   "mobile/pageIndex.json": [],

@@ -78,6 +78,8 @@ function createReadConfigFile(files) {
       'global.json': { region: 'eu' },
       'mobile/theme.json': theme,
       'mobile/classMap.json': classMap,
+      'mobile/appJs.json': { jsEntries: null },
+      'i18n.json': {},
       ...files,
     }[file];
   };
@@ -86,8 +88,10 @@ function createReadConfigFile(files) {
 test('getMobileRootConfig gives a signed-out caller only the public mobile pages', async () => {
   const context = testContext({ appMeta, readConfigFile: createReadConfigFile() });
   expect(await getMobileRootConfig(context)).toEqual({
+    _jsEntries: null,
     events,
     homePageId: 'today',
+    i18n: {},
     lowdefyApp: appMeta,
     lowdefyGlobal: { region: 'eu' },
     minShellVersion: '7.4.0',
@@ -183,4 +187,26 @@ test('getMobileRootConfig returns null for an app without a mobile key', async (
     }),
   });
   expect(await getMobileRootConfig(context)).toBeNull();
+});
+
+test('getMobileRootConfig gives a shell the app i18n and the app events _js as module text', async () => {
+  const i18n = {
+    defaultLocale: 'en-US',
+    locales: [
+      { code: 'en-US', dayjs: 'en' },
+      { code: 'af-ZA', dayjs: 'af' },
+    ],
+    messages: { 'af-ZA': { hello: 'Hallo' } },
+  };
+  const jsEntries = "export default { 'h1': ({ state }) => { return state.a; }, };";
+  const rootConfig = await getMobileRootConfig(
+    testContext({
+      readConfigFile: createReadConfigFile({
+        'i18n.json': i18n,
+        'mobile/appJs.json': { jsEntries },
+      }),
+    })
+  );
+  expect(rootConfig.i18n).toEqual(i18n);
+  expect(rootConfig._jsEntries).toBe(jsEntries);
 });

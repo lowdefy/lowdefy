@@ -1088,6 +1088,9 @@
     ],
     "~k": "2o"
   },
+  "mobile/appJs.json": {
+    "jsEntries": null
+  },
   "mobile/classMap.json": {},
   "mobile/config.json": {},
   "mobile/pageIndex.json": [],

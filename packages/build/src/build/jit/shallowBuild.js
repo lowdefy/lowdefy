@@ -44,6 +44,7 @@ import buildIconContext from '../icons/buildIconContext.js';
 import buildMcp from '../buildMcp.js';
 import buildMenu from '../buildMenu.js';
 import buildMobile from '../buildMobile/buildMobile.js';
+import buildMobileAppJs from '../buildMobile/buildMobileAppJs.js';
 import buildMobileClassMap from '../buildMobile/buildMobileClassMap.js';
 import buildMobileTheme from '../buildMobile/buildMobileTheme.js';
 import validateMobileMenuIcons from '../buildMobile/validateMobileMenuIcons.js';
@@ -239,6 +240,7 @@ async function shallowBuild(options) {
     await writePluginChecksPending({ context, packages: pluginChecksPending });
     tryBuildStep(validateApiHtmlLinks, 'validateApiHtmlLinks', { components, context });
 
+    tryBuildStep(buildMobileAppJs, 'buildMobileAppJs', { components, context });
     tryBuildStep(buildJsShallow, 'buildJsShallow', { components, context });
 
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
