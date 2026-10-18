@@ -34,13 +34,14 @@ const primitiveOption = {
 
 export default {
   category: 'input',
-  icons: [],
+  icons: ['ChevronsUpDown'],
   valueType: 'any',
   cssKeys: {
-    element: 'The Selector box.',
+    element: 'The Selector box, or the row of the menu variant.',
     label: 'The Selector label.',
     extra: 'The Selector extra content.',
     feedback: 'The Selector validation feedback.',
+    value: 'The chosen option text of the menu variant.',
   },
   events: {
     onChange: {
@@ -85,7 +86,32 @@ export default {
                 disabled: {
                   type: 'boolean',
                   default: false,
-                  description: 'Leave the option out of the picker.',
+                  description:
+                    'Leave the option out of the picker. The menu variant shows it dimmed.',
+                },
+                symbol: {
+                  type: 'string',
+                  description:
+                    'Mobile menu variant only. An SF Symbol name drawn beside the option in the native menu and, on iOS, beside the chosen option in the row.',
+                },
+                icon: {
+                  type: 'string',
+                  description:
+                    'Mobile menu variant only. An icon name from the app icon data, drawn beside the chosen option in the row where there is no SF Symbol (Android, or an option without symbol).',
+                },
+                iconColor: {
+                  type: 'string',
+                  description: 'Mobile menu variant only. The colour of the glyph in the row.',
+                },
+                avatar: {
+                  type: 'object',
+                  description:
+                    'Mobile menu variant only. A person the option stands for, drawn as an initials avatar beside the chosen option in the row; the native menu shows the person symbol.',
+                  properties: {
+                    name: { type: 'string', description: 'The name the initials are taken from.' },
+                    src: { type: 'string', description: 'An image url.' },
+                    color: { type: 'string', description: 'The circle colour.' },
+                  },
                 },
                 filterString: {
                   type: 'string',
@@ -98,6 +124,10 @@ export default {
             },
           },
         ],
+      },
+      menuTitle: {
+        type: 'string',
+        description: 'Mobile menu variant only. A title at the top of the menu, on iOS.',
       },
       placeholder: { ...placeholder, default: 'Select item' },
       showSearch: {
@@ -112,7 +142,9 @@ export default {
       title: inputTitle,
       variant: {
         ...variant,
-        enum: ['solid', 'outlined', 'filled', 'borderless', 'underlined'],
+        enum: ['solid', 'outlined', 'filled', 'borderless', 'underlined', 'menu'],
+        description:
+          "Input visual variant. On mobile, 'menu' draws an iOS Settings-style row, the title at the left and the chosen option at the right, that opens a native menu of the options.",
       },
     },
   },

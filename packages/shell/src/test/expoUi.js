@@ -40,4 +40,8 @@ function Switch({ onValueChange, testID, value }) {
   return <View onValueChange={onValueChange} testID={testID} value={value} />;
 }
 
-export { Host, Picker, Switch };
+function Icon({ color, name, size }) {
+  return <View color={color} name={name} size={size} testID={`expo-ui-icon-${name}`} />;
+}
+
+export { Host, Icon, Picker, Switch };
