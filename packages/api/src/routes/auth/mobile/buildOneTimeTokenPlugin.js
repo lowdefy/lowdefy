@@ -14,23 +14,41 @@
   limitations under the License.
 */
 
+import { createAuthMiddleware } from 'better-auth/api';
 import { oneTimeToken } from 'better-auth/plugins';
 
+import createCodeVerifierCheck from './createCodeVerifierCheck.js';
+
 // The one-time token the mobile sign-in page hands a shell, which the shell
-// exchanges at /one-time-token/verify for the session the person signed in to.
-// It lasts one minute (expiresIn is in minutes) and is consumed by its first
-// verify. Stored hashed, so the database never holds a usable token.
+// exchanges at /one-time-token/verify, with its PKCE code_verifier, for the
+// session the person signed in to. It lasts one minute (expiresIn is in
+// minutes) and is consumed by its first verify. Stored hashed, so the database
+// never holds a usable token.
 //
 // Only the server mints one (handleMobileSignIn, through auth.api):
 // disableClientRequest closes GET /one-time-token/generate to HTTP callers, so
 // page script running in a signed-in browser can not turn its session into a
-// token it could carry off.
+// token it could carry off. The verify route takes the token only with the
+// verifier of the challenge it was minted for (createCodeVerifierCheck).
 function buildOneTimeTokenPlugin() {
-  return oneTimeToken({
+  const plugin = oneTimeToken({
     expiresIn: 1,
     disableClientRequest: true,
     storeToken: 'hashed',
   });
+  return {
+    ...plugin,
+    hooks: {
+      ...plugin.hooks,
+      before: [
+        ...(plugin.hooks.before ?? []),
+        {
+          matcher: (ctx) => ctx.path === '/one-time-token/verify',
+          handler: createAuthMiddleware(createCodeVerifierCheck()),
+        },
+      ],
+    },
+  };
 }
 
 export default buildOneTimeTokenPlugin;

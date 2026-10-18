@@ -16,6 +16,7 @@
 
 import { jest } from '@jest/globals';
 
+import getOneTimeTokenIdentifiers from './getOneTimeTokenIdentifiers.js';
 import handleMobileSignIn from './handleMobileSignIn.js';
 
 const authJson = {
@@ -23,16 +24,22 @@ const authJson = {
   mobile: { shells: [{ id: 'field', scheme: 'com.example.field' }], sessionExpiresIn: null },
 };
 
+// RFC 7636 appendix B.
+const challenge = 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM';
+const pkce = `code_challenge=${challenge}&code_challenge_method=S256`;
+
 function createAuth({ session = null } = {}) {
   const adapter = { update: jest.fn() };
+  const internalAdapter = { createVerificationValue: jest.fn() };
   return {
     adapter,
+    internalAdapter,
     auth: {
       api: {
         getSession: jest.fn(async () => session),
         generateOneTimeToken: jest.fn(async () => ({ token: 'one-time' })),
       },
-      $context: Promise.resolve({ adapter }),
+      $context: Promise.resolve({ adapter, internalAdapter }),
     },
   };
 }
@@ -46,16 +53,27 @@ test('handleMobileSignIn answers 404 when auth is not configured', async () => {
     auth: null,
     authJson,
     basePath: '',
-    request: request('/auth/mobile?shell=field&state=s'),
+    request: request(`/auth/mobile?shell=field&state=s&${pkce}`),
   });
   expect(response.status).toBe(404);
 });
 
 test.each([
-  ['/auth/mobile?state=s'],
-  ['/auth/mobile?shell=other&state=s'],
-  ['/auth/mobile?shell=field'],
-  [`/auth/mobile?shell=field&state=${'s'.repeat(513)}`],
+  [`/auth/mobile?state=s&${pkce}`],
+  [`/auth/mobile?shell=other&state=s&${pkce}`],
+  [`/auth/mobile?shell=field&${pkce}`],
+  [`/auth/mobile?shell=field&state=${'s'.repeat(513)}&${pkce}`],
+  ['/auth/mobile?shell=field&state=s'],
+  [`/auth/mobile?shell=field&state=s&code_challenge=${challenge}`],
+  [`/auth/mobile?shell=field&state=s&code_challenge=${challenge}&code_challenge_method=plain`],
+  ['/auth/mobile?shell=field&state=s&code_challenge_method=S256'],
+  [`/auth/mobile?shell=field&state=s&code_challenge=${challenge}A&code_challenge_method=S256`],
+  [
+    `/auth/mobile?shell=field&state=s&code_challenge=${challenge.slice(
+      0,
+      -1
+    )}%3D&code_challenge_method=S256`,
+  ],
 ])('handleMobileSignIn answers 400 to %s', async (path) => {
   const { auth } = createAuth();
   const response = await handleMobileSignIn({
@@ -74,7 +92,7 @@ test('handleMobileSignIn answers 400 for an app with no mobile section', async (
     auth,
     authJson: { authPages: { signIn: '/login' } },
     basePath: '',
-    request: request('/auth/mobile?shell=field&state=s'),
+    request: request(`/auth/mobile?shell=field&state=s&${pkce}`),
   });
   expect(response.status).toBe(400);
 });
@@ -85,11 +103,13 @@ test('handleMobileSignIn sends a signed-out person to the sign-in page under the
     auth,
     authJson,
     basePath: '/app',
-    request: request('/app/auth/mobile?shell=field&state=s%201'),
+    request: request(`/app/auth/mobile?shell=field&state=s%201&${pkce}`),
   });
   expect(response.status).toBe(302);
   expect(response.headers.get('location')).toBe(
-    `/app/login?callbackUrl=${encodeURIComponent('/app/auth/mobile?shell=field&state=s%201')}`
+    `/app/login?callbackUrl=${encodeURIComponent(
+      `/app/auth/mobile?shell=field&state=s%201&${pkce}`
+    )}`
   );
   expect(auth.api.getSession).toHaveBeenCalledWith({
     headers: expect.any(Headers),
@@ -97,13 +117,20 @@ test('handleMobileSignIn sends a signed-out person to the sign-in page under the
   });
 });
 
-test('handleMobileSignIn redirects a signed-in person to the shell scheme with a one-time token', async () => {
-  const { adapter, auth } = createAuth({ session: { session: { id: 's1' }, user: { id: 'u1' } } });
+test('handleMobileSignIn redirects a signed-in person to the shell scheme with a one-time token bound to the challenge', async () => {
+  const { adapter, auth, internalAdapter } = createAuth({
+    session: { session: { id: 's1' }, user: { id: 'u1' } },
+  });
   const response = await handleMobileSignIn({
     auth,
     authJson,
     basePath: '',
-    request: request('/auth/mobile?shell=field&state=a%26b'),
+    request: request(`/auth/mobile?shell=field&state=a%26b&${pkce}`),
+  });
+  expect(internalAdapter.createVerificationValue).toHaveBeenCalledWith({
+    identifier: getOneTimeTokenIdentifiers({ token: 'one-time' }).challenge,
+    value: challenge,
+    expiresAt: expect.any(Date),
   });
   expect(response.status).toBe(302);
   expect(response.headers.get('location')).toBe(
@@ -120,7 +147,7 @@ test('handleMobileSignIn gives the handed-on session the phone lifetime when one
     auth,
     authJson: { ...authJson, mobile: { ...authJson.mobile, sessionExpiresIn: 60 } },
     basePath: '',
-    request: request('/auth/mobile?shell=field&state=s'),
+    request: request(`/auth/mobile?shell=field&state=s&${pkce}`),
   });
   expect(adapter.update).toHaveBeenCalledWith({
     model: 'session',
