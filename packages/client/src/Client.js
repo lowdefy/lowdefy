@@ -31,6 +31,7 @@ import getMessageIcon from './getMessageIcon.js';
 import initLowdefyContext from './initLowdefyContext.js';
 
 const Client = ({
+  apiBase,
   auth,
   Components,
   config: rawConfig,
@@ -71,6 +72,7 @@ const Client = ({
   const contextKey =
     config.pageConfig.dynamic === true ? `${instanceKey}:${buildRef.current.build}` : instanceKey;
   initLowdefyContext({
+    apiBase,
     auth,
     Components,
     config,

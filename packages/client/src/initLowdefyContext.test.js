@@ -192,3 +192,32 @@ test('initLowdefyContext keeps user storage of the person signed in', () => {
   initLowdefyContext(args);
   expect(window.localStorage.getItem('lowdefy:sales::lowdefy_user:u1:views')).toBe('{}');
 });
+
+test('initLowdefyContext defaults apiBase to the router basePath', () => {
+  const args = baseArgs();
+  args.router.basePath = '/base';
+  const result = initLowdefyContext(args);
+  expect(result.apiBase).toBe('/base');
+  expect(result.basePath).toBe('/base');
+});
+
+test('initLowdefyContext sets apiBase apart from basePath when passed', () => {
+  const args = baseArgs();
+  args.apiBase = 'https://app.example.com';
+  const result = initLowdefyContext(args);
+  expect(result.apiBase).toBe('https://app.example.com');
+  expect(result.basePath).toBe('');
+});
+
+test('initLowdefyContext builds the context on the browser host', () => {
+  const args = baseArgs();
+  const result = initLowdefyContext(args);
+  expect(result._internal.globals).toEqual({
+    document: args.window.document,
+    fetch: args.window.fetch,
+    window: args.window,
+  });
+  expect(result._internal.router).toBe(args.router);
+  expect(result._internal.host.router).toBe(args.router);
+  expect(result._internal.components.handleError).toBe(result._internal.handleError);
+});
