@@ -16,8 +16,10 @@
 
 import React from 'react';
 
-// The column gap of the area a block is placed in. A gapped area is widened by its gap, and each
-// of its blocks takes the gap as left padding (@lowdefy/layout-native childStyle).
-const ColumnGapContext = React.createContext(0);
+// The area a block is placed in: its column gap and its container style. A gapped area is widened
+// by its gap, and each of its blocks takes the gap as left padding (@lowdefy/layout-native
+// childStyle); the container style says whether a block's placement is stretched or grown past its
+// content (fillsPlacement). Outside an area (the page's root block) blocks stack in a column.
+const AreaContext = React.createContext({ columnGap: 0, container: {} });
 
-export default ColumnGapContext;
+export default AreaContext;

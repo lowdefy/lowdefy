@@ -17,5 +17,6 @@
 export { default as blockOrder } from './blockOrder.js';
 export { default as breakpointIndex } from './breakpointIndex.js';
 export { default as breakpoints } from './breakpoints.js';
+export { default as fillsPlacement } from './fillsPlacement.js';
 export { default as getBreakpoint } from './getBreakpoint.js';
 export { default as layoutStyles } from './layoutStyles.js';
