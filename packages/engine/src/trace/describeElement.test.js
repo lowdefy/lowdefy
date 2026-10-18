@@ -30,7 +30,7 @@ function targetFields(target) {
 }
 
 function createLowdefy() {
-  return { basePath: '', contexts: {}, home: {} };
+  return { basePath: '', contexts: {}, home: {}, _internal: { globals: { window } } };
 }
 
 function select(selector) {

@@ -17,6 +17,7 @@
 import { ConfigError } from '@lowdefy/errors';
 import { buildPagePath, type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
+import getGlobals from './getGlobals.js';
 import getHomePathname from './getHomePathname.js';
 import getPathEntry from './getPathEntry.js';
 
@@ -81,7 +82,7 @@ function classifyUrl({ lowdefy, url: rawUrl, query }) {
     return { kind: 'external', href: query === '' ? url : `?${query}${url}` };
   }
 
-  const location = lowdefy._internal?.globals?.window?.location;
+  const location = getGlobals(lowdefy).window?.location;
   // No window (SSR, tests): a `url` that reaches origin classification cannot be
   // placed, so it resolves to nothing rather than dereferencing a missing window.
   if (type.isNone(location?.origin)) {

@@ -93,7 +93,7 @@ function createTraceRegistry({ lowdefy }) {
   const pathEntryOf = createPathEntryOf({ lowdefy });
   const pageIdOf = createPageIdOf({ pathEntryOf });
   const describeElement = createDescribeElement({ findBlockType, pathEntryOf });
-  const describeChain = createDescribeChain({ findBlockType, pathEntryOf });
+  const describeChain = createDescribeChain({ findBlockType, lowdefy, pathEntryOf });
   const isConfigText = createIsConfigText({ lowdefy, pathEntryOf });
 
   return {

@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
+import { type, urlQuery } from '@lowdefy/helpers';
+
 import getFromObject from './getFromObject.js';
-import { urlQuery } from '@lowdefy/helpers';
+import getGlobals from '../getGlobals.js';
 
 function createGetUrlQuery({ arrayIndices, blockId, context }) {
   return function getUrlQuery(params) {
-    const { window } = context._internal.lowdefy._internal.globals;
-    if (!window?.location) {
+    const { location } = getGlobals(context._internal.lowdefy).window ?? {};
+    if (type.isNone(location)) {
       throw new Error(
         `Browser window.location not available for getUrlQuery on blockId: ${blockId}.`
       );
@@ -28,7 +30,7 @@ function createGetUrlQuery({ arrayIndices, blockId, context }) {
     return getFromObject({
       arrayIndices,
       location: blockId,
-      object: urlQuery.parse(window.location.search.slice(1)),
+      object: urlQuery.parse(location.search.slice(1)),
       method: 'getUrlQuery',
       params,
     });
