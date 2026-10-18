@@ -196,6 +196,44 @@ test('writeMobile writes the store fields of a shell with the icon as an absolut
   ]);
 });
 
+test('writeMobile writes the shell plugins lowdefy mobile config installs', async () => {
+  const context = createContext();
+  await writeMobile({
+    components: {
+      mobile: {
+        homePageId: 'today',
+        shells: [
+          {
+            id: 'field',
+            plugins: [
+              {
+                name: '@example/lowdefy-printer',
+                version: '2.1.0',
+                typePrefix: 'Printer',
+                '~k': 'k2',
+              },
+              { name: '@example/lowdefy-mdm', version: '1.0.3', options: { tenant: 'field-team' } },
+            ],
+          },
+          { id: 'office' },
+        ],
+      },
+    },
+    context,
+  });
+  expect(getArtifacts()['mobile/config.json'].shells).toEqual([
+    {
+      id: 'field',
+      distribution: 'private',
+      plugins: [
+        { name: '@example/lowdefy-printer', version: '2.1.0', typePrefix: 'Printer' },
+        { name: '@example/lowdefy-mdm', version: '1.0.3', options: { tenant: 'field-team' } },
+      ],
+    },
+    { id: 'office', distribution: 'private' },
+  ]);
+});
+
 test('writeMobile writes mobile.auth as configured', async () => {
   const context = createContext();
   await writeMobile({
