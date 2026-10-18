@@ -23,9 +23,11 @@ import Chip from './Chip.js';
 import EdgeFade from './EdgeFade.js';
 import getChipColors from './getChipColors.js';
 import getFadeRanges from './getFadeRanges.js';
+import getOverscrollSwipe from './getOverscrollSwipe.js';
 import getScrollTarget from './getScrollTarget.js';
 import getSemanticColors from '../../shared/getSemanticColors.js';
 import meta from './meta.js';
+import SwipeContext from '../../shared/SwipeContext.js';
 import useBlockTokens from '../../shared/useBlockTokens.js';
 
 const INSET = 16;
@@ -102,6 +104,12 @@ function useScrollToSelected({ scrollRef, selectedIndex }) {
  *
  * In a padded area that says how far it reaches (client-native's EdgeInsetContext, such as a
  * Screen's headerBottom), it cancels that padding to reach the screen edges.
+ *
+ * It scrolls only when its chips overflow it, and never bounces when they fit: a native scroll
+ * view takes a horizontal drag before any JS responder can, so a strip that scrolled for nothing
+ * would keep a Box it sits in from taking swipes across it. In a Box with swipe events
+ * (SwipeContext), a strip that overflows passes a drag on that pulls it past an end it cannot
+ * scroll further toward (getOverscrollSwipe), as the Box's swipe that way.
  */
 function ChipSelector({ blockId, components, loading, methods, properties, styles = {}, value }) {
   const { isDark, tokens } = useBlockTokens({ properties });
@@ -130,6 +138,20 @@ function ChipSelector({ blockId, components, loading, methods, properties, style
     viewportWidth: widths.viewport,
   });
   const fadeColor = properties.fadeColor ?? semantic.groupedBackground;
+  const overflows = widths.content > widths.viewport;
+  const parentSwipe = useContext(SwipeContext);
+  const onScrollEndDrag = (event) => {
+    if (parentSwipe === null) return;
+    const direction = getOverscrollSwipe({
+      contentWidth: widths.content,
+      offset: event.nativeEvent.contentOffset.x,
+      velocity: event.nativeEvent.velocity?.x ?? 0,
+      viewportWidth: widths.viewport,
+    });
+    if (parentSwipe.directions.includes(direction)) {
+      parentSwipe.swipe(direction);
+    }
+  };
 
   const unselectedColors = {
     background: tokens.colorSystemFill,
@@ -156,6 +178,7 @@ function ChipSelector({ blockId, components, loading, methods, properties, style
       testID={`${blockId}_input`}
     >
       <Animated.ScrollView
+        alwaysBounceHorizontal={false}
         contentContainerStyle={{ alignItems: 'center', gap: GAP, paddingHorizontal: INSET }}
         horizontal
         onContentSizeChange={(width) => {
@@ -168,7 +191,9 @@ function ChipSelector({ blockId, components, loading, methods, properties, style
           scroll.onViewportWidth(width);
         }}
         onScroll={onScroll}
+        onScrollEndDrag={onScrollEndDrag}
         ref={scrollRef}
+        scrollEnabled={overflows}
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         testID={`${blockId}_scroll`}
