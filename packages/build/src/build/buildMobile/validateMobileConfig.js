@@ -18,6 +18,7 @@ import semver from 'semver';
 import { type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
+import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import validateShellIcon from './validateShellIcon.js';
 
 const MOBILE_KEYS = ['homePageId', 'minShellVersion', 'menus', 'pages', 'shells', 'auth'];
@@ -35,7 +36,9 @@ const SHELL_KEYS = [
   'eas',
   'ios',
   'android',
+  'plugins',
 ];
+const SHELL_PLUGIN_KEYS = ['name', 'version', 'typePrefix', 'options'];
 const IOS_KEYS = ['bundleId', 'teamId'];
 const ANDROID_KEYS = ['package', 'sha256'];
 const EAS_KEYS = ['owner', 'projectId'];
@@ -46,6 +49,9 @@ const SHELL_DISTRIBUTIONS = ['private', 'store', 'internal'];
 
 const COLOR_PATTERN = /^#[0-9A-Fa-f]{6}$/;
 const STORE_VERSION_PATTERN = /^\d+\.\d+$/;
+// A shell plugin's version is exact, so one name@version is always the same
+// native code and the runtime version's plugins hash can stand for it.
+const PLUGIN_VERSION_PATTERN = /^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$/;
 // Apple: alphanumerics, hyphens and periods, in reverse-DNS form.
 const IOS_BUNDLE_ID_PATTERN = /^[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$/;
 // Android: at least two segments, each starting with a letter; letters, digits
@@ -241,6 +247,46 @@ function warnMissingSha256({ shell, path, configKey, context }) {
   );
 }
 
+function validateShellPlugin({ plugin, path, configKey }) {
+  checkObject({ value: plugin, path, configKey });
+  const pluginConfigKey = plugin['~k'] ?? configKey;
+  checkKeys({ object: plugin, allowed: SHELL_PLUGIN_KEYS, path, configKey: pluginConfigKey });
+  if (!type.isString(plugin.name)) {
+    throw new ConfigError(`App "${path}.name" should be a string.`, {
+      received: plugin.name,
+      configKey: pluginConfigKey,
+    });
+  }
+  if (!type.isString(plugin.version) || !PLUGIN_VERSION_PATTERN.test(plugin.version)) {
+    throw new ConfigError(
+      `App "${path}.version" of shell plugin "${plugin.name}" should be an exact version, like "2.1.0" or "2.1.0-beta.1". Ranges, dist-tags, git, "file:" and "workspace:" are refused.`,
+      { received: plugin.version, configKey: pluginConfigKey }
+    );
+  }
+  checkOptionalString({
+    value: plugin.typePrefix,
+    path: `${path}.typePrefix`,
+    configKey: pluginConfigKey,
+  });
+  if (!type.isUndefined(plugin.options)) {
+    checkObject({ value: plugin.options, path: `${path}.options`, configKey: pluginConfigKey });
+  }
+}
+
+function validateShellPlugins({ plugins, path, configKey }) {
+  if (!type.isArray(plugins)) {
+    throw new ConfigError(`App "${path}" should be an array.`, { received: plugins, configKey });
+  }
+  const checkDuplicatePlugin = createCheckDuplicateId({
+    message: `Duplicate shell plugin "{{ id }}" in "${path}".`,
+  });
+  plugins.forEach((plugin, index) => {
+    const pluginPath = `${path}[${index}]`;
+    validateShellPlugin({ plugin, path: pluginPath, configKey });
+    checkDuplicatePlugin({ id: plugin.name, configKey: plugin['~k'] ?? configKey });
+  });
+}
+
 function validateShell({ shell, path, configKey, context }) {
   checkObject({ value: shell, path, configKey });
   const shellConfigKey = shell['~k'] ?? configKey;
@@ -310,7 +356,41 @@ function validateShell({ shell, path, configKey, context }) {
       configKey: shellConfigKey,
     });
   }
+  if (!type.isUndefined(shell.plugins)) {
+    validateShellPlugins({
+      plugins: shell.plugins,
+      path: `${path}.plugins`,
+      configKey: shellConfigKey,
+    });
+  }
   warnMissingSha256({ shell, path, configKey: shellConfigKey, context });
+}
+
+// The server installs one copy of each plugin package, so a package has one
+// version across root plugins and every shell's plugins.
+function checkPluginVersions({ shells, rootPlugins, configKey }) {
+  const seen = new Map();
+  (type.isArray(rootPlugins) ? rootPlugins : []).forEach((plugin, index) => {
+    if (type.isObject(plugin) && type.isString(plugin.name) && !seen.has(plugin.name)) {
+      seen.set(plugin.name, { version: plugin.version, path: `plugins[${index}]` });
+    }
+  });
+  shells.forEach((shell, shellIndex) => {
+    (shell.plugins ?? []).forEach((plugin, index) => {
+      const path = `mobile.shells[${shellIndex}].plugins[${index}]`;
+      const first = seen.get(plugin.name);
+      if (!first) {
+        seen.set(plugin.name, { version: plugin.version, path });
+        return;
+      }
+      if (first.version !== plugin.version) {
+        throw new ConfigError(
+          `Plugin "${plugin.name}" is at version "${first.version}" in "${first.path}" and "${plugin.version}" in "${path}". An app runs one version of a plugin, so use the same version in both.`,
+          { configKey: plugin['~k'] ?? shell['~k'] ?? configKey }
+        );
+      }
+    });
+  });
 }
 
 function validateShells({ shells, configKey, context }) {
@@ -331,6 +411,14 @@ function validateShells({ shells, configKey, context }) {
     }
     shellIds.add(shell.id);
   });
+  checkPluginVersions({ shells, rootPlugins: context.plugins, configKey });
+  // validateNativePageTypes reads which shells carry which plugins. buildPage
+  // has no components. An in-process JIT page build runs on a copy of this
+  // context; the dev server's page builds restore it from mobileShells.json.
+  context.mobileShells = shells.map((shell) => ({
+    id: shell.id,
+    plugins: (shell.plugins ?? []).map((plugin) => plugin.name),
+  }));
 }
 
 function checkOptionalBoolean({ value, path, configKey }) {

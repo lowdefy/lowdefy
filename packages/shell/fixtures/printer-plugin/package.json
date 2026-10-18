@@ -1,0 +1,24 @@
+{
+  "name": "@example/lowdefy-printer",
+  "version": "2.1.0",
+  "private": true,
+  "description": "A test Lowdefy shell plugin: a Bluetooth label printer with one native block and one action.",
+  "type": "module",
+  "exports": {
+    "./shell": "./shell.cjs",
+    "./native": "./native.js",
+    "./types": "./types.js"
+  },
+  "peerDependencies": {
+    "expo": ">=58.0.0 <59.0.0",
+    "react-native-ble-plx": "3.5.0"
+  },
+  "peerDependenciesMeta": {
+    "expo": {
+      "optional": true
+    },
+    "react-native-ble-plx": {
+      "optional": true
+    }
+  }
+}

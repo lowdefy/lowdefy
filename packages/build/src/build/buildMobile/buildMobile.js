@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 import mergeMobilePages from './mergeMobilePages.js';
 import validateMobileConfig from './validateMobileConfig.js';
 import validateMobilePageRefs from './validateMobilePageRefs.js';
+import validateShellPluginsListed from './validateShellPluginsListed.js';
 
 // Runs once the web page list is complete (after addDefaultPages) and before
 // buildRoutes and buildAuth, so mobile pages get routes and auth like any page.
@@ -28,6 +29,7 @@ function buildMobile({ components, context }) {
     return components;
   }
   validateMobileConfig({ mobile: components.mobile, context });
+  validateShellPluginsListed({ mobile: components.mobile, context });
   mergeMobilePages({ components });
   validateMobilePageRefs({ components });
   return components;

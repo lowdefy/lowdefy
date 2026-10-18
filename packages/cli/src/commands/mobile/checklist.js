@@ -15,6 +15,7 @@
 */
 
 import createChecklist from './createChecklist.js';
+import loadInstalledShellPlugins from './loadInstalledShellPlugins.js';
 import loadMobileShell from './loadMobileShell.js';
 
 function formatChecklist({ shell, environment, steps }) {
@@ -37,8 +38,16 @@ function formatChecklist({ shell, environment, steps }) {
 // lowdefy mobile checklist: prints what the stores still need a person for.
 // It runs no EAS command.
 async function mobileChecklist({ context }) {
-  const { environment, profile, shell } = await loadMobileShell({ context });
-  const steps = createChecklist({ shell, profile, env: environment });
+  const { environment, profile, projectDirectory, shell, shellPackage } = await loadMobileShell({
+    context,
+  });
+  const plugins = loadInstalledShellPlugins({
+    environment,
+    projectDirectory,
+    shell,
+    shellPackage,
+  });
+  const steps = createChecklist({ shell, profile, env: environment, plugins });
   context.logger.info(formatChecklist({ shell, environment, steps }));
   return steps;
 }

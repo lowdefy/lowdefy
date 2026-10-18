@@ -15,22 +15,22 @@
 */
 
 import path from 'path';
-import { get } from '@lowdefy/helpers';
-import { readFile } from '@lowdefy/node-utils';
+import { collectPluginDefinitions, readFile } from '@lowdefy/node-utils';
 import YAML from 'yaml';
 
 // The plugins lowdefy.yaml lists, read straight from the file: the plugin
-// type maps are read before the config build, which needs them.
+// type maps are read before the config build, which needs them. plugins is
+// every package the server installs (root plugins, then shell-only plugins);
+// shellPlugins the packages mobile.shells[].plugins lists, for native types.
 async function readPluginDefinitions({ directories }) {
   let lowdefyYaml = await readFile(path.join(directories.config, 'lowdefy.yaml'));
   if (!lowdefyYaml) {
     lowdefyYaml = await readFile(path.join(directories.config, 'lowdefy.yml'));
   }
   if (!lowdefyYaml) {
-    return [];
+    return { plugins: [], shellPlugins: [] };
   }
-  const lowdefy = YAML.parse(lowdefyYaml);
-  return get(lowdefy, 'plugins', { default: [] });
+  return collectPluginDefinitions({ lowdefy: YAML.parse(lowdefyYaml) });
 }
 
 export default readPluginDefinitions;

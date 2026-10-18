@@ -19,7 +19,9 @@ import { jest } from '@jest/globals';
 const mockShallowBuild = jest.fn();
 const mockSerializeBuildException = jest.fn((exception) => ({ message: exception.message }));
 const mockWriteBuildStatus = jest.fn();
-const mockCreateCustomPluginTypesMap = jest.fn().mockResolvedValue({});
+const mockCreateCustomPluginTypesMap = jest
+  .fn()
+  .mockResolvedValue({ customTypesMap: {}, customTypesMapMobile: {} });
 const mockCreateCustomPluginMessagesMap = jest.fn().mockResolvedValue({});
 const mockPublishBuildDirectory = jest.fn(async () => {});
 

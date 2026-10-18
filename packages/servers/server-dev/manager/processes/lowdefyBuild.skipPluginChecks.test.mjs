@@ -26,7 +26,7 @@ jest.unstable_mockModule('../utils/writeBuildStatus.mjs', () => ({
   default: jest.fn(),
 }));
 jest.unstable_mockModule('../utils/createCustomPluginTypesMap.mjs', () => ({
-  default: jest.fn().mockResolvedValue({}),
+  default: jest.fn().mockResolvedValue({ customTypesMap: {}, customTypesMapMobile: {} }),
 }));
 jest.unstable_mockModule('../utils/createCustomPluginMessagesMap.mjs', () => ({
   default: jest.fn().mockResolvedValue({}),

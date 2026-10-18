@@ -1,0 +1,11 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Block type \"PrinterLabel\" on block \"label\" on page \"jobs\" comes from shell plugin \"@example/lowdefy-printer\", which mobile shell \"office\" does not list in its \"plugins\". A mobile page may use a shell plugin's types only when every shell carries the plugin."
+      ],
+      "errorContains": ["{{fixturesDir}}/MB10-mobile-shell-plugin-type-missing/lowdefy.yaml:25"]
+    }
+  ]
+}

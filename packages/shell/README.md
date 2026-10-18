@@ -52,6 +52,33 @@ operator type the shell registers (`src/plugins/types.js`, listed in
 a change to the plugin maps, `src/plugins/types.test.js` fails when it is stale, and
 `pnpm release:version` rewrites it after the version bump.
 
+## Shell plugins
+
+`plugins` in `shell.json` lists npm packages that add native code on top of the shell's profile:
+`[{ name, version, typePrefix?, options? }]`, written by `lowdefy mobile config` from
+`mobile.shells[].plugins`, which also installs them in the shell project. Each is a Lowdefy shell
+plugin; `resolveShellPlugins.js` describes the package contract:
+
+- `./shell` (CommonJS): a row shaped like one of `profiles.js` (`capabilities`, `modules`,
+  `plugins`, `permissions`, `privacyReasons`, `dataCollected`). `plugins` may be a function of the
+  plugin's `options`. `app.config.ts` loads it (`resolveShellPlugins.js`) and folds it into the
+  resolved profile (`applyShellPlugins.js`), so its config plugins, permissions, privacy reasons and
+  data join the profile's. Its modules are never excluded.
+- `./native` (optional): named exports `blocks` and `actions`, `{ [typeName]: implementation }`.
+  The shell ships `src/plugins/appTypes.js` empty; `config` rewrites it in the copy to import each
+  plugin's `./native` with its `typePrefix` (`src/plugins/prefixTypes.js`), and `types.js`
+  registers them after the built-in types.
+- `./types` (optional): `native: { blocks, actions, blockMetas, icons }`.
+  `scripts/createTypeManifest.mjs` adds `native.blocks` and `native.actions`, prefixed, to the type
+  manifest with the plugin's major version, and fails when two packages give one type name.
+  `config` runs it with `--write` in the copy, so the bundled `src/plugins/typeManifest.js` lists
+  the plugins' types.
+
+`checkShellPlugins.js` refuses a plugin that links a module `@lowdefy/shell` carries itself
+(`expo-camera`) or asks for a permission some profile carries and the shell's leaves out (the camera
+on `basic`), naming the profile to pick. `config` runs it from the copied shell; `app.config.ts`
+runs it again at prebuild. `fixtures/printer-plugin` is the test plugin.
+
 ## Store uploads
 
 `app.config.ts` sets what App Store Connect and Google Play would otherwise ask a person on upload:
@@ -72,9 +99,10 @@ a change to the plugin maps, `src/plugins/types.test.js` fails when it is stale,
   Lowdefy Dev has none and builds as `0.0.0`.
 - `extra.shell.version` is the `@lowdefy/shell` package version, which the runtime sends as
   `x-lowdefy-shell`.
-- `runtimeVersion` is `<nativeVersion>-<profile>`, with `-<hash>` of the shell's `plugins`
-  (`[{ name, version }]`) when it lists any (`runtimeVersion.js`, a pure function `lowdefy mobile`
-  reuses). An over-the-air update reaches only binaries with the same runtime version. Shell
+- `runtimeVersion` is `<nativeVersion>-<profile>`, with `-<hash>` of the shell's `plugins` when it
+  lists any (`runtimeVersion.js`, a pure function `lowdefy mobile` reuses). Each plugin is keyed on
+  `name@version` and its `options` as JSON with keys sorted, so a new plugin version or option is a
+  new runtime version and a native build. An over-the-air update reaches only binaries with the same runtime version. Shell
   identity is not part of it, so every shell on one `nativeVersion` and profile shares it.
 - `nativeVersion` in `package.json` is bumped only when the shell's native dependencies or config
   plugins change. `pnpm check:native-version` (run by the package's tests) computes Expo's

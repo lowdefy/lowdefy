@@ -65,6 +65,8 @@ afterAll(() => {
 
 beforeEach(() => {
   context.handleWarning.mockReset();
+  delete context.plugins;
+  delete context.mobileShells;
 });
 
 const validMobile = {
@@ -411,7 +413,7 @@ test.each([
   [
     'an extra key',
     { bundleId: 'com.example.field' },
-    'App "mobile.shells[0]" has unknown key "bundleId". Allowed keys: id, name, icon, color, profile, version, scheme, distribution, eas, ios, android.',
+    'App "mobile.shells[0]" has unknown key "bundleId". Allowed keys: id, name, icon, color, profile, version, scheme, distribution, eas, ios, android, plugins.',
   ],
 ])('validateMobileConfig refuses a shell with %s', (_, fields, message) => {
   expect(() => validateShells([{ ...storeShell, ...fields }])).toThrow(message);
@@ -437,4 +439,118 @@ test('validateMobileConfig warns when an iOS-only shell has no android.sha256', 
 test('validateMobileConfig does not warn for a shell with neither ios nor android', () => {
   validateShells([{ id: 'field', scheme: 'field' }]);
   expect(context.handleWarning).not.toHaveBeenCalled();
+});
+
+const printer = { name: '@example/lowdefy-printer', version: '2.1.0' };
+
+test('validateMobileConfig accepts shell plugins with exact versions', () => {
+  expect(() =>
+    validateShells([
+      {
+        id: 'field',
+        plugins: [
+          { ...printer, typePrefix: 'Printer' },
+          { name: '@example/lowdefy-mdm', version: '2.1.0-beta.1', options: { tenant: 'field' } },
+        ],
+      },
+    ])
+  ).not.toThrow();
+  expect(context.mobileShells).toEqual([
+    { id: 'field', plugins: ['@example/lowdefy-printer', '@example/lowdefy-mdm'] },
+  ]);
+});
+
+test('validateMobileConfig records shells without plugins for the page type check', () => {
+  validateShells([{ id: 'field' }, { id: 'office', plugins: [] }]);
+  expect(context.mobileShells).toEqual([
+    { id: 'field', plugins: [] },
+    { id: 'office', plugins: [] },
+  ]);
+});
+
+test.each(['^2.1.0', 'latest', 'file:../x', 'workspace:*', '2.1', 'github:example/printer', 2])(
+  'validateMobileConfig refuses shell plugin version %s',
+  (version) => {
+    expect(() => validateShells([{ id: 'field', plugins: [{ ...printer, version }] }])).toThrow(
+      'App "mobile.shells[0].plugins[0].version" of shell plugin "@example/lowdefy-printer" should be an exact version, like "2.1.0" or "2.1.0-beta.1". Ranges, dist-tags, git, "file:" and "workspace:" are refused.'
+    );
+  }
+);
+
+test.each([
+  [
+    'plugins that are not an array',
+    { plugins: {} },
+    'App "mobile.shells[0].plugins" should be an array.',
+  ],
+  [
+    'a plugin that is not an object',
+    { plugins: ['x'] },
+    'App "mobile.shells[0].plugins[0]" should be an object.',
+  ],
+  [
+    'a plugin with an unknown key',
+    { plugins: [{ ...printer, source: 'git' }] },
+    'App "mobile.shells[0].plugins[0]" has unknown key "source". Allowed keys: name, version, typePrefix, options.',
+  ],
+  [
+    'a plugin with no name',
+    { plugins: [{ version: '2.1.0' }] },
+    'App "mobile.shells[0].plugins[0].name" should be a string.',
+  ],
+  [
+    'a typePrefix that is not a string',
+    { plugins: [{ ...printer, typePrefix: 1 }] },
+    'App "mobile.shells[0].plugins[0].typePrefix" should be a string.',
+  ],
+  [
+    'options that are not an object',
+    { plugins: [{ ...printer, options: 'tenant' }] },
+    'App "mobile.shells[0].plugins[0].options" should be an object.',
+  ],
+  [
+    'the same plugin twice',
+    { plugins: [printer, { ...printer }] },
+    'Duplicate shell plugin "@example/lowdefy-printer" in "mobile.shells[0].plugins".',
+  ],
+])('validateMobileConfig refuses a shell with %s', (_, fields, message) => {
+  expect(() => validateShells([{ id: 'field', ...fields }])).toThrow(message);
+});
+
+test('validateMobileConfig accepts one plugin in two shells at one version', () => {
+  context.plugins = [printer];
+  expect(() =>
+    validateShells([
+      { id: 'field', plugins: [printer] },
+      { id: 'office', plugins: [{ ...printer }] },
+    ])
+  ).not.toThrow();
+});
+
+test('validateMobileConfig refuses one plugin in two shells at two versions', () => {
+  expect(() =>
+    validateShells([
+      { id: 'field', plugins: [printer] },
+      { id: 'office', plugins: [{ ...printer, version: '2.2.0', '~k': 'k2' }] },
+    ])
+  ).toThrow(
+    'Plugin "@example/lowdefy-printer" is at version "2.1.0" in "mobile.shells[0].plugins[0]" and "2.2.0" in "mobile.shells[1].plugins[0]". An app runs one version of a plugin, so use the same version in both.'
+  );
+});
+
+test('validateMobileConfig refuses a shell plugin at a version other than root plugins', () => {
+  context.plugins = [
+    { name: '@example/other', version: '1.0.0' },
+    { ...printer, version: '2.0.0' },
+  ];
+  let error;
+  try {
+    validateShells([{ id: 'field', plugins: [{ ...printer, '~k': 'k3' }] }]);
+  } catch (err) {
+    error = err;
+  }
+  expect(error.message).toBe(
+    'Plugin "@example/lowdefy-printer" is at version "2.0.0" in "plugins[1]" and "2.1.0" in "mobile.shells[0].plugins[0]". An app runs one version of a plugin, so use the same version in both.'
+  );
+  expect(error.configKey).toBe('k3');
 });

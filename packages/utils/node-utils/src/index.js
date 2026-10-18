@@ -20,6 +20,7 @@ import bootIosSimulator from './devices/bootIosSimulator.js';
 import checkEnvironmentGuards from './checkEnvironmentGuards.js';
 import cleanDirectory from './cleanDirectory.js';
 import collectEnvironmentGuards from './collectEnvironmentGuards.js';
+import collectPluginDefinitions from './collectPluginDefinitions.js';
 import compareProcessStartTimes from './compareProcessStartTimes.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
 import createConnectPublic from './createConnectPublic.js';
@@ -40,6 +41,7 @@ import getMarkedCredentials from './getMarkedCredentials.js';
 import getLowdefyHome from './getLowdefyHome.js';
 import getProcessStartTime from './getProcessStartTime.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
+import hasTypesExport from './hasTypesExport.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 import isPidAlive from './isPidAlive.js';
 import isProcessAlive from './isProcessAlive.js';
@@ -113,6 +115,7 @@ export {
   cleanDirectory,
   createDevAppLink,
   collectEnvironmentGuards,
+  collectPluginDefinitions,
   compareProcessStartTimes,
   compileSegments,
   copyFileOrDirectory,
@@ -140,6 +143,7 @@ export {
   getLowdefyHome,
   getProcessStartTime,
   getSecretsFromEnv,
+  hasTypesExport,
   hashSequence,
   installIfPackageJsonChanged,
   isBackedBy,

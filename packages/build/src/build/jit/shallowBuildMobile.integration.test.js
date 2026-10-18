@@ -53,6 +53,21 @@ const { snapshotTypesMap, snapshotTypesMapMobile } = await import(
   '../../test-utils/runBuildForSnapshots.js'
 );
 
+// A shell plugin's native block, as the servers' createCustomPluginTypesMap
+// adds it.
+const customTypesMapMobile = {
+  ...snapshotTypesMapMobile,
+  blocks: {
+    ...snapshotTypesMapMobile.blocks,
+    PrinterLabel: {
+      package: '@example/lowdefy-printer',
+      originalTypeName: 'Label',
+      version: '2.1.0',
+    },
+  },
+  plugins: ['@example/lowdefy-printer'],
+};
+
 const logger = {
   info: () => {},
   log: () => {},
@@ -185,7 +200,7 @@ blocks:
 
   result = await shallowBuild({
     customTypesMap: snapshotTypesMap,
-    customTypesMapMobile: snapshotTypesMapMobile,
+    customTypesMapMobile,
     directories: { config: configDir, build: buildDir, server: path.dirname(buildDir) },
     logger,
     stage: 'dev',
@@ -247,6 +262,18 @@ test('the skeleton build writes the mobile theme and the class map of inline mob
   expect(type.isString(theme.dark.colorBgBase)).toBe(true);
   const classMap = readArtifact('mobile/classMap.json');
   expect(Object.keys(classMap)).toEqual(expect.arrayContaining(['p-4', 'text-lg']));
+});
+
+test('the skeleton build writes the mobile types map JIT page builds read', () => {
+  expect(readArtifact('customTypesMapMobile.json')).toEqual(customTypesMapMobile);
+  expect(result.context.typesMapMobile.blocks.PrinterLabel).toEqual(
+    customTypesMapMobile.blocks.PrinterLabel
+  );
+});
+
+test('the skeleton build writes which shell plugins each shell carries for dev page builds', () => {
+  expect(readArtifact('mobileShells.json')).toEqual(result.context.mobileShells);
+  expect(readArtifact('mobileShells.json')).toEqual([{ id: 'field', plugins: [] }]);
 });
 
 test('the web menu leaves mobile-only pages out', () => {

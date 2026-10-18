@@ -81,9 +81,12 @@ function createContext({
     pluginModuleCache: new Map(),
     typeCounters: createTypeCounters(),
     typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
-    // The client types a native shell carries (defaultPackagesMobile). Mobile
-    // pages resolve blocks, actions and client operators against it; app
-    // plugins do not register into it, since a shell carries no app code.
+    // The client types a native shell carries (defaultPackagesMobile), plus
+    // the native types of the shell plugins mobile.shells[].plugins lists
+    // (createPluginTypesMapMobile). Mobile pages resolve blocks, actions and
+    // client operators against it. Other app plugins do not register into it,
+    // since a shell carries no app code. Its plugins key names the shell
+    // plugins the server read, which validateShellPluginsListed checks.
     typesMapMobile: mergeObjects([defaultTypesMapMobile, customTypesMapMobile]),
     messagesMap: mergeObjects([defaultMessagesMap, customMessagesMap]),
   };

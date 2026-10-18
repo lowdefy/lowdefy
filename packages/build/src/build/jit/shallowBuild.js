@@ -335,6 +335,18 @@ async function shallowBuild(options) {
       'customTypesMap.json',
       JSON.stringify(options.customTypesMap ?? {})
     );
+    // JIT page builds resolve mobile pages against the same shell plugin
+    // types as this build.
+    await context.writeBuildArtifact(
+      'customTypesMapMobile.json',
+      JSON.stringify(options.customTypesMapMobile ?? {})
+    );
+    // Which shells carry which shell plugins (validateMobileConfig), so a
+    // dev page build refuses a plugin type some shell lacks, as this build does.
+    await context.writeBuildArtifact(
+      'mobileShells.json',
+      JSON.stringify(context.mobileShells ?? [])
+    );
     await context.writeBuildArtifact(
       'customMessagesMap.json',
       JSON.stringify(options.customMessagesMap ?? {})
