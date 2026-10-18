@@ -35,6 +35,7 @@ const nativeBlockTypes = {
     'Markdown',
     'Menu',
     'NumberInput',
+    'PageDots',
     'Paragraph',
     'Screen',
     'SegmentedControl',
@@ -84,6 +85,7 @@ const nativeBlockTypes = {
     Markdown: [],
     Menu: [],
     NumberInput: [],
+    PageDots: [],
     Paragraph: [],
     Screen: [],
     SegmentedControl: [],
@@ -233,6 +235,10 @@ const nativeBlockTypes = {
         'prefixIcon',
         'suffixIcon',
       ],
+    },
+    PageDots: {
+      category: 'display',
+      cssKeys: ['element'],
     },
     Paragraph: {
       category: 'display',

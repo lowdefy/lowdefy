@@ -300,6 +300,10 @@ const typeManifest = {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
+    PageDots: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
     Paragraph: {
       package: '@lowdefy/blocks-native',
       version: 6,

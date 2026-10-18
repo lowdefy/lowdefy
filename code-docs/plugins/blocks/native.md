@@ -4,11 +4,11 @@ The native block set: React Native components a Lowdefy mobile shell renders thr
 
 ## Blocks
 
-Layout and display blocks: `Box`, `Card`, `Divider`, `Tabs`, `Title`, `Paragraph`, `Markdown`, `Icon`, `Tag`, `Alert`, `Empty`, `Skeleton` and `Spinner`. List, input and action blocks: `List`, `ListItem`, `Avatar`, `StatusIcon`, `TextInput`, `TextArea`, `NumberInput`, `Selector`, `ChipSelector`, `Switch`, `DateSelector` and `Button`. `Screen` (the mobile page type) has its meta here and its component in `@lowdefy/client-native`. `Empty`, `ListItem`, `Avatar`, `StatusIcon` and `ChipSelector` have no web block; a page that uses one is mobile only.
+Layout and display blocks: `Box`, `Card`, `Divider`, `Tabs`, `Title`, `Paragraph`, `Markdown`, `Icon`, `Tag`, `Alert`, `Empty`, `Skeleton`, `Spinner` and `PageDots`. List, input and action blocks: `List`, `ListItem`, `Avatar`, `StatusIcon`, `TextInput`, `TextArea`, `NumberInput`, `Selector`, `ChipSelector`, `Switch`, `DateSelector` and `Button`. `Screen` (the mobile page type) has its meta here and its component in `@lowdefy/client-native`. `Empty`, `ListItem`, `Avatar`, `StatusIcon`, `ChipSelector` and `PageDots` have no web block; a page that uses one is mobile only. Box's `onSwipeLeft`, `onSwipeRight` and `swipeFeedback` are mobile only.
 
 | Block                 | Web source          | Native notes                                                                                  |
 | --------------------- | ------------------- | --------------------------------------------------------------------------------------------- |
-| `Box`                 | blocks-basic        | A `View`, or a `Pressable` button with `onClick`.                                             |
+| `Box`                 | blocks-basic        | A `View`, or a `Pressable` button with `onClick`; swipe events (see Swipes below).            |
 | `Card`                | blocks-antd         | Header (title, extra), cover, body, actions; `loading` draws skeleton rows.                   |
 | `Divider`             | blocks-antd         | Dashed and dotted lines are zero-height views with a split border (iOS draws dashes only so). |
 | `Tabs`                | blocks-antd         | Top tabs in a scrolling bar (RN views, not `@expo/ui`); `setActiveKey` method; `bottom` too.  |
@@ -42,6 +42,17 @@ The list, input and action blocks:
 - **Swipe actions.** `shared/SwipeableRow` (Animated and PanResponder, JS driven): leading and trailing trays that grow with the drag, the first action at the edge, open past half, and a full swipe past 60% of the row runs the edge action on the sides `fullSwipe` allows (ListItem: leading by default). SwiftUI's SwipeActions only work inside a SwiftUI List, and List items are React Native views. No haptics: the shell links no haptics module.
 - **Context menu.** On iOS `ListItemContextMenu` hosts the row in `@expo/ui/swift-ui`'s `ContextMenu` trigger (`Host` and `RNHostView`), its items as SwiftUI buttons with SF Symbols (`getSfSymbol`; a Lucide name shows no icon). It requires `@expo/ui/swift-ui` when drawn, so Android and the shell's Jest never load SwiftUI. Elsewhere a long press shows an alert (`showContextMenuAlert`). Screen readers get swipe and menu items as accessibility actions on the row.
 - **Avatar and StatusIcon.** `getInitials` (first and last word, an email's name part) and `getAvatarColor` (an FNV-1a hash of the lower-cased name into nine antd hues, deeper shades for bright hues in light mode). `StatusGlyph` draws each glyph on a 16 unit grid with react-native-svg; marks inside filled glyphs use the cell colour so they read as cut out. `StatusMark` adds the label and accessibility, and is shared by StatusIcon, ListItem and section headers.
+
+## Swipes
+
+A Box with `onSwipeLeft` or `onSwipeRight` takes horizontal swipes, such as swiping through recent records (with `PageDots` for the place among them). `Box/useSwipeGesture` is a PanResponder on the Box (around its Pressable when it has `onClick`, since a Pressable sets its own responder handlers), and the thresholds are plain functions with tests:
+
+- **Taking a drag.** `isSwipeGesture` answers the bubble-phase `onMoveShouldSetPanResponder` only, so rows inside the Box with their own swipes (a ListItem's swipe actions take the capture phase) win, and a press inside the Box is cancelled once the Box takes the drag. It takes a drag that `getSwipeDirection` calls a swipe (across more than 40pt and more than twice as far across as down, or a flick faster than 0.5pt/ms past 10pt) in a direction the Box has an event for, and never one that started within 20pt of the screen's left edge (`moveX - dx`), which is iOS's back gesture. Vertical drags stay with the page's scroll view. Once taken, the Box refuses to give the drag up.
+- **Release.** The pan responder measures from its grant, so the hook keeps the distance it took the drag at and judges the release on the whole drag: a drag dragged back short of a swipe fires nothing.
+- **Feedback.** `swipeFeedback: true` moves the Box on a rubber band (`getRubberBand`: iOS's `1 - 1 / (x * 0.55 / 48 + 1)` stretch, never past 48pt) from where it took the drag, so it does not jump by the 40pt, and only toward a direction it has an event for; it springs back on release, on the native driver.
+- **Screen readers.** Each swipe event is an accessibility action (`swipeLeft`, `swipeRight`) on the Box's accessible element.
+
+`PageDots` is iOS's page control: `count` 7pt dots 9pt apart in `color` (a hue, token or hex through `resolveColor`; the label colour by default) at 30%, and an active dot over them in full that slides to `index` on a spring as it stretches across and settles round (native driver). Screen readers read "Page 2 of 5". An index past the end shows the last page.
 
 ## Chip strips
 
