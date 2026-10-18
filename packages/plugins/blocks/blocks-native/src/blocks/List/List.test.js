@@ -16,7 +16,7 @@
 
 import { act, fireEvent, screen, within } from '@testing-library/react-native';
 
-import { renderPage, styleOf, theme } from '../../test/renderPage.js';
+import { renderPage, styleOf } from '../../test/renderPage.js';
 
 function callMethod(id, method, args) {
   return { id, type: 'CallMethod', params: { blockId: 'items', method, args } };
@@ -284,9 +284,8 @@ test('an inset grouped List draws sections in the order sections gives, with cou
   expect(screen.getByText('1')).toBeTruthy();
   expect(screen.getByText('2')).toBeTruthy();
   expect(screen.getByLabelText('In progress')).toBeTruthy();
-  expect(styleOf(screen.getByTestId('items_list')).backgroundColor).toEqual(
-    theme.light.colorBgLayout
-  );
+  // The theme provider adds iOS semantic tokens: systemGroupedBackground in light mode.
+  expect(styleOf(screen.getByTestId('items_list')).backgroundColor).toEqual('#F2F2F7');
 });
 
 test('a plain List with a header draws edge to edge rows under a Headline header', async () => {
