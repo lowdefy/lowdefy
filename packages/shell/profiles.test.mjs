@@ -20,7 +20,13 @@ import { createRequire } from 'node:module';
 import test from 'node:test';
 
 const require = createRequire(import.meta.url);
-const { PROFILES, RELEASE_PROFILES, resolveProfile } = require('./profiles.js');
+const {
+  MICROPHONE_PERMISSION,
+  PROFILES,
+  RELEASE_PROFILES,
+  SPEECH_RECOGNITION_PERMISSION,
+  resolveProfile,
+} = require('./profiles.js');
 
 const shellPackage = require('./package.json');
 
@@ -38,6 +44,59 @@ test('field carries everything basic does, and the camera', () => {
   assert.equal(field.modules['expo-camera'], 'ExpoCamera');
   assert.ok(field.capabilities.includes('camera'));
   assert.equal('expo-camera' in basic.modules, false);
+});
+
+test('basic carries the speech module, its config plugin and its permissions', () => {
+  const basic = resolveProfile('basic');
+  assert.equal(basic.modules['expo-speech-recognition'], 'ExpoSpeechRecognition');
+  assert.ok(basic.capabilities.includes('speech'));
+  assert.deepEqual(
+    basic.plugins.find(
+      (plugin) => Array.isArray(plugin) && plugin[0] === 'expo-speech-recognition'
+    ),
+    [
+      'expo-speech-recognition',
+      {
+        microphonePermission:
+          '$(PRODUCT_NAME) uses the microphone when you tap the microphone button, to turn what you say into text.',
+        speechRecognitionPermission:
+          '$(PRODUCT_NAME) turns what you say into text on this device. Your voice is not recorded or sent anywhere.',
+      },
+    ]
+  );
+  [
+    'NSMicrophoneUsageDescription',
+    'NSSpeechRecognitionUsageDescription',
+    'android.permission.RECORD_AUDIO',
+  ].forEach((permission) => assert.ok(basic.permissions.includes(permission), permission));
+});
+
+test('every profile carries speech', () => {
+  Object.keys(PROFILES).forEach((name) => {
+    const profile = resolveProfile(name);
+    assert.equal(profile.modules['expo-speech-recognition'], 'ExpoSpeechRecognition', name);
+    assert.ok(profile.capabilities.includes('speech'), name);
+    assert.ok(profile.permissions.includes('android.permission.RECORD_AUDIO'), name);
+    assert.equal(
+      profile.plugins.filter(
+        (plugin) => Array.isArray(plugin) && plugin[0] === 'expo-speech-recognition'
+      ).length,
+      1,
+      name
+    );
+  });
+});
+
+test('every expo-camera entry gives the speech microphone text and keeps RECORD_AUDIO off', () => {
+  Object.keys(PROFILES).forEach((name) => {
+    resolveProfile(name)
+      .plugins.filter((plugin) => Array.isArray(plugin) && plugin[0] === 'expo-camera')
+      .forEach(([, props]) => {
+        assert.equal(props.microphonePermission, MICROPHONE_PERMISSION, name);
+        assert.equal(props.recordAudioAndroid, false, name);
+      });
+  });
+  assert.match(SPEECH_RECOGNITION_PERMISSION, /not recorded or sent anywhere/);
 });
 
 test('field-nfc and field-tracking extend field', () => {

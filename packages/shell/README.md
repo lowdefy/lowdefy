@@ -38,7 +38,10 @@ names more than one app, or has no url for the shell's `environment`; `app.confi
 `field`, `field-nfc`, `field-tracking`, and `dev` and `development` for Lowdefy Dev and development
 builds. Each lists the native modules, config plugins, permissions, JavaScript entry modules,
 required-reason APIs and collected data it carries, and may extend another (`field` is `basic` and
-the camera). `resolveProfile(name)` flattens one, and throws on a name the table lacks. A shell
+the camera). `basic`, and so every profile, carries on-device dictation (`expo-speech-recognition`)
+with its microphone and speech purpose texts; `expo-camera` is given the same microphone text, so
+plugin order cannot change it. `resolveProfile(name)` flattens one, and throws on a name the table
+lacks. A shell
 config without `profile` is `basic`, or `dev` for Lowdefy Dev. `app.config.ts` applies only the
 profile's config plugins, and sets `capabilities` from it when `shell.json` has none.
 

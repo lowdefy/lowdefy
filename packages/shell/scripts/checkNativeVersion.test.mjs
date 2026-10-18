@@ -25,6 +25,7 @@ import { fileURLToPath } from 'node:url';
 import { checkNativeVersion } from './checkNativeVersion.mjs';
 
 const shellRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const shellPackage = JSON.parse(fs.readFileSync(path.join(shellRoot, 'package.json'), 'utf8'));
 
 const SKIPPED_IN_COPY = new Set(['android', 'coverage', 'dist', 'ios', 'node_modules', '.expo']);
 
@@ -98,15 +99,24 @@ test('a native dependency added without a nativeVersion bump fails, and passes a
     }));
     const unbumped = await checkNativeVersion({ shellRoot: directory });
     assert.equal(unbumped.ok, false);
-    assert.match(unbumped.message, /native code changed .* but nativeVersion is still 1/);
+    assert.match(
+      unbumped.message,
+      new RegExp(`native code changed .* but nativeVersion is still ${shellPackage.nativeVersion}`)
+    );
 
     const refused = await checkNativeVersion({ shellRoot: directory, write: true });
     assert.equal(refused.ok, false);
 
-    updatePackageJson(directory, (packageJson) => ({ ...packageJson, nativeVersion: 2 }));
+    updatePackageJson(directory, (packageJson) => ({
+      ...packageJson,
+      nativeVersion: packageJson.nativeVersion + 1,
+    }));
     const notWritten = await checkNativeVersion({ shellRoot: directory });
     assert.equal(notWritten.ok, false);
-    assert.match(notWritten.message, /records 1. Run .*--write/);
+    assert.match(
+      notWritten.message,
+      new RegExp(`records ${shellPackage.nativeVersion}. Run .*--write`)
+    );
 
     assert.equal((await checkNativeVersion({ shellRoot: directory, write: true })).ok, true);
     const written = await checkNativeVersion({ shellRoot: directory });

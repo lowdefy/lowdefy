@@ -45,10 +45,19 @@ const path = require('node:path');
 // Lowdefy Dev's developer features: connect, shake menu and dev-tab client (src/dev).
 const DEV_ENTRY = path.join(__dirname, 'src', 'dev', 'index.js');
 
+// One microphone purpose text for every plugin that writes NSMicrophoneUsageDescription: speech
+// (basic) and expo-camera (field, dev). expo-camera writes its own default when no earlier plugin
+// set the key, so it is given the same text and plugin order cannot change what a shell shows.
+const MICROPHONE_PERMISSION =
+  '$(PRODUCT_NAME) uses the microphone when you tap the microphone button, to turn what you say into text.';
+const SPEECH_RECOGNITION_PERMISSION =
+  '$(PRODUCT_NAME) turns what you say into text on this device. Your voice is not recorded or sent anywhere.';
+
 const PROFILES = {
-  // What every shell carries: the runtime, native blocks, sign-in and biometric unlock.
+  // What every shell carries: the runtime, native blocks, sign-in, biometric unlock and on-device
+  // dictation (expo-speech-recognition, for the Composer and AgentChat mic).
   basic: {
-    capabilities: ['biometrics', 'sign-in'],
+    capabilities: ['biometrics', 'sign-in', 'speech'],
     modules: {
       '@expo/ui': 'ExpoUI',
       'expo-clipboard': 'ExpoClipboard',
@@ -61,6 +70,7 @@ const PROFILES = {
       'expo-network': 'ExpoNetwork',
       'expo-router': null,
       'expo-secure-store': 'ExpoSecureStore',
+      'expo-speech-recognition': 'ExpoSpeechRecognition',
       'expo-splash-screen': 'ExpoSplashScreen',
       'expo-sqlite': 'ExpoSQLite',
       'expo-updates': 'ExpoUpdates',
@@ -79,11 +89,24 @@ const PROFILES = {
         'expo-secure-store',
         { faceIDPermission: 'Allow $(PRODUCT_NAME) to use Face ID to unlock the app.' },
       ],
+      [
+        'expo-speech-recognition',
+        {
+          microphonePermission: MICROPHONE_PERMISSION,
+          speechRecognitionPermission: SPEECH_RECOGNITION_PERMISSION,
+        },
+      ],
       'expo-splash-screen',
       'expo-sqlite',
       'expo-web-browser',
     ],
-    permissions: ['NSFaceIDUsageDescription', 'android.permission.USE_BIOMETRIC'],
+    permissions: [
+      'NSFaceIDUsageDescription',
+      'android.permission.USE_BIOMETRIC',
+      'NSMicrophoneUsageDescription',
+      'NSSpeechRecognitionUsageDescription',
+      'android.permission.RECORD_AUDIO',
+    ],
     jsEntries: [],
     // React Native's own (file timestamps, UserDefaults, boot time), and the free disk space
     // expo-sqlite checks before it writes.
@@ -104,12 +127,14 @@ const PROFILES = {
     extends: 'basic',
     capabilities: ['camera'],
     modules: { 'expo-camera': 'ExpoCamera' },
-    // Android's microphone permission is left out: the shell takes no video.
+    // The camera does not add Android's microphone permission: the shell takes no video.
+    // RECORD_AUDIO comes from basic, for speech.
     plugins: [
       [
         'expo-camera',
         {
           cameraPermission: 'Allow $(PRODUCT_NAME) to use the camera.',
+          microphonePermission: MICROPHONE_PERMISSION,
           recordAudioAndroid: false,
         },
       ],
@@ -142,6 +167,7 @@ const PROFILES = {
         'expo-camera',
         {
           cameraPermission: 'Allow $(PRODUCT_NAME) to scan the code lowdefy dev prints.',
+          microphonePermission: MICROPHONE_PERMISSION,
           recordAudioAndroid: false,
         },
       ],
@@ -238,9 +264,11 @@ function resolveProfile(name) {
 
 module.exports = {
   DEV_ENTRY,
+  MICROPHONE_PERMISSION,
   PROFILES,
   RELEASE_PROFILES,
   mergeProfiles,
   pluginName,
   resolveProfile,
+  SPEECH_RECOGNITION_PERMISSION,
 };
