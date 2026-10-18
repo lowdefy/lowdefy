@@ -39,7 +39,8 @@ function getPublicOrigins({ context }) {
 
 // Browsers open a websocket to any host a page names, so a websocket upgrade
 // is accepted only from the app's own pages, or from a client that sends no
-// Origin (a server or a script). A browser cannot set headers on a websocket
+// Origin (a server, a script, or a phone shell sending its session as a
+// bearer). A browser cannot set headers on a websocket
 // handshake, so X-Forwarded-Host is accepted here, where a proxy or CDN in
 // front of the app rewrites Host; the app's configured public origins are too.
 // A refusal is logged, since behind a proxy that passes neither it would
