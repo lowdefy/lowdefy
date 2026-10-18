@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { jest } from '@jest/globals';
-import { StyleSheet } from 'react-native';
+import { Dimensions, processColor, StyleSheet } from 'react-native';
 import { act, fireEvent, render, screen, within } from '@testing-library/react-native';
 
 import buildPage from './test/buildPage.js';
@@ -403,6 +403,121 @@ test('a Screen without a headerBottom slot reports none', async () => {
   expect(await screen.findByText('Body')).toBeTruthy();
   expect(onScreenOptions.mock.calls.at(-1)[0]).toMatchObject({ headerBottom: false });
   expect(screen.queryByTestId('home_header_bottom')).toBeNull();
+});
+
+// The colours of a tint layer's gradient stops, from the top, as react-native-svg sends them.
+function tintColors(layer) {
+  const [gradient] = findAll(layer, (node) => node.type === 'RNSVGLinearGradient');
+  return gradient.props.gradient.filter((_, index) => index % 2 === 1);
+}
+
+async function waitFor(ms) {
+  await act(() => new Promise((resolve) => setTimeout(resolve, ms)));
+}
+
+const tintPage = {
+  id: 'home',
+  type: 'Screen',
+  properties: {
+    title: 'Design',
+    largeTitle: true,
+    backgroundTint: { color: { _state: 'tint' }, colorDark: '#7c2d12' },
+  },
+  events: { onInit: [{ id: 'init', type: 'SetState', params: { tint: '#ff7a45' } }] },
+  slots: {
+    content: {
+      blocks: [
+        {
+          id: 'next',
+          type: 'Button',
+          properties: { title: 'Next' },
+          events: { onClick: [{ id: 'set', type: 'SetState', params: { tint: '#1677ff' } }] },
+        },
+      ],
+    },
+    headerBottom: {
+      blocks: [{ id: 'spaces', type: 'Paragraph', properties: { content: 'Spaces' } }],
+    },
+  },
+};
+
+test('a backgroundTint draws a gradient behind the scroll view, fixed to the screen', async () => {
+  const { view } = renderScreen({ page: tintPage });
+  await view;
+  expect(await screen.findByText('Next')).toBeTruthy();
+  const layer = screen.getByTestId('screen_tint_0');
+  const [scrollView] = findAll(screen.root, (node) => node.type === 'RCTScrollView');
+  // Under the scroll view, in its parent, not in the content that scrolls.
+  expect(screen.root.children.indexOf(layer)).toBeLessThan(
+    screen.root.children.indexOf(scrollView)
+  );
+  expect(flatStyle(screen.root).backgroundColor).toBe('#F2F2F7');
+  expect(flatStyle(scrollView).backgroundColor).toBeUndefined();
+  expect(flatStyle(layer)).toMatchObject({
+    height: Dimensions.get('window').height * 0.15,
+    position: 'absolute',
+    top: 0,
+  });
+  expect(layer.props.pointerEvents).toBe('none');
+  // The colour at 35% at the top, easing out to clear at the bottom.
+  const colors = tintColors(layer);
+  expect(colors[0]).toBe(processColor('rgba(255, 122, 69, 0.35)'));
+  expect(colors.at(-1)).toBe(processColor('rgba(255, 122, 69, 0)'));
+});
+
+test('a backgroundTint cross-fades to a new colour', async () => {
+  const { view } = renderScreen({ page: tintPage });
+  await view;
+  await waitFor(400);
+  await act(async () => {
+    fireEvent.press(screen.getByText('Next'));
+  });
+  // The new tint fades in over the old one as it fades out.
+  const incoming = await screen.findByTestId('screen_tint_1');
+  expect(tintColors(incoming)[0]).toBe(processColor('rgba(22, 119, 255, 0.35)'));
+  expect(screen.getByTestId('screen_tint_0')).toBeTruthy();
+  // Faded out after 250ms, the old tint is gone.
+  await waitFor(400);
+  expect(screen.queryByTestId('screen_tint_0')).toBeNull();
+  expect(screen.getByTestId('screen_tint_1')).toBeTruthy();
+});
+
+test('a backgroundTint draws colorDark at 45% in dark mode', async () => {
+  const { host } = createFakeHost({ path: '/home' });
+  await render(
+    <LowdefyPage
+      core={createCore()}
+      host={host}
+      pageConfig={buildPage(tintPage)}
+      rootConfig={{ ...rootConfig, theme: { ...theme, darkMode: 'dark' } }}
+      types={createTypes()}
+    />
+  );
+  await screen.findByText('Next');
+  expect(tintColors(screen.getByTestId('screen_tint_0'))[0]).toBe(
+    processColor('rgba(124, 45, 18, 0.45)')
+  );
+});
+
+test('a pinned headerBottom draws the backgroundTint in its surface, where the page draws it', async () => {
+  const { view } = renderScreen({ headerInset: 150, page: tintPage });
+  await view;
+  await screen.findByText('Spaces');
+  const strip = screen.getByTestId('home_header_bottom');
+  const layer = within(strip).getByTestId('home_header_bottom_tint_0');
+  expect(tintColors(layer)[0]).toBe(processColor('rgba(255, 122, 69, 0.35)'));
+  // The surface reaches 1000pt above the strip, which pins at the bar's 150pt bottom edge.
+  const [offset] = findAll(strip, (node) => flatStyle(node).transform?.[0]?.translateY === 850);
+  expect(offset).toBeTruthy();
+});
+
+test('a Screen without a backgroundTint draws none', async () => {
+  const { view } = renderScreen({
+    page: { id: 'home', type: 'Screen', blocks: [{ id: 'body', type: 'Paragraph' }] },
+  });
+  await view;
+  await act(async () => undefined);
+  expect(screen.queryByTestId('screen_tint_0')).toBeNull();
 });
 
 test('onRefresh turns on pull-to-refresh, refreshing until its actions finish', async () => {

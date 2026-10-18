@@ -20,7 +20,7 @@ import getHeaderBottomMotion from './getHeaderBottomMotion.js';
 
 function valuesAt({ headerInset, scrollY, offset }) {
   scrollY.setValue(offset);
-  const motion = getHeaderBottomMotion({ headerInset, scrollY });
+  const motion = getHeaderBottomMotion({ cover: 1000, headerInset, scrollY });
   return { opacity: motion.pinnedOpacity.__getValue(), y: motion.translateY.__getValue() };
 }
 
@@ -40,7 +40,7 @@ test('getHeaderBottomMotion pins the strip under the header, fading its surface 
 test('getHeaderBottomMotion follows a header height that changes as a large title collapses', () => {
   const scrollY = new Animated.Value(-150);
   const headerInset = new Animated.Value(150);
-  const motion = getHeaderBottomMotion({ headerInset, scrollY });
+  const motion = getHeaderBottomMotion({ cover: 1000, headerInset, scrollY });
   // The large title collapses with the scroll: the bar's edge stays at the page's top.
   scrollY.setValue(-120);
   headerInset.setValue(120);
@@ -55,4 +55,19 @@ test('getHeaderBottomMotion pins at the top of a page that sits below the header
   const scrollY = new Animated.Value(0);
   expect(valuesAt({ headerInset: 0, offset: 0, scrollY })).toEqual({ opacity: 0, y: 0 });
   expect(valuesAt({ headerInset: 0, offset: 30, scrollY })).toEqual({ opacity: 1, y: 30 });
+});
+
+test('getHeaderBottomMotion places the page tint in the pinned surface where the page draws it', () => {
+  const headerInset = new Animated.Value(150);
+  const motion = getHeaderBottomMotion({
+    cover: 1000,
+    headerInset,
+    scrollY: new Animated.Value(0),
+  });
+  // The surface's top is 1000pt above the strip, pinned at the bar's 150pt edge.
+  expect(motion.tintOffset.__getValue()).toBe(850);
+  headerInset.setValue(98);
+  expect(motion.tintOffset.__getValue()).toBe(902);
+  const below = getHeaderBottomMotion({ cover: 1000, headerInset: 0, scrollY: 0 });
+  expect(below.tintOffset.__getValue()).toBe(1000);
 });

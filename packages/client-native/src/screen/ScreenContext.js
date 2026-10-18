@@ -25,12 +25,15 @@ import React from 'react';
 // - scrollY: the page scroll view's vertical offset, an Animated value on the native driver.
 // - headerInset: where the navigation bar's bottom edge is in the scroll view's frame, an
 //   Animated value or a number (see LowdefyPage). A headerBottom pins under it.
+// - tint: the store a Screen sets its backgroundTint in, which the page draws behind its scroll
+//   view and a pinned headerBottom in its surface (createTintStore).
 const ScreenContext = React.createContext({
   focused: true,
   footer: { get: () => null, set: () => undefined, subscribe: () => () => undefined },
   headerInset: 0,
   scrollY: 0,
   setRefresh: () => undefined,
+  tint: { get: () => null, set: () => undefined, subscribe: () => () => undefined },
 });
 
 export default ScreenContext;

@@ -15,7 +15,7 @@
 */
 
 import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
-import { Animated, RefreshControl, useWindowDimensions } from 'react-native';
+import { Animated, RefreshControl, useWindowDimensions, View } from 'react-native';
 import { getAppContext } from '@lowdefy/engine';
 import { appStorageKey, pageInstanceKey, serializer, type } from '@lowdefy/helpers';
 import { getBreakpoint } from '@lowdefy/layout-native';
@@ -25,6 +25,7 @@ import BreakpointContext from './layout/BreakpointContext.js';
 import Context from './Context.js';
 import createScreenGlobals from './globals/createScreenGlobals.js';
 import createFooterStore from './screen/createFooterStore.js';
+import createTintStore from './screen/createTintStore.js';
 import ElementsContext from './elements/ElementsContext.js';
 import FocusMemoryContext from './screen/FocusMemoryContext.js';
 import getFocusMemory from './screen/getFocusMemory.js';
@@ -33,6 +34,7 @@ import PageStyleContext from './style/PageStyleContext.js';
 import ScreenContext from './screen/ScreenContext.js';
 import ScreenFooter from './screen/ScreenFooter.js';
 import ScreenOptionsContext from './screen/ScreenOptionsContext.js';
+import ScreenTint from './screen/ScreenTint.js';
 import ThemeContext from './theme/ThemeContext.js';
 import ThemeProvider from './theme/ThemeProvider.js';
 import useElementRef from './elements/useElementRef.js';
@@ -121,9 +123,10 @@ const Page = ({
   const { hasRefresh, onRefresh, refreshing, setRefresh } = useRefresh({ pageConfig });
   const { onScroll, scrollY } = useScrollY();
   const [footer] = useState(createFooterStore);
+  const [tint] = useState(createTintStore);
   const screen = useMemo(
-    () => ({ focused, footer, headerInset, scrollY, setRefresh }),
-    [focused, footer, headerInset, scrollY, setRefresh]
+    () => ({ focused, footer, headerInset, scrollY, setRefresh, tint }),
+    [focused, footer, headerInset, scrollY, setRefresh, tint]
   );
 
   const lowdefy = initNativeLowdefy({
@@ -145,52 +148,56 @@ const Page = ({
             {/* A native stack header is translucent on iOS 26 and later and the page scrolls
                 under it: automatic insets start the content below the header and the tab bar,
                 and let a large title collapse as the page scrolls. The page is drawn on the
-                grouped background, as an iOS screen of grouped sections is. Its offset drives a
-                Screen's headerBottom on the native driver. */}
-            <Animated.ScrollView
-              contentInsetAdjustmentBehavior="automatic"
-              keyboardShouldPersistTaps="handled"
-              onScroll={onScroll}
-              ref={scrollRef}
-              scrollEventThrottle={16}
-              style={{ backgroundColor: theme.tokens.colorGroupedBackground }}
-              refreshControl={
-                hasRefresh ? (
-                  <RefreshControl
-                    onRefresh={onRefresh}
-                    refreshing={refreshing}
-                    testID="screen-refresh"
-                  />
-                ) : undefined
-              }
-            >
-              <Context
-                key={contextKey}
-                appContext={appContext}
-                config={pageConfig}
-                globals={globals}
-                instanceId={instanceId}
-                jsMap={jsMap}
-                lowdefy={lowdefy}
-                pathParams={pathParams}
-                resetContext={resetContext}
+                grouped background, as an iOS screen of grouped sections is, with a Screen's
+                backgroundTint over it, behind the clear scroll view: fixed to the screen, behind
+                the bar and the content. Its offset drives a Screen's headerBottom on the native
+                driver. */}
+            <View style={{ backgroundColor: theme.tokens.colorGroupedBackground, flex: 1 }}>
+              <ScreenTint id="screen_tint" tint={tint} />
+              <Animated.ScrollView
+                contentInsetAdjustmentBehavior="automatic"
+                keyboardShouldPersistTaps="handled"
+                onScroll={onScroll}
+                ref={scrollRef}
+                scrollEventThrottle={16}
+                refreshControl={
+                  hasRefresh ? (
+                    <RefreshControl
+                      onRefresh={onRefresh}
+                      refreshing={refreshing}
+                      testID="screen-refresh"
+                    />
+                  ) : undefined
+                }
               >
-                {(context) => {
-                  if (!context._internal.onInitDone) return null;
-                  return (
-                    <FocusMemoryContext.Provider value={getFocusMemory(context)}>
-                      <Block
-                        block={context._internal.RootSlots.map[pageConfig.blockId]}
-                        Blocks={context._internal.RootSlots}
-                        context={context}
-                        lowdefy={lowdefy}
-                        parentLoading={false}
-                      />
-                    </FocusMemoryContext.Provider>
-                  );
-                }}
-              </Context>
-            </Animated.ScrollView>
+                <Context
+                  key={contextKey}
+                  appContext={appContext}
+                  config={pageConfig}
+                  globals={globals}
+                  instanceId={instanceId}
+                  jsMap={jsMap}
+                  lowdefy={lowdefy}
+                  pathParams={pathParams}
+                  resetContext={resetContext}
+                >
+                  {(context) => {
+                    if (!context._internal.onInitDone) return null;
+                    return (
+                      <FocusMemoryContext.Provider value={getFocusMemory(context)}>
+                        <Block
+                          block={context._internal.RootSlots.map[pageConfig.blockId]}
+                          Blocks={context._internal.RootSlots}
+                          context={context}
+                          lowdefy={lowdefy}
+                          parentLoading={false}
+                        />
+                      </FocusMemoryContext.Provider>
+                    );
+                  }}
+                </Context>
+              </Animated.ScrollView>
+            </View>
             <ScreenFooter bottomInset={bottomInset} footer={footer} />
           </ScreenContext.Provider>
         </ScreenOptionsContext.Provider>

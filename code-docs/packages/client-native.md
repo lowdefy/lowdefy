@@ -24,6 +24,8 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 | `screen/Screen.js`                                               | The `Screen` page type; reports header options to `onScreenOptions`          |
 | `screen/HeaderActionButton.js`                                   | A header action as a natural-size icon button                                |
 | `screen/HeaderBottom.js`, `getHeaderBottomMotion.js`             | A Screen's headerBottom, pinned under the header by the page's scroll offset |
+| `screen/ScreenTint.js`, `createTintStore.js`                     | A Screen's backgroundTint, a gradient fixed behind the page, cross-faded     |
+| `screen/getBackgroundTint.js`, `getTintStops.js`                 | The tint's colour and opacity in the mode showing; its eased gradient stops  |
 | `layout/EdgeInsetContext.js`                                     | An area's horizontal padding, which an edge-to-edge block cancels            |
 | `trace/describeBlock.js`                                         | The trace's element description, by block id                                 |
 | `elements/createElementRegistry.js`, `useElementRef.js`          | Native views by page and block id (`globals.elements`), for native actions   |
@@ -120,6 +122,19 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   slot pads its blocks to the 16pt screen inset and provides it in `EdgeInsetContext`, which a
   ChipSelector cancels to run edge to edge. The Screen reports `headerBottom: true`, and the
   shell's router hides the bar's own hairline.
+- A Screen's `backgroundTint` (`{ color, colorDark, height }`) is drawn by the page, not the
+  Screen: the Screen sets it in `ScreenContext`'s `tint` store (`createTintStore`, as the footer
+  store), and `ScreenTint` draws it in a view around the `Animated.ScrollView`, which holds the
+  grouped background, under the scroll view, which is clear. It is fixed to the screen: behind the
+  large title, through the bar (the scroll view's frame starts at the screen top under a
+  translucent bar) and behind the content. `getBackgroundTint` picks `colorDark` in dark mode,
+  reads a token or palette hue, and gives the top opacity (35% light, 45% dark); `getTintStops`
+  eases it to clear along a half cosine, so the fade has no lower edge. A new tint is a new layer
+  that fades in over 250ms on the native driver as the layers under it fade out and are dropped;
+  the same tint set again (a page tree mounting again) changes nothing. A pinned headerBottom's
+  surface would paint a band of the grouped background over the gradient, so it draws a second
+  `ScreenTint` inside its surface (clipped), moved by `getHeaderBottomMotion`'s `tintOffset`
+  (`cover - headerInset`) to the scroll view's top, where the page draws it.
 - The engine's `window` and `document` keys hold plain objects. `focus` and `blur` have no
   source on a phone; `online` and `offline` follow the `network` the shell passes.
 
