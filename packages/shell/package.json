@@ -45,6 +45,7 @@
     "type-manifest": "node scripts/createTypeManifest.mjs"
   },
   "dependencies": {
+    "@expo/ui": "58.0.20",
     "@lowdefy/actions-core": "6.0.0",
     "@lowdefy/blocks-native": "6.0.0",
     "@lowdefy/client-core": "6.0.0",

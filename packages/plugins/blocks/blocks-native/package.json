@@ -47,9 +47,11 @@
     "@lowdefy/block-utils": "6.0.0",
     "@lowdefy/client-native": "6.0.0",
     "@lowdefy/helpers": "6.0.0",
-    "@lowdefy/style-native": "6.0.0"
+    "@lowdefy/style-native": "6.0.0",
+    "dayjs": "1.11.20"
   },
   "peerDependencies": {
+    "@expo/ui": "^58.0.0",
     "react": "^19.2.0",
     "react-native": "^0.88.0",
     "react-native-svg": "^15.16.0"
@@ -57,6 +59,7 @@
   "devDependencies": {
     "@babel/core": "7.29.6",
     "@babel/plugin-transform-class-static-block": "7.29.7",
+    "@expo/ui": "58.0.20",
     "@jest/globals": "29.7.0",
     "@lowdefy/actions-core": "6.0.0",
     "@lowdefy/operators-js": "6.0.0",
