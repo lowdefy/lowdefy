@@ -16,14 +16,41 @@
 
 import semver from 'semver';
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
+
+import validateShellIcon from './validateShellIcon.js';
 
 const MOBILE_KEYS = ['homePageId', 'minShellVersion', 'menus', 'pages', 'shells', 'auth'];
 const MENU_KEYS = ['tabs', 'drawer', 'stack'];
 const MENU_ITEM_KEYS = ['pageId', 'icon', 'title'];
-const SHELL_KEYS = ['id', 'scheme', 'ios', 'android'];
+const SHELL_KEYS = [
+  'id',
+  'name',
+  'icon',
+  'color',
+  'profile',
+  'version',
+  'scheme',
+  'distribution',
+  'eas',
+  'ios',
+  'android',
+];
 const IOS_KEYS = ['bundleId', 'teamId'];
 const ANDROID_KEYS = ['package', 'sha256'];
+const EAS_KEYS = ['owner', 'projectId'];
+// The capability profiles @lowdefy/shell defines. The shell's own table is
+// authoritative at its version; lowdefy mobile config fails on a name it lacks.
+const SHELL_PROFILES = ['basic', 'field', 'field-nfc', 'field-tracking'];
+const SHELL_DISTRIBUTIONS = ['private', 'store', 'internal'];
+
+const COLOR_PATTERN = /^#[0-9A-Fa-f]{6}$/;
+const STORE_VERSION_PATTERN = /^\d+\.\d+$/;
+// Apple: alphanumerics, hyphens and periods, in reverse-DNS form.
+const IOS_BUNDLE_ID_PATTERN = /^[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$/;
+// Android: at least two segments, each starting with a letter; letters, digits
+// and underscores only.
+const ANDROID_PACKAGE_PATTERN = /^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)+$/;
 const AUTH_KEYS = ['emailCode', 'unlock', 'unlockAfter', 'sharedDevice', 'sessionExpiresIn'];
 const UNLOCK_MODES = ['none', 'biometric'];
 
@@ -133,7 +160,88 @@ function validateMenus({ menus, configKey }) {
   }
 }
 
-function validateShell({ shell, path, configKey }) {
+function checkOptionalEnum({ value, allowed, path, configKey }) {
+  if (!type.isUndefined(value) && !allowed.includes(value)) {
+    throw new ConfigError(`App "${path}" should be one of ${allowed.join(', ')}.`, {
+      received: value,
+      configKey,
+    });
+  }
+}
+
+function checkOptionalPattern({ value, pattern, path, description, configKey }) {
+  checkOptionalString({ value, path, configKey });
+  if (type.isString(value) && !pattern.test(value)) {
+    throw new ConfigError(`App "${path}" should be ${description}.`, {
+      received: value,
+      configKey,
+    });
+  }
+}
+
+function validateShellEas({ eas, path, configKey }) {
+  checkObject({ value: eas, path, configKey });
+  checkKeys({ object: eas, allowed: EAS_KEYS, path, configKey });
+  EAS_KEYS.forEach((key) =>
+    checkOptionalString({ value: eas[key], path: `${path}.${key}`, configKey })
+  );
+}
+
+function validateShellIos({ ios, path, configKey }) {
+  checkObject({ value: ios, path, configKey });
+  checkKeys({ object: ios, allowed: IOS_KEYS, path, configKey });
+  checkOptionalPattern({
+    value: ios.bundleId,
+    pattern: IOS_BUNDLE_ID_PATTERN,
+    path: `${path}.bundleId`,
+    description: 'a reverse-DNS bundle id of letters, digits and hyphens, like "com.example.app"',
+    configKey,
+  });
+  checkOptionalString({ value: ios.teamId, path: `${path}.teamId`, configKey });
+}
+
+function validateShellAndroid({ android, path, configKey }) {
+  checkObject({ value: android, path, configKey });
+  checkKeys({ object: android, allowed: ANDROID_KEYS, path, configKey });
+  checkOptionalPattern({
+    value: android.package,
+    pattern: ANDROID_PACKAGE_PATTERN,
+    path: `${path}.package`,
+    description:
+      'a reverse-DNS package name whose segments start with a letter and hold only letters, digits and underscores, like "com.example.app"',
+    configKey,
+  });
+  const { sha256 } = android;
+  const validSha256 =
+    type.isUndefined(sha256) ||
+    type.isString(sha256) ||
+    (type.isArray(sha256) && sha256.every((value) => type.isString(value)));
+  if (!validSha256) {
+    throw new ConfigError(`App "${path}.sha256" should be a string or an array of strings.`, {
+      received: sha256,
+      configKey,
+    });
+  }
+}
+
+// The fingerprint exists only after the first Android upload, so a shell
+// is built and shipped without it first.
+function warnMissingSha256({ shell, path, configKey, context }) {
+  if (type.isUndefined(shell.ios) && type.isUndefined(shell.android)) {
+    return;
+  }
+  if (!type.isUndefined(shell.android?.sha256)) {
+    return;
+  }
+  context.handleWarning(
+    new ConfigWarning(
+      `Mobile shell "${shell.id}" has no "android.sha256", so sign-in by sheet will not work on Android. After the first Android upload, copy the app signing key's SHA-256 from Play Console into "${path}.android.sha256" and deploy the server (see "lowdefy mobile checklist").`,
+      { configKey }
+    )
+  );
+}
+
+function validateShell({ shell, path, configKey, context }) {
   checkObject({ value: shell, path, configKey });
   const shellConfigKey = shell['~k'] ?? configKey;
   checkKeys({ object: shell, allowed: SHELL_KEYS, path, configKey: shellConfigKey });
@@ -143,6 +251,42 @@ function validateShell({ shell, path, configKey }) {
       configKey: shellConfigKey,
     });
   }
+  checkOptionalString({ value: shell.name, path: `${path}.name`, configKey: shellConfigKey });
+  checkOptionalString({ value: shell.icon, path: `${path}.icon`, configKey: shellConfigKey });
+  if (type.isString(shell.icon)) {
+    validateShellIcon({
+      icon: shell.icon,
+      path: `${path}.icon`,
+      configDirectory: context.directories.config,
+      configKey: shellConfigKey,
+    });
+  }
+  checkOptionalPattern({
+    value: shell.color,
+    pattern: COLOR_PATTERN,
+    path: `${path}.color`,
+    description: 'a colour like "#0B5FFF"',
+    configKey: shellConfigKey,
+  });
+  checkOptionalEnum({
+    value: shell.profile,
+    allowed: SHELL_PROFILES,
+    path: `${path}.profile`,
+    configKey: shellConfigKey,
+  });
+  checkOptionalPattern({
+    value: shell.version,
+    pattern: STORE_VERSION_PATTERN,
+    path: `${path}.version`,
+    description: '"major.minor", like "1.4" (the patch is raised by each native build)',
+    configKey: shellConfigKey,
+  });
+  checkOptionalEnum({
+    value: shell.distribution,
+    allowed: SHELL_DISTRIBUTIONS,
+    path: `${path}.distribution`,
+    configKey: shellConfigKey,
+  });
   checkOptionalString({ value: shell.scheme, path: `${path}.scheme`, configKey: shellConfigKey });
   if (
     type.isString(shell.scheme) &&
@@ -153,51 +297,23 @@ function validateShell({ shell, path, configKey }) {
       { received: shell.scheme, configKey: shellConfigKey }
     );
   }
+  if (!type.isUndefined(shell.eas)) {
+    validateShellEas({ eas: shell.eas, path: `${path}.eas`, configKey: shellConfigKey });
+  }
   if (!type.isUndefined(shell.ios)) {
-    checkObject({ value: shell.ios, path: `${path}.ios`, configKey: shellConfigKey });
-    checkKeys({
-      object: shell.ios,
-      allowed: IOS_KEYS,
-      path: `${path}.ios`,
-      configKey: shellConfigKey,
-    });
-    IOS_KEYS.forEach((key) =>
-      checkOptionalString({
-        value: shell.ios[key],
-        path: `${path}.ios.${key}`,
-        configKey: shellConfigKey,
-      })
-    );
+    validateShellIos({ ios: shell.ios, path: `${path}.ios`, configKey: shellConfigKey });
   }
   if (!type.isUndefined(shell.android)) {
-    const androidPath = `${path}.android`;
-    checkObject({ value: shell.android, path: androidPath, configKey: shellConfigKey });
-    checkKeys({
-      object: shell.android,
-      allowed: ANDROID_KEYS,
-      path: androidPath,
+    validateShellAndroid({
+      android: shell.android,
+      path: `${path}.android`,
       configKey: shellConfigKey,
     });
-    checkOptionalString({
-      value: shell.android.package,
-      path: `${androidPath}.package`,
-      configKey: shellConfigKey,
-    });
-    const { sha256 } = shell.android;
-    const validSha256 =
-      type.isUndefined(sha256) ||
-      type.isString(sha256) ||
-      (type.isArray(sha256) && sha256.every((value) => type.isString(value)));
-    if (!validSha256) {
-      throw new ConfigError(
-        `App "${androidPath}.sha256" should be a string or an array of strings.`,
-        { received: sha256, configKey: shellConfigKey }
-      );
-    }
   }
+  warnMissingSha256({ shell, path, configKey: shellConfigKey, context });
 }
 
-function validateShells({ shells, configKey }) {
+function validateShells({ shells, configKey, context }) {
   if (!type.isArray(shells)) {
     throw new ConfigError('App "mobile.shells" should be an array.', {
       received: shells,
@@ -207,7 +323,7 @@ function validateShells({ shells, configKey }) {
   const shellIds = new Set();
   shells.forEach((shell, index) => {
     const path = `mobile.shells[${index}]`;
-    validateShell({ shell, path, configKey });
+    validateShell({ shell, path, configKey, context });
     if (shellIds.has(shell.id)) {
       throw new ConfigError(`Duplicate mobile shell id "${shell.id}".`, {
         configKey: shell['~k'] ?? configKey,
@@ -272,7 +388,10 @@ function validateAuth({ auth, configKey }) {
 // The schema check (testSchema) only warns, and a shell cannot open an app
 // whose mobile config it does not understand, so the mobile key is checked
 // here and an unknown key fails the build.
-function validateMobileConfig({ mobile }) {
+//
+// Purpose texts for the capabilities a shell's profile adds are checked once
+// mobile.permissions exists; until then a profile is accepted on its name.
+function validateMobileConfig({ mobile, context }) {
   checkObject({ value: mobile, path: 'mobile' });
   const configKey = mobile['~k'];
   checkKeys({ object: mobile, allowed: MOBILE_KEYS, path: 'mobile', configKey });
@@ -300,7 +419,7 @@ function validateMobileConfig({ mobile }) {
     });
   }
   if (!type.isUndefined(mobile.shells)) {
-    validateShells({ shells: mobile.shells, configKey });
+    validateShells({ shells: mobile.shells, configKey, context });
   }
   if (!type.isUndefined(mobile.auth)) {
     validateAuth({ auth: mobile.auth, configKey });

@@ -2918,6 +2918,87 @@ export default {
             type: 'Mobile shell "id" should be a string.',
           },
         },
+        name: {
+          type: 'string',
+          description: 'The name the phone shows under the app icon and in the stores.',
+          errorMessage: {
+            type: 'Mobile shell "name" should be a string.',
+          },
+        },
+        icon: {
+          type: 'string',
+          description:
+            'Path to the app icon, relative to the config directory: a 1024×1024 PNG with no alpha channel.',
+          errorMessage: {
+            type: 'Mobile shell "icon" should be a string.',
+          },
+        },
+        color: {
+          type: 'string',
+          pattern: '^#[0-9A-Fa-f]{6}$',
+          description:
+            'Splash screen background and Android adaptive icon background, as "#RRGGBB".',
+          errorMessage: {
+            type: 'Mobile shell "color" should be a string.',
+            pattern: 'Mobile shell "color" should be a colour like "#0B5FFF".',
+          },
+        },
+        profile: {
+          type: 'string',
+          enum: ['basic', 'field', 'field-nfc', 'field-tracking'],
+          description: 'Capability profile: the fixed set of native modules the shell carries.',
+          errorMessage: {
+            type: 'Mobile shell "profile" should be a string.',
+            enum: 'Mobile shell "profile" should be one of "basic", "field", "field-nfc" or "field-tracking".',
+          },
+        },
+        version: {
+          type: 'string',
+          pattern: '^\\d+\\.\\d+$',
+          description:
+            'Store version as "major.minor", like "1.4". Each native build raises the patch.',
+          errorMessage: {
+            type: 'Mobile shell "version" should be a string.',
+            pattern: 'Mobile shell "version" should be "major.minor", like "1.4".',
+          },
+        },
+        distribution: {
+          type: 'string',
+          enum: ['private', 'store', 'internal'],
+          default: 'private',
+          description:
+            'How the shell reaches phones: "private" (a Custom App and a Managed Google Play private app), "store" (a public listing) or "internal" (TestFlight and Play testing only).',
+          errorMessage: {
+            type: 'Mobile shell "distribution" should be a string.',
+            enum: 'Mobile shell "distribution" should be one of "private", "store" or "internal".',
+          },
+        },
+        eas: {
+          type: 'object',
+          additionalProperties: false,
+          description: 'The Expo account and EAS project the shell builds in.',
+          properties: {
+            '~r': {},
+            '~l': {},
+            owner: {
+              type: 'string',
+              description: 'Expo account or organisation that owns the EAS project.',
+              errorMessage: {
+                type: 'Mobile shell "eas.owner" should be a string.',
+              },
+            },
+            projectId: {
+              type: 'string',
+              description: 'EAS project id.',
+              errorMessage: {
+                type: 'Mobile shell "eas.projectId" should be a string.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Mobile shell "eas" should be an object.',
+          },
+        },
         scheme: {
           type: 'string',
           description: 'URL scheme the shell opens links with.',
@@ -2934,10 +3015,16 @@ export default {
             bundleId: {
               type: 'string',
               description: 'iOS bundle id, for example "com.example.app".',
+              errorMessage: {
+                type: 'Mobile shell "ios.bundleId" should be a string.',
+              },
             },
             teamId: {
               type: 'string',
               description: 'Apple developer team id.',
+              errorMessage: {
+                type: 'Mobile shell "ios.teamId" should be a string.',
+              },
             },
           },
           errorMessage: {
@@ -2953,6 +3040,9 @@ export default {
             package: {
               type: 'string',
               description: 'Android package name, for example "com.example.app".',
+              errorMessage: {
+                type: 'Mobile shell "android.package" should be a string.',
+              },
             },
             sha256: {
               type: ['string', 'array'],

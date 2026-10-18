@@ -141,9 +141,58 @@ test('writeMobile writes shells with sha256 as a list', async () => {
     {
       id: 'field',
       scheme: 'field',
+      distribution: 'private',
       android: { package: 'com.example.field', sha256: ['AA:BB'] },
     },
-    { id: 'ops', ios: { bundleId: 'com.example.ops', teamId: 'T1' } },
+    {
+      id: 'ops',
+      distribution: 'private',
+      ios: { bundleId: 'com.example.ops', teamId: 'T1' },
+    },
+  ]);
+});
+
+test('writeMobile writes the store fields of a shell with the icon as an absolute path', async () => {
+  const context = createContext();
+  context.directories.config = '/apps/field-app';
+  await writeMobile({
+    components: {
+      mobile: {
+        homePageId: 'today',
+        shells: [
+          {
+            id: 'field',
+            name: 'Field',
+            icon: 'mobile/icon.png',
+            color: '#0B5FFF',
+            profile: 'field',
+            version: '1.4',
+            scheme: 'field',
+            distribution: 'store',
+            eas: { owner: 'example', projectId: 'p1', '~k': 'k3' },
+            ios: { bundleId: 'com.example.field', teamId: 'T1' },
+            android: { package: 'com.example.field', sha256: ['AA:BB'] },
+            '~k': 'k1',
+          },
+        ],
+      },
+    },
+    context,
+  });
+  expect(getArtifacts()['mobile/config.json'].shells).toEqual([
+    {
+      id: 'field',
+      name: 'Field',
+      icon: '/apps/field-app/mobile/icon.png',
+      color: '#0B5FFF',
+      profile: 'field',
+      version: '1.4',
+      scheme: 'field',
+      distribution: 'store',
+      eas: { owner: 'example', projectId: 'p1' },
+      ios: { bundleId: 'com.example.field', teamId: 'T1' },
+      android: { package: 'com.example.field', sha256: ['AA:BB'] },
+    },
   ]);
 });
 
