@@ -495,24 +495,30 @@ const tintPage = {
   },
 };
 
-test('a backgroundTint draws a gradient behind the scroll view, fixed to the screen', async () => {
-  const { view } = renderScreen({ page: tintPage });
+test('a backgroundTint draws a gradient behind the blocks, fixed to the screen top', async () => {
+  const { onScreenOptions, view } = renderScreen({ page: tintPage });
   await view;
   expect(await screen.findByText('Next')).toBeTruthy();
+  // The router makes the bar clear over it.
+  expect(onScreenOptions.mock.calls.at(-1)[0]).toMatchObject({ backgroundTint: true });
   const layer = screen.getByTestId('screen_tint_0');
-  const [scrollView] = findAll(screen.root, (node) => node.type === 'RCTScrollView');
-  // Under the scroll view, in its parent, not in the content that scrolls.
-  expect(screen.root.children.indexOf(layer)).toBeLessThan(
-    screen.root.children.indexOf(scrollView)
-  );
+  // The scroll view stays the page's own first view, as the native stack finds it for the large
+  // title and the bar's scroll edge.
+  expect(screen.root.type).toBe('RCTScrollView');
   expect(flatStyle(screen.root).backgroundColor).toBe('#F2F2F7');
-  expect(flatStyle(scrollView).backgroundColor).toBeUndefined();
+  // The tint is the scroll view's first content, behind the blocks, moved by the scroll offset
+  // so it stays at the screen's top.
+  const tint = screen.getByTestId('screen_tint');
+  const [content] = screen.root.children;
+  expect(content.children[0]).toBe(tint);
+  expect(flatStyle(tint)).toMatchObject({ position: 'absolute', top: 0 });
+  expect(flatStyle(tint).transform[0].translateY).toBe(0);
+  expect(tint.props.pointerEvents).toBe('none');
   expect(flatStyle(layer)).toMatchObject({
     height: Dimensions.get('window').height * 0.15,
     position: 'absolute',
     top: 0,
   });
-  expect(layer.props.pointerEvents).toBe('none');
   // The colour at 35% at the top, easing out to clear at the bottom.
   const colors = tintColors(layer);
   expect(colors[0]).toBe(processColor('rgba(255, 122, 69, 0.35)'));
@@ -566,12 +572,13 @@ test('a pinned headerBottom draws the backgroundTint in its surface, where the p
 });
 
 test('a Screen without a backgroundTint draws none', async () => {
-  const { view } = renderScreen({
+  const { onScreenOptions, view } = renderScreen({
     page: { id: 'home', type: 'Screen', blocks: [{ id: 'body', type: 'Paragraph' }] },
   });
   await view;
   await act(async () => undefined);
   expect(screen.queryByTestId('screen_tint_0')).toBeNull();
+  expect(onScreenOptions.mock.calls.at(-1)[0]).toMatchObject({ backgroundTint: false });
 });
 
 test('onRefresh turns on pull-to-refresh, refreshing until its actions finish', async () => {

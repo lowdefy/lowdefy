@@ -155,6 +155,9 @@ where the bar's bottom edge is in the page's scroll view: the native stack's
 collapses, when the page scrolls under the bar (`navigation/isPageUnderHeader.js`: iOS 26 and
 later, or a large title or search bar before that), and 0 when the page sits below it (Android).
 A page with a headerBottom hides the bar's own hairline; the strip draws one under itself.
+A Screen with a `backgroundTint` gets a clear bar on iOS (`headerTransparent`; before iOS 26 also
+clear at the scroll edge, with the chrome material once content scrolls under it), so the tint the
+page draws at the screen's top shows behind the bar, and the page counts as under the bar.
 
 Each screen keeps its page state per route instance (`useRoute().key`), so task B pushed on task A
 has its own, and reads `_url_query` from its own route (`routePath`). The focused screen sets the

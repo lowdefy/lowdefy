@@ -116,20 +116,48 @@ function getSearchOptions({ headerSearch, searchBarRef }) {
   };
 }
 
+// A Screen with a backgroundTint on iOS: a clear bar the page scrolls under, so the tint shows
+// behind the status bar, the bar, the large title and the search field. iOS 26's glass bar is
+// clear already, with the system's scroll edge effect under it once the page scrolls; before
+// iOS 26 the bar stays clear at the scroll edge (the large title's appearance, which a standard
+// title's scroll edge takes too) and takes the system chrome material once content scrolls
+// under it. Elsewhere the bar is the stack's own: the options are set to undefined, since
+// navigation.setOptions merges, so a tint that goes gives the bar back.
+function getTintOptions({ backgroundTint, platform, platformVersion }) {
+  if (backgroundTint !== true || platform !== 'ios') {
+    return {
+      headerBlurEffect: undefined,
+      headerLargeStyle: undefined,
+      headerTransparent: undefined,
+    };
+  }
+  if (Number.parseInt(`${platformVersion}`, 10) >= 26) {
+    return { headerBlurEffect: undefined, headerLargeStyle: undefined, headerTransparent: true };
+  }
+  return {
+    headerBlurEffect: 'systemChromeMaterial',
+    headerLargeStyle: { backgroundColor: 'transparent' },
+    headerTransparent: true,
+  };
+}
+
 /**
  * The native stack options for a Screen page's header options (client-native screen/Screen.js):
  * the title (a large title on iOS that collapses into the bar as the page scrolls), the
  * presentation, a native search bar, and the header's slots and icon buttons at their natural
  * size, as native bar buttons on iOS. A page with a headerBottom hides the bar's own hairline:
- * the pinned strip under the bar draws one under itself.
+ * the pinned strip under the bar draws one under itself. A page with a backgroundTint has a clear
+ * bar on iOS (getTintOptions).
  *
  * @param {Object} params
  * @param {Object} params.options What the Screen reported.
  * @param {string} params.platform Platform.OS.
+ * @param {string|number} [params.platformVersion] Platform.Version: iOS gives a string, "26.0".
  * @param {Object} params.searchBarRef The ref the search bar's commands (focus) are set on.
  */
-function getStackOptions({ options, platform, searchBarRef }) {
+function getStackOptions({ options, platform, platformVersion, searchBarRef }) {
   const {
+    backgroundTint,
     headerActions,
     headerBottom,
     headerLeft,
@@ -150,6 +178,7 @@ function getStackOptions({ options, platform, searchBarRef }) {
     title: title ?? '',
     ...getSideOptions({ actions: headerActions, platform, side: 'left', slot: headerLeft }),
     ...getSideOptions({ actions: headerActions, platform, side: 'right', slot: headerRight }),
+    ...getTintOptions({ backgroundTint, platform, platformVersion }),
   };
 }
 

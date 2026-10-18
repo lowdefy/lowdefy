@@ -71,3 +71,16 @@ test('getHeaderBottomMotion places the page tint in the pinned surface where the
   const below = getHeaderBottomMotion({ cover: 1000, headerInset: 0, scrollY: 0 });
   expect(below.tintOffset.__getValue()).toBe(1000);
 });
+
+test('getHeaderBottomMotion places the page tint by where the strip is on screen, pinned or not', () => {
+  const scrollY = new Animated.Value(-100);
+  const motion = getHeaderBottomMotion({ cover: 1000, headerInset: 100, scrollY });
+  // At rest under a 100pt bar, the strip's top is 100pt down the screen.
+  expect(motion.tintOffset.__getValue()).toBe(900);
+  // Pulled down 80pt to refresh, it rides down with the content.
+  scrollY.setValue(-180);
+  expect(motion.tintOffset.__getValue()).toBe(820);
+  // Scrolled on, it stays pinned under the bar.
+  scrollY.setValue(240);
+  expect(motion.tintOffset.__getValue()).toBe(900);
+});

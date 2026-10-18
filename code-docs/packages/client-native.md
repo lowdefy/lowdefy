@@ -138,17 +138,27 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   shell's router hides the bar's own hairline.
 - A Screen's `backgroundTint` (`{ color, colorDark, height }`) is drawn by the page, not the
   Screen: the Screen sets it in `ScreenContext`'s `tint` store (`createTintStore`, as the footer
-  store), and `ScreenTint` draws it in a view around the `Animated.ScrollView`, which holds the
-  grouped background, under the scroll view, which is clear. It is fixed to the screen: behind the
-  large title, through the bar (the scroll view's frame starts at the screen top under a
-  translucent bar) and behind the content. `getBackgroundTint` picks `colorDark` in dark mode,
-  reads a token or palette hue, and gives the top opacity (35% light, 45% dark); `getTintStops`
-  eases it to clear along a half cosine, so the fade has no lower edge. A new tint is a new layer
-  that fades in over 250ms on the native driver as the layers under it fade out and are dropped;
-  the same tint set again (a page tree mounting again) changes nothing. A pinned headerBottom's
-  surface would paint a band of the grouped background over the gradient, so it draws a second
-  `ScreenTint` inside its surface (clipped), moved by `getHeaderBottomMotion`'s `tintOffset`
-  (`cover - headerInset`) to the scroll view's top, where the page draws it.
+  store) and reports `backgroundTint: true`, and `PageTint` draws it as the `Animated.ScrollView`'s
+  first content, absolutely at the top, behind the blocks, moved down by `scrollY` (native driver)
+  so it stays fixed to the screen: behind the status bar, the bar, the large title and the search
+  field, which the page scrolls under, and still while a large title collapses or the page is
+  pulled to refresh. It is not drawn in a view around the scroll view: the native stack finds the
+  page's scroll view by first subviews only (react-native-screens' `RNSScrollViewFinder`, as
+  UIKit does), for the large title, the bar's scroll edge and the tab's scroll to top, so the
+  scroll view must stay the page's first view, and each first child down to it a first view. A
+  layer before it broke the large title and left `scrollY` at 0 at rest, which pinned a
+  headerBottom a header height too low. `getBackgroundTint` picks `colorDark` in dark mode, reads
+  a token or palette hue, and gives the top opacity (35% light, 45% dark); `getTintStops` eases it
+  to clear along a half cosine, so the fade has no lower edge. A new tint is a new layer that
+  fades in over 250ms on the native driver as the layers under it fade out and are dropped; the
+  same tint set again (a page tree mounting again) changes nothing. The shell's router makes the
+  bar clear over a tinted Screen on iOS (`headerTransparent`; before iOS 26 also clear at the
+  scroll edge and the chrome material once scrolled) and counts the page as under the bar. A
+  headerBottom at rest has no surface, so the tint shows through it; pinned, its surface (the
+  grouped background, reaching up over the bar) draws a second `ScreenTint`, clipped, at
+  `getHeaderBottomMotion`'s `tintOffset` (`cover + scrollY - translateY`, the scroll view's top
+  in the surface, from where the strip is on screen), so it continues the page's tint with no
+  seam while rows scrolled under it stay hidden.
 - The engine's `window` and `document` keys hold plain objects. `focus` and `blur` have no
   source on a phone; `online` and `offline` follow the `network` the shell passes.
 
