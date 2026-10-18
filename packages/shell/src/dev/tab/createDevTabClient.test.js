@@ -66,11 +66,18 @@ function createStream() {
 function createLowdefy() {
   const context = {
     ...fixtures.pageContext,
+    state: { ...fixtures.pageContext.state },
     pathParams: fixtures.page.pathParams,
     _internal: {
       parser: {
         parse: ({ input }) => ({ output: get(context.state, input._state), errors: [] }),
       },
+      State: {
+        set: (key, value) => {
+          context.state[key] = value;
+        },
+      },
+      update: jest.fn(),
     },
   };
   return {
@@ -93,7 +100,7 @@ function createLowdefy() {
   };
 }
 
-function setup({ stream = createStream(), streamFetch, pollEvents = [] } = {}) {
+function setup({ device, stream = createStream(), streamFetch, pollEvents = [] } = {}) {
   const fetch = jest.fn(async (url) => {
     if (url.includes('transport=poll')) {
       return { ok: true, json: async () => ({ tabId: 'phone', events: pollEvents.splice(0) }) };
@@ -105,6 +112,7 @@ function setup({ stream = createStream(), streamFetch, pollEvents = [] } = {}) {
   const onInject = jest.fn(({ injection }) => ({ ok: true, kind: injection.kind, pending: 1 }));
   const client = createDevTabClient({
     apiBase,
+    device,
     fetch,
     getLowdefy: createLowdefy,
     onInject,
@@ -152,6 +160,30 @@ test('the stream is opened on /api/reload with the dev client marker', async () 
   const [url, init] = streamFetch.mock.calls[0];
   expect(url).toBe(`${apiBase}/api/reload?client=${DEV_CLIENT_MARKER}`);
   expect(init.headers).toEqual({ Accept: 'text/event-stream' });
+});
+
+test('the stream names the phone platform and app id for the device tools', async () => {
+  const stream = createStream();
+  const streamFetch = jest.fn(async () => ({ ok: true, body: stream.body }));
+  running = setup({ device: { platform: 'ios', app: 'com.lowdefy.dev' }, stream, streamFetch });
+  await waitFor(() => expect(streamFetch).toHaveBeenCalled());
+  expect(streamFetch.mock.calls[0][0]).toBe(
+    `${apiBase}/api/reload?client=${DEV_CLIENT_MARKER}&platform=ios&app=com.lowdefy.dev`
+  );
+});
+
+test('a load-state-request sets the checkpoint state on the page and answers the keys it verified', async () => {
+  running = setup();
+  running.stream.send(fixtures.loadStateRequest.event, {
+    requestId: 'r-load',
+    ...fixtures.page,
+    ...fixtures.loadStateRequest.payload,
+  });
+  await waitFor(() => expect(posts(running.fetch, '')).toHaveLength(1));
+  expect(posts(running.fetch, '')[0]).toEqual({
+    requestId: 'r-load',
+    result: fixtures.loadStateResult,
+  });
 });
 
 test('a reload event reloads the app', async () => {
