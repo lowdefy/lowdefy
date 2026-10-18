@@ -86,7 +86,12 @@ function ToolApprovalCard({
       </View>
       {rows.length > 0 && description.input ? (
         <View style={[styles.input, { backgroundColor: colors.nested }]}>
-          <ToolDetail colors={colors} detail={{ kind: 'rows', rows }} onLinkPress={onLinkPress} />
+          <ToolDetail
+            colors={colors}
+            components={components}
+            detail={{ kind: 'rows', rows }}
+            onLinkPress={onLinkPress}
+          />
         </View>
       ) : null}
       <View style={styles.buttons}>

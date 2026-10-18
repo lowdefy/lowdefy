@@ -15,12 +15,13 @@
 */
 
 import { jest } from '@jest/globals';
-import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import dayjs from 'dayjs';
 
 import { createRoot } from '../test/fixtures.js';
 import helloJsEntries from '../../fixtures/hello.jsEntries.json';
+import reloadApp from '../dev/tab/reloadApp.js';
 import renderPageScreen from '../test/renderPageScreen.js';
 
 const mockNavigation = { setOptions: jest.fn() };
@@ -401,4 +402,67 @@ test('a screen reads its own route query, not the focused screen route', async (
     }),
   });
   expect(await screen.findByText('key PEL-645')).toBeTruthy();
+});
+
+test('a changed page the shell fetches replaces the version the screen shows', async () => {
+  // A dev root: pages carry no hash, and each visit fetches the page again.
+  const { server, session } = await renderPageScreen({
+    path: 'today',
+    pages: {
+      today: {
+        pageConfig: screenPage('today', 'Today', [
+          { blockId: 'greeting', type: 'Box', properties: { content: 'Version 1' } },
+        ]),
+        etag: '"v1"',
+      },
+    },
+    root: createRoot({
+      pageIndex: [{ path: 'today', pageId: 'today', typesKey: 'screen' }],
+      typeSets: { screen: boxTypes },
+    }),
+  });
+  expect(await screen.findByText('Version 1')).toBeTruthy();
+  server.state.pages.today = {
+    pageConfig: screenPage('today', 'Today', [
+      { blockId: 'greeting', type: 'Box', properties: { content: 'Version 2' } },
+    ]),
+    etag: '"v2"',
+  };
+  // The dev server rebuilt the app: the shell fetches the page on screen and rebuilds its screens.
+  await act(async () => {
+    await reloadApp({ session });
+  });
+  expect(await screen.findByText('Version 2')).toBeTruthy();
+  expect(screen.queryByText('Version 1')).toBeNull();
+});
+
+test('a newer version fetched while a screen shows its cached one is drawn on that screen', async () => {
+  const { server, session } = await renderPageScreen({
+    path: 'today',
+    pages: {
+      today: {
+        pageConfig: screenPage('today', 'Today', [
+          { blockId: 'greeting', type: 'Box', properties: { content: 'Cached' } },
+        ]),
+        etag: '"v1"',
+      },
+    },
+    root: createRoot({
+      pageIndex: [{ path: 'today', pageId: 'today', typesKey: 'screen' }],
+      typeSets: { screen: boxTypes },
+    }),
+  });
+  expect(await screen.findByText('Cached')).toBeTruthy();
+  server.state.pages.today = {
+    pageConfig: screenPage('today', 'Today', [
+      { blockId: 'greeting', type: 'Box', properties: { content: 'Deployed' } },
+    ]),
+    etag: '"v2"',
+  };
+  const entry = session.getState().root.pageIndex[0];
+  await act(async () => {
+    await session.loadPage({ entry, path: 'today' });
+  });
+  expect(await screen.findByText('Deployed')).toBeTruthy();
+  expect(screen.queryByText('Cached')).toBeNull();
 });

@@ -24,7 +24,10 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 | `screen/Screen.js`                                               | The `Screen` page type; reports header options to `onScreenOptions`          |
 | `screen/HeaderActionButton.js`                                   | A header action as a natural-size icon button                                |
 | `screen/HeaderBottom.js`, `getHeaderBottomMotion.js`             | A Screen's headerBottom, pinned under the header by the page's scroll offset |
+| `screen/ScreenTint.js`, `createTintStore.js`                     | A Screen's backgroundTint, a gradient fixed behind the page, cross-faded     |
+| `screen/getBackgroundTint.js`, `getTintStops.js`                 | The tint's colour and opacity in the mode showing; its eased gradient stops  |
 | `layout/EdgeInsetContext.js`                                     | An area's horizontal padding, which an edge-to-edge block cancels            |
+| `motion/FadeInView.js`, `useReduceMotion.js`                     | Content fading in after a skeleton; the system Reduce Motion setting         |
 | `trace/describeBlock.js`                                         | The trace's element description, by block id                                 |
 | `elements/createElementRegistry.js`, `useElementRef.js`          | Native views by page and block id (`globals.elements`), for native actions   |
 | `block/createStreamFetch.js`                                     | `methods.streamFetch`: a block's streamed server call, with the bearer token |
@@ -36,10 +39,18 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 ## Differences from the web renderer
 
 - `visible: false` draws nothing (the web keeps a hidden `div` for its id).
+- A loading block with a `skeleton` draws the skeleton in its place (`LoadingBlock`). When it
+  stops loading, `CategorySwitch` passes `fadeIn` and `BlockLayout` draws its outer view as a
+  `FadeInView`, so the content fades in over 200ms where the skeleton was (at once with Reduce
+  Motion on). Only a block that showed its own skeleton fades; a separate Skeleton block toggled
+  by `visible` does not, so pages put `loading` and `skeleton` on the block that loads.
 - There are no class names, `Head`, shortcuts, progress bar or antd providers.
 - Layout is `@lowdefy/layout-native` (see its doc). A gapped area is two views (the slot style
   outside, the widened row inside), and a block in it is two views (the placement with the gap
-  padding outside, the view with its `testID` and `style.block` inside). An area sorts its blocks
+  padding outside, the view with its `testID` and `style.block` inside, which fills the placement
+  only when `fillsPlacement` says so; the area passes its column gap and container style down in
+  `AreaContext`). A slot whose blocks are all hidden is not passed to its block
+  (`useVisibleSlots`), so a header slot of hidden blocks draws no glass button. An area sorts its blocks
   by layout order, which React Native has no style for. The breakpoint comes from the window's
   shorter side on a phone, so it is not the `_media: size` of a landscape phone.
 - `class` and `style` reach a block as one `styles` prop, a React Native style per slot: the
@@ -87,6 +98,11 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   route, so `_url_query` and `_location` are the query this screen was opened with, whichever
   screen rendered or took focus last. Without them, a page has one context and reads the host's
   shown route, as before.
+- The page ScrollView is keyed by the route instance, so a scroll position is kept only for the
+  instance it was scrolled on. A host gives one `pageConfig` object per version of a page
+  (`deserializeConfig` deserializes each once): a new object while the screen shows the old one
+  rebuilds the screen's kept context once (`getContextReset` raises `resetContext`), on the same
+  screen and scroll view, so a version the shell fetched in the background shows at once.
 - `Screen` reports its header to the shell's router (`onScreenOptions`): `title`, `largeTitle`,
   `presentation`, `headerLeft` and `headerRight` (slot render functions), `headerActions` (icon
   buttons with an SF Symbol from `getSfSymbol`, an `onPress`, a `menu` of items (`id`, `title`,
@@ -125,6 +141,29 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   slot pads its blocks to the 16pt screen inset and provides it in `EdgeInsetContext`, which a
   ChipSelector cancels to run edge to edge. The Screen reports `headerBottom: true`, and the
   shell's router hides the bar's own hairline.
+- A Screen's `backgroundTint` (`{ color, colorDark, height }`) is drawn by the page, not the
+  Screen: the Screen sets it in `ScreenContext`'s `tint` store (`createTintStore`, as the footer
+  store) and reports `backgroundTint: true`, and `PageTint` draws it as the `Animated.ScrollView`'s
+  first content, absolutely at the top, behind the blocks, moved down by `scrollY` (native driver)
+  so it stays fixed to the screen: behind the status bar, the bar, the large title and the search
+  field, which the page scrolls under, and still while a large title collapses or the page is
+  pulled to refresh. It is not drawn in a view around the scroll view: the native stack finds the
+  page's scroll view by first subviews only (react-native-screens' `RNSScrollViewFinder`, as
+  UIKit does), for the large title, the bar's scroll edge and the tab's scroll to top, so the
+  scroll view must stay the page's first view, and each first child down to it a first view. A
+  layer before it broke the large title and left `scrollY` at 0 at rest, which pinned a
+  headerBottom a header height too low. `getBackgroundTint` picks `colorDark` in dark mode, reads
+  a token or palette hue, and gives the top opacity (35% light, 45% dark); `getTintStops` eases it
+  to clear along a half cosine, so the fade has no lower edge. A new tint is a new layer that
+  fades in over 250ms on the native driver as the layers under it fade out and are dropped; the
+  same tint set again (a page tree mounting again) changes nothing. The shell's router makes the
+  bar clear over a tinted Screen on iOS (`headerTransparent`; before iOS 26 also clear at the
+  scroll edge and the chrome material once scrolled) and counts the page as under the bar. A
+  headerBottom at rest has no surface, so the tint shows through it; pinned, its surface (the
+  grouped background, reaching up over the bar) draws a second `ScreenTint`, clipped, at
+  `getHeaderBottomMotion`'s `tintOffset` (`cover + scrollY - translateY`, the scroll view's top
+  in the surface, from where the strip is on screen), so it continues the page's tint with no
+  seam while rows scrolled under it stay hidden.
 - The engine's `window` and `document` keys hold plain objects. `focus` and `blur` have no
   source on a phone; `online` and `offline` follow the `network` the shell passes.
 

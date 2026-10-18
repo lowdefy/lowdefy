@@ -102,7 +102,11 @@ test('a reload refetches the root and the page on screen, and rebuilds it with e
   });
 
   const paths = server.fetch.mock.calls.map(([url]) => new URL(url).pathname);
-  expect(paths).toEqual(['/api/page/today', '/api/mobile/root', '/api/user']);
+  // The rebuilt screen revalidates its page, as every screen does after a rebuild, so a screen
+  // under the one shown gets its new version too: the version reloadApp fetched is current.
+  expect(paths).toEqual(['/api/page/today', '/api/mobile/root', '/api/user', '/api/page/today']);
+  const revalidation = server.fetch.mock.calls.at(-1)[1];
+  expect(revalidation.headers).toEqual({ 'If-None-Match': '"p2"' });
   expect(await screen.findByText('Hello again')).toBeTruthy();
   expect(session.getCurrentPath()).toBe('/today');
   const after = session.getState().lowdefy;

@@ -27,6 +27,7 @@ import getOptionValue from './getOptionValue.js';
 import Label from '../Label/Label.js';
 import meta from './meta.js';
 import SelectorMenu from './SelectorMenu.js';
+import SelectorSheet from './SelectorSheet.js';
 import useBlockTokens from '../../shared/useBlockTokens.js';
 
 // The picker item that stands for no value: shown while nothing is chosen, and kept when the
@@ -35,10 +36,14 @@ const NO_VALUE = -1;
 
 // The picker works on option indices, so an option may hold any value, as on the web.
 // A disabled option is left out of the picker unless it is the one chosen.
-// `variant: menu` draws a property row that opens a native menu instead (SelectorMenu).
+// `variant: menu` draws a property row that opens a native menu instead (SelectorMenu), and
+// `variant: sheet` the same row opening a bottom sheet of the options (SelectorSheet).
 function Selector(props) {
   if (props.properties.variant === 'menu') {
     return <SelectorMenu {...props} />;
+  }
+  if (props.properties.variant === 'sheet') {
+    return <SelectorSheet {...props} />;
   }
   return <SelectorPicker {...props} />;
 }

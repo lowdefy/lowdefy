@@ -20,9 +20,9 @@ import { Text } from 'react-native';
 /**
  * A timeline line's sentence as one wrapping text: the actor in the label colour and bold (with
  * "via agent" for an agent), strong parts in the label colour, the rest secondary, and the time
- * after it.
+ * after it. With numberOfLines a long sentence ends in an ellipsis.
  */
-function LineText({ colors, hideActor, segments, time }) {
+function LineText({ colors, hideActor, numberOfLines, segments, time }) {
   const pieces = [];
   segments.forEach((segment, index) => {
     if (segment.kind === 'actor') {
@@ -56,7 +56,11 @@ function LineText({ colors, hideActor, segments, time }) {
     );
   });
   return (
-    <Text style={{ color: colors.secondary, fontSize: 15, lineHeight: 20 }}>
+    <Text
+      ellipsizeMode="tail"
+      numberOfLines={numberOfLines}
+      style={{ color: colors.secondary, fontSize: 15, lineHeight: 20 }}
+    >
       {pieces}
       {time ? <Text style={{ color: colors.tertiary, fontSize: 13 }}>{`  ${time}`}</Text> : null}
     </Text>

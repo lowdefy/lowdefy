@@ -15,30 +15,26 @@
 */
 
 import React, { useCallback } from 'react';
-import { Linking } from 'react-native';
 
 import MarkdownContent from './MarkdownContent.js';
 import meta from './meta.js';
 
-// GitHub-flavoured markdown drawn with React Native views (MarkdownContent). A pressed link runs
-// onLinkPress when the block has it, and otherwise leaves the app through the system, as an
-// outside Link does.
-function Markdown({ events, methods, properties, styles = {} }) {
+// GitHub-flavoured markdown drawn with React Native views in the iOS typography (MarkdownContent).
+// Every pressed link, chips included, runs onLinkPress when the block has it. Without it a web
+// link opens in the in-app browser and any other link (mail, phone) through the system; a chip is
+// not pressable.
+function Markdown({ components, events, methods, properties, styles = {} }) {
   const hasOnLinkPress = Boolean(events.onLinkPress);
-  const onLinkPress = useCallback(
-    (href) => {
-      if (hasOnLinkPress) {
-        methods.triggerEvent({ name: 'onLinkPress', event: { href } });
-        return;
-      }
-      Linking.openURL(href);
-    },
-    [hasOnLinkPress, methods]
+  const triggerLinkPress = useCallback(
+    (href) => methods.triggerEvent({ name: 'onLinkPress', event: { href } }),
+    [methods]
   );
   return (
     <MarkdownContent
+      components={components}
       content={properties.content}
-      onLinkPress={onLinkPress}
+      linkChips={properties.linkChips}
+      onLinkPress={hasOnLinkPress ? triggerLinkPress : null}
       skipHtml={properties.skipHtml === true}
       style={styles.element}
     />

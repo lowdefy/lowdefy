@@ -15,47 +15,17 @@
 */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Platform, Pressable, ScrollView, Text, View, useColorScheme } from 'react-native';
+import { Platform, ScrollView, Text, View, useColorScheme } from 'react-native';
 import { BottomSheet } from '@expo/ui/community/bottom-sheet';
 import { type } from '@lowdefy/helpers';
 
 import getSheetDetents from './getSheetDetents.js';
 import meta from './meta.js';
-import SystemIcon from '../../shared/SystemIcon.js';
+import SheetCloseButton from '../../shared/SheetCloseButton.js';
 import useComponentTokens from '../../useComponentTokens.js';
 
 const CLOSED = -1;
 const HEADER_HEIGHT = 44;
-const CLOSE_BUTTON_SIZE = 30;
-
-function CloseButton({ blockId, components, onPress, tokens }) {
-  return (
-    <Pressable
-      accessibilityLabel="Close"
-      accessibilityRole="button"
-      hitSlop={8}
-      onPress={onPress}
-      style={({ pressed }) => ({
-        alignItems: 'center',
-        backgroundColor: tokens.colorFillSecondary,
-        borderRadius: CLOSE_BUTTON_SIZE / 2,
-        height: CLOSE_BUTTON_SIZE,
-        justifyContent: 'center',
-        opacity: pressed ? 0.6 : 1,
-        width: CLOSE_BUTTON_SIZE,
-      })}
-      testID={`${blockId}_close`}
-    >
-      <SystemIcon
-        color={tokens.colorTextSecondary}
-        components={components}
-        fallback="X"
-        size={13}
-        symbol="xmark"
-      />
-    </Pressable>
-  );
-}
 
 /**
  * A native sheet holding child blocks: a SwiftUI sheet with medium and large detents on iOS, a
@@ -140,12 +110,18 @@ function Sheet({ blockId, components, content, methods, properties, styles = {} 
               </Text>
             )}
             <View style={{ alignItems: 'flex-end', flex: 1 }}>
-              {content.headerRight ? content.headerRight() : null}
+              {content.headerRight
+                ? content.headerRight({
+                    alignItems: 'center',
+                    flexWrap: 'nowrap',
+                    justifyContent: 'flex-end',
+                  })
+                : null}
               {!content.headerRight && closable ? (
-                <CloseButton
-                  blockId={blockId}
+                <SheetCloseButton
                   components={components}
                   onPress={() => setIndex(CLOSED)}
+                  testID={`${blockId}_close`}
                   tokens={tokens}
                 />
               ) : null}

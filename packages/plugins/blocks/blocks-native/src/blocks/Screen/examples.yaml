@@ -207,3 +207,30 @@
   blocks:
     - id: results
       type: List
+
+# A detail page washed in its space's colour: the tint shows behind the large title and through
+# the navigation bar's glass, fades out a fifth of the way down the screen, and cross-fades when
+# the page moves to a design of another space.
+- id: m-design
+  type: Screen
+  properties:
+    title:
+      _state: design.title
+    largeTitle: true
+    backgroundTint:
+      color:
+        _state: design.space_color
+      colorDark:
+        _state: design.space_color_dark
+      height: 0.2
+  events:
+    onInit:
+      - id: load
+        type: Request
+        params: get_design
+  blocks:
+    - id: body
+      type: Markdown
+      properties:
+        content:
+          _state: design.body

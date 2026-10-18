@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
-import React, { useMemo } from 'react';
-import { Platform, View } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { Dimensions, Platform, View } from 'react-native';
 import { useMarkdown } from 'react-native-marked';
 
+import ChipWidthContext from '../Markdown/ChipWidthContext.js';
 import getMarkdownStyles from '../Markdown/getMarkdownStyles.js';
 import MarkdownTokenizer from '../Markdown/MarkdownTokenizer.js';
 import TimelineMarkdownRenderer from './TimelineMarkdownRenderer.js';
@@ -30,8 +31,10 @@ const monospace = Platform.select({ ios: 'Menlo', default: 'monospace' });
 
 // The Markdown block's styles at the comment body size, in the label colours, with paragraphs
 // spaced for a card rather than a page.
-function getBodyStyles({ colors, tokens }) {
-  const { styles, theme } = getMarkdownStyles({
+function getBodyStyles({ colors, isDark, tokens }) {
+  const { palette, styles, theme } = getMarkdownStyles({
+    blockSpace: PARAGRAPH_GAP,
+    isDark,
     tokens: {
       ...tokens,
       colorText: colors.label,
@@ -51,32 +54,38 @@ function getBodyStyles({ colors, tokens }) {
     },
   });
   return {
-    listStyle: { marginBottom: PARAGRAPH_GAP },
+    palette: {
+      ...palette,
+      codeBackground: colors.fill,
+      label: colors.label,
+      separator: colors.separator,
+      tint: colors.tint,
+    },
     theme: { ...theme, colors: { ...theme.colors, link: colors.tint, text: colors.label } },
     styles: {
       ...styles,
       paragraph: { ...styles.paragraph, marginBottom: PARAGRAPH_GAP },
       code: { ...styles.code, backgroundColor: colors.fill, marginBottom: PARAGRAPH_GAP },
       codespan: { ...styles.codespan, backgroundColor: colors.fill },
-      blockquote: {
-        ...styles.blockquote,
-        borderLeftColor: colors.separator,
-        marginBottom: PARAGRAPH_GAP,
-      },
+      blockquote: { ...styles.blockquote, marginBottom: PARAGRAPH_GAP },
       link: { ...styles.link, color: colors.tint },
     },
   };
 }
 
 /**
- * A comment's markdown, drawn with the Markdown block's renderer: mentions as @Name chips and
- * `[[KEY]]` record links in the tint. The space under the last paragraph is taken back, so the
- * card's padding holds.
+ * A comment's markdown, drawn with the Markdown block's renderer: mentions as @Name chips,
+ * `[[KEY]]` record links in the tint, and links of a `linkChips` scheme as the Markdown block's
+ * link chips, pressable when the timeline has onLinkPress. The space under the last paragraph is
+ * taken back, so the card's padding holds.
  */
 function CommentBody({
   body,
   colors,
+  hasLinkPress,
+  Icon,
   isDark,
+  linkChips,
   mentions,
   onLinkPress,
   onRecordPress,
@@ -84,10 +93,11 @@ function CommentBody({
   people,
   tokens,
 }) {
-  const { listStyle, styles, theme } = useMemo(
-    () => getBodyStyles({ colors, tokens }),
-    [colors, tokens]
+  const { palette, styles, theme } = useMemo(
+    () => getBodyStyles({ colors, isDark, tokens }),
+    [colors, isDark, tokens]
   );
+  const [width, setWidth] = useState(() => Dimensions.get('window').width - 64);
   const tokenizer = useMemo(() => new MarkdownTokenizer(), []);
   const renderer = useMemo(
     () =>
@@ -97,12 +107,15 @@ function CommentBody({
           muted: { backgroundColor: colors.fill, color: colors.secondary, fontWeight: '600' },
           record: { color: colors.tint, fontFamily: monospace, fontSize: BODY_SIZE - 1 },
         },
-        listStyle,
+        Icon,
+        linkChips,
+        onChipPress: hasLinkPress ? onLinkPress : null,
         onLinkPress,
         onRecordPress,
+        palette,
         skipHtml: false,
       }),
-    [colors, listStyle, onLinkPress, onRecordPress]
+    [colors, hasLinkPress, Icon, linkChips, onLinkPress, onRecordPress, palette]
   );
   const markdown = useMemo(
     () => toTimelineMarkdown({ body, mentions, people, pattern }),
@@ -115,7 +128,14 @@ function CommentBody({
     theme,
     tokenizer,
   });
-  return <View style={{ marginBottom: -PARAGRAPH_GAP }}>{elements}</View>;
+  return (
+    <View
+      onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
+      style={{ marginBottom: -PARAGRAPH_GAP }}
+    >
+      <ChipWidthContext.Provider value={width}>{elements}</ChipWidthContext.Provider>
+    </View>
+  );
 }
 
 export default CommentBody;

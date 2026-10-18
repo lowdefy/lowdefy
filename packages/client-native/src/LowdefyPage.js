@@ -25,6 +25,8 @@ import BreakpointContext from './layout/BreakpointContext.js';
 import Context from './Context.js';
 import createScreenGlobals from './globals/createScreenGlobals.js';
 import createFooterStore from './screen/createFooterStore.js';
+import createTintStore from './screen/createTintStore.js';
+import deserializeConfig from './deserializeConfig.js';
 import ElementsContext from './elements/ElementsContext.js';
 import FocusMemoryContext from './screen/FocusMemoryContext.js';
 import getFocusMemory from './screen/getFocusMemory.js';
@@ -33,6 +35,7 @@ import PageStyleContext from './style/PageStyleContext.js';
 import ScreenContext from './screen/ScreenContext.js';
 import ScreenFooter from './screen/ScreenFooter.js';
 import ScreenOptionsContext from './screen/ScreenOptionsContext.js';
+import PageTint from './screen/PageTint.js';
 import ThemeContext from './theme/ThemeContext.js';
 import ThemeProvider from './theme/ThemeProvider.js';
 import useElementRef from './elements/useElementRef.js';
@@ -58,9 +61,9 @@ function useRefresh({ pageConfig }) {
 }
 
 // The page scroll view's vertical offset as an Animated value on the native driver, which a
-// Screen's headerBottom moves with.
-function useScrollY() {
-  const scrollY = useRef(new Animated.Value(0)).current;
+// Screen's headerBottom moves with. Each route instance has its own, from the top.
+function useScrollY({ screenKey }) {
+  const scrollY = useMemo(() => new Animated.Value(0), [screenKey]);
   const onScroll = useMemo(
     () =>
       Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
@@ -69,6 +72,22 @@ function useScrollY() {
     [scrollY]
   );
   return { onScroll, scrollY };
+}
+
+const KEEP = { reset: false, setReset: () => undefined };
+const REBUILD = { reset: true, setReset: () => undefined };
+
+// A new version of the page (the shell fetched a changed config while the screen shows the one it
+// held) rebuilds the screen's kept page context once, so the screen shows the new version now,
+// not on the next visit: the engine keeps a page context across renders and mounts by its
+// instance key, whatever config it is given. The rebuilt context runs onInit and onMount again;
+// the screen and its scroll position stay.
+function getContextReset({ lowdefy, pageConfig, resetContext, screenKey }) {
+  const kept = lowdefy.contexts[screenKey];
+  if (resetContext.reset || pageConfig.dynamic === true || kept === undefined) {
+    return resetContext;
+  }
+  return kept._internal.pageConfig === pageConfig ? KEEP : REBUILD;
 }
 
 const Page = ({
@@ -119,11 +138,12 @@ const Page = ({
     pageConfig.dynamic === true ? `${screenKey}:${buildRef.current.build}` : screenKey;
 
   const { hasRefresh, onRefresh, refreshing, setRefresh } = useRefresh({ pageConfig });
-  const { onScroll, scrollY } = useScrollY();
+  const { onScroll, scrollY } = useScrollY({ screenKey });
   const [footer] = useState(createFooterStore);
+  const [tint] = useState(createTintStore);
   const screen = useMemo(
-    () => ({ focused, footer, headerInset, scrollY, setRefresh }),
-    [focused, footer, headerInset, scrollY, setRefresh]
+    () => ({ focused, footer, headerInset, scrollY, setRefresh, tint }),
+    [focused, footer, headerInset, scrollY, setRefresh, tint]
   );
 
   const lowdefy = initNativeLowdefy({
@@ -135,6 +155,7 @@ const Page = ({
     rootConfig,
     types,
   });
+  const contextReset = getContextReset({ lowdefy, pageConfig, resetContext, screenKey });
   lowdefy.theme._resolvedAntdToken = theme.tokens;
   const appContext = getAppContext({ events: rootConfig.events, jsMap, lowdefy });
   return (
@@ -144,11 +165,19 @@ const Page = ({
           <ScreenContext.Provider value={screen}>
             {/* A native stack header is translucent on iOS 26 and later and the page scrolls
                 under it: automatic insets start the content below the header and the tab bar,
-                and let a large title collapse as the page scrolls. The page is drawn on the
-                grouped background, as an iOS screen of grouped sections is. Its offset drives a
-                Screen's headerBottom on the native driver. */}
+                and let a large title collapse as the page scrolls. The scroll view is the
+                screen's first view (and each first child down to it is a first view): the native
+                stack finds it so, for the large title, the bar's scroll edge and the tab bar's
+                scroll to top. The page is drawn on the grouped background, as an iOS screen of
+                grouped sections is, with a Screen's backgroundTint over it (PageTint). Its offset
+                drives the tint and a Screen's headerBottom on the native driver. It is keyed by
+                the route instance, so a position is kept only for the instance it was scrolled
+                on: another instance starts at the top. Dragging it dismisses the keyboard, and a
+                tap on a row works while the keyboard is up. */}
             <Animated.ScrollView
+              key={screenKey}
               contentInsetAdjustmentBehavior="automatic"
+              keyboardDismissMode="on-drag"
               keyboardShouldPersistTaps="handled"
               onScroll={onScroll}
               ref={scrollRef}
@@ -164,6 +193,7 @@ const Page = ({
                 ) : undefined
               }
             >
+              <PageTint scrollY={scrollY} tint={tint} />
               <Context
                 key={contextKey}
                 appContext={appContext}
@@ -173,7 +203,7 @@ const Page = ({
                 jsMap={jsMap}
                 lowdefy={lowdefy}
                 pathParams={pathParams}
-                resetContext={resetContext}
+                resetContext={contextReset}
               >
                 {(context) => {
                   if (!context._internal.onInitDone) return null;
@@ -210,7 +240,9 @@ const Page = ({
  *   globals, WebSocket, websocketUrl, onBuildChanged, onCallerChanged). Its globals come from
  *   `createNativeGlobals`, so `location` is the shown route.
  * @param {Object} props.pageConfig The page, as the server sends it (serialized). A page built
- *   on request in dev carries `_classMap`, the class map entries of its own classes.
+ *   on request in dev carries `_classMap`, the class map entries of its own classes. A host gives
+ *   one object per version of the page: another object is a new version, which rebuilds the
+ *   screen's page context in place.
  * @param {Object} props.rootConfig The app's root config, as the server sends it (serialized),
  *   with the mobile root's `theme` (`{ darkMode, light, dark }`) and `classMap`.
  * @param {Object} props.types `{ blocks, actions, operators, icons }`, the native plugin maps and
@@ -256,9 +288,10 @@ const LowdefyPage = ({
   routePath,
   types,
 }) => {
-  // Deserialized once per fetched config: the engine keeps dynamic page contexts by config
-  // object identity.
-  const pageConfig = useMemo(() => serializer.deserialize(rawPageConfig), [rawPageConfig]);
+  // Deserialized once per fetched config, even across mounts: a page context is rebuilt when its
+  // config object is not the one it was built from (getContextReset, and the engine for a
+  // dynamic page).
+  const pageConfig = deserializeConfig(rawPageConfig);
   const rootConfig = useMemo(() => serializer.deserialize(rawRootConfig), [rawRootConfig]);
   const theme = useContext(ThemeContext);
   // The page's views register here, by block id, for native actions (globals.elements).

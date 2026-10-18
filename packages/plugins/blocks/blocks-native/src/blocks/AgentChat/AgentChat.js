@@ -517,6 +517,7 @@ function AgentChat({
           config={config}
           isStreaming={isBusy && message === lastMessage}
           key={message.id}
+          linkChips={properties.linkChips}
           message={message}
           onApprove={onApprove}
           onLinkPress={onLinkPress}

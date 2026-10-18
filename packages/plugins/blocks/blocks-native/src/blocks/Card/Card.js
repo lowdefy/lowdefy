@@ -51,10 +51,20 @@ function getHeaderFontSize({ compact, tokens }) {
   return type.isNumber(fontSize) ? { fontSize } : null;
 }
 
+// The card's loading text, one "Loading" progress bar to a screen reader.
 function LoadingRows() {
-  return LOADING_ROWS.map((width, index) => (
-    <SkeletonShape key={index} style={{ height: 14, marginTop: index === 0 ? 0 : 10, width }} />
-  ));
+  return (
+    <View
+      accessible
+      accessibilityLabel="Loading"
+      accessibilityRole="progressbar"
+      accessibilityState={{ busy: true }}
+    >
+      {LOADING_ROWS.map((width, index) => (
+        <SkeletonShape key={index} style={{ height: 14, marginTop: index === 0 ? 0 : 10, width }} />
+      ))}
+    </View>
+  );
 }
 
 // antd's Card as an iOS grouped section: a cell on the grouped background with a rounded corner

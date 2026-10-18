@@ -18,13 +18,19 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { type } from '@lowdefy/helpers';
 
 import applyDisplayEdit from './applyDisplayEdit.js';
+import convertSpokenMentions from './convertSpokenMentions.js';
 import createMentionPattern, { DEFAULT_MENTION_FORMAT } from './createMentionPattern.js';
 import findTrigger from './findTrigger.js';
 import insertLink from './insertLink.js';
 import insertMention from './insertMention.js';
 import parseMentionValue from './parseMentionValue.js';
+import shiftOffset from './shiftOffset.js';
 import snapSelection from './snapSelection.js';
 import { toDisplay, toValue } from './segmentText.js';
+
+// Dictation puts text in a phrase at a time and typing a word at a time; spoken mentions are
+// converted once the text has been still this long, so a name is not taken while it is spoken.
+const SPOKEN_MENTION_MS = 900;
 
 /**
  * The state of a text input that holds mentions: the markdown value (with mention tokens) is
@@ -35,13 +41,18 @@ import { toDisplay, toValue } from './segmentText.js';
  * A selection the editor sets (after a pick, or when a mention is removed or stepped over) is
  * passed to the input for one frame, then released, so typing moves the cursor as usual.
  *
+ * With `spokenWords`, spoken addressing ("for Sam, can you look") becomes a mention once the
+ * text stops changing, and when it is sent (convertSpokenMentions).
+ *
  * @param {Object} params
  * @param {string} params.value The markdown value.
  * @param {Function} params.onChangeValue Called with the new markdown value.
  * @param {Array<{ value: string, label: string, sees?: boolean }>} [params.people]
  * @param {string} [params.mentionFormat]
+ * @param {string[] | null} [params.spokenWords] The trigger words of spoken mentions; null for
+ *   none.
  */
-function useMentionEditor({ value, onChangeValue, people, mentionFormat }) {
+function useMentionEditor({ value, onChangeValue, people, mentionFormat, spokenWords = null }) {
   const format = type.isString(mentionFormat) ? mentionFormat : DEFAULT_MENTION_FORMAT;
   const pattern = useMemo(() => createMentionPattern(format), [format]);
   const peopleById = useMemo(
@@ -86,9 +97,33 @@ function useMentionEditor({ value, onChangeValue, people, mentionFormat }) {
         setForced({ start: nextCursor, end: nextCursor });
       }
       onChangeValue(next);
+      return next;
     },
     [format, onChangeValue]
   );
+
+  // The timer reads what is current when it fires, not what was when it was set.
+  const latest = useRef(null);
+  latest.current = { commit, people, segments, spokenWords };
+  const spokenTimer = useRef(null);
+  useEffect(() => () => clearTimeout(spokenTimer.current), []);
+
+  const convertSpoken = useCallback(({ final }) => {
+    const current = latest.current;
+    if (current.spokenWords === null) return null;
+    const result = convertSpokenMentions({
+      segments: current.segments,
+      people: current.people,
+      words: current.spokenWords,
+      final,
+    });
+    if (result === null) return null;
+    return current.commit({
+      nextSegments: result.segments,
+      nextCursor: shiftOffset({ offset: selection.current.end, edits: result.edits }),
+      force: true,
+    });
+  }, []);
 
   const onChangeText = (nextDisplay) => {
     const result = applyDisplayEdit({
@@ -102,6 +137,17 @@ function useMentionEditor({ value, onChangeValue, people, mentionFormat }) {
       nextCursor: result.cursor,
       force: result.cursor !== result.natural,
     });
+    if (spokenWords !== null) {
+      clearTimeout(spokenTimer.current);
+      spokenTimer.current = setTimeout(() => convertSpoken({ final: false }), SPOKEN_MENTION_MS);
+    }
+  };
+
+  // Converts what is left to convert before a send, the end of the text included, and returns
+  // the value to send.
+  const finishSpokenMentions = () => {
+    clearTimeout(spokenTimer.current);
+    return convertSpoken({ final: true }) ?? text;
   };
 
   const onSelectionChange = ({ nativeEvent }) => {
@@ -132,6 +178,7 @@ function useMentionEditor({ value, onChangeValue, people, mentionFormat }) {
 
   return {
     display,
+    finishSpokenMentions,
     onChangeText,
     onSelectionChange,
     pickLink,

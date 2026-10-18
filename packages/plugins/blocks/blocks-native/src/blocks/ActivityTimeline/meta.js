@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import linkChips from '../../schemas/linkChips.js';
 import { theme } from '../../schemas/inputProperties.js';
 
 const actor = {
@@ -45,7 +46,7 @@ const rule = {
     text: {
       type: 'string',
       description:
-        'The line. `{actor}` is who did it; `{path}` is the value at a path in the event (`{what.to}`, `{subject.key}`), with filters `|humanize` ("In progress"), `|words` ("in progress") and `|lower`. Text between `**` pairs is bold.',
+        'The line. `{actor}` is who did it; `{path}` is the value at a path in the event (`{what.to}`, `{subject.key}`), with filters `|humanize` ("In progress"), `|words` ("in progress") and `|lower`. Text between `**` pairs is bold. A long line shows two lines ending in an ellipsis until tapped.',
     },
     summary: {
       type: 'string',
@@ -54,7 +55,8 @@ const rule = {
     },
     note: {
       type: 'string',
-      description: 'A template for a note drawn under the line, such as `{what.reason}`.',
+      description:
+        'A template for a note drawn under the line, such as `{what.reason}`. A long note shows three lines ending in an ellipsis until its line is tapped.',
     },
   },
 };
@@ -213,6 +215,11 @@ export default {
             text: { type: 'string', description: 'The line, instead of the counted one.' },
           },
         },
+      },
+      linkChips: {
+        ...linkChips,
+        description:
+          "Links in comment bodies drawn as inline chips by their address scheme, as the Markdown block's `linkChips`: a pressed chip fires onLinkPress, and without onLinkPress chips are not pressable. Mentions and `[[KEY]]` record links keep their own chips.",
       },
       maxLength: {
         type: 'integer',

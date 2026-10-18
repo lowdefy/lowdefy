@@ -65,12 +65,21 @@ function Rows({ colors, onLinkPress, rows }) {
  *
  * @param {Object} props
  * @param {Object} props.colors
+ * @param {Object} props.components
  * @param {{ kind: 'markdown'|'json'|'rows', text?: string, rows?: Object[] }} props.detail
+ * @param {Object[]} [props.linkChips]
  * @param {(href: string) => void} props.onLinkPress
  */
-function ToolDetail({ colors, detail, onLinkPress }) {
+function ToolDetail({ colors, components, detail, linkChips, onLinkPress }) {
   if (detail.kind === 'markdown') {
-    return <MarkdownContent content={detail.text} onLinkPress={onLinkPress} />;
+    return (
+      <MarkdownContent
+        components={components}
+        content={detail.text}
+        linkChips={linkChips}
+        onLinkPress={onLinkPress}
+      />
+    );
   }
   if (detail.kind === 'json') {
     return (

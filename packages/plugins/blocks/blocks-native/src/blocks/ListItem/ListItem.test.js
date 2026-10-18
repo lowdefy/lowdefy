@@ -92,6 +92,35 @@ test('a ListItem draws a leading status, a Headline title, a subtitle and traili
   expect(styleOf(screen.getByText('waiting')).color).toEqual(theme.light['orange-6']);
 });
 
+test('a ListItem with a long title keeps its trailing badges at their natural width', async () => {
+  await renderPage({
+    pageConfig: itemPage({
+      id: 'design',
+      type: 'ListItem',
+      properties: {
+        title:
+          'Pelican for iPhone: a native shell with large titles, inset grouped lists, sheets and swipe actions on every row',
+        subtitle: 'PEL-1842 · Ger Dev · 2d',
+        trailing: { badges: [{ icon: 'House', text: 12 }], status: 'priorityHigh' },
+        contextMenu: [{ id: 'open', title: 'Open' }],
+      },
+      events: { onClick: [] },
+    }),
+  });
+  const title = await screen.findByText(/^Pelican for iPhone/);
+  expect(title.props.numberOfLines).toEqual(2);
+  expect(title.props.ellipsizeMode).toEqual('tail');
+  expect(styleOf(screen.getByTestId('design_text'))).toMatchObject({
+    flexBasis: 0,
+    flexGrow: 1,
+    flexShrink: 1,
+    minWidth: 0,
+  });
+  expect(styleOf(screen.getByTestId('design_trailing')).flexShrink).toEqual(0);
+  expect(styleOf(screen.getByTestId('design_badge_0')).flexShrink).toEqual(0);
+  expect(screen.getByText('12', { includeHiddenElements: true })).toBeTruthy();
+});
+
 test('a ListItem without a subtitle sets its title as Body', async () => {
   await renderPage({
     pageConfig: itemPage({ id: 'row', type: 'ListItem', properties: { title: 'Priority' } }),

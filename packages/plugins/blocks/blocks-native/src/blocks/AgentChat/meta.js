@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import linkChips from '../../schemas/linkChips.js';
+
 const toolResultMode = { type: 'string', enum: ['summary', 'full', 'none', 'readable'] };
 
 const prompt = {
@@ -126,6 +128,7 @@ export default {
         description:
           'The transcript to show, when the app keeps its threads: an array loads it, null clears the chat. Not read with `threads`.',
       },
+      linkChips,
       loading: {
         type: 'boolean',
         description:

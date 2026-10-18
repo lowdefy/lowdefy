@@ -26,6 +26,10 @@ export default {
   },
   events: {
     onClick: 'Trigger actions when the Box is pressed.',
+    onSwipeLeft:
+      'Mobile only. Trigger actions when the Box is swiped left: a drag across more than 40pt and more than twice as far across as down, or a quick flick. Vertical scrolls, and drags that start at the left edge of the screen (the iOS back gesture), are left to the page.',
+    onSwipeRight:
+      'Mobile only. Trigger actions when the Box is swiped right: a drag across more than 40pt and more than twice as far across as down, or a quick flick. Vertical scrolls, and drags that start at the left edge of the screen (the iOS back gesture), are left to the page.',
     onPaste:
       'Trigger actions when the element is focused and a paste event is triggered. Never fires on mobile.',
   },
@@ -36,6 +40,12 @@ export default {
       content: {
         type: 'string',
         description: 'Box content string. Overrides the "content" content area.',
+      },
+      swipeFeedback: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Mobile only. Move the Box a little with the drag while it is swiped, on a rubber band, and spring it back on release. Needs `onSwipeLeft` or `onSwipeRight`.',
       },
     },
   },

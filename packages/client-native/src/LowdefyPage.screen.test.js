@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { jest } from '@jest/globals';
-import { StyleSheet } from 'react-native';
+import { Dimensions, processColor, StyleSheet } from 'react-native';
 import { act, fireEvent, render, screen, within } from '@testing-library/react-native';
 
 import buildPage from './test/buildPage.js';
@@ -192,6 +192,8 @@ function renderScreen({ focused = true, headerInset, onScreenOptions = jest.fn()
   const { host } = createFakeHost({ path: '/home' });
   const core = createCore();
   const types = createTypes({ icons: { Plus: plus }, record });
+  // A host holds one config object per version of a page; a new object is a new version.
+  const pageConfig = buildPage(page);
   const element = (isFocused) => (
     <LowdefyPage
       core={core}
@@ -199,7 +201,7 @@ function renderScreen({ focused = true, headerInset, onScreenOptions = jest.fn()
       headerInset={headerInset}
       host={host}
       onScreenOptions={onScreenOptions}
-      pageConfig={buildPage(page)}
+      pageConfig={pageConfig}
       rootConfig={rootConfig}
       types={types}
     />
@@ -359,6 +361,58 @@ test('header slot blocks take their natural size, not the column width', async (
   expect(JSON.stringify(more.props.style ?? null)).not.toContain('100%');
 });
 
+test('a header slot whose blocks are all hidden is not reported, until one shows', async () => {
+  const { onScreenOptions, view } = renderScreen({
+    page: {
+      id: 'home',
+      type: 'Screen',
+      properties: { title: 'Designs' },
+      events: { onInit: [{ id: 'init', type: 'SetState', params: { spaces: false } }] },
+      slots: {
+        content: {
+          blocks: [
+            {
+              id: 'show',
+              type: 'Button',
+              properties: { title: 'Show' },
+              events: {
+                onClick: [{ id: 'show', type: 'SetState', params: { spaces: true } }],
+              },
+            },
+          ],
+        },
+        headerLeft: {
+          blocks: [
+            {
+              id: 'spaces',
+              type: 'Button',
+              visible: { _state: 'spaces' },
+              properties: { title: 'Spaces' },
+            },
+          ],
+        },
+        headerRight: {
+          blocks: [{ id: 'more', type: 'Button', visible: false, properties: { title: 'More' } }],
+        },
+      },
+    },
+  });
+  await view;
+  await act(async () => undefined);
+  // An empty slot would be drawn as an empty glass button in the native header.
+  expect(onScreenOptions.mock.calls.at(-1)[0]).toMatchObject({
+    headerLeft: undefined,
+    headerRight: undefined,
+  });
+  await act(async () => {
+    fireEvent.press(screen.getByText('Show'));
+  });
+  const { headerLeft, headerRight } = onScreenOptions.mock.calls.at(-1)[0];
+  expect(headerRight).toBeUndefined();
+  await render(headerLeft());
+  expect(screen.getByText('Spaces')).toBeTruthy();
+});
+
 // The style of a host view, with Animated values read as numbers.
 function flatStyle(node) {
   return StyleSheet.flatten(node.props.style) ?? {};
@@ -403,6 +457,128 @@ test('a Screen without a headerBottom slot reports none', async () => {
   expect(await screen.findByText('Body')).toBeTruthy();
   expect(onScreenOptions.mock.calls.at(-1)[0]).toMatchObject({ headerBottom: false });
   expect(screen.queryByTestId('home_header_bottom')).toBeNull();
+});
+
+// The colours of a tint layer's gradient stops, from the top, as react-native-svg sends them.
+function tintColors(layer) {
+  const [gradient] = findAll(layer, (node) => node.type === 'RNSVGLinearGradient');
+  return gradient.props.gradient.filter((_, index) => index % 2 === 1);
+}
+
+async function waitFor(ms) {
+  await act(() => new Promise((resolve) => setTimeout(resolve, ms)));
+}
+
+const tintPage = {
+  id: 'home',
+  type: 'Screen',
+  properties: {
+    title: 'Design',
+    largeTitle: true,
+    backgroundTint: { color: { _state: 'tint' }, colorDark: '#7c2d12' },
+  },
+  events: { onInit: [{ id: 'init', type: 'SetState', params: { tint: '#ff7a45' } }] },
+  slots: {
+    content: {
+      blocks: [
+        {
+          id: 'next',
+          type: 'Button',
+          properties: { title: 'Next' },
+          events: { onClick: [{ id: 'set', type: 'SetState', params: { tint: '#1677ff' } }] },
+        },
+      ],
+    },
+    headerBottom: {
+      blocks: [{ id: 'spaces', type: 'Paragraph', properties: { content: 'Spaces' } }],
+    },
+  },
+};
+
+test('a backgroundTint draws a gradient behind the blocks, fixed to the screen top', async () => {
+  const { onScreenOptions, view } = renderScreen({ page: tintPage });
+  await view;
+  expect(await screen.findByText('Next')).toBeTruthy();
+  // The router makes the bar clear over it.
+  expect(onScreenOptions.mock.calls.at(-1)[0]).toMatchObject({ backgroundTint: true });
+  const layer = screen.getByTestId('screen_tint_0');
+  // The scroll view stays the page's own first view, as the native stack finds it for the large
+  // title and the bar's scroll edge.
+  expect(screen.root.type).toBe('RCTScrollView');
+  expect(flatStyle(screen.root).backgroundColor).toBe('#F2F2F7');
+  // The tint is the scroll view's first content, behind the blocks, moved by the scroll offset
+  // so it stays at the screen's top.
+  const tint = screen.getByTestId('screen_tint');
+  const [content] = screen.root.children;
+  expect(content.children[0]).toBe(tint);
+  expect(flatStyle(tint)).toMatchObject({ position: 'absolute', top: 0 });
+  expect(flatStyle(tint).transform[0].translateY).toBe(0);
+  expect(tint.props.pointerEvents).toBe('none');
+  expect(flatStyle(layer)).toMatchObject({
+    height: Dimensions.get('window').height * 0.15,
+    position: 'absolute',
+    top: 0,
+  });
+  // The colour at 35% at the top, easing out to clear at the bottom.
+  const colors = tintColors(layer);
+  expect(colors[0]).toBe(processColor('rgba(255, 122, 69, 0.35)'));
+  expect(colors.at(-1)).toBe(processColor('rgba(255, 122, 69, 0)'));
+});
+
+test('a backgroundTint cross-fades to a new colour', async () => {
+  const { view } = renderScreen({ page: tintPage });
+  await view;
+  await waitFor(400);
+  await act(async () => {
+    fireEvent.press(screen.getByText('Next'));
+  });
+  // The new tint fades in over the old one as it fades out.
+  const incoming = await screen.findByTestId('screen_tint_1');
+  expect(tintColors(incoming)[0]).toBe(processColor('rgba(22, 119, 255, 0.35)'));
+  expect(screen.getByTestId('screen_tint_0')).toBeTruthy();
+  // Faded out after 250ms, the old tint is gone.
+  await waitFor(400);
+  expect(screen.queryByTestId('screen_tint_0')).toBeNull();
+  expect(screen.getByTestId('screen_tint_1')).toBeTruthy();
+});
+
+test('a backgroundTint draws colorDark at 45% in dark mode', async () => {
+  const { host } = createFakeHost({ path: '/home' });
+  await render(
+    <LowdefyPage
+      core={createCore()}
+      host={host}
+      pageConfig={buildPage(tintPage)}
+      rootConfig={{ ...rootConfig, theme: { ...theme, darkMode: 'dark' } }}
+      types={createTypes()}
+    />
+  );
+  await screen.findByText('Next');
+  expect(tintColors(screen.getByTestId('screen_tint_0'))[0]).toBe(
+    processColor('rgba(124, 45, 18, 0.45)')
+  );
+});
+
+test('a pinned headerBottom draws the backgroundTint in its surface, where the page draws it', async () => {
+  const { view } = renderScreen({ headerInset: 150, page: tintPage });
+  await view;
+  await screen.findByText('Spaces');
+  const strip = screen.getByTestId('home_header_bottom');
+  const layer = within(strip).getByTestId('home_header_bottom_tint_0');
+  expect(tintColors(layer)[0]).toBe(processColor('rgba(255, 122, 69, 0.35)'));
+  // The surface reaches 1000pt above the strip, which pins at the bar's 150pt bottom edge.
+  const [offset] = findAll(strip, (node) => flatStyle(node).transform?.[0]?.translateY === 850);
+  expect(offset).toBeTruthy();
+});
+
+test('a Screen without a backgroundTint draws none', async () => {
+  const { onScreenOptions, view } = renderScreen({
+    page: { id: 'home', type: 'Screen', blocks: [{ id: 'body', type: 'Paragraph' }] },
+  });
+  await view;
+  await act(async () => undefined);
+  expect(screen.queryByTestId('screen_tint_0')).toBeNull();
+  expect(onScreenOptions.mock.calls.at(-1)[0]).toMatchObject({ backgroundTint: false });
 });
 
 test('onRefresh turns on pull-to-refresh, refreshing until its actions finish', async () => {

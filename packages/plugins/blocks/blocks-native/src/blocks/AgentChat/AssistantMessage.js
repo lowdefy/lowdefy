@@ -29,6 +29,7 @@ function ToolSegment({
   colors,
   components,
   config,
+  linkChips,
   onApprove,
   onLinkPress,
   parts,
@@ -60,6 +61,7 @@ function ToolSegment({
                 colors={colors}
                 components={components}
                 description={description}
+                linkChips={linkChips}
                 onLinkPress={onLinkPress}
                 testID={`${testID}_tool_${description.id}`}
               />
@@ -115,6 +117,7 @@ function FileSegment({ colors, components, parts }) {
  * @param {Object} props.components
  * @param {Object} [props.config] The messageDisplay property.
  * @param {boolean} props.isStreaming This reply is still streaming.
+ * @param {Object[]} [props.linkChips] Links drawn as inline chips (the linkChips property).
  * @param {Object} props.message
  * @param {({ id, approved }) => void} props.onApprove
  * @param {(href: string) => void} props.onLinkPress
@@ -127,6 +130,7 @@ function AssistantMessage({
   components,
   config,
   isStreaming,
+  linkChips,
   message,
   onApprove,
   onLinkPress,
@@ -169,6 +173,7 @@ function AssistantMessage({
                 components={components}
                 config={config}
                 key={key}
+                linkChips={linkChips}
                 onApprove={onApprove}
                 onLinkPress={onLinkPress}
                 parts={segment.parts}
@@ -200,7 +205,15 @@ function AssistantMessage({
           case 'text': {
             const text = segment.parts.map((part) => part.text ?? '').join('');
             if (text === '') return null;
-            return <MarkdownContent content={text} key={key} onLinkPress={onLinkPress} />;
+            return (
+              <MarkdownContent
+                components={components}
+                content={text}
+                key={key}
+                linkChips={linkChips}
+                onLinkPress={onLinkPress}
+              />
+            );
           }
           default:
             return null;

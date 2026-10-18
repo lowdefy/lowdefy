@@ -120,17 +120,26 @@ function PageScreen({ path, query = '' }) {
     }, [fullPath, route.key, session])
   );
 
-  // Once per visit: fetch the page when it is not cached, or when it is built per request.
+  // Once per visit, and again when every screen is rebuilt (a new build, or a dev server rebuild):
+  // fetch the page when it is not cached, or when it is built per request. A fetched version that
+  // differs from the one shown replaces it on this screen (LowdefyPage).
   useEffect(() => {
     if (pageId === null) return;
     const entry = session.getState().root.pageIndex.find((item) => item.pageId === pageId);
     setLoadError(null);
     session.loadPage({ entry, path }).catch((error) => setLoadError(error));
-  }, [pageId, path, session, state.cacheKey]);
+  }, [pageId, path, session, state.cacheKey, state.generation]);
 
   const onScreenOptions = useCallback(
     (options) => {
-      navigation.setOptions(getStackOptions({ options, platform: Platform.OS, searchBarRef }));
+      navigation.setOptions(
+        getStackOptions({
+          options,
+          platform: Platform.OS,
+          platformVersion: Platform.Version,
+          searchBarRef,
+        })
+      );
       setAutoFocus(options.headerSearch?.autoFocus === true);
       updateHeaderInset(options);
     },
@@ -174,8 +183,10 @@ function PageScreen({ path, query = '' }) {
   };
   return (
     <LowdefyPage
-      // A new generation (another caller or build) or a new version of the page rebuilds it.
-      key={`${state.generation}:${view.page.hash ?? view.page.etag ?? ''}`}
+      // A new generation (another caller or build) rebuilds the screen. A new version of the page
+      // is drawn on it in place, keeping its scroll position (LowdefyPage rebuilds the page's
+      // context).
+      key={state.generation}
       bottomInset={bottomInset}
       core={core}
       focused={focused}

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { type } from '@lowdefy/helpers';
 
 import Container from './Container.js';
@@ -23,12 +23,16 @@ import List from './List.js';
 import LoadingBlock from './LoadingBlock.js';
 
 // Renders a block as its category asks, once the engine has evaluated it. A block evaluated
-// visible: false is not drawn at all.
+// visible: false is not drawn at all. A loading block with a skeleton draws the skeleton in its
+// place; when it stops loading, its content fades in over the skeleton's place (fadeIn), so a
+// screen settles rather than jumps as its data arrives.
 const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
+  const showedSkeleton = useRef(false);
   // A list item's blocks can render before their first evaluation (see the web renderer, #520).
   if (!block.eval) return null;
   if (block.eval.visible === false) return null;
   if (loading && type.isObject(block.eval.skeleton)) {
+    showedSkeleton.current = true;
     return (
       <LoadingBlock
         blockId={block.blockId}
@@ -42,7 +46,16 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
   }
   const Component = lowdefy._internal.blockComponents[block.type];
   const category = lowdefy._internal.blockMetas[block.type]?.category;
-  const props = { block, Blocks, category, Component, context, loading, lowdefy };
+  const props = {
+    block,
+    Blocks,
+    category,
+    Component,
+    context,
+    fadeIn: showedSkeleton.current,
+    loading,
+    lowdefy,
+  };
   switch (category) {
     case 'list':
       return <List {...props} />;

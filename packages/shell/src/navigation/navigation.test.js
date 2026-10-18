@@ -243,6 +243,51 @@ test('getStackOptions hides the bar hairline for a headerBottom, which draws its
   ).toBeUndefined();
 });
 
+test('getStackOptions makes the iOS bar clear over a Screen with a backgroundTint', () => {
+  const tinted = { ...screenOptions, backgroundTint: true, largeTitle: true };
+  const searchBarRef = { current: null };
+  expect(
+    getStackOptions({ options: tinted, platform: 'ios', platformVersion: '26.0', searchBarRef })
+  ).toMatchObject({ headerBlurEffect: undefined, headerTransparent: true });
+  // Before iOS 26: clear at the scroll edge, the chrome material once content scrolls under it.
+  expect(
+    getStackOptions({ options: tinted, platform: 'ios', platformVersion: '18.4', searchBarRef })
+  ).toMatchObject({
+    headerBlurEffect: 'systemChromeMaterial',
+    headerLargeStyle: { backgroundColor: 'transparent' },
+    headerTransparent: true,
+  });
+  // Untinted, and off iOS, the stack's own bar: set undefined, as setOptions merges.
+  const untinted = getStackOptions({
+    options: screenOptions,
+    platform: 'ios',
+    platformVersion: '26.0',
+    searchBarRef,
+  });
+  expect(untinted).toHaveProperty('headerTransparent', undefined);
+  expect(
+    getStackOptions({ options: tinted, platform: 'android', platformVersion: 35, searchBarRef })
+      .headerTransparent
+  ).toBeUndefined();
+});
+
+test('isPageUnderHeader: a Screen with a backgroundTint scrolls under its clear bar on iOS', () => {
+  expect(
+    isPageUnderHeader({
+      options: { backgroundTint: true },
+      platform: 'ios',
+      platformVersion: '18.4',
+    })
+  ).toBe(true);
+  expect(
+    isPageUnderHeader({
+      options: { backgroundTint: true },
+      platform: 'android',
+      platformVersion: 35,
+    })
+  ).toBe(false);
+});
+
 test('isPageUnderHeader: iOS 26 pages scroll under the glass bar', () => {
   expect(isPageUnderHeader({ options: {}, platform: 'ios', platformVersion: '26.0' })).toBe(true);
   expect(isPageUnderHeader({ options: {}, platform: 'ios', platformVersion: '27.1' })).toBe(true);

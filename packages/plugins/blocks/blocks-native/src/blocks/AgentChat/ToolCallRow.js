@@ -80,10 +80,11 @@ function StatusGlyph({ colors, components, expanded, status, hasDetail }) {
  * @param {Object} props.colors
  * @param {Object} props.components
  * @param {Object} props.description describeToolPart.
+ * @param {Object[]} [props.linkChips]
  * @param {(href: string) => void} props.onLinkPress
  * @param {string} props.testID
  */
-function ToolCallRow({ colors, components, description, onLinkPress, testID }) {
+function ToolCallRow({ colors, components, description, linkChips, onLinkPress, testID }) {
   const [expanded, setExpanded] = useState(false);
   const hasDetail = !type.isNone(description.detail);
   return (
@@ -134,7 +135,13 @@ function ToolCallRow({ colors, components, description, onLinkPress, testID }) {
           style={[styles.detail, { borderTopColor: colors.separator }]}
           testID={`${testID}_detail`}
         >
-          <ToolDetail colors={colors} detail={description.detail} onLinkPress={onLinkPress} />
+          <ToolDetail
+            colors={colors}
+            components={components}
+            detail={description.detail}
+            linkChips={linkChips}
+            onLinkPress={onLinkPress}
+          />
         </View>
       ) : null}
     </View>

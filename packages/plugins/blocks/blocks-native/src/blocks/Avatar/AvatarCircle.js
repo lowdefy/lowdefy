@@ -14,16 +14,20 @@
   limitations under the License.
 */
 
-import React, { useState } from 'react';
-import { Image, Text, View } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { SvgAst } from 'react-native-svg';
 import { type } from '@lowdefy/helpers';
 
+import AvatarPhoto from './AvatarPhoto.js';
 import getAvatarColor from './getAvatarColor.js';
+import getAvatarImage from './getAvatarImage.js';
 import getInitials from './getInitials.js';
 
 /**
- * One round avatar: its image, or the initials of its name on a colour the name picks. An image
- * that fails to load falls back to the initials.
+ * One round avatar: the initials of its name on a colour the name picks, under its picture when
+ * it has one. An SVG data URI is drawn at once; a photo fades in over the initials once loaded.
+ * A picture that fails to load leaves the initials, until `src` changes.
  *
  * @param {Object} props
  * @param {{ name?: string, src?: string, content?: string, color?: string }} props.avatar
@@ -35,7 +39,12 @@ import getInitials from './getInitials.js';
  * @param {Object} props.tokens
  */
 function AvatarCircle({ avatar, isDark, ringColor, size, style, testID, tokens }) {
-  const [imageFailed, setImageFailed] = useState(false);
+  const image = useMemo(() => getAvatarImage({ src: avatar.src }), [avatar.src]);
+  // Both hold the src they are about, so a new src starts over without an effect to reset them.
+  const [failedSrc, setFailedSrc] = useState(null);
+  const [shownSrc, setShownSrc] = useState(null);
+  const drawImage = image !== null && failedSrc !== avatar.src;
+  const covered = drawImage && (image.kind === 'svg' || shownSrc === avatar.src);
   const ring = type.isString(ringColor) ? Math.max(1.5, size / 16) : 0;
   const shape = {
     borderColor: ringColor,
@@ -48,18 +57,6 @@ function AvatarCircle({ avatar, isDark, ringColor, size, style, testID, tokens }
   const accessibilityProps = type.isString(avatar.name)
     ? { accessible: true, accessibilityLabel: avatar.name, accessibilityRole: 'image' }
     : { accessibilityElementsHidden: true, importantForAccessibility: 'no-hide-descendants' };
-  if (type.isString(avatar.src) && !imageFailed) {
-    return (
-      <View {...accessibilityProps} style={[shape, style]} testID={testID}>
-        <Image
-          accessibilityIgnoresInvertColors
-          onError={() => setImageFailed(true)}
-          source={{ uri: avatar.src }}
-          style={{ height: size, width: size, borderRadius: size / 2 }}
-        />
-      </View>
-    );
-  }
   const { color } = getAvatarColor({ color: avatar.color, isDark, name: avatar.name, tokens });
   return (
     <View
@@ -71,18 +68,34 @@ function AvatarCircle({ avatar, isDark, ringColor, size, style, testID, tokens }
       ]}
       testID={testID}
     >
-      <Text
-        allowFontScaling={false}
-        numberOfLines={1}
-        style={{
-          color: tokens.colorTextLightSolid,
-          fontSize: Math.round(size * 0.4),
-          fontWeight: '600',
-          letterSpacing: size <= 20 ? -0.2 : 0,
-        }}
-      >
-        {getInitials({ content: avatar.content, name: avatar.name })}
-      </Text>
+      {covered ? null : (
+        <Text
+          allowFontScaling={false}
+          numberOfLines={1}
+          style={{
+            color: tokens.colorTextLightSolid,
+            fontSize: Math.round(size * 0.4),
+            fontWeight: '600',
+            letterSpacing: size <= 20 ? -0.2 : 0,
+          }}
+        >
+          {getInitials({ content: avatar.content, name: avatar.name })}
+        </Text>
+      )}
+      {drawImage && image.kind === 'svg' ? (
+        <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+          <SvgAst ast={image.ast} override={{ height: size, width: size }} />
+        </View>
+      ) : null}
+      {drawImage && image.kind === 'uri' ? (
+        <AvatarPhoto
+          key={image.uri}
+          onError={() => setFailedSrc(avatar.src)}
+          onShown={() => setShownSrc(avatar.src)}
+          size={size}
+          uri={image.uri}
+        />
+      ) : null}
     </View>
   );
 }

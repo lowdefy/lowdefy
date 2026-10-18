@@ -17,7 +17,7 @@
 import { act, fireEvent } from '@testing-library/react-native';
 
 import formPage from '../../test/formPage.js';
-import { record, renderPage, screen } from '../../test/renderPage.js';
+import { record, renderPage, screen, styleOf } from '../../test/renderPage.js';
 
 const status = {
   id: 'status',
@@ -74,6 +74,39 @@ test('an option with an avatar shows its initials in the row', async () => {
   await screen.findByTestId('status_input');
   await pick('2');
   expect(screen.getByText('AL')).toBeTruthy();
+});
+
+test('an option avatar has the colour an Avatar block gives the same person', async () => {
+  const ada = { id: 'ada', type: 'Avatar', properties: { name: ' ADA LOVELACE ' } };
+  await renderPage({ pageConfig: formPage({ blocks: [status, ada], mirrorKey: 'status' }) });
+  await screen.findByTestId('status_input');
+  await pick('2');
+  const glyph = styleOf(screen.getByTestId('status_glyph'));
+  const avatar = styleOf(screen.getByTestId('ada_avatar'));
+  expect(glyph.backgroundColor).toBeDefined();
+  expect(glyph.backgroundColor).toBe(avatar.backgroundColor);
+});
+
+test('an option with an avatar picture shows the picture in the row', async () => {
+  const withPicture = {
+    ...status,
+    properties: {
+      ...status.properties,
+      options: [
+        {
+          label: 'Bo',
+          value: 'bo',
+          avatar: { name: 'Bo Smit', src: 'https://img.example/bo.png' },
+        },
+      ],
+    },
+  };
+  await renderPage({ pageConfig: formPage({ blocks: [withPicture], mirrorKey: 'status' }) });
+  await screen.findByTestId('status_input');
+  await pick('0');
+  expect(screen.getByTestId('expo-image').props.source).toEqual({
+    uri: 'https://img.example/bo.png',
+  });
 });
 
 test('the placeholder item clears the value and fires onClear', async () => {

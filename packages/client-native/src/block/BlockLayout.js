@@ -16,12 +16,16 @@
 
 import React, { useContext } from 'react';
 import { View } from 'react-native';
+import { fillsPlacement } from '@lowdefy/layout-native';
 
+import AreaContext from '../layout/AreaContext.js';
 import BreakpointContext from '../layout/BreakpointContext.js';
-import ColumnGapContext from '../layout/ColumnGapContext.js';
+import FadeInView from '../motion/FadeInView.js';
 import layoutStyles from '../layout/layoutStyles.js';
 import NaturalSizeContext from '../layout/NaturalSizeContext.js';
 import useElementRef from '../elements/useElementRef.js';
+
+const FILL = { flexGrow: 1 };
 
 // The view a block is placed in. Its testID and accessibilityLabel are the block id, so device
 // automation finds a block as a browser journey finds its `bl-<blockId>` element. The label is
@@ -29,41 +33,47 @@ import useElementRef from '../elements/useElementRef.js';
 // controls inside. The view is registered as the block's element, which ScrollTo measures.
 //
 // In a gapped area the block takes the column gap as left padding, so its own style (a
-// background, a border) goes on an inner view that fills the placement, as the web's column div
-// carries it without the gap.
+// background, a border) goes on an inner view inside it, as the web's column div carries it
+// without the gap. The inner view grows to fill the placement only when the placement is taller
+// than its content (fillsPlacement): React Native grows a flexGrow view to the height it is
+// measured within, so in a wrapping row of aligned blocks every line took the area's height.
 //
 // In a screen header (NaturalSizeContext) a block takes its content's size, not a column width.
-const BlockLayout = ({ blockId, children, layout = {}, style }) => {
+//
+// With fadeIn, the block's outer view fades in as it mounts (FadeInView): CategorySwitch sets it
+// when the block's content replaces the skeleton it showed while loading.
+const BlockLayout = ({ blockId, children, fadeIn = false, layout = {}, style }) => {
+  const OuterView = fadeIn ? FadeInView : View;
   const breakpoint = useContext(BreakpointContext);
-  const columnGap = useContext(ColumnGapContext);
+  const { columnGap, container } = useContext(AreaContext);
   const naturalSize = useContext(NaturalSizeContext);
   const ref = useElementRef({ blockId, kind: 'view' });
   if (layout.disabled === true || naturalSize) {
     return (
-      <View accessibilityLabel={blockId} ref={ref} style={style} testID={blockId}>
+      <OuterView accessibilityLabel={blockId} ref={ref} style={style} testID={blockId}>
         {children}
-      </View>
+      </OuterView>
     );
   }
   const placement = layoutStyles(layout, breakpoint, columnGap).child;
   if (columnGap === 0 || placement.display === 'none') {
     return (
-      <View accessibilityLabel={blockId} ref={ref} style={[placement, style]} testID={blockId}>
+      <OuterView accessibilityLabel={blockId} ref={ref} style={[placement, style]} testID={blockId}>
         {children}
-      </View>
+      </OuterView>
     );
   }
   return (
-    <View style={placement}>
+    <OuterView style={placement}>
       <View
         accessibilityLabel={blockId}
         ref={ref}
-        style={[{ flexGrow: 1 }, style]}
+        style={[fillsPlacement({ container, child: placement }) ? FILL : null, style]}
         testID={blockId}
       >
         {children}
       </View>
-    </View>
+    </OuterView>
   );
 };
 

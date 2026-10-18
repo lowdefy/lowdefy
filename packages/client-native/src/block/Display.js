@@ -21,10 +21,15 @@ import getBlockProps from './getBlockProps.js';
 import useBlockStyles from '../style/useBlockStyles.js';
 
 // A display or input block: no slots. An input also gets its value.
-const Display = ({ block, category, Component, context, loading, lowdefy }) => {
+const Display = ({ block, category, Component, context, fadeIn, loading, lowdefy }) => {
   const styles = useBlockStyles({ block, lowdefy });
   return (
-    <BlockLayout blockId={block.blockId} layout={block.eval.layout} style={styles.block}>
+    <BlockLayout
+      blockId={block.blockId}
+      fadeIn={fadeIn}
+      layout={block.eval.layout}
+      style={styles.block}
+    >
       <Component
         {...getBlockProps({ block, category, context, loading, lowdefy, styles })}
         value={category === 'input' ? block.value : undefined}

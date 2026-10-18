@@ -48,7 +48,9 @@ function hashString(text) {
 
 /**
  * The fill of an avatar: its own `color` when set, else a palette hue picked by a hash of the
- * name, so a person has the same colour everywhere. The hue is read from the theme of the mode
+ * name's normalised form (trimmed and lower-cased), so a person has the same colour everywhere.
+ * The lower case is locale-independent: a device's locale (Turkish lower-cases "I" to a dotless
+ * "ı") must not change a person's colour. The hue is read from the theme of the mode
  * showing. With no name and no colour it is the neutral fill.
  *
  * @param {Object} params
@@ -62,7 +64,7 @@ function getAvatarColor({ color, isDark, name, tokens }) {
   if (type.isString(color)) {
     return { hue: null, color: resolveColor({ color, tokens }) };
   }
-  const key = type.isString(name) ? name.trim().toLocaleLowerCase() : '';
+  const key = type.isString(name) ? name.trim().toLowerCase() : '';
   if (key === '') {
     return { hue: null, color: tokens.colorFill };
   }

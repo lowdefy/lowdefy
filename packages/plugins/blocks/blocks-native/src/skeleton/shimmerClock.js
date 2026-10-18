@@ -14,10 +14,9 @@
   limitations under the License.
 */
 
-import React from 'react';
+import createShimmerClock from './createShimmerClock.js';
 
-// The column gap of the area a block is placed in. A gapped area is widened by its gap, and each
-// of its blocks takes the gap as left padding (@lowdefy/layout-native childStyle).
-const ColumnGapContext = React.createContext(0);
+// The app's one shimmer clock: a sweep every 1.2s.
+const shimmerClock = createShimmerClock({ duration: 1200 });
 
-export default ColumnGapContext;
+export default shimmerClock;

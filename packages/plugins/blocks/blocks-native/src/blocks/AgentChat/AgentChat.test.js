@@ -552,3 +552,25 @@ test('with sender.sticky false the composer sits under the conversation, not in 
   expect(screen.queryByTestId('screen-footer')).toBeNull();
   expect(screen.getByTestId('nigel_input')).toBeTruthy();
 });
+
+test('a reply draws linkChips links as chips, as the Markdown block does, and a press reports it', async () => {
+  const { calls, host } = await renderPage({
+    pageConfig: chatPage({
+      events: { onLinkClick: record('link') },
+      properties: { linkChips: [{ scheme: 'pelican', icon: 'House', tone: 'primary' }] },
+    }),
+  });
+  host.streamFetch.mockImplementation(async () =>
+    sse(textReply({ text: 'Blocked on [PEL-12 Sign in with a passkey](pelican:PEL-12).' }))
+  );
+  await send('What is blocked?');
+  const chip = await screen.findByLabelText('PEL-12 Sign in with a passkey');
+  expect(screen.getByTestId('markdown-chip-icon-PEL-12')).toBeTruthy();
+  await act(async () => {
+    fireEvent.press(chip);
+  });
+  expect(calls.find((call) => call.name === 'link').event).toEqual({
+    href: 'pelican:PEL-12',
+    text: '',
+  });
+});

@@ -159,6 +159,68 @@ test('a gapped area widens by its column gap, and its blocks take the gap and of
   });
 });
 
+test('blocks aligned in a gapped wrapping row size to their content, not the row', async () => {
+  // A centred wrapping row of tags and a footnote (a design hero's chips). An inner view that grew
+  // took the row's height in React Native, so every line drew as tall as the row, and the lines
+  // after the first fell below it, over the next block.
+  await renderPage({
+    pageConfig: {
+      id: 'home',
+      type: 'Box',
+      layout: { direction: 'column', gap: 10 },
+      blocks: [
+        {
+          id: 'chips',
+          type: 'Box',
+          layout: { direction: 'row', wrap: 'wrap', gap: 8, align: 'middle' },
+          blocks: [
+            { id: 'space', type: 'Paragraph', properties: { content: 'Pelican' } },
+            { id: 'key', type: 'Paragraph', properties: { content: 'PEL-645' } },
+          ],
+        },
+        { id: 'title', type: 'Paragraph', properties: { content: 'Title' } },
+      ],
+    },
+  });
+  await screen.findByText('PEL-645');
+  expect(styleOf(screen.getByTestId('space')).flexGrow).toBeUndefined();
+  expect(styleOf(screen.getByTestId('key')).flexGrow).toBeUndefined();
+  expect(styleOf(screen.getByTestId('key').parent)).toEqual({ paddingLeft: 8, width: '100%' });
+  // In a column, a block that does not grow sizes to its content too.
+  expect(styleOf(screen.getByTestId('chips')).flexGrow).toBeUndefined();
+});
+
+test('a block a gapped row stretches, or a gapped column grows, fills its placement', async () => {
+  await renderPage({
+    window: TABLET_MD,
+    pageConfig: {
+      id: 'home',
+      type: 'Box',
+      layout: { direction: 'column', gap: 10 },
+      blocks: [
+        {
+          id: 'cards',
+          type: 'Box',
+          layout: { grow: 1, gap: 8 },
+          blocks: [
+            { id: 'short', type: 'Paragraph', layout: { span: 12 }, properties: { content: 'S' } },
+            {
+              id: 'aligned',
+              type: 'Paragraph',
+              layout: { span: 12, selfAlign: 'top' },
+              properties: { content: 'A' },
+            },
+          ],
+        },
+      ],
+    },
+  });
+  await screen.findByText('S');
+  expect(styleOf(screen.getByTestId('cards')).flexGrow).toBe(1);
+  expect(styleOf(screen.getByTestId('short')).flexGrow).toBe(1);
+  expect(styleOf(screen.getByTestId('aligned')).flexGrow).toBeUndefined();
+});
+
 test('an area draws its blocks in layout order at the breakpoint', async () => {
   await renderPage({
     window: TABLET_MD,

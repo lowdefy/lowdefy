@@ -58,7 +58,8 @@ function groupNeighbours({ count, sectionKey, showCount, value }) {
 }
 
 // With `sections`, every item joins its key's section, in the order `sections` lists them. Keys
-// it does not list follow, in the order they first appear. Empty sections are left out.
+// it does not list follow, in the order they first appear, titled by their key. A listed
+// section without a title has no header. Empty sections are left out.
 function groupBySections({ count, sectionKey, sections, showCount, value }) {
   const byKey = new Map();
   sections.forEach((section) => {
@@ -75,7 +76,7 @@ function groupBySections({ count, sectionKey, sections, showCount, value }) {
     .filter(([, { data }]) => data.length > 0)
     .map(([key, { section, data }]) => ({
       key,
-      title: section.title ?? key,
+      title: section.title,
       count: getCount({ configured: section.count, length: data.length, showCount }),
       footer: section.footer,
       status: section.status,

@@ -14,29 +14,25 @@
   limitations under the License.
 */
 
-import { useEffect, useRef } from 'react';
-import { Animated, Easing } from 'react-native';
+import { useEffect } from 'react';
 
-const DURATION = 1400;
+import shimmerClock from './shimmerClock.js';
 
-// A progress that sweeps from 0 to 1 and starts again, the light a loading placeholder shimmers
-// with. Every shape starts its own sweep on mount, at the same pace, so a screen of rows shimmers
-// together. It runs on the native driver.
-function useShimmer() {
-  const progress = useRef(new Animated.Value(0)).current;
+/**
+ * The shared shimmer progress (shimmerClock), held while the component is mounted and `enabled`.
+ * Every shape reads the same value, so a screen of skeletons sweeps as one.
+ *
+ * @param {Object} params
+ * @param {boolean} params.enabled False with Reduce Motion on: the clock is not held.
+ * @returns {Animated.Value}
+ */
+function useShimmer({ enabled }) {
   useEffect(() => {
-    const loop = Animated.loop(
-      Animated.timing(progress, {
-        duration: DURATION,
-        easing: Easing.inOut(Easing.ease),
-        toValue: 1,
-        useNativeDriver: true,
-      })
-    );
-    loop.start();
-    return () => loop.stop();
-  }, [progress]);
-  return progress;
+    if (!enabled) return undefined;
+    shimmerClock.acquire();
+    return () => shimmerClock.release();
+  }, [enabled]);
+  return shimmerClock.progress;
 }
 
 export default useShimmer;
