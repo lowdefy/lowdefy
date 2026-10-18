@@ -285,13 +285,13 @@ test('plain options have no leading space, so the separators sit at the cell ins
   expect(styleOf(screen.getByTestId('assignee_option_0_separator')).left).toBe(16);
 });
 
-test('the sheet takes the elevated background when the app forces dark mode', async () => {
+test('the sheet takes the solid elevated background in dark mode', async () => {
   await renderPage({
     darkMode: 'dark',
     pageConfig: formPage({ blocks: [assignee()], mirrorKey: 'assignee' }),
   });
   await screen.findByTestId('assignee_input');
-  expect(sheet().props.backgroundStyle).toEqual({ backgroundColor: theme.dark.colorBgElevated });
+  expect(sheet().props.backgroundStyle).toEqual({ backgroundColor: '#1C1C1E' });
 });
 
 test('a required sheet row shows its message after Validate', async () => {

@@ -15,16 +15,9 @@
 */
 
 import React, { useState } from 'react';
-import {
-  FlatList,
-  Keyboard,
-  Platform,
-  Text,
-  View,
-  useColorScheme,
-  useWindowDimensions,
-} from 'react-native';
+import { FlatList, Keyboard, Platform, Text, View, useWindowDimensions } from 'react-native';
 import { BottomSheet } from '@expo/ui/community/bottom-sheet';
+import { iosColors } from '@lowdefy/client-native';
 import { type } from '@lowdefy/helpers';
 
 import getPickerSheetDetents, { HEADER_HEIGHT, ROW_HEIGHT } from './getPickerSheetDetents.js';
@@ -81,7 +74,6 @@ function PickerSheet({
   title,
   tokens,
 }) {
-  const systemScheme = useColorScheme();
   const { height: windowHeight } = useWindowDimensions();
   const colors = getSemanticColors({ tokens });
   const [detentIndex, setDetentIndex] = useState(MEDIUM);
@@ -111,11 +103,14 @@ function PickerSheet({
       type.isObject(option) &&
       (type.isObject(option.avatar) || type.isString(option.symbol) || type.isString(option.icon))
   );
-  const showsSystemMode = (systemScheme === 'dark') === isDark;
 
   return (
     <BottomSheet
-      backgroundStyle={showsSystemMode ? undefined : { backgroundColor: tokens.colorBgElevated }}
+      backgroundStyle={{
+        backgroundColor: isDark
+          ? iosColors.elevated.dark.colorSystemBackground
+          : tokens.colorSystemBackground,
+      }}
       enableDynamicSizing={false}
       enablePanDownToClose
       handleComponent={resizable ? undefined : null}
