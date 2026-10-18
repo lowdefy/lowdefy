@@ -20,8 +20,8 @@
 // node_modules, so babel-jest compiles them too.
 //
 // @expo/ui draws SwiftUI and Jetpack Compose views through native modules Jest does not have,
-// so its pickers, switch and date picker are replaced by small React Native stand-ins
-// (src/test/expoUi.js) that keep their props.
+// so its pickers, switch, date picker and context menu are replaced by small React Native stand-ins
+// (src/test/expoUi.js, expoUiSwiftUi.js) that keep their props.
 export default {
   preset: '@react-native/jest-preset',
   clearMocks: true,
@@ -34,6 +34,7 @@ export default {
   moduleNameMapper: {
     '^@expo/ui$': '<rootDir>/src/test/expoUi.js',
     '^@expo/ui/community/datetime-picker$': '<rootDir>/src/test/expoUiDateTimePicker.js',
+    '^@expo/ui/swift-ui$': '<rootDir>/src/test/expoUiSwiftUi.js',
   },
   setupFiles: ['<rootDir>/src/test/removeWindow.js'],
   // The preset's pattern assumes a flat node_modules; pnpm nests each package under .pnpm.
