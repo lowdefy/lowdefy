@@ -21,8 +21,13 @@ export default {
   slots: {
     content: 'Child blocks in the Box.',
   },
+  cssKeys: {
+    element: 'The Box element.',
+  },
   events: {
     onClick: 'Trigger actions when the Box is pressed.',
+    onPaste:
+      'Trigger actions when the element is focused and a paste event is triggered. Never fires on mobile.',
   },
   properties: {
     type: 'object',
@@ -30,7 +35,7 @@ export default {
     properties: {
       content: {
         type: 'string',
-        description: 'Box content string. Overrides the "content" slot.',
+        description: 'Box content string. Overrides the "content" content area.',
       },
     },
   },
