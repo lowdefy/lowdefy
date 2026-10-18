@@ -114,8 +114,8 @@ const testTypesMap = {
 };
 
 /**
- * Native types map for error tests: blocks from the native skeleton, the
- * actions-core actions, and the web client operators.
+ * Native types map for error tests: blocks from the native skeleton and one
+ * shell plugin block, the actions-core actions, and the web client operators.
  */
 const testTypesMapMobile = {
   actions: Object.fromEntries(
@@ -128,6 +128,8 @@ const testTypesMapMobile = {
     Button: { package: '@lowdefy/blocks-native' },
     Paragraph: { package: '@lowdefy/blocks-native' },
     Title: { package: '@lowdefy/blocks-native' },
+    // A shell plugin's native block, as a plugin's ./types would add it.
+    PrinterLabel: { package: '@example/lowdefy-printer' },
   },
   operators: {
     client: testTypesMap.operators.client,
