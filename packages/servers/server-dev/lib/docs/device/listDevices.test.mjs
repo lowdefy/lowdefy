@@ -91,3 +91,14 @@ test('listDevices lists nothing for a tool that is not installed, and says which
     ],
   });
 });
+
+test('listDevices lists one kind only when asked', async () => {
+  const ios = fakeRun();
+  expect(
+    (await listDevices({ adb: 'adb', platform: 'darwin', run: ios.run, only: 'ios' })).android
+  ).toEqual([]);
+  expect(ios.calls).toEqual([['xcrun', 'simctl', 'list', 'devices', 'booted', '--json']]);
+  const android = fakeRun();
+  await listDevices({ adb: 'adb', platform: 'darwin', run: android.run, only: 'android' });
+  expect(android.calls).toEqual([['adb', 'devices', '-l']]);
+});

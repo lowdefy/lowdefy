@@ -43,7 +43,7 @@ async function findDeviceTarget({ tab, devices = {} }) {
     return { kind: 'view', reason: 'Lowdefy Dev did not report its platform' };
   }
   const adb = devices.adb ?? findAndroidTool({ name: 'adb' });
-  const listed = await listDevices({ ...devices, adb });
+  const listed = await listDevices({ ...devices, adb, only: platform });
   if (platform === 'ios') {
     if (listed.simulators.length === 1) {
       const [{ udid, name }] = listed.simulators;

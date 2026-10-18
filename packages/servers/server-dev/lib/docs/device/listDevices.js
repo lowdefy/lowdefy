@@ -46,6 +46,30 @@ function parseAndroidDevices(output) {
     });
 }
 
+async function listSimulators({ platform, result, run }) {
+  if (platform !== 'darwin') {
+    result.unavailable.push('iOS simulators: they run only on macOS.');
+    return;
+  }
+  try {
+    result.simulators = parseSimulators(
+      await run(buildDeviceCommand({ action: 'list-simulators' }))
+    );
+  } catch (error) {
+    result.unavailable.push(`iOS simulators: ${error.message}`);
+  }
+}
+
+async function listAndroid({ adb, result, run }) {
+  try {
+    result.android = parseAndroidDevices(
+      await run(buildDeviceCommand({ action: 'list-android', adb }))
+    );
+  } catch (error) {
+    result.unavailable.push(`Android devices: ${error.message}`);
+  }
+}
+
 /**
  * The booted iOS simulators and the Android devices (emulators and USB phones) on this computer,
  * as `{ simulators, android, unavailable }`. A tool that is not installed lists nothing, and
@@ -55,30 +79,20 @@ function parseAndroidDevices(output) {
  * @param {string} [params.adb] The adb executable.
  * @param {string} [params.platform] process.platform.
  * @param {Function} [params.run] Runs one device command (runDeviceTool).
+ * @param {string} [params.only] 'ios' or 'android' to list one kind only.
  */
 async function listDevices({
   adb = findAndroidTool({ name: 'adb' }),
+  only,
   platform = process.platform,
   run = runDeviceTool,
 } = {}) {
   const result = { simulators: [], android: [], unavailable: [] };
-  if (platform === 'darwin') {
-    try {
-      result.simulators = parseSimulators(
-        await run(buildDeviceCommand({ action: 'list-simulators' }))
-      );
-    } catch (error) {
-      result.unavailable.push(`iOS simulators: ${error.message}`);
-    }
-  } else {
-    result.unavailable.push('iOS simulators: they run only on macOS.');
+  if (only !== 'android') {
+    await listSimulators({ platform, result, run });
   }
-  try {
-    result.android = parseAndroidDevices(
-      await run(buildDeviceCommand({ action: 'list-android', adb }))
-    );
-  } catch (error) {
-    result.unavailable.push(`Android devices: ${error.message}`);
+  if (only !== 'ios') {
+    await listAndroid({ adb, result, run });
   }
   return result;
 }

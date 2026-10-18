@@ -138,9 +138,11 @@ function deviceParamsError({ tool, params, names }) {
     return null;
   }
   return notFoundResult(
-    `${tool} with device acts on the phone as it is: ${given.join(
-      ', '
-    )} apply to the headless browser only. Leave them out, or leave device out.`
+    `${tool} with device acts on the phone as it is: ${given.join(', ')} ${
+      given.length === 1 ? 'applies' : 'apply'
+    } to the headless browser only. Leave ${
+      given.length === 1 ? 'it' : 'them'
+    } out, or leave device out.`
   );
 }
 
