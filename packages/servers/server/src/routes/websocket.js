@@ -58,8 +58,8 @@ const upgrade = upgradeWebSocket((c) => {
 });
 
 // Upgrades are accepted from the app's own pages and from clients that send no
-// Origin, a phone shell among them; isWebSocketOriginAllowed holds the rule and
-// logs a refusal.
+// Origin (a phone shell sends the app's own); isWebSocketOriginAllowed holds the
+// rule and logs a refusal.
 function websocketHandler(c, next) {
   const context = c.get('lowdefyContext');
   if (!isWebSocketOriginAllowed({ context, getHeader: (name) => c.req.header(name) })) {

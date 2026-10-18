@@ -31,7 +31,20 @@ const UNLOCK_MODES = ['none', 'biometric'];
 // a one-time sign-in token to <scheme>://auth, which must reach the shell app,
 // never a website.
 const SCHEME_PATTERN = /^[a-z][a-z0-9+.-]*$/;
-const REFUSED_SCHEMES = ['http', 'https', 'javascript', 'data', 'file', 'blob'];
+const REFUSED_SCHEMES = [
+  'about',
+  'blob',
+  'content',
+  'data',
+  'file',
+  'http',
+  'https',
+  'intent',
+  'javascript',
+  'vbscript',
+  'ws',
+  'wss',
+];
 
 // Keys starting with "~" are build markers (~k, ~r, ~l, ~ignoreBuildChecks).
 function checkKeys({ object, allowed, path, configKey }) {
