@@ -16,6 +16,14 @@
 
 export { default as Box } from './blocks/Box/meta.js';
 export { default as Button } from './blocks/Button/meta.js';
+export { default as DateSelector } from './blocks/DateSelector/meta.js';
+export { default as List } from './blocks/List/meta.js';
+export { default as ListItem } from './blocks/ListItem/meta.js';
+export { default as NumberInput } from './blocks/NumberInput/meta.js';
 export { default as Paragraph } from './blocks/Paragraph/meta.js';
 export { default as Screen } from './blocks/Screen/meta.js';
+export { default as Selector } from './blocks/Selector/meta.js';
+export { default as Switch } from './blocks/Switch/meta.js';
+export { default as TextArea } from './blocks/TextArea/meta.js';
+export { default as TextInput } from './blocks/TextInput/meta.js';
 export { default as Title } from './blocks/Title/meta.js';
