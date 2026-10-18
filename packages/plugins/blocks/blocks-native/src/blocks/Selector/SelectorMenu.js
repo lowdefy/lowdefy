@@ -49,7 +49,7 @@ function SelectorMenu({
   validation,
   value,
 }) {
-  const { tokens } = useBlockTokens({ properties });
+  const { isDark, tokens } = useBlockTokens({ properties });
   const { accessibilityLabel, labelProperties } = getLabelProperties({ blockId, properties });
   const { title } = getLabelState({ blockId, properties: labelProperties });
   const options = properties.options ?? [];
@@ -129,6 +129,7 @@ function SelectorMenu({
                 color={selected.iconColor}
                 components={components}
                 icon={selected.icon}
+                isDark={isDark}
                 symbol={selected.symbol}
                 size={GLYPH_SIZE}
                 testID={`${blockId}_glyph`}

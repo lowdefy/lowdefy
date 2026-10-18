@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import getAvatarColor from './getAvatarColor.js';
 import theme from '../../test/theme.json';
 
@@ -58,4 +60,21 @@ test('getAvatarColor uses a configured colour, and the neutral fill for no name'
     hue: null,
     color: light.colorFill,
   });
+});
+
+test('getAvatarColor gives a name the same hue whatever the device locale', () => {
+  const name = 'IGOR IVANOV';
+  const expected = getAvatarColor({ isDark: false, name, tokens: light });
+  expect(getAvatarColor({ isDark: false, name: 'igor ivanov', tokens: light })).toEqual(expected);
+  // A Turkish locale lower-cases "I" to a dotless "ı".
+  const turkish = jest
+    .spyOn(String.prototype, 'toLocaleLowerCase')
+    .mockImplementation(function toTurkishLowerCase() {
+      return this.replace(/I/g, 'ı').toLowerCase();
+    });
+  try {
+    expect(getAvatarColor({ isDark: false, name, tokens: light })).toEqual(expected);
+  } finally {
+    turkish.mockRestore();
+  }
 });
