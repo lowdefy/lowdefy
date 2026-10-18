@@ -85,8 +85,9 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   shown route, as before.
 - `Screen` reports its header to the shell's router (`onScreenOptions`): `title`, `largeTitle`,
   `presentation`, `headerLeft` and `headerRight` (slot render functions), `headerActions` (icon
-  buttons with an SF Symbol from `getSfSymbol`, an `onPress` and a `render` that draws a
-  `HeaderActionButton`) and `headerSearch` (search bar callbacks; `onSearchChange` is debounced).
+  buttons with an SF Symbol from `getSfSymbol`, an `onPress`, a `menu` of `{ id, title, symbol,
+  destructive, disabled, onPress }` items or null, and a `render` that draws a
+  `HeaderActionButton`, which opens the menu in a `Modal` where the shell has no native menu) and `headerSearch` (search bar callbacks; `onSearchChange` is debounced).
   Header slots render inside `NaturalSizeContext`, so `BlockLayout` gives their blocks their
   content's size rather than a column width; a span-24 block would stretch the native bar item
   across the header and truncate the title. `ScreenContext` carries the screen's `focused` flag

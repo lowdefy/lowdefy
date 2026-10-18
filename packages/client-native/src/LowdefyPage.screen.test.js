@@ -272,6 +272,71 @@ test('a Screen reports a large title, header search and header actions', async (
   expect(findAll(button, (node) => node.props?.d === 'M12 5v14')).not.toHaveLength(0);
 });
 
+test('a header action with items opens a menu whose picked item fires its id', async () => {
+  const record = jest.fn();
+  const { onScreenOptions, view } = renderScreen({
+    record,
+    page: {
+      id: 'home',
+      type: 'Screen',
+      properties: {
+        title: 'Task',
+        headerActions: [
+          {
+            id: 'more',
+            icon: 'Plus',
+            title: 'More',
+            items: [
+              { id: 'copy_link', title: 'Copy link', symbol: 'link' },
+              { id: 'delete', title: 'Delete', destructive: true },
+            ],
+          },
+        ],
+      },
+      events: {
+        onHeaderAction: [{ id: 'action', type: 'Record', params: { action: { _event: 'id' } } }],
+      },
+      blocks: [{ id: 'body', type: 'Paragraph', properties: { content: 'Body' } }],
+    },
+  });
+  await view;
+  expect(await screen.findByText('Body')).toBeTruthy();
+  const [more] = onScreenOptions.mock.calls.at(-1)[0].headerActions;
+  expect(
+    more.menu.map(({ destructive, disabled, id, symbol, title }) => ({
+      destructive,
+      disabled,
+      id,
+      symbol,
+      title,
+    }))
+  ).toEqual([
+    { destructive: false, disabled: false, id: 'copy_link', symbol: 'link', title: 'Copy link' },
+    { destructive: true, disabled: false, id: 'delete', symbol: null, title: 'Delete' },
+  ]);
+  // A native menu (iOS) runs the picked item's onPress.
+  await act(async () => {
+    await more.menu[0].onPress();
+  });
+  // Where there is no native menu, the icon button opens the menu itself, in a React Native Modal,
+  // which reads window (removed for these tests, test/removeWindow.js).
+  global.window = global;
+  await render(more.render());
+  expect(screen.queryByTestId('header-menu-delete')).toBeNull();
+  await act(async () => {
+    fireEvent.press(screen.getByTestId('home_more'));
+  });
+  await act(async () => {
+    fireEvent.press(screen.getByTestId('header-menu-delete'));
+  });
+  expect(record.mock.calls.map(([params]) => params)).toEqual([
+    { action: 'copy_link' },
+    { action: 'delete' },
+  ]);
+  expect(screen.queryByTestId('header-menu-delete')).toBeNull();
+  delete global.window;
+});
+
 test('header slot blocks take their natural size, not the column width', async () => {
   const { onScreenOptions, view } = renderScreen({
     page: {

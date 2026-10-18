@@ -82,6 +82,7 @@ function headerAction(overrides) {
   return {
     disabled: false,
     id: 'add',
+    menu: null,
     onPress: jest.fn(),
     placement: 'right',
     render: () => 'icon button',
@@ -158,6 +159,62 @@ test('getStackOptions draws header actions as native SF Symbol bar buttons on iO
   ]);
   // An icon with no SF Symbol draws as its own icon button.
   expect(options.unstable_headerLeftItems()).toEqual([{ type: 'custom', element: 'icon button' }]);
+});
+
+test('getStackOptions draws a header action with items as a native menu on iOS', () => {
+  const copy = { destructive: false, disabled: false, id: 'copy_link', onPress: jest.fn() };
+  const remove = { destructive: true, disabled: false, id: 'delete', onPress: jest.fn() };
+  const more = headerAction({
+    id: 'more',
+    menu: [
+      { ...copy, symbol: 'link', title: 'Copy link' },
+      { ...remove, symbol: null, title: 'Delete' },
+    ],
+    sfSymbol: 'ellipsis',
+    title: 'More',
+  });
+  const options = getStackOptions({
+    options: { ...screenOptions, headerActions: [more] },
+    platform: 'ios',
+    searchBarRef: { current: null },
+  });
+  expect(options.unstable_headerRightItems()).toEqual([
+    {
+      type: 'menu',
+      accessibilityLabel: 'More',
+      disabled: false,
+      icon: { type: 'sfSymbol', name: 'ellipsis' },
+      identifier: 'more',
+      label: 'More',
+      menu: {
+        items: [
+          {
+            type: 'action',
+            destructive: false,
+            disabled: false,
+            icon: { type: 'sfSymbol', name: 'link' },
+            label: 'Copy link',
+            onPress: copy.onPress,
+          },
+          {
+            type: 'action',
+            destructive: true,
+            disabled: false,
+            icon: undefined,
+            label: 'Delete',
+            onPress: remove.onPress,
+          },
+        ],
+      },
+    },
+  ]);
+  // An action with a menu stays a native menu when its icon has no SF Symbol.
+  const plain = getStackOptions({
+    options: { ...screenOptions, headerActions: [{ ...more, sfSymbol: null }] },
+    platform: 'ios',
+    searchBarRef: { current: null },
+  });
+  expect(plain.unstable_headerRightItems()[0]).toMatchObject({ type: 'menu', icon: undefined });
 });
 
 test('getStackOptions draws a header slot alone as its custom view on iOS', () => {

@@ -52,9 +52,29 @@ function useHeaderSlot({ pageContextsRef, slot }) {
   return typeof slot === 'function' ? render : undefined;
 }
 
+// An action's menu items (`items`, the Menu block's item shape): picking one triggers the
+// action's event with the item's id.
+function getMenu({ config, methodsRef }) {
+  if (!type.isArray(config.items)) {
+    return null;
+  }
+  return config.items.map((item) => ({
+    destructive: item.destructive === true,
+    disabled: item.disabled === true,
+    id: item.id,
+    onPress: () =>
+      methodsRef.current.triggerEvent({
+        name: config.event ?? 'onHeaderAction',
+        event: { id: item.id },
+      }),
+    symbol: item.symbol ?? null,
+    title: item.title,
+  }));
+}
+
 // properties.headerActions as the header buttons the router draws: an SF Symbol for iOS's native
 // bar buttons, when the icon has one, and `render`, the same action as a natural-size icon button
-// for a platform or icon with none.
+// for a platform or icon with none. An action with `items` opens a menu of them.
 function useHeaderActions({ blockId, components, methodsRef, pageContextsRef, headerActions }) {
   const actionsKey = JSON.stringify(headerActions ?? []);
   return useMemo(
@@ -64,6 +84,7 @@ function useHeaderActions({ blockId, components, methodsRef, pageContextsRef, he
           disabled: config.disabled === true,
           icon: config.icon,
           id: config.id,
+          menu: getMenu({ config, methodsRef }),
           onPress: () =>
             methodsRef.current.triggerEvent({
               name: config.event ?? 'onHeaderAction',
@@ -168,9 +189,10 @@ function useRefreshEvent({ events, methodsRef, setRefresh }) {
  * - `title`, `presentation` (card, modal or sheet) and `largeTitle`;
  * - `headerLeft` and `headerRight`: functions that draw those slots' blocks at their natural
  *   size, or undefined;
- * - `headerActions`: `[{ id, title, icon, sfSymbol, placement, disabled, onPress, render }]`, the
- *   header's icon buttons (`sfSymbol` is null for an icon with no SF Symbol; `render` draws the
- *   action as an icon button);
+ * - `headerActions`: `[{ id, title, icon, sfSymbol, placement, disabled, onPress, menu, render }]`,
+ *   the header's icon buttons (`sfSymbol` is null for an icon with no SF Symbol; `menu` is null,
+ *   or the items `[{ id, title, symbol, destructive, disabled, onPress }]` the button opens a menu
+ *   of; `render` draws the action as an icon button, opening its menu when it has one);
  * - `headerSearch`: `{ placeholder, autoFocus, hideWhenScrolling, onChangeText, onSearch,
  *   onCancel }` for a native search bar, or undefined.
  *
