@@ -26,6 +26,7 @@ export { default as DateSelector } from './blocks/DateSelector/meta.js';
 export { default as Divider } from './blocks/Divider/meta.js';
 export { default as Empty } from './blocks/Empty/meta.js';
 export { default as Icon } from './blocks/Icon/meta.js';
+export { default as Illustration } from './blocks/Illustration/meta.js';
 export { default as List } from './blocks/List/meta.js';
 export { default as ListItem } from './blocks/ListItem/meta.js';
 export { default as Markdown } from './blocks/Markdown/meta.js';
