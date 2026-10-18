@@ -17,9 +17,9 @@
 import React, { useContext } from 'react';
 import { View } from 'react-native';
 
+import AreaContext from '../layout/AreaContext.js';
 import areaLayout from '../layout/areaLayout.js';
 import BreakpointContext from '../layout/BreakpointContext.js';
-import ColumnGapContext from '../layout/ColumnGapContext.js';
 import layoutStyles from '../layout/layoutStyles.js';
 import sortByOrder from '../layout/sortByOrder.js';
 
@@ -40,22 +40,23 @@ import sortByOrder from '../layout/sortByOrder.js';
 const Area = ({ area, areaKey, blocks, getLayout, layout, renderBlock, style }) => {
   const breakpoint = useContext(BreakpointContext);
   const { container, columnGap } = layoutStyles(areaLayout({ area, areaKey, layout }), breakpoint);
+  const areaContext = { columnGap, container };
   const children = sortByOrder({ blocks, breakpoint, getLayout }).map(({ block, index }) =>
     renderBlock(block, index)
   );
   if (columnGap === 0) {
     return (
-      <ColumnGapContext.Provider value={0}>
+      <AreaContext.Provider value={areaContext}>
         <View style={[container, style]}>{children}</View>
-      </ColumnGapContext.Provider>
+      </AreaContext.Provider>
     );
   }
   return (
-    <ColumnGapContext.Provider value={columnGap}>
+    <AreaContext.Provider value={areaContext}>
       <View style={style}>
         <View style={container}>{children}</View>
       </View>
-    </ColumnGapContext.Provider>
+    </AreaContext.Provider>
   );
 };
 
