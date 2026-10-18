@@ -18,11 +18,13 @@
 
 const nativeBlockTypes = {
   blocks: [
+    'ActivityTimeline',
     'Alert',
     'Avatar',
     'Box',
     'Button',
     'Card',
+    'Composer',
     'DateSelector',
     'Divider',
     'Empty',
@@ -48,11 +50,29 @@ const nativeBlockTypes = {
     'Title',
   ],
   icons: {
+    ActivityTimeline: [
+      'ChevronDown',
+      'ChevronRight',
+      'CircleCheck',
+      'Dot',
+      'Ellipsis',
+      'FaceSlightlySmilingPlus',
+    ],
     Alert: ['success', 'info', 'warning', 'error', 'close'],
     Avatar: [],
     Box: [],
     Button: [],
     Card: [],
+    Composer: [
+      'ArrowUp',
+      'CircleCheck',
+      'CornerUpLeft',
+      'FileText',
+      'Link',
+      'Scale',
+      'TriangleAlert',
+      'X',
+    ],
     DateSelector: [],
     Divider: [],
     Empty: ['Inbox'],
@@ -78,6 +98,10 @@ const nativeBlockTypes = {
     Title: [],
   },
   blockMetas: {
+    ActivityTimeline: {
+      category: 'display',
+      cssKeys: ['element'],
+    },
     Alert: {
       category: 'container',
       slots: {
@@ -112,6 +136,11 @@ const nativeBlockTypes = {
       },
       cssKeys: ['element', 'header', 'title', 'body', 'cover', 'actions', 'extra'],
       nativeIgnored: ['hoverable'],
+    },
+    Composer: {
+      category: 'input',
+      valueType: 'string',
+      cssKeys: ['element', 'input'],
     },
     DateSelector: {
       category: 'input',

@@ -232,6 +232,10 @@ const typeManifest = {
     },
   },
   blocks: {
+    ActivityTimeline: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
     Alert: {
       package: '@lowdefy/blocks-native',
       version: 6,
@@ -249,6 +253,10 @@ const typeManifest = {
       version: 6,
     },
     Card: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    Composer: {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
