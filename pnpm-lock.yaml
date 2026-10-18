@@ -269,6 +269,9 @@ importers:
       '@lowdefy/blocks-markdown':
         specifier: 6.0.0
         version: link:../plugins/blocks/blocks-markdown
+      '@lowdefy/blocks-native':
+        specifier: 6.0.0
+        version: link:../plugins/blocks/blocks-native
       '@lowdefy/blocks-qr':
         specifier: 6.0.0
         version: link:../plugins/blocks/blocks-qr
@@ -1342,6 +1345,19 @@ importers:
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
+
+  packages/plugins/blocks/blocks-native:
+    dependencies:
+      '@lowdefy/block-utils':
+        specifier: 6.0.0
+        version: link:../../../utils/block-utils
+    devDependencies:
+      '@swc/cli':
+        specifier: 0.8.1
+        version: 0.8.1(@swc/core@1.15.32)
+      '@swc/core':
+        specifier: 1.15.32
+        version: 1.15.32
 
   packages/plugins/blocks/blocks-qr:
     dependencies:

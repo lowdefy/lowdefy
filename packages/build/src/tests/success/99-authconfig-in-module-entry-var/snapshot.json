@@ -1025,6 +1025,9 @@
     ],
     "~k": "2a"
   },
+  "mobile/config.json": {},
+  "mobile/pageIndex.json": [],
+  "mobile/typeSets.json": {},
   "pageTypeSets.json": {
     "404": {
       "actions": [
@@ -1234,6 +1237,7 @@
     },
     "pageId": "404",
     "blockId": "404",
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "25"
@@ -1257,6 +1261,7 @@
     },
     "pageId": "home",
     "blockId": "home",
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "1t"
@@ -1300,6 +1305,7 @@
     },
     "pageId": "rolesmod/roles-view",
     "blockId": "rolesmod/roles-view",
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "1x"

@@ -818,6 +818,9 @@
     ],
     "~k": "1o"
   },
+  "mobile/config.json": {},
+  "mobile/pageIndex.json": [],
+  "mobile/typeSets.json": {},
   "pageTypeSets.json": {
     "404": {
       "actions": [
@@ -985,6 +988,7 @@
     },
     "pageId": "404",
     "blockId": "404",
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "1a"
@@ -1038,6 +1042,7 @@
       },
       "~k": "10"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "12"

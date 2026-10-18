@@ -1619,6 +1619,9 @@
     ],
     "~k": "h"
   },
+  "mobile/config.json": {},
+  "mobile/pageIndex.json": [],
+  "mobile/typeSets.json": {},
   "pageTypeSets.json": {
     "404": {
       "actions": [
@@ -1997,6 +2000,7 @@
     },
     "pageId": "404",
     "blockId": "404",
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "4q"
@@ -2091,6 +2095,7 @@
       },
       "~k": "40"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "44"
@@ -2163,6 +2168,7 @@
       },
       "~k": "t"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "3q"
@@ -2242,6 +2248,7 @@
       },
       "~k": "48"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "4a"
@@ -2300,6 +2307,7 @@
       },
       "~k": "3u"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "3w"
@@ -2419,6 +2427,7 @@
       },
       "~k": "4e"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "4i"

@@ -1784,6 +1784,9 @@
     ],
     "~k": "5"
   },
+  "mobile/config.json": {},
+  "mobile/pageIndex.json": [],
+  "mobile/typeSets.json": {},
   "pageTypeSets.json": {
     "404": {
       "actions": [
@@ -2451,6 +2454,7 @@
     },
     "pageId": "404",
     "blockId": "404",
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "5v"
@@ -2499,6 +2503,7 @@
       },
       "~k": "53"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "55"
@@ -2547,6 +2552,7 @@
       },
       "~k": "4f"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "4h"
@@ -2595,6 +2601,7 @@
       },
       "~k": "4r"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "4t"
@@ -2643,6 +2650,7 @@
       },
       "~k": "59"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "5b"
@@ -2691,6 +2699,7 @@
       },
       "~k": "49"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "4b"
@@ -2739,6 +2748,7 @@
       },
       "~k": "4l"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "4n"
@@ -2787,6 +2797,7 @@
       },
       "~k": "3x"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "3z"
@@ -2835,6 +2846,7 @@
       },
       "~k": "5f"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "5h"
@@ -2883,6 +2895,7 @@
       },
       "~k": "43"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "45"
@@ -2931,6 +2944,7 @@
       },
       "~k": "4x"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "4z"
@@ -2979,6 +2993,7 @@
       },
       "~k": "5l"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "5n"

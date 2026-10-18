@@ -117,6 +117,7 @@ function buildDynamicBlocks({
   const allowed = policy ? getPolicySets(policy) : getAllowedSets(types);
   const pageContext = {
     blockIdCounter: createCounter(),
+    blockMetas,
     // Namespace runtime ids under the resolving Dynamic block's built id —
     // unique by construction, so they can never collide with static block ids.
     blockIdPrefix: idPrefix,

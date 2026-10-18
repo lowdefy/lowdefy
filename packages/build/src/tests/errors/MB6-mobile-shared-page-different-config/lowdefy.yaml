@@ -1,0 +1,17 @@
+# MB6: Shared Page Id With Different Config
+# One pageId namespace: a mobile page with a web page's id is that page shared,
+# so its config must be the same.
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    properties:
+      title: Web
+
+mobile:
+  pages:
+    - id: home
+      type: Box
+      properties:
+        title: Mobile

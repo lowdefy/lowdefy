@@ -113,6 +113,27 @@ const testTypesMap = {
   },
 };
 
+/**
+ * Native types map for error tests: blocks from the native skeleton, the
+ * actions-core actions, and the web client operators.
+ */
+const testTypesMapMobile = {
+  actions: Object.fromEntries(
+    Object.entries(testTypesMap.actions).filter(
+      ([, definition]) => definition.package === '@lowdefy/actions-core'
+    )
+  ),
+  blocks: {
+    Box: { package: '@lowdefy/blocks-native' },
+    Button: { package: '@lowdefy/blocks-native' },
+    Paragraph: { package: '@lowdefy/blocks-native' },
+    Title: { package: '@lowdefy/blocks-native' },
+  },
+  operators: {
+    client: testTypesMap.operators.client,
+  },
+};
+
 // Mirrors the CLI logger's name segment (errorToDisplayString) so fixtures assert
 // what a developer actually reads in the terminal. `received` is left off - the
 // logged line carries the message, not the operator payload.
@@ -147,6 +168,7 @@ function createRunBuild(build, fixturesDir) {
     try {
       await build({
         customTypesMap: testTypesMap,
+        customTypesMapMobile: testTypesMapMobile,
         directories: {
           config: configDir,
           build: path.join(configDir, '.lowdefy'),
@@ -167,4 +189,4 @@ function createRunBuild(build, fixturesDir) {
   };
 }
 
-export { testTypesMap, createRunBuild };
+export { testTypesMap, testTypesMapMobile, createRunBuild };

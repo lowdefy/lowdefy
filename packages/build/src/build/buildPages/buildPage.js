@@ -28,6 +28,8 @@ import validateId from '../../utils/validateId.js';
 import createCounter from '../../utils/createCounter.js';
 import countImpliedClientTypes from './countImpliedClientTypes.js';
 import createPageTypeCounters from './createPageTypeCounters.js';
+import getTargetTypeCounters from './getTargetTypeCounters.js';
+import validateNativePageTypes from './validateNativePageTypes.js';
 import validateCallMethodReferences from './validateCallMethodReferences.js';
 import validateRequestReferences from './validateRequestReferences.js';
 
@@ -60,8 +62,12 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   // The same holds for path, which only a page may declare.
   const pagePath = page.path;
   delete page.path;
+  // buildMobile sets the target of mobile and shared pages. A mobile page
+  // resolves its client types against the native types map.
+  const target = page.target ?? 'web';
+  const blockMetas = target === 'mobile' ? context.blockMetasMobile : context.blockMetas;
   const { pageCounters, typeCounters } = createPageTypeCounters({
-    typeCounters: context.typeCounters,
+    typeCounters: getTargetTypeCounters({ target, context }),
   });
   context.pageTypeCounters.set(page.pageId, pageCounters);
   // The link refs this page adds, for its linkPaths.
@@ -69,6 +75,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   const pageContext = {
     auth: page.auth,
     blockIdCounter: createCounter(),
+    blockMetas,
     callApiActionRefs: context.callApiActionRefs ?? [],
     callMethodActionRefs,
     websocketActionRefs: context.websocketActionRefs ?? [],
@@ -88,6 +95,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   buildBlock(page, pageContext);
   // set page.id since buildBlock sets id as well.
   page.id = `page:${page.pageId}`;
+  page.target = target;
   if (!type.isUndefined(pagePath)) {
     page.path = pagePath;
   }
@@ -118,7 +126,11 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     context,
   });
 
-  countImpliedClientTypes({ blockMetas: context.blockMetas, pageCounters, typeCounters });
+  countImpliedClientTypes({ blockMetas, pageCounters, typeCounters });
+
+  if (target !== 'web') {
+    validateNativePageTypes({ page, pageCounters, context });
+  }
 
   // Validate that all Request actions reference defined requests
   validateRequestReferences({

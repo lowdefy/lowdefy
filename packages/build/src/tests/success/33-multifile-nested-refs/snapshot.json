@@ -1307,6 +1307,9 @@
     ],
     "~k": "3t"
   },
+  "mobile/config.json": {},
+  "mobile/pageIndex.json": [],
+  "mobile/typeSets.json": {},
   "pageTypeSets.json": {
     "404": {
       "actions": [
@@ -1530,6 +1533,7 @@
     },
     "pageId": "404",
     "blockId": "404",
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "3f"
@@ -1735,6 +1739,7 @@
       },
       "~k": "2b"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "2r"
@@ -1894,6 +1899,7 @@
       },
       "~k": "2v"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "37"

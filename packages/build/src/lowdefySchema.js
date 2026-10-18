@@ -2866,6 +2866,114 @@ export default {
         },
       },
     },
+    mobileMenuItem: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['pageId'],
+      properties: {
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
+        '~r': {},
+        '~l': {},
+        pageId: {
+          type: 'string',
+          description: 'Id of the mobile page the item opens.',
+          errorMessage: {
+            type: 'Mobile menu item "pageId" should be a string.',
+          },
+        },
+        icon: {
+          type: 'string',
+          description: 'Icon name, as in web menus and blocks.',
+          errorMessage: {
+            type: 'Mobile menu item "icon" should be a string.',
+          },
+        },
+        title: {
+          type: 'string',
+          description: 'Item label.',
+          errorMessage: {
+            type: 'Mobile menu item "title" should be a string.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Mobile menu item should be an object.',
+        required: {
+          pageId: 'Mobile menu item should have required property "pageId".',
+        },
+      },
+    },
+    mobileShell: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['id'],
+      properties: {
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
+        '~r': {},
+        '~l': {},
+        id: {
+          type: 'string',
+          description: 'Shell id.',
+          errorMessage: {
+            type: 'Mobile shell "id" should be a string.',
+          },
+        },
+        scheme: {
+          type: 'string',
+          description: 'URL scheme the shell opens links with.',
+          errorMessage: {
+            type: 'Mobile shell "scheme" should be a string.',
+          },
+        },
+        ios: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~r': {},
+            '~l': {},
+            bundleId: {
+              type: 'string',
+              description: 'iOS bundle id, for example "com.example.app".',
+            },
+            teamId: {
+              type: 'string',
+              description: 'Apple developer team id.',
+            },
+          },
+          errorMessage: {
+            type: 'Mobile shell "ios" should be an object.',
+          },
+        },
+        android: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~r': {},
+            '~l': {},
+            package: {
+              type: 'string',
+              description: 'Android package name, for example "com.example.app".',
+            },
+            sha256: {
+              type: ['string', 'array'],
+              items: {
+                type: 'string',
+              },
+              description: 'SHA-256 fingerprint of the app signing certificate, or a list of them.',
+            },
+          },
+          errorMessage: {
+            type: 'Mobile shell "android" should be an object.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Mobile shell should be an object.',
+        required: {
+          id: 'Mobile shell should have required property "id".',
+        },
+      },
+    },
   },
   additionalProperties: false,
   required: ['lowdefy'],
@@ -3509,6 +3617,102 @@ export default {
       },
       errorMessage: {
         type: 'App "menus" should be an array.',
+      },
+    },
+    mobile: {
+      type: 'object',
+      additionalProperties: false,
+      description:
+        'The mobile surface of the app: the pages, menus and home page a native shell shows.',
+      properties: {
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
+        '~r': {},
+        '~l': {},
+        homePageId: {
+          type: 'string',
+          description:
+            'Mobile home page id. Defaults to the first menu item, or else the first mobile page.',
+          errorMessage: {
+            type: 'App "mobile.homePageId" should be a string.',
+          },
+        },
+        minShellVersion: {
+          type: 'string',
+          description:
+            'Oldest shell version that may open the app, as a semver version. Older shells show an update screen on every page.',
+          errorMessage: {
+            type: 'App "mobile.minShellVersion" should be a string.',
+          },
+        },
+        menus: {
+          type: 'object',
+          additionalProperties: false,
+          description: 'The navigation frame: exactly one of tabs, drawer or stack.',
+          properties: {
+            '~ignoreBuildChecks': ignoreBuildChecksSchema,
+            '~r': {},
+            '~l': {},
+            tabs: {
+              type: 'array',
+              minItems: 2,
+              maxItems: 5,
+              items: {
+                $ref: '#/definitions/mobileMenuItem',
+              },
+              errorMessage: {
+                type: 'App "mobile.menus.tabs" should be an array.',
+                minItems: 'App "mobile.menus.tabs" should have 2 to 5 items.',
+                maxItems: 'App "mobile.menus.tabs" should have 2 to 5 items.',
+              },
+            },
+            drawer: {
+              type: 'array',
+              items: {
+                $ref: '#/definitions/mobileMenuItem',
+              },
+              errorMessage: {
+                type: 'App "mobile.menus.drawer" should be an array.',
+              },
+            },
+            stack: {
+              const: true,
+              errorMessage: {
+                const: 'App "mobile.menus.stack" should be true.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'App "mobile.menus" should be an object.',
+          },
+        },
+        pages: {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/block',
+          },
+          errorMessage: {
+            type: 'App "mobile.pages" should be an array.',
+          },
+        },
+        shells: {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/mobileShell',
+          },
+          errorMessage: {
+            type: 'App "mobile.shells" should be an array.',
+          },
+        },
+        auth: {
+          type: 'object',
+          description: 'Reserved for shell sign-in.',
+          errorMessage: {
+            type: 'App "mobile.auth" should be an object.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'App "mobile" should be an object.',
       },
     },
     pages: {

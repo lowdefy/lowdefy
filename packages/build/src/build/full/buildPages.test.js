@@ -236,6 +236,7 @@ test('no blocks on page', () => {
     pages: [
       {
         id: 'page:1',
+        target: 'web',
         linkPaths: {},
         auth: { public: true },
         pageId: '1',
@@ -305,6 +306,7 @@ test('nested blocks', () => {
     pages: [
       {
         id: 'page:page_1',
+        target: 'web',
         linkPaths: {},
         auth: { public: true },
         pageId: 'page_1',
@@ -378,6 +380,7 @@ describe('block areas', () => {
       pages: [
         {
           id: 'page:page1',
+          target: 'web',
           linkPaths: {},
           auth: { public: true },
           blockId: 'page1',
@@ -420,6 +423,7 @@ describe('block areas', () => {
       pages: [
         {
           id: 'page:1',
+          target: 'web',
           linkPaths: {},
           auth: { public: true },
           blockId: '1',
@@ -469,6 +473,7 @@ describe('block areas', () => {
       pages: [
         {
           id: 'page:1',
+          target: 'web',
           linkPaths: {},
           auth: { public: true },
           pageId: '1',
@@ -526,6 +531,7 @@ describe('block areas', () => {
       pages: [
         {
           id: 'page:1',
+          target: 'web',
           linkPaths: {},
           auth: { public: true },
           pageId: '1',
@@ -589,6 +595,7 @@ describe('block areas', () => {
       pages: [
         {
           id: 'page:1',
+          target: 'web',
           linkPaths: {},
           auth: { public: true },
           pageId: '1',
@@ -660,6 +667,7 @@ describe('block areas', () => {
       pages: [
         {
           id: 'page:1',
+          target: 'web',
           linkPaths: {},
           auth: { public: true },
           pageId: '1',
@@ -747,6 +755,7 @@ describe('block areas', () => {
       pages: [
         {
           id: 'page:1',
+          target: 'web',
           linkPaths: {},
           auth: { public: true },
           pageId: '1',
@@ -842,6 +851,7 @@ test('user defined skeleton', () => {
     pages: [
       {
         id: 'page:page_1',
+        target: 'web',
         linkPaths: {},
         auth: { public: true },
         pageId: 'page_1',
@@ -904,6 +914,7 @@ test('create unique block ids', () => {
     pages: [
       {
         id: 'page:page_1',
+        target: 'web',
         linkPaths: {},
         auth: { public: true },
         pageId: 'page_1',
@@ -998,6 +1009,7 @@ test('different blockId counter for each page', () => {
     pages: [
       {
         id: 'page:page_1',
+        target: 'web',
         linkPaths: {},
         auth: { public: true },
         pageId: 'page_1',
@@ -1024,6 +1036,7 @@ test('different blockId counter for each page', () => {
       },
       {
         id: 'page:page_2',
+        target: 'web',
         linkPaths: {},
         auth: { public: true },
         pageId: 'page_2',
