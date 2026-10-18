@@ -42,11 +42,12 @@ the camera). `resolveProfile(name)` flattens one, and throws on a name the table
 config without `profile` is `basic`, or `dev` for Lowdefy Dev. `app.config.ts` applies only the
 profile's config plugins, and sets `capabilities` from it when `shell.json` has none.
 
-It adds the shell's package version. The shell's type manifest is not in the Expo config: it is
-`src/plugins/typeManifest.js`, part of the JavaScript bundle, so it matches the code that runs. An
-embedded launch reads the Expo config of the native build, so a manifest there would hide a type
-added since from Metro and from over-the-air updates. The manifest lists every block, action and
-operator type the shell registers (`src/plugins/types.js`, listed in
+The shell's version and type manifest are not in the Expo config: they are
+`src/version/shellVersion.js` and `src/plugins/typeManifest.js`, part of the JavaScript bundle, so
+they match the code that runs. An embedded launch reads the Expo config of the native build, so a
+version there would keep a debug shell on Metro behind an app's `minShellVersion`, and a manifest
+there would hide a type added since. The manifest lists every block, action and operator type the
+shell registers (`src/plugins/types.js`, listed in
 `src/plugins/shellPlugins.json`), with its plugin package and that package's major version.
 `pnpm --filter=@lowdefy/shell type-manifest` rewrites it (`scripts/createTypeManifest.mjs`) after
 a change to the plugin maps, `src/plugins/types.test.js` fails when it is stale, and
@@ -97,8 +98,11 @@ runs it again at prebuild. `fixtures/printer-plugin` is the test plugin.
 
 - `version` in `shell.json` is the store version (`major.minor.patch`), the app config's `version`.
   Lowdefy Dev has none and builds as `0.0.0`.
-- `extra.shell.version` is the `@lowdefy/shell` package version, which the runtime sends as
-  `x-lowdefy-shell`.
+- The shell version is the `@lowdefy/shell` package version, which the runtime sends as
+  `x-lowdefy-shell` and compares with `mobile.minShellVersion`. It is `src/version/shellVersion.js`,
+  which `pnpm --filter=@lowdefy/shell shell-version` rewrites (`scripts/createShellVersion.mjs`) and
+  `pnpm release:version` rewrites after the version bump; `src/version/shellVersion.test.js` fails
+  when it is stale.
 - `runtimeVersion` is `<nativeVersion>-<profile>`, with `-<hash>` of the shell's `plugins` when it
   lists any (`runtimeVersion.js`, a pure function `lowdefy mobile` reuses). Each plugin is keyed on
   `name@version` and its `options` as JSON with keys sorted, so a new plugin version or option is a

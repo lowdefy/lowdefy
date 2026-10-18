@@ -17,17 +17,19 @@
 import Constants from 'expo-constants';
 
 import typeManifest from '../plugins/typeManifest.js';
+import shellVersion from '../version/shellVersion.js';
 
 /**
  * The shell's config: shell.json as app.config.ts built it into the app (`id`, `name`,
  * `profile`, `scheme`, `environment`, `store` and the one app it opens,
- * `app: { id, name, urls: { <env>: url } }`, checked by checkShellConfig.js) with the shell's
- * `version`, and the `typeManifest` of the JavaScript that is running. An embedded launch reads the
- * Expo config the native build embedded, so the manifest comes from the bundle instead: a type
- * added to the plugin maps then reaches the shell from Metro or by an over-the-air update.
+ * `app: { id, name, urls: { <env>: url } }`, checked by checkShellConfig.js), with the `version`
+ * and `typeManifest` of the JavaScript that is running. An embedded launch reads the Expo config
+ * the native build embedded, so both come from the bundle instead: a type added to the plugin maps
+ * reaches the shell from Metro or by an over-the-air update, and a shell whose new JavaScript
+ * meets an app's `minShellVersion` opens its pages.
  */
 function getShellConfig() {
-  return { ...Constants.expoConfig.extra.shell, typeManifest };
+  return { ...Constants.expoConfig.extra.shell, typeManifest, version: shellVersion };
 }
 
 export default getShellConfig;

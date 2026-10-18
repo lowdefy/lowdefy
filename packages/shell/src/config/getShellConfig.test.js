@@ -17,15 +17,17 @@
 import getPageView from '../session/getPageView.js';
 import types from '../plugins/types.js';
 import typeManifest from '../plugins/typeManifest.js';
+import shellVersion from '../version/shellVersion.js';
 import getShellConfig from './getShellConfig.js';
 
-// The Expo config a native build embedded: its type manifest predates the native Markdown block.
+// The Expo config a native build embedded: its shell version is older than the JavaScript's, and its
+// type manifest predates the native Markdown block.
 jest.mock('expo-constants', () => ({
   expoConfig: {
     extra: {
       shell: {
         scheme: 'lowdefy-dev',
-        version: '6.0.0',
+        version: '0.1.0',
         typeManifest: {
           actions: {},
           blocks: { Screen: { package: '@lowdefy/blocks-native', version: 6 } },
@@ -40,7 +42,22 @@ test('getShellConfig reads the type manifest from the bundle, not the embedded E
   const shell = getShellConfig();
   expect(shell.typeManifest).toBe(typeManifest);
   expect(shell.scheme).toBe('lowdefy-dev');
-  expect(shell.version).toBe('6.0.0');
+});
+
+test('getShellConfig reads the shell version from the bundle, not the embedded Expo config', () => {
+  expect(getShellConfig().version).toBe(shellVersion);
+});
+
+test('an app whose minShellVersion the bundled JavaScript meets opens on a shell built before it', () => {
+  const root = {
+    minShellVersion: shellVersion,
+    pageIndex: [{ path: 'home', pageId: 'home', hash: 'h-home-1', typesKey: 'basic' }],
+    typeSets: {
+      basic: { blocks: [{ type: 'Screen', ...typeManifest.blocks.Screen }] },
+    },
+  };
+  const view = getPageView({ path: 'home', shell: getShellConfig(), state: { pages: {}, root } });
+  expect(view.view).toBe('loading');
 });
 
 test('a block type in the plugin maps opens on a shell whose embedded Expo config lacks it', () => {
