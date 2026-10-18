@@ -14,20 +14,13 @@
   limitations under the License.
 */
 
-import React from 'react';
 import { jest } from '@jest/globals';
-import { act, render, screen } from '@testing-library/react-native';
-import { createNativeGlobals } from '@lowdefy/client-native';
+import { act, screen } from '@testing-library/react-native';
 
-import createAppSession from '../../session/createAppSession.js';
-import createFakeServer from '../../test/createFakeServer.js';
-import createMemoryCacheStore from '../../test/createMemoryCacheStore.js';
-import createMemoryStore from '../../host/createMemoryStore.js';
 import getShownPage from './getShownPage.js';
-import PageScreen from '../../components/PageScreen.js';
 import reloadApp from './reloadApp.js';
-import ShellContext from '../../ShellContext.js';
-import { createRoot, shell } from '../../test/fixtures.js';
+import renderPageScreen from '../../test/renderPageScreen.js';
+import { createRoot } from '../../test/fixtures.js';
 
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => false },
@@ -37,8 +30,6 @@ jest.mock('expo-router', () => ({
   },
   useNavigation: () => ({ setOptions: jest.fn() }),
 }));
-
-const apiBase = 'http://localhost:3000';
 
 function todayPage(greeting) {
   return {
@@ -64,7 +55,8 @@ function todayPage(greeting) {
 
 // A dev root: its pages have no hash, so the shell fetches them on each visit.
 async function renderDevPage() {
-  const server = createFakeServer({
+  const { server, session } = await renderPageScreen({
+    path: 'today',
     root: createRoot({
       pageIndex: [{ path: 'today', pageId: 'today', hash: null, typesKey: 'screen' }],
       typeSets: {
@@ -76,41 +68,8 @@ async function renderDevPage() {
         },
       },
     }),
-    rootEtag: '"r1"',
     pages: { today: { pageConfig: todayPage('Hello'), etag: '"p1"' } },
   });
-  const session = createAppSession({
-    apiBase,
-    app: { id: 'dev-localhost_3000' },
-    cacheStore: createMemoryCacheStore(),
-    fetch: server.fetch,
-    kv: createMemoryStore(),
-    tokenStore: { get: () => null },
-  });
-  await session.start();
-  const host = {
-    authTransport: 'bearer',
-    fetch: server.fetch,
-    globals: createNativeGlobals({
-      assign: jest.fn(),
-      fetch: server.fetch,
-      getPath: session.getCurrentPath,
-      origin: apiBase,
-    }),
-    onBuildChanged: jest.fn(),
-    onCallerChanged: jest.fn(),
-    router: { back: jest.fn(), push: jest.fn(), replace: jest.fn() },
-    sessionStorage: createMemoryStore(),
-    storage: createMemoryStore(),
-    tokenStore: { get: () => null, set: jest.fn(), clear: jest.fn() },
-    WebSocket: jest.fn(),
-    websocketUrl: (apiPath) => apiPath.replace(/^http/, 'ws'),
-  };
-  await render(
-    <ShellContext.Provider value={{ host, session, shell }}>
-      <PageScreen path="today" />
-    </ShellContext.Provider>
-  );
   await screen.findByText('Hello');
   return { server, session };
 }

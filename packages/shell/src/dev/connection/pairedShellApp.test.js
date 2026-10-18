@@ -37,6 +37,7 @@ jest.mock('expo-web-browser', () => ({}));
 jest.mock('expo-local-authentication', () => ({}));
 jest.mock('expo-network', () => ({ addNetworkStateListener: () => ({ remove: () => undefined }) }));
 jest.mock('expo-router', () => ({ router: {} }));
+jest.mock('expo-clipboard', () => ({}));
 
 class FakeWebSocket {
   constructor(url, protocols, options) {
