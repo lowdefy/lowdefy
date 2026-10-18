@@ -1,0 +1,117 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import icon from '../../schemas/icon.js';
+
+export default {
+  category: 'display',
+  icons: ['close'],
+  valueType: null,
+  cssKeys: {
+    element: 'The Tag element.',
+    icon: 'The icon in the Tag.',
+    closeIcon: 'The close icon of a closable Tag.',
+  },
+  events: {
+    onClick:
+      'Called when Tag is clicked. Renders a shortcut badge when a shortcut is configured. On mobile, called when the Tag is pressed; shortcuts are ignored.',
+    onClose: 'Called when Tag close icon is clicked.',
+  },
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      closable: {
+        type: 'boolean',
+        default: false,
+        description: 'Allow tag to be closed.',
+      },
+      closeIcon: {
+        ...icon,
+        description:
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize the close icon of a closable tag.',
+      },
+      color: {
+        type: 'string',
+        description:
+          'Color of the Tag. Preset options are success, processing, error, warning, default, blue, cyan, geekblue, gold, green, lime, magenta, orange, purple, red, volcano, or alternatively any hex color.',
+        docs: {
+          displayType: 'color',
+        },
+      },
+      disabled: {
+        type: 'boolean',
+        default: false,
+        description: 'Disable the tag. A disabled tag cannot be clicked or closed.',
+      },
+      href: {
+        type: 'string',
+        urlKind: 'href',
+        description:
+          'Render the tag as a link to this URL. On mobile, a URL with a scheme (https:, mailto:, tel:) opens outside the app; a relative path does not link.',
+      },
+      target: {
+        nativeIgnored: true,
+        type: 'string',
+        description:
+          'Where to open the href link, like `_blank` for a new tab. Ignored on mobile, where links open outside the app.',
+      },
+      title: {
+        type: 'string',
+        description:
+          'Content title of tag - supports html. On mobile, tags are removed and the text is shown plain.',
+      },
+      variant: {
+        type: 'string',
+        enum: ['filled', 'solid', 'outlined'],
+        default: 'filled',
+        description:
+          'Tag style variant. `filled` shows a tinted background, `outlined` adds a border and `solid` fills the tag with its color.',
+      },
+      icon: {
+        ...icon,
+        description:
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize tag icon.',
+      },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+          link: 'https://ant.design/components/tag#design-token',
+        },
+        properties: {
+          defaultBg: {
+            type: 'string',
+            default: '#fafafa',
+            description: 'Default background color of the tag.',
+          },
+          defaultColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.88)',
+            description: 'Default text color of the tag.',
+          },
+          solidTextColor: {
+            type: 'string',
+            default: '#fff',
+            description: 'Text color for solid (filled) tags, determined by background brightness.',
+          },
+        },
+      },
+    },
+  },
+};

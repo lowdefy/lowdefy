@@ -1,0 +1,292 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import icon from '../../schemas/icon.js';
+
+export default {
+  category: 'container',
+  icons: ['more'],
+  valueType: null,
+  slots: false,
+  cssKeys: {
+    element: 'The Tabs element.',
+    icon: 'The icon in the Tabs.',
+    tabBar: 'The Tabs tab bar.',
+    tabPane: 'The Tabs tab pane.',
+    inkBar: 'The Tabs ink bar.',
+    item: 'Each tab in the tab bar.',
+    popup:
+      'The dropdown that lists tabs that overflow the tab bar. On mobile the tab bar scrolls instead.',
+  },
+  // Each tab may declare its own eventName, so the event names a Tabs block
+  // fires are authored in its properties and cannot be enumerated here.
+  dynamicEvents: true,
+  events: {
+    onChange: {
+      description: 'Trigger action on any tab change.',
+      event: { activeKey: 'The key of the active tab.' },
+    },
+    onTabSelect: {
+      description:
+        'Documentation reference — not a fixed event name. When a tab becomes active, the `eventName` string declared on that `tabs[]` entry is triggered (in addition to onChange). Declare your named events under `events:` (e.g. `onProfileTab`, `onBillingTab`).',
+      event: { key: 'The key of the now-active tab.' },
+    },
+  },
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      animated: {
+        nativeIgnored: true,
+        type: 'boolean',
+        default: true,
+        description:
+          'Whether to change tabs with animation. Only works while tabPlacement is top or bottom. Ignored on mobile.',
+      },
+      centered: {
+        type: 'boolean',
+        default: false,
+        description: 'Center the tabs in the tab bar.',
+      },
+      defaultActiveKey: {
+        type: 'string',
+        description: "Initial active TabPane's key, if activeKey is not set.",
+      },
+      destroyOnHidden: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Unmount the content of inactive tabs. Blocks in a hidden tab keep their state values.',
+      },
+      indicator: {
+        type: 'object',
+        description: 'Size and alignment of the active tab indicator (ink bar).',
+        additionalProperties: false,
+        properties: {
+          size: {
+            type: 'number',
+            description: 'Length of the indicator in pixels. Defaults to the width of the tab.',
+          },
+          align: {
+            type: 'string',
+            enum: ['start', 'center', 'end'],
+            default: 'center',
+            description: 'Alignment of the indicator along the tab when size is set.',
+          },
+        },
+      },
+      tabBarGutter: {
+        type: 'number',
+        description: 'Gap between tabs in pixels.',
+      },
+      size: {
+        type: 'string',
+        default: 'default',
+        enum: ['default', 'small', 'large'],
+        description: 'Size of the tabs.',
+      },
+      tabPlacement: {
+        type: 'string',
+        default: 'top',
+        enum: ['top', 'end', 'bottom', 'start'],
+        description: 'Position of the tabs. On mobile, start and end show the tabs at the top.',
+      },
+      tabType: {
+        type: 'string',
+        default: 'line',
+        enum: ['line', 'card'],
+        description: 'Type of tabs.',
+      },
+      tabs: {
+        type: 'array',
+        items: {
+          type: 'object',
+          required: ['key'],
+          properties: {
+            title: {
+              type: 'string',
+              description:
+                'Title of the tab - supports html. On mobile, tags are removed and the text is shown plain.',
+            },
+            key: {
+              type: 'string',
+              description: 'Area key of the tab.',
+            },
+            eventName: {
+              type: 'string',
+              description:
+                'Block-level event name to trigger when this tab becomes active, in addition to onChange. Declare an event with this name under `events:`. The event receives `{ key }` of the now-active tab.',
+            },
+            disabled: {
+              type: 'boolean',
+              default: false,
+              description: 'Disable the tab if true.',
+            },
+            icon: {
+              ...icon,
+              description:
+                'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to show in tab title.',
+            },
+            shortcut: {
+              type: 'string',
+              description:
+                'Keyboard shortcut to switch to this tab. Use "mod" for Cmd/Ctrl. Ignored on mobile.',
+            },
+          },
+        },
+      },
+      extraAreaKey: {
+        type: 'string',
+        description: 'Area key for the extra area blocks.',
+      },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+          link: 'https://ant.design/components/tabs#design-token',
+        },
+        properties: {
+          cardBg: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.02)',
+            description: 'Background color of card-type tab.',
+          },
+          cardGutter: {
+            type: 'number',
+            default: 2,
+            description: 'Gap between card-type tabs.',
+          },
+          cardHeight: {
+            type: 'number',
+            default: 40,
+            description: 'Height of card-type tab.',
+          },
+          cardHeightSM: {
+            type: 'number',
+            default: 32,
+            description: 'Height of small card-type tab.',
+          },
+          cardHeightLG: {
+            type: 'number',
+            default: 48,
+            description: 'Height of large card-type tab.',
+          },
+          cardPadding: {
+            type: 'string',
+            default: '8px 16px',
+            description: 'Padding of card-type tab.',
+          },
+          cardPaddingLG: {
+            type: 'string',
+            default: '11px 16px',
+            description: 'Padding of large card-type tab.',
+          },
+          cardPaddingSM: {
+            type: 'string',
+            default: '4px 8px',
+            description: 'Padding of small card-type tab.',
+          },
+          horizontalItemGutter: {
+            type: 'number',
+            default: 32,
+            description: 'Gap between horizontal tabs.',
+          },
+          horizontalItemMargin: {
+            type: 'string',
+            description: 'Horizontal margin of tab item.',
+          },
+          horizontalItemPadding: {
+            type: 'string',
+            default: '12px 0',
+            description: 'Padding of horizontal tab item.',
+          },
+          horizontalItemPaddingLG: {
+            type: 'string',
+            default: '16px 0',
+            description: 'Padding of large horizontal tab item.',
+          },
+          horizontalItemPaddingSM: {
+            type: 'string',
+            default: '8px 0',
+            description: 'Padding of small horizontal tab item.',
+          },
+          horizontalMargin: {
+            type: 'string',
+            default: '0 0 16px 0',
+            description: 'Margin of horizontal tab bar.',
+          },
+          inkBarColor: {
+            type: 'string',
+            default: '#1677ff',
+            description: 'Color of the active tab indicator bar.',
+          },
+          itemActiveColor: {
+            type: 'string',
+            default: '#0958d9',
+            description: 'Text color of active (mousedown) tab.',
+          },
+          itemColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.88)',
+            description: 'Text color of tab.',
+          },
+          itemHoverColor: {
+            type: 'string',
+            default: '#4096ff',
+            description: 'Text color of hovered tab.',
+          },
+          itemSelectedColor: {
+            type: 'string',
+            default: '#1677ff',
+            description: 'Text color of selected tab.',
+          },
+          titleFontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of tab title.',
+          },
+          titleFontSizeLG: {
+            type: 'number',
+            default: 16,
+            description: 'Font size of large tab title.',
+          },
+          titleFontSizeSM: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of small tab title.',
+          },
+          verticalItemMargin: {
+            type: 'string',
+            default: '16px 0 0 0',
+            description: 'Margin of vertical tab item.',
+          },
+          verticalItemPadding: {
+            type: 'string',
+            default: '8px 24px',
+            description: 'Padding of vertical tab item.',
+          },
+          zIndexPopup: {
+            type: 'number',
+            default: 1050,
+            description: 'Z-index of tab dropdown popup.',
+          },
+        },
+      },
+    },
+  },
+};

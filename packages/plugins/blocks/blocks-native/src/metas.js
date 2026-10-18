@@ -14,8 +14,17 @@
   limitations under the License.
 */
 
+export { default as Alert } from './blocks/Alert/meta.js';
 export { default as Box } from './blocks/Box/meta.js';
 export { default as Button } from './blocks/Button/meta.js';
+export { default as Card } from './blocks/Card/meta.js';
+export { default as Divider } from './blocks/Divider/meta.js';
+export { default as Empty } from './blocks/Empty/meta.js';
+export { default as Icon } from './blocks/Icon/meta.js';
 export { default as Paragraph } from './blocks/Paragraph/meta.js';
 export { default as Screen } from './blocks/Screen/meta.js';
+export { default as Skeleton } from './blocks/Skeleton/meta.js';
+export { default as Spinner } from './blocks/Spinner/meta.js';
+export { default as Tabs } from './blocks/Tabs/meta.js';
+export { default as Tag } from './blocks/Tag/meta.js';
 export { default as Title } from './blocks/Title/meta.js';
