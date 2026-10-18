@@ -114,6 +114,64 @@ test('onClick runs a SetState that changes a Title', async () => {
   expect(screen.queryByText('Hello')).toBeNull();
 });
 
+// A shell can show one page instance on two screens at once (in two tabs' stacks, or pushed
+// again over itself). Both share the page's context, and both re-render when it changes.
+test('one page mounted twice re-renders both copies, and the other after one unmounts', async () => {
+  const { host } = createFakeHost({ path: '/home' });
+  const core = {
+    apiBase: 'https://app.lowdefy.test',
+    auth: { authConfig: {} },
+    basePath: '',
+    lowdefy: { buildId: 'build-1' },
+  };
+  const pageConfig = buildPage({
+    ...greetingPage,
+    blocks: [
+      ...greetingPage.blocks,
+      {
+        id: 'say_bye',
+        type: 'Button',
+        properties: { title: 'Say bye' },
+        events: {
+          onClick: [{ id: 'set', type: 'SetState', params: { greeting: 'Bye' } }],
+        },
+      },
+    ],
+  });
+  const types = createTypes();
+  const page = (key) => (
+    <LowdefyPage
+      key={key}
+      core={core}
+      host={host}
+      pageConfig={pageConfig}
+      rootConfig={rootConfig}
+      types={types}
+    />
+  );
+  const view = await render(
+    <>
+      {page('tab')}
+      {page('pushed')}
+    </>
+  );
+  expect(await screen.findAllByText('Hello')).toHaveLength(2);
+  await act(async () => {
+    fireEvent.press(screen.getAllByText('Say hi')[1]);
+  });
+  expect(await screen.findAllByText('Hi there')).toHaveLength(2);
+  expect(screen.queryByText('Hello')).toBeNull();
+
+  // The pushed copy is popped: the tab's copy still re-renders.
+  await act(async () => {
+    view.rerender(<>{page('tab')}</>);
+  });
+  await act(async () => {
+    fireEvent.press(screen.getByText('Say bye'));
+  });
+  expect(await screen.findByText('Bye')).toBeTruthy();
+});
+
 test('visible: false hides a block and its children', async () => {
   await renderPage({
     pageConfig: {

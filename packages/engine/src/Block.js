@@ -717,7 +717,7 @@ class Block {
     // Updaters register per context — a context under construction has none,
     // so construction-time evals never setState mounted components from a
     // previous context.
-    this.context._internal.updaters[this.id]?.();
+    this.context._internal.updaters.update(this.id);
   };
 }
 

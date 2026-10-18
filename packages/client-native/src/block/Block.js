@@ -25,7 +25,16 @@ import MountEvents from '../MountEvents.js';
 const Block = ({ block, Blocks, context, lowdefy, parentLoading }) => {
   const [updates, setUpdate] = useState(0);
   const loggedErrorsRef = useRef(new Set());
-  context._internal.updaters[block.id] = () => setUpdate(updates + 1);
+  // The block's one updater for this component's life. It registers on render, as the engine
+  // can update the block before the first commit, and again when mounted (a StrictMode remount
+  // unregisters it); unmounting removes only this copy's. A native shell can show one page on
+  // two screens, and each copy of the block keeps its own updater (engine createUpdaters).
+  const updater = useRef(() => setUpdate((count) => count + 1)).current;
+  context._internal.updaters.register(block.id, updater);
+  useEffect(
+    () => context._internal.updaters.register(block.id, updater),
+    [block.id, context, updater]
+  );
 
   const progress = () => {
     lowdefy._internal.progress.dispatch({ type: 'increment' });
