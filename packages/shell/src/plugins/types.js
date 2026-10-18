@@ -31,8 +31,8 @@ import { Screen } from '@lowdefy/client-native';
 import nativeActions from '../actions/nativeActions.js';
 
 // The plugin maps the shell renders pages with. They hold the packages in shellPlugins.json, from
-// which scripts/createTypeManifest.mjs writes the type manifest pages are checked against; a test
-// keeps the two the same. The blocks are the whole native block set, with the Screen page type
+// which scripts/createTypeManifest.mjs writes the type manifest pages are checked against
+// (typeManifest.js); a test keeps the two the same. The blocks are the whole native block set, with the Screen page type
 // from the native renderer (blocks-native carries only its meta). The actions-core actions that reach the DOM on the web run native
 // bodies under the same names. The client operators are those of every default operator package,
 // as the build's mobile type map allows. icons is the icon data the native Icon renderer draws

@@ -57,8 +57,8 @@ function writeTestModule(directory) {
 
 // A copy of the shell package whose node_modules links the shell's own, plus the test module.
 function copyShell() {
-  // The real path: scripts/createTypeManifest.mjs, which app.config.ts runs, compares its own path
-  // with the one it was started with, and macOS's temporary directory is behind a symlink.
+  // The real path: macOS's temporary directory is behind a symlink, and a script app.config.ts runs
+  // may compare its own path with the one it was started with.
   const directory = fs.mkdtempSync(
     path.join(fs.realpathSync(os.tmpdir()), 'lowdefy-shell-native-version-')
   );

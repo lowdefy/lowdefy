@@ -42,9 +42,15 @@ the camera). `resolveProfile(name)` flattens one, and throws on a name the table
 config without `profile` is `basic`, or `dev` for Lowdefy Dev. `app.config.ts` applies only the
 profile's config plugins, and sets `capabilities` from it when `shell.json` has none.
 
-It adds the shell's package version and its type manifest (`scripts/createTypeManifest.mjs`): every block,
-action and operator type the shell registers (`src/plugins/types.js`, listed in
+It adds the shell's package version. The shell's type manifest is not in the Expo config: it is
+`src/plugins/typeManifest.js`, part of the JavaScript bundle, so it matches the code that runs. An
+embedded launch reads the Expo config of the native build, so a manifest there would hide a type
+added since from Metro and from over-the-air updates. The manifest lists every block, action and
+operator type the shell registers (`src/plugins/types.js`, listed in
 `src/plugins/shellPlugins.json`), with its plugin package and that package's major version.
+`pnpm --filter=@lowdefy/shell type-manifest` rewrites it (`scripts/createTypeManifest.mjs`) after
+a change to the plugin maps, `src/plugins/types.test.js` fails when it is stale, and
+`pnpm release:version` rewrites it after the version bump.
 
 ## Store uploads
 
