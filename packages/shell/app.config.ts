@@ -20,6 +20,7 @@ import path from 'node:path';
 
 import type { ConfigContext, ExpoConfig } from 'expo/config';
 
+import checkShellConfig from './checkShellConfig.js';
 import { getExcludedModules, getShellVariant } from './shellVariant.js';
 import withExcludedNativeModules from './withExcludedNativeModules.js';
 
@@ -37,7 +38,7 @@ function readShellJson() {
   const configPath = process.env.LOWDEFY_SHELL_CONFIG
     ? path.resolve(process.env.LOWDEFY_SHELL_CONFIG)
     : path.join(shellRoot, 'shell.dev.json');
-  return readJson(configPath);
+  return checkShellConfig({ configPath, shell: readJson(configPath) });
 }
 
 function createTypeManifest() {

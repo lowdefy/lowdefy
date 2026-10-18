@@ -22,7 +22,7 @@ import createFakeNetwork from '../../test/createFakeNetwork.js';
 import createNetworkStatus from '../../host/createNetworkStatus.js';
 import createOfflineFetch from './createOfflineFetch.js';
 
-const shell = { environment: 'dev', version: '7.4.0', apps: [] };
+const shell = { environment: 'dev', version: '7.4.0' };
 
 function setup({ pair = null } = {}) {
   const injections = createDeviceInjections({

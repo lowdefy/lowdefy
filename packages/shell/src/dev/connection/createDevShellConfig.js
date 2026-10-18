@@ -35,13 +35,11 @@ function createDevShellConfig({
 }) {
   return {
     ...shell,
-    apps: [
-      {
-        id: `dev-${server.host.replace(/[^A-Za-z0-9._-]/g, '_')}`,
-        name: server.host,
-        urls: { [shell.environment]: server.url },
-      },
-    ],
+    app: {
+      id: `dev-${server.host.replace(/[^A-Za-z0-9._-]/g, '_')}`,
+      name: server.host,
+      urls: { [shell.environment]: server.url },
+    },
     transport: createDevTransport({ fetch, pair: server.pair, WebSocket }),
   };
 }

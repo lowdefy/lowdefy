@@ -20,11 +20,15 @@ plugin maps. Pages, menus and theme come from the app's Lowdefy server as data. 
   "ios": { "bundleIdentifier": "com.example.field" },
   "android": { "package": "com.example.field" },
   "store": { "ios": "https://apps.apple.com/...", "android": "https://play.google.com/..." },
-  "apps": [
-    { "id": "field", "name": "Field", "urls": { "production": "https://field.example.com" } }
-  ]
+  "app": { "id": "field", "name": "Field", "urls": { "production": "https://field.example.com" } }
 }
 ```
+
+A shell opens exactly one app, named by `app`. Every app's `_js` runs in the shell's one JavaScript
+realm, which cannot be sandboxed, so a second app in the same shell could reach the first one's
+session token, storage and cache. `checkShellConfig.js` refuses a `shell.json` that lists `apps`,
+names more than one app, or has no url for the shell's `environment`; `app.config.ts` runs it, so
+`expo prebuild` and `expo export` fail on such a config.
 
 It adds the shell's `version` and its type manifest (`scripts/createTypeManifest.mjs`): every block,
 action and operator type the shell registers (`src/plugins/types.js`, listed in
@@ -32,7 +36,7 @@ action and operator type the shell registers (`src/plugins/types.js`, listed in
 
 ## Boot, cache and sync
 
-- One app opens at once; with several, a picker lists the one opened last first.
+- The shell opens its one app at once. There is no app picker.
 - The last root config and pages the app showed are read from SQLite and rendered at once. The
   cache is keyed by app, caller (person and organisation) and roles, from the server's
   `x-lowdefy-caller` stamp.
@@ -125,8 +129,9 @@ left-out modules and asks for no camera (unless the shell needs it) or motion pe
 - **Connect.** `lowdefy-dev://connect?url=<server>&pair=<token>` (the QR code `lowdefy dev --lan`
   prints, or the link `--ios`/`--android` open), a scanned code (`expo-camera`), a typed address, or
   one of the last 5 servers. A server not on this device is confirmed first ("Connect to
-  `<host>`?"); a simulator's or USB phone's localhost connects at once. Each server is its own app,
-  with its own cache and session, and every call to it (fetch and websocket) carries its pairing
+  `<host>`?"); a simulator's or USB phone's localhost connects at once. Lowdefy Dev opens one dev
+  server at a time; switching server closes the open app. Each server is its own app, with its own
+  cache and session, and every call to it (fetch and websocket) carries its pairing
   token as `x-lowdefy-pair`.
 - **Shake menu** (or `lowdefy-dev://menu`): reload, switch server, clear data, show logs, the block
   gallery, and the shell version.

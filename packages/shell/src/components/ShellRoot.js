@@ -14,42 +14,18 @@
   limitations under the License.
 */
 
-import React, { useEffect, useMemo, useState } from 'react';
-import * as SplashScreen from 'expo-splash-screen';
+import React, { useMemo } from 'react';
 
-import AppPicker from './AppPicker.js';
 import AppProvider from './AppProvider.js';
-import createDeviceStore from '../host/createDeviceStore.js';
 import Frame from './Frame.js';
 import getShellConfig from '../config/getShellConfig.js';
 
-const LAST_APP_KEY = 'lowdefy-shell:last-app';
-
-// The shell: one app opens at once; with several, the person picks one each launch, the one opened
-// last listed first.
+// The shell opens its one app (shell.json `app`). A shell never opens another app: every app's `_js`
+// runs in this one JavaScript realm, beside the app's session token, storage and cache.
 function ShellRoot() {
   const shell = useMemo(() => getShellConfig(), []);
-  const deviceStore = useMemo(() => createDeviceStore(), []);
-  const [appId, setAppId] = useState(shell.apps.length === 1 ? shell.apps[0].id : null);
-  const app = shell.apps.find((item) => item.id === appId) ?? null;
-  useEffect(() => {
-    if (app === null) SplashScreen.hideAsync();
-  }, [app]);
-  if (app === null) {
-    return (
-      <AppPicker
-        apps={shell.apps}
-        lastAppId={deviceStore.get(LAST_APP_KEY)}
-        onPick={(id) => {
-          deviceStore.set(LAST_APP_KEY, id);
-          setAppId(id);
-        }}
-        shellName={shell.name}
-      />
-    );
-  }
   return (
-    <AppProvider app={app} shell={shell}>
+    <AppProvider shell={shell}>
       <Frame />
     </AppProvider>
   );

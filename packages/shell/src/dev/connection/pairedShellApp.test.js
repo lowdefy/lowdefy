@@ -66,7 +66,6 @@ test('every call of an app on a paired dev server carries the pairing token', as
     WebSocket: FakeWebSocket,
   });
   const { auth, host, session } = await createShellApp({
-    app: devShell.apps[0],
     onSignedOut: jest.fn(),
     shell: devShell,
   });
