@@ -218,3 +218,34 @@ test('a ListItem in a List moves the separator in to its title', async () => {
   expect(separators).toHaveLength(1);
   expect(styleOf(separators[0]).left).toEqual(16 + 18 + 12);
 });
+
+test('trailing.check draws the tinted checkmark where the chevron goes, with no chevron', async () => {
+  await renderPage({
+    pageConfig: {
+      id: 'form',
+      type: 'Box',
+      blocks: [
+        {
+          id: 'bug',
+          type: 'ListItem',
+          properties: { title: 'Bug', trailing: { check: true } },
+          events: { onClick: [] },
+        },
+        {
+          id: 'docs',
+          type: 'ListItem',
+          properties: { title: 'Docs', trailing: { check: false } },
+          events: { onClick: [] },
+        },
+      ],
+    },
+  });
+  const check = await screen.findByTestId('expo-ui-icon-checkmark');
+  expect(check.props.color).toBe(theme.light.colorPrimary);
+  expect(check.props.size).toBe(17);
+  expect(check.props.modifiers).toEqual([{ $type: 'font', size: 17, weight: 'semibold' }]);
+  expect(screen.queryByTestId('bug_chevron', { includeHiddenElements: true })).toBeNull();
+  expect(screen.getByTestId('bug_item').props.accessibilityState).toMatchObject({ selected: true });
+  expect(screen.getAllByTestId('expo-ui-icon-checkmark')).toHaveLength(1);
+  expect(screen.getByTestId('docs_chevron', { includeHiddenElements: true })).toBeTruthy();
+});

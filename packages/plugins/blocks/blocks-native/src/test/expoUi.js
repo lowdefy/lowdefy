@@ -65,8 +65,16 @@ function Switch({ disabled, label, onValueChange, testID, value }) {
   );
 }
 
-function Icon({ color, name, size }) {
-  return <View color={color} name={name} size={size} testID={`expo-ui-icon-${name}`} />;
+function Icon({ color, modifiers, name, size }) {
+  return (
+    <View
+      color={color}
+      modifiers={modifiers}
+      name={name}
+      size={size}
+      testID={`expo-ui-icon-${name}`}
+    />
+  );
 }
 
 export { Host, Icon, Picker, Switch };

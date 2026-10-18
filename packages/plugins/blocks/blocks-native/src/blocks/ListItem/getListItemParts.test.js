@@ -51,6 +51,7 @@ test('getListItemParts insets the separator by the row padding without a leading
       avatar: undefined,
       avatars: undefined,
       badges: [],
+      check: false,
       icon: undefined,
       status: undefined,
       text: undefined,

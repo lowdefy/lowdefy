@@ -32,6 +32,7 @@ module.exports = {
     '^@expo/ui/community/menu$': '<rootDir>/src/test/expoUiMenu.js',
     '^@expo/ui/community/segmented-control$': '<rootDir>/src/test/expoUiSegmentedControl.js',
     '^@expo/ui/swift-ui$': '<rootDir>/src/test/expoUiSwiftUi.js',
+    '^@expo/ui/swift-ui/modifiers$': '<rootDir>/src/test/expoUiSwiftUiModifiers.js',
     '^expo-image$': '<rootDir>/src/test/expoImage.js',
     '^expo-web-browser$': '<rootDir>/src/test/expoWebBrowser.js',
   },

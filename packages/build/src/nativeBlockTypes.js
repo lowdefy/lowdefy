@@ -105,7 +105,7 @@ const nativeBlockTypes = {
     Empty: ['Inbox'],
     Icon: ['loading'],
     List: [],
-    ListItem: ['chevron-right'],
+    ListItem: ['Check', 'chevron-right'],
     Markdown: [],
     Menu: [],
     NumberInput: [],
