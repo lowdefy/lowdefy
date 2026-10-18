@@ -18,6 +18,7 @@ import { act, fireEvent } from '@testing-library/react-native';
 
 import formPage from '../../test/formPage.js';
 import { record, renderPage, screen, styleOf } from '../../test/renderPage.js';
+import theme from '../../test/theme.json';
 
 const status = {
   id: 'status',
@@ -67,6 +68,28 @@ test('the menu variant is a row that opens a native menu of the options', async 
   expect(screen.getByText('In progress')).toBeTruthy();
   expect(screen.getByTestId('expo-ui-icon-circle.lefthalf.filled').props.color).toBe('#F59E0B');
   expect(screen.getByTestId('status_input').props.actions[2].state).toBe('on');
+});
+
+test('an option iconColor resolves through the theme: a palette hue, a token or a hex', async () => {
+  const coloured = {
+    ...status,
+    properties: {
+      ...status.properties,
+      options: [
+        { label: 'Waiting', value: 'waiting', symbol: 'clock', iconColor: 'amber' },
+        { label: 'Started', value: 'started', symbol: 'circle', iconColor: 'colorPrimary' },
+      ],
+    },
+  };
+  await renderPage({
+    darkMode: 'dark',
+    pageConfig: formPage({ blocks: [coloured], mirrorKey: 'status' }),
+  });
+  await screen.findByTestId('status_input');
+  await pick('0');
+  expect(screen.getByTestId('expo-ui-icon-clock').props.color).toBe(theme.dark['gold-6']);
+  await pick('1');
+  expect(screen.getByTestId('expo-ui-icon-circle').props.color).toBe(theme.dark.colorPrimary);
 });
 
 test('an option with an avatar shows its initials in the row', async () => {

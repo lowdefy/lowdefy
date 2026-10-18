@@ -34,6 +34,7 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 | `screen/useScreenFooter.js`                                      | A block draws its own chrome in the page footer (AgentChat's composer)       |
 | `icon/Icon.js`                                                   | Draws IconData (the web's icon node data) with `react-native-svg`            |
 | `icon/createIcon.js`                                             | `components.Icon`: an icon by name from `types.icons`, drawn with `Icon`     |
+| `theme/resolveColor.js`                                          | A configured colour (palette hue, token name, hex) as the theme draws it     |
 | `icon/getSfSymbol.js`, `sfSymbolNames.js`                        | The SF Symbol of a Lucide or semantic icon name, for iOS tab and bar buttons |
 
 ## Differences from the web renderer
@@ -83,6 +84,7 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
   the shell draws menu icons with it, and `initNativeLowdefy` installs `createIcon({ icons:
 types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw every icon
   through. Its props follow the web's (`properties` is a name or the Icon block's properties);
+  `properties.color` resolves through the theme (`resolveColor`: `amber`, `colorPrimary`, a hex);
   an element style's `color` and `fontSize` stand in for CSS `currentColor` and `1em`. It looks
   names up in `types.icons` at render (with `loading` for a spin and `icon-missing` for an
   unknown name), and draws an empty icon when the data has neither. Each built mobile page

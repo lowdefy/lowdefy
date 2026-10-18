@@ -16,8 +16,6 @@
 
 import { type } from '@lowdefy/helpers';
 
-import getSemanticColors from './getSemanticColors.js';
-
 // Names people use for a hue that antd's palette calls something else.
 const HUE_ALIASES = {
   amber: 'gold',
@@ -30,9 +28,11 @@ const GREY_NAMES = new Set(['default', 'gray', 'grey']);
 
 /**
  * A colour a block's config names, as the theme draws it in the mode showing: a palette hue
- * (`blue`, `gold`, `teal`, ...) is its mode-adjusted 6th shade, `grey` is the secondary label, a
- * token name (`colorSuccess`) is that token, and anything else (a hex or rgb colour) is used as
- * it is.
+ * (`blue`, `gold`, `teal`, ...) is its mode-adjusted 6th shade, `grey` is the secondary label
+ * (the iOS token, or antd's colorTextSecondary in a theme without it), a token name
+ * (`colorSuccess`, `colorTint`) is that token, and anything else (a hex or rgb colour) is used as
+ * it is. Native blocks resolve every configured colour through it, and the icon renderer
+ * (createIcon) resolves an icon's `color` with it.
  *
  * @param {Object} params
  * @param {string} params.color The configured colour.
@@ -41,7 +41,7 @@ const GREY_NAMES = new Set(['default', 'gray', 'grey']);
  */
 function resolveColor({ color, tokens }) {
   if (GREY_NAMES.has(color)) {
-    return getSemanticColors({ tokens }).secondaryLabel;
+    return tokens.colorSecondaryLabel ?? tokens.colorTextSecondary;
   }
   const hue = HUE_ALIASES[color] ?? color;
   if (type.isString(tokens[`${hue}-6`])) {

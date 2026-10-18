@@ -16,6 +16,7 @@
 
 import React, { useContext, useLayoutEffect } from 'react';
 import { Platform, Pressable, Text, View } from 'react-native';
+import { resolveColor } from '@lowdefy/client-native';
 import { type } from '@lowdefy/helpers';
 
 import AvatarCircle from '../Avatar/AvatarCircle.js';
@@ -26,7 +27,6 @@ import iosTextStyles from '../../shared/iosTextStyles.js';
 import ListItemContextMenu from './ListItemContextMenu.js';
 import ListRowContext from '../List/ListRowContext.js';
 import meta from './meta.js';
-import resolveColor from '../../shared/resolveColor.js';
 import showContextMenuAlert from './showContextMenuAlert.js';
 import StatusMark from '../StatusIcon/StatusMark.js';
 import SwipeableRow from '../../shared/SwipeableRow.js';

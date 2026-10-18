@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
+import { resolveColor } from '@lowdefy/client-native';
 import { type } from '@lowdefy/helpers';
-
-import resolveColor from '../../shared/resolveColor.js';
 
 // antd hues that carry white initials in both modes; red is left out, so no avatar reads as an
 // error.
