@@ -14,23 +14,16 @@
   limitations under the License.
 */
 
-import getFrame from './getFrame.js';
+import getTabHref from './getTabHref.js';
 
 // The router href for a link the core follows ({ pathname, query }). A link to a tab's own page
 // switches to that tab, rather than stacking another copy of the page on the current one.
 function toRouterHref({ pathname, query, root }) {
-  const search = query ? `?${query}` : '';
-  const frame = getFrame(root?.menus);
-  if (frame.kind === 'tabs') {
-    const path = pathname.replace(/^\//, '');
-    const slotIndex = frame.items.findIndex(
-      (item) => root.pageIndex.find((entry) => entry.pageId === item.pageId)?.path === path
-    );
-    if (slotIndex !== -1) {
-      return `/(t${slotIndex})${search}`;
-    }
+  const tabHref = getTabHref({ path: pathname.replace(/^\//, ''), query, root });
+  if (tabHref !== null) {
+    return tabHref;
   }
-  return `${pathname}${search}`;
+  return `${pathname}${query ? `?${query}` : ''}`;
 }
 
 export default toRouterHref;

@@ -21,6 +21,7 @@ import getFrame from './getFrame.js';
 import getPresentation from './getPresentation.js';
 import getSlotRootPath from './getSlotRootPath.js';
 import getStackOptions from './getStackOptions.js';
+import getTabHref from './getTabHref.js';
 import getTabIcons from './getTabIcons.js';
 import toRouterHref from './toRouterHref.js';
 import { createRoot } from '../test/fixtures.js';
@@ -60,6 +61,14 @@ test('toRouterHref switches tabs for a link to a tab page and keeps the query', 
   expect(toRouterHref({ pathname: '/jobs/12', query: '', root: tabsRoot })).toBe('/jobs/12');
   const stackRoot = createRoot({ menus: { stack: true } });
   expect(toRouterHref({ pathname: '/jobs', query: 'a=1', root: stackRoot })).toBe('/jobs?a=1');
+});
+
+test('getTabHref names the tab that shows a page, and no tab for other pages and frames', () => {
+  expect(getTabHref({ path: 'today', query: '', root: tabsRoot })).toBe('/(t0)');
+  expect(getTabHref({ path: 'jobs', query: 'a=1', root: tabsRoot })).toBe('/(t1)?a=1');
+  expect(getTabHref({ path: 'jobs/12', query: '', root: tabsRoot })).toBeNull();
+  const stackRoot = createRoot({ menus: { stack: true } });
+  expect(getTabHref({ path: 'jobs', query: '', root: stackRoot })).toBeNull();
 });
 
 test('getPresentation maps Screen presentations to native stack presentations', () => {
