@@ -123,8 +123,10 @@ const Page = ({
  *   on request in dev carries `_classMap`, the class map entries of its own classes.
  * @param {Object} props.rootConfig The app's root config, as the server sends it (serialized),
  *   with the mobile root's `theme` (`{ darkMode, light, dark }`) and `classMap`.
- * @param {Object} props.types `{ blocks, actions, operators }`, the native plugin maps. Each
- *   block component carries its `meta`.
+ * @param {Object} props.types `{ blocks, actions, operators, icons }`, the native plugin maps and
+ *   the icon data `components.Icon` draws from. Each block component carries its `meta`. The
+ *   first page's `icons` object is kept and read at render, so a shell adds a page's `_icons` to
+ *   it before the page renders.
  * @param {Object} [props.pathParams] The values of the page path's params, from the router.
  * @param {Object} [props.jsMap] The page's compiled `_js` functions.
  * @param {(options: Object) => void} [props.onScreenOptions] Called by a Screen page with

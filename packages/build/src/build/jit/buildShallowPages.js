@@ -106,11 +106,9 @@ function buildShallowPages({ components, context }) {
       return { requestId: request.requestId, requestJson };
     });
 
-    return {
-      pageId: builtPage.pageId,
-      pageJson: serializer.serializeToString(builtPage),
-      requests,
-    };
+    // The page is serialized when written (writeSourcelessPages), after
+    // shallowBuild adds a mobile page's _icons.
+    return { pageId: builtPage.pageId, page: builtPage, requests };
   });
 
   return { pageRegistry, sourcelessPageArtifacts };

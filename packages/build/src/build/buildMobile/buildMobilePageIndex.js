@@ -63,8 +63,8 @@ function getMobileTypeSet({ page, context }) {
 
 // The index a shell syncs its page cache against: every page it may open, with
 // the path it opens at, a hash of the page's built JSON and the key of its
-// type set. Runs on the final page config (after buildPageTypes), so the hash
-// matches the file writePages writes.
+// type set. Runs on the final page config (after buildPageTypes and
+// buildMobilePageIcons), so the hash matches the file writePages writes.
 function buildMobilePageIndex({ components, context }) {
   context.mobilePageIndex = [];
   context.mobileTypeSets = {};

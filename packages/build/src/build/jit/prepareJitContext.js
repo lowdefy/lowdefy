@@ -73,6 +73,19 @@ function readThemeArtifacts({ directories }) {
   }
 }
 
+// The app's global the skeleton build wrote: a mobile page carries the data of
+// the icons global names (buildPageIconsJit), as in the full build.
+function readGlobal({ directories }) {
+  try {
+    return serializer.deserialize(
+      JSON.parse(fs.readFileSync(path.join(directories.build, 'global.json'), 'utf8'))
+    );
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+    return {};
+  }
+}
+
 // Fills, on the context JIT page builds share, every field build code would
 // otherwise fill on first use. Each page build runs on a shallow copy of this
 // context (createPageBuildContext), so a field first set during a build would
@@ -101,6 +114,14 @@ function prepareJitContext(context) {
     refMap: context.refMap,
     name: 'jit',
   });
+
+  if (type.isUndefined(context.global)) {
+    context.global =
+      context.components?.global ??
+      (type.isString(context.directories?.build)
+        ? readGlobal({ directories: context.directories })
+        : {});
+  }
 
   context.deferred ??= {};
   context.unresolvedRefVars ??= {};

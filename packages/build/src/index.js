@@ -46,6 +46,7 @@ import buildMenu from './build/buildMenu.js';
 import buildMobile from './build/buildMobile/buildMobile.js';
 import buildMobileAppJs from './build/buildMobile/buildMobileAppJs.js';
 import buildMobileClassMap from './build/buildMobile/buildMobileClassMap.js';
+import buildMobilePageIcons from './build/buildMobile/buildMobilePageIcons.js';
 import buildMobileTheme from './build/buildMobile/buildMobileTheme.js';
 import collectMobileClassCandidates from './build/buildMobile/collectMobileClassCandidates.js';
 import buildMobilePageIndex from './build/buildMobile/buildMobilePageIndex.js';
@@ -274,6 +275,8 @@ async function build(options) {
     // Per-page type sets are build output, not config: computed once every page
     // built cleanly, after the final addKeys pass.
     buildPageTypes({ components, context });
+    // Before the page index: a mobile page's hash covers its _icons.
+    await buildMobilePageIcons({ components, context });
     buildMobilePageIndex({ components, context });
 
     // Write steps - only if no errors

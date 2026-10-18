@@ -14,11 +14,13 @@
   limitations under the License.
 */
 
+import { serializer } from '@lowdefy/helpers';
+
 async function writeSourcelessPages({ sourcelessPageArtifacts, context }) {
   for (const artifact of sourcelessPageArtifacts) {
     await context.writeBuildArtifact(
       `pages/${artifact.pageId}.json`,
-      artifact.pageJson
+      serializer.serializeToString(artifact.page)
     );
     for (const request of artifact.requests) {
       await context.writeBuildArtifact(

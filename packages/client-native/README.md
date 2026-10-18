@@ -24,6 +24,9 @@ requests as they do on the web.
 - `rootConfig` carries the mobile root's `theme` (`{ darkMode, light, dark }`, antd's computed
   tokens per mode) and `classMap` (the Tailwind class map). In dev a page built on request carries
   `_classMap`, its own classes' entries, which go over the root's.
+- `types.icons` is the icon data `components.Icon` draws from, read at render. Each built mobile
+  page carries its icons' data as `_icons`; the shell adds it to `types.icons` before the page
+  renders.
 - Areas and blocks are laid out by `layoutStyles(layout, breakpoint, columnGap)` from
   `@lowdefy/layout-native`, v7's 24-column grid as React Native styles.
 - Each block gets `styles`, a React Native style per slot: its classes from the class map, then

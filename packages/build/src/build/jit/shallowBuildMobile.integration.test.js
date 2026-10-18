@@ -22,6 +22,7 @@ import { jest } from '@jest/globals';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import { icons as lucideIcons } from 'lucide';
 import { serializer, type } from '@lowdefy/helpers';
 
 process.env.AUTH_SECRET = 'test-secret-for-integration-test';
@@ -119,6 +120,7 @@ mobile:
           class: p-4 text-lg
           properties:
             content: Profile
+            icon: Bell
 `
   );
   write('pages/home.yaml', 'id: home\ntype: Box\n');
@@ -135,6 +137,8 @@ blocks:
       content: Today
   - id: go
     type: Button
+    properties:
+      icon: House
     events:
       onClick:
         - id: link
@@ -330,6 +334,36 @@ test('a JIT build of a shared page carries a class map, and a web page none', as
     context: result.context,
   });
   expect(home._classMap).toBeUndefined();
+});
+
+test('a JIT build of a mobile page carries the icon data of the icons it draws', async () => {
+  const page = await buildPageJit({
+    pageId: 'today',
+    pageRegistry: result.pageRegistry,
+    context: result.context,
+  });
+  expect(page._icons.House).toEqual({ node: lucideIcons.House });
+  expect(page._icons.loading).toEqual({ node: lucideIcons.LoaderCircle });
+  expect(readArtifact('pages/today.json')._icons).toEqual(page._icons);
+});
+
+test('a JIT build of a shared page carries icon data, and a web page none', async () => {
+  const about = await buildPageJit({
+    pageId: 'about',
+    pageRegistry: result.pageRegistry,
+    context: result.context,
+  });
+  expect(Object.keys(about._icons)).toContain('icon-missing');
+  const home = await buildPageJit({
+    pageId: 'home',
+    pageRegistry: result.pageRegistry,
+    context: result.context,
+  });
+  expect(home._icons).toBeUndefined();
+});
+
+test('the skeleton build writes an inline mobile page with its icon data', () => {
+  expect(readArtifact('pages/profile.json')._icons.Bell).toEqual({ node: lucideIcons.Bell });
 });
 
 test('a JIT build of a mobile page with a class React Native cannot honour fails', async () => {

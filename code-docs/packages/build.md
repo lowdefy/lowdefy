@@ -352,6 +352,10 @@ Native blocks have no CSS, so the build turns the app's theme, styles and Tailwi
 
 In the dev build the skeleton's class map holds only the pages it builds inline. `buildPageJit` compiles a mobile or shared page's own classes (`buildPageClassMapJit`, with the mobile theme and `theme.tailwind` that `prepareJitContext` reads back from the skeleton's artifacts) and writes them on the page as `_classMap`, which the native renderer lays over the root class map. A class with no native form fails the JIT page build as it fails the full build.
 
+### Mobile page icons (`buildMobilePageIcons`)
+
+The web inlines a page's icon data into its page types chunk; a shell has no chunks, so each mobile and shared page carries the data of the icons it draws as `_icons`, `{ name: IconData }`. `collectMobilePageIconNames` finds them as the web's page icons are found: the always-bundled icons the client draws itself (`loading`, `icon-missing`, ...), every name in the page config, its `_js` sources (through their hashes) and `global` that resolves (semantic names, aliases, set and qualified names such as `tabler:Truck`), and the `meta.icons` of the page's native block types (`typesMapMobile.icons`). The full build runs it after `buildPageTypes` and before `buildMobilePageIndex`, so the page hash covers `_icons`; the dev skeleton build runs it on inline pages, and `buildPageJit` gives a page built on request its `_icons` (`buildPageIconsJit`, with the `global` that `prepareJitContext` reads back from `global.json`). Web pages get no `_icons`; the root config carries the menu icons' data. The shell merges each page's `_icons` into the icon map client-native's `components.Icon` reads.
+
 ### Plugin Schema Map Generation
 
 During `writePluginImports`, schema maps are generated for runtime validation:

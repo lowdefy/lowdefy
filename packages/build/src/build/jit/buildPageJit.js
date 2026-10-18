@@ -41,6 +41,7 @@ import warnUnsetEnvReads from '../buildRefs/warnUnsetEnvReads.js';
 import testSchema from '../testSchema.js';
 import validateIconNames from '../icons/validateIconNames.js';
 import buildPageClassMapJit from './buildPageClassMapJit.js';
+import buildPageIconsJit from './buildPageIconsJit.js';
 import createPageBuildContext from './createPageBuildContext.js';
 import detectMissingIcons from './detectMissingIcons.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
@@ -272,6 +273,12 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // it; the dev mobile client lays it over the root class map.
     if (!type.isUndefined(pageClassMap)) {
       finalPage._classMap = pageClassMap;
+    }
+    // After _js extraction: a page reaches its functions' icon names through
+    // their hashes, as in the full build.
+    const pageIcons = await buildPageIconsJit({ page: cleanPage, context: buildContext });
+    if (!type.isUndefined(pageIcons)) {
+      finalPage._icons = pageIcons;
     }
 
     // Check for collected errors from validation steps
