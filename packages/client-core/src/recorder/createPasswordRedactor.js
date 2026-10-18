@@ -14,18 +14,6 @@
   limitations under the License.
 */
 
-import { journeyTargetSelectors } from '@lowdefy/helpers';
-
-const { blockWrapperPrefix } = journeyTargetSelectors;
-
-function isPasswordInput(element) {
-  return (
-    typeof element?.tagName === 'string' &&
-    element.tagName.toLowerCase() === 'input' &&
-    element.type === 'password'
-  );
-}
-
 // A write holds a password block's value when its path is the block's id, or
 // an ancestor of it: arrays are diffed as leaves, so a password block inside a
 // List is written as the whole list array.
@@ -45,22 +33,16 @@ function redactWrites(event, passwordBlocks) {
 }
 
 // Password inputs are never recorded. A block is a password block when the
-// interaction's element, or its block's `<blockId>_input` element, is an
-// `<input type="password">`. It is remembered for the rest of the tab session,
-// so its value is redacted from every later change and from every state write
-// to its path, a later SetState echo included. It is remembered from any
-// interaction with the block, a click included: the visibility toggle turns
-// the input into `type="text"`, and a click on it comes before the typing.
-function createPasswordRedactor() {
+// host's isPassword says the interaction's element is one: on the web an
+// `<input type="password">` (server-dev isPasswordElement), on a phone a
+// TextInput of type password. It is remembered for the rest of the recording
+// session, so its value is redacted from every later change and from every
+// state write to its path, a later SetState echo included. It is remembered
+// from any interaction with the block, a click included: on the web the
+// visibility toggle turns the input into `type="text"`, and a click on it
+// comes before the typing.
+function createPasswordRedactor({ isPassword }) {
   const passwordBlocks = new Set();
-
-  function isPassword(element) {
-    if (isPasswordInput(element)) return true;
-    const wrapper = element?.closest?.(`[id^="${blockWrapperPrefix}"]`);
-    if (!wrapper) return false;
-    const blockId = wrapper.id.slice(blockWrapperPrefix.length);
-    return isPasswordInput(element.ownerDocument?.getElementById(`${blockId}_input`));
-  }
 
   function remember(blockId) {
     if (typeof blockId === 'string' && blockId !== '') {

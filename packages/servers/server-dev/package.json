@@ -68,6 +68,7 @@
     "@lowdefy/blocks-tiptap": "6.0.0",
     "@lowdefy/build": "6.0.0",
     "@lowdefy/client": "6.0.0",
+    "@lowdefy/client-core": "6.0.0",
     "@lowdefy/connection-axios-http": "6.0.0",
     "@lowdefy/connection-mongodb": "6.0.0",
     "@lowdefy/docs-content": "6.0.0",

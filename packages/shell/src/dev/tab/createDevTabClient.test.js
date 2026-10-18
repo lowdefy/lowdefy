@@ -102,17 +102,19 @@ function setup({ stream = createStream(), streamFetch, pollEvents = [] } = {}) {
   });
   const onReload = jest.fn(async () => undefined);
   const onStep = jest.fn(async ({ step }) => ({ ok: true, ran: step }));
+  const onInject = jest.fn(({ injection }) => ({ ok: true, kind: injection.kind, pending: 1 }));
   const client = createDevTabClient({
     apiBase,
     fetch,
     getLowdefy: createLowdefy,
+    onInject,
     onReload,
     onStep,
     pollInterval: 10,
     streamFetch: streamFetch ?? jest.fn(async () => ({ ok: true, body: stream.body })),
   });
   client.start();
-  return { client, fetch, onReload, onStep, stream };
+  return { client, fetch, onInject, onReload, onStep, stream };
 }
 
 function posts(fetch, path) {
@@ -229,6 +231,34 @@ test('a failed step is answered with its error', async () => {
   await waitFor(() => expect(posts(running.fetch, '')).toHaveLength(1));
   expect(posts(running.fetch, '')[0].result).toEqual({
     error: 'Block "save" is not on page "ticket".',
+  });
+});
+
+test('an inject request fakes the next device result and posts what was queued', async () => {
+  running = setup();
+  running.stream.send('inject', {
+    requestId: 'r-inject',
+    inject: { kind: 'scan', value: { data: 'JOB-42', type: 'qr' } },
+  });
+  await waitFor(() => expect(posts(running.fetch, '')).toHaveLength(1));
+  expect(running.onInject).toHaveBeenCalledWith({
+    injection: { kind: 'scan', value: { data: 'JOB-42', type: 'qr' } },
+  });
+  expect(posts(running.fetch, '')[0]).toEqual({
+    requestId: 'r-inject',
+    result: { ok: true, kind: 'scan', pending: 1 },
+  });
+});
+
+test('a refused injection is answered with why', async () => {
+  running = setup();
+  running.onInject.mockImplementation(() => {
+    throw new Error('A scan injection needs { data }. Received "JOB-42".');
+  });
+  running.stream.send('inject', { requestId: 'r-bad', inject: { kind: 'scan', value: 'JOB-42' } });
+  await waitFor(() => expect(posts(running.fetch, '')).toHaveLength(1));
+  expect(posts(running.fetch, '')[0].result).toEqual({
+    error: 'A scan injection needs { data }. Received "JOB-42".',
   });
 });
 

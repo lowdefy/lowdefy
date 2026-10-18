@@ -27,6 +27,37 @@ const DEV_ENTRY = path.join(__dirname, 'src', 'dev', 'index.js');
 // release bundle holds it. Keep it in step with src/dev/tab/devClientMarker.js.
 const DEV_CLIENT_MARKER = 'lowdefy-dev-tab-client';
 
+// Native modules only Lowdefy Dev's developer features use (src/dev): the shake menu's
+// accelerometer and the dev-tab client's screenshots. With the native module name each one's
+// JavaScript asks for, which scripts/checkReleaseBundle.mjs looks for in a release bundle.
+const DEV_ONLY_MODULES = {
+  'expo-sensors': 'ExponentAccelerometer',
+  'react-native-view-shot': 'RNViewShot',
+};
+
+// expo-camera reads the code `lowdefy dev` prints. A release shell links it only when the shell
+// asks for the camera.
+const CAMERA_MODULE = { 'expo-camera': 'ExpoCamera' };
+
+// Whether the shell config asks for the camera: `capabilities`, the device features its capability
+// profile resolves to at shell build, lists 'camera'.
+function shellNeedsCamera(shell) {
+  return (shell.capabilities ?? []).includes('camera');
+}
+
+// The native modules a shell of this variant leaves unlinked, as { [package]: nativeModuleName }:
+// none for Lowdefy Dev; for a release shell the dev-only ones, and expo-camera unless the shell
+// needs the camera. app.config.ts excludes them from autolinking and from their config plugins.
+function getExcludedModules({ shell, variant }) {
+  if (variant === 'dev') {
+    return {};
+  }
+  if (shellNeedsCamera(shell)) {
+    return { ...DEV_ONLY_MODULES };
+  }
+  return { ...DEV_ONLY_MODULES, ...CAMERA_MODULE };
+}
+
 // LOWDEFY_SHELL_VARIANT=dev | release. Without it, Lowdefy Dev (no LOWDEFY_SHELL_CONFIG) is dev and
 // every other shell is release, so a customer shell leaves the developer features out unless its
 // build asks for them.
@@ -40,4 +71,10 @@ function getShellVariant(env = process.env) {
   return variant;
 }
 
-module.exports = { DEV_CLIENT_MARKER, DEV_ENTRY, getShellVariant };
+module.exports = {
+  DEV_CLIENT_MARKER,
+  DEV_ENTRY,
+  getExcludedModules,
+  getShellVariant,
+  shellNeedsCamera,
+};

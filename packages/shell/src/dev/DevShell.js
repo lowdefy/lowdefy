@@ -23,13 +23,16 @@ import AppProvider from '../components/AppProvider.js';
 import ConfirmSheet from './connect/ConfirmSheet.js';
 import ConnectScreen from './connect/ConnectScreen.js';
 import createDevShellConfig from './connection/createDevShellConfig.js';
+import createDeviceInjections from './inject/createDeviceInjections.js';
 import createDeviceStore from '../host/createDeviceStore.js';
 import createLogBuffer from './menu/createLogBuffer.js';
+import createOfflineFetch from './inject/createOfflineFetch.js';
 import createServerList, { SERVERS_KEY } from './connection/createServerList.js';
 import DevMenu from './menu/DevMenu.js';
 import DevTabClient from './tab/DevTabClient.js';
 import Frame from '../components/Frame.js';
 import getShellConfig from '../config/getShellConfig.js';
+import { installInjector } from '../device/injected.js';
 import isLoopbackHost from './connection/isLoopbackHost.js';
 import parseDevLink from './connection/parseDevLink.js';
 import reloadApp from './tab/reloadApp.js';
@@ -43,7 +46,9 @@ import watchShake from './menu/watchShake.js';
  *   "Connect to <host>?" first for any server not on this device: a simulator's or USB phone's
  *   localhost connects at once, which is how `lowdefy dev --ios` and `--android` open it.
  * - Shaking the phone (or a `lowdefy-dev://menu` link) opens the dev menu.
- * - The open app joins the dev server's tab channel (DevTabClient).
+ * - The open app joins the dev server's tab channel (DevTabClient), which records what is done in
+ *   it and takes device injections: the next scan, photo or NFC read, a location, a permission
+ *   answer, or no network, which fails the app's every fetch (createDeviceInjections).
  *
  * @param {Object} props
  * @param {Object} [props.accelerometer] expo-sensors' Accelerometer.
@@ -61,6 +66,7 @@ function DevShell({
   const kv = useMemo(() => kvProp ?? createDeviceStore(), [kvProp]);
   const servers = useMemo(() => createServerList({ kv }), [kv]);
   const logs = useMemo(() => createLogBuffer({ console: globalThis.console }), []);
+  const injections = useMemo(() => createDeviceInjections(), []);
   const rootRef = useRef(null);
   const openApp = useRef(null);
   const [server, setServer] = useState(() => servers.last());
@@ -104,6 +110,8 @@ function DevShell({
 
   useEffect(() => logs.install(), [logs]);
 
+  useEffect(() => installInjector(injections), [injections]);
+
   useEffect(() => {
     linking.getInitialURL().then((link) => link && handleLink(link));
     const subscription = linking.addEventListener('url', ({ url }) => handleLink(url));
@@ -117,8 +125,18 @@ function DevShell({
   }, [server]);
 
   const devShell = useMemo(
-    () => (server === null ? null : createDevShellConfig({ server, shell })),
-    [server, shell]
+    () =>
+      server === null
+        ? null
+        : createDevShellConfig({
+            fetch: createOfflineFetch({
+              fetch: globalThis.fetch,
+              isOffline: injections.isOffline,
+            }),
+            server,
+            shell,
+          }),
+    [injections, server, shell]
   );
 
   const onApp = useCallback((app) => {
@@ -193,7 +211,7 @@ function DevShell({
         shell={devShell}
       >
         <Frame />
-        <DevTabClient logs={logs} onApp={onApp} rootRef={rootRef} />
+        <DevTabClient injections={injections} kv={kv} logs={logs} onApp={onApp} rootRef={rootRef} />
       </AppProvider>
       {sheet}
       {menu}

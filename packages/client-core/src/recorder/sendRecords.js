@@ -16,7 +16,8 @@
 
 import chunkRecords from './chunkRecords.js';
 
-// One same-origin POST per chunk. keepalive lets a send started on pagehide
+// One POST per chunk to the dev server (`basePath` is the page's base path on
+// the web, the dev server's URL on a phone). keepalive lets a send started on pagehide
 // finish after the tab is gone, as a beacon would, with one code path. A
 // failed send is dropped: recording must never get in the developer's way.
 async function sendRecords({ basePath, records, fetch }) {

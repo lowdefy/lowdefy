@@ -14,11 +14,15 @@
   limitations under the License.
 */
 
+import getReportingMethods from './getReportingMethods.js';
+
 const INPUT_CATEGORIES = new Set(['input', 'input-container']);
 const LIST_CATEGORIES = new Set(['list', 'input-container']);
 
-// The methods a block component gets, by its category, as the web renderer gives them.
+// The methods a block component gets, by its category, as the web renderer gives them. Its
+// triggerEvent and setValue report presses and changes for Lowdefy Dev's recorder.
 function getBlockMethods({ block, category, lowdefy }) {
+  const reporting = getReportingMethods({ block, lowdefy });
   const methods = Object.assign(block.methods, {
     getAppStorageKey: lowdefy._internal.storage.appKey,
     getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
@@ -26,10 +30,10 @@ function getBlockMethods({ block, category, lowdefy }) {
     registerEvent: block.registerEvent,
     registerMethod: block.registerMethod,
     translate: lowdefy._internal.translate,
-    triggerEvent: block.triggerEvent,
+    triggerEvent: reporting.triggerEvent,
   });
   if (INPUT_CATEGORIES.has(category)) {
-    methods.setValue = block.setValue;
+    methods.setValue = reporting.setValue;
   }
   if (LIST_CATEGORIES.has(category)) {
     Object.assign(methods, {

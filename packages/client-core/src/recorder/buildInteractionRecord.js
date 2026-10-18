@@ -24,7 +24,8 @@ function recordTarget(target) {
   return rest;
 }
 
-// A DOM interaction as a v1 trace record. `paired` are the trace events the
+// An interaction (a DOM event on the web, a block pressed or changed on a
+// phone) as a v1 trace record. `paired` are the trace events the
 // pairing rule gave it, innermost first: the first is `event`, the rest go to
 // `also`. `build` is the build of the page config the interaction happened
 // on; `source` and `run` are stamped by the dev server, never the page.
