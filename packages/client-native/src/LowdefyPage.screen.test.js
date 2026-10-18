@@ -359,6 +359,58 @@ test('header slot blocks take their natural size, not the column width', async (
   expect(JSON.stringify(more.props.style ?? null)).not.toContain('100%');
 });
 
+test('a header slot whose blocks are all hidden is not reported, until one shows', async () => {
+  const { onScreenOptions, view } = renderScreen({
+    page: {
+      id: 'home',
+      type: 'Screen',
+      properties: { title: 'Designs' },
+      events: { onInit: [{ id: 'init', type: 'SetState', params: { spaces: false } }] },
+      slots: {
+        content: {
+          blocks: [
+            {
+              id: 'show',
+              type: 'Button',
+              properties: { title: 'Show' },
+              events: {
+                onClick: [{ id: 'show', type: 'SetState', params: { spaces: true } }],
+              },
+            },
+          ],
+        },
+        headerLeft: {
+          blocks: [
+            {
+              id: 'spaces',
+              type: 'Button',
+              visible: { _state: 'spaces' },
+              properties: { title: 'Spaces' },
+            },
+          ],
+        },
+        headerRight: {
+          blocks: [{ id: 'more', type: 'Button', visible: false, properties: { title: 'More' } }],
+        },
+      },
+    },
+  });
+  await view;
+  await act(async () => undefined);
+  // An empty slot would be drawn as an empty glass button in the native header.
+  expect(onScreenOptions.mock.calls.at(-1)[0]).toMatchObject({
+    headerLeft: undefined,
+    headerRight: undefined,
+  });
+  await act(async () => {
+    fireEvent.press(screen.getByText('Show'));
+  });
+  const { headerLeft, headerRight } = onScreenOptions.mock.calls.at(-1)[0];
+  expect(headerRight).toBeUndefined();
+  await render(headerLeft());
+  expect(screen.getByText('Spaces')).toBeTruthy();
+});
+
 // The style of a host view, with Animated values read as numbers.
 function flatStyle(node) {
   return StyleSheet.flatten(node.props.style) ?? {};

@@ -21,18 +21,21 @@ import Block from './Block.js';
 import BlockLayout from './BlockLayout.js';
 import getBlockProps from './getBlockProps.js';
 import useBlockStyles from '../style/useBlockStyles.js';
+import useVisibleSlots from './useVisibleSlots.js';
 
 const getEvaluatedLayout = (block) => block.eval?.layout;
 
 // A container or input container: its slots are passed as `content`, a function per slot that
-// renders the slot's blocks in an area. A block may pass the loading its slot's blocks inherit
-// (`{ loading }`), for slots that are its chrome rather than its content.
+// renders the slot's blocks in an area. A slot with no visible block has no function, so the
+// block draws nothing for it (useVisibleSlots). A block may pass the loading its slot's blocks
+// inherit (`{ loading }`), for slots that are its chrome rather than its content.
 const Container = ({ block, Blocks, category, Component, context, loading, lowdefy }) => {
   const styles = useBlockStyles({ block, lowdefy });
   const content = {};
   const { slots } = Blocks.subSlots[block.id][0];
+  const visibleSlots = useVisibleSlots({ context, slots });
   Object.keys(slots).forEach((slotKey) => {
-    if (slots[slotKey].blocks.length === 0) return;
+    if (!visibleSlots.has(slotKey)) return;
     content[slotKey] = (contentStyle, { loading: slotLoading = loading } = {}) => (
       <Area
         area={block.eval.slots?.[slotKey]}
