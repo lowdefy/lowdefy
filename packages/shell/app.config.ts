@@ -20,7 +20,8 @@ import path from 'node:path';
 
 import type { ConfigContext, ExpoConfig } from 'expo/config';
 
-import { getShellVariant } from './shellVariant.js';
+import { getExcludedModules, getShellVariant } from './shellVariant.js';
+import withExcludedNativeModules from './withExcludedNativeModules.js';
 
 // The shell's config comes from shell.json, written for each shell at build: LOWDEFY_SHELL_CONFIG
 // is its path. Without it the shell is Lowdefy Dev (shell.dev.json), which opens `lowdefy dev`.
@@ -48,11 +49,30 @@ function createTypeManifest() {
   return JSON.parse(output);
 }
 
+// expo-camera reads the code lowdefy dev prints in Lowdefy Dev (src/dev). Android's microphone
+// permission is left out. A release shell links it only when it needs the camera.
+function cameraPlugin(variant: string) {
+  return [
+    'expo-camera',
+    {
+      cameraPermission:
+        variant === 'dev'
+          ? 'Allow $(PRODUCT_NAME) to scan the code lowdefy dev prints.'
+          : 'Allow $(PRODUCT_NAME) to use the camera.',
+      recordAudioAndroid: false,
+    },
+  ];
+}
+
 export default function appConfig({ config }: ConfigContext): ExpoConfig {
   const shell = readShellJson();
   const variant = getShellVariant();
   const { version } = readJson(path.join(shellRoot, 'package.json'));
-  return {
+  // Lowdefy Dev's native modules (the shake menu's accelerometer, the dev-tab client's screenshots,
+  // and the camera unless the shell needs it) are left out of a release shell: not linked, and
+  // their config plugins and permissions not applied (scripts/checkReleaseBundle.mjs checks it).
+  const excluded = Object.keys(getExcludedModules({ shell, variant }));
+  const appConfigResult: ExpoConfig = {
     ...config,
     name: shell.name,
     slug: shell.id,
@@ -67,7 +87,7 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
     },
     android: {
       package: shell.android?.package,
-      blockedPermissions: variant === 'release' ? ['android.permission.CAMERA'] : [],
+      blockedPermissions: excluded.includes('expo-camera') ? ['android.permission.CAMERA'] : [],
     },
     plugins: [
       'expo-router',
@@ -82,19 +102,7 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
       'expo-splash-screen',
       'expo-sqlite',
       'expo-web-browser',
-      // expo-camera is linked into every shell: Lowdefy Dev scans the code lowdefy dev prints
-      // with it (src/dev). Android's microphone permission is left out; a release shell, which
-      // never asks for the camera, blocks Android's camera permission too.
-      [
-        'expo-camera',
-        {
-          cameraPermission:
-            variant === 'dev'
-              ? 'Allow $(PRODUCT_NAME) to scan the code lowdefy dev prints.'
-              : 'Allow $(PRODUCT_NAME) to use the camera.',
-          recordAudioAndroid: false,
-        },
-      ],
+      ...(excluded.includes('expo-camera') ? [] : [cameraPlugin(variant)]),
     ],
     extra: {
       shell: {
@@ -105,4 +113,5 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
       },
     },
   };
+  return withExcludedNativeModules(appConfigResult, excluded);
 }
