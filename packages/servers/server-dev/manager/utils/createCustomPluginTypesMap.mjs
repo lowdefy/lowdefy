@@ -16,7 +16,7 @@
 */
 
 import { createRequire } from 'node:module';
-import { createPluginTypesMap } from '@lowdefy/build';
+import { createPluginTypesMap, createPluginTypesMapMobile } from '@lowdefy/build';
 import importFresh from './importFresh.mjs';
 import readPluginDefinitions from './readPluginDefinitions.mjs';
 
@@ -45,14 +45,25 @@ async function createCustomPluginTypesMap({ directories, logger }) {
     websockets: {},
   };
 
-  const pluginDefinitions = await readPluginDefinitions({ directories });
+  const { plugins, shellPlugins } = await readPluginDefinitions({ directories });
+  const customTypesMapMobile = {
+    actions: {},
+    blockMetas: {},
+    blocks: {},
+    icons: {},
+    operators: {
+      client: {},
+    },
+    plugins: shellPlugins.map((plugin) => plugin.name),
+  };
 
   // Each import starts a worker, so the plugins are imported in parallel and
   // added to the map in the order lowdefy.yaml lists them.
   const pluginTypes = await Promise.all(
-    pluginDefinitions.map(async (plugin) => {
+    plugins.map(async (plugin) => {
       try {
-        return await importFresh(require.resolve(`${plugin.name}/types`));
+        const types = await importFresh(require.resolve(`${plugin.name}/types`));
+        return types.default ?? types;
       } catch (e) {
         logger.error(`Failed to import plugin "${plugin.name}".`);
         logger.debug(e);
@@ -62,18 +73,28 @@ async function createCustomPluginTypesMap({ directories, logger }) {
     })
   );
 
-  pluginDefinitions.forEach((plugin, index) => {
-    const types = pluginTypes[index];
+  const packageTypes = new Map();
+  plugins.forEach((plugin, index) => {
+    packageTypes.set(plugin.name, pluginTypes[index]);
     createPluginTypesMap({
-      packageTypes: types.default ?? types,
+      packageTypes: pluginTypes[index],
       typesMap: customTypesMap,
       packageName: plugin.name,
       version: plugin.version,
       typePrefix: plugin.typePrefix,
     });
   });
+  shellPlugins.forEach((plugin) => {
+    createPluginTypesMapMobile({
+      packageTypes: packageTypes.get(plugin.name),
+      typesMap: customTypesMapMobile,
+      packageName: plugin.name,
+      version: plugin.version,
+      typePrefix: plugin.typePrefix,
+    });
+  });
 
-  return customTypesMap;
+  return { customTypesMap, customTypesMapMobile };
 }
 
 export default createCustomPluginTypesMap;

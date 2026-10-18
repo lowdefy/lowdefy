@@ -112,11 +112,14 @@ function createBuildContext(buildDirectory, configDirectory) {
   const websocketIds = readJsonFile(path.join(buildDirectory, 'websocketIds.json')) ?? [];
 
   const customTypesMap = readJsonFile(path.join(buildDirectory, 'customTypesMap.json')) ?? {};
+  const customTypesMapMobile =
+    readJsonFile(path.join(buildDirectory, 'customTypesMapMobile.json')) ?? {};
   const customMessagesMap = readJsonFile(path.join(buildDirectory, 'customMessagesMap.json')) ?? {};
 
   const context = createContext({
     customMessagesMap,
     customTypesMap,
+    customTypesMapMobile,
     directories: {
       build: buildDirectory,
       config: configDirectory,

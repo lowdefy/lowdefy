@@ -451,7 +451,7 @@ Errors and warnings can be suppressed using `~ignoreBuildChecks` in config. See 
 
 ```javascript
 import build from '@lowdefy/build';
-import { createPluginTypesMap } from '@lowdefy/build';
+import { createPluginTypesMap, createPluginTypesMapMobile } from '@lowdefy/build';
 
 // Run full build (resolves all refs, all pages)
 await build({
@@ -462,6 +462,14 @@ await build({
 
 // Create types map for validation
 const typesMap = createPluginTypesMap(plugins);
+// A shell plugin's `native` types into the mobile types map (customTypesMapMobile)
+createPluginTypesMapMobile({
+  packageName,
+  packageTypes,
+  typePrefix,
+  typesMap: typesMapMobile,
+  version,
+});
 ```
 
 ### Dev Build (JIT)
@@ -472,6 +480,7 @@ import { shallowBuild, buildPageJit, createContext, createJitMaps } from '@lowde
 // Phase 1: Skeleton build (resolves everything except page content)
 const { components, pageRegistry, context } = await shallowBuild({
   customTypesMap,
+  customTypesMapMobile, // written to customTypesMapMobile.json for JIT page builds
   directories,
   logger,
   refResolver,

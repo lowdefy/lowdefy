@@ -142,7 +142,7 @@ server-dev/
 │   │   ├── loadSkeletonSourceFiles.mjs  # Read skeletonSourceFiles.json as Set
 │   │   ├── publishBuildDirectory.mjs    # Move build-staging over build, file by file
 │   │   ├── readBuildStatusWait.mjs      # Is a proxied request a build-status wait?
-│   │   ├── readPluginDefinitions.mjs    # The plugins lowdefy.yaml lists
+│   │   ├── readPluginDefinitions.mjs    # The plugins lowdefy.yaml lists, root and shell
 │   │   └── updatePageTailwindCss.mjs    # Refresh Tailwind candidates on page edits
 │   └── watchers/
 │       ├── lowdefyBuildWatcher.mjs   # Config, local modules and ref map files: skeleton vs page
@@ -287,11 +287,15 @@ Cross-process communication uses files in the build directory:
 ```javascript
 function lowdefyBuild({ directories, logger, options }) {
   async function build() {
-    const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
+    const { customTypesMap, customTypesMapMobile } = await createCustomPluginTypesMap({
+      directories,
+      logger,
+    });
     const customMessagesMap = await createCustomPluginMessagesMap({ directories, logger });
     const result = await shallowBuild({
       customMessagesMap,
       customTypesMap,
+      customTypesMapMobile, // shell plugins' native types; JIT reads customTypesMapMobile.json
       directories: { ...directories, build: directories.buildStaging },
       ...
     });

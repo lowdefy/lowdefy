@@ -23,7 +23,7 @@ jest.unstable_mockModule('@lowdefy/logger/node', () => ({
   createNodeLogger: jest.fn(() => 'logger'),
 }));
 jest.unstable_mockModule('./createCustomPluginTypesMap.mjs', () => ({
-  default: jest.fn().mockResolvedValue({}),
+  default: jest.fn().mockResolvedValue({ customTypesMap: {}, customTypesMapMobile: {} }),
 }));
 
 const savedSkip = process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS;

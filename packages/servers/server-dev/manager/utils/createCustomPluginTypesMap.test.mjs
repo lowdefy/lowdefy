@@ -19,16 +19,19 @@ import { jest } from '@jest/globals';
 const mockImportFresh = jest.fn();
 jest.unstable_mockModule('./importFresh.mjs', () => ({ default: mockImportFresh }));
 const mockCreatePluginTypesMap = jest.fn();
+const mockCreatePluginTypesMapMobile = jest.fn();
 jest.unstable_mockModule('@lowdefy/build', () => ({
   createPluginTypesMap: mockCreatePluginTypesMap,
+  createPluginTypesMapMobile: mockCreatePluginTypesMapMobile,
 }));
 // The module under test imports @lowdefy/build, which links against every
 // export it uses, so the real module passes through and only readFile is
 // replaced.
 const realNodeUtils = await import('@lowdefy/node-utils');
+const mockReadFile = jest.fn(async () => 'plugins:\n  - name: plugin-a\n  - name: plugin-b\n');
 jest.unstable_mockModule('@lowdefy/node-utils', () => ({
   ...realNodeUtils,
-  readFile: jest.fn(async () => 'plugins:\n  - name: plugin-a\n  - name: plugin-b\n'),
+  readFile: mockReadFile,
 }));
 jest.unstable_mockModule('node:module', () => ({
   createRequire: () => ({ resolve: (name) => `/plugins/${name}.js` }),
@@ -91,4 +94,45 @@ test('createCustomPluginMessagesMap imports every plugin before any import finis
   imports.release();
 
   expect(await result).toEqual({ 'plugin-a': { hello: 'A' }, 'plugin-b': { hello: 'B' } });
+});
+
+test('createCustomPluginTypesMap imports a plugin in root and two shells once and reads its native types', async () => {
+  mockCreatePluginTypesMap.mockClear();
+  mockReadFile.mockResolvedValueOnce(`
+plugins:
+  - name: '@example/lowdefy-printer'
+    version: 2.1.0
+mobile:
+  shells:
+    - id: field
+      plugins:
+        - name: '@example/lowdefy-printer'
+          version: 2.1.0
+          typePrefix: Printer
+    - id: staging
+      plugins:
+        - name: '@example/lowdefy-printer'
+          version: 2.1.0
+          typePrefix: Printer
+`);
+  const printerTypes = { native: { blocks: ['Label'] } };
+  mockImportFresh.mockReset();
+  mockImportFresh.mockResolvedValue(printerTypes);
+
+  const { customTypesMapMobile } = await createCustomPluginTypesMap({ directories, logger });
+
+  expect(mockImportFresh.mock.calls).toEqual([['/plugins/@example/lowdefy-printer/types.js']]);
+  expect(mockCreatePluginTypesMap.mock.calls.map(([args]) => args.typePrefix)).toEqual([undefined]);
+  expect(mockCreatePluginTypesMapMobile.mock.calls).toEqual([
+    [
+      {
+        packageName: '@example/lowdefy-printer',
+        packageTypes: printerTypes,
+        typePrefix: 'Printer',
+        typesMap: customTypesMapMobile,
+        version: '2.1.0',
+      },
+    ],
+  ]);
+  expect(customTypesMapMobile.plugins).toEqual(['@example/lowdefy-printer']);
 });

@@ -335,6 +335,12 @@ async function shallowBuild(options) {
       'customTypesMap.json',
       JSON.stringify(options.customTypesMap ?? {})
     );
+    // JIT page builds resolve mobile pages against the same shell plugin
+    // types as this build.
+    await context.writeBuildArtifact(
+      'customTypesMapMobile.json',
+      JSON.stringify(options.customTypesMapMobile ?? {})
+    );
     await context.writeBuildArtifact(
       'customMessagesMap.json',
       JSON.stringify(options.customMessagesMap ?? {})

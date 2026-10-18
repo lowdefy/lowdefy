@@ -20,6 +20,7 @@ import bootIosSimulator from './devices/bootIosSimulator.js';
 import checkEnvironmentGuards from './checkEnvironmentGuards.js';
 import cleanDirectory from './cleanDirectory.js';
 import collectEnvironmentGuards from './collectEnvironmentGuards.js';
+import collectPluginDefinitions from './collectPluginDefinitions.js';
 import compareProcessStartTimes from './compareProcessStartTimes.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
 import createConnectPublic from './createConnectPublic.js';
@@ -113,6 +114,7 @@ export {
   cleanDirectory,
   createDevAppLink,
   collectEnvironmentGuards,
+  collectPluginDefinitions,
   compareProcessStartTimes,
   compileSegments,
   copyFileOrDirectory,
