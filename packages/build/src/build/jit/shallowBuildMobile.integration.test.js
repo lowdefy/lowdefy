@@ -225,6 +225,7 @@ test('the skeleton build writes the mobile config and a page index without hashe
   expect(config.shells).toEqual([
     {
       id: 'field',
+      distribution: 'private',
       ios: { bundleId: 'com.example.field', teamId: 'ABCDE12345' },
     },
   ]);

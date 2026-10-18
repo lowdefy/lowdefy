@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'node:path';
+
 import { type } from '@lowdefy/helpers';
 
 import getMobileAuth from './buildMobile/getMobileAuth.js';
@@ -49,10 +51,23 @@ async function buildMenus({ menus, context }) {
   return { drawer: buildMenuItems({ items: menus.drawer, iconData }) };
 }
 
-function buildShells(shells) {
+// lowdefy mobile reads each shell from here, so the icon is written as an
+// absolute path and distribution with its default.
+function buildShells({ shells, context }) {
   return (shells ?? []).map((shell) => ({
     id: shell.id,
+    name: shell.name,
+    icon: type.isString(shell.icon)
+      ? path.resolve(context.directories.config, shell.icon)
+      : undefined,
+    color: shell.color,
+    profile: shell.profile,
+    version: shell.version,
     scheme: shell.scheme,
+    distribution: shell.distribution ?? 'private',
+    eas: type.isObject(shell.eas)
+      ? { owner: shell.eas.owner, projectId: shell.eas.projectId }
+      : undefined,
     ios: type.isObject(shell.ios)
       ? { bundleId: shell.ios.bundleId, teamId: shell.ios.teamId }
       : undefined,
@@ -73,7 +88,7 @@ async function buildMobileConfig({ components, context }) {
     homePageId: getMobileHomePageId({ components, mobilePageIndex: context.mobilePageIndex }),
     minShellVersion: mobile.minShellVersion ?? null,
     menus: await buildMenus({ menus: mobile.menus, context }),
-    shells: buildShells(mobile.shells),
+    shells: buildShells({ shells: mobile.shells, context }),
     auth: getMobileAuth({ mobile }),
   };
 }

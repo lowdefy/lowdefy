@@ -48,6 +48,7 @@ import journeysUsage from './commands/journeys/journeysUsage.js';
 import journeysPullPosthog from './commands/journeys/pull/journeysPullPosthog.js';
 import journeysScope from './commands/journeys/scope/journeysScope.js';
 import mcp from './commands/mcp/mcp.js';
+import addMobileCommands from './commands/mobile/addMobileCommands.js';
 import start from './commands/start/start.js';
 import test from './commands/test/test.js';
 import upgrade from './commands/upgrade/upgrade.js';
@@ -313,6 +314,8 @@ hub
   .command('serve', { hidden: true })
   .description('Run the hub in the foreground. Started automatically when needed.')
   .action(runHubCommand({ cliVersion, handler: hubServe }));
+
+addMobileCommands({ cliVersion, options, program });
 
 const journeys = program
   .command('journeys')

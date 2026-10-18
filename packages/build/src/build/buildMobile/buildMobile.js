@@ -23,11 +23,11 @@ import validateMobilePageRefs from './validateMobilePageRefs.js';
 // Runs once the web page list is complete (after addDefaultPages) and before
 // buildRoutes and buildAuth, so mobile pages get routes and auth like any page.
 // An app without a mobile key is left exactly as it was.
-function buildMobile({ components }) {
+function buildMobile({ components, context }) {
   if (type.isNone(components.mobile)) {
     return components;
   }
-  validateMobileConfig({ mobile: components.mobile });
+  validateMobileConfig({ mobile: components.mobile, context });
   mergeMobilePages({ components });
   validateMobilePageRefs({ components });
   return components;
