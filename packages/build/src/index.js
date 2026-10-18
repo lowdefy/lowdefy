@@ -44,8 +44,12 @@ import buildLogger from './build/buildLogger.js';
 import buildMcp from './build/buildMcp.js';
 import buildMenu from './build/buildMenu.js';
 import buildMobile from './build/buildMobile/buildMobile.js';
+import buildMobileClassMap from './build/buildMobile/buildMobileClassMap.js';
+import buildMobileTheme from './build/buildMobile/buildMobileTheme.js';
+import collectMobileClassCandidates from './build/buildMobile/collectMobileClassCandidates.js';
 import buildMobilePageIndex from './build/buildMobile/buildMobilePageIndex.js';
 import validateMobileMenuIcons from './build/buildMobile/validateMobileMenuIcons.js';
+import validateMobileStyles from './build/buildMobile/validateMobileStyles.js';
 import buildModuleDefs from './build/buildModuleDefs.js';
 import { resolveModuleManifests } from './build/registerModules.js';
 import buildModules from './build/buildModules.js';
@@ -208,6 +212,8 @@ async function build(options) {
       context,
     });
     tryBuildStep(buildPages, 'buildPages', { components, context });
+    // After buildPages: styles are keyed by slot (normalizeClassAndStyles).
+    tryBuildStep(validateMobileStyles, 'validateMobileStyles', { components, context });
     // After buildPages: Link actions in app events are checked against the page ids.
     tryBuildStep(buildAppEvents, 'buildAppEvents', { components, context });
     // Every type is counted by now, and buildJs has not yet replaced the
@@ -229,12 +235,21 @@ async function build(options) {
         context.tailwindContentMap.set(page.pageId, content);
       }
     }
+    // Mobile class candidates are collected here for the same reason.
+    tryBuildStep(collectMobileClassCandidates, 'collectMobileClassCandidates', {
+      components,
+      context,
+    });
     tryBuildStep(buildJs, 'buildJs', { components, context });
     tryBuildStep(buildTypes, 'buildTypes', { components, context });
     tryBuildStep(buildTypesMobile, 'buildTypesMobile', { components, context });
     // Icon sets load asynchronously; a bad theme.icons stops the build here,
     // since buildImports resolves every icon name against context.icons.
     await buildIconContext({ components, context });
+    buildMobileTheme({ components, context });
+    // Async (Tailwind's compiler), so it runs outside tryBuildStep; config
+    // faults are collected, not thrown.
+    await buildMobileClassMap({ components, context });
     logCollectedErrors(context);
     tryBuildStep(validateMobileMenuIcons, 'validateMobileMenuIcons', { components, context });
     tryBuildStep(buildImports, 'buildImports', { components, context });

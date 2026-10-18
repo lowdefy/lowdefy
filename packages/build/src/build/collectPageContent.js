@@ -65,4 +65,4 @@ function collectPageContent(pages) {
 }
 
 export default collectPageContent;
-export { walkBlockProperties };
+export { walkBlockProperties, walkValue };

@@ -25,6 +25,12 @@ function createContext() {
   const context = testContext({ writeBuildArtifact: mockWriteBuildArtifact });
   context.mobilePageIndex = [{ path: 'today', pageId: 'today', hash: 'h1', typesKey: 't1' }];
   context.mobileTypeSets = { t1: { actions: [], blocks: [], operators: [] } };
+  context.mobileTheme = {
+    darkMode: 'system',
+    light: { colorPrimary: '#1677ff' },
+    dark: { colorPrimary: '#1668dc' },
+  };
+  context.mobileClassMap = { 'p-4': { padding: 16 } };
   return context;
 }
 
@@ -42,11 +48,15 @@ test('writeMobile writes empty artifacts for an app without a mobile key', async
   const context = testContext({ writeBuildArtifact: mockWriteBuildArtifact });
   context.mobilePageIndex = [];
   context.mobileTypeSets = {};
+  context.mobileTheme = {};
+  context.mobileClassMap = {};
   await writeMobile({ components: {}, context });
   expect(getArtifacts()).toEqual({
     'mobile/config.json': {},
     'mobile/pageIndex.json': [],
     'mobile/typeSets.json': {},
+    'mobile/theme.json': {},
+    'mobile/classMap.json': {},
   });
 });
 
@@ -62,6 +72,12 @@ test('writeMobile defaults to a stack frame and the first mobile page as home', 
     },
     'mobile/pageIndex.json': [{ path: 'today', pageId: 'today', hash: 'h1', typesKey: 't1' }],
     'mobile/typeSets.json': { t1: { actions: [], blocks: [], operators: [] } },
+    'mobile/theme.json': {
+      darkMode: 'system',
+      light: { colorPrimary: '#1677ff' },
+      dark: { colorPrimary: '#1668dc' },
+    },
+    'mobile/classMap.json': { 'p-4': { padding: 16 } },
   });
 });
 

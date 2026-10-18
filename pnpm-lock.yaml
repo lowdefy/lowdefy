@@ -83,13 +83,13 @@ importers:
     dependencies:
       '@better-auth/cimd':
         specifier: 1.7.7
-        version: 1.7.7(57097a72f2cf143f36aeba5f2c106265)
+        version: 1.7.7(644151256100c2dbf70631a21279553d)
       '@better-auth/oauth-provider':
         specifier: 1.7.7
-        version: 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(better-auth@1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(better-call@1.4.0(zod@4.6.5))
+        version: 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(better-auth@1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@babel/core@7.29.6)(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(better-call@1.4.0(zod@4.6.5))
       '@better-auth/passkey':
         specifier: 1.7.7
-        version: 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(better-auth@1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(better-call@1.4.0(zod@4.6.5))(nanostores@1.4.0)
+        version: 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(better-auth@1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@babel/core@7.29.6)(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(better-call@1.4.0(zod@4.6.5))(nanostores@1.4.0)
       '@lowdefy/ajv':
         specifier: 6.0.0
         version: link:../utils/ajv
@@ -125,7 +125,7 @@ importers:
         version: 1.31.0(zod@4.6.5)
       better-auth:
         specifier: 1.7.7
-        version: 1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@babel/core@7.29.6)(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       jose:
         specifier: ^6.2.3
         version: 6.2.3
@@ -205,12 +205,18 @@ importers:
       '@lowdefy/operators-js':
         specifier: 6.0.0
         version: link:../plugins/operators/operators-js
+      '@lowdefy/style-native':
+        specifier: 6.0.0
+        version: link:../utils/style-native
       acorn:
         specifier: 8.16.0
         version: 8.16.0
       ajv:
         specifier: 8.20.0
         version: 8.20.0
+      antd:
+        specifier: 6.6.5
+        version: 6.6.5(date-fns@2.29.3)(luxon@3.7.2)(moment@2.29.4)(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
       json5:
         specifier: 2.2.3
         version: 2.2.3
@@ -220,12 +226,21 @@ importers:
       picomatch:
         specifier: 4.0.4
         version: 4.0.4
+      react:
+        specifier: 18.2.0
+        version: 18.2.0
       semver:
         specifier: 7.7.4
         version: 7.7.4
+      tailwindcss:
+        specifier: 4.3.3
+        version: 4.3.3
       tar:
         specifier: 7.5.21
         version: 7.5.21
+      twrnc:
+        specifier: 4.16.0
+        version: 4.16.0(react-native@0.88.0(@babel/core@7.29.6)(react@18.2.0))(yaml@2.9.0)
       yaml:
         specifier: 2.9.0
         version: 2.9.0
@@ -14294,6 +14309,11 @@ packages:
   turndown@7.2.0:
     resolution: {integrity: sha512-eCZGBN4nNNqM9Owkv9HAtWRYfLA4h909E/WGAWWBpmB275ehNhZyk87/Tpvjbp0jjNl9XwCsbe6bm6CqFsgD+A==}
 
+  twrnc@4.16.0:
+    resolution: {integrity: sha512-sPSnSlT2CmOd2ITUm9M8ltsEjTyJti/9HpYfewAfhqRT4gMQtOWkK1tiIev0vVhPJ9IcTGtk2TC33OsSLhsFfA==}
+    peerDependencies:
+      react-native: '>=0.62.2'
+
   type-check@0.3.2:
     resolution: {integrity: sha512-ZCmOJdvOWDBYJlzAoFkC+Q0+bUyEOS1ltgp1MGU03fqHG+dbi9tBFU2Rd9QKiDZFAYrhPh2JUf7rZRIuHRKtOg==}
     engines: {node: '>= 0.8.0'}
@@ -15021,6 +15041,14 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@ant-design/cssinjs-utils@2.1.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@ant-design/cssinjs': 2.1.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@babel/runtime': 7.29.2
+      '@rc-component/util': 1.10.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@ant-design/cssinjs@2.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@babel/runtime': 7.23.5
@@ -15031,6 +15059,18 @@ snapshots:
       csstype: 3.2.3
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+      stylis: 4.3.6
+
+  '@ant-design/cssinjs@2.1.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@babel/runtime': 7.23.5
+      '@emotion/hash': 0.8.0
+      '@emotion/unitless': 0.7.5
+      '@rc-component/util': 1.10.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      csstype: 3.2.3
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
       stylis: 4.3.6
 
   '@ant-design/fast-color@3.0.1': {}
@@ -15057,6 +15097,15 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@ant-design/icons@6.3.4(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@ant-design/colors': 8.0.1
+      '@ant-design/icons-svg': 4.6.0
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@ant-design/react-slick@2.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@babel/runtime': 7.29.2
@@ -15064,6 +15113,15 @@ snapshots:
       json2mq: 0.2.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+      throttle-debounce: 5.0.2
+
+  '@ant-design/react-slick@2.0.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@babel/runtime': 7.29.2
+      clsx: 2.1.1
+      json2mq: 0.2.0
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
       throttle-debounce: 5.0.2
 
   '@ant-design/x-markdown@2.9.0(@types/react@18.2.38)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
@@ -16020,11 +16078,11 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@better-auth/cimd@1.7.7(57097a72f2cf143f36aeba5f2c106265)':
+  '@better-auth/cimd@1.7.7(644151256100c2dbf70631a21279553d)':
     dependencies:
       '@better-auth/core': 1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0)
-      '@better-auth/oauth-provider': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(better-auth@1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(better-call@1.4.0(zod@4.6.5))
-      better-auth: 1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@better-auth/oauth-provider': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(better-auth@1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@babel/core@7.29.6)(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(better-call@1.4.0(zod@4.6.5))
+      better-auth: 1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@babel/core@7.29.6)(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       better-call: 1.4.0(zod@4.6.5)
 
   '@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0)':
@@ -16127,22 +16185,22 @@ snapshots:
       jose: 6.2.3
       zod: 4.6.5
 
+  '@better-auth/oauth-provider@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(better-auth@1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@babel/core@7.29.6)(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(better-call@1.4.0(zod@4.6.5))':
+    dependencies:
+      '@better-auth/core': 1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0)
+      '@better-auth/utils': 0.5.0
+      '@better-fetch/fetch': 1.3.2
+      better-auth: 1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@babel/core@7.29.6)(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      better-call: 1.4.0(zod@4.6.5)
+      jose: 6.2.3
+      zod: 4.6.5
+
   '@better-auth/oauth-provider@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(better-auth@1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.20.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(better-call@1.4.0(zod@4.6.5))':
     dependencies:
       '@better-auth/core': 1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0)
       '@better-auth/utils': 0.5.0
       '@better-fetch/fetch': 1.3.2
       better-auth: 1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.20.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      better-call: 1.4.0(zod@4.6.5)
-      jose: 6.2.3
-      zod: 4.6.5
-
-  '@better-auth/oauth-provider@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(better-auth@1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(better-call@1.4.0(zod@4.6.5))':
-    dependencies:
-      '@better-auth/core': 1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0)
-      '@better-auth/utils': 0.5.0
-      '@better-fetch/fetch': 1.3.2
-      better-auth: 1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       better-call: 1.4.0(zod@4.6.5)
       jose: 6.2.3
       zod: 4.6.5
@@ -16159,6 +16217,18 @@ snapshots:
       nanostores: 1.4.0
       zod: 4.6.5
 
+  '@better-auth/passkey@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(better-auth@1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@babel/core@7.29.6)(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(better-call@1.4.0(zod@4.6.5))(nanostores@1.4.0)':
+    dependencies:
+      '@better-auth/core': 1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0)
+      '@better-auth/utils': 0.5.0
+      '@better-fetch/fetch': 1.3.2
+      '@simplewebauthn/browser': 13.3.0
+      '@simplewebauthn/server': 13.3.2
+      better-auth: 1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@babel/core@7.29.6)(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      better-call: 1.4.0(zod@4.6.5)
+      nanostores: 1.4.0
+      zod: 4.6.5
+
   '@better-auth/passkey@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(better-auth@1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.20.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(better-call@1.4.0(zod@4.6.5))(nanostores@1.4.0)':
     dependencies:
       '@better-auth/core': 1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0)
@@ -16167,18 +16237,6 @@ snapshots:
       '@simplewebauthn/browser': 13.3.0
       '@simplewebauthn/server': 13.3.2
       better-auth: 1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.20.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      better-call: 1.4.0(zod@4.6.5)
-      nanostores: 1.4.0
-      zod: 4.6.5
-
-  '@better-auth/passkey@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(better-auth@1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(better-call@1.4.0(zod@4.6.5))(nanostores@1.4.0)':
-    dependencies:
-      '@better-auth/core': 1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0)
-      '@better-auth/utils': 0.5.0
-      '@better-fetch/fetch': 1.3.2
-      '@simplewebauthn/browser': 13.3.0
-      '@simplewebauthn/server': 13.3.2
-      better-auth: 1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       better-call: 1.4.0(zod@4.6.5)
       nanostores: 1.4.0
       zod: 4.6.5
@@ -17688,12 +17746,28 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/cascader@1.22.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/select': 1.10.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/tree': 1.4.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/checkbox@2.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/util': 1.10.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       clsx: 2.1.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rc-component/checkbox@2.0.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/util': 1.10.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
 
   '@rc-component/collapse@1.2.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -17704,6 +17778,15 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/collapse@1.2.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@babel/runtime': 7.29.2
+      '@rc-component/motion': 1.3.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.10.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/color-picker@3.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@ant-design/fast-color': 3.0.1
@@ -17712,11 +17795,25 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/color-picker@3.1.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@ant-design/fast-color': 3.0.1
+      '@rc-component/util': 1.10.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/context@2.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/util': 1.13.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rc-component/context@2.0.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
 
   '@rc-component/dialog@1.10.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -17727,6 +17824,15 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/dialog@1.10.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/motion': 1.3.3(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/portal': 2.2.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/drawer@1.4.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/motion': 1.3.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -17736,6 +17842,15 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/drawer@1.4.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/motion': 1.3.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/portal': 2.2.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.10.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/dropdown@1.0.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/trigger': 3.10.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -17744,6 +17859,14 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/dropdown@1.0.3(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/trigger': 3.10.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/form@1.8.6(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/async-validator': 6.0.0
@@ -17751,6 +17874,14 @@ snapshots:
       clsx: 2.1.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rc-component/form@1.8.6(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/async-validator': 6.0.0
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
 
   '@rc-component/image@1.10.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -17761,6 +17892,15 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/image@1.10.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/motion': 1.3.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/portal': 2.2.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/input-number@1.6.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/mini-decimal': 1.1.3
@@ -17769,6 +17909,14 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/input-number@1.6.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/mini-decimal': 1.1.3
+      '@rc-component/util': 1.10.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/input@1.3.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/resize-observer': 1.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -17776,6 +17924,14 @@ snapshots:
       clsx: 2.1.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rc-component/input@1.3.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
 
   '@rc-component/listy@1.2.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -17788,6 +17944,17 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/listy@1.2.3(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/motion': 1.3.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/portal': 2.2.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/virtual-list': 1.5.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/mentions@1.12.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/input': 1.3.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -17798,6 +17965,16 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/mentions@1.12.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/input': 1.3.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/menu': 1.5.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/trigger': 3.10.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/menu@1.5.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/motion': 1.3.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -17807,6 +17984,16 @@ snapshots:
       clsx: 2.1.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rc-component/menu@1.5.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/motion': 1.3.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/overflow': 1.0.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/trigger': 3.10.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
 
   '@rc-component/mini-decimal@1.1.3':
     dependencies:
@@ -17819,6 +18006,13 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/motion@1.3.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/util': 1.10.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/motion@1.3.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/util': 1.13.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -17826,11 +18020,24 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/motion@1.3.3(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/mutate-observer@2.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/util': 1.10.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rc-component/mutate-observer@2.0.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/util': 1.10.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
 
   '@rc-component/notification@2.0.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -17839,6 +18046,14 @@ snapshots:
       clsx: 2.1.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rc-component/notification@2.0.8(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/motion': 1.3.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
 
   '@rc-component/overflow@1.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -17849,12 +18064,28 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/overflow@1.0.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@babel/runtime': 7.29.2
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/pagination@1.4.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/util': 1.13.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       clsx: 2.1.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rc-component/pagination@1.4.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
 
   '@rc-component/picker@1.12.2(date-fns@2.29.3)(dayjs@1.11.20)(luxon@3.7.2)(moment@2.29.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -17871,12 +18102,34 @@ snapshots:
       luxon: 3.7.2
       moment: 2.29.4
 
+  '@rc-component/picker@1.12.2(date-fns@2.29.3)(dayjs@1.11.20)(luxon@3.7.2)(moment@2.29.4)(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/overflow': 1.0.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/trigger': 3.10.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+    optionalDependencies:
+      date-fns: 2.29.3
+      dayjs: 1.11.20
+      luxon: 3.7.2
+      moment: 2.29.4
+
   '@rc-component/portal@2.2.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/util': 1.13.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       clsx: 2.1.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rc-component/portal@2.2.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
 
   '@rc-component/portal@2.2.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -17885,6 +18138,13 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/portal@2.2.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/progress@1.0.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/util': 1.13.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -17892,11 +18152,24 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/progress@1.0.3(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/qrcode@2.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@babel/runtime': 7.29.2
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rc-component/qrcode@2.0.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@babel/runtime': 7.29.2
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
 
   '@rc-component/rate@1.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -17905,11 +18178,24 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/rate@1.0.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/resize-observer@1.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/util': 1.10.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rc-component/resize-observer@1.1.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/util': 1.10.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
 
   '@rc-component/segmented@1.4.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -17919,6 +18205,15 @@ snapshots:
       clsx: 2.1.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rc-component/segmented@1.4.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@babel/runtime': 8.0.5
+      '@rc-component/motion': 1.3.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
 
   '@rc-component/select@1.10.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -17930,12 +18225,29 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/select@1.10.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/overflow': 1.0.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/trigger': 3.10.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/virtual-list': 1.5.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/slider@1.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/util': 1.13.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       clsx: 2.1.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rc-component/slider@1.1.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
 
   '@rc-component/steps@1.2.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -17944,12 +18256,26 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/steps@1.2.3(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/switch@1.0.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/util': 1.13.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       clsx: 2.1.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rc-component/switch@1.0.3(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
 
   '@rc-component/table@1.11.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -17960,6 +18286,16 @@ snapshots:
       clsx: 2.1.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rc-component/table@1.11.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/context': 2.0.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/virtual-list': 1.0.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
 
   '@rc-component/tabs@1.13.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -17972,6 +18308,17 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/tabs@1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/dropdown': 1.0.3(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/menu': 1.5.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/motion': 1.3.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/tooltip@1.5.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/trigger': 3.10.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -17979,6 +18326,14 @@ snapshots:
       clsx: 2.1.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rc-component/tooltip@1.5.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/trigger': 3.10.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
 
   '@rc-component/tour@2.4.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -17989,6 +18344,15 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/tour@2.4.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/portal': 2.2.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/trigger': 3.10.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/tree-select@1.16.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/select': 1.10.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -17998,6 +18362,15 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/tree-select@1.16.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/select': 1.10.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/tree': 1.4.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/tree@1.4.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/motion': 1.3.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -18006,6 +18379,15 @@ snapshots:
       clsx: 2.1.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rc-component/tree@1.4.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/motion': 1.3.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/virtual-list': 1.5.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
 
   '@rc-component/trigger@3.10.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -18017,6 +18399,16 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/trigger@3.10.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/motion': 1.3.3(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/portal': 2.2.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/upload@1.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/util': 1.13.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -18024,11 +18416,25 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/upload@1.1.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/util@1.10.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       is-mobile: 5.0.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+      react-is: 18.2.0
+
+  '@rc-component/util@1.10.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      is-mobile: 5.0.0
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
       react-is: 18.2.0
 
   '@rc-component/util@1.10.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
@@ -18045,6 +18451,13 @@ snapshots:
       react-dom: 18.2.0(react@18.2.0)
       react-is: 19.3.0
 
+  '@rc-component/util@1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      is-mobile: 5.0.0
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+      react-is: 19.3.0
+
   '@rc-component/virtual-list@1.0.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@babel/runtime': 7.29.2
@@ -18054,6 +18467,15 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@rc-component/virtual-list@1.0.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@babel/runtime': 7.29.2
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+
   '@rc-component/virtual-list@1.5.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@babel/runtime': 8.0.5
@@ -18062,6 +18484,15 @@ snapshots:
       clsx: 2.1.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rc-component/virtual-list@1.5.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@babel/runtime': 8.0.5
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
 
   '@react-email/body@0.3.0(react@18.2.0)':
     dependencies:
@@ -18334,6 +18765,13 @@ snapshots:
       react-native: 0.88.0(@babel/core@7.29.6)(@types/react@18.2.38)(react@19.3.0)
     optionalDependencies:
       '@types/react': 18.2.38
+
+  '@react-native/virtualized-lists@0.88.0(react-native@0.88.0(@babel/core@7.29.6)(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      invariant: 2.2.4
+      nullthrows: 1.1.1
+      react: 18.2.0
+      react-native: 0.88.0(@babel/core@7.29.6)(react@18.2.0)
 
   '@redis/bloom@1.2.0(@redis/client@1.5.12)':
     dependencies:
@@ -20041,6 +20479,63 @@ snapshots:
       - luxon
       - moment
 
+  antd@6.6.5(date-fns@2.29.3)(luxon@3.7.2)(moment@2.29.4)(react-dom@19.3.0(react@18.2.0))(react@18.2.0):
+    dependencies:
+      '@ant-design/colors': 8.0.1
+      '@ant-design/cssinjs': 2.1.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@ant-design/cssinjs-utils': 2.1.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@ant-design/fast-color': 3.0.1
+      '@ant-design/icons': 6.3.4(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@ant-design/react-slick': 2.0.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@babel/runtime': 7.29.2
+      '@rc-component/cascader': 1.22.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/checkbox': 2.0.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/collapse': 1.2.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/color-picker': 3.1.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/dialog': 1.10.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/drawer': 1.4.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/dropdown': 1.0.3(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/form': 1.8.6(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/image': 1.10.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/input': 1.3.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/input-number': 1.6.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/listy': 1.2.3(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/mentions': 1.12.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/menu': 1.5.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/motion': 1.3.3(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/mutate-observer': 2.0.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/notification': 2.0.8(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/pagination': 1.4.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/picker': 1.12.2(date-fns@2.29.3)(dayjs@1.11.20)(luxon@3.7.2)(moment@2.29.4)(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/progress': 1.0.3(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/qrcode': 2.0.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/rate': 1.0.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/segmented': 1.4.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/select': 1.10.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/slider': 1.1.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/steps': 1.2.3(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/switch': 1.0.3(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/table': 1.11.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/tabs': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/tooltip': 1.5.2(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/tour': 2.4.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/tree': 1.4.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/tree-select': 1.16.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/trigger': 3.10.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/upload': 1.1.1(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.13.0(react-dom@19.3.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      dayjs: 1.11.20
+      react: 18.2.0
+      react-dom: 19.3.0(react@18.2.0)
+      scroll-into-view-if-needed: 3.1.0
+      throttle-debounce: 5.0.2
+    transitivePeerDependencies:
+      - date-fns
+      - luxon
+      - moment
+
   any-promise@1.3.0: {}
 
   anymatch@3.1.3:
@@ -20405,6 +20900,35 @@ snapshots:
 
   baseline-browser-mapping@2.9.19: {}
 
+  better-auth@1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@babel/core@7.29.6)(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
+    dependencies:
+      '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0)
+      '@better-auth/drizzle-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)
+      '@better-auth/kysely-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)(kysely@0.29.3)
+      '@better-auth/memory-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)
+      '@better-auth/mongo-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)(mongodb@7.2.0)
+      '@better-auth/prisma-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)
+      '@better-auth/telemetry': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)
+      '@better-auth/utils': 0.4.2
+      '@better-fetch/fetch': 1.3.2
+      '@noble/ciphers': 2.2.0
+      '@noble/hashes': 2.2.0
+      better-call: 1.4.0(zod@4.6.5)
+      defu: 6.1.7
+      jose: 6.2.3
+      kysely: 0.29.3
+      nanostores: 1.4.0
+      zod: 4.6.5
+    optionalDependencies:
+      mongodb: 7.2.0
+      mysql2: 3.23.1(@types/node@24.13.3)
+      next: 15.5.26(@babel/core@7.29.6)(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      pg: 8.20.0
+      react: 19.3.0
+      react-dom: 19.3.0(react@19.3.0)
+    transitivePeerDependencies:
+      - '@opentelemetry/api'
+
   better-auth@1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.20.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0)
@@ -20437,12 +20961,12 @@ snapshots:
   better-auth@1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.26(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.20.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
     dependencies:
       '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0)
-      '@better-auth/drizzle-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)
-      '@better-auth/kysely-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)(kysely@0.29.3)
-      '@better-auth/memory-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)
-      '@better-auth/mongo-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)(mongodb@7.2.0)
-      '@better-auth/prisma-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)
-      '@better-auth/telemetry': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)
+      '@better-auth/drizzle-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)
+      '@better-auth/kysely-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)(kysely@0.29.3)
+      '@better-auth/memory-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)
+      '@better-auth/mongo-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)(mongodb@7.2.0)
+      '@better-auth/prisma-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)
+      '@better-auth/telemetry': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)
       '@better-auth/utils': 0.4.2
       '@better-fetch/fetch': 1.3.2
       '@noble/ciphers': 2.2.0
@@ -25426,6 +25950,33 @@ snapshots:
 
   next-tick@1.1.0: {}
 
+  next@15.5.26(@babel/core@7.29.6)(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
+    dependencies:
+      '@next/env': 15.5.26
+      '@swc/helpers': 0.5.15
+      caniuse-lite: 1.0.30001769
+      postcss: 8.5.23
+      react: 19.3.0
+      react-dom: 19.3.0(react@19.3.0)
+      styled-jsx: 5.1.6(@babel/core@7.29.6)(react@19.3.0)
+    optionalDependencies:
+      '@next/swc-darwin-arm64': 15.5.26
+      '@next/swc-darwin-x64': 15.5.26
+      '@next/swc-linux-arm64-gnu': 15.5.26
+      '@next/swc-linux-arm64-musl': 15.5.26
+      '@next/swc-linux-x64-gnu': 15.5.26
+      '@next/swc-linux-x64-musl': 15.5.26
+      '@next/swc-win32-arm64-msvc': 15.5.26
+      '@next/swc-win32-x64-msvc': 15.5.26
+      '@opentelemetry/api': 1.9.1
+      '@playwright/test': 1.59.1
+      sharp: 0.35.5(@types/node@24.13.3)
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@types/node'
+      - babel-plugin-macros
+    optional: true
+
   next@15.5.26(@opentelemetry/api@1.9.0)(@playwright/test@1.59.1)(@types/node@24.13.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
     dependencies:
       '@next/env': 15.5.26
@@ -25434,7 +25985,7 @@ snapshots:
       postcss: 8.5.23
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
-      styled-jsx: 5.1.6(react@19.3.0)
+      styled-jsx: 5.1.6(@babel/core@7.29.6)(react@19.3.0)
     optionalDependencies:
       '@next/swc-darwin-arm64': 15.5.26
       '@next/swc-darwin-x64': 15.5.26
@@ -25487,7 +26038,7 @@ snapshots:
       postcss: 8.5.23
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
-      styled-jsx: 5.1.6(react@19.3.0)
+      styled-jsx: 5.1.6(@babel/core@7.29.6)(react@19.3.0)
     optionalDependencies:
       '@next/swc-darwin-arm64': 15.5.26
       '@next/swc-darwin-x64': 15.5.26
@@ -26400,6 +26951,11 @@ snapshots:
       react: 18.2.0
       scheduler: 0.23.0
 
+  react-dom@19.3.0(react@18.2.0):
+    dependencies:
+      react: 18.2.0
+      scheduler: 0.28.0
+
   react-dom@19.3.0(react@19.3.0):
     dependencies:
       react: 19.3.0
@@ -26497,6 +27053,46 @@ snapshots:
       yargs: 17.7.2
     optionalDependencies:
       '@types/react': 18.2.38
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@react-native-community/cli'
+      - '@react-native/metro-config'
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  react-native@0.88.0(@babel/core@7.29.6)(react@18.2.0):
+    dependencies:
+      '@react-native/asset-utils': 0.88.0
+      '@react-native/codegen': 0.88.0(@babel/core@7.29.6)
+      '@react-native/community-cli-plugin': 0.88.0
+      '@react-native/gradle-plugin': 0.88.0
+      '@react-native/normalize-colors': 0.88.0
+      '@react-native/virtualized-lists': 0.88.0(react-native@0.88.0(@babel/core@7.29.6)(react@18.2.0))(react@18.2.0)
+      anser: 1.4.10
+      ansi-regex: 5.0.1
+      base64-js: 1.5.1
+      flow-enums-runtime: 0.0.6
+      flow-parser: 0.327.0
+      hermes-compiler: 260318099.0.4
+      invariant: 2.2.4
+      memoize-one: 5.2.1
+      metro-runtime: 0.87.1
+      metro-source-map: 0.87.1
+      nullthrows: 1.1.1
+      pretty-format: 29.7.0
+      promise: 8.3.0
+      react: 18.2.0
+      react-devtools-core: 6.1.5
+      react-refresh: 0.14.2
+      regenerator-runtime: 0.13.11
+      scheduler: 0.28.0
+      semver: 7.7.4
+      stacktrace-parser: 0.1.11
+      tinyglobby: 0.2.17
+      whatwg-fetch: 3.6.20
+      ws: 7.5.13
+      yargs: 17.7.2
     transitivePeerDependencies:
       - '@babel/core'
       - '@react-native-community/cli'
@@ -27532,16 +28128,18 @@ snapshots:
     dependencies:
       inline-style-parser: 0.2.7
 
+  styled-jsx@5.1.6(@babel/core@7.29.6)(react@19.3.0):
+    dependencies:
+      client-only: 0.0.1
+      react: 19.3.0
+    optionalDependencies:
+      '@babel/core': 7.29.6
+
   styled-jsx@5.1.6(react@18.2.0):
     dependencies:
       client-only: 0.0.1
       react: 18.2.0
     optional: true
-
-  styled-jsx@5.1.6(react@19.3.0):
-    dependencies:
-      client-only: 0.0.1
-      react: 19.3.0
 
   stylis@4.3.6: {}
 
@@ -27893,6 +28491,14 @@ snapshots:
   turndown@7.2.0:
     dependencies:
       '@mixmark-io/domino': 2.2.0
+
+  twrnc@4.16.0(react-native@0.88.0(@babel/core@7.29.6)(react@18.2.0))(yaml@2.9.0):
+    dependencies:
+      react-native: 0.88.0(@babel/core@7.29.6)(react@18.2.0)
+      tailwindcss: 3.4.19(yaml@2.9.0)
+    transitivePeerDependencies:
+      - tsx
+      - yaml
 
   type-check@0.3.2:
     dependencies:
