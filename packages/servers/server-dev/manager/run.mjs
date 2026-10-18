@@ -20,12 +20,14 @@ import { registerServer, watchOwner } from '@lowdefy/node-utils';
 import getContext from './getContext.mjs';
 import acquireDevInstance from './utils/acquireDevInstance.mjs';
 import createBuildActivity from './utils/createBuildActivity.mjs';
+import createLanPairing from './utils/createLanPairing.mjs';
 import createIdleGc from './utils/createIdleGc.mjs';
 import createRequestActivity from './utils/createRequestActivity.mjs';
 import startMailSink from './processes/startMailSink.mjs';
 import startProxy from './processes/startProxy.mjs';
 import startFirstServer from './processes/startFirstServer.mjs';
 import startRecordingPruner from './utils/startRecordingPruner.mjs';
+import formatLanPairing from './utils/formatLanPairing.mjs';
 import formatNoticeBox from './utils/formatNoticeBox.mjs';
 import resolvePorts from './utils/resolvePorts.mjs';
 
@@ -185,6 +187,7 @@ try {
   // or .env change) then never drops the listener, so long-lived clients (MCP
   // agents, the reload SSE stream, HMR websockets) reconnect instead of dying
   // on ECONNREFUSED.
+  context.lan = createLanPairing({ lan: context.options.lan });
   await startProxy(context);
   context.mailSink = await startMailSink(context);
 
@@ -210,6 +213,11 @@ try {
       ],
     })
   );
+  if (context.lan) {
+    context.logger.info(
+      formatLanPairing({ lan: context.lan, port: context.options.port, basePath: context.basePath })
+    );
+  }
   // A hub-owned server was started for an agent, not for a person at a browser.
   if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true' && context.options.owner !== 'hub') {
     // TODO: Wait 1 sec for a ping and don't open if a ping is seen

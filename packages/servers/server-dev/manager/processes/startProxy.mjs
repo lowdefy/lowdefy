@@ -20,6 +20,8 @@ import net from 'node:net';
 import { devPassiveHeader } from '@lowdefy/node-utils';
 
 import buildWaitHeader from '../../lib/docs/buildWaitHeader.js';
+import { pairHeader, remoteCallerHeader } from '../../lib/server/pairingHeaders.js';
+import checkPairing from '../utils/checkPairing.mjs';
 import readBuildStatusWait from '../utils/readBuildStatusWait.mjs';
 
 /*
@@ -203,7 +205,32 @@ function isActivity(req) {
 // latest edits, restarts included, and only then forwarded: a restart ends
 // the dev server process, and any wait running in it. The header tells the
 // dev server what this wait saw, so it does not wait again.
+// The pairing gate sits here, in front of Vite and the app alike, because the
+// child only ever sees the proxy's loopback address. The child learns that a
+// caller is remote from remoteCallerHeader, which only the proxy sets.
+function readAccess({ context, req }) {
+  return checkPairing({
+    remoteAddress: req.socket.remoteAddress,
+    pairToken: context.lan?.token,
+    providedToken: req.headers[pairHeader],
+  });
+}
+
+const PAIRING_REFUSAL =
+  'This dev server answers other machines only with the pairing token that `lowdefy dev --lan` prints.';
+
 async function handleRequest({ context, proxyState }, req, res) {
+  const access = readAccess({ context, req });
+  if (access === 'refused') {
+    res.writeHead(401, { 'content-type': 'application/json' });
+    res.end(JSON.stringify({ message: PAIRING_REFUSAL }));
+    return;
+  }
+  delete req.headers[pairHeader];
+  delete req.headers[remoteCallerHeader];
+  if (access === 'paired') {
+    req.headers[remoteCallerHeader] = '1';
+  }
   if (isActivity(req)) {
     context.requestActivity.trackResponse(res);
   }
@@ -221,6 +248,11 @@ async function handleRequest({ context, proxyState }, req, res) {
 }
 
 function forwardUpgrade(context, req, socket, head) {
+  const access = readAccess({ context, req });
+  if (access === 'refused') {
+    socket.end('HTTP/1.1 401 Unauthorized\r\nconnection: close\r\n\r\n');
+    return;
+  }
   waitForChild({ port: context.internalPort, deadline: Date.now() + HOLD_MS }).then((up) => {
     if (socket.destroyed) return;
     if (!up) {
@@ -233,7 +265,13 @@ function forwardUpgrade(context, req, socket, head) {
       // websockets both pass through untouched.
       const lines = [`${req.method} ${req.url} HTTP/1.1`];
       for (let i = 0; i < req.rawHeaders.length; i += 2) {
-        lines.push(`${req.rawHeaders[i]}: ${req.rawHeaders[i + 1]}`);
+        const name = req.rawHeaders[i].toLowerCase();
+        if (name !== pairHeader && name !== remoteCallerHeader) {
+          lines.push(`${req.rawHeaders[i]}: ${req.rawHeaders[i + 1]}`);
+        }
+      }
+      if (access === 'paired') {
+        lines.push(`${remoteCallerHeader}: 1`);
       }
       upstream.write(lines.join('\r\n') + '\r\n\r\n');
       if (head?.length) upstream.write(head);
@@ -247,9 +285,17 @@ function forwardUpgrade(context, req, socket, head) {
   });
 }
 
-function startProxy(context) {
-  if (context.proxyServer) return Promise.resolve();
-  const proxyState = { confirmedChild: null };
+function listen({ server, port, host }) {
+  return new Promise((resolve, reject) => {
+    server.once('error', reject);
+    server.listen(port, host, () => {
+      server.removeListener('error', reject);
+      resolve();
+    });
+  });
+}
+
+function createProxyServer({ context, proxyState }) {
   const proxy = http.createServer((req, res) => {
     // A client that drops an MCP request while its body is read.
     handleRequest({ context, proxyState }, req, res).catch(() => res.destroy());
@@ -259,19 +305,24 @@ function startProxy(context) {
   // request timeout; keep the proxy transparent.
   proxy.requestTimeout = 0;
   proxy.headersTimeout = 60000;
-  context.proxyServer = proxy;
-  return new Promise((resolve, reject) => {
-    proxy.once('error', reject);
-    // 'localhost' for parity with the Vite default host the child used to bind
-    // — the dev server stays loopback-only, not exposed on the LAN.
-    proxy.listen(context.options.port, 'localhost', () => {
-      proxy.removeListener('error', reject);
-      context.logger.debug(
-        `Proxy listening on port ${context.options.port}, forwarding to ${context.internalPort}.`
-      );
-      resolve();
-    });
-  });
+  return proxy;
+}
+
+async function startProxy(context) {
+  if (context.proxyServer) return;
+  const proxyState = { confirmedChild: null };
+  const { port } = context.options;
+  context.proxyServer = createProxyServer({ context, proxyState });
+  // 'localhost' for parity with the Vite default host the child used to bind
+  // - the dev server stays loopback-only unless --lan asks for the network.
+  await listen({ server: context.proxyServer, port, host: 'localhost' });
+  // --lan adds a listener on the chosen interface's address only, not on every
+  // interface, so a VPN or Docker network does not reach the server too.
+  if (context.lan) {
+    context.lanProxyServer = createProxyServer({ context, proxyState });
+    await listen({ server: context.lanProxyServer, port, host: context.lan.address });
+  }
+  context.logger.debug(`Proxy listening on port ${port}, forwarding to ${context.internalPort}.`);
 }
 
 export default startProxy;

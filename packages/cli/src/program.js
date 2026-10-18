@@ -22,6 +22,7 @@ import agentSetupUser from './commands/agentSetup/agentSetupUser.js';
 import build from './commands/build/build.js';
 import dataList from './commands/data/list.js';
 import dev from './commands/dev/dev.js';
+import deviceOptions from './commands/dev/deviceOptions.js';
 import dockerOutput from './commands/dockerOutput/dockerOutput.js';
 import emails from './commands/emails/emails.js';
 import hubLogs from './commands/hub/hubLogs.js';
@@ -204,6 +205,9 @@ program
   .addOption(options.skipPluginChecks)
   .addOption(options.watch)
   .addOption(options.watchIgnore)
+  .addOption(deviceOptions.ios)
+  .addOption(deviceOptions.android)
+  .addOption(deviceOptions.lan)
   .action(runCommand({ cliVersion, handler: dev }));
 
 program

@@ -20,7 +20,10 @@ import clientErrorStore from '../../lib/docs/clientErrorStore.js';
 import errorRecordingStamp from '../../lib/server/recording/errorRecordingStamp.js';
 import createSameOriginGuard from '../middleware/createSameOriginGuard.js';
 
-const guardSameOrigin = createSameOriginGuard();
+// No Origin is allowed in dev: a phone shell (a simulator, a USB phone through
+// adb reverse, or a phone the proxy let in with the pairing token) sends none.
+// A browser on another site always sends one, so it is still refused.
+const guardSameOrigin = createSameOriginGuard({ allowNoOrigin: true });
 
 async function clientErrorHandler(c) {
   if (c.req.method !== 'POST') {

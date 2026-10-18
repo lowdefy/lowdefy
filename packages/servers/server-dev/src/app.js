@@ -113,11 +113,14 @@ function createApp() {
   // No api context: SSE/health routes had no apiWrapper before.
   app.get('/api/reload', reloadHandler);
   app.get('/api/ping', pingHandler);
+  // Dev tools, refused from other machines (localDevToolsOnly).
+  app.use('/api/dev-tools', localDevToolsOnly());
   app.get('/api/dev-tools', devToolsHandler);
   // Annotation helper: the in-page overlay (Cmd/Ctrl+/) POSTs annotation
   // batches here and gets back the enriched agent-readable text, which the
   // overlay copies to the clipboard. No api context needed.
   // /lowdefy-feedback is a reserved page-path prefix in dev, like /lowdefy-docs.
+  app.use('/lowdefy-feedback', localDevToolsOnly());
   app.post('/lowdefy-feedback', feedbackHandler);
 
   const mockUser = getMockUser();

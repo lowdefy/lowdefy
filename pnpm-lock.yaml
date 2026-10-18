@@ -3020,6 +3020,9 @@ importers:
       '@modelcontextprotocol/sdk':
         specifier: 1.31.0
         version: 1.31.0(zod@3.25.76)
+      '@rc-component/qrcode':
+        specifier: 2.0.0
+        version: 2.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@tailwindcss/postcss':
         specifier: 4.3.3
         version: 4.3.3
