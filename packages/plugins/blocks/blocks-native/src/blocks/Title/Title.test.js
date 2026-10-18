@@ -97,7 +97,6 @@ test('a Title color, theme tokens and element style apply in that order', async 
     color: '#123456',
     fontSize: 50,
     letterSpacing: 1,
-    marginBottom: 4,
   });
 });
 

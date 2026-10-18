@@ -15,7 +15,6 @@
 */
 
 import React from 'react';
-import { toPixels } from '@lowdefy/client-native';
 
 import getIosTextStyle from '../../typography/getIosTextStyle.js';
 import getTextStyle from '../../typography/getTextStyle.js';
@@ -39,7 +38,6 @@ function Title({ blockId, methods, properties, styles = {} }) {
     ...textStyle,
     fontSize,
     lineHeight: (fontSize * textStyle.lineHeight) / textStyle.fontSize,
-    marginBottom: toPixels({ fontSize, value: tokens.titleMarginBottom ?? '0.3em' }),
   };
   return (
     <TypographyText

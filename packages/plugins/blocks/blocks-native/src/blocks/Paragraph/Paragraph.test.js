@@ -33,8 +33,9 @@ test('a Paragraph draws its content in the body text style, with the block id as
     color: ios.light.colorLabel,
     fontSize: 17,
     lineHeight: 22,
-    marginBottom: 11,
   });
+  // No outer margin: the layout's gap spaces blocks on a phone.
+  expect(styleOf(screen.getByText('Hello')).marginBottom).toBeUndefined();
   expect(screen.getByTestId('body')).toBeTruthy();
 });
 

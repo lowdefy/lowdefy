@@ -22,15 +22,12 @@ import meta from './meta.js';
 import TypographyText from '../../typography/TypographyText.js';
 import useComponentTokens from '../../useComponentTokens.js';
 
-// A paragraph in the iOS body style (or its own textStyle) and label colour, with half a line
-// below it.
+// A paragraph in the iOS body style (or its own textStyle) and label colour. It has no outer
+// margin: on a phone the layout's gap spaces blocks, as UIKit stacks do.
 function Paragraph({ blockId, methods, properties, styles = {} }) {
   const { tokens } = useComponentTokens(properties.theme);
   const textStyle = getIosTextStyle({ textStyle: properties.textStyle ?? 'body', tokens });
-  const baseStyle = {
-    ...textStyle,
-    marginBottom: Math.round(textStyle.lineHeight / 2),
-  };
+  const baseStyle = textStyle;
   return (
     <TypographyText
       blockId={blockId}
