@@ -22,6 +22,9 @@ const handleMobileSignIn = jest.fn(() => new Response('mobile sign-in'));
 jest.unstable_mockModule('@lowdefy/api', () => ({ handleMobileSignIn }));
 jest.unstable_mockModule('../../lib/build/auth.js', () => ({ default: authJson }));
 jest.unstable_mockModule('../../lib/build/config.js', () => ({ default: {} }));
+jest.unstable_mockModule('../../lib/build/theme.js', () => ({
+  default: { antd: { token: { colorPrimary: '#00aa55' } } },
+}));
 jest.unstable_mockModule('../../lib/server/auth/getAuth.js', () => ({ default: () => null }));
 const { default: mobileSignInHandler } = await import('./mobileSignIn.js');
 
@@ -49,4 +52,7 @@ test('mobileSignInHandler serves the mobile sign-in page when the app has a mobi
   const res = await mobileSignInHandler(createContext(), next);
   expect(await res.text()).toEqual('mobile sign-in');
   expect(next).not.toHaveBeenCalled();
+  expect(handleMobileSignIn).toHaveBeenCalledWith(
+    expect.objectContaining({ basePath: '', primaryColor: '#00aa55' })
+  );
 });

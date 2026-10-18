@@ -18,12 +18,15 @@ import { Hono } from 'hono';
 import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('./mobileSignIn.js', () => ({
-  default: (c) => c.json({ mobileSignIn: c.req.query('shell') }),
+  default: (c) => c.json({ mobileSignIn: c.req.query('shell'), method: c.req.method }),
+}));
+jest.unstable_mockModule('./mobileSignInCallback.js', () => ({
+  default: (c) => c.json({ mobileSignInCallback: true }),
 }));
 
 const { default: mountPageRoutes } = await import('./mountPageRoutes.js');
 
-function request({ basePath, path }) {
+function request({ basePath, path, method = 'GET' }) {
   const app = basePath === '' ? new Hono() : new Hono().basePath(basePath);
   mountPageRoutes({
     app,
@@ -31,7 +34,7 @@ function request({ basePath, path }) {
     renderPage: (c, { path: pagePath, matchedPath, status = 200 }) =>
       c.json({ path: pagePath, matchedPath }, status),
   });
-  return app.request(path);
+  return app.request(path, { method });
 }
 
 test.each([
@@ -64,6 +67,20 @@ test.each([[''], ['/app']])(
   'with basePath "%s", /auth/mobile is the mobile sign-in route, not a page',
   async (basePath) => {
     const res = await request({ basePath, path: `${basePath}/auth/mobile?shell=field&state=s` });
-    expect(await res.json()).toEqual({ mobileSignIn: 'field' });
+    expect(await res.json()).toEqual({ mobileSignIn: 'field', method: 'GET' });
+    const posted = await request({
+      basePath,
+      path: `${basePath}/auth/mobile?shell=field&state=s`,
+      method: 'POST',
+    });
+    expect(await posted.json()).toEqual({ mobileSignIn: 'field', method: 'POST' });
+  }
+);
+
+test.each([[''], ['/app']])(
+  'with basePath "%s", /auth/mobile/callback is the sign-in app link route, not a page',
+  async (basePath) => {
+    const res = await request({ basePath, path: `${basePath}/auth/mobile/callback?state=s` });
+    expect(await res.json()).toEqual({ mobileSignInCallback: true });
   }
 );
