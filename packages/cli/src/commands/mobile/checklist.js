@@ -14,10 +14,33 @@
   limitations under the License.
 */
 
-// Filled in by a later change; the command is listed so lowdefy mobile --help
-// shows the whole group.
-async function mobileChecklist() {
-  throw new Error('lowdefy mobile checklist is not available yet.');
+import createChecklist from './createChecklist.js';
+import loadMobileShell from './loadMobileShell.js';
+
+function formatChecklist({ shell, environment, steps }) {
+  const lines = [
+    `Steps a person does for shell "${shell.id}" (${
+      shell.distribution ?? 'private'
+    }, ${environment}):`,
+  ];
+  steps.forEach((step, index) => {
+    lines.push('', `${index + 1}. ${step.done ? '[done] ' : ''}${step.title}`);
+    step.details.forEach((detail) => lines.push(`   - ${detail}`));
+  });
+  lines.push(
+    '',
+    'Optional: set SENTRY_AUTH_TOKEN where build and update run, to upload source maps.'
+  );
+  return lines.join('\n');
+}
+
+// lowdefy mobile checklist: prints what the stores still need a person for.
+// It runs no EAS command.
+async function mobileChecklist({ context }) {
+  const { environment, profile, shell } = await loadMobileShell({ context });
+  const steps = createChecklist({ shell, profile, env: environment });
+  context.logger.info(formatChecklist({ shell, environment, steps }));
+  return steps;
 }
 
 export default mobileChecklist;

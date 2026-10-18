@@ -3314,7 +3314,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "cc3046c20d4e057b38b8bf25fe23061fc6684a116a0fe78a0afbcf545ebbfcb4"
+      "hash": "82962cac27c6b861d63c5a7c1dd926a18df5b43f392dcd586dfc814ae4f76f63"
     },
     "concepts/lowdefy-api": {
       "files": [

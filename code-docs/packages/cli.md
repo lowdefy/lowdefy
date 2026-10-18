@@ -116,6 +116,22 @@ Generate Vercel deployment scripts.
 lowdefy init-vercel [options]
 ```
 
+### `lowdefy mobile`
+
+Build, submit and update an app's phone shells with EAS (`commands/mobile/`). User docs: `packages/docs/concepts/cli.yaml`, "mobile".
+
+```bash
+lowdefy mobile config|build|submit|update|release|checklist [--shell <id>] [--env <environment>] [--dry-run]
+```
+
+- `loadMobileShell` builds the app (no client build) for the environment, picks the `mobile.shells` entry, copies the published `@lowdefy/shell` at the app's Lowdefy version into `.lowdefy/mobile/<shell>/project` (`getServer`) and loads its `profiles.js` and `runtimeVersion.js` (`loadShellPackage`), which are authoritative at that version. `checklist` stops here.
+- `config` writes `shell.json`, `eas.json`, the icon and a pnpm workspace into the project and installs it. It returns `{ environment, projectDirectory, runtimeVersion, shell, shellJson, shellVersion }`, which `build`, `submit`, `update` and `release` build on.
+- `runEas` is the only module that runs EAS: `npx --yes eas-cli@<EAS_CLI_VERSION>` in the project with `EAS_NO_VCS=1`, `LOWDEFY_SHELL_CONFIG=<project>/shell.json` (so eas reads the shell's app config, not Lowdefy Dev's) and `EAS_UPDATE_SKIP_ENVIRONMENT_CHECK=1` (the shell reads `shell.json`, not EAS environment variables). With `--json` in the args it returns the parsed output; with `dryRun` it prints and runs nothing. Tests stub this module.
+- Store version: `build` and `release` read the latest finished build per store (`getLatestBuild`, `eas build:list`), compute the next patch on the entry's `major.minor` (`getNextStoreVersion`) and write it to `shell.json` (`setStoreVersion`). Build numbers use EAS's remote version source.
+- `release` decides per store (`planRelease`): a different runtime version (or no build) builds and submits; the same runtime with another shell version in the latest update's message (`parseShellVersion`, written by `createUpdateMessage`) sends an update; else nothing.
+- `checklist` turns the shell entry and its resolved profile into data (`createChecklist`) and prints it.
+- Shell plugins are always `[]`: how an app declares them in `lowdefy.yaml` is not designed yet.
+
 ### `lowdefy upgrade`
 
 Upgrade a Lowdefy app by walking through migration prompts that handle breaking changes between versions.
@@ -264,6 +280,7 @@ All options can be set via environment variables:
 | `build/`       | Production build orchestration   |
 | `start/`       | Production server startup        |
 | `upgrade/`     | Codemod upgrade orchestration    |
+| `mobile/`      | Phone shell builds through EAS   |
 | `init-docker/` | Dockerfile generation            |
 | `init-vercel/` | Vercel scripts generation        |
 
