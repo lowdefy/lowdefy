@@ -388,7 +388,42 @@ _ref:
 
             Both pass through from your environment and are never written into the project.
 
-            Shell plugins, extra native modules an app adds to its shell, cannot be declared in `lowdefy.yaml` yet.
+            ### Shell plugins
+
+            A shell can carry native code its capability profile does not, such as a Bluetooth printer or a device-management SDK, by listing Lowdefy shell plugins under `mobile.shells[].plugins`. Each is an npm package that declares the native modules, config plugins, permissions, privacy reasons and collected data it brings.
+
+            ```yaml
+            plugins:
+              - name: '@example/lowdefy-printer'
+                version: 2.1.0
+            mobile:
+              shells:
+                - id: field
+                  profile: field
+                  plugins:
+                    - name: '@example/lowdefy-printer'
+                      version: 2.1.0
+                      typePrefix: Printer
+                    - name: '@example/lowdefy-mdm'
+                      version: 1.0.3
+                      options:
+                        tenant: field-team
+            ```
+
+            Each entry takes:
+
+            - `name: string`: __Required__ - The npm package name, from the public registry or one set in the app's `.npmrc`.
+            - `version: string`: __Required__ - An exact version, like `2.1.0` or `2.1.0-beta.1`. Ranges, dist-tags, git, `file:` and `workspace:` are refused, so one name and version is always the same native code.
+            - `typePrefix: string`: A prefix added to the plugin's type names, as for app [plugins](/lowdefy-schema).
+            - `options: object`: Passed to the plugin's config plugins. Options are baked into the binary and uploaded to EAS, so they never hold secrets.
+
+            The build checks that:
+
+            - A shell lists each plugin once.
+            - A package has one version across root `plugins` and every shell's `plugins`, since the app runs one version of a plugin.
+            - A mobile page uses a plugin's native blocks and actions only when every shell lists that plugin, since every shell opens every mobile page. The error names the page, the block or action and the shell that lacks the plugin.
+
+            A shell with plugins gets its own runtime version, so it builds and updates on its own instead of sharing its profile's builds and updates. A change of a plugin's version or options needs a native build.
 
             ## upgrade
 
