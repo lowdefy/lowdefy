@@ -15,7 +15,10 @@
 */
 
 // Builds the hello fixture app with the Lowdefy build and checks what a shell would sync: two tabs,
-// the Screen page and every page's type set carried by this shell's type manifest.
+// the first with its icon's data, the Screen page and every page's type set carried by this
+// shell's type manifest, and the app events' and Screen page's _js as module text. That text must
+// match hello.jsEntries.json, which the shell's Jest tests evaluate; run with
+// LOWDEFY_UPDATE_FIXTURES=1 to rewrite it after a change to the build's _js module.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -28,7 +31,9 @@ import { createNodeLogger } from '@lowdefy/logger/node';
 
 import createTypeManifest from '../scripts/createTypeManifest.mjs';
 
-const configDirectory = path.join(path.dirname(fileURLToPath(import.meta.url)), 'hello');
+const fixturesDirectory = path.dirname(fileURLToPath(import.meta.url));
+const configDirectory = path.join(fixturesDirectory, 'hello');
+const jsEntriesPath = path.join(fixturesDirectory, 'hello.jsEntries.json');
 
 function checkTypeSet({ manifest, typeSet }) {
   return ['actions', 'blocks', 'operators'].flatMap((category) =>
@@ -83,6 +88,17 @@ test('the hello fixture builds into two tabs whose pages this shell renders', as
       typeSets[pageIndex[0].typesKey].actions.map((needed) => needed.type),
       ['SetState']
     );
+    assert.deepEqual(config.menus.tabs[0].iconData.node[0][0], 'path');
+    const jsEntries = {
+      app: readArtifact('mobile/appJs.json').jsEntries,
+      today: readArtifact('pages/today.json')._jsEntries,
+    };
+    assert.match(jsEntries.app, /return 'Hello from Lowdefy';/);
+    assert.match(jsEntries.today, /return lowdefyGlobal\('greeting'\);/);
+    if (process.env.LOWDEFY_UPDATE_FIXTURES === '1') {
+      fs.writeFileSync(jsEntriesPath, `${JSON.stringify(jsEntries, null, 2)}\n`);
+    }
+    assert.deepEqual(jsEntries, JSON.parse(fs.readFileSync(jsEntriesPath, 'utf8')));
     const manifest = await createTypeManifest();
     pageIndex.forEach((entry) => {
       assert.deepEqual(checkTypeSet({ manifest, typeSet: typeSets[entry.typesKey] }), []);

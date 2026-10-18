@@ -15,11 +15,15 @@
 */
 
 // The root config @lowdefy/client-native renders pages with, from the mobile root. The web menus
-// (_menu) have no mobile counterpart; the mobile frame is the shell's.
+// (_menu) have no mobile counterpart; the mobile frame is the shell's. The theme
+// ({ darkMode, light, dark }) and the Tailwind class map style the blocks. A root cached from a
+// server built before they were served has no class map or i18n.
 function toRootConfig(root) {
   return {
+    classMap: root.classMap ?? {},
     events: root.events,
     home: { configured: true, pageId: root.homePageId },
+    i18n: root.i18n ?? {},
     lowdefyApp: root.lowdefyApp ?? {},
     lowdefyGlobal: root.lowdefyGlobal ?? {},
     menus: [],

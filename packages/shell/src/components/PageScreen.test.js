@@ -14,18 +14,14 @@
   limitations under the License.
 */
 
-import React from 'react';
 import { jest } from '@jest/globals';
-import { render, screen, waitFor } from '@testing-library/react-native';
-import { createNativeGlobals } from '@lowdefy/client-native';
+import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
+import dayjs from 'dayjs';
 
-import createAppSession from '../session/createAppSession.js';
-import createFakeServer from '../test/createFakeServer.js';
-import createMemoryCacheStore from '../test/createMemoryCacheStore.js';
-import createMemoryStore from '../host/createMemoryStore.js';
-import PageScreen from './PageScreen.js';
-import ShellContext from '../ShellContext.js';
-import { createRoot, shell } from '../test/fixtures.js';
+import { createRoot } from '../test/fixtures.js';
+import helloJsEntries from '../../fixtures/hello.jsEntries.json';
+import renderPageScreen from '../test/renderPageScreen.js';
 
 const mockNavigation = { setOptions: jest.fn() };
 
@@ -38,10 +34,15 @@ jest.mock('expo-router', () => ({
   useNavigation: () => mockNavigation,
 }));
 
-const apiBase = 'https://field.example.com';
+const boxTypes = {
+  blocks: [
+    { type: 'Box', package: '@lowdefy/blocks-native', version: 7 },
+    { type: 'Screen', package: '@lowdefy/blocks-native', version: 7 },
+  ],
+};
 
-// Pages of the types the shell carries so far: Screen and Box.
-function screenPage(pageId, title) {
+// A Screen page of Box blocks, the types the shell carries so far.
+function screenPage(pageId, title, blocks) {
   return {
     id: `page:${pageId}`,
     pageId,
@@ -50,76 +51,51 @@ function screenPage(pageId, title) {
     properties: { title },
     slots: {
       content: {
-        blocks: [
-          {
-            id: `block:${pageId}:greeting:0`,
-            blockId: 'greeting',
-            type: 'Box',
-            properties: { content: `Hello from ${pageId}` },
-          },
-        ],
+        blocks: (
+          blocks ?? [
+            { blockId: 'greeting', type: 'Box', properties: { content: `Hello from ${pageId}` } },
+          ]
+        ).map((block, index) => ({ id: `block:${pageId}:${block.blockId}:${index}`, ...block })),
       },
     },
   };
 }
 
-async function renderPath(path, rootOverrides = {}) {
-  const server = createFakeServer({
+function renderPath(path, rootOverrides = {}) {
+  return renderPageScreen({
+    path,
+    pages: {
+      today: { pageConfig: screenPage('today', 'Today'), etag: '"p1"' },
+      map: { pageConfig: screenPage('map', 'Map'), etag: '"p2"' },
+    },
     root: createRoot({
       pageIndex: [
         { path: 'today', pageId: 'today', hash: 'h1', typesKey: 'screen' },
         { path: 'map', pageId: 'map', hash: 'h2', typesKey: 'newBlock' },
       ],
       typeSets: {
-        screen: {
-          blocks: [
-            { type: 'Box', package: '@lowdefy/blocks-native', version: 7 },
-            { type: 'Screen', package: '@lowdefy/blocks-native', version: 7 },
-          ],
-        },
+        screen: boxTypes,
         newBlock: { blocks: [{ type: 'Map', package: '@lowdefy/blocks-native', version: 7 }] },
       },
       ...rootOverrides,
     }),
-    rootEtag: '"r1"',
+  });
+}
+
+// One Screen page at "today", with the root's other fields as given.
+function renderTodayPage({ blocks, deviceLocales, page = {}, root = {} }) {
+  return renderPageScreen({
+    deviceLocales,
+    path: 'today',
     pages: {
-      today: { pageConfig: screenPage('today', 'Today'), etag: '"p1"' },
-      map: { pageConfig: screenPage('map', 'Map'), etag: '"p2"' },
+      today: { pageConfig: { ...screenPage('today', 'Today', blocks), ...page }, etag: '"p1"' },
     },
-  });
-  const session = createAppSession({
-    apiBase,
-    app: { id: 'field' },
-    cacheStore: createMemoryCacheStore(),
-    fetch: server.fetch,
-    kv: createMemoryStore(),
-    tokenStore: { get: () => null },
-  });
-  await session.start();
-  const host = {
-    authTransport: 'bearer',
-    fetch: server.fetch,
-    globals: createNativeGlobals({
-      assign: jest.fn(),
-      fetch: server.fetch,
-      getPath: session.getCurrentPath,
-      origin: apiBase,
+    root: createRoot({
+      pageIndex: [{ path: 'today', pageId: 'today', hash: 'h1', typesKey: 'screen' }],
+      typeSets: { screen: boxTypes },
+      ...root,
     }),
-    onBuildChanged: jest.fn(),
-    onCallerChanged: jest.fn(),
-    router: { back: jest.fn(), push: jest.fn(), replace: jest.fn() },
-    sessionStorage: createMemoryStore(),
-    storage: createMemoryStore(),
-    tokenStore: { get: () => null, set: jest.fn(), clear: jest.fn() },
-    WebSocket: jest.fn(),
-    websocketUrl: (apiPath) => apiPath.replace(/^http/, 'ws'),
-  };
-  await render(
-    <ShellContext.Provider value={{ host, session, shell }}>
-      <PageScreen path={path} />
-    </ShellContext.Provider>
-  );
-  return { session };
+  });
 }
 
 test('a cached Screen page renders and reports its title to the stack header', async () => {
@@ -148,4 +124,156 @@ test('every page shows the update screen below minShellVersion', async () => {
 test('a path with no mobile page that the server does not have is not found', async () => {
   await renderPath('nowhere');
   expect(await screen.findByText('Page not found')).toBeTruthy();
+});
+
+function onClick(actions) {
+  return { onClick: { try: actions, catch: [] } };
+}
+
+test('the app events and a page run their _js from the module text the build writes', async () => {
+  await renderTodayPage({
+    blocks: [
+      {
+        blockId: 'greeting',
+        type: 'Box',
+        properties: { content: { _js: 'HorPchxU3cTNYhB6dbx9DFcepx4=' } },
+      },
+      {
+        blockId: 'year',
+        type: 'Box',
+        properties: { content: { _js: 'b+IYcPY3kW9J7YdZ4RyICtelfz8=' } },
+      },
+    ],
+    page: { _jsEntries: helloJsEntries.today },
+    root: {
+      _jsEntries: helloJsEntries.app,
+      events: {
+        onInit: {
+          try: [
+            {
+              id: 'set_greeting',
+              type: 'SetGlobal',
+              params: { greeting: { _js: 'yHZGzdxAuSQ8P5USi0AFFY81iNg=' } },
+            },
+          ],
+          catch: [],
+        },
+      },
+    },
+  });
+  expect(await screen.findByText('Hello from Lowdefy')).toBeTruthy();
+  expect(screen.getByText(String(new Date().getFullYear()))).toBeTruthy();
+});
+
+test('pages take their style from the root theme and class map, and a dev page its own classes', async () => {
+  const { host } = await renderTodayPage({
+    blocks: [
+      {
+        blockId: 'panel',
+        type: 'Box',
+        class: { block: 'p-4 dark:bg-gray-900' },
+        properties: { content: 'Panel' },
+      },
+      { blockId: 'big', type: 'Box', class: { block: 'text-xl' }, properties: { content: 'Big' } },
+    ],
+    page: { _classMap: { 'text-xl': { fontSize: 20 } } },
+    root: {
+      theme: { darkMode: 'dark', light: {}, dark: { colorPrimary: '#1668dc' } },
+      classMap: {
+        'p-4': { paddingTop: 16 },
+        'bg-gray-100': { backgroundColor: '#f3f4f6' },
+        'dark:bg-gray-900': { backgroundColor: '#101828' },
+      },
+    },
+  });
+  await screen.findByText('Panel');
+  expect(StyleSheet.flatten(screen.getByTestId('panel').props.style)).toMatchObject({
+    backgroundColor: '#101828',
+    paddingTop: 16,
+  });
+  expect(StyleSheet.flatten(screen.getByTestId('big').props.style)).toMatchObject({ fontSize: 20 });
+  expect(host.globals.window.__lowdefy_isDark).toBe(true);
+});
+
+const i18n = {
+  defaultLocale: 'en-US',
+  locales: [
+    { code: 'en-US', dayjs: 'en' },
+    { code: 'af-ZA', dayjs: 'af' },
+  ],
+  messages: { 'en-US': { hello: 'Hello' }, 'af-ZA': { hello: 'Hallo' } },
+};
+
+test('a page translates with the root i18n in the device locale the app supports', async () => {
+  await renderTodayPage({
+    blocks: [{ blockId: 'greeting', type: 'Box', properties: { content: { _t: 'hello' } } }],
+    deviceLocales: ['af-NA'],
+    root: { i18n },
+  });
+  expect(await screen.findByText('Hallo')).toBeTruthy();
+  expect(dayjs.locale()).toBe('af');
+});
+
+test('SetLocale changes the locale the page translates with, and the device keeps it', async () => {
+  const { storage } = await renderTodayPage({
+    blocks: [
+      { blockId: 'greeting', type: 'Box', properties: { content: { _t: 'hello' } } },
+      {
+        blockId: 'switch',
+        type: 'Box',
+        properties: { content: 'Afrikaans' },
+        events: onClick([{ id: 'af', type: 'SetLocale', params: { locale: 'af-ZA' } }]),
+      },
+    ],
+    root: { i18n },
+  });
+  expect(await screen.findByText('Hello')).toBeTruthy();
+  fireEvent.press(screen.getByTestId('switch-press'));
+  expect(await screen.findByText('Hallo')).toBeTruthy();
+  expect(storage.get('lowdefy:field::lowdefy_locale')).toBe('af-ZA');
+});
+
+test('the local storage actions keep a value under the app key in the device store', async () => {
+  const { storage } = await renderTodayPage({
+    blocks: [
+      {
+        blockId: 'saved',
+        type: 'Box',
+        properties: { content: { _if_none: [{ _state: 'draft.title' }, 'none'] } },
+      },
+      {
+        blockId: 'save',
+        type: 'Box',
+        properties: { content: 'Save' },
+        events: onClick([
+          {
+            id: 'set',
+            type: 'SetLocalStorage',
+            params: { key: 'draft', value: { title: 'Pump' } },
+          },
+          { id: 'get', type: 'GetLocalStorage', params: { key: 'draft' } },
+          { id: 'state', type: 'SetState', params: { draft: { _actions: 'get.response' } } },
+        ]),
+      },
+    ],
+  });
+  expect(await screen.findByText('none')).toBeTruthy();
+  fireEvent.press(screen.getByTestId('save-press'));
+  expect(await screen.findByText('Pump')).toBeTruthy();
+  expect(storage.get('lowdefy:field::draft')).toBe('{"title":"Pump"}');
+});
+
+test('CopyToClipboard copies through the shell clipboard', async () => {
+  const { clipboard } = await renderTodayPage({
+    blocks: [
+      {
+        blockId: 'copy',
+        type: 'Box',
+        properties: { content: 'Copy' },
+        events: onClick([{ id: 'copy', type: 'CopyToClipboard', params: { copy: 'JOB-42' } }]),
+      },
+    ],
+  });
+  fireEvent.press(await screen.findByTestId('copy-press'));
+  await waitFor(() => expect(clipboard.setString.mock.calls).toEqual([['JOB-42']]));
 });

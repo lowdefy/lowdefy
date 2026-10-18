@@ -58,6 +58,28 @@ A `drawer` frame is one stack with a menu button; a `stack` frame is one stack. 
 its header title, `headerRight` and presentation. `Link` actions go through the router; a link to a
 tab's page switches tab, and links to other sites open in the system browser.
 
+## Plugins, `_js`, locale and theme
+
+- Pages run every actions-core action and the client operators of every default operator package
+  (`src/plugins/types.js`). The actions whose web bodies reach the DOM run native bodies under the
+  same names (`src/actions`): `SetFocus` focuses the control a block registered, `ScrollTo`
+  scrolls the page's ScrollView to a block's measured place, `CopyToClipboard` uses
+  `expo-clipboard`, and the local storage actions keep the app's keys in the device store, from
+  which sign-out clears the user keys. `SetDarkMode` and `SetLocale` keep their actions-core
+  bodies: they call the window members the theme provider and the shell's locale set.
+- `_js` reaches the shell as module text: a page's `_jsEntries`, and the root's for the app
+  events. `src/js/evaluateJsEntries.js` is the one place it becomes functions, with
+  `new Function`.
+- The app's locale is chosen as on the web: the `SetLocale` choice the device keeps, the device's
+  locale the app supports, the app's default. Every dayjs locale is bundled
+  (`src/locale/dayjsLocales.js`, written by `scripts/createDayjsLocales.mjs`) and loaded when
+  used.
+- One theme provider holds the theme mode for every screen, from the root's `theme` and the
+  `SetDarkMode` choice; the root's `classMap`, with a dev page's own `_classMap`, styles classes.
+- Menu icons are drawn from the icon data the root carries, with client-native's `Icon`, in the
+  drawer menu. Native tab bars take images or SF Symbols, so tabs show titles only.
+- Hermes has no `crypto.getRandomValues`, which `_uuid` needs; `expo-crypto` fills it.
+
 ## Checks
 
 ```bash

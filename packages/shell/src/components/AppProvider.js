@@ -23,6 +23,7 @@ import LoadingScreen from './LoadingScreen.js';
 import MessageScreen from './MessageScreen.js';
 import NoConnectionBanner from './NoConnectionBanner.js';
 import ShellContext, { useSessionState } from '../ShellContext.js';
+import ShellThemeProvider from './ShellThemeProvider.js';
 
 function AppGate({ children }) {
   const { status, error } = useSessionState();
@@ -46,7 +47,7 @@ function AppGate({ children }) {
   return (
     <View style={{ flex: 1 }}>
       <NoConnectionBanner />
-      {children}
+      <ShellThemeProvider>{children}</ShellThemeProvider>
     </View>
   );
 }
@@ -57,9 +58,9 @@ function AppProvider({ app, children, shell }) {
   const [value, setValue] = useState(null);
   useEffect(() => {
     let active = true;
-    createShellApp({ app, shell }).then(({ host, session }) => {
+    createShellApp({ app, shell }).then(({ host, locale, session }) => {
       if (!active) return;
-      setValue({ host, session, shell });
+      setValue({ host, locale, session, shell });
       session.start();
     });
     return () => {

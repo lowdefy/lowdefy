@@ -24,7 +24,7 @@ module.exports = {
   errorOnDeprecated: true,
   // The preset's pattern assumes a flat node_modules; pnpm nests each package under .pnpm.
   transformIgnorePatterns: [
-    'node_modules/(?!(\\.pnpm/[^/]+/node_modules/)?((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo|expo-[^/]+|change-case|intl-messageformat|@formatjs)/)',
+    'node_modules/(?!(\\.pnpm/[^/]+/node_modules/)?((jest-)?react-native(-svg)?|@react-native(-community)?|expo(nent)?|@expo|expo-[^/]+|change-case|intl-messageformat|@formatjs|mingo|uuid|yaml|cron-parser|cronstrue|luxon|jsonata|deep-diff|nunjucks)/)',
   ],
   testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test/', '<rootDir>/node_modules/'],
 };

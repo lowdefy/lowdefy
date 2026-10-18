@@ -21,9 +21,11 @@ import createDeviceStore from './host/createDeviceStore.js';
 import createRouterAdapter from './host/createRouterAdapter.js';
 import createShellFetch from './host/createShellFetch.js';
 import createShellHost from './host/createShellHost.js';
+import createShellLocale from './locale/createShellLocale.js';
 import createSqliteCacheStore from './cache/createSqliteCacheStore.js';
 import createTokenStore from './host/createTokenStore.js';
 import getAppApiBase from './config/getAppApiBase.js';
+import getDeviceLocales from './locale/getDeviceLocales.js';
 import withShellHeader from './host/withShellHeader.js';
 
 let db = null;
@@ -35,7 +37,7 @@ function getDatabase() {
   return db;
 }
 
-// Everything one app needs in the shell: its session and core host. The token is read from the
+// Everything one app needs in the shell: its session, core host and locale. The token is read from the
 // Keychain or Keystore before the session starts.
 async function createShellApp({ app, shell }) {
   const tokenStore = createTokenStore({ appId: app.id });
@@ -55,7 +57,13 @@ async function createShellApp({ app, shell }) {
     session,
     tokenStore,
   });
-  return { host, session };
+  const locale = createShellLocale({
+    getDeviceLocales,
+    globals: host.globals,
+    session,
+    storage: host.storage,
+  });
+  return { host, locale, session };
 }
 
 export default createShellApp;

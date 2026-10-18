@@ -17,7 +17,10 @@
 import React from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 
+import installGetRandomValues from '../src/polyfills/installGetRandomValues.js';
 import ShellRoot from '../src/components/ShellRoot.js';
+
+installGetRandomValues();
 
 // The launch screen stays until the first screen is ready: the app picker, or the app's home page
 // from the cache (or from the server on a first launch).
