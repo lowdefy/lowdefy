@@ -108,9 +108,17 @@ tab's page switches tab, and links to other sites open in the system browser.
 `src/dev`. Lowdefy Dev is this shell built as the `dev` variant: `LOWDEFY_SHELL_VARIANT=dev | release`
 (`shellVariant.js`), `dev` by default for Lowdefy Dev (no `LOWDEFY_SHELL_CONFIG`) and `release` for
 every other shell. A release bundle resolves `src/dev/index.js` to an empty module
-(`metro.config.js`), so a customer shell carries none of it; `pnpm check:release-bundle` exports both
-platforms as `release` and fails when a bundle holds the dev-tab client's marker string (`--control`
-first checks that a `dev` bundle holds it).
+(`metro.config.js`), so a customer shell carries none of it. A release shell also leaves Lowdefy
+Dev's native modules unlinked (`getExcludedModules`): `expo-sensors`, `react-native-view-shot`, and
+`expo-camera` unless the shell config's `capabilities` include `camera`. `app.config.ts` leaves out
+their config plugins and permissions, and `withExcludedNativeModules.js` passes them as exclusions
+to Expo autolinking in the generated Podfile and settings.gradle.
+
+`pnpm check:release-bundle` checks a release shell (Lowdefy Dev's, or the one
+`LOWDEFY_SHELL_CONFIG` names) on both platforms: its bundle holds neither the dev-tab client's
+marker string nor a left-out module's native name, and an `expo prebuild` of it links none of the
+left-out modules and asks for no camera (unless the shell needs it) or motion permission.
+`--control` first checks that the `dev` variant holds and links them.
 
 - **Connect.** `lowdefy-dev://connect?url=<server>&pair=<token>` (the QR code `lowdefy dev --lan`
   prints, or the link `--ios`/`--android` open), a scanned code (`expo-camera`), a typed address, or
@@ -131,6 +139,19 @@ first checks that a `dev` bundle holds it).
   - `step-request` `{ step }`: a journey step by block id (`click`, `fill`, `select`,
     `press: 'Enter'`, `wait`, `screenshot`), run through the engine; it waits for the action chain
     to settle. A screenshot is the root view as a base64 PNG (`react-native-view-shot`).
+  - `inject` `{ inject: { kind, value, name } }`: fakes the next device result
+    (`src/dev/inject`): `scan` `{ data, type }`, `photo` `{ base64, ... }` and `nfc` for the next
+    read; `location` `{ latitude, longitude, ... }`, or a route as a list, read one at a time with
+    the last one staying; `permission` with `name` and `'granted' | 'denied'`, standing until
+    changed; `network` `'offline' | 'online'`, which fails the app's every fetch as offline (the tab
+    client keeps its own); `clear`. `push` is refused until the shell carries expo-notifications.
+    Device actions read these with `injected(name)` (`src/device/injected.js`), which returns
+    nothing in a release shell; `GeolocationCurrentPosition` answers with an injected location.
+- **Recorder** (`src/dev/recorder`). What the developer does is recorded as the web recorder records
+  it: the engine trace's events paired with the presses and changes client-native reports by block
+  id, a pageview when the page on screen changes, password inputs redacted, each record labelled
+  `device: ios | android` and `shell_version`, posted to `/api/dev-recording`. `lowdefy journeys
+session` lists and prints phone sessions as it does browser ones.
 
 ## Checks
 
@@ -138,5 +159,5 @@ first checks that a `dev` bundle holds it).
 pnpm --filter=@lowdefy/shell test         # Jest, and the hello fixture build
 pnpm --filter=@lowdefy/shell export:ios     # Metro and Hermes bundle, no simulator needed
 pnpm --filter=@lowdefy/shell export:android
-pnpm --filter=@lowdefy/shell check:release-bundle   # no dev-tab client in a release bundle
+pnpm --filter=@lowdefy/shell check:release-bundle   # no dev features or modules in a release shell
 ```
