@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import getMobileAuth from './buildMobile/getMobileAuth.js';
 import getMobileHomePageId from './buildMobile/getMobileHomePageId.js';
 import loadIconData from './icons/loadIconData.js';
 
@@ -73,6 +74,7 @@ async function buildMobileConfig({ components, context }) {
     minShellVersion: mobile.minShellVersion ?? null,
     menus: await buildMenus({ menus: mobile.menus, context }),
     shells: buildShells(mobile.shells),
+    auth: getMobileAuth({ mobile }),
   };
 }
 

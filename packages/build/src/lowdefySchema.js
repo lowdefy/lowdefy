@@ -3705,7 +3705,63 @@ export default {
         },
         auth: {
           type: 'object',
-          description: 'Reserved for shell sign-in.',
+          additionalProperties: false,
+          description: 'How people sign in to the app on a phone and keep it locked.',
+          properties: {
+            '~ignoreBuildChecks': ignoreBuildChecksSchema,
+            '~r': {},
+            '~l': {},
+            emailCode: {
+              type: 'boolean',
+              default: true,
+              description:
+                'Show the native email-code sign-in screen when the app has auth.emailOTP on. When false, the shell opens the sign-in sheet directly.',
+              errorMessage: {
+                type: 'App "mobile.auth.emailCode" should be a boolean.',
+              },
+            },
+            unlock: {
+              type: 'string',
+              enum: ['none', 'biometric'],
+              default: 'none',
+              description:
+                'Ask for Face ID or a fingerprint before any page shows, after the app has been in the background for unlockAfter seconds.',
+              errorMessage: {
+                type: 'App "mobile.auth.unlock" should be a string.',
+                enum: 'App "mobile.auth.unlock" should be "none" or "biometric".',
+              },
+            },
+            unlockAfter: {
+              type: 'integer',
+              minimum: 0,
+              default: 300,
+              description:
+                'Seconds in the background after which the app asks to unlock again. Used when unlock is "biometric".',
+              errorMessage: {
+                type: 'App "mobile.auth.unlockAfter" should be an integer.',
+                minimum: 'App "mobile.auth.unlockAfter" should be 0 or more.',
+              },
+            },
+            sharedDevice: {
+              type: 'boolean',
+              default: false,
+              description:
+                'Sign out every time the app closes and skip biometric unlock, for phones that several people share.',
+              errorMessage: {
+                type: 'App "mobile.auth.sharedDevice" should be a boolean.',
+              },
+            },
+            sessionExpiresIn: {
+              type: 'integer',
+              minimum: 1,
+              description:
+                'Lifetime in seconds of sessions signed in on a phone. Defaults to auth.session.expiresIn.',
+              errorMessage: {
+                type: 'App "mobile.auth.sessionExpiresIn" should be an integer.',
+                minimum: 'App "mobile.auth.sessionExpiresIn" should be 1 or more.',
+              },
+            },
+          },
           errorMessage: {
             type: 'App "mobile.auth" should be an object.',
           },
