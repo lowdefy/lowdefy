@@ -18,6 +18,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useRef } from 'reac
 import { type } from '@lowdefy/helpers';
 
 import BreakpointContext from '../layout/BreakpointContext.js';
+import FocusMemoryContext from './FocusMemoryContext.js';
 import formatIconTitle from '../icon/formatIconTitle.js';
 import getSfSymbol from '../icon/getSfSymbol.js';
 import HeaderActionButton from './HeaderActionButton.js';
@@ -121,24 +122,23 @@ function useHeaderSearch({ headerSearch, methodsRef }) {
 
 // onFocus fires each time the screen becomes the one shown: on its first show once its onMount
 // is done (the block is loading until then), and again after a tab switch or a back navigation
-// to it.
-function useFocusEvent({ events, focused, loading, methodsRef }) {
-  const shownRef = useRef(false);
-  const focusedRef = useRef(false);
+// to it. What the screen has fired for is kept in its page context's focus memory, so the page
+// tree mounting again onto the same context, while the screen stays shown, fires nothing.
+function useFocusEvent({ events, focused, focusMemory, loading, methodsRef }) {
   const hasOnFocus = !type.isNone(events.onFocus);
   useEffect(() => {
     if (!focused) {
-      focusedRef.current = false;
+      focusMemory.focused = false;
       return;
     }
-    if (focusedRef.current) return;
-    if (!shownRef.current && loading) return;
-    focusedRef.current = true;
-    shownRef.current = true;
+    if (focusMemory.focused) return;
+    if (!focusMemory.shown && loading) return;
+    focusMemory.focused = true;
+    focusMemory.shown = true;
     if (hasOnFocus) {
       methodsRef.current.triggerEvent({ name: 'onFocus' });
     }
-  }, [focused, hasOnFocus, loading, methodsRef]);
+  }, [focused, focusMemory, hasOnFocus, loading, methodsRef]);
 }
 
 // events.onRefresh as pull-to-refresh on the page's scroll view: the spinner shows until the
@@ -169,6 +169,7 @@ function useRefreshEvent({ events, methodsRef, setRefresh }) {
 function Screen({ blockId, components, content, events, loading, methods, properties }) {
   const onScreenOptions = useContext(ScreenOptionsContext);
   const { focused, setRefresh } = useContext(ScreenContext);
+  const focusMemory = useContext(FocusMemoryContext);
   const methodsRef = useRef(methods);
   methodsRef.current = methods;
   const pageContextsRef = useRef(null);
@@ -187,7 +188,7 @@ function Screen({ blockId, components, content, events, loading, methods, proper
     pageContextsRef,
   });
   const headerSearch = useHeaderSearch({ headerSearch: properties.headerSearch, methodsRef });
-  useFocusEvent({ events, focused, loading, methodsRef });
+  useFocusEvent({ events, focused, focusMemory, loading, methodsRef });
   useRefreshEvent({ events, methodsRef, setRefresh });
 
   const { presentation = 'card', title } = properties;

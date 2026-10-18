@@ -390,3 +390,52 @@ test('a screen first rendered unfocused fires onFocus when it is first shown', a
   });
   expect(record).toHaveBeenCalledTimes(1);
 });
+
+test('a page tree mounted again onto its kept context while shown does not fire onFocus again', async () => {
+  const record = jest.fn();
+  const { host } = createFakeHost({
+    path: '/home',
+    response: { id: 'load', success: true, response: [{ name: 'Row 1' }] },
+  });
+  const core = createCore();
+  const types = createTypes({ icons: { Plus: plus }, record });
+  // onFocus loads the page, as a Screen's load chain does: a request, then state from it.
+  const pageConfig = buildPage({
+    id: 'home',
+    type: 'Screen',
+    requests: [{ id: 'load', type: 'MongoDBFind', payload: {} }],
+    events: {
+      onFocus: [
+        { id: 'focus', type: 'Record', params: { event: 'focus' } },
+        { id: 'fetch', type: 'Request', params: 'load' },
+        { id: 'set', type: 'SetState', params: { rows: { _request: 'load' } } },
+      ],
+    },
+    blocks: [{ id: 'body', type: 'Paragraph', properties: { content: 'Body' } }],
+  });
+  // A shell mounts the page again (a new key) when the page's version changes; the route
+  // instance, and so the page context, stays.
+  const element = (version) => (
+    <LowdefyPage
+      core={core}
+      focused={true}
+      host={host}
+      instanceId="route-1"
+      key={version}
+      onScreenOptions={jest.fn()}
+      pageConfig={pageConfig}
+      rootConfig={rootConfig}
+      types={types}
+    />
+  );
+  const rendered = await render(element('v1'));
+  expect(await screen.findByText('Body')).toBeTruthy();
+  await act(async () => undefined);
+  await act(async () => {
+    rendered.rerender(element('v2'));
+  });
+  expect(await screen.findByText('Body')).toBeTruthy();
+  await act(async () => undefined);
+  expect(record).toHaveBeenCalledTimes(1);
+  expect(host.fetch).toHaveBeenCalledTimes(1);
+});

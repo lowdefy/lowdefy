@@ -25,6 +25,8 @@ import BreakpointContext from './layout/BreakpointContext.js';
 import Context from './Context.js';
 import createScreenGlobals from './globals/createScreenGlobals.js';
 import ElementsContext from './elements/ElementsContext.js';
+import FocusMemoryContext from './screen/FocusMemoryContext.js';
+import getFocusMemory from './screen/getFocusMemory.js';
 import initNativeLowdefy from './initNativeLowdefy.js';
 import PageStyleContext from './style/PageStyleContext.js';
 import ScreenContext from './screen/ScreenContext.js';
@@ -147,13 +149,15 @@ const Page = ({
                 {(context) => {
                   if (!context._internal.onInitDone) return null;
                   return (
-                    <Block
-                      block={context._internal.RootSlots.map[pageConfig.blockId]}
-                      Blocks={context._internal.RootSlots}
-                      context={context}
-                      lowdefy={lowdefy}
-                      parentLoading={false}
-                    />
+                    <FocusMemoryContext.Provider value={getFocusMemory(context)}>
+                      <Block
+                        block={context._internal.RootSlots.map[pageConfig.blockId]}
+                        Blocks={context._internal.RootSlots}
+                        context={context}
+                        lowdefy={lowdefy}
+                        parentLoading={false}
+                      />
+                    </FocusMemoryContext.Provider>
                   );
                 }}
               </Context>
