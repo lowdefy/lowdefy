@@ -86,7 +86,7 @@ test('the hello fixture builds into two tabs whose pages this shell renders', as
     );
     assert.deepEqual(
       typeSets[pageIndex[0].typesKey].actions.map((needed) => needed.type),
-      ['SetState']
+      ['SetGlobal', 'SetState']
     );
     assert.deepEqual(config.menus.tabs[0].iconData.node[0][0], 'path');
     const jsEntries = {

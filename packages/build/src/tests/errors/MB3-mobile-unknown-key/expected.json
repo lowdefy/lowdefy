@@ -3,10 +3,10 @@
     {
       "mode": "prod",
       "errors": [
-        "App \"mobile\" has unknown key \"serverUrl\". Allowed keys: homePageId, minShellVersion, menus, pages, shells, auth."
+        "App \"mobile\" has unknown key \"serverUrl\". Allowed keys: homePageId, minShellVersion, menus, pages, events, shells, auth."
       ],
       "errorContains": [
-        "App \"mobile\" has unknown key \"serverUrl\". Allowed keys: homePageId, minShellVersion, menus, pages, shells, auth.",
+        "App \"mobile\" has unknown key \"serverUrl\". Allowed keys: homePageId, minShellVersion, menus, pages, events, shells, auth.",
         "{{fixturesDir}}/MB3-mobile-unknown-key/lowdefy.yaml:9"
       ]
     }
