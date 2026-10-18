@@ -45,7 +45,7 @@ function DateSelector({
 }) {
   const [open, setOpen] = useState(false);
   const { isDark, tokens } = useBlockTokens({ properties });
-  const { accessibilityLabel, labelProperties } = getLabelProperties({ blockId, properties });
+  const { accessibilityLabel, labelProperties } = getLabelProperties({ properties });
   const disabled = loading === true || properties.disabled === true;
   const { box, text } = getInputBoxStyle({
     disabled,
@@ -89,7 +89,7 @@ function DateSelector({
           style={[
             text,
             { flex: 1 },
-            display === null ? { color: tokens.colorTextPlaceholder } : null,
+            display === null ? { color: tokens.colorTertiaryLabel } : null,
           ]}
         >
           {display ?? properties.placeholder ?? 'Select date'}
@@ -106,9 +106,9 @@ function DateSelector({
         ) : null}
       </Pressable>
       {open ? (
-        <View style={{ marginTop: tokens.marginXS }}>
+        <View style={{ marginTop: 8 }}>
           <DateTimePicker
-            accentColor={tokens.colorPrimary}
+            accentColor={tokens.colorTint}
             display={Platform.OS === 'ios' ? 'inline' : 'default'}
             maximumDate={toBoundDate({ bound: properties.disabledDates?.max })}
             minimumDate={toBoundDate({ bound: properties.disabledDates?.min })}

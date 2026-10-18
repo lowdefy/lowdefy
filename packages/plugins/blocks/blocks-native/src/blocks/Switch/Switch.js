@@ -29,9 +29,14 @@ function getStateText({ properties, value }) {
   return type.isString(text) ? text : undefined;
 }
 
+// The platform switch. A titled switch sits beside its title, at the end of the row, as an iOS
+// settings row draws it, unless its label sets `inline: false`.
 function Switch({ blockId, loading, methods, properties, required, styles, validation, value }) {
   const { isDark, tokens } = useBlockTokens({ properties });
-  const { accessibilityLabel, labelProperties } = getLabelProperties({ blockId, properties });
+  const { accessibilityLabel, labelProperties } = getLabelProperties({
+    properties: { ...properties, label: { inline: true, ...properties.label } },
+  });
+  const inline = labelProperties.inline === true;
   const disabled = loading === true || properties.disabled === true || properties.loading === true;
   return (
     <Label
@@ -44,12 +49,12 @@ function Switch({ blockId, loading, methods, properties, required, styles, valid
     >
       <View
         accessibilityLabel={accessibilityLabel}
-        style={[{ alignItems: 'flex-start' }, styles.element]}
+        style={[{ alignItems: inline ? 'flex-end' : 'flex-start' }, styles.element]}
       >
         <Host
           colorScheme={isDark ? 'dark' : 'light'}
           matchContents
-          seedColor={properties.color ?? tokens.colorPrimary}
+          seedColor={properties.color ?? tokens.colorTint}
         >
           <ExpoSwitch
             disabled={disabled}

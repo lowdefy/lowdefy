@@ -145,3 +145,45 @@ test('allowClear clears the value and fires onClear', async () => {
   expect(screen.getByTestId('name_input').props.value).toBe('');
   expect(screen.getByText('Cleared')).toBeTruthy();
 });
+
+test('an input without a title has no label, not its block id', async () => {
+  await renderPage({
+    pageConfig: formPage([
+      { id: 'space_id', type: 'TextInput', properties: { placeholder: 'Space' } },
+    ]),
+  });
+  const input = await screen.findByTestId('space_id_input');
+  expect(screen.queryByText('space_id')).toBeNull();
+  expect(input.props.accessibilityLabel).toBe('Space');
+});
+
+test('a search TextInput is a search field with a clear button and Cancel while focused', async () => {
+  await renderPage({
+    pageConfig: formPage([
+      {
+        id: 'm_search',
+        type: 'TextInput',
+        properties: { variant: 'search' },
+        events: { onClear: [{ id: 'note', type: 'SetState', params: { cleared: 'Cleared' } }] },
+      },
+      { id: 'cleared_text', type: 'Paragraph', properties: { content: { _state: 'cleared' } } },
+    ]),
+  });
+  const input = await screen.findByTestId('m_search_input');
+  expect(input.props.placeholder).toBe('Search');
+  expect(input.props.returnKeyType).toBe('search');
+  expect(screen.getByTestId('m_search_search_icon', { includeHiddenElements: true })).toBeTruthy();
+  expect(screen.queryByText('m_search')).toBeNull();
+  expect(screen.queryByTestId('m_search_clear')).toBeNull();
+  expect(screen.queryByTestId('m_search_cancel')).toBeNull();
+  await act(async () => {
+    fireEvent(input, 'focus');
+    fireEvent.changeText(input, 'design');
+  });
+  expect(screen.getByTestId('m_search_clear')).toBeTruthy();
+  await act(async () => {
+    fireEvent.press(screen.getByTestId('m_search_cancel'));
+  });
+  expect(screen.getByTestId('m_search_input').props.value).toBe('');
+  expect(screen.getByText('Cleared')).toBeTruthy();
+});
