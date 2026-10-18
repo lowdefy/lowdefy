@@ -18,7 +18,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { getDefaultConfig } = require('expo/metro-config');
 
-const { DEV_ENTRY, getShellVariant } = require('./shellVariant.js');
+const readShellConfig = require('./readShellConfig.js');
+const { getExclusions, getShellVariant } = require('./shellVariant.js');
 
 const projectRoot = __dirname;
 
@@ -33,10 +34,13 @@ function findWorkspaceRoot(directory) {
 const config = getDefaultConfig(projectRoot);
 config.resolver.unstable_enableSymlinks = true;
 
-// A release shell (LOWDEFY_SHELL_VARIANT=release, the default for every shell but Lowdefy Dev)
-// resolves the developer features' module to an empty one: the dev-tab client, connect flow and
-// shake menu are not in its bundle (scripts/checkReleaseBundle.mjs checks it).
-const releaseVariant = getShellVariant() === 'release';
+// A shell resolves the feature modules its capability profile leaves out to empty ones
+// (getExclusions in shellVariant.js). A release shell (LOWDEFY_SHELL_VARIANT=release, the default
+// for every shell but Lowdefy Dev) leaves out the developer features: the dev-tab client, connect
+// flow and shake menu are not in its bundle (scripts/checkReleaseBundle.mjs checks it).
+const excludedEntries = new Set(
+  getExclusions({ shell: readShellConfig().shell, variant: getShellVariant() }).jsEntries
+);
 
 // Lowdefy packages shared with the server import a few Node built-ins in code the client never
 // runs (@lowdefy/errors reads build maps with `path`). The web client's bundler leaves them empty
@@ -48,7 +52,7 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
     return { type: 'empty' };
   }
   const resolution = (resolveDefault ?? context.resolveRequest)(context, moduleName, platform);
-  if (releaseVariant && resolution.type === 'sourceFile' && resolution.filePath === DEV_ENTRY) {
+  if (resolution.type === 'sourceFile' && excludedEntries.has(resolution.filePath)) {
     return { type: 'empty' };
   }
   return resolution;

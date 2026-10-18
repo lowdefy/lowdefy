@@ -82,3 +82,55 @@ test("a shell app without a url for the shell's environment is refused", () => {
     /"app.urls" should have a url for the shell's environment "staging"/
   );
 });
+
+test('a store shell config with a profile, store version and EAS project is returned as it is', () => {
+  const storeShell = {
+    ...shell,
+    profile: 'field',
+    version: '1.4.0',
+    eas: { owner: 'example', projectId: '2b6f0000-0000-4000-8000-000000000000' },
+  };
+  assert.equal(checkShellConfig({ configPath, shell: storeShell }), storeShell);
+});
+
+test('a shell config with a version that is not a string is refused', () => {
+  assert.throws(
+    () => checkShellConfig({ configPath, shell: { ...shell, version: 1.4 } }),
+    /^Error: Shell config "shell.json" "version" should be a string. Received 1.4.$/
+  );
+});
+
+test('a shell config with a profile that is not a string is refused', () => {
+  assert.throws(
+    () => checkShellConfig({ configPath, shell: { ...shell, profile: ['field'] } }),
+    /"profile" should be the name of a capability profile/
+  );
+});
+
+test('a shell config with an EAS project without a projectId is refused', () => {
+  assert.throws(
+    () => checkShellConfig({ configPath, shell: { ...shell, eas: { owner: 'example' } } }),
+    /"eas" should be \{ owner, projectId \}/
+  );
+  assert.throws(
+    () =>
+      checkShellConfig({ configPath, shell: { ...shell, eas: { owner: 3, projectId: 'abc' } } }),
+    /"eas.owner" should be a string. Received 3./
+  );
+});
+
+test('a shell config with an icon and a colour is returned as it is', () => {
+  const iconShell = { ...shell, icon: './icon.png', color: '#0B5FFF' };
+  assert.equal(checkShellConfig({ configPath, shell: iconShell }), iconShell);
+});
+
+test('a shell config with a colour that is not a hex colour is refused', () => {
+  assert.throws(
+    () => checkShellConfig({ configPath, shell: { ...shell, color: 'blue' } }),
+    /^Error: Shell config "shell.json" "color" should be a colour like "#0B5FFF". Received "blue".$/
+  );
+  assert.throws(
+    () => checkShellConfig({ configPath, shell: { ...shell, icon: 3 } }),
+    /"icon" should be the path of a PNG, relative to the shell config/
+  );
+});

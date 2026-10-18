@@ -15,26 +15,29 @@
 */
 
 /*
-  The release check: a customer shell must not carry Lowdefy Dev's developer features, in its
-  JavaScript or in its native projects. A shell's release build runs it before a store build.
+  The release check: a shell carries only its capability profile's native modules (profiles.js),
+  and a customer shell none of Lowdefy Dev's developer features, in its JavaScript or in its native
+  projects. A shell's release build runs it before a store build.
 
-  For each platform, with LOWDEFY_SHELL_VARIANT=release and the shell config LOWDEFY_SHELL_CONFIG
-  names (Lowdefy Dev's shell.dev.json without it):
+  For each release profile (basic, field, field-nfc, field-tracking; --profile names one) and each
+  platform, with LOWDEFY_SHELL_VARIANT=release and the shell config LOWDEFY_SHELL_CONFIG names
+  (Lowdefy Dev's shell.dev.json without it) set to that profile:
 
   1. Bundle: exports the JavaScript bundle and fails when any file of it holds the dev-tab client's
-     marker (src/dev/tab/devClientMarker.js) or the native module name of a module the shell leaves
-     out (getExcludedModules in shellVariant.js: expo-sensors, react-native-view-shot, and
-     expo-camera unless the shell needs the camera).
+     marker (src/dev/tab/devClientMarker.js) or the native module name of a module the profile
+     leaves out (getExclusions in shellVariant.js).
   2. Prebuild: runs `expo prebuild` in a copy of the shell and fails when
      - Expo autolinking, run with the exclusions the generated Podfile and settings.gradle pass it,
-       still links a module the shell leaves out; or
-     - the camera permission (NSCameraUsageDescription, android.permission.CAMERA) is asked for by
-       a shell that does not need the camera, or the motion permission (expo-sensors) by any.
+       still links a module the profile leaves out; or
+     - the native project asks for a permission only a left-out module needs
+       (NSCameraUsageDescription and android.permission.CAMERA without the camera,
+       NSMotionUsageDescription in any release shell).
 
-  With --control it first runs both on the dev variant and fails when the marker, the module names
-  or the modules are missing there, which shows the check can see them.
+  With --control it first runs both on the dev variant (profile `dev`) and fails when the marker,
+  the module names or the modules any release profile leaves out are missing there, which shows the
+  check can see them.
 
-    node scripts/checkReleaseBundle.mjs [--platform ios|android] [--control]
+    node scripts/checkReleaseBundle.mjs [--platform ios|android] [--profile <name>] [--control]
 */
 
 import { execFileSync } from 'node:child_process';
@@ -46,42 +49,68 @@ import { fileURLToPath } from 'node:url';
 
 const shellRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const require = createRequire(import.meta.url);
-const checkShellConfig = require('../checkShellConfig.js');
-const { DEV_CLIENT_MARKER, getExcludedModules, shellNeedsCamera } = require('../shellVariant.js');
+const { RELEASE_PROFILES } = require('../profiles.js');
+const readShellConfig = require('../readShellConfig.js');
+const { DEV_CLIENT_MARKER, getExclusions } = require('../shellVariant.js');
 
-// The modules Lowdefy Dev links that a release shell may leave out, for the --control run.
-const DEV_MODULES = getExcludedModules({ shell: {}, variant: 'release' });
+// The modules some release profile leaves out, which the dev variant links, for the --control run.
+const RELEASE_EXCLUDED_MODULES = Object.assign(
+  {},
+  ...RELEASE_PROFILES.map(
+    (profile) => getExclusions({ shell: { profile }, variant: 'release' }).modules
+  )
+);
+
+// The native module names a bundle that carries a module's JavaScript holds. A module with no
+// JavaScript of its own in the bundle (null) is checked by autolinking only.
+function nativeNames(modules) {
+  return Object.values(modules).filter((name) => name !== null);
+}
 
 // Copied into each prebuild's temporary project; node_modules is linked, not copied.
 const SKIPPED_IN_COPY = new Set(['android', 'coverage', 'dist', 'ios', 'node_modules', '.expo']);
 
 const AUTOLINKING_PLATFORMS = { ios: 'apple', android: 'android' };
 
+function readOption(argv, option) {
+  const index = argv.indexOf(option);
+  return index === -1 ? undefined : argv[index + 1];
+}
+
 function readArgs(argv) {
-  const platformIndex = argv.indexOf('--platform');
+  const platform = readOption(argv, '--platform');
+  const profile = readOption(argv, '--profile');
+  if (profile !== undefined && !RELEASE_PROFILES.includes(profile)) {
+    throw new Error(
+      `--profile should be one of ${RELEASE_PROFILES.join(', ')}. Received ${JSON.stringify(
+        profile
+      )}.`
+    );
+  }
   return {
     control: argv.includes('--control'),
-    platforms: platformIndex === -1 ? ['ios', 'android'] : [argv[platformIndex + 1]],
+    platforms: platform === undefined ? ['ios', 'android'] : [platform],
+    profiles: profile === undefined ? RELEASE_PROFILES : [profile],
   };
 }
 
-function readShell() {
-  const configPath = process.env.LOWDEFY_SHELL_CONFIG
-    ? path.resolve(process.env.LOWDEFY_SHELL_CONFIG)
-    : path.join(shellRoot, 'shell.dev.json');
-  const shell = checkShellConfig({
-    configPath,
-    shell: JSON.parse(fs.readFileSync(configPath, 'utf8')),
+// The environment of a check of the shell built on one profile and variant: the shell config, set
+// to that profile, written to a temporary shell.json, its icon still found where it is.
+function withShellEnv({ configPath: shellConfigPath, profile, shell, variant }, callback) {
+  return withTemporaryDirectory(`lowdefy-shell-config-${profile}-`, (directory) => {
+    const configPath = path.join(directory, 'shell.json');
+    const icon =
+      shell.icon === undefined
+        ? undefined
+        : path.resolve(path.dirname(shellConfigPath), shell.icon);
+    fs.writeFileSync(configPath, JSON.stringify({ ...shell, icon, profile }, null, 2));
+    return callback({
+      ...process.env,
+      CI: '1',
+      LOWDEFY_SHELL_CONFIG: configPath,
+      LOWDEFY_SHELL_VARIANT: variant,
+    });
   });
-  return { configPath, shell };
-}
-
-function variantEnv({ configPath, variant }) {
-  const env = { ...process.env, CI: '1', LOWDEFY_SHELL_VARIANT: variant };
-  if (process.env.LOWDEFY_SHELL_CONFIG) {
-    env.LOWDEFY_SHELL_CONFIG = configPath;
-  }
-  return env;
 }
 
 function listFiles(directory) {
@@ -181,7 +210,8 @@ function readLinkedModules({ platform, projectDir }) {
   ]);
 }
 
-// The permissions the native project asks for that a check looks at.
+// The permissions the native project asks for, of those every profile's modules ask for: iOS
+// Info.plist usage keys and Android permissions not removed by `blockedPermissions`.
 function readPermissions({ platform, projectDir }) {
   if (platform === 'ios') {
     const iosDir = path.join(projectDir, 'ios');
@@ -190,22 +220,19 @@ function readPermissions({ platform, projectDir }) {
       .map((name) => path.join(iosDir, name, 'Info.plist'))
       .find((file) => fs.existsSync(file));
     const text = fs.readFileSync(plist, 'utf8');
-    return {
-      camera: text.includes('<key>NSCameraUsageDescription</key>'),
-      motion: text.includes('<key>NSMotionUsageDescription</key>'),
-    };
+    return new Set(
+      [...text.matchAll(/<key>(NS[A-Za-z]+UsageDescription)<\/key>/g)].map((m) => m[1])
+    );
   }
   const manifest = fs.readFileSync(
     path.join(projectDir, 'android', 'app', 'src', 'main', 'AndroidManifest.xml'),
     'utf8'
   );
-  const camera = [
-    ...manifest.matchAll(/<uses-permission [^>]*android\.permission\.CAMERA"[^>]*>/g),
-  ];
-  return {
-    camera: camera.some((match) => !match[0].includes('tools:node="remove"')),
-    motion: false,
-  };
+  return new Set(
+    [...manifest.matchAll(/<uses-permission [^>]*android:name="([^"]+)"[^>]*>/g)]
+      .filter((match) => !match[0].includes('tools:node="remove"'))
+      .map((match) => match[1])
+  );
 }
 
 function prebuild({ env, platform }) {
@@ -228,58 +255,70 @@ function prebuild({ env, platform }) {
   });
 }
 
-function checkControl({ configPath, platform }) {
-  const env = variantEnv({ configPath, variant: 'dev' });
-  const problems = [];
-  const found = findInBundle({
-    env,
-    platform,
-    strings: [DEV_CLIENT_MARKER, ...Object.values(DEV_MODULES)],
+function checkControl({ configPath, platform, shell }) {
+  return withShellEnv({ configPath, profile: 'dev', shell, variant: 'dev' }, (env) => {
+    const problems = [];
+    const found = findInBundle({
+      env,
+      platform,
+      strings: [DEV_CLIENT_MARKER, ...nativeNames(RELEASE_EXCLUDED_MODULES)],
+    });
+    Object.entries(found)
+      .filter(([, files]) => files.length === 0)
+      .forEach(([string]) => problems.push(`the dev bundle does not hold "${string}"`));
+    const { linked } = prebuild({ env, platform });
+    Object.keys(RELEASE_EXCLUDED_MODULES)
+      .filter((name) => !linked.has(name))
+      .forEach((name) => problems.push(`the dev prebuild does not link ${name}`));
+    return problems;
   });
-  Object.entries(found)
-    .filter(([, files]) => files.length === 0)
-    .forEach(([string]) => problems.push(`the dev bundle does not hold "${string}"`));
-  const { linked } = prebuild({ env, platform });
-  Object.keys(DEV_MODULES)
-    .filter((name) => !linked.has(name))
-    .forEach((name) => problems.push(`the dev prebuild does not link ${name}`));
-  return problems;
 }
 
-function checkRelease({ configPath, platform, shell }) {
-  const env = variantEnv({ configPath, variant: 'release' });
-  const excluded = getExcludedModules({ shell, variant: 'release' });
-  const problems = [];
-  const found = findInBundle({
-    env,
-    platform,
-    strings: [DEV_CLIENT_MARKER, ...Object.values(excluded)],
+// iOS asks for permissions with Info.plist usage keys, Android with android.permission names.
+function onPlatform({ permissions, platform }) {
+  return permissions.filter(
+    (permission) => permission.startsWith('android.permission.') === (platform === 'android')
+  );
+}
+
+function checkRelease({ configPath, platform, profile, shell }) {
+  const exclusions = getExclusions({ shell: { ...shell, profile }, variant: 'release' });
+  const excluded = {
+    modules: exclusions.modules,
+    permissions: onPlatform({ permissions: exclusions.permissions, platform }),
+  };
+  return withShellEnv({ configPath, profile, shell, variant: 'release' }, (env) => {
+    const problems = [];
+    const found = findInBundle({
+      env,
+      platform,
+      strings: [DEV_CLIENT_MARKER, ...nativeNames(excluded.modules)],
+    });
+    Object.entries(found)
+      .filter(([, files]) => files.length > 0)
+      .forEach(([string, files]) =>
+        problems.push(`the release bundle holds "${string}" (${files.join(', ')})`)
+      );
+    const { linked, permissions } = prebuild({ env, platform });
+    Object.keys(excluded.modules)
+      .filter((name) => linked.has(name))
+      .forEach((name) => problems.push(`the release prebuild links ${name}`));
+    excluded.permissions
+      .filter((permission) => permissions.has(permission))
+      .forEach((permission) =>
+        problems.push(`the release prebuild asks for ${permission}, which no module it links needs`)
+      );
+    return { excluded, problems };
   });
-  Object.entries(found)
-    .filter(([, files]) => files.length > 0)
-    .forEach(([string, files]) =>
-      problems.push(`the release bundle holds "${string}" (${files.join(', ')})`)
-    );
-  const { linked, permissions } = prebuild({ env, platform });
-  Object.keys(excluded)
-    .filter((name) => linked.has(name))
-    .forEach((name) => problems.push(`the release prebuild links ${name}`));
-  if (permissions.camera && !shellNeedsCamera(shell)) {
-    problems.push('the release prebuild asks for the camera, which this shell does not need');
-  }
-  if (permissions.motion) {
-    problems.push('the release prebuild asks for motion, which only Lowdefy Dev uses');
-  }
-  return { excluded: Object.keys(excluded), problems };
 }
 
 function main() {
-  const { control, platforms } = readArgs(process.argv.slice(2));
-  const { configPath, shell } = readShell();
+  const { control, platforms, profiles } = readArgs(process.argv.slice(2));
+  const { configPath, shell } = readShellConfig();
   let failed = false;
   platforms.forEach((platform) => {
     if (control) {
-      const problems = checkControl({ configPath, platform });
+      const problems = checkControl({ configPath, platform, shell });
       if (problems.length > 0) {
         problems.forEach((problem) => console.error(`${platform}: ${problem}.`));
         failed = true;
@@ -287,23 +326,29 @@ function main() {
       }
       console.log(
         `${platform}: the dev variant holds the dev-tab client and links ${Object.keys(
-          DEV_MODULES
+          RELEASE_EXCLUDED_MODULES
         ).join(', ')}.`
       );
     }
-    const { excluded, problems } = checkRelease({ configPath, platform, shell });
-    if (problems.length > 0) {
-      problems.forEach((problem) => console.error(`${platform}: ${problem}.`));
-      failed = true;
-      return;
-    }
-    console.log(
-      `${platform}: the release shell "${
-        shell.id
-      }" holds no dev-tab client, links none of ${excluded.join(', ')}, and asks for ${
-        shellNeedsCamera(shell) ? 'the camera only as it needs' : 'no camera'
-      }.`
-    );
+    profiles.forEach((profile) => {
+      const { excluded, problems } = checkRelease({ configPath, platform, profile, shell });
+      if (problems.length > 0) {
+        problems.forEach((problem) => console.error(`${platform} ${profile}: ${problem}.`));
+        failed = true;
+        return;
+      }
+      const permissions =
+        excluded.permissions.length === 0
+          ? 'asks for no permission of a left-out module'
+          : `asks for none of ${excluded.permissions.join(', ')}`;
+      console.log(
+        `${platform} ${profile}: the release shell "${
+          shell.id
+        }" holds no dev-tab client, links none of ${Object.keys(excluded.modules).join(
+          ', '
+        )}, and ${permissions}.`
+      );
+    });
   });
   if (failed) {
     process.exit(1);

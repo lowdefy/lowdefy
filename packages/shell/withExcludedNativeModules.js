@@ -32,8 +32,8 @@ function replaceOnce({ contents, file, pattern, replace }) {
 }
 
 /**
- * Leaves native modules out of a shell's native projects (getExcludedModules in shellVariant.js),
- * so a release shell does not carry Lowdefy Dev's modules:
+ * Leaves native modules out of a shell's native projects (getExclusions in shellVariant.js), so a
+ * shell carries only its capability profile's modules, and a release shell none of Lowdefy Dev's:
  * - iOS: `use_expo_modules!` and the react-native-config command in the Podfile get `exclude`.
  * - Android: settings.gradle sets `expoAutolinking.exclude` and adds `--exclude` to the
  *   react-native-config command.

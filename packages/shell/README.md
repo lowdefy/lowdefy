@@ -14,9 +14,13 @@ plugin maps. Pages, menus and theme come from the app's Lowdefy server as data. 
 {
   "id": "field",
   "name": "Field",
-  "profile": "standard",
+  "profile": "field",
+  "version": "1.4.2",
+  "icon": "./icon.png",
+  "color": "#0B5FFF",
   "scheme": "field",
   "environment": "production",
+  "eas": { "owner": "example", "projectId": "2b6f…" },
   "ios": { "bundleIdentifier": "com.example.field" },
   "android": { "package": "com.example.field" },
   "store": { "ios": "https://apps.apple.com/...", "android": "https://play.google.com/..." },
@@ -30,9 +34,49 @@ session token, storage and cache. `checkShellConfig.js` refuses a `shell.json` t
 names more than one app, or has no url for the shell's `environment`; `app.config.ts` runs it, so
 `expo prebuild` and `expo export` fail on such a config.
 
-It adds the shell's `version` and its type manifest (`scripts/createTypeManifest.mjs`): every block,
+`profile` names the shell's capability profile, one row of the table in `profiles.js`: `basic`,
+`field`, `field-nfc`, `field-tracking`, and `dev` and `development` for Lowdefy Dev and development
+builds. Each lists the native modules, config plugins, permissions, JavaScript entry modules,
+required-reason APIs and collected data it carries, and may extend another (`field` is `basic` and
+the camera). `resolveProfile(name)` flattens one, and throws on a name the table lacks. A shell
+config without `profile` is `basic`, or `dev` for Lowdefy Dev. `app.config.ts` applies only the
+profile's config plugins, and sets `capabilities` from it when `shell.json` has none.
+
+It adds the shell's package version and its type manifest (`scripts/createTypeManifest.mjs`): every block,
 action and operator type the shell registers (`src/plugins/types.js`, listed in
 `src/plugins/shellPlugins.json`), with its plugin package and that package's major version.
+
+## Store uploads
+
+`app.config.ts` sets what App Store Connect and Google Play would otherwise ask a person on upload:
+
+- `ios.config.usesNonExemptEncryption: false`: the shell uses only the OS's encryption.
+- `ios.privacyManifests`: the required-reason APIs of the profile's modules (`privacyReasons` in
+  `profiles.js`, where `basic` carries React Native's and expo-sqlite's), each listed once
+  (`getPrivacyManifest.js`).
+- From `shell.json` `icon` (a 1024×1024 PNG, relative to `shell.json`) and `color`: the app icon,
+  the `expo-splash-screen` image on `color`, and the Android adaptive icon on `color`. Its
+  foreground, the icon scaled into the centre 66% of a transparent canvas, is written beside
+  `shell.json` as `adaptive-icon-<hash>.png` (`scripts/createShellAssets.mjs`) once per icon.
+  Without `icon` (Lowdefy Dev) Expo's defaults stay.
+
+## Versions
+
+- `version` in `shell.json` is the store version (`major.minor.patch`), the app config's `version`.
+  Lowdefy Dev has none and builds as `0.0.0`.
+- `extra.shell.version` is the `@lowdefy/shell` package version, which the runtime sends as
+  `x-lowdefy-shell`.
+- `runtimeVersion` is `<nativeVersion>-<profile>`, with `-<hash>` of the shell's `plugins`
+  (`[{ name, version }]`) when it lists any (`runtimeVersion.js`, a pure function `lowdefy mobile`
+  reuses). An over-the-air update reaches only binaries with the same runtime version. Shell
+  identity is not part of it, so every shell on one `nativeVersion` and profile shares it.
+- `nativeVersion` in `package.json` is bumped only when the shell's native dependencies or config
+  plugins change. `pnpm check:native-version` (run by the package's tests) computes Expo's
+  fingerprint of the shell's native inputs for every profile and fails when it differs from the one
+  `native-fingerprint.json` records for the current `nativeVersion`. After a bump,
+  `pnpm check:native-version --write` records the new one.
+- With `eas`, the app config sets `owner`, `updates.url` (`https://u.expo.dev/<projectId>`) and
+  `extra.eas.projectId`.
 
 ## Boot, cache and sync
 
@@ -119,17 +163,19 @@ tab's page switches tab, and links to other sites open in the system browser.
 `src/dev`. Lowdefy Dev is this shell built as the `dev` variant: `LOWDEFY_SHELL_VARIANT=dev | release`
 (`shellVariant.js`), `dev` by default for Lowdefy Dev (no `LOWDEFY_SHELL_CONFIG`) and `release` for
 every other shell. A release bundle resolves `src/dev/index.js` to an empty module
-(`metro.config.js`), so a customer shell carries none of it. A release shell also leaves Lowdefy
-Dev's native modules unlinked (`getExcludedModules`): `expo-sensors`, `react-native-view-shot`, and
-`expo-camera` unless the shell config's `capabilities` include `camera`. `app.config.ts` leaves out
-their config plugins and permissions, and `withExcludedNativeModules.js` passes them as exclusions
-to Expo autolinking in the generated Podfile and settings.gradle.
+(`metro.config.js`), so a customer shell carries none of it. Every shell
+leaves out the native modules its profile does not carry, and a release shell also leaves out
+Lowdefy Dev's own (`expo-sensors`, `react-native-view-shot`, `expo-dev-client`) whatever its profile
+(`getExclusions` in `shellVariant.js`): a `basic` shell links no `expo-camera`. `app.config.ts`
+leaves out their config plugins and blocks their Android permissions, `withExcludedNativeModules.js`
+passes them as exclusions to Expo autolinking in the generated Podfile and settings.gradle, and
+`metro.config.js` resolves the left-out profiles' JavaScript entries to empty modules.
 
 `pnpm check:release-bundle` checks a release shell (Lowdefy Dev's, or the one
-`LOWDEFY_SHELL_CONFIG` names) on both platforms: its bundle holds neither the dev-tab client's
-marker string nor a left-out module's native name, and an `expo prebuild` of it links none of the
-left-out modules and asks for no camera (unless the shell needs it) or motion permission.
-`--control` first checks that the `dev` variant holds and links them.
+`LOWDEFY_SHELL_CONFIG` names) on each release profile (`--profile` names one) and both platforms:
+its bundle holds neither the dev-tab client's marker string nor a left-out module's native name,
+and an `expo prebuild` of it links none of the left-out modules and asks for none of their
+permissions. `--control` first checks that the `dev` variant holds and links them.
 
 - **Connect.** `lowdefy-dev://connect?url=<server>&pair=<token>` (the QR code `lowdefy dev --lan`
   prints, or the link `--ios`/`--android` open), a scanned code (`expo-camera`), a typed address, or
@@ -173,5 +219,6 @@ session` lists and prints phone sessions as it does browser ones.
 pnpm --filter=@lowdefy/shell test         # Jest, and the hello fixture build
 pnpm --filter=@lowdefy/shell export:ios     # Metro and Hermes bundle, no simulator needed
 pnpm --filter=@lowdefy/shell export:android
-pnpm --filter=@lowdefy/shell check:release-bundle   # no dev features or modules in a release shell
+pnpm --filter=@lowdefy/shell check:release-bundle   # each release profile links only its modules
+pnpm --filter=@lowdefy/shell check:native-version   # native code changed only with a nativeVersion bump
 ```

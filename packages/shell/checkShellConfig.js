@@ -57,6 +57,46 @@ function checkShellConfig({ configPath, shell }) {
       }". Received ${JSON.stringify(shell.app.urls)}.`
     );
   }
+  if (shell.profile !== undefined && typeof shell.profile !== 'string') {
+    throw new Error(
+      `${where} "profile" should be the name of a capability profile. Received ${JSON.stringify(
+        shell.profile
+      )}.`
+    );
+  }
+  // The store version, major.minor.patch; `lowdefy mobile build` sets the patch.
+  if (shell.version !== undefined && typeof shell.version !== 'string') {
+    throw new Error(
+      `${where} "version" should be a string. Received ${JSON.stringify(shell.version)}.`
+    );
+  }
+  // The icon is a path relative to shell.json; `lowdefy mobile config` copies it there.
+  if (shell.icon !== undefined && (typeof shell.icon !== 'string' || shell.icon.length === 0)) {
+    throw new Error(
+      `${where} "icon" should be the path of a PNG, relative to the shell config. Received ${JSON.stringify(
+        shell.icon
+      )}.`
+    );
+  }
+  if (shell.color !== undefined && !/^#[0-9a-fA-F]{6}$/.test(shell.color)) {
+    throw new Error(
+      `${where} "color" should be a colour like "#0B5FFF". Received ${JSON.stringify(shell.color)}.`
+    );
+  }
+  if (shell.eas !== undefined) {
+    if (!isObject(shell.eas) || typeof shell.eas.projectId !== 'string') {
+      throw new Error(
+        `${where} "eas" should be { owner, projectId }, the shell's Expo account and project. Received ${JSON.stringify(
+          shell.eas
+        )}.`
+      );
+    }
+    if (shell.eas.owner !== undefined && typeof shell.eas.owner !== 'string') {
+      throw new Error(
+        `${where} "eas.owner" should be a string. Received ${JSON.stringify(shell.eas.owner)}.`
+      );
+    }
+  }
   return shell;
 }
 
