@@ -38,10 +38,11 @@ function TabIcon({ icon, image }) {
 }
 
 // The tabs frame: a native tab bar, each tab a route group with its own stack. The selected tab
-// takes the theme's primary colour. A `role: search` item is iOS 26's search tab, set apart at the
+// takes the theme's tint. iOS 26 draws the bar's glass itself; before it, the bar blurs in the
+// mode showing, and Android's bar takes the cell colour. A `role: search` item is iOS 26's search tab, set apart at the
 // right of the bar with a magnifier; elsewhere it is a tab with its search icon.
 function TabsFrame({ items }) {
-  const { tokens } = useTheme();
+  const { isDark, tokens } = useTheme();
   const icons = useMemo(() => getTabIcons({ items, platform: Platform.OS }), [items]);
   const [images, setImages] = useState({});
   const onImage = useCallback(
@@ -52,9 +53,11 @@ function TabsFrame({ items }) {
   return (
     <>
       <NativeTabs
-        iconColor={{ selected: tokens.colorPrimary }}
-        labelStyle={{ selected: { color: tokens.colorPrimary } }}
-        tintColor={tokens.colorPrimary}
+        backgroundColor={Platform.OS === 'ios' ? undefined : tokens.colorCell}
+        blurEffect={isDark ? 'systemChromeMaterialDark' : 'systemChromeMaterialLight'}
+        iconColor={{ selected: tokens.colorTint }}
+        labelStyle={{ selected: { color: tokens.colorTint } }}
+        tintColor={tokens.colorTint}
       >
         {FRAME_SLOTS.map((slot, index) => {
           const item = items[index];

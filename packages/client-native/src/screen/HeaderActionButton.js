@@ -49,7 +49,7 @@ function HeaderActionButton({ action, Icon, testID }) {
     >
       <Icon
         properties={{ name: action.icon, title: '' }}
-        styles={{ element: { color: tokens.colorText, fontSize: ICON_SIZE } }}
+        styles={{ element: { color: tokens.colorLabel, fontSize: ICON_SIZE } }}
       />
     </Pressable>
   );

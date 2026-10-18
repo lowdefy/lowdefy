@@ -48,7 +48,7 @@ function findAll(node, predicate, found = []) {
 }
 
 const inbox = { node: [['path', { d: 'M1 1' }]] };
-const tokens = { colorPrimary: '#0A72D8', colorText: '#111111' };
+const tokens = { colorCell: '#FFFFFF', colorLabel: '#000000', colorTint: '#0A72D8' };
 
 test('native tab bar items take SF Symbols, the search role and the theme tint', async () => {
   mockState.homeRequests = 0;
@@ -69,6 +69,7 @@ test('native tab bar items take SF Symbols, the search role and the theme tint',
   const tabBar = findAll(view.root, (node) => node.type === 'NativeTabs')[0];
   expect(tabBar.props.tintColor).toBe('#0A72D8');
   expect(tabBar.props.iconColor).toEqual({ selected: '#0A72D8' });
+  expect(tabBar.props.blurEffect).toBe('systemChromeMaterialLight');
   const triggers = findAll(view.root, (node) => node.type === 'Trigger');
   expect(triggers.map((trigger) => [trigger.props.name, trigger.props.hidden])).toEqual([
     ['(t0)', false],

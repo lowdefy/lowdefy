@@ -78,7 +78,7 @@ function createIcon({ icons, iconTheme = {} }) {
       tokens.fontSize;
     const named = getIconData(iconProperties.name);
     let data = named;
-    let color = iconProperties.color ?? elementColor ?? tokens.colorText;
+    let color = iconProperties.color ?? elementColor ?? tokens.colorLabel;
     if (spin) {
       data = getIconData('loading');
     } else if (named === null) {

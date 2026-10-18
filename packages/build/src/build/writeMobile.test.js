@@ -251,6 +251,7 @@ test('writeMobile writes tab icons with their data, sfSymbol and role, the searc
   await writeMobile({
     components: {
       mobile: {
+        events: {},
         menus: {
           tabs: [
             { pageId: 'today', title: 'Today', icon: 'Inbox' },
