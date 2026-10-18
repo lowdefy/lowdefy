@@ -14,8 +14,22 @@
   limitations under the License.
 */
 
-import createPluginTypesMap from './createPluginTypesMap.js';
-import createPluginTypesMapMobile from './createPluginTypesMapMobile.js';
+import { jest } from '@jest/globals';
+
+// The built-in native types, which scripts/generateDefaultTypes.js writes at package build.
+jest.unstable_mockModule('../defaultTypesMapMobile.js', () => ({
+  default: {
+    actions: { SetState: { package: '@lowdefy/actions-core', version: '6.0.0' } },
+    blockMetas: {},
+    blocks: { Box: { package: '@lowdefy/blocks-native', version: '6.0.0' } },
+    icons: {},
+    operators: { client: {} },
+    plugins: [],
+  },
+}));
+
+const { default: createPluginTypesMap } = await import('./createPluginTypesMap.js');
+const { default: createPluginTypesMapMobile } = await import('./createPluginTypesMapMobile.js');
 
 function createEmptyTypesMap() {
   return {
@@ -112,4 +126,36 @@ test('createPluginTypesMap leaves native types out of the web map', () => {
   expect(Object.keys(typesMap.blocks)).toEqual(['PrinterWebLabel']);
   expect(typesMap.actions).toEqual({});
   expect(typesMap.icons).toEqual({});
+});
+
+test('createPluginTypesMapMobile refuses an unprefixed native block named like a built-in one', () => {
+  expect(() =>
+    createPluginTypesMapMobile({
+      packageName: '@example/lowdefy-layout',
+      packageTypes: { native: { blocks: ['Box'] } },
+      typesMap: createEmptyTypesMapMobile(),
+      version: '1.0.0',
+    })
+  ).toThrow(
+    'Shell plugin "@example/lowdefy-layout" gives the native block type "Box" with no typePrefix, which is a built-in native block type. Set a typePrefix on the plugin in mobile.shells[].plugins that keeps its type names apart from the built-in ones.'
+  );
+});
+
+test('createPluginTypesMapMobile refuses a prefixed native action named like a built-in one', () => {
+  let error;
+  try {
+    createPluginTypesMapMobile({
+      packageName: '@example/lowdefy-state',
+      packageTypes: { native: { actions: ['State'] } },
+      typePrefix: 'Set',
+      typesMap: createEmptyTypesMapMobile(),
+      version: '1.0.0',
+    });
+  } catch (e) {
+    error = e;
+  }
+  expect(error.name).toBe('ConfigError');
+  expect(error.message).toBe(
+    'Shell plugin "@example/lowdefy-state" gives the native action type "SetState" with typePrefix "Set", which is a built-in native action type. Set a typePrefix on the plugin in mobile.shells[].plugins that keeps its type names apart from the built-in ones.'
+  );
 });

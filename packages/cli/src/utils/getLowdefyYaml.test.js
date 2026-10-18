@@ -268,7 +268,7 @@ test('get plugins lists a plugin in root and in two shells once, then shell-only
   const config = await getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true });
   expect(config.plugins).toEqual([
     { name: '@example/lowdefy-printer', version: '2.1.0' },
-    { name: '@example/lowdefy-mdm', version: '1.0.3', typePrefix: undefined },
+    { name: '@example/lowdefy-mdm', version: '1.0.3', typePrefix: undefined, shellOnly: true },
   ]);
 });
 

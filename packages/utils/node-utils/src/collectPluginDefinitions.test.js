@@ -78,7 +78,7 @@ test('collectPluginDefinitions adds a shell-only plugin after root plugins', () 
   expect(collectPluginDefinitions({ lowdefy })).toEqual({
     plugins: [
       { name: '@example/web', version: '1.0.0' },
-      { name: '@example/mdm', version: '1.0.3', typePrefix: undefined },
+      { name: '@example/mdm', version: '1.0.3', typePrefix: undefined, shellOnly: true },
     ],
     shellPlugins: [{ name: '@example/mdm', version: '1.0.3', typePrefix: undefined }],
   });

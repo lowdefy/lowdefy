@@ -37,7 +37,9 @@ function readShellEntries({ lowdefy }) {
 // The plugins the server installs and the build reads types from, from a raw
 // (unresolved) read of lowdefy.yaml:
 // - plugins: root `plugins`, then each package only `mobile.shells[].plugins`
-//   lists, once per package name. The web type map uses these entries.
+//   lists, once per package name. The web type map uses these entries. A
+//   shell-only entry is marked shellOnly: it may be native-only, with no
+//   `./types` export, which root plugins must have.
 // - shellPlugins: each package any shell lists, once. Their `native` types go
 //   into the mobile type map, with the shell entry's typePrefix.
 // The server installs one copy of each package, so every listing of a package
@@ -68,7 +70,12 @@ function collectPluginDefinitions({ lowdefy }) {
     }
     if (!first) {
       listed.set(plugin.name, { version: plugin.version, source });
-      plugins.push({ name: plugin.name, version: plugin.version, typePrefix: plugin.typePrefix });
+      plugins.push({
+        name: plugin.name,
+        version: plugin.version,
+        typePrefix: plugin.typePrefix,
+        shellOnly: true,
+      });
     }
     const shellPlugin = shellPlugins.get(plugin.name);
     if (shellPlugin && shellPlugin.typePrefix !== plugin.typePrefix) {

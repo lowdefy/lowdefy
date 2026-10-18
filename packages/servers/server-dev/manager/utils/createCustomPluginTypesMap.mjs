@@ -17,6 +17,7 @@
 
 import { createRequire } from 'node:module';
 import { createPluginTypesMap, createPluginTypesMapMobile } from '@lowdefy/build';
+import { hasTypesExport } from '@lowdefy/node-utils';
 import importFresh from './importFresh.mjs';
 import readPluginDefinitions from './readPluginDefinitions.mjs';
 
@@ -58,9 +59,14 @@ async function createCustomPluginTypesMap({ directories, logger }) {
   };
 
   // Each import starts a worker, so the plugins are imported in parallel and
-  // added to the map in the order lowdefy.yaml lists them.
+  // added to the map in the order lowdefy.yaml lists them. A plugin only
+  // shells list may be native-only, with no ./types export: it adds no types.
+  // Root plugins must export ./types.
   const pluginTypes = await Promise.all(
     plugins.map(async (plugin) => {
+      if (plugin.shellOnly && !hasTypesExport({ name: plugin.name, require })) {
+        return {};
+      }
       try {
         const types = await importFresh(require.resolve(`${plugin.name}/types`));
         return types.default ?? types;

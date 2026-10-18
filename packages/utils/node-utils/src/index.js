@@ -41,6 +41,7 @@ import getMarkedCredentials from './getMarkedCredentials.js';
 import getLowdefyHome from './getLowdefyHome.js';
 import getProcessStartTime from './getProcessStartTime.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
+import hasTypesExport from './hasTypesExport.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 import isPidAlive from './isPidAlive.js';
 import isProcessAlive from './isProcessAlive.js';
@@ -142,6 +143,7 @@ export {
   getLowdefyHome,
   getProcessStartTime,
   getSecretsFromEnv,
+  hasTypesExport,
   hashSequence,
   installIfPackageJsonChanged,
   isBackedBy,
