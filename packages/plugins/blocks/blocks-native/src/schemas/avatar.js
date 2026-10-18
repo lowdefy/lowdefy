@@ -26,7 +26,8 @@ export default {
     },
     src: {
       type: 'string',
-      description: 'An image url. The initials show while it is missing or fails to load.',
+      description:
+        'A picture: an image url, cached on the device, or an SVG data URI. The initials show while it loads, and when it is missing or fails to load.',
     },
     content: {
       type: 'string',

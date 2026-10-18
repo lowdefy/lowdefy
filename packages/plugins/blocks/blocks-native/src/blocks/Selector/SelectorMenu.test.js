@@ -87,6 +87,28 @@ test('an option avatar has the colour an Avatar block gives the same person', as
   expect(glyph.backgroundColor).toBe(avatar.backgroundColor);
 });
 
+test('an option with an avatar picture shows the picture in the row', async () => {
+  const withPicture = {
+    ...status,
+    properties: {
+      ...status.properties,
+      options: [
+        {
+          label: 'Bo',
+          value: 'bo',
+          avatar: { name: 'Bo Smit', src: 'https://img.example/bo.png' },
+        },
+      ],
+    },
+  };
+  await renderPage({ pageConfig: formPage({ blocks: [withPicture], mirrorKey: 'status' }) });
+  await screen.findByTestId('status_input');
+  await pick('0');
+  expect(screen.getByTestId('expo-image').props.source).toEqual({
+    uri: 'https://img.example/bo.png',
+  });
+});
+
 test('the placeholder item clears the value and fires onClear', async () => {
   const { calls } = await renderPage({
     pageConfig: formPage({ blocks: [status], mirrorKey: 'status' }),

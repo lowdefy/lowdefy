@@ -38,7 +38,12 @@ function MentionRow({ colors, isDark, onPick, person, tokens }) {
       onPress={() => onPick(person)}
       style={({ pressed }) => [styles.row, pressed ? { backgroundColor: colors.fill } : null]}
     >
-      <AvatarCircle avatar={{ name: person.label }} isDark={isDark} size={28} tokens={tokens} />
+      <AvatarCircle
+        avatar={{ name: person.label, src: person.picture ?? undefined }}
+        isDark={isDark}
+        size={28}
+        tokens={tokens}
+      />
       <Text numberOfLines={1} style={[styles.name, { color: colors.label }]}>
         {person.label}
       </Text>

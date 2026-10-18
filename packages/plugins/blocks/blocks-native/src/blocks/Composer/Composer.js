@@ -28,6 +28,7 @@ import { type } from '@lowdefy/helpers';
 import { useElementRef } from '@lowdefy/client-native';
 
 import getSendState from './getSendState.js';
+import getSpokenMentionWords from './getSpokenMentionWords.js';
 import getTimelineColors from '../ActivityTimeline/getTimelineColors.js';
 import MentionTextInput from './MentionTextInput.js';
 import meta from './meta.js';
@@ -114,7 +115,8 @@ function SendButton({ colors, disabled, Icon, onPress, sending }) {
  * markdown. Typing @ at a word start opens a picker of the people who see the record; a pick
  * stores a mention token (`[[user:<id>]]` by default) and shows "@Name" in the input. Typing `[[`
  * opens a record picker fed by onLinkSearch and the `links` property, and a pick writes
- * `[[KEY]]`. The text clears once onSubmit's actions succeed.
+ * `[[KEY]]`. Spoken addressing, as dictation writes it ("for Sam, can you look"), becomes a
+ * mention of that person. The text clears once onSubmit's actions succeed.
  */
 function Composer({
   blockId,
@@ -144,6 +146,7 @@ function Composer({
     onChangeValue: setText,
     people: properties.mentions,
     mentionFormat: properties.mentionFormat,
+    spokenWords: getSpokenMentionWords({ spokenMentions: properties.spokenMentions }),
   });
 
   const inputRef = useRef(null);
@@ -176,7 +179,7 @@ function Composer({
   const links = trigger?.kind === 'link' ? (properties.links ?? []).slice(0, 8) : [];
 
   const send = async () => {
-    const body = editor.text;
+    const body = editor.finishSpokenMentions();
     if (getSendState({ value: body, sending, maxLength }).disabled) return;
     setSending(true);
     try {

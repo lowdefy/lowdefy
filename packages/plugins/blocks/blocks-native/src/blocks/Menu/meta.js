@@ -29,7 +29,10 @@ const avatar = {
     'A person the item stands for. The native menu shows the person symbol in its place when the item has no symbol.',
   properties: {
     name: { type: 'string', description: 'The name the initials are taken from.' },
-    src: { type: 'string', description: 'An image url.' },
+    src: {
+      type: 'string',
+      description: 'An image url. Not drawn in the menu, which draws only SF Symbols.',
+    },
     color: { type: 'string', description: 'The circle colour. Defaults to one from the name.' },
   },
 };

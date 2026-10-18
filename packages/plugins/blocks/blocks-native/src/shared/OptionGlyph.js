@@ -27,7 +27,7 @@ import SystemIcon from './SystemIcon.js';
  * the option has none of them for the platform.
  *
  * @param {Object} props
- * @param {Object} [props.avatar] `{ name, src, color }`.
+ * @param {Object} [props.avatar] `{ name, src, color }`, drawn as the Avatar block draws it.
  * @param {string} [props.color] The glyph colour; secondary text by default.
  * @param {Object} props.components
  * @param {string} [props.icon] An icon name from the app's icon data.

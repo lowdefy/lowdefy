@@ -106,10 +106,13 @@ export default {
                 avatar: {
                   type: 'object',
                   description:
-                    'Mobile menu variant only. A person the option stands for, drawn as an initials avatar beside the chosen option in the row; the native menu shows the person symbol.',
+                    'Mobile menu variant only. A person the option stands for, drawn as an avatar (their picture, or initials) beside the chosen option in the row; the native menu shows the person symbol.',
                   properties: {
                     name: { type: 'string', description: 'The name the initials are taken from.' },
-                    src: { type: 'string', description: 'An image url.' },
+                    src: {
+                      type: 'string',
+                      description: 'A picture url or SVG data URI, drawn in place of the initials.',
+                    },
                     color: { type: 'string', description: 'The circle colour.' },
                   },
                 },
