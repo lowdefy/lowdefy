@@ -142,6 +142,7 @@ test('jitPageHandler builds the page a patterned path matches and returns its pa
   expect(mockGetPageConfig.mock.calls[0][1]).toEqual({
     path: 'support/tickets/1234/',
     urlQuery: { tab: '2' },
+    surface: 'web',
   });
   expect(res.status).toEqual(200);
   const body = await res.json();
@@ -245,4 +246,28 @@ test('jitPageHandler names the build it served, and the recording route keeps th
     fs.rmSync(configDirectory, { recursive: true, force: true });
     delete process.env.LOWDEFY_DIRECTORY_CONFIG;
   }
+});
+
+test('jitPageHandler passes the web surface to getPageConfig for a browser', async () => {
+  mockGetPageConfig.mockResolvedValue({ status: 'not_found' });
+  await createApp().request('/api/page/dashboard');
+  expect(mockGetPageConfig.mock.calls[0][1].surface).toEqual('web');
+});
+
+test('jitPageHandler passes the mobile surface to getPageConfig for a shell', async () => {
+  mockGetPageConfig.mockResolvedValue({ status: 'not_found' });
+  await createApp().request('/api/page/dashboard', { headers: { 'x-lowdefy-shell': '7.4.0' } });
+  expect(mockGetPageConfig.mock.calls[0][1].surface).toEqual('mobile');
+});
+
+test('jitPageHandler returns 404 naming the surface when the page is for the other one', async () => {
+  mockGetPageConfig.mockResolvedValue({
+    status: 'wrong_surface',
+    pageId: 'dashboard',
+    pathParams: {},
+    surface: 'mobile',
+  });
+  const res = await createApp().request('/api/page/dashboard');
+  expect(res.status).toEqual(404);
+  expect(await res.json()).toEqual({ pageConfig: null, surface: 'mobile' });
 });

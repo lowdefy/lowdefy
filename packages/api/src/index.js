@@ -21,7 +21,9 @@ import callEndpoint from './routes/endpoints/callEndpoint.js';
 import getEndpointConfig from './routes/endpoints/getEndpointConfig.js';
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
+import createAppleAppSiteAssociation from './routes/mobile/createAppleAppSiteAssociation.js';
 import createAsMetadataHandler from './routes/auth/createAsMetadataHandler.js';
+import createAssetLinks from './routes/mobile/createAssetLinks.js';
 import createChannelRegistry from './routes/websocket/createChannelRegistry.js';
 import createContentSecurityPolicy from './csp/createContentSecurityPolicy.js';
 import createMcpServer from './routes/mcp/createMcpServer.js';
@@ -43,6 +45,7 @@ import getMcpResourceBinding, {
 } from './routes/mcp/getMcpResourceBinding.js';
 import { ensureMcpOauthResource } from './routes/mcp/oauthResourceLifecycle.js';
 import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
+import getMobileRootConfig from './routes/mobile/getMobileRootConfig.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import isSameOriginRequest from './context/isSameOriginRequest.js';
@@ -71,7 +74,9 @@ export {
   getEndpointConfig,
   callRequest,
   createApiContext,
+  createAppleAppSiteAssociation,
   createAsMetadataHandler,
+  createAssetLinks,
   createChannelRegistry,
   createContentSecurityPolicy,
   createMcpServer,
@@ -85,6 +90,7 @@ export {
   getBetterAuth,
   MCP_OAUTH_SCOPES,
   getHomeAndMenus,
+  getMobileRootConfig,
   handleAuthRequest,
   getMcpResourceBinding,
   getMcpResourceMetadataUri,

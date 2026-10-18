@@ -16,6 +16,7 @@
 
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
+import { etag } from 'hono/etag';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { runInCredentialScope } from '@lowdefy/node-utils';
 
@@ -70,6 +71,9 @@ import jitPageHandler from './routes/jitPage.js';
 import localDevToolsOnly from './middleware/localDevToolsOnly.js';
 import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
+import mobileConfig from '../lib/build/mobileConfig.js';
+import mobileRootHandler from './routes/mobileRoot.js';
+import mountMobileWellKnown from './routes/mountMobileWellKnown.js';
 import mountDevPageRoutes from './routes/mountDevPageRoutes.js';
 import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
 import noStore from './middleware/noStore.js';
@@ -130,6 +134,7 @@ function createApp() {
     app,
     auth: authJson.configured === true && !mockUser ? getAuth({ logger }) : null,
   });
+  mountMobileWellKnown({ app, basePath, mobileConfig });
   app.all('/.well-known/*', wellKnownFallbackHandler);
 
   // Docs and MCP endpoint for AI coding agents — always on in dev. Serves
@@ -221,9 +226,14 @@ function createApp() {
   // as in the production server. /api/root is the dev form of the root config the
   // production page embeds. The page routes use the same middleware.
   const noStoreMiddleware = noStore();
-  ['/api/root', '/api/page/*', '/api/user', '/api/request/*', '/api/endpoints/*'].forEach((route) =>
-    app.use(route, noStoreMiddleware)
-  );
+  [
+    '/api/root',
+    '/api/mobile/root',
+    '/api/page/*',
+    '/api/user',
+    '/api/request/*',
+    '/api/endpoints/*',
+  ].forEach((route) => app.use(route, noStoreMiddleware));
   // Unified dev get-session: createLowdefyContext resolves the mock or headless
   // caller into context.user on every path, so read it here rather than
   // re-deriving the precedence. context.user is only absent in the real-engine
@@ -241,7 +251,14 @@ function createApp() {
   app.use('/api/request/*', stampCaller());
   app.use('/api/endpoints/*', stampCaller());
   app.use('/api/page/*', stampCaller());
+  app.use('/api/mobile/root', stampCaller());
+  // A shell revalidates the pages and root config it keeps with If-None-Match.
+  // Registered inside noStore and stampCaller, so a 304 still carries both.
+  const etagMiddleware = etag();
+  app.use('/api/page/*', etagMiddleware);
+  app.use('/api/mobile/root', etagMiddleware);
   app.get('/api/root', rootHandler);
+  app.get('/api/mobile/root', mobileRootHandler);
   app.get('/api/page/*', jitPageHandler);
   app.all('/api/request/*', requestHandler);
   // Endpoint payloads may carry base64 file content (emitFileContent + CallAPI);

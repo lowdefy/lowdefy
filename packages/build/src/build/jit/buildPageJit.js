@@ -141,10 +141,15 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // build's testSchema does. Before auth is attached: it is not page config.
     testSchema({ components: processed, context: buildContext, schema: pageSchema });
 
-    // Apply skeleton-computed auth and path (buildAuth ran during skeleton
+    // Apply skeleton-computed auth, path and target (buildAuth ran during skeleton
     // build, and buildModules scoped a module page's path to its entry).
     processed.auth = pageEntry.auth;
     processed.path = pageEntry.path;
+    // A mobile page resolves its client types against the native types map
+    // (buildPage), as in the full build.
+    if (!type.isUndefined(pageEntry.target)) {
+      processed.target = pageEntry.target;
+    }
 
     // Build the page (validation, block processing)
     const checkDuplicatePageId = createCheckDuplicateId({

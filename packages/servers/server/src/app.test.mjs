@@ -41,6 +41,7 @@ jest.unstable_mockModule('./routes/cronForward.js', () => ({ default: handler })
 jest.unstable_mockModule('./routes/detached.js', () => ({ default: handler }));
 jest.unstable_mockModule('./routes/endpoints.js', () => ({ default: throwingHandler }));
 jest.unstable_mockModule('./routes/mcp.js', () => ({ default: handler }));
+jest.unstable_mockModule('./routes/mobileRoot.js', () => ({ default: handler }));
 jest.unstable_mockModule('./routes/mountOauthDiscovery.js', () => ({ default: () => {} }));
 jest.unstable_mockModule('./routes/request.js', () => ({ default: handler }));
 jest.unstable_mockModule('./routes/usage.js', () => ({ default: handler }));
@@ -58,6 +59,7 @@ jest.unstable_mockModule('./middleware/errorHandler.js', () => ({
 jest.unstable_mockModule('../lib/build/appMeta.js', () => ({ default: { buildId: 'build-1' } }));
 jest.unstable_mockModule('../lib/build/auth.js', () => ({ default: { configured: false } }));
 jest.unstable_mockModule('../lib/build/config.js', () => ({ default: {} }));
+jest.unstable_mockModule('../lib/build/mobileConfig.js', () => ({ default: {} }));
 jest.unstable_mockModule('../lib/server/auth/getAuth.js', () => ({ default: jest.fn() }));
 jest.unstable_mockModule('../lib/server/auth/getStrategies.js', () => ({ default: jest.fn() }));
 jest.unstable_mockModule('../lib/server/log/createLogger.js', () => ({
@@ -87,6 +89,7 @@ test.each([
   ['GET', '/'],
   ['GET', '/404'],
   ['GET', '/api/page/home'],
+  ['GET', '/api/mobile/root'],
   ['GET', '/api/user'],
   ['POST', '/api/request/home/get_data'],
   ['POST', '/api/endpoints/my_endpoint'],
