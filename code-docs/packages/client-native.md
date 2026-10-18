@@ -67,7 +67,9 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   through. Its props follow the web's (`properties` is a name or the Icon block's properties);
   an element style's `color` and `fontSize` stand in for CSS `currentColor` and `1em`. It looks
   names up in `types.icons` at render (with `loading` for a spin and `icon-missing` for an
-  unknown name), and draws an empty icon when the data has neither.
+  unknown name), and draws an empty icon when the data has neither. Each built mobile page
+  carries the data of its icons as `_icons`, which the shell adds to `types.icons` before the
+  page renders.
 - The engine's `window` and `document` keys hold plain objects. `focus` and `blur` have no
   source on a phone; `online` and `offline` follow the `network` the shell passes.
 

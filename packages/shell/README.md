@@ -99,6 +99,8 @@ tab's page switches tab, and links to other sites open in the system browser.
   used.
 - One theme provider holds the theme mode for every screen, from the root's `theme` and the
   `SetDarkMode` choice; the root's `classMap`, with a dev page's own `_classMap`, styles classes.
+- Block icons are drawn from the icon data each page carries (`_icons`), which `PageScreen` adds
+  to the icon map client-native's `components.Icon` reads (`types.icons`).
 - Menu icons are drawn from the icon data the root carries, with client-native's `Icon`, in the
   drawer menu. Native tab bars take images or SF Symbols, so tabs show titles only.
 - Hermes has no `crypto.getRandomValues`, which `_uuid` needs; `expo-crypto` fills it.

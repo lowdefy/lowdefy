@@ -277,3 +277,20 @@ test('CopyToClipboard copies through the shell clipboard', async () => {
   fireEvent.press(await screen.findByText('Copy'));
   await waitFor(() => expect(clipboard.setString.mock.calls).toEqual([['JOB-42']]));
 });
+
+function findAll(node, predicate, found = []) {
+  if (node === null || typeof node === 'string') return found;
+  if (predicate(node)) found.push(node);
+  (node.children ?? []).forEach((child) => findAll(child, predicate, found));
+  return found;
+}
+
+test('an Icon block draws the icon data the page carries', async () => {
+  const housePath = 'M3 10a2 2 0 0 1 .709-1.528l7-6';
+  await renderTodayPage({
+    blocks: [{ blockId: 'home', type: 'Icon', properties: { name: 'House' } }],
+    page: { _icons: { House: { node: [['path', { d: housePath }]] } } },
+  });
+  const icon = await screen.findByLabelText('House');
+  expect(findAll(icon, (node) => node.props?.d === housePath)).not.toHaveLength(0);
+});

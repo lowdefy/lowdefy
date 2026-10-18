@@ -108,6 +108,8 @@ function PageScreen({ path, query = '' }) {
   }
   session.setCurrentPath(fullPath);
   locale.apply();
+  // The page's icons join the icon map the Icon renderer reads, which every page of the app shares.
+  Object.assign(types.icons, view.page.pageConfig._icons);
   const core = {
     apiBase: session.apiBase,
     auth: { authConfig: {}, user: state.user },
