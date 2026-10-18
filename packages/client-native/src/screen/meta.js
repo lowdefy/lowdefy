@@ -22,6 +22,8 @@ const meta = {
   valueType: null,
   slots: {
     content: 'The page content, in a scroll view.',
+    headerBottom:
+      'Blocks pinned under the screen header (under the large title or the search field), which stay in view as the page scrolls.',
     headerLeft: 'Blocks drawn at the left of the screen header, at their natural size.',
     headerRight: 'Blocks drawn at the right of the screen header, at their natural size.',
   },

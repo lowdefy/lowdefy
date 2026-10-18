@@ -34,6 +34,9 @@ requests as they do on the web.
 - Wrap the app's pages in `<ThemeProvider host storageKey theme>` so they share the theme mode;
   `SetDarkMode` and `_media: darkMode` work as on the web. A page outside one makes its own.
 - A `Screen` page reports `{ title, presentation, headerRight }` through `onScreenOptions`, for
-  the shell's router to draw the header.
+  the shell's router to draw the header. Its `headerBottom` slot is drawn on the page, pinned
+  under the header as the page scrolls; pass `headerInset`, where the header's bottom edge is in
+  the page's scroll view (an Animated header height when the page scrolls under a translucent
+  header, 0 when it sits below it).
 
 The package imports no Expo modules: a shell passes what it needs through the host.
