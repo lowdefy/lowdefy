@@ -1,0 +1,73 @@
+{
+  "name": "@lowdefy/client-native",
+  "version": "6.0.0",
+  "license": "Apache-2.0",
+  "description": "Lowdefy Client Native - the React Native renderer for Lowdefy pages, over @lowdefy/client-core",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "react native"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "swc src --out-dir dist --config-file ../../.swcrc --cli-config-file ../../.swc-cli.json --ignore \"src/test/**\"",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "pnpm build",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@lowdefy/client-core": "6.0.0",
+    "@lowdefy/engine": "6.0.0",
+    "@lowdefy/errors": "6.0.0",
+    "@lowdefy/helpers": "6.0.0",
+    "@lowdefy/operators": "6.0.0"
+  },
+  "peerDependencies": {
+    "react": "^19.2.0",
+    "react-native": "^0.88.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.29.6",
+    "@babel/plugin-transform-class-static-block": "7.29.7",
+    "@jest/globals": "29.7.0",
+    "@lowdefy/actions-core": "6.0.0",
+    "@lowdefy/operators-js": "6.0.0",
+    "@react-native/babel-preset": "0.88.0",
+    "@react-native/jest-preset": "0.88.0",
+    "@swc/cli": "0.8.1",
+    "@swc/core": "1.15.32",
+    "@testing-library/react-native": "14.1.0",
+    "babel-jest": "29.7.0",
+    "jest": "29.7.0",
+    "react": "19.3.0",
+    "react-native": "0.88.0",
+    "test-renderer": "1.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
