@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { remoteCallerHeader } from '../pairingHeaders.js';
 import { HEADLESS_USER_COOKIE } from './headlessUser.js';
 
 // Mirrors the e2e user-injection pattern (server-e2e/lib/server/auth/getUser.js):
@@ -23,7 +24,12 @@ import { HEADLESS_USER_COOKIE } from './headlessUser.js';
 // as getBrowser.js wrote it, or null on miss - the caller floors the user's
 // shape via normalizeInjectedCaller. `explicit` is true when the tool call or
 // journey named the user, so createLowdefyContext lets it beat a dev mock user.
+// A request from another machine (a phone paired with `lowdefy dev --lan`) is
+// never a headless one: the cookie would let it sign in as anyone.
 function getHeadlessUser(c) {
+  if (c.req.header(remoteCallerHeader) !== undefined) {
+    return null;
+  }
   const cookieHeader = c.req.header('cookie') ?? '';
   const match = cookieHeader.match(new RegExp(`${HEADLESS_USER_COOKIE}=([^;]+)`));
   if (!match) {

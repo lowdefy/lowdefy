@@ -59,3 +59,25 @@ test.each([
   const res = await request({ headers });
   expect(res.status).toEqual(403);
 });
+
+test.each([
+  ['with no origin', { host: '192.168.1.20:4102', 'x-lowdefy-dev-remote': '1' }],
+  [
+    'from its own page',
+    {
+      host: '192.168.1.20:4102',
+      origin: 'http://192.168.1.20:4102',
+      'sec-fetch-site': 'same-origin',
+      'x-lowdefy-dev-remote': '1',
+    },
+  ],
+])(
+  'localDevToolsOnly refuses a paired phone (the proxy marked it remote) %s',
+  async (_, headers) => {
+    const res = await request({ headers });
+    expect(res.status).toEqual(403);
+    expect((await res.json()).error).toEqual(
+      'The dev tools answer only on the computer running lowdefy dev.'
+    );
+  }
+);
