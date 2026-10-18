@@ -18,6 +18,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useRef } from 'reac
 import { type } from '@lowdefy/helpers';
 
 import BreakpointContext from '../layout/BreakpointContext.js';
+import FocusMemoryContext from './FocusMemoryContext.js';
 import formatIconTitle from '../icon/formatIconTitle.js';
 import getSfSymbol from '../icon/getSfSymbol.js';
 import HeaderActionButton from './HeaderActionButton.js';
@@ -52,9 +53,29 @@ function useHeaderSlot({ pageContextsRef, slot }) {
   return typeof slot === 'function' ? render : undefined;
 }
 
+// An action's menu items (`items`, the Menu block's item shape): picking one triggers the
+// action's event with the item's id.
+function getMenu({ config, methodsRef }) {
+  if (!type.isArray(config.items)) {
+    return null;
+  }
+  return config.items.map((item) => ({
+    destructive: item.destructive === true,
+    disabled: item.disabled === true,
+    id: item.id,
+    onPress: () =>
+      methodsRef.current.triggerEvent({
+        name: config.event ?? 'onHeaderAction',
+        event: { id: item.id },
+      }),
+    symbol: item.symbol ?? null,
+    title: item.title,
+  }));
+}
+
 // properties.headerActions as the header buttons the router draws: an SF Symbol for iOS's native
 // bar buttons, when the icon has one, and `render`, the same action as a natural-size icon button
-// for a platform or icon with none.
+// for a platform or icon with none. An action with `items` opens a menu of them.
 function useHeaderActions({ blockId, components, methodsRef, pageContextsRef, headerActions }) {
   const actionsKey = JSON.stringify(headerActions ?? []);
   return useMemo(
@@ -64,6 +85,7 @@ function useHeaderActions({ blockId, components, methodsRef, pageContextsRef, he
           disabled: config.disabled === true,
           icon: config.icon,
           id: config.id,
+          menu: getMenu({ config, methodsRef }),
           onPress: () =>
             methodsRef.current.triggerEvent({
               name: config.event ?? 'onHeaderAction',
@@ -122,24 +144,33 @@ function useHeaderSearch({ headerSearch, methodsRef }) {
 
 // onFocus fires each time the screen becomes the one shown: on its first show once its onMount
 // is done (the block is loading until then), and again after a tab switch or a back navigation
-// to it.
-function useFocusEvent({ events, focused, loading, methodsRef }) {
-  const shownRef = useRef(false);
-  const focusedRef = useRef(false);
+// to it. What the screen has fired for is kept in its page context's focus memory, so the page
+// tree mounting again onto the same context, while the screen stays shown, fires nothing.
+function useFocusEvent({ events, focused, focusMemory, loading, methodsRef }) {
   const hasOnFocus = !type.isNone(events.onFocus);
   useEffect(() => {
     if (!focused) {
-      focusedRef.current = false;
+      focusMemory.focused = false;
       return;
     }
-    if (focusedRef.current) return;
-    if (!shownRef.current && loading) return;
-    focusedRef.current = true;
-    shownRef.current = true;
+    if (focusMemory.focused) return;
+    if (!focusMemory.shown && loading) return;
+    focusMemory.focused = true;
+    focusMemory.shown = true;
     if (hasOnFocus) {
       methodsRef.current.triggerEvent({ name: 'onFocus' });
     }
-  }, [focused, hasOnFocus, loading, methodsRef]);
+  }, [focused, focusMemory, hasOnFocus, loading, methodsRef]);
+}
+
+// The footer slot, for the page to draw below its scroll view (ScreenFooter). It is set on every
+// render, so the footer shows the slot as the Screen last rendered it, and cleared when the
+// Screen goes.
+function useFooterSlot({ footer, slot }) {
+  useEffect(() => {
+    footer.set(typeof slot === 'function' ? () => slot() : null);
+  });
+  useEffect(() => () => footer.set(null), [footer]);
 }
 
 // events.onRefresh as pull-to-refresh on the page's scroll view: the spinner shows until the
@@ -159,21 +190,24 @@ function useRefreshEvent({ events, methodsRef, setRefresh }) {
  * - `title`, `presentation` (card, modal or sheet) and `largeTitle`;
  * - `headerLeft` and `headerRight`: functions that draw those slots' blocks at their natural
  *   size, or undefined;
- * - `headerActions`: `[{ id, title, icon, sfSymbol, placement, disabled, onPress, render }]`, the
- *   header's icon buttons (`sfSymbol` is null for an icon with no SF Symbol; `render` draws the
- *   action as an icon button);
+ * - `headerActions`: `[{ id, title, icon, sfSymbol, placement, disabled, onPress, menu, render }]`,
+ *   the header's icon buttons (`sfSymbol` is null for an icon with no SF Symbol; `menu` is null,
+ *   or the items `[{ id, title, symbol, destructive, disabled, onPress }]` the button opens a menu
+ *   of; `render` draws the action as an icon button, opening its menu when it has one);
  * - `headerSearch`: `{ placeholder, autoFocus, hideWhenScrolling, onChangeText, onSearch,
  *   onCancel }` for a native search bar, or undefined;
  * - `headerBottom`: whether the page pins blocks under the bar, so the router leaves out the
  *   bar's own hairline (the strip draws one under itself).
  *
  * The headerBottom slot is drawn here, as the page's first content, pinned under the bar as the
- * page scrolls (HeaderBottom, from the page's scroll offset and header inset). Pull-to-refresh
- * (onRefresh) and onFocus come from the page's screen too (ScreenContext).
+ * page scrolls (HeaderBottom, from the page's scroll offset and header inset). The footer slot is
+ * drawn by the page below its scroll view, pinned above the tab bar and the keyboard.
+ * Pull-to-refresh (onRefresh) and onFocus come from the page's screen too (ScreenContext).
  */
 function Screen({ blockId, components, content, events, loading, methods, properties }) {
   const onScreenOptions = useContext(ScreenOptionsContext);
-  const { focused, headerInset, scrollY, setRefresh } = useContext(ScreenContext);
+  const { focused, footer, headerInset, scrollY, setRefresh } = useContext(ScreenContext);
+  const focusMemory = useContext(FocusMemoryContext);
   const methodsRef = useRef(methods);
   methodsRef.current = methods;
   const pageContextsRef = useRef(null);
@@ -192,8 +226,9 @@ function Screen({ blockId, components, content, events, loading, methods, proper
     pageContextsRef,
   });
   const headerSearch = useHeaderSearch({ headerSearch: properties.headerSearch, methodsRef });
-  useFocusEvent({ events, focused, loading, methodsRef });
+  useFocusEvent({ events, focused, focusMemory, loading, methodsRef });
   useRefreshEvent({ events, methodsRef, setRefresh });
+  useFooterSlot({ footer, slot: content.footer });
 
   const { presentation = 'card', title } = properties;
   const largeTitle = properties.largeTitle === true;

@@ -87,14 +87,24 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   shown route, as before.
 - `Screen` reports its header to the shell's router (`onScreenOptions`): `title`, `largeTitle`,
   `presentation`, `headerLeft` and `headerRight` (slot render functions), `headerActions` (icon
-  buttons with an SF Symbol from `getSfSymbol`, an `onPress` and a `render` that draws a
-  `HeaderActionButton`) and `headerSearch` (search bar callbacks; `onSearchChange` is debounced).
+  buttons with an SF Symbol from `getSfSymbol`, an `onPress`, a `menu` of items (`id`, `title`,
+  `symbol`, `destructive`, `disabled`, `onPress`) or null, and a `render` that draws a
+  `HeaderActionButton`, which opens the menu in a `Modal` where the shell has no native menu)
+  and `headerSearch` (search bar callbacks; `onSearchChange` is debounced).
   Header slots render inside `NaturalSizeContext`, so `BlockLayout` gives their blocks their
   content's size rather than a column width; a span-24 block would stretch the native bar item
   across the header and truncate the title. `ScreenContext` carries the screen's `focused` flag
-  (onFocus fires on each false-to-true change, the first one after onMount) and `setRefresh`,
+  (onFocus fires on each false-to-true change, the first one after onMount), `setRefresh`,
   which turns on the page ScrollView's `RefreshControl` for `onRefresh` and holds `refreshing`
-  until the event's promise settles.
+  until the event's promise settles (whether the control is there is read from the page config's
+  `onRefresh`, never set as the Screen mounts: the iOS ScrollView draws the control ahead of its
+  content, so toggling it remounts the page tree), and `footer`, the store (`createFooterStore`)
+  the Screen sets its `footer` slot in. `ScreenFooter` draws that slot below the ScrollView, padded by
+  `LowdefyPage`'s `bottomInset` (the shell's bottom safe area: tab bar, home indicator) and kept
+  above the keyboard by a `KeyboardAvoidingView`; only it re-renders when the slot is set, so the
+  Screen's every-render update does not render the page again. What onFocus has fired for is kept
+  per page context (`getFocusMemory`, through `FocusMemoryContext`), not in the Screen's refs, so
+  the page tree mounting again onto a kept context does not fire it again.
 - A Screen's `headerBottom` slot is drawn by the Screen block itself, as the page's first content
   (`HeaderBottom`, `zIndex: 1` over the content after it), not by the router: React Native's
   `stickyHeaderIndices` pin at the scroll view's top, which on iOS is under the translucent bar.

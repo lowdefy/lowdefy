@@ -22,6 +22,8 @@
 // - colorCellNested: tertiarySystemGroupedBackground, a field or box inside a cell.
 // - colorCellPressed: systemGray4, a pressed cell.
 // - colorSystemBackground: systemBackground, a plain (ungrouped) screen.
+// - colorBar: the bar material (systemChromeMaterial) of a toolbar or a screen's footer, drawn
+//   without its blur.
 // - colorSeparator, colorOpaqueSeparator: the hairline between cells.
 // - colorLabel, colorSecondaryLabel, colorTertiaryLabel, colorQuaternaryLabel: text tiers.
 // - colorSystemFill to colorQuaternarySystemFill: fills for controls, from thin shapes (a
@@ -33,6 +35,7 @@ const iosColors = {
     colorCellNested: '#F2F2F7',
     colorCellPressed: '#D1D1D6',
     colorSystemBackground: '#FFFFFF',
+    colorBar: 'rgba(249,249,249,0.94)',
     colorSeparator: 'rgba(60,60,67,0.29)',
     colorOpaqueSeparator: '#C6C6C8',
     colorLabel: '#000000',
@@ -50,6 +53,7 @@ const iosColors = {
     colorCellNested: '#2C2C2E',
     colorCellPressed: '#3A3A3C',
     colorSystemBackground: '#000000',
+    colorBar: 'rgba(22,22,24,0.94)',
     colorSeparator: 'rgba(84,84,88,0.6)',
     colorOpaqueSeparator: '#38383A',
     colorLabel: '#FFFFFF',

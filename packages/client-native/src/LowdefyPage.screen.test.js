@@ -273,6 +273,71 @@ test('a Screen reports a large title, header search and header actions', async (
   expect(findAll(button, (node) => node.props?.d === 'M12 5v14')).not.toHaveLength(0);
 });
 
+test('a header action with items opens a menu whose picked item fires its id', async () => {
+  const record = jest.fn();
+  const { onScreenOptions, view } = renderScreen({
+    record,
+    page: {
+      id: 'home',
+      type: 'Screen',
+      properties: {
+        title: 'Task',
+        headerActions: [
+          {
+            id: 'more',
+            icon: 'Plus',
+            title: 'More',
+            items: [
+              { id: 'copy_link', title: 'Copy link', symbol: 'link' },
+              { id: 'delete', title: 'Delete', destructive: true },
+            ],
+          },
+        ],
+      },
+      events: {
+        onHeaderAction: [{ id: 'action', type: 'Record', params: { action: { _event: 'id' } } }],
+      },
+      blocks: [{ id: 'body', type: 'Paragraph', properties: { content: 'Body' } }],
+    },
+  });
+  await view;
+  expect(await screen.findByText('Body')).toBeTruthy();
+  const [more] = onScreenOptions.mock.calls.at(-1)[0].headerActions;
+  expect(
+    more.menu.map(({ destructive, disabled, id, symbol, title }) => ({
+      destructive,
+      disabled,
+      id,
+      symbol,
+      title,
+    }))
+  ).toEqual([
+    { destructive: false, disabled: false, id: 'copy_link', symbol: 'link', title: 'Copy link' },
+    { destructive: true, disabled: false, id: 'delete', symbol: null, title: 'Delete' },
+  ]);
+  // A native menu (iOS) runs the picked item's onPress.
+  await act(async () => {
+    await more.menu[0].onPress();
+  });
+  // Where there is no native menu, the icon button opens the menu itself, in a React Native Modal,
+  // which reads window (removed for these tests, test/removeWindow.js).
+  global.window = global;
+  await render(more.render());
+  expect(screen.queryByTestId('header-menu-delete')).toBeNull();
+  await act(async () => {
+    fireEvent.press(screen.getByTestId('home_more'));
+  });
+  await act(async () => {
+    fireEvent.press(screen.getByTestId('header-menu-delete'));
+  });
+  expect(record.mock.calls.map(([params]) => params)).toEqual([
+    { action: 'copy_link' },
+    { action: 'delete' },
+  ]);
+  expect(screen.queryByTestId('header-menu-delete')).toBeNull();
+  delete global.window;
+});
+
 test('header slot blocks take their natural size, not the column width', async () => {
   const { onScreenOptions, view } = renderScreen({
     page: {
@@ -437,4 +502,109 @@ test('a screen first rendered unfocused fires onFocus when it is first shown', a
     rendered.rerender(element(true));
   });
   expect(record).toHaveBeenCalledTimes(1);
+});
+
+test('a page tree mounted again onto its kept context while shown does not fire onFocus again', async () => {
+  const record = jest.fn();
+  const { host } = createFakeHost({
+    path: '/home',
+    response: { id: 'load', success: true, response: [{ name: 'Row 1' }] },
+  });
+  const core = createCore();
+  const types = createTypes({ icons: { Plus: plus }, record });
+  // onFocus loads the page, as a Screen's load chain does: a request, then state from it.
+  const pageConfig = buildPage({
+    id: 'home',
+    type: 'Screen',
+    requests: [{ id: 'load', type: 'MongoDBFind', payload: {} }],
+    events: {
+      onFocus: [
+        { id: 'focus', type: 'Record', params: { event: 'focus' } },
+        { id: 'fetch', type: 'Request', params: 'load' },
+        { id: 'set', type: 'SetState', params: { rows: { _request: 'load' } } },
+      ],
+    },
+    blocks: [{ id: 'body', type: 'Paragraph', properties: { content: 'Body' } }],
+  });
+  // A shell mounts the page again (a new key) when the page's version changes; the route
+  // instance, and so the page context, stays.
+  const element = (version) => (
+    <LowdefyPage
+      core={core}
+      focused={true}
+      host={host}
+      instanceId="route-1"
+      key={version}
+      onScreenOptions={jest.fn()}
+      pageConfig={pageConfig}
+      rootConfig={rootConfig}
+      types={types}
+    />
+  );
+  const rendered = await render(element('v1'));
+  expect(await screen.findByText('Body')).toBeTruthy();
+  await act(async () => undefined);
+  await act(async () => {
+    rendered.rerender(element('v2'));
+  });
+  expect(await screen.findByText('Body')).toBeTruthy();
+  await act(async () => undefined);
+  expect(record).toHaveBeenCalledTimes(1);
+  expect(host.fetch).toHaveBeenCalledTimes(1);
+});
+
+test('a Screen footer is drawn below the scroll view, above the bottom inset', async () => {
+  const { host } = createFakeHost({ path: '/home' });
+  const page = buildPage({
+    id: 'home',
+    type: 'Screen',
+    events: { onInit: [{ id: 'init', type: 'SetState', params: { label: 'Send' } }] },
+    slots: {
+      footer: {
+        blocks: [
+          {
+            id: 'send',
+            type: 'Button',
+            properties: { title: { _state: 'label' } },
+            events: {
+              onClick: [{ id: 'sent', type: 'SetState', params: { label: 'Sent' } }],
+            },
+          },
+        ],
+      },
+    },
+    blocks: [{ id: 'body', type: 'Paragraph', properties: { content: 'Body' } }],
+  });
+  await render(
+    <LowdefyPage
+      bottomInset={83}
+      core={createCore()}
+      host={host}
+      pageConfig={page}
+      rootConfig={rootConfig}
+      types={createTypes()}
+    />
+  );
+  expect(await screen.findByText('Send')).toBeTruthy();
+  const footer = screen.getByTestId('screen-footer');
+  const [scrollView] = findAll(screen.root, (node) => node.type === 'RCTScrollView');
+  expect(findAll(footer, (node) => node.props?.children === 'Send')).not.toHaveLength(0);
+  expect(findAll(scrollView, (node) => node.props?.children === 'Send')).toHaveLength(0);
+  expect(findAll(scrollView, (node) => node.props?.children === 'Body')).not.toHaveLength(0);
+  expect(StyleSheet.flatten(footer.props.style).borderTopWidth).toBe(StyleSheet.hairlineWidth);
+  expect(findAll(footer, (node) => node.props?.style?.paddingBottom === 83)).not.toHaveLength(0);
+  // The footer's blocks update with the page's state.
+  await act(async () => {
+    fireEvent.press(screen.getByText('Send'));
+  });
+  expect(await screen.findByText('Sent')).toBeTruthy();
+});
+
+test('a Screen without a footer draws none', async () => {
+  const { view } = renderScreen({
+    page: { id: 'home', type: 'Screen', blocks: [{ id: 'body', type: 'Paragraph' }] },
+  });
+  await view;
+  await act(async () => undefined);
+  expect(screen.queryByTestId('screen-footer')).toBeNull();
 });

@@ -17,36 +17,43 @@
 import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { Animated, RefreshControl, useWindowDimensions } from 'react-native';
 import { getAppContext } from '@lowdefy/engine';
-import { appStorageKey, pageInstanceKey, serializer } from '@lowdefy/helpers';
+import { appStorageKey, pageInstanceKey, serializer, type } from '@lowdefy/helpers';
 import { getBreakpoint } from '@lowdefy/layout-native';
 
 import Block from './block/Block.js';
 import BreakpointContext from './layout/BreakpointContext.js';
 import Context from './Context.js';
 import createScreenGlobals from './globals/createScreenGlobals.js';
+import createFooterStore from './screen/createFooterStore.js';
 import ElementsContext from './elements/ElementsContext.js';
+import FocusMemoryContext from './screen/FocusMemoryContext.js';
+import getFocusMemory from './screen/getFocusMemory.js';
 import initNativeLowdefy from './initNativeLowdefy.js';
 import PageStyleContext from './style/PageStyleContext.js';
 import ScreenContext from './screen/ScreenContext.js';
+import ScreenFooter from './screen/ScreenFooter.js';
 import ScreenOptionsContext from './screen/ScreenOptionsContext.js';
 import ThemeContext from './theme/ThemeContext.js';
 import ThemeProvider from './theme/ThemeProvider.js';
 import useElementRef from './elements/useElementRef.js';
 
 // Pull-to-refresh on the page's scroll view, for a Screen with onRefresh: the native spinner shows
-// until the refresh function's promise settles.
-function useRefresh() {
+// until the refresh function's promise settles. Whether the scroll view has its refresh control is
+// read from the page config, before the page renders, never from the Screen as it mounts: React
+// Native's ScrollView draws the control ahead of its content, so the content moves, and mounts
+// again, when the control comes or goes. A Screen that turned the control on as it mounted would
+// mount again, turn it off as it unmounted, and so on, running onMount each time.
+function useRefresh({ pageConfig }) {
   const refreshRef = useRef(null);
-  const [hasRefresh, setHasRefresh] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const setRefresh = useCallback((refresh) => {
     refreshRef.current = refresh;
-    setHasRefresh(refresh !== null);
   }, []);
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     Promise.resolve(refreshRef.current?.()).finally(() => setRefreshing(false));
   }, []);
+  const hasRefresh = !type.isNone(pageConfig.events?.onRefresh);
   return { hasRefresh, onRefresh, refreshing, setRefresh };
 }
 
@@ -65,6 +72,7 @@ function useScrollY() {
 }
 
 const Page = ({
+  bottomInset,
   core,
   focused,
   globals,
@@ -110,11 +118,12 @@ const Page = ({
   const contextKey =
     pageConfig.dynamic === true ? `${screenKey}:${buildRef.current.build}` : screenKey;
 
-  const { hasRefresh, onRefresh, refreshing, setRefresh } = useRefresh();
+  const { hasRefresh, onRefresh, refreshing, setRefresh } = useRefresh({ pageConfig });
   const { onScroll, scrollY } = useScrollY();
+  const [footer] = useState(createFooterStore);
   const screen = useMemo(
-    () => ({ focused, headerInset, scrollY, setRefresh }),
-    [focused, headerInset, scrollY, setRefresh]
+    () => ({ focused, footer, headerInset, scrollY, setRefresh }),
+    [focused, footer, headerInset, scrollY, setRefresh]
   );
 
   const lowdefy = initNativeLowdefy({
@@ -169,17 +178,20 @@ const Page = ({
                 {(context) => {
                   if (!context._internal.onInitDone) return null;
                   return (
-                    <Block
-                      block={context._internal.RootSlots.map[pageConfig.blockId]}
-                      Blocks={context._internal.RootSlots}
-                      context={context}
-                      lowdefy={lowdefy}
-                      parentLoading={false}
-                    />
+                    <FocusMemoryContext.Provider value={getFocusMemory(context)}>
+                      <Block
+                        block={context._internal.RootSlots.map[pageConfig.blockId]}
+                        Blocks={context._internal.RootSlots}
+                        context={context}
+                        lowdefy={lowdefy}
+                        parentLoading={false}
+                      />
+                    </FocusMemoryContext.Provider>
                   );
                 }}
               </Context>
             </Animated.ScrollView>
+            <ScreenFooter bottomInset={bottomInset} footer={footer} />
           </ScreenContext.Provider>
         </ScreenOptionsContext.Provider>
       </PageStyleContext.Provider>
@@ -188,7 +200,7 @@ const Page = ({
 };
 
 /**
- * Renders one Lowdefy page as native views, in a ScrollView.
+ * Renders one Lowdefy page as native views, in a ScrollView, with a Screen's footer slot below it.
  *
  * @param {Object} props
  * @param {Object} props.core What the page needs to build the app's core the first time:
@@ -222,11 +234,14 @@ const Page = ({
  *   Animated value that follows a collapsing large title) when the page scrolls under a
  *   translucent bar, or 0 when the page sits below the bar. Defaults to 0.
  * @param {Object} [props.resetContext] `{ reset, setReset }`: rebuild the page context once.
+ * @param {number} [props.bottomInset] The screen's bottom safe area: the tab bar and the home
+ *   indicator, which a Screen's footer is drawn above. Defaults to 0.
  *
  * A shell wraps its pages in one ThemeProvider, so they share the theme mode; a page outside one
  * makes its own.
  */
 const LowdefyPage = ({
+  bottomInset = 0,
   core,
   focused = true,
   headerInset = 0,
@@ -264,6 +279,7 @@ const LowdefyPage = ({
   const page = (
     <ElementsContext.Provider value={elements}>
       <Page
+        bottomInset={bottomInset}
         core={core}
         focused={focused}
         globals={globals}

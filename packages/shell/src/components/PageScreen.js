@@ -25,6 +25,7 @@ import React, {
 import { Platform } from 'react-native';
 import { useFocusEffect, useIsFocused, useNavigation, useRoute } from 'expo-router';
 import { useAnimatedHeaderHeight } from 'expo-router/native-stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LowdefyPage } from '@lowdefy/client-native';
 
 import evaluateJsEntries from '../js/evaluateJsEntries.js';
@@ -95,6 +96,8 @@ function PageScreen({ path, query = '' }) {
   const navigation = useNavigation();
   const route = useRoute();
   const focused = useIsFocused();
+  // The bottom safe area of the screen's frame: the tab bar of a tab, and the home indicator.
+  const { bottom: bottomInset } = useSafeAreaInsets();
   const { searchBarRef, setAutoFocus } = useSearchAutoFocus({ focused });
   const { headerInset, updateHeaderInset } = useHeaderInset();
   const [loadError, setLoadError] = useState(null);
@@ -173,6 +176,7 @@ function PageScreen({ path, query = '' }) {
     <LowdefyPage
       // A new generation (another caller or build) or a new version of the page rebuilds it.
       key={`${state.generation}:${view.page.hash ?? view.page.etag ?? ''}`}
+      bottomInset={bottomInset}
       core={core}
       focused={focused}
       headerInset={headerInset}

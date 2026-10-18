@@ -21,8 +21,9 @@ import getFrame from './getFrame.js';
 import getPresentation from './getPresentation.js';
 import getSlotRootPath from './getSlotRootPath.js';
 import getStackOptions from './getStackOptions.js';
-import isPageUnderHeader from './isPageUnderHeader.js';
+import getTabHref from './getTabHref.js';
 import getTabIcons from './getTabIcons.js';
+import isPageUnderHeader from './isPageUnderHeader.js';
 import toRouterHref from './toRouterHref.js';
 import { createRoot } from '../test/fixtures.js';
 
@@ -63,6 +64,14 @@ test('toRouterHref switches tabs for a link to a tab page and keeps the query', 
   expect(toRouterHref({ pathname: '/jobs', query: 'a=1', root: stackRoot })).toBe('/jobs?a=1');
 });
 
+test('getTabHref names the tab that shows a page, and no tab for other pages and frames', () => {
+  expect(getTabHref({ path: 'today', query: '', root: tabsRoot })).toBe('/(t0)');
+  expect(getTabHref({ path: 'jobs', query: 'a=1', root: tabsRoot })).toBe('/(t1)?a=1');
+  expect(getTabHref({ path: 'jobs/12', query: '', root: tabsRoot })).toBeNull();
+  const stackRoot = createRoot({ menus: { stack: true } });
+  expect(getTabHref({ path: 'jobs', query: '', root: stackRoot })).toBeNull();
+});
+
 test('getPresentation maps Screen presentations to native stack presentations', () => {
   expect(getPresentation('card')).toBe('card');
   expect(getPresentation('modal')).toBe('modal');
@@ -74,6 +83,7 @@ function headerAction(overrides) {
   return {
     disabled: false,
     id: 'add',
+    menu: null,
     onPress: jest.fn(),
     placement: 'right',
     render: () => 'icon button',
@@ -150,6 +160,62 @@ test('getStackOptions draws header actions as native SF Symbol bar buttons on iO
   ]);
   // An icon with no SF Symbol draws as its own icon button.
   expect(options.unstable_headerLeftItems()).toEqual([{ type: 'custom', element: 'icon button' }]);
+});
+
+test('getStackOptions draws a header action with items as a native menu on iOS', () => {
+  const copy = { destructive: false, disabled: false, id: 'copy_link', onPress: jest.fn() };
+  const remove = { destructive: true, disabled: false, id: 'delete', onPress: jest.fn() };
+  const more = headerAction({
+    id: 'more',
+    menu: [
+      { ...copy, symbol: 'link', title: 'Copy link' },
+      { ...remove, symbol: null, title: 'Delete' },
+    ],
+    sfSymbol: 'ellipsis',
+    title: 'More',
+  });
+  const options = getStackOptions({
+    options: { ...screenOptions, headerActions: [more] },
+    platform: 'ios',
+    searchBarRef: { current: null },
+  });
+  expect(options.unstable_headerRightItems()).toEqual([
+    {
+      type: 'menu',
+      accessibilityLabel: 'More',
+      disabled: false,
+      icon: { type: 'sfSymbol', name: 'ellipsis' },
+      identifier: 'more',
+      label: 'More',
+      menu: {
+        items: [
+          {
+            type: 'action',
+            destructive: false,
+            disabled: false,
+            icon: { type: 'sfSymbol', name: 'link' },
+            label: 'Copy link',
+            onPress: copy.onPress,
+          },
+          {
+            type: 'action',
+            destructive: true,
+            disabled: false,
+            icon: undefined,
+            label: 'Delete',
+            onPress: remove.onPress,
+          },
+        ],
+      },
+    },
+  ]);
+  // An action with a menu stays a native menu when its icon has no SF Symbol.
+  const plain = getStackOptions({
+    options: { ...screenOptions, headerActions: [{ ...more, sfSymbol: null }] },
+    platform: 'ios',
+    searchBarRef: { current: null },
+  });
+  expect(plain.unstable_headerRightItems()[0]).toMatchObject({ type: 'menu', icon: undefined });
 });
 
 test('getStackOptions draws a header slot alone as its custom view on iOS', () => {

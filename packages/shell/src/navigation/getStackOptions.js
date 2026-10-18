@@ -21,9 +21,38 @@ import getPresentation from './getPresentation.js';
 
 const SIDES = { left: 'Left', right: 'Right' };
 
+function toSfSymbol(name) {
+  return name === null ? undefined : { type: 'sfSymbol', name };
+}
+
+// A menu item as a native UIMenu action: its title, its SF Symbol, and red when destructive.
+function toNativeMenuAction(item) {
+  return {
+    type: 'action',
+    destructive: item.destructive,
+    disabled: item.disabled,
+    icon: toSfSymbol(item.symbol),
+    label: item.title,
+    onPress: item.onPress,
+  };
+}
+
 // An action as a native iOS bar button: its SF Symbol, in the bar's shared glass background. An
-// icon with no SF Symbol draws as its Lucide icon in a custom item.
+// action with a menu is a bar button that opens a native menu (UIMenu) of its items, drawn with
+// its title when its icon has no SF Symbol. Any other icon with no SF Symbol draws as its Lucide
+// icon in a custom item.
 function toNativeItem(action) {
+  if (action.menu !== null) {
+    return {
+      type: 'menu',
+      accessibilityLabel: action.title,
+      disabled: action.disabled,
+      icon: toSfSymbol(action.sfSymbol),
+      identifier: action.id,
+      label: action.title,
+      menu: { items: action.menu.map(toNativeMenuAction) },
+    };
+  }
   if (action.sfSymbol === null) {
     return { type: 'custom', element: action.render() };
   }

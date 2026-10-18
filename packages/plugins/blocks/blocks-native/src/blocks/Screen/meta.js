@@ -28,6 +28,8 @@ export default {
       'Blocks drawn at the left of the screen header, at their natural size. Prefer `headerActions` for icon buttons.',
     headerRight:
       'Blocks drawn at the right of the screen header, at their natural size. Prefer `headerActions` for icon buttons.',
+    footer:
+      'Blocks pinned to the bottom of the screen, outside the scroll view, above the tab bar and the keyboard, on the bar background with a hairline above. For a Composer, or actions that stay in reach.',
   },
   events: {
     onFocus:
@@ -39,7 +41,7 @@ export default {
     onSearchChange:
       'Trigger actions when the header search text changes, once typing pauses (`headerSearch.debounce`), and with an empty value when the search is cancelled. `_event: value` is the search text.',
     onHeaderAction:
-      'Trigger actions when a header action without its own `event` is pressed. `_event: id` is the action id.',
+      'Trigger actions when a header action without its own `event` is pressed, or an item of its menu is picked. `_event: id` is the action id, or the picked item id.',
   },
   properties: {
     type: 'object',
@@ -133,6 +135,35 @@ export default {
               type: 'boolean',
               default: false,
               description: 'Draw the button dimmed and ignore presses.',
+            },
+            items: {
+              type: 'array',
+              description:
+                "Make the button open a menu of these items, a native menu on iOS, such as a ⋯ menu of a detail page. Picking an item triggers the button's `event` with the item's id as `_event: id`.",
+              items: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['id', 'title'],
+                properties: {
+                  id: { type: 'string', description: 'The item id, the `_event: id` it triggers.' },
+                  title: { type: 'string', description: 'The item text.' },
+                  symbol: {
+                    type: 'string',
+                    description:
+                      'An SF Symbol name, such as `link` or `trash`, drawn beside the item on iOS.',
+                  },
+                  destructive: {
+                    type: 'boolean',
+                    default: false,
+                    description: 'Draw the item in red, for actions such as Delete.',
+                  },
+                  disabled: {
+                    type: 'boolean',
+                    default: false,
+                    description: 'Show the item, dimmed.',
+                  },
+                },
+              },
             },
           },
         },

@@ -26,6 +26,8 @@ const meta = {
       'Blocks pinned under the screen header (under the large title or the search field), which stay in view as the page scrolls.',
     headerLeft: 'Blocks drawn at the left of the screen header, at their natural size.',
     headerRight: 'Blocks drawn at the right of the screen header, at their natural size.',
+    footer:
+      'Blocks pinned to the bottom of the screen, outside the scroll view, above the tab bar and the keyboard.',
   },
 };
 

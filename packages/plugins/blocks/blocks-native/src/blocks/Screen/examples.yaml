@@ -120,9 +120,9 @@
           properties:
             title: All spaces
 
-# A detail page: a standard title, and two header buttons that each trigger their own event.
-# The page reads its key from the query it was opened with; two task screens stacked on each
-# other keep their own state.
+# A detail page: a standard title, a header button that triggers its own event, and a ⋯ menu
+# whose picked item reaches onHeaderAction. The page reads its key from the query it was opened
+# with; two task screens stacked on each other keep their own state.
 - id: m-task
   type: Screen
   properties:
@@ -136,6 +136,18 @@
         icon: edit
         sfSymbol: square.and.pencil
         event: onEdit
+      - id: more
+        icon: Ellipsis
+        sfSymbol: ellipsis
+        title: More
+        items:
+          - id: copy_link
+            title: Copy link
+            symbol: link
+          - id: archive
+            title: Archive
+            symbol: archivebox
+            destructive: true
   events:
     onInit:
       - id: key
@@ -146,6 +158,16 @@
     onShare:
       - id: copy
         type: CopyToClipboard
+        params:
+          copy:
+            _state: task.url
+    onHeaderAction:
+      - id: copy_link
+        type: CopyToClipboard
+        skip:
+          _ne:
+            - _event: id
+            - copy_link
         params:
           copy:
             _state: task.url

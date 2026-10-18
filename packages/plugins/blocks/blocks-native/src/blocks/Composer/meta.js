@@ -136,7 +136,7 @@ export default {
         type: 'boolean',
         default: true,
         description:
-          'Keep the composer above the keyboard. Place it at the bottom of the screen, outside the scrolling content.',
+          'Keep the composer above the keyboard. Place it in the Screen `footer` slot, which pins it to the bottom of the screen outside the scrolling content.',
       },
       theme,
       title: {
