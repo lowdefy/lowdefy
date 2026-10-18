@@ -36,11 +36,25 @@ import resolveDynamicContent from './dynamic/resolveDynamicContent.js';
 // means you are signed in - and every app's 404 page stops needing to serve a
 // signed-out visitor who was refused a protected page.
 //
+// - wrong_surface: the page is for the other surface. A shell (surface
+//   "mobile", sent as x-lowdefy-shell) opens only pages whose target is mobile
+//   or both; a browser (surface "web") never opens a mobile-only page. Checked
+//   once access is allowed, so the gate never reveals a page the caller may not
+//   open. It serves the user's experience, not security: the header is set by
+//   the client, and page access stays with auth.pages.
+//
 // The default is a build-resolved boolean, coarser than the glob lists that
 // produced it on purpose: an id absent from the build could still match a
 // declared pattern, and matching globs on the request path to change the answer
 // for URLs that are wrong anyway is a cost the artifact exists to avoid.
-async function getPageConfig(context, { path, urlQuery }) {
+function servesSurface({ target, surface }) {
+  if (surface === 'mobile') {
+    return target === 'mobile' || target === 'both';
+  }
+  return target !== 'mobile';
+}
+
+async function getPageConfig(context, { path, urlQuery, surface = 'web' }) {
   const routes = await context.readConfigFile('routes.json');
   const match = matchPagePath({ routes, path });
   if (match === null) {
@@ -55,6 +69,9 @@ async function getPageConfig(context, { path, urlQuery }) {
   if (outcome === 'allow') {
     // eslint-disable-next-line no-unused-vars
     const { auth, ...rest } = pageConfig;
+    if (!servesSurface({ target: rest.target, surface })) {
+      return { status: 'wrong_surface', pageId, pathParams, surface: rest.target };
+    }
     if (rest.dynamic !== true) {
       // Use serializer.serialize to ensure ~k keys (non-enumerable after deserialize)
       // are made enumerable again for JSON transfer to client
