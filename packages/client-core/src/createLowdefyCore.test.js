@@ -198,3 +198,134 @@ test('createLowdefyCore throws when the host is not an object', () => {
     'Lowdefy client host is not an object. Received undefined.'
   );
 });
+
+function createBearerHost(token) {
+  let held = token;
+  return {
+    ...createFakeHost(),
+    authTransport: 'bearer',
+    tokenStore: {
+      get: jest.fn(() => held),
+      set: jest.fn(async (value) => {
+        held = value;
+      }),
+      clear: jest.fn(async () => {
+        held = null;
+      }),
+    },
+  };
+}
+
+test('a cookie host sends requests and endpoint calls exactly as before', async () => {
+  const { host, lowdefy } = createCore({ apiBase: '/crm' });
+  await lowdefy._internal.callRequest({
+    actionId: 'a1',
+    blockId: 'b1',
+    pageId: 'home',
+    payload: { x: 1 },
+    requestId: 'list',
+  });
+  await lowdefy._internal.callAPI({
+    blockId: 'b1',
+    endpointId: 'save',
+    pageId: 'home',
+    payload: {},
+  });
+  expect(host.fetch.mock.calls).toEqual([
+    [
+      '/crm/api/request/home/list',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-lowdefy-build': 'build-1' },
+        body: JSON.stringify({ actionId: 'a1', blockId: 'b1', payload: { x: 1 } }),
+      },
+    ],
+    [
+      '/crm/api/endpoints/save',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-lowdefy-build': 'build-1' },
+        body: JSON.stringify({ payload: {}, pageId: 'home', blockId: 'b1' }),
+      },
+    ],
+  ]);
+});
+
+test('a bearer host sends its token on requests and endpoint calls', async () => {
+  const host = createBearerHost('session.sig');
+  const { lowdefy } = createCore({ apiBase: 'https://app.example.com', host });
+  await lowdefy._internal.callRequest({ pageId: 'home', requestId: 'list', payload: {} });
+  await lowdefy._internal.callAPI({ endpointId: 'save', payload: {} });
+  expect(host.fetch.mock.calls.map(([, init]) => init.headers.Authorization)).toEqual([
+    'Bearer session.sig',
+    'Bearer session.sig',
+  ]);
+});
+
+test('a bearer host sends the build id on page requests and none on endpoint calls', async () => {
+  const host = createBearerHost('session.sig');
+  const { lowdefy } = createCore({ host });
+  await lowdefy._internal.callRequest({ pageId: 'home', requestId: 'list', payload: {} });
+  await lowdefy._internal.callAPI({ endpointId: 'save', payload: {} });
+  expect(host.fetch.mock.calls[0][1].headers['x-lowdefy-build']).toBe('build-1');
+  expect(host.fetch.mock.calls[1][1].headers).not.toHaveProperty('x-lowdefy-build');
+});
+
+test('a bearer host never has an endpoint call refused for a server build change', async () => {
+  const host = createBearerHost('session.sig');
+  host.fetch.mockResolvedValue(response({ body: { saved: true } }));
+  const { lowdefy } = createCore({ host });
+  await expect(lowdefy._internal.callAPI({ endpointId: 'save', payload: {} })).resolves.toEqual({
+    saved: true,
+  });
+  expect(host.onBuildChanged).not.toHaveBeenCalled();
+});
+
+test.each([
+  ['request', (lowdefy) => lowdefy._internal.callRequest({ pageId: 'home', requestId: 'list' })],
+  ['endpoint call', (lowdefy) => lowdefy._internal.callAPI({ endpointId: 'save', payload: {} })],
+])(
+  'a 401 to a bearer %s clears the token, calls onCallerChanged and never settles',
+  async (_, call) => {
+    const host = createBearerHost('session.sig');
+    host.fetch.mockResolvedValue(
+      response({
+        status: 401,
+        body: { name: 'AuthenticationError', message: 'Authentication required.' },
+        headers: { 'x-lowdefy-caller': '' },
+      })
+    );
+    const { lowdefy } = createCore({ host });
+    expect(await settles(call(lowdefy))).toBe(false);
+    expect(host.tokenStore.clear).toHaveBeenCalledTimes(1);
+    expect(host.tokenStore.get()).toBe(null);
+    expect(host.onCallerChanged.mock.calls).toEqual([
+      [{ caller: '', session: null, roles: null, memberships: null }],
+    ]);
+  }
+);
+
+test('a bearer websocket sends its token as a header on the upgrade', () => {
+  const host = createBearerHost('session.sig');
+  const { lowdefy } = createCore({ apiBase: '/crm', host });
+  lowdefy._internal.websocketClient.connect();
+  expect(host.WebSocket.mock.calls).toEqual([
+    [
+      'wss://app.example.com/crm/api/websocket',
+      undefined,
+      { headers: { Authorization: 'Bearer session.sig' } },
+    ],
+  ]);
+});
+
+test('createLowdefyCore throws for a host with an unknown authTransport', () => {
+  expect(() => createCore({ host: { ...createFakeHost(), authTransport: 'jwt' } })).toThrow(
+    'Lowdefy client host authTransport must be "cookie" or "bearer". Received "jwt".'
+  );
+});
+
+test('createLowdefyCore throws for a bearer host with no tokenStore', () => {
+  expect(() => createCore({ host: { ...createFakeHost(), authTransport: 'bearer' } })).toThrow(
+    'Lowdefy client host with authTransport "bearer" needs a tokenStore with get, set, clear.'
+  );
+});
