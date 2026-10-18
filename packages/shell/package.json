@@ -36,7 +36,8 @@
     "metro.config.js",
     "shell.dev.json",
     "shellVariant.js",
-    "withExcludedNativeModules.js"
+    "withExcludedNativeModules.js",
+    "!**/*.test.*"
   ],
   "scripts": {
     "dayjs-locales": "node scripts/createDayjsLocales.mjs",

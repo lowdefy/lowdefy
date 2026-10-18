@@ -4,7 +4,7 @@ The native block set: React Native components a Lowdefy mobile shell renders thr
 
 ## Blocks
 
-Phase 1 layout and display blocks: `Box`, `Card`, `Divider`, `Tabs`, `Title`, `Paragraph`, `Icon`, `Tag`, `Alert`, `Empty`, `Skeleton` and `Spinner`. Phase 1 list, input and action blocks: `List`, `ListItem`, `TextInput`, `TextArea`, `NumberInput`, `Selector`, `Switch`, `DateSelector` and `Button`. `Screen` (the mobile page type) has its meta here and its component in `@lowdefy/client-native`. `Empty` and `ListItem` have no web block; a page that uses one is mobile only.
+Layout and display blocks: `Box`, `Card`, `Divider`, `Tabs`, `Title`, `Paragraph`, `Icon`, `Tag`, `Alert`, `Empty`, `Skeleton` and `Spinner`. List, input and action blocks: `List`, `ListItem`, `TextInput`, `TextArea`, `NumberInput`, `Selector`, `Switch`, `DateSelector` and `Button`. `Screen` (the mobile page type) has its meta here and its component in `@lowdefy/client-native`. `Empty` and `ListItem` have no web block; a page that uses one is mobile only.
 
 | Block                 | Web source          | Native notes                                                                                  |
 | --------------------- | ------------------- | --------------------------------------------------------------------------------------------- |
@@ -60,7 +60,7 @@ Blocks draw every icon through `components.Icon`, as on the web. `@lowdefy/clien
 
 ## Tests
 
-Each block has a Jest test under React Native's preset that renders a page through `LowdefyPage` with the real blocks (`src/test/renderPage.js`): the computed theme of an app with `colorPrimary: #6366f1` (`src/test/theme.json`), a few lucide icons (`src/test/icons.json`) and the `SetState`, `CallMethod`, `Validate`, `Wait` and `Record` actions, so a test types, picks and validates as a person would. `fixtures/display-blocks` is an app whose shared page uses every phase 1 block with a web version; `lowdefy build` builds it for both targets.
+Each block has a Jest test under React Native's preset that renders a page through `LowdefyPage` with the real blocks (`src/test/renderPage.js`): the computed theme of an app with `colorPrimary: #6366f1` (`src/test/theme.json`), a few lucide icons (`src/test/icons.json`) and the `SetState`, `CallMethod`, `Validate`, `Wait` and `Record` actions, so a test types, picks and validates as a person would. `fixtures/display-blocks` is an app whose shared page uses every native block with a web version; `lowdefy build` builds it for both targets.
 
 `@expo/ui` is mapped to stand-ins in `src/test/` that keep the props the blocks pass; a test fires their callbacks with `fireEvent(view, 'valueChange', ...)`.
 
