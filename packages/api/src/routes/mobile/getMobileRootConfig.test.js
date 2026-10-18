@@ -61,6 +61,13 @@ const mobileConfig = {
     ],
   },
   shells: [{ id: 'field', ios: { bundleId: 'com.example.field', teamId: 'TEAM' } }],
+  auth: {
+    emailCode: true,
+    unlock: 'biometric',
+    unlockAfter: 300,
+    sharedDevice: false,
+    sessionExpiresIn: 2592000,
+  },
 };
 
 const events = { onInit: { try: [{ id: 'set', type: 'SetGlobal', params: { ready: true } }] } };
@@ -86,6 +93,7 @@ function createReadConfigFile(files) {
 test('getMobileRootConfig gives a signed-out caller only the public mobile pages', async () => {
   const context = testContext({ appMeta, readConfigFile: createReadConfigFile() });
   expect(await getMobileRootConfig(context)).toEqual({
+    auth: null,
     events,
     homePageId: 'today',
     lowdefyApp: appMeta,
@@ -98,6 +106,16 @@ test('getMobileRootConfig gives a signed-out caller only the public mobile pages
     typeSets: { t1: typeSets.t1 },
     theme,
     classMap,
+  });
+});
+
+test('getMobileRootConfig gives a shell the mobile auth settings of an app with auth', async () => {
+  const context = testContext({ auth: {}, readConfigFile: createReadConfigFile() });
+  expect((await getMobileRootConfig(context)).auth).toEqual({
+    emailCode: true,
+    unlock: 'biometric',
+    unlockAfter: 300,
+    sharedDevice: false,
   });
 });
 

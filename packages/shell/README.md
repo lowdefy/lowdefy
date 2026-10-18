@@ -20,7 +20,9 @@ plugin maps. Pages, menus and theme come from the app's Lowdefy server as data. 
   "ios": { "bundleIdentifier": "com.example.field" },
   "android": { "package": "com.example.field" },
   "store": { "ios": "https://apps.apple.com/...", "android": "https://play.google.com/..." },
-  "apps": [{ "id": "field", "name": "Field", "urls": { "production": "https://field.example.com" } }]
+  "apps": [
+    { "id": "field", "name": "Field", "urls": { "production": "https://field.example.com" } }
+  ]
 }
 ```
 
@@ -39,6 +41,27 @@ action and operator type the shell registers (`src/plugins/types.js`, listed in
   each visit.
 - Every call carries `x-lowdefy-shell` (the shell's version) and the session token as a bearer
   token, kept in the Keychain or Keystore.
+
+## Sign-in, unlock and sign-out
+
+`src/auth`. The mobile root carries the app's `mobile.auth` (null for an app without auth, which
+opens with no sign-in screen).
+
+- With nobody signed in, the native email-code screen asks for an email, then the 6-digit code
+  (iOS offers it from Mail). It always says "If this email can sign in, a code is on its way".
+  "Other ways to sign in", `emailCode: false`, a server without email codes and a second factor
+  open the app's sign-in page in an ephemeral system sheet (`/auth/mobile`, with a state and a
+  PKCE S256 challenge); the shell checks the state and exchanges the one-time token with the code
+  verifier at `/api/auth/one-time-token/verify`.
+- The session token is kept in `expo-secure-store` on this device only: readable while unlocked,
+  behind biometrics with `unlock: biometric`, or readable after first unlock for the
+  `field-tracking` profile. It is read once per unlock and held in memory. Calls send no cookies.
+- `unlock: biometric` shows a lock screen on launch and after `unlockAfter` seconds in the
+  background, with "Sign in again" as the way out.
+- Sign-out, the token cleared by the core (a Logout action, a 401), and a call with the token
+  answered as the signed-out caller remove the token, every cached root and page of the app and
+  the person's storage keys, then open the app afresh. A 403 drops that caller's cache.
+  `sharedDevice: true` signs out whenever the app goes to the background.
 
 ## Version skew
 
