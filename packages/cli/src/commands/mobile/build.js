@@ -14,10 +14,49 @@
   limitations under the License.
 */
 
-// Filled in by a later change; the command is listed so lowdefy mobile --help
-// shows the whole group.
-async function mobileBuild() {
-  throw new Error('lowdefy mobile build is not available yet.');
+import config from './config.js';
+import getLatestBuild from './getLatestBuild.js';
+import getPlatforms from './getPlatforms.js';
+import runEasBuild from './runEasBuild.js';
+import setStoreVersion from './setStoreVersion.js';
+
+const DEVELOPMENT = 'development';
+
+// lowdefy mobile build: writes the shell project, raises the store version
+// from the latest build on the environment's channel, then runs eas build.
+// --profile development builds a development client instead, which takes no
+// store version.
+async function mobileBuild({ context }) {
+  const { local = false, nonInteractive = false, platform = 'all', profile } = context.options;
+  const dryRun = context.options.dryRun === true;
+  const shellProject = await config({ context });
+  const { environment, projectDirectory } = shellProject;
+  if (profile !== DEVELOPMENT) {
+    const latestBuilds = [];
+    for (const storePlatform of getPlatforms(platform)) {
+      latestBuilds.push(
+        await getLatestBuild({
+          context,
+          dryRun,
+          environment,
+          platform: storePlatform,
+          projectDirectory,
+        })
+      );
+    }
+    await setStoreVersion({ context, dryRun, latestBuilds, shellProject });
+  }
+  await runEasBuild({
+    context,
+    dryRun,
+    local,
+    nonInteractive,
+    platform,
+    profile: profile ?? environment,
+    projectDirectory,
+    // In CI the build is queued and the job ends; EAS finishes it.
+    wait: !nonInteractive || local,
+  });
 }
 
 export default mobileBuild;

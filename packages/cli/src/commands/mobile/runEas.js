@@ -15,6 +15,7 @@
 */
 
 import { spawn } from 'node:child_process';
+import path from 'node:path';
 
 import EAS_CLI_VERSION from './easCliVersion.js';
 
@@ -29,9 +30,13 @@ function getCommand() {
 function getEasEnv({ projectDirectory }) {
   // EAS_NO_VCS uploads the project folder as it is, without git: the folder is
   // generated and lives in the app's gitignored .lowdefy directory.
+  // LOWDEFY_SHELL_CONFIG makes the app config eas reads on this machine the
+  // shell's own (its EAS project, ids and runtime version), not Lowdefy Dev's;
+  // a build profile's env in eas.json still wins inside eas build.
   return {
     EAS_NO_VCS: '1',
     EAS_PROJECT_ROOT: projectDirectory,
+    LOWDEFY_SHELL_CONFIG: path.join(projectDirectory, 'shell.json'),
   };
 }
 

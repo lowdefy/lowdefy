@@ -33,13 +33,16 @@ const MOBILE_COMMANDS = [
   },
   {
     name: 'build',
-    description: 'Build the shell in the cloud with EAS for one environment.',
+    description:
+      'Build the shell in the cloud with EAS for one environment, raising the store version.',
     handler: mobileBuild,
+    options: ['platform', 'profile', 'nonInteractive', 'local'],
   },
   {
     name: 'submit',
     description: 'Upload the latest build to TestFlight and Google Play internal testing.',
     handler: mobileSubmit,
+    options: ['platform', 'nonInteractive'],
   },
   {
     name: 'update',
@@ -69,6 +72,21 @@ function createMobileOptions() {
       '--env <environment>',
       'The environment the shell is built for, a key of config.environments. The binary opens its url and listens on its EAS channel.'
     ).default('production'),
+    local: new Option(
+      '--local',
+      'Build on this machine with eas build --local (a Mac for iOS) instead of in the cloud.'
+    ),
+    nonInteractive: new Option(
+      '--non-interactive',
+      'Run EAS without prompts, as CI does, with the credentials stored in EAS. A build is queued and not waited for.'
+    ),
+    platform: new Option('--platform <platform>', 'The store to work on.')
+      .choices(['ios', 'android', 'all'])
+      .default('all'),
+    profile: new Option(
+      '--profile <profile>',
+      "development: a development client of the shell's dev variant, for internal distribution, that connects to lowdefy dev."
+    ).choices(['development']),
     shell: new Option(
       '--shell <id>',
       'The shell (mobile.shells id) to work on. Needed when the app declares more than one.'
@@ -77,7 +95,7 @@ function createMobileOptions() {
 }
 
 // lowdefy mobile <command>: the program's shared options plus --shell, --env
-// and --dry-run on every subcommand.
+// and --dry-run on every subcommand, and each subcommand's own options.
 function addMobileCommands({ cliVersion, options, program }) {
   const mobileOptions = createMobileOptions();
   const mobile = program
@@ -85,8 +103,8 @@ function addMobileCommands({ cliVersion, options, program }) {
     .description(
       "Build, submit and update the app's phone shells with EAS, from the developer's own Expo, Apple and Google accounts."
     );
-  MOBILE_COMMANDS.forEach(({ name, description, handler }) => {
-    mobile
+  MOBILE_COMMANDS.forEach(({ name, description, handler, options: commandOptions = [] }) => {
+    const command = mobile
       .command(name)
       .description(description)
       .usage('[options]')
@@ -98,8 +116,9 @@ function addMobileCommands({ cliVersion, options, program }) {
       .addOption(options.refResolver)
       .addOption(options.serverDirectory)
       .addOption(mobileOptions.shell)
-      .addOption(options.skipPluginChecks)
-      .action(runCommand({ cliVersion, handler }));
+      .addOption(options.skipPluginChecks);
+    commandOptions.forEach((key) => command.addOption(mobileOptions[key]));
+    command.action(runCommand({ cliVersion, handler }));
   });
   return mobile;
 }

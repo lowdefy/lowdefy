@@ -14,10 +14,26 @@
   limitations under the License.
 */
 
-// Filled in by a later change; the command is listed so lowdefy mobile --help
-// shows the whole group.
-async function mobileSubmit() {
-  throw new Error('lowdefy mobile submit is not available yet.');
+import config from './config.js';
+import runEasSubmit from './runEasSubmit.js';
+
+// lowdefy mobile submit: uploads the latest build of the environment to
+// TestFlight and Google Play internal testing, and nothing more.
+async function mobileSubmit({ context }) {
+  const { nonInteractive = false, platform = 'all' } = context.options;
+  const dryRun = context.options.dryRun === true;
+  const { environment, projectDirectory } = await config({ context });
+  await runEasSubmit({
+    context,
+    dryRun,
+    environment,
+    nonInteractive,
+    platform,
+    projectDirectory,
+  });
+  context.logger.info(
+    'Uploaded only. Submitting the TestFlight build for review and promoting the Play release from internal testing are steps for a person: see lowdefy mobile checklist.'
+  );
 }
 
 export default mobileSubmit;

@@ -75,3 +75,47 @@ test('lowdefy mobile config parses --shell, --env and --dry-run', () => {
     expect.objectContaining({ shell: 'field', env: 'staging', dryRun: true })
   );
 });
+
+function findCommand(name) {
+  const command = createMobileCommand().commands.find((candidate) => candidate.name() === name);
+  command.action(() => {});
+  return command;
+}
+
+test('lowdefy mobile build parses --platform, --profile, --non-interactive and --local', () => {
+  const build = findCommand('build');
+  build.parse(
+    [
+      '--env',
+      'staging',
+      '--platform',
+      'ios',
+      '--profile',
+      'development',
+      '--non-interactive',
+      '--local',
+    ],
+    { from: 'user' }
+  );
+  expect(build.opts()).toEqual(
+    expect.objectContaining({
+      env: 'staging',
+      platform: 'ios',
+      profile: 'development',
+      nonInteractive: true,
+      local: true,
+    })
+  );
+});
+
+test('lowdefy mobile build defaults --platform to all', () => {
+  const build = findCommand('build');
+  build.parse([], { from: 'user' });
+  expect(build.opts().platform).toBe('all');
+});
+
+test('lowdefy mobile submit takes --platform and --non-interactive', () => {
+  const flags = findCommand('submit').options.map((option) => option.long);
+  expect(flags).toEqual(expect.arrayContaining(['--platform', '--non-interactive']));
+  expect(flags).not.toContain('--profile');
+});
