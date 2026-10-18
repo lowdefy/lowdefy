@@ -20,6 +20,7 @@ export { default as Avatar } from './blocks/Avatar/meta.js';
 export { default as Box } from './blocks/Box/meta.js';
 export { default as Button } from './blocks/Button/meta.js';
 export { default as Card } from './blocks/Card/meta.js';
+export { default as ChipSelector } from './blocks/ChipSelector/meta.js';
 export { default as Composer } from './blocks/Composer/meta.js';
 export { default as DateSelector } from './blocks/DateSelector/meta.js';
 export { default as Divider } from './blocks/Divider/meta.js';

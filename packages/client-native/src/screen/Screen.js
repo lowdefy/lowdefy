@@ -21,6 +21,7 @@ import BreakpointContext from '../layout/BreakpointContext.js';
 import formatIconTitle from '../icon/formatIconTitle.js';
 import getSfSymbol from '../icon/getSfSymbol.js';
 import HeaderActionButton from './HeaderActionButton.js';
+import HeaderBottom from './HeaderBottom.js';
 import NaturalSizeContext from '../layout/NaturalSizeContext.js';
 import PageContexts from '../style/PageContexts.js';
 import PageStyleContext from '../style/PageStyleContext.js';
@@ -162,13 +163,17 @@ function useRefreshEvent({ events, methodsRef, setRefresh }) {
  *   header's icon buttons (`sfSymbol` is null for an icon with no SF Symbol; `render` draws the
  *   action as an icon button);
  * - `headerSearch`: `{ placeholder, autoFocus, hideWhenScrolling, onChangeText, onSearch,
- *   onCancel }` for a native search bar, or undefined.
+ *   onCancel }` for a native search bar, or undefined;
+ * - `headerBottom`: whether the page pins blocks under the bar, so the router leaves out the
+ *   bar's own hairline (the strip draws one under itself).
  *
- * Pull-to-refresh (onRefresh) and onFocus come from the page's screen (ScreenContext).
+ * The headerBottom slot is drawn here, as the page's first content, pinned under the bar as the
+ * page scrolls (HeaderBottom, from the page's scroll offset and header inset). Pull-to-refresh
+ * (onRefresh) and onFocus come from the page's screen too (ScreenContext).
  */
 function Screen({ blockId, components, content, events, loading, methods, properties }) {
   const onScreenOptions = useContext(ScreenOptionsContext);
-  const { focused, setRefresh } = useContext(ScreenContext);
+  const { focused, headerInset, scrollY, setRefresh } = useContext(ScreenContext);
   const methodsRef = useRef(methods);
   methodsRef.current = methods;
   const pageContextsRef = useRef(null);
@@ -192,10 +197,12 @@ function Screen({ blockId, components, content, events, loading, methods, proper
 
   const { presentation = 'card', title } = properties;
   const largeTitle = properties.largeTitle === true;
+  const headerBottom = typeof content.headerBottom === 'function';
   useEffect(() => {
     if (onScreenOptions === null) return;
     onScreenOptions({
       headerActions,
+      headerBottom,
       headerLeft,
       headerRight,
       headerSearch,
@@ -205,6 +212,7 @@ function Screen({ blockId, components, content, events, loading, methods, proper
     });
   }, [
     headerActions,
+    headerBottom,
     headerLeft,
     headerRight,
     headerSearch,
@@ -213,7 +221,18 @@ function Screen({ blockId, components, content, events, loading, methods, proper
     presentation,
     title,
   ]);
-  return content.content ? content.content() : null;
+  const page = content.content ? content.content() : null;
+  if (!headerBottom) {
+    return page;
+  }
+  return (
+    <>
+      <HeaderBottom blockId={blockId} headerInset={headerInset} scrollY={scrollY}>
+        {content.headerBottom({ rowGap: 8 })}
+      </HeaderBottom>
+      {page}
+    </>
+  );
 }
 
 Screen.meta = meta;

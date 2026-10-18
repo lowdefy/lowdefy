@@ -21,6 +21,7 @@ export { default as BreakpointContext } from './layout/BreakpointContext.js';
 export { default as createIcon } from './icon/createIcon.js';
 export { default as createNativeGlobals } from './globals/createNativeGlobals.js';
 export { default as describeBlock } from './trace/describeBlock.js';
+export { default as EdgeInsetContext } from './layout/EdgeInsetContext.js';
 export { default as ElementsContext } from './elements/ElementsContext.js';
 export { default as formatIconTitle } from './icon/formatIconTitle.js';
 export { default as getSfSymbol } from './icon/getSfSymbol.js';

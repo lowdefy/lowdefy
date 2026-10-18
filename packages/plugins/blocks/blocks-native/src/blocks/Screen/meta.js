@@ -22,6 +22,8 @@ export default {
   valueType: null,
   slots: {
     content: 'The page content, in a scroll view.',
+    headerBottom:
+      'Blocks pinned directly under the screen header (under the large title or the search field), such as a ChipSelector or a SegmentedControl, which stay in view as the page scrolls. Once the page scrolls they take the screen background and a hairline under them. They sit at the 16pt screen inset; a ChipSelector runs edge to edge.',
     headerLeft:
       'Blocks drawn at the left of the screen header, at their natural size. Prefer `headerActions` for icon buttons.',
     headerRight:

@@ -24,6 +24,7 @@ const nativeBlockTypes = {
     'Box',
     'Button',
     'Card',
+    'ChipSelector',
     'Composer',
     'DateSelector',
     'Divider',
@@ -63,6 +64,7 @@ const nativeBlockTypes = {
     Box: [],
     Button: [],
     Card: [],
+    ChipSelector: [],
     Composer: [
       'ArrowUp',
       'CircleCheck',
@@ -136,6 +138,11 @@ const nativeBlockTypes = {
       },
       cssKeys: ['element', 'header', 'title', 'body', 'cover', 'actions', 'extra'],
       nativeIgnored: ['hoverable'],
+    },
+    ChipSelector: {
+      category: 'input',
+      valueType: 'string',
+      cssKeys: ['element', 'chip', 'label'],
     },
     Composer: {
       category: 'input',
@@ -236,6 +243,8 @@ const nativeBlockTypes = {
       category: 'container',
       slots: {
         content: 'The page content, in a scroll view.',
+        headerBottom:
+          'Blocks pinned directly under the screen header (under the large title or the search field), such as a ChipSelector or a SegmentedControl, which stay in view as the page scrolls. Once the page scrolls they take the screen background and a hairline under them. They sit at the 16pt screen inset; a ChipSelector runs edge to edge.',
         headerLeft:
           'Blocks drawn at the left of the screen header, at their natural size. Prefer `headerActions` for icon buttons.',
         headerRight:
