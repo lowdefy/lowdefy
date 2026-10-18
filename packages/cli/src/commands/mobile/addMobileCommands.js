@@ -33,24 +33,29 @@ const MOBILE_COMMANDS = [
   },
   {
     name: 'build',
-    description: 'Build the shell in the cloud with EAS for one environment.',
+    description:
+      'Build the shell in the cloud with EAS for one environment, raising the store version.',
     handler: mobileBuild,
+    options: ['platform', 'profile', 'nonInteractive', 'local'],
   },
   {
     name: 'submit',
     description: 'Upload the latest build to TestFlight and Google Play internal testing.',
     handler: mobileSubmit,
+    options: ['platform', 'nonInteractive'],
   },
   {
     name: 'update',
     description: "Send the shell's JavaScript to installed binaries as an over-the-air update.",
     handler: mobileUpdate,
+    options: ['platform', 'rollout', 'promote', 'rollback'],
   },
   {
     name: 'release',
     description:
       'Build and submit when the native code changed, send an update when only the JavaScript did, or do nothing.',
     handler: mobileRelease,
+    options: ['platform', 'nonInteractive', 'noWait', 'autoSubmit', 'rollout'],
   },
   {
     name: 'checklist',
@@ -61,6 +66,10 @@ const MOBILE_COMMANDS = [
 
 function createMobileOptions() {
   return {
+    autoSubmit: new Option(
+      '--auto-submit',
+      'Have EAS submit each build when it finishes (eas build --auto-submit), so the job need not wait.'
+    ),
     dryRun: new Option(
       '--dry-run',
       'Print the EAS commands, with their environment, and run none.'
@@ -69,6 +78,34 @@ function createMobileOptions() {
       '--env <environment>',
       'The environment the shell is built for, a key of config.environments. The binary opens its url and listens on its EAS channel.'
     ).default('production'),
+    local: new Option(
+      '--local',
+      'Build on this machine with eas build --local (a Mac for iOS) instead of in the cloud.'
+    ),
+    nonInteractive: new Option(
+      '--non-interactive',
+      'Run EAS without prompts, as CI does, with the credentials stored in EAS. build then queues the build and does not wait for it. release always runs this way.'
+    ),
+    noWait: new Option(
+      '--no-wait',
+      'Queue builds and end without waiting for them. Needs --auto-submit.'
+    ),
+    platform: new Option('--platform <platform>', 'The store to work on.')
+      .choices(['ios', 'android', 'all'])
+      .default('all'),
+    profile: new Option(
+      '--profile <profile>',
+      "development: a development client of the shell's dev variant, for internal distribution, that connects to lowdefy dev."
+    ).choices(['development']),
+    promote: new Option('--promote', 'Roll the latest update out to every device.'),
+    rollback: new Option(
+      '--rollback',
+      'Republish the update before the latest one, for the same runtime version.'
+    ),
+    rollout: new Option(
+      '--rollout <percent>',
+      'Send the update to this percentage of devices; --promote sends it to the rest.'
+    ),
     shell: new Option(
       '--shell <id>',
       'The shell (mobile.shells id) to work on. Needed when the app declares more than one.'
@@ -77,7 +114,7 @@ function createMobileOptions() {
 }
 
 // lowdefy mobile <command>: the program's shared options plus --shell, --env
-// and --dry-run on every subcommand.
+// and --dry-run on every subcommand, and each subcommand's own options.
 function addMobileCommands({ cliVersion, options, program }) {
   const mobileOptions = createMobileOptions();
   const mobile = program
@@ -85,8 +122,8 @@ function addMobileCommands({ cliVersion, options, program }) {
     .description(
       "Build, submit and update the app's phone shells with EAS, from the developer's own Expo, Apple and Google accounts."
     );
-  MOBILE_COMMANDS.forEach(({ name, description, handler }) => {
-    mobile
+  MOBILE_COMMANDS.forEach(({ name, description, handler, options: commandOptions = [] }) => {
+    const command = mobile
       .command(name)
       .description(description)
       .usage('[options]')
@@ -98,8 +135,9 @@ function addMobileCommands({ cliVersion, options, program }) {
       .addOption(options.refResolver)
       .addOption(options.serverDirectory)
       .addOption(mobileOptions.shell)
-      .addOption(options.skipPluginChecks)
-      .action(runCommand({ cliVersion, handler }));
+      .addOption(options.skipPluginChecks);
+    commandOptions.forEach((key) => command.addOption(mobileOptions[key]));
+    command.action(runCommand({ cliVersion, handler }));
   });
   return mobile;
 }

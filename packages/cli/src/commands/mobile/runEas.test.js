@@ -69,7 +69,7 @@ test('runEas with dryRun prints the npx command, cwd and the variables it sets, 
   expect(lines).toEqual([
     `[dry run] ${npx} --yes eas-cli@${EAS_CLI_VERSION} build --platform all --profile staging`,
     '[dry run]   cwd: /app/.lowdefy/mobile/field/project',
-    '[dry run]   env: EAS_NO_VCS=1 EAS_PROJECT_ROOT=/app/.lowdefy/mobile/field/project',
+    '[dry run]   env: EAS_NO_VCS=1 EAS_PROJECT_ROOT=/app/.lowdefy/mobile/field/project EAS_UPDATE_SKIP_ENVIRONMENT_CHECK=1 LOWDEFY_SHELL_CONFIG=/app/.lowdefy/mobile/field/project/shell.json',
     '[dry run]   passed through: EXPO_TOKEN',
   ]);
   expect(lines.join('\n')).not.toContain('secret-expo-token');
@@ -98,6 +98,8 @@ test('runEas spawns npx eas-cli at the pinned version in the project with EAS_NO
   expect(options.cwd).toBe('/project');
   expect(options.env.EAS_NO_VCS).toBe('1');
   expect(options.env.EAS_PROJECT_ROOT).toBe('/project');
+  expect(options.env.LOWDEFY_SHELL_CONFIG).toBe('/project/shell.json');
+  expect(options.env.EAS_UPDATE_SKIP_ENVIRONMENT_CHECK).toBe('1');
   expect(options.env.EXPO_TOKEN).toBe('secret-expo-token');
   expect(options.stdio).toEqual(['inherit', 'inherit', 'inherit']);
 });

@@ -17,43 +17,16 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { type } from '@lowdefy/helpers';
-import { readFile, writeFileIfChanged } from '@lowdefy/node-utils';
+import { writeFileIfChanged } from '@lowdefy/node-utils';
 
-import build from '../build/build.js';
 import createEasJson from './createEasJson.js';
 import createShellJson from './createShellJson.js';
-import getMobileShell from './getMobileShell.js';
-import getServer from '../../utils/getServer.js';
 import installShellProject from './installShellProject.js';
-import loadShellPackage from './loadShellPackage.js';
+import loadMobileShell from './loadMobileShell.js';
 import writeShellWorkspace from './writeShellWorkspace.js';
-
-const SHELL_PACKAGE = '@lowdefy/shell';
-
-async function readBuildArtifact({ context, filePath }) {
-  return JSON.parse(await readFile(path.join(context.directories.build, filePath)));
-}
-
-// The app's own build checks the shell entry and resolves the environments.
-// It is built for the shell's environment, so a declared environment that is
-// not this deployment's still builds. The phone serves no web client, so the
-// client build is skipped.
-async function buildApp({ context, environment }) {
-  process.env.LOWDEFY_ENVIRONMENT = environment;
-  await build({ context: { ...context, options: { ...context.options, clientBuild: false } } });
-  return {
-    appMeta: await readBuildArtifact({ context, filePath: 'appMeta.json' }),
-    config: await readBuildArtifact({ context, filePath: 'config.json' }),
-    mobileConfig: await readBuildArtifact({ context, filePath: 'mobile/config.json' }),
-  };
-}
 
 function getEnvironmentNames(config) {
   return Object.keys(config.environments ?? {}).filter((name) => !name.startsWith('~'));
-}
-
-function getProjectDirectory({ context, shell }) {
-  return path.join(context.configDirectory, '.lowdefy', 'mobile', shell.id, 'project');
 }
 
 async function writeJson({ filePath, value }) {
@@ -65,31 +38,15 @@ async function writeJson({ filePath, value }) {
 // install, plus shell.json, eas.json and the icon. Every EAS command runs
 // from there. Returns what the other lowdefy mobile commands build on.
 async function config({ context }) {
-  const environment = context.options.env;
   const dryRun = context.options.dryRun === true;
-  if (context.lowdefyVersion === 'local') {
-    throw new Error(
-      'lowdefy mobile copies the published @lowdefy/shell at the app\'s Lowdefy version, and this app\'s version is "local". Set "lowdefy" in lowdefy.yaml to a published version.'
-    );
-  }
-  const { appMeta, config: appConfig, mobileConfig } = await buildApp({ context, environment });
-  const { shell, url } = getMobileShell({
-    mobileConfig,
-    config: appConfig,
-    shellId: context.options.shell,
-    environment,
-  });
-  const projectDirectory = getProjectDirectory({ context, shell });
-  await getServer({ context, packageName: SHELL_PACKAGE, directory: projectDirectory });
-  const shellPackage = loadShellPackage({ projectDirectory });
-  // A shell.json without a profile is a basic shell, as @lowdefy/shell reads it.
-  const profile = shell.profile ?? 'basic';
-  const { capabilities } = shellPackage.resolveProfile(profile);
+  const { appConfig, appMeta, environment, profile, projectDirectory, shell, shellPackage, url } =
+    await loadMobileShell({ context });
+  const { capabilities } = profile;
   const shellJson = createShellJson({
     appMeta,
     capabilities,
     environment,
-    profile,
+    profile: profile.name,
     shell,
     url,
   });
@@ -105,11 +62,12 @@ async function config({ context }) {
   await installShellProject({ context, directory: projectDirectory, dryRun });
   const runtimeVersion = shellPackage.getRuntimeVersion({
     nativeVersion: shellPackage.nativeVersion,
-    profile,
+    profile: profile.name,
+    // How an app declares shell plugins in lowdefy.yaml is not designed yet.
     plugins: [],
   });
   context.logger.info(
-    `Shell "${shell.id}" for ${environment} written to ${projectDirectory}: @lowdefy/shell@${shellPackage.version}, profile ${profile}, runtime version ${runtimeVersion}.`
+    `Shell "${shell.id}" for ${environment} written to ${projectDirectory}: @lowdefy/shell@${shellPackage.version}, profile ${profile.name}, runtime version ${runtimeVersion}.`
   );
   return {
     environment,

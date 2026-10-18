@@ -75,3 +75,77 @@ test('lowdefy mobile config parses --shell, --env and --dry-run', () => {
     expect.objectContaining({ shell: 'field', env: 'staging', dryRun: true })
   );
 });
+
+function findCommand(name) {
+  const command = createMobileCommand().commands.find((candidate) => candidate.name() === name);
+  command.action(() => {});
+  return command;
+}
+
+test('lowdefy mobile build parses --platform, --profile, --non-interactive and --local', () => {
+  const build = findCommand('build');
+  build.parse(
+    [
+      '--env',
+      'staging',
+      '--platform',
+      'ios',
+      '--profile',
+      'development',
+      '--non-interactive',
+      '--local',
+    ],
+    { from: 'user' }
+  );
+  expect(build.opts()).toEqual(
+    expect.objectContaining({
+      env: 'staging',
+      platform: 'ios',
+      profile: 'development',
+      nonInteractive: true,
+      local: true,
+    })
+  );
+});
+
+test('lowdefy mobile build defaults --platform to all', () => {
+  const build = findCommand('build');
+  build.parse([], { from: 'user' });
+  expect(build.opts().platform).toBe('all');
+});
+
+test('lowdefy mobile submit takes --platform and --non-interactive', () => {
+  const flags = findCommand('submit').options.map((option) => option.long);
+  expect(flags).toEqual(expect.arrayContaining(['--platform', '--non-interactive']));
+  expect(flags).not.toContain('--profile');
+});
+
+test('lowdefy mobile release parses the flags CI passes', () => {
+  const release = findCommand('release');
+  release.parse(['--non-interactive', '--no-wait', '--auto-submit', '--rollout', '10'], {
+    from: 'user',
+  });
+  expect(release.opts()).toEqual(
+    expect.objectContaining({
+      nonInteractive: true,
+      wait: false,
+      autoSubmit: true,
+      rollout: '10',
+      platform: 'all',
+    })
+  );
+});
+
+test('lowdefy mobile release waits by default', () => {
+  const release = findCommand('release');
+  release.parse([], { from: 'user' });
+  expect(release.opts().wait).toBe(true);
+});
+
+test('lowdefy mobile update takes --rollout, --promote and --rollback', () => {
+  const update = findCommand('update');
+  update.parse(['--promote', '--platform', 'android'], { from: 'user' });
+  expect(update.opts()).toEqual(expect.objectContaining({ promote: true, platform: 'android' }));
+  const flags = update.options.map((option) => option.long);
+  expect(flags).toEqual(expect.arrayContaining(['--rollout', '--promote', '--rollback']));
+});

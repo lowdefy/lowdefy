@@ -290,6 +290,82 @@ The `journeys coverage` command reports what real use no journey in `tests/journ
 - `--since <since>`, `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: The production window, as for [`journeys pull posthog`](#journeys-pull-posthog), at most 30 days.
 - `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys session`](#journeys-session).
 
+## mobile
+
+The `mobile` commands build, submit and update the app's phone shells with [EAS](https://expo.dev/eas), from your own Expo, Apple and Google accounts. A shell is declared under `mobile.shells` in `lowdefy.yaml`. Each command builds the app, then writes the shell's Expo project to `.lowdefy/mobile/<shell>/project`: a copy of the published `@lowdefy/shell` at the app's Lowdefy version, with its own install, plus `shell.json`, `eas.json` (a build and submit profile per environment in `config.environments`, and a `development` profile) and the icon. The folder is generated; do not commit it. Every EAS command runs from it, through `npx eas-cli@<pinned version>` with `EAS_NO_VCS=1`, so nothing needs to be installed globally.
+
+```
+lowdefy mobile config    [--shell <id>] [--env <environment>] [--dry-run]
+lowdefy mobile build     [--shell <id>] [--env <environment>] [--platform ios|android|all] [--profile development] [--non-interactive] [--local] [--dry-run]
+lowdefy mobile submit    [--shell <id>] [--env <environment>] [--platform ios|android|all] [--non-interactive] [--dry-run]
+lowdefy mobile update    [--shell <id>] [--env <environment>] [--platform ios|android|all] [--rollout <percent> | --promote | --rollback] [--dry-run]
+lowdefy mobile release   [--shell <id>] [--env <environment>] [--platform ios|android|all] [--non-interactive] [--no-wait --auto-submit] [--rollout <percent>] [--dry-run]
+lowdefy mobile checklist [--shell <id>] [--env <environment>]
+```
+
+Every `mobile` command takes:
+
+- `--shell <id>`: The shell to work on, a `mobile.shells` id. Needed when the app declares more than one.
+- `--env <environment>`: The environment, a key of `config.environments`. The binary opens its `url` and listens on the EAS channel of the same name. The default is `production`.
+- `--dry-run`: Print the EAS commands, with their working directory and environment variables, and run none. The project is still written.
+- `--config-directory`, `--disable-telemetry`, `--log-level`, `--ref-resolver`, `--server-directory`, `--skip-plugin-checks`: As for [`build`](#build).
+
+### mobile config
+
+Writes the shell's project and prints its runtime version, `<nativeVersion>-<profile>`. Over-the-air updates reach only binaries with the same runtime version, so it changes only when the shell's native code or capability profile does.
+
+### mobile build
+
+Raises the store version, then runs `eas build --profile <environment>`. The shell's `version` gives the major and minor; each build reads the latest finished build on the channel for each store and uses the next patch, or `<major>.<minor>.0` for a first build or a new `version`. Both stores get the same version. Build numbers are kept by EAS.
+
+- `--platform <platform>`: `ios`, `android` or `all`. The default is `all`.
+- `--non-interactive`: Run without prompts, with the credentials stored in EAS, and queue the build without waiting for it. For CI. Without it the build is interactive, as the first build of a shell must be.
+- `--local`: Build on this machine (`eas build --local`; a Mac for iOS).
+- `--profile development`: Build a development client of the shell, for internal distribution, which connects to `lowdefy dev`. It takes no store version.
+
+### mobile submit
+
+Uploads the latest build to TestFlight and Google Play internal testing (`eas submit --latest`), and nothing more. Review and promotion are steps for a person (see [`mobile checklist`](#mobile-checklist)).
+
+- `--platform <platform>`, `--non-interactive`: As for `mobile build`.
+
+### mobile update
+
+Sends the shell's JavaScript to installed binaries on the environment's channel as an over-the-air update (`eas update`). Only `@lowdefy/shell` code travels this way; the app's pages always come from its server. The update's message records the shell version, profile and runtime version: `lowdefy-shell@<version> profile=<profile> runtime=<runtime version>`.
+
+- `--rollout <percent>`: Send the update to this percentage of devices.
+- `--promote`: Roll the latest update for this runtime version out to every device.
+- `--rollback`: Republish the update before the latest one for this runtime version. A later `release` of the same Lowdefy version sends the newer shell again, so roll back while you fix forward.
+- `--platform <platform>`: As for `mobile build`.
+
+### mobile release
+
+What CI runs. For each store it reads the latest finished build on the channel and compares its runtime version with the shell's:
+
+- No build, or a different runtime version: raise the store version, build and submit.
+- The same runtime version, and the latest update carries a different shell version, or none: send an update.
+- Otherwise: nothing.
+
+It prints one line per store saying which and why, and exits with 0. Any EAS failure exits with 1. Release always runs EAS without prompts, so the first build and submission of a shell are done by hand first.
+
+- `--no-wait --auto-submit`: Queue each build and let EAS submit it when it finishes, so the CI job does not wait. `--no-wait` needs `--auto-submit`; without them release waits for each build, then submits it.
+- `--rollout <percent>`: Passed to the update.
+- `--platform <platform>`: As for `mobile build`. `--non-interactive` is accepted and changes nothing.
+- `--dry-run`: Print the reads, and for each store both paths with the condition that picks each.
+
+### mobile checklist
+
+Prints, filled in with the shell's own ids, the steps the stores still need a person for: creating the store records, the first build and submission, making a `private` app private, copying the Play app signing key into `android.sha256`, the privacy questions for the shell's profile, and, for `private` and `store` shells, review and promotion of each native release. It runs no EAS command.
+
+### Environment variables
+
+- `EXPO_TOKEN`: Signs EAS in without `eas login`, for CI.
+- `SENTRY_AUTH_TOKEN`: Optional. Uploads source maps on `build` and `update`.
+
+Both pass through from your environment and are never written into the project.
+
+Shell plugins, extra native modules an app adds to its shell, cannot be declared in `lowdefy.yaml` yet.
+
 ## upgrade
 
 The `upgrade` command upgrades a Lowdefy app to a newer version by walking you through migration prompts that handle breaking changes.
