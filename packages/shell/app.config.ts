@@ -20,6 +20,8 @@ import path from 'node:path';
 
 import type { ConfigContext, ExpoConfig } from 'expo/config';
 
+import { getShellVariant } from './shellVariant.js';
+
 // The shell's config comes from shell.json, written for each shell at build: LOWDEFY_SHELL_CONFIG
 // is its path. Without it the shell is Lowdefy Dev (shell.dev.json), which opens `lowdefy dev`.
 // The shell's version and type manifest are added here, at build, so the app reads one object
@@ -48,6 +50,7 @@ function createTypeManifest() {
 
 export default function appConfig({ config }: ConfigContext): ExpoConfig {
   const shell = readShellJson();
+  const variant = getShellVariant();
   const { version } = readJson(path.join(shellRoot, 'package.json'));
   return {
     ...config,
@@ -64,6 +67,7 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
     },
     android: {
       package: shell.android?.package,
+      blockedPermissions: variant === 'release' ? ['android.permission.CAMERA'] : [],
     },
     plugins: [
       'expo-router',
@@ -78,10 +82,24 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
       'expo-splash-screen',
       'expo-sqlite',
       'expo-web-browser',
+      // expo-camera is linked into every shell: Lowdefy Dev scans the code lowdefy dev prints
+      // with it (src/dev). Android's microphone permission is left out; a release shell, which
+      // never asks for the camera, blocks Android's camera permission too.
+      [
+        'expo-camera',
+        {
+          cameraPermission:
+            variant === 'dev'
+              ? 'Allow $(PRODUCT_NAME) to scan the code lowdefy dev prints.'
+              : 'Allow $(PRODUCT_NAME) to use the camera.',
+          recordAudioAndroid: false,
+        },
+      ],
     ],
     extra: {
       shell: {
         ...shell,
+        variant,
         version,
         typeManifest: createTypeManifest(),
       },

@@ -19,6 +19,8 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import installGetRandomValues from '../src/polyfills/installGetRandomValues.js';
 import ShellRoot from '../src/components/ShellRoot.js';
+// Lowdefy Dev's developer features; undefined in a release shell, whose bundle leaves them out.
+import { DevShell } from '../src/dev/index.js';
 
 installGetRandomValues();
 
@@ -27,5 +29,5 @@ installGetRandomValues();
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  return <ShellRoot />;
+  return DevShell ? <DevShell /> : <ShellRoot />;
 }

@@ -103,10 +103,40 @@ tab's page switches tab, and links to other sites open in the system browser.
   drawer menu. Native tab bars take images or SF Symbols, so tabs show titles only.
 - Hermes has no `crypto.getRandomValues`, which `_uuid` needs; `expo-crypto` fills it.
 
+## Lowdefy Dev
+
+`src/dev`. Lowdefy Dev is this shell built as the `dev` variant: `LOWDEFY_SHELL_VARIANT=dev | release`
+(`shellVariant.js`), `dev` by default for Lowdefy Dev (no `LOWDEFY_SHELL_CONFIG`) and `release` for
+every other shell. A release bundle resolves `src/dev/index.js` to an empty module
+(`metro.config.js`), so a customer shell carries none of it; `pnpm check:release-bundle` exports both
+platforms as `release` and fails when a bundle holds the dev-tab client's marker string (`--control`
+first checks that a `dev` bundle holds it).
+
+- **Connect.** `lowdefy-dev://connect?url=<server>&pair=<token>` (the QR code `lowdefy dev --lan`
+  prints, or the link `--ios`/`--android` open), a scanned code (`expo-camera`), a typed address, or
+  one of the last 5 servers. A server not on this device is confirmed first ("Connect to
+  `<host>`?"); a simulator's or USB phone's localhost connects at once. Each server is its own app,
+  with its own cache and session, and every call to it (fetch and websocket) carries its pairing
+  token as `x-lowdefy-pair`.
+- **Shake menu** (or `lowdefy-dev://menu`): reload, switch server, clear data, show logs, the block
+  gallery, and the shell version.
+- **Dev-tab client.** The open app joins the dev server's tab channel as a browser tab does: it
+  registers on `/api/reload` (an event stream read from `expo/fetch`, or polls of
+  `/api/reload?transport=poll` every second when the stream cannot be read), posts the page it shows
+  to `/api/dev-inspect/page`, and answers on `/api/dev-inspect`:
+  - `reload`: refetches the root and the page on screen and rebuilds the screens with empty page
+    state, staying on the page.
+  - `inspect-request`, `eval-request`: the browser tab's payloads (shared fixtures with the dev
+    server's tests).
+  - `step-request` `{ step }`: a journey step by block id (`click`, `fill`, `select`,
+    `press: 'Enter'`, `wait`, `screenshot`), run through the engine; it waits for the action chain
+    to settle. A screenshot is the root view as a base64 PNG (`react-native-view-shot`).
+
 ## Checks
 
 ```bash
 pnpm --filter=@lowdefy/shell test         # Jest, and the hello fixture build
 pnpm --filter=@lowdefy/shell export:ios     # Metro and Hermes bundle, no simulator needed
 pnpm --filter=@lowdefy/shell export:android
+pnpm --filter=@lowdefy/shell check:release-bundle   # no dev-tab client in a release bundle
 ```
