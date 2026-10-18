@@ -44,6 +44,8 @@ import buildIconContext from '../icons/buildIconContext.js';
 import buildMcp from '../buildMcp.js';
 import buildMenu from '../buildMenu.js';
 import buildMobile from '../buildMobile/buildMobile.js';
+import buildMobileClassMap from '../buildMobile/buildMobileClassMap.js';
+import buildMobileTheme from '../buildMobile/buildMobileTheme.js';
 import validateMobileMenuIcons from '../buildMobile/validateMobileMenuIcons.js';
 import buildModuleDefs from '../buildModuleDefs.js';
 import { resolveModuleManifests } from '../registerModules.js';
@@ -245,6 +247,13 @@ async function shallowBuild(options) {
       context,
     });
     tryBuildStep(buildTypes, 'buildTypes', { components, context });
+    // writeMobile writes mobile/theme.json and mobile/classMap.json from these.
+    // The class map covers the class candidates buildShallowPages collected
+    // from sourceless pages.
+    buildMobileTheme({ components, context });
+    // Async (Tailwind's compiler), so it runs outside tryBuildStep; config
+    // faults are collected, not thrown.
+    await buildMobileClassMap({ components, context });
 
     // Update server package.json before addInstalledTypes so that addInstalledTypes
     // sees the full set of dependencies on every run (not just after the first build).
