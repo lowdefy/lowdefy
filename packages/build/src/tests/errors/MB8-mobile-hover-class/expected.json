@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Class \"hover:bg-blue-500\" on block \"save\" on page \"jobs\" has no native form, so a mobile shell cannot apply it. Mobile pages support spacing, sizing, flex and gap, colours, font size and weight, borders, radius and opacity classes, with the dark:, sm:, md: and lg: prefixes."
+      ],
+      "errorContains": [
+        "Class \"hover:bg-blue-500\" on block \"save\" on page \"jobs\" has no native form",
+        "{{fixturesDir}}/MB8-mobile-hover-class/lowdefy.yaml:15"
+      ]
+    }
+  ]
+}

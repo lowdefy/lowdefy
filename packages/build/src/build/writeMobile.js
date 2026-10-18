@@ -80,6 +80,15 @@ async function buildMobileConfig({ components, context }) {
 
 // What a shell needs from the build. Written for every app, as {} and [] when
 // the app has no mobile key, so the server reads them without existence checks.
+//
+// mobile/theme.json: { darkMode, light, dark }, darkMode as theme.darkMode
+// ("system", "light" or "dark") and light and dark the computed antd tokens of
+// each mode (colorPrimary, borderRadius, fontSize, ...).
+// mobile/classMap.json: { [className]: reactNativeStyle }, every Tailwind
+// class on mobile pages that has a native form. Variants are keyed by the full
+// class ("dark:bg-gray-900", "sm:flex-row"); in dark mode a shell reads
+// "dark:<class>" before "<class>", which the build adds for classes that use
+// an antd theme colour.
 async function writeMobile({ components, context }) {
   const config = type.isNone(components.mobile)
     ? {}
@@ -90,6 +99,8 @@ async function writeMobile({ components, context }) {
     JSON.stringify(context.mobilePageIndex)
   );
   await context.writeBuildArtifact('mobile/typeSets.json', JSON.stringify(context.mobileTypeSets));
+  await context.writeBuildArtifact('mobile/theme.json', JSON.stringify(context.mobileTheme));
+  await context.writeBuildArtifact('mobile/classMap.json', JSON.stringify(context.mobileClassMap));
 }
 
 export default writeMobile;

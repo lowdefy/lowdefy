@@ -237,6 +237,12 @@ Build artifacts go to `.lowdefy/build/`:
 │   ├── actionSchemas.json   # Action param schemas (for runtime validation)
 │   ├── blockSchemas.json    # Block property schemas (for runtime validation)
 │   └── operatorSchemas.json # Operator param schemas (for runtime validation)
+├── mobile/            # What a mobile shell needs (all {} or [] without a mobile key)
+│   ├── config.json    # Home page, menus, shells, minShellVersion
+│   ├── pageIndex.json # Mobile pages with path, hash and type-set key
+│   ├── typeSets.json  # Native type sets by key
+│   ├── theme.json     # { darkMode, light, dark }: computed antd tokens per mode
+│   └── classMap.json  # { [className]: reactNativeStyle }: the Tailwind class map
 └── js/                # Compiled JavaScript functions
 ```
 
@@ -320,6 +326,17 @@ Also writes:
 - Block plugin JS content via `collectBlockSourceContent()` to `lowdefy-build/tailwind/_blocks.html` (follows pnpm/yarn symlinks to resolve real paths)
 
 If `public/styles.less` is detected, a `ConfigError` is thrown, advising migration.
+
+### Mobile theme, styles and class map (`buildMobile/`)
+
+Native blocks have no CSS, so the build turns the app's theme, styles and Tailwind classes into what React Native reads. Each step runs only for an app with a `mobile` key.
+
+- **`buildMobileTheme`** runs antd's `theme.getDesignToken` twice, configured as the web client's `useDarkMode` configures antd: the shared `token` with `lightToken`/`darkToken` over it, and the app's algorithm with `dark` taken out for light and added for dark. `writeMobile` writes `mobile/theme.json` as `{ darkMode, light, dark }`.
+- **`validateMobileStyles`** (after `buildPages`, so `style` is keyed by slot) checks every literal style on mobile and shared pages with `convertStyle` from `@lowdefy/style-native`. Keys React Native cannot honour (`display: grid`, selectors, `calc()`, `position: fixed`, `transition*`, `cursor`, unitless `lineHeight`) fail the build, naming page, block, slot and key. Mobile-only pages are converted in place (px and rem to numbers, shorthands expanded). Shared pages, and any slot that is or holds an operator, stay as written: the web reads the same page JSON, and the shell converts those slots with the same function after operators run.
+- **`collectMobileClassCandidates`** (before `buildJs`, like the web's Tailwind scan) walks blocks with `collectPageContent`'s `walkValue`, keeping strings under `class` apart from strings under `properties`.
+- **`buildMobileClassMap`** compiles each token with twrnc's parser, once per colour mode. The twrnc config is Tailwind 3's defaults, Tailwind 4's colours (converted from oklch) and radii from `tailwindcss/theme.css`, and the app's theme vars (`getTailwindThemeVars`: the antd bridge plus `theme.tailwind`) mapped by Tailwind 4 namespace, with `var(--ant-*)` resolved to that mode's tokens. Supported variants are `dark:`, `sm:`, `md:` and `lg:`. A token under `class` that does not compile but that Tailwind 4 itself writes CSS for is a class with no native form and fails the build; every other token is skipped, so prose never fails.
+
+`mobile/classMap.json` is flat: `{ "p-4": { "paddingTop": 16, ... }, "dark:bg-gray-900": {...}, "sm:flex-row": {...} }`, variants keyed by their full class. A class whose style differs in dark mode because it uses an antd colour (`bg-primary`) also gets a `dark:<class>` entry, so in dark mode a shell reads `dark:<class>` before `<class>`.
 
 ### Plugin Schema Map Generation
 
