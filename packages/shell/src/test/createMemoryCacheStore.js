@@ -38,6 +38,18 @@ function createMemoryCacheStore() {
     async writePage({ cacheKey, pageId, page }) {
       pagesOf(cacheKey).set(pageId, structuredClone(page));
     },
+    async removeEntry({ cacheKey }) {
+      roots.delete(cacheKey);
+      pages.delete(cacheKey);
+    },
+    async removeApp({ appId }) {
+      [...roots.keys(), ...pages.keys()]
+        .filter((cacheKey) => cacheKey.startsWith(`${appId}:`))
+        .forEach((cacheKey) => {
+          roots.delete(cacheKey);
+          pages.delete(cacheKey);
+        });
+    },
     async removePages({ cacheKey, pageIds }) {
       pageIds.forEach((pageId) => pagesOf(cacheKey).delete(pageId));
     },

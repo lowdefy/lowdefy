@@ -16,7 +16,7 @@
 
 import { createContext, useContext, useSyncExternalStore } from 'react';
 
-// { session, host, locale, shell } of the app the shell has open.
+// { auth, session, host, locale, shell } of the app the shell has open.
 const ShellContext = createContext(null);
 
 function useShell() {

@@ -35,8 +35,22 @@ function createFakeDb() {
       } else if (sql.startsWith('INSERT OR REPLACE INTO pages')) {
         const [cacheKey, pageId, page] = params;
         pages.set(`${cacheKey}|${pageId}`, { cache_key: cacheKey, page_id: pageId, page });
-      } else if (sql.startsWith('DELETE FROM pages')) {
+      } else if (sql.startsWith('DELETE FROM roots WHERE cache_key')) {
+        roots.delete(params[0]);
+      } else if (sql.startsWith('DELETE FROM pages WHERE cache_key = ? AND')) {
         pages.delete(`${params[0]}|${params[1]}`);
+      } else if (sql.startsWith('DELETE FROM pages WHERE cache_key')) {
+        [...pages.keys()]
+          .filter((key) => pages.get(key).cache_key === params[0])
+          .forEach((key) => pages.delete(key));
+      } else if (sql.startsWith('DELETE FROM roots WHERE substr')) {
+        [...roots.keys()]
+          .filter((key) => key.startsWith(params[1]))
+          .forEach((key) => roots.delete(key));
+      } else if (sql.startsWith('DELETE FROM pages WHERE substr')) {
+        [...pages.keys()]
+          .filter((key) => pages.get(key).cache_key.startsWith(params[1]))
+          .forEach((key) => pages.delete(key));
       }
     }),
   };
@@ -61,4 +75,19 @@ test('the SQLite cache keeps a root and its pages per cache key', async () => {
     pages: { today: { hash: 'h1' } },
   });
   expect(db.execAsync).toHaveBeenCalledTimes(1);
+});
+
+test('the SQLite cache drops one caller, or every caller of one app', async () => {
+  const store = createSqliteCacheStore({ db: createFakeDb() });
+  const entry = { root: {}, rootEtag: null, user: null };
+  await store.writeRoot({ cacheKey: 'field:c1:r1', entry });
+  await store.writePage({ cacheKey: 'field:c1:r1', pageId: 'today', page: { hash: 'h1' } });
+  await store.writeRoot({ cacheKey: 'field:c2:r1', entry });
+  await store.writeRoot({ cacheKey: 'fieldwork:c1:r1', entry });
+  await store.removeEntry({ cacheKey: 'field:c2:r1' });
+  expect(await store.read('field:c2:r1')).toBeNull();
+  expect(await store.read('field:c1:r1')).not.toBeNull();
+  await store.removeApp({ appId: 'field' });
+  expect(await store.read('field:c1:r1')).toBeNull();
+  expect(await store.read('fieldwork:c1:r1')).not.toBeNull();
 });

@@ -18,6 +18,7 @@ import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 
+import AuthGate from '../auth/AuthGate.js';
 import createShellApp from '../createShellApp.js';
 import LoadingScreen from './LoadingScreen.js';
 import MessageScreen from './MessageScreen.js';
@@ -52,27 +53,35 @@ function AppGate({ children }) {
   );
 }
 
-// Opens one app: builds its session and host, renders its last pages from the cache and syncs it
-// with the app's server.
+// Opens one app: builds its auth, session and host, renders its last pages from the cache and
+// syncs it with the app's server. A sign-out opens it afresh, with nothing of the person's kept.
 function AppProvider({ app, children, shell }) {
   const [value, setValue] = useState(null);
+  const [openings, setOpenings] = useState(0);
   useEffect(() => {
     let active = true;
-    createShellApp({ app, shell }).then(({ host, locale, session }) => {
+    let opened = null;
+    setValue(null);
+    const onSignedOut = () => setOpenings((count) => count + 1);
+    createShellApp({ app, onSignedOut, shell }).then(({ auth, host, locale, session }) => {
       if (!active) return;
-      setValue({ host, locale, session, shell });
-      session.start();
+      opened = auth;
+      setValue({ auth, host, locale, session, shell });
+      auth.start({ session });
     });
     return () => {
       active = false;
+      opened?.dispose();
     };
-  }, [app, shell]);
+  }, [app, openings, shell]);
   if (value === null) {
     return <LoadingScreen />;
   }
   return (
     <ShellContext.Provider value={value}>
-      <AppGate>{children}</AppGate>
+      <AuthGate>
+        <AppGate>{children}</AppGate>
+      </AuthGate>
     </ShellContext.Provider>
   );
 }

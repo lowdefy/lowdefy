@@ -151,6 +151,7 @@ test('the dev mobile root lists the paths of the pages the caller may open, with
   expect(res.status).toEqual(200);
   expect(await res.json()).toEqual({
     _jsEntries: null,
+    auth: null,
     homePageId: 'today',
     i18n: {},
     lowdefyGlobal: {},
