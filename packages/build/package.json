@@ -50,6 +50,7 @@
   "scripts": {
     "build": "swc src --out-dir dist --config-file ../../.swcrc --cli-config-file ../../.swc-cli.json && node dist/scripts/generateDefaultTypes.js && node dist/scripts/generateDefaultMessages.js",
     "clean": "rm -rf dist",
+    "native-block-types": "node scripts/createNativeBlockTypes.mjs && prettier --config ../../.prettierrc --write src/nativeBlockTypes.js",
     "prepublishOnly": "pnpm build",
     "start": "node dist/scripts/run.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
@@ -97,7 +98,6 @@
     "@lowdefy/blocks-files": "6.0.0",
     "@lowdefy/blocks-google-maps": "6.0.0",
     "@lowdefy/blocks-markdown": "6.0.0",
-    "@lowdefy/blocks-native": "6.0.0",
     "@lowdefy/blocks-qr": "6.0.0",
     "@lowdefy/blocks-table": "6.0.0",
     "@lowdefy/blocks-tiptap": "6.0.0",

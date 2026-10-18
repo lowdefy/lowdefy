@@ -288,9 +288,6 @@ importers:
       '@lowdefy/blocks-markdown':
         specifier: 6.0.0
         version: link:../plugins/blocks/blocks-markdown
-      '@lowdefy/blocks-native':
-        specifier: 6.0.0
-        version: link:../plugins/blocks/blocks-native
       '@lowdefy/blocks-qr':
         specifier: 6.0.0
         version: link:../plugins/blocks/blocks-qr
