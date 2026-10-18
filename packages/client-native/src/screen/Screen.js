@@ -173,7 +173,7 @@ function useFooterSlot({ footer, slot }) {
   useEffect(() => () => footer.set(null), [footer]);
 }
 
-// properties.backgroundTint, set in the page's tint store for the page to draw behind its scroll
+// properties.backgroundTint, set in the page's tint store for the page to draw in its scroll
 // view when it changes, and cleared when the Screen goes.
 function useBackgroundTint({ backgroundTint, tint }) {
   const tintKey = JSON.stringify(backgroundTint ?? null);
@@ -209,14 +209,16 @@ function useRefreshEvent({ events, methodsRef, setRefresh }) {
  * - `headerSearch`: `{ placeholder, autoFocus, hideWhenScrolling, onChangeText, onSearch,
  *   onCancel }` for a native search bar, or undefined;
  * - `headerBottom`: whether the page pins blocks under the bar, so the router leaves out the
- *   bar's own hairline (the strip draws one under itself).
+ *   bar's own hairline (the strip draws one under itself);
+ * - `backgroundTint`: whether the page draws a backgroundTint, so the router makes the bar clear
+ *   over it and the page scrolls under the bar.
  *
  * The headerBottom slot is drawn here, as the page's first content, pinned under the bar as the
  * page scrolls (HeaderBottom, from the page's scroll offset and header inset). The footer slot is
  * drawn by the page below its scroll view, pinned above the tab bar and the keyboard.
  * Pull-to-refresh (onRefresh) and onFocus come from the page's screen too (ScreenContext), and
- * the page draws the Screen's backgroundTint (`{ color, colorDark, height }`) behind its scroll
- * view, fixed to the screen (ScreenTint).
+ * the page draws the Screen's backgroundTint (`{ color, colorDark, height }`) in its scroll view,
+ * fixed to the screen (PageTint).
  */
 function Screen({ blockId, components, content, events, loading, methods, properties }) {
   const onScreenOptions = useContext(ScreenOptionsContext);
@@ -248,9 +250,11 @@ function Screen({ blockId, components, content, events, loading, methods, proper
   const { presentation = 'card', title } = properties;
   const largeTitle = properties.largeTitle === true;
   const headerBottom = typeof content.headerBottom === 'function';
+  const backgroundTint = !type.isNone(properties.backgroundTint);
   useEffect(() => {
     if (onScreenOptions === null) return;
     onScreenOptions({
+      backgroundTint,
       headerActions,
       headerBottom,
       headerLeft,
@@ -261,6 +265,7 @@ function Screen({ blockId, components, content, events, loading, methods, proper
       title,
     });
   }, [
+    backgroundTint,
     headerActions,
     headerBottom,
     headerLeft,

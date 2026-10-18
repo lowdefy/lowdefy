@@ -38,8 +38,9 @@ requests as they do on the web.
   under the header as the page scrolls; pass `headerInset`, where the header's bottom edge is in
   the page's scroll view (an Animated header height when the page scrolls under a translucent
   header, 0 when it sits below it).
-- A Screen's `backgroundTint` (`{ color, colorDark, height }`) is drawn by the page behind its
-  scroll view, fixed to the screen: behind the header and the content, and in a pinned
-  headerBottom's surface. It cross-fades when it changes.
+- A Screen's `backgroundTint` (`{ color, colorDark, height }`) is drawn by the page in its scroll
+  view, behind the blocks and fixed to the screen's top: behind the header (the Screen reports
+  `backgroundTint: true`, for the router to make the bar clear) and in a pinned headerBottom's
+  surface. It cross-fades when it changes. The scroll view stays the page's first view.
 
 The package imports no Expo modules: a shell passes what it needs through the host.

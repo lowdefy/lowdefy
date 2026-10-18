@@ -132,7 +132,14 @@ function PageScreen({ path, query = '' }) {
 
   const onScreenOptions = useCallback(
     (options) => {
-      navigation.setOptions(getStackOptions({ options, platform: Platform.OS, searchBarRef }));
+      navigation.setOptions(
+        getStackOptions({
+          options,
+          platform: Platform.OS,
+          platformVersion: Platform.Version,
+          searchBarRef,
+        })
+      );
       setAutoFocus(options.headerSearch?.autoFocus === true);
       updateHeaderInset(options);
     },
