@@ -36,8 +36,9 @@ function hasTargetIdentity(target) {
   );
 }
 
-// Turns DOM interactions and engine trace payloads into finished v1 trace
-// records, paired in the tab with the shared pairing rule. Each record carries
+// Turns interactions (DOM events on the web, block presses and changes on a
+// phone) and engine trace payloads into finished v1 trace records, paired on
+// the client with the shared pairing rule. Each record carries
 // the build getBuild() named when its interaction was captured or its event
 // arrived, never when its hold closes: a hold can outlast a config reload.
 //

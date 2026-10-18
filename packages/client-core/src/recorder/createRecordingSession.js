@@ -37,7 +37,8 @@ function writeStored(storage, value) {
   }
 }
 
-// The tab's recording session. sessionStorage lives as long as the tab, so a
+// The tab's recording session (or the phone's, over the shell's device store).
+// sessionStorage lives as long as the tab, so a
 // session survives the reload a dev server restart triggers; a gap of more
 // than 10 minutes starts a new one.
 function createRecordingSession({ storage, now = Date.now }) {
