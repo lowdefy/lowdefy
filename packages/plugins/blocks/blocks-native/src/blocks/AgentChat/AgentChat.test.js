@@ -20,6 +20,12 @@ import { ActionSheetIOS, StyleSheet } from 'react-native';
 import { jest } from '@jest/globals';
 import { Link } from '@lowdefy/actions-core/actions';
 
+import {
+  emitSpeechEvent,
+  ExpoSpeechRecognitionModule as speech,
+  setSpeechRecognition,
+} from '../../test/expoSpeechRecognition.js';
+import { installDictationSource } from '../../shared/dictation/getRecognizer.js';
 import { page, record, renderPage } from '../../test/renderPage.js';
 
 // The UI message stream the agent route answers with, as server-sent events.
@@ -572,5 +578,324 @@ test('a reply draws linkChips links as chips, as the Markdown block does, and a 
   expect(calls.find((call) => call.name === 'link').event).toEqual({
     href: 'pelican:PEL-12',
     text: '',
+  });
+});
+
+describe('dictation', () => {
+  function footerQuery() {
+    return within(screen.getByTestId('screen-footer'));
+  }
+
+  async function renderChat(options) {
+    const rendered = await renderPage({ pageConfig: chatPage(options) });
+    // Let the availability check settle.
+    await act(async () => {});
+    return rendered;
+  }
+
+  function input() {
+    return footerQuery().getByTestId('nigel_input');
+  }
+
+  async function typeText(text, cursor = text.length) {
+    await act(async () => {
+      fireEvent.changeText(input(), text);
+      fireEvent(input(), 'selectionChange', {
+        nativeEvent: { selection: { start: cursor, end: cursor } },
+      });
+    });
+  }
+
+  async function pressMic() {
+    await act(async () => {
+      fireEvent.press(footerQuery().getByTestId('nigel_dictation'));
+    });
+  }
+
+  async function emit(name, event) {
+    await act(async () => {
+      emitSpeechEvent(name, event);
+    });
+  }
+
+  function partial(transcript) {
+    return { isFinal: false, results: [{ transcript, confidence: 0, segments: [] }] };
+  }
+
+  function final(transcript) {
+    return { isFinal: true, results: [{ transcript, confidence: 0.9, segments: [] }] };
+  }
+
+  // iOS: the one final result after stop, then the end.
+  async function dictate(words) {
+    await pressMic();
+    await emit('result', final(words));
+    await emit('end');
+  }
+
+  function testIds(node, ids = []) {
+    if (typeof node === 'string') return ids;
+    if (node.props.testID) ids.push(node.props.testID);
+    node.children.forEach((child) => testIds(child, ids));
+    return ids;
+  }
+
+  function sentText(host, index = 0) {
+    const { messages } = JSON.parse(host.streamFetch.mock.calls[index][1].body);
+    return messages.at(-1).parts[0].text;
+  }
+
+  beforeEach(() => {
+    setSpeechRecognition();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  test('the mic sits inside the field before send, and starts with no hints', async () => {
+    await renderChat();
+    const field = input().parent;
+    const ids = testIds(field);
+    expect(ids.indexOf('nigel_input')).toBeLessThan(ids.indexOf('nigel_dictation'));
+    expect(ids.indexOf('nigel_dictation')).toBeLessThan(ids.indexOf('nigel_send'));
+    expect(footerQuery().getByLabelText('Dictate')).toBeTruthy();
+    await pressMic();
+    expect(speech.start).toHaveBeenCalledTimes(1);
+    expect(speech.start.mock.calls[0][0].contextualStrings).toEqual([]);
+    expect(footerQuery().getByLabelText('Stop dictation')).toBeTruthy();
+    await pressMic();
+    expect(speech.stop).toHaveBeenCalledTimes(1);
+  });
+
+  test('the listening row sits above the input row, under the prompt chips', async () => {
+    await renderChat();
+    await pressMic();
+    const ids = testIds(screen.getByTestId('nigel_composer'));
+    expect(ids.indexOf('nigel_prompt_0')).toBeLessThan(ids.indexOf('nigel_listening'));
+    expect(ids.indexOf('nigel_listening')).toBeLessThan(ids.indexOf('nigel_new_chat'));
+    expect(ids.indexOf('nigel_listening')).toBeLessThan(ids.indexOf('nigel_input'));
+  });
+
+  test('the mic is hidden where the phone cannot recognise speech on the device', async () => {
+    setSpeechRecognition({ onDevice: false });
+    await renderChat();
+    expect(footerQuery().queryByTestId('nigel_dictation')).toBeNull();
+  });
+
+  test('the mic is hidden with dictation false', async () => {
+    await renderChat({ properties: { dictation: false } });
+    expect(footerQuery().queryByTestId('nigel_dictation')).toBeNull();
+  });
+
+  test('words still being heard show grey at the cursor and are not in the text', async () => {
+    await renderChat();
+    await typeText('Looks good.');
+    await pressMic();
+    await emit('result', partial('for Sam can you check'));
+    const field = input();
+    expect(field.props.value).toBeUndefined();
+    const grey = within(field).getByText('for Sam can you check');
+    expect(grey.props.children).toEqual(' for Sam can you check');
+    expect(grey.props.style.color).toEqual(expect.any(String));
+    expect(grey.props.style.color).not.toEqual(StyleSheet.flatten(field.props.style).color);
+    // Cancel shows that nothing was taken into the text.
+    await act(async () => {
+      fireEvent.press(footerQuery().getByTestId('nigel_listening_cancel'));
+    });
+    expect(input().props.value).toEqual('Looks good.');
+  });
+
+  test('a final result goes in at the cursor with a space, and "for Sam" stays as said', async () => {
+    await renderChat();
+    await typeText('Ask to look', 3);
+    await dictate('for Sam');
+    expect(input().props.value).toEqual('Ask for Sam to look');
+    // The cursor moved after the words: the next session goes in there.
+    await dictate('please');
+    expect(input().props.value).toEqual('Ask for Sam please to look');
+    await typeText('');
+    await dictate('for Sam, can you look');
+    expect(input().props.value).toEqual('for Sam, can you look');
+  });
+
+  test('final segments go in one after another at the cursor', async () => {
+    await renderChat();
+    await typeText('Start end', 5);
+    await pressMic();
+    await emit('result', final('one'));
+    await emit('result', final('two'));
+    await emit('end');
+    expect(input().props.value).toEqual('Start one two end');
+  });
+
+  test('cancel restores the text and cursor the session started with', async () => {
+    await renderChat();
+    await typeText('Draft one', 5);
+    await pressMic();
+    await emit('result', final('more'));
+    expect(within(input()).getByText('Draft more one')).toBeTruthy();
+    await act(async () => {
+      fireEvent.press(footerQuery().getByTestId('nigel_listening_cancel'));
+    });
+    expect(speech.abort).toHaveBeenCalledTimes(1);
+    expect(footerQuery().queryByTestId('nigel_listening')).toBeNull();
+    expect(input().props.value).toEqual('Draft one');
+    // The cursor is back where the session started: the next one goes in there.
+    await dictate('again');
+    expect(input().props.value).toEqual('Draft again one');
+  });
+
+  test('typing ends the session and keeps the words that showed', async () => {
+    await renderChat();
+    await pressMic();
+    await emit('result', partial('hello there'));
+    await typeText('hello there!');
+    expect(speech.abort).toHaveBeenCalledTimes(1);
+    expect(footerQuery().queryByTestId('nigel_listening')).toBeNull();
+    expect(input().props.value).toEqual('hello there!');
+  });
+
+  test('a prompt chip cancels the session and sends its prompt', async () => {
+    const { host } = await renderChat();
+    host.streamFetch.mockImplementation(async () => sse(textReply({ text: 'Two questions.' })));
+    await typeText('Draft');
+    await pressMic();
+    await emit('result', final('more'));
+    await act(async () => {
+      fireEvent.press(footerQuery().getByTestId('nigel_prompt_0'));
+    });
+    expect(speech.abort).toHaveBeenCalledTimes(1);
+    expect(footerQuery().queryByTestId('nigel_listening')).toBeNull();
+    await waitFor(() => expect(screen.getByText('Two questions.')).toBeTruthy());
+    expect(sentText(host)).toEqual('What is waiting on me?');
+    expect(input().props.value).toEqual('Draft');
+  });
+
+  test('setInput and newChat cancel a running session', async () => {
+    await renderPage({
+      pageConfig: page([
+        {
+          id: 'fill',
+          type: 'Button',
+          properties: { title: 'Fill' },
+          events: {
+            onClick: [
+              {
+                id: 'fill',
+                type: 'CallMethod',
+                params: { blockId: 'nigel', method: 'setInput', args: [{ text: 'Log a ticket' }] },
+              },
+            ],
+          },
+        },
+        {
+          id: 'new',
+          type: 'Button',
+          properties: { title: 'New' },
+          events: {
+            onClick: [
+              { id: 'new', type: 'CallMethod', params: { blockId: 'nigel', method: 'newChat' } },
+            ],
+          },
+        },
+        { id: 'nigel', type: 'AgentChat', properties: { agentId: 'nigel' } },
+      ]),
+    });
+    await act(async () => {});
+    await pressMic();
+    await emit('result', partial('never mind'));
+    await act(async () => {
+      fireEvent.press(screen.getByText('Fill'));
+    });
+    expect(speech.abort).toHaveBeenCalledTimes(1);
+    expect(footerQuery().queryByTestId('nigel_listening')).toBeNull();
+    expect(input().props.value).toEqual('Log a ticket');
+    await pressMic();
+    await emit('result', final('for Sam'));
+    await act(async () => {
+      fireEvent.press(screen.getByText('New'));
+    });
+    expect(speech.abort).toHaveBeenCalledTimes(2);
+    expect(footerQuery().queryByTestId('nigel_listening')).toBeNull();
+    expect(input().props.value).toEqual('Log a ticket');
+  });
+
+  test('the composer’s New chat cancels a running session', async () => {
+    await renderChat();
+    await pressMic();
+    await act(async () => {
+      fireEvent.press(footerQuery().getByTestId('nigel_new_chat'));
+    });
+    expect(speech.abort).toHaveBeenCalledTimes(1);
+    expect(footerQuery().queryByTestId('nigel_listening')).toBeNull();
+  });
+
+  test('while a reply streams, the reply stop holds the send slot and the red stop the mic slot', async () => {
+    const { host } = await renderChat();
+    host.streamFetch.mockImplementation(() => new Promise(() => undefined));
+    await send('Write me a long answer');
+    await waitFor(() => expect(footerQuery().getByTestId('nigel_stop')).toBeTruthy());
+    await pressMic();
+    const ids = testIds(input().parent);
+    expect(ids.indexOf('nigel_dictation')).toBeLessThan(ids.indexOf('nigel_stop'));
+    expect(footerQuery().queryByTestId('nigel_send')).toBeNull();
+    const background = (testID) =>
+      StyleSheet.flatten(footerQuery().getByTestId(testID).props.style).backgroundColor;
+    expect(background('nigel_dictation')).toEqual(expect.any(String));
+    expect(background('nigel_stop')).toEqual(expect.any(String));
+    expect(background('nigel_dictation')).not.toEqual(background('nigel_stop'));
+  });
+
+  test('send while listening waits for the final words and sends them', async () => {
+    const { host } = await renderChat();
+    host.streamFetch.mockImplementation(async () => sse(textReply({ text: 'Shipping it.' })));
+    await typeText('Looks good.');
+    await pressMic();
+    await emit('result', partial('ship it'));
+    expect(footerQuery().getByTestId('nigel_send').props.accessibilityState.disabled).toBe(false);
+    await act(async () => {
+      fireEvent.press(footerQuery().getByTestId('nigel_send'));
+    });
+    expect(speech.stop).toHaveBeenCalledTimes(1);
+    expect(host.streamFetch).not.toHaveBeenCalled();
+    await emit('result', final('ship it'));
+    await emit('end');
+    await waitFor(() => expect(screen.getByText('Shipping it.')).toBeTruthy());
+    expect(sentText(host)).toEqual('Looks good. ship it');
+    expect(input().props.value).toEqual('');
+  });
+
+  test('a transcript Lowdefy Dev injects dictates into AgentChat, and send sends it', async () => {
+    // As the shell's dev build installs it: injected('transcript') takes the next queued one.
+    const queued = [{ partials: ['for', 'for Sam can'], final: 'for Sam, can you look' }];
+    const remove = installDictationSource((name) =>
+      name === 'transcript' ? queued.shift() : undefined
+    );
+    try {
+      setSpeechRecognition({ available: false });
+      const { host } = await renderChat();
+      host.streamFetch.mockImplementation(async () => sse(textReply({ text: 'On it.' })));
+      jest.useFakeTimers();
+      await pressMic();
+      await act(async () => {
+        jest.advanceTimersByTime(600);
+      });
+      expect(within(input()).getByText('for Sam can')).toBeTruthy();
+      await act(async () => {
+        jest.advanceTimersByTime(300);
+      });
+      expect(footerQuery().queryByTestId('nigel_listening')).toBeNull();
+      expect(input().props.value).toEqual('for Sam, can you look');
+      jest.useRealTimers();
+      await act(async () => {
+        fireEvent.press(footerQuery().getByTestId('nigel_send'));
+      });
+      await waitFor(() => expect(screen.getByText('On it.')).toBeTruthy());
+      expect(sentText(host)).toEqual('for Sam, can you look');
+      expect(speech.start).not.toHaveBeenCalled();
+    } finally {
+      remove();
+    }
   });
 });

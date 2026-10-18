@@ -213,6 +213,8 @@ function AgentChat({
   const { follow, following, onContentLayout, onTouchStart } = useFollowScroll();
   const [sheetOpen, setSheetOpen] = useState(false);
   const [fill, setFill] = useState(null);
+  // The composer's controls, set as it renders: New chat drops its dictation session.
+  const composerRef = useRef({ cancelDictation: () => {} });
 
   // An unanswered tool call left by a reply cut off this session fails validation for the whole
   // history. A reply still streaming is not cut off, and a client-side tool still running will
@@ -283,6 +285,7 @@ function AgentChat({
   }, [methods]);
 
   const handleNewChat = useCallback(() => {
+    composerRef.current.cancelDictation();
     chatRef.current.stop();
     setSheetOpen(false);
     threads.newThread();
@@ -456,6 +459,8 @@ function AgentChat({
       busy={isBusy}
       colors={colors}
       components={components}
+      controlRef={composerRef}
+      dictation={properties.dictation !== false}
       disabled={isLoading}
       fill={fill}
       newChat={sender.newChat !== false}
