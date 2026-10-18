@@ -31,6 +31,7 @@ const nativeBlockTypes = {
     'Divider',
     'Empty',
     'Icon',
+    'Illustration',
     'List',
     'ListItem',
     'Markdown',
@@ -104,6 +105,7 @@ const nativeBlockTypes = {
     Divider: [],
     Empty: ['Inbox'],
     Icon: ['loading'],
+    Illustration: [],
     List: [],
     ListItem: ['chevron-right'],
     Markdown: [],
@@ -238,6 +240,10 @@ const nativeBlockTypes = {
       cssKeys: ['element', 'image', 'title', 'description', 'footer'],
     },
     Icon: {
+      category: 'display',
+      cssKeys: ['element'],
+    },
+    Illustration: {
       category: 'display',
       cssKeys: ['element'],
     },

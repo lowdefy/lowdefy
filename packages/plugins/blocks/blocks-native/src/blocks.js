@@ -27,6 +27,7 @@ export { default as DateSelector } from './blocks/DateSelector/DateSelector.js';
 export { default as Divider } from './blocks/Divider/Divider.js';
 export { default as Empty } from './blocks/Empty/Empty.js';
 export { default as Icon } from './blocks/Icon/Icon.js';
+export { default as Illustration } from './blocks/Illustration/Illustration.js';
 export { default as List } from './blocks/List/List.js';
 export { default as ListItem } from './blocks/ListItem/ListItem.js';
 export { default as Markdown } from './blocks/Markdown/Markdown.js';

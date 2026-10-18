@@ -284,6 +284,10 @@ const typeManifest = {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
+    Illustration: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
     List: {
       package: '@lowdefy/blocks-native',
       version: 6,
