@@ -14,10 +14,54 @@
   limitations under the License.
 */
 
-// Filled in by a later change; the command is listed so lowdefy mobile --help
-// shows the whole group.
-async function mobileUpdate() {
-  throw new Error('lowdefy mobile update is not available yet.');
+import config from './config.js';
+import createUpdateMessage from './createUpdateMessage.js';
+import parseRollout from './parseRollout.js';
+import promoteUpdate from './promoteUpdate.js';
+import rollbackUpdate from './rollbackUpdate.js';
+import runEasUpdate from './runEasUpdate.js';
+
+function checkOptions({ promote, rollback, rollout }) {
+  const picked = [
+    ['--promote', promote],
+    ['--rollback', rollback],
+    ['--rollout', rollout !== undefined],
+  ].filter(([, value]) => value === true);
+  if (picked.length > 1) {
+    throw new Error(
+      `${picked.map(([flag]) => flag).join(' and ')} cannot be used together. Pick one.`
+    );
+  }
+}
+
+// lowdefy mobile update: sends the shell's JavaScript over the air to the
+// environment's channel. --rollout sends it to a share of devices, --promote
+// takes the latest update to all of them and --rollback republishes the one
+// before it.
+async function mobileUpdate({ context }) {
+  const { platform = 'all', promote = false, rollback = false, rollout } = context.options;
+  const dryRun = context.options.dryRun === true;
+  checkOptions({ promote, rollback, rollout });
+  const rolloutPercent = rollout === undefined ? undefined : parseRollout(rollout);
+  const shellProject = await config({ context });
+  if (promote) {
+    await promoteUpdate({ context, dryRun, platform, shellProject });
+    return;
+  }
+  if (rollback) {
+    await rollbackUpdate({ context, dryRun, platform, shellProject });
+    return;
+  }
+  const { environment, projectDirectory, runtimeVersion, shellJson, shellVersion } = shellProject;
+  await runEasUpdate({
+    context,
+    dryRun,
+    environment,
+    message: createUpdateMessage({ profile: shellJson.profile, runtimeVersion, shellVersion }),
+    platform,
+    projectDirectory,
+    rollout: rolloutPercent,
+  });
 }
 
 export default mobileUpdate;

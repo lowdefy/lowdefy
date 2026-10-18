@@ -48,12 +48,14 @@ const MOBILE_COMMANDS = [
     name: 'update',
     description: "Send the shell's JavaScript to installed binaries as an over-the-air update.",
     handler: mobileUpdate,
+    options: ['platform', 'rollout', 'promote', 'rollback'],
   },
   {
     name: 'release',
     description:
       'Build and submit when the native code changed, send an update when only the JavaScript did, or do nothing.',
     handler: mobileRelease,
+    options: ['platform', 'nonInteractive', 'noWait', 'autoSubmit', 'rollout'],
   },
   {
     name: 'checklist',
@@ -64,6 +66,10 @@ const MOBILE_COMMANDS = [
 
 function createMobileOptions() {
   return {
+    autoSubmit: new Option(
+      '--auto-submit',
+      'Have EAS submit each build when it finishes (eas build --auto-submit), so the job need not wait.'
+    ),
     dryRun: new Option(
       '--dry-run',
       'Print the EAS commands, with their environment, and run none.'
@@ -78,7 +84,11 @@ function createMobileOptions() {
     ),
     nonInteractive: new Option(
       '--non-interactive',
-      'Run EAS without prompts, as CI does, with the credentials stored in EAS. A build is queued and not waited for.'
+      'Run EAS without prompts, as CI does, with the credentials stored in EAS. build then queues the build and does not wait for it. release always runs this way.'
+    ),
+    noWait: new Option(
+      '--no-wait',
+      'Queue builds and end without waiting for them. Needs --auto-submit.'
     ),
     platform: new Option('--platform <platform>', 'The store to work on.')
       .choices(['ios', 'android', 'all'])
@@ -87,6 +97,15 @@ function createMobileOptions() {
       '--profile <profile>',
       "development: a development client of the shell's dev variant, for internal distribution, that connects to lowdefy dev."
     ).choices(['development']),
+    promote: new Option('--promote', 'Roll the latest update out to every device.'),
+    rollback: new Option(
+      '--rollback',
+      'Republish the update before the latest one, for the same runtime version.'
+    ),
+    rollout: new Option(
+      '--rollout <percent>',
+      'Send the update to this percentage of devices; --promote sends it to the rest.'
+    ),
     shell: new Option(
       '--shell <id>',
       'The shell (mobile.shells id) to work on. Needed when the app declares more than one.'

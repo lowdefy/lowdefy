@@ -33,9 +33,13 @@ function getEasEnv({ projectDirectory }) {
   // LOWDEFY_SHELL_CONFIG makes the app config eas reads on this machine the
   // shell's own (its EAS project, ids and runtime version), not Lowdefy Dev's;
   // a build profile's env in eas.json still wins inside eas build.
+  // EAS_UPDATE_SKIP_ENVIRONMENT_CHECK: the shell takes its config from
+  // shell.json, not EAS environment variables, so eas update needs no
+  // --environment, on a developer's machine as in CI.
   return {
     EAS_NO_VCS: '1',
     EAS_PROJECT_ROOT: projectDirectory,
+    EAS_UPDATE_SKIP_ENVIRONMENT_CHECK: '1',
     LOWDEFY_SHELL_CONFIG: path.join(projectDirectory, 'shell.json'),
   };
 }

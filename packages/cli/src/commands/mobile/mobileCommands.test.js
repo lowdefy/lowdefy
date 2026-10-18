@@ -119,3 +119,33 @@ test('lowdefy mobile submit takes --platform and --non-interactive', () => {
   expect(flags).toEqual(expect.arrayContaining(['--platform', '--non-interactive']));
   expect(flags).not.toContain('--profile');
 });
+
+test('lowdefy mobile release parses the flags CI passes', () => {
+  const release = findCommand('release');
+  release.parse(['--non-interactive', '--no-wait', '--auto-submit', '--rollout', '10'], {
+    from: 'user',
+  });
+  expect(release.opts()).toEqual(
+    expect.objectContaining({
+      nonInteractive: true,
+      wait: false,
+      autoSubmit: true,
+      rollout: '10',
+      platform: 'all',
+    })
+  );
+});
+
+test('lowdefy mobile release waits by default', () => {
+  const release = findCommand('release');
+  release.parse([], { from: 'user' });
+  expect(release.opts().wait).toBe(true);
+});
+
+test('lowdefy mobile update takes --rollout, --promote and --rollback', () => {
+  const update = findCommand('update');
+  update.parse(['--promote', '--platform', 'android'], { from: 'user' });
+  expect(update.opts()).toEqual(expect.objectContaining({ promote: true, platform: 'android' }));
+  const flags = update.options.map((option) => option.long);
+  expect(flags).toEqual(expect.arrayContaining(['--rollout', '--promote', '--rollback']));
+});
