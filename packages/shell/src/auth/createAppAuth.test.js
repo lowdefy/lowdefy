@@ -360,6 +360,27 @@ test('a shared device signs out when the app closes, and skips biometrics', asyn
   expectPurged(context);
 });
 
+test('a shared device signs out on start when its token was stored behind biometrics', async () => {
+  const kv = createMemoryStore();
+  const first = await setup({
+    kv,
+    server: createServer({ auth: { ...settings, unlock: 'biometric' } }).server,
+  });
+  await signIn(first);
+  expect(first.auth.tokenStore.isProtected()).toBe(true);
+  first.auth.dispose();
+  // The app became a shared device, and the shell kept the new settings, before it was killed.
+  const shared = { ...settings, unlock: 'biometric', sharedDevice: true };
+  kv.set('lowdefy-shell:auth:field', JSON.stringify({ settings: shared, slug: 'field' }));
+  const context = await setup({
+    kv,
+    server: createServer({ auth: shared }).server,
+  });
+  expect(context.onSignedOut).toHaveBeenCalledTimes(1);
+  expect(context.localAuthentication.authenticateAsync).not.toHaveBeenCalled();
+  expect(SecureStore.items.size).toBe(0);
+});
+
 test('a shared device signs out on start when the app was closed without going to the background', async () => {
   const kv = createMemoryStore();
   const { server } = createServer({ auth: { ...settings, sharedDevice: true } });
