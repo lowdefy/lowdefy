@@ -13,7 +13,7 @@ export default {
   setupFiles: ['<rootDir>/src/test/removeWindow.js'],
   // The preset's pattern assumes a flat node_modules; pnpm nests each package under .pnpm.
   transformIgnorePatterns: [
-    'node_modules/(?!(\\.pnpm/[^/]+/node_modules/)?((jest-)?react-native|@react-native(-community)?|change-case|intl-messageformat|@formatjs)/)',
+    'node_modules/(?!(\\.pnpm/[^/]+/node_modules/)?((jest-)?react-native(-svg)?|@react-native(-community)?|change-case|intl-messageformat|@formatjs)/)',
   ],
   testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test/'],
 };

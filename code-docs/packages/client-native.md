@@ -22,6 +22,8 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 | `link/setupLink.js`                                              | Page links through the host router, others through `Linking`                 |
 | `screen/Screen.js`                                               | The `Screen` page type; reports header options to `onScreenOptions`          |
 | `trace/describeBlock.js`                                         | The trace's element description, by block id                                 |
+| `elements/createElementRegistry.js`, `useElementRef.js`          | Native views by page and block id (`globals.elements`), for native actions   |
+| `icon/Icon.js`                                                   | Draws IconData (the web's icon node data) with `react-native-svg`            |
 
 ## Differences from the web renderer
 
@@ -51,6 +53,15 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
   `lowdefy.theme._resolvedAntdToken` is the mode's tokens. A shell wraps its pages in one
   provider; a `LowdefyPage` outside one makes its own. A Screen's `headerRight` carries the
   page's theme, breakpoint and class map into the header the router draws.
+- There is no `document.getElementById`. Each `BlockLayout` view registers in the host's element
+  registry (`globals.elements`, from `createNativeGlobals`) as the block's `view`, and the page's
+  ScrollView as its `scroll`, while mounted. A block registers the control it focuses with
+  `useElementRef({ blockId, kind: 'input' })`. The shell's native `SetFocus` and `ScrollTo` find
+  them by the page and block id; the view registered last wins, so a page on screen twice
+  answers for the one on top.
+- `Icon` draws the same IconData as the web (`{ node, attrs, size }`), with lucide's defaults
+  (24px, `currentColor` stroke 2) under a set's own attributes. Blocks and the shell draw every
+  icon through it.
 - The engine's `window` and `document` keys hold plain objects. `focus` and `blur` have no
   source on a phone; `online` and `offline` follow the `network` the shell passes.
 

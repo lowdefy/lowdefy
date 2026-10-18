@@ -397,3 +397,14 @@ test('a list block draws its slot once per item in state', async () => {
   expect(screen.getByText('Two')).toBeTruthy();
   expect(screen.getByTestId('items.0.label')).toBeTruthy();
 });
+
+test('a page registers its scroll view and block views for native actions by block id', async () => {
+  const { host } = await renderPage({ pageConfig: greetingPage });
+  const { elements } = host.globals;
+  expect(elements.find({ kind: 'scroll', pageId: 'home' })).not.toBeNull();
+  expect(elements.find({ blockId: 'say_hi', kind: 'view', pageId: 'home' })).not.toBeNull();
+  expect(elements.find({ blockId: 'say_hi', kind: 'view', pageId: 'other' })).toBeNull();
+  await screen.unmount();
+  expect(elements.find({ kind: 'scroll', pageId: 'home' })).toBeNull();
+  expect(elements.find({ blockId: 'say_hi', kind: 'view', pageId: 'home' })).toBeNull();
+});

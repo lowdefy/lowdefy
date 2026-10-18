@@ -20,11 +20,12 @@ import { View } from 'react-native';
 import BreakpointContext from '../layout/BreakpointContext.js';
 import ColumnGapContext from '../layout/ColumnGapContext.js';
 import layoutStyles from '../layout/layoutStyles.js';
+import useElementRef from '../elements/useElementRef.js';
 
 // The view a block is placed in. Its testID and accessibilityLabel are the block id, so device
 // automation finds a block as a browser journey finds its `bl-<blockId>` element. The label is
 // not made an accessibility element (accessible stays unset), so screen readers still reach the
-// controls inside.
+// controls inside. The view is registered as the block's element, which ScrollTo measures.
 //
 // In a gapped area the block takes the column gap as left padding, so its own style (a
 // background, a border) goes on an inner view that fills the placement, as the web's column div
@@ -32,9 +33,10 @@ import layoutStyles from '../layout/layoutStyles.js';
 const BlockLayout = ({ blockId, children, layout = {}, style }) => {
   const breakpoint = useContext(BreakpointContext);
   const columnGap = useContext(ColumnGapContext);
+  const ref = useElementRef({ blockId, kind: 'view' });
   if (layout.disabled === true) {
     return (
-      <View accessibilityLabel={blockId} style={style} testID={blockId}>
+      <View accessibilityLabel={blockId} ref={ref} style={style} testID={blockId}>
         {children}
       </View>
     );
@@ -42,14 +44,19 @@ const BlockLayout = ({ blockId, children, layout = {}, style }) => {
   const placement = layoutStyles(layout, breakpoint, columnGap).child;
   if (columnGap === 0 || placement.display === 'none') {
     return (
-      <View accessibilityLabel={blockId} style={[placement, style]} testID={blockId}>
+      <View accessibilityLabel={blockId} ref={ref} style={[placement, style]} testID={blockId}>
         {children}
       </View>
     );
   }
   return (
     <View style={placement}>
-      <View accessibilityLabel={blockId} style={[{ flexGrow: 1 }, style]} testID={blockId}>
+      <View
+        accessibilityLabel={blockId}
+        ref={ref}
+        style={[{ flexGrow: 1 }, style]}
+        testID={blockId}
+      >
         {children}
       </View>
     </View>
