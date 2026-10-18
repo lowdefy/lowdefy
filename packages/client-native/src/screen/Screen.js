@@ -22,6 +22,7 @@ import FocusMemoryContext from './FocusMemoryContext.js';
 import formatIconTitle from '../icon/formatIconTitle.js';
 import getSfSymbol from '../icon/getSfSymbol.js';
 import HeaderActionButton from './HeaderActionButton.js';
+import HeaderBottom from './HeaderBottom.js';
 import NaturalSizeContext from '../layout/NaturalSizeContext.js';
 import PageContexts from '../style/PageContexts.js';
 import PageStyleContext from '../style/PageStyleContext.js';
@@ -194,14 +195,18 @@ function useRefreshEvent({ events, methodsRef, setRefresh }) {
  *   or the items `[{ id, title, symbol, destructive, disabled, onPress }]` the button opens a menu
  *   of; `render` draws the action as an icon button, opening its menu when it has one);
  * - `headerSearch`: `{ placeholder, autoFocus, hideWhenScrolling, onChangeText, onSearch,
- *   onCancel }` for a native search bar, or undefined.
+ *   onCancel }` for a native search bar, or undefined;
+ * - `headerBottom`: whether the page pins blocks under the bar, so the router leaves out the
+ *   bar's own hairline (the strip draws one under itself).
  *
- * Pull-to-refresh (onRefresh) and onFocus come from the page's screen (ScreenContext). The footer
- * slot is drawn by the page below its scroll view, pinned above the tab bar and the keyboard.
+ * The headerBottom slot is drawn here, as the page's first content, pinned under the bar as the
+ * page scrolls (HeaderBottom, from the page's scroll offset and header inset). The footer slot is
+ * drawn by the page below its scroll view, pinned above the tab bar and the keyboard.
+ * Pull-to-refresh (onRefresh) and onFocus come from the page's screen too (ScreenContext).
  */
 function Screen({ blockId, components, content, events, loading, methods, properties }) {
   const onScreenOptions = useContext(ScreenOptionsContext);
-  const { focused, footer, setRefresh } = useContext(ScreenContext);
+  const { focused, footer, headerInset, scrollY, setRefresh } = useContext(ScreenContext);
   const focusMemory = useContext(FocusMemoryContext);
   const methodsRef = useRef(methods);
   methodsRef.current = methods;
@@ -227,10 +232,12 @@ function Screen({ blockId, components, content, events, loading, methods, proper
 
   const { presentation = 'card', title } = properties;
   const largeTitle = properties.largeTitle === true;
+  const headerBottom = typeof content.headerBottom === 'function';
   useEffect(() => {
     if (onScreenOptions === null) return;
     onScreenOptions({
       headerActions,
+      headerBottom,
       headerLeft,
       headerRight,
       headerSearch,
@@ -240,6 +247,7 @@ function Screen({ blockId, components, content, events, loading, methods, proper
     });
   }, [
     headerActions,
+    headerBottom,
     headerLeft,
     headerRight,
     headerSearch,
@@ -248,7 +256,18 @@ function Screen({ blockId, components, content, events, loading, methods, proper
     presentation,
     title,
   ]);
-  return content.content ? content.content() : null;
+  const page = content.content ? content.content() : null;
+  if (!headerBottom) {
+    return page;
+  }
+  return (
+    <>
+      <HeaderBottom blockId={blockId} headerInset={headerInset} scrollY={scrollY}>
+        {content.headerBottom({ rowGap: 8 })}
+      </HeaderBottom>
+      {page}
+    </>
+  );
 }
 
 Screen.meta = meta;

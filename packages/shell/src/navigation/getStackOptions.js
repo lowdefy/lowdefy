@@ -120,7 +120,8 @@ function getSearchOptions({ headerSearch, searchBarRef }) {
  * The native stack options for a Screen page's header options (client-native screen/Screen.js):
  * the title (a large title on iOS that collapses into the bar as the page scrolls), the
  * presentation, a native search bar, and the header's slots and icon buttons at their natural
- * size, as native bar buttons on iOS.
+ * size, as native bar buttons on iOS. A page with a headerBottom hides the bar's own hairline:
+ * the pinned strip under the bar draws one under itself.
  *
  * @param {Object} params
  * @param {Object} params.options What the Screen reported.
@@ -128,10 +129,20 @@ function getSearchOptions({ headerSearch, searchBarRef }) {
  * @param {Object} params.searchBarRef The ref the search bar's commands (focus) are set on.
  */
 function getStackOptions({ options, platform, searchBarRef }) {
-  const { headerActions, headerLeft, headerRight, headerSearch, largeTitle, presentation, title } =
-    options;
+  const {
+    headerActions,
+    headerBottom,
+    headerLeft,
+    headerRight,
+    headerSearch,
+    largeTitle,
+    presentation,
+    title,
+  } = options;
   return {
     headerBackVisible: true,
+    // Undefined keeps the stack's own default.
+    headerShadowVisible: headerBottom === true ? false : undefined,
     headerLargeTitleEnabled: largeTitle,
     headerLargeTitleShadowVisible: false,
     headerSearchBarOptions: getSearchOptions({ headerSearch, searchBarRef }),

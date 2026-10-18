@@ -15,7 +15,7 @@
 */
 
 import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
-import { RefreshControl, ScrollView, useWindowDimensions } from 'react-native';
+import { Animated, RefreshControl, useWindowDimensions } from 'react-native';
 import { getAppContext } from '@lowdefy/engine';
 import { appStorageKey, pageInstanceKey, serializer, type } from '@lowdefy/helpers';
 import { getBreakpoint } from '@lowdefy/layout-native';
@@ -57,11 +57,26 @@ function useRefresh({ pageConfig }) {
   return { hasRefresh, onRefresh, refreshing, setRefresh };
 }
 
+// The page scroll view's vertical offset as an Animated value on the native driver, which a
+// Screen's headerBottom moves with.
+function useScrollY() {
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const onScroll = useMemo(
+    () =>
+      Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
+        useNativeDriver: true,
+      }),
+    [scrollY]
+  );
+  return { onScroll, scrollY };
+}
+
 const Page = ({
   bottomInset,
   core,
   focused,
   globals,
+  headerInset,
   host,
   instanceId,
   jsMap,
@@ -104,8 +119,12 @@ const Page = ({
     pageConfig.dynamic === true ? `${screenKey}:${buildRef.current.build}` : screenKey;
 
   const { hasRefresh, onRefresh, refreshing, setRefresh } = useRefresh({ pageConfig });
+  const { onScroll, scrollY } = useScrollY();
   const [footer] = useState(createFooterStore);
-  const screen = useMemo(() => ({ focused, footer, setRefresh }), [focused, footer, setRefresh]);
+  const screen = useMemo(
+    () => ({ focused, footer, headerInset, scrollY, setRefresh }),
+    [focused, footer, headerInset, scrollY, setRefresh]
+  );
 
   const lowdefy = initNativeLowdefy({
     core,
@@ -126,11 +145,14 @@ const Page = ({
             {/* A native stack header is translucent on iOS 26 and later and the page scrolls
                 under it: automatic insets start the content below the header and the tab bar,
                 and let a large title collapse as the page scrolls. The page is drawn on the
-                grouped background, as an iOS screen of grouped sections is. */}
-            <ScrollView
+                grouped background, as an iOS screen of grouped sections is. Its offset drives a
+                Screen's headerBottom on the native driver. */}
+            <Animated.ScrollView
               contentInsetAdjustmentBehavior="automatic"
               keyboardShouldPersistTaps="handled"
+              onScroll={onScroll}
               ref={scrollRef}
+              scrollEventThrottle={16}
               style={{ backgroundColor: theme.tokens.colorGroupedBackground }}
               refreshControl={
                 hasRefresh ? (
@@ -168,7 +190,7 @@ const Page = ({
                   );
                 }}
               </Context>
-            </ScrollView>
+            </Animated.ScrollView>
             <ScreenFooter bottomInset={bottomInset} footer={footer} />
           </ScreenContext.Provider>
         </ScreenOptionsContext.Provider>
@@ -207,6 +229,10 @@ const Page = ({
  *   a screen under another keeps its own query.
  * @param {boolean} [props.focused] Whether the screen is the one shown; a Screen page fires
  *   onFocus each time it becomes true. Defaults to true.
+ * @param {Object|number} [props.headerInset] Where the navigation bar's bottom edge is in the
+ *   page scroll view's frame, which a Screen's headerBottom pins under: the header height (an
+ *   Animated value that follows a collapsing large title) when the page scrolls under a
+ *   translucent bar, or 0 when the page sits below the bar. Defaults to 0.
  * @param {Object} [props.resetContext] `{ reset, setReset }`: rebuild the page context once.
  * @param {number} [props.bottomInset] The screen's bottom safe area: the tab bar and the home
  *   indicator, which a Screen's footer is drawn above. Defaults to 0.
@@ -218,6 +244,7 @@ const LowdefyPage = ({
   bottomInset = 0,
   core,
   focused = true,
+  headerInset = 0,
   host,
   instanceId,
   jsMap,
@@ -256,6 +283,7 @@ const LowdefyPage = ({
         core={core}
         focused={focused}
         globals={globals}
+        headerInset={headerInset}
         host={host}
         instanceId={instanceId}
         jsMap={jsMap}

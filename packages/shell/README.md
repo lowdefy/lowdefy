@@ -149,6 +149,13 @@ the slot) a custom item; elsewhere a side is a row of icon buttons. A side with 
 stack's own (a drawer's menu button). Pull-to-refresh (`onRefresh`) and `onFocus` come from the
 page's screen: `PageScreen` passes `useIsFocused()`.
 
+A Screen's `headerBottom` slot pins its blocks under the bar. `PageScreen` passes `headerInset`,
+where the bar's bottom edge is in the page's scroll view: the native stack's
+`useAnimatedHeaderHeight()` (from `expo-router/native-stack`), which follows a large title as it
+collapses, when the page scrolls under the bar (`navigation/isPageUnderHeader.js`: iOS 26 and
+later, or a large title or search bar before that), and 0 when the page sits below it (Android).
+A page with a headerBottom hides the bar's own hairline; the strip draws one under itself.
+
 Each screen keeps its page state per route instance (`useRoute().key`), so task B pushed on task A
 has its own, and reads `_url_query` from its own route (`routePath`). The focused screen sets the
 session's current path and instance (`setCurrentPath`), which the host's `location` and Lowdefy

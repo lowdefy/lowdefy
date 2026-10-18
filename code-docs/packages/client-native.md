@@ -23,6 +23,8 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 | `link/setupLink.js`                                              | Page links through the host router, others through `Linking`                 |
 | `screen/Screen.js`                                               | The `Screen` page type; reports header options to `onScreenOptions`          |
 | `screen/HeaderActionButton.js`                                   | A header action as a natural-size icon button                                |
+| `screen/HeaderBottom.js`, `getHeaderBottomMotion.js`             | A Screen's headerBottom, pinned under the header by the page's scroll offset |
+| `layout/EdgeInsetContext.js`                                     | An area's horizontal padding, which an edge-to-edge block cancels            |
 | `trace/describeBlock.js`                                         | The trace's element description, by block id                                 |
 | `elements/createElementRegistry.js`, `useElementRef.js`          | Native views by page and block id (`globals.elements`), for native actions   |
 | `icon/Icon.js`                                                   | Draws IconData (the web's icon node data) with `react-native-svg`            |
@@ -85,9 +87,10 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   shown route, as before.
 - `Screen` reports its header to the shell's router (`onScreenOptions`): `title`, `largeTitle`,
   `presentation`, `headerLeft` and `headerRight` (slot render functions), `headerActions` (icon
-  buttons with an SF Symbol from `getSfSymbol`, an `onPress`, a `menu` of `{ id, title, symbol,
-  destructive, disabled, onPress }` items or null, and a `render` that draws a
-  `HeaderActionButton`, which opens the menu in a `Modal` where the shell has no native menu) and `headerSearch` (search bar callbacks; `onSearchChange` is debounced).
+  buttons with an SF Symbol from `getSfSymbol`, an `onPress`, a `menu` of items (`id`, `title`,
+  `symbol`, `destructive`, `disabled`, `onPress`) or null, and a `render` that draws a
+  `HeaderActionButton`, which opens the menu in a `Modal` where the shell has no native menu)
+  and `headerSearch` (search bar callbacks; `onSearchChange` is debounced).
   Header slots render inside `NaturalSizeContext`, so `BlockLayout` gives their blocks their
   content's size rather than a column width; a span-24 block would stretch the native bar item
   across the header and truncate the title. `ScreenContext` carries the screen's `focused` flag
@@ -95,13 +98,28 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   which turns on the page ScrollView's `RefreshControl` for `onRefresh` and holds `refreshing`
   until the event's promise settles (whether the control is there is read from the page config's
   `onRefresh`, never set as the Screen mounts: the iOS ScrollView draws the control ahead of its
-  content, so toggling it remounts the page tree), and `footer`, the store (`createFooterStore`) the Screen sets
-  its `footer` slot in. `ScreenFooter` draws that slot below the ScrollView, padded by
+  content, so toggling it remounts the page tree), and `footer`, the store (`createFooterStore`)
+  the Screen sets its `footer` slot in. `ScreenFooter` draws that slot below the ScrollView, padded by
   `LowdefyPage`'s `bottomInset` (the shell's bottom safe area: tab bar, home indicator) and kept
   above the keyboard by a `KeyboardAvoidingView`; only it re-renders when the slot is set, so the
   Screen's every-render update does not render the page again. What onFocus has fired for is kept
   per page context (`getFocusMemory`, through `FocusMemoryContext`), not in the Screen's refs, so
   the page tree mounting again onto a kept context does not fire it again.
+- A Screen's `headerBottom` slot is drawn by the Screen block itself, as the page's first content
+  (`HeaderBottom`, `zIndex: 1` over the content after it), not by the router: React Native's
+  `stickyHeaderIndices` pin at the scroll view's top, which on iOS is under the translucent bar.
+  `ScreenContext` carries `scrollY` (the page `Animated.ScrollView`'s offset, an `Animated.event`
+  on the native driver) and `headerInset` (the `headerInset` prop: where the bar's bottom edge is
+  in the scroll view's frame). The strip moves down by `max(0, scrollY + headerInset)`
+  (`getHeaderBottomMotion`), the distance the page has scrolled past the bar: at rest under a bar
+  the offset is minus the header height, so it is 0; as a large title collapses the header height
+  falls with the offset and it stays 0; pulled to refresh it is negative and clamped, so the strip
+  rides with the content and the spinner shows above it; once the bar is compact the strip is
+  pinned. Pinned, a surface in `colorGroupedBackground` reaching up over the bar (iOS 26's bar is
+  clear glass the page scrolls under) and a hairline in `colorSeparator` fade in over 6pt. The
+  slot pads its blocks to the 16pt screen inset and provides it in `EdgeInsetContext`, which a
+  ChipSelector cancels to run edge to edge. The Screen reports `headerBottom: true`, and the
+  shell's router hides the bar's own hairline.
 - The engine's `window` and `document` keys hold plain objects. `focus` and `blur` have no
   source on a phone; `online` and `offline` follow the `network` the shell passes.
 

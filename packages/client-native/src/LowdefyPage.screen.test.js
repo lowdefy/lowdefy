@@ -17,7 +17,7 @@
 import React from 'react';
 import { jest } from '@jest/globals';
 import { StyleSheet } from 'react-native';
-import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { act, fireEvent, render, screen, within } from '@testing-library/react-native';
 
 import buildPage from './test/buildPage.js';
 import createFakeHost from './test/createFakeHost.js';
@@ -188,7 +188,7 @@ function getRefreshControl() {
   return scrollView?.props.refreshControl;
 }
 
-function renderScreen({ focused = true, onScreenOptions = jest.fn(), page, record }) {
+function renderScreen({ focused = true, headerInset, onScreenOptions = jest.fn(), page, record }) {
   const { host } = createFakeHost({ path: '/home' });
   const core = createCore();
   const types = createTypes({ icons: { Plus: plus }, record });
@@ -196,6 +196,7 @@ function renderScreen({ focused = true, onScreenOptions = jest.fn(), page, recor
     <LowdefyPage
       core={core}
       focused={isFocused}
+      headerInset={headerInset}
       host={host}
       onScreenOptions={onScreenOptions}
       pageConfig={buildPage(page)}
@@ -356,6 +357,52 @@ test('header slot blocks take their natural size, not the column width', async (
   const more = screen.getByTestId('more');
   expect(more.props.style).not.toEqual(expect.objectContaining({ width: '100%' }));
   expect(JSON.stringify(more.props.style ?? null)).not.toContain('100%');
+});
+
+// The style of a host view, with Animated values read as numbers.
+function flatStyle(node) {
+  return StyleSheet.flatten(node.props.style) ?? {};
+}
+
+test('a headerBottom slot draws its blocks first, over the content, and reports them', async () => {
+  const { onScreenOptions, view } = renderScreen({
+    page: {
+      id: 'home',
+      type: 'Screen',
+      properties: { title: 'Designs', largeTitle: true },
+      slots: {
+        content: { blocks: [{ id: 'body', type: 'Paragraph', properties: { content: 'Body' } }] },
+        headerBottom: {
+          blocks: [{ id: 'spaces', type: 'Paragraph', properties: { content: 'Spaces' } }],
+        },
+      },
+    },
+  });
+  await view;
+  expect(await screen.findByText('Spaces')).toBeTruthy();
+  expect(onScreenOptions.mock.calls.at(-1)[0]).toMatchObject({ headerBottom: true });
+  const strip = screen.getByTestId('home_header_bottom');
+  // The strip is the page's first content, over the content below it.
+  expect(flatStyle(strip).zIndex).toBe(1);
+  expect(within(strip).queryByText('Body')).toBeNull();
+  // On a page at rest, its surface and hairline are hidden: they show once it is pinned
+  // (getHeaderBottomMotion).
+  expect(flatStyle(screen.getByTestId('home_header_bottom_separator')).opacity).toBe(0);
+});
+
+test('a Screen without a headerBottom slot reports none', async () => {
+  const { onScreenOptions, view } = renderScreen({
+    page: {
+      id: 'home',
+      type: 'Screen',
+      properties: { title: 'Designs' },
+      blocks: [{ id: 'body', type: 'Paragraph', properties: { content: 'Body' } }],
+    },
+  });
+  await view;
+  expect(await screen.findByText('Body')).toBeTruthy();
+  expect(onScreenOptions.mock.calls.at(-1)[0]).toMatchObject({ headerBottom: false });
+  expect(screen.queryByTestId('home_header_bottom')).toBeNull();
 });
 
 test('onRefresh turns on pull-to-refresh, refreshing until its actions finish', async () => {

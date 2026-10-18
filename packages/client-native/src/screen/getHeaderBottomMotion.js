@@ -1,0 +1,50 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { Animated } from 'react-native';
+
+// The scroll distance over which the pinned strip's surface and hairline fade in.
+const FADE_DISTANCE = 6;
+
+/**
+ * How a Screen's headerBottom moves with the page: `translateY`, the distance the page's top has
+ * scrolled past the navigation bar's bottom edge (0 while it is at or below the bar, so the strip
+ * rides with the content as a large title collapses or the page is pulled to refresh), and
+ * `pinnedOpacity`, which fades the strip's surface and hairline in over the first 6pt pinned.
+ *
+ * @param {Object} params
+ * @param {Object|number} params.headerInset Where the bar's bottom edge is in the page scroll
+ *   view's frame.
+ * @param {Object|number} params.scrollY The page scroll view's vertical offset.
+ * @returns {{ pinnedOpacity: Object, translateY: Object }} Animated values.
+ */
+function getHeaderBottomMotion({ headerInset, scrollY }) {
+  const scrolledPast = Animated.add(scrollY, headerInset);
+  return {
+    pinnedOpacity: scrolledPast.interpolate({
+      extrapolate: 'clamp',
+      inputRange: [0, FADE_DISTANCE],
+      outputRange: [0, 1],
+    }),
+    translateY: scrolledPast.interpolate({
+      extrapolateLeft: 'clamp',
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+    }),
+  };
+}
+
+export default getHeaderBottomMotion;

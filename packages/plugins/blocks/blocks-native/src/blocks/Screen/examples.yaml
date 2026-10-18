@@ -54,6 +54,72 @@
                     key:
                       _state: tasks.$.key
 
+# A list page with a space switcher and a filter pinned under the search field: they ride with
+# the content as the large title collapses, then stay under the header, on the screen's
+# background with a hairline, as the list scrolls on.
+- id: m-designs
+  type: Screen
+  properties:
+    title: Designs
+    largeTitle: true
+    headerSearch:
+      placeholder: Search designs
+  events:
+    onFocus:
+      - id: load
+        type: Request
+        params: get_designs
+  slots:
+    headerBottom:
+      blocks:
+        - id: space_id
+          type: ChipSelector
+          properties:
+            title: Space
+            options:
+              _request: get_spaces
+            moreChip:
+              label: All spaces
+              icon: LayoutGrid
+          events:
+            onChange:
+              - id: load
+                type: Request
+                params: get_designs
+            onMore:
+              - id: open
+                type: CallMethod
+                params:
+                  blockId: spaces_sheet
+                  method: open
+        - id: scope
+          type: SegmentedControl
+          properties:
+            title: Scope
+            options:
+              - Open
+              - Mine
+              - All
+          events:
+            onChange:
+              - id: load
+                type: Request
+                params: get_designs
+    content:
+      blocks:
+        - id: designs
+          type: List
+          blocks:
+            - id: designs.$.row
+              type: ListItem
+              properties:
+                title:
+                  _state: designs.$.title
+        - id: spaces_sheet
+          type: Sheet
+          properties:
+            title: All spaces
+
 # A detail page: a standard title, a header button that triggers its own event, and a ⋯ menu
 # whose picked item reaches onHeaderAction. The page reads its key from the query it was opened
 # with; two task screens stacked on each other keep their own state.

@@ -27,6 +27,8 @@ const mockNavigation = { setOptions: jest.fn() };
 // Whether the screen is the focused one; a screen under another is not.
 const mockFocus = { focused: true };
 
+// The native stack's header height, which a Screen's headerBottom pins under on iOS.
+jest.mock('expo-router/native-stack', () => ({ useAnimatedHeaderHeight: () => 0 }));
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 34, left: 0 }),
 }));

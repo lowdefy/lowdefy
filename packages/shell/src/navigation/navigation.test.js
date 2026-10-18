@@ -23,6 +23,7 @@ import getSlotRootPath from './getSlotRootPath.js';
 import getStackOptions from './getStackOptions.js';
 import getTabHref from './getTabHref.js';
 import getTabIcons from './getTabIcons.js';
+import isPageUnderHeader from './isPageUnderHeader.js';
 import toRouterHref from './toRouterHref.js';
 import { createRoot } from '../test/fixtures.js';
 
@@ -226,6 +227,40 @@ test('getStackOptions draws a header slot alone as its custom view on iOS', () =
   });
   expect(options.headerRight).toBe(slot);
   expect(options.unstable_headerRightItems).toBeUndefined();
+});
+
+test('getStackOptions hides the bar hairline for a headerBottom, which draws its own', () => {
+  const options = getStackOptions({
+    options: { ...screenOptions, headerBottom: true },
+    platform: 'ios',
+    searchBarRef: { current: null },
+  });
+  expect(options.headerShadowVisible).toBe(false);
+  // Without one, the stack keeps its own default.
+  expect(
+    getStackOptions({ options: screenOptions, platform: 'ios', searchBarRef: { current: null } })
+      .headerShadowVisible
+  ).toBeUndefined();
+});
+
+test('isPageUnderHeader: iOS 26 pages scroll under the glass bar', () => {
+  expect(isPageUnderHeader({ options: {}, platform: 'ios', platformVersion: '26.0' })).toBe(true);
+  expect(isPageUnderHeader({ options: {}, platform: 'ios', platformVersion: '27.1' })).toBe(true);
+});
+
+test('isPageUnderHeader: before iOS 26 only a large title or search bar makes the bar translucent', () => {
+  const ios18 = { platform: 'ios', platformVersion: '18.4' };
+  expect(isPageUnderHeader({ ...ios18, options: { largeTitle: false } })).toBe(false);
+  expect(isPageUnderHeader({ ...ios18, options: { largeTitle: true } })).toBe(true);
+  expect(isPageUnderHeader({ ...ios18, options: { headerSearch: { placeholder: 'Find' } } })).toBe(
+    true
+  );
+});
+
+test('isPageUnderHeader: Android pages sit below the header', () => {
+  expect(
+    isPageUnderHeader({ options: { largeTitle: true }, platform: 'android', platformVersion: 35 })
+  ).toBe(false);
 });
 
 test('getStackOptions draws header actions as a row of icon buttons off iOS', () => {
