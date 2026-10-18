@@ -18,6 +18,7 @@ export { default as claimCallerReload } from './claimCallerReload.js';
 export { default as createAuthFetchOptions } from './auth/createAuthFetchOptions.js';
 export { default as createLowdefyCore } from './createLowdefyCore.js';
 export { default as createPageLifecycleManager } from './createPageLifecycleManager.js';
+export { default as createPkceChallenge } from './auth/createPkceChallenge.js';
 export { createUrl, serializeQuery } from './url.js';
 export { default as getActiveLocale } from './getActiveLocale.js';
 export { default as getAuthorizationHeaders } from './auth/getAuthorizationHeaders.js';

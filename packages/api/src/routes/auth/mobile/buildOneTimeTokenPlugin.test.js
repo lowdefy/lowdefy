@@ -25,3 +25,10 @@ test('buildOneTimeTokenPlugin mints hashed one-minute tokens on the server only'
     storeToken: 'hashed',
   });
 });
+
+test('buildOneTimeTokenPlugin checks the code verifier on the verify route only', () => {
+  const [hook] = buildOneTimeTokenPlugin().hooks.before;
+  expect(hook.matcher({ path: '/one-time-token/verify' })).toBe(true);
+  expect(hook.matcher({ path: '/one-time-token/generate' })).toBe(false);
+  expect(hook.matcher({ path: '/sign-in/email-otp' })).toBe(false);
+});

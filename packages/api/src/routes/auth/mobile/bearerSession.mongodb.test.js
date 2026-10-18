@@ -20,7 +20,7 @@
 // "Authorization: Bearer" - and the caller resolved the way every /api/request,
 // /api/endpoints and websocket call resolves it (resolveAuthentication).
 
-import { randomUUID } from 'node:crypto';
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { jest } from '@jest/globals';
 import * as mongodb from 'mongodb';
 
@@ -454,7 +454,21 @@ test('the send cap counts only the last 15 minutes', async () => {
   expect(left).toBe(1);
 });
 
-function mobileSignInRequest({ shell = 'field', state = 'shell-state-1', cookie } = {}) {
+// What a shell does before it opens the sheet (RFC 7636): a random verifier it
+// keeps in memory, and its S256 challenge, which goes in the URL.
+function createPkce() {
+  const codeVerifier = randomBytes(64).toString('base64url');
+  const codeChallenge = createHash('sha256').update(codeVerifier).digest('base64url');
+  return { codeVerifier, codeChallenge };
+}
+
+function mobileSignInRequest({
+  shell = 'field',
+  state = 'shell-state-1',
+  codeChallenge,
+  codeChallengeMethod = 'S256',
+  cookie,
+} = {}) {
   const headers = new Headers();
   if (cookie) {
     headers.set('cookie', cookie);
@@ -466,7 +480,38 @@ function mobileSignInRequest({ shell = 'field', state = 'shell-state-1', cookie 
   if (state !== null) {
     url.searchParams.set('state', state);
   }
+  if (codeChallenge !== null) {
+    url.searchParams.set('code_challenge', codeChallenge ?? createPkce().codeChallenge);
+  }
+  if (codeChallengeMethod !== null) {
+    url.searchParams.set('code_challenge_method', codeChallengeMethod);
+  }
   return new Request(url, { headers });
+}
+
+// Signs a browser in and has the mobile sign-in page hand its session to the
+// shell: the one-time token from the redirect, and the verifier for it.
+async function handOffToShell({ auth, authJson, email }) {
+  const cookie = cookieOf(await signInByCode({ auth, email, request: browserRequest }));
+  const { codeVerifier, codeChallenge } = createPkce();
+  const redirect = await handleMobileSignIn({
+    auth,
+    authJson,
+    basePath: '',
+    request: mobileSignInRequest({ cookie, codeChallenge }),
+  });
+  expect(redirect.status).toBe(302);
+  const oneTimeToken = new URL(redirect.headers.get('location')).searchParams.get('token');
+  return { codeVerifier, oneTimeToken };
+}
+
+// The shell's exchange of the one-time token for the session token.
+function exchange({ auth, token, codeVerifier }) {
+  const body = { token };
+  if (codeVerifier !== undefined) {
+    body.code_verifier = codeVerifier;
+  }
+  return auth.handler(nativeRequest({ path: '/one-time-token/verify', body }));
 }
 
 test('the mobile sign-in page hands a signed-in browser session to the shell scheme as a one-time token', async () => {
@@ -475,12 +520,13 @@ test('the mobile sign-in page hands a signed-in browser session to the shell sch
   const cookie = cookieOf(
     await signInByCode({ auth, email: 'jo@example.com', request: browserRequest })
   );
+  const { codeVerifier, codeChallenge } = createPkce();
 
   const redirect = await handleMobileSignIn({
     auth,
     authJson,
     basePath: '',
-    request: mobileSignInRequest({ cookie }),
+    request: mobileSignInRequest({ cookie, codeChallenge }),
   });
   expect(redirect.status).toBe(302);
   expect(redirect.headers.get('cache-control')).toBe('no-store');
@@ -488,52 +534,114 @@ test('the mobile sign-in page hands a signed-in browser session to the shell sch
   expect(location.protocol).toBe('com.example.field:');
   expect(location.host).toBe('auth');
   expect(location.searchParams.get('state')).toBe('shell-state-1');
+  expect(location.searchParams.has('code_challenge')).toBe(false);
   const oneTimeToken = location.searchParams.get('token');
 
-  // Stored hashed, for one minute.
+  // Stored hashed, for one minute, with the challenge it is bound to.
   const stored = await adapter.findMany({ model: 'verification' });
   const record = stored.find((each) => each.identifier.startsWith('one-time-token:'));
   expect(record.identifier).not.toContain(oneTimeToken);
   const lifetime = new Date(record.expiresAt).getTime() - Date.now();
   expect(lifetime).toBeGreaterThan(50 * 1000);
   expect(lifetime).toBeLessThanOrEqual(60 * 1000);
-
-  const verified = await auth.handler(
-    nativeRequest({ path: '/one-time-token/verify', body: { token: oneTimeToken } })
+  const challenge = stored.find((each) => each.identifier.startsWith('one-time-token-challenge:'));
+  expect(challenge.identifier).toBe(
+    record.identifier.replace('one-time-token:', 'one-time-token-challenge:')
   );
+  expect(challenge.value).toBe(codeChallenge);
+
+  const verified = await exchange({ auth, token: oneTimeToken, codeVerifier });
   expect(verified.status).toBe(200);
   const token = verified.headers.get('set-auth-token');
   expect((await resolveCaller({ auth, token })).user).toMatchObject({ id: user.id });
+  // Nothing is left behind.
+  const left = await adapter.findMany({ model: 'verification' });
+  expect(left.filter((each) => each.identifier.startsWith('one-time-token'))).toEqual([]);
 
   // Single use.
-  const again = await auth.handler(
-    nativeRequest({ path: '/one-time-token/verify', body: { token: oneTimeToken } })
-  );
+  const again = await exchange({ auth, token: oneTimeToken, codeVerifier });
   expect(again.status).toBe(400);
+});
+
+test('an exchange without the code verifier is refused and burns the one-time token', async () => {
+  const { adapter, auth, authJson, internalAdapter } = await setup();
+  await createMember({ adapter, internalAdapter, email: 'ola@example.com' });
+  const { codeVerifier, oneTimeToken } = await handOffToShell({
+    auth,
+    authJson,
+    email: 'ola@example.com',
+  });
+
+  const refused = await exchange({ auth, token: oneTimeToken });
+  expect(refused.status).toBe(400);
+  expect(refused.headers.get('set-auth-token')).toBeNull();
+  expect(refused.headers.getSetCookie()).toEqual([]);
+
+  const late = await exchange({ auth, token: oneTimeToken, codeVerifier });
+  expect(late.status).toBe(400);
+  expect(late.headers.get('set-auth-token')).toBeNull();
+});
+
+test('an exchange with the wrong code verifier is refused and burns the one-time token', async () => {
+  const { adapter, auth, authJson, internalAdapter } = await setup();
+  await createMember({ adapter, internalAdapter, email: 'pia@example.com' });
+  const { codeVerifier, oneTimeToken } = await handOffToShell({
+    auth,
+    authJson,
+    email: 'pia@example.com',
+  });
+
+  // An app that caught the redirect has the token but not the shell's verifier.
+  const caught = await exchange({
+    auth,
+    token: oneTimeToken,
+    codeVerifier: createPkce().codeVerifier,
+  });
+  expect(caught.status).toBe(400);
+  expect(caught.headers.get('set-auth-token')).toBeNull();
+  expect(caught.headers.getSetCookie()).toEqual([]);
+  const left = await adapter.findMany({ model: 'verification' });
+  expect(left.filter((each) => each.identifier.startsWith('one-time-token'))).toEqual([]);
+
+  // The shell's own exchange then fails closed: the person signs in again.
+  const late = await exchange({ auth, token: oneTimeToken, codeVerifier });
+  expect(late.status).toBe(400);
+  expect(late.headers.get('set-auth-token')).toBeNull();
+});
+
+test('a one-time token with no stored challenge is refused', async () => {
+  const { adapter, auth, authJson, internalAdapter } = await setup();
+  await createMember({ adapter, internalAdapter, email: 'quin@example.com' });
+  const { codeVerifier, oneTimeToken } = await handOffToShell({
+    auth,
+    authJson,
+    email: 'quin@example.com',
+  });
+  await adapter.deleteMany({
+    model: 'verification',
+    where: [{ field: 'identifier', operator: 'starts_with', value: 'one-time-token-challenge:' }],
+  });
+
+  const verified = await exchange({ auth, token: oneTimeToken, codeVerifier });
+  expect(verified.status).toBe(400);
+  expect(verified.headers.get('set-auth-token')).toBeNull();
 });
 
 test('an expired one-time token is refused', async () => {
   const { adapter, auth, authJson, internalAdapter } = await setup();
   await createMember({ adapter, internalAdapter, email: 'kim@example.com' });
-  const cookie = cookieOf(
-    await signInByCode({ auth, email: 'kim@example.com', request: browserRequest })
-  );
-  const redirect = await handleMobileSignIn({
+  const { codeVerifier, oneTimeToken } = await handOffToShell({
     auth,
     authJson,
-    basePath: '',
-    request: mobileSignInRequest({ cookie }),
+    email: 'kim@example.com',
   });
-  const oneTimeToken = new URL(redirect.headers.get('location')).searchParams.get('token');
   await adapter.updateMany({
     model: 'verification',
     where: [{ field: 'identifier', operator: 'starts_with', value: 'one-time-token:' }],
     update: { expiresAt: new Date(Date.now() - 1000) },
   });
 
-  const verified = await auth.handler(
-    nativeRequest({ path: '/one-time-token/verify', body: { token: oneTimeToken } })
-  );
+  const verified = await exchange({ auth, token: oneTimeToken, codeVerifier });
   expect(verified.status).toBe(400);
 });
 
@@ -551,34 +659,48 @@ test('a browser can not mint a one-time token over HTTP', async () => {
 
 test('the mobile sign-in page sends a signed-out person to sign in and back', async () => {
   const { auth, authJson } = await setup();
+  const { codeChallenge } = createPkce();
   const response = await handleMobileSignIn({
     auth,
     authJson,
     basePath: '',
-    request: mobileSignInRequest(),
+    request: mobileSignInRequest({ codeChallenge }),
   });
   expect(response.status).toBe(302);
   expect(response.headers.get('location')).toBe(
-    `/login?callbackUrl=${encodeURIComponent('/auth/mobile?shell=field&state=shell-state-1')}`
+    `/login?callbackUrl=${encodeURIComponent(
+      `/auth/mobile?shell=field&state=shell-state-1&code_challenge=${codeChallenge}&code_challenge_method=S256`
+    )}`
   );
 });
 
-test('the mobile sign-in page refuses an unknown shell and a missing state', async () => {
-  const { auth, authJson } = await setup();
-  const unknown = await handleMobileSignIn({
-    auth,
-    authJson,
-    basePath: '',
-    request: mobileSignInRequest({ shell: 'other' }),
-  });
-  expect(unknown.status).toBe(400);
-  const noState = await handleMobileSignIn({
-    auth,
-    authJson,
-    basePath: '',
-    request: mobileSignInRequest({ state: null }),
-  });
-  expect(noState.status).toBe(400);
+test('the mobile sign-in page refuses an unknown shell, a missing state and a missing or non-S256 challenge', async () => {
+  const { adapter, auth, authJson, internalAdapter } = await setup();
+  await createMember({ adapter, internalAdapter, email: 'rae@example.com' });
+  const cookie = cookieOf(
+    await signInByCode({ auth, email: 'rae@example.com', request: browserRequest })
+  );
+  const { codeVerifier, codeChallenge } = createPkce();
+
+  async function statusFor(options) {
+    const response = await handleMobileSignIn({
+      auth,
+      authJson,
+      basePath: '',
+      request: mobileSignInRequest({ cookie, ...options }),
+    });
+    return response.status;
+  }
+
+  expect(await statusFor({ shell: 'other' })).toBe(400);
+  expect(await statusFor({ state: null })).toBe(400);
+  expect(await statusFor({ codeChallenge: null })).toBe(400);
+  expect(await statusFor({ codeChallengeMethod: null })).toBe(400);
+  expect(await statusFor({ codeChallenge: codeVerifier, codeChallengeMethod: 'plain' })).toBe(400);
+  expect(await statusFor({ codeChallenge: `${codeChallenge}=` })).toBe(400);
+  // Refused before anything was minted.
+  const stored = await adapter.findMany({ model: 'verification' });
+  expect(stored.filter((each) => each.identifier.startsWith('one-time-token'))).toEqual([]);
 });
 
 test('phone sessions get mobile.auth.sessionExpiresIn and keep it when they slide forward', async () => {
