@@ -51,7 +51,8 @@ export default {
     hasFeedback: {
       type: 'boolean',
       default: true,
-      description: 'Display validation messages beneath the input. This does not disable validation.',
+      description:
+        'Display validation messages beneath the input. This does not disable validation.',
     },
     inline: {
       type: 'boolean',

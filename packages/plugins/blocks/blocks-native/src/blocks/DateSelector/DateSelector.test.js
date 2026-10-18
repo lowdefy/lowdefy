@@ -106,7 +106,9 @@ test('clearing a DateSelector sets null', async () => {
 
 test('a required DateSelector shows its message after Validate', async () => {
   const record = [];
-  await renderPage(datePage({ block: { id: 'due', type: 'DateSelector', required: true }, record }));
+  await renderPage(
+    datePage({ block: { id: 'due', type: 'DateSelector', required: true }, record })
+  );
   await screen.findByTestId('due_input');
   await act(async () => {
     fireEvent.press(screen.getByText('Submit'));

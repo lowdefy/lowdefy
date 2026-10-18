@@ -32,16 +32,7 @@ function getMinHeight({ fontSize, rows, tokens }) {
   return Math.ceil(lines * fontSize * tokens.lineHeight) + 2 * tokens.paddingXS;
 }
 
-function TextArea({
-  blockId,
-  loading,
-  methods,
-  properties,
-  required,
-  styles,
-  validation,
-  value,
-}) {
+function TextArea({ blockId, loading, methods, properties, required, styles, validation, value }) {
   const { tokens } = useBlockTokens({ properties });
   const { accessibilityLabel, labelProperties } = getLabelProperties({ blockId, properties });
   const disabled = loading === true || properties.disabled === true;

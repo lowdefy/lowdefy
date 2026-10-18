@@ -84,9 +84,7 @@ function Button({ blockId, components, events, loading, methods, properties, sty
           styles={{ element: [{ color: colors.textColor, fontSize }, styles.icon] }}
         />
       ) : null}
-      {showTitle ? (
-        <Text style={{ color: colors.textColor, fontSize }}>{title}</Text>
-      ) : null}
+      {showTitle ? <Text style={{ color: colors.textColor, fontSize }}>{title}</Text> : null}
     </Pressable>
   );
 }

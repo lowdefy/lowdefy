@@ -42,7 +42,10 @@ function Switch({ blockId, loading, methods, properties, required, styles, valid
       tokens={tokens}
       validation={validation}
     >
-      <View accessibilityLabel={accessibilityLabel} style={[{ alignItems: 'flex-start' }, styles.element]}>
+      <View
+        accessibilityLabel={accessibilityLabel}
+        style={[{ alignItems: 'flex-start' }, styles.element]}
+      >
         <Host
           colorScheme={isDark ? 'dark' : 'light'}
           matchContents

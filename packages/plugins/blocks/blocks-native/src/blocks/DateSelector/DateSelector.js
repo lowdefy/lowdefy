@@ -86,7 +86,11 @@ function DateSelector({
         testID={`${blockId}_input`}
       >
         <Text
-          style={[text, { flex: 1 }, display === null ? { color: tokens.colorTextPlaceholder } : null]}
+          style={[
+            text,
+            { flex: 1 },
+            display === null ? { color: tokens.colorTextPlaceholder } : null,
+          ]}
         >
           {display ?? properties.placeholder ?? 'Select date'}
         </Text>

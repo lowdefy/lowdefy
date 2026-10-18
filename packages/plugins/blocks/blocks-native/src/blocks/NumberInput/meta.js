@@ -81,7 +81,8 @@ export default {
       label,
       max: {
         type: 'number',
-        description: 'The maximum value. A larger number is lowered to it when the input loses focus.',
+        description:
+          'The maximum value. A larger number is lowered to it when the input loses focus.',
       },
       min: {
         type: 'number',

@@ -42,7 +42,10 @@ export default {
         description: 'A round avatar at the start of the item: an image, or a short text.',
         properties: {
           src: { type: 'string', description: 'The image url.' },
-          content: { type: 'string', description: 'Text shown when there is no image, such as initials.' },
+          content: {
+            type: 'string',
+            description: 'Text shown when there is no image, such as initials.',
+          },
           color: { type: 'string', description: 'Background colour of a text avatar.' },
         },
       },
@@ -66,7 +69,8 @@ export default {
       },
       icon: {
         type: ['string', 'object'],
-        description: 'Name of an icon, or the properties of an Icon block, shown at the start of the item.',
+        description:
+          'Name of an icon, or the properties of an Icon block, shown at the start of the item.',
       },
       theme,
       title: {

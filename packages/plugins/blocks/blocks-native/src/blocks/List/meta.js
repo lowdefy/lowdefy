@@ -64,7 +64,10 @@ export default {
               type: 'string',
               description: 'The name of the List event the button fires, such as onDelete.',
             },
-            color: { type: 'string', description: 'The button colour. Defaults to the primary colour.' },
+            color: {
+              type: 'string',
+              description: 'The button colour. Defaults to the primary colour.',
+            },
             danger: {
               type: 'boolean',
               default: false,

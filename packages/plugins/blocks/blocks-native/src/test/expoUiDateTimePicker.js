@@ -19,7 +19,15 @@ import { View } from 'react-native';
 
 // A stand-in for @expo/ui's community DateTimePicker that keeps its props, so a test fires
 // fireEvent(view, 'valueChange', event, date) or fireEvent(view, 'dismiss').
-function DateTimePicker({ maximumDate, minimumDate, mode, onDismiss, onValueChange, testID, value }) {
+function DateTimePicker({
+  maximumDate,
+  minimumDate,
+  mode,
+  onDismiss,
+  onValueChange,
+  testID,
+  value,
+}) {
   return (
     <View
       maximumDate={maximumDate}

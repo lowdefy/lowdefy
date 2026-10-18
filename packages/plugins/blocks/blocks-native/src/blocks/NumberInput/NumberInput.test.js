@@ -57,7 +57,9 @@ test('a NumberInput keeps its value within min and max when it loses focus', asy
 test('the spinner buttons step the value', async () => {
   await renderPage({
     pageConfig: formPage({
-      blocks: [{ id: 'qty', type: 'NumberInput', properties: { mode: 'spinner', step: 2, max: 3 } }],
+      blocks: [
+        { id: 'qty', type: 'NumberInput', properties: { mode: 'spinner', step: 2, max: 3 } },
+      ],
       mirrorKey: 'qty',
     }),
   });
@@ -74,7 +76,10 @@ test('the spinner buttons step the value', async () => {
 
 test('a required NumberInput shows its message after Validate', async () => {
   await renderPage({
-    pageConfig: formPage({ blocks: [{ id: 'qty', type: 'NumberInput', required: true }], mirrorKey: 'qty' }),
+    pageConfig: formPage({
+      blocks: [{ id: 'qty', type: 'NumberInput', required: true }],
+      mirrorKey: 'qty',
+    }),
   });
   await screen.findByTestId('qty_input');
   await act(async () => {

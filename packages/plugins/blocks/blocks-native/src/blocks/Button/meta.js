@@ -25,7 +25,8 @@ export default {
     icon: 'The Button icon.',
   },
   events: {
-    onClick: 'Trigger actions when the Button is pressed. The Button shows a spinner while they run.',
+    onClick:
+      'Trigger actions when the Button is pressed. The Button shows a spinner while they run.',
   },
   properties: {
     type: 'object',

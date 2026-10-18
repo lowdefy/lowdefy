@@ -43,24 +43,25 @@ function getFeedbackColor({ status, tokens }) {
 function Label({ blockId, children, properties, required, styles, tokens, validation }) {
   const { colon, extra, feedback, title } = getLabelState({ blockId, properties, validation });
   const inline = properties.inline === true;
-  const titleNode = title === null ? null : (
-    <Text
-      nativeID={`${blockId}_label`}
-      style={[
-        {
-          color: tokens.colorText,
-          fontSize: tokens.fontSize,
-          marginBottom: inline ? 0 : tokens.marginXS,
-          marginRight: inline ? tokens.marginXS : 0,
-        },
-        styles.label,
-      ]}
-    >
-      {required === true ? <Text style={{ color: tokens.colorError }}>* </Text> : null}
-      {title}
-      {colon ? ':' : null}
-    </Text>
-  );
+  const titleNode =
+    title === null ? null : (
+      <Text
+        nativeID={`${blockId}_label`}
+        style={[
+          {
+            color: tokens.colorText,
+            fontSize: tokens.fontSize,
+            marginBottom: inline ? 0 : tokens.marginXS,
+            marginRight: inline ? tokens.marginXS : 0,
+          },
+          styles.label,
+        ]}
+      >
+        {required === true ? <Text style={{ color: tokens.colorError }}>* </Text> : null}
+        {title}
+        {colon ? ':' : null}
+      </Text>
+    );
   return (
     <View>
       <View style={inline ? { alignItems: 'center', flexDirection: 'row' } : null}>
@@ -86,7 +87,11 @@ function Label({ blockId, children, properties, required, styles, tokens, valida
       {extra === null ? null : (
         <Text
           style={[
-            { color: tokens.colorTextSecondary, fontSize: tokens.fontSize, marginTop: tokens.marginXXS },
+            {
+              color: tokens.colorTextSecondary,
+              fontSize: tokens.fontSize,
+              marginTop: tokens.marginXXS,
+            },
             styles.extra,
           ]}
           testID={`${blockId}_extra`}

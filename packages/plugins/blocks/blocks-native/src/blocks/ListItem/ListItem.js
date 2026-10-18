@@ -65,7 +65,9 @@ function ListItem({ blockId, components, events, methods, properties, styles }) 
           blockId={`${blockId}_icon`}
           events={events}
           properties={properties.icon}
-          styles={{ element: [{ color: tokens.colorIcon, fontSize: tokens.fontSizeLG }, styles.icon] }}
+          styles={{
+            element: [{ color: tokens.colorIcon, fontSize: tokens.fontSizeLG }, styles.icon],
+          }}
         />
       ) : null}
       <View style={{ flex: 1 }}>
@@ -84,7 +86,9 @@ function ListItem({ blockId, components, events, methods, properties, styles }) 
         ) : null}
       </View>
       {type.isString(properties.extra) ? (
-        <Text style={[{ color: tokens.colorTextTertiary, fontSize: tokens.fontSizeLG }, styles.extra]}>
+        <Text
+          style={[{ color: tokens.colorTextTertiary, fontSize: tokens.fontSizeLG }, styles.extra]}
+        >
           {properties.extra}
         </Text>
       ) : null}

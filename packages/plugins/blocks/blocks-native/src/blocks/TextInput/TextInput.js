@@ -28,16 +28,7 @@ import Label from '../Label/Label.js';
 import meta from './meta.js';
 import useBlockTokens from '../../shared/useBlockTokens.js';
 
-function TextInput({
-  blockId,
-  loading,
-  methods,
-  properties,
-  required,
-  styles,
-  validation,
-  value,
-}) {
+function TextInput({ blockId, loading, methods, properties, required, styles, validation, value }) {
   const { tokens } = useBlockTokens({ properties });
   const { accessibilityLabel, labelProperties } = getLabelProperties({ blockId, properties });
   const disabled = loading === true || properties.disabled === true;

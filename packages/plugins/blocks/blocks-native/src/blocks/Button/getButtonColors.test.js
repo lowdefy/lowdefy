@@ -35,16 +35,20 @@ test('color and variant pick the colour and the fill', () => {
     borderColor: tokens.green,
     textColor: tokens.green,
   });
-  expect(getButtonColors({ properties: { color: 'default', variant: 'text' }, tokens })).toMatchObject({
+  expect(
+    getButtonColors({ properties: { color: 'default', variant: 'text' }, tokens })
+  ).toMatchObject({
     backgroundColor: 'transparent',
     textColor: tokens.colorText,
   });
 });
 
 test('danger draws the Button in the error colour', () => {
-  expect(getButtonColors({ properties: { danger: true, variant: 'solid' }, tokens })).toMatchObject({
-    backgroundColor: tokens.colorError,
-  });
+  expect(getButtonColors({ properties: { danger: true, variant: 'solid' }, tokens })).toMatchObject(
+    {
+      backgroundColor: tokens.colorError,
+    }
+  );
   expect(getButtonColors({ properties: { type: 'danger' }, tokens })).toMatchObject({
     backgroundColor: tokens.colorError,
   });

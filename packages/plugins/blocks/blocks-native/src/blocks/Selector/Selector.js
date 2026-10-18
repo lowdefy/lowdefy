@@ -34,16 +34,7 @@ const NO_VALUE = -1;
 
 // The picker works on option indices, so an option may hold any value, as on the web.
 // A disabled option is left out of the picker unless it is the one chosen.
-function Selector({
-  blockId,
-  loading,
-  methods,
-  properties,
-  required,
-  styles,
-  validation,
-  value,
-}) {
+function Selector({ blockId, loading, methods, properties, required, styles, validation, value }) {
   const { isDark, tokens } = useBlockTokens({ properties });
   const { accessibilityLabel, labelProperties } = getLabelProperties({ blockId, properties });
   const disabled = loading === true || properties.disabled === true;
@@ -67,11 +58,7 @@ function Selector({
       validation={validation}
     >
       <View accessibilityLabel={accessibilityLabel} style={[box, styles.element]}>
-        <Host
-          colorScheme={isDark ? 'dark' : 'light'}
-          matchContents
-          seedColor={tokens.colorPrimary}
-        >
+        <Host colorScheme={isDark ? 'dark' : 'light'} matchContents seedColor={tokens.colorPrimary}>
           <Picker
             appearance={properties.appearance ?? 'menu'}
             enabled={!disabled}

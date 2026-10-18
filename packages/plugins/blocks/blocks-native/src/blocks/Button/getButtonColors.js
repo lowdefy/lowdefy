@@ -80,10 +80,18 @@ function getButtonColors({ properties, tokens }) {
   const { color, variant } = getColorAndVariant({ properties });
   const main = resolveColor({ color, danger: properties.danger, tokens });
   const accent = main ?? tokens.colorText;
-  const border = { borderColor: main ?? tokens.colorBorder, borderStyle: 'solid', borderWidth: tokens.lineWidth };
+  const border = {
+    borderColor: main ?? tokens.colorBorder,
+    borderStyle: 'solid',
+    borderWidth: tokens.lineWidth,
+  };
   const none = { borderColor: 'transparent', borderStyle: 'solid', borderWidth: 0 };
   if (properties.ghost === true) {
-    return { ...border, backgroundColor: 'transparent', textColor: main ?? tokens.colorTextLightSolid };
+    return {
+      ...border,
+      backgroundColor: 'transparent',
+      textColor: main ?? tokens.colorTextLightSolid,
+    };
   }
   switch (variant) {
     case 'solid':
@@ -93,7 +101,12 @@ function getButtonColors({ properties, tokens }) {
         textColor: tokens.colorTextLightSolid,
       };
     case 'dashed':
-      return { ...border, backgroundColor: tokens.colorBgContainer, borderStyle: 'dashed', textColor: accent };
+      return {
+        ...border,
+        backgroundColor: tokens.colorBgContainer,
+        borderStyle: 'dashed',
+        textColor: accent,
+      };
     case 'filled':
       return { ...none, backgroundColor: tokens.colorFillTertiary, textColor: accent };
     case 'text':
