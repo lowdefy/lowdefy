@@ -45,7 +45,8 @@
     "shell.dev.json",
     "shellVariant.js",
     "withExcludedNativeModules.js",
-    "!**/*.test.*"
+    "!**/*.test.*",
+    "!scripts/checkNativeVersion.mjs"
   ],
   "scripts": {
     "dayjs-locales": "node scripts/createDayjsLocales.mjs",

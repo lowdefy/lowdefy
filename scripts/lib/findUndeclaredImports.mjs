@@ -59,15 +59,19 @@ function matchesFilesEntry({ entry, relativePath }) {
   return new RegExp(`^${pattern}(/|$)`).test(relativePath);
 }
 
-// Packages publish dist/, which swc (or webpack) builds from src/.
+// Packages publish dist/, which swc (or webpack) builds from src/. As npm does, a `!` entry
+// leaves out the files it matches.
 function isPublished({ packageJson, relativePath }) {
   if (!Array.isArray(packageJson.files)) return true;
   const builtPath = relativePath.replace(/^src\//, 'dist/');
-  return packageJson.files.some(
-    (entry) =>
-      matchesFilesEntry({ entry, relativePath }) ||
-      matchesFilesEntry({ entry, relativePath: builtPath })
-  );
+  const matches = (entry) =>
+    matchesFilesEntry({ entry, relativePath }) ||
+    matchesFilesEntry({ entry, relativePath: builtPath });
+  const included = packageJson.files.filter((entry) => !entry.startsWith('!'));
+  const excluded = packageJson.files
+    .filter((entry) => entry.startsWith('!'))
+    .map((entry) => entry.slice(1));
+  return included.some(matches) && !excluded.some(matches);
 }
 
 // Block packages export e2e helpers that only run inside an app's Playwright tests, where
