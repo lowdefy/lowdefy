@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import { act, fireEvent, screen } from '@testing-library/react-native';
 
 import formPage from '../../test/formPage.js';
@@ -175,4 +176,92 @@ test('a Composer asks for record links after [[ and writes the picked key', asyn
     fireEvent.press(screen.getByLabelText('Link PEL-12 Fix the rail'));
   });
   expect(screen.getByText('See [[PEL-12]]')).toBeTruthy();
+});
+
+describe('spoken mentions', () => {
+  const people = [
+    { value: 'u1', label: 'Sam Tolmay', sees: true },
+    { value: 'u2', label: 'Puffin Agent', sees: true },
+  ];
+
+  function composerPage(properties = {}) {
+    return formPage({
+      blocks: [
+        {
+          id: 'comment',
+          type: 'Composer',
+          properties: { mentions: people, ...properties },
+          events: {
+            onSubmit: [{ id: 'sent', type: 'SetState', params: { sent: { _event: 'body' } } }],
+          },
+        },
+        { id: 'sent_text', type: 'Paragraph', properties: { content: { _state: 'sent' } } },
+      ],
+      mirrorKey: 'comment',
+    });
+  }
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  test('dictated addressing becomes a mention once the text is still', async () => {
+    await renderPage({ pageConfig: composerPage() });
+    const input = await screen.findByTestId('comment_input');
+    jest.useFakeTimers();
+    await type(input, 'For Puffin, please check the build');
+    expect(screen.getAllByText('For Puffin, please check the build')).toHaveLength(2);
+    await act(async () => {
+      jest.advanceTimersByTime(900);
+    });
+    expect(screen.getByText('[[user:u2]] please check the build')).toBeTruthy();
+    expect(screen.getByText('@Puffin Agent')).toBeTruthy();
+  });
+
+  test('more dictated text holds the conversion back until it stops', async () => {
+    await renderPage({ pageConfig: composerPage() });
+    const input = await screen.findByTestId('comment_input');
+    jest.useFakeTimers();
+    await type(input, 'for Sam ');
+    await act(async () => {
+      jest.advanceTimersByTime(500);
+    });
+    await type(input, 'for Sam can you look');
+    await act(async () => {
+      jest.advanceTimersByTime(500);
+    });
+    expect(screen.getAllByText('for Sam can you look')).toHaveLength(2);
+    await act(async () => {
+      jest.advanceTimersByTime(400);
+    });
+    expect(screen.getByText('[[user:u1]] can you look')).toBeTruthy();
+  });
+
+  test('sending converts what is left, a name at the end included', async () => {
+    await renderPage({ pageConfig: composerPage() });
+    await type(await screen.findByTestId('comment_input'), 'Merged. For Sam');
+    await act(async () => {
+      fireEvent.press(screen.getByTestId('composer_send'));
+    });
+    expect(screen.getByText('Merged. [[user:u1]]')).toBeTruthy();
+  });
+
+  test('the trigger words are configurable', async () => {
+    await renderPage({ pageConfig: composerPage({ spokenMentions: { words: ['hey'] } }) });
+    await type(await screen.findByTestId('comment_input'), 'Hey Sam, can you look');
+    await act(async () => {
+      fireEvent.press(screen.getByTestId('composer_send'));
+    });
+    expect(screen.getByText('[[user:u1]] can you look')).toBeTruthy();
+  });
+
+  test('spokenMentions false leaves the text as it is', async () => {
+    await renderPage({ pageConfig: composerPage({ spokenMentions: false }) });
+    await type(await screen.findByTestId('comment_input'), 'for Sam, can you look');
+    await act(async () => {
+      fireEvent.press(screen.getByTestId('composer_send'));
+    });
+    expect(screen.getAllByText('for Sam, can you look').length).toBeGreaterThan(0);
+    expect(screen.queryByText('[[user:u1]] can you look')).toBeNull();
+  });
 });
