@@ -16,24 +16,25 @@
 
 import React from 'react';
 
+import getIosTextStyle from '../../typography/getIosTextStyle.js';
 import getTextStyle from '../../typography/getTextStyle.js';
 import meta from './meta.js';
 import TypographyText from '../../typography/TypographyText.js';
 import useComponentTokens from '../../useComponentTokens.js';
 
-// antd's paragraph: body text with an em below it.
+// A paragraph in the iOS body style (or its own textStyle) and label colour, with half a line
+// below it.
 function Paragraph({ blockId, methods, properties, styles = {} }) {
   const { tokens } = useComponentTokens(properties.theme);
+  const textStyle = getIosTextStyle({ textStyle: properties.textStyle ?? 'body', tokens });
   const baseStyle = {
-    color: tokens.colorText,
-    fontSize: tokens.fontSize,
-    lineHeight: tokens.fontSize * tokens.lineHeight,
-    marginBottom: tokens.fontSize,
+    ...textStyle,
+    marginBottom: Math.round(textStyle.lineHeight / 2),
   };
   return (
     <TypographyText
       blockId={blockId}
-      linkStyle={[{ color: tokens.colorLink, fontSize: tokens.fontSize }, styles.actions]}
+      linkStyle={[{ ...textStyle, color: tokens.colorTint }, styles.actions]}
       methods={methods}
       properties={properties}
       style={[getTextStyle({ baseStyle, properties, tokens }), styles.element]}

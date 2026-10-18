@@ -14,55 +14,83 @@
   limitations under the License.
 */
 
+import { iosColors, withAlpha } from '@lowdefy/client-native';
+
 import getButtonColors from './getButtonColors.js';
 import theme from '../../test/theme.json';
 
-const tokens = theme.light;
+const tokens = { ...iosColors.light, colorTint: theme.light.colorPrimary, ...theme.light };
 
-test('the default Button is solid primary, as the web type primary', () => {
-  expect(getButtonColors({ properties: {}, tokens })).toMatchObject({
+test('the default Button is iOS filled: the tint under white text', () => {
+  expect(getButtonColors({ isDark: false, properties: {}, tokens })).toMatchObject({
     backgroundColor: tokens.colorPrimary,
-    textColor: tokens.colorTextLightSolid,
     borderWidth: 0,
+    textColor: '#FFFFFF',
+  });
+});
+
+test('tinted, gray and plain take the tint when no colour is set', () => {
+  expect(
+    getButtonColors({ isDark: false, properties: { variant: 'tinted' }, tokens })
+  ).toMatchObject({
+    backgroundColor: withAlpha({ alpha: 0.14, color: tokens.colorPrimary }),
+    textColor: tokens.colorPrimary,
+  });
+  expect(
+    getButtonColors({ isDark: true, properties: { variant: 'tinted' }, tokens })
+  ).toMatchObject({
+    backgroundColor: withAlpha({ alpha: 0.24, color: tokens.colorPrimary }),
+  });
+  expect(getButtonColors({ isDark: false, properties: { variant: 'gray' }, tokens })).toMatchObject(
+    {
+      backgroundColor: tokens.colorTertiarySystemFill,
+      textColor: tokens.colorPrimary,
+    }
+  );
+  expect(
+    getButtonColors({ isDark: false, properties: { variant: 'plain' }, tokens })
+  ).toMatchObject({
+    backgroundColor: 'transparent',
+    plain: true,
+    pressedOpacity: 0.4,
+    textColor: tokens.colorPrimary,
   });
 });
 
 test('color and variant pick the colour and the fill', () => {
   expect(
-    getButtonColors({ properties: { color: 'green', variant: 'outlined' }, tokens })
+    getButtonColors({ isDark: false, properties: { color: 'green', variant: 'outlined' }, tokens })
   ).toMatchObject({
-    backgroundColor: tokens.colorBgContainer,
+    backgroundColor: 'transparent',
     borderColor: tokens.green,
     textColor: tokens.green,
   });
   expect(
-    getButtonColors({ properties: { color: 'default', variant: 'text' }, tokens })
+    getButtonColors({ isDark: false, properties: { color: 'default', variant: 'text' }, tokens })
   ).toMatchObject({
     backgroundColor: 'transparent',
-    textColor: tokens.colorText,
+    textColor: tokens.colorLabel,
   });
 });
 
 test('danger draws the Button in the error colour', () => {
-  expect(getButtonColors({ properties: { danger: true, variant: 'solid' }, tokens })).toMatchObject(
-    {
-      backgroundColor: tokens.colorError,
-    }
-  );
-  expect(getButtonColors({ properties: { type: 'danger' }, tokens })).toMatchObject({
+  expect(
+    getButtonColors({ isDark: false, properties: { danger: true, variant: 'solid' }, tokens })
+  ).toMatchObject({ backgroundColor: tokens.colorError });
+  expect(getButtonColors({ isDark: false, properties: { type: 'danger' }, tokens })).toMatchObject({
     backgroundColor: tokens.colorError,
   });
 });
 
 test('without a variant a custom colour replaces the primary colour and a preset has no effect', () => {
-  expect(getButtonColors({ properties: { color: '#123456' }, tokens })).toMatchObject({
-    backgroundColor: '#123456',
-  });
-  expect(getButtonColors({ properties: { color: 'green' }, tokens })).toMatchObject({
+  expect(
+    getButtonColors({ isDark: false, properties: { color: '#123456' }, tokens })
+  ).toMatchObject({ backgroundColor: '#123456' });
+  expect(getButtonColors({ isDark: false, properties: { color: 'green' }, tokens })).toMatchObject({
     backgroundColor: tokens.colorPrimary,
   });
-  expect(getButtonColors({ properties: { type: 'dashed' }, tokens })).toMatchObject({
+  expect(getButtonColors({ isDark: false, properties: { type: 'dashed' }, tokens })).toMatchObject({
+    borderColor: tokens.colorOpaqueSeparator,
     borderStyle: 'dashed',
-    borderColor: tokens.colorBorder,
   });
 });

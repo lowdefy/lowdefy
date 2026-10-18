@@ -20,6 +20,7 @@ import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, View } fro
 import AuthButton from './AuthButton.js';
 import AuthLink from './AuthLink.js';
 import styles from './styles.js';
+import useSurfaceTokens from '../components/useSurfaceTokens.js';
 
 const CODE_LENGTH = 6;
 const RESEND_SECONDS = 30;
@@ -47,6 +48,12 @@ const MESSAGES = {
  * @param {{ emailCode: boolean }} props.settings The app's mobile.auth.
  */
 function SignInScreen({ appName, auth, settings }) {
+  const tokens = useSurfaceTokens();
+  const labelStyle = [styles.label, { color: tokens.colorLabel }];
+  const inputStyle = [
+    styles.input,
+    { backgroundColor: tokens.colorCell, color: tokens.colorLabel },
+  ];
   const [step, setStep] = useState('email');
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
@@ -147,7 +154,7 @@ function SignInScreen({ appName, auth, settings }) {
   } else if (step === 'email') {
     form = (
       <>
-        <Text style={styles.label}>Email</Text>
+        <Text style={labelStyle}>Email</Text>
         <TextInput
           autoCapitalize="none"
           autoComplete="email"
@@ -157,8 +164,9 @@ function SignInScreen({ appName, auth, settings }) {
           keyboardType="email-address"
           onChangeText={setEmail}
           onSubmitEditing={sendCode}
+          placeholderTextColor={tokens.colorTertiaryLabel}
           returnKeyType="next"
-          style={styles.input}
+          style={inputStyle}
           testID="sign-in-email"
           textContentType="emailAddress"
           value={email}
@@ -174,10 +182,13 @@ function SignInScreen({ appName, auth, settings }) {
   } else {
     form = (
       <>
-        <Text style={styles.message} testID="sign-in-message">
+        <Text
+          style={[styles.message, { color: tokens.colorSecondaryLabel }]}
+          testID="sign-in-message"
+        >
           {message}
         </Text>
-        <Text style={styles.label}>Code sent to {email.trim()}</Text>
+        <Text style={labelStyle}>Code sent to {email.trim()}</Text>
         <TextInput
           autoComplete="one-time-code"
           autoFocus
@@ -186,7 +197,7 @@ function SignInScreen({ appName, auth, settings }) {
           keyboardType="number-pad"
           maxLength={CODE_LENGTH}
           onChangeText={changeCode}
-          style={[styles.input, styles.codeInput]}
+          style={[inputStyle, styles.codeInput]}
           testID="sign-in-code"
           textContentType="oneTimeCode"
           value={code}
@@ -212,15 +223,19 @@ function SignInScreen({ appName, auth, settings }) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      style={{ flex: 1 }}
+      style={{ backgroundColor: tokens.colorGroupedBackground, flex: 1 }}
     >
       <ScrollView contentContainerStyle={styles.screen} keyboardShouldPersistTaps="handled">
-        <Text accessibilityRole="header" style={styles.appName}>
+        <Text accessibilityRole="header" style={[styles.appName, { color: tokens.colorLabel }]}>
           {appName}
         </Text>
         {form}
         {error ? (
-          <Text accessibilityRole="alert" style={styles.error} testID="sign-in-error">
+          <Text
+            accessibilityRole="alert"
+            style={[styles.error, { color: tokens.colorError }]}
+            testID="sign-in-error"
+          >
             {error}
           </Text>
         ) : null}

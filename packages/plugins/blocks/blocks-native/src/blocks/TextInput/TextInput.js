@@ -14,34 +14,55 @@
   limitations under the License.
 */
 
-import React from 'react';
-import { Text, TextInput as RNTextInput, View } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { Pressable, Text, TextInput as RNTextInput, View } from 'react-native';
 import { type } from '@lowdefy/helpers';
 
 import applyReplaceInput from './applyReplaceInput.js';
 import ClearButton from '../../shared/ClearButton.js';
 import CountText from '../../shared/CountText.js';
 import getInputBoxStyle from '../../shared/getInputBoxStyle.js';
+import getIosTextStyle from '../../typography/getIosTextStyle.js';
 import getKeyboardProps from './getKeyboardProps.js';
 import getLabelProperties from '../Label/getLabelProperties.js';
+import getSearchBoxStyle from './getSearchBoxStyle.js';
 import Label from '../Label/Label.js';
 import meta from './meta.js';
 import useBlockTokens from '../../shared/useBlockTokens.js';
 
-function TextInput({ blockId, loading, methods, properties, required, styles, validation, value }) {
+// A text field. `variant: search` is the iOS search field: a rounded grey fill with a magnifying
+// glass, a clear button while it has text, the keyboard's Search key, and Cancel beside it while
+// it is focused, which clears the text and closes the keyboard.
+function TextInput({
+  blockId,
+  components,
+  loading,
+  methods,
+  properties,
+  required,
+  styles,
+  validation,
+  value,
+}) {
   const { tokens } = useBlockTokens({ properties });
-  const { accessibilityLabel, labelProperties } = getLabelProperties({ blockId, properties });
+  const inputRef = useRef(null);
+  const [focused, setFocused] = useState(false);
+  const { accessibilityLabel, labelProperties } = getLabelProperties({ properties });
   const disabled = loading === true || properties.disabled === true;
-  const { box, text } = getInputBoxStyle({
-    disabled,
-    properties,
-    status: validation?.status,
-    tokens,
-  });
+  const search = properties.variant === 'search';
+  const { box, text } = search
+    ? getSearchBoxStyle({ disabled, tokens })
+    : getInputBoxStyle({ disabled, properties, status: validation?.status, tokens });
+  const hasValue = !type.isNone(value) && value !== '';
   const setText = (input) => {
     methods.setValue(input);
     methods.triggerEvent({ name: 'onChange', event: { value: input } });
   };
+  const clear = () => {
+    setText('');
+    methods.triggerEvent({ name: 'onClear' });
+  };
+  const showClear = (search || properties.allowClear === true) && !disabled && hasValue;
   return (
     <Label
       blockId={blockId}
@@ -51,43 +72,76 @@ function TextInput({ blockId, loading, methods, properties, required, styles, va
       tokens={tokens}
       validation={validation}
     >
-      <View style={[box, styles.element]}>
-        {type.isString(properties.prefix) ? (
-          <Text style={[text, { marginRight: tokens.marginXXS }]}>{properties.prefix}</Text>
-        ) : null}
-        <RNTextInput
-          {...getKeyboardProps({ type: properties.type })}
-          accessibilityLabel={accessibilityLabel}
-          autoFocus={properties.autoFocus === true}
-          editable={!disabled}
-          maxLength={properties.maxLength}
-          onBlur={() => methods.triggerEvent({ name: 'onBlur' })}
-          onChangeText={(input) =>
-            setText(applyReplaceInput({ replaceInput: properties.replaceInput, text: input }))
-          }
-          onFocus={() => methods.triggerEvent({ name: 'onFocus' })}
-          onSubmitEditing={() => methods.triggerEvent({ name: 'onPressEnter' })}
-          placeholder={properties.placeholder}
-          placeholderTextColor={tokens.colorTextPlaceholder}
-          style={[text, { flex: 1, paddingVertical: tokens.paddingXXS }]}
-          testID={`${blockId}_input`}
-          value={value ?? ''}
-        />
-        {properties.showCount === true ? (
-          <CountText maxLength={properties.maxLength} tokens={tokens} value={value} />
-        ) : null}
-        {properties.allowClear === true && !disabled && !type.isNone(value) && value !== '' ? (
-          <ClearButton
-            blockId={blockId}
-            onPress={() => {
-              setText('');
-              methods.triggerEvent({ name: 'onClear' });
+      <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+        <View style={[box, { flex: 1 }, styles.element]}>
+          {search ? (
+            <components.Icon
+              properties={{ name: 'search', title: '' }}
+              styles={{
+                element: { color: tokens.colorSecondaryLabel, fontSize: 17, marginRight: 6 },
+              }}
+              testID={`${blockId}_search_icon`}
+            />
+          ) : null}
+          {type.isString(properties.prefix) ? (
+            <Text style={[text, { color: tokens.colorSecondaryLabel, marginRight: 4 }]}>
+              {properties.prefix}
+            </Text>
+          ) : null}
+          <RNTextInput
+            {...getKeyboardProps({ type: properties.type })}
+            {...(search
+              ? { autoCapitalize: 'none', autoCorrect: false, returnKeyType: 'search' }
+              : {})}
+            accessibilityLabel={accessibilityLabel}
+            autoFocus={properties.autoFocus === true}
+            editable={!disabled}
+            maxLength={properties.maxLength}
+            onBlur={() => {
+              setFocused(false);
+              methods.triggerEvent({ name: 'onBlur' });
             }}
-            tokens={tokens}
+            onChangeText={(input) =>
+              setText(applyReplaceInput({ replaceInput: properties.replaceInput, text: input }))
+            }
+            onFocus={() => {
+              setFocused(true);
+              methods.triggerEvent({ name: 'onFocus' });
+            }}
+            onSubmitEditing={() => methods.triggerEvent({ name: 'onPressEnter' })}
+            placeholder={properties.placeholder ?? (search ? 'Search' : undefined)}
+            placeholderTextColor={tokens.colorTertiaryLabel}
+            ref={inputRef}
+            selectionColor={tokens.colorTint}
+            style={[text, { flex: 1, paddingVertical: 0 }]}
+            testID={`${blockId}_input`}
+            value={value ?? ''}
           />
-        ) : null}
-        {type.isString(properties.suffix) ? (
-          <Text style={[text, { marginLeft: tokens.marginXXS }]}>{properties.suffix}</Text>
+          {properties.showCount === true ? (
+            <CountText maxLength={properties.maxLength} tokens={tokens} value={value} />
+          ) : null}
+          {showClear ? <ClearButton blockId={blockId} onPress={clear} tokens={tokens} /> : null}
+          {type.isString(properties.suffix) ? (
+            <Text style={[text, { color: tokens.colorSecondaryLabel, marginLeft: 4 }]}>
+              {properties.suffix}
+            </Text>
+          ) : null}
+        </View>
+        {search && focused ? (
+          <Pressable
+            accessibilityRole="button"
+            hitSlop={8}
+            onPress={() => {
+              if (hasValue) clear();
+              inputRef.current?.blur();
+            }}
+            style={{ marginLeft: 12 }}
+            testID={`${blockId}_cancel`}
+          >
+            <Text style={getIosTextStyle({ color: tokens.colorTint, textStyle: 'body', tokens })}>
+              Cancel
+            </Text>
+          </Pressable>
         ) : null}
       </View>
     </Label>

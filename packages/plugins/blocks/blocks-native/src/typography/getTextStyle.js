@@ -16,14 +16,15 @@
 
 import { Platform } from 'react-native';
 
-// antd's Typography styles as React Native text styles. antd's code font is a CSS font stack,
-// which a phone cannot read, so code text uses the platform's monospace font.
+// antd's Typography styles as React Native text styles, in the iOS label and fill colours. antd's
+// code font is a CSS font stack, which a phone cannot read, so code text uses the platform's
+// monospace font.
 const monospace = Platform.select({ ios: 'Menlo', default: 'monospace' });
 
 function getTypeColor({ tokens, type }) {
   switch (type) {
     case 'secondary':
-      return tokens.colorTextSecondary;
+      return tokens.colorSecondaryLabel;
     case 'success':
       return tokens.colorSuccess;
     case 'warning':
@@ -58,24 +59,22 @@ function getTextStyle({ baseStyle, properties, tokens }) {
   const style = { ...baseStyle };
   const typeColor = getTypeColor({ tokens, type: properties.type });
   if (typeColor !== undefined) style.color = typeColor;
-  if (properties.disabled === true) style.color = tokens.colorTextDisabled;
-  if (properties.strong === true) style.fontWeight = String(tokens.fontWeightStrong);
+  if (properties.disabled === true) style.color = tokens.colorTertiaryLabel;
+  if (properties.strong === true) style.fontWeight = '600';
   if (properties.italic === true) style.fontStyle = 'italic';
   if (properties.code === true) {
     Object.assign(style, {
-      backgroundColor: tokens.colorFillTertiary,
-      borderColor: tokens.colorBorderSecondary,
+      backgroundColor: tokens.colorTertiarySystemFill,
       borderRadius: tokens.borderRadiusSM,
-      borderWidth: tokens.lineWidth,
       fontFamily: monospace,
       fontSize: style.fontSize * 0.85,
     });
   }
   if (properties.keyboard === true) {
     Object.assign(style, {
-      backgroundColor: tokens.colorFillQuaternary,
+      backgroundColor: tokens.colorQuaternarySystemFill,
       borderBottomWidth: tokens.lineWidth * 2,
-      borderColor: tokens.colorBorder,
+      borderColor: tokens.colorOpaqueSeparator,
       borderRadius: tokens.borderRadiusSM,
       borderWidth: tokens.lineWidth,
       fontFamily: monospace,

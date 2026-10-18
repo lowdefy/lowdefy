@@ -18,20 +18,26 @@ import React from 'react';
 import { Text } from 'react-native';
 import { type } from '@lowdefy/helpers';
 
+import getIosTextStyle from '../typography/getIosTextStyle.js';
+
 /**
  * The character count an input with `showCount` shows: the length, or the length out of
  * `maxLength`.
  *
  * @param {Object} props
  * @param {number} [props.maxLength]
- * @param {Object} props.tokens The block's antd tokens.
+ * @param {Object} props.tokens The block's theme tokens.
  * @param {string|null} [props.value]
  */
 function CountText({ maxLength, tokens, value }) {
   const length = (value ?? '').length;
   const count = type.isInt(maxLength) ? `${length} / ${maxLength}` : `${length}`;
   return (
-    <Text style={{ color: tokens.colorTextTertiary, fontSize: tokens.fontSizeSM }}>{count}</Text>
+    <Text
+      style={getIosTextStyle({ color: tokens.colorTertiaryLabel, textStyle: 'footnote', tokens })}
+    >
+      {count}
+    </Text>
   );
 }
 

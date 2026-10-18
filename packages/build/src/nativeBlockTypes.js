@@ -55,7 +55,7 @@ const nativeBlockTypes = {
     Card: [],
     DateSelector: [],
     Divider: [],
-    Empty: [],
+    Empty: ['Inbox'],
     Icon: ['loading'],
     List: [],
     ListItem: ['chevron-right'],
@@ -73,8 +73,8 @@ const nativeBlockTypes = {
     Switch: [],
     Tabs: ['more'],
     Tag: ['close'],
-    TextArea: [],
-    TextInput: [],
+    TextArea: ['ArrowUp'],
+    TextInput: ['search'],
     Title: [],
   },
   blockMetas: {
@@ -99,7 +99,7 @@ const nativeBlockTypes = {
     Button: {
       category: 'display',
       cssKeys: ['element', 'icon'],
-      nativeIgnored: ['iconPlacement', 'tooltip'],
+      nativeIgnored: ['tooltip'],
     },
     Card: {
       category: 'container',
@@ -140,7 +140,7 @@ const nativeBlockTypes = {
       slots: {
         footer: 'Blocks under the description, such as a button that creates the first item.',
       },
-      cssKeys: ['element', 'image', 'description', 'footer'],
+      cssKeys: ['element', 'image', 'title', 'description', 'footer'],
     },
     Icon: {
       category: 'display',
@@ -284,7 +284,7 @@ const nativeBlockTypes = {
     },
     Tag: {
       category: 'display',
-      cssKeys: ['element', 'icon', 'closeIcon'],
+      cssKeys: ['element', 'icon', 'dot', 'closeIcon'],
       nativeIgnored: ['target'],
     },
     TextArea: {

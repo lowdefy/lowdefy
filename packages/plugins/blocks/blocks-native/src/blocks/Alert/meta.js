@@ -90,7 +90,7 @@ export default {
         enum: ['outlined', 'filled'],
         default: 'outlined',
         description:
-          'Alert style variant. `filled` hides the border and keeps the background tint.',
+          'Alert style variant. `filled` hides the border and keeps the background tint. On mobile an alert is an iOS callout: a rounded box tinted in its type colour (the tint for info), with a border only when `outlined` is set.',
       },
       theme: {
         type: 'object',

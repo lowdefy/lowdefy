@@ -45,7 +45,7 @@ export default {
         type: 'boolean',
         default: true,
         description:
-          'Toggles rendering of the border around the card. `bordered: false` is the same as `variant: borderless`.',
+          'Toggles rendering of the border around the card. `bordered: false` is the same as `variant: borderless`. On mobile a card is an iOS grouped cell and has no border.',
       },
       hoverable: {
         nativeIgnored: true,
@@ -85,7 +85,8 @@ export default {
         type: 'string',
         enum: ['outlined', 'borderless'],
         default: 'outlined',
-        description: 'Card style variant.',
+        description:
+          'Card style variant. On mobile a card is an iOS grouped cell on the grouped background, with no border in either variant.',
       },
       theme: {
         type: 'object',

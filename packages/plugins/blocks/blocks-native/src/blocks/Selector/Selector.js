@@ -54,7 +54,7 @@ function SelectorPicker({
   value,
 }) {
   const { isDark, tokens } = useBlockTokens({ properties });
-  const { accessibilityLabel, labelProperties } = getLabelProperties({ blockId, properties });
+  const { accessibilityLabel, labelProperties } = getLabelProperties({ properties });
   const disabled = loading === true || properties.disabled === true;
   const { box } = getInputBoxStyle({ disabled, properties, status: validation?.status, tokens });
   const options = properties.options ?? [];
@@ -76,7 +76,7 @@ function SelectorPicker({
       validation={validation}
     >
       <View accessibilityLabel={accessibilityLabel} style={[box, styles.element]}>
-        <Host colorScheme={isDark ? 'dark' : 'light'} matchContents seedColor={tokens.colorPrimary}>
+        <Host colorScheme={isDark ? 'dark' : 'light'} matchContents seedColor={tokens.colorTint}>
           <Picker
             appearance={properties.appearance ?? 'menu'}
             enabled={!disabled}

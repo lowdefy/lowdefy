@@ -18,11 +18,16 @@ import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 
 import styles from './styles.js';
+import useSurfaceTokens from './useSurfaceTokens.js';
 
 function LoadingScreen() {
+  const tokens = useSurfaceTokens();
   return (
-    <View style={styles.centered} testID="shell-loading">
-      <ActivityIndicator />
+    <View
+      style={[styles.centered, { backgroundColor: tokens.colorGroupedBackground }]}
+      testID="shell-loading"
+    >
+      <ActivityIndicator color={tokens.colorSecondaryLabel} />
     </View>
   );
 }

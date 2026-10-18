@@ -19,35 +19,60 @@ import { Text, View } from 'react-native';
 import { type } from '@lowdefy/helpers';
 import { useTheme } from '@lowdefy/client-native';
 
-import EmptyImage from './EmptyImage.js';
+import getIosTextStyle from '../../typography/getIosTextStyle.js';
 import meta from './meta.js';
 
-const imageHeights = { default: 100, simple: 40 };
+// iOS's ContentUnavailableView at two sizes: `default` for a screen, `simple` inside a list or card.
+const SIZES = {
+  default: { description: 'body', icon: 48, paddingVertical: 48, title: 'title2' },
+  simple: { description: 'subheadline', icon: 32, paddingVertical: 24, title: 'headline' },
+};
 
-// A centred placeholder for nothing to show: the empty tray (or an icon), a description and an
-// optional footer of blocks, as antd's Empty.
+// A centred placeholder for nothing to show, as iOS's ContentUnavailableView: a large icon in the
+// secondary label colour, a title, a line of description and an optional footer of blocks, such
+// as a button that creates the first item. Without a title the description defaults to "No data".
 function Empty({ blockId, components, content, properties, styles = {} }) {
   const { tokens } = useTheme();
-  const image = properties.image ?? 'default';
-  const description = properties.description ?? 'No data';
-  const imageHeight = imageHeights[image];
+  const size = SIZES[properties.image === 'simple' ? 'simple' : 'default'];
+  const hasTitle = type.isString(properties.title) && properties.title !== '';
+  const description = properties.description ?? (hasTitle ? null : 'No data');
   return (
-    <View style={[{ alignItems: 'center', paddingVertical: tokens.paddingLG }, styles.element]}>
-      <View style={[{ marginBottom: tokens.marginXS }, styles.image]}>
-        {type.isNone(properties.icon) ? (
-          <EmptyImage height={imageHeight} tokens={tokens} />
-        ) : (
-          <components.Icon
-            properties={properties.icon}
-            styles={{ element: { color: tokens.colorTextQuaternary, fontSize: imageHeight / 2 } }}
-            testID={`${blockId}_icon`}
-          />
-        )}
+    <View
+      style={[
+        { alignItems: 'center', paddingHorizontal: 24, paddingVertical: size.paddingVertical },
+        styles.element,
+      ]}
+    >
+      <View style={[{ marginBottom: 12 }, styles.image]}>
+        <components.Icon
+          properties={properties.icon ?? { name: 'Inbox', title: '' }}
+          styles={{
+            element: { color: tokens.colorSecondaryLabel, fontSize: size.icon },
+          }}
+          testID={`${blockId}_icon`}
+        />
       </View>
-      {description === '' ? null : (
+      {hasTitle ? (
+        <Text
+          accessibilityRole="header"
+          style={[
+            getIosTextStyle({ textStyle: size.title, tokens }),
+            { textAlign: 'center' },
+            styles.title,
+          ]}
+        >
+          {properties.title}
+        </Text>
+      ) : null}
+      {type.isNone(description) || description === '' ? null : (
         <Text
           style={[
-            { color: tokens.colorTextDescription, fontSize: tokens.fontSize, textAlign: 'center' },
+            getIosTextStyle({
+              color: tokens.colorSecondaryLabel,
+              textStyle: size.description,
+              tokens,
+            }),
+            { marginTop: hasTitle ? 4 : 0, textAlign: 'center' },
             styles.description,
           ]}
         >
@@ -55,7 +80,7 @@ function Empty({ blockId, components, content, properties, styles = {} }) {
         </Text>
       )}
       {content.footer ? (
-        <View style={[{ marginTop: tokens.margin }, styles.footer]}>{content.footer()}</View>
+        <View style={[{ marginTop: 16 }, styles.footer]}>{content.footer()}</View>
       ) : null}
     </View>
   );

@@ -20,6 +20,7 @@ import { View, Text } from 'react-native';
 import AuthButton from './AuthButton.js';
 import AuthLink from './AuthLink.js';
 import styles from './styles.js';
+import useSurfaceTokens from '../components/useSurfaceTokens.js';
 
 /**
  * The lock screen of an app with biometric unlock: no page shows until Face ID or a fingerprint
@@ -27,6 +28,7 @@ import styles from './styles.js';
  * biometrics no longer open the app.
  */
 function LockScreen({ appName, auth }) {
+  const tokens = useSurfaceTokens();
   const [busy, setBusy] = useState(false);
 
   const unlock = useCallback(async () => {
@@ -43,8 +45,11 @@ function LockScreen({ appName, auth }) {
   }, [unlock]);
 
   return (
-    <View style={styles.screen} testID="shell-lock">
-      <Text accessibilityRole="header" style={styles.appName}>
+    <View
+      style={[styles.screen, { backgroundColor: tokens.colorGroupedBackground }]}
+      testID="shell-lock"
+    >
+      <Text accessibilityRole="header" style={[styles.appName, { color: tokens.colorLabel }]}>
         {appName}
       </Text>
       <AuthButton disabled={busy} onPress={unlock} testID="lock-unlock" title="Unlock" />

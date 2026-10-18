@@ -15,14 +15,35 @@
 */
 
 import React from 'react';
+import { View } from 'react-native';
+import { type } from '@lowdefy/helpers';
 import { convertStyle } from '@lowdefy/style-native';
 
 import meta from './meta.js';
+import SkeletonRows from './SkeletonRows.js';
 import SkeletonShape from '../../skeleton/SkeletonShape.js';
 
-// A placeholder shape for a loading block, as the web's: the given width and height, full size by
-// default. CSS lengths (`120px`, `50%`) become React Native ones.
+// A shimmering placeholder for a loading block. With `count`, `rows` or `avatar` it draws loading
+// list rows (an avatar and two lines each, by default); otherwise one shape of the given width and
+// height, full size by default, as the web's. CSS lengths (`120px`, `50%`) become React Native
+// ones.
 function Skeleton({ blockId, properties, styles = {} }) {
+  const drawsRows =
+    !type.isNone(properties.count) ||
+    !type.isNone(properties.rows) ||
+    !type.isNone(properties.avatar);
+  if (drawsRows) {
+    return (
+      <View style={styles.element}>
+        <SkeletonRows
+          avatar={properties.avatar !== false}
+          blockId={blockId}
+          count={properties.count ?? 3}
+          rows={properties.rows ?? 2}
+        />
+      </View>
+    );
+  }
   const { style } = convertStyle({
     height: properties.height ?? '100%',
     width: properties.width ?? '100%',

@@ -15,27 +15,38 @@
 */
 
 import React from 'react';
-import { Pressable, Text } from 'react-native';
+import { Pressable } from 'react-native';
+import Svg, { Circle, Path } from 'react-native-svg';
 
 /**
- * The clear button an input with `allowClear` shows while it has a value.
+ * The clear button an input shows while it has a value: iOS's filled circle with a cross, in the
+ * tertiary label colour.
  *
  * @param {Object} props
  * @param {string} props.blockId
  * @param {() => void} props.onPress
- * @param {Object} props.tokens The block's antd tokens.
+ * @param {number} [props.size] The circle's size, 17 by default.
+ * @param {Object} props.tokens The block's theme tokens.
  */
-function ClearButton({ blockId, onPress, tokens }) {
+function ClearButton({ blockId, onPress, size = 17, tokens }) {
   return (
     <Pressable
       accessibilityLabel="Clear"
       accessibilityRole="button"
-      hitSlop={tokens.paddingXS}
+      hitSlop={12}
       onPress={onPress}
-      style={{ marginLeft: tokens.marginXXS }}
+      style={{ marginLeft: 8 }}
       testID={`${blockId}_clear`}
     >
-      <Text style={{ color: tokens.colorTextTertiary, fontSize: tokens.fontSizeLG }}>×</Text>
+      <Svg height={size} viewBox="0 0 20 20" width={size}>
+        <Circle cx="10" cy="10" fill={tokens.colorTertiaryLabel} r="10" />
+        <Path
+          d="M6.5 6.5l7 7M13.5 6.5l-7 7"
+          stroke={tokens.colorCell}
+          strokeLinecap="round"
+          strokeWidth="1.8"
+        />
+      </Svg>
     </Pressable>
   );
 }

@@ -14,14 +14,16 @@
   limitations under the License.
 */
 
-import { page, renderPage, screen, styleOf, theme } from '../../test/renderPage.js';
+import { StyleSheet } from 'react-native';
 
-test('a Divider is a rule in the split colour with a large margin by default', async () => {
+import { ios, page, renderPage, screen, styleOf, theme } from '../../test/renderPage.js';
+
+test('a Divider is a hairline in the separator colour with a large margin by default', async () => {
   await renderPage({ pageConfig: page([{ id: 'rule', type: 'Divider' }]) });
   const rule = (await screen.findByTestId('rule')).children[0];
   expect(styleOf(rule)).toMatchObject({
-    backgroundColor: theme.light.colorSplit,
-    height: theme.light.lineWidth,
+    backgroundColor: ios.light.colorSeparator,
+    height: StyleSheet.hairlineWidth,
     marginVertical: theme.light.marginLG,
   });
 });
@@ -37,7 +39,11 @@ test('a Divider with a title puts it between two lines, at its placement', async
     ]),
   });
   const title = await screen.findByText('Details');
-  expect(styleOf(title)).toMatchObject({ fontSize: theme.light.fontSize, fontWeight: 'normal' });
+  expect(styleOf(title)).toMatchObject({
+    color: ios.light.colorSecondaryLabel,
+    fontSize: 13,
+    fontWeight: '400',
+  });
   const row = screen.getByTestId('section').children[0];
   expect(styleOf(row).marginVertical).toBe(theme.light.marginXS);
   const [before, , after] = row.children;
@@ -57,12 +63,12 @@ test('a dashed or vertical Divider draws a dashed or upright line', async () => 
     height: 0,
   });
   expect(styleOf(screen.getByTestId('upright').children[0])).toMatchObject({
-    height: theme.light.fontSize * 0.9,
-    width: theme.light.lineWidth,
+    height: 13,
+    width: StyleSheet.hairlineWidth,
   });
 });
 
-test('a Divider takes the dark split colour in dark mode, and is not drawn when not visible', async () => {
+test('a Divider takes the dark separator colour in dark mode, and is not drawn when not visible', async () => {
   await renderPage({
     darkMode: 'dark',
     pageConfig: page([
@@ -71,7 +77,7 @@ test('a Divider takes the dark split colour in dark mode, and is not drawn when 
     ]),
   });
   expect(styleOf((await screen.findByTestId('rule')).children[0]).backgroundColor).toBe(
-    theme.dark.colorSplit
+    ios.dark.colorSeparator
   );
   expect(screen.queryByTestId('hidden')).toBeNull();
 });
