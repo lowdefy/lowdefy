@@ -15,10 +15,12 @@
 */
 
 export { default as claimCallerReload } from './claimCallerReload.js';
+export { default as createAuthFetchOptions } from './auth/createAuthFetchOptions.js';
 export { default as createLowdefyCore } from './createLowdefyCore.js';
 export { default as createPageLifecycleManager } from './createPageLifecycleManager.js';
 export { createUrl, serializeQuery } from './url.js';
 export { default as getActiveLocale } from './getActiveLocale.js';
+export { default as getAuthorizationHeaders } from './auth/getAuthorizationHeaders.js';
 export { default as getContextKey } from './getContextKey.js';
 export { default as recordCallerStamp } from './recordCallerStamp.js';
 export { default as shouldReloadForBuild } from './shouldReloadForBuild.js';

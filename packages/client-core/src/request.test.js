@@ -417,3 +417,87 @@ describe('caller check', () => {
     });
   });
 });
+
+describe('bearer transport', () => {
+  function createBearerLowdefy({ token, user = null }) {
+    let held = token;
+    host.authTransport = 'bearer';
+    host.tokenStore = {
+      get: jest.fn(() => held),
+      set: jest.fn(),
+      clear: jest.fn(async () => {
+        held = null;
+      }),
+    };
+    return createLowdefy(user);
+  }
+
+  test('request sends the held token as an Authorization header', async () => {
+    mockFetchResponse({ ok: true, body: {} });
+    await request({
+      lowdefy: createBearerLowdefy({ token: 'session.sig' }),
+      buildId: 'build-1',
+      url: '/api/test',
+      method: 'POST',
+      body: {},
+    });
+    expect(host.fetch.mock.calls[0][1].headers).toEqual({
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer session.sig',
+      'x-lowdefy-build': 'build-1',
+    });
+  });
+
+  test('request sends no Authorization header while a bearer host holds no token', async () => {
+    mockFetchResponse({ ok: true, body: {} });
+    await request({ lowdefy: createBearerLowdefy({ token: null }), url: '/api/test', body: {} });
+    expect(host.fetch.mock.calls[0][1].headers).not.toHaveProperty('Authorization');
+  });
+
+  test('a 401 to a call that sent the token clears it, calls onCallerChanged and never settles', async () => {
+    mockFetchResponse({
+      ok: false,
+      status: 401,
+      body: { name: 'AuthenticationError', message: 'Authentication required.' },
+      headers: { 'x-lowdefy-caller': '' },
+    });
+    const lowdefy = createBearerLowdefy({ token: 'session.sig', user: { id: 'user_a' } });
+    const settled = jest.fn();
+    request({ lowdefy, url: '/api/request/home/list', method: 'POST', body: {} }).then(
+      settled,
+      settled
+    );
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(settled).not.toHaveBeenCalled();
+    expect(host.tokenStore.clear).toHaveBeenCalledTimes(1);
+    expect(host.tokenStore.get()).toBe(null);
+    expect(host.onCallerChanged.mock.calls).toEqual([
+      [{ caller: '', session: null, roles: null, memberships: null }],
+    ]);
+  });
+
+  test('a 401 to a call that sent no token is thrown as an AuthenticationError', async () => {
+    mockFetchResponse({
+      ok: false,
+      status: 401,
+      body: { name: 'AuthenticationError', message: 'Authentication required.' },
+    });
+    await expect(
+      request({ lowdefy: createBearerLowdefy({ token: null }), url: '/api/test', body: {} })
+    ).rejects.toBeInstanceOf(AuthenticationError);
+    expect(host.tokenStore.clear).not.toHaveBeenCalled();
+    expect(host.onCallerChanged).not.toHaveBeenCalled();
+  });
+
+  test('a 403 to a call that sent the token keeps it', async () => {
+    mockFetchResponse({
+      ok: false,
+      status: 403,
+      body: { name: 'AuthorizationError', message: 'Endpoint "save" does not exist.' },
+    });
+    await expect(
+      request({ lowdefy: createBearerLowdefy({ token: 'session.sig' }), url: '/api/test' })
+    ).rejects.toBeInstanceOf(AuthorizationError);
+    expect(host.tokenStore.clear).not.toHaveBeenCalled();
+  });
+});

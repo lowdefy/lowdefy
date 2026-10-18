@@ -27,6 +27,8 @@ function setup({ signInResult, signUpResult } = {}) {
       globals: {
         window: { location: { assign, origin: 'https://app.lowdefy.test', search: '' } },
       },
+      // A cookie host, as the web's: it names no authTransport.
+      host: {},
       storage: { clearUserStorage: jest.fn() },
     },
     home: { configured: false, pageId: 'home-page' },

@@ -35,11 +35,12 @@ function createHandlers() {
   };
 }
 
-function createTestClient({ apiBase } = {}) {
+function createTestClient({ apiBase, host: hostMembers = {} } = {}) {
   const sockets = [];
   class MockWebSocket {
-    constructor(url) {
-      this.url = url;
+    constructor(...args) {
+      this.args = args;
+      [this.url] = args;
       this.readyState = 0;
       this.send = jest.fn();
       this.close = jest.fn();
@@ -53,6 +54,7 @@ function createTestClient({ apiBase } = {}) {
       host: {
         WebSocket: MockWebSocket,
         websocketUrl: (path) => `ws://localhost${path}`,
+        ...hostMembers,
       },
       logger: { warn: jest.fn() },
     },
@@ -636,4 +638,52 @@ test('the socket connects to the URL the host gives for the apiBase websocket pa
   const { client, currentSocket } = createTestClient({ apiBase: '/app' });
   client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'feed' });
   expect(currentSocket().url).toBe('ws://localhost/app/api/websocket');
+});
+
+describe('auth transport', () => {
+  function bearerHost(getToken) {
+    return {
+      authTransport: 'bearer',
+      tokenStore: { get: getToken, set: jest.fn(), clear: jest.fn() },
+    };
+  }
+
+  test('a cookie host opens the socket with the URL alone, as a browser WebSocket takes it', () => {
+    const { client, currentSocket } = createTestClient({ apiBase: '/crm' });
+    client.connect();
+    expect(currentSocket().args).toEqual(['ws://localhost/crm/api/websocket']);
+  });
+
+  test('a bearer host sends its token as an Authorization header on the upgrade', () => {
+    const { client, currentSocket } = createTestClient({
+      host: bearerHost(() => 'session.sig'),
+    });
+    client.connect();
+    expect(currentSocket().args).toEqual([
+      'ws://localhost/api/websocket',
+      undefined,
+      { headers: { Authorization: 'Bearer session.sig' } },
+    ]);
+  });
+
+  test('a bearer host holding no token opens the socket with the URL alone', () => {
+    const { client, currentSocket } = createTestClient({ host: bearerHost(() => null) });
+    client.connect();
+    expect(currentSocket().args).toEqual(['ws://localhost/api/websocket']);
+  });
+
+  test('a bearer host reconnecting after a caller change sends the token it holds then', () => {
+    jest.useFakeTimers();
+    let token = 'first.sig';
+    const { client, close, currentSocket, open } = createTestClient({
+      host: bearerHost(() => token),
+    });
+    client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
+    open();
+    token = 'second.sig';
+    close({ code: 4401 });
+    jest.advanceTimersByTime(500);
+    expect(currentSocket().args[2]).toEqual({ headers: { Authorization: 'Bearer second.sig' } });
+    jest.useRealTimers();
+  });
 });

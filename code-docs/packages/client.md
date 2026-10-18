@@ -52,6 +52,20 @@ renderer package; `src/platformFree.test.js` enforces both.
 defaults to `basePath`; a native shell passes its server's origin while `basePath` keeps its
 routing meaning.
 
+A host may also name its auth transport (`auth/validateAuthTransport.js`). The web host names
+none and is a cookie host: the browser sends the session cookie, and calls go out as they always
+have. A native shell passes `authTransport: 'bearer'` and a `tokenStore` of `{ get, set, clear }`
+holding its Better Auth session token. Then:
+
+- requests, endpoint calls and the websocket upgrade send `Authorization: Bearer <token>`
+  (`auth/getAuthorizationHeaders.js`);
+- `createAuthFetchOptions({ host })` gives the shell's Better Auth client the same header, keeps
+  the token the bearer plugin returns in `set-auth-token`, and ends the session on a 401;
+- a 401 to any call that sent the token clears the store and calls `onCallerChanged`
+  (`auth/endBearerSession.js`), and `Logout` clears it after sign-out;
+- endpoint calls send no `x-lowdefy-build`, so a server build change never refuses them; page
+  requests still do.
+
 On the web, `initLowdefyContext.js` builds the browser host (`host/createWebHost.js`): the
 window's `fetch`, `localStorage` and `sessionStorage`, the page origin for the websocket URL, and
 `window.location.reload()` for a build or caller change. It then adds the web renderer's parts:

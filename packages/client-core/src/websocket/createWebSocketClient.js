@@ -18,6 +18,8 @@ import { decodeServerError } from '@lowdefy/engine';
 import { ServiceError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
+import getAuthorizationHeaders from '../auth/getAuthorizationHeaders.js';
+
 const ACK_TIMEOUT_MS = 10 * 1000;
 const IDLE_CLOSE_GRACE_MS = 5 * 1000;
 const RECONNECT_BASE_MS = 500;
@@ -70,6 +72,18 @@ function createWebSocketClient(lowdefy) {
 
   function url() {
     return host.websocketUrl(`${lowdefy.apiBase ?? ''}/api/websocket`);
+  }
+
+  // A browser sends the session cookie on the upgrade itself. A bearer host
+  // sends its token as a header, which React Native's WebSocket takes as a
+  // third argument; it is read on every connect, so a reconnect after a caller
+  // change authenticates with the token held then.
+  function createSocket() {
+    const headers = getAuthorizationHeaders({ host });
+    if (type.isNone(headers.Authorization)) {
+      return new host.WebSocket(url());
+    }
+    return new host.WebSocket(url(), undefined, { headers });
   }
 
   function clearIdleTimer() {
@@ -305,7 +319,7 @@ function createWebSocketClient(lowdefy) {
     }
     clearIdleTimer();
     openPromise = new Promise((resolve, reject) => {
-      const ws = new host.WebSocket(url());
+      const ws = createSocket();
       ws.onopen = () => {
         socket = ws;
         openedAt = Date.now();

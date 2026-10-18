@@ -18,6 +18,8 @@ import { decodeServerError } from '@lowdefy/engine';
 import { expectedErrorNames, lowdefyErrorTypes } from '@lowdefy/errors';
 import { parseCallerStamp, translate, type } from '@lowdefy/helpers';
 
+import endBearerSession from './auth/endBearerSession.js';
+import getAuthorizationHeaders from './auth/getAuthorizationHeaders.js';
 import recordCallerStamp from './recordCallerStamp.js';
 import shouldReloadForAuthError from './shouldReloadForAuthError.js';
 import shouldReloadForBuild from './shouldReloadForBuild.js';
@@ -42,6 +44,12 @@ import shouldReloadForCaller from './shouldReloadForCaller.js';
 // the last one seen (recordCallerStamp).
 // reloadOnAuthorizationError is set for page requests, which share the page's
 // auth, and not for endpoints, which carry their own.
+//
+// A bearer host (a native shell) sends its session token as Authorization. A
+// 401 to a call that carried one means the session is gone, so the token is
+// cleared and the host moves onto the signed-out caller (endBearerSession),
+// with no reload guard: once the token is cleared the next call cannot be
+// refused for it again.
 async function request({
   buildId,
   url,
@@ -53,7 +61,8 @@ async function request({
   // Read per call: the rendered caller changes with the session.
   const { user } = lowdefy;
   const { host } = lowdefy._internal;
-  const headers = { 'Content-Type': 'application/json' };
+  const authorizationHeaders = getAuthorizationHeaders({ host });
+  const headers = { 'Content-Type': 'application/json', ...authorizationHeaders };
   if (!type.isNone(buildId)) {
     headers['x-lowdefy-build'] = buildId;
   }
@@ -63,6 +72,10 @@ async function request({
     body: JSON.stringify(body),
   });
   const serverCaller = res.headers.get('x-lowdefy-caller');
+  if (res.status === 401 && !type.isNone(authorizationHeaders.Authorization)) {
+    await endBearerSession({ host, serverCaller });
+    return new Promise(() => {});
+  }
   if (shouldReloadForCaller({ serverCaller, sessionStorage: host.sessionStorage, user })) {
     host.onCallerChanged(parseCallerStamp(serverCaller));
     return new Promise(() => {});

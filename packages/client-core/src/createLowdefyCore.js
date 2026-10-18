@@ -18,6 +18,7 @@ import { translate, type } from '@lowdefy/helpers';
 import { createBrowserLogger } from '@lowdefy/logger/browser';
 
 import createAuthMethods from './auth/createAuthMethods.js';
+import validateAuthTransport from './auth/validateAuthTransport.js';
 import createCallAPI from './createCallAPI.js';
 import createCallRequest from './createCallRequest.js';
 import createHandleError from './createHandleError.js';
@@ -38,6 +39,8 @@ const HOST_KEYS = [
   'WebSocket', // the WebSocket constructor.
   'websocketUrl', // (path) the socket URL for an API path such as `${apiBase}/api/websocket`.
 ];
+// A host may also give authTransport ('cookie', the default, or 'bearer') and,
+// for bearer, tokenStore: see validateAuthTransport.
 
 // Builds lowdefy._internal and the app-level state of the lowdefy object for a
 // renderer: requests, endpoint calls, the websocket client, auth methods,
@@ -56,6 +59,7 @@ function createLowdefyCore({ apiBase, auth, basePath, host, lowdefy, rootConfig,
   if (missing.length > 0) {
     throw new Error(`Lowdefy client host is missing ${missing.join(', ')}.`);
   }
+  validateAuthTransport({ host });
   // The path memory lasts the session. A dev config reload clears initialised
   // to rebuild the page contexts, but the paths this tab followed still name
   // the same pages, and the page response it fetches next rewrites its own.
