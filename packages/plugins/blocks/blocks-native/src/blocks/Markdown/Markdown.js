@@ -14,53 +14,35 @@
   limitations under the License.
 */
 
-import React, { useMemo } from 'react';
-import { Linking, View } from 'react-native';
-import { useMarkdown } from 'react-native-marked';
+import React, { useCallback } from 'react';
+import { Linking } from 'react-native';
 
-import getMarkdownStyles from './getMarkdownStyles.js';
-import MarkdownRenderer from './MarkdownRenderer.js';
-import MarkdownTokenizer from './MarkdownTokenizer.js';
+import MarkdownContent from './MarkdownContent.js';
 import meta from './meta.js';
-import useComponentTokens from '../../useComponentTokens.js';
 
-// GitHub-flavoured markdown drawn with React Native views. useMarkdown gives the elements rather
-// than react-native-marked's FlatList, since the block sits in the page's scroll view. A pressed
-// link runs onLinkPress when the block has it, and otherwise leaves the app through the system,
-// as an outside Link does.
+// GitHub-flavoured markdown drawn with React Native views (MarkdownContent). A pressed link runs
+// onLinkPress when the block has it, and otherwise leaves the app through the system, as an
+// outside Link does.
 function Markdown({ events, methods, properties, styles = {} }) {
-  const { isDark, tokens } = useComponentTokens();
   const hasOnLinkPress = Boolean(events.onLinkPress);
-  const skipHtml = properties.skipHtml === true;
-  const {
-    listStyle,
-    styles: markdownStyles,
-    theme,
-  } = useMemo(() => getMarkdownStyles({ tokens }), [tokens]);
-  const tokenizer = useMemo(() => new MarkdownTokenizer(), []);
-  const renderer = useMemo(
-    () =>
-      new MarkdownRenderer({
-        listStyle,
-        onLinkPress: (href) => {
-          if (hasOnLinkPress) {
-            methods.triggerEvent({ name: 'onLinkPress', event: { href } });
-            return;
-          }
-          Linking.openURL(href);
-        },
-        skipHtml,
-      }),
-    [hasOnLinkPress, listStyle, methods, skipHtml]
+  const onLinkPress = useCallback(
+    (href) => {
+      if (hasOnLinkPress) {
+        methods.triggerEvent({ name: 'onLinkPress', event: { href } });
+        return;
+      }
+      Linking.openURL(href);
+    },
+    [hasOnLinkPress, methods]
   );
-  const elements = useMarkdown(properties.content ?? '', {
-    colorScheme: isDark ? 'dark' : 'light',
-    renderer,
-    styles: markdownStyles,
-    theme,
-    tokenizer,
-  });
-  return <View style={styles.element}>{elements}</View>;
+  return (
+    <MarkdownContent
+      content={properties.content}
+      onLinkPress={onLinkPress}
+      skipHtml={properties.skipHtml === true}
+      style={styles.element}
+    />
+  );
 }
 
 Markdown.meta = meta;

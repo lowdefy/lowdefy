@@ -57,7 +57,12 @@ jest.unstable_mockModule('../../lib/server/log/createHandleError.js', () => ({
   default: jest.fn(() => jest.fn()),
 }));
 jest.unstable_mockModule('../../lib/server/log/createLogger.js', () => ({
-  default: jest.fn(() => ({ debug: jest.fn(), info: jest.fn(), warn: jest.fn(), error: jest.fn() })),
+  default: jest.fn(() => ({
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  })),
 }));
 jest.unstable_mockModule('../../lib/server/fileCache.js', () => ({ default: {} }));
 jest.unstable_mockModule('../../lib/server/auth/getAuth.js', () => ({

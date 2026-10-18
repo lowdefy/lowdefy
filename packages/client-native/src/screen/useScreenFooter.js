@@ -26,16 +26,21 @@ import ScreenContext from './ScreenContext.js';
  *
  * `render` is drawn in the footer's own tree, so state a component keeps there survives the
  * block's renders while its element type stays the same. It is set on every render of the block,
- * so the footer always draws the block's latest props; pass null to draw nothing.
+ * so the footer always draws the block's latest props. null draws nothing and leaves the footer
+ * alone, for a block that draws its chrome itself in some configurations.
  *
  * @param {(() => React.ReactNode)|null} render
  */
 function useScreenFooter(render) {
   const { footer } = useContext(ScreenContext);
+  const hasRender = typeof render === 'function';
   useEffect(() => {
-    footer.set(render);
+    if (hasRender) footer.set(render);
   });
-  useEffect(() => () => footer.set(null), [footer]);
+  useEffect(() => {
+    if (!hasRender) return undefined;
+    return () => footer.set(null);
+  }, [footer, hasRender]);
 }
 
 export default useScreenFooter;

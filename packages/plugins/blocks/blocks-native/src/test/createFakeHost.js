@@ -28,9 +28,12 @@ function jsonResponse(body) {
   };
 }
 
-// A native host for @lowdefy/client-core with no network: fetch answers every request with `{}`.
+// A native host for @lowdefy/client-core with no network: fetch answers every request with `{}`,
+// and streamFetch (a block's streamed call, such as AgentChat's chat stream) with an empty body
+// until a test gives it an answer.
 function createFakeHost({ path }) {
   const fetch = jest.fn(async () => jsonResponse({}));
+  const streamFetch = jest.fn(async () => new Response(''));
   return {
     fetch,
     globals: createNativeGlobals({
@@ -44,6 +47,7 @@ function createFakeHost({ path }) {
     router: { back: jest.fn(), push: jest.fn(), replace: jest.fn() },
     sessionStorage: createMemoryStore(),
     storage: createMemoryStore(),
+    streamFetch,
     WebSocket: jest.fn(),
     websocketUrl: (apiPath) => apiPath.replace(/^http/, 'ws'),
   };

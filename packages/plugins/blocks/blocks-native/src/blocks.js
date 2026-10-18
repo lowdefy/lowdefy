@@ -15,6 +15,7 @@
 */
 
 export { default as ActivityTimeline } from './blocks/ActivityTimeline/ActivityTimeline.js';
+export { default as AgentChat } from './blocks/AgentChat/AgentChat.js';
 export { default as Alert } from './blocks/Alert/Alert.js';
 export { default as Avatar } from './blocks/Avatar/Avatar.js';
 export { default as Box } from './blocks/Box/Box.js';

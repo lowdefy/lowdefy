@@ -43,10 +43,12 @@
     "test": "jest"
   },
   "dependencies": {
+    "@ai-sdk/react": "4.0.119",
     "@lowdefy/block-utils": "6.0.0",
     "@lowdefy/client-native": "6.0.0",
     "@lowdefy/helpers": "6.0.0",
     "@lowdefy/style-native": "6.0.0",
+    "ai": "7.0.116",
     "dayjs": "1.11.20",
     "react-native-marked": "8.3.2"
   },
