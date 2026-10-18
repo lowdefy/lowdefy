@@ -22,7 +22,8 @@ import lowdefyConfig from '../../lib/build/config.js';
 
 // GET /auth/mobile - the sign-in page a phone shell opens in a system sheet;
 // handleMobileSignIn sends the person through the app's sign-in page and back
-// to the shell's scheme with a one-time token.
+// to the shell's scheme with a one-time token bound to the shell's PKCE code
+// challenge (code_challenge, code_challenge_method=S256, required).
 function mobileSignInHandler(c) {
   const { logger } = c.get('lowdefyContext');
   return handleMobileSignIn({
