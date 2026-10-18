@@ -21,7 +21,17 @@ import getMobileAuth from '../buildMobile/getMobileAuth.js';
 // The facts the auth server needs about phones, written onto auth.json only
 // when the app has a mobile section: it turns on bearer sessions and the
 // mobile sign-in page, which hands a one-time token only to a listed shell's
-// scheme, and sets how long phone sessions last.
+// scheme (iOS) or verified app link (Android), and sets how long phone
+// sessions last. A shell has an Android app link when it names its package and
+// signing certificate, which assetlinks.json then lists.
+// The same test createAssetLinks (@lowdefy/api) applies to list a shell in
+// assetlinks.json: a package and at least one certificate fingerprint.
+function hasAndroidAppLink(shell) {
+  const sha256 = shell.android?.sha256;
+  const fingerprints = type.isString(sha256) ? [sha256] : sha256 ?? [];
+  return type.isString(shell.android?.package) && fingerprints.length > 0;
+}
+
 function buildAuthMobile({ components }) {
   if (type.isNone(components.mobile)) {
     return components;
@@ -29,7 +39,11 @@ function buildAuthMobile({ components }) {
   components.auth.mobile = {
     shells: (components.mobile.shells ?? [])
       .filter((shell) => type.isString(shell.scheme))
-      .map((shell) => ({ id: shell.id, scheme: shell.scheme })),
+      .map((shell) => ({
+        id: shell.id,
+        scheme: shell.scheme,
+        androidAppLink: hasAndroidAppLink(shell),
+      })),
     sessionExpiresIn: getMobileAuth({ mobile: components.mobile }).sessionExpiresIn,
   };
   return components;

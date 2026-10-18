@@ -46,7 +46,10 @@ test('mountMobileWellKnown serves both documents when shells take iOS and Androi
   ]);
   const assetLinks = await app.request('/.well-known/assetlinks.json');
   expect(assetLinks.status).toEqual(200);
-  expect((await assetLinks.json())[0].target.package_name).toEqual('com.example.droid');
+  const assetLinksBody = await assetLinks.json();
+  expect(assetLinksBody[0].target.package_name).toEqual('com.example.droid');
+  // The sign-in sheet's Android app link (/auth/mobile/callback) is verified by this relation.
+  expect(assetLinksBody[0].relation).toEqual(['delegate_permission/common.handle_all_urls']);
 });
 
 test('mountMobileWellKnown leaves both to the 404 catch-all for an app without shells', async () => {

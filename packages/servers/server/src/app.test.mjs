@@ -58,6 +58,7 @@ jest.unstable_mockModule('./middleware/errorHandler.js', () => ({
 }));
 jest.unstable_mockModule('../lib/build/appMeta.js', () => ({ default: { buildId: 'build-1' } }));
 jest.unstable_mockModule('../lib/build/auth.js', () => ({ default: { configured: false } }));
+jest.unstable_mockModule('../lib/build/theme.js', () => ({ default: {} }));
 jest.unstable_mockModule('../lib/build/config.js', () => ({ default: {} }));
 jest.unstable_mockModule('../lib/build/mobileConfig.js', () => ({ default: {} }));
 jest.unstable_mockModule('../lib/server/auth/getAuth.js', () => ({ default: jest.fn() }));

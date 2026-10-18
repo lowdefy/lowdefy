@@ -21,15 +21,16 @@ import createCodeVerifierCheck from './createCodeVerifierCheck.js';
 
 // The one-time token the mobile sign-in page hands a shell, which the shell
 // exchanges at /one-time-token/verify, with its PKCE code_verifier, for the
-// session the person signed in to. It lasts one minute (expiresIn is in
+// session created for the phone. It lasts one minute (expiresIn is in
 // minutes) and is consumed by its first verify. Stored hashed, so the database
 // never holds a usable token.
 //
-// Only the server mints one (handleMobileSignIn, through auth.api):
-// disableClientRequest closes GET /one-time-token/generate to HTTP callers, so
-// page script running in a signed-in browser can not turn its session into a
-// token it could carry off. The verify route takes the token only with the
-// verifier of the challenge it was minted for (createCodeVerifierCheck).
+// Only the server mints one (mintOneTimeToken, once the person confirms on the
+// mobile sign-in page): disableClientRequest closes GET
+// /one-time-token/generate to HTTP callers, so page script running in a
+// signed-in browser can not turn its session into a token it could carry off.
+// The verify route takes the token only with the verifier of the challenge it
+// was minted for (createCodeVerifierCheck).
 function buildOneTimeTokenPlugin() {
   const plugin = oneTimeToken({
     expiresIn: 1,

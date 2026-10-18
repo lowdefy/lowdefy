@@ -18,7 +18,10 @@ import { Hono } from 'hono';
 import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('./mobileSignIn.js', () => ({
-  default: (c) => c.text('mobile sign-in'),
+  default: (c) => c.text(`mobile sign-in ${c.req.method}`),
+}));
+jest.unstable_mockModule('./mobileSignInCallback.js', () => ({
+  default: (c) => c.text('mobile sign-in callback'),
 }));
 
 const { default: mountDevPageRoutes } = await import('./mountDevPageRoutes.js');
@@ -40,6 +43,12 @@ test.each([[''], ['/app']])(
     const app = basePath === '' ? new Hono() : new Hono().basePath(basePath);
     mountDevPageRoutes({ app, renderPage: (c) => c.text('shell') });
     const res = await app.request(`${basePath}/auth/mobile?shell=field&state=s`);
-    expect(await res.text()).toEqual('mobile sign-in');
+    expect(await res.text()).toEqual('mobile sign-in GET');
+    const posted = await app.request(`${basePath}/auth/mobile?shell=field&state=s`, {
+      method: 'POST',
+    });
+    expect(await posted.text()).toEqual('mobile sign-in POST');
+    const callback = await app.request(`${basePath}/auth/mobile/callback?state=s`);
+    expect(await callback.text()).toEqual('mobile sign-in callback');
   }
 );

@@ -57,6 +57,7 @@
           {
             "id": "field",
             "scheme": "field",
+            "androidAppLink": true,
             "~k": "39"
           }
         ],

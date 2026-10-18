@@ -21,6 +21,7 @@ import authJson from '../../lib/build/auth.js';
 import getAuth from '../../lib/server/auth/getAuth.js';
 import getMockUser from '../../lib/server/auth/getMockUser.js';
 import lowdefyConfig from '../../lib/build/config.js';
+import themeConfig from '../../lib/build/theme.js';
 
 // The auth engine is off while dev.mockUser is set and for journeys on a data
 // set, as on /api/auth/* (routes/auth.js).
@@ -34,12 +35,13 @@ function getEngine(c) {
   return getAuth({ logger: c.get('lowdefyContext').logger });
 }
 
-// GET /auth/mobile - the sign-in page a phone shell opens in a system sheet;
-// handleMobileSignIn sends the person through the app's sign-in page and back
-// to the shell's scheme with a one-time token bound to the shell's PKCE code
-// challenge (code_challenge, code_challenge_method=S256, required). An app
-// without a mobile section has no such page, so the path falls through to the
-// app's own pages.
+// GET and POST /auth/mobile - the sign-in page a phone shell opens in a system
+// sheet. handleMobileSignIn sends the person through the app's sign-in page,
+// asks them to confirm (GET), and on Continue (POST) returns a one-time token
+// for a new phone session, bound to the shell's PKCE code challenge, to the
+// shell's scheme (iOS) or app link (Android). The page takes the app theme's
+// primary colour. An app without a mobile section has no such page, so the
+// path falls through to the app's own pages.
 function mobileSignInHandler(c, next) {
   if (type.isNone(authJson.mobile)) {
     return next();
@@ -48,6 +50,7 @@ function mobileSignInHandler(c, next) {
     auth: getEngine(c),
     authJson,
     basePath: lowdefyConfig.basePath ?? '',
+    primaryColor: themeConfig.antd?.token?.colorPrimary,
     request: c.req.raw,
   });
 }

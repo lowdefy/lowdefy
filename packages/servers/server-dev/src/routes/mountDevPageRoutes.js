@@ -14,15 +14,19 @@
   limitations under the License.
 */
 
+import mobileSignInCallbackHandler from './mobileSignInCallback.js';
 import mobileSignInHandler from './mobileSignIn.js';
 
 // Every page path renders the same dev shell; the client reads the page from
-// the URL. `/auth/mobile`, the sign-in page a phone shell opens, is a server
-// route ahead of it. `.*`, not `.+`: under a basePath, `<basePath>/` arrives
-// with an empty rest, and is the app root like `<basePath>` itself.
+// the URL. `/auth/mobile`, the sign-in page a phone shell opens (and its
+// confirmation post), and `/auth/mobile/callback`, its Android app link, are
+// server routes ahead of it. `.*`, not `.+`: under a basePath, `<basePath>/`
+// arrives with an empty rest, and is the app root like `<basePath>` itself.
 function mountDevPageRoutes({ app, renderPage }) {
   app.get('/', renderPage);
   app.get('/auth/mobile', mobileSignInHandler);
+  app.post('/auth/mobile', mobileSignInHandler);
+  app.get('/auth/mobile/callback', mobileSignInCallbackHandler);
   app.get('/:rest{.*}', renderPage);
 }
 

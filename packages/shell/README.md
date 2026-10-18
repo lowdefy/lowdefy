@@ -54,9 +54,14 @@ opens with no sign-in screen).
 - With nobody signed in, the native email-code screen asks for an email, then the 6-digit code
   (iOS offers it from Mail). It always says "If this email can sign in, a code is on its way".
   "Other ways to sign in", `emailCode: false`, a server without email codes and a second factor
-  open the app's sign-in page in an ephemeral system sheet (`/auth/mobile`, with a state and a
-  PKCE S256 challenge); the shell checks the state and exchanges the one-time token with the code
-  verifier at `/api/auth/one-time-token/verify`.
+  open the app's sign-in page in an ephemeral system sheet (`/auth/mobile`, with a state, a PKCE
+  S256 challenge and the platform). Once signed in, the page asks "Sign in to <app> on this
+  device?"; Continue creates a new session for the phone and returns a one-time token for it. iOS
+  returns to the shell's scheme; Android returns by the verified app link
+  `<app url>/auth/mobile/callback`, which `app.config.ts` declares for each app url
+  (`authCallbackIntentFilters.js`) and the app's `assetlinks.json` names the shell for. The shell
+  checks the state and exchanges the one-time token with the code verifier at
+  `/api/auth/one-time-token/verify`.
 - The session token is kept in `expo-secure-store` on this device only: readable while unlocked,
   behind biometrics with `unlock: biometric`, or readable after first unlock for the
   `field-tracking` profile. It is read once per unlock and held in memory. Calls send no cookies.
