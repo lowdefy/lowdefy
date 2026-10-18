@@ -1,0 +1,121 @@
+# A list page: a large title that collapses as the page scrolls, a native search bar,
+# pull-to-refresh and an add button in the header. onFocus reloads the list each time the
+# screen is shown again (a tab switch, or back from a task).
+- id: m-tasks
+  type: Screen
+  properties:
+    title: Tasks
+    largeTitle: true
+    headerSearch:
+      placeholder: Search tasks
+    headerActions:
+      - id: add
+        icon: add
+        title: New task
+  events:
+    onFocus:
+      - id: load
+        type: Request
+        params: get_tasks
+    onRefresh:
+      - id: reload
+        type: Request
+        params: get_tasks
+    onSearchChange:
+      - id: set_search
+        type: SetState
+        params:
+          search:
+            _event: value
+      - id: search
+        type: Request
+        params: get_tasks
+    onHeaderAction:
+      - id: new_task
+        type: Link
+        params:
+          pageId: m-new-task
+  blocks:
+    - id: tasks
+      type: List
+      blocks:
+        - id: tasks.$.row
+          type: ListItem
+          properties:
+            title:
+              _state: tasks.$.title
+          events:
+            onClick:
+              - id: open
+                type: Link
+                params:
+                  pageId: m-task
+                  urlQuery:
+                    key:
+                      _state: tasks.$.key
+
+# A detail page: a standard title, and two header buttons that each trigger their own event.
+# The page reads its key from the query it was opened with; two task screens stacked on each
+# other keep their own state.
+- id: m-task
+  type: Screen
+  properties:
+    title:
+      _state: task.key
+    headerActions:
+      - id: share
+        icon: share
+        event: onShare
+      - id: edit
+        icon: edit
+        sfSymbol: square.and.pencil
+        event: onEdit
+  events:
+    onInit:
+      - id: key
+        type: SetState
+        params:
+          key:
+            _url_query: key
+    onShare:
+      - id: copy
+        type: CopyToClipboard
+        params:
+          copy:
+            _state: task.url
+    onEdit:
+      - id: edit
+        type: Link
+        params:
+          pageId: m-edit-task
+          urlQuery:
+            key:
+              _state: key
+  blocks:
+    - id: body
+      type: Markdown
+      properties:
+        content:
+          _state: task.body
+
+# A search page for a `role: search` tab: the search field takes focus each time the tab
+# is picked.
+- id: m-search
+  type: Screen
+  properties:
+    title: Search
+    headerSearch:
+      placeholder: Designs, tasks and people
+      autoFocus: true
+  events:
+    onSearchChange:
+      - id: search
+        type: Request
+        params: search_all
+    onSearch:
+      - id: search
+        type: Request
+        params: search_all
+  blocks:
+    - id: results
+      type: List

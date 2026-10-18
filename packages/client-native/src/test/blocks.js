@@ -87,4 +87,10 @@ function Themed({ blockId, styles }) {
 }
 Themed.meta = { category: 'display' };
 
-export { Box, Button, List, Paragraph, TextInput, Themed, Title };
+// The Icon block: an icon drawn through components.Icon, the native icon renderer.
+function Icon({ components, properties }) {
+  return <components.Icon properties={properties} />;
+}
+Icon.meta = { category: 'display' };
+
+export { Box, Button, Icon, List, Paragraph, TextInput, Themed, Title };

@@ -17,8 +17,7 @@
 import { AppState, Dimensions } from 'react-native';
 
 import createElementRegistry from '../elements/createElementRegistry.js';
-import parseOrigin from './parseOrigin.js';
-import parsePath from './parsePath.js';
+import createNativeLocation from './createNativeLocation.js';
 
 function visibilityOf(appState) {
   return appState === 'active' ? 'visible' : 'hidden';
@@ -68,24 +67,7 @@ function createListenerRegistry(subscribers) {
  * @param {string} params.origin The app server's origin, such as 'https://app.example.com'.
  */
 function createNativeGlobals({ assign, fetch, getPath, network, origin }) {
-  const originParts = parseOrigin(origin);
-  const location = {
-    ...originParts,
-    assign,
-    get hash() {
-      return parsePath(getPath()).hash;
-    },
-    get href() {
-      return `${origin}${getPath()}`;
-    },
-    origin,
-    get pathname() {
-      return parsePath(getPath()).pathname;
-    },
-    get search() {
-      return parsePath(getPath()).search;
-    },
-  };
+  const location = createNativeLocation({ assign, getPath, origin });
   const networkListener = (online) => (listener) =>
     network.addListener((isOnline) => {
       if (isOnline === online) listener({ type: online ? 'online' : 'offline' });

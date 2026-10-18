@@ -26,8 +26,9 @@ import setupLink from './link/setupLink.js';
 // Builds the app-level lowdefy object on the core the first time a page renders, then points it
 // at the page being shown. The renderer's own page type, Screen, joins the block map; a block set
 // that brings its own Screen wins. The native icon renderer is installed as components.Icon over
-// `types.icons`, the live map of icon data by name, as the web client does.
-function initNativeLowdefy({ core, host, pageConfig, pathParams, rootConfig, types }) {
+// `types.icons`, the live map of icon data by name, as the web client does. pathname is the
+// shown screen's path, which the path memory records the page under.
+function initNativeLowdefy({ core, host, pageConfig, pathname, pathParams, rootConfig, types }) {
   const { apiBase, auth, basePath = '', lowdefy } = core;
   if (!lowdefy._internal?.initialised) {
     const blocks = { Screen, ...types.blocks };
@@ -53,7 +54,7 @@ function initNativeLowdefy({ core, host, pageConfig, pathParams, rootConfig, typ
   updateLowdefyPage({
     config: { pageConfig, rootConfig },
     lowdefy,
-    matchedPath: getMatchedPath({ basePath, pathname: host.globals.window.location.pathname }),
+    matchedPath: getMatchedPath({ basePath, pathname }),
     pathParams,
     user: auth?.user,
   });
