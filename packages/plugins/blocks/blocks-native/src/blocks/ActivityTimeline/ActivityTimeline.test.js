@@ -151,3 +151,71 @@ test('an ActivityTimeline raises onExpandGap from a gap line', async () => {
     { name: 'gap', event: { after: null, before: null, count: 14, id: 'g1' } },
   ]);
 });
+
+// The line's outer Text, which holds a part of its sentence.
+function lineOf(part) {
+  let element = part;
+  while (element.props.ellipsizeMode !== 'tail') element = element.parent;
+  return element;
+}
+
+test('an ActivityTimeline cuts a long event line and note short with an ellipsis until tapped', async () => {
+  const title =
+    'Use the platform passkey sheet on iOS and Android, keep the recovery code for every site and ' +
+    'retire passwords once the pilot sites have moved over';
+  await renderPage({
+    pageConfig: page([
+      {
+        id: 'activity',
+        type: 'ActivityTimeline',
+        properties: {
+          entries: [
+            {
+              id: 'd1',
+              at: minutesAgo(30),
+              tier: 'key',
+              type: 'ratified',
+              by: sam,
+              what: { title, note: `Agreed in the review. ${title}.` },
+            },
+            {
+              id: 'c9',
+              type: 'comment',
+              at: minutesAgo(5),
+              by: ada,
+              body: `Comment bodies stay whole: ${title}`,
+            },
+          ],
+          formatEvent: {
+            ratified: {
+              icon: 'CircleCheck',
+              tone: 'success',
+              text: '{actor} ratified **{what.title}**',
+              note: '{what.note}',
+            },
+          },
+          user: { id: 'u1' },
+        },
+      },
+    ]),
+  });
+  const strong = await screen.findByText(title);
+  const line = lineOf(strong);
+  expect(line.props.numberOfLines).toEqual(2);
+  expect(line.props.ellipsizeMode).toEqual('tail');
+  const note = screen.getByText(`Agreed in the review. ${title}.`);
+  expect(note.props.numberOfLines).toEqual(3);
+  expect(note.props.ellipsizeMode).toEqual('tail');
+  const comment = screen.getByText(`Comment bodies stay whole: ${title}`);
+  expect(comment.props.numberOfLines).toBeUndefined();
+
+  await act(async () => {
+    fireEvent.press(strong);
+  });
+  expect(lineOf(screen.getByText(title)).props.numberOfLines).toBeUndefined();
+  expect(screen.getByText(`Agreed in the review. ${title}.`).props.numberOfLines).toBeUndefined();
+  await act(async () => {
+    fireEvent.press(screen.getByText(title));
+  });
+  expect(lineOf(screen.getByText(title)).props.numberOfLines).toEqual(2);
+});

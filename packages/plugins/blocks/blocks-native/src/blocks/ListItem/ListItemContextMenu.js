@@ -56,7 +56,8 @@ function ListItemContextMenu({ children, isDark, items, onSelect, testID }) {
         </ContextMenu.Items>
         <ContextMenu.Trigger>
           <RNHostView matchContents={{ vertical: true }}>
-            <View>{children}</View>
+            {/* The row is as wide as the menu's trigger, never as wide as its title would like. */}
+            <View style={{ width: '100%' }}>{children}</View>
           </RNHostView>
         </ContextMenu.Trigger>
       </ContextMenu>

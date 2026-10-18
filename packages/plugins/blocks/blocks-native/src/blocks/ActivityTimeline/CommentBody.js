@@ -30,8 +30,10 @@ const monospace = Platform.select({ ios: 'Menlo', default: 'monospace' });
 
 // The Markdown block's styles at the comment body size, in the label colours, with paragraphs
 // spaced for a card rather than a page.
-function getBodyStyles({ colors, tokens }) {
-  const { styles, theme } = getMarkdownStyles({
+function getBodyStyles({ colors, isDark, tokens }) {
+  const { palette, styles, theme } = getMarkdownStyles({
+    blockSpace: PARAGRAPH_GAP,
+    isDark,
     tokens: {
       ...tokens,
       colorText: colors.label,
@@ -51,18 +53,20 @@ function getBodyStyles({ colors, tokens }) {
     },
   });
   return {
-    listStyle: { marginBottom: PARAGRAPH_GAP },
+    palette: {
+      ...palette,
+      codeBackground: colors.fill,
+      label: colors.label,
+      separator: colors.separator,
+      tint: colors.tint,
+    },
     theme: { ...theme, colors: { ...theme.colors, link: colors.tint, text: colors.label } },
     styles: {
       ...styles,
       paragraph: { ...styles.paragraph, marginBottom: PARAGRAPH_GAP },
       code: { ...styles.code, backgroundColor: colors.fill, marginBottom: PARAGRAPH_GAP },
       codespan: { ...styles.codespan, backgroundColor: colors.fill },
-      blockquote: {
-        ...styles.blockquote,
-        borderLeftColor: colors.separator,
-        marginBottom: PARAGRAPH_GAP,
-      },
+      blockquote: { ...styles.blockquote, marginBottom: PARAGRAPH_GAP },
       link: { ...styles.link, color: colors.tint },
     },
   };
@@ -84,9 +88,9 @@ function CommentBody({
   people,
   tokens,
 }) {
-  const { listStyle, styles, theme } = useMemo(
-    () => getBodyStyles({ colors, tokens }),
-    [colors, tokens]
+  const { palette, styles, theme } = useMemo(
+    () => getBodyStyles({ colors, isDark, tokens }),
+    [colors, isDark, tokens]
   );
   const tokenizer = useMemo(() => new MarkdownTokenizer(), []);
   const renderer = useMemo(
@@ -97,12 +101,12 @@ function CommentBody({
           muted: { backgroundColor: colors.fill, color: colors.secondary, fontWeight: '600' },
           record: { color: colors.tint, fontFamily: monospace, fontSize: BODY_SIZE - 1 },
         },
-        listStyle,
         onLinkPress,
         onRecordPress,
+        palette,
         skipHtml: false,
       }),
-    [colors, listStyle, onLinkPress, onRecordPress]
+    [colors, onLinkPress, onRecordPress, palette]
   );
   const markdown = useMemo(
     () => toTimelineMarkdown({ body, mentions, people, pattern }),

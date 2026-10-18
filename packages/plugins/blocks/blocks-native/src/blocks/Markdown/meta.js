@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import iconSchema from '../../schemas/icon.js';
+import toneSchema from '../../schemas/tone.js';
+
 export default {
   category: 'display',
   icons: [],
@@ -24,9 +27,9 @@ export default {
   events: {
     onLinkPress: {
       description:
-        'Trigger action when a link is pressed, instead of opening it. Without this event a link opens in the system browser. Mobile only.',
+        'Trigger action when any link is pressed, link chips included, instead of opening it. Without this event a web (http or https) link opens in the in-app browser, any other link (mailto:, tel:) through the system, and link chips are not pressable. Mobile only.',
       event: {
-        href: 'The href of the pressed link, as written in the markdown.',
+        href: 'The href of the pressed link, as written in the markdown (`pelican:PEL-12` for a chip).',
       },
     },
   },
@@ -39,6 +42,41 @@ export default {
         description: 'Content in markdown format.',
         docs: {
           displayType: 'text-area',
+        },
+      },
+      linkChips: {
+        type: 'array',
+        description:
+          'Links drawn as inline chips rather than text, by their address scheme: `[PEL-12 Sign in](pelican:PEL-12)` with a `pelican` chip is a rounded pill with the icon, the key (`PEL-12`, the part of the text the address names) in medium weight in the tone, and the title after it in the label colour, cut short with an ellipsis to the block width. Link text that does not start with the address value is all key, after the prefix. Mobile only.',
+        items: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['scheme'],
+          properties: {
+            scheme: {
+              type: 'string',
+              description: 'The address scheme, without the colon: `pelican` for `pelican:PEL-12`.',
+            },
+            icon: {
+              ...iconSchema,
+              description: 'The icon at the start of the chip. ' + iconSchema.description,
+            },
+            tone: {
+              ...toneSchema,
+              description:
+                "The chip colour: 'primary' (the app's tint), 'danger', 'warning', 'success', 'info' or 'neutral' (grey, the key in the label colour). The chip is a soft tint of it.",
+            },
+            color: {
+              type: 'string',
+              description:
+                'A colour in place of tone: a palette hue (`blue`, `teal`, `purple`), a token name or a hex colour.',
+            },
+            prefix: {
+              type: 'string',
+              description:
+                'Text put before link text that does not start with it, such as `@` for a mention.',
+            },
+          },
         },
       },
       skipHtml: {

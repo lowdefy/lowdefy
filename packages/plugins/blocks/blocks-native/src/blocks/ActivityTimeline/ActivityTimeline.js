@@ -45,7 +45,7 @@ function Chevron({ colors, Icon, open }) {
 }
 
 // An event, gap or fold line on the rail. With onPress it is a button with a press highlight.
-function LineRow({ children, ctx, first, icon, last, onPress, open, tone }) {
+function LineRow({ children, ctx, expanded, first, icon, last, onPress, open, tone }) {
   const { colors, Icon, tokens } = ctx;
   const content = (
     <View style={styles.lineContent}>
@@ -71,7 +71,11 @@ function LineRow({ children, ctx, first, icon, last, onPress, open, tone }) {
       {onPress ? (
         <Pressable
           accessibilityRole="button"
-          accessibilityState={open === undefined ? undefined : { expanded: open }}
+          accessibilityState={
+            open === undefined && expanded === undefined
+              ? undefined
+              : { expanded: open ?? expanded }
+          }
           onPress={onPress}
           style={({ pressed }) => [
             styles.pressable,
@@ -87,11 +91,46 @@ function LineRow({ children, ctx, first, icon, last, onPress, open, tone }) {
   );
 }
 
-function Note({ colors, text }) {
+// A long event sentence shows two lines and a note three, each ending in an ellipsis, until the
+// line is tapped open. Comment bodies always show in full.
+const EVENT_LINES = 2;
+const NOTE_LINES = 3;
+
+function Note({ colors, expanded, text }) {
   return (
     <View style={[styles.note, { backgroundColor: colors.fill }]}>
-      <Text style={[styles.noteText, { color: colors.secondary }]}>{text}</Text>
+      <Text
+        ellipsizeMode="tail"
+        numberOfLines={expanded ? undefined : NOTE_LINES}
+        style={[styles.noteText, { color: colors.secondary }]}
+      >
+        {text}
+      </Text>
     </View>
+  );
+}
+
+// One event on the rail, its sentence and note cut short until it is tapped, and full after.
+function EventLine({ colors, ctx, event, expanded, first, hideActor, last, onToggle, time }) {
+  return (
+    <LineRow
+      ctx={ctx}
+      expanded={expanded}
+      first={first}
+      icon={event.line.icon}
+      last={last}
+      onPress={onToggle}
+      tone={event.line.tone}
+    >
+      <LineText
+        colors={colors}
+        hideActor={hideActor}
+        numberOfLines={expanded ? undefined : EVENT_LINES}
+        segments={event.line.segments}
+        time={time}
+      />
+      {event.line.note ? <Note colors={colors} expanded={expanded} text={event.line.note} /> : null}
+    </LineRow>
   );
 }
 
@@ -278,17 +317,17 @@ function ActivityTimeline({
             );
           case 'event':
             return (
-              <LineRow
-                first={first}
-                last={last}
+              <EventLine
+                colors={colors}
                 ctx={ctx}
-                icon={row.line.icon}
+                event={row}
+                expanded={open.has(`full:${row.id}`)}
+                first={first}
                 key={row.id}
-                tone={row.line.tone}
-              >
-                <LineText colors={colors} segments={row.line.segments} time={time(row.entry.at)} />
-                {row.line.note ? <Note colors={colors} text={row.line.note} /> : null}
-              </LineRow>
+                last={last}
+                onToggle={() => toggle(`full:${row.id}`)}
+                time={time(row.entry.at)}
+              />
             );
           case 'group': {
             const isOpen = open.has(row.id);
@@ -307,22 +346,18 @@ function ActivityTimeline({
                 </LineRow>
                 {isOpen
                   ? row.events.map((event, eventIndex) => (
-                      <LineRow
+                      <EventLine
+                        colors={colors}
                         ctx={ctx}
+                        event={event}
+                        expanded={open.has(`full:${event.id}`)}
                         first={false}
-                        icon={event.line.icon}
+                        hideActor
                         key={event.id}
                         last={last && eventIndex === row.events.length - 1}
-                        tone={event.line.tone}
-                      >
-                        <LineText
-                          colors={colors}
-                          hideActor
-                          segments={event.line.segments}
-                          time={time(event.entry.at)}
-                        />
-                        {event.line.note ? <Note colors={colors} text={event.line.note} /> : null}
-                      </LineRow>
+                        onToggle={() => toggle(`full:${event.id}`)}
+                        time={time(event.entry.at)}
+                      />
                     ))
                   : null}
               </React.Fragment>
@@ -375,7 +410,7 @@ function ActivityTimeline({
 const styles = StyleSheet.create({
   pressable: { borderRadius: 8, marginHorizontal: -6, paddingHorizontal: 6 },
   lineContent: { alignItems: 'flex-start', flexDirection: 'row', gap: 6, paddingVertical: 8 },
-  lineText: { flex: 1, minWidth: 0 },
+  lineText: { flexBasis: 0, flexGrow: 1, flexShrink: 1, minWidth: 0 },
   lineFont: { fontSize: 15, lineHeight: 20 },
   note: { borderRadius: 8, marginTop: 6, paddingHorizontal: 10, paddingVertical: 7 },
   noteText: { fontSize: 14, lineHeight: 19 },

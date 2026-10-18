@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   rail: { alignItems: 'center', width: RAIL_WIDTH },
   grow: { flexGrow: 1, minHeight: 4 },
   hidden: { opacity: 0 },
-  content: { flex: 1, minWidth: 0, paddingLeft: 12 },
+  content: { flexBasis: 0, flexGrow: 1, flexShrink: 1, minWidth: 0, paddingLeft: 12 },
 });
 
 export default RailRow;
