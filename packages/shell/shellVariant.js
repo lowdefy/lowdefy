@@ -14,48 +14,77 @@
   limitations under the License.
 */
 
-const path = require('node:path');
+const { DEV_ENTRY, PROFILES, mergeProfiles, pluginName, resolveProfile } = require('./profiles.js');
 
 const VARIANTS = ['dev', 'release'];
-
-// The module that holds Lowdefy Dev's developer features (connect, shake menu, dev-tab client).
-// A release bundle resolves it to an empty module (metro.config.js), so a customer shell never
-// carries them.
-const DEV_ENTRY = path.join(__dirname, 'src', 'dev', 'index.js');
 
 // The string the dev-tab client sends to the dev server. scripts/checkReleaseBundle.mjs fails when a
 // release bundle holds it. Keep it in step with src/dev/tab/devClientMarker.js.
 const DEV_CLIENT_MARKER = 'lowdefy-dev-tab-client';
 
-// Native modules only Lowdefy Dev's developer features use (src/dev): the shake menu's
-// accelerometer and the dev-tab client's screenshots. With the native module name each one's
-// JavaScript asks for, which scripts/checkReleaseBundle.mjs looks for in a release bundle.
-const DEV_ONLY_MODULES = {
-  'expo-sensors': 'ExponentAccelerometer',
-  'react-native-view-shot': 'RNViewShot',
-};
+// Everything any profile carries: every module, entry and permission a build can leave out.
+const EVERYTHING = Object.keys(PROFILES).reduce(
+  (all, name) => mergeProfiles(all, resolveProfile(name)),
+  resolveProfile('basic')
+);
 
-// expo-camera reads the code `lowdefy dev` prints. A release shell links it only when the shell
-// asks for the camera.
-const CAMERA_MODULE = { 'expo-camera': 'ExpoCamera' };
+// What the `dev` profile adds itself: the developer features, which a release build never carries.
+const DEV_ONLY = PROFILES.dev;
 
-// Whether the shell config asks for the camera: `capabilities`, the device features its capability
-// profile resolves to at shell build, lists 'camera'.
-function shellNeedsCamera(shell) {
-  return (shell.capabilities ?? []).includes('camera');
+// The shell's capability profile: shell.json `profile`, else `dev` for Lowdefy Dev and `basic` for
+// any other shell.
+function getProfileName({ shell, variant }) {
+  return shell.profile ?? (variant === 'dev' ? 'dev' : 'basic');
 }
 
-// The native modules a shell of this variant leaves unlinked, as { [package]: nativeModuleName }:
-// none for Lowdefy Dev; for a release shell the dev-only ones, and expo-camera unless the shell
-// needs the camera. app.config.ts excludes them from autolinking and from their config plugins.
-function getExcludedModules({ shell, variant }) {
+/**
+ * What a shell build of this variant carries: its profile, resolved (profiles.js). The dev variant
+ * also carries Lowdefy Dev's developer features, whatever the profile; a release build carries
+ * none of them.
+ */
+function getShellProfile({ shell, variant }) {
+  const profile = resolveProfile(getProfileName({ shell, variant }));
   if (variant === 'dev') {
-    return {};
+    return mergeProfiles(profile, { ...resolveProfile('dev'), name: profile.name });
   }
-  if (shellNeedsCamera(shell)) {
-    return { ...DEV_ONLY_MODULES };
-  }
-  return { ...DEV_ONLY_MODULES, ...CAMERA_MODULE };
+  return {
+    ...profile,
+    modules: Object.fromEntries(
+      Object.entries(profile.modules).filter(([name]) => !(name in DEV_ONLY.modules))
+    ),
+    plugins: profile.plugins.filter((plugin) => !(pluginName(plugin) in DEV_ONLY.modules)),
+    permissions: profile.permissions.filter(
+      (permission) => !DEV_ONLY.permissions.includes(permission)
+    ),
+    jsEntries: profile.jsEntries.filter((entry) => !DEV_ONLY.jsEntries.includes(entry)),
+  };
+}
+
+/**
+ * What a shell build of this variant leaves out: every module, JavaScript entry and permission some
+ * profile carries and its own does not. app.config.ts leaves the modules unlinked and their config
+ * plugins unapplied (withExcludedNativeModules.js) and blocks the permissions; metro.config.js
+ * resolves the entries to empty modules.
+ *
+ * @returns {{ modules: Object<string, string|null>, jsEntries: string[], permissions: string[] }}
+ *   modules as { [package]: nativeModuleName }.
+ */
+function getExclusions({ shell, variant }) {
+  const profile = getShellProfile({ shell, variant });
+  return {
+    modules: Object.fromEntries(
+      Object.entries(EVERYTHING.modules).filter(([name]) => !(name in profile.modules))
+    ),
+    jsEntries: EVERYTHING.jsEntries.filter((entry) => !profile.jsEntries.includes(entry)),
+    permissions: EVERYTHING.permissions.filter(
+      (permission) => !profile.permissions.includes(permission)
+    ),
+  };
+}
+
+// The native modules a shell build leaves unlinked, as { [package]: nativeModuleName }.
+function getExcludedModules({ shell, variant }) {
+  return getExclusions({ shell, variant }).modules;
 }
 
 // LOWDEFY_SHELL_VARIANT=dev | release. Without it, Lowdefy Dev (no LOWDEFY_SHELL_CONFIG) is dev and
@@ -75,6 +104,8 @@ module.exports = {
   DEV_CLIENT_MARKER,
   DEV_ENTRY,
   getExcludedModules,
+  getExclusions,
+  getProfileName,
+  getShellProfile,
   getShellVariant,
-  shellNeedsCamera,
 };

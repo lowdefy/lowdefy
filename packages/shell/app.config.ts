@@ -21,25 +21,17 @@ import path from 'node:path';
 import type { ConfigContext, ExpoConfig } from 'expo/config';
 
 import { getAuthCallbackIntentFilters } from './authCallbackIntentFilters.js';
-import checkShellConfig from './checkShellConfig.js';
-import { getExcludedModules, getShellVariant } from './shellVariant.js';
+import readShellConfig from './readShellConfig.js';
+import { getExclusions, getShellProfile, getShellVariant } from './shellVariant.js';
 import withExcludedNativeModules from './withExcludedNativeModules.js';
 
-// The shell's config comes from shell.json, written for each shell at build: LOWDEFY_SHELL_CONFIG
-// is its path. Without it the shell is Lowdefy Dev (shell.dev.json), which opens `lowdefy dev`.
-// The shell's version and type manifest are added here, at build, so the app reads one object
+// The shell's config is its shell.json (readShellConfig.js). Its capability profile, version and
+// type manifest are added here, at build, so the app reads one object
 // (src/config/getShellConfig.js).
 const shellRoot = __dirname;
 
 function readJson(filePath: string) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-}
-
-function readShellJson() {
-  const configPath = process.env.LOWDEFY_SHELL_CONFIG
-    ? path.resolve(process.env.LOWDEFY_SHELL_CONFIG)
-    : path.join(shellRoot, 'shell.dev.json');
-  return checkShellConfig({ configPath, shell: readJson(configPath) });
 }
 
 function createTypeManifest() {
@@ -51,29 +43,15 @@ function createTypeManifest() {
   return JSON.parse(output);
 }
 
-// expo-camera reads the code lowdefy dev prints in Lowdefy Dev (src/dev). Android's microphone
-// permission is left out. A release shell links it only when it needs the camera.
-function cameraPlugin(variant: string) {
-  return [
-    'expo-camera',
-    {
-      cameraPermission:
-        variant === 'dev'
-          ? 'Allow $(PRODUCT_NAME) to scan the code lowdefy dev prints.'
-          : 'Allow $(PRODUCT_NAME) to use the camera.',
-      recordAudioAndroid: false,
-    },
-  ];
-}
-
 export default function appConfig({ config }: ConfigContext): ExpoConfig {
-  const shell = readShellJson();
+  const { shell } = readShellConfig();
   const variant = getShellVariant();
   const { version } = readJson(path.join(shellRoot, 'package.json'));
-  // Lowdefy Dev's native modules (the shake menu's accelerometer, the dev-tab client's screenshots,
-  // and the camera unless the shell needs it) are left out of a release shell: not linked, and
-  // their config plugins and permissions not applied (scripts/checkReleaseBundle.mjs checks it).
-  const excluded = Object.keys(getExcludedModules({ shell, variant }));
+  // The shell carries only its capability profile's native modules (profiles.js). The rest, and
+  // Lowdefy Dev's developer features in a release shell, are left out: not linked, their config
+  // plugins and permissions not applied (scripts/checkReleaseBundle.mjs checks it).
+  const profile = getShellProfile({ shell, variant });
+  const excluded = getExclusions({ shell, variant });
   const appConfigResult: ExpoConfig = {
     ...config,
     name: shell.name,
@@ -91,31 +69,21 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
       package: shell.android?.package,
       // The sign-in sheet returns by a verified app link on Android (src/auth/signInWithSheet.js).
       intentFilters: getAuthCallbackIntentFilters({ shell }),
-      blockedPermissions: excluded.includes('expo-camera') ? ['android.permission.CAMERA'] : [],
+      blockedPermissions: excluded.permissions.filter((permission) =>
+        permission.startsWith('android.permission.')
+      ),
     },
-    plugins: [
-      'expo-router',
-      [
-        'expo-local-authentication',
-        { faceIDPermission: 'Allow $(PRODUCT_NAME) to use Face ID to unlock the app.' },
-      ],
-      [
-        'expo-secure-store',
-        { faceIDPermission: 'Allow $(PRODUCT_NAME) to use Face ID to unlock the app.' },
-      ],
-      'expo-splash-screen',
-      'expo-sqlite',
-      'expo-web-browser',
-      ...(excluded.includes('expo-camera') ? [] : [cameraPlugin(variant)]),
-    ],
+    plugins: profile.plugins,
     extra: {
       shell: {
         ...shell,
+        profile: profile.name,
+        capabilities: shell.capabilities ?? profile.capabilities,
         variant,
         version,
         typeManifest: createTypeManifest(),
       },
     },
   };
-  return withExcludedNativeModules(appConfigResult, excluded);
+  return withExcludedNativeModules(appConfigResult, Object.keys(excluded.modules));
 }
