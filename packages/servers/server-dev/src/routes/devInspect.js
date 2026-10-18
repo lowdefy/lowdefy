@@ -20,22 +20,8 @@ import { serializer, type } from '@lowdefy/helpers';
 import { readCheckpoint } from '../../lib/docs/checkpointStore.js';
 import { loadMocks } from '../../lib/docs/devMockRegistry.js';
 import getPathSegments from '../lib/getPathSegments.js';
+import isTabChannelCaller from '../lib/isTabChannelCaller.js';
 import { listTabs, resolveTabRequest, updateTabPage } from '../../lib/docs/tabChannel.js';
-
-// Origin/host check mirrors clientError.js — this endpoint accepts a POST
-// from Inspector.jsx (a same-origin dev-only browser component), not from
-// arbitrary agents, so it needs the same CSRF-style guard.
-function checkOrigin(c) {
-  const origin = c.req.header('origin');
-  if (!origin) {
-    return false;
-  }
-  try {
-    return new URL(origin).host === c.req.header('host');
-  } catch {
-    return false;
-  }
-}
 
 // Dev-only agent-state-xray: a human tab bootstrapping from a
 // `?_checkpoint=<name>` URL (client/Inspector.jsx) fetches this. It returns
@@ -101,7 +87,9 @@ async function devInspectHandler(c) {
     return c.json({ error: 'Method not allowed.' }, 405);
   }
 
-  if (!checkOrigin(c)) {
+  // Only a dev tab answers: a browser tab's Inspector.jsx, or a phone shell's
+  // dev-tab client (@lowdefy/shell src/dev). Not a page on another site.
+  if (!isTabChannelCaller(c)) {
     return c.json({ error: 'Forbidden' }, 403);
   }
 

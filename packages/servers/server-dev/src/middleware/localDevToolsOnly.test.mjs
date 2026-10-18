@@ -81,3 +81,14 @@ test.each([
     );
   }
 );
+
+test('localDevToolsOnly lets a paired phone through only where allowPaired says so', async () => {
+  const app = new Hono();
+  app.use('/api/dev-recording', localDevToolsOnly({ allowPaired: (c) => c.req.method === 'POST' }));
+  app.all('/api/dev-recording', (c) => c.json({ allowed: true }));
+  const headers = { host: '192.168.1.20:4102', 'x-lowdefy-dev-remote': '1' };
+  const posted = await app.request('/api/dev-recording', { headers, method: 'POST' });
+  const read = await app.request('/api/dev-recording', { headers, method: 'GET' });
+  expect(posted.status).toEqual(200);
+  expect(read.status).toEqual(403);
+});

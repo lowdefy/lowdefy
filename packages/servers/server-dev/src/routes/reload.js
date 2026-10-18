@@ -15,10 +15,12 @@
 */
 
 import { randomUUID } from 'node:crypto';
+import fs from 'node:fs';
 
 import chokidar from 'chokidar';
 import { streamSSE } from 'hono/streaming';
 
+import pollTab from '../../lib/docs/pollTab.js';
 import { registerTab, unregisterTab } from '../../lib/docs/tabChannel.js';
 import readRecordingCookie from '../../lib/server/recording/readRecordingCookie.js';
 
@@ -50,7 +52,29 @@ function tabOrigin(cookieHeader) {
 // would force a reconnect on every navigation — but posted by
 // client/Inspector.jsx to /api/dev-inspect/page (routes/devInspect.js) as
 // { tabId, pageId } whenever it changes.
+function readReloadStamp() {
+  try {
+    return fs.readFileSync('./build/reload', 'utf8');
+  } catch {
+    // No build has finished since the build directory was cleaned.
+    return null;
+  }
+}
+
+// GET /api/reload?transport=poll[&tabId=<id>] is the same channel for a tab
+// that cannot read an event stream (a phone shell whose fetch cannot stream):
+// it answers { tabId, events } with the events queued since the last poll
+// (lib/docs/pollTab.js).
 async function reloadHandler(c) {
+  if (c.req.query('transport') === 'poll') {
+    return c.json(
+      pollTab({
+        tabId: c.req.query('tabId'),
+        origin: tabOrigin(c.req.header('cookie')),
+        readReloadStamp,
+      })
+    );
+  }
   return streamSSE(c, async (stream) => {
     const watcher = chokidar.watch(['./build/reload'], {
       persistent: true,
