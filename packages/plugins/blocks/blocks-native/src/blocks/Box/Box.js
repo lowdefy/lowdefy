@@ -14,13 +14,14 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
 import { type } from '@lowdefy/helpers';
 import { useTheme } from '@lowdefy/client-native';
 
 import getIosTextStyle from '../../typography/getIosTextStyle.js';
 import meta from './meta.js';
+import SwipeContext from '../../shared/SwipeContext.js';
 import useSwipeGesture from './useSwipeGesture.js';
 
 const SWIPE_ACTIONS = [
@@ -30,20 +31,35 @@ const SWIPE_ACTIONS = [
 
 // A plain container. With an onClick event it is pressable, and a content string is drawn as body
 // text. With onSwipeLeft or onSwipeRight it takes clear horizontal swipes (useSwipeGesture), which
-// screen readers get as the Box's accessibility actions.
+// screen readers get as the Box's accessibility actions, and which a block inside with its own
+// horizontal scroll passes on through SwipeContext.
 function Box({ content, events, methods, properties, styles = {} }) {
   const { tokens } = useTheme();
   const swipeActions = SWIPE_ACTIONS.filter((action) => !type.isNone(events[action.event]));
+  const directions = swipeActions.map((action) => action.direction);
   const gesture = useSwipeGesture({
-    directions: swipeActions.map((action) => action.direction),
+    directions,
     feedback: properties.swipeFeedback === true,
     methods,
   });
-  const children = type.isString(properties.content) ? (
+  const directionsKey = directions.join(' ');
+  const swipeContext = useMemo(
+    () =>
+      directionsKey === '' ? null : { directions: directionsKey.split(' '), swipe: gesture.swipe },
+    [directionsKey, gesture.swipe]
+  );
+  const body = type.isString(properties.content) ? (
     <Text style={getIosTextStyle({ textStyle: 'body', tokens })}>{properties.content}</Text>
   ) : (
     content.content?.()
   );
+  // A Box without swipe events leaves a swipe Box around it as the one its blocks pass swipes to.
+  const children =
+    swipeContext === null ? (
+      body
+    ) : (
+      <SwipeContext.Provider value={swipeContext}>{body}</SwipeContext.Provider>
+    );
   const accessibilityProps =
     swipeActions.length === 0
       ? {}

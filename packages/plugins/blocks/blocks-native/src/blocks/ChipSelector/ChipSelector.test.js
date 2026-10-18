@@ -163,3 +163,53 @@ test("in a Screen's headerBottom the strip cancels the screen inset to run edge 
   await renderPage({ pageConfig: spacesPage() });
   expect(styleOf(await screen.findByTestId('space_input')).marginHorizontal).toBeUndefined();
 });
+
+async function layOut({ content, viewport }) {
+  const scroll = await screen.findByTestId('space_scroll');
+  await act(async () => {
+    fireEvent(scroll, 'layout', { nativeEvent: { layout: { width: viewport, height: 32 } } });
+  });
+  await act(async () => {
+    fireEvent(scroll, 'contentSizeChange', content, 32);
+  });
+  return screen.getByTestId('space_scroll');
+}
+
+test('a strip whose chips fit neither scrolls nor bounces, so a Box around it takes the swipe', async () => {
+  await renderPage({ pageConfig: spacesPage() });
+  const scroll = await layOut({ content: 300, viewport: 402 });
+  expect(scroll.props.scrollEnabled).toBe(false);
+  expect(scroll.props.alwaysBounceHorizontal).toBe(false);
+});
+
+test('a strip whose chips overflow scrolls', async () => {
+  await renderPage({ pageConfig: spacesPage() });
+  const scroll = await layOut({ content: 700, viewport: 402 });
+  expect(scroll.props.scrollEnabled).toBe(true);
+});
+
+test('a strip in a swipe Box passes a pull past its end on as the swipe that way', async () => {
+  const { calls } = await renderPage({
+    pageConfig: page([
+      {
+        id: 'bar',
+        type: 'Box',
+        events: { onSwipeLeft: record('left'), onSwipeRight: record('right') },
+        blocks: [{ ...spaces, events: {} }],
+      },
+    ]),
+  });
+  const scroll = await layOut({ content: 700, viewport: 400 });
+  const release = (x, velocity) =>
+    act(async () => {
+      fireEvent(scroll, 'scrollEndDrag', {
+        nativeEvent: { contentOffset: { x, y: 0 }, velocity: { x: velocity, y: 0 } },
+      });
+    });
+  // Scrolled within the strip: no swipe.
+  await release(120, 1.2);
+  // Pulled 30pt past the trailing end, then 30pt before the leading one.
+  await release(330, 0);
+  await release(-30, 0);
+  expect(calls.map((call) => call.name)).toEqual(['left', 'right']);
+});
