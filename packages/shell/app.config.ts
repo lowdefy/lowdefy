@@ -20,6 +20,7 @@ import path from 'node:path';
 
 import type { ConfigContext, ExpoConfig } from 'expo/config';
 
+import { getAuthCallbackIntentFilters } from './authCallbackIntentFilters.js';
 import { getExcludedModules, getShellVariant } from './shellVariant.js';
 import withExcludedNativeModules from './withExcludedNativeModules.js';
 
@@ -87,6 +88,8 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
     },
     android: {
       package: shell.android?.package,
+      // The sign-in sheet returns by a verified app link on Android (src/auth/signInWithSheet.js).
+      intentFilters: getAuthCallbackIntentFilters({ shell }),
       blockedPermissions: excluded.includes('expo-camera') ? ['android.permission.CAMERA'] : [],
     },
     plugins: [

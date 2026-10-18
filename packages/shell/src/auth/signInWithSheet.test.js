@@ -16,7 +16,10 @@
 
 import { createHash } from 'node:crypto';
 import { jest } from '@jest/globals';
+import { Platform } from 'react-native';
 
+import getSheetReturnUrl from './getSheetReturnUrl.js';
+import isSheetReturnLink from './isSheetReturnLink.js';
 import parseQuery from './parseQuery.js';
 import signInWithSheet from './signInWithSheet.js';
 
@@ -47,7 +50,15 @@ function createAuthApi() {
   return { exchangeToken: jest.fn(async () => ({ status: 'signedIn' })) };
 }
 
-test('the sheet opens /auth/mobile ephemeral, with the shell, a state and an S256 challenge', async () => {
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
+function onAndroid() {
+  jest.replaceProperty(Platform, 'OS', 'android');
+}
+
+test('the sheet opens /auth/mobile ephemeral, with the shell, a state, an S256 challenge and the platform', async () => {
   WebBrowser.openAuthSessionAsync.mockResolvedValue({
     type: 'success',
     url: 'com.example.field://auth?token=ott-1&state=state-1',
@@ -61,6 +72,7 @@ test('the sheet opens /auth/mobile ephemeral, with the shell, a state and an S25
   expect(query.state).toBe('state-1');
   expect(query.code_challenge_method).toBe('S256');
   expect(query.code_challenge).toMatch(/^[A-Za-z0-9_-]{43}$/);
+  expect(query.platform).toBe('ios');
   expect(redirectUrl).toBe('com.example.field://auth');
   expect(options).toEqual({ preferEphemeralSession: true });
 
@@ -111,6 +123,69 @@ test('a redirect without a token fails', async () => {
   const authApi = createAuthApi();
   expect(await signInWithSheet({ apiBase, authApi, shell })).toEqual({ status: 'failed' });
   expect(authApi.exchangeToken).not.toHaveBeenCalled();
+});
+
+test('on Android the sheet returns by the https app link and exchanges its token', async () => {
+  onAndroid();
+  WebBrowser.openAuthSessionAsync.mockResolvedValue({
+    type: 'success',
+    url: `${apiBase}/auth/mobile/callback?token=ott-1&state=state-1`,
+  });
+  const authApi = createAuthApi();
+  expect(await signInWithSheet({ apiBase, authApi, shell })).toEqual({ status: 'signedIn' });
+  const [url, redirectUrl] = WebBrowser.openAuthSessionAsync.mock.calls[0];
+  expect(parseQuery(url).platform).toBe('android');
+  expect(redirectUrl).toBe(`${apiBase}/auth/mobile/callback`);
+  expect(authApi.exchangeToken.mock.calls[0][0].token).toBe('ott-1');
+});
+
+test('on Android a callback with another state is refused and the token is not exchanged', async () => {
+  onAndroid();
+  WebBrowser.openAuthSessionAsync.mockResolvedValue({
+    type: 'success',
+    url: `${apiBase}/auth/mobile/callback?token=ott-1&state=someone-else`,
+  });
+  const authApi = createAuthApi();
+  expect(await signInWithSheet({ apiBase, authApi, shell })).toEqual({ status: 'failed' });
+  expect(authApi.exchangeToken).not.toHaveBeenCalled();
+});
+
+test('on Android a return to the custom scheme is not the app link and is refused', async () => {
+  onAndroid();
+  WebBrowser.openAuthSessionAsync.mockResolvedValue({
+    type: 'success',
+    url: 'com.example.field://auth?token=ott-1&state=state-1',
+  });
+  const authApi = createAuthApi();
+  expect(await signInWithSheet({ apiBase, authApi, shell })).toEqual({ status: 'failed' });
+  expect(authApi.exchangeToken).not.toHaveBeenCalled();
+});
+
+test('Cancel on the confirmation page cancels the sign-in', async () => {
+  WebBrowser.openAuthSessionAsync.mockResolvedValue({
+    type: 'success',
+    url: 'com.example.field://auth?error=cancelled&state=state-1',
+  });
+  const authApi = createAuthApi();
+  expect(await signInWithSheet({ apiBase, authApi, shell })).toEqual({ status: 'cancelled' });
+  expect(authApi.exchangeToken).not.toHaveBeenCalled();
+});
+
+test('getSheetReturnUrl is the scheme on iOS and the app link under the app url on Android', () => {
+  expect(getSheetReturnUrl({ apiBase, platform: 'ios', shell })).toBe('com.example.field://auth');
+  expect(getSheetReturnUrl({ apiBase: `${apiBase}/app/`, platform: 'android', shell })).toBe(
+    `${apiBase}/app/auth/mobile/callback`
+  );
+});
+
+test('isSheetReturnLink tells the app link return from page links', () => {
+  expect(isSheetReturnLink(`${apiBase}/auth/mobile/callback?token=ott-1&state=s`)).toBe(true);
+  expect(isSheetReturnLink(`${apiBase}/app/auth/mobile/callback`)).toBe(true);
+  expect(isSheetReturnLink('/auth/mobile/callback?token=ott-1')).toBe(true);
+  expect(isSheetReturnLink(`${apiBase}/auth/mobile`)).toBe(false);
+  expect(isSheetReturnLink(`${apiBase}/jobs?next=/auth/mobile/callback`)).toBe(false);
+  expect(isSheetReturnLink('/jobs/42')).toBe(false);
+  expect(isSheetReturnLink('com.example.field://jobs')).toBe(false);
 });
 
 test('closing the sheet cancels the sign-in', async () => {

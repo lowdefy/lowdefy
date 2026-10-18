@@ -14,10 +14,17 @@
   limitations under the License.
 */
 
-// A Lowdefy Dev link (lowdefy-dev://connect, lowdefy-dev://menu) is not a page path: Lowdefy Dev
-// handles it (src/dev). A release shell has no developer features and routes every link.
+// Links that are not page paths:
+// - The sign-in sheet's Android app link (/auth/mobile/callback) carries a one-time token that
+//   signInWithSheet reads from the sheet's result; the router leaves it alone.
+// - A Lowdefy Dev link (lowdefy-dev://connect, lowdefy-dev://menu): Lowdefy Dev handles it
+//   (src/dev). A release shell has no developer features and routes every other link.
 import { redirectDevLink } from '../src/dev/index.js';
+import isSheetReturnLink from '../src/auth/isSheetReturnLink.js';
 
 export function redirectSystemPath({ initial, path }) {
+  if (isSheetReturnLink(path)) {
+    return initial ? '/' : null;
+  }
   return redirectDevLink ? redirectDevLink({ initial, path }) : path;
 }
