@@ -19,10 +19,19 @@ import path from 'node:path';
 import { type } from '@lowdefy/helpers';
 import { writeFileIfChanged } from '@lowdefy/node-utils';
 
+import addShellPluginDependencies, {
+  getShellPluginDependencies,
+} from './addShellPluginDependencies.js';
+import checkShellPluginPeers from './checkShellPluginPeers.js';
+import checkShellPluginSupport from './checkShellPluginSupport.js';
+import checkShellTypeManifest from './checkShellTypeManifest.js';
 import createEasJson from './createEasJson.js';
 import createShellJson from './createShellJson.js';
 import installShellProject from './installShellProject.js';
 import loadMobileShell from './loadMobileShell.js';
+import readShellPackageJson from './readShellPackageJson.js';
+import readShellPluginPackages from './readShellPluginPackages.js';
+import writeShellAppTypes from './writeShellAppTypes.js';
 import writeShellWorkspace from './writeShellWorkspace.js';
 
 function getEnvironmentNames(config) {
@@ -33,14 +42,44 @@ async function writeJson({ filePath, value }) {
   await writeFileIfChanged(filePath, `${JSON.stringify(value, null, 2)}\n`);
 }
 
+// The copied shell loads each plugin's "./shell" entry from the installed
+// project and refuses plugins the shell's profile must not take: modules the
+// shell carries itself, or permissions its profile leaves out. The release
+// variant is checked, since it carries the fewest permissions. Then the type
+// manifest refuses plugin type names that clash.
+async function checkInstalledShellPlugins({ context, projectDirectory, shellJson, shellPackage }) {
+  if ((shellJson.plugins ?? []).length === 0) {
+    return;
+  }
+  const plugins = shellPackage.resolveShellPlugins({
+    shell: shellJson,
+    require: shellPackage.require,
+  });
+  shellPackage.checkShellPlugins({ shell: shellJson, variant: 'release', plugins });
+  await checkShellTypeManifest({ context, projectDirectory, shell: shellJson });
+}
+
+function logDryRunDependencies({ context, dependencies }) {
+  Object.entries(dependencies).forEach(([name, version]) => {
+    context.logger.info(`[dry run] add dependency ${name}@${version}`);
+  });
+}
+
 // Writes the shell's Expo project to .lowdefy/mobile/<shell>/project: a copy
 // of the published @lowdefy/shell at the app's Lowdefy version, with its own
-// install, plus shell.json, eas.json and the icon. Every EAS command runs
-// from there. Returns what the other lowdefy mobile commands build on.
+// install, plus shell.json, eas.json and the icon, and the shell's plugins
+// with their native peers. Every EAS command runs from there. Returns what the
+// other lowdefy mobile commands build on.
 async function config({ context }) {
   const dryRun = context.options.dryRun === true;
   const { appConfig, appMeta, environment, profile, projectDirectory, shell, shellPackage, url } =
     await loadMobileShell({ context });
+  checkShellPluginSupport({ shell, shellPackage });
+  // Read and checked before anything is written.
+  const packages = await readShellPluginPackages({ context, shell });
+  const shellPackageJson = readShellPackageJson({ projectDirectory });
+  checkShellPluginPeers({ shell, packages, shellPackageJson });
+  const dependencies = getShellPluginDependencies({ packages, shellPackageJson });
   const { capabilities } = profile;
   const shellJson = createShellJson({
     appMeta,
@@ -59,12 +98,20 @@ async function config({ context }) {
     await fs.promises.copyFile(shell.icon, path.join(projectDirectory, 'icon.png'));
   }
   await writeShellWorkspace({ context, directory: projectDirectory });
+  if (dryRun) {
+    logDryRunDependencies({ context, dependencies });
+  } else {
+    await addShellPluginDependencies({ dependencies, projectDirectory, shellPackageJson });
+    await writeShellAppTypes({ packages, projectDirectory });
+  }
   await installShellProject({ context, directory: projectDirectory, dryRun });
+  if (!dryRun) {
+    await checkInstalledShellPlugins({ context, projectDirectory, shellJson, shellPackage });
+  }
   const runtimeVersion = shellPackage.getRuntimeVersion({
     nativeVersion: shellPackage.nativeVersion,
     profile: profile.name,
-    // How an app declares shell plugins in lowdefy.yaml is not designed yet.
-    plugins: [],
+    plugins: shellJson.plugins ?? [],
   });
   context.logger.info(
     `Shell "${shell.id}" for ${environment} written to ${projectDirectory}: @lowdefy/shell@${shellPackage.version}, profile ${profile.name}, runtime version ${runtimeVersion}.`
