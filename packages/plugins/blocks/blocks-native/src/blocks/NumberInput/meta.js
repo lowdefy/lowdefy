@@ -57,11 +57,13 @@ export default {
       changeOnWheel: {
         type: 'boolean',
         default: false,
+        nativeIgnored: true,
         description: 'Ignored on mobile.',
       },
       controls: {
         type: 'boolean',
         default: true,
+        nativeIgnored: true,
         description: "Ignored on mobile: use mode: 'spinner' for step buttons.",
       },
       decimalSeparator: {
@@ -71,11 +73,13 @@ export default {
       disabled,
       formatter: {
         type: 'object',
+        nativeIgnored: true,
         description: 'Ignored on mobile.',
       },
       keyboard: {
         type: 'boolean',
         default: true,
+        nativeIgnored: true,
         description: 'Ignored on mobile.',
       },
       label,
@@ -97,6 +101,7 @@ export default {
       },
       parser: {
         type: 'object',
+        nativeIgnored: true,
         description: 'Ignored on mobile.',
       },
       placeholder,

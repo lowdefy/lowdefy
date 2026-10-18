@@ -19,6 +19,7 @@
 // their descriptions say.
 const columnSpan = {
   type: 'object',
+  nativeIgnored: true,
   description: 'Ignored on mobile: the label is always above or beside its input.',
   properties: { span: { type: 'number' } },
 };
@@ -32,6 +33,7 @@ export default {
       type: 'string',
       enum: ['left', 'right'],
       default: 'left',
+      nativeIgnored: true,
       description: 'Ignored on mobile.',
     },
     colon: {
@@ -61,6 +63,7 @@ export default {
     },
     span: {
       type: 'number',
+      nativeIgnored: true,
       description: 'Ignored on mobile: the label is always above or beside its input.',
     },
     title: {
@@ -69,11 +72,13 @@ export default {
     },
     tooltip: {
       type: ['string', 'object'],
+      nativeIgnored: true,
       description: 'Ignored on mobile: a phone has no hover.',
     },
     wrap: {
       type: 'boolean',
       default: false,
+      nativeIgnored: true,
       description: 'Ignored on mobile: labels always wrap.',
     },
     xs: columnSpan,

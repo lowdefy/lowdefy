@@ -89,5 +89,6 @@ export const variant = {
 
 export const webIcon = {
   type: ['string', 'object'],
+  nativeIgnored: true,
   description: 'Ignored on mobile.',
 };

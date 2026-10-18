@@ -395,6 +395,7 @@ Every build error or warning from a check that the build prints shows its slug a
 | `websocket-refs` | Invalid websocket action reference warnings |
 | `callmethod-refs` | CallMethod actions targeting blocks not defined on the page |
 | `icons` | Unresolvable icon name warnings |
+| `native-ignored` | Properties set on a mobile page that the native block ignores |
 | `types` | All type validation (blocks, operators, actions, requests, connections) |
 | `schema` | JSON schema validation errors |
 | `secrets` | Environment variable names that are not set in the build environment |

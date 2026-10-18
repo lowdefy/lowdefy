@@ -88,6 +88,7 @@ export default {
       showToday: {
         type: 'boolean',
         default: true,
+        nativeIgnored: true,
         description: 'Ignored on mobile: the platform picker marks today.',
       },
       size: sizeSmallDefaultLarge,

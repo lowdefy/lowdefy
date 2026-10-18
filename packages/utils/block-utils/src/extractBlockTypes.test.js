@@ -36,3 +36,40 @@ test('extractBlockTypes keeps the action and operator types a block registers it
     },
   });
 });
+
+test('extractBlockTypes lists the property paths a native meta marks nativeIgnored', () => {
+  const types = extractBlockTypes({
+    Card: {
+      category: 'container',
+      properties: {
+        type: 'object',
+        properties: {
+          hoverable: { type: 'boolean', nativeIgnored: true },
+          title: { type: 'string' },
+          label: {
+            type: 'object',
+            properties: { align: { type: 'string', nativeIgnored: true }, title: {} },
+          },
+          ellipsis: {
+            oneOf: [
+              { type: 'boolean' },
+              { type: 'object', properties: { tooltip: { nativeIgnored: true } } },
+            ],
+          },
+          options: {
+            type: 'array',
+            items: { type: 'object', properties: { style: { nativeIgnored: true } } },
+          },
+        },
+      },
+    },
+    Box: { category: 'container', properties: { type: 'object', properties: { title: {} } } },
+  });
+  expect(types.blockMetas.Card.nativeIgnored).toEqual([
+    'ellipsis.tooltip',
+    'hoverable',
+    'label.align',
+    'options.$.style',
+  ]);
+  expect(types.blockMetas.Box).toEqual({ category: 'container' });
+});

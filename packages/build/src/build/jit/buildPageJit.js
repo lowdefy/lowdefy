@@ -21,6 +21,7 @@ import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import addKeys from '../addKeys.js';
 import validateMobileStyles from '../buildMobile/validateMobileStyles.js';
+import validateNativeIgnoredProperties from '../buildMobile/validateNativeIgnoredProperties.js';
 import buildPage from '../buildPages/buildPage.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
 import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js';
@@ -162,6 +163,10 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // After buildPage: styles are keyed by slot (normalizeClassAndStyles), as
     // in the full build.
     validateMobileStyles({ components: { pages: [processed] }, context: buildContext });
+    validateNativeIgnoredProperties({
+      components: { pages: [processed] },
+      context: buildContext,
+    });
 
     // Validate that all page-level types (blocks, actions, operators) exist
     validatePageTypes({ context: buildContext });

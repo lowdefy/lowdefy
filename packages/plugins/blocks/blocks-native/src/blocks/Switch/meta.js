@@ -58,6 +58,7 @@ export default {
         type: 'string',
         enum: ['small', 'default'],
         default: 'default',
+        nativeIgnored: true,
         description: 'Ignored on mobile: the switch takes the platform size.',
       },
       theme,

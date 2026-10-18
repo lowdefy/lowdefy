@@ -70,6 +70,7 @@ export default {
         type: 'string',
         enum: ['start', 'end'],
         default: 'start',
+        nativeIgnored: true,
         description: 'Ignored on mobile: the icon is shown before the title.',
       },
       shape: {
@@ -91,6 +92,7 @@ export default {
       },
       tooltip: {
         type: 'string',
+        nativeIgnored: true,
         description: 'Ignored on mobile: a phone has no hover.',
       },
       type: {

@@ -142,6 +142,7 @@ export default {
             },
             shortcut: {
               type: 'string',
+              nativeIgnored: true,
               description:
                 'Keyboard shortcut to switch to this tab. Use "mod" for Cmd/Ctrl. Ignored on mobile.',
             },

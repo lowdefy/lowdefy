@@ -51,6 +51,7 @@ import collectMobileClassCandidates from './build/buildMobile/collectMobileClass
 import buildMobilePageIndex from './build/buildMobile/buildMobilePageIndex.js';
 import validateMobileMenuIcons from './build/buildMobile/validateMobileMenuIcons.js';
 import validateMobileStyles from './build/buildMobile/validateMobileStyles.js';
+import validateNativeIgnoredProperties from './build/buildMobile/validateNativeIgnoredProperties.js';
 import buildModuleDefs from './build/buildModuleDefs.js';
 import { resolveModuleManifests } from './build/registerModules.js';
 import buildModules from './build/buildModules.js';
@@ -215,6 +216,10 @@ async function build(options) {
     tryBuildStep(buildPages, 'buildPages', { components, context });
     // After buildPages: styles are keyed by slot (normalizeClassAndStyles).
     tryBuildStep(validateMobileStyles, 'validateMobileStyles', { components, context });
+    tryBuildStep(validateNativeIgnoredProperties, 'validateNativeIgnoredProperties', {
+      components,
+      context,
+    });
     // After buildPages: Link actions in app events are checked against the page ids.
     tryBuildStep(buildAppEvents, 'buildAppEvents', { components, context });
     // Every type is counted by now, and buildJs has not yet replaced the

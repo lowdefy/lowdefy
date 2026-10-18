@@ -35,7 +35,7 @@ The list, input and action blocks:
 
 Each `meta.js` mirrors the web meta (copied, not imported, so the shell never installs web block packages). Two additions:
 
-- **`nativeIgnored: true`** on a property a phone cannot honour (`hoverable`, `copyable`, `animated`, `target`), with "Ignored on mobile." in its description. The schema still accepts the property, so a shared page stays valid; the build is meant to warn once per page for these, which it does not do yet.
+- **`nativeIgnored: true`** on a property a phone cannot honour (`hoverable`, `copyable`, `animated`, `target`, input `label.align` and `label.span`, `prefixIcon`, ...), with "Ignored on mobile" in its description. The schema still accepts the property, so a shared page stays valid. `extractBlockTypes` lists the marked paths in the block meta, and the build warns once per page for each one a page sets (`validateNativeIgnoredProperties`). Mark every property whose description says it is ignored on mobile, nested ones included.
 - Descriptions say where mobile differs: "supports html" text is shown plain (tags removed by `htmlToText`), events that never fire on a phone say so.
 
 ## Theme and styles

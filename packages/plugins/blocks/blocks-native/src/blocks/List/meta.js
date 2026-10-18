@@ -80,6 +80,7 @@ export default {
       wrap: {
         type: 'string',
         enum: ['wrap', 'nowrap', 'wrap-reverse'],
+        nativeIgnored: true,
         description: 'Ignored on mobile: list items do not wrap.',
       },
     },
