@@ -15,8 +15,7 @@
 */
 
 import { Platform } from 'react-native';
-import { ExpoSpeechRecognitionModule } from 'expo-speech-recognition';
-
+import getRecognizer from './getRecognizer.js';
 import pickRecognitionLocale from './pickRecognitionLocale.js';
 
 const UNAVAILABLE = { available: false, lang: null };
@@ -28,7 +27,7 @@ function getPhoneLocale() {
 
 async function getInstalledLocales() {
   try {
-    const { installedLocales } = await ExpoSpeechRecognitionModule.getSupportedLocales({});
+    const { installedLocales } = await getRecognizer().getSupportedLocales({});
     return installedLocales;
   } catch (error) {
     // Android throws when the on-device recognition service is missing or fails to answer.
@@ -45,10 +44,7 @@ async function getInstalledLocales() {
  * @returns {Promise<{ available: boolean, lang: string|null }>}
  */
 async function checkDictationAvailable() {
-  if (
-    !ExpoSpeechRecognitionModule.isRecognitionAvailable() ||
-    !ExpoSpeechRecognitionModule.supportsOnDeviceRecognition()
-  ) {
+  if (!getRecognizer().isRecognitionAvailable() || !getRecognizer().supportsOnDeviceRecognition()) {
     return UNAVAILABLE;
   }
   const phoneLocale = getPhoneLocale();

@@ -16,13 +16,27 @@
 
 import { type } from '@lowdefy/helpers';
 
-const NEXT_READ_KINDS = ['scan', 'photo', 'nfc'];
+const NEXT_READ_KINDS = ['scan', 'photo', 'nfc', 'transcript'];
 const PERMISSION_ANSWERS = ['granted', 'denied'];
 const NETWORK_STATES = ['online', 'offline'];
 const KINDS = [...NEXT_READ_KINDS, 'location', 'permission', 'network', 'push', 'clear'];
 
 function describe(value) {
   return JSON.stringify(value);
+}
+
+function isTranscript(value) {
+  if (!type.isObject(value)) {
+    return false;
+  }
+  if (!type.isUndefined(value.error)) {
+    return type.isString(value.error) && value.error !== '';
+  }
+  return (
+    type.isString(value.final) &&
+    (type.isUndefined(value.partials) ||
+      (type.isArray(value.partials) && value.partials.every(type.isString)))
+  );
 }
 
 function isLocation(value) {
@@ -48,6 +62,13 @@ function validateInjection({ kind, name, value }) {
   if (kind === 'nfc' && !type.isObject(value)) {
     throw new Error(
       `An nfc injection needs the tag read as an object. Received ${describe(value)}.`
+    );
+  }
+  if (kind === 'transcript' && !isTranscript(value)) {
+    throw new Error(
+      `A transcript injection needs { final } with optional { partials } (a list of strings), or { error }. Received ${describe(
+        value
+      )}.`
     );
   }
   if (kind === 'location') {
@@ -81,6 +102,9 @@ function validateInjection({ kind, name, value }) {
  * calls take.
  *
  * - `scan`, `photo` and `nfc` queue: each read takes the next one, and none is left once taken.
+ * - `transcript` queues the same way: each dictation session takes the next one and "hears" its
+ *   `partials`, then its `final`, or ends with its `error` (blocks-native's
+ *   installDictationSource plays it).
  * - `location` queues too, so a list of locations plays a route one read at a time, but the last
  *   one taken stays: the phone is still there for the next read and for geofences.
  * - `permission` sets the standing answer for one permission, as the phone remembers a choice.

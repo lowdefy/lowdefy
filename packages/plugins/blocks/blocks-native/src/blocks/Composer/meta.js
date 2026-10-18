@@ -24,6 +24,7 @@ export default {
     'CornerUpLeft',
     'FileText',
     'Link',
+    'Mic',
     'Scale',
     'TriangleAlert',
     'X',
@@ -67,6 +68,12 @@ export default {
         type: 'boolean',
         default: false,
         description: 'Focus the input when the composer mounts.',
+      },
+      dictation: {
+        type: 'boolean',
+        default: true,
+        description:
+          'Show a mic at the field’s trailing edge that turns speech into text on the phone. One tap starts listening and the next stops; the cross on the listening row throws away what was said. The names in `mentions` are passed as hints, and the final words go through `spokenMentions`. The mic shows only where the phone recognises its language on the device, never in a browser.',
       },
       disabled,
       keyboardOffset: {

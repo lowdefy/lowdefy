@@ -14,7 +14,7 @@
 
 # Mobile only.
 
-- title: A comment composer with mentions, record links and a reply-to
+- title: A comment composer with mentions, record links, a reply-to and dictation
   blocks:
     - id: comment
       type: Composer
@@ -70,12 +70,13 @@
             params:
               comment_reply_to: null
 
-- title: A short composer, not kept above the keyboard
+- title: A short composer, not kept above the keyboard, without the mic
   blocks:
     - id: note
       type: Composer
       properties:
         sticky: false
+        dictation: false
         maxLength: 280
         placeholder: Add a note
         mentionFormat: '<@{id}>'
