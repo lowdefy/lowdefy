@@ -26,8 +26,11 @@ import getTabIcons from '../navigation/getTabIcons.js';
 import TabIconImages from './TabIconImages.js';
 import { useSessionState, useShell } from '../ShellContext.js';
 
-// One tab's icon: its SF Symbol on iOS, else its Lucide icon drawn as an image once ready.
-function TabIcon({ icon, image }) {
+// One tab's icon: its SF Symbol on iOS, else its Lucide icon drawn as an image once ready. It is
+// called, not rendered as a component: Expo Router reads a trigger's options from its direct
+// NativeTabs.Trigger.Icon and Label children only, and drops any other element, even one that
+// renders an Icon.
+function renderTabIcon({ icon, image }) {
   if (icon.sf !== null) {
     return <NativeTabs.Trigger.Icon sf={icon.sf} />;
   }
@@ -68,9 +71,9 @@ function TabsFrame({ items }) {
               name={`(${slot})`}
               role={item?.role}
             >
-              {item === undefined ? null : (
-                <TabIcon icon={icons[index]} image={images[item.pageId]} />
-              )}
+              {item === undefined
+                ? null
+                : renderTabIcon({ icon: icons[index], image: images[item.pageId] })}
               <NativeTabs.Trigger.Label>
                 {item?.title ?? item?.pageId ?? ''}
               </NativeTabs.Trigger.Label>

@@ -21,14 +21,25 @@ import { ThemeContext } from '@lowdefy/client-native';
 
 import Frame from './Frame.js';
 
-// The native tabs as plain elements that keep their props, so a test reads the tab bar.
+// The native tabs as plain elements that keep their props, so a test reads the tab bar. A trigger
+// keeps only its direct Icon and Label children, as Expo Router's convertTabPropsToOptions reads a
+// trigger's options: any other element, even one that renders an Icon, is dropped.
 jest.mock('expo-router/native-tabs', () => {
-  const { createElement } = jest.requireActual('react');
+  const { Children, createElement, isValidElement } = jest.requireActual('react');
   const element = (name) => (props) => createElement(name, props, props.children);
   const NativeTabs = element('NativeTabs');
-  NativeTabs.Trigger = element('Trigger');
-  NativeTabs.Trigger.Icon = element('TriggerIcon');
-  NativeTabs.Trigger.Label = ({ children }) => createElement('TriggerLabel', { label: children });
+  const Icon = element('TriggerIcon');
+  const Label = ({ children }) => createElement('TriggerLabel', { label: children });
+  NativeTabs.Trigger = (props) =>
+    createElement(
+      'Trigger',
+      props,
+      Children.toArray(props.children).filter(
+        (child) => isValidElement(child) && (child.type === Icon || child.type === Label)
+      )
+    );
+  NativeTabs.Trigger.Icon = Icon;
+  NativeTabs.Trigger.Label = Label;
   return { NativeTabs };
 });
 
