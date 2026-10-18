@@ -2973,7 +2973,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "9349d9f464f8e2670b96bdbcb0e49f564b811a3afa5ba089d5d717acf93d01f6"
+      "hash": "00ab0a0a51de9ca306a4d171c2d69036e09fd347affbc7e99ca563c0be44e17b"
     },
     "concepts/menus": {
       "files": [
@@ -3378,7 +3378,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "6822ea2639224cad5b5778186868b1b07a45dc5ead648708d10ce882b51f0bb1"
+      "hash": "d101b1fedf0bc44e65444df83dc2edb531376492fefa4be863f7376af0c2b8f4"
     },
     "agents/agents-introduction": {
       "files": [
