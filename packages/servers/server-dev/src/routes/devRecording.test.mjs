@@ -20,6 +20,8 @@ import path from 'path';
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { jest } from '@jest/globals';
+import { buildSessionReport, readRecordings } from '@lowdefy/node-utils';
+import validateTraceRecord from '@lowdefy/node-utils/journeyTrace/validateTraceRecord.js';
 
 jest.unstable_mockModule('../../lib/docs/getBuildId.js', () => ({
   default: () => '2026-10-03T14:02:00.000Z',
@@ -133,6 +135,40 @@ test("POST /api/dev-recording writes a phone shell's records, which carry no Ori
   });
   expect(res.status).toBe(204);
   expect(readLines('dev', '2026-10-03', `${SESSION}.jsonl`)).toHaveLength(1);
+});
+
+// What Lowdefy Dev's recorder writes for a click, a fill and a select on a phone (shell
+// src/dev/recorder/createNativeRecorder.test.js checks it writes exactly these).
+const nativeFixture = JSON.parse(
+  fs.readFileSync(new URL('../../test/nativeRecordingFixture.json', import.meta.url), 'utf8')
+);
+
+test("a phone's native records pass the trace record validation and list as a session", async () => {
+  const { records } = nativeFixture;
+  const { session } = records[0];
+  const res = await createApp().request('/api/dev-recording', {
+    method: 'POST',
+    headers: {
+      host: '192.168.1.20:3001',
+      'content-type': 'application/json',
+      'x-lowdefy-shell': '7.4.0',
+      'x-lowdefy-dev-remote': '1',
+    },
+    body: JSON.stringify({ session, records }),
+  });
+  expect(res.status).toBe(204);
+  const lines = readLines('dev', '2026-10-18', `${session}.jsonl`);
+  expect(lines.map((line) => line.kind)).toEqual(['pageview', 'change', 'change', 'click']);
+  lines.forEach((line) => {
+    expect(validateTraceRecord({ record: line })).toEqual({});
+    expect(line).toMatchObject({ source: 'dev', device: 'ios', shell_version: '7.4.0' });
+  });
+  const { sessions } = buildSessionReport({
+    records: readRecordings({ configDirectory, source: 'dev' }),
+  });
+  expect(sessions).toEqual([
+    expect.objectContaining({ id: session, pages: ['ticket'], interactions: 3, failures: 0 }),
+  ]);
 });
 
 test('POST /api/dev-recording answers 400 for a session id that is not a trace id', async () => {
