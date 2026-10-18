@@ -236,6 +236,10 @@ const typeManifest = {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
+    AgentChat: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
     Alert: {
       package: '@lowdefy/blocks-native',
       version: 6,
@@ -277,6 +281,10 @@ const typeManifest = {
       version: 6,
     },
     Icon: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    Illustration: {
       package: '@lowdefy/blocks-native',
       version: 6,
     },

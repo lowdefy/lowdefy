@@ -56,6 +56,7 @@ function createRecord() {
  *   buildPage builds it; its root is usually a Box.
  * @param {Object} [params.actions] Extra test actions, by type name, over the default ones.
  * @param {'light'|'dark'} [params.darkMode] The theme mode, light unless asked.
+ * @param {boolean} [params.focused] Whether the page's screen is the one shown, true unless asked.
  * @param {Object} [params.rootConfig] Root config keys over the test root config.
  * @returns {Promise<{ calls: Object[], host: Object, lowdefy: Object }>} The Record action's
  *   params in the order they ran, the fake host and the lowdefy object.
@@ -63,6 +64,7 @@ function createRecord() {
 async function renderPage({
   actions = {},
   darkMode = 'light',
+  focused = true,
   pageConfig,
   rootConfig: rootOverrides = {},
 }) {
@@ -77,6 +79,7 @@ async function renderPage({
         basePath: '',
         lowdefy,
       }}
+      focused={focused}
       host={host}
       pageConfig={buildPage(pageConfig)}
       rootConfig={{

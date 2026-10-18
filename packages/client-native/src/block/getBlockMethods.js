@@ -20,7 +20,8 @@ const INPUT_CATEGORIES = new Set(['input', 'input-container']);
 const LIST_CATEGORIES = new Set(['list', 'input-container']);
 
 // The methods a block component gets, by its category, as the web renderer gives them. Its
-// triggerEvent and setValue report presses and changes for Lowdefy Dev's recorder.
+// triggerEvent and setValue report presses and changes for Lowdefy Dev's recorder. streamFetch
+// is native only: the server call a block reads as a stream (createStreamFetch).
 function getBlockMethods({ block, category, lowdefy }) {
   const reporting = getReportingMethods({ block, lowdefy });
   const methods = Object.assign(block.methods, {
@@ -29,6 +30,7 @@ function getBlockMethods({ block, category, lowdefy }) {
     getUserStorageKey: lowdefy._internal.storage.userKey,
     registerEvent: block.registerEvent,
     registerMethod: block.registerMethod,
+    streamFetch: lowdefy._internal.streamFetch,
     translate: lowdefy._internal.translate,
     triggerEvent: reporting.triggerEvent,
   });

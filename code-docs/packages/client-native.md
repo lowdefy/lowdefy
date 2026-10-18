@@ -24,12 +24,16 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 | `screen/Screen.js`                                               | The `Screen` page type; reports header options to `onScreenOptions`          |
 | `screen/HeaderActionButton.js`                                   | A header action as a natural-size icon button                                |
 | `screen/HeaderBottom.js`, `getHeaderBottomMotion.js`             | A Screen's headerBottom, pinned under the header by the page's scroll offset |
+| `screen/HeaderBackdrop.js`                                       | A Screen's headerBackdrop, lifted above the content behind the large title   |
+| `screen/useScreenFocused.js`                                     | Whether the block's screen is shown, for work that runs only while it is     |
 | `screen/ScreenTint.js`, `createTintStore.js`                     | A Screen's backgroundTint, a gradient fixed behind the page, cross-faded     |
 | `screen/getBackgroundTint.js`, `getTintStops.js`                 | The tint's colour and opacity in the mode showing; its eased gradient stops  |
 | `layout/EdgeInsetContext.js`                                     | An area's horizontal padding, which an edge-to-edge block cancels            |
 | `motion/FadeInView.js`, `useReduceMotion.js`                     | Content fading in after a skeleton; the system Reduce Motion setting         |
 | `trace/describeBlock.js`                                         | The trace's element description, by block id                                 |
 | `elements/createElementRegistry.js`, `useElementRef.js`          | Native views by page and block id (`globals.elements`), for native actions   |
+| `block/createStreamFetch.js`                                     | `methods.streamFetch`: a block's streamed server call, with the bearer token |
+| `screen/useScreenFooter.js`                                      | A block draws its own chrome in the page footer (AgentChat's composer)       |
 | `icon/Icon.js`                                                   | Draws IconData (the web's icon node data) with `react-native-svg`            |
 | `icon/createIcon.js`                                             | `components.Icon`: an icon by name from `types.icons`, drawn with `Icon`     |
 | `icon/getSfSymbol.js`, `sfSymbolNames.js`                        | The SF Symbol of a Lucide or semantic icon name, for iOS tab and bar buttons |
@@ -106,7 +110,10 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   buttons with an SF Symbol from `getSfSymbol`, an `onPress`, a `menu` of items (`id`, `title`,
   `symbol`, `destructive`, `disabled`, `onPress`) or null, and a `render` that draws a
   `HeaderActionButton`, which opens the menu in a `Modal` where the shell has no native menu)
-  and `headerSearch` (search bar callbacks; `onSearchChange` is debounced).
+  and `headerSearch` (search bar callbacks; `onSearchChange` is debounced). It reports them in a
+  layout effect, so they reach the router in the same update as the page's first content: the
+  bar is in large-title mode when the scroll view first lays out its automatic insets, and a page
+  opens with its large title expanded however long its first content takes to mount.
   Header slots render inside `NaturalSizeContext`, so `BlockLayout` gives their blocks their
   content's size rather than a column width; a span-24 block would stretch the native bar item
   across the header and truncate the title. `ScreenContext` carries the screen's `focused` flag
@@ -118,9 +125,19 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   the Screen sets its `footer` slot in. `ScreenFooter` draws that slot below the ScrollView, padded by
   `LowdefyPage`'s `bottomInset` (the shell's bottom safe area: tab bar, home indicator) and kept
   above the keyboard by a `KeyboardAvoidingView`; only it re-renders when the slot is set, so the
-  Screen's every-render update does not render the page again. What onFocus has fired for is kept
+  Screen's every-render update does not render the page again. A block can draw its own chrome
+  there instead (`useScreenFooter`, exported): AgentChat draws its composer in the footer while
+  the conversation is the page content. A Screen with no footer slot leaves the footer alone, so
+  a page uses one or the other. What onFocus has fired for is kept
   per page context (`getFocusMemory`, through `FocusMemoryContext`), not in the Screen's refs, so
   the page tree mounting again onto a kept context does not fire it again.
+- A Screen's `headerBackdrop` slot is drawn by the Screen block before everything else
+  (`HeaderBackdrop`): an absolute view at the top of the content, out of its flow, lifted by its
+  own height with `translateY: '-100%'`, so its blocks sit behind the large title and the clear bar
+  and scroll away with the title. Only a transform takes it above the content: its layout stays
+  inside the content, as `PageTint`'s does, so nothing in the scroll view's content has a negative
+  frame. It never takes touches. `useScreenFocused` (exported) reads `ScreenContext.focused` for
+  a block, such as an Illustration that stops its animations on a hidden screen.
 - A Screen's `headerBottom` slot is drawn by the Screen block itself, as the page's first content
   (`HeaderBottom`, `zIndex: 1` over the content after it), not by the router: React Native's
   `stickyHeaderIndices` pin at the scroll view's top, which on iOS is under the translucent bar.
@@ -161,6 +178,17 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   seam while rows scrolled under it stay hidden.
 - The engine's `window` and `document` keys hold plain objects. `focus` and `blur` have no
   source on a phone; `online` and `offline` follow the `network` the shell passes.
+
+## Streamed server calls
+
+React Native's `fetch` buffers a response body, so a block that reads its answer as a stream (the
+native AgentChat reads the AI SDK's UI message stream, server-sent events over a POST) calls
+`methods.streamFetch(path, init)`, a native-only block method (`block/createStreamFetch.js`). It
+prefixes `lowdefy.apiBase` and adds the caller's session as the core's requests do
+(`getAuthorizationHeaders`: a bearer host's token as `Authorization`), and calls
+`host.streamFetch`, a Fetch API whose body streams. The shell gives `expo/fetch`, sent as its
+`fetch` is (the `x-lowdefy-shell` header, no cookies, Lowdefy Dev's pairing token) and watched by
+the same session watch, so a 401 ends the session.
 
 ## Tests
 

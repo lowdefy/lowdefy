@@ -34,14 +34,14 @@ const primitiveOption = {
 
 export default {
   category: 'input',
-  icons: ['ChevronsUpDown'],
+  icons: ['Check', 'ChevronsUpDown', 'Search', 'X'],
   valueType: 'any',
   cssKeys: {
-    element: 'The Selector box, or the row of the menu variant.',
+    element: 'The Selector box, or the row of the menu and sheet variants.',
     label: 'The Selector label.',
     extra: 'The Selector extra content.',
     feedback: 'The Selector validation feedback.',
-    value: 'The chosen option text of the menu variant.',
+    value: 'The chosen option text of the menu and sheet variants.',
   },
   events: {
     onChange: {
@@ -87,26 +87,27 @@ export default {
                   type: 'boolean',
                   default: false,
                   description:
-                    'Leave the option out of the picker. The menu variant shows it dimmed.',
+                    'Leave the option out of the picker. The menu and sheet variants show it dimmed.',
                 },
                 symbol: {
                   type: 'string',
                   description:
-                    'Mobile menu variant only. An SF Symbol name drawn beside the option in the native menu and, on iOS, beside the chosen option in the row.',
+                    'Mobile menu and sheet variants only. An SF Symbol name drawn beside the option in the native menu or the sheet and, on iOS, beside the chosen option in the row.',
                 },
                 icon: {
                   type: 'string',
                   description:
-                    'Mobile menu variant only. An icon name from the app icon data, drawn beside the chosen option in the row where there is no SF Symbol (Android, or an option without symbol).',
+                    'Mobile menu and sheet variants only. An icon name from the app icon data, drawn beside the option in the sheet and the chosen option in the row where there is no SF Symbol (Android, or an option without symbol).',
                 },
                 iconColor: {
                   type: 'string',
-                  description: 'Mobile menu variant only. The colour of the glyph in the row.',
+                  description:
+                    'Mobile menu and sheet variants only. The colour of the glyph in the row and the sheet.',
                 },
                 avatar: {
                   type: 'object',
                   description:
-                    'Mobile menu variant only. A person the option stands for, drawn as an avatar (their picture, or initials) beside the chosen option in the row; the native menu shows the person symbol.',
+                    'Mobile menu and sheet variants only. A person the option stands for, drawn as an avatar (their picture, or initials) beside the chosen option in the row and beside the option in the sheet; the native menu shows the person symbol.',
                   properties: {
                     name: { type: 'string', description: 'The name the initials are taken from.' },
                     src: {
@@ -115,6 +116,17 @@ export default {
                     },
                     color: { type: 'string', description: 'The circle colour.' },
                   },
+                },
+                description: {
+                  type: 'string',
+                  description:
+                    'Mobile sheet variant only. A line of secondary text under the option label, such as an email address.',
+                },
+                pinned: {
+                  type: 'boolean',
+                  default: false,
+                  description:
+                    'Mobile sheet variant only. Show the option in the group at the top of the sheet, under the placeholder item and above a hairline, such as "Assign to me".',
                 },
                 filterString: {
                   type: 'string',
@@ -130,9 +142,16 @@ export default {
       },
       menuTitle: {
         type: 'string',
-        description: 'Mobile menu variant only. A title at the top of the menu, on iOS.',
+        description:
+          'Mobile menu and sheet variants only. A title at the top of the menu, on iOS, or centred in the sheet header (the Selector title by default).',
       },
       placeholder: { ...placeholder, default: 'Select item' },
+      searchThreshold: {
+        type: 'number',
+        default: 7,
+        description:
+          'Mobile sheet variant only. Show a search field above the options when there are more options than this. The search matches labels, ignoring case and accents.',
+      },
       showSearch: {
         type: 'boolean',
         default: true,
@@ -145,9 +164,9 @@ export default {
       title: inputTitle,
       variant: {
         ...variant,
-        enum: ['solid', 'outlined', 'filled', 'borderless', 'underlined', 'menu'],
+        enum: ['solid', 'outlined', 'filled', 'borderless', 'underlined', 'menu', 'sheet'],
         description:
-          "Input visual variant. On mobile, 'menu' draws an iOS Settings-style row, the title at the left and the chosen option at the right, that opens a native menu of the options.",
+          "Input visual variant. On mobile, 'menu' draws an iOS Settings-style row, the title at the left and the chosen option at the right, that opens a native menu of the options. 'sheet' draws the same row, opening a bottom sheet of the options with their avatar pictures, descriptions, a pinned group and a search field for a long list.",
       },
     },
   },

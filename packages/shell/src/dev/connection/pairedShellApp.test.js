@@ -38,6 +38,9 @@ jest.mock('expo-local-authentication', () => ({}));
 jest.mock('expo-network', () => ({ addNetworkStateListener: () => ({ remove: () => undefined }) }));
 jest.mock('expo-router', () => ({ router: {} }));
 jest.mock('expo-clipboard', () => ({}));
+jest.mock('expo/fetch', () => ({
+  fetch: jest.fn(async () => ({ status: 200, headers: { get: () => null } })),
+}));
 
 class FakeWebSocket {
   constructor(url, protocols, options) {
@@ -86,6 +89,15 @@ test('every call of an app on a paired dev server carries the pairing token', as
     expect(header(init, 'x-lowdefy-pair')).toBe('k3x9q');
     expect(header(init, 'x-lowdefy-shell')).toBe('7.0.0');
   });
+  // A block's streamed call (AgentChat's chat stream) goes through expo/fetch, sent the same way.
+  const { fetch: expoFetch } = jest.requireMock('expo/fetch');
+  await host.streamFetch('http://192.168.1.20:3000/api/agent/chat/assistant', { method: 'POST' });
+  expect(server.fetch).toHaveBeenCalledTimes(calls.length);
+  const [[streamUrl, streamInit]] = expoFetch.mock.calls;
+  expect(streamUrl).toBe('http://192.168.1.20:3000/api/agent/chat/assistant');
+  expect(streamInit.credentials).toBe('omit');
+  expect(header(streamInit, 'x-lowdefy-pair')).toBe('k3x9q');
+  expect(header(streamInit, 'x-lowdefy-shell')).toBe('7.0.0');
   const socket = new host.WebSocket('ws://192.168.1.20:3000/api/websocket');
   expect(socket.options.headers).toEqual({ 'x-lowdefy-pair': 'k3x9q' });
   auth.dispose();

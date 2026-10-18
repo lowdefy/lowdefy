@@ -444,6 +444,35 @@ test('a headerBottom slot draws its blocks first, over the content, and reports 
   expect(flatStyle(screen.getByTestId('home_header_bottom_separator')).opacity).toBe(0);
 });
 
+test('a headerBackdrop slot draws its blocks above the top of the content, taking no touches', async () => {
+  const { view } = renderScreen({
+    page: {
+      id: 'home',
+      type: 'Screen',
+      properties: { title: 'My work', largeTitle: true },
+      slots: {
+        content: { blocks: [{ id: 'body', type: 'Paragraph', properties: { content: 'Body' } }] },
+        headerBackdrop: {
+          blocks: [{ id: 'art', type: 'Paragraph', properties: { content: 'Art' } }],
+        },
+      },
+    },
+  });
+  await view;
+  const backdrop = await screen.findByTestId('home_header_backdrop');
+  expect(within(backdrop).getByText('Art')).toBeTruthy();
+  expect(within(backdrop).queryByText('Body')).toBeNull();
+  expect(backdrop.props.pointerEvents).toBe('none');
+  // Laid out at the top of the content, out of its flow, and lifted by its own height.
+  expect(flatStyle(backdrop)).toMatchObject({
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    transform: [{ translateY: '-100%' }],
+  });
+});
+
 test('a Screen without a headerBottom slot reports none', async () => {
   const { onScreenOptions, view } = renderScreen({
     page: {
@@ -783,4 +812,63 @@ test('a Screen without a footer draws none', async () => {
   await view;
   await act(async () => undefined);
   expect(screen.queryByTestId('screen-footer')).toBeNull();
+});
+
+test('a block draws its own chrome in the footer of a Screen with no footer slot', async () => {
+  const { host } = createFakeHost({ path: '/home' });
+  const page = buildPage({
+    id: 'home',
+    type: 'Screen',
+    blocks: [{ id: 'chat', type: 'FooterBar', properties: { label: 'Composer' } }],
+  });
+  const rendered = await render(
+    <LowdefyPage
+      bottomInset={83}
+      core={createCore()}
+      host={host}
+      pageConfig={page}
+      rootConfig={rootConfig}
+      types={createTypes()}
+    />
+  );
+  await act(async () => undefined);
+  const footer = screen.getByTestId('screen-footer');
+  expect(within(footer).getByTestId('chat-footer').props.children).toEqual('Composer');
+  const [scrollView] = findAll(screen.root, (node) => node.type === 'RCTScrollView');
+  expect(findAll(scrollView, (node) => node.props?.children === 'Composer')).toHaveLength(0);
+  // The block is gone with its page, and its chrome with it.
+  await act(async () => {
+    rendered.unmount();
+  });
+  expect(screen.queryByTestId('screen-footer')).toBeNull();
+});
+
+test('a block streams a server call through the host with the bearer session', async () => {
+  const { host } = createFakeHost({ path: '/home' });
+  host.authTransport = 'bearer';
+  host.tokenStore = { get: () => 'session-token', set: jest.fn(), clear: jest.fn() };
+  await render(
+    <LowdefyPage
+      core={createCore()}
+      host={host}
+      pageConfig={buildPage({
+        id: 'home',
+        type: 'Screen',
+        blocks: [{ id: 'chat', type: 'FooterBar', properties: { label: 'Composer' } }],
+      })}
+      rootConfig={rootConfig}
+      types={createTypes()}
+    />
+  );
+  await act(async () => {
+    fireEvent.press(await screen.findByTestId('chat-press'));
+  });
+  expect(host.streamFetch).toHaveBeenCalledWith(
+    'https://app.lowdefy.test/api/agent/home/assistant',
+    { method: 'POST', headers: { Authorization: 'Bearer session-token' } }
+  );
+  expect(host.fetch).not.toHaveBeenCalledWith(
+    'https://app.lowdefy.test/api/agent/home/assistant',
+    expect.anything()
+  );
 });

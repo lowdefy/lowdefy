@@ -76,6 +76,24 @@ const builtinMessages = {
     '{count, plural, one {Returned # result} other {Returned # results}}',
   'agent.toolResult.returnedKeys': 'Returned: {keys}',
   'agent.toolResult.returnedFields': 'Returned object with {count} fields',
+  'agent.toolResult.waitingApproval': 'Waiting for your approval',
+  'agent.toolResult.approved': 'Approved',
+
+  // The native AgentChat's own controls.
+  'agent.chat.cancel': 'Cancel',
+  'agent.chat.chats': 'Chats',
+  'agent.chat.chatsLoadFailed': 'Your chats could not be loaded.',
+  'agent.chat.deleteChat': 'Delete',
+  'agent.chat.errorTitle': 'Something went wrong',
+  'agent.chat.jumpToLatest': 'Jump to latest',
+  'agent.chat.newChat': 'New chat',
+  'agent.chat.noChats': 'No chats yet',
+  'agent.chat.noChatsDescription': 'Your conversations show here.',
+  'agent.chat.retry': 'Try again',
+  'agent.chat.send': 'Send',
+  'agent.chat.stop': 'Stop',
+  'agent.chat.thinking': 'Thinking',
+  'agent.chat.thought': 'Thought process',
 
   // Block built-ins — surfaced directly by block components, overridable per-locale.
   'blocks.listSelector.search.placeholder': 'Search…',

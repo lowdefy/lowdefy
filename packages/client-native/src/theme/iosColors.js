@@ -30,6 +30,10 @@
 //   switch track) to large areas (a search field).
 // - colorSkeleton, colorSkeletonHighlight: a loading placeholder's fill and the soft band that
 //   sweeps across it, a few percent lighter, so the sweep stays low contrast in either mode.
+//
+// `elevated` holds the grouped surfaces of a presentation over the screen (a sheet): UIKit draws
+// them a step lighter in dark mode so the sheet stands off the black screen behind it, and the
+// same as the screen's in light mode.
 const iosColors = {
   light: {
     colorGroupedBackground: '#F2F2F7',
@@ -70,6 +74,22 @@ const iosColors = {
     colorQuaternarySystemFill: 'rgba(118,118,128,0.18)',
     colorSkeleton: '#2C2C2E',
     colorSkeletonHighlight: '#3A3A3C',
+  },
+  elevated: {
+    light: {
+      colorGroupedBackground: '#F2F2F7',
+      colorCell: '#FFFFFF',
+      colorCellNested: '#F2F2F7',
+    },
+    dark: {
+      colorGroupedBackground: '#1C1C1E',
+      colorCell: '#2C2C2E',
+      colorCellNested: '#3A3A3C',
+      colorCellPressed: '#48484A',
+      colorSystemBackground: '#1C1C1E',
+      colorSkeleton: '#3A3A3C',
+      colorSkeletonHighlight: '#48484A',
+    },
   },
 };
 
