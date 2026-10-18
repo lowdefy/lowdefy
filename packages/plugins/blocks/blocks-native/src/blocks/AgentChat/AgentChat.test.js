@@ -731,3 +731,100 @@ test('with threads, a resumed thread opens in place of the seed property', async
     within(screen.getByTestId('screen-footer')).getByTestId('nigel_input').props.value
   ).toEqual('');
 });
+
+// Thread endpoints whose get-active-thread answers only when the test resolves it.
+function createSlowResumeEndpoints() {
+  const endpoints = createThreadEndpoints({ stored: { acme_1: storedThread } });
+  let resolveActive;
+  const active = new Promise((resolve) => {
+    resolveActive = () =>
+      resolve({
+        conversationId: 'acme_1',
+        title: 'Payroll questions',
+        messages: storedThread.messages,
+      });
+  });
+  const CallAPI = (options) => {
+    if (options.params.endpointId === 'ai-assistant/get-active-thread') {
+      endpoints.calls.push({
+        endpointId: options.params.endpointId,
+        payload: options.params.payload,
+      });
+      return active.then((response) => ({ response }));
+    }
+    return endpoints.CallAPI(options);
+  };
+  return { ...endpoints, CallAPI, resolveActive };
+}
+
+function slowResumePage({ args } = {}) {
+  return page([
+    {
+      id: 'new',
+      type: 'Button',
+      properties: { title: 'New' },
+      events: {
+        onClick: [
+          {
+            id: 'new',
+            type: 'CallMethod',
+            params: { blockId: 'nigel', method: 'newChat', ...(args ? { args } : {}) },
+          },
+        ],
+      },
+    },
+    {
+      id: 'nigel',
+      type: 'AgentChat',
+      properties: {
+        agentId: 'nigel',
+        welcome: { title: 'Hi' },
+        threads: { module: 'ai-assistant', scope: 'acme' },
+      },
+    },
+  ]);
+}
+
+test('newChat while the last thread is still resuming cancels the resume, so the new chat stays', async () => {
+  const endpoints = createSlowResumeEndpoints();
+  const { host } = await renderPage({
+    actions: { CallAPI: endpoints.CallAPI },
+    pageConfig: slowResumePage({ args: [recordSeed] }),
+  });
+  expect(screen.getByTestId('nigel_loading')).toBeTruthy();
+  await act(async () => {
+    fireEvent.press(screen.getByText('New'));
+  });
+  expect(screen.queryByTestId('nigel_loading')).toBeNull();
+  expect(screen.getByText('About ACME-12')).toBeTruthy();
+  await act(async () => {
+    endpoints.resolveActive();
+  });
+  expect(screen.getByText('About ACME-12')).toBeTruthy();
+  expect(screen.queryByText('PEL-645 holds it.')).toBeNull();
+  host.streamFetch.mockImplementation(async () => sse(textReply({ text: 'Only the review.' })));
+  const footer = screen.getByTestId('screen-footer');
+  await act(async () => {
+    fireEvent.press(within(footer).getByTestId('nigel_send'));
+  });
+  await waitFor(() => expect(screen.getByText('Only the review.')).toBeTruthy());
+  expect(host.streamFetch.mock.calls[0][0]).not.toMatch(/conversationId=acme_1$/);
+});
+
+test('an unseeded newChat while the last thread is still resuming keeps the empty chat', async () => {
+  const endpoints = createSlowResumeEndpoints();
+  await renderPage({
+    actions: { CallAPI: endpoints.CallAPI },
+    pageConfig: slowResumePage(),
+  });
+  expect(screen.getByTestId('nigel_loading')).toBeTruthy();
+  await act(async () => {
+    fireEvent.press(screen.getByText('New'));
+  });
+  expect(screen.getByText('Hi')).toBeTruthy();
+  await act(async () => {
+    endpoints.resolveActive();
+  });
+  expect(screen.getByText('Hi')).toBeTruthy();
+  expect(screen.queryByText('PEL-645 holds it.')).toBeNull();
+});

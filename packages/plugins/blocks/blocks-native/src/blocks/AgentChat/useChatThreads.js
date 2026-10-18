@@ -47,7 +47,8 @@ function userMessageIds(messages) {
  * them on the web:
  *
  * - On mount, the thread last opened in the scope is resumed (getActiveThread), unless
- *   `threads.resume` is false.
+ *   `threads.resume` is false. A chat the person starts (newChat) or opens while it loads cancels
+ *   the resume, so the answer does not replace it.
  * - A thread is saved (saveThread) when the person sends in it, named by their first message, and
  *   again when each reply finishes; after the first reply it is named from the first exchange
  *   (titleThread).
@@ -83,6 +84,8 @@ function useChatThreads({ messagesRef, methods, onThreadLoaded, properties }) {
     newThreadState({ scope, seed: getChatSeed(properties.seed) })
   );
   const [resuming, setResuming] = useState(canResume);
+  // A resume still waiting on getActiveThread. A chat the person starts or opens meanwhile wins.
+  const resumePendingRef = useRef(canResume);
   const [list, setList] = useState({ status: 'idle', items: [] });
   const [openingId, setOpeningId] = useState(null);
   const threadRef = useRef(thread);
@@ -122,8 +125,15 @@ function useChatThreads({ messagesRef, methods, onThreadLoaded, properties }) {
     [endpoints, methods]
   );
 
+  const cancelResume = useCallback(() => {
+    if (!resumePendingRef.current) return;
+    resumePendingRef.current = false;
+    setResuming(false);
+  }, []);
+
   const showThread = useCallback(
     (next) => {
+      cancelResume();
       savedUserIdsRef.current = userMessageIds(next.messages);
       onThreadLoaded(next.messages);
       setThread(next);
@@ -132,7 +142,7 @@ function useChatThreads({ messagesRef, methods, onThreadLoaded, properties }) {
         event: { conversationId: next.id, title: next.title },
       });
     },
-    [methods, onThreadLoaded]
+    [cancelResume, methods, onThreadLoaded]
   );
 
   useEffect(() => {
@@ -140,7 +150,7 @@ function useChatThreads({ messagesRef, methods, onThreadLoaded, properties }) {
     let current = true;
     callEndpoint('getActiveThread', { scope })
       .then((active) => {
-        if (!current || type.isNone(active?.conversationId)) return;
+        if (!current || !resumePendingRef.current || type.isNone(active?.conversationId)) return;
         const messages = replayableMessages({ messages: active.messages ?? [] });
         savedUserIdsRef.current = userMessageIds(messages);
         onThreadLoaded(messages);
@@ -154,7 +164,9 @@ function useChatThreads({ messagesRef, methods, onThreadLoaded, properties }) {
       })
       .catch(() => undefined)
       .finally(() => {
-        if (current) setResuming(false);
+        if (!current) return;
+        resumePendingRef.current = false;
+        setResuming(false);
       });
     return () => {
       current = false;
@@ -284,6 +296,7 @@ function useChatThreads({ messagesRef, methods, onThreadLoaded, properties }) {
   // unseeded is kept rather than replaced.
   const newThread = useCallback(
     (seedArgs) => {
+      cancelResume();
       const seed = getChatSeed(seedArgs);
       const current = threadRef.current;
       const isBlank =
@@ -291,12 +304,13 @@ function useChatThreads({ messagesRef, methods, onThreadLoaded, properties }) {
       if (seed === null && isBlank) return;
       showThread(newThreadState({ scope, seed }));
     },
-    [messagesRef, scope, showThread]
+    [cancelResume, messagesRef, scope, showThread]
   );
 
   const openThread = useCallback(
     async ({ key, label }) => {
       if (key === threadRef.current.id) return true;
+      cancelResume();
       setOpeningId(key);
       try {
         const stored = await callEndpoint('getThread', { conversationId: key });
@@ -314,7 +328,7 @@ function useChatThreads({ messagesRef, methods, onThreadLoaded, properties }) {
         setOpeningId(null);
       }
     },
-    [callEndpoint, showThread]
+    [callEndpoint, cancelResume, showThread]
   );
 
   const deleteThread = useCallback(
