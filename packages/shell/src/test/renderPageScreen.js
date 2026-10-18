@@ -37,7 +37,14 @@ const apiBase = 'https://field.example.com';
  * globals over in-memory stores, its locale, and the shell's theme provider. The test file mocks
  * expo-router.
  */
-async function renderPageScreen({ deviceLocales = ['en-US'], pages, path, root }) {
+async function renderPageScreen({
+  beforeRender = () => undefined,
+  deviceLocales = ['en-US'],
+  pages,
+  path,
+  query,
+  root,
+}) {
   const server = createFakeServer({ root, rootEtag: '"r1"', pages });
   const session = createAppSession({
     apiBase,
@@ -54,6 +61,7 @@ async function renderPageScreen({ deviceLocales = ['en-US'], pages, path, root }
     assign: jest.fn(),
     clipboard,
     fetch: server.fetch,
+    getInstanceId: session.getCurrentInstanceId,
     getPath: session.getCurrentPath,
     origin: apiBase,
     storage,
@@ -77,10 +85,11 @@ async function renderPageScreen({ deviceLocales = ['en-US'], pages, path, root }
     session,
     storage,
   });
+  beforeRender({ session });
   await render(
     <ShellContext.Provider value={{ host, locale, session, shell }}>
       <ShellThemeProvider>
-        <PageScreen path={path} />
+        <PageScreen path={path} query={query} />
       </ShellThemeProvider>
     </ShellContext.Provider>
   );

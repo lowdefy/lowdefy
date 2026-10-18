@@ -47,6 +47,7 @@ function createShellHost({ fetch, router, session, tokenStore, WebSocket }) {
       assign: (url) => Linking.openURL(url),
       clipboard,
       fetch,
+      getInstanceId: session.getCurrentInstanceId,
       getPath: session.getCurrentPath,
       network,
       origin: getOrigin(session.apiBase),

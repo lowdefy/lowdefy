@@ -14,10 +14,14 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import { getSlotIndex } from './frameSlots.js';
 import getFrame from './getFrame.js';
 import getPresentation from './getPresentation.js';
 import getSlotRootPath from './getSlotRootPath.js';
+import getStackOptions from './getStackOptions.js';
+import getTabIcons from './getTabIcons.js';
 import toRouterHref from './toRouterHref.js';
 import { createRoot } from '../test/fixtures.js';
 
@@ -63,4 +67,130 @@ test('getPresentation maps Screen presentations to native stack presentations', 
   expect(getPresentation('modal')).toBe('modal');
   expect(getPresentation('sheet')).toBe('formSheet');
   expect(getPresentation(undefined)).toBe('card');
+});
+
+function headerAction(overrides) {
+  return {
+    disabled: false,
+    id: 'add',
+    onPress: jest.fn(),
+    placement: 'right',
+    render: () => 'icon button',
+    sfSymbol: 'plus',
+    title: 'Add',
+    ...overrides,
+  };
+}
+
+const screenOptions = {
+  headerActions: [],
+  headerLeft: undefined,
+  headerRight: undefined,
+  headerSearch: undefined,
+  largeTitle: false,
+  presentation: 'card',
+  title: 'Designs',
+};
+
+test('getStackOptions gives a large title, the presentation and a native search bar', () => {
+  const headerSearch = {
+    autoFocus: true,
+    hideWhenScrolling: false,
+    onCancel: jest.fn(),
+    onChangeText: jest.fn(),
+    onSearch: jest.fn(),
+    placeholder: 'Search designs',
+  };
+  const searchBarRef = { current: null };
+  const options = getStackOptions({
+    options: { ...screenOptions, headerSearch, largeTitle: true, presentation: 'sheet' },
+    platform: 'ios',
+    searchBarRef,
+  });
+  expect(options).toMatchObject({
+    headerLargeTitleEnabled: true,
+    presentation: 'formSheet',
+    title: 'Designs',
+  });
+  // No header items: the sides are left as the stack has them (a drawer's menu button).
+  expect(options).not.toHaveProperty('headerLeft');
+  expect(options).not.toHaveProperty('headerRight');
+  const search = options.headerSearchBarOptions;
+  expect(search).toMatchObject({ placeholder: 'Search designs', ref: searchBarRef });
+  search.onChangeText({ nativeEvent: { text: 'dar' } });
+  search.onSearchButtonPress({ nativeEvent: { text: 'dark' } });
+  search.onCancelButtonPress({});
+  expect(headerSearch.onChangeText).toHaveBeenCalledWith('dar');
+  expect(headerSearch.onSearch).toHaveBeenCalledWith('dark');
+  expect(headerSearch.onCancel).toHaveBeenCalled();
+});
+
+test('getStackOptions draws header actions as native SF Symbol bar buttons on iOS', () => {
+  const slot = () => 'slot blocks';
+  const add = headerAction();
+  const squirrel = headerAction({ id: 'squirrel', placement: 'left', sfSymbol: null });
+  const options = getStackOptions({
+    options: { ...screenOptions, headerActions: [add, squirrel], headerRight: slot },
+    platform: 'ios',
+    searchBarRef: { current: null },
+  });
+  expect(options.headerRight).toBeUndefined();
+  expect(options.unstable_headerRightItems()).toEqual([
+    { type: 'custom', element: 'slot blocks' },
+    {
+      type: 'button',
+      accessibilityLabel: 'Add',
+      disabled: false,
+      icon: { type: 'sfSymbol', name: 'plus' },
+      identifier: 'add',
+      label: 'Add',
+      onPress: add.onPress,
+    },
+  ]);
+  // An icon with no SF Symbol draws as its own icon button.
+  expect(options.unstable_headerLeftItems()).toEqual([{ type: 'custom', element: 'icon button' }]);
+});
+
+test('getStackOptions draws a header slot alone as its custom view on iOS', () => {
+  const slot = () => 'slot blocks';
+  const options = getStackOptions({
+    options: { ...screenOptions, headerRight: slot },
+    platform: 'ios',
+    searchBarRef: { current: null },
+  });
+  expect(options.headerRight).toBe(slot);
+  expect(options.unstable_headerRightItems).toBeUndefined();
+});
+
+test('getStackOptions draws header actions as a row of icon buttons off iOS', () => {
+  const options = getStackOptions({
+    options: { ...screenOptions, headerActions: [headerAction()] },
+    platform: 'android',
+    searchBarRef: { current: null },
+  });
+  expect(options).not.toHaveProperty('unstable_headerRightItems');
+  const row = options.headerRight();
+  expect(row.props.children).toEqual([null, ['icon button']]);
+});
+
+test('getTabIcons gives SF Symbols on iOS and Lucide icon data elsewhere', () => {
+  const inbox = { node: [['path', { d: 'M1 1' }]] };
+  const squirrel = { node: [['path', { d: 'M2 2' }]] };
+  const items = [
+    { pageId: 'my-work', icon: 'Inbox', iconData: inbox },
+    { pageId: 'designs', icon: 'FileText', iconData: {}, sfSymbol: 'doc.richtext' },
+    { pageId: 'pets', icon: 'Squirrel', iconData: squirrel },
+    { pageId: 'plain' },
+  ];
+  expect(getTabIcons({ items, platform: 'ios' })).toEqual([
+    { pageId: 'my-work', sf: 'tray', iconData: null },
+    { pageId: 'designs', sf: 'doc.richtext', iconData: null },
+    { pageId: 'pets', sf: null, iconData: squirrel },
+    { pageId: 'plain', sf: null, iconData: null },
+  ]);
+  expect(getTabIcons({ items, platform: 'android' })[0]).toEqual({
+    pageId: 'my-work',
+    sf: null,
+    iconData: inbox,
+  });
 });
