@@ -58,9 +58,9 @@ function useRefresh({ pageConfig }) {
 }
 
 // The page scroll view's vertical offset as an Animated value on the native driver, which a
-// Screen's headerBottom moves with.
-function useScrollY() {
-  const scrollY = useRef(new Animated.Value(0)).current;
+// Screen's headerBottom moves with. Each route instance has its own, from the top.
+function useScrollY({ screenKey }) {
+  const scrollY = useMemo(() => new Animated.Value(0), [screenKey]);
   const onScroll = useMemo(
     () =>
       Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
@@ -119,7 +119,7 @@ const Page = ({
     pageConfig.dynamic === true ? `${screenKey}:${buildRef.current.build}` : screenKey;
 
   const { hasRefresh, onRefresh, refreshing, setRefresh } = useRefresh({ pageConfig });
-  const { onScroll, scrollY } = useScrollY();
+  const { onScroll, scrollY } = useScrollY({ screenKey });
   const [footer] = useState(createFooterStore);
   const screen = useMemo(
     () => ({ focused, footer, headerInset, scrollY, setRefresh }),
@@ -146,9 +146,14 @@ const Page = ({
                 under it: automatic insets start the content below the header and the tab bar,
                 and let a large title collapse as the page scrolls. The page is drawn on the
                 grouped background, as an iOS screen of grouped sections is. Its offset drives a
-                Screen's headerBottom on the native driver. */}
+                Screen's headerBottom on the native driver. It is keyed by the route instance, so
+                a position is kept only for the instance it was scrolled on: another instance
+                starts at the top. Dragging it dismisses the keyboard, and a tap on a row works
+                while the keyboard is up. */}
             <Animated.ScrollView
+              key={screenKey}
               contentInsetAdjustmentBehavior="automatic"
+              keyboardDismissMode="on-drag"
               keyboardShouldPersistTaps="handled"
               onScroll={onScroll}
               ref={scrollRef}
