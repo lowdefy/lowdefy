@@ -1,0 +1,13 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "App \"mobile.menus.tabs\" should have 2 to 5 items. Received 1."
+      ],
+      "errorContains": [
+        "App \"mobile.menus.tabs\" should have 2 to 5 items. Received 1."
+      ]
+    }
+  ]
+}

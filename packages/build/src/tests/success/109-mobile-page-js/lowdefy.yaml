@@ -1,0 +1,23 @@
+# 109: _js On A Mobile Page
+# A mobile page carries its client _js as _jsEntries module text, since a shell
+# cannot load the web client's clientJsMap module. A web page's _js stays in
+# clientJsMap.
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    properties:
+      title:
+        _js: return 'Web';
+
+mobile:
+  pages:
+    - id: today
+      type: Box
+      blocks:
+        - id: heading
+          type: Title
+          properties:
+            content:
+              _js: return 'Today';

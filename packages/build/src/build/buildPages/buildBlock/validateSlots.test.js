@@ -20,9 +20,9 @@ import validateSlots from './validateSlots.js';
 
 function createPageContext(blockMetas = {}) {
   return {
+    blockMetas,
     context: {
       handleWarning: jest.fn(),
-      blockMetas,
     },
   };
 }

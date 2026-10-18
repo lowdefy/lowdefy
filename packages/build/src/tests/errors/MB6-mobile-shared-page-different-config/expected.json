@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Page \"home\" is in both \"pages\" and \"mobile.pages\" with different config. A page shared by web and mobile must be the same config, for example the same _ref."
+      ],
+      "errorContains": [
+        "Page \"home\" is in both \"pages\" and \"mobile.pages\" with different config. A page shared by web and mobile must be the same config, for example the same _ref.",
+        "{{fixturesDir}}/MB6-mobile-shared-page-different-config/lowdefy.yaml:14"
+      ]
+    }
+  ]
+}
