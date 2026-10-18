@@ -46,6 +46,7 @@ import buildMenu from '../buildMenu.js';
 import buildMobile from '../buildMobile/buildMobile.js';
 import buildMobileAppJs from '../buildMobile/buildMobileAppJs.js';
 import buildMobileClassMap from '../buildMobile/buildMobileClassMap.js';
+import buildMobilePageIcons from '../buildMobile/buildMobilePageIcons.js';
 import buildMobileTheme from '../buildMobile/buildMobileTheme.js';
 import validateMobileMenuIcons from '../buildMobile/validateMobileMenuIcons.js';
 import buildModuleDefs from '../buildModuleDefs.js';
@@ -227,6 +228,14 @@ async function shallowBuild(options) {
     tryBuildStep(validateMobileMenuIcons, 'validateMobileMenuIcons', { components, context });
 
     const { pageRegistry, sourcelessPageArtifacts } = buildShallowPages({ components, context });
+    // Inline mobile pages carry their icons' data, as page builds' do.
+    await buildMobilePageIcons({
+      components: {
+        global: components.global,
+        pages: sourcelessPageArtifacts.map((artifact) => artifact.page),
+      },
+      context,
+    });
     // After buildShallowPages: Link actions in app events are checked against the page ids.
     tryBuildStep(buildAppEvents, 'buildAppEvents', { components, context });
     // App-level config and inline pages; page builds check their own pages.
