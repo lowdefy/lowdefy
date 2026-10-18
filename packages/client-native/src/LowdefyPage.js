@@ -79,7 +79,13 @@ const Page = ({
     <BreakpointContext.Provider value={breakpoint}>
       <PageStyleContext.Provider value={pageStyle}>
         <ScreenOptionsContext.Provider value={onScreenOptions}>
-          <ScrollView keyboardShouldPersistTaps="handled" ref={scrollRef}>
+          {/* A native stack header is translucent on iOS 26 and later and the page scrolls under
+              it: automatic insets start the content below the header and the tab bar. */}
+          <ScrollView
+            contentInsetAdjustmentBehavior="automatic"
+            keyboardShouldPersistTaps="handled"
+            ref={scrollRef}
+          >
             <Context
               key={contextKey}
               appContext={appContext}

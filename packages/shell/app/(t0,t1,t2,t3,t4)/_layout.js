@@ -18,26 +18,31 @@ import React from 'react';
 import { Stack } from 'expo-router';
 
 import getFrame from '../../src/navigation/getFrame.js';
+import { getSlotIndex } from '../../src/navigation/frameSlots.js';
 import MenuButton from '../../src/components/MenuButton.js';
+import SlotContext from '../../src/navigation/SlotContext.js';
 import { useSessionState } from '../../src/ShellContext.js';
 
 // A deep link opens on top of the group's first screen, so back leads to it.
 export const unstable_settings = { initialRouteName: 'index' };
 
 // The stack of one frame group (a tab, or the app's one stack). A drawer frame puts its menu
-// button in the header of the group's first screen.
-export default function GroupLayout() {
+// button in the header of the group's first screen. Expo Router passes the group's own segment,
+// such as `(t1)`, to a layout shared by several groups; its screens read the group from SlotContext.
+export default function GroupLayout({ segment }) {
   const { root } = useSessionState();
   const frame = getFrame(root.menus);
   return (
-    <Stack screenOptions={{ title: '' }}>
-      <Stack.Screen
-        name="index"
-        options={
-          frame.kind === 'drawer' ? { headerLeft: () => <MenuButton items={frame.items} /> } : {}
-        }
-      />
-      <Stack.Screen name="[...path]" />
-    </Stack>
+    <SlotContext.Provider value={getSlotIndex(segment)}>
+      <Stack screenOptions={{ title: '' }}>
+        <Stack.Screen
+          name="index"
+          options={
+            frame.kind === 'drawer' ? { headerLeft: () => <MenuButton items={frame.items} /> } : {}
+          }
+        />
+        <Stack.Screen name="[...path]" />
+      </Stack>
+    </SlotContext.Provider>
   );
 }

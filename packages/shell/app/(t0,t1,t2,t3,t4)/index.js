@@ -14,20 +14,19 @@
   limitations under the License.
 */
 
-import React from 'react';
-import { useSegments } from 'expo-router';
+import React, { useContext } from 'react';
 
 import getSlotRootPath from '../../src/navigation/getSlotRootPath.js';
 import MessageScreen from '../../src/components/MessageScreen.js';
 import PageScreen from '../../src/components/PageScreen.js';
-import { getSlotIndex } from '../../src/navigation/frameSlots.js';
+import SlotContext from '../../src/navigation/SlotContext.js';
 import { useSessionState } from '../../src/ShellContext.js';
 
 // The first screen of a frame group: its tab's page, or the app's home page.
 export default function GroupIndex() {
-  const segments = useSegments();
+  const slotIndex = useContext(SlotContext);
   const { root } = useSessionState();
-  const path = getSlotRootPath({ root, slotIndex: getSlotIndex(segments[0]) });
+  const path = getSlotRootPath({ root, slotIndex });
   if (path === null) {
     return <MessageScreen testID="shell-no-home" title="This app has no page to open" />;
   }

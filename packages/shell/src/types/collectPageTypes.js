@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 function collectEventActions({ events, actions }) {
   Object.values(events ?? {}).forEach((event) => {
@@ -34,11 +34,12 @@ function collectBlock({ block, blocks, actions }) {
 
 // The block and action types a page uses, read from its config. The dev server builds pages on
 // demand and sends no type set, so a dev shell checks a page's types when the page arrives, by
-// name only: a dev shell runs the same Lowdefy version as the dev server.
+// name only: a dev shell runs the same Lowdefy version as the dev server. Page config arrives
+// serialized (arrays as `{ '~arr': [...] }`), so it is deserialized before it is walked.
 function collectPageTypes(pageConfig) {
   const blocks = new Set();
   const actions = new Set();
-  collectBlock({ block: pageConfig, blocks, actions });
+  collectBlock({ block: serializer.deserialize(pageConfig), blocks, actions });
   return {
     blocks: [...blocks].sort(),
     actions: [...actions].sort(),
