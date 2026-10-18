@@ -173,6 +173,18 @@ function useFooterSlot({ footer, slot }) {
   useEffect(() => () => footer.set(null), [footer]);
 }
 
+// properties.backgroundTint, set in the page's tint store for the page to draw behind its scroll
+// view when it changes, and cleared when the Screen goes.
+function useBackgroundTint({ backgroundTint, tint }) {
+  const tintKey = JSON.stringify(backgroundTint ?? null);
+  useEffect(() => {
+    tint.set(backgroundTint ?? null);
+    // backgroundTint is read when its key changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tintKey, tint]);
+  useEffect(() => () => tint.set(null), [tint]);
+}
+
 // events.onRefresh as pull-to-refresh on the page's scroll view: the spinner shows until the
 // event's actions finish.
 function useRefreshEvent({ events, methodsRef, setRefresh }) {
@@ -202,11 +214,13 @@ function useRefreshEvent({ events, methodsRef, setRefresh }) {
  * The headerBottom slot is drawn here, as the page's first content, pinned under the bar as the
  * page scrolls (HeaderBottom, from the page's scroll offset and header inset). The footer slot is
  * drawn by the page below its scroll view, pinned above the tab bar and the keyboard.
- * Pull-to-refresh (onRefresh) and onFocus come from the page's screen too (ScreenContext).
+ * Pull-to-refresh (onRefresh) and onFocus come from the page's screen too (ScreenContext), and
+ * the page draws the Screen's backgroundTint (`{ color, colorDark, height }`) behind its scroll
+ * view, fixed to the screen (ScreenTint).
  */
 function Screen({ blockId, components, content, events, loading, methods, properties }) {
   const onScreenOptions = useContext(ScreenOptionsContext);
-  const { focused, footer, headerInset, scrollY, setRefresh } = useContext(ScreenContext);
+  const { focused, footer, headerInset, scrollY, setRefresh, tint } = useContext(ScreenContext);
   const focusMemory = useContext(FocusMemoryContext);
   const methodsRef = useRef(methods);
   methodsRef.current = methods;
@@ -229,6 +243,7 @@ function Screen({ blockId, components, content, events, loading, methods, proper
   useFocusEvent({ events, focused, focusMemory, loading, methodsRef });
   useRefreshEvent({ events, methodsRef, setRefresh });
   useFooterSlot({ footer, slot: content.footer });
+  useBackgroundTint({ backgroundTint: properties.backgroundTint, tint });
 
   const { presentation = 'card', title } = properties;
   const largeTitle = properties.largeTitle === true;
@@ -262,7 +277,7 @@ function Screen({ blockId, components, content, events, loading, methods, proper
   }
   return (
     <>
-      <HeaderBottom blockId={blockId} headerInset={headerInset} scrollY={scrollY}>
+      <HeaderBottom blockId={blockId} headerInset={headerInset} scrollY={scrollY} tint={tint}>
         {content.headerBottom({ rowGap: 8 })}
       </HeaderBottom>
       {page}

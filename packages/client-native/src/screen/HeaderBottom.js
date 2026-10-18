@@ -19,6 +19,7 @@ import { Animated, StyleSheet, View } from 'react-native';
 
 import EdgeInsetContext from '../layout/EdgeInsetContext.js';
 import getHeaderBottomMotion from './getHeaderBottomMotion.js';
+import ScreenTint from './ScreenTint.js';
 import useTheme from '../theme/useTheme.js';
 
 // The screen inset its blocks sit at, which an edge-to-edge block cancels (EdgeInsetContext).
@@ -33,7 +34,9 @@ const COVER = 1000;
  * moved down by the distance the page has scrolled past the bar's bottom edge, so it rides with
  * the content while a large title collapses, and with a pull-to-refresh, and is pinned once the
  * bar is compact. Pinned, it takes the screen's background over the bar too, and a hairline under
- * it. Both move on the native driver, with the page's scroll offset.
+ * it. Both move on the native driver, with the page's scroll offset. A Screen with a
+ * backgroundTint has its tint drawn in that surface too, at the place on the screen the page draws
+ * it, so the pinned strip continues the gradient rather than painting a band over it.
  *
  * @param {Object} props
  * @param {string} props.blockId The Screen's block id.
@@ -42,11 +45,12 @@ const COVER = 1000;
  *   view's frame (an Animated value as a large title collapses, or 0 when the page sits below
  *   the bar).
  * @param {Object} props.scrollY The page scroll view's Animated vertical offset.
+ * @param {Object} props.tint The page's tint store (createTintStore).
  */
-function HeaderBottom({ blockId, children, headerInset, scrollY }) {
+function HeaderBottom({ blockId, children, headerInset, scrollY, tint }) {
   const { tokens } = useTheme();
   const motion = useMemo(
-    () => getHeaderBottomMotion({ headerInset, scrollY }),
+    () => getHeaderBottomMotion({ cover: COVER, headerInset, scrollY }),
     [headerInset, scrollY]
   );
   return (
@@ -61,11 +65,24 @@ function HeaderBottom({ blockId, children, headerInset, scrollY }) {
           bottom: 0,
           left: 0,
           opacity: motion.pinnedOpacity,
+          overflow: 'hidden',
           position: 'absolute',
           right: 0,
           top: -COVER,
         }}
-      />
+      >
+        <Animated.View
+          style={{
+            left: 0,
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            transform: [{ translateY: motion.tintOffset }],
+          }}
+        >
+          <ScreenTint id={`${blockId}_header_bottom_tint`} tint={tint} />
+        </Animated.View>
+      </Animated.View>
       <EdgeInsetContext.Provider value={INSET}>
         <View style={{ paddingHorizontal: INSET, paddingVertical: 8 }}>{children}</View>
       </EdgeInsetContext.Provider>

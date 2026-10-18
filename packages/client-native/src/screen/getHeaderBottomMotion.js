@@ -23,15 +23,18 @@ const FADE_DISTANCE = 6;
  * How a Screen's headerBottom moves with the page: `translateY`, the distance the page's top has
  * scrolled past the navigation bar's bottom edge (0 while it is at or below the bar, so the strip
  * rides with the content as a large title collapses or the page is pulled to refresh), and
- * `pinnedOpacity`, which fades the strip's surface and hairline in over the first 6pt pinned.
+ * `pinnedOpacity`, which fades the strip's surface and hairline in over the first 6pt pinned,
+ * and `tintOffset`, where the top of the page's scroll view is in the surface while the strip is
+ * pinned, so the surface draws the page's backgroundTint where the page draws it.
  *
  * @param {Object} params
+ * @param {number} params.cover How far the strip's surface reaches above the strip.
  * @param {Object|number} params.headerInset Where the bar's bottom edge is in the page scroll
  *   view's frame.
  * @param {Object|number} params.scrollY The page scroll view's vertical offset.
- * @returns {{ pinnedOpacity: Object, translateY: Object }} Animated values.
+ * @returns {{ pinnedOpacity: Object, tintOffset: Object, translateY: Object }} Animated values.
  */
-function getHeaderBottomMotion({ headerInset, scrollY }) {
+function getHeaderBottomMotion({ cover, headerInset, scrollY }) {
   const scrolledPast = Animated.add(scrollY, headerInset);
   return {
     pinnedOpacity: scrolledPast.interpolate({
@@ -39,6 +42,8 @@ function getHeaderBottomMotion({ headerInset, scrollY }) {
       inputRange: [0, FADE_DISTANCE],
       outputRange: [0, 1],
     }),
+    // Pinned, the strip's top is at the bar's bottom edge, and its surface's top `cover` above.
+    tintOffset: Animated.subtract(cover, headerInset),
     translateY: scrolledPast.interpolate({
       extrapolateLeft: 'clamp',
       inputRange: [0, 1],

@@ -57,6 +57,32 @@ export default {
         description:
           'Show the title as an iOS large title, which collapses into the header as the page scrolls. Other platforms show the standard title.',
       },
+      backgroundTint: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['color'],
+        description:
+          "A soft wash of colour at the top of the screen, such as a record's space colour: a vertical gradient from the colour at the top (35% in light mode, 45% in dark mode) easing to clear at `height` of the screen height. It is fixed to the screen, behind the large title, the translucent navigation bar and the content, and continues behind a pinned `headerBottom`. A change of colour cross-fades over 250ms.",
+        properties: {
+          color: {
+            type: 'string',
+            description:
+              'The tint colour: a hex or CSS colour, a theme token such as `colorPrimary`, or a palette hue such as `blue`.',
+          },
+          colorDark: {
+            type: 'string',
+            description: 'The tint colour in dark mode. Defaults to `color`.',
+          },
+          height: {
+            type: 'number',
+            minimum: 0,
+            maximum: 1,
+            default: 0.15,
+            description:
+              'Where the tint has faded to clear, as a fraction of the screen height from the top.',
+          },
+        },
+      },
       presentation: {
         type: 'string',
         enum: ['card', 'modal', 'sheet'],
