@@ -402,6 +402,7 @@ The build checks that:
 - A shell lists each plugin once.
 - A package has one version across root `plugins` and every shell's `plugins`, since the app runs one version of a plugin.
 - A mobile page uses a plugin's native blocks and actions only when every shell lists that plugin, since every shell opens every mobile page. The error names the page, the block or action and the shell that lacks the plugin.
+- A plugin's native block or action type is not named like a built-in native type, such as `Box` or `SetState`. Set a `typePrefix`.
 
 A shell with plugins gets its own runtime version, so it builds and updates on its own instead of sharing its profile's builds and updates. A change of a plugin's version or options needs a native build.
 
@@ -422,7 +423,7 @@ A Lowdefy shell plugin is an npm package that exports:
 
 - `./shell`: CommonJS, an object with the native code it brings: `capabilities`, `modules` (`{ [package]: nativeModuleName }`), `plugins` (Expo config plugin entries, or a function of the entry's `options` that returns them), `permissions` (iOS `Info.plist` keys and Android permissions), `privacyReasons` (`{ category, reasons }` for each required-reason API) and `dataCollected` (`{ type, purpose }`).
 - `./native`: Optional. Its native block and action types, as named exports `blocks` and `actions`.
-- `./types`: Optional. Its type names, with the native ones under `native: { blocks, actions, blockMetas, icons }`, so the build knows them.
+- `./types`: Optional. Its type names, with the native ones under `native: { blocks, actions, blockMetas, icons }`, so the build knows them. A native-only plugin, such as a wrapped device-management SDK, leaves it out and adds no types. A plugin in root `plugins` must export it.
 
 Its native modules are `peerDependencies` at exact versions, beside an `expo` peer range, and every peer is marked optional in `peerDependenciesMeta`, so the web server's install leaves the native code out:
 
