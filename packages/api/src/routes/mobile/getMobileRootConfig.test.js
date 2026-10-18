@@ -51,6 +51,10 @@ const mobileConfig = {
   shells: [{ id: 'field', ios: { bundleId: 'com.example.field', teamId: 'TEAM' } }],
 };
 
+const events = { onInit: { try: [{ id: 'set', type: 'SetGlobal', params: { ready: true } }] } };
+
+const appMeta = { slug: 'field-app', buildId: 'build-1' };
+
 function createReadConfigFile(files) {
   return async function readConfigFile(file) {
     return {
@@ -58,15 +62,20 @@ function createReadConfigFile(files) {
       'mobile/config.json': mobileConfig,
       'mobile/pageIndex.json': pageIndex,
       'mobile/typeSets.json': typeSets,
+      'events.json': events,
+      'global.json': { region: 'eu' },
       ...files,
     }[file];
   };
 }
 
 test('getMobileRootConfig gives a signed-out caller only the public mobile pages', async () => {
-  const context = testContext({ readConfigFile: createReadConfigFile() });
+  const context = testContext({ appMeta, readConfigFile: createReadConfigFile() });
   expect(await getMobileRootConfig(context)).toEqual({
+    events,
     homePageId: 'today',
+    lowdefyApp: appMeta,
+    lowdefyGlobal: { region: 'eu' },
     minShellVersion: '7.4.0',
     menus: {
       tabs: [{ pageId: 'today', title: 'Today', icon: 'House', iconData: houseIcon }],

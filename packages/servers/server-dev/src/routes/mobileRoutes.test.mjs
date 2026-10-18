@@ -136,6 +136,7 @@ test('the dev mobile root lists the paths of the pages the caller may open', asy
   expect(res.status).toEqual(200);
   expect(await res.json()).toEqual({
     homePageId: 'today',
+    lowdefyGlobal: {},
     minShellVersion: null,
     menus: { tabs: [{ pageId: 'today', title: 'Today' }] },
     pageIndex: [
