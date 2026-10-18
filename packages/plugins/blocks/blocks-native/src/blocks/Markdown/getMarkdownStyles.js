@@ -39,7 +39,8 @@ function getHeadingStyle({ fontSize, lineHeight, tokens }) {
  *
  * @param {Object} params
  * @param {Object} params.tokens The computed antd tokens for the mode showing.
- * @returns {{ styles: Object, theme: Object }} react-native-marked's styles and theme colours.
+ * @returns {{ listStyle: Object, styles: Object, theme: Object }} The space below a list, and
+ *   react-native-marked's styles and theme colours.
  */
 function getMarkdownStyles({ tokens }) {
   const lineHeight = tokens.fontSize * tokens.lineHeight;
@@ -65,6 +66,7 @@ function getMarkdownStyles({ tokens }) {
     fontWeight: 'normal',
   };
   return {
+    listStyle: { marginBottom: tokens.fontSize },
     theme: {
       colors: {
         border: tokens.colorBorderSecondary,
@@ -94,7 +96,6 @@ function getMarkdownStyles({ tokens }) {
       hr: { borderBottomColor: tokens.colorSplit, marginVertical: tokens.margin },
       li: text,
       link: { ...text, color: tokens.colorLink, fontStyle: 'normal' },
-      list: { marginBottom: tokens.fontSize },
       paragraph: { marginBottom: tokens.fontSize, paddingVertical: 0 },
       strikethrough: { ...text, textDecorationLine: 'line-through' },
       strong: { ...text, fontWeight: String(tokens.fontWeightStrong) },

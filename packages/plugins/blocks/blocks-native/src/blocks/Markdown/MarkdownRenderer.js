@@ -15,17 +15,27 @@
 */
 
 import React from 'react';
-import { Pressable, Text } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { Renderer } from 'react-native-marked';
 
 // react-native-marked's renderer, with links pressed through the block's onLinkPress and raw
 // html dropped when skipHtml is set. Raw html is otherwise drawn as its source text, as the web
-// block escapes it.
+// block escapes it. The library applies a list's style to each item's marker, so the space
+// below a list is a view around it.
 class MarkdownRenderer extends Renderer {
-  constructor({ onLinkPress, skipHtml }) {
+  constructor({ listStyle, onLinkPress, skipHtml }) {
     super();
+    this.listStyle = listStyle;
     this.onLinkPress = onLinkPress;
     this.skipHtml = skipHtml;
+  }
+
+  list(ordered, li, markerStyle, textStyle, startIndex) {
+    return (
+      <View key={this.getKey()} style={this.listStyle}>
+        {super.list(ordered, li, markerStyle, textStyle, startIndex)}
+      </View>
+    );
   }
 
   link(children, href, styles, title) {

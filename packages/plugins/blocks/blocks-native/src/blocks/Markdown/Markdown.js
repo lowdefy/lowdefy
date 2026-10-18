@@ -32,11 +32,16 @@ function Markdown({ events, methods, properties, styles = {} }) {
   const { isDark, tokens } = useComponentTokens();
   const hasOnLinkPress = Boolean(events.onLinkPress);
   const skipHtml = properties.skipHtml === true;
-  const { styles: markdownStyles, theme } = useMemo(() => getMarkdownStyles({ tokens }), [tokens]);
+  const {
+    listStyle,
+    styles: markdownStyles,
+    theme,
+  } = useMemo(() => getMarkdownStyles({ tokens }), [tokens]);
   const tokenizer = useMemo(() => new MarkdownTokenizer(), []);
   const renderer = useMemo(
     () =>
       new MarkdownRenderer({
+        listStyle,
         onLinkPress: (href) => {
           if (hasOnLinkPress) {
             methods.triggerEvent({ name: 'onLinkPress', event: { href } });
@@ -46,7 +51,7 @@ function Markdown({ events, methods, properties, styles = {} }) {
         },
         skipHtml,
       }),
-    [hasOnLinkPress, methods, skipHtml]
+    [hasOnLinkPress, listStyle, methods, skipHtml]
   );
   const elements = useMarkdown(properties.content ?? '', {
     colorScheme: isDark ? 'dark' : 'light',
