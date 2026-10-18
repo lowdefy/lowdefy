@@ -18,7 +18,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { type } from '@lowdefy/helpers';
 
+import DictationButton from '../../shared/dictation/DictationButton.js';
+import DictationWarning from '../../shared/dictation/DictationWarning.js';
+import ListeningRow from '../../shared/dictation/ListeningRow.js';
+import PartialSpans from '../../shared/dictation/PartialSpans.js';
 import SystemIcon from '../../shared/SystemIcon.js';
+import useChatDictation from './useChatDictation.js';
 
 const LINE_HEIGHT = 22;
 const MAX_LINES = 6;
@@ -104,11 +109,19 @@ function PromptChips({ blockId, colors, onPress, prompts }) {
  * The text is held here, in the footer's own tree, so typing renders the composer and not the
  * conversation. `fill` ({ text, nonce }) replaces it (the setInput method).
  *
+ * A mic inside the field, before send, dictates on the phone (useChatDictation). Words still being
+ * heard show grey at the cursor; each final result goes into the text as said. While a reply
+ * streams, the reply's stop holds the send slot and dictation's red stop stays in the mic slot. A
+ * prompt chip and `fill` drop a running session first, and AgentChat's New chat does through
+ * `controlRef`.
+ *
  * @param {Object} props
  * @param {string} props.blockId
  * @param {boolean} props.busy A reply is on its way: the send button stops it.
  * @param {Object} props.colors getTimelineColors.
  * @param {Object} props.components The block's components.
+ * @param {{ current: Object }} props.controlRef Set to `{ cancelDictation }` for the block.
+ * @param {boolean} props.dictation Show the mic.
  * @param {boolean} props.disabled Nothing can be sent (the transcript is loading).
  * @param {{ text: string, nonce: number }|null} props.fill
  * @param {boolean} props.newChat Show the new-chat button.
@@ -128,6 +141,8 @@ function ChatComposer({
   busy,
   colors,
   components,
+  controlRef,
+  dictation: dictationEnabled,
   disabled,
   fill,
   newChat,
@@ -145,23 +160,49 @@ function ChatComposer({
   const [text, setText] = useState('');
   const [sending, setSending] = useState(false);
   const inputRef = useRef(null);
+  const dictation = useChatDictation({
+    disabled: disabled || !dictationEnabled,
+    setText,
+    text,
+  });
+  controlRef.current = { cancelDictation: dictation.discard };
+
   const fillNonce = fill?.nonce;
   useEffect(() => {
     if (type.isNone(fill)) return;
+    dictation.discard();
     setText(fill.text);
     if (fill.text !== '') inputRef.current?.focus();
   }, [fillNonce]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const empty = text.trim() === '';
+  // Words still being heard count, so send can stop the mic and send them.
+  const empty = text.trim() === '' && (!dictation.listening || dictation.partial.trim() === '');
   const send = async () => {
     if (empty || sending || disabled) return;
     setSending(true);
     try {
-      const sent = await onSend(text);
+      if (dictation.listening) {
+        // Up to 1.5 s for the final words; anything later would land in a sent composer.
+        await dictation.finish();
+        dictation.endWithText();
+      }
+      dictation.clearWarning();
+      const current = dictation.currentText();
+      if (current.trim() === '') return;
+      const sent = await onSend(current);
       if (sent) setText('');
     } finally {
       setSending(false);
     }
+  };
+  // Typing ends the session; the words it showed become text as they were shown.
+  const onChangeText = (next) => {
+    dictation.endWithText();
+    setText(next);
+  };
+  const onPromptPress = (prompt) => {
+    dictation.discard();
+    onPrompt(prompt);
   };
 
   return (
@@ -189,8 +230,27 @@ function ChatComposer({
         </Pressable>
       ) : null}
       {prompts.length > 0 ? (
-        <PromptChips blockId={blockId} colors={colors} onPress={onPrompt} prompts={prompts} />
+        <PromptChips blockId={blockId} colors={colors} onPress={onPromptPress} prompts={prompts} />
       ) : null}
+      <View style={styles.dictationLines}>
+        <DictationWarning
+          colors={colors}
+          components={components}
+          testID={`${blockId}_dictation_warning`}
+          translate={translate}
+          warning={dictation.warning}
+        />
+        {dictation.listening ? (
+          <ListeningRow
+            colors={colors}
+            components={components}
+            level={dictation.level}
+            onCancel={dictation.discard}
+            testID={`${blockId}_listening`}
+            translate={translate}
+          />
+        ) : null}
+      </View>
       <View style={styles.row}>
         {newChat ? (
           <RoundButton
@@ -216,14 +276,37 @@ function ChatComposer({
             accessibilityLabel={placeholder}
             editable={!disabled}
             multiline
-            onChangeText={setText}
+            onChangeText={onChangeText}
+            onSelectionChange={dictation.onSelectionChange}
             placeholder={placeholder}
             placeholderTextColor={colors.tertiary}
             ref={inputRef}
+            selection={dictation.selection}
             style={[styles.input, { color: colors.label }]}
             testID={`${blockId}_input`}
-            value={text}
-          />
+            value={dictation.listening ? undefined : text}
+          >
+            {dictation.listening ? (
+              <PartialSpans
+                color={colors.secondary}
+                partial={dictation.partial}
+                selection={dictation.anchor}
+                text={text}
+              />
+            ) : null}
+          </TextInput>
+          {dictation.available ? (
+            <View style={styles.mic}>
+              <DictationButton
+                colors={colors}
+                components={components}
+                onPress={dictation.toggle}
+                status={dictation.status}
+                testID={`${blockId}_dictation`}
+                translate={translate}
+              />
+            </View>
+          ) : null}
           {busy ? (
             <RoundButton
               accessibilityLabel={translate('agent.chat.stop')}
@@ -260,6 +343,7 @@ function ChatComposer({
 
 const styles = StyleSheet.create({
   bar: { paddingBottom: 8, paddingTop: 8 },
+  dictationLines: { paddingHorizontal: 12 },
   chipStrip: { flexGrow: 0, marginBottom: 8 },
   chips: { gap: 8, paddingHorizontal: 12 },
   chip: {
@@ -313,6 +397,8 @@ const styles = StyleSheet.create({
   },
   // Level with the send button inside the field.
   newChat: { marginBottom: 4 },
+  // The 28 pt mic centred on the 32 pt send button beside it.
+  mic: { marginBottom: (BUTTON - 28) / 2, marginRight: 4 },
   stopSquare: { borderRadius: 3, height: 11, width: 11 },
 });
 

@@ -48,6 +48,7 @@ export default {
     'CircleX',
     'FileText',
     'MessagesSquare',
+    'Mic',
     'Paperclip',
     'RotateCcw',
     'Search',
@@ -58,6 +59,7 @@ export default {
     'Trash2',
     'TriangleAlert',
     'Wrench',
+    'X',
   ],
   valueType: null,
   cssKeys: {
@@ -129,6 +131,12 @@ export default {
           'The transcript to show, when the app keeps its threads: an array loads it, null clears the chat. Not read with `threads`.',
       },
       linkChips,
+      dictation: {
+        type: 'boolean',
+        default: true,
+        description:
+          'Mobile only. Show a mic in the composer, before send, that turns speech into text on the phone. One tap starts listening and the next stops; the cross on the listening row throws away what was said. The words go in as said. The mic shows only where the phone recognises its language on the device.',
+      },
       loading: {
         type: 'boolean',
         description:
