@@ -100,7 +100,7 @@ const nativeBlockTypes = {
       'TriangleAlert',
       'X',
     ],
-    DateSelector: [],
+    DateSelector: ['ChevronsUpDown'],
     Divider: [],
     Empty: ['Inbox'],
     Icon: ['loading'],
@@ -211,7 +211,7 @@ const nativeBlockTypes = {
     DateSelector: {
       category: 'input',
       valueType: 'date',
-      cssKeys: ['element', 'label', 'extra', 'feedback'],
+      cssKeys: ['element', 'label', 'extra', 'feedback', 'value'],
       nativeIgnored: [
         'label.align',
         'label.lg',
@@ -273,7 +273,7 @@ const nativeBlockTypes = {
     NumberInput: {
       category: 'input',
       valueType: 'number',
-      cssKeys: ['element', 'label', 'extra', 'feedback'],
+      cssKeys: ['element', 'label', 'extra', 'feedback', 'value'],
       nativeIgnored: [
         'changeOnWheel',
         'controls',
@@ -412,7 +412,7 @@ const nativeBlockTypes = {
     TextInput: {
       category: 'input',
       valueType: 'string',
-      cssKeys: ['element', 'label', 'extra', 'feedback'],
+      cssKeys: ['element', 'label', 'extra', 'feedback', 'value'],
       nativeIgnored: [
         'label.align',
         'label.lg',

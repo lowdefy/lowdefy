@@ -35,13 +35,14 @@ const bound = {
 
 export default {
   category: 'input',
-  icons: [],
+  icons: ['ChevronsUpDown'],
   valueType: 'date',
   cssKeys: {
-    element: 'The DateSelector field.',
-    label: 'The DateSelector label.',
+    element: 'The DateSelector field, or the row with `variant: row`.',
+    label: 'The DateSelector label (the row title with `variant: row`).',
     extra: 'The DateSelector extra content.',
     feedback: 'The DateSelector validation feedback.',
+    value: 'The day with `variant: row`.',
   },
   events: {
     onChange: {
@@ -95,7 +96,11 @@ export default {
       suffixIcon: webIcon,
       theme,
       title: inputTitle,
-      variant,
+      variant: {
+        ...variant,
+        enum: [...variant.enum, 'row'],
+        description: `${variant.description} \`row\` (mobile only) is an iOS Settings-style row for an insetGrouped List or a Card with \`padding: none\`: the title at the left in Body and the day at the right in the secondary label colour with an up-down chevron (its placeholder defaults to "Not set"), at the height and padding of a Selector menu row. Pressing the row opens a native menu: Today, Tomorrow, Next week (a week from today), "Pick a date…", which opens the calendar under the row, and Clear while there is a value and \`allowClear\` is not false. Shortcuts outside \`disabledDates\` are dimmed.`,
+      },
     },
   },
 };

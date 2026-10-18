@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
+import { TextInput } from 'react-native';
 import { act, fireEvent, screen } from '@testing-library/react-native';
 
-import { renderPage } from '../../test/renderPage.js';
+import { ios, renderPage, styleOf } from '../../test/renderPage.js';
 
 function formPage(inputs, events = {}) {
   return {
@@ -186,4 +187,41 @@ test('a search TextInput is a search field with a clear button and Cancel while 
   });
   expect(screen.getByTestId('m_search_input').props.value).toBe('');
   expect(screen.getByText('Cleared')).toBeTruthy();
+});
+
+test('the row variant is a Settings row: the title at the left, the text right-aligned', async () => {
+  const { calls } = await renderPage({
+    pageConfig: formPage([
+      {
+        id: 'name',
+        type: 'TextInput',
+        properties: { title: 'Name', variant: 'row', allowClear: true },
+        events: {
+          onClear: [{ id: 'record', type: 'Record', params: { name: 'clear' } }],
+        },
+      },
+    ]),
+  });
+  const input = await screen.findByTestId('name_input');
+  expect(screen.getByText('Name')).toBeTruthy();
+  expect(input.props.placeholder).toBe('Not set');
+  expect(styleOf(input)).toMatchObject({
+    color: ios.light.colorSecondaryLabel,
+    fontSize: 17,
+    textAlign: 'right',
+  });
+  await act(async () => {
+    fireEvent.press(screen.getByTestId('name_row'));
+  });
+  expect(TextInput.prototype.focus).toHaveBeenCalledTimes(1);
+  await act(async () => {
+    fireEvent(screen.getByTestId('name_input'), 'focus');
+    fireEvent.changeText(screen.getByTestId('name_input'), 'Ada');
+  });
+  expect(screen.getByText('Ada')).toBeTruthy();
+  await act(async () => {
+    fireEvent.press(screen.getByTestId('name_clear'));
+  });
+  expect(screen.getByTestId('name_input').props.value).toBe('');
+  expect(calls).toEqual([{ name: 'clear' }]);
 });
