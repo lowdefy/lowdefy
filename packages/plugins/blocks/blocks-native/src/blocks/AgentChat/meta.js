@@ -30,6 +30,37 @@ const prompt = {
 
 const endpointId = { type: 'string' };
 
+const welcomeProperties = {
+  title: { type: 'string' },
+  description: { type: 'string' },
+  icon: {
+    type: 'string',
+    description:
+      'Mobile: a Lucide icon name for the glyph where there are no SF Symbols. Defaults to Sparkles.',
+  },
+  symbol: {
+    type: 'string',
+    description: 'Mobile only: the SF Symbol drawn on iOS. Defaults to sparkles.',
+  },
+  prompts: {
+    type: 'array',
+    description:
+      'Starter prompts, shown as chips above the composer. Pressing one sends its label.',
+    items: prompt,
+  },
+};
+
+const welcome = {
+  type: 'object',
+  description:
+    'The empty conversation: a glyph, a title and a description, and prompt chips above the composer.',
+  properties: {
+    ...welcomeProperties,
+    variant: { nativeIgnored: true, type: 'string', description: 'Ignored on mobile.' },
+    tracks: { nativeIgnored: true, type: 'array', description: 'Ignored on mobile.' },
+  },
+};
+
 export default {
   category: 'display',
   // The internal events the block registers: update-page-state's SetState, Copy, a link press,
@@ -99,7 +130,7 @@ export default {
     clearMessages: 'Clear all messages from the chat.',
     deleteMessage: 'Delete a message. Accepts args.messageId.',
     newChat:
-      'Mobile only. Start a new conversation, as the composer’s new-chat button does. With `threads` the block mints and keeps it; otherwise onThreadChange gives its conversationId.',
+      'Mobile only. Start a new conversation, as the composer’s new-chat button does. With `threads` the block mints and keeps it; otherwise onThreadChange gives its conversationId. Accepts args `{ sharedState, welcome, input, tag, title }`, as the `seed` property, to start a chat about a record.',
     openThreads:
       'Mobile only. Open the sheet of recent conversations. Needs `threads` with a list endpoint. Wire it to a Screen header action.',
     regenerate: 'Regenerate the last reply, or args.messageId.',
@@ -149,30 +180,37 @@ export default {
         description:
           'Send `sharedState` as read-only context: the agent is not offered update-page-state.',
       },
-      welcome: {
+      welcome,
+      seed: {
         type: 'object',
+        additionalProperties: false,
         description:
-          'The empty conversation: a glyph, a title and a description, and prompt chips above the composer.',
+          'Mobile only. What the chat starts with when it mounts with no thread resumed (no `threads`, `threads.resume` false, or no thread to resume), so a page can open a chat about a record. The newChat method takes the same object as its args. The composer’s new-chat button starts an unseeded chat.',
         properties: {
-          title: { type: 'string' },
-          description: { type: 'string' },
-          icon: {
+          sharedState: {
+            type: 'object',
+            description:
+              'Merged under `sharedState` for this conversation: sent to the agent each turn, and writable through update-page-state as the page’s shared keys are. The page’s `sharedState` wins where both set a key.',
+          },
+          welcome: {
+            type: 'object',
+            description: 'Laid over the `welcome` property while this conversation is empty.',
+            properties: welcomeProperties,
+          },
+          input: {
+            type: 'string',
+            description: 'Text put in the composer, unsent, for the person to edit or send.',
+          },
+          tag: {
             type: 'string',
             description:
-              'Mobile: a Lucide icon name for the glyph where there are no SF Symbols. Defaults to Sparkles.',
+              'With `threads`, the tag saved onto this thread in place of `threads.tag`.',
           },
-          symbol: {
+          title: {
             type: 'string',
-            description: 'Mobile only: the SF Symbol drawn on iOS. Defaults to sparkles.',
-          },
-          prompts: {
-            type: 'array',
             description:
-              'Starter prompts, shown as chips above the composer. Pressing one sends its label.',
-            items: prompt,
+              'With `threads`, the thread’s name, kept rather than named from its first exchange. onThreadChange gives it as title.',
           },
-          variant: { nativeIgnored: true, type: 'string', description: 'Ignored on mobile.' },
-          tracks: { nativeIgnored: true, type: 'array', description: 'Ignored on mobile.' },
         },
       },
       suggestions: {

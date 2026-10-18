@@ -597,3 +597,137 @@ test('a reply draws an app path link as a chip by pattern, and a press opens it 
     expect.objectContaining({ pathname: '/ACME/tasks/ACME-647' })
   );
 });
+
+const recordSeed = {
+  sharedState: { task: { key: 'ACME-12', title: 'Fix the menu' } },
+  welcome: { title: 'About ACME-12', description: 'Ask about Fix the menu.' },
+  input: 'What is left on ACME-12?',
+  tag: 'ACME-12',
+  title: 'ACME-12 questions',
+};
+
+test('newChat with a seed starts a chat about a record: its welcome, its input and its shared state', async () => {
+  const { calls, host } = await renderPage({
+    pageConfig: page([
+      {
+        id: 'ask',
+        type: 'Button',
+        properties: { title: 'Ask about it' },
+        events: {
+          onClick: [
+            {
+              id: 'new',
+              type: 'CallMethod',
+              params: { blockId: 'nigel', method: 'newChat', args: [recordSeed] },
+            },
+          ],
+        },
+      },
+      {
+        id: 'nigel',
+        type: 'AgentChat',
+        properties: {
+          agentId: 'nigel',
+          sharedState: { space: 'ACME' },
+          welcome: { title: 'Hi', prompts: [{ label: 'What is waiting on me?' }] },
+        },
+        events: { onThreadChange: record('thread') },
+      },
+    ]),
+  });
+  expect(screen.getByText('Hi')).toBeTruthy();
+  await act(async () => {
+    fireEvent.press(screen.getByText('Ask about it'));
+  });
+  expect(screen.getByText('About ACME-12')).toBeTruthy();
+  expect(screen.getByText('Ask about Fix the menu.')).toBeTruthy();
+  const footer = screen.getByTestId('screen-footer');
+  // The seed's welcome is laid over the property's, so its prompts stay.
+  expect(within(footer).getByText('What is waiting on me?')).toBeTruthy();
+  expect(within(footer).getByTestId('nigel_input').props.value).toEqual('What is left on ACME-12?');
+  expect(calls.find((call) => call.name === 'thread').event.title).toEqual('ACME-12 questions');
+  host.streamFetch.mockImplementation(async () => sse(textReply({ text: 'Only the review.' })));
+  await act(async () => {
+    fireEvent.press(within(footer).getByTestId('nigel_send'));
+  });
+  await waitFor(() => expect(screen.getByText('Only the review.')).toBeTruthy());
+  const body = JSON.parse(host.streamFetch.mock.calls[0][1].body);
+  expect(body.sharedState).toEqual({
+    task: { key: 'ACME-12', title: 'Fix the menu' },
+    space: 'ACME',
+  });
+  expect(body.messages[0].parts).toEqual([{ type: 'text', text: 'What is left on ACME-12?' }]);
+});
+
+test('with threads, the seed property starts the chat when there is no thread to resume, saved with its tag and title', async () => {
+  const endpoints = createThreadEndpoints();
+  const { host } = await renderPage({
+    actions: { CallAPI: endpoints.CallAPI },
+    pageConfig: page([
+      {
+        id: 'nigel',
+        type: 'AgentChat',
+        properties: {
+          agentId: 'nigel',
+          seed: recordSeed,
+          threads: { module: 'ai-assistant', scope: 'acme', tag: 'tasks' },
+        },
+      },
+    ]),
+  });
+  await waitFor(() => expect(screen.getByText('About ACME-12')).toBeTruthy());
+  const footer = screen.getByTestId('screen-footer');
+  await waitFor(() =>
+    expect(within(footer).getByTestId('nigel_input').props.value).toEqual(
+      'What is left on ACME-12?'
+    )
+  );
+  host.streamFetch.mockImplementation(async () => sse(textReply({ text: 'Only the review.' })));
+  await act(async () => {
+    fireEvent.press(within(footer).getByTestId('nigel_send'));
+  });
+  await waitFor(() => expect(screen.getByText('Only the review.')).toBeTruthy());
+  const saves = endpoints.calls.filter((call) => call.endpointId === 'ai-assistant/save-thread');
+  await waitFor(() => expect(saves.length).toBeGreaterThan(1));
+  saves.forEach((save) =>
+    expect(save.payload).toMatchObject({
+      scope: 'acme',
+      tag: 'ACME-12',
+      title: 'ACME-12 questions',
+    })
+  );
+  // The seed's title is the thread's name, so it is not named from the first exchange.
+  expect(endpoints.calls.some((call) => call.endpointId === 'ai-assistant/title-thread')).toBe(
+    false
+  );
+});
+
+test('with threads, a resumed thread opens in place of the seed property', async () => {
+  const endpoints = createThreadEndpoints({
+    active: {
+      conversationId: 'acme_1',
+      title: 'Payroll questions',
+      messages: storedThread.messages,
+    },
+    stored: { acme_1: storedThread },
+  });
+  await renderPage({
+    actions: { CallAPI: endpoints.CallAPI },
+    pageConfig: page([
+      {
+        id: 'nigel',
+        type: 'AgentChat',
+        properties: {
+          agentId: 'nigel',
+          seed: recordSeed,
+          threads: { module: 'ai-assistant', scope: 'acme' },
+        },
+      },
+    ]),
+  });
+  await waitFor(() => expect(screen.getByText('PEL-645 holds it.')).toBeTruthy());
+  expect(screen.queryByText('About ACME-12')).toBeNull();
+  expect(
+    within(screen.getByTestId('screen-footer')).getByTestId('nigel_input').props.value
+  ).toEqual('');
+});

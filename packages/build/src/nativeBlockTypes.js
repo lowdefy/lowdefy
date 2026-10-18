@@ -152,6 +152,7 @@ const nativeBlockTypes = {
         'messageDisplay.showSources',
         'messageDisplay.showStepSeparators',
         'messageDisplay.sourcesDisplay',
+        'seed.welcome.prompts.$.icon',
         'sender.allowSpeech',
         'sender.attachments',
         'sender.classNames',
