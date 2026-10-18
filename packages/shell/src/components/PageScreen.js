@@ -24,11 +24,13 @@ import React, {
 } from 'react';
 import { Platform } from 'react-native';
 import { useFocusEffect, useIsFocused, useNavigation, useRoute } from 'expo-router';
+import { useAnimatedHeaderHeight } from 'expo-router/native-stack';
 import { LowdefyPage } from '@lowdefy/client-native';
 
 import evaluateJsEntries from '../js/evaluateJsEntries.js';
 import getPageView from '../session/getPageView.js';
 import getStackOptions from '../navigation/getStackOptions.js';
+import isPageUnderHeader from '../navigation/isPageUnderHeader.js';
 import LoadingScreen from './LoadingScreen.js';
 import MessageScreen from './MessageScreen.js';
 import OtherPageScreen from './OtherPageScreen.js';
@@ -59,6 +61,22 @@ function useSearchAutoFocus({ focused }) {
   return { searchBarRef, setAutoFocus };
 }
 
+// Where the navigation bar's bottom edge is in the page scroll view's frame, which a Screen's
+// headerBottom pins under: the native stack's header height, an Animated value that follows a
+// large title as it collapses, when the page scrolls under the bar; 0 when it sits below it.
+function useHeaderInset() {
+  const headerHeight = useAnimatedHeaderHeight();
+  const [underHeader, setUnderHeader] = useState(() =>
+    isPageUnderHeader({ options: {}, platform: Platform.OS, platformVersion: Platform.Version })
+  );
+  const updateHeaderInset = useCallback((options) => {
+    setUnderHeader(
+      isPageUnderHeader({ options, platform: Platform.OS, platformVersion: Platform.Version })
+    );
+  }, []);
+  return { headerInset: underHeader ? headerHeight : 0, updateHeaderInset };
+}
+
 /**
  * One screen of the frame: the Lowdefy page at `path`, from the cache, with its header drawn from
  * the Screen page's options. The page keeps its state per route instance (the route's key), so
@@ -78,6 +96,7 @@ function PageScreen({ path, query = '' }) {
   const route = useRoute();
   const focused = useIsFocused();
   const { searchBarRef, setAutoFocus } = useSearchAutoFocus({ focused });
+  const { headerInset, updateHeaderInset } = useHeaderInset();
   const [loadError, setLoadError] = useState(null);
   const view = getPageView({ path, shell, state });
   const fullPath = `/${path}${query ? `?${query}` : ''}`;
@@ -110,8 +129,9 @@ function PageScreen({ path, query = '' }) {
     (options) => {
       navigation.setOptions(getStackOptions({ options, platform: Platform.OS, searchBarRef }));
       setAutoFocus(options.headerSearch?.autoFocus === true);
+      updateHeaderInset(options);
     },
-    [navigation, searchBarRef, setAutoFocus]
+    [navigation, searchBarRef, setAutoFocus, updateHeaderInset]
   );
 
   if (view.view === 'update') {
@@ -155,6 +175,7 @@ function PageScreen({ path, query = '' }) {
       key={`${state.generation}:${view.page.hash ?? view.page.etag ?? ''}`}
       core={core}
       focused={focused}
+      headerInset={headerInset}
       host={host}
       instanceId={route.key}
       jsMap={jsMap}

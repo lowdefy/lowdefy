@@ -22,6 +22,9 @@ import reloadApp from './reloadApp.js';
 import renderPageScreen from '../../test/renderPageScreen.js';
 import { createRoot } from '../../test/fixtures.js';
 
+// The native stack's header height, which a Screen's headerBottom pins under on iOS.
+jest.mock('expo-router/native-stack', () => ({ useAnimatedHeaderHeight: () => 0 }));
+
 jest.mock('expo-router', () => ({
   DarkTheme: { fonts: {} },
   DefaultTheme: { fonts: {} },
