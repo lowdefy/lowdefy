@@ -17,12 +17,12 @@
 import { jest } from '@jest/globals';
 import { AppState, Platform } from 'react-native';
 import { act, renderHook } from '@testing-library/react-native';
+
 import {
   emitSpeechEvent,
   ExpoSpeechRecognitionModule as speech,
   setSpeechRecognition,
-} from 'expo-speech-recognition';
-
+} from '../../test/expoSpeechRecognition.js';
 import useDictation from './useDictation.js';
 
 function partialResult(transcript) {

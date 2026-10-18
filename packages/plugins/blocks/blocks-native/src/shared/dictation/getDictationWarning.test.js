@@ -27,9 +27,7 @@ test('getDictationWarning gives no warning for a cancelled or silent session', (
 });
 
 test('getDictationWarning gives failed for any other error', () => {
-  ['audio-capture', 'interrupted', 'language-not-supported', 'busy', 'unknown'].forEach(
-    (error) => {
-      expect(getDictationWarning({ error })).toBe('failed');
-    }
-  );
+  ['audio-capture', 'interrupted', 'language-not-supported', 'busy', 'unknown'].forEach((error) => {
+    expect(getDictationWarning({ error })).toBe('failed');
+  });
 });
