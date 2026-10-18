@@ -38,10 +38,11 @@ function getDatabase() {
   return db;
 }
 
-// Everything one app needs in the shell: its auth, session, core host and locale. auth.start reads the
-// session token and starts the session; onSignedOut is called once a sign-out removed the person's
-// data, to open the app afresh.
-async function createShellApp({ app, onSignedOut, shell }) {
+// Everything the shell's one app (shell.app) needs: its auth, session, core host and locale.
+// auth.start reads the session token and starts the session; onSignedOut is called once a sign-out
+// removed the person's data, to open the app afresh.
+async function createShellApp({ onSignedOut, shell }) {
+  const { app } = shell;
   const apiBase = getAppApiBase({ app, environment: shell.environment });
   const cacheStore = createSqliteCacheStore({ db: getDatabase() });
   const kv = createDeviceStore();

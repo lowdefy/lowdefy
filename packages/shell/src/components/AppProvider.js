@@ -53,9 +53,10 @@ function AppGate({ children }) {
   );
 }
 
-// Opens one app: builds its auth, session and host, renders its last pages from the cache and
-// syncs it with the app's server. A sign-out opens it afresh, with nothing of the person's kept.
-function AppProvider({ app, children, shell }) {
+// Opens the shell's app (shell.app): builds its auth, session and host, renders its last pages from
+// the cache and syncs it with the app's server. A sign-out opens it afresh, with nothing of the
+// person's kept.
+function AppProvider({ children, shell }) {
   const [value, setValue] = useState(null);
   const [openings, setOpenings] = useState(0);
   useEffect(() => {
@@ -63,7 +64,7 @@ function AppProvider({ app, children, shell }) {
     let opened = null;
     setValue(null);
     const onSignedOut = () => setOpenings((count) => count + 1);
-    createShellApp({ app, onSignedOut, shell }).then(({ auth, host, locale, session }) => {
+    createShellApp({ onSignedOut, shell }).then(({ auth, host, locale, session }) => {
       if (!active) return;
       opened = auth;
       setValue({ auth, host, locale, session, shell });
@@ -73,7 +74,7 @@ function AppProvider({ app, children, shell }) {
       active = false;
       opened?.dispose();
     };
-  }, [app, openings, shell]);
+  }, [openings, shell]);
   if (value === null) {
     return <LoadingScreen />;
   }

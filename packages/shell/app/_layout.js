@@ -24,8 +24,8 @@ import { DevShell } from '../src/dev/index.js';
 
 installGetRandomValues();
 
-// The launch screen stays until the first screen is ready: the app picker, or the app's home page
-// from the cache (or from the server on a first launch).
+// The launch screen stays until the first screen is ready: the app's home page from the cache (or
+// from the server on a first launch).
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {

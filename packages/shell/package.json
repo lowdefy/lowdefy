@@ -33,6 +33,7 @@
     "src/*",
     "app.config.ts",
     "babel.config.js",
+    "checkShellConfig.js",
     "metro.config.js",
     "shell.dev.json",
     "shellVariant.js",
@@ -45,7 +46,7 @@
     "export:android": "expo export --platform android --output-dir dist/android",
     "export:ios": "expo export --platform ios --output-dir dist/ios",
     "start": "expo start",
-    "test": "jest && node --test fixtures/hello.test.mjs scripts/createDayjsLocales.test.mjs shellVariant.test.mjs",
+    "test": "jest && node --test fixtures/hello.test.mjs scripts/createDayjsLocales.test.mjs checkShellConfig.test.mjs shellVariant.test.mjs",
     "type-manifest": "node scripts/createTypeManifest.mjs"
   },
   "dependencies": {

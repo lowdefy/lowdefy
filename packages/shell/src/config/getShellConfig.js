@@ -18,8 +18,9 @@ import Constants from 'expo-constants';
 
 /**
  * The shell's config, as app.config.ts built it into the app: shell.json (`id`, `name`,
- * `profile`, `scheme`, `environment`, `store`, `apps: [{ id, name, urls: { <env>: url } }]`) with
- * the shell's `version` and its `typeManifest`.
+ * `profile`, `scheme`, `environment`, `store` and the one app it opens,
+ * `app: { id, name, urls: { <env>: url } }`, checked by checkShellConfig.js) with the shell's
+ * `version` and its `typeManifest`.
  */
 function getShellConfig() {
   return Constants.expoConfig.extra.shell;

@@ -24,7 +24,8 @@ import DevShell from './DevShell.js';
 // The opened app is recorded, not built: its auth, session and screens have their own tests.
 const mockOpened = [];
 jest.mock('../components/AppProvider.js', () => {
-  function AppProvider({ app, children, shell }) {
+  function AppProvider({ children, shell }) {
+    const { app } = shell;
     mockOpened.push({ app, shell });
     const { Text: MockText } = jest.requireActual('react-native');
     return (
@@ -64,7 +65,7 @@ const shell = {
   environment: 'dev',
   scheme: 'lowdefy-dev',
   version: '7.0.0',
-  apps: [{ id: 'dev', name: 'Lowdefy Dev', urls: { dev: 'http://localhost:3000' } }],
+  app: { id: 'dev', name: 'Lowdefy Dev', urls: { dev: 'http://localhost:3000' } },
 };
 
 function createLinking(initialUrl = null) {

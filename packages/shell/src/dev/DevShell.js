@@ -207,11 +207,7 @@ function DevShell({
   }
   return (
     <View collapsable={false} ref={rootRef} style={{ flex: 1 }}>
-      <AppProvider
-        app={devShell.apps[0]}
-        key={`${devShell.apps[0].id}:${openings}`}
-        shell={devShell}
-      >
+      <AppProvider key={`${devShell.app.id}:${openings}`} shell={devShell}>
         <Frame />
         <DevTabClient injections={injections} kv={kv} logs={logs} onApp={onApp} rootRef={rootRef} />
       </AppProvider>

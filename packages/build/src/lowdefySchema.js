@@ -3696,6 +3696,8 @@ export default {
         },
         shells: {
           type: 'array',
+          description:
+            'The shells that open this app. Each shell opens only this app, never another one.',
           items: {
             $ref: '#/definitions/mobileShell',
           },

@@ -61,13 +61,12 @@ test('each dev server is its own app, at its url', () => {
     shell,
     WebSocket: FakeWebSocket,
   });
-  expect(config.apps).toEqual([
-    {
-      id: 'dev-192.168.1.20_3000',
-      name: '192.168.1.20:3000',
-      urls: { dev: 'http://192.168.1.20:3000' },
-    },
-  ]);
+  expect(config.app).toEqual({
+    id: 'dev-192.168.1.20_3000',
+    name: '192.168.1.20:3000',
+    urls: { dev: 'http://192.168.1.20:3000' },
+  });
+  expect(config).not.toHaveProperty('apps');
   expect(config.version).toBe('7.0.0');
 });
 

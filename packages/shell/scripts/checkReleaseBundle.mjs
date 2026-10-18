@@ -46,6 +46,7 @@ import { fileURLToPath } from 'node:url';
 
 const shellRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const require = createRequire(import.meta.url);
+const checkShellConfig = require('../checkShellConfig.js');
 const { DEV_CLIENT_MARKER, getExcludedModules, shellNeedsCamera } = require('../shellVariant.js');
 
 // The modules Lowdefy Dev links that a release shell may leave out, for the --control run.
@@ -68,7 +69,11 @@ function readShell() {
   const configPath = process.env.LOWDEFY_SHELL_CONFIG
     ? path.resolve(process.env.LOWDEFY_SHELL_CONFIG)
     : path.join(shellRoot, 'shell.dev.json');
-  return { configPath, shell: JSON.parse(fs.readFileSync(configPath, 'utf8')) };
+  const shell = checkShellConfig({
+    configPath,
+    shell: JSON.parse(fs.readFileSync(configPath, 'utf8')),
+  });
+  return { configPath, shell };
 }
 
 function variantEnv({ configPath, variant }) {
