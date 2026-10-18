@@ -27,6 +27,7 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 | `screen/ScreenTint.js`, `createTintStore.js`                     | A Screen's backgroundTint, a gradient fixed behind the page, cross-faded     |
 | `screen/getBackgroundTint.js`, `getTintStops.js`                 | The tint's colour and opacity in the mode showing; its eased gradient stops  |
 | `layout/EdgeInsetContext.js`                                     | An area's horizontal padding, which an edge-to-edge block cancels            |
+| `motion/FadeInView.js`, `useReduceMotion.js`                     | Content fading in after a skeleton; the system Reduce Motion setting         |
 | `trace/describeBlock.js`                                         | The trace's element description, by block id                                 |
 | `elements/createElementRegistry.js`, `useElementRef.js`          | Native views by page and block id (`globals.elements`), for native actions   |
 | `icon/Icon.js`                                                   | Draws IconData (the web's icon node data) with `react-native-svg`            |
@@ -36,6 +37,11 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 ## Differences from the web renderer
 
 - `visible: false` draws nothing (the web keeps a hidden `div` for its id).
+- A loading block with a `skeleton` draws the skeleton in its place (`LoadingBlock`). When it
+  stops loading, `CategorySwitch` passes `fadeIn` and `BlockLayout` draws its outer view as a
+  `FadeInView`, so the content fades in over 200ms where the skeleton was (at once with Reduce
+  Motion on). Only a block that showed its own skeleton fades; a separate Skeleton block toggled
+  by `visible` does not, so pages put `loading` and `skeleton` on the block that loads.
 - There are no class names, `Head`, shortcuts, progress bar or antd providers.
 - Layout is `@lowdefy/layout-native` (see its doc). A gapped area is two views (the slot style
   outside, the widened row inside), and a block in it is two views (the placement with the gap

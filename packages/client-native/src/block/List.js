@@ -26,7 +26,7 @@ import useBlockStyles from '../style/useBlockStyles.js';
 const getEvaluatedLayout = (block) => block.eval?.layout;
 
 // A list block: one set of slot functions per item, passed as `list`.
-const List = ({ block, Blocks, category, Component, context, loading, lowdefy }) => {
+const List = ({ block, Blocks, category, Component, context, fadeIn, loading, lowdefy }) => {
   const styles = useBlockStyles({ block, lowdefy });
   const list = Blocks.subSlots[block.id].map((SBlock) => {
     const content = {};
@@ -57,7 +57,12 @@ const List = ({ block, Blocks, category, Component, context, loading, lowdefy })
     return content;
   });
   return (
-    <BlockLayout blockId={block.blockId} layout={block.eval.layout} style={styles.block}>
+    <BlockLayout
+      blockId={block.blockId}
+      fadeIn={fadeIn}
+      layout={block.eval.layout}
+      style={styles.block}
+    >
       <Component
         {...getBlockProps({ block, category, context, loading, lowdefy, styles })}
         list={list}

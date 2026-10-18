@@ -212,3 +212,32 @@
             tone: success
             text: 'Shipped with **{what.carrier}**'
             what: { carrier: DHL Express }
+
+- title: Record links in comments drawn as chips
+  blocks:
+    - id: comments
+      type: ActivityTimeline
+      properties:
+        user:
+          id: u-gerrie
+        linkChips:
+          - scheme: pelican
+            icon: FileText
+            tone: primary
+        entries:
+          - id: c-1
+            type: comment
+            at: '2026-10-18T09:12:00Z'
+            by:
+              id: u-sam
+              name: Sam Tolmay
+            body: Blocked on [PEL-12 Sign in with a passkey](pelican:PEL-12), picking it up next.
+      events:
+        onLinkPress:
+          - id: open_record
+            type: Link
+            params:
+              pageId: task
+              urlQuery:
+                href:
+                  _event: href

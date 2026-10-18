@@ -20,6 +20,7 @@ import { fillsPlacement } from '@lowdefy/layout-native';
 
 import AreaContext from '../layout/AreaContext.js';
 import BreakpointContext from '../layout/BreakpointContext.js';
+import FadeInView from '../motion/FadeInView.js';
 import layoutStyles from '../layout/layoutStyles.js';
 import NaturalSizeContext from '../layout/NaturalSizeContext.js';
 import useElementRef from '../elements/useElementRef.js';
@@ -38,28 +39,32 @@ const FILL = { flexGrow: 1 };
 // measured within, so in a wrapping row of aligned blocks every line took the area's height.
 //
 // In a screen header (NaturalSizeContext) a block takes its content's size, not a column width.
-const BlockLayout = ({ blockId, children, layout = {}, style }) => {
+//
+// With fadeIn, the block's outer view fades in as it mounts (FadeInView): CategorySwitch sets it
+// when the block's content replaces the skeleton it showed while loading.
+const BlockLayout = ({ blockId, children, fadeIn = false, layout = {}, style }) => {
+  const OuterView = fadeIn ? FadeInView : View;
   const breakpoint = useContext(BreakpointContext);
   const { columnGap, container } = useContext(AreaContext);
   const naturalSize = useContext(NaturalSizeContext);
   const ref = useElementRef({ blockId, kind: 'view' });
   if (layout.disabled === true || naturalSize) {
     return (
-      <View accessibilityLabel={blockId} ref={ref} style={style} testID={blockId}>
+      <OuterView accessibilityLabel={blockId} ref={ref} style={style} testID={blockId}>
         {children}
-      </View>
+      </OuterView>
     );
   }
   const placement = layoutStyles(layout, breakpoint, columnGap).child;
   if (columnGap === 0 || placement.display === 'none') {
     return (
-      <View accessibilityLabel={blockId} ref={ref} style={[placement, style]} testID={blockId}>
+      <OuterView accessibilityLabel={blockId} ref={ref} style={[placement, style]} testID={blockId}>
         {children}
-      </View>
+      </OuterView>
     );
   }
   return (
-    <View style={placement}>
+    <OuterView style={placement}>
       <View
         accessibilityLabel={blockId}
         ref={ref}
@@ -68,7 +73,7 @@ const BlockLayout = ({ blockId, children, layout = {}, style }) => {
       >
         {children}
       </View>
-    </View>
+    </OuterView>
   );
 };
 

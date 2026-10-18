@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
-import React, { useMemo } from 'react';
-import { Platform, View } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { Dimensions, Platform, View } from 'react-native';
 import { useMarkdown } from 'react-native-marked';
 
+import ChipWidthContext from '../Markdown/ChipWidthContext.js';
 import getMarkdownStyles from '../Markdown/getMarkdownStyles.js';
 import MarkdownTokenizer from '../Markdown/MarkdownTokenizer.js';
 import TimelineMarkdownRenderer from './TimelineMarkdownRenderer.js';
@@ -73,14 +74,18 @@ function getBodyStyles({ colors, isDark, tokens }) {
 }
 
 /**
- * A comment's markdown, drawn with the Markdown block's renderer: mentions as @Name chips and
- * `[[KEY]]` record links in the tint. The space under the last paragraph is taken back, so the
- * card's padding holds.
+ * A comment's markdown, drawn with the Markdown block's renderer: mentions as @Name chips,
+ * `[[KEY]]` record links in the tint, and links of a `linkChips` scheme as the Markdown block's
+ * link chips, pressable when the timeline has onLinkPress. The space under the last paragraph is
+ * taken back, so the card's padding holds.
  */
 function CommentBody({
   body,
   colors,
+  hasLinkPress,
+  Icon,
   isDark,
+  linkChips,
   mentions,
   onLinkPress,
   onRecordPress,
@@ -92,6 +97,7 @@ function CommentBody({
     () => getBodyStyles({ colors, isDark, tokens }),
     [colors, isDark, tokens]
   );
+  const [width, setWidth] = useState(() => Dimensions.get('window').width - 64);
   const tokenizer = useMemo(() => new MarkdownTokenizer(), []);
   const renderer = useMemo(
     () =>
@@ -101,12 +107,15 @@ function CommentBody({
           muted: { backgroundColor: colors.fill, color: colors.secondary, fontWeight: '600' },
           record: { color: colors.tint, fontFamily: monospace, fontSize: BODY_SIZE - 1 },
         },
+        Icon,
+        linkChips,
+        onChipPress: hasLinkPress ? onLinkPress : null,
         onLinkPress,
         onRecordPress,
         palette,
         skipHtml: false,
       }),
-    [colors, onLinkPress, onRecordPress, palette]
+    [colors, hasLinkPress, Icon, linkChips, onLinkPress, onRecordPress, palette]
   );
   const markdown = useMemo(
     () => toTimelineMarkdown({ body, mentions, people, pattern }),
@@ -119,7 +128,14 @@ function CommentBody({
     theme,
     tokenizer,
   });
-  return <View style={{ marginBottom: -PARAGRAPH_GAP }}>{elements}</View>;
+  return (
+    <View
+      onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
+      style={{ marginBottom: -PARAGRAPH_GAP }}
+    >
+      <ChipWidthContext.Provider value={width}>{elements}</ChipWidthContext.Provider>
+    </View>
+  );
 }
 
 export default CommentBody;

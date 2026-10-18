@@ -28,6 +28,8 @@
 // - colorLabel, colorSecondaryLabel, colorTertiaryLabel, colorQuaternaryLabel: text tiers.
 // - colorSystemFill to colorQuaternarySystemFill: fills for controls, from thin shapes (a
 //   switch track) to large areas (a search field).
+// - colorSkeleton, colorSkeletonHighlight: a loading placeholder's fill and the soft band that
+//   sweeps across it, a few percent lighter, so the sweep stays low contrast in either mode.
 const iosColors = {
   light: {
     colorGroupedBackground: '#F2F2F7',
@@ -46,6 +48,8 @@ const iosColors = {
     colorSecondarySystemFill: 'rgba(120,120,128,0.16)',
     colorTertiarySystemFill: 'rgba(118,118,128,0.12)',
     colorQuaternarySystemFill: 'rgba(116,116,128,0.08)',
+    colorSkeleton: '#E9E9EB',
+    colorSkeletonHighlight: '#F4F4F5',
   },
   dark: {
     colorGroupedBackground: '#000000',
@@ -64,6 +68,8 @@ const iosColors = {
     colorSecondarySystemFill: 'rgba(120,120,128,0.32)',
     colorTertiarySystemFill: 'rgba(118,118,128,0.24)',
     colorQuaternarySystemFill: 'rgba(118,118,128,0.18)',
+    colorSkeleton: '#2C2C2E',
+    colorSkeletonHighlight: '#3A3A3C',
   },
 };
 

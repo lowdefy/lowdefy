@@ -19,28 +19,56 @@ export default {
   icons: [],
   valueType: null,
   cssKeys: {
-    element: 'The Skeleton element (the box around the rows when it draws rows).',
+    element:
+      'The Skeleton element: the shape, or the box around a variant (set margins and a horizontal inset here).',
   },
   properties: {
     type: 'object',
     additionalProperties: false,
     properties: {
+      variant: {
+        type: 'string',
+        enum: ['listRow', 'insetGroup', 'hero', 'paragraph', 'card', 'timeline'],
+        description:
+          "Mobile only. The shape of what loads in the skeleton's place, so the content lands where the skeleton was: 'listRow' (list rows: a leading circle, a title bar and shorter subtitle bars, an optional trailing circle), 'insetGroup' (rows in inset grouped sections, a header bar above each, as an insetGrouped List draws them), 'hero' (a record's hero: a chip and key, two Title 1 lines, an avatar and meta), 'paragraph' (lines of body text ending ragged), 'card' (paragraph lines in a cell-coloured rounded card) or 'timeline' (activity entries on a rail, one or two lines each). insetGroup and card are inset 16pt from the screen edges as grouped cells are; give the others their inset with the element style. Without a variant, `count`, `rows` or `avatar` draw list rows, and otherwise the Skeleton is one shape of its width and height.",
+      },
       avatar: {
         type: 'boolean',
         description:
-          'Mobile only. Draw loading rows with a round avatar at the start of each (true, the default for rows) or without (false).',
+          'Mobile only. Draw a leading 22pt circle (a status glyph or avatar) in each list row (true, the default) or not (false).',
       },
       count: {
+        type: ['integer', 'array'],
+        minimum: 1,
+        items: { type: 'integer', minimum: 1 },
+        description:
+          "Mobile only. List rows to draw (3 by default; for 'insetGroup', the rows of its one section, 4 by default, or a list of each section's rows, such as [2, 4, 3]), or a timeline's entries (3 by default). Without a variant, count draws list rows in place of one shape.",
+        docs: {
+          displayType: 'number',
+        },
+      },
+      header: {
+        type: 'boolean',
+        description:
+          "Mobile only. For 'insetGroup', draw a header bar above each section (true, the default) or leave the space of an untitled section (false).",
+      },
+      lines: {
         type: 'integer',
         minimum: 1,
         description:
-          'Mobile only. Draw this many loading list rows (3 when `rows` or `avatar` is set), shaped like list rows, in place of one shape.',
+          "Mobile only. The lines of text of a 'paragraph' (3 by default) or a 'card' (4 by default).",
       },
       rows: {
         type: 'integer',
         minimum: 1,
         description:
-          'Mobile only. The lines of text in each loading row: a title line, then shorter meta lines. Defaults to 2.',
+          'Mobile only. The lines of text in each list row: a title line, then shorter subtitle lines. Defaults to 2; 1 draws single-line cells.',
+      },
+      trailing: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Mobile only. Draw a trailing 20pt circle (an avatar or priority glyph) in each list row.',
       },
       height: {
         type: ['number', 'string'],
