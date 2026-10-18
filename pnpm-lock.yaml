@@ -1514,6 +1514,9 @@ importers:
       expo-image:
         specifier: 58.0.15
         version: 58.0.15(expo@58.0.14)(react-native@0.88.0(@babel/core@7.29.6)(@react-native/metro-config@0.88.0(@babel/core@7.29.6))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)
+      expo-speech-recognition:
+        specifier: 58.0.0
+        version: 58.0.0(expo@58.0.14)(react-native@0.88.0(@babel/core@7.29.6)(@react-native/metro-config@0.88.0(@babel/core@7.29.6))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)
       expo-web-browser:
         specifier: 58.0.6
         version: 58.0.6(expo@58.0.14)(react-native@0.88.0(@babel/core@7.29.6)(@react-native/metro-config@0.88.0(@babel/core@7.29.6))(@types/react@18.2.38)(react@19.3.0))
@@ -24256,7 +24259,7 @@ snapshots:
       eslint: 8.54.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint@8.54.0))(eslint@8.54.0)
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint@8.54.0))(eslint@8.54.0))(eslint@8.54.0)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.54.0)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@8.54.0)
       eslint-plugin-react: 7.37.5(eslint@8.54.0)
       eslint-plugin-react-hooks: 5.2.0(eslint@8.54.0)
@@ -24290,7 +24293,7 @@ snapshots:
       tinyglobby: 0.2.17
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint@8.54.0))(eslint@8.54.0))(eslint@8.54.0)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.54.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -24339,7 +24342,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint@8.54.0))(eslint@8.54.0))(eslint@8.54.0):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.54.0):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
