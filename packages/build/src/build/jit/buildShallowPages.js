@@ -17,6 +17,8 @@
 import { serializer } from '@lowdefy/helpers';
 
 import buildPage from '../buildPages/buildPage.js';
+import collectMobileClassCandidates from '../buildMobile/collectMobileClassCandidates.js';
+import validateMobileStyles from '../buildMobile/validateMobileStyles.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import removeRequestServerKeys from '../../utils/removeRequestServerKeys.js';
@@ -63,6 +65,11 @@ function buildShallowPages({ components, context }) {
     validateIconNames({ config: page, icons: context.icons, context });
     sourcelessPages.push(page);
   });
+
+  // After buildPage, which keys styles by slot (normalizeClassAndStyles), and
+  // before content is stripped below, as in the full build.
+  validateMobileStyles({ components: { pages: sourcelessPages }, context });
+  collectMobileClassCandidates({ components: { pages: sourcelessPages }, context });
 
   validatePageReferences({
     components,

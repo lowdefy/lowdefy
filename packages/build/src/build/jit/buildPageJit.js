@@ -20,6 +20,7 @@ import { serializer, type } from '@lowdefy/helpers';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import addKeys from '../addKeys.js';
+import validateMobileStyles from '../buildMobile/validateMobileStyles.js';
 import buildPage from '../buildPages/buildPage.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
 import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js';
@@ -157,6 +158,9 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     });
     // buildPage collects the page's action references on this build's context.
     buildPage({ page: processed, index: 0, context: buildContext, checkDuplicatePageId });
+    // After buildPage: styles are keyed by slot (normalizeClassAndStyles), as
+    // in the full build.
+    validateMobileStyles({ components: { pages: [processed] }, context: buildContext });
 
     // Validate that all page-level types (blocks, actions, operators) exist
     validatePageTypes({ context: buildContext });

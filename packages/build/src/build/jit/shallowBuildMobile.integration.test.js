@@ -22,7 +22,7 @@ import { jest } from '@jest/globals';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 process.env.AUTH_SECRET = 'test-secret-for-integration-test';
 
@@ -108,12 +108,14 @@ mobile:
   pages:
     - _ref: mobile/today.yaml
     - _ref: mobile/jobs.yaml
+    - _ref: mobile/grid.yaml
     - _ref: pages/about.yaml
     - id: profile
       type: Box
       blocks:
         - id: name
           type: Title
+          class: p-4 text-lg
           properties:
             content: Profile
 `
@@ -147,6 +149,19 @@ path: jobs/{job_id}
 blocks:
   - id: html
     type: Html
+`
+  );
+
+  // A grid style has no React Native form.
+  write(
+    'mobile/grid.yaml',
+    `id: grid
+type: Box
+blocks:
+  - id: cards
+    type: Box
+    style:
+      display: grid
 `
   );
 
@@ -199,9 +214,19 @@ test('the skeleton build writes the mobile config and a page index without hashe
     { path: 'company/about', pageId: 'about' },
     { path: 'today', pageId: 'today' },
     { path: 'jobs/{job_id}', pageId: 'jobs' },
+    { path: 'grid', pageId: 'grid' },
     { path: 'profile', pageId: 'profile' },
   ]);
   expect(readArtifact('mobile/typeSets.json')).toEqual({});
+});
+
+test('the skeleton build writes the mobile theme and the class map of inline mobile pages', () => {
+  const theme = readArtifact('mobile/theme.json');
+  expect(theme.darkMode).toEqual('system');
+  expect(type.isString(theme.light.colorPrimary)).toBe(true);
+  expect(type.isString(theme.dark.colorBgBase)).toBe(true);
+  const classMap = readArtifact('mobile/classMap.json');
+  expect(Object.keys(classMap)).toEqual(expect.arrayContaining(['p-4', 'text-lg']));
 });
 
 test('the web menu leaves mobile-only pages out', () => {
@@ -240,6 +265,22 @@ test('a JIT build of a mobile page using a type with no native version fails', a
     buildErrors: expect.arrayContaining([
       expect.objectContaining({
         message: expect.stringContaining('Block type "Html" on block "html" on page "jobs"'),
+      }),
+    ]),
+  });
+});
+
+test('a JIT build of a mobile page with a style React Native cannot honour fails', async () => {
+  await expect(
+    buildPageJit({
+      pageId: 'grid',
+      pageRegistry: result.pageRegistry,
+      context: result.context,
+    })
+  ).rejects.toMatchObject({
+    buildErrors: expect.arrayContaining([
+      expect.objectContaining({
+        message: expect.stringContaining('Style "display" in slot "block" on block "cards"'),
       }),
     ]),
   });
