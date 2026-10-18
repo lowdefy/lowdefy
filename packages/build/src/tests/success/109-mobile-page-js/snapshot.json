@@ -963,6 +963,9 @@
     ],
     "~k": "21"
   },
+  "mobile/appJs.json": {
+    "jsEntries": null
+  },
   "mobile/classMap.json": {},
   "mobile/config.json": {
     "homePageId": "today",

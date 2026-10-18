@@ -23,11 +23,13 @@ import { getBreakpoint } from '@lowdefy/layout-native';
 import Block from './block/Block.js';
 import BreakpointContext from './layout/BreakpointContext.js';
 import Context from './Context.js';
+import ElementsContext from './elements/ElementsContext.js';
 import initNativeLowdefy from './initNativeLowdefy.js';
 import PageStyleContext from './style/PageStyleContext.js';
 import ScreenOptionsContext from './screen/ScreenOptionsContext.js';
 import ThemeContext from './theme/ThemeContext.js';
 import ThemeProvider from './theme/ThemeProvider.js';
+import useElementRef from './elements/useElementRef.js';
 
 const Page = ({
   core,
@@ -43,6 +45,7 @@ const Page = ({
   // Read here, so a change of theme mode renders the page again: the engine's render-time full
   // pass (getContext) then evaluates _media: darkMode and _theme with the new mode.
   const theme = useContext(ThemeContext);
+  const scrollRef = useElementRef({ kind: 'scroll' });
   const { width, height } = useWindowDimensions();
   const breakpoint = getBreakpoint({ width, height });
   // In dev, a page built on request carries the class map entries of its own classes, which the
@@ -76,7 +79,7 @@ const Page = ({
     <BreakpointContext.Provider value={breakpoint}>
       <PageStyleContext.Provider value={pageStyle}>
         <ScreenOptionsContext.Provider value={onScreenOptions}>
-          <ScrollView keyboardShouldPersistTaps="handled">
+          <ScrollView keyboardShouldPersistTaps="handled" ref={scrollRef}>
             <Context
               key={contextKey}
               appContext={appContext}
@@ -147,18 +150,25 @@ const LowdefyPage = ({
   const pageConfig = useMemo(() => serializer.deserialize(rawPageConfig), [rawPageConfig]);
   const rootConfig = useMemo(() => serializer.deserialize(rawRootConfig), [rawRootConfig]);
   const theme = useContext(ThemeContext);
+  // The page's views register here, by block id, for native actions (globals.elements).
+  const elements = useMemo(
+    () => ({ registry: host.globals.elements, pageId: pageConfig.pageId }),
+    [host.globals.elements, pageConfig.pageId]
+  );
   const page = (
-    <Page
-      core={core}
-      host={host}
-      jsMap={jsMap}
-      onScreenOptions={onScreenOptions}
-      pageConfig={pageConfig}
-      pathParams={pathParams}
-      resetContext={resetContext}
-      rootConfig={rootConfig}
-      types={types}
-    />
+    <ElementsContext.Provider value={elements}>
+      <Page
+        core={core}
+        host={host}
+        jsMap={jsMap}
+        onScreenOptions={onScreenOptions}
+        pageConfig={pageConfig}
+        pathParams={pathParams}
+        resetContext={resetContext}
+        rootConfig={rootConfig}
+        types={types}
+      />
+    </ElementsContext.Provider>
   );
   if (theme !== null) {
     return page;

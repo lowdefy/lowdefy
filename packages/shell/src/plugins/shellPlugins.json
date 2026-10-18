@@ -1,5 +1,14 @@
 [
   { "category": "actions", "package": "@lowdefy/actions-core" },
   { "category": "blocks", "package": "@lowdefy/blocks-native", "types": ["Box", "Screen"] },
-  { "category": "operators", "package": "@lowdefy/operators-js" }
+  { "category": "operators", "package": "@lowdefy/operators-js" },
+  { "category": "operators", "package": "@lowdefy/operators-change-case" },
+  { "category": "operators", "package": "@lowdefy/operators-cron" },
+  { "category": "operators", "package": "@lowdefy/operators-dayjs" },
+  { "category": "operators", "package": "@lowdefy/operators-diff" },
+  { "category": "operators", "package": "@lowdefy/operators-jsonata" },
+  { "category": "operators", "package": "@lowdefy/operators-mql" },
+  { "category": "operators", "package": "@lowdefy/operators-nunjucks" },
+  { "category": "operators", "package": "@lowdefy/operators-uuid" },
+  { "category": "operators", "package": "@lowdefy/operators-yaml" }
 ]

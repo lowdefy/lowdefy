@@ -1040,6 +1040,9 @@
     ],
     "~k": "2j"
   },
+  "mobile/appJs.json": {
+    "jsEntries": null
+  },
   "mobile/classMap.json": {},
   "mobile/config.json": {
     "homePageId": "about",

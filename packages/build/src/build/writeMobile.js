@@ -89,6 +89,8 @@ async function buildMobileConfig({ components, context }) {
 // class ("dark:bg-gray-900", "sm:flex-row"); in dark mode a shell reads
 // "dark:<class>" before "<class>", which the build adds for classes that use
 // an antd theme colour.
+// mobile/appJs.json: { jsEntries }, the app events' client _js as module text
+// (buildMobileAppJs), or null.
 async function writeMobile({ components, context }) {
   const config = type.isNone(components.mobile)
     ? {}
@@ -101,6 +103,10 @@ async function writeMobile({ components, context }) {
   await context.writeBuildArtifact('mobile/typeSets.json', JSON.stringify(context.mobileTypeSets));
   await context.writeBuildArtifact('mobile/theme.json', JSON.stringify(context.mobileTheme));
   await context.writeBuildArtifact('mobile/classMap.json', JSON.stringify(context.mobileClassMap));
+  await context.writeBuildArtifact(
+    'mobile/appJs.json',
+    JSON.stringify({ jsEntries: context.mobileAppJsEntries })
+  );
 }
 
 export default writeMobile;

@@ -87,6 +87,7 @@ const configFiles = {
     dark: { colorPrimary: '#1668dc' },
   },
   'mobile/classMap.json': { 'p-4': { paddingTop: 16 } },
+  'mobile/appJs.json': { jsEntries: null },
 };
 
 function authorizeOutcome(user) {

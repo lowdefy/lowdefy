@@ -1682,6 +1682,9 @@
     ],
     "~k": "5n"
   },
+  "mobile/appJs.json": {
+    "jsEntries": null
+  },
   "mobile/classMap.json": {},
   "mobile/config.json": {},
   "mobile/pageIndex.json": [],

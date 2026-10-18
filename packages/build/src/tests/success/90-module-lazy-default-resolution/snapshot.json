@@ -1028,6 +1028,9 @@
     ],
     "~k": "2r"
   },
+  "mobile/appJs.json": {
+    "jsEntries": null
+  },
   "mobile/classMap.json": {},
   "mobile/config.json": {},
   "mobile/pageIndex.json": [],

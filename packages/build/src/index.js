@@ -44,6 +44,7 @@ import buildLogger from './build/buildLogger.js';
 import buildMcp from './build/buildMcp.js';
 import buildMenu from './build/buildMenu.js';
 import buildMobile from './build/buildMobile/buildMobile.js';
+import buildMobileAppJs from './build/buildMobile/buildMobileAppJs.js';
 import buildMobileClassMap from './build/buildMobile/buildMobileClassMap.js';
 import buildMobileTheme from './build/buildMobile/buildMobileTheme.js';
 import collectMobileClassCandidates from './build/buildMobile/collectMobileClassCandidates.js';
@@ -240,6 +241,7 @@ async function build(options) {
       components,
       context,
     });
+    tryBuildStep(buildMobileAppJs, 'buildMobileAppJs', { components, context });
     tryBuildStep(buildJs, 'buildJs', { components, context });
     tryBuildStep(buildTypes, 'buildTypes', { components, context });
     tryBuildStep(buildTypesMobile, 'buildTypesMobile', { components, context });

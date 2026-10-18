@@ -15,11 +15,12 @@
 */
 
 import { Linking } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 import * as Network from 'expo-network';
-import { createNativeGlobals } from '@lowdefy/client-native';
 
 import createDeviceStore from './createDeviceStore.js';
 import createMemoryStore from './createMemoryStore.js';
+import createShellGlobals from './createShellGlobals.js';
 import getOrigin from './getOrigin.js';
 import isOnline from './isOnline.js';
 
@@ -36,16 +37,23 @@ const network = {
  * request refused for another build is retried by `fetch` (createShellFetch) or rebuilds the
  * screens (onBuildChanged); another caller resets the app (onCallerChanged).
  */
+const clipboard = {
+  setString: (text) => Clipboard.setStringAsync(text),
+};
+
 function createShellHost({ fetch, router, session, tokenStore }) {
+  const storage = createDeviceStore();
   return {
     authTransport: 'bearer',
     fetch,
-    globals: createNativeGlobals({
+    globals: createShellGlobals({
       assign: (url) => Linking.openURL(url),
+      clipboard,
       fetch,
       getPath: session.getCurrentPath,
       network,
       origin: getOrigin(session.apiBase),
+      storage,
     }),
     onBuildChanged: () => {
       session.handleBuildChanged();
@@ -55,7 +63,7 @@ function createShellHost({ fetch, router, session, tokenStore }) {
     },
     router,
     sessionStorage: createMemoryStore(),
-    storage: createDeviceStore(),
+    storage,
     tokenStore,
     WebSocket: globalThis.WebSocket,
     websocketUrl: (apiPath) => apiPath.replace(/^http/, 'ws'),

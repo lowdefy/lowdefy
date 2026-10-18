@@ -15,18 +15,41 @@
 */
 
 import * as actions from '@lowdefy/actions-core/actions';
-import * as operators from '@lowdefy/operators-js/operators/client';
+import * as changeCaseOperators from '@lowdefy/operators-change-case/operators/client';
+import * as cronOperators from '@lowdefy/operators-cron/operators/client';
+import * as dayjsOperators from '@lowdefy/operators-dayjs/operators/client';
+import * as diffOperators from '@lowdefy/operators-diff/operators/client';
+import * as jsOperators from '@lowdefy/operators-js/operators/client';
+import * as jsonataOperators from '@lowdefy/operators-jsonata/operators/client';
+import * as mqlOperators from '@lowdefy/operators-mql/operators/client';
+import * as nunjucksOperators from '@lowdefy/operators-nunjucks/operators/client';
+import * as uuidOperators from '@lowdefy/operators-uuid/operators/client';
+import * as yamlOperators from '@lowdefy/operators-yaml/operators/client';
 import { Screen } from '@lowdefy/client-native';
 
 import Box from './blocks/Box.js';
+import nativeActions from '../actions/nativeActions.js';
 
 // The plugin maps the shell renders pages with. They hold the packages in shellPlugins.json, from
 // which scripts/createTypeManifest.mjs writes the type manifest pages are checked against; a test
-// keeps the two the same. The DOM-bound actions get native bodies under the same names later.
+// keeps the two the same. The actions-core actions that reach the DOM on the web run native
+// bodies under the same names. The client operators are those of every default operator package,
+// as the build's mobile type map allows.
 const types = {
-  actions: { ...actions },
+  actions: { ...actions, ...nativeActions },
   blocks: { Box, Screen },
-  operators: { ...operators },
+  operators: {
+    ...jsOperators,
+    ...changeCaseOperators,
+    ...cronOperators,
+    ...dayjsOperators,
+    ...diffOperators,
+    ...jsonataOperators,
+    ...mqlOperators,
+    ...nunjucksOperators,
+    ...uuidOperators,
+    ...yamlOperators,
+  },
 };
 
 export default types;

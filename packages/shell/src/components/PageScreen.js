@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { useFocusEffect, useNavigation } from 'expo-router';
 import { LowdefyPage } from '@lowdefy/client-native';
 
+import evaluateJsEntries from '../js/evaluateJsEntries.js';
 import getPageView from '../session/getPageView.js';
 import getPresentation from '../navigation/getPresentation.js';
 import LoadingScreen from './LoadingScreen.js';
@@ -36,13 +37,22 @@ import { useSessionState, useShell } from '../ShellContext.js';
  * @param {string} [props.query] The route's query string, without "?".
  */
 function PageScreen({ path, query = '' }) {
-  const { host, session, shell } = useShell();
+  const { host, locale, session, shell } = useShell();
   const state = useSessionState();
+  // A locale chosen with SetLocale renders every screen again, as the web app re-renders.
+  useSyncExternalStore(locale.subscribe, locale.getVersion);
   const navigation = useNavigation();
   const [loadError, setLoadError] = useState(null);
   const view = getPageView({ path, shell, state });
   const fullPath = `/${path}${query ? `?${query}` : ''}`;
   const pageId = view.entry?.pageId ?? null;
+  // The app events' and the page's _js, as the jsMap the engine's _js operator reads.
+  const rootJsEntries = state.root._jsEntries;
+  const pageJsEntries = view.page?.pageConfig._jsEntries;
+  const jsMap = useMemo(
+    () => ({ ...evaluateJsEntries(rootJsEntries), ...evaluateJsEntries(pageJsEntries) }),
+    [rootJsEntries, pageJsEntries]
+  );
 
   // The engine reads the shown route (_location, _url_query) through the host globals. Screens
   // rendered at once (one per tab) each set it as they render; the focused one keeps it.
@@ -97,6 +107,7 @@ function PageScreen({ path, query = '' }) {
     return <LoadingScreen />;
   }
   session.setCurrentPath(fullPath);
+  locale.apply();
   const core = {
     apiBase: session.apiBase,
     auth: { authConfig: {}, user: state.user },
@@ -109,6 +120,7 @@ function PageScreen({ path, query = '' }) {
       key={`${state.generation}:${view.page.hash ?? view.page.etag ?? ''}`}
       core={core}
       host={host}
+      jsMap={jsMap}
       onScreenOptions={onScreenOptions}
       pageConfig={view.page.pageConfig}
       pathParams={view.pathParams}

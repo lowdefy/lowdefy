@@ -22,8 +22,10 @@ import createDeviceStore from './host/createDeviceStore.js';
 import createRouterAdapter from './host/createRouterAdapter.js';
 import createShellFetch from './host/createShellFetch.js';
 import createShellHost from './host/createShellHost.js';
+import createShellLocale from './locale/createShellLocale.js';
 import createSqliteCacheStore from './cache/createSqliteCacheStore.js';
 import getAppApiBase from './config/getAppApiBase.js';
+import getDeviceLocales from './locale/getDeviceLocales.js';
 import withoutCookies from './auth/withoutCookies.js';
 import withShellHeader from './host/withShellHeader.js';
 
@@ -36,7 +38,7 @@ function getDatabase() {
   return db;
 }
 
-// Everything one app needs in the shell: its auth, session and core host. auth.start reads the
+// Everything one app needs in the shell: its auth, session, core host and locale. auth.start reads the
 // session token and starts the session; onSignedOut is called once a sign-out removed the person's
 // data, to open the app afresh.
 async function createShellApp({ app, onSignedOut, shell }) {
@@ -66,7 +68,13 @@ async function createShellApp({ app, onSignedOut, shell }) {
     session,
     tokenStore: auth.tokenStore,
   });
-  return { auth, host, session };
+  const locale = createShellLocale({
+    getDeviceLocales,
+    globals: host.globals,
+    session,
+    storage: host.storage,
+  });
+  return { auth, host, locale, session };
 }
 
 export default createShellApp;

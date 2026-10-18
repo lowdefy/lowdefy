@@ -16,6 +16,7 @@
 
 import { AppState, Dimensions } from 'react-native';
 
+import createElementRegistry from '../elements/createElementRegistry.js';
 import parseOrigin from './parseOrigin.js';
 import parsePath from './parsePath.js';
 
@@ -56,6 +57,8 @@ function createListenerRegistry(subscribers) {
  *   listener follows `Dimensions` changes (rotation, split screen).
  * - `document.visibilityState` follows `AppState`; `visibilitychange` fires when it changes.
  * - `online` and `offline` follow `network`, when the shell gives one.
+ * - `elements` finds the native views of the pages on screen by block id (createElementRegistry),
+ *   for native actions such as SetFocus and ScrollTo.
  *
  * @param {Object} params
  * @param {(url: string) => void} params.assign Opens a URL, for `location.assign` (auth flows).
@@ -114,7 +117,7 @@ function createNativeGlobals({ assign, fetch, getPath, network, origin }) {
       return visibilityOf(AppState.currentState);
     },
   };
-  return { document, fetch, window };
+  return { document, elements: createElementRegistry(), fetch, window };
 }
 
 export default createNativeGlobals;

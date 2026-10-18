@@ -18,6 +18,7 @@ import React, { useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Icon } from '@lowdefy/client-native';
 
 import { useSessionState } from '../ShellContext.js';
 
@@ -40,6 +41,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   item: {
+    alignItems: 'center',
+    columnGap: 16,
+    flexDirection: 'row',
     paddingHorizontal: 24,
     paddingVertical: 16,
   },
@@ -48,8 +52,9 @@ const styles = StyleSheet.create({
   },
 });
 
-// The drawer frame: a header button that opens the app's drawer menu over the screen. Picking an
-// item replaces the stack with that page.
+// The drawer frame: a header button that opens the app's drawer menu over the screen, each item
+// with its icon drawn from the icon data the root carries. Picking an item replaces the stack with
+// that page.
 function MenuButton({ items }) {
   const [open, setOpen] = useState(false);
   const { root } = useSessionState();
@@ -82,6 +87,9 @@ function MenuButton({ items }) {
                 style={styles.item}
                 testID={`menu-${item.pageId}`}
               >
+                {item.iconData ? (
+                  <Icon data={item.iconData} size={22} testID={`menu-${item.pageId}-icon`} />
+                ) : null}
                 <Text style={styles.itemText}>{item.title ?? item.pageId}</Text>
               </Pressable>
             ))}

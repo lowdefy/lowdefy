@@ -1069,6 +1069,9 @@
     ],
     "~k": "2x"
   },
+  "mobile/appJs.json": {
+    "jsEntries": null
+  },
   "mobile/classMap.json": {
     "bg-primary": {
       "backgroundColor": "#6366f1"
