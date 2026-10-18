@@ -484,6 +484,12 @@ function createAuthMethods(lowdefy, auth) {
     // The next person on this browser must not read the signed-out person's data. Clearing
     // before the navigation or the session provider's reload keeps it from any later page.
     lowdefy._internal.storage.clearUserStorage({ keepUserId: null });
+    // A bearer host holds the session token itself; the server ended the session, so the
+    // token goes too, and the host's store hears of the sign-out through clear.
+    const { host } = lowdefy._internal;
+    if (host.authTransport === 'bearer') {
+      await host.tokenStore.clear();
+    }
     if (willNavigate) {
       navigateToTarget(callbackTarget);
     }

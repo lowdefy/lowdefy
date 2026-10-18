@@ -16,11 +16,16 @@
 
 import request from './request.js';
 
+// Endpoint calls from a bearer host (a native shell) carry no build id, so a
+// server build change never refuses them: endpoints are the stable contract a
+// shell's cached pages and its later offline outbox call across builds. Page
+// requests keep the build id on every host.
 function createCallAPI(lowdefy) {
   const { apiBase, buildId } = lowdefy;
+  const endpointBuildId = lowdefy._internal.host.authTransport === 'bearer' ? undefined : buildId;
   function callAPI({ payload, endpointId, pageId, blockId }) {
     return request({
-      buildId,
+      buildId: endpointBuildId,
       url: `${apiBase}/api/endpoints/${endpointId}`,
       method: 'POST',
       body: { payload, pageId, blockId },
