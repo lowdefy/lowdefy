@@ -106,6 +106,8 @@ async function generateDefaultTypesMapMobile({ packageFile }) {
     operators: {
       client: typesMap.operators.client,
     },
+    // Shell plugins add their package names (createCustomPluginTypesMap).
+    plugins: [],
   };
 
   await writeFile(

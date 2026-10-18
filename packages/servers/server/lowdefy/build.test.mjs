@@ -23,7 +23,7 @@ jest.unstable_mockModule('@lowdefy/logger/node', () => ({
   createNodeLogger: jest.fn(() => 'logger'),
 }));
 jest.unstable_mockModule('./createCustomPluginTypesMap.mjs', () => ({
-  default: jest.fn().mockResolvedValue({}),
+  default: jest.fn().mockResolvedValue({ customTypesMap: {}, customTypesMapMobile: {} }),
 }));
 jest.unstable_mockModule('./createCustomPluginMessagesMap.mjs', () => ({
   default: jest.fn().mockResolvedValue({}),

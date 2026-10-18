@@ -19,15 +19,18 @@ import path from 'path';
 
 class MockConfigError extends Error {
   constructor({ message, error, filePath, received }) {
-    const finalMessage = error instanceof Error ? `Could not parse YAML. ${error.message}` : message;
+    const finalMessage =
+      error instanceof Error ? `Could not parse YAML. ${error.message}` : message;
     super(finalMessage);
     this.name = 'ConfigError';
     this.received = received;
   }
 }
 
+const { collectPluginDefinitions } = await import('@lowdefy/node-utils');
 jest.unstable_mockModule('@lowdefy/node-utils', () => {
   return {
+    collectPluginDefinitions,
     readFile: jest.fn(),
     ConfigError: MockConfigError,
   };
@@ -230,4 +233,66 @@ test('support yml extension', async () => {
   });
   const config = await getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true });
   expect(config).toEqual({ lowdefyVersion: '1.0.0', cliConfig: {}, plugins: [] });
+});
+
+test('get plugins lists a plugin in root and in two shells once, then shell-only plugins', async () => {
+  const { readFile } = await import('@lowdefy/node-utils');
+  const { default: getLowdefyYaml } = await import('./getLowdefyYaml.js');
+  readFile.mockImplementation((filePath) => {
+    if (filePath === path.resolve(process.cwd(), 'lowdefy.yaml')) {
+      return `
+      lowdefy: 1.0.0
+      plugins:
+        - name: '@example/lowdefy-printer'
+          version: 2.1.0
+      mobile:
+        shells:
+          - id: field
+            plugins:
+              - name: '@example/lowdefy-printer'
+                version: 2.1.0
+                typePrefix: Printer
+              - name: '@example/lowdefy-mdm'
+                version: 1.0.3
+                options:
+                  tenant: field-team
+          - id: staging
+            plugins:
+              - name: '@example/lowdefy-printer'
+                version: 2.1.0
+                typePrefix: Printer
+      `;
+    }
+    return null;
+  });
+  const config = await getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true });
+  expect(config.plugins).toEqual([
+    { name: '@example/lowdefy-printer', version: '2.1.0' },
+    { name: '@example/lowdefy-mdm', version: '1.0.3', typePrefix: undefined },
+  ]);
+});
+
+test('get plugins throws when a shell lists a plugin at another version than root', async () => {
+  const { readFile } = await import('@lowdefy/node-utils');
+  const { default: getLowdefyYaml } = await import('./getLowdefyYaml.js');
+  readFile.mockImplementation((filePath) => {
+    if (filePath === path.resolve(process.cwd(), 'lowdefy.yaml')) {
+      return `
+      lowdefy: 1.0.0
+      plugins:
+        - name: '@example/lowdefy-printer'
+          version: 2.1.0
+      mobile:
+        shells:
+          - id: field
+            plugins:
+              - name: '@example/lowdefy-printer'
+                version: 2.2.0
+      `;
+    }
+    return null;
+  });
+  await expect(getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true })).rejects.toThrow(
+    'Plugin "@example/lowdefy-printer" is listed at version "2.1.0" in root plugins and "2.2.0" in shell "field".'
+  );
 });

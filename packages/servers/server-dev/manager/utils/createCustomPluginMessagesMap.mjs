@@ -27,7 +27,7 @@ const warnedMissingMessages = new Set();
 
 async function createCustomPluginMessagesMap({ directories, logger }) {
   const customMessagesMap = {};
-  const pluginDefinitions = await readPluginDefinitions({ directories });
+  const { plugins: pluginDefinitions } = await readPluginDefinitions({ directories });
 
   // Each import starts a worker, so the plugins are imported in parallel.
   await Promise.all(
