@@ -1,0 +1,95 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Mobile only. Linear-style glyphs, coloured for light and dark mode.
+
+- title: Task states
+  blocks:
+    - id: s_backlog
+      type: StatusIcon
+      properties:
+        name: backlog
+    - id: s_todo
+      type: StatusIcon
+      properties:
+        name: todo
+    - id: s_in_progress
+      type: StatusIcon
+      properties:
+        name: inProgress
+        label: true
+    - id: s_in_review
+      type: StatusIcon
+      properties:
+        name: inReview
+    - id: s_needs_input
+      type: StatusIcon
+      properties:
+        name: needsInput
+    - id: s_unmerged
+      type: StatusIcon
+      properties:
+        name: unmerged
+    - id: s_done
+      type: StatusIcon
+      properties:
+        name: done
+    - id: s_cancelled
+      type: StatusIcon
+      properties:
+        name: cancelled
+
+- title: Priorities
+  blocks:
+    - id: p_urgent
+      type: StatusIcon
+      properties:
+        name: priorityUrgent
+    - id: p_high
+      type: StatusIcon
+      properties:
+        name: priorityHigh
+    - id: p_medium
+      type: StatusIcon
+      properties:
+        name: priorityMedium
+    - id: p_low
+      type: StatusIcon
+      properties:
+        name: priorityLow
+    - id: p_none
+      type: StatusIcon
+      properties:
+        name: priorityNone
+
+- title: Design stage dots with labels
+  blocks:
+    - id: stage_discussing
+      type: StatusIcon
+      properties:
+        name: dot
+        color: amber
+        label: discussing
+    - id: stage_settled
+      type: StatusIcon
+      properties:
+        name: dot
+        color: teal
+        label: settled
+    - id: stage_rejected
+      type: StatusIcon
+      properties:
+        name: dot
+        color: red
+        label: rejected

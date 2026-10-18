@@ -236,6 +236,10 @@ const typeManifest = {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
+    Avatar: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
     Box: {
       package: '@lowdefy/blocks-native',
       version: 6,
@@ -309,6 +313,10 @@ const typeManifest = {
       version: 6,
     },
     Spinner: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    StatusIcon: {
       package: '@lowdefy/blocks-native',
       version: 6,
     },

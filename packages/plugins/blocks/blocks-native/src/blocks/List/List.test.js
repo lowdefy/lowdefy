@@ -16,7 +16,7 @@
 
 import { act, fireEvent, screen, within } from '@testing-library/react-native';
 
-import { renderPage } from '../../test/renderPage.js';
+import { renderPage, styleOf, theme } from '../../test/renderPage.js';
 
 function callMethod(id, method, args) {
   return { id, type: 'CallMethod', params: { blockId: 'items', method, args } };
@@ -223,4 +223,80 @@ test('onRefresh runs when the List is pulled to refresh', async () => {
     list.props.onRefresh();
   });
   expect(record).toEqual(['refreshed']);
+});
+
+function sectionPage(list) {
+  return {
+    pageConfig: {
+      id: 'form',
+      type: 'Box',
+      events: {
+        onInit: [
+          {
+            id: 'init',
+            type: 'SetState',
+            params: {
+              items: [
+                { name: 'Login', state: 'todo' },
+                { name: 'Search', state: 'doing' },
+                { name: 'Sheets', state: 'todo' },
+              ],
+            },
+          },
+        ],
+      },
+      blocks: [
+        {
+          id: 'items',
+          type: 'List',
+          ...list,
+          blocks: [
+            {
+              id: 'items.$.row',
+              type: 'ListItem',
+              properties: { title: { _state: 'items.$.name' } },
+            },
+          ],
+        },
+      ],
+    },
+  };
+}
+
+test('an inset grouped List draws sections in the order sections gives, with counts', async () => {
+  await renderPage(
+    sectionPage({
+      properties: {
+        sectionKey: 'state',
+        showCount: true,
+        sections: [
+          { key: 'doing', title: 'In progress', status: 'inProgress' },
+          { key: 'todo', title: 'Up next' },
+          { key: 'review', title: 'In review' },
+        ],
+      },
+    })
+  );
+  const header = await screen.findByText('In progress');
+  expect(styleOf(header)).toMatchObject({ fontSize: 13, textTransform: 'uppercase' });
+  expect(screen.getByText('Up next')).toBeTruthy();
+  expect(screen.queryByText('In review')).toBeNull();
+  expect(screen.getByText('1')).toBeTruthy();
+  expect(screen.getByText('2')).toBeTruthy();
+  expect(screen.getByLabelText('In progress')).toBeTruthy();
+  expect(styleOf(screen.getByTestId('items_list')).backgroundColor).toEqual(
+    theme.light.colorBgLayout
+  );
+});
+
+test('a plain List with a header draws edge to edge rows under a Headline header', async () => {
+  await renderPage(
+    sectionPage({
+      properties: { variant: 'plain', header: { title: 'Tasks', count: 3 } },
+    })
+  );
+  const header = await screen.findByText('Tasks');
+  expect(styleOf(header)).toMatchObject({ fontSize: 17, fontWeight: '600' });
+  expect(screen.getByText('3')).toBeTruthy();
+  expect(screen.getByTestId('items_list').props.stickyHeaderIndices).toHaveLength(1);
 });

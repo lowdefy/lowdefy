@@ -14,31 +14,100 @@
   limitations under the License.
 */
 
-import { get } from '@lowdefy/helpers';
+import { get, type } from '@lowdefy/helpers';
+
+function getCount({ configured, length, showCount }) {
+  if (!type.isNone(configured)) return configured;
+  if (showCount === true) return length;
+  return undefined;
+}
+
+function getItemKey({ index, sectionKey, value }) {
+  return `${get(value, `${index}.${sectionKey}`, { default: '' })}`;
+}
+
+function getHeaderSection({ count, header, showCount }) {
+  const config = type.isString(header) ? { title: header } : header ?? {};
+  return {
+    key: '',
+    title: config.title,
+    count: getCount({ configured: config.count, length: count, showCount }),
+    footer: config.footer,
+    status: config.status,
+    data: Array.from({ length: count }, (item, index) => index),
+  };
+}
+
+// Without `sections`, neighbouring items with the same key form a section, so the list's own
+// order is kept.
+function groupNeighbours({ count, sectionKey, showCount, value }) {
+  const groups = [];
+  for (let index = 0; index < count; index += 1) {
+    const key = getItemKey({ index, sectionKey, value });
+    const last = groups[groups.length - 1];
+    if (last && last.key === key) {
+      last.data.push(index);
+    } else {
+      groups.push({ key, title: key, data: [index] });
+    }
+  }
+  return groups.map((group) => ({
+    ...group,
+    count: getCount({ length: group.data.length, showCount }),
+  }));
+}
+
+// With `sections`, every item joins its key's section, in the order `sections` lists them. Keys
+// it does not list follow, in the order they first appear. Empty sections are left out.
+function groupBySections({ count, sectionKey, sections, showCount, value }) {
+  const byKey = new Map();
+  sections.forEach((section) => {
+    byKey.set(`${section.key}`, { section, data: [] });
+  });
+  for (let index = 0; index < count; index += 1) {
+    const key = getItemKey({ index, sectionKey, value });
+    if (!byKey.has(key)) {
+      byKey.set(key, { section: { key, title: key }, data: [] });
+    }
+    byKey.get(key).data.push(index);
+  }
+  return [...byKey.entries()]
+    .filter(([, { data }]) => data.length > 0)
+    .map(([key, { section, data }]) => ({
+      key,
+      title: section.title ?? key,
+      count: getCount({ configured: section.count, length: data.length, showCount }),
+      footer: section.footer,
+      status: section.status,
+      data,
+    }));
+}
 
 /**
- * The List's items grouped into sections by their `sectionKey` value, for the sticky section
- * headers of a SectionList. Items with the same value next to each other form one section, so the
- * order of the list is kept; sort the list by the key to get one section per value.
+ * The List's items as titled sections of item indices, for its SectionList. Without a
+ * `sectionKey` the List is one section, titled by `header`. With one, items are grouped by the
+ * value at that path: neighbouring items with the same value form a section, or, with
+ * `sections`, every item joins its value's section in the order `sections` gives.
  *
  * @param {Object} params
  * @param {number} params.count The number of rendered items.
- * @param {string} params.sectionKey The path in each item of the section title.
+ * @param {string|Object} [params.header] The one section's title, or `{ title, count, status, footer }`.
+ * @param {string} [params.sectionKey] The path in each item of its section's key.
+ * @param {{ key: string, title?: string, count?: number|string, status?: string|Object,
+ *   footer?: string }[]} [params.sections] The sections' order, titles and counts.
+ * @param {boolean} [params.showCount] Count each section's items in its header.
  * @param {Array} params.value The List's array in state.
- * @returns {{ title: string, data: number[] }[]} Sections of item indices.
+ * @returns {{ key: string, title?: string, count?: number|string, footer?: string,
+ *   status?: string|Object, data: number[] }[]}
  */
-function getSections({ count, sectionKey, value }) {
-  const sections = [];
-  for (let index = 0; index < count; index += 1) {
-    const title = `${get(value, `${index}.${sectionKey}`, { default: '' })}`;
-    const last = sections[sections.length - 1];
-    if (last && last.title === title) {
-      last.data.push(index);
-    } else {
-      sections.push({ title, data: [index] });
-    }
+function getSections({ count, header, sectionKey, sections, showCount, value }) {
+  if (!type.isString(sectionKey)) {
+    return [getHeaderSection({ count, header, showCount })];
   }
-  return sections;
+  if (type.isArray(sections)) {
+    return groupBySections({ count, sectionKey, sections, showCount, value });
+  }
+  return groupNeighbours({ count, sectionKey, showCount, value });
 }
 
 export default getSections;

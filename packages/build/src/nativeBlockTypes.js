@@ -19,6 +19,7 @@
 const nativeBlockTypes = {
   blocks: [
     'Alert',
+    'Avatar',
     'Box',
     'Button',
     'Card',
@@ -38,6 +39,7 @@ const nativeBlockTypes = {
     'Sheet',
     'Skeleton',
     'Spinner',
+    'StatusIcon',
     'Switch',
     'Tabs',
     'Tag',
@@ -47,6 +49,7 @@ const nativeBlockTypes = {
   ],
   icons: {
     Alert: ['success', 'info', 'warning', 'error', 'close'],
+    Avatar: [],
     Box: [],
     Button: [],
     Card: [],
@@ -55,7 +58,7 @@ const nativeBlockTypes = {
     Empty: [],
     Icon: ['loading'],
     List: [],
-    ListItem: [],
+    ListItem: ['chevron-right'],
     Markdown: [],
     Menu: [],
     NumberInput: [],
@@ -66,6 +69,7 @@ const nativeBlockTypes = {
     Sheet: ['X'],
     Skeleton: [],
     Spinner: [],
+    StatusIcon: [],
     Switch: [],
     Tabs: ['more'],
     Tag: ['close'],
@@ -80,6 +84,10 @@ const nativeBlockTypes = {
         action: 'Action area content.',
       },
       cssKeys: ['element', 'icon', 'message', 'description', 'action', 'closeIcon'],
+    },
+    Avatar: {
+      category: 'display',
+      cssKeys: ['element'],
     },
     Box: {
       category: 'container',
@@ -144,12 +152,16 @@ const nativeBlockTypes = {
       slots: {
         content: 'Blocks rendered for each list item.',
       },
-      cssKeys: ['element', 'sectionHeader'],
+      cssKeys: ['element', 'cell', 'sectionHeader', 'sectionFooter'],
       nativeIgnored: ['wrap'],
     },
     ListItem: {
-      category: 'display',
-      cssKeys: ['element', 'avatar', 'icon', 'title', 'description', 'extra'],
+      category: 'container',
+      slots: {
+        leading: 'Blocks at the start of the row, in place of the leading property.',
+        trailing: 'Blocks at the end of the row, before the trailing property parts.',
+      },
+      cssKeys: ['element', 'avatar', 'icon', 'title', 'subtitle', 'description', 'extra'],
     },
     Markdown: {
       category: 'display',
@@ -240,6 +252,10 @@ const nativeBlockTypes = {
     Spinner: {
       category: 'display',
       cssKeys: ['element'],
+    },
+    StatusIcon: {
+      category: 'display',
+      cssKeys: ['element', 'label'],
     },
     Switch: {
       category: 'input',
