@@ -19,14 +19,13 @@ import path from 'node:path';
 import { type } from '@lowdefy/helpers';
 import { writeFileIfChanged } from '@lowdefy/node-utils';
 
-import addShellPluginDependencies, {
-  getShellPluginDependencies,
-} from './addShellPluginDependencies.js';
+import addShellPluginDependencies from './addShellPluginDependencies.js';
 import checkShellPluginPeers from './checkShellPluginPeers.js';
 import checkShellPluginSupport from './checkShellPluginSupport.js';
 import checkShellTypeManifest from './checkShellTypeManifest.js';
 import createEasJson from './createEasJson.js';
 import createShellJson from './createShellJson.js';
+import getShellPluginDependencies from './getShellPluginDependencies.js';
 import installShellProject from './installShellProject.js';
 import loadMobileShell from './loadMobileShell.js';
 import readShellPackageJson from './readShellPackageJson.js';
