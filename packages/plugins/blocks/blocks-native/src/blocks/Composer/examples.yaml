@@ -1,0 +1,83 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Mobile only.
+
+- title: A comment composer with mentions, record links and a reply-to
+  blocks:
+    - id: comment
+      type: Composer
+      properties:
+        placeholder: Leave a comment…
+        replyTo:
+          _state: comment_reply_to
+        warning:
+          _if:
+            test:
+              _state: comment_hidden_mentions
+            then: Pat Contractor can't see this task, so they won't be notified.
+            else: null
+        mentions:
+          - { value: u-sam, label: Sam Tolmay, sees: true }
+          - { value: u-ada, label: Ada Lovelace, sees: true }
+          - { value: u-gerrie, label: Gerrie van Wyk, sees: true }
+          - { value: u-nigel, label: Nigel, sees: true }
+          - { value: u-pat, label: Pat Contractor, sees: false }
+        links:
+          _state: comment_link_hits
+      events:
+        onLinkSearch:
+          - id: search_links
+            type: CallAPI
+            params:
+              endpointId: link-picker
+              payload:
+                q:
+                  _event: query
+          - id: set_hits
+            type: SetState
+            params:
+              comment_link_hits:
+                _actions: search_links.response.response.hits
+        onCancelReply:
+          - id: clear_reply_to
+            type: SetState
+            params:
+              comment_reply_to: null
+        onSubmit:
+          - id: post_comment
+            type: CallAPI
+            params:
+              endpointId: comment
+              payload:
+                body:
+                  _event: body
+                reply_to:
+                  _event: reply_to
+          - id: clear_reply
+            type: SetState
+            params:
+              comment_reply_to: null
+
+- title: A short composer, not kept above the keyboard
+  blocks:
+    - id: note
+      type: Composer
+      properties:
+        sticky: false
+        maxLength: 280
+        placeholder: Add a note
+        mentionFormat: '<@{id}>'
+        mentions:
+          - { value: u-1, label: Jordan Smith, sees: true }

@@ -1,0 +1,214 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Mobile only.
+
+- title: A task's activity, worded by event type
+  blocks:
+    - id: activity
+      type: ActivityTimeline
+      properties:
+        user:
+          id: u-gerrie
+        earlier: true
+        formatEvent:
+          status-change:
+            - when:
+                what.from: null
+              icon: CirclePlus
+              text: '{actor} created the task in **{what.to|humanize}**'
+              summary: 'created {n} task{s}'
+            - when:
+                what.to: [done, ready_for_release]
+              icon: CircleCheck
+              tone: success
+              text: '{actor} moved it to **{what.to|humanize}**'
+            - icon: CircleDot
+              tone: primary
+              text: '{actor} moved it to **{what.to|humanize}**'
+              summary: 'moved {n} task{s}'
+          assignee-change:
+            icon: User
+            tone: info
+            text: '{actor} assigned it to **{what.name}**'
+          block-set:
+            icon: Lock
+            tone: danger
+            text: '{actor} blocked it'
+            note: '{what.reason}'
+          edit:
+            icon: Pencil
+            text: '{actor} edited the {what.fields.0|words}'
+            summary: 'edited the {what.fields.0|words}'
+          decision-recorded:
+            icon: Scale
+            text: '{actor} recorded **{subject.title}**'
+            summary: 'recorded {n} decision{s}'
+        entries:
+          - id: ev-1
+            at: '2026-10-14T08:12:00Z'
+            tier: key
+            type: status-change
+            subject: { kind: task, id: t-644, key: PEL-644 }
+            by: { id: u-sam, name: Sam Tolmay }
+            what: { from: null, to: backlog }
+          - type: gap
+            id: gap-1
+            count: 14
+            actors:
+              - { id: u-sam, name: Sam Tolmay }
+              - { id: u-gerrie, name: Gerrie van Wyk }
+              - { id: u-nigel, name: Nigel, agent: true }
+              - { id: u-ada, name: Ada Lovelace }
+            types: { edit: 11, file-added: 3 }
+          - id: ev-2
+            at: '2026-10-16T09:40:00Z'
+            tier: key
+            type: assignee-change
+            by: { id: u-gerrie, name: Gerrie van Wyk }
+            what: { to: u-nigel, name: Nigel }
+          - id: ev-3
+            at: '2026-10-16T09:41:00Z'
+            tier: key
+            type: status-change
+            by: { id: u-nigel, name: Nigel, agent: true }
+            what: { from: todo, to: in_progress }
+          - id: ev-4
+            at: '2026-10-16T10:02:00Z'
+            tier: detail
+            type: edit
+            by: { id: u-nigel, name: Nigel, agent: true }
+            what: { fields: [body] }
+          - id: ev-5
+            at: '2026-10-16T10:05:00Z'
+            tier: detail
+            type: decision-recorded
+            subject: { kind: decision, id: d-1, title: Rail icons sit on a filled circle }
+            by: { id: u-nigel, name: Nigel, agent: true }
+          - id: ev-6
+            at: '2026-10-16T10:06:00Z'
+            tier: detail
+            type: decision-recorded
+            subject: { kind: decision, id: d-2, title: Replies stay flat under the first comment }
+            by: { id: u-nigel, name: Nigel, agent: true }
+          - id: c-1
+            type: comment
+            at: '2026-10-17T14:20:00Z'
+            by: { id: u-ada, name: Ada Lovelace }
+            body: |
+              The rail looks right in dark mode now. [[user:u-sam]] can you check the
+              resolved thread fold on a small phone? It touches [[PEL-645]].
+
+              - Avatars 28pt
+              - Replies newest 3
+            mentions:
+              - { user_id: u-sam, name: Sam Tolmay, sees: true }
+            reactions:
+              - { emoji: 👍, user_ids: [u-sam, u-gerrie] }
+              - { emoji: 🎉, user_ids: [u-sam] }
+            reply_count: 5
+            replies:
+              - id: r-3
+                at: '2026-10-17T15:02:00Z'
+                by: { id: u-sam, name: Sam Tolmay }
+                body: Checked on an SE. The fold reads well.
+              - id: r-4
+                at: '2026-10-17T15:30:00Z'
+                by: { id: u-nigel, name: Nigel, agent: true }
+                body: I moved the chevron to the end of the line.
+              - id: r-5
+                at: '2026-10-18T07:45:00Z'
+                by: { id: u-gerrie, name: Gerrie van Wyk }
+                body: Thanks both. [[user:u-pat]] has a look tomorrow.
+                edited_at: '2026-10-18T07:50:00Z'
+                mentions:
+                  - { user_id: u-pat, name: Pat Contractor, sees: false }
+          - id: c-2
+            type: comment
+            at: '2026-10-18T08:00:00Z'
+            by: { id: u-sam, name: Sam Tolmay }
+            body: Should the gap line load all 14 at once?
+            resolved:
+              by: { id: u-gerrie, name: Gerrie van Wyk }
+              at: '2026-10-18T08:30:00Z'
+            reply_count: 2
+            replies:
+              - id: r-6
+                at: '2026-10-18T08:10:00Z'
+                by: { id: u-gerrie, name: Gerrie van Wyk }
+                body: Yes, the endpoint pages them.
+          - id: c-3
+            type: comment
+            at: '2026-10-18T09:00:00Z'
+            by: { id: u-ada, name: Ada Lovelace }
+            deleted: true
+            reply_count: 1
+            replies:
+              - id: r-7
+                at: '2026-10-18T09:05:00Z'
+                by: { id: u-gerrie, name: Gerrie van Wyk }
+                body: Reply to a deleted comment.
+      events:
+        onReact:
+          - id: react
+            type: CallAPI
+            params:
+              endpointId: comment-react
+              payload:
+                comment_id:
+                  _event: comment_id
+                emoji:
+                  _event: emoji
+        onReply:
+          - id: set_reply_to
+            type: SetState
+            params:
+              comment_reply_to:
+                id:
+                  _event: thread_id
+                name:
+                  _event: name
+          - id: focus_composer
+            type: SetFocus
+            params: comment
+        onCopy:
+          - id: copy
+            type: CopyToClipboard
+            params:
+              copy:
+                _event: text
+
+- title: Pre-worded events from another app
+  blocks:
+    - id: order_activity
+      type: ActivityTimeline
+      properties:
+        foldDetail: false
+        emptyText: No activity yet
+        entries:
+          - id: o-1
+            at: '2026-10-18T06:00:00Z'
+            type: placed
+            by: { name: Jordan Smith }
+            icon: ShoppingCart
+            tone: primary
+            text: '{actor} placed order **#1042**'
+          - id: o-2
+            at: '2026-10-18T07:15:00Z'
+            type: shipped
+            by: { name: Warehouse, agent: true }
+            icon: Truck
+            tone: success
+            text: 'Shipped with **{what.carrier}**'
+            what: { carrier: DHL Express }
