@@ -16,7 +16,9 @@
 
 import { type } from '@lowdefy/helpers';
 
-const SERVER_URL = /^(https?):\/\/([^/?#\s]+)(\/[^?#\s]*)?$/i;
+// The host excludes "@" and a backslash: a URL with userinfo (http://localhost@evil.example)
+// names a different host than its text starts with, and would pass for a loopback server.
+const SERVER_URL = /^(https?):\/\/([^/\\?#\s@]+)(\/[^?#\s]*)?$/i;
 
 /**
  * A dev server's URL as Lowdefy Dev keeps it: `{ url, host }`, the url without a trailing slash,

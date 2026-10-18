@@ -14,9 +14,15 @@
   limitations under the License.
 */
 
-// The link Lowdefy Dev opens to attach to a dev server.
+// The link Lowdefy Dev opens to attach to a dev server. adb passes it through the device's
+// shell inside single quotes, so the characters encodeURIComponent keeps (' ( ) ! *) are
+// encoded too: a url can never close the quotes.
 function createDevAppLink({ url }) {
-  return `lowdefy-dev://connect?url=${encodeURIComponent(url)}`;
+  const encoded = encodeURIComponent(url).replace(
+    /['()!*]/g,
+    (char) => `%${char.charCodeAt(0).toString(16).toUpperCase()}`
+  );
+  return `lowdefy-dev://connect?url=${encoded}`;
 }
 
 export default createDevAppLink;
