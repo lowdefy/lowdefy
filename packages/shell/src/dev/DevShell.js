@@ -15,7 +15,7 @@
 */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Linking, View } from 'react-native';
+import { Linking, LogBox, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { Accelerometer } from 'expo-sensors';
 
@@ -38,6 +38,10 @@ import networkStatus from '../host/networkStatus.js';
 import parseDevLink from './connection/parseDevLink.js';
 import reloadApp from './tab/reloadApp.js';
 import watchShake from './menu/watchShake.js';
+
+// Lowdefy Dev reports errors in its own log (the dev menu) and to the dev server's build status.
+// React Native's LogBox toasts would cover the tab bar and every screenshot an agent takes.
+LogBox.ignoreAllLogs();
 
 /**
  * Lowdefy Dev: the shell with developer features, in place of ShellRoot. It opens one app, the
