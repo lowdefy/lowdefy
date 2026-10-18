@@ -29,7 +29,16 @@ import { writeCheckpoint } from './checkpointStore.js';
 // available. With only a `pageId`, a tab's snapshot is of the instance it
 // names (see findPageInstance in tabChannel.js), and the checkpoint keeps that
 // instance's pathParams.
-async function snapshotState({ origin, pageId, pathParams, name, notes, source, overwrite }) {
+async function snapshotState({
+  origin,
+  pageId,
+  pathParams,
+  name,
+  notes,
+  source,
+  overwrite,
+  device,
+}) {
   if (type.isNone(pageId) || !type.isString(pageId)) {
     return {
       error: `snapshotState requires a "pageId" string. Received ${JSON.stringify(pageId)}.`,
@@ -39,7 +48,7 @@ async function snapshotState({ origin, pageId, pathParams, name, notes, source, 
     return { error: `snapshotState requires a "name" string. Received ${JSON.stringify(name)}.` };
   }
 
-  const snapshot = await inspectState({ origin, pageId, pathParams, source });
+  const snapshot = await inspectState({ origin, pageId, pathParams, source, device });
   if (snapshot?.error) {
     return { error: snapshot.error, invalidInput: snapshot.invalidInput };
   }
@@ -58,7 +67,11 @@ async function snapshotState({ origin, pageId, pathParams, name, notes, source, 
       notes,
       overwrite,
     });
-    return { name, dir, parts, source: snapshot.source };
+    const result = { name, dir, parts, source: snapshot.source };
+    if (!type.isNone(snapshot.device)) {
+      result.device = snapshot.device;
+    }
+    return result;
   } catch (error) {
     return { error: error.message };
   }

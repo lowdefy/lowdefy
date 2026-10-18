@@ -97,6 +97,38 @@ test('listTypes merges client and server operators with environments', () => {
   expect(secret.used).toBe(false);
 });
 
+test('listTypes with target mobile lists the blocks a native shell carries', () => {
+  const blocks = listTypes({ kind: 'blocks', target: 'mobile' });
+  expect(blocks.map((block) => block.type)).toEqual(['Button', 'TextInput']);
+  const button = blocks.find((block) => block.type === 'Button');
+  expect(button.package).toEqual('@lowdefy/blocks-native');
+  expect(button.category).toEqual('display');
+  expect(button).not.toHaveProperty('used');
+});
+
+test('listTypes with target web lists the installed web blocks, as without a target', () => {
+  expect(listTypes({ kind: 'blocks', target: 'web' })).toEqual(listTypes({ kind: 'blocks' }));
+});
+
+test('listTypes with target mobile takes client operators from the shell and server ones from the app', () => {
+  const operators = listTypes({ kind: 'operators', target: 'mobile' });
+  expect(operators.map(({ type, environments }) => [type, environments])).toEqual([
+    ['_get', ['server']],
+    ['_secret', ['server']],
+    ['_state', ['client']],
+  ]);
+});
+
+test('listTypes with target mobile lists server kinds as for the web', () => {
+  expect(listTypes({ kind: 'requests', target: 'mobile' }).map(({ type }) => type)).toEqual([
+    'AxiosHttp',
+  ]);
+});
+
+test('listTypes throws on an unknown target', () => {
+  expect(() => listTypes({ kind: 'blocks', target: 'watch' })).toThrow('Unknown target');
+});
+
 test('listTypes accepts singular kind names', () => {
   expect(listTypes({ kind: 'block' }).length).toEqual(2);
 });

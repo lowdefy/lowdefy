@@ -22,20 +22,41 @@ import { streamSSE } from 'hono/streaming';
 
 import pollTab from '../../lib/docs/pollTab.js';
 import { registerTab, unregisterTab } from '../../lib/docs/tabChannel.js';
+import { remoteCallerHeader } from '../../lib/server/pairingHeaders.js';
 import readRecordingCookie from '../../lib/server/recording/readRecordingCookie.js';
+
+const PLATFORMS = ['ios', 'android'];
+
+// A phone shell (Lowdefy Dev) names its shell version in x-lowdefy-shell, and
+// its platform and bundle id in the query; the manager's proxy marks a phone
+// paired over the network (remoteCallerHeader). A browser tab is no device.
+function tabDevice(c) {
+  const shell = c.req.header('x-lowdefy-shell');
+  if (shell === undefined) {
+    return null;
+  }
+  const platform = c.req.query('platform');
+  return {
+    shell,
+    platform: PLATFORMS.includes(platform) ? platform : null,
+    app: c.req.query('app') ?? null,
+    paired: c.req.header(remoteCallerHeader) !== undefined,
+  };
+}
 
 // A verified recording cookie means the dev server's own headless browser
 // opened the tab: a journey run ({ source }), or a headless
 // tool ('off'). A developer's tab carries none.
-function tabOrigin(cookieHeader) {
-  const recording = readRecordingCookie(cookieHeader);
+function tabOrigin(c) {
+  const device = tabDevice(c);
+  const recording = readRecordingCookie(c.req.header('cookie'));
   if (recording === null) {
-    return { source: 'dev', automated: false };
+    return { source: 'dev', automated: false, device };
   }
   if (recording === 'off') {
-    return { source: 'headless', automated: true };
+    return { source: 'headless', automated: true, device };
   }
-  return { source: recording.source, automated: true };
+  return { source: recording.source, automated: true, device };
 }
 
 // SSE endpoint — notifies the client when build/reload is written so it can
@@ -70,7 +91,7 @@ async function reloadHandler(c) {
     return c.json(
       pollTab({
         tabId: c.req.query('tabId'),
-        origin: tabOrigin(c.req.header('cookie')),
+        origin: tabOrigin(c),
         readReloadStamp,
       })
     );
@@ -85,7 +106,7 @@ async function reloadHandler(c) {
     registerTab({
       id: tabId,
       send: (event, data) => stream.writeSSE({ event, data: JSON.stringify(data) }),
-      ...tabOrigin(c.req.header('cookie')),
+      ...tabOrigin(c),
     });
 
     let open = true;

@@ -16,12 +16,14 @@
 
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
+import findDeviceTab from './device/findDeviceTab.js';
 import { buildPageUrl, getBrowser, openPage } from './getBrowser.js';
 import noBrowserError from './noBrowserError.js';
 import { loadMocks } from './devMockRegistry.js';
 import { readCheckpoint } from './checkpointStore.js';
 import resolvePageInstance from './resolvePageInstance.js';
 import resolveToolCaller from './resolveToolCaller.js';
+import { requestFromTab } from './tabChannel.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import withBrowserSlot from './withBrowserSlot.js';
 import withDataSession from './withDataSession.js';
@@ -42,10 +44,16 @@ const READY_TIMEOUT = 15000;
 //   - 'registry-only': just returns a URL a human can open in a real browser
 //     tab — client/Inspector.jsx's `?_checkpoint=` bootstrap does the state
 //     injection client-side once that tab loads.
-async function loadState({ origin, name, mode = 'headless', user, data }) {
+// With `device` (a phone's tab id) the recorded state is set on the page
+// instance the phone holds instead (loadStateOnDevice).
+async function loadState({ origin, name, mode: requestedMode, user, data, device }) {
   if (type.isNone(name) || !type.isString(name)) {
     return { error: `loadState requires a "name" string. Received ${JSON.stringify(name)}.` };
   }
+  if (!type.isNone(device)) {
+    return loadStateOnDevice({ name, mode: requestedMode, user, data, device });
+  }
+  const mode = requestedMode ?? 'headless';
 
   // `user` only reaches a page this function opens itself. In 'registry-only'
   // mode the developer opens the returned URL in their own browser, carrying
@@ -132,6 +140,64 @@ async function loadState({ origin, name, mode = 'headless', user, data }) {
           }),
       }),
   });
+}
+
+// The checkpoint's requests are served from the registry, as in the other
+// modes, and its state is set on the page instance the phone holds through its
+// dev-tab client (a `load-state-request`), which answers the keys it verified.
+// The phone must hold the checkpoint's page: the tools do not navigate it.
+async function loadStateOnDevice({ name, mode, user, data, device }) {
+  if (!type.isNone(mode)) {
+    return {
+      error: `loadState loads into the phone when "device" is given; "mode" ${JSON.stringify(
+        mode
+      )} does not apply. Leave "mode" out.`,
+      invalidInput: true,
+    };
+  }
+  if (!type.isNone(user) || !type.isNone(data)) {
+    return {
+      error: `loadState cannot apply "${
+        type.isNone(user) ? 'data' : 'user'
+      }" to a phone: it carries its own session and the app's real database.`,
+      invalidInput: true,
+    };
+  }
+  const { tab, error } = findDeviceTab({ device });
+  if (!type.isUndefined(error)) {
+    return { error, invalidInput: true };
+  }
+  let checkpoint;
+  try {
+    checkpoint = readCheckpoint({ name });
+  } catch (readError) {
+    return { error: readError.message };
+  }
+  const pageId = checkpoint.checkpoint.pageId;
+  if (type.isNone(pageId)) {
+    return { error: `Checkpoint "${name}" has no recorded pageId.` };
+  }
+  const { pathParams } = checkpoint;
+  loadMocks({ pageId, mocks: checkpoint.requests });
+  const result = await requestFromTab({
+    tabId: tab.id,
+    pageId,
+    pathParams,
+    event: 'load-state-request',
+    payload: { state: checkpoint.state ?? {}, verify: VERIFY_KEY_COUNT },
+  });
+  if (!type.isUndefined(result?.error)) {
+    return { error: `Failed to load checkpoint "${name}" on the phone: ${result.error}` };
+  }
+  return {
+    loaded: true,
+    mode: 'device',
+    device: tab.id,
+    pageId,
+    pathParams,
+    verifiedKeys: result?.verifiedKeys ?? {},
+    note: "Recorded request data is served to the phone as to a browser; the page's requests return it the next time they run.",
+  };
 }
 
 // The part of loadState that runs in the browser, inside a browser slot.

@@ -27,7 +27,11 @@ function docsTypesHandler(c) {
       404
     );
   }
-  return c.json(listTypes({ kind }));
+  const target = c.req.query('target');
+  if (target !== undefined && target !== 'web' && target !== 'mobile') {
+    return c.json({ error: `Unknown target "${target}". Use "web" or "mobile".` }, 400);
+  }
+  return c.json(listTypes({ kind, target }));
 }
 
 export default docsTypesHandler;

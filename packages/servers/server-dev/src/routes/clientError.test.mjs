@@ -84,3 +84,22 @@ test('clientError refuses an error a page on another site posts', async () => {
   expect(res.status).toEqual(403);
   expect(mockPush).not.toHaveBeenCalled();
 });
+
+test('clientError marks a phone shell error as mobile with its shell version', async () => {
+  const res = await post({ host: 'localhost:3000', 'x-lowdefy-shell': '7.1.0' });
+  expect(res.status).toEqual(200);
+  expect(mockPush).toHaveBeenCalledWith(
+    expect.objectContaining({ name: 'BlockError', surface: 'mobile', shell: '7.1.0' })
+  );
+});
+
+test('clientError marks a browser error as web', async () => {
+  await post({
+    host: 'localhost:3000',
+    origin: 'http://localhost:3000',
+    'sec-fetch-site': 'same-origin',
+  });
+  const [entry] = mockPush.mock.calls.at(-1);
+  expect(entry.surface).toEqual('web');
+  expect(entry).not.toHaveProperty('shell');
+});

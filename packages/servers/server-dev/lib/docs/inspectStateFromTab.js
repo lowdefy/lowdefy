@@ -25,14 +25,15 @@ import { requestFromTab } from './tabChannel.js';
 // requestFromTab resolves directly with whatever the tab posted as `result`
 // (see tabChannel.js) — a serialized snapshot string on success, or an
 // `{ error }` object if no tab is connected, the request timed out, or
-// Inspector.jsx itself failed to build the snapshot.
-async function inspectStateFromTab({ pageId, pathParams } = {}) {
-  const response = await requestFromTab({ pageId, pathParams, event: 'inspect-request' });
+// Inspector.jsx itself failed to build the snapshot. `tabId` asks one tab (a
+// phone in Lowdefy Dev answers in the same shape), else the tab showing the page.
+async function inspectStateFromTab({ tabId, pageId, pathParams } = {}) {
+  const response = await requestFromTab({ tabId, pageId, pathParams, event: 'inspect-request' });
   if (response?.error) {
     return { error: response.error };
   }
   if (!type.isString(response)) {
-    return { error: 'Browser tab responded with an unexpected payload.' };
+    return { error: 'The tab responded with an unexpected payload.' };
   }
   return serializer.deserializeFromString(response);
 }
