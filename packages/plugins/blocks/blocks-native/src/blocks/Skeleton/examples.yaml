@@ -1,0 +1,96 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Skeleton draws a shimmering placeholder shaped like what loads in its place. Give the block
+# that loads `loading` and a Skeleton `skeleton`: its content fades in over the skeleton when it
+# stops loading.
+
+- title: An inset grouped List that shows its sections while it loads
+  blocks:
+    - id: tasks
+      type: List
+      loading:
+        _not:
+          _state: tasks_loaded
+      skeleton:
+        type: Skeleton
+        properties:
+          variant: insetGroup
+          count: [2, 4, 3]
+          trailing: true
+      properties:
+        variant: insetGrouped
+        sectionKey: state
+        showCount: true
+      blocks:
+        - id: tasks.$.row
+          type: ListItem
+          properties:
+            title:
+              _state: tasks.$.title
+
+- title: List rows without a leading glyph, one line each
+  blocks:
+    - id: results_loading
+      type: Skeleton
+      properties:
+        variant: listRow
+        count: 5
+        rows: 1
+        avatar: false
+
+- title: A record page while it loads, hero, body card and activity
+  blocks:
+    - id: record_loading
+      type: Box
+      layout:
+        direction: column
+        gap: 20
+      blocks:
+        - id: record_hero_loading
+          type: Skeleton
+          style:
+            .element:
+              paddingHorizontal: 16
+          properties:
+            variant: hero
+        - id: record_body_loading
+          type: Skeleton
+          properties:
+            variant: card
+            lines: 5
+        - id: record_activity_loading
+          type: Skeleton
+          style:
+            .element:
+              paddingHorizontal: 16
+          properties:
+            variant: timeline
+            count: 3
+
+- title: A paragraph of text
+  blocks:
+    - id: about_loading
+      type: Skeleton
+      properties:
+        variant: paragraph
+        lines: 4
+
+- title: One shape of a set size
+  blocks:
+    - id: chart_loading
+      type: Skeleton
+      properties:
+        height: 160
+        width: 100%

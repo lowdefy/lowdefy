@@ -29,7 +29,7 @@ const getEvaluatedLayout = (block) => block.eval?.layout;
 // renders the slot's blocks in an area. A slot with no visible block has no function, so the
 // block draws nothing for it (useVisibleSlots). A block may pass the loading its slot's blocks
 // inherit (`{ loading }`), for slots that are its chrome rather than its content.
-const Container = ({ block, Blocks, category, Component, context, loading, lowdefy }) => {
+const Container = ({ block, Blocks, category, Component, context, fadeIn, loading, lowdefy }) => {
   const styles = useBlockStyles({ block, lowdefy });
   const content = {};
   const { slots } = Blocks.subSlots[block.id][0];
@@ -59,7 +59,12 @@ const Container = ({ block, Blocks, category, Component, context, loading, lowde
     );
   });
   return (
-    <BlockLayout blockId={block.blockId} layout={block.eval.layout} style={styles.block}>
+    <BlockLayout
+      blockId={block.blockId}
+      fadeIn={fadeIn}
+      layout={block.eval.layout}
+      style={styles.block}
+    >
       <Component
         {...getBlockProps({ block, category, context, loading, lowdefy, styles })}
         content={content}

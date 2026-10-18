@@ -18,70 +18,48 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@lowdefy/client-native';
 
-import SkeletonShape from '../../skeleton/SkeletonShape.js';
-
-const AVATAR_SIZE = 32;
-const LINE_WIDTHS = ['62%', '38%', '84%', '50%'];
+import SkeletonListRow, { getTextInset } from './SkeletonListRow.js';
 
 /**
- * Loading rows shaped like list rows: `count` rows, each an optional round avatar and `rows`
- * lines of text (a wider title line, then shorter meta lines), divided by separators inset to the
- * text, as an inset grouped list draws them.
+ * `count` loading list rows (SkeletonListRow), each but the last with a hairline separator under
+ * it, inset to the text, as a List draws its rows.
  *
  * @param {Object} props
  * @param {boolean} props.avatar
  * @param {string} props.blockId
  * @param {number} props.count
- * @param {number} props.rows
+ * @param {number} [props.first] The index of the first row, so rows of later sections vary on.
+ * @param {number} props.lines
+ * @param {boolean} props.trailing
  */
-function SkeletonRows({ avatar, blockId, count, rows }) {
+function SkeletonRows({ avatar, blockId, count, first = 0, lines, trailing }) {
   const { tokens } = useTheme();
-  const textInset = avatar ? 16 + AVATAR_SIZE + 12 : 16;
-  return Array.from({ length: count }, (_, index) => (
-    <View key={index} testID={`${blockId}_row_${index}`}>
-      <View
-        style={{
-          alignItems: 'center',
-          flexDirection: 'row',
-          minHeight: rows > 1 ? 60 : 44,
-          paddingHorizontal: 16,
-          paddingVertical: 10,
-        }}
-      >
-        {avatar ? (
-          <SkeletonShape
+  return Array.from({ length: count }, (_, row) => {
+    const index = first + row;
+    return (
+      <View key={row}>
+        <SkeletonListRow
+          avatar={avatar}
+          index={index}
+          lines={lines}
+          testID={`${blockId}_row_${index}`}
+          trailing={trailing}
+        />
+        {row === count - 1 ? null : (
+          <View
             style={{
-              borderRadius: AVATAR_SIZE / 2,
-              height: AVATAR_SIZE,
-              marginRight: 12,
-              width: AVATAR_SIZE,
+              backgroundColor: tokens.colorSeparator,
+              bottom: 0,
+              height: StyleSheet.hairlineWidth,
+              left: getTextInset({ avatar }),
+              position: 'absolute',
+              right: 0,
             }}
           />
-        ) : null}
-        <View style={{ flex: 1, gap: 8 }}>
-          {Array.from({ length: rows }, (__, line) => (
-            <SkeletonShape
-              key={line}
-              style={{
-                height: line === 0 ? 14 : 11,
-                width: LINE_WIDTHS[line % LINE_WIDTHS.length],
-              }}
-              testID={line === 0 && index === 0 ? `${blockId}_skeleton` : undefined}
-            />
-          ))}
-        </View>
+        )}
       </View>
-      {index < count - 1 ? (
-        <View
-          style={{
-            backgroundColor: tokens.colorSeparator,
-            height: StyleSheet.hairlineWidth,
-            marginLeft: textInset,
-          }}
-        />
-      ) : null}
-    </View>
-  ));
+    );
+  });
 }
 
 export default SkeletonRows;

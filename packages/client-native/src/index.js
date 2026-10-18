@@ -35,5 +35,6 @@ export { default as ThemeContext } from './theme/ThemeContext.js';
 export { default as ThemeProvider } from './theme/ThemeProvider.js';
 export { default as toPixels } from './style/toPixels.js';
 export { default as useElementRef } from './elements/useElementRef.js';
+export { default as useReduceMotion } from './motion/useReduceMotion.js';
 export { default as useTheme } from './theme/useTheme.js';
 export { default as withAlpha } from './theme/withAlpha.js';

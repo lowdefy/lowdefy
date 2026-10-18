@@ -6,19 +6,19 @@ The native block set: React Native components a Lowdefy mobile shell renders thr
 
 Layout and display blocks: `Box`, `Card`, `Divider`, `Tabs`, `Title`, `Paragraph`, `Markdown`, `Icon`, `Tag`, `Alert`, `Empty`, `Skeleton` and `Spinner`. List, input and action blocks: `List`, `ListItem`, `Avatar`, `StatusIcon`, `TextInput`, `TextArea`, `NumberInput`, `Selector`, `ChipSelector`, `Switch`, `DateSelector` and `Button`. `Screen` (the mobile page type) has its meta here and its component in `@lowdefy/client-native`. `Empty`, `ListItem`, `Avatar`, `StatusIcon` and `ChipSelector` have no web block; a page that uses one is mobile only.
 
-| Block                 | Web source          | Native notes                                                                                  |
-| --------------------- | ------------------- | --------------------------------------------------------------------------------------------- |
-| `Box`                 | blocks-basic        | A `View`, or a `Pressable` button with `onClick`.                                             |
-| `Card`                | blocks-antd         | Header (title, extra), cover, body, actions; `loading` draws skeleton rows.                   |
-| `Divider`             | blocks-antd         | Dashed and dotted lines are zero-height views with a split border (iOS draws dashes only so). |
-| `Tabs`                | blocks-antd         | Top tabs in a scrolling bar (RN views, not `@expo/ui`); `setActiveKey` method; `bottom` too.  |
-| `Title`, `Paragraph`  | blocks-antd         | Text styles from antd's typography; `ellipsis` with expand/collapse fires `onExpand`.         |
-| `Markdown`            | blocks-markdown     | Read-only GFM drawn with RN views by `react-native-marked` (below); adds `onLinkPress`.       |
-| `Icon`                | blocks-basic        | Drawn by the native icon renderer; a button with `onClick`.                                   |
-| `Tag`                 | blocks-antd         | Status and preset colours from the computed palette tokens; closable; `href` opens outside.   |
-| `Alert`               | blocks-antd         | Type colours and icon; closable fires `onClose` then `afterClose`; `action` slot.             |
-| `Skeleton`, `Spinner` | blocks-loaders      | A pulsing shape; the platform `ActivityIndicator`, scaled to the web sizes.                   |
-| `Empty`               | none (antd `Empty`) | The empty tray or an icon, a description and a `footer` slot.                                 |
+| Block                 | Web source          | Native notes                                                                                    |
+| --------------------- | ------------------- | ----------------------------------------------------------------------------------------------- |
+| `Box`                 | blocks-basic        | A `View`, or a `Pressable` button with `onClick`.                                               |
+| `Card`                | blocks-antd         | Header (title, extra), cover, body, actions; `loading` draws skeleton rows.                     |
+| `Divider`             | blocks-antd         | Dashed and dotted lines are zero-height views with a split border (iOS draws dashes only so).   |
+| `Tabs`                | blocks-antd         | Top tabs in a scrolling bar (RN views, not `@expo/ui`); `setActiveKey` method; `bottom` too.    |
+| `Title`, `Paragraph`  | blocks-antd         | Text styles from antd's typography; `ellipsis` with expand/collapse fires `onExpand`.           |
+| `Markdown`            | blocks-markdown     | Read-only GFM drawn with RN views by `react-native-marked` (below); `onLinkPress`, `linkChips`. |
+| `Icon`                | blocks-basic        | Drawn by the native icon renderer; a button with `onClick`.                                     |
+| `Tag`                 | blocks-antd         | Status and preset colours from the computed palette tokens; closable; `href` opens outside.     |
+| `Alert`               | blocks-antd         | Type colours and icon; closable fires `onClose` then `afterClose`; `action` slot.               |
+| `Skeleton`, `Spinner` | blocks-loaders      | A shimmering shape or `variant` layout (below); the platform `ActivityIndicator`.               |
+| `Empty`               | none (antd `Empty`) | The empty tray or an icon, a description and a `footer` slot.                                   |
 
 The list, input and action blocks:
 
@@ -107,3 +107,12 @@ Each block has a Jest test under React Native's preset that renders a page throu
 child process and renders its page with these blocks: the build check that a form page of the
 native set builds and renders. It lives in the shell because `@lowdefy/build` depends on this
 package.
+
+## Skeleton
+
+`Skeleton` draws a placeholder shaped like the content that replaces it, so nothing jumps when data lands. `variant` picks the shape: `listRow` (a leading 22pt circle, a title bar 60 to 80% wide varied by row, shorter subtitle bars, an optional trailing 20pt circle), `insetGroup` (sections of rows in rounded cell cards with a header bar, at the inset grouped List's spacing; `count` may list each section's rows), `hero` (chip, key, two Title 1 bars, avatar and meta), `paragraph` (ragged body lines), `card` (paragraph lines in a cell card) and `timeline` (rail circles with one or two lines). Without a variant, `count`, `rows` or `avatar` draw list rows and anything else one shape of `width` and `height`.
+
+- **Shimmer** (`src/skeleton/`): every shape is the `colorSkeleton` fill with a soft wide band of `colorSkeletonHighlight` sweeping left to right. One clock (`shimmerClock`, a 1.2s native-driver loop) runs while any shape is mounted, and each shape places the band by its x in its Skeleton block (`SkeletonFrameContext`, `measureLayout`), so all the shapes on a screen sweep as one band. With Reduce Motion on (`useReduceMotion` from client-native) the shapes are the plain fill and the clock does not run.
+- **Bars** stand for an iOS text style (`skeletonText`): the bar sits in the style's line height, with round caps, so the text that replaces it takes the same room.
+- **Accessibility:** the whole skeleton is one "Loading" progress bar.
+- **Fade:** put `loading` and `skeleton` on the block that loads; client-native fades its content in when it stops loading (see client-native).

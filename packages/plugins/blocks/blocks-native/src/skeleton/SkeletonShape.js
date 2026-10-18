@@ -14,69 +14,110 @@
   limitations under the License.
 */
 
-import React, { useState } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import React, { useContext, useRef, useState } from 'react';
+import { Animated, View, useWindowDimensions } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
-import { useTheme } from '@lowdefy/client-native';
+import { useReduceMotion, useTheme } from '@lowdefy/client-native';
 
+import SkeletonFrameContext from './SkeletonFrameContext.js';
 import useShimmer from './useShimmer.js';
 
+// The band is most of the screen wide and eases in and out (BAND_STOPS), so it reads as a soft
+// sheen passing rather than a stripe.
+const BAND_SHARE = 0.75;
+const BAND_STOPS = [
+  { offset: '0', opacity: '0' },
+  { offset: '0.25', opacity: '0.35' },
+  { offset: '0.5', opacity: '1' },
+  { offset: '0.75', opacity: '0.35' },
+  { offset: '1', opacity: '0' },
+];
+
 /**
- * A loading placeholder shape: the tertiary system fill with a band of light sweeping across it.
- * The Skeleton block and a loading Card draw it.
+ * A loading placeholder shape: the skeleton fill (colorSkeleton) with a soft band of light
+ * (colorSkeletonHighlight) sweeping left to right across it. Every shape reads one clock
+ * (useShimmer) and places the band by its x in its Skeleton block (SkeletonFrameContext), so all
+ * the shapes on a screen sweep together, as one band crossing the screen. With Reduce Motion on
+ * the shape is the plain fill.
  *
  * @param {Object} props
+ * @param {boolean} [props.busy] Announce the shape as a loading progress bar, when it is the
+ *   whole placeholder.
  * @param {Object} [props.style] The shape's size, corner radius and margins.
  * @param {string} [props.testID]
  */
-function SkeletonShape({ style, testID }) {
-  const { isDark, tokens } = useTheme();
-  const progress = useShimmer();
-  const [width, setWidth] = useState(0);
-  const highlight = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.65)';
+function SkeletonShape({ busy = false, style, testID }) {
+  const { tokens } = useTheme();
+  const frame = useContext(SkeletonFrameContext);
+  const reduceMotion = useReduceMotion();
+  const progress = useShimmer({ enabled: !reduceMotion });
+  const { width: screenWidth } = useWindowDimensions();
+  const ref = useRef(null);
+  const [offset, setOffset] = useState(frame === null ? 0 : null);
+  const band = Math.round(screenWidth * BAND_SHARE);
+
+  function onLayout() {
+    if (frame === null) return;
+    ref.current.measureLayout(frame.current, (x) => setOffset(x));
+  }
+
+  const accessibility = busy
+    ? {
+        accessible: true,
+        accessibilityLabel: 'Loading',
+        accessibilityRole: 'progressbar',
+        accessibilityState: { busy: true },
+      }
+    : {};
   return (
     <View
-      accessible
-      accessibilityLabel="Loading"
-      accessibilityRole="progressbar"
-      accessibilityState={{ busy: true }}
-      onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
+      {...accessibility}
+      onLayout={onLayout}
+      ref={ref}
       style={[
-        { backgroundColor: tokens.colorTertiarySystemFill, borderRadius: 4 },
+        { backgroundColor: tokens.colorSkeleton, borderRadius: 4 },
         style,
         { overflow: 'hidden' },
       ]}
       testID={testID}
     >
-      {width > 0 ? (
+      {reduceMotion || offset === null ? null : (
         <Animated.View
           pointerEvents="none"
-          style={[
-            StyleSheet.absoluteFill,
-            {
-              transform: [
-                {
-                  translateX: progress.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [-width, width],
-                  }),
-                },
-              ],
-            },
-          ]}
+          style={{
+            bottom: 0,
+            left: 0,
+            position: 'absolute',
+            top: 0,
+            transform: [
+              {
+                translateX: progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [-band - offset, screenWidth - offset],
+                }),
+              },
+            ],
+            width: band,
+          }}
+          testID={testID ? `${testID}_shimmer` : undefined}
         >
           <Svg height="100%" width="100%">
             <Defs>
               <LinearGradient id="shimmer" x1="0" x2="1" y1="0" y2="0">
-                <Stop offset="0" stopColor={highlight} stopOpacity="0" />
-                <Stop offset="0.5" stopColor={highlight} stopOpacity="1" />
-                <Stop offset="1" stopColor={highlight} stopOpacity="0" />
+                {BAND_STOPS.map((stop) => (
+                  <Stop
+                    key={stop.offset}
+                    offset={stop.offset}
+                    stopColor={tokens.colorSkeletonHighlight}
+                    stopOpacity={stop.opacity}
+                  />
+                ))}
               </LinearGradient>
             </Defs>
             <Rect fill="url(#shimmer)" height="100%" width="100%" />
           </Svg>
         </Animated.View>
-      ) : null}
+      )}
     </View>
   );
 }

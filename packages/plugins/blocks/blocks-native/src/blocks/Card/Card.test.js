@@ -86,7 +86,7 @@ test('a loading Card shows skeleton rows in place of its content', async () => {
     ]),
   });
   await screen.findByTestId('busy');
-  expect(screen.getAllByRole('progressbar')).toHaveLength(4);
+  expect(screen.getAllByRole('progressbar')).toHaveLength(1);
   expect(screen.queryByText('Late')).toBeNull();
 });
 
