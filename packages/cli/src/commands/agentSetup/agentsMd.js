@@ -18,23 +18,17 @@ import agentsMdSkills from './agentsMdSkills.js';
 import devServerRules from './devServerRules.js';
 import TESTING_RULES from './testingRules.js';
 
-function agentsMd({ devCommand, appPath, skills }) {
-  const appDescription =
-    appPath === ''
-      ? 'This project is a [Lowdefy](https://lowdefy.com) app'
-      : `This project contains a [Lowdefy](https://lowdefy.com) app in \`${appPath}/\``;
+function agentsMd({ skills }) {
   return `## Lowdefy
 
-${appDescription}: a web app defined in YAML config files
+This project contains a [Lowdefy](https://lowdefy.com) app, or several: a web app defined in YAML config files
 rather than hand-written code. Pages compose **blocks** (UI components), **operators** (logic
 like \`_if\`, \`_get\`, \`_state\`), **actions** (event handlers), and **connections/requests**
 (databases and APIs).
 
 ### The dev server
 
-${devServerRules({ appPath })}
-
-Developers start it themselves with \`${devCommand}\`; agents use the tools above.
+${devServerRules()}
 
 ### Looking up types, schemas, and docs
 

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import getLowdefyVersion from '../../manager/utils/getLowdefyVersion.mjs';
+import checkAgentFiles from './checkAgentFiles.js';
 import clientErrorStore from './clientErrorStore.js';
 import getBuildId from './getBuildId.js';
 import getPageBuildStatus from './getPageBuildStatus.js';
@@ -30,6 +32,16 @@ function splitByBuild({ entries, buildId }) {
   };
 }
 
+// Notices about Lowdefy's agent block (see checkAgentFiles), checked on every
+// read: the root files are not watched, so a stored result would outlive a fix.
+async function getAgentFiles() {
+  const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd();
+  const lowdefyVersion = await getLowdefyVersion({
+    directories: { config: configDirectory },
+  }).catch(() => null);
+  return checkAgentFiles({ configDirectory, lowdefyVersion });
+}
+
 // Feedback loop for agents: build status (written by the build manager to
 // build/buildStatus.json), the page builds (see getPageBuildStatus), plus
 // recent browser errors reported via POST /api/client-error, plus recent server
@@ -37,6 +49,8 @@ function splitByBuild({ entries, buildId }) {
 // createHandleError. Lets an agent check "did my last edit work?" without
 // tailing terminal logs. Errors reported under an earlier build are listed
 // apart under earlierErrors. `buildId` names the build being served now.
+// Notices about the agent files come under agentFiles, apart from the build's
+// warnings, and only when there are any.
 async function getBuildStatus({ checked } = {}) {
   const build = readBuildArtifact({ name: 'buildStatus.json' }) ?? {
     status: 'unknown',
@@ -60,6 +74,10 @@ async function getBuildStatus({ checked } = {}) {
       clientErrors: clientErrors.earlier,
       serverErrors: serverErrors.earlier,
     };
+  }
+  const agentFiles = await getAgentFiles();
+  if (agentFiles.length > 0) {
+    status.agentFiles = agentFiles;
   }
   return status;
 }

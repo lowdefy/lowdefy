@@ -6,7 +6,7 @@ Everything is served under the `/lowdefy-docs` path of your dev server. It is al
 
 ## Connect your agent: `lowdefy mcp`
 
-Run `lowdefy agent-setup` once in your project. It registers the `lowdefy` MCP server in `.mcp.json`, pinned to your app's Lowdefy version:
+Run `npx lowdefy@<app version> agent-setup` once in your project (see _Setting up a project_ below). It registers the `lowdefy` MCP server in `.mcp.json`, pinned to the version of the CLI that ran it:
 
 ```json
 {
@@ -190,6 +190,20 @@ So while the last build is failing, every answer says so:
 Nothing is refused — the last-known-good schema or page config is often exactly what you need while fixing the build. The flag disappears as soon as a build succeeds. Call `lowdefy_build_status` (or `GET /lowdefy-docs/build-status`) for the errors.
 
 Some build warnings are only warnings in `lowdefy dev` — they fail `lowdefy build`. Those carry `"prodError": true` in `lowdefy_build_status`, are printed in the dev terminal as `[ConfigWarning · fails in prod] …`, and are badged **fails in prod** on a dark-orange bar in the browser error bar. Treat them as errors: the production build will not pass until they are fixed.
+
+### Agent instructions are checked, and said once
+
+`lowdefy agent-setup` writes Lowdefy's guidance for coding agents as a marked block in `AGENTS.md` (or `CLAUDE.md`), stamped with the Lowdefy version that wrote it. The dev server checks that block and reports what it finds under `agentFiles` in `lowdefy_build_status`, as `{ code, message }` notices, never among the build's warnings:
+
+| `code`                  | When                                                                                                    |
+| ----------------------- | ------------------------------------------------------------------------------------------------------- |
+| `version_mismatch`      | The block comes from a different Lowdefy minor version than `lowdefy.yaml` (a patch difference is fine) |
+| `claude_import_missing` | The block is in `AGENTS.md`, but the root `CLAUDE.md` is missing or has no `@AGENTS.md` line            |
+| `block_missing`         | No block, but `.mcp.json` registers the `lowdefy` server, so the project set up agents                  |
+
+The check reads the nearest `AGENTS.md` or `CLAUDE.md` holding the block, from the app folder up to the git root, and runs on every read, so a fix shows at once. It never changes a file. Apps on `lowdefy: local` get no version or missing-block notice. The dev server also prints the notices once when it starts.
+
+`lowdefy mcp` passes each notice on once per agent session for each app, and again only if its text changes; later build-status results in that session leave `agentFiles` out. `GET /lowdefy-docs/build-status` reports it on every read. Each notice tells the agent to tell you rather than fix it: the fix (`npx lowdefy@<app version> agent-setup`) rewrites committed files on whatever branch is open, and in a repository whose apps pin different Lowdefy versions only you know which version the files should follow.
 
 ## Live state — the agent sees what you see
 
@@ -463,12 +477,31 @@ Journeys are also the file format of `tests/journeys/`, which `lowdefy test` run
 ## Setting up a project — one command
 
 ```bash
-npx lowdefy agent-setup
+npx lowdefy@<app version> agent-setup
 ```
 
-This writes these files into your project (merging safely if they exist): `.mcp.json` registering the `lowdefy` MCP server (`lowdefy mcp`, see [Connect your agent](#connect-your-agent-lowdefy-mcp)), `.claude/skills/lowdefy-config/SKILL.md` teaching Claude Code the workflow, a `.claude/skills/journeys-from-dev/SKILL.md` skill that turns what you tried in the development server into journeys (see [Dev recordings](/config-tests#dev-recordings)), a `.claude/skills/journeys-from-production/SKILL.md` skill that turns what real users do in production into journeys (see [Production journeys](/config-tests#production-journeys)), a `.claude/skills/journeys-from-pr/SKILL.md` skill that explores a pull request (or a bug bash goal) page by page, writes a journey for every path a user can take, keeps those that pass and reports those that fail as findings (see [Exploring a pull request](/explore-pull-request)), a `.claude/skills/journeys-harden/SKILL.md` skill that replays, lints and mutation-tests your journeys and writes their edge-case variants, never deleting a journey (see [Hardening journeys](/config-tests#hardening-journeys)), a `.claude/skills/journeys-autopilot/SKILL.md` skill that builds and hardens the journeys of a whole app on its own, cycle after cycle (see [Journeys on autopilot](/config-tests#journeys-on-autopilot)), and an `AGENTS.md` section for other coding agents that lists the installed skills. Rerunning the command refreshes a generated skill to the current version unless you edited it; an edited skill is left alone. Add `lowdefy` to your app's `devDependencies` first, so `.mcp.json` pins your app's own version of the CLI. Rerun `agent-setup` after upgrading Lowdefy to move the pin.
+Run it with the Lowdefy version your app's `lowdefy.yaml` pins. It writes to the project root, the nearest folder holding `.git` above the app (or `--project-directory`), and merges into files that already exist:
 
-Projects set up by an earlier version, with an `http://localhost:<port>/lowdefy-docs/mcp` entry or one that runs the CLI from `node_modules`, are migrated when you rerun the command: the entry is replaced, per-port entries such as `lowdefy-3010` are removed, and the skill and `AGENTS.md` section it wrote are updated. The server, formerly `lowdefy-docs`, is renamed `lowdefy`, along with its approval in `.claude/settings.json` and the name in the skill and `AGENTS.md` section; its tools are now named `mcp__lowdefy__*`.
+- **`.mcp.json`** registers the `lowdefy` MCP server, pinned to the version of the CLI running `agent-setup` (`npx lowdefy@<version> mcp`; see [Connect your agent](#connect-your-agent-lowdefy-mcp)). Other servers in the file stay.
+- **Lowdefy's block** of guidance for coding agents: the dev server, looking up types and docs, icons and HTML, testing a change, visual feedback and the installed skills. It sits between `<!-- BEGIN:lowdefy-agent-rules version=<version> -->` and `<!-- END:lowdefy-agent-rules -->`, stamped with the version of the CLI that wrote it, and each run rewrites the whole block. Text outside the markers is yours and never touched. An existing block is replaced where it is. Otherwise the block is appended to `AGENTS.md` when it exists, else to `CLAUDE.md` when that is all the project has (no `AGENTS.md` is created), else to a new `AGENTS.md`.
+- **The root `CLAUDE.md` imports `AGENTS.md`.** Claude Code skips `AGENTS.md` whenever it finds a Claude file in or above the working directory, including one outside the repository on your machine. When the block is in `AGENTS.md`, `agent-setup` creates a root `CLAUDE.md` holding only `@AGENTS.md`, or adds that line to the top of an existing one that lacks it. It never edits `.claude/CLAUDE.md` or `CLAUDE.local.md`.
+- **Skills**, each written to both `.agents/skills/<name>/SKILL.md` (read by Codex, Cursor, Copilot, Gemini, Amp and opencode) and `.claude/skills/<name>/SKILL.md` (read by Claude Code). Agents that read both folders may list a skill twice.
+  - `lowdefy-config`: writing Lowdefy config with exact types, schemas and examples from the dev server.
+  - `journeys-from-dev`: turns what you tried in the development server into journeys (see [Dev recordings](/config-tests#dev-recordings)).
+  - `journeys-from-production`: turns what real users do in production into journeys (see [Production journeys](/config-tests#production-journeys)).
+  - `journeys-from-pr`: explores a pull request (or a bug bash goal) page by page, writes a journey for every path a user can take, keeps those that pass and reports those that fail as findings (see [Exploring a pull request](/explore-pull-request)).
+  - `journeys-harden`: replays, lints and mutation-tests your journeys and writes their edge-case variants, never deleting a journey (see [Hardening journeys](/config-tests#hardening-journeys)).
+  - `journeys-autopilot`: builds and hardens the journeys of a whole app on its own, cycle after cycle (see [Journeys on autopilot](/config-tests#journeys-on-autopilot)).
+
+**Everything follows the CLI, not the app.** Nothing `agent-setup` writes names an app, so running it from any app in a repository writes the same files. A plain `npx lowdefy agent-setup` runs the latest release, whatever your app pins. When the CLI's version differs from your app's, `agent-setup` still writes, and warns with the command that matches them, such as `npx lowdefy@7.1.0 agent-setup`. The dev server keeps a notice about the block until someone does (see [Agent instructions are checked, and said once](#agent-instructions-are-checked-and-said-once)). Rerun `agent-setup` the same way after upgrading Lowdefy.
+
+**Which app agents work on.** A Lowdefy app is a folder containing `lowdefy.yaml`. The block tells agents the rule the `lowdefy_` tools follow: the app folder the session started in, else the repository's only app; otherwise the tools fail and list the apps, and the agent passes the folder it means as `directory`. Shell commands such as `lowdefy test` take it as `--config-directory <app>`. The unattended `journeys-autopilot` skill stops and lists the apps rather than guess.
+
+**Skills you edit are kept.** Each `SKILL.md` carries a `lowdefy-skill-hash` of its content. A rerun refreshes both copies of a skill, and recreates a missing one, while every copy still matches its hash. Edit either copy and both are frozen; `agent-setup` names the edited copy and its twin, so you can copy the edit across, or delete both and rerun to go back to Lowdefy's. A skill Lowdefy no longer ships is removed when unedited: its `SKILL.md` is deleted, and its folder only when nothing else is left in it. An edited one stays, and `agent-setup` says Lowdefy no longer maintains it. Skills without a `lowdefy-skill-hash` are not Lowdefy's and are never touched.
+
+**Apps on `lowdefy: local`** are not supported: `agent-setup` stops with an error and writes nothing.
+
+**Projects set up by an earlier version.** In `.mcp.json`, the `lowdefy` entry is replaced whatever it ran before (a dev server port such as `http://localhost:<port>/lowdefy-docs/mcp`, or the CLI in `node_modules`), and port-pinned entries under other names, such as `lowdefy-3010`, are removed. Approvals in `.claude/settings.json` under the server's old name, `lowdefy-docs`, carry over to `lowdefy`, whose tools are named `mcp__lowdefy__*`; remove an old `lowdefy-docs` entry from `.mcp.json` by hand. Guidance written before the block is not migrated: an unmarked `## Lowdefy` section stays where it is, and a `lowdefy-config` skill without a hash counts as edited. Delete them, then rerun `agent-setup`.
 
 ## Using it with Claude Code manually
 
