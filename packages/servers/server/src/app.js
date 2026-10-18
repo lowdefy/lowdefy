@@ -35,6 +35,7 @@ import cronHandler from './routes/cron.js';
 import detachedHandler from './routes/detached.js';
 import endpointsHandler from './routes/endpoints.js';
 import getAuth from '../lib/server/auth/getAuth.js';
+import getRequestSurface from './lib/getRequestSurface.js';
 import getStrategies from '../lib/server/auth/getStrategies.js';
 import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
@@ -150,8 +151,12 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   app.use('/api/mobile/root', stampCaller());
   // A shell revalidates the pages and root config it keeps with If-None-Match.
   // Registered inside noStore and stampCaller, so a 304 still carries both.
+  // Browsers never revalidate a no-store page, so their page responses are
+  // left as they were, with no ETag.
   const etagMiddleware = etag();
-  app.use('/api/page/*', etagMiddleware);
+  app.use('/api/page/*', (c, next) =>
+    getRequestSurface(c) === 'mobile' ? etagMiddleware(c, next) : next()
+  );
   app.use('/api/mobile/root', etagMiddleware);
   app.all('/api/request/*', refuseOtherBuild({ buildId: appMeta.buildId }), requestHandler);
   // Endpoint payloads may carry base64 file content (emitFileContent + CallAPI);

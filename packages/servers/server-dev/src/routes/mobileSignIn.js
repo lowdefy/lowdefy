@@ -37,8 +37,13 @@ function getEngine(c) {
 // GET /auth/mobile - the sign-in page a phone shell opens in a system sheet;
 // handleMobileSignIn sends the person through the app's sign-in page and back
 // to the shell's scheme with a one-time token bound to the shell's PKCE code
-// challenge (code_challenge, code_challenge_method=S256, required).
-function mobileSignInHandler(c) {
+// challenge (code_challenge, code_challenge_method=S256, required). An app
+// without a mobile section has no such page, so the path falls through to the
+// app's own pages.
+function mobileSignInHandler(c, next) {
+  if (type.isNone(authJson.mobile)) {
+    return next();
+  }
   return handleMobileSignIn({
     auth: getEngine(c),
     authJson,

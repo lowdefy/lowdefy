@@ -68,6 +68,7 @@ import getAuth from '../lib/server/auth/getAuth.js';
 import getStrategies from '../lib/server/auth/getStrategies.js';
 import getMockUser from '../lib/server/auth/getMockUser.js';
 import isTabAnswer from './lib/isTabAnswer.js';
+import getRequestSurface from './lib/getRequestSurface.js';
 import jitPageHandler from './routes/jitPage.js';
 import localDevToolsOnly from './middleware/localDevToolsOnly.js';
 import lowdefyConfig from '../lib/build/config.js';
@@ -262,8 +263,12 @@ function createApp() {
   app.use('/api/mobile/root', stampCaller());
   // A shell revalidates the pages and root config it keeps with If-None-Match.
   // Registered inside noStore and stampCaller, so a 304 still carries both.
+  // Browsers never revalidate a no-store page, so their page responses are
+  // left as they were, with no ETag.
   const etagMiddleware = etag();
-  app.use('/api/page/*', etagMiddleware);
+  app.use('/api/page/*', (c, next) =>
+    getRequestSurface(c) === 'mobile' ? etagMiddleware(c, next) : next()
+  );
   app.use('/api/mobile/root', etagMiddleware);
   app.get('/api/root', rootHandler);
   app.get('/api/mobile/root', mobileRootHandler);

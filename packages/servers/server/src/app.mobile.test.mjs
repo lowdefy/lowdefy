@@ -257,11 +257,19 @@ describe('GET /api/page/* surface gate', () => {
 });
 
 describe('GET /api/page/* ETag', () => {
+  test('a browser page response carries no ETag, as before', async () => {
+    const res = await app.request('/api/page/shared');
+    expect(res.status).toEqual(200);
+    expect(res.headers.get('etag')).toBeNull();
+  });
+
   test('answers 304 to a matching If-None-Match', async () => {
-    const first = await app.request('/api/page/shared');
+    const first = await app.request('/api/page/shared', { headers: shell });
     const etag = first.headers.get('etag');
     expect(etag).toMatch(/^"[^"]+"$/);
-    const second = await app.request('/api/page/shared', { headers: { 'if-none-match': etag } });
+    const second = await app.request('/api/page/shared', {
+      headers: { ...shell, 'if-none-match': etag },
+    });
     expect(second.status).toEqual(304);
     expect(second.headers.get('x-lowdefy-caller')).not.toBeNull();
   });
