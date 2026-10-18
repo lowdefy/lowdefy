@@ -93,7 +93,9 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   across the header and truncate the title. `ScreenContext` carries the screen's `focused` flag
   (onFocus fires on each false-to-true change, the first one after onMount), `setRefresh`,
   which turns on the page ScrollView's `RefreshControl` for `onRefresh` and holds `refreshing`
-  until the event's promise settles, and `footer`, the store (`createFooterStore`) the Screen sets
+  until the event's promise settles (whether the control is there is read from the page config's
+  `onRefresh`, never set as the Screen mounts: the iOS ScrollView draws the control ahead of its
+  content, so toggling it remounts the page tree), and `footer`, the store (`createFooterStore`) the Screen sets
   its `footer` slot in. `ScreenFooter` draws that slot below the ScrollView, padded by
   `LowdefyPage`'s `bottomInset` (the shell's bottom safe area: tab bar, home indicator) and kept
   above the keyboard by a `KeyboardAvoidingView`; only it re-renders when the slot is set, so the

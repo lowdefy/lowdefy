@@ -17,7 +17,7 @@
 import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { RefreshControl, ScrollView, useWindowDimensions } from 'react-native';
 import { getAppContext } from '@lowdefy/engine';
-import { appStorageKey, pageInstanceKey, serializer } from '@lowdefy/helpers';
+import { appStorageKey, pageInstanceKey, serializer, type } from '@lowdefy/helpers';
 import { getBreakpoint } from '@lowdefy/layout-native';
 
 import Block from './block/Block.js';
@@ -38,19 +38,22 @@ import ThemeProvider from './theme/ThemeProvider.js';
 import useElementRef from './elements/useElementRef.js';
 
 // Pull-to-refresh on the page's scroll view, for a Screen with onRefresh: the native spinner shows
-// until the refresh function's promise settles.
-function useRefresh() {
+// until the refresh function's promise settles. Whether the scroll view has its refresh control is
+// read from the page config, before the page renders, never from the Screen as it mounts: React
+// Native's ScrollView draws the control ahead of its content, so the content moves, and mounts
+// again, when the control comes or goes. A Screen that turned the control on as it mounted would
+// mount again, turn it off as it unmounted, and so on, running onMount each time.
+function useRefresh({ pageConfig }) {
   const refreshRef = useRef(null);
-  const [hasRefresh, setHasRefresh] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const setRefresh = useCallback((refresh) => {
     refreshRef.current = refresh;
-    setHasRefresh(refresh !== null);
   }, []);
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     Promise.resolve(refreshRef.current?.()).finally(() => setRefreshing(false));
   }, []);
+  const hasRefresh = !type.isNone(pageConfig.events?.onRefresh);
   return { hasRefresh, onRefresh, refreshing, setRefresh };
 }
 
@@ -100,7 +103,7 @@ const Page = ({
   const contextKey =
     pageConfig.dynamic === true ? `${screenKey}:${buildRef.current.build}` : screenKey;
 
-  const { hasRefresh, onRefresh, refreshing, setRefresh } = useRefresh();
+  const { hasRefresh, onRefresh, refreshing, setRefresh } = useRefresh({ pageConfig });
   const [footer] = useState(createFooterStore);
   const screen = useMemo(() => ({ focused, footer, setRefresh }), [focused, footer, setRefresh]);
 
