@@ -192,6 +192,8 @@ function renderScreen({ focused = true, headerInset, onScreenOptions = jest.fn()
   const { host } = createFakeHost({ path: '/home' });
   const core = createCore();
   const types = createTypes({ icons: { Plus: plus }, record });
+  // A host holds one config object per version of a page; a new object is a new version.
+  const pageConfig = buildPage(page);
   const element = (isFocused) => (
     <LowdefyPage
       core={core}
@@ -199,7 +201,7 @@ function renderScreen({ focused = true, headerInset, onScreenOptions = jest.fn()
       headerInset={headerInset}
       host={host}
       onScreenOptions={onScreenOptions}
-      pageConfig={buildPage(page)}
+      pageConfig={pageConfig}
       rootConfig={rootConfig}
       types={types}
     />

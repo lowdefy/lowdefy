@@ -37,7 +37,10 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 - There are no class names, `Head`, shortcuts, progress bar or antd providers.
 - Layout is `@lowdefy/layout-native` (see its doc). A gapped area is two views (the slot style
   outside, the widened row inside), and a block in it is two views (the placement with the gap
-  padding outside, the view with its `testID` and `style.block` inside). An area sorts its blocks
+  padding outside, the view with its `testID` and `style.block` inside, which fills the placement
+  only when `fillsPlacement` says so; the area passes its column gap and container style down in
+  `AreaContext`). A slot whose blocks are all hidden is not passed to its block
+  (`useVisibleSlots`), so a header slot of hidden blocks draws no glass button. An area sorts its blocks
   by layout order, which React Native has no style for. The breakpoint comes from the window's
   shorter side on a phone, so it is not the `_media: size` of a landscape phone.
 - `class` and `style` reach a block as one `styles` prop, a React Native style per slot: the
@@ -85,6 +88,11 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   route, so `_url_query` and `_location` are the query this screen was opened with, whichever
   screen rendered or took focus last. Without them, a page has one context and reads the host's
   shown route, as before.
+- The page ScrollView is keyed by the route instance, so a scroll position is kept only for the
+  instance it was scrolled on. A host gives one `pageConfig` object per version of a page
+  (`deserializeConfig` deserializes each once): a new object while the screen shows the old one
+  rebuilds the screen's kept context once (`getContextReset` raises `resetContext`), on the same
+  screen and scroll view, so a version the shell fetched in the background shows at once.
 - `Screen` reports its header to the shell's router (`onScreenOptions`): `title`, `largeTitle`,
   `presentation`, `headerLeft` and `headerRight` (slot render functions), `headerActions` (icon
   buttons with an SF Symbol from `getSfSymbol`, an `onPress`, a `menu` of items (`id`, `title`,
