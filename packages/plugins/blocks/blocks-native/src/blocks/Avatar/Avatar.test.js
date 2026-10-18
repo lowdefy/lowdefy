@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { page, renderPage, screen, styleOf, theme } from '../../test/renderPage.js';
+import { page, renderPage, screen, styleOf } from '../../test/renderPage.js';
 
 test('an Avatar shows initials on the colour its name picks', async () => {
   await renderPage({
@@ -43,7 +43,8 @@ test('an Avatar stacks several people and counts the rest past max', async () =>
   expect(screen.getByText('+1', { includeHiddenElements: true })).toBeTruthy();
   const second = screen.getByTestId('team_avatar_1', { includeHiddenElements: true });
   expect(styleOf(second)).toMatchObject({
-    borderColor: theme.light.colorBgContainer,
+    // The ring matches the cell it sits on: secondarySystemGroupedBackground in light mode.
+    borderColor: '#FFFFFF',
     marginLeft: -6,
   });
 });
