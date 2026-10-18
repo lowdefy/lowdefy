@@ -242,7 +242,9 @@ test('journeys-autopilot runs the whole suite on a fix branch before pushing it'
 test('journeys-autopilot picks the dev script when several run lowdefy dev, never a production one', () => {
   const skill = journeysAutopilot();
   expect(skill).toContain('2. **Pick the dev script.**');
-  expect(skill).toContain('or it has no `items` yet because\nbootstrap stopped as Blocked');
+  expect(skill).toContain(
+    '### 2. Bootstrap\n\nOnly when there is no `tests/autopilot.yaml`, or it has no `items` yet because bootstrap stopped\nas Blocked.'
+  );
   expect(skill).toContain('`Several package.json scripts run "lowdefy dev" (...)`');
   expect(skill).toContain(
     "choose one of the scripts that refusal lists\n   (the scripts in the app's `package.json`"

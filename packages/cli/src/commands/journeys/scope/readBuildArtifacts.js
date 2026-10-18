@@ -49,12 +49,13 @@ function idOf(file, folder) {
 
 // A page's requests sit in the folder named for the page, as
 // pages/<pageId>/requests/<requestId>.json, and either id may hold '/'. The
-// first split whose page id is a page wins.
+// longest page id that is a page wins: a module page such as crm/requests
+// has its requests under pages/crm/requests/requests/, beside an app page crm.
 function splitRequest({ file, pageIds }) {
   if (!file.startsWith('pages/') || !file.endsWith('.json')) return null;
   const id = idOf(file, 'pages/');
   const marker = '/requests/';
-  for (let at = id.indexOf(marker); at !== -1; at = id.indexOf(marker, at + 1)) {
+  for (let at = id.lastIndexOf(marker); at > 0; at = id.lastIndexOf(marker, at - 1)) {
     const pageId = id.slice(0, at);
     if (pageIds.has(pageId)) return { pageId, requestId: id.slice(at + marker.length) };
   }
