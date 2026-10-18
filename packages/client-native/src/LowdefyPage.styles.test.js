@@ -401,10 +401,22 @@ test('blocks read the theme tokens of theme.json for the mode showing', async ()
     },
   });
   const tokens = await screen.findByTestId('tokens-element');
-  expect(JSON.parse(tokens.props.children)).toEqual(theme.light);
+  expect(JSON.parse(tokens.props.children)).toMatchObject({
+    ...theme.light,
+    colorCell: '#FFFFFF',
+    colorGroupedBackground: '#F2F2F7',
+    colorLabel: '#000000',
+    colorTint: theme.light.colorPrimary,
+  });
   expect(screen.getByText(`primary ${theme.light.colorPrimary}`)).toBeTruthy();
   await press('Go dark');
-  expect(JSON.parse(screen.getByTestId('tokens-element').props.children)).toEqual(theme.dark);
+  expect(JSON.parse(screen.getByTestId('tokens-element').props.children)).toMatchObject({
+    ...theme.dark,
+    colorCell: '#1C1C1E',
+    colorGroupedBackground: '#000000',
+    colorLabel: '#FFFFFF',
+    colorTint: theme.dark.colorPrimary,
+  });
   expect(await screen.findByText(`primary ${theme.dark.colorPrimary}`)).toBeTruthy();
 });
 
@@ -414,18 +426,29 @@ test('the theme mode follows theme.darkMode, then the stored preference', async 
     JSON.parse((await screen.findByTestId('tokens-element')).props.children);
 
   await renderPage({ pageConfig, rootConfig: { theme: { ...theme, darkMode: 'dark' } } });
-  expect(await tokensShown()).toEqual(theme.dark);
+  expect(await tokensShown()).toMatchObject(theme.dark);
 
   const storageKey = appStorageKey({ basePath: '', name: 'lowdefy_darkMode', slug: 'test-app' });
   await renderPage({ pageConfig, storage: { [storageKey]: 'dark' } });
-  expect(await tokensShown()).toEqual(theme.dark);
+  expect(await tokensShown()).toMatchObject(theme.dark);
 
   await renderPage({
     pageConfig,
     rootConfig: { theme: { ...theme, darkMode: 'light' } },
     storage: { [storageKey]: 'dark' },
   });
-  expect(await tokensShown()).toEqual(theme.light);
+  expect(await tokensShown()).toMatchObject(theme.light);
+});
+
+test('the page is drawn on the grouped background of the mode showing', async () => {
+  await renderPage({
+    pageConfig: { id: 'home', type: 'Box', blocks: [darkModeButton] },
+  });
+  await screen.findByText('Go dark');
+  const scrollView = () => screen.root;
+  expect(styleOf(scrollView()).backgroundColor).toBe('#F2F2F7');
+  await press('Go dark');
+  expect(styleOf(scrollView()).backgroundColor).toBe('#000000');
 });
 
 test('SetDarkMode stores the preference under the app key', async () => {

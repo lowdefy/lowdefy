@@ -17,7 +17,8 @@
 import React from 'react';
 
 // { isDark, preference, tokens }: the theme mode showing, the person's preference ('light',
-// 'dark' or 'system') and the computed antd tokens of the mode. null outside a ThemeProvider.
+// 'dark' or 'system') and the tokens of the mode: antd's computed tokens with the iOS semantic
+// colours. null outside a ThemeProvider.
 const ThemeContext = React.createContext(null);
 
 export default ThemeContext;

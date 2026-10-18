@@ -80,11 +80,13 @@ const Page = ({
       <PageStyleContext.Provider value={pageStyle}>
         <ScreenOptionsContext.Provider value={onScreenOptions}>
           {/* A native stack header is translucent on iOS 26 and later and the page scrolls under
-              it: automatic insets start the content below the header and the tab bar. */}
+              it: automatic insets start the content below the header and the tab bar. The page
+              is drawn on the grouped background, as an iOS screen of grouped sections is. */}
           <ScrollView
             contentInsetAdjustmentBehavior="automatic"
             keyboardShouldPersistTaps="handled"
             ref={scrollRef}
+            style={{ backgroundColor: theme.tokens.colorGroupedBackground }}
           >
             <Context
               key={contextKey}
