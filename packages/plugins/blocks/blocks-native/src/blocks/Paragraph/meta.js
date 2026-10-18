@@ -155,6 +155,7 @@ export default {
               },
               tooltip: {
                 type: ['boolean', 'string'],
+                nativeIgnored: true,
                 description:
                   'Show a tooltip when the text is truncated. true shows the full text, a string shows that text. Ignored on mobile.',
                 docs: {

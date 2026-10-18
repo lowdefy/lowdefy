@@ -15,10 +15,10 @@
 */
 
 import React from 'react';
+import { toPixels } from '@lowdefy/client-native';
 
 import getTextStyle from '../../typography/getTextStyle.js';
 import meta from './meta.js';
-import toPixels from '../../toPixels.js';
 import TypographyText from '../../typography/TypographyText.js';
 import useComponentTokens from '../../useComponentTokens.js';
 

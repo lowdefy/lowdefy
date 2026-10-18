@@ -17,10 +17,10 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { type } from '@lowdefy/helpers';
+import { toPixels } from '@lowdefy/client-native';
 
 import htmlToText from '../../htmlToText.js';
 import meta from './meta.js';
-import toPixels from '../../toPixels.js';
 import useComponentTokens from '../../useComponentTokens.js';
 
 const sizeMargins = { small: 'marginXS', medium: 'margin', large: 'marginLG' };

@@ -19,44 +19,45 @@ import Svg from 'react-native-svg';
 
 import renderIconNodes from './renderIconNodes.js';
 
-// lucide-react's svg attributes, which the web draws every icon with. A set that draws another
-// way (filled icons) gives its own in IconData.attrs, which win.
-const DEFAULT_ATTRS = {
-  fill: 'none',
-  stroke: 'currentColor',
-  strokeLinecap: 'round',
-  strokeLinejoin: 'round',
-  strokeWidth: 2,
-  viewBox: '0 0 24 24',
-};
+const DEFAULT_VIEW_SIZE = 24;
 
 /**
  * Draws an icon from its IconData, the same data the web draws: `{ node, attrs?, size?, width?,
- * height? }`, `node` being `[tag, attrs, children?]` entries. The build gives it in the mobile
- * root (menu icons) and page config. Blocks and the shell draw every icon through this.
+ * height? }`, `node` being `[tag, attrs, children?]` entries. lucide-react's svg defaults (a 24
+ * unit grid, round stroked lines in the current colour) sit under the data's own attributes, so
+ * a filled set's `fill` wins. The shell draws menu icons with it, and the `components.Icon` that
+ * blocks draw through (createIcon) draws with it.
  *
  * @param {Object} props
  * @param {Object} props.data The icon's IconData.
  * @param {string} [props.color] The colour `currentColor` draws with.
+ * @param {boolean} [props.nonScalingStroke] Keep the stroke width at any size.
  * @param {number} [props.size] Width and height; the icon's own size, or 24.
  * @param {number} [props.strokeWidth]
  * @param {Object} [props.style]
  * @param {string} [props.testID]
  */
-function Icon({ color, data, size, strokeWidth, style, testID }) {
-  const { height, width, ...attrs } = { ...DEFAULT_ATTRS, ...data.attrs };
-  const iconSize = size ?? data.size;
+function Icon({ color, data, nonScalingStroke = false, size, strokeWidth = 2, style, testID }) {
+  // An svg width or height in the data is the view size, not the drawn size: size wins.
+  const { height, width, ...attrs } = data.attrs ?? {};
+  const viewWidth = data.width ?? data.size ?? width ?? DEFAULT_VIEW_SIZE;
+  const viewHeight = data.height ?? data.size ?? height ?? DEFAULT_VIEW_SIZE;
   return (
     <Svg
-      {...attrs}
       color={color}
-      height={iconSize ?? data.height ?? height ?? 24}
-      strokeWidth={strokeWidth ?? attrs.strokeWidth}
+      fill="none"
+      height={size ?? viewHeight}
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={strokeWidth}
       style={style}
       testID={testID}
-      width={iconSize ?? data.width ?? width ?? 24}
+      viewBox={`0 0 ${viewWidth} ${viewHeight}`}
+      width={size ?? viewWidth}
+      {...attrs}
     >
-      {renderIconNodes(data.node)}
+      {renderIconNodes({ node: data.node, nonScalingStroke })}
     </Svg>
   );
 }

@@ -32,8 +32,7 @@ import {
   Stop,
 } from 'react-native-svg';
 
-// The SVG elements icon sets draw with, as react-native-svg components. Icon data uses React's
-// attribute names (strokeWidth, fillRule), which react-native-svg takes as they are.
+// The SVG elements icon sets draw with, as react-native-svg components.
 const components = {
   circle: Circle,
   clipPath: ClipPath,
@@ -51,20 +50,43 @@ const components = {
   stop: Stop,
 };
 
-// An icon's IconData node ([tag, attrs, children?] entries) as react-native-svg elements. A tag
-// with no native form (a title, a style sheet) is left out, as it draws nothing.
-function renderIconNodes(node) {
-  return node.map(([tag, attrs, children], index) => {
-    const Component = components[tag];
-    if (Component === undefined) {
-      return null;
-    }
-    const props = { ...attrs, key: index };
-    if (!children) {
-      return React.createElement(Component, props);
-    }
-    return React.createElement(Component, props, renderIconNodes(children));
+const shapeTags = new Set(['circle', 'ellipse', 'line', 'path', 'polygon', 'polyline', 'rect']);
+const droppedAttrs = new Set(['class', 'className', 'key', 'style']);
+
+function toPropName(name) {
+  return name.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase());
+}
+
+function toProps({ attrs, index, nonScalingStroke, tag }) {
+  const props = { key: index };
+  if (nonScalingStroke && shapeTags.has(tag)) {
+    props.vectorEffect = 'non-scaling-stroke';
+  }
+  Object.entries(attrs ?? {}).forEach(([name, value]) => {
+    if (droppedAttrs.has(name)) return;
+    props[toPropName(name)] = value;
   });
+  return props;
+}
+
+// An icon's IconData node ([tag, attrs, children?] entries) as react-native-svg elements. SVG
+// attribute names become React Native props (`stroke-width` to `strokeWidth`; React names such
+// as `fillRule` stay as they are). A tag with no native form (a title, a style sheet) is left
+// out, as it draws nothing.
+function renderIconNodes({ node, nonScalingStroke = false }) {
+  return node
+    .filter(([tag]) => Object.hasOwn(components, tag))
+    .map(([tag, attrs, children], index) => {
+      const props = toProps({ attrs, index, nonScalingStroke, tag });
+      if (!children) {
+        return React.createElement(components[tag], props);
+      }
+      return React.createElement(
+        components[tag],
+        props,
+        renderIconNodes({ node: children, nonScalingStroke })
+      );
+    });
 }
 
 export default renderIconNodes;

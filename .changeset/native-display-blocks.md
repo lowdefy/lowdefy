@@ -10,4 +10,4 @@ feat(blocks-native): Native layout and display blocks
 - Blocks draw with the app's computed antd tokens in light and dark mode, and a block's own `theme` tokens apply where it has the matching token. Each block's style slots (`element`, `header`, `title`, ...) take its `class` and `style`.
 - Properties a phone cannot honour (`hoverable`, `copyable`, `animated`, `target`) are accepted and marked `nativeIgnored` in the native metas. Text that supports html on the web is shown as plain text.
 - `Tabs` is a scrolling top tab bar, with `onChange`, each tab's `eventName` and the `setActiveKey` method. `Title` and `Paragraph` support `ellipsis` with expand and collapse.
-- `./icon/createIcon.js` is the native icon renderer: it draws the icon data the build resolves with `react-native-svg`, for a renderer to install as `components.Icon`.
+- Blocks draw every icon through `components.Icon`, which `@lowdefy/client-native` installs.

@@ -17,14 +17,22 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
-import { CallMethod, SetState } from '@lowdefy/actions-core/actions';
+import { CallMethod, SetState, Validate, Wait } from '@lowdefy/actions-core/actions';
 import { LowdefyPage } from '@lowdefy/client-native';
-import { _event, _if, _state, _string } from '@lowdefy/operators-js/operators/client';
+import {
+  _event,
+  _if,
+  _index,
+  _not,
+  _state,
+  _string,
+  _sum,
+  _type,
+} from '@lowdefy/operators-js/operators/client';
 
 import * as blocks from '../blocks.js';
 import buildPage from './buildPage.js';
 import createFakeHost from './createFakeHost.js';
-import createIcon from '../icon/createIcon.js';
 import icons from './icons.json';
 import theme from './theme.json';
 
@@ -37,44 +45,39 @@ function createRecord() {
   return { calls, Record };
 }
 
-// The lowdefy object a shell hands its pages. A shell installs the native icon renderer as
-// components.Icon once the core is built; here a setter does it as client-core builds _internal.
-function createLowdefy() {
-  const lowdefy = { buildId: 'build-1' };
-  let internal;
-  Object.defineProperty(lowdefy, '_internal', {
-    configurable: true,
-    enumerable: true,
-    get: () => internal,
-    set: (value) => {
-      internal = value;
-      internal.components.Icon = createIcon({ icons });
-    },
-  });
-  return lowdefy;
-}
-
 /**
  * Renders a page of native blocks as a shell does: through @lowdefy/client-native's LowdefyPage,
- * with the computed theme tokens of an app with colorPrimary #6366f1, the test icons, and the
- * CallMethod, SetState and Record actions.
+ * with the computed theme tokens of an app with colorPrimary #6366f1, the test icons (which
+ * client-native's icon renderer draws as components.Icon), and the CallMethod, SetState,
+ * Validate, Wait and Record actions.
  *
  * @param {Object} params
  * @param {Object} params.pageConfig The page as config writes it (blocks, events, properties).
+ *   buildPage builds it; its root is usually a Box.
+ * @param {Object} [params.actions] Extra test actions, by type name, over the default ones.
  * @param {'light'|'dark'} [params.darkMode] The theme mode, light unless asked.
- * @returns {Promise<{ calls: Object[] }>} The Record action's params, in the order they ran.
+ * @param {Object} [params.rootConfig] Root config keys over the test root config.
+ * @returns {Promise<{ calls: Object[], host: Object, lowdefy: Object }>} The Record action's
+ *   params in the order they ran, the fake host and the lowdefy object.
  */
-async function renderPage({ pageConfig, darkMode = 'light' }) {
+async function renderPage({
+  actions = {},
+  darkMode = 'light',
+  pageConfig,
+  rootConfig: rootOverrides = {},
+}) {
   const { calls, Record } = createRecord();
+  const host = createFakeHost({ path: `/${pageConfig.id}` });
+  const lowdefy = { buildId: 'build-1' };
   await render(
     <LowdefyPage
       core={{
         apiBase: 'https://app.lowdefy.test',
         auth: { authConfig: {} },
         basePath: '',
-        lowdefy: createLowdefy(),
+        lowdefy,
       }}
-      host={createFakeHost({ path: `/${pageConfig.id}` })}
+      host={host}
       pageConfig={buildPage(pageConfig)}
       rootConfig={{
         classMap: {},
@@ -83,15 +86,17 @@ async function renderPage({ pageConfig, darkMode = 'light' }) {
         menus: [],
         pagePaths: { [pageConfig.id]: pageConfig.id },
         theme: { ...theme, darkMode },
+        ...rootOverrides,
       }}
       types={{
-        actions: { CallMethod, Record, SetState },
+        actions: { CallMethod, Record, SetState, Validate, Wait, ...actions },
         blocks,
-        operators: { _event, _if, _state, _string },
+        icons,
+        operators: { _event, _if, _index, _not, _state, _string, _sum, _type },
       }}
     />
   );
-  return { calls };
+  return { calls, host, lowdefy };
 }
 
 // A page of one Box holding the blocks under test.

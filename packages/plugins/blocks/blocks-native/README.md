@@ -6,6 +6,5 @@ Each native block takes its web block's type name, properties, events, methods a
 
 - `./blocks`: the React Native block components, rendered by `@lowdefy/client-native`.
 - `./metas` and `./types`: what the Lowdefy build reads to resolve and check the block types of mobile pages.
-- `./icon/createIcon.js`: the native icon renderer, which a renderer installs as `components.Icon`.
 
-Blocks draw with `StyleSheet` styles and the app's computed antd theme tokens (`useTheme` from `@lowdefy/client-native`); icons draw with `react-native-svg`.
+Blocks draw with `StyleSheet` styles and the app's computed antd theme tokens (`useTheme` from `@lowdefy/client-native`); icons draw through `components.Icon`, the native icon renderer `@lowdefy/client-native` installs. Inputs draw their controls from `@expo/ui`; `@expo/ui`, `react-native` and `react-native-svg` are peer dependencies the shell carries.

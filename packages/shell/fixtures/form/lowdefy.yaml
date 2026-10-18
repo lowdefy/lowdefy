@@ -1,0 +1,98 @@
+# A phone form page with the native list, input and action blocks: what the shell's form fixture
+# test builds and renders.
+lowdefy: local
+name: Form
+
+mobile:
+  homePageId: form
+  pages:
+    - id: form
+      type: Screen
+      properties:
+        title: New order
+      events:
+        onInit:
+          - id: init
+            type: SetState
+            params:
+              lines:
+                - product: Bolts
+                  packs: 4 packs
+                - product: Nuts
+                  packs: 12 packs
+      slots:
+        content:
+          blocks:
+            - id: customer
+              type: TextInput
+              required: true
+              properties:
+                title: Customer
+                placeholder: Name
+            - id: email
+              type: TextInput
+              properties:
+                title: Email
+                type: email
+            - id: notes
+              type: TextArea
+              properties:
+                title: Notes
+                rows: 3
+            - id: quantity
+              type: NumberInput
+              properties:
+                title: Quantity
+                min: 1
+                mode: spinner
+            - id: colour
+              type: Selector
+              required: true
+              properties:
+                title: Colour
+                options:
+                  - label: Red
+                    value: red
+                  - label: Green
+                    value: green
+            - id: urgent
+              type: Switch
+              properties:
+                title: Urgent
+            - id: due
+              type: DateSelector
+              properties:
+                title: Due
+            - id: lines
+              type: List
+              properties:
+                swipeActions:
+                  - title: Delete
+                    event: onDelete
+                    danger: true
+              events:
+                onDelete:
+                  - id: remove
+                    type: CallMethod
+                    params:
+                      blockId: lines
+                      method: removeItem
+                      args:
+                        - _event: index
+              blocks:
+                - id: lines.$.item
+                  type: ListItem
+                  properties:
+                    title:
+                      _state: lines.$.product
+                    extra:
+                      _state: lines.$.packs
+            - id: submit
+              type: Button
+              properties:
+                title: Submit
+                block: true
+              events:
+                onClick:
+                  - id: validate
+                    type: Validate

@@ -41,7 +41,7 @@ const boxTypes = {
   ],
 };
 
-// A Screen page of Box blocks, the types the shell carries so far.
+// A Screen page of Box blocks from the native block set.
 function screenPage(pageId, title, blocks) {
   return {
     id: `page:${pageId}`,
@@ -228,7 +228,7 @@ test('SetLocale changes the locale the page translates with, and the device keep
     root: { i18n },
   });
   expect(await screen.findByText('Hello')).toBeTruthy();
-  fireEvent.press(screen.getByTestId('switch-press'));
+  fireEvent.press(screen.getByText('Afrikaans'));
   expect(await screen.findByText('Hallo')).toBeTruthy();
   expect(storage.get('lowdefy:field::lowdefy_locale')).toBe('af-ZA');
 });
@@ -258,7 +258,7 @@ test('the local storage actions keep a value under the app key in the device sto
     ],
   });
   expect(await screen.findByText('none')).toBeTruthy();
-  fireEvent.press(screen.getByTestId('save-press'));
+  fireEvent.press(screen.getByText('Save'));
   expect(await screen.findByText('Pump')).toBeTruthy();
   expect(storage.get('lowdefy:field::draft')).toBe('{"title":"Pump"}');
 });
@@ -274,6 +274,6 @@ test('CopyToClipboard copies through the shell clipboard', async () => {
       },
     ],
   });
-  fireEvent.press(await screen.findByTestId('copy-press'));
+  fireEvent.press(await screen.findByText('Copy'));
   await waitFor(() => expect(clipboard.setString.mock.calls).toEqual([['JOB-42']]));
 });

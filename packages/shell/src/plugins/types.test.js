@@ -17,6 +17,9 @@
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 
+import * as nativeBlocks from '@lowdefy/blocks-native/blocks';
+import { Screen } from '@lowdefy/client-native';
+
 import nativeActions from '../actions/nativeActions.js';
 import types from './types.js';
 
@@ -32,6 +35,7 @@ test('the type manifest lists every type the shell registers, and no other', () 
   });
   expect(manifest.blocks.Box).toEqual({ package: '@lowdefy/blocks-native', version: 6 });
   expect(manifest.blocks.Screen).toEqual({ package: '@lowdefy/blocks-native', version: 6 });
+  expect(manifest.blocks.TextInput).toEqual({ package: '@lowdefy/blocks-native', version: 6 });
   expect(manifest.actions.SetState.package).toBe('@lowdefy/actions-core');
   expect(manifest.operators._state.package).toBe('@lowdefy/operators-js');
 });
@@ -57,6 +61,12 @@ test('the shell registers the client operators of every default operator package
     expect(typeof types.operators[operator]).toBe('function');
     expect(manifest.operators[operator].package).toBe(`@lowdefy/operators-${name}`);
   });
+});
+
+test("the shell renders the whole native block set, with the native renderer's Screen", () => {
+  expect(Object.keys(types.blocks).sort()).toEqual([...Object.keys(nativeBlocks), 'Screen'].sort());
+  expect(types.blocks.Screen).toBe(Screen);
+  expect(types.blocks.Box).toBe(nativeBlocks.Box);
 });
 
 test('the DOM-bound actions-core actions run their native bodies under the same names', () => {
