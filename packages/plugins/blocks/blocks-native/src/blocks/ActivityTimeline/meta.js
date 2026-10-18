@@ -219,7 +219,7 @@ export default {
       linkChips: {
         ...linkChips,
         description:
-          "Links in comment bodies drawn as inline chips by their address scheme, as the Markdown block's `linkChips`: a pressed chip fires onLinkPress, and without onLinkPress chips are not pressable. Mentions and `[[KEY]]` record links keep their own chips.",
+          "Links in comment bodies drawn as inline chips by their address scheme or a pattern on the address, as the Markdown block's `linkChips`: a pressed chip fires onLinkPress, and without onLinkPress chips are not pressable. Mentions and `[[KEY]]` record links keep their own chips.",
       },
       maxLength: {
         type: 'integer',

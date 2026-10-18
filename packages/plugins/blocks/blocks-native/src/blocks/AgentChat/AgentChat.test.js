@@ -574,3 +574,26 @@ test('a reply draws linkChips links as chips, as the Markdown block does, and a 
     text: '',
   });
 });
+
+test('a reply draws an app path link as a chip by pattern, and a press opens it through the Link action', async () => {
+  const { host } = await renderPage({
+    actions: { Link },
+    pageConfig: chatPage({
+      properties: {
+        linkChips: [{ pattern: '^/ACME/tasks/(?<key>ACME-\\d+)$', icon: 'House', tone: 'primary' }],
+      },
+    }),
+  });
+  host.streamFetch.mockImplementation(async () =>
+    sse(textReply({ text: 'Logged [ACME-647 (Fix broken menu URL)](/ACME/tasks/ACME-647).' }))
+  );
+  await send('Log the menu bug');
+  const chip = await screen.findByLabelText('ACME-647 Fix broken menu URL');
+  expect(screen.getByTestId('markdown-chip-icon-ACME-647')).toBeTruthy();
+  await act(async () => {
+    fireEvent.press(chip);
+  });
+  expect(host.router.push).toHaveBeenCalledWith(
+    expect.objectContaining({ pathname: '/ACME/tasks/ACME-647' })
+  );
+});

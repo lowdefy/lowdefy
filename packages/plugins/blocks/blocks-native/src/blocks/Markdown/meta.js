@@ -28,7 +28,7 @@ export default {
       description:
         'Trigger action when any link is pressed, link chips included, instead of opening it. Without this event a web (http or https) link opens in the in-app browser, any other link (mailto:, tel:) through the system, and link chips are not pressable. Mobile only.',
       event: {
-        href: 'The href of the pressed link, as written in the markdown (`pelican:PEL-12` for a chip).',
+        href: 'The href of the pressed link, as written in the markdown (`pelican:PEL-12` or `/ACME/tasks/ACME-12` for a chip).',
       },
     },
   },
