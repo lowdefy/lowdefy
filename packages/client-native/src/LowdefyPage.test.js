@@ -376,6 +376,39 @@ test('a loading block shows its skeleton in its place', async () => {
   expect(screen.queryByText('Loaded')).toBeNull();
 });
 
+test('a skeleton style is split into slots: its block style places it, its block gets the rest', async () => {
+  await renderPage({
+    pageConfig: {
+      id: 'home',
+      type: 'Box',
+      blocks: [
+        {
+          id: 'slow',
+          type: 'Paragraph',
+          loading: true,
+          properties: { content: 'Loaded' },
+          skeleton: {
+            id: 'sk',
+            type: 'Themed',
+            style: { marginTop: '8px', '.element': { padding: '4px 16px' } },
+          },
+        },
+      ],
+    },
+  });
+  const element = await screen.findByTestId('slow-element');
+  expect(StyleSheet.flatten(element.props.style)).toMatchObject({
+    paddingBottom: 4,
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingTop: 4,
+  });
+  expect(StyleSheet.flatten(screen.getByTestId('s-slow-sk').props.style)).toMatchObject({
+    marginTop: 8,
+  });
+  expect(StyleSheet.flatten(screen.getByTestId('s-slow-sk').props.style).element).toBeUndefined();
+});
+
 test('a block fades its content in when it stops loading, after showing its skeleton', async () => {
   await renderPage({
     pageConfig: {

@@ -40,10 +40,14 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 ## Differences from the web renderer
 
 - `visible: false` draws nothing (the web keeps a hidden `div` for its id).
-- A loading block with a `skeleton` draws the skeleton in its place (`LoadingBlock`). When it
-  stops loading, `CategorySwitch` passes `fadeIn` and `BlockLayout` draws its outer view as a
-  `FadeInView`, so the content fades in over 200ms where the skeleton was (at once with Reduce
-  Motion on). Only a block that showed its own skeleton fades; a separate Skeleton block toggled
+- A loading block with a `skeleton` draws the skeleton in its place (`LoadingBlock`). The build
+  leaves a skeleton's `style` and `class` as config wrote them, so `getSkeletonBlock` keys them by
+  slot as `normalizeClassAndStyles` keys a block's (`.element` is the element slot, plain CSS the
+  block slot) and `useBlockStyles` converts every slot (`unconverted`); the skeleton's block gets
+  them as `styles` and its block slot places it. The web passes a skeleton's style to its layout
+  only. When it stops loading, `CategorySwitch` passes `fadeIn` and `BlockLayout` draws its outer
+  view as a `FadeInView`, so the content fades in over 200ms where the skeleton was (at once with
+  Reduce Motion on). Only a block that showed its own skeleton fades; a separate Skeleton block toggled
   by `visible` does not, so pages put `loading` and `skeleton` on the block that loads.
 - There are no class names, `Head`, shortcuts, progress bar or antd providers.
 - Layout is `@lowdefy/layout-native` (see its doc). A gapped area is two views (the slot style

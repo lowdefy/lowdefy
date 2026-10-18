@@ -125,3 +125,51 @@ test('hero, paragraph, card and timeline Skeletons draw their shapes', async () 
   expect(screen.queryByTestId('activity_entry_4')).toBeNull();
   expect(screen.getAllByRole('progressbar')).toHaveLength(4);
 });
+
+test('hero and timeline Skeletons are inset 16pt, the element paddingHorizontal over it', async () => {
+  await renderPage({
+    pageConfig: page([
+      { id: 'hero', type: 'Skeleton', properties: { variant: 'hero' } },
+      { id: 'activity', type: 'Skeleton', properties: { variant: 'timeline' } },
+      {
+        id: 'edge',
+        type: 'Skeleton',
+        style: { element: { paddingHorizontal: 0 } },
+        properties: { variant: 'hero' },
+      },
+      { id: 'text', type: 'Skeleton', properties: { variant: 'paragraph' } },
+    ]),
+  });
+  expect(styleOf(await screen.findByTestId('hero_skeleton')).paddingHorizontal).toBe(16);
+  expect(styleOf(screen.getByTestId('activity_skeleton')).paddingHorizontal).toBe(16);
+  expect(styleOf(screen.getByTestId('edge_skeleton')).paddingHorizontal).toBe(0);
+  expect(styleOf(screen.getByTestId('text_skeleton')).paddingHorizontal).toBeUndefined();
+});
+
+test("a loading block's Skeleton skeleton takes the skeleton's element style", async () => {
+  await renderPage({
+    pageConfig: page([
+      {
+        id: 'record',
+        type: 'Paragraph',
+        loading: true,
+        skeleton: {
+          type: 'Skeleton',
+          style: { marginTop: 8, '.element': { paddingHorizontal: 24 } },
+          properties: { variant: 'hero' },
+        },
+        properties: { content: 'Arrived' },
+      },
+      {
+        id: 'activity',
+        type: 'Paragraph',
+        loading: true,
+        skeleton: { type: 'Skeleton', properties: { variant: 'timeline' } },
+        properties: { content: 'Arrived' },
+      },
+    ]),
+  });
+  expect(styleOf(await screen.findByTestId('record_skeleton')).paddingHorizontal).toBe(24);
+  expect(styleOf(screen.getByTestId('activity_skeleton')).paddingHorizontal).toBe(16);
+  expect(screen.getByTestId('record_hero')).toBeTruthy();
+});
