@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { ActivityIndicator, Pressable, Text } from 'react-native';
+import { formatIconTitle } from '@lowdefy/client-native';
 import { type } from '@lowdefy/helpers';
 
 import getButtonColors from './getButtonColors.js';
@@ -23,31 +24,54 @@ import getControlSize from '../../shared/getControlSize.js';
 import meta from './meta.js';
 import useBlockTokens from '../../shared/useBlockTokens.js';
 
-function getShapeStyle({ height, shape, size, tokens }) {
+function getShapeStyle({ borderRadius, height, shape }) {
   if (shape === 'circle') {
     return { borderRadius: height / 2, paddingHorizontal: 0, width: height };
   }
   if (shape === 'round') {
     return { borderRadius: height / 2 };
   }
-  return { borderRadius: size === 'large' ? tokens.borderRadiusLG : tokens.borderRadius };
+  return { borderRadius };
 }
 
-// The spinner shows while the onClick actions run, from the engine's event loading, as on the
-// web; the button is disabled meanwhile.
+function getIconName(icon) {
+  if (type.isString(icon)) return icon;
+  return icon?.name;
+}
+
+// An iOS button: filled (solid), tinted, gray or plain, at a 44 point default height, with an
+// icon before or after the title. A Button without a title shows its icon alone; one with neither
+// shows its block id. Pressing dims or darkens it, as iOS does. The spinner shows while the
+// onClick actions run, from the engine's event loading, as on the web; the button is disabled
+// meanwhile.
 function Button({ blockId, components, events, loading, methods, properties, styles }) {
-  const { tokens } = useBlockTokens({ properties });
+  const { isDark, tokens } = useBlockTokens({ properties });
   const actionLoading = events.onClick?.loading === true;
   const disabled = loading === true || actionLoading || properties.disabled === true;
-  const { height, fontSize, paddingHorizontal } = getControlSize({ size: properties.size, tokens });
-  const colors = getButtonColors({ properties, tokens });
-  const title = type.isNone(properties.title) ? blockId : properties.title;
+  const { borderRadius, fontSize, height, paddingHorizontal } = getControlSize({
+    size: properties.size,
+  });
+  const colors = getButtonColors({ isDark, properties, tokens });
+  const hasIcon = !type.isNone(properties.icon);
+  let title = null;
+  if (type.isString(properties.title)) title = properties.title;
+  else if (!hasIcon) title = blockId;
   const showTitle =
-    properties.hideTitle !== true &&
-    !(properties.shape === 'circle' && type.isNone(properties.title));
+    title !== null && properties.hideTitle !== true && properties.shape !== 'circle';
+  const accessibilityLabel = title ?? formatIconTitle(getIconName(properties.icon));
+  const iconEnd = properties.iconPlacement === 'end';
+  const icon =
+    !actionLoading && hasIcon ? (
+      <components.Icon
+        blockId={`${blockId}_icon`}
+        events={events}
+        properties={properties.icon}
+        styles={{ element: [{ color: colors.textColor, fontSize }, styles.icon] }}
+      />
+    ) : null;
   return (
     <Pressable
-      accessibilityLabel={title}
+      accessibilityLabel={accessibilityLabel}
       accessibilityRole="button"
       accessibilityState={{ busy: actionLoading, disabled }}
       disabled={disabled}
@@ -56,19 +80,20 @@ function Button({ blockId, components, events, loading, methods, properties, sty
         {
           alignItems: 'center',
           alignSelf: properties.block === true ? 'stretch' : 'flex-start',
-          backgroundColor: colors.backgroundColor,
+          backgroundColor: pressed ? colors.pressedColor : colors.backgroundColor,
           borderColor: colors.borderColor,
           borderStyle: colors.borderStyle,
           borderWidth: colors.borderWidth,
           flexDirection: 'row',
-          gap: tokens.marginXS,
+          gap: 6,
           justifyContent: 'center',
           minHeight: height,
-          opacity: disabled && !actionLoading ? 0.5 : 1,
+          minWidth: height,
+          opacity: disabled && !actionLoading ? 0.4 : 1,
           paddingHorizontal,
         },
-        getShapeStyle({ height, shape: properties.shape, size: properties.size, tokens }),
-        pressed ? { opacity: 0.7 } : null,
+        getShapeStyle({ borderRadius, height, shape: properties.shape }),
+        pressed ? { opacity: colors.pressedOpacity } : null,
         styles.element,
       ]}
       testID={`${blockId}_button`}
@@ -76,15 +101,20 @@ function Button({ blockId, components, events, loading, methods, properties, sty
       {actionLoading ? (
         <ActivityIndicator color={colors.textColor} size="small" testID={`${blockId}_loading`} />
       ) : null}
-      {!actionLoading && !type.isNone(properties.icon) ? (
-        <components.Icon
-          blockId={`${blockId}_icon`}
-          events={events}
-          properties={properties.icon}
-          styles={{ element: [{ color: colors.textColor, fontSize }, styles.icon] }}
-        />
+      {iconEnd ? null : icon}
+      {showTitle ? (
+        <Text
+          numberOfLines={1}
+          style={{
+            color: colors.textColor,
+            fontSize,
+            fontWeight: colors.plain ? '400' : '600',
+          }}
+        >
+          {title}
+        </Text>
       ) : null}
-      {showTitle ? <Text style={{ color: colors.textColor, fontSize }}>{title}</Text> : null}
+      {iconEnd ? icon : null}
     </Pressable>
   );
 }

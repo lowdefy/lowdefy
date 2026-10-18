@@ -14,114 +14,96 @@
   limitations under the License.
 */
 
-const presetColors = new Set([
-  'blue',
-  'cyan',
-  'geekblue',
-  'gold',
-  'green',
-  'lime',
-  'magenta',
-  'orange',
-  'purple',
-  'red',
-  'volcano',
-]);
+import { StyleSheet } from 'react-native';
+import { withAlpha } from '@lowdefy/client-native';
 
-const statusTokens = {
-  error: 'Error',
-  processing: 'Info',
-  success: 'Success',
-  warning: 'Warning',
-};
+import TONE_PALETTES from './TONE_PALETTES.js';
 
-function byVariant({ variant, filled, outlined, solid }) {
-  switch (variant) {
-    case 'solid':
-      return solid;
-    case 'outlined':
-      return outlined;
-    default:
-      return filled;
+// A tone's colours: `accent` for the solid fill, the tint behind a filled tag and the dot, and
+// `text` for its title. A palette tone takes antd's palette for the mode (6 for the accent, 7 for
+// text, which the dark palette lightens); the primary tone the tint; any other colour is used as
+// written.
+function getTone({ color, tokens }) {
+  if (Object.hasOwn(TONE_PALETTES, color)) {
+    const palette = TONE_PALETTES[color];
+    return { accent: tokens[`${palette}6`], text: tokens[`${palette}7`] };
   }
+  if (color === 'primary') {
+    return { accent: tokens.colorTint, text: tokens.colorTint };
+  }
+  return { accent: color, text: color };
 }
 
 /**
- * A Tag's background, border and text colours for its `color` and `variant`, from the computed
- * antd tokens, as antd colours tags: status colours from the status tokens, preset colours from
- * their palettes (tint 1 behind, 3 for the border, 7 for text; 6 when solid), and any other colour
- * filled with light text.
+ * A Tag's colours for its `color` and `variant`, from the theme tokens: a `filled` tag (the
+ * default) is the tone's colour over a tint of it, readable in both modes; `outlined` adds a
+ * border of the tone on no fill; `solid` fills the tag with the tone under white text. The
+ * default tone is grey: the secondary label on the tertiary system fill.
  *
- * @returns {{ backgroundColor: string, borderColor: string, color: string }}
+ * @param {Object} params
+ * @param {string} [params.color] A status (success, processing, warning, error), a preset colour
+ *   name, `primary`, `default` or any colour.
+ * @param {boolean} params.isDark
+ * @param {Object} params.tokens The block's theme tokens.
+ * @param {string} params.variant 'filled', 'outlined' or 'solid'.
+ * @returns {{ accent: string, backgroundColor: string, borderColor: string, borderWidth: number, color: string }}
  */
-function getTagColors({ color, tokens, variant }) {
-  if (Object.hasOwn(statusTokens, color)) {
-    const name = statusTokens[color];
-    return byVariant({
-      variant,
-      filled: {
-        backgroundColor: tokens[`color${name}Bg`],
-        borderColor: tokens[`color${name}Border`],
-        color: tokens[`color${name}`],
-      },
-      outlined: {
-        backgroundColor: 'transparent',
-        borderColor: tokens[`color${name}Border`],
-        color: tokens[`color${name}`],
-      },
-      solid: {
-        backgroundColor: tokens[`color${name}`],
-        borderColor: tokens[`color${name}`],
-        color: tokens.colorTextLightSolid,
-      },
-    });
-  }
-  if (presetColors.has(color)) {
-    return byVariant({
-      variant,
-      filled: {
-        backgroundColor: tokens[`${color}1`],
-        borderColor: tokens[`${color}3`],
-        color: tokens[`${color}7`],
-      },
-      outlined: {
-        backgroundColor: 'transparent',
-        borderColor: tokens[`${color}3`],
-        color: tokens[`${color}7`],
-      },
-      solid: {
-        backgroundColor: tokens[`${color}6`],
-        borderColor: tokens[`${color}6`],
-        color: tokens.colorTextLightSolid,
-      },
-    });
-  }
+function getTagColors({ color, isDark, tokens, variant }) {
   if (color === undefined || color === 'default') {
-    return byVariant({
-      variant,
-      filled: {
-        backgroundColor: tokens.defaultBg ?? tokens.colorFillQuaternary,
-        borderColor: tokens.colorBorder,
-        color: tokens.defaultColor ?? tokens.colorText,
-      },
-      outlined: {
-        backgroundColor: 'transparent',
-        borderColor: tokens.colorBorder,
-        color: tokens.defaultColor ?? tokens.colorText,
-      },
-      solid: {
-        backgroundColor: tokens.colorText,
-        borderColor: tokens.colorText,
-        color: tokens.colorBgContainer,
-      },
-    });
+    switch (variant) {
+      case 'solid':
+        return {
+          accent: tokens.colorCell,
+          backgroundColor: tokens.colorSecondaryLabel,
+          borderColor: 'transparent',
+          borderWidth: 0,
+          color: tokens.colorCell,
+        };
+      case 'outlined':
+        return {
+          accent: tokens.colorSecondaryLabel,
+          backgroundColor: 'transparent',
+          borderColor: tokens.colorOpaqueSeparator,
+          borderWidth: StyleSheet.hairlineWidth * 2,
+          color: tokens.colorSecondaryLabel,
+        };
+      default:
+        return {
+          accent: tokens.colorSecondaryLabel,
+          backgroundColor: tokens.defaultBg ?? tokens.colorTertiarySystemFill,
+          borderColor: 'transparent',
+          borderWidth: 0,
+          color: tokens.defaultColor ?? tokens.colorSecondaryLabel,
+        };
+    }
   }
-  return byVariant({
-    variant,
-    filled: { backgroundColor: color, borderColor: color, color: tokens.colorTextLightSolid },
-    outlined: { backgroundColor: 'transparent', borderColor: color, color },
-    solid: { backgroundColor: color, borderColor: color, color: tokens.colorTextLightSolid },
-  });
+  const tone = getTone({ color, tokens });
+  switch (variant) {
+    case 'solid':
+      return {
+        accent: '#FFFFFF',
+        backgroundColor: tone.accent,
+        borderColor: 'transparent',
+        borderWidth: 0,
+        color: tokens.solidTextColor ?? '#FFFFFF',
+      };
+    case 'outlined':
+      return {
+        accent: tone.accent,
+        backgroundColor: 'transparent',
+        borderColor: withAlpha({ alpha: 0.6, color: tone.accent }),
+        borderWidth: StyleSheet.hairlineWidth * 2,
+        color: tone.text,
+      };
+    default:
+      return {
+        accent: tone.accent,
+        backgroundColor: withAlpha({ alpha: isDark ? 0.22 : 0.14, color: tone.accent }),
+        borderColor: 'transparent',
+        borderWidth: 0,
+        color: tone.text,
+      };
+  }
 }
 
 export default getTagColors;

@@ -19,22 +19,39 @@ export default {
   icons: [],
   valueType: null,
   cssKeys: {
-    element: 'The Skeleton element.',
+    element: 'The Skeleton element (the box around the rows when it draws rows).',
   },
   properties: {
     type: 'object',
     additionalProperties: false,
     properties: {
+      avatar: {
+        type: 'boolean',
+        description:
+          'Mobile only. Draw loading rows with a round avatar at the start of each (true, the default for rows) or without (false).',
+      },
+      count: {
+        type: 'integer',
+        minimum: 1,
+        description:
+          'Mobile only. Draw this many loading list rows (3 when `rows` or `avatar` is set), shaped like list rows, in place of one shape.',
+      },
+      rows: {
+        type: 'integer',
+        minimum: 1,
+        description:
+          'Mobile only. The lines of text in each loading row: a title line, then shorter meta lines. Defaults to 2.',
+      },
       height: {
         type: ['number', 'string'],
-        description: 'Height of the skeleton.',
+        description: 'Height of the skeleton shape.',
         docs: {
           displayType: 'string',
         },
       },
       width: {
         type: ['number', 'string'],
-        description: 'Width of the skeleton.',
+        description: 'Width of the skeleton shape.',
         docs: {
           displayType: 'string',
         },

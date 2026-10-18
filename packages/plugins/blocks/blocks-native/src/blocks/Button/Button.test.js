@@ -89,6 +89,15 @@ test('a disabled Button does not run onClick', async () => {
   expect(record).toEqual([]);
 });
 
+test('a Button with an icon and no title shows the icon alone, labelled by its name', async () => {
+  await renderPage({
+    pageConfig: buttonPage({ id: 'refresh', type: 'Button', properties: { icon: 'House' } }),
+  });
+  const button = await screen.findByTestId('refresh_button');
+  expect(screen.queryByText('refresh')).toBeNull();
+  expect(button.props.accessibilityLabel).toBe('House');
+});
+
 test('a Button without a title shows its block id', async () => {
   await renderPage({ pageConfig: buttonPage({ id: 'go', type: 'Button' }) });
   expect(await screen.findByText('go')).toBeTruthy();
