@@ -38,6 +38,18 @@ const pageIndex = [
 
 const houseIcon = { node: [['path', { d: 'M3 10' }]] };
 
+const theme = {
+  darkMode: 'system',
+  light: { colorPrimary: '#1677ff', borderRadius: 6 },
+  dark: { colorPrimary: '#1668dc', borderRadius: 6 },
+};
+
+const classMap = {
+  'p-4': { paddingTop: 16, paddingRight: 16, paddingBottom: 16, paddingLeft: 16 },
+  'bg-primary': { backgroundColor: '#1677ff' },
+  'dark:bg-primary': { backgroundColor: '#1668dc' },
+};
+
 const mobileConfig = {
   homePageId: 'today',
   minShellVersion: '7.4.0',
@@ -64,6 +76,8 @@ function createReadConfigFile(files) {
       'mobile/typeSets.json': typeSets,
       'events.json': events,
       'global.json': { region: 'eu' },
+      'mobile/theme.json': theme,
+      'mobile/classMap.json': classMap,
       ...files,
     }[file];
   };
@@ -82,7 +96,8 @@ test('getMobileRootConfig gives a signed-out caller only the public mobile pages
     },
     pageIndex: [{ path: 'today', pageId: 'today', hash: 'h-today', typesKey: 't1' }],
     typeSets: { t1: typeSets.t1 },
-    theme: { light: {}, dark: {} },
+    theme,
+    classMap,
   });
 });
 
@@ -144,12 +159,27 @@ test('getMobileRootConfig lists dev page index entries without hashes or type se
   expect(rootConfig.typeSets).toEqual({});
 });
 
+test('getMobileRootConfig sends the whole theme and class map to every caller', async () => {
+  const signedOut = await getMobileRootConfig(
+    testContext({ readConfigFile: createReadConfigFile() })
+  );
+  const admin = await getMobileRootConfig(
+    testContext({ readConfigFile: createReadConfigFile(), user: { sub: 'sub', roles: ['admin'] } })
+  );
+  expect(signedOut.theme).toEqual(theme);
+  expect(signedOut.classMap).toEqual(classMap);
+  expect(admin.theme).toEqual(theme);
+  expect(admin.classMap).toEqual(classMap);
+});
+
 test('getMobileRootConfig returns null for an app without a mobile key', async () => {
   const context = testContext({
     readConfigFile: createReadConfigFile({
       'mobile/config.json': {},
       'mobile/pageIndex.json': [],
       'mobile/typeSets.json': {},
+      'mobile/theme.json': {},
+      'mobile/classMap.json': {},
     }),
   });
   expect(await getMobileRootConfig(context)).toBeNull();
