@@ -22,7 +22,9 @@ import validateShellIcon from './validateShellIcon.js';
 
 const MOBILE_KEYS = ['homePageId', 'minShellVersion', 'menus', 'pages', 'events', 'shells', 'auth'];
 const MENU_KEYS = ['tabs', 'drawer', 'stack'];
-const MENU_ITEM_KEYS = ['pageId', 'icon', 'title'];
+const MENU_ITEM_KEYS = ['pageId', 'icon', 'sfSymbol', 'title', 'role'];
+// iOS 26's search tab: set apart at the right of the tab bar, with a magnifier.
+const TAB_ROLES = ['search'];
 const SHELL_KEYS = [
   'id',
   'name',
@@ -98,6 +100,28 @@ function checkOptionalString({ value, path, configKey }) {
   }
 }
 
+// A tab may take a role; one tab at most is the search tab. A drawer item takes none.
+function validateMenuItemRoles({ items, path, configKey, roles }) {
+  items.forEach((item, index) => {
+    if (type.isUndefined(item.role)) return;
+    if (!roles.includes(item.role)) {
+      const allowed = roles.length === 0 ? 'none' : roles.join(', ');
+      throw new ConfigError(
+        `App "${path}[${index}].role" should be one of: ${allowed}. Received ${JSON.stringify(
+          item.role
+        )}.`,
+        { configKey: item['~k'] ?? configKey }
+      );
+    }
+  });
+  const searchTabs = items.filter((item) => item.role === 'search');
+  if (searchTabs.length > 1) {
+    throw new ConfigError(`App "${path}" should have at most one item with role "search".`, {
+      configKey: searchTabs[1]['~k'] ?? configKey,
+    });
+  }
+}
+
 function validateMenuItems({ items, path, configKey }) {
   if (!type.isArray(items)) {
     throw new ConfigError(`App "${path}" should be an array.`, { received: items, configKey });
@@ -114,6 +138,11 @@ function validateMenuItems({ items, path, configKey }) {
       });
     }
     checkOptionalString({ value: item.icon, path: `${itemPath}.icon`, configKey: itemConfigKey });
+    checkOptionalString({
+      value: item.sfSymbol,
+      path: `${itemPath}.sfSymbol`,
+      configKey: itemConfigKey,
+    });
     checkOptionalString({ value: item.title, path: `${itemPath}.title`, configKey: itemConfigKey });
   });
 }
@@ -133,6 +162,12 @@ function validateMenus({ menus, configKey }) {
   }
   if (!type.isUndefined(menus.tabs)) {
     validateMenuItems({ items: menus.tabs, path: 'mobile.menus.tabs', configKey: menusConfigKey });
+    validateMenuItemRoles({
+      items: menus.tabs,
+      path: 'mobile.menus.tabs',
+      configKey: menusConfigKey,
+      roles: TAB_ROLES,
+    });
     if (menus.tabs.length < 2 || menus.tabs.length > 5) {
       throw new ConfigError(
         `App "mobile.menus.tabs" should have 2 to 5 items. Received ${menus.tabs.length}.`,
@@ -145,6 +180,12 @@ function validateMenus({ menus, configKey }) {
       items: menus.drawer,
       path: 'mobile.menus.drawer',
       configKey: menusConfigKey,
+    });
+    validateMenuItemRoles({
+      items: menus.drawer,
+      path: 'mobile.menus.drawer',
+      configKey: menusConfigKey,
+      roles: [],
     });
     if (menus.drawer.length === 0) {
       throw new ConfigError('App "mobile.menus.drawer" should have at least one item.', {

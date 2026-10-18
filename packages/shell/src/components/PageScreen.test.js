@@ -24,6 +24,8 @@ import helloJsEntries from '../../fixtures/hello.jsEntries.json';
 import renderPageScreen from '../test/renderPageScreen.js';
 
 const mockNavigation = { setOptions: jest.fn() };
+// Whether the screen is the focused one; a screen under another is not.
+const mockFocus = { focused: true };
 
 jest.mock('expo-router', () => ({
   DarkTheme: { fonts: {} },
@@ -32,9 +34,11 @@ jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => false },
   useFocusEffect: (effect) => {
     const { useEffect: useReactEffect } = jest.requireActual('react');
-    useReactEffect(effect, [effect]);
+    useReactEffect(() => (mockFocus.focused ? effect() : undefined), [effect]);
   },
+  useIsFocused: () => mockFocus.focused,
   useNavigation: () => mockNavigation,
+  useRoute: () => ({ key: 'route-1' }),
 }));
 
 const boxTypes = {
@@ -43,6 +47,10 @@ const boxTypes = {
     { type: 'Screen', package: '@lowdefy/blocks-native', version: 7 },
   ],
 };
+
+beforeEach(() => {
+  mockFocus.focused = true;
+});
 
 // A Screen page of Box blocks from the native block set.
 function screenPage(pageId, title, blocks) {
@@ -105,11 +113,14 @@ test('a cached Screen page renders and reports its title to the stack header', a
   const { session } = await renderPath('today');
   expect(await screen.findByText('Hello from today')).toBeTruthy();
   await waitFor(() =>
-    expect(mockNavigation.setOptions).toHaveBeenCalledWith({
-      headerRight: undefined,
-      presentation: 'card',
-      title: 'Today',
-    })
+    expect(mockNavigation.setOptions).toHaveBeenCalledWith(
+      expect.objectContaining({
+        headerLargeTitleEnabled: false,
+        headerSearchBarOptions: undefined,
+        presentation: 'card',
+        title: 'Today',
+      })
+    )
   );
   expect(session.getCurrentPath()).toBe('/today');
 });
@@ -357,4 +368,31 @@ test('an Icon block draws the icon data the page carries', async () => {
   });
   const icon = await screen.findByLabelText('House');
   expect(findAll(icon, (node) => node.props?.d === housePath)).not.toHaveLength(0);
+});
+
+test('a screen reads its own route query, not the focused screen route', async () => {
+  // Another screen (pushed on this one) is focused: the shell's shown route is its route.
+  mockFocus.focused = false;
+  await renderPageScreen({
+    beforeRender: ({ session }) => session.setCurrentPath('/today?key=PEL-1', 'route-top'),
+    path: 'today',
+    query: 'space=PEL&key=PEL-645',
+    pages: {
+      today: {
+        pageConfig: screenPage('today', 'Today', [
+          {
+            blockId: 'key',
+            type: 'Box',
+            properties: { content: { '_string.concat': ['key ', { _url_query: 'key' }] } },
+          },
+        ]),
+        etag: '"p1"',
+      },
+    },
+    root: createRoot({
+      pageIndex: [{ path: 'today', pageId: 'today', hash: 'h1', typesKey: 'screen' }],
+      typeSets: { screen: boxTypes },
+    }),
+  });
+  expect(await screen.findByText('key PEL-645')).toBeTruthy();
 });

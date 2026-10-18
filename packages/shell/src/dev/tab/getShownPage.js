@@ -18,7 +18,9 @@ import { type } from '@lowdefy/helpers';
 import { getTrace } from '@lowdefy/engine';
 
 // The page instance the shell shows, `{ pageId, pathParams, instanceKey }`, read from the route the
-// focused screen set (host globals), as the trace reads it. Null before the first page renders.
+// focused screen set (host globals), as the trace reads it. A screen's page context is keyed by its
+// route instance too (engine getContext), so the key ends in `@{instanceId}`. Null before the first
+// page renders.
 function getShownPage(lowdefy) {
   const globals = lowdefy?._internal?.globals;
   if (type.isNone(globals)) {
@@ -28,7 +30,13 @@ function getShownPage(lowdefy) {
   if (type.isNone(entry)) {
     return null;
   }
-  return { pageId: entry.pageId, pathParams: entry.pathParams, instanceKey: entry.instanceKey };
+  // Only the shell's own globals know the focused screen; a page rendered without one has one
+  // context per page instance.
+  const instanceId = globals.shownScreen?.instanceId;
+  const instanceKey = type.isNone(instanceId)
+    ? entry.instanceKey
+    : `${entry.instanceKey}@${instanceId}`;
+  return { pageId: entry.pageId, pathParams: entry.pathParams, instanceKey };
 }
 
 export default getShownPage;

@@ -31,7 +31,9 @@ jest.mock('expo-router', () => ({
     const { useEffect: useReactEffect } = jest.requireActual('react');
     useReactEffect(effect, [effect]);
   },
+  useIsFocused: () => true,
   useNavigation: () => ({ setOptions: jest.fn() }),
+  useRoute: () => ({ key: 'route-1' }),
 }));
 
 function todayPage(greeting) {
@@ -81,7 +83,8 @@ test('a reload refetches the root and the page on screen, and rebuilds it with e
   const { server, session } = await renderDevPage();
   const before = session.getState().lowdefy;
   const shown = getShownPage(before);
-  expect(shown).toEqual({ pageId: 'today', pathParams: {}, instanceKey: 'page:today' });
+  // The screen's page context is keyed by its route instance.
+  expect(shown).toEqual({ pageId: 'today', pathParams: {}, instanceKey: 'page:today@route-1' });
   before.contexts[shown.instanceKey]._internal.State.set('typed', 'Quarterly');
   expect(before.contexts[shown.instanceKey].state.typed).toBe('Quarterly');
 

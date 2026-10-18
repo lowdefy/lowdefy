@@ -40,8 +40,26 @@ const WebSocketsEffect = ({ context }) => {
 // The page's engine context. The app events run once per app load, when the first page mounts;
 // the page onInit waits for the app onInit, but not for the app onInitAsync. The page's blocks
 // render once onInit is done.
-const Context = ({ appContext, children, config, jsMap, lowdefy, pathParams, resetContext }) => {
-  const context = getContext({ config, jsMap, lowdefy, pathParams, resetContext });
+const Context = ({
+  appContext,
+  children,
+  config,
+  globals,
+  instanceId,
+  jsMap,
+  lowdefy,
+  pathParams,
+  resetContext,
+}) => {
+  const context = getContext({
+    config,
+    globals,
+    instanceId,
+    jsMap,
+    lowdefy,
+    pathParams,
+    resetContext,
+  });
   const progress = () => {
     lowdefy._internal.progress.dispatch({ type: 'increment' });
   };

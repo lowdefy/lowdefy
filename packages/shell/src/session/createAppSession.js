@@ -82,6 +82,7 @@ function createAppSession({ apiBase, app, cacheStore, fetch, kv, tokenStore }) {
   };
   const listeners = new Set();
   let currentPath = '/';
+  let currentInstanceId = null;
   let homeRequestsTaken = 0;
   let syncing = null;
   const pageLoads = new Map();
@@ -294,14 +295,18 @@ function createAppSession({ apiBase, app, cacheStore, fetch, kv, tokenStore }) {
     apiBase,
     app,
     fetchOtherPage,
+    getCurrentInstanceId: () => currentInstanceId,
     getCurrentPath: () => currentPath,
     getRequestPageEntry,
     getState,
     handleBuildChanged,
     handleCallerChanged,
     loadPage,
-    setCurrentPath: (path) => {
+    // The focused screen: its route (path and query) and its route instance, which keys its page
+    // context.
+    setCurrentPath: (path, instanceId = null) => {
       currentPath = path;
+      currentInstanceId = instanceId;
     },
     start,
     subscribe,

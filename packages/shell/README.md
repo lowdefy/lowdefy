@@ -136,9 +136,32 @@ opens with no sign-in screen).
 
 Expo Router, with one route for every page, `app/(t0,t1,t2,t3,t4)/[...path].js`, in five route
 groups: with `mobile.menus.tabs` each tab is a group with its own native stack, under native tabs.
-A `drawer` frame is one stack with a menu button; a `stack` frame is one stack. A `Screen` page sets
-its header title, `headerRight` and presentation. `Link` actions go through the router; a link to a
-tab's page switches tab, and links to other sites open in the system browser.
+A `drawer` frame is one stack with a menu button; a `stack` frame is one stack. `Link` actions go
+through the router; a link to a tab's page switches tab (with its query), and links to other sites
+open in the system browser.
+
+A `Screen` page reports its header and `src/navigation/getStackOptions.js` maps it to native stack
+options: the title, or an iOS large title (`largeTitle`) that collapses as the page scrolls; the
+presentation; a native search bar (`headerSearch`, focused on each show with `autoFocus`); and
+the `headerLeft`/`headerRight` slots and `headerActions` at their natural size. On iOS each action
+is a native bar button drawing its SF Symbol in the bar's glass, and an icon with no symbol (or
+the slot) a custom item; elsewhere a side is a row of icon buttons. A side with nothing keeps the
+stack's own (a drawer's menu button). Pull-to-refresh (`onRefresh`) and `onFocus` come from the
+page's screen: `PageScreen` passes `useIsFocused()`.
+
+Each screen keeps its page state per route instance (`useRoute().key`), so task B pushed on task A
+has its own, and reads `_url_query` from its own route (`routePath`). The focused screen sets the
+session's current path and instance (`setCurrentPath`), which the host's `location` and Lowdefy
+Dev's shown page (`getShownPage`, `shownScreen` in the shell's globals) read.
+
+Tabs (`mobile.menus.tabs`) draw their icons in the native tab bar, the selected tab in the theme's
+`colorPrimary`. On iOS a tab draws an SF Symbol: its `sfSymbol`, or the symbol client-native's
+`getSfSymbol` maps from its icon (`Inbox` to `tray`, `FileText` to `doc.text`, `edit` to `pencil`).
+Elsewhere, and for an icon with no symbol, `TabIconImages` draws the Lucide icon from the item's
+icon data once, out of sight, and reads it back as a PNG for the tab bar to tint. A tab with
+`role: search` is iOS 26's search tab, apart at the right of the bar with a magnifier; on Android
+and older iOS it is a tab with the search icon. Its page is a Screen with
+`headerSearch: { autoFocus: true }`.
 
 ## Plugins, `_js`, locale and theme
 
@@ -160,8 +183,8 @@ tab's page switches tab, and links to other sites open in the system browser.
   `SetDarkMode` choice; the root's `classMap`, with a dev page's own `_classMap`, styles classes.
 - Block icons are drawn from the icon data each page carries (`_icons`), which `PageScreen` adds
   to the icon map client-native's `components.Icon` reads (`types.icons`).
-- Menu icons are drawn from the icon data the root carries, with client-native's `Icon`, in the
-  drawer menu. Native tab bars take images or SF Symbols, so tabs show titles only.
+- Menu icons are drawn from the icon data the root carries: with client-native's `Icon` in the
+  drawer menu, and as SF Symbols or images in the tab bar (see Navigation).
 - Hermes has no `crypto.getRandomValues`, which `_uuid` needs; `expo-crypto` fills it.
 
 ## Lowdefy Dev

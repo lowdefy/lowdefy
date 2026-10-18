@@ -17,13 +17,15 @@
 import { type } from '@lowdefy/helpers';
 
 // `page "ticket"`, or `page "ticket" (tickets/s/1)` for an instance of a page with placeholders,
-// whose instance key ends in the path its values build. Worded as the browser tab words it.
+// whose instance key holds the path its values build. Worded as the browser tab words it. A
+// screen's key ends in `@{instanceId}`, its route instance, which is left out.
 function describePage({ pageId, instanceKey }) {
-  const hashIndex = instanceKey.indexOf('#');
+  const pageKey = instanceKey.split('@')[0];
+  const hashIndex = pageKey.indexOf('#');
   if (hashIndex === -1) {
     return `page "${pageId}"`;
   }
-  return `page "${pageId}" (${instanceKey.slice(hashIndex + 1)})`;
+  return `page "${pageId}" (${pageKey.slice(hashIndex + 1)})`;
 }
 
 // The engine context of a page instance: `{ context }`, or `{ error }` as a browser tab answers it.

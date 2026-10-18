@@ -207,7 +207,10 @@ const nativeBlockTypes = {
       category: 'container',
       slots: {
         content: 'The page content, in a scroll view.',
-        headerRight: 'Blocks drawn at the right of the screen header.',
+        headerLeft:
+          'Blocks drawn at the left of the screen header, at their natural size. Prefer `headerActions` for icon buttons.',
+        headerRight:
+          'Blocks drawn at the right of the screen header, at their natural size. Prefer `headerActions` for icon buttons.',
       },
     },
     SegmentedControl: {

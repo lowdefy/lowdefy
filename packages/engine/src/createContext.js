@@ -86,7 +86,17 @@ const blockData = (config) => {
 // page context, and a block-less root carrying the app events for the app context.
 // instanceKey is where the context and its input are stored. organizationId is
 // the caller's organization a page context was built for (see getContext).
-function createContext({ config, instanceKey, jsMap, lowdefy, organizationId, pathParams }) {
+// globals, when given, are the host globals of the screen the context is shown
+// on (getContext); otherwise the context reads the app's.
+function createContext({
+  config,
+  globals,
+  instanceKey,
+  jsMap,
+  lowdefy,
+  organizationId,
+  pathParams,
+}) {
   const { id } = config;
   const ctx = {
     id,
@@ -98,6 +108,7 @@ function createContext({ config, instanceKey, jsMap, lowdefy, organizationId, pa
     requests: {},
     state: {},
     _internal: {
+      globals,
       lowdefy,
       // Config object reference for dynamic page memoization — identity marks
       // which fetch this context was built from.

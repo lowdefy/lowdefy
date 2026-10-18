@@ -76,6 +76,10 @@ Blocks read the computed antd tokens of the mode showing with `useTheme()` from 
   `Switch`, and the community `DateTimePicker` (DateSelector). Picker and Switch sit in a
   `Host` seeded with the theme's primary colour and mode.
 
+## Screen
+
+`Screen` is the mobile page type. Its properties: `title`, `largeTitle` (an iOS large title that collapses as the page scrolls), `presentation` (`card`, `modal`, `sheet`), `headerSearch` (`{ placeholder, autoFocus, debounce, hideWhenScrolling }`, a native search bar) and `headerActions` (`[{ id, icon, sfSymbol, title, placement, event, disabled }]`, header icon buttons at their natural size, native SF Symbol bar buttons on iOS). Its events: `onFocus` (each time the screen is shown, after onMount the first time), `onRefresh` (turns on pull-to-refresh; the spinner holds until its actions finish), `onSearch` and `onSearchChange` (`_event: value` is the text; changes are debounced) and `onHeaderAction` (`_event: id`; an action's `event` names another). Its slots: `content`, and `headerLeft`/`headerRight` for blocks drawn in the header at their natural size. `src/blocks/Screen/examples.yaml` shows a list page, a detail page and a search tab page.
+
 ## Icons
 
 Blocks draw every icon through `components.Icon`, as on the web. `@lowdefy/client-native` installs it (`createIcon` over its `Icon` IconData renderer, the same renderer the shell's menus use), from `types.icons`, the icon data by name. The `Icon` block wraps it, as a button when it has `onClick`.

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { iosColors } from '@lowdefy/client-native';
+
 import {
   findAllOfType,
   iconPaths,
@@ -61,7 +63,7 @@ test('an Icon takes its colour, rotation, stroke width and title from its proper
   expect(svg.props.color).toBe('#ff0000');
 });
 
-test('an Icon is the theme text size and colour by default, and dark in dark mode', async () => {
+test('an Icon is the theme text size and label colour by default, and dark in dark mode', async () => {
   await renderPage({
     darkMode: 'dark',
     pageConfig: page([{ id: 'house', type: 'Icon', properties: { name: 'House' } }]),
@@ -69,7 +71,7 @@ test('an Icon is the theme text size and colour by default, and dark in dark mod
   const block = await screen.findByTestId('house');
   expect(styleOf(screen.getByRole('image')).width).toBe(theme.dark.fontSize);
   const [svg] = findAllOfType(block, 'RNSVGSvgView');
-  expect(svg.props.color).toBe(theme.dark.colorText);
+  expect(svg.props.color).toBe(iosColors.dark.colorLabel);
 });
 
 test('an unknown icon name draws the missing icon in red', async () => {

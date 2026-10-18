@@ -19,12 +19,15 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 | `style/slotStyle.js`                                             | Converts shared-page and operator styles with `@lowdefy/style-native`        |
 | `theme/ThemeProvider.js`, `useTheme.js`                          | Theme mode and the computed antd tokens of that mode                         |
 | `globals/createNativeGlobals.js`                                 | Host globals: route `location`, `Dimensions`, `AppState`, network events     |
+| `globals/createScreenGlobals.js`                                 | One screen's globals: the app's, with `location` the screen's own route      |
 | `link/setupLink.js`                                              | Page links through the host router, others through `Linking`                 |
 | `screen/Screen.js`                                               | The `Screen` page type; reports header options to `onScreenOptions`          |
+| `screen/HeaderActionButton.js`                                   | A header action as a natural-size icon button                                |
 | `trace/describeBlock.js`                                         | The trace's element description, by block id                                 |
 | `elements/createElementRegistry.js`, `useElementRef.js`          | Native views by page and block id (`globals.elements`), for native actions   |
 | `icon/Icon.js`                                                   | Draws IconData (the web's icon node data) with `react-native-svg`            |
 | `icon/createIcon.js`                                             | `components.Icon`: an icon by name from `types.icons`, drawn with `Icon`     |
+| `icon/getSfSymbol.js`, `sfSymbolNames.js`                        | The SF Symbol of a Lucide or semantic icon name, for iOS tab and bar buttons |
 
 ## Differences from the web renderer
 
@@ -69,7 +72,27 @@ types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw 
   names up in `types.icons` at render (with `loading` for a spin and `icon-missing` for an
   unknown name), and draws an empty icon when the data has neither. Each built mobile page
   carries the data of its icons as `_icons`, which the shell adds to `types.icons` before the
-  page renders.
+  page renders. On iOS the tab bar and header actions draw SF Symbols instead: `getSfSymbol`
+  maps Lucide names and Lowdefy's semantic names (`Inbox` to `tray`, `edit` to `pencil`), and a
+  config's `sfSymbol` wins; a name with no symbol draws as its Lucide icon.
+- A shell shows several pages at once (a stack under each tab). `LowdefyPage` takes the screen's
+  `instanceId` (its route key) and `routePath` (its path and query). The engine keeps a context
+  per route instance (`{pageKey}@{instanceId}`), so task B pushed on task A has its own state, and
+  A's state is untouched when B is popped. A screen's first visit takes the Link input left under
+  the page key. The context reads `createScreenGlobals`, whose `location` is the screen's own
+  route, so `_url_query` and `_location` are the query this screen was opened with, whichever
+  screen rendered or took focus last. Without them, a page has one context and reads the host's
+  shown route, as before.
+- `Screen` reports its header to the shell's router (`onScreenOptions`): `title`, `largeTitle`,
+  `presentation`, `headerLeft` and `headerRight` (slot render functions), `headerActions` (icon
+  buttons with an SF Symbol from `getSfSymbol`, an `onPress` and a `render` that draws a
+  `HeaderActionButton`) and `headerSearch` (search bar callbacks; `onSearchChange` is debounced).
+  Header slots render inside `NaturalSizeContext`, so `BlockLayout` gives their blocks their
+  content's size rather than a column width; a span-24 block would stretch the native bar item
+  across the header and truncate the title. `ScreenContext` carries the screen's `focused` flag
+  (onFocus fires on each false-to-true change, the first one after onMount) and `setRefresh`,
+  which turns on the page ScrollView's `RefreshControl` for `onRefresh` and holds `refreshing`
+  until the event's promise settles.
 - The engine's `window` and `document` keys hold plain objects. `focus` and `blur` have no
   source on a phone; `online` and `offline` follow the `network` the shell passes.
 

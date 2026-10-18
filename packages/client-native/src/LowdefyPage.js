@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import React, { useContext, useMemo, useRef } from 'react';
-import { ScrollView, useWindowDimensions } from 'react-native';
+import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
+import { RefreshControl, ScrollView, useWindowDimensions } from 'react-native';
 import { getAppContext } from '@lowdefy/engine';
 import { appStorageKey, pageInstanceKey, serializer } from '@lowdefy/helpers';
 import { getBreakpoint } from '@lowdefy/layout-native';
@@ -23,17 +23,39 @@ import { getBreakpoint } from '@lowdefy/layout-native';
 import Block from './block/Block.js';
 import BreakpointContext from './layout/BreakpointContext.js';
 import Context from './Context.js';
+import createScreenGlobals from './globals/createScreenGlobals.js';
 import ElementsContext from './elements/ElementsContext.js';
 import initNativeLowdefy from './initNativeLowdefy.js';
 import PageStyleContext from './style/PageStyleContext.js';
+import ScreenContext from './screen/ScreenContext.js';
 import ScreenOptionsContext from './screen/ScreenOptionsContext.js';
 import ThemeContext from './theme/ThemeContext.js';
 import ThemeProvider from './theme/ThemeProvider.js';
 import useElementRef from './elements/useElementRef.js';
 
+// Pull-to-refresh on the page's scroll view, for a Screen with onRefresh: the native spinner shows
+// until the refresh function's promise settles.
+function useRefresh() {
+  const refreshRef = useRef(null);
+  const [hasRefresh, setHasRefresh] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const setRefresh = useCallback((refresh) => {
+    refreshRef.current = refresh;
+    setHasRefresh(refresh !== null);
+  }, []);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    Promise.resolve(refreshRef.current?.()).finally(() => setRefreshing(false));
+  }, []);
+  return { hasRefresh, onRefresh, refreshing, setRefresh };
+}
+
 const Page = ({
   core,
+  focused,
+  globals,
   host,
+  instanceId,
   jsMap,
   onScreenOptions,
   pageConfig,
@@ -69,48 +91,74 @@ const Page = ({
   if (buildRef.current.config !== pageConfig) {
     buildRef.current = { config: pageConfig, build: buildRef.current.build + 1 };
   }
+  const screenKey = instanceId === undefined ? instanceKey : `${instanceKey}@${instanceId}`;
   const contextKey =
-    pageConfig.dynamic === true ? `${instanceKey}:${buildRef.current.build}` : instanceKey;
+    pageConfig.dynamic === true ? `${screenKey}:${buildRef.current.build}` : screenKey;
 
-  const lowdefy = initNativeLowdefy({ core, host, pageConfig, pathParams, rootConfig, types });
+  const { hasRefresh, onRefresh, refreshing, setRefresh } = useRefresh();
+  const screen = useMemo(() => ({ focused, setRefresh }), [focused, setRefresh]);
+
+  const lowdefy = initNativeLowdefy({
+    core,
+    host,
+    pageConfig,
+    pathname: (globals ?? host.globals).window.location.pathname,
+    pathParams,
+    rootConfig,
+    types,
+  });
   lowdefy.theme._resolvedAntdToken = theme.tokens;
   const appContext = getAppContext({ events: rootConfig.events, jsMap, lowdefy });
   return (
     <BreakpointContext.Provider value={breakpoint}>
       <PageStyleContext.Provider value={pageStyle}>
         <ScreenOptionsContext.Provider value={onScreenOptions}>
-          {/* A native stack header is translucent on iOS 26 and later and the page scrolls under
-              it: automatic insets start the content below the header and the tab bar. The page
-              is drawn on the grouped background, as an iOS screen of grouped sections is. */}
-          <ScrollView
-            contentInsetAdjustmentBehavior="automatic"
-            keyboardShouldPersistTaps="handled"
-            ref={scrollRef}
-            style={{ backgroundColor: theme.tokens.colorGroupedBackground }}
-          >
-            <Context
-              key={contextKey}
-              appContext={appContext}
-              config={pageConfig}
-              jsMap={jsMap}
-              lowdefy={lowdefy}
-              pathParams={pathParams}
-              resetContext={resetContext}
-            >
-              {(context) => {
-                if (!context._internal.onInitDone) return null;
-                return (
-                  <Block
-                    block={context._internal.RootSlots.map[pageConfig.blockId]}
-                    Blocks={context._internal.RootSlots}
-                    context={context}
-                    lowdefy={lowdefy}
-                    parentLoading={false}
+          <ScreenContext.Provider value={screen}>
+            {/* A native stack header is translucent on iOS 26 and later and the page scrolls
+                under it: automatic insets start the content below the header and the tab bar,
+                and let a large title collapse as the page scrolls. The page is drawn on the
+                grouped background, as an iOS screen of grouped sections is. */}
+            <ScrollView
+              contentInsetAdjustmentBehavior="automatic"
+              keyboardShouldPersistTaps="handled"
+              ref={scrollRef}
+              style={{ backgroundColor: theme.tokens.colorGroupedBackground }}
+              refreshControl={
+                hasRefresh ? (
+                  <RefreshControl
+                    onRefresh={onRefresh}
+                    refreshing={refreshing}
+                    testID="screen-refresh"
                   />
-                );
-              }}
-            </Context>
-          </ScrollView>
+                ) : undefined
+              }
+            >
+              <Context
+                key={contextKey}
+                appContext={appContext}
+                config={pageConfig}
+                globals={globals}
+                instanceId={instanceId}
+                jsMap={jsMap}
+                lowdefy={lowdefy}
+                pathParams={pathParams}
+                resetContext={resetContext}
+              >
+                {(context) => {
+                  if (!context._internal.onInitDone) return null;
+                  return (
+                    <Block
+                      block={context._internal.RootSlots.map[pageConfig.blockId]}
+                      Blocks={context._internal.RootSlots}
+                      context={context}
+                      lowdefy={lowdefy}
+                      parentLoading={false}
+                    />
+                  );
+                }}
+              </Context>
+            </ScrollView>
+          </ScreenContext.Provider>
         </ScreenOptionsContext.Provider>
       </PageStyleContext.Provider>
     </BreakpointContext.Provider>
@@ -137,8 +185,16 @@ const Page = ({
  *   it before the page renders.
  * @param {Object} [props.pathParams] The values of the page path's params, from the router.
  * @param {Object} [props.jsMap] The page's compiled `_js` functions.
- * @param {(options: Object) => void} [props.onScreenOptions] Called by a Screen page with
- *   `{ title, presentation, headerRight }` for the router to draw the header.
+ * @param {(options: Object) => void} [props.onScreenOptions] Called by a Screen page with its
+ *   header options for the router to draw the header (see screen/Screen.js).
+ * @param {string} [props.instanceId] The route instance the page is shown on (a router's route
+ *   key). Two screens of one page in a stack (task A, then task B pushed on it) each keep their
+ *   own page state under it. Without it, every screen of a page shares one context.
+ * @param {string} [props.routePath] The route the screen shows: path and query string. The page
+ *   reads its location (`_url_query`, `_location`) from it, not from the host's shown route, so
+ *   a screen under another keeps its own query.
+ * @param {boolean} [props.focused] Whether the screen is the one shown; a Screen page fires
+ *   onFocus each time it becomes true. Defaults to true.
  * @param {Object} [props.resetContext] `{ reset, setReset }`: rebuild the page context once.
  *
  * A shell wraps its pages in one ThemeProvider, so they share the theme mode; a page outside one
@@ -146,13 +202,16 @@ const Page = ({
  */
 const LowdefyPage = ({
   core,
+  focused = true,
   host,
+  instanceId,
   jsMap,
   onScreenOptions = null,
   pageConfig: rawPageConfig,
   pathParams = {},
   resetContext = { reset: false, setReset: () => undefined },
   rootConfig: rawRootConfig,
+  routePath,
   types,
 }) => {
   // Deserialized once per fetched config: the engine keeps dynamic page contexts by config
@@ -165,11 +224,24 @@ const LowdefyPage = ({
     () => ({ registry: host.globals.elements, pageId: pageConfig.pageId }),
     [host.globals.elements, pageConfig.pageId]
   );
+  const routePathRef = useRef(routePath);
+  routePathRef.current = routePath;
+  const hasRoutePath = routePath !== undefined;
+  const globals = useMemo(
+    () =>
+      hasRoutePath
+        ? createScreenGlobals({ globals: host.globals, getPath: () => routePathRef.current })
+        : undefined,
+    [hasRoutePath, host.globals]
+  );
   const page = (
     <ElementsContext.Provider value={elements}>
       <Page
         core={core}
+        focused={focused}
+        globals={globals}
         host={host}
+        instanceId={instanceId}
         jsMap={jsMap}
         onScreenOptions={onScreenOptions}
         pageConfig={pageConfig}

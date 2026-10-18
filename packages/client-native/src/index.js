@@ -23,6 +23,7 @@ export { default as createNativeGlobals } from './globals/createNativeGlobals.js
 export { default as describeBlock } from './trace/describeBlock.js';
 export { default as ElementsContext } from './elements/ElementsContext.js';
 export { default as formatIconTitle } from './icon/formatIconTitle.js';
+export { default as getSfSymbol } from './icon/getSfSymbol.js';
 export { default as Icon } from './icon/Icon.js';
 export { default as iosColors } from './theme/iosColors.js';
 export { default as layoutStyles } from './layout/layoutStyles.js';

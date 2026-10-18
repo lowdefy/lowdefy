@@ -34,16 +34,27 @@ const DEFAULT_VIEW_SIZE = 24;
  * @param {boolean} [props.nonScalingStroke] Keep the stroke width at any size.
  * @param {number} [props.size] Width and height; the icon's own size, or 24.
  * @param {number} [props.strokeWidth]
+ * @param {Object} [props.ref] The svg's ref, for its toDataURL (a shell draws tab bar images).
  * @param {Object} [props.style]
  * @param {string} [props.testID]
  */
-function Icon({ color, data, nonScalingStroke = false, size, strokeWidth = 2, style, testID }) {
+function Icon({
+  color,
+  data,
+  nonScalingStroke = false,
+  ref,
+  size,
+  strokeWidth = 2,
+  style,
+  testID,
+}) {
   // An svg width or height in the data is the view size, not the drawn size: size wins.
   const { height, width, ...attrs } = data.attrs ?? {};
   const viewWidth = data.width ?? data.size ?? width ?? DEFAULT_VIEW_SIZE;
   const viewHeight = data.height ?? data.size ?? height ?? DEFAULT_VIEW_SIZE;
   return (
     <Svg
+      ref={ref}
       color={color}
       fill="none"
       height={size ?? viewHeight}

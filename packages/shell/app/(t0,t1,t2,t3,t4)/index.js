@@ -15,6 +15,8 @@
 */
 
 import React, { useContext } from 'react';
+import { useLocalSearchParams } from 'expo-router';
+import { serializeQuery } from '@lowdefy/client-core';
 
 import getSlotRootPath from '../../src/navigation/getSlotRootPath.js';
 import MessageScreen from '../../src/components/MessageScreen.js';
@@ -22,13 +24,15 @@ import PageScreen from '../../src/components/PageScreen.js';
 import SlotContext from '../../src/navigation/SlotContext.js';
 import { useSessionState } from '../../src/ShellContext.js';
 
-// The first screen of a frame group: its tab's page, or the app's home page.
+// The first screen of a frame group: its tab's page, or the app's home page. A link to a tab's
+// page switches to the tab (toRouterHref) with its query as the route's params.
 export default function GroupIndex() {
   const slotIndex = useContext(SlotContext);
+  const query = useLocalSearchParams();
   const { root } = useSessionState();
   const path = getSlotRootPath({ root, slotIndex });
   if (path === null) {
     return <MessageScreen testID="shell-no-home" title="This app has no page to open" />;
   }
-  return <PageScreen path={path} />;
+  return <PageScreen path={path} query={serializeQuery(query)} />;
 }

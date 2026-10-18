@@ -332,7 +332,11 @@ test('a Screen page reports its header options and renders its headerRight slot'
   expect(await screen.findByText('Body')).toBeTruthy();
   expect(screen.queryByText('Add')).toBeNull();
   expect(onScreenOptions).toHaveBeenCalledWith({
+    headerActions: [],
+    headerLeft: undefined,
     headerRight: expect.any(Function),
+    headerSearch: undefined,
+    largeTitle: false,
     presentation: 'modal',
     title: 'Jobs',
   });

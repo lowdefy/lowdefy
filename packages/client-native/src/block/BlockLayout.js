@@ -20,6 +20,7 @@ import { View } from 'react-native';
 import BreakpointContext from '../layout/BreakpointContext.js';
 import ColumnGapContext from '../layout/ColumnGapContext.js';
 import layoutStyles from '../layout/layoutStyles.js';
+import NaturalSizeContext from '../layout/NaturalSizeContext.js';
 import useElementRef from '../elements/useElementRef.js';
 
 // The view a block is placed in. Its testID and accessibilityLabel are the block id, so device
@@ -30,11 +31,14 @@ import useElementRef from '../elements/useElementRef.js';
 // In a gapped area the block takes the column gap as left padding, so its own style (a
 // background, a border) goes on an inner view that fills the placement, as the web's column div
 // carries it without the gap.
+//
+// In a screen header (NaturalSizeContext) a block takes its content's size, not a column width.
 const BlockLayout = ({ blockId, children, layout = {}, style }) => {
   const breakpoint = useContext(BreakpointContext);
   const columnGap = useContext(ColumnGapContext);
+  const naturalSize = useContext(NaturalSizeContext);
   const ref = useElementRef({ blockId, kind: 'view' });
-  if (layout.disabled === true) {
+  if (layout.disabled === true || naturalSize) {
     return (
       <View accessibilityLabel={blockId} ref={ref} style={style} testID={blockId}>
         {children}
