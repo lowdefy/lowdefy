@@ -17,8 +17,8 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import { type } from '@lowdefy/helpers';
+import { formatIconTitle } from '@lowdefy/client-native';
 
-import formatIconTitle from '../../icon/formatIconTitle.js';
 import meta from './meta.js';
 
 // An icon from the app's icon data, drawn by the native icon renderer. With an onClick event it

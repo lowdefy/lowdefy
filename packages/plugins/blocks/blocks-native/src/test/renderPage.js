@@ -33,7 +33,6 @@ import {
 import * as blocks from '../blocks.js';
 import buildPage from './buildPage.js';
 import createFakeHost from './createFakeHost.js';
-import createIcon from '../icon/createIcon.js';
 import icons from './icons.json';
 import theme from './theme.json';
 
@@ -46,27 +45,11 @@ function createRecord() {
   return { calls, Record };
 }
 
-// The lowdefy object a shell hands its pages. A shell installs the native icon renderer as
-// components.Icon once the core is built; here a setter does it as client-core builds _internal.
-function createLowdefy() {
-  const lowdefy = { buildId: 'build-1' };
-  let internal;
-  Object.defineProperty(lowdefy, '_internal', {
-    configurable: true,
-    enumerable: true,
-    get: () => internal,
-    set: (value) => {
-      internal = value;
-      internal.components.Icon = createIcon({ icons });
-    },
-  });
-  return lowdefy;
-}
-
 /**
  * Renders a page of native blocks as a shell does: through @lowdefy/client-native's LowdefyPage,
- * with the computed theme tokens of an app with colorPrimary #6366f1, the test icons, and the
- * CallMethod, SetState, Validate, Wait and Record actions.
+ * with the computed theme tokens of an app with colorPrimary #6366f1, the test icons (which
+ * client-native's icon renderer draws as components.Icon), and the CallMethod, SetState,
+ * Validate, Wait and Record actions.
  *
  * @param {Object} params
  * @param {Object} params.pageConfig The page as config writes it (blocks, events, properties).
@@ -85,7 +68,7 @@ async function renderPage({
 }) {
   const { calls, Record } = createRecord();
   const host = createFakeHost({ path: `/${pageConfig.id}` });
-  const lowdefy = createLowdefy();
+  const lowdefy = { buildId: 'build-1' };
   await render(
     <LowdefyPage
       core={{
@@ -108,6 +91,7 @@ async function renderPage({
       types={{
         actions: { CallMethod, Record, SetState, Validate, Wait, ...actions },
         blocks,
+        icons,
         operators: { _event, _if, _index, _not, _state, _string, _sum, _type },
       }}
     />

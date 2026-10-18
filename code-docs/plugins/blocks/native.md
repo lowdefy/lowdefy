@@ -56,7 +56,7 @@ Blocks read the computed antd tokens of the mode showing with `useTheme()` from 
 
 ## Icons
 
-`src/icon/createIcon.js` is the native icon renderer: `createIcon({ icons, iconTheme })` returns the `Icon` component a renderer installs as `lowdefy._internal.components.Icon`, as the web client installs its own. `icons` is the icon data the build loads (`{ node, attrs, size }` by name, including `loading` and `icon-missing`); `renderIconNodes` draws the nodes with `react-native-svg`. Props follow the web's (`properties` is a name or the Icon block's properties); an element style's `color` and `fontSize` stand in for CSS `currentColor` and `1em`. Blocks draw every icon through `components.Icon`.
+Blocks draw every icon through `components.Icon`, as on the web. `@lowdefy/client-native` installs it (`createIcon` over its `Icon` IconData renderer, the same renderer the shell's menus use), from `types.icons`, the icon data by name. The `Icon` block wraps it, as a button when it has `onClick`.
 
 ## Tests
 

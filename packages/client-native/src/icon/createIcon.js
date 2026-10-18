@@ -17,20 +17,25 @@
 import React from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { type } from '@lowdefy/helpers';
-import { useTheme } from '@lowdefy/client-native';
 
 import formatIconTitle from './formatIconTitle.js';
-import IconSvg from './IconSvg.js';
-import toPixels from '../toPixels.js';
+import IconSvg from './Icon.js';
+import toPixels from '../style/toPixels.js';
 import useSpin from './useSpin.js';
+import useTheme from '../theme/useTheme.js';
 
 const MISSING_COLOR = '#F00';
+
+// Drawn when neither the icon nor `icon-missing` is in the icon data: an empty svg keeps the
+// icon's box, as the web's pending icon does.
+const EMPTY_ICON = { node: [] };
 
 /**
  * The native icon renderer: the web client's `components.Icon` for a phone. It draws the icon
  * node data the build resolves (semantic names, aliases and sets such as `tabler:`) with
  * react-native-svg, so `House` and `tabler:truck` look the same on every surface. A renderer
- * installs it as `lowdefy._internal.components.Icon`, and blocks draw every icon through it.
+ * installs it as `lowdefy._internal.components.Icon` (initNativeLowdefy does), and blocks draw
+ * every icon through it. It draws with Icon, the IconData renderer the shell's menus use too.
  *
  * The props follow the web's: `properties` is an icon name or the Icon block's properties. An
  * element style's `color` and `fontSize` play the part CSS inheritance plays on the web: the
@@ -38,7 +43,8 @@ const MISSING_COLOR = '#F00';
  *
  * @param {Object} params
  * @param {Object} params.icons Icon data by name, as the build loads it: `{ node, attrs, size }`.
- *   It holds `loading` (drawn while a spin or click runs) and `icon-missing`.
+ *   It holds `loading` (drawn while a spin or click runs) and `icon-missing`. It is read at
+ *   render, so names added to it later draw.
  * @param {{ size?: number|string, strokeWidth?: number, nonScalingStroke?: boolean }} [params.iconTheme]
  *   The app's `theme.icons` defaults.
  * @returns {Function} The Icon component.
@@ -97,7 +103,7 @@ function createIcon({ icons, iconTheme = {} }) {
       >
         <IconSvg
           color={color}
-          data={data}
+          data={data ?? EMPTY_ICON}
           nonScalingStroke={iconProperties.nonScalingStroke ?? iconTheme.nonScalingStroke ?? false}
           size={size}
           strokeWidth={iconProperties.strokeWidth ?? iconTheme.strokeWidth ?? 2}

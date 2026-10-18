@@ -24,6 +24,7 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 | `trace/describeBlock.js`                                         | The trace's element description, by block id                                 |
 | `elements/createElementRegistry.js`, `useElementRef.js`          | Native views by page and block id (`globals.elements`), for native actions   |
 | `icon/Icon.js`                                                   | Draws IconData (the web's icon node data) with `react-native-svg`            |
+| `icon/createIcon.js`                                             | `components.Icon`: an icon by name from `types.icons`, drawn with `Icon`     |
 
 ## Differences from the web renderer
 
@@ -60,8 +61,13 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
   them by the page and block id; the view registered last wins, so a page on screen twice
   answers for the one on top.
 - `Icon` draws the same IconData as the web (`{ node, attrs, size }`), with lucide's defaults
-  (24px, `currentColor` stroke 2) under a set's own attributes. Blocks and the shell draw every
-  icon through it.
+  (24px, `currentColor` stroke 2) under a set's own attributes. It is the one icon renderer:
+  the shell draws menu icons with it, and `initNativeLowdefy` installs `createIcon({ icons:
+types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw every icon
+  through. Its props follow the web's (`properties` is a name or the Icon block's properties);
+  an element style's `color` and `fontSize` stand in for CSS `currentColor` and `1em`. It looks
+  names up in `types.icons` at render (with `loading` for a spin and `icon-missing` for an
+  unknown name), and draws an empty icon when the data has neither.
 - The engine's `window` and `document` keys hold plain objects. `focus` and `blur` have no
   source on a phone; `online` and `offline` follow the `network` the shell passes.
 

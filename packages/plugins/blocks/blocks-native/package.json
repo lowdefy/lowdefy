@@ -29,7 +29,6 @@
   },
   "type": "module",
   "exports": {
-    "./*": "./dist/*",
     "./blocks": "./dist/blocks.js",
     "./metas": "./dist/metas.js",
     "./types": "./dist/types.js"

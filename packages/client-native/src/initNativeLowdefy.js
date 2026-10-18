@@ -16,6 +16,7 @@
 
 import { createLowdefyCore, updateLowdefyPage } from '@lowdefy/client-core';
 
+import createIcon from './icon/createIcon.js';
 import createLinkComponent from './link/createLinkComponent.js';
 import getBlockMetas from './getBlockMetas.js';
 import getMatchedPath from './getMatchedPath.js';
@@ -24,7 +25,8 @@ import setupLink from './link/setupLink.js';
 
 // Builds the app-level lowdefy object on the core the first time a page renders, then points it
 // at the page being shown. The renderer's own page type, Screen, joins the block map; a block set
-// that brings its own Screen wins.
+// that brings its own Screen wins. The native icon renderer is installed as components.Icon over
+// `types.icons`, the live map of icon data by name, as the web client does.
 function initNativeLowdefy({ core, host, pageConfig, pathParams, rootConfig, types }) {
   const { apiBase, auth, basePath = '', lowdefy } = core;
   if (!lowdefy._internal?.initialised) {
@@ -39,6 +41,10 @@ function initNativeLowdefy({ core, host, pageConfig, pathParams, rootConfig, typ
       types: { ...types, blockMetas: getBlockMetas(blocks), blocks },
     });
     lowdefy._internal.link = setupLink(lowdefy);
+    lowdefy._internal.components.Icon = createIcon({
+      icons: types.icons ?? {},
+      iconTheme: rootConfig.theme?.icons,
+    });
     lowdefy._internal.components.Link = createLinkComponent(lowdefy);
     lowdefy._internal.components.handleError = lowdefy._internal.handleError;
     // The classes a development build has warned are missing from the class map, once each.
