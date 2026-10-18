@@ -15,25 +15,50 @@
 */
 
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Animated, Pressable, Text, View } from 'react-native';
 import { type } from '@lowdefy/helpers';
 import { useTheme } from '@lowdefy/client-native';
 
 import getIosTextStyle from '../../typography/getIosTextStyle.js';
 import meta from './meta.js';
+import useSwipeGesture from './useSwipeGesture.js';
+
+const SWIPE_ACTIONS = [
+  { direction: 'left', event: 'onSwipeLeft', label: 'Swipe left', name: 'swipeLeft' },
+  { direction: 'right', event: 'onSwipeRight', label: 'Swipe right', name: 'swipeRight' },
+];
 
 // A plain container. With an onClick event it is pressable, and a content string is drawn as body
-// text.
+// text. With onSwipeLeft or onSwipeRight it takes clear horizontal swipes (useSwipeGesture), which
+// screen readers get as the Box's accessibility actions.
 function Box({ content, events, methods, properties, styles = {} }) {
   const { tokens } = useTheme();
+  const swipeActions = SWIPE_ACTIONS.filter((action) => !type.isNone(events[action.event]));
+  const gesture = useSwipeGesture({
+    directions: swipeActions.map((action) => action.direction),
+    feedback: properties.swipeFeedback === true,
+    methods,
+  });
   const children = type.isString(properties.content) ? (
     <Text style={getIosTextStyle({ textStyle: 'body', tokens })}>{properties.content}</Text>
   ) : (
     content.content?.()
   );
+  const accessibilityProps =
+    swipeActions.length === 0
+      ? {}
+      : {
+          accessibilityActions: swipeActions.map(({ label, name }) => ({ label, name })),
+          onAccessibilityAction: (event) => {
+            const action = swipeActions.find(({ name }) => name === event.nativeEvent.actionName);
+            gesture.swipe(action.direction);
+          },
+        };
+  const moved = { transform: [{ translateX: gesture.translateX }] };
   if (events.onClick) {
-    return (
+    const button = (
       <Pressable
+        {...accessibilityProps}
         accessibilityRole="button"
         onPress={() => methods.triggerEvent({ name: 'onClick' })}
         style={styles.element}
@@ -41,8 +66,24 @@ function Box({ content, events, methods, properties, styles = {} }) {
         {children}
       </Pressable>
     );
+    if (swipeActions.length === 0) {
+      return button;
+    }
+    // A Pressable sets its own responder handlers, so the swipe is taken by a view around it.
+    return (
+      <Animated.View {...gesture.panHandlers} style={moved}>
+        {button}
+      </Animated.View>
+    );
   }
-  return <View style={styles.element}>{children}</View>;
+  if (swipeActions.length === 0) {
+    return <View style={styles.element}>{children}</View>;
+  }
+  return (
+    <Animated.View {...gesture.panHandlers} {...accessibilityProps} style={[styles.element, moved]}>
+      {children}
+    </Animated.View>
+  );
 }
 
 Box.meta = meta;
