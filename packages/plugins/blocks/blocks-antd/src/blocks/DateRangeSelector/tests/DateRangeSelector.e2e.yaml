@@ -381,9 +381,31 @@ blocks:
     type: DateRangeSelector
     properties:
       title: Fixed Start
+      format: YYYY-MM-DD
       disabled:
         - true
         - false
+    events:
+      onChange:
+        - id: count_drs_disabled_start
+          type: SetState
+          params:
+            drs_disabled_start_count:
+              _sum:
+                - _if_none:
+                    - _state: drs_disabled_start_count
+                    - 0
+                - 1
+
+  - id: drs_disabled_start_count_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'Changes: '
+          - _if_none:
+              - _state: drs_disabled_start_count
+              - 0
 
   - id: drs_typed
     type: DateRangeSelector
@@ -397,6 +419,15 @@ blocks:
           params:
             drs_typed_event:
               _event: value
+        - id: count_drs_typed
+          type: SetState
+          params:
+            drs_typed_count:
+              _sum:
+                - _if_none:
+                    - _state: drs_typed_count
+                    - 0
+                - 1
 
   # Shows the range the last onChange carried, so a test can tell the event fired with it.
   - id: drs_typed_display
@@ -426,6 +457,17 @@ blocks:
     properties:
       title: Typed Dates Without a Value
       format: YYYY-MM-DD
+    events:
+      onChange:
+        - id: count_drs_typed_empty
+          type: SetState
+          params:
+            drs_typed_empty_count:
+              _sum:
+                - _if_none:
+                    - _state: drs_typed_empty_count
+                    - 0
+                - 1
 
   - id: drs_typed_empty_display
     type: Span
@@ -468,3 +510,23 @@ blocks:
               - true
           then: Changed
           else: ''
+
+  - id: drs_typed_count_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'Changes: '
+          - _if_none:
+              - _state: drs_typed_count
+              - 0
+
+  - id: drs_typed_empty_count_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'Changes: '
+          - _if_none:
+              - _state: drs_typed_empty_count
+              - 0

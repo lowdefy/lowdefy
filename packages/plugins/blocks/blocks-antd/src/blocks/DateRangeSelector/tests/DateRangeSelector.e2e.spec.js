@@ -442,6 +442,7 @@ test.describe('DateRangeSelector typed dates', () => {
 
     await expect(getBlock(page, 'drs_typed_display')).toHaveText('2024-05-01 ~ 2024-06-30');
     await expect(getEndInput(page, 'drs_typed')).toBeFocused();
+    await expect(getBlock(page, 'drs_typed_count_display')).toHaveText('Changes: 1');
 
     await page.keyboard.press('Escape');
     await dateRangeSelector.expect.closed(page, 'drs_typed');
@@ -469,6 +470,36 @@ test.describe('DateRangeSelector typed dates', () => {
 
     await dateRangeSelector.expect.closed(page, 'drs_typed');
     await expect(getBlock(page, 'drs_typed_display')).toHaveText('2024-05-01 ~ 2024-06-30');
+    await expect(getBlock(page, 'drs_typed_count_display')).toHaveText('Changes: 1');
+  });
+
+  test('Enter on a start date typed after visiting the end date fires onChange once', async ({
+    page,
+  }) => {
+    await getEndInput(page, 'drs_typed').click();
+    await typeDate(getStartInput(page, 'drs_typed'), '2024-05-01');
+    await page.keyboard.press('Enter');
+
+    await expect(getBlock(page, 'drs_typed_display')).toHaveText('2024-05-01 ~ 2024-06-30');
+    await expect(getBlock(page, 'drs_typed_count_display')).toHaveText('Changes: 1');
+  });
+
+  test('Enter on an end date before a fixed start date does not apply it', async ({ page }) => {
+    await typeDate(getEndInput(page, 'drs_disabled_start'), '2024-05-15');
+    await page.keyboard.press('Enter');
+    await page.keyboard.press('Escape');
+
+    await expect(getStartInput(page, 'drs_disabled_start')).toHaveValue('2024-06-01');
+    await expect(getEndInput(page, 'drs_disabled_start')).toHaveValue('2024-06-30');
+    await expect(getBlock(page, 'drs_disabled_start_count_display')).toHaveText('Changes: 0');
+  });
+
+  test('Enter on a typed end date with a fixed start date applies it once', async ({ page }) => {
+    await typeDate(getEndInput(page, 'drs_disabled_start'), '2024-07-15');
+    await page.keyboard.press('Enter');
+
+    await expect(getEndInput(page, 'drs_disabled_start')).toHaveValue('2024-07-15');
+    await expect(getBlock(page, 'drs_disabled_start_count_display')).toHaveText('Changes: 1');
   });
 
   test('Enter on a typed start date after the end date applies the range in order', async ({
@@ -500,6 +531,7 @@ test.describe('DateRangeSelector typed dates', () => {
     await expect(getStartInput(page, 'drs_typed_empty')).toHaveValue('2024-06-10');
     await expect(getEndInput(page, 'drs_typed_empty')).toHaveValue('2024-06-20');
     await expect(getBlock(page, 'drs_typed_empty_display')).toHaveText('Range set');
+    await expect(getBlock(page, 'drs_typed_empty_count_display')).toHaveText('Changes: 1');
   });
 
   test('picking a range with the mouse applies it', async ({ page }) => {
