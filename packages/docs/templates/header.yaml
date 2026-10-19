@@ -151,7 +151,7 @@
     color: default
     variant: text
     shape: circle
-    icon: FaDiscord
+    icon: brands:Discord
     href: https://discord.gg/WmcJgXt
 - id: github_button
   type: Button

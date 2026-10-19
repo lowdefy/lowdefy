@@ -20,14 +20,14 @@
       type: MenuGroup
       properties:
         title: Welcome
-        icon: AiOutlineHome
+        icon: home
       links:
         - id: introduction
           type: MenuLink
           pageId: introduction
           properties:
             title: Introduction
-            icon: AiOutlineCoffee
+            icon: Coffee
         - id: why-lowdefy
           type: MenuLink
           url: https://lowdefy.com
@@ -42,7 +42,7 @@
       type: MenuGroup
       properties:
         title: Start here
-        icon: AiOutlineRocket
+        icon: Rocket
       links:
         - id: quickstart
           type: MenuLink
@@ -53,7 +53,7 @@
           type: MenuGroup
           properties:
             title: Tutorial
-            icon: AiOutlineRocket
+            icon: Rocket
           links:
             - id: tutorial-start
               type: MenuLink
@@ -99,7 +99,7 @@
       type: MenuGroup
       properties:
         title: Core concepts
-        icon: AiOutlineBulb
+        icon: Lightbulb
       links:
         - id: four-primitives
           type: MenuLink
@@ -155,7 +155,7 @@
       type: MenuGroup
       properties:
         title: AI Agents
-        icon: AiOutlineRobot
+        icon: bot
       links:
         - id: agents-introduction
           type: MenuLink
@@ -201,7 +201,7 @@
       type: MenuGroup
       properties:
         title: Advanced topics
-        icon: AiOutlineControl
+        icon: SlidersHorizontal
       links:
         - id: lowdefy-api
           type: MenuLink
@@ -277,7 +277,7 @@
       type: MenuGroup
       properties:
         title: Testing
-        icon: AiOutlineExperiment
+        icon: FlaskConical
       links:
         - id: e2e-introduction
           type: MenuLink
@@ -313,7 +313,7 @@
       type: MenuGroup
       properties:
         title: Authentication
-        icon: AiOutlineTeam
+        icon: users
       links:
         - id: users
           type: MenuLink
@@ -378,7 +378,7 @@
       type: MenuGroup
       properties:
         title: Deployment
-        icon: AiOutlineCloudUpload
+        icon: CloudUpload
       links:
         - id: docker
           type: MenuLink
@@ -399,7 +399,7 @@
       type: MenuGroup
       properties:
         title: Upgrading
-        icon: RiArrowLeftRightLine
+        icon: ArrowLeftRight
       links:
         - id: upgrade-guide
           type: MenuLink
@@ -425,12 +425,12 @@
       pageId: reference
       properties:
         title: Overview
-        icon: AiOutlineBook
+        icon: Book
     - id: blocks-group
       type: MenuGroup
       properties:
         title: Blocks
-        icon: AiOutlineAppstore
+        icon: grid
       links:
         - id: blocks-reference
           type: MenuLink
@@ -441,7 +441,7 @@
           type: MenuGroup
           properties:
             title: Input
-            icon: AiOutlineForm
+            icon: SquarePen
           links:
             - id: InputGallery
               type: MenuLink
@@ -548,7 +548,7 @@
           type: MenuGroup
           properties:
             title: Display
-            icon: AiOutlinePicture
+            icon: image
           links:
             - id: AgGrid
               type: MenuLink
@@ -671,7 +671,7 @@
           type: MenuGroup
           properties:
             title: Container
-            icon: AiOutlineContainer
+            icon: Archive
           links:
             - id: Affix
               type: MenuLink
@@ -785,7 +785,7 @@
           type: MenuGroup
           properties:
             title: List
-            icon: AiOutlineOrderedList
+            icon: ListOrdered
           links:
             - id: ControlledList
               type: MenuLink
@@ -803,7 +803,7 @@
       type: MenuGroup
       properties:
         title: Operators
-        icon: AiOutlineFunction
+        icon: SquareFunction
       links:
         - id: operators-reference
           type: MenuLink
@@ -1081,7 +1081,7 @@
       type: MenuGroup
       properties:
         title: Actions
-        icon: AiOutlineThunderbolt
+        icon: Zap
       links:
         - id: actions-reference
           type: MenuLink
@@ -1201,7 +1201,7 @@
       type: MenuGroup
       properties:
         title: Connections
-        icon: AiOutlineApi
+        icon: Plug
       links:
         - id: connections-reference
           type: MenuLink
@@ -1314,7 +1314,7 @@
       type: MenuGroup
       properties:
         title: Controls
-        icon: MdAltRoute
+        icon: Split
       links:
         - id: :for
           type: MenuLink
@@ -1354,13 +1354,13 @@
       pageId: schema-reference
       properties:
         title: Schema Reference
-        icon: AiOutlineFileText
+        icon: document
     - id: cli
       type: MenuLink
       pageId: cli
       properties:
         title: CLI Reference
-        icon: AiOutlineCode
+        icon: CodeXml
 - id: menu-recipes
   properties:
     title: Recipes
@@ -1370,7 +1370,7 @@
       pageId: recipes
       properties:
         title: Overview
-        icon: AiOutlineExperiment
+        icon: FlaskConical
 - id: menu-plugins
   properties:
     title: Plugins
@@ -1380,12 +1380,12 @@
       pageId: plugins
       properties:
         title: Overview
-        icon: AiOutlineAppstoreAdd
+        icon: Grid2x2Plus
     - id: build-a-plugin
       type: MenuGroup
       properties:
         title: Build a plugin
-        icon: AiOutlineTool
+        icon: Wrench
       links:
         - id: plugins-introduction
           type: MenuLink

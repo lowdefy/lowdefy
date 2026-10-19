@@ -61,7 +61,7 @@ _ref:
                   flex: 0 1 auto
                 properties:
                   title: 5-minute Quickstart
-                  icon: AiOutlineThunderbolt
+                  icon: Zap
                   size: large
                   color: primary
                   variant: solid
@@ -77,7 +77,7 @@ _ref:
                   flex: 0 1 auto
                 properties:
                   title: Full tutorial
-                  icon: AiOutlineRocket
+                  icon: Rocket
                   size: large
                 events:
                   onClick:
@@ -522,7 +522,7 @@ _ref:
                   flex: 0 1 auto
                 properties:
                   title: Star on GitHub
-                  icon: AiFillGithub
+                  icon: brands:Github
                   href: https://github.com/lowdefy/lowdefy
               - id: social_discord_button
                 type: Button
@@ -530,7 +530,7 @@ _ref:
                   flex: 0 1 auto
                 properties:
                   title: Join our Discord
-                  icon: FaDiscord
+                  icon: brands:Discord
                   href: https://discord.gg/WmcJgXt
               - id: social_showcase_button
                 type: Button
@@ -538,7 +538,7 @@ _ref:
                   flex: 0 1 auto
                 properties:
                   title: See the showcase
-                  icon: AiOutlineAppstore
+                  icon: grid
                 events:
                   onClick:
                     - id: social_link_showcase

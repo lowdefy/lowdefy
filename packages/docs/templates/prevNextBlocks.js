@@ -75,10 +75,10 @@ function prevNextBlocks({ prev, next }) {
     },
     blocks: [
       prev
-        ? navButton({ id: 'previous_page_button', icon: 'AiOutlineArrowLeft', item: prev })
+        ? navButton({ id: 'previous_page_button', icon: 'arrow-left', item: prev })
         : navSpacer('previous_page_spacer'),
       next
-        ? navButton({ id: 'next_page_button', icon: 'AiOutlineArrowRight', item: next })
+        ? navButton({ id: 'next_page_button', icon: 'arrow-right', item: next })
         : navSpacer('next_page_spacer'),
     ],
   };

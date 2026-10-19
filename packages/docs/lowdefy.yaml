@@ -22,12 +22,9 @@ theme:
     # Search result group icons live in public/search-index.json, which the build does not scan.
     include:
       - Rocket
-      - Lightbulb
-      - PanelsTopLeft
-      - Plug
-      - Zap
-      - SquareFunction
-      - GitBranch
+      - Book
+      - FlaskConical
+      - LayoutGrid
   antd:
     token:
       colorPrimary: '#1990ff'

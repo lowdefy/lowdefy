@@ -23,10 +23,10 @@ import extractPageContent from './search/extractPageContent.js';
 import stripMarkdown from './search/stripMarkdown.js';
 
 const groupIcons = {
-  Learn: 'AiOutlineRocket',
-  Reference: 'AiOutlineBook',
-  Recipes: 'AiOutlineExperiment',
-  Plugins: 'AiOutlineAppstore',
+  Learn: 'Rocket',
+  Reference: 'Book',
+  Recipes: 'FlaskConical',
+  Plugins: 'LayoutGrid',
 };
 
 // records: pageId -> { tab, tabTitle, title, trail } — computed by the menu
