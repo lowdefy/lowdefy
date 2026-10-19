@@ -16,7 +16,7 @@
 
 import placeDictation from './placeDictation.js';
 
-const sam = { kind: 'mention', id: 'u1', name: 'Sam Tolmay', sees: true };
+const sam = { kind: 'mention', id: 'u1', name: 'Sam Taylor', sees: true };
 
 test('placeDictation puts words at the end of an empty text', () => {
   expect(placeDictation({ segments: [], selection: { start: 0, end: 0 }, words: 'Hello' })).toEqual(
@@ -38,7 +38,7 @@ test('placeDictation adds a space after a word and none before punctuation', () 
 
 test('placeDictation inserts mid-text and keeps mentions as they are', () => {
   const segments = [sam, { kind: 'text', text: ' see end' }];
-  // "@Sam Tolmay see| end"
+  // "@Sam Taylor see| end"
   expect(placeDictation({ segments, selection: { start: 15, end: 15 }, words: 'the' })).toEqual({
     segments: [sam, { kind: 'text', text: ' see the end' }],
     cursor: 19,

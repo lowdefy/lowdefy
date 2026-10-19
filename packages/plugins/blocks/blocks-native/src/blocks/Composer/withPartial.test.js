@@ -16,7 +16,7 @@
 
 import withPartial from './withPartial.js';
 
-const sam = { kind: 'mention', id: 'u1', name: 'Sam Tolmay', sees: true };
+const sam = { kind: 'mention', id: 'u1', name: 'Sam Taylor', sees: true };
 
 test('withPartial shows the words at the cursor, spaced as they will commit', () => {
   expect(
@@ -32,7 +32,7 @@ test('withPartial shows the words at the cursor, spaced as they will commit', ()
       { kind: 'partial', text: ' the' },
       { kind: 'text', text: ' end' },
     ],
-    display: '@Sam Tolmay see the end',
+    display: '@Sam Taylor see the end',
   });
 });
 

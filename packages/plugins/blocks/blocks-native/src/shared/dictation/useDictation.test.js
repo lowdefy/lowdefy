@@ -42,7 +42,7 @@ async function emit(name, event) {
 async function renderDictation(props = {}) {
   const onFinal = jest.fn();
   const hook = await renderHook((hookProps) => useDictation(hookProps), {
-    initialProps: { hints: ['Sam Tolmay', 'Ana'], onFinal, ...props },
+    initialProps: { hints: ['Sam Taylor', 'Ana'], onFinal, ...props },
   });
   // Let the availability check settle.
   await act(async () => {});
@@ -146,7 +146,7 @@ test('useDictation starts on the device only, with the hints and the input level
   expect(speech.start).toHaveBeenCalledTimes(1);
   expect(speech.start.mock.calls[0][0]).toMatchObject({
     addsPunctuation: true,
-    contextualStrings: ['Sam Tolmay', 'Ana'],
+    contextualStrings: ['Sam Taylor', 'Ana'],
     continuous: true,
     interimResults: true,
     iosTaskHint: 'dictation',

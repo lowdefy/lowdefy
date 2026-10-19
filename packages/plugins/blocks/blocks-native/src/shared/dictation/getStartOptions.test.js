@@ -17,14 +17,14 @@
 import getStartOptions from './getStartOptions.js';
 
 test('getStartOptions dictates on the device only, as text entry, with partial words and the level', () => {
-  expect(getStartOptions({ hints: ['Sam Tolmay'], lang: 'en-ZA' })).toEqual({
+  expect(getStartOptions({ hints: ['Sam Taylor'], lang: 'en-ZA' })).toEqual({
     lang: 'en-ZA',
     interimResults: true,
     continuous: true,
     requiresOnDeviceRecognition: true,
     addsPunctuation: true,
     iosTaskHint: 'dictation',
-    contextualStrings: ['Sam Tolmay'],
+    contextualStrings: ['Sam Taylor'],
     volumeChangeEventOptions: { enabled: true },
   });
 });

@@ -275,8 +275,8 @@ describe('spoken mentions', () => {
 
 describe('dictation', () => {
   const people = [
-    { value: 'u1', label: 'Sam Tolmay', sees: true },
-    { value: 'u2', label: 'Puffin Agent', sees: true },
+    { value: 'u1', label: 'Sam Taylor', sees: true },
+    { value: 'u2', label: 'Falcon Agent', sees: true },
   ];
 
   function composerPage(properties = {}) {
@@ -344,7 +344,7 @@ describe('dictation', () => {
     expect(screen.getByLabelText('Dictate')).toBeTruthy();
     await pressMic();
     expect(speech.start).toHaveBeenCalledTimes(1);
-    expect(speech.start.mock.calls[0][0].contextualStrings).toEqual(['Sam Tolmay', 'Puffin Agent']);
+    expect(speech.start.mock.calls[0][0].contextualStrings).toEqual(['Sam Taylor', 'Falcon Agent']);
     expect(screen.getByTestId('comment_listening')).toBeTruthy();
     expect(screen.getByLabelText('Stop dictation')).toBeTruthy();
     await pressMic();
@@ -407,7 +407,7 @@ describe('dictation', () => {
     await renderComposer();
     await dictate('for Sam, can you look');
     expect(screen.getByText('[[user:u1]] can you look')).toBeTruthy();
-    expect(screen.getByText('@Sam Tolmay')).toBeTruthy();
+    expect(screen.getByText('@Sam Taylor')).toBeTruthy();
     expect(screen.queryByTestId('comment_listening')).toBeNull();
     await act(async () => {
       fireEvent.press(screen.getByTestId('composer_send'));
@@ -418,7 +418,7 @@ describe('dictation', () => {
   test('a mention converts as the final words commit, without waiting for the still-timer', async () => {
     await renderComposer();
     jest.useFakeTimers();
-    await dictate('Merged. For Puffin, please check the build');
+    await dictate('Merged. For Falcon, please check the build');
     expect(screen.getByText('Merged. [[user:u2]] please check the build')).toBeTruthy();
   });
 

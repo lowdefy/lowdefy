@@ -594,7 +594,7 @@ describe('dictation', () => {
   }
 
   function input() {
-    return footerQuery().getByTestId('nigel_input');
+    return footerQuery().getByTestId('atlas_input');
   }
 
   async function typeText(text, cursor = text.length) {
@@ -608,7 +608,7 @@ describe('dictation', () => {
 
   async function pressMic() {
     await act(async () => {
-      fireEvent.press(footerQuery().getByTestId('nigel_dictation'));
+      fireEvent.press(footerQuery().getByTestId('atlas_dictation'));
     });
   }
 
@@ -657,8 +657,8 @@ describe('dictation', () => {
     await renderChat();
     const field = input().parent;
     const ids = testIds(field);
-    expect(ids.indexOf('nigel_input')).toBeLessThan(ids.indexOf('nigel_dictation'));
-    expect(ids.indexOf('nigel_dictation')).toBeLessThan(ids.indexOf('nigel_send'));
+    expect(ids.indexOf('atlas_input')).toBeLessThan(ids.indexOf('atlas_dictation'));
+    expect(ids.indexOf('atlas_dictation')).toBeLessThan(ids.indexOf('atlas_send'));
     expect(footerQuery().getByLabelText('Dictate')).toBeTruthy();
     await pressMic();
     expect(speech.start).toHaveBeenCalledTimes(1);
@@ -671,21 +671,21 @@ describe('dictation', () => {
   test('the listening row sits above the input row, under the prompt chips', async () => {
     await renderChat();
     await pressMic();
-    const ids = testIds(screen.getByTestId('nigel_composer'));
-    expect(ids.indexOf('nigel_prompt_0')).toBeLessThan(ids.indexOf('nigel_listening'));
-    expect(ids.indexOf('nigel_listening')).toBeLessThan(ids.indexOf('nigel_new_chat'));
-    expect(ids.indexOf('nigel_listening')).toBeLessThan(ids.indexOf('nigel_input'));
+    const ids = testIds(screen.getByTestId('atlas_composer'));
+    expect(ids.indexOf('atlas_prompt_0')).toBeLessThan(ids.indexOf('atlas_listening'));
+    expect(ids.indexOf('atlas_listening')).toBeLessThan(ids.indexOf('atlas_new_chat'));
+    expect(ids.indexOf('atlas_listening')).toBeLessThan(ids.indexOf('atlas_input'));
   });
 
   test('the mic is hidden where the phone cannot recognise speech on the device', async () => {
     setSpeechRecognition({ onDevice: false });
     await renderChat();
-    expect(footerQuery().queryByTestId('nigel_dictation')).toBeNull();
+    expect(footerQuery().queryByTestId('atlas_dictation')).toBeNull();
   });
 
   test('the mic is hidden with dictation false', async () => {
     await renderChat({ properties: { dictation: false } });
-    expect(footerQuery().queryByTestId('nigel_dictation')).toBeNull();
+    expect(footerQuery().queryByTestId('atlas_dictation')).toBeNull();
   });
 
   test('words still being heard show grey at the cursor and are not in the text', async () => {
@@ -701,7 +701,7 @@ describe('dictation', () => {
     expect(grey.props.style.color).not.toEqual(StyleSheet.flatten(field.props.style).color);
     // Cancel shows that nothing was taken into the text.
     await act(async () => {
-      fireEvent.press(footerQuery().getByTestId('nigel_listening_cancel'));
+      fireEvent.press(footerQuery().getByTestId('atlas_listening_cancel'));
     });
     expect(input().props.value).toEqual('Looks good.');
   });
@@ -736,10 +736,10 @@ describe('dictation', () => {
     await emit('result', final('more'));
     expect(within(input()).getByText('Draft more one')).toBeTruthy();
     await act(async () => {
-      fireEvent.press(footerQuery().getByTestId('nigel_listening_cancel'));
+      fireEvent.press(footerQuery().getByTestId('atlas_listening_cancel'));
     });
     expect(speech.abort).toHaveBeenCalledTimes(1);
-    expect(footerQuery().queryByTestId('nigel_listening')).toBeNull();
+    expect(footerQuery().queryByTestId('atlas_listening')).toBeNull();
     expect(input().props.value).toEqual('Draft one');
     // The cursor is back where the session started: the next one goes in there.
     await dictate('again');
@@ -752,7 +752,7 @@ describe('dictation', () => {
     await emit('result', partial('hello there'));
     await typeText('hello there!');
     expect(speech.abort).toHaveBeenCalledTimes(1);
-    expect(footerQuery().queryByTestId('nigel_listening')).toBeNull();
+    expect(footerQuery().queryByTestId('atlas_listening')).toBeNull();
     expect(input().props.value).toEqual('hello there!');
   });
 
@@ -763,10 +763,10 @@ describe('dictation', () => {
     await pressMic();
     await emit('result', final('more'));
     await act(async () => {
-      fireEvent.press(footerQuery().getByTestId('nigel_prompt_0'));
+      fireEvent.press(footerQuery().getByTestId('atlas_prompt_0'));
     });
     expect(speech.abort).toHaveBeenCalledTimes(1);
-    expect(footerQuery().queryByTestId('nigel_listening')).toBeNull();
+    expect(footerQuery().queryByTestId('atlas_listening')).toBeNull();
     await waitFor(() => expect(screen.getByText('Two questions.')).toBeTruthy());
     expect(sentText(host)).toEqual('What is waiting on me?');
     expect(input().props.value).toEqual('Draft');
@@ -784,7 +784,7 @@ describe('dictation', () => {
               {
                 id: 'fill',
                 type: 'CallMethod',
-                params: { blockId: 'nigel', method: 'setInput', args: [{ text: 'Log a ticket' }] },
+                params: { blockId: 'atlas', method: 'setInput', args: [{ text: 'Log a ticket' }] },
               },
             ],
           },
@@ -795,11 +795,11 @@ describe('dictation', () => {
           properties: { title: 'New' },
           events: {
             onClick: [
-              { id: 'new', type: 'CallMethod', params: { blockId: 'nigel', method: 'newChat' } },
+              { id: 'new', type: 'CallMethod', params: { blockId: 'atlas', method: 'newChat' } },
             ],
           },
         },
-        { id: 'nigel', type: 'AgentChat', properties: { agentId: 'nigel' } },
+        { id: 'atlas', type: 'AgentChat', properties: { agentId: 'atlas' } },
       ]),
     });
     await act(async () => {});
@@ -809,7 +809,7 @@ describe('dictation', () => {
       fireEvent.press(screen.getByText('Fill'));
     });
     expect(speech.abort).toHaveBeenCalledTimes(1);
-    expect(footerQuery().queryByTestId('nigel_listening')).toBeNull();
+    expect(footerQuery().queryByTestId('atlas_listening')).toBeNull();
     expect(input().props.value).toEqual('Log a ticket');
     await pressMic();
     await emit('result', final('for Sam'));
@@ -817,7 +817,7 @@ describe('dictation', () => {
       fireEvent.press(screen.getByText('New'));
     });
     expect(speech.abort).toHaveBeenCalledTimes(2);
-    expect(footerQuery().queryByTestId('nigel_listening')).toBeNull();
+    expect(footerQuery().queryByTestId('atlas_listening')).toBeNull();
     expect(input().props.value).toEqual('Log a ticket');
   });
 
@@ -825,26 +825,26 @@ describe('dictation', () => {
     await renderChat();
     await pressMic();
     await act(async () => {
-      fireEvent.press(footerQuery().getByTestId('nigel_new_chat'));
+      fireEvent.press(footerQuery().getByTestId('atlas_new_chat'));
     });
     expect(speech.abort).toHaveBeenCalledTimes(1);
-    expect(footerQuery().queryByTestId('nigel_listening')).toBeNull();
+    expect(footerQuery().queryByTestId('atlas_listening')).toBeNull();
   });
 
   test('while a reply streams, the reply stop holds the send slot and the red stop the mic slot', async () => {
     const { host } = await renderChat();
     host.streamFetch.mockImplementation(() => new Promise(() => undefined));
     await send('Write me a long answer');
-    await waitFor(() => expect(footerQuery().getByTestId('nigel_stop')).toBeTruthy());
+    await waitFor(() => expect(footerQuery().getByTestId('atlas_stop')).toBeTruthy());
     await pressMic();
     const ids = testIds(input().parent);
-    expect(ids.indexOf('nigel_dictation')).toBeLessThan(ids.indexOf('nigel_stop'));
-    expect(footerQuery().queryByTestId('nigel_send')).toBeNull();
+    expect(ids.indexOf('atlas_dictation')).toBeLessThan(ids.indexOf('atlas_stop'));
+    expect(footerQuery().queryByTestId('atlas_send')).toBeNull();
     const background = (testID) =>
       StyleSheet.flatten(footerQuery().getByTestId(testID).props.style).backgroundColor;
-    expect(background('nigel_dictation')).toEqual(expect.any(String));
-    expect(background('nigel_stop')).toEqual(expect.any(String));
-    expect(background('nigel_dictation')).not.toEqual(background('nigel_stop'));
+    expect(background('atlas_dictation')).toEqual(expect.any(String));
+    expect(background('atlas_stop')).toEqual(expect.any(String));
+    expect(background('atlas_dictation')).not.toEqual(background('atlas_stop'));
   });
 
   test('send while listening waits for the final words and sends them', async () => {
@@ -853,9 +853,9 @@ describe('dictation', () => {
     await typeText('Looks good.');
     await pressMic();
     await emit('result', partial('ship it'));
-    expect(footerQuery().getByTestId('nigel_send').props.accessibilityState.disabled).toBe(false);
+    expect(footerQuery().getByTestId('atlas_send').props.accessibilityState.disabled).toBe(false);
     await act(async () => {
-      fireEvent.press(footerQuery().getByTestId('nigel_send'));
+      fireEvent.press(footerQuery().getByTestId('atlas_send'));
     });
     expect(speech.stop).toHaveBeenCalledTimes(1);
     expect(host.streamFetch).not.toHaveBeenCalled();
@@ -885,11 +885,11 @@ describe('dictation', () => {
       await act(async () => {
         jest.advanceTimersByTime(300);
       });
-      expect(footerQuery().queryByTestId('nigel_listening')).toBeNull();
+      expect(footerQuery().queryByTestId('atlas_listening')).toBeNull();
       expect(input().props.value).toEqual('for Sam, can you look');
       jest.useRealTimers();
       await act(async () => {
-        fireEvent.press(footerQuery().getByTestId('nigel_send'));
+        fireEvent.press(footerQuery().getByTestId('atlas_send'));
       });
       await waitFor(() => expect(screen.getByText('On it.')).toBeTruthy());
       expect(sentText(host)).toEqual('for Sam, can you look');
