@@ -103,6 +103,7 @@ function SelectorSheet({
         blockId={blockId}
         components={components}
         isDark={isDark}
+        noValue={selectedIndex === null || properties.allowClear !== false}
         onClose={() => setOpen(false)}
         onPick={(row) => {
           setSelectorValue({ index: row.index, methods, options, selectedIndex });
@@ -111,8 +112,8 @@ function SelectorSheet({
         open={open && !disabled}
         options={options}
         placeholder={placeholder}
-        properties={properties}
-        selectedIndex={selectedIndex}
+        searchThreshold={properties.searchThreshold}
+        selected={selectedIndex === null ? [] : [selectedIndex]}
         title={properties.menuTitle ?? title}
         tokens={tokens}
       />

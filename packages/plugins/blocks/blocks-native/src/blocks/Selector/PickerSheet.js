@@ -28,6 +28,7 @@ import iosTextStyles from '../../shared/iosTextStyles.js';
 import PickerOptionRow from './PickerOptionRow.js';
 import PickerSearchField from './PickerSearchField.js';
 import SheetCloseButton from '../../shared/SheetCloseButton.js';
+import SheetDoneButton from '../../shared/SheetDoneButton.js';
 
 const CLOSED = -1;
 const MEDIUM = 0;
@@ -35,12 +36,17 @@ const LARGE = 1;
 const DEFAULT_SEARCH_THRESHOLD = 7;
 
 /**
- * The bottom sheet a Selector with `variant: sheet` opens: its title centred in the header with
- * a close button at the right, a search field while there are more options than
- * `searchThreshold`, and the options as rows (PickerOptionRow), the pinned group first. A short
- * list rests at the medium detent; a long list or one with a search field can be dragged to
- * the large detent, which focusing the search field opens. Its rows mount while it is presented,
- * and the search clears when it is dismissed.
+ * The bottom sheet a Selector or MultipleSelector with `variant: sheet` opens: its title centred
+ * in the header with a close button at the right (Done for a sheet that picks several options),
+ * a search field while there are more options than `searchThreshold` or new values can be added,
+ * and the options as rows (PickerOptionRow), the pinned group first. A short list rests at the
+ * medium detent; a long list or one with a search field can be dragged to the large detent,
+ * which focusing the search field opens. Its rows mount while it is presented, and the search
+ * clears when it is dismissed.
+ *
+ * Picking a row of a single picker dismisses the keyboard; a multiple picker keeps the keyboard
+ * and the search, so several matches can be checked, and clears the search once the add row is
+ * picked.
  *
  * As the Sheet block, it keeps the system's background while the app shows the system's colour
  * mode, and takes the theme's elevated background when the app forces the other mode.
@@ -48,29 +54,40 @@ const DEFAULT_SEARCH_THRESHOLD = 7;
  * @param {Object} props
  * @param {string} props.blockId
  * @param {Object} props.components
+ * @param {{ pattern?: string, message?: string }|null} [props.create] Offer to add the search
+ *   text as a new value (getPickerSheetRows).
+ * @param {number[]} [props.first] Indices of the options listed first.
+ * @param {boolean} [props.full] No more options can be chosen.
  * @param {boolean} props.isDark
- * @param {() => void} props.onClose Called to close the sheet: by its close button, or once a
- *   swipe has dismissed it.
+ * @param {boolean} [props.multiple] The sheet checks several options and closes with Done.
+ * @param {boolean} [props.noValue] List the item that stands for no value.
+ * @param {() => void} props.onClose Called to close the sheet: by its close or Done button, or
+ *   once a swipe has dismissed it.
  * @param {(row: Object) => void} props.onPick Called with the picked getPickerSheetRows row.
  * @param {boolean} props.open
  * @param {Array} props.options
- * @param {string} props.placeholder
- * @param {Object} props.properties The Selector's properties.
- * @param {number|null} props.selectedIndex
+ * @param {string} [props.placeholder] The label of the item that stands for no value.
+ * @param {number} [props.searchThreshold]
+ * @param {number[]} props.selected Indices of the chosen options.
  * @param {string} [props.title] The header title.
  * @param {Object} props.tokens
  */
 function PickerSheet({
   blockId,
   components,
+  create = null,
+  first,
+  full,
   isDark,
+  multiple = false,
+  noValue,
   onClose,
   onPick,
   open,
   options,
   placeholder,
-  properties,
-  selectedIndex,
+  searchThreshold = DEFAULT_SEARCH_THRESHOLD,
+  selected,
   title,
   tokens,
 }) {
@@ -85,13 +102,18 @@ function PickerSheet({
     setPresented(true);
   }
 
-  const allowClear = properties.allowClear !== false;
-  const allRows = getPickerSheetRows({ allowClear, options, placeholder, selectedIndex });
-  const rows =
-    query === ''
-      ? allRows
-      : getPickerSheetRows({ allowClear, options, placeholder, query, selectedIndex });
-  const searchShown = options.length > (properties.searchThreshold ?? DEFAULT_SEARCH_THRESHOLD);
+  const rowParams = { create, first, full, noValue, options, placeholder, selected };
+  const allRows = getPickerSheetRows(rowParams);
+  const rows = query === '' ? allRows : getPickerSheetRows({ ...rowParams, query });
+  const searchShown = create !== null || options.length > searchThreshold;
+  const pick = (row) => {
+    if (!multiple) {
+      Keyboard.dismiss();
+    } else if (row.create) {
+      setQuery('');
+    }
+    onPick(row);
+  };
   const { snapPoints, resizable } = getPickerSheetDetents({
     platform: Platform.OS,
     rowCount: allRows.length,
@@ -148,12 +170,16 @@ function PickerSheet({
               </Text>
             ) : null}
             <View style={{ alignItems: 'flex-end', flex: 1 }}>
-              <SheetCloseButton
-                components={components}
-                onPress={onClose}
-                testID={`${blockId}_close`}
-                tokens={tokens}
-              />
+              {multiple ? (
+                <SheetDoneButton onPress={onClose} testID={`${blockId}_done`} tokens={tokens} />
+              ) : (
+                <SheetCloseButton
+                  components={components}
+                  onPress={onClose}
+                  testID={`${blockId}_close`}
+                  tokens={tokens}
+                />
+              )}
             </View>
           </View>
           {searchShown ? (
@@ -166,6 +192,11 @@ function PickerSheet({
               onFocus={() => {
                 if (resizable) setDetentIndex(LARGE);
               }}
+              onSubmitEditing={() => {
+                const createRow = rows.find((row) => row.create && !row.disabled);
+                if (createRow !== undefined) pick(createRow);
+              }}
+              placeholder={create === null ? 'Search' : 'Search or add'}
               tokens={tokens}
               value={query}
             />
@@ -203,10 +234,8 @@ function PickerSheet({
                 colors={colors}
                 components={components}
                 isDark={isDark}
-                onPick={(row) => {
-                  Keyboard.dismiss();
-                  onPick(row);
-                }}
+                multiple={multiple}
+                onPick={pick}
                 row={item}
                 showLeading={showLeading}
                 tokens={tokens}

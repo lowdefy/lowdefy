@@ -32,6 +32,7 @@ export { default as List } from './blocks/List/meta.js';
 export { default as ListItem } from './blocks/ListItem/meta.js';
 export { default as Markdown } from './blocks/Markdown/meta.js';
 export { default as Menu } from './blocks/Menu/meta.js';
+export { default as MultipleSelector } from './blocks/MultipleSelector/meta.js';
 export { default as NumberInput } from './blocks/NumberInput/meta.js';
 export { default as PageDots } from './blocks/PageDots/meta.js';
 export { default as Paragraph } from './blocks/Paragraph/meta.js';
