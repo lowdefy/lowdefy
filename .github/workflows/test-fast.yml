@@ -23,7 +23,7 @@ jobs:
         with:
           fetch-depth: 0
           filter: blob:none
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v5
       - uses: actions/setup-node@v5
         with:
           node-version: 24
@@ -38,7 +38,7 @@ jobs:
           node scripts/ci-scope.mjs --base "$BASE"
         env:
           BASE: ${{ github.event_name == 'pull_request' && 'HEAD^1' || '' }}
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           path: .turbo/cache
           key: turbo-${{ runner.os }}-node24-${{ hashFiles('pnpm-lock.yaml', 'turbo.json') }}-${{ github.sha }}
