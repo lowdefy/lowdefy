@@ -5,7 +5,7 @@
 (blockId: string): void
 (blockIds: string[]): void
 (params: {
-  blockId?: string|string[],
+  blockIds?: string|string[],
   regex?: string|string[],
 }): void
 ```
@@ -80,7 +80,7 @@ An array of blockIds of the blocks for which to lower validation flags.
 - id: reset_foo_price_and_my_input
   type: ResetValidation
   params:
-    blockId: my_input
+    blockIds: my_input
     regex:
       - ^foo\.
       - ^.*price.*$

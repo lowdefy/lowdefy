@@ -32,6 +32,12 @@ _ref:
 
             If an operator errors while evaluating, it returns a `null` value, and logs the error to the console.
 
+            ## How an operator is recognised
+
+            An object in config is evaluated as an operator when it has exactly one key, that key starts with `_`, and the part of the key before the first `.` names an operator installed in the app. Objects with more than one key, and strings that start with `_`, are never operators.
+
+            This means config written as data can collide with an operator. A one-key object such as `{ _user: 1 }` in a MongoDB `$project` stage, or `{ _date: ... }` in a `SetState` param, is evaluated as that operator instead of being kept as written. A one-key object whose key names no operator, such as `{ _score: 0.5 }`, stays data but logs a build warning that the operator type is not defined. Avoid field names and state keys that start with `_` (other than `_id`) where they could end up as the only key of an object.
+
             ## Client or server operators
 
             Some operators are only available on either the client or the server. For example, the [`_menu`](/_menu) operator is only useful on the client and is thus not included in server requests. Likewise, the [`_secret`](/_secret) operator is only available on the server for security reasons.

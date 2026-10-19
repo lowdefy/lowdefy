@@ -24,7 +24,7 @@ _ref:
       (blockId: string): void
       (blockIds: string[]): void
       (params: {
-        blockId?: string|string[],
+        blockIds?: string|string[],
         regex?: string|string[],
       }): void
       ```
@@ -97,7 +97,7 @@ _ref:
       - id: reset_foo_price_and_my_input
         type: ResetValidation
         params:
-          blockId: my_input
+          blockIds: my_input
           regex:
             - ^foo\.
             - ^.*price.*$
