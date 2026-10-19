@@ -12,7 +12,7 @@ name: CI
 # - Actions tab, "Run workflow": the fast path on every package, or the complete path
 #   with `full` ticked.
 #
-# Pushes to main run the complete path through release.yaml. See code-docs/testing.md.
+# The publish push to main runs the complete path through release.yaml. See code-docs/testing.md.
 on:
   pull_request:
     types: [opened, reopened, synchronize, labeled]
