@@ -31,7 +31,7 @@
  */
 
 import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'fs';
-import { execSync } from 'child_process';
+import { execSync, spawnSync } from 'child_process';
 import { join, dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -43,6 +43,9 @@ const flags = new Set(process.argv.slice(2).filter((a) => !a.startsWith('--outpu
 const FLAG_ALL = flags.has('--all');
 const outputFileArg = process.argv.find((a) => a.startsWith('--output-file='));
 const OUTPUT_FILE = outputFileArg ? outputFileArg.split('=')[1] : '/tmp/release-notes.md';
+
+// GitHub refuses a release body over 125,000 characters; keep a margin under it.
+const RELEASE_BODY_LIMIT = 120000;
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -265,20 +268,26 @@ function generateNotes(technicalNotes) {
     'Return only markdown bullet points, no headings or preamble. ' +
     'If there are no meaningful changes, return "- Minor internal improvements and dependency updates."';
 
-  try {
-    const result = execSync(`claude -p --model claude-haiku-4-5-20251001 "${prompt}"`, {
-      input: technicalNotes,
-      encoding: 'utf-8',
-      cwd: ROOT,
-      timeout: 60000,
-      maxBuffer: 1024 * 1024,
-      stdio: ['pipe', 'pipe', 'pipe'],
-    });
-    return result.trim();
-  } catch (err) {
-    console.warn('  Claude CLI failed, skipping AI notes:', err.message);
+  // No shell, so the prompt needs no quoting. A CLI that exits before reading its input
+  // (not installed, missing native binary) surfaces as EPIPE; its stderr says why.
+  const result = spawnSync('claude', ['-p', '--model', 'claude-haiku-4-5-20251001', prompt], {
+    input: technicalNotes,
+    encoding: 'utf-8',
+    cwd: ROOT,
+    timeout: 180000,
+    maxBuffer: 1024 * 1024,
+  });
+  if (result.error || result.status !== 0) {
+    console.warn(
+      '  Claude CLI failed, skipping AI notes:',
+      result.error?.message ?? `exit code ${result.status}`
+    );
+    if (result.stderr?.trim()) {
+      console.warn(result.stderr.trim());
+    }
     return null;
   }
+  return result.stdout.trim();
 }
 
 // ---------------------------------------------------------------------------
@@ -415,11 +424,37 @@ function buildVersionMarkdown(entry) {
     target.push(cs);
   }
 
+  const changes = { minorChanges, patchChanges, plainEntries };
+  const full = [...lines, renderChanges({ ...changes, titlesOnly: false })].join('\n').trimEnd();
+  if (full.length <= RELEASE_BODY_LIMIT) {
+    return full;
+  }
+
+  // A major release can carry hundreds of changesets with long bodies. List one line per
+  // changeset instead; the full text stays in each package's CHANGELOG.md.
+  console.log(`  Full notes are ${full.length} characters, over the limit; listing titles only`);
+  return [
+    ...lines,
+    renderChanges({ ...changes, titlesOnly: true }),
+    '',
+    "_Each change's full description is in the CHANGELOG.md of the packages listed with it._",
+  ]
+    .join('\n')
+    .trimEnd();
+}
+
+function renderChanges({ minorChanges, patchChanges, plainEntries, titlesOnly }) {
+  const lines = [];
+
   if (minorChanges.length > 0) {
     lines.push('## What\'s New');
     lines.push('');
     for (const cs of minorChanges) {
       const pkgList = cs.packages.map((p) => `\`${p}\``).join(', ');
+      if (titlesOnly) {
+        lines.push(`- **${cs.firstLine}** (${pkgList})`);
+        continue;
+      }
       lines.push(`### ${cs.firstLine}`);
       lines.push('');
       lines.push(`Packages: ${pkgList}`);
@@ -429,6 +464,9 @@ function buildVersionMarkdown(entry) {
         lines.push('');
       }
     }
+    if (titlesOnly) {
+      lines.push('');
+    }
   }
 
   if (patchChanges.length > 0) {
@@ -437,17 +475,21 @@ function buildVersionMarkdown(entry) {
     for (const cs of patchChanges) {
       const pkgList = cs.packages.map((p) => `\`${p}\``).join(', ');
       lines.push(`- **${cs.firstLine}** (${pkgList})`);
-      if (cs.body.trim()) {
+      if (!titlesOnly && cs.body.trim()) {
         lines.push('');
         lines.push(cs.body);
         lines.push('');
       }
     }
+    if (titlesOnly) {
+      lines.push('');
+    }
   }
 
   if (plainEntries.length > 0) {
     for (const pe of plainEntries) {
-      lines.push(`- **${pe.packageName}**: ${pe.text}`);
+      const text = titlesOnly ? pe.text.trim().split('\n')[0] : pe.text;
+      lines.push(`- **${pe.packageName}**: ${text}`);
     }
     lines.push('');
   }
