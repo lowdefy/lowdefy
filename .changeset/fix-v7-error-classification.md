@@ -52,7 +52,8 @@ The same rule was applied across the code new in v7:
   step references and organization client-action references collect every error instead of
   stopping at the first; `websocket-refs`, `dynamic-endpoint-refs`, `callapi-refs`,
   `callapi-internal-refs` and `icons` are valid `~ignoreBuildChecks` slugs; a plugin module that
-  fails to load is reported instead of surfacing later as an unknown type; the deprecated
+  resolves but fails to load is reported instead of surfacing later as an unknown type (a plugin
+  without an optional subpath such as `schemas` is not a failure); the deprecated
   `public/styles.less` check runs as a validation step rather than failing the write phase.
 - Errors revived from the wire keep their class for the auth gate errors, and the dev client
   revives serialized Lowdefy errors instead of flattening them to their message.

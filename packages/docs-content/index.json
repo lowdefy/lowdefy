@@ -3062,7 +3062,7 @@
         "templates/navigation_buttons.yaml",
         "version.yaml"
       ],
-      "hash": "bc77d12483a33c7a8802259f985adf965db7a24d96e5f7295702c4f86d758a18"
+      "hash": "553ea1b2ecaa5b588755b29594d961a109ea1d9ba8138cea40046fbf485a87cb"
     },
     "concepts/notifications": {
       "files": [
@@ -5665,7 +5665,7 @@
         "migration/v6-to-v7.yaml",
         "templates/navigation_buttons.yaml"
       ],
-      "hash": "e8cf88abf4e7cc57d6df9e2a5e34d5d1ec3df2fe06b5056d52a43b6575966e05"
+      "hash": "ca289ecd955c8728c3f25103b648785f419e7d756137ef635a36e2212b386de0"
     },
     "migration/v3-to-v4": {
       "files": [

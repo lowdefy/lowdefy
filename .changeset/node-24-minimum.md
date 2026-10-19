@@ -15,4 +15,5 @@ upgrading Lowdefy.
   a Node.js version below 24.
 - `lowdefy init-docker` generates a Dockerfile on `node:24-slim`. Apps with a Dockerfile generated
   by an earlier version should change their `FROM node:22-slim` lines to `node:24-slim`.
-- The Vercel build output declares the `nodejs24.x` function runtime.
+- The Vercel build output declares the `nodejs24.x` function runtime, and the README that
+  `lowdefy init-vercel` writes lists the Node.js 24 project setting the install and build steps need.
