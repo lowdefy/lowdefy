@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: GoogleCloudStorage
     pageTitle: Google Cloud Storage
-    section: Connections
     filePath: connections/GoogleCloudStorage.yaml
     content:
       - id: markdown

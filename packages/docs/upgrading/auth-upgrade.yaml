@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: auth-upgrade
     pageTitle: Auth Upgrade (BetterAuth)
-    section: Migration
     filePath: upgrading/auth-upgrade.yaml
     content:
       - id: md1

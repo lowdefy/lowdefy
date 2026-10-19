@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: {{ pageId }}
     pageTitle: {{ pageTitle }}
-    section: {{ section }}
     filePath:
       _var: filePath
     fullWidth: true
@@ -87,6 +86,8 @@ _ref:
           content:
             _var: guide
 {% endif %}
+{# Input and list blocks hold a value, so their examples show the live state. The build renders each template once with no vars to check it, hence the fallback. #}
+{% set showState = 'blocks/input/' in (filePath or '') or 'blocks/list/' in (filePath or '') %}
 {% if wrapperType %}
       - id: gallery_wrapper
         type: {{ wrapperType }}
@@ -108,7 +109,7 @@ _ref:
                 path:
                   _var: gallery
                 transformer: templates/blocks/galleryExampleTransformer.js
-{% if section == 'Input Blocks' or section == 'List Blocks' %}
+{% if showState %}
                 vars:
                   showState: true
 {% endif %}
@@ -128,7 +129,7 @@ _ref:
             path:
               _var: gallery
             transformer: templates/blocks/galleryExampleTransformer.js
-{% if section == 'Input Blocks' or section == 'List Blocks' %}
+{% if showState %}
             vars:
               showState: true
 {% endif %}

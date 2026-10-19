@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: TableInput
     pageTitle: TableInput
-    section: Input Blocks
     filePath: blocks/input/TableInput.yaml
     block_type: TableInput
     fullWidthExamples: true

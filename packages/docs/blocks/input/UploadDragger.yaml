@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: UploadDragger
     pageTitle: UploadDragger
-    section: Input Blocks
     filePath: blocks/input/UploadDragger.yaml
     block_type: UploadDragger
     antd_component: Upload

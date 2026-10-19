@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: v6-to-v7
     pageTitle: Version 6 to Version 7
-    section: Migration
     filePath: upgrading/v6-to-v7.yaml
     content:
       - id: md1

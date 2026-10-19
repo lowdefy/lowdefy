@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: websocket-subscriptions
     pageTitle: Page Subscriptions
-    section: WebSockets
     filePath: websockets/subscriptions.yaml
     content:
       - id: md1

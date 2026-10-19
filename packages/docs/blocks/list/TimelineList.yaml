@@ -17,7 +17,7 @@ _ref:
   vars:
     pageId: TimelineList
     pageTitle: TimelineList
-    filePath: blocks/TimelineList/TimelineList.yaml
+    filePath: blocks/list/TimelineList.yaml
     block_type: TimelineList
     antd_component: Timeline
     antd_url: timeline

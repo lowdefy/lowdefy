@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: PlacesAutocomplete
     pageTitle: PlacesAutocomplete
-    section: Input Blocks
     filePath: blocks/input/PlacesAutocomplete.yaml
     block_type: PlacesAutocomplete
     antd_component: AutoComplete

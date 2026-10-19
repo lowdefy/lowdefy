@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: websockets-introduction
     pageTitle: WebSockets
-    section: WebSockets
     filePath: websockets/introduction.yaml
     content:
       - id: md1

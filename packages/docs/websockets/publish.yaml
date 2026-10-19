@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: websocket-publish
     pageTitle: Publish and Actions
-    section: WebSockets
     filePath: websockets/publish.yaml
     content:
       - id: md1
