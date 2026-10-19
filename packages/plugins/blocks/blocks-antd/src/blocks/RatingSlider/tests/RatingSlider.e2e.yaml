@@ -21,6 +21,9 @@ events:
       type: SetState
       params:
         ratingslider_with_value: 7
+        ratingslider_color_orange: 4
+        ratingslider_no_color: 4
+        slider_theme_reference: 4
 
 blocks:
   # ============================================
@@ -80,6 +83,25 @@ blocks:
     properties:
       title: Custom Color
       color: '#1890ff'
+
+  - id: ratingslider_color_orange
+    type: RatingSlider
+    properties:
+      title: Orange Color
+      color: '#fa8c16'
+      max: 5
+
+  - id: ratingslider_no_color
+    type: RatingSlider
+    properties:
+      title: No Color
+      max: 5
+
+  # A plain Slider in the theme's primary colour, for ratingslider_no_color to match.
+  - id: slider_theme_reference
+    type: Slider
+    properties:
+      max: 5
 
   - id: ratingslider_hide_marks
     type: RatingSlider

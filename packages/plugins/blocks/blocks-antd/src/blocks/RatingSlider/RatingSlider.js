@@ -84,6 +84,8 @@ const RatingSlider = ({
   const sliderTheme = {};
   if (properties.color) {
     sliderTheme.colorPrimary = properties.color;
+    // Derive the track, handle and dot tokens (colorPrimaryBorder*) from this colorPrimary.
+    sliderTheme.algorithm = true;
   }
   if (validationColor) {
     sliderTheme.railBg = validationColor;

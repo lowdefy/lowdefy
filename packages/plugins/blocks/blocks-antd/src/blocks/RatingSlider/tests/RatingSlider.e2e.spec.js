@@ -89,6 +89,33 @@ test.describe('RatingSlider Block', () => {
     await expect(icons).toHaveCount(2);
   });
 
+  test('colors track and handle with color', async ({ page }) => {
+    const track = page.locator(`#bl-${escapeId('ratingslider_color_orange')} .ant-slider-track`);
+    const handle = getHandle(page, 'ratingslider_color_orange');
+    // antd derives these from colorPrimary #fa8c16: colorPrimaryBorder #ffd591,
+    // colorPrimaryBorderHover #ffc069.
+    await expect(track).toHaveCSS('background-color', 'rgb(255, 213, 145)');
+    expect(
+      await handle.evaluate((el) => getComputedStyle(el, '::after').boxShadow)
+    ).toContain('rgb(255, 213, 145)');
+
+    await getSlider(page, 'ratingslider_color_orange').hover();
+    await expect(track).toHaveCSS('background-color', 'rgb(255, 192, 105)');
+
+    await handle.focus();
+    await expect
+      .poll(() => handle.evaluate((el) => getComputedStyle(el, '::after').boxShadow))
+      .toContain('rgb(250, 140, 22)');
+  });
+
+  test('uses the theme primary color without color', async ({ page }) => {
+    const track = page.locator(`#bl-${escapeId('ratingslider_no_color')} .ant-slider-track`);
+    const reference = page.locator(`#bl-${escapeId('slider_theme_reference')} .ant-slider-track`);
+    const referenceColor = await reference.evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(referenceColor).not.toBe('rgb(255, 213, 145)');
+    await expect(track).toHaveCSS('background-color', referenceColor);
+  });
+
   test('renders marks by default', async ({ page }) => {
     const block = getBlock(page, 'ratingslider_basic');
     // Rating slider shows marks by default - check slider marks container exists
