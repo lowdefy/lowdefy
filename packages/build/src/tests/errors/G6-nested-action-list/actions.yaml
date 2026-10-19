@@ -1,0 +1,7 @@
+- id: second
+  type: SetState
+  params:
+    other: value
+- id: third
+  type: Link
+  params: home
