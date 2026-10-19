@@ -45,6 +45,7 @@ function applyEllipsis(colDef, ellipsis, makeEllipsisRenderer) {
 }
 
 const JUSTIFY_MAP = { left: 'flex-start', center: 'center', right: 'flex-end' };
+const TEXT_ALIGN_MAP = { left: 'left', center: 'center', right: 'right' };
 const HEADER_ALIGN_CLASS = {
   left: 'ag-left-aligned-header',
   center: 'ag-center-aligned-header',
@@ -57,6 +58,9 @@ function applyAlignment(colDef, cell) {
   if (!align || !JUSTIFY_MAP[align]) return colDef;
   const cellStyle = { ...(type.isObject(colDef.cellStyle) ? colDef.cellStyle : {}) };
   if (type.isNone(cellStyle.justifyContent)) cellStyle.justifyContent = JUSTIFY_MAP[align];
+  // A cell holding only text lays out as a block (see ag-grid-antd.module.css), where
+  // justifyContent does nothing.
+  if (type.isNone(cellStyle.textAlign)) cellStyle.textAlign = TEXT_ALIGN_MAP[align];
   const headerClass = type.isString(colDef.headerClass)
     ? `${colDef.headerClass} ${HEADER_ALIGN_CLASS[align]}`
     : type.isArray(colDef.headerClass)
