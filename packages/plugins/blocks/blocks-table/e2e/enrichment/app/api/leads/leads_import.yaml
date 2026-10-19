@@ -80,8 +80,21 @@ routine:
     type: MongoDBInsertMany
     connectionId: leads
     properties:
+      # Each row gets a UUID _id, as every row has (leads_add), and the insert order the page
+      # sorts by: one insert time for the batch (_date is read once, before the map), with the
+      # row's place in the CSV as the tiebreak, since a batch shares a millisecond.
       docs:
-        _state: converted.docs
+        _array.map:
+          - _state: converted.docs
+          - _function:
+              __object.assign:
+                - __args: 0
+                - _id:
+                    __uuid: true
+                  createdAt:
+                    _date: now
+                  position:
+                    __args: 1
   - _ref:
       path: api/leads/start_auto_run.yaml
       vars:

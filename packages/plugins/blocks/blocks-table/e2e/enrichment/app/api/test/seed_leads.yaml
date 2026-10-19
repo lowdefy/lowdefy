@@ -14,30 +14,41 @@
 
 # E2E only: fictional leads. The mock services answer each domain differently (see
 # e2e/enrichment/mocks/mockServices.mjs): found, not found (404), failing (500), a bad request
-# (400) or rate limited once (429). The last lead has no domain.
-- name: Ada Brightwell
+# (400) or rate limited once (429). The last lead has no domain. Fixed UUID _ids, like the ones
+# the app's endpoints give rows, so a test run always has the same keys; test_reset stamps their
+# insert order.
+- _id: a0000000-0000-4000-8000-000000000001
+  name: Ada Brightwell
   title: Head of Operations
   domain: brightpath.test
-- name: Ben Quill
+- _id: a0000000-0000-4000-8000-000000000002
+  name: Ben Quill
   title: CTO
   domain: quillsoft.test
-- name: Cara Tidewell
+- _id: a0000000-0000-4000-8000-000000000003
+  name: Cara Tidewell
   title: Buyer
   domain: tidewater.test
-- name: Dan Fernsby
+- _id: a0000000-0000-4000-8000-000000000004
+  name: Dan Fernsby
   title: Founder
   domain: ferncrest.test
-- name: Eve Honeywell
+- _id: a0000000-0000-4000-8000-000000000005
+  name: Eve Honeywell
   title: Owner
   domain: busybee.test
-- name: Finn Marsh
+- _id: a0000000-0000-4000-8000-000000000006
+  name: Finn Marsh
   title: Analyst
   domain: nowhere.test
-- name: Gina Brooks
+- _id: a0000000-0000-4000-8000-000000000007
+  name: Gina Brooks
   title: Engineer
   domain: broken.test
-- name: Hal Stone
+- _id: a0000000-0000-4000-8000-000000000008
+  name: Hal Stone
   title: Manager
   domain: badrequest.test
-- name: Ivy Lane
+- _id: a0000000-0000-4000-8000-000000000009
+  name: Ivy Lane
   title: Consultant

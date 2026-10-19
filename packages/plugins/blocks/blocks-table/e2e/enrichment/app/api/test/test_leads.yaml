@@ -17,7 +17,7 @@
 # It refuses every call without the e2e secret (api/test/e2e_guard.yaml), and is no part
 # of the enrichment reference.
 # ============================================================================================
-# E2E only: every lead, with its enrichment cells, in insert order.
+# E2E only: every lead, with its enrichment cells, in insert order (as the page sorts them).
 id: test_leads
 type: Api
 routine:
@@ -29,6 +29,8 @@ routine:
       query: {}
       options:
         sort:
+          createdAt: 1
+          position: 1
           _id: 1
   - :return:
       _step: find
