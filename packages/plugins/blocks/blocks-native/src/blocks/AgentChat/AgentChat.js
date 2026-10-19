@@ -223,6 +223,8 @@ function AgentChat({
   const { follow, following, onContentLayout, onTouchStart } = useFollowScroll();
   const [sheetOpen, setSheetOpen] = useState(false);
   const [fill, setFill] = useState(null);
+  // The composer's controls, set as it renders: New chat drops its dictation session.
+  const composerRef = useRef({ cancelDictation: () => {} });
 
   // A seeded chat opens with its input in the composer, once no resume can replace it.
   useEffect(() => {
@@ -300,6 +302,7 @@ function AgentChat({
 
   const startNewChat = useCallback(
     (seedArgs) => {
+      composerRef.current.cancelDictation();
       chatRef.current.stop();
       setSheetOpen(false);
       threads.newThread(seedArgs);
@@ -476,6 +479,8 @@ function AgentChat({
       busy={isBusy}
       colors={colors}
       components={components}
+      controlRef={composerRef}
+      dictation={properties.dictation !== false}
       disabled={isLoading}
       fill={fill}
       newChat={sender.newChat !== false}

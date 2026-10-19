@@ -22,9 +22,10 @@ module.exports = {
   coveragePathIgnorePatterns: ['<rootDir>/src/test/'],
   coverageReporters: [['lcov', { projectRoot: '../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
-  // @expo/ui, expo-image and expo-web-browser reach native modules Jest does not have, so the native
-  // blocks' pickers, switch, icon, date picker, menu, segmented control, bottom sheet, pictures and
-  // in-app browser are stand-ins (src/test/) that keep their props.
+  // @expo/ui, expo-image, expo-web-browser and expo-speech-recognition reach native modules Jest
+  // does not have, so the native blocks' pickers, switch, icon, date picker, menu, segmented
+  // control, bottom sheet, pictures, in-app browser and dictation recogniser are stand-ins
+  // (src/test/) that keep their props.
   moduleNameMapper: {
     '^@expo/ui$': '<rootDir>/src/test/expoUi.js',
     '^@expo/ui/community/bottom-sheet$': '<rootDir>/src/test/expoUiBottomSheet.js',
@@ -34,6 +35,7 @@ module.exports = {
     '^@expo/ui/swift-ui$': '<rootDir>/src/test/expoUiSwiftUi.js',
     '^@expo/ui/swift-ui/modifiers$': '<rootDir>/src/test/expoUiSwiftUiModifiers.js',
     '^expo-image$': '<rootDir>/src/test/expoImage.js',
+    '^expo-speech-recognition$': '<rootDir>/src/test/expoSpeechRecognition.js',
     '^expo-web-browser$': '<rootDir>/src/test/expoWebBrowser.js',
   },
   // The preset's pattern assumes a flat node_modules; pnpm nests each package under .pnpm. The

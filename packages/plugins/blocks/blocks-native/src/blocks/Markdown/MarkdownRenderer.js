@@ -18,8 +18,10 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Renderer } from 'react-native-marked';
 
+import ChipWidthView from './ChipWidthView.js';
 import getLinkChip from './getLinkChip.js';
 import getNodeText from './getNodeText.js';
+import layoutLinkChips from './layoutLinkChips.js';
 import LinkChip from './LinkChip.js';
 import MarkdownCode from './MarkdownCode.js';
 import MarkdownList from './MarkdownList.js';
@@ -29,13 +31,15 @@ import { TASK_DONE, TASK_OPEN } from './MarkdownTokenizer.js';
 import TaskMark from './TaskMark.js';
 
 const THIN_SPACE = String.fromCharCode(0x2009);
+const QUOTE_PADDING = 12;
 
 // react-native-marked's renderer, drawn as iOS text: headings marked as headers, lists with a
 // marker column and nesting (MarkdownList), task boxes in place of the marker, fenced code in a
 // rounded card, quotes with a tint bar, tables in a rounded box and links in the tint. A link
-// that matches one of `linkChips` (by scheme or pattern) is a chip (LinkChip). Every link is pressed through
-// onLinkPress; chips only when onChipPress is given. Raw html is drawn as its source text, as the
-// web block escapes it, or dropped with skipHtml.
+// that matches one of `linkChips` (by scheme or pattern) is a chip (LinkChip), laid out with its
+// line as a word of it (layoutLinkChips). Every link is pressed through onLinkPress; chips only
+// when onChipPress is given. Raw html is drawn as its source text, as the web block escapes it,
+// or dropped with skipHtml.
 class MarkdownRenderer extends Renderer {
   constructor({ Icon, linkChips = [], onChipPress, onLinkPress, palette, skipHtml }) {
     super();
@@ -55,7 +59,7 @@ class MarkdownRenderer extends Renderer {
         selectable={this.selectable}
         style={styles}
       >
-        {text}
+        {layoutLinkChips(text)}
       </Text>
     );
   }
@@ -76,18 +80,19 @@ class MarkdownRenderer extends Renderer {
         testID="markdown-quote"
       >
         <View style={{ backgroundColor: this.palette.tint, borderRadius: 1.5, width: 3 }} />
-        <View
+        <ChipWidthView
+          inset={2 * QUOTE_PADDING}
           style={{
             flex: 1,
             marginBottom: -this.palette.blockSpace,
             minWidth: 0,
             paddingBottom: 10,
-            paddingHorizontal: 12,
+            paddingHorizontal: QUOTE_PADDING,
             paddingTop: 10,
           }}
         >
           {children}
-        </View>
+        </ChipWidthView>
       </View>
     );
   }
@@ -136,6 +141,9 @@ class MarkdownRenderer extends Renderer {
   }
 
   text(text, styles) {
+    if (Array.isArray(text)) {
+      return super.text(layoutLinkChips(text), styles);
+    }
     if (typeof text !== 'string' || (text[0] !== TASK_OPEN && text[0] !== TASK_DONE)) {
       return super.text(text, styles);
     }
@@ -204,7 +212,7 @@ class MarkdownRenderer extends Renderer {
     const cellText = { fontSize: 15, letterSpacing: -0.24, lineHeight: 20 };
     const toCell = (nodes, style) => (
       <Text selectable={this.selectable} style={[this.palette.text, style]}>
-        {restyleText(nodes, style)}
+        {layoutLinkChips(restyleText(nodes, style))}
       </Text>
     );
     return (

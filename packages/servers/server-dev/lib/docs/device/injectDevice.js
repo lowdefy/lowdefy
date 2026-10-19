@@ -122,7 +122,7 @@ async function injectDevice({ device, inject, devices = {}, run = runDeviceTool 
   }
   if (!type.isObject(inject) || !type.isString(inject.kind)) {
     return {
-      error: `"inject" must be { kind, value, name }, kind one of scan, photo, nfc, location, permission, network, push, clear. Received ${JSON.stringify(
+      error: `"inject" must be { kind, value, name }, kind one of scan, photo, nfc, transcript, location, permission, network, push, clear. Received ${JSON.stringify(
         inject
       )}.`,
     };

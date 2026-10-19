@@ -17,6 +17,7 @@
 import React, { useContext, useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
 
+import ChipWidthView from './ChipWidthView.js';
 import getListMarker from './getListMarker.js';
 import { ListDepthContext, ListItemContext } from './MarkdownListContext.js';
 import TaskBox from './TaskBox.js';
@@ -44,9 +45,9 @@ function ListItem({ children, first, marker, markerWidth, palette }) {
           <TaskBox checked={task.checked} palette={palette} />
         )}
       </View>
-      <View style={{ flex: 1, minWidth: 0 }}>
+      <ChipWidthView style={{ flex: 1, minWidth: 0 }}>
         <ListItemContext.Provider value={item}>{children}</ListItemContext.Provider>
-      </View>
+      </ChipWidthView>
     </View>
   );
 }

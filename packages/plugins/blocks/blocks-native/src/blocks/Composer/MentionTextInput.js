@@ -20,9 +20,17 @@ import { Text, TextInput } from 'react-native';
 const RECORD_LINK = /(\[\[[^[\]\n]+\]\])/;
 
 // The shown text as styled children: mentions as tinted @Name chips (muted for someone who
-// cannot see the record), record links in the tint.
+// cannot see the record), record links in the tint, and dictated words still being heard in the
+// secondary colour.
 function renderSegments({ colors, segments }) {
   return segments.map((segment, index) => {
+    if (segment.kind === 'partial') {
+      return (
+        <Text key={index} style={{ color: colors.secondary }} testID="composer_partial">
+          {segment.text}
+        </Text>
+      );
+    }
     if (segment.kind === 'mention') {
       return (
         <Text
@@ -54,7 +62,7 @@ function renderSegments({ colors, segments }) {
 /**
  * A multi-line text input driven by useMentionEditor: it shows the editor's segments as nested
  * styled text, which React Native draws inside the input, and reports changes and the cursor
- * back to the editor.
+ * back to the editor. `onChangeText` is the editor's, or the host's wrapper of it.
  */
 function MentionTextInput({
   accessibilityLabel,
@@ -64,6 +72,7 @@ function MentionTextInput({
   editor,
   inputRef,
   onBlur,
+  onChangeText,
   onFocus,
   placeholder,
   style,
@@ -76,7 +85,7 @@ function MentionTextInput({
       editable={editable}
       multiline
       onBlur={onBlur}
-      onChangeText={editor.onChangeText}
+      onChangeText={onChangeText}
       onFocus={onFocus}
       onSelectionChange={editor.onSelectionChange}
       placeholder={placeholder}
@@ -88,7 +97,9 @@ function MentionTextInput({
       style={[{ color: colors.label, textAlignVertical: 'top' }, style]}
       testID={testID}
     >
-      {editor.display === '' ? null : renderSegments({ colors, segments: editor.segments })}
+      {editor.shown.display === ''
+        ? null
+        : renderSegments({ colors, segments: editor.shown.segments })}
     </TextInput>
   );
 }

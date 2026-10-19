@@ -22,8 +22,9 @@
 // @expo/ui draws SwiftUI and Jetpack Compose views through native modules Jest does not have,
 // so its pickers, switch, icon, date picker, menu, segmented control, bottom sheet and context
 // menu are replaced by small React Native stand-ins (src/test/expoUi*.js) that keep their props,
-// expo-image's Image by one too (src/test/expoImage.js), and expo-web-browser's in-app browser
-// by a mock (src/test/expoWebBrowser.js).
+// expo-image's Image by one too (src/test/expoImage.js), expo-web-browser's in-app browser by a
+// mock (src/test/expoWebBrowser.js), and expo-speech-recognition's recogniser by a stand-in tests
+// drive (src/test/expoSpeechRecognition.js).
 export default {
   preset: '@react-native/jest-preset',
   clearMocks: true,
@@ -42,6 +43,7 @@ export default {
     '^@expo/ui/swift-ui$': '<rootDir>/src/test/expoUiSwiftUi.js',
     '^@expo/ui/swift-ui/modifiers$': '<rootDir>/src/test/expoUiSwiftUiModifiers.js',
     '^expo-image$': '<rootDir>/src/test/expoImage.js',
+    '^expo-speech-recognition$': '<rootDir>/src/test/expoSpeechRecognition.js',
     '^expo-web-browser$': '<rootDir>/src/test/expoWebBrowser.js',
   },
   setupFiles: ['<rootDir>/src/test/removeWindow.js'],

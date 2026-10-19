@@ -103,6 +103,13 @@ const builtinMessages = {
   'blocks.treeSelector.notFound': 'Not found',
   'blocks.treeMultipleSelector.placeholder': 'Select items',
   'blocks.treeMultipleSelector.notFound': 'Not found',
+  'blocks.dictation.start': 'Dictate',
+  'blocks.dictation.stop': 'Stop dictation',
+  'blocks.dictation.cancel': 'Cancel dictation',
+  'blocks.dictation.listening': 'Listening',
+  'blocks.dictation.denied': 'Microphone access is off.',
+  'blocks.dictation.failed': 'Dictation stopped.',
+  'blocks.dictation.settings': 'Settings',
 
   // antd X built-ins — apps can override per-locale via config.i18n.messages.
   // For en_US and zh_CN, XProvider's pack already covers these natively.
