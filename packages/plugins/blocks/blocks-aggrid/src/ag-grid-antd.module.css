@@ -68,6 +68,14 @@
   text-overflow: ellipsis;
 }
 
+/* A cellRenderer's HTML that mixes elements and text, such as `<b>Name</b> details`, also ends in
+   an ellipsis. Its wrapper clips only across, so a tag's padded background or a focus ring that
+   reaches above or below the line still shows. */
+.antdTheme :global(.ag-cell > .lf-cell-html) {
+  overflow-x: clip;
+  text-overflow: ellipsis;
+}
+
 /* paragraphInput cell: antd offsets the inline edit textarea with a negative margin/inset to
    overlay the static text in normal block flow. Inside a flex-centred grid cell that shifts the
    editor off-centre, so neutralise it and let the cell's align-items keep it centred. */

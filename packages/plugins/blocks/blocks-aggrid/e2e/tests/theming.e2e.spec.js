@@ -402,15 +402,41 @@ test.describe('AG Grid theming', () => {
   // anonymous flex item the ellipsis never reaches, and an element that grows to its text's width is
   // clipped by the cell with no "…".
   test.describe('cell overflow', () => {
-    ['Plain', 'Renderer', 'Link', 'Checkbox', 'Right'].forEach((column, index) => {
+    const ellipsisCell = (page, rowIndex, colId) =>
+      getBlock(page, 'theming_cell_ellipsis').locator(
+        `.ag-row[row-index="${rowIndex}"] .ag-cell[col-id="${colId}"]`
+      );
+
+    // Where the cell's text lands, measured against the cell's content box.
+    const textPosition = (cell) =>
+      cell.evaluate((el) => {
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        const text = range.getBoundingClientRect();
+        const cellBox = el.getBoundingClientRect();
+        const style = getComputedStyle(el);
+        return {
+          gapRight: cellBox.right - parseFloat(style.paddingRight) - text.right,
+          gapLeft: text.left - cellBox.left - parseFloat(style.paddingLeft),
+          gapBottom: cellBox.bottom - text.bottom,
+          offCentre: Math.abs((text.top + text.bottom) / 2 - (cellBox.top + cellBox.bottom) / 2),
+        };
+      });
+
+    [
+      { column: 'Plain', colId: 'plain' },
+      { column: 'Renderer', colId: 'renderer' },
+      { column: 'Link', colId: 'link' },
+      { column: 'Drag', colId: 'drag' },
+      { column: 'Right', colId: 'right' },
+      { column: 'Justify', colId: 'justify' },
+    ].forEach(({ column, colId }) => {
       test(`${column} column ends long text in an ellipsis`, async ({ page }) => {
         await navigateToTestPage(page, 'aggridtheming');
-        const cell = getBlock(page, 'theming_cell_ellipsis')
-          .locator('.ag-row[row-index="0"] .ag-cell')
-          .nth(index);
+        const cell = ellipsisCell(page, 0, colId);
         await expect(cell).toContainText('A dealership name');
         const box = await cell.evaluate((el) => {
-          // AG Grid's checkbox markup holds whitespace text nodes, so skip to the value's text.
+          // AG Grid's drag-handle markup holds whitespace text nodes, so skip to the value's text.
           const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, (node) =>
             node.textContent.trim() === '' ? NodeFilter.FILTER_SKIP : NodeFilter.FILTER_ACCEPT
           );
@@ -434,29 +460,58 @@ test.describe('AG Grid theming', () => {
       });
     });
 
+    // The ellipsis there only proves something if the text sits in AG Grid's .ag-cell-wrapper.
+    test('Drag column holds its text in .ag-cell-wrapper', async ({ page }) => {
+      await navigateToTestPage(page, 'aggridtheming');
+      await expect(ellipsisCell(page, 0, 'drag').locator('.ag-cell-wrapper')).toHaveCount(1);
+    });
+
+    // HTML mixing elements and text has no single text holder; the renderer's wrapper carries the
+    // ellipsis for all of it.
+    test('HTML renderer column ends mixed elements and text in an ellipsis', async ({ page }) => {
+      await navigateToTestPage(page, 'aggridtheming');
+      const cell = ellipsisCell(page, 0, 'html');
+      await expect(cell.locator('b')).toHaveText('Dealer');
+      const box = await cell.locator('.lf-cell-html').evaluate((el) => {
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        return {
+          overflowX: getComputedStyle(el).overflowX,
+          whiteSpace: getComputedStyle(el).whiteSpace,
+          textOverflow: getComputedStyle(el).textOverflow,
+          textRight: range.getBoundingClientRect().right,
+          holderRight: el.getBoundingClientRect().right,
+          cellRight: el.closest('.ag-cell').getBoundingClientRect().right,
+        };
+      });
+      expect(box.overflowX).not.toBe('visible');
+      expect(box.whiteSpace).toBe('nowrap');
+      expect(box.textOverflow).toBe('ellipsis');
+      expect(box.textRight).toBeGreaterThan(box.holderRight);
+      expect(box.holderRight).toBeLessThanOrEqual(box.cellRight);
+    });
+
     // A cell holding only text is a block, not a flex container, so its alignment comes from
     // text-align and align-content rather than justify-content and align-items.
     test('plain text keeps cell.align and stays vertically centred', async ({ page }) => {
       await navigateToTestPage(page, 'aggridtheming');
-      const cell = getBlock(page, 'theming_cell_ellipsis')
-        .locator('.ag-row[row-index="2"] .ag-cell')
-        .nth(4);
+      const cell = ellipsisCell(page, 2, 'right');
       await expect(cell).toHaveText('Short');
-      const box = await cell.evaluate((el) => {
-        const range = document.createRange();
-        range.selectNodeContents(el);
-        const text = range.getBoundingClientRect();
-        const cellBox = el.getBoundingClientRect();
-        const style = getComputedStyle(el);
-        return {
-          gapRight: cellBox.right - parseFloat(style.paddingRight) - text.right,
-          gapLeft: text.left - cellBox.left - parseFloat(style.paddingLeft),
-          offCentre: Math.abs((text.top + text.bottom) / 2 - (cellBox.top + cellBox.bottom) / 2),
-        };
-      });
+      const box = await textPosition(cell);
       expect(box.gapRight).toBeLessThan(2);
       expect(box.gapLeft).toBeGreaterThan(20);
       expect(box.offCentre).toBeLessThan(2);
+    });
+
+    // A cellStyle written while every cell was a flex container keeps aligning plain text.
+    test('plain text keeps a flex justifyContent and alignItems cellStyle', async ({ page }) => {
+      await navigateToTestPage(page, 'aggridtheming');
+      const cell = ellipsisCell(page, 2, 'justify');
+      await expect(cell).toHaveText('Short');
+      const box = await textPosition(cell);
+      expect(box.gapRight).toBeLessThan(2);
+      expect(box.gapLeft).toBeGreaterThan(20);
+      expect(box.gapBottom).toBeLessThan(box.offCentre);
     });
   });
 
