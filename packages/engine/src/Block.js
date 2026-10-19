@@ -18,6 +18,7 @@ import { ConfigError } from '@lowdefy/errors';
 import { applyArrayIndices, get, serializer, swap, type } from '@lowdefy/helpers';
 import Events from './Events.js';
 import Slots from './Slots.js';
+import pathCovers from './pathCovers.js';
 import inputContainsOperator from './tracking/inputContainsOperator.js';
 import readsIntersectChanges from './tracking/readsIntersectChanges.js';
 import validateClassEval from './validateClassEval.js';
@@ -278,7 +279,7 @@ class Block {
     this.showValidation = showValidation;
   };
 
-  reset = (parentSubSlots, initWithState) => {
+  reset = (parentSubSlots, initWithState, writtenPaths = []) => {
     this.update = true;
     this.setShowValidation(false);
     if (this.isInput() || this.isList()) {
@@ -291,11 +292,14 @@ class Block {
         // (lists) when the block becomes visible, or leaves the field deleted
         // if it stays hidden. This makes SetState-driven visibility toggles
         // consistent with setValue-driven toggles.
+        // A SetState that wrote this block's path, or a parent of it, did clear the value, so the
+        // block resets like a visible one would.
         const wasInvisible = this.visibleEval && this.visibleEval.output === false;
         const inputHasValue = this.isInput() && !type.isUndefined(this.value);
         const listHasSubSlots =
           this.isList() && type.isArray(this.subSlots) && this.subSlots.length > 0;
-        if (wasInvisible && (inputHasValue || listHasSubSlots)) {
+        const pathWritten = writtenPaths.some((path) => pathCovers({ path, target: this.blockId }));
+        if (wasInvisible && !pathWritten && (inputHasValue || listHasSubSlots)) {
           // For inputs, reuse this.value below.
           // For lists, leave blockValue undefined so the rebuild loop skips
           // (preserving subSlots). Sub-block this.value stays in memory and
@@ -326,7 +330,7 @@ class Block {
                 })
               );
             } else {
-              this.subSlots[i].resetBlocks(initWithState);
+              this.subSlots[i].resetBlocks(initWithState, writtenPaths);
             }
           });
           this.subSlots
@@ -347,7 +351,7 @@ class Block {
           this.newSlots({ arrayIndices: this.arrayIndices, initState: initWithState })
         );
       } else {
-        this.subSlots[0].resetBlocks(initWithState);
+        this.subSlots[0].resetBlocks(initWithState, writtenPaths);
       }
     }
   };
