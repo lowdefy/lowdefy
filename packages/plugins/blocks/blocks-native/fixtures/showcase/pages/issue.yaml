@@ -3,9 +3,9 @@
 # Menu that changes it, then the title and who opened it. Below: the body (Markdown, with chips for
 # issue links and @mentions), the activity with a comment thread, and a Composer pinned in the
 # footer. The ⋯ header action opens the Details sheet: property rows (Selector menu and sheet
-# variants, NumberInput and DateSelector rows) and the labels, checked in place. The rows and the
-# hero share their state keys, so a change in one shows in the other. The page fakes a 600ms load
-# to show its hero, card and timeline skeletons.
+# variants, a MultipleSelector sheet row for the labels, NumberInput and DateSelector rows). The
+# rows and the hero share their state keys, so a change in one shows in the other. The page fakes
+# a 600ms load to show its hero, card and timeline skeletons.
 id: issue
 type: Screen
 properties:
@@ -98,21 +98,8 @@ events:
           _state: details.activity
         reply_to: null
         labels:
-          - name: Sync
-            color: blue
-            checked: true
-          - name: Offline
-            color: teal
-            checked: true
-          - name: Regression
-            color: red
-            checked: false
-          - name: iOS 26
-            color: orange
-            checked: false
-          - name: Needs design
-            color: pink
-            checked: false
+          - sync
+          - offline
   onMountAsync:
     - id: fake_load
       type: Wait
@@ -608,6 +595,47 @@ slots:
                           avatar:
                             name: Katherine Johnson
                             src: https://i.pravatar.cc/96?img=45
+                  - id: assignee_rule
+                    type: Divider
+                    style:
+                      .element:
+                        marginVertical: 0
+                        marginLeft: 16
+                  # The labels: one row naming the chosen labels, opening a sheet that checks
+                  # them and adds new ones. The value is set as the sheet closes.
+                  - id: labels
+                    type: MultipleSelector
+                    properties:
+                      title: Labels
+                      variant: sheet
+                      menuTitle: Labels
+                      allowCreate: true
+                      options:
+                        - label: Sync
+                          value: sync
+                          symbol: circle.fill
+                          icon: Circle
+                          iconColor: blue
+                        - label: Offline
+                          value: offline
+                          symbol: circle.fill
+                          icon: Circle
+                          iconColor: teal
+                        - label: Regression
+                          value: regression
+                          symbol: circle.fill
+                          icon: Circle
+                          iconColor: red
+                        - label: iOS 26
+                          value: ios-26
+                          symbol: circle.fill
+                          icon: Circle
+                          iconColor: orange
+                        - label: Needs design
+                          value: needs-design
+                          symbol: circle.fill
+                          icon: Circle
+                          iconColor: pink
               - id: planning_card
                 type: Card
                 style:
@@ -638,35 +666,6 @@ slots:
                       title: Due
                       variant: row
                       placeholder: No due date
-              - id: labels
-                type: List
-                properties:
-                  header:
-                    title: Labels
-                    footer: Labels group issues across projects.
-                blocks:
-                  - id: labels.$.row
-                    type: ListItem
-                    properties:
-                      title:
-                        _state: labels.$.name
-                      chevron: false
-                      leading:
-                        status:
-                          name: dot
-                          color:
-                            _state: labels.$.color
-                      trailing:
-                        check:
-                          _state: labels.$.checked
-                    events:
-                      onClick:
-                        - id: toggle_label
-                          type: SetState
-                          params:
-                            labels.$.checked:
-                              _not:
-                                _state: labels.$.checked
   footer:
     blocks:
       - id: comment
