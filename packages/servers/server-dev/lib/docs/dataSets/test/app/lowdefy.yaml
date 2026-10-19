@@ -30,6 +30,15 @@ connections:
         _secret: MONGODB_URI
       collection: tickets
       write: true
+  # A second database that also has a tickets collection: under a data set it reads a session
+  # database of its own, so its fixtures never merge with the app's tickets.
+  - id: crm_tickets
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: CRM_MONGODB_URI
+      collection: tickets
+      write: true
 
 # A module connection is written under its module's folder (connections/archive/archive_db.json),
 # which the data set redirect must reach too.
@@ -74,6 +83,19 @@ api:
         type: MongoDBFind
         connectionId: tickets
         tenant: none
+        properties:
+          query: {}
+          options:
+            sort:
+              _id: 1
+      - :return:
+          _step: find
+  - id: list_crm_tickets
+    type: Api
+    routine:
+      - id: find
+        type: MongoDBFind
+        connectionId: crm_tickets
         properties:
           query: {}
           options:
