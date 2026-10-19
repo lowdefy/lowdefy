@@ -84,3 +84,7 @@ async function Confetti({ params }) {
 
 export default Confetti;
 ```
+# next_page_title: Blocks
+# next_page_id: plugins-blocks
+next_page_title: Connections # while blocks is in progress
+next_page_id: plugins-connections

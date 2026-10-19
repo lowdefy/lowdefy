@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Treg
     pageTitle: treg
-    section: Connections
     filePath: connections/Treg.yaml
     content:
       - id: markdown

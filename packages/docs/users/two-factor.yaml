@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: two-factor
     pageTitle: Two-Factor Authentication
-    section: User Authentication
     filePath: users/two-factor.yaml
     content:
       - id: content

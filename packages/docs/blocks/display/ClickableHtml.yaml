@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: ClickableHtml
     pageTitle: ClickableHtml
-    section: Display Blocks
     filePath: blocks/display/ClickableHtml.yaml
     block_type: ClickableHtml
     github_path: packages/plugins/blocks/blocks-basic/src/blocks/ClickableHtml

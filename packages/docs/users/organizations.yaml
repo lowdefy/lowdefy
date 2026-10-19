@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: organizations
     pageTitle: Organizations & Multi-Tenancy
-    section: User Authentication
     filePath: users/organizations.yaml
     content:
       - id: content

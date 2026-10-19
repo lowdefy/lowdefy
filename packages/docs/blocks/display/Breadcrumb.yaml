@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Breadcrumb
     pageTitle: Breadcrumb
-    section: Display Blocks
     filePath: blocks/display/Breadcrumb.yaml
     block_type: Breadcrumb
     antd_component: Breadcrumb

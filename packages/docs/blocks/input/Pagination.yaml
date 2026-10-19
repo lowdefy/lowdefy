@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Pagination
     pageTitle: Pagination
-    section: Input Blocks
     filePath: blocks/input/Pagination.yaml
     block_type: Pagination
     antd_component: Pagination

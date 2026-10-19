@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: S3UploadPhoto
     pageTitle: S3UploadPhoto
-    section: Input Blocks
     filePath: blocks/input/S3UploadPhoto.yaml
     block_type: S3UploadPhoto
     antd_component: Upload

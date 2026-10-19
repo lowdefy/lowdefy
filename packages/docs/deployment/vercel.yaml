@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: vercel
     pageTitle: Deploy with Vercel
-    section: Deployment
     filePath: deployment/vercel.yaml
     content:
       - id: content

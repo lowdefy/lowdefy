@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: node-server
     pageTitle: Deploy with Node.js
-    section: Deployment
     filePath: deployment/node-server.yaml
     content:
       - id: node_server_info

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: TableLight
     pageTitle: TableLight
-    section: Display Blocks
     filePath: blocks/display/TableLight.yaml
     block_type: TableLight
     antd_component: Table

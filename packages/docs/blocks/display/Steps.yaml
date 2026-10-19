@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Steps
     pageTitle: Steps
-    section: Display Blocks
     filePath: blocks/display/Steps.yaml
     block_type: Steps
     antd_component: Steps

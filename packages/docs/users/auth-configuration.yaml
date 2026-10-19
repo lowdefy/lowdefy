@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: auth-configuration
     pageTitle: Auth Configuration
-    section: User Authentication
     filePath: users/auth-configuration.yaml
     content:
       - id: auth_configuration
@@ -295,10 +294,3 @@ _ref:
 
                 `auth.dev` needs no auth stack behind it. An `auth` block whose only key is `dev` is not an auth configuration: it demands no login method, no `secret` and no `database`, the app builds and runs signed out in production, and in the dev server the browser is the `dev.mockUser` caller. Adding any other `auth` key declares a real auth stack, and the build then requires a mechanism, a secret and (for a login method) a database as usual.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: User Object
-            previous_page_id: user-object
-            next_page_title: Login and Logout
-            next_page_id: login-and-logout

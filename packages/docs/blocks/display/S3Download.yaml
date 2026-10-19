@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: S3Download
     pageTitle: S3Download
-    section: Display Blocks
     filePath: blocks/display/S3Download.yaml
     block_type: S3Download
     github_path: packages/plugins/plugins/plugin-aws/src/blocks/S3Download

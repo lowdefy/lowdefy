@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: S3UploadDragger
     pageTitle: S3UploadDragger
-    section: Input Blocks
     filePath: blocks/input/S3UploadDragger.yaml
     block_type: S3UploadDragger
     antd_component: Upload

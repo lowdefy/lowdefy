@@ -469,12 +469,53 @@
                   properties:
                     message: Thanks! 👏  We'll keep you updated with the latest Lowdefy news.
                     type: success
+    - id: footer_community_links
+      type: Box
+      layout:
+        span: 3
+        sm:
+          span: 12
+        gap: 8
+      blocks:
+        - id: community_links_title
+          type: Html
+          properties:
+            html: '<b style="font-size: 0.85rem;">Community</b>'
+        - id: showcase_anchor
+          type: Anchor
+          properties:
+            title: Showcase
+            url: /showcase
+        - id: contributing_anchor
+          type: Anchor
+          properties:
+            title: Contributing
+            url: https://github.com/lowdefy/lowdefy/blob/main/CONTRIBUTING.md
+            newTab: true
+        - id: roadmap_anchor
+          type: Anchor
+          properties:
+            title: Roadmap
+            url: https://github.com/lowdefy/lowdefy/discussions
+            newTab: true
+        - id: sponsors_anchor
+          type: Anchor
+          properties:
+            title: Sponsors
+            url: https://github.com/sponsors/lowdefy
+            newTab: true
     - id: footer_links
       type: Box
       layout:
-        span: 6
+        span: 3
+        sm:
+          span: 12
         gap: 8
       blocks:
+        - id: resources_links_title
+          type: Html
+          properties:
+            html: '<b style="font-size: 0.85rem;">Resources</b>'
         - id: github_anchor
           type: Anchor
           properties:

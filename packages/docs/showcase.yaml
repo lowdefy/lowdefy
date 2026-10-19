@@ -1,0 +1,37 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: showcase
+    pageTitle: Showcase
+    filePath: showcase.yaml
+    content:
+      - id: showcase_intro
+        type: Markdown
+        properties:
+          content: |
+            More than 25 000 apps have been built with Lowdefy — admin panels, BI dashboards,
+            CRMs, ticketing systems, webforms, and these docs themselves. A few open examples:
+
+      - _ref: templates/built_with_lowdefy.yaml
+
+      - id: showcase_footer
+        type: Markdown
+        properties:
+          content: |
+            Built something with Lowdefy? Share it with the community on
+            [GitHub Discussions](https://github.com/lowdefy/lowdefy/discussions) or
+            [Discord](https://discord.gg/WmcJgXt).

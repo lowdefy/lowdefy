@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: AxiosHttp
     pageTitle: AxiosHttp
-    section: Connections
     filePath: connections/AxiosHttp.yaml
     content:
       - id: markdown

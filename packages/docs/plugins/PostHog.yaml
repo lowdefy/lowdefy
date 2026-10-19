@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: PostHog
     pageTitle: PostHog
-    section: Plugins
     filePath: plugins/PostHog.yaml
     content:
       - id: md1

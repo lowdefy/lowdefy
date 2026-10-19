@@ -115,3 +115,9 @@ AxiosHttp.meta = {
 
 export default AxiosHttp;
 ```
+# previous_page_title: Blocks
+# previous_page_id: plugins-blocks
+previous_page_title: Actions # while blocks doesn't exist
+previous_page_id: plugins-actions
+next_page_title: Operators
+next_page_id: plugins-operators

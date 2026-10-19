@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Knex
     pageTitle: Knex
-    section: Connections
     filePath: connections/Knex.yaml
     content:
       - id: markdown_intro
