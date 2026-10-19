@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: config-tests
     pageTitle: Config Tests
-    section: Testing
     filePath: testing/config-tests.yaml
     content:
       - id: md1

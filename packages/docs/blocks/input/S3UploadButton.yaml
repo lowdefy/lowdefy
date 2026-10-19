@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: S3UploadButton
     pageTitle: S3UploadButton
-    section: Input Blocks
     filePath: blocks/input/S3UploadButton.yaml
     block_type: S3UploadButton
     antd_component: Upload

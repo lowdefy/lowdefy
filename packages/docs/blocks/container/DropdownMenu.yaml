@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: DropdownMenu
     pageTitle: DropdownMenu
-    section: Container Blocks
     filePath: blocks/container/DropdownMenu.yaml
     block_type: DropdownMenu
     antd_component: Dropdown

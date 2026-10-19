@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: websocket-subscriptions
     pageTitle: Page Subscriptions
-    section: WebSockets
     filePath: websockets/subscriptions.yaml
     content:
       - id: md1
@@ -163,11 +162,3 @@ _ref:
                 ```
 
                 Until it is subscribed, the channel's `_websocket` state reads as not connected with no messages. The page still closes it when it unmounts.
-
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: WebSockets
-            previous_page_id: websockets-introduction
-            next_page_title: Publish and Actions
-            next_page_id: websocket-publish

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: tutorial-deploy
     pageTitle: 6. Deploy to Netlify
-    section: Tutorial
     filePath: tutorial/tutorial-deploy.yaml
     prefetchPages:
       - next-steps
@@ -137,10 +136,3 @@ _ref:
             This is the end of the tutorial. If you have any feedback or suggestions, we would greatly appreciate that. You can start a new discussion [here](https://github.com/lowdefy/lowdefy/discussions).
 
             Our next steps will show you some of the things you could do next.
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: SQL Requests
-            previous_page_id: tutorial-requests-sql
-            next_page_title: Next steps
-            next_page_id: next-steps

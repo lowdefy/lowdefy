@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: tutorial-requests-api
     pageTitle: 5. API / HTTP requests
-    section: Tutorial
     filePath: tutorial/tutorial-requests-api.yaml
     content:
       - id: body_axios
@@ -183,10 +182,3 @@ _ref:
 
                 Next we will save the form data to a SQLite database file.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Interactive pages
-            previous_page_id: tutorial-actions-operators
-            next_page_title: Save data to a database
-            next_page_id: tutorial-requests-sql

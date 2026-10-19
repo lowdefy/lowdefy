@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: auth-steps
     pageTitle: Auth Steps
-    section: User Authentication
     filePath: users/auth-steps.yaml
     content:
       - id: content

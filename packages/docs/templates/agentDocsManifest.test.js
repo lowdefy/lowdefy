@@ -28,6 +28,10 @@ import path from 'path';
 import YAML from 'yaml';
 
 import hashDocSources from '@lowdefy/docs-content/scripts/hashDocSources.js';
+import resolvePageSections from '@lowdefy/docs-content/scripts/resolvePageSections.js';
+import sectionKind from '@lowdefy/docs-content/scripts/sectionKind.js';
+
+import walkMenus from './walkMenus.js';
 
 // Must match toSlugSegment in @lowdefy/docs-content/scripts/extractAgentDocs.js.
 function toSlugSegment(value) {
@@ -37,23 +41,11 @@ function toSlugSegment(value) {
     .replace(/^-+|-+$/g, '');
 }
 
-// Mirrors resolvePageSections in extractAgentDocs.js: a page's section is the
-// menu group that directly holds its link.
 function collectMenuPages(menus) {
-  const pages = [];
-  function walkLinks(links, group) {
-    (links ?? []).forEach((link) => {
-      if (link.type === 'MenuGroup') {
-        walkLinks(link.links, link.properties?.title ?? link.id);
-        return;
-      }
-      if (link.type === 'MenuLink' && link.pageId && group) {
-        pages.push({ pageId: link.pageId, section: group });
-      }
-    });
-  }
-  menus.forEach((menu) => walkLinks(menu.links, null));
-  return pages;
+  return [...resolvePageSections({ menus }).entries()].map(([pageId, section]) => ({
+    pageId,
+    section,
+  }));
 }
 
 const menus = YAML.parse(fs.readFileSync(path.resolve('menus.yaml'), 'utf8'));
@@ -98,4 +90,101 @@ test('every @lowdefy/docs-content doc matches the page files it was extracted fr
     })
     .map((doc) => doc.slug);
   expect(stale).toEqual([]);
+});
+
+test('every menu page has a docsSection, so no doc falls back to other/', () => {
+  const sectioned = new Set(menuPages.map(({ pageId }) => pageId));
+  const unsectioned = [...walkMenus(menus).membershipCounts.keys()].filter(
+    (pageId) => !sectioned.has(pageId)
+  );
+  expect(unsectioned).toEqual([]);
+  expect(manifest.docs.filter((doc) => doc.section === 'Other').map((doc) => doc.slug)).toEqual([]);
+});
+
+test('the doc paths agents are told to request resolve in @lowdefy/docs-content', () => {
+  ['operators/_get', 'operators/_if', 'concepts/lowdefy-schema', 'concepts/blocks'].forEach(
+    (slug) => {
+      expect(manifestSlugs.has(slug)).toBe(true);
+    }
+  );
+});
+
+const fixtureMenus = [
+  {
+    id: 'menu-reference',
+    properties: { title: 'Reference', docsSection: 'Reference' },
+    links: [
+      { id: 'cli', type: 'MenuLink', pageId: 'cli' },
+      {
+        id: 'operators-group',
+        type: 'MenuGroup',
+        properties: { title: 'Operators', docsSection: 'Operators' },
+        links: [
+          {
+            id: 'operators-reference',
+            type: 'MenuLink',
+            pageId: 'operators-reference',
+            properties: { title: 'Overview', docsSection: 'Reference' },
+          },
+          {
+            id: 'operators-logic',
+            type: 'MenuGroup',
+            properties: { title: 'Logic & control' },
+            links: [
+              {
+                id: 'operators-nested',
+                type: 'MenuGroup',
+                properties: { title: 'Nested' },
+                links: [{ id: '_if', type: 'MenuLink', pageId: '_if' }],
+              },
+            ],
+          },
+        ],
+      },
+      { id: 'external', type: 'MenuLink', url: 'https://lowdefy.com' },
+    ],
+  },
+  {
+    id: 'menu-untagged',
+    properties: { title: 'Untagged' },
+    links: [
+      {
+        id: 'group',
+        type: 'MenuGroup',
+        properties: { title: 'Group' },
+        links: [{ id: 'loose', type: 'MenuLink', pageId: 'loose' }],
+      },
+    ],
+  },
+];
+
+test('resolvePageSections takes a link docsSection over its group and menu', () => {
+  const sections = resolvePageSections({ menus: fixtureMenus });
+  expect(sections.get('operators-reference')).toBe('Reference');
+});
+
+test('resolvePageSections inherits a group docsSection through nested untagged groups', () => {
+  const sections = resolvePageSections({ menus: fixtureMenus });
+  expect(sections.get('_if')).toBe('Operators');
+});
+
+test('resolvePageSections falls back to the menu docsSection for pages in no tagged group', () => {
+  const sections = resolvePageSections({ menus: fixtureMenus });
+  expect(sections.get('cli')).toBe('Reference');
+});
+
+test('resolvePageSections ignores group titles and leaves untagged pages without a section', () => {
+  const sections = resolvePageSections({ menus: fixtureMenus });
+  expect(sections.has('loose')).toBe(false);
+  expect([...sections.keys()].sort()).toEqual(['_if', 'cli', 'operators-reference']);
+});
+
+test('sectionKind gives a plugin type only to plugin sections, not Reference', () => {
+  expect(sectionKind({ section: 'Operators' })).toBe('operator');
+  expect(sectionKind({ section: 'Actions' })).toBe('action');
+  expect(sectionKind({ section: 'Connections' })).toBe('connection');
+  expect(sectionKind({ section: 'Controls' })).toBe('block');
+  expect(sectionKind({ section: 'Input Blocks' })).toBe('block');
+  expect(sectionKind({ section: 'Reference' })).toBeUndefined();
+  expect(sectionKind({ section: 'Other' })).toBeUndefined();
 });

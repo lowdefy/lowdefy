@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: PageSiderMenu
     pageTitle: PageSiderMenu
-    section: Container Blocks
     filePath: blocks/container/PageSiderMenu.yaml
     block_type: PageSiderMenu
     antd_component: Layout

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Icon
     pageTitle: Icon
-    section: Display Blocks
     filePath: blocks/display/Icon.yaml
     block_type: Icon
     github_path: packages/plugins/blocks/blocks-basic/src/blocks/Icon

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Watermark
     pageTitle: Watermark
-    section: Container Blocks
     filePath: blocks/container/Watermark.yaml
     block_type: Watermark
     antd_component: Watermark
