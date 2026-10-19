@@ -95,9 +95,9 @@ test.describe('RatingSlider Block', () => {
     // antd derives these from colorPrimary #fa8c16: colorPrimaryBorder #ffd591,
     // colorPrimaryBorderHover #ffc069.
     await expect(track).toHaveCSS('background-color', 'rgb(255, 213, 145)');
-    expect(
-      await handle.evaluate((el) => getComputedStyle(el, '::after').boxShadow)
-    ).toContain('rgb(255, 213, 145)');
+    expect(await handle.evaluate((el) => getComputedStyle(el, '::after').boxShadow)).toContain(
+      'rgb(255, 213, 145)'
+    );
 
     await getSlider(page, 'ratingslider_color_orange').hover();
     await expect(track).toHaveCSS('background-color', 'rgb(255, 192, 105)');
