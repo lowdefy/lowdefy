@@ -99,15 +99,7 @@
     flex: 0 1 auto
     selfAlign: middle
   properties:
-    title:
-      _get:
-        from:
-          learn: Learn
-          reference: Reference
-          recipes: Recipes
-          plugins: Plugins
-        key:
-          _state: tab_selector
+    trigger: click
     links:
       - id: mobile_tab_learn
         type: MenuLink
@@ -129,6 +121,22 @@
         pageId: plugins
         properties:
           title: Plugins
+  blocks:
+    - id: mobile_tab_menu_button
+      type: Button
+      properties:
+        variant: outlined
+        icon: ChevronDown
+        iconPlacement: end
+        title:
+          _get:
+            from:
+              learn: Learn
+              reference: Reference
+              recipes: Recipes
+              plugins: Plugins
+            key:
+              _state: tab_selector
 - id: header_spacer
   type: Box
   layout:

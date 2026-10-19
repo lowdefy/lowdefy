@@ -23,7 +23,6 @@ function navButton({ id, icon, item }) {
     },
     properties: {
       block: true,
-      hideActionLoading: true,
       icon,
       size: 'large',
       title: item.title,

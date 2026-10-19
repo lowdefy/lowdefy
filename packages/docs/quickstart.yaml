@@ -89,7 +89,6 @@ _ref:
           marginTop: 24px
         properties:
           block: true
-          hideActionLoading: true
           icon: Rocket
           size: large
           title: Start the tutorial
