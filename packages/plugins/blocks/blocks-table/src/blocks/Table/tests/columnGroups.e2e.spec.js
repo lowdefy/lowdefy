@@ -72,7 +72,13 @@ test.describe('Table collapsible column groups', () => {
     await toggle(page, 'cg', 'outcomes').click();
     await expect(value(page)).toHaveText('collapsed=[]');
     const stored = await page.evaluate(() =>
-      JSON.parse(window.localStorage.getItem('lowdefy-table:e2e_column_groups'))
+      JSON.parse(
+        window.localStorage.getItem(
+          Object.keys(window.localStorage).find((key) =>
+            key.endsWith(':lowdefy-table:e2e_column_groups')
+          )
+        )
+      )
     );
     expect(stored.view).toEqual({ collapsedColumnGroups: [] });
     await page.reload();
