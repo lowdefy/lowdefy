@@ -309,9 +309,11 @@ test('a cell whose worker crashed is claimed again when its lease runs out', asy
 
 test('a new row runs its autoRun columns', async ({ request }) => {
   const added = await callEndpoint(request, 'leads_add', {
+    rowKey: '3f6c1a9e-6b1d-4f0a-9c3e-2d8b7a5e4f10',
     values: { name: 'Jo Rivers', title: 'COO', domain: 'ferncrest.test' },
   });
-  expect(added.insertedId._oid).toMatch(/^[0-9a-f]{24}$/);
+  // Saved under the key the Table showed it under while it saved.
+  expect(added.insertedId).toBe('3f6c1a9e-6b1d-4f0a-9c3e-2d8b7a5e4f10');
   const leads = await settle(request);
   const jo = byName(leads, 'Jo Rivers');
   expect(cellOf(jo, 'company')).toMatchObject({ status: 'ok', value: 'Software' });
@@ -324,10 +326,21 @@ test('a new row runs its autoRun columns', async ({ request }) => {
 
 test('a new row can only set input fields', async ({ request }) => {
   const refused = await callEndpoint(request, 'leads_add', {
+    rowKey: 'b0d5e2c4-1f3a-4e6b-8c7d-9a0f1e2d3c4b',
     values: { name: 'Mallory', _enrich: 'x', secret: 'y' },
   });
   expect(refused.error).toContain('"_enrich" is not an input column.');
   expect(refused.error).toContain('"secret" is not an input column.');
+});
+
+test('a new row can not take the key of a row that exists', async ({ request }) => {
+  const rowKey = 'c7e1f0a2-5d4b-4a3c-9e8f-0b1a2c3d4e5f';
+  await callEndpoint(request, 'leads_add', { rowKey, values: { name: 'Jo Rivers' } });
+  const refused = await callEndpoint(request, 'leads_add', { rowKey, values: { name: 'Mallory' } });
+  expect(refused.error).toBeDefined();
+  const leads = await readLeads(request);
+  expect(byName(leads, 'Jo Rivers')._id).toBe(rowKey);
+  expect(leads.some((lead) => lead.name === 'Mallory')).toBe(false);
 });
 
 test('an AI prompt fills a dotted placeholder from the input it starts with', async ({

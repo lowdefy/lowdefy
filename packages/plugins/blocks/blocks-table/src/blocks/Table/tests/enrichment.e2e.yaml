@@ -222,6 +222,8 @@ blocks:
           params:
             ev.onRowAdd:
               _event: true
+        # Saved under the key the row shows under while it saves, and pushed before the event
+        # ends, as a live push would: the saved row takes the saving row's place at once.
         - id: row_add_push
           type: CallMethod
           params:
@@ -231,7 +233,12 @@ blocks:
               - add:
                   - _object.assign:
                       - _event: values
-                      - _id: saved
+                      - _id:
+                          _event: rowKey
+        - id: row_add_settle
+          type: Wait
+          params:
+            ms: 1500
       onImport:
         - id: import_wait
           type: Wait

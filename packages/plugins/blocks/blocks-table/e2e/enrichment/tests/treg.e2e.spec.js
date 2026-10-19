@@ -60,7 +60,7 @@ async function tregCalls(request, domain) {
 // The Idempotency-Key the worker sends for a cell: runId:columnKey:rowKey:inputHash.
 function keyOf(lead) {
   const cell = cellOf(lead, 'work_email');
-  return `${cell.runId}:work_email:${lead._id._oid}:${cell.inputHash}`;
+  return `${cell.runId}:work_email:${lead._id}:${cell.inputHash}`;
 }
 
 test.beforeEach(async ({ request }) => {

@@ -987,12 +987,23 @@ test.describe('Table enrichment', () => {
     }
     await expect(saving.locator('[data-col-key="label"]')).toHaveText('Tyrell (tyrell.com)');
     await expect(editor.locator('[data-lf-new-row-saving]')).toBeVisible();
-    await expectEvent(page, 'onRowAdd', { values: { company: 'Tyrell', domain: 'tyrell.com' } });
-    await expect(saving).toHaveCount(0);
-    await expect(cell(page, 'saved', 'company')).toHaveText('Tyrell');
+    await expect
+      .poll(async () => (await eventOf(page, 'onRowAdd'))?.values)
+      .toEqual({ company: 'Tyrell', domain: 'tyrell.com' });
+    // The row shows under the key the event sends, so the app can save it under that key.
+    const { rowKey } = await eventOf(page, 'onRowAdd');
+    expect(rowKey).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+    // The saved row arrives while the event still runs (it waits 1.5s after the push): it takes
+    // the saving row's place at once, one row, never both.
+    await expect(saving).toHaveCount(0, { timeout: 1000 });
+    await expect(editor.locator('[data-lf-new-row-saving]')).toBeVisible();
+    const rows = getBlock(page, 'enrich').locator(`.lf-table-body [data-row-key="${rowKey}"]`);
+    await expect(rows).toHaveCount(1);
+    await expect(cell(page, rowKey, 'company')).toHaveText('Tyrell');
     // Saved, the row renders from its data.
-    await expect(cell(page, 'saved', 'email').locator('[data-lf-enrich-pending]')).toHaveCount(0);
-    await expect(state(page, 'saved', 'email')).toHaveAttribute('data-lf-enrich-status', 'none');
+    await expect(cell(page, rowKey, 'email').locator('[data-lf-enrich-pending]')).toHaveCount(0);
+    await expect(state(page, rowKey, 'email')).toHaveAttribute('data-lf-enrich-status', 'none');
+    await expect(editor.locator('[data-lf-new-row-saving]')).toHaveCount(0);
     // The editor stays open, cleared, for the next row.
     await expect(editor.locator('[data-lf-new-row-field="company"] input')).toHaveValue('');
   });

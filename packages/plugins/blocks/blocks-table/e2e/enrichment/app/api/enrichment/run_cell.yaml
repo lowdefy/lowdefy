@@ -39,9 +39,7 @@
             _js:
               fn: |
                 const { cell } = args;
-                // An ObjectId row key reaches the routine as { _oid }.
-                const rowKey = cell.rowKey?._oid ?? String(cell.rowKey);
-                return [cell.runId, cell.columnKey, rowKey, cell.inputHash].join(':');
+                return [cell.runId, cell.columnKey, String(cell.rowKey), cell.inputHash].join(':');
               args:
                 cell:
                   _item: cell

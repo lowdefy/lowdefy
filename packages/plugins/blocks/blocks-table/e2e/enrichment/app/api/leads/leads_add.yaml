@@ -12,15 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Adds a row: the Table's onRowAdd { values }. The row's autoRun columns start at once.
+# Adds a row: the Table's onRowAdd { rowKey, values }. The row's autoRun columns start at once.
 id: leads_add
 type: Api
 payloadSchema:
   type: object
   required:
+    - rowKey
     - values
   additionalProperties: false
   properties:
+    # The key the Table shows the row under while it saves (a random UUID), stored as its _id,
+    # as every row's _id is a UUID: the saved row then replaces the saving one as soon as the
+    # page has it. The key comes from the browser, so it is only ever inserted (never an upsert,
+    # replace or update keyed by it): a key that is taken fails the insert, and a browser can
+    # never write over another row.
+    rowKey:
+      type: string
+      pattern: ^[A-Za-z0-9_-]{1,64}$
     values:
       type: object
 routine:
@@ -50,10 +59,14 @@ routine:
       doc:
         _object.assign:
           - _state: converted.docs.0
+          - _id:
+              _payload: rowKey
           # - org_id:
           #     _user: organization.id
+          # The insert order the page sorts by (position breaks ties within an import batch).
           - createdAt:
               _date: now
+            position: 0
   - _ref:
       path: api/leads/start_auto_run.yaml
       vars:

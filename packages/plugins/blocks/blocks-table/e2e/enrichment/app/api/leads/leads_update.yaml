@@ -23,15 +23,10 @@ payloadSchema:
     - values
   additionalProperties: false
   properties:
-    # The row's _id, as the page has it ({ _oid } for an ObjectId).
+    # The row's _id: a UUID, as every row has (leads_add, leads_import).
     rowKey:
-      type: object
-      required:
-        - _oid
-      properties:
-        _oid:
-          type: string
-          pattern: ^[0-9a-f]{24}$
+      type: string
+      pattern: ^[A-Za-z0-9_-]{1,64}$
     values:
       type: object
 routine:
