@@ -92,8 +92,11 @@ let hub;
 
 // A range of its own for each test run, clear of the hub's real 4100-4999, so
 // hubs and hub tests in other worktrees never take the ports a test expects.
+// It ends below 49152, where Windows' dynamic port range starts: Windows
+// reserves blocks inside that range for Hyper-V and NAT, binding a reserved
+// port fails with EACCES, and a range inside one block has no free pair.
 function randomPortRange() {
-  const first = 20000 + 2 * Math.floor(Math.random() * 15000);
+  const first = 20000 + 2 * Math.floor(Math.random() * 14500);
   return { first, last: first + 40 };
 }
 
