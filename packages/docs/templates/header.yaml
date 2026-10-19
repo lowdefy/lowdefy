@@ -136,7 +136,7 @@
               recipes: Recipes
               plugins: Plugins
             key:
-              _state: tab_selector
+              _state: active_tab
 - id: header_spacer
   type: Box
   layout:

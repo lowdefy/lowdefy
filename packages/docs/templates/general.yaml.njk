@@ -28,12 +28,21 @@ events:
           _random:
             type: string
             length: 16
-    # Seed the header SegmentedSelector's active tab. Resolved at build time
-    # by the navFromMenus transformer from this page's menu membership.
+    # Seed the header's active tab. Resolved at build time by the navFromMenus
+    # transformer from this page's menu membership. The mobile tab menu reads
+    # active_tab: an input block's value leaves state while the block is hidden,
+    # and the SegmentedSelector (tab_selector) is hidden on small screens.
     - id: set_active_tab
       type: SetState
       params:
         tab_selector:
+          _ref:
+            path: menus.yaml
+            transformer: templates/navFromMenus.js
+            vars:
+              pageId: {{ pageId }}
+              field: tab
+        active_tab:
           _ref:
             path: menus.yaml
             transformer: templates/navFromMenus.js
