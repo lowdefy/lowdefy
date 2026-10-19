@@ -128,7 +128,7 @@ function createApp() {
 }
 
 function postChat(headers) {
-  return createApp().request('/api/agent/nigel-chat/nigel?conversationId=c1', {
+  return createApp().request('/api/agent/atlas-chat/atlas?conversationId=c1', {
     method: 'POST',
     headers: { 'content-type': 'application/json', ...headers },
     body: JSON.stringify({ messages: [], sharedState: { now: 'today' } }),
@@ -151,8 +151,8 @@ test('a shell chat call with a bearer session runs the agent as that caller', as
   expect(mockCallAgent).toHaveBeenCalledTimes(1);
   const [context, params] = mockCallAgent.mock.calls[0];
   expect(context.user).toEqual({ id: 'u-phone', roles: ['member'] });
-  expect(params.agentId).toEqual('nigel');
-  expect(params.pageId).toEqual('nigel-chat');
+  expect(params.agentId).toEqual('atlas');
+  expect(params.pageId).toEqual('atlas-chat');
   expect(params.conversationId).toEqual('c1');
 });
 

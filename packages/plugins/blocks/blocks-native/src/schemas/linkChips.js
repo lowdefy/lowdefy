@@ -22,7 +22,7 @@ import toneSchema from './tone.js';
 export default {
   type: 'array',
   description:
-    "Links drawn as inline chips rather than text, matched by their address scheme (`[PEL-12 Sign in](pelican:PEL-12)` with a `pelican` chip) or by a `pattern` on the address (`[ACME-12 (Fix the menu)](/ACME/tasks/ACME-12)` with the pattern `^/ACME/tasks/(?<key>ACME-\\d+)$`). A chip is a rounded pill with the icon, the key (`ACME-12`: the value after the scheme, or the pattern's `key` group) in medium weight in the tone, and the title after it in the label colour, cut short with an ellipsis to the block width. Link text that starts with the key gives the title after it, without the brackets or separator between them; other link text is the title after a pattern's key, and all key after a scheme, after the prefix. The first chip a link matches draws it. Mobile only.",
+    "Links drawn as inline chips rather than text, matched by their address scheme (`[ACME-12 Sign in](acme:ACME-12)` with a `acme` chip) or by a `pattern` on the address (`[ACME-12 (Fix the menu)](/ACME/tasks/ACME-12)` with the pattern `^/ACME/tasks/(?<key>ACME-\\d+)$`). A chip is a rounded pill with the icon, the key (`ACME-12`: the value after the scheme, or the pattern's `key` group) in medium weight in the tone, and the title after it in the label colour, cut short with an ellipsis to the block width. Link text that starts with the key gives the title after it, without the brackets or separator between them; other link text is the title after a pattern's key, and all key after a scheme, after the prefix. The first chip a link matches draws it. Mobile only.",
   items: {
     type: 'object',
     additionalProperties: false,
@@ -35,7 +35,7 @@ export default {
     properties: {
       scheme: {
         type: 'string',
-        description: 'The address scheme, without the colon: `pelican` for `pelican:PEL-12`.',
+        description: 'The address scheme, without the colon: `acme` for `acme:ACME-12`.',
       },
       pattern: {
         type: 'string',

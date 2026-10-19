@@ -39,9 +39,9 @@ function setup({ answer = [], sharedState = null, sharedStateReadOnly = false, .
   const onRequest = jest.fn();
   const transport = createAgentTransport({
     agentId: 'support/assistant',
-    conversationId: 'pelican_1 2',
+    conversationId: 'acme_1 2',
     onRequest,
-    pageId: 'nigel',
+    pageId: 'atlas',
     sharedStateRef: { current: sharedState },
     sharedStateReadOnlyRef: { current: sharedStateReadOnly },
     streamFetch,
@@ -55,7 +55,7 @@ const userMessage = { id: 'u1', role: 'user', parts: [{ type: 'text', text: 'Hi'
 async function send(transport) {
   return transport.sendMessages({
     abortSignal: undefined,
-    chatId: 'pelican_1 2',
+    chatId: 'acme_1 2',
     messageId: undefined,
     messages: [userMessage],
     trigger: 'submit-message',
@@ -74,16 +74,16 @@ test('the transport posts to the agent route with the module agent id as one seg
   const { streamFetch, transport } = setup();
   await collect(await send(transport));
   const [path, init] = streamFetch.mock.calls[0];
-  expect(path).toEqual('/api/agent/nigel/support%2Fassistant?conversationId=pelican_1%202');
+  expect(path).toEqual('/api/agent/atlas/support%2Fassistant?conversationId=acme_1%202');
   expect(init.method).toEqual('POST');
   expect(init.credentials).toEqual('omit');
   expect(JSON.parse(init.body).messages).toEqual([userMessage]);
 });
 
 test('the transport sends the url query, path params and shared state of the moment', async () => {
-  const sharedStateRef = { current: { space: 'PEL' } };
+  const sharedStateRef = { current: { space: 'ACME' } };
   const { streamFetch, transport } = setup({
-    pathParams: { ref: 'PEL-1' },
+    pathParams: { ref: 'ACME-1' },
     sharedStateRef,
     urlQuery: { tab: 'questions' },
   });
@@ -92,8 +92,8 @@ test('the transport sends the url query, path params and shared state of the mom
   await collect(await send(transport));
   const bodies = streamFetch.mock.calls.map(([, init]) => JSON.parse(init.body));
   expect(bodies[0]).toMatchObject({
-    pathParams: { ref: 'PEL-1' },
-    sharedState: { space: 'PEL' },
+    pathParams: { ref: 'ACME-1' },
+    sharedState: { space: 'ACME' },
     urlQuery: { tab: 'questions' },
   });
   expect(bodies[0].sharedStateReadOnly).toBeUndefined();

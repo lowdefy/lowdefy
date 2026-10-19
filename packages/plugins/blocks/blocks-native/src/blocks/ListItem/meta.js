@@ -151,7 +151,7 @@ export default {
       },
       subtitle: {
         type: 'string',
-        description: 'One line of meta under the title, such as `PEL-644 · Design title`.',
+        description: 'One line of meta under the title, such as `ACME-644 · Design title`.',
       },
       subtitleLines: {
         type: 'integer',

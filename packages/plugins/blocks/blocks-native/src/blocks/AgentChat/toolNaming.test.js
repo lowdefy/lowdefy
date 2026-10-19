@@ -45,7 +45,7 @@ test('getToolIcon picks a glyph by the verb a tool name starts with', () => {
 
 test('summarizeToolInput quotes the first two text or number values', () => {
   expect(
-    summarizeToolInput({ input: { q: 'payroll  run', page: 2, space: 'PEL' }, translate })
+    summarizeToolInput({ input: { q: 'payroll  run', page: 2, space: 'ACME' }, translate })
   ).toEqual('“payroll run” · “2”');
   expect(summarizeToolInput({ input: { q: 'x'.repeat(70) }, translate })).toEqual(
     `“${'x'.repeat(60)}…”`

@@ -46,12 +46,12 @@ function textReply({ id = 'a1', text }) {
 function chatPage({ events = {}, properties = {} } = {}) {
   return page([
     {
-      id: 'nigel',
+      id: 'atlas',
       type: 'AgentChat',
       properties: {
-        agentId: 'nigel',
+        agentId: 'atlas',
         welcome: {
-          title: "Hi, I'm Nigel",
+          title: "Hi, I'm Atlas",
           description: 'I can log a task for you.',
           prompts: [{ label: 'What is waiting on me?', description: 'Questions and reviews' }],
         },
@@ -65,25 +65,25 @@ function chatPage({ events = {}, properties = {} } = {}) {
 async function send(text) {
   const footer = screen.getByTestId('screen-footer');
   await act(async () => {
-    fireEvent.changeText(within(footer).getByTestId('nigel_input'), text);
+    fireEvent.changeText(within(footer).getByTestId('atlas_input'), text);
   });
   await act(async () => {
-    fireEvent.press(within(footer).getByTestId('nigel_send'));
+    fireEvent.press(within(footer).getByTestId('atlas_send'));
   });
 }
 
 test('an empty AgentChat shows the welcome, and its prompts as chips in the screen footer', async () => {
   await renderPage({ pageConfig: chatPage() });
-  expect(screen.getByText("Hi, I'm Nigel")).toBeTruthy();
+  expect(screen.getByText("Hi, I'm Atlas")).toBeTruthy();
   expect(screen.getByText('I can log a task for you.')).toBeTruthy();
   const footer = screen.getByTestId('screen-footer');
   expect(within(footer).getByText('What is waiting on me?')).toBeTruthy();
-  expect(within(footer).getByTestId('nigel_input')).toBeTruthy();
+  expect(within(footer).getByTestId('atlas_input')).toBeTruthy();
 });
 
 test('a sent message posts to the agent route through the host stream and streams the reply in', async () => {
   const { host } = await renderPage({
-    pageConfig: chatPage({ properties: { sharedState: { space: 'PEL' } } }),
+    pageConfig: chatPage({ properties: { sharedState: { space: 'ACME' } } }),
   });
   host.streamFetch.mockImplementation(async () =>
     sse(textReply({ text: 'Two **questions** wait on you.' }))
@@ -94,11 +94,11 @@ test('a sent message posts to the agent route through the host stream and stream
   expect(host.streamFetch).toHaveBeenCalledTimes(1);
   const [url, init] = host.streamFetch.mock.calls[0];
   expect(url).toMatch(
-    /^https:\/\/app\.lowdefy\.test\/api\/agent\/home\/nigel\?conversationId=chat_/
+    /^https:\/\/app\.lowdefy\.test\/api\/agent\/home\/atlas\?conversationId=chat_/
   );
   expect(init.method).toEqual('POST');
   const body = JSON.parse(init.body);
-  expect(body.sharedState).toEqual({ space: 'PEL' });
+  expect(body.sharedState).toEqual({ space: 'ACME' });
   expect(body.messages).toHaveLength(1);
   expect(body.messages[0].parts).toEqual([{ type: 'text', text: 'What is waiting on me?' }]);
 });
@@ -122,19 +122,19 @@ test('a reply draws its reasoning collapsed, its tool calls as compact rows and 
       {
         type: 'tool-output-available',
         toolCallId: 'c1',
-        output: [{ key: 'PEL-645', title: 'Payroll' }],
+        output: [{ key: 'ACME-645', title: 'Payroll' }],
       },
       { type: 'finish-step' },
       { type: 'start-step' },
       { type: 'text-start', id: 't1' },
-      { type: 'text-delta', id: 't1', delta: 'PEL-645 needs you.' },
+      { type: 'text-delta', id: 't1', delta: 'ACME-645 needs you.' },
       { type: 'text-end', id: 't1' },
       { type: 'finish-step' },
       { type: 'finish' },
     ])
   );
   await send('What is waiting on me?');
-  await waitFor(() => expect(screen.getByText('PEL-645 needs you.')).toBeTruthy());
+  await waitFor(() => expect(screen.getByText('ACME-645 needs you.')).toBeTruthy());
   expect(screen.getByText('Search designs')).toBeTruthy();
   expect(screen.getByText('Returned 1 result')).toBeTruthy();
   // Reasoning is behind its disclosure until pressed.
@@ -147,7 +147,7 @@ test('a reply draws its reasoning collapsed, its tool calls as compact rows and 
   await act(async () => {
     fireEvent.press(screen.getByLabelText('Search designs'));
   });
-  expect(screen.getByText('PEL-645')).toBeTruthy();
+  expect(screen.getByText('ACME-645')).toBeTruthy();
   expect(screen.getByText('Payroll')).toBeTruthy();
 });
 
@@ -169,28 +169,28 @@ test('a tool call waiting for approval is answered with Approve, which continues
         { type: 'finish' },
       ])
     )
-    .mockImplementationOnce(async () => sse(textReply({ id: 'a1', text: 'Logged PEL-900.' })));
+    .mockImplementationOnce(async () => sse(textReply({ id: 'a1', text: 'Logged ACME-900.' })));
   await send('Log a task to fix login');
-  await waitFor(() => expect(screen.getByTestId('nigel_message_a1_approval_c1')).toBeTruthy());
+  await waitFor(() => expect(screen.getByTestId('atlas_message_a1_approval_c1')).toBeTruthy());
   expect(screen.getByText('Write task')).toBeTruthy();
   expect(screen.getByText('Fix login')).toBeTruthy();
   await act(async () => {
-    fireEvent.press(screen.getByTestId('nigel_message_a1_approval_c1_approve'));
+    fireEvent.press(screen.getByTestId('atlas_message_a1_approval_c1_approve'));
   });
   await waitFor(() => expect(host.streamFetch).toHaveBeenCalledTimes(2));
   const { messages } = JSON.parse(host.streamFetch.mock.calls[1][1].body);
   const toolPart = messages[1].parts.find((part) => part.toolCallId === 'c1');
   expect(toolPart.approval).toEqual({ id: 'ap1', approved: true });
-  await waitFor(() => expect(screen.getByText('Logged PEL-900.')).toBeTruthy());
+  await waitFor(() => expect(screen.getByText('Logged ACME-900.')).toBeTruthy());
 });
 
 test('update-page-state writes the shared keys into the page state and reports back', async () => {
   const { host } = await renderPage({
     pageConfig: page([
       {
-        id: 'nigel',
+        id: 'atlas',
         type: 'AgentChat',
-        properties: { agentId: 'nigel', sharedState: { space: { _state: 'space' } } },
+        properties: { agentId: 'atlas', sharedState: { space: { _state: 'space' } } },
       },
       { id: 'shown', type: 'Paragraph', properties: { content: { _state: 'space' } } },
     ]),
@@ -227,13 +227,13 @@ test('a failed reply shows the error with Try again, which asks again', async ()
     .mockImplementationOnce(async () => new Response('The agent is unavailable.', { status: 500 }))
     .mockImplementationOnce(async () => sse(textReply({ text: 'Here you go.' })));
   await send('Hello');
-  await waitFor(() => expect(screen.getByTestId('nigel_error')).toBeTruthy());
+  await waitFor(() => expect(screen.getByTestId('atlas_error')).toBeTruthy());
   expect(screen.getByText('Something went wrong')).toBeTruthy();
   await act(async () => {
-    fireEvent.press(screen.getByTestId('nigel_error_retry'));
+    fireEvent.press(screen.getByTestId('atlas_error_retry'));
   });
   await waitFor(() => expect(screen.getByText('Here you go.')).toBeTruthy());
-  expect(screen.queryByTestId('nigel_error')).toBeNull();
+  expect(screen.queryByTestId('atlas_error')).toBeNull();
   const { messages } = JSON.parse(host.streamFetch.mock.calls[1][1].body);
   expect(messages.map((message) => message.role)).toEqual(['user']);
 });
@@ -254,27 +254,27 @@ test('the send button is a stop button while a reply streams', async () => {
   );
   await send('Write me a long answer');
   const footer = screen.getByTestId('screen-footer');
-  await waitFor(() => expect(within(footer).getByTestId('nigel_stop')).toBeTruthy());
+  await waitFor(() => expect(within(footer).getByTestId('atlas_stop')).toBeTruthy());
   await act(async () => {
-    fireEvent.press(within(footer).getByTestId('nigel_stop'));
+    fireEvent.press(within(footer).getByTestId('atlas_stop'));
   });
   expect(abortSignal.aborted).toBe(true);
-  await waitFor(() => expect(within(footer).getByTestId('nigel_send')).toBeTruthy());
+  await waitFor(() => expect(within(footer).getByTestId('atlas_send')).toBeTruthy());
   expect(calls.map((call) => call.name)).toContain('stop');
 });
 
 test('a link in a reply opens an app path as a page through the Link action', async () => {
   const { host } = await renderPage({ actions: { Link }, pageConfig: chatPage() });
   host.streamFetch.mockImplementation(async () =>
-    sse(textReply({ text: 'See [PEL-645](/PEL/designs/PEL-645).' }))
+    sse(textReply({ text: 'See [ACME-645](/ACME/designs/ACME-645).' }))
   );
   await send('Where is payroll?');
-  await waitFor(() => expect(screen.getByText('PEL-645')).toBeTruthy());
+  await waitFor(() => expect(screen.getByText('ACME-645')).toBeTruthy());
   await act(async () => {
-    fireEvent.press(screen.getByText('PEL-645'));
+    fireEvent.press(screen.getByText('ACME-645'));
   });
   expect(host.router.push).toHaveBeenCalledWith(
-    expect.objectContaining({ pathname: '/PEL/designs/PEL-645' })
+    expect.objectContaining({ pathname: '/ACME/designs/ACME-645' })
   );
 });
 
@@ -314,14 +314,14 @@ function threadsPage({ events = {} } = {}) {
       properties: { title: 'Chats' },
       events: {
         onClick: [
-          { id: 'open', type: 'CallMethod', params: { blockId: 'nigel', method: 'openThreads' } },
+          { id: 'open', type: 'CallMethod', params: { blockId: 'atlas', method: 'openThreads' } },
         ],
       },
     },
     {
-      id: 'nigel',
+      id: 'atlas',
       type: 'AgentChat',
-      properties: { agentId: 'nigel', threads: { module: 'ai-assistant', scope: 'pelican' } },
+      properties: { agentId: 'atlas', threads: { module: 'ai-assistant', scope: 'acme' } },
       events,
     },
   ]);
@@ -331,35 +331,35 @@ const storedThread = {
   title: 'Payroll questions',
   messages: [
     { id: 'u1', role: 'user', parts: [{ type: 'text', text: 'What about payroll?' }] },
-    { id: 'a1', role: 'assistant', parts: [{ type: 'text', text: 'PEL-645 holds it.' }] },
+    { id: 'a1', role: 'assistant', parts: [{ type: 'text', text: 'ACME-645 holds it.' }] },
   ],
 };
 
 test('with threads, the chat resumes the thread last opened and replies in it', async () => {
   const endpoints = createThreadEndpoints({
     active: {
-      conversationId: 'pelican_1',
+      conversationId: 'acme_1',
       title: 'Payroll questions',
       messages: storedThread.messages,
     },
-    stored: { pelican_1: storedThread },
+    stored: { acme_1: storedThread },
   });
   const { host } = await renderPage({
     actions: { CallAPI: endpoints.CallAPI },
     pageConfig: threadsPage(),
   });
-  await waitFor(() => expect(screen.getByText('PEL-645 holds it.')).toBeTruthy());
+  await waitFor(() => expect(screen.getByText('ACME-645 holds it.')).toBeTruthy());
   expect(endpoints.calls[0]).toEqual({
     endpointId: 'ai-assistant/get-active-thread',
-    payload: { scope: 'pelican' },
+    payload: { scope: 'acme' },
   });
   host.streamFetch.mockImplementation(async () =>
     sse(textReply({ id: 'a2', text: 'It is settled.' }))
   );
   await send('Is it settled?');
   await waitFor(() => expect(screen.getByText('It is settled.')).toBeTruthy());
-  expect(host.streamFetch.mock.calls[0][0]).toMatch(/conversationId=pelican_1$/);
-  await waitFor(() => expect(endpoints.threads.pelican_1.messages).toHaveLength(4));
+  expect(host.streamFetch.mock.calls[0][0]).toMatch(/conversationId=acme_1$/);
+  await waitFor(() => expect(endpoints.threads.acme_1.messages).toHaveLength(4));
   // A resumed thread keeps its name: there is no first exchange to title.
   expect(endpoints.calls.some((call) => call.endpointId === 'ai-assistant/title-thread')).toBe(
     false
@@ -373,18 +373,18 @@ test('with threads, a new chat is saved on its first message and titled from its
     pageConfig: threadsPage(),
   });
   await waitFor(() => expect(screen.getByTestId('screen-footer')).toBeTruthy());
-  host.streamFetch.mockImplementation(async () => sse(textReply({ text: 'Logged PEL-900.' })));
+  host.streamFetch.mockImplementation(async () => sse(textReply({ text: 'Logged ACME-900.' })));
   await send('Log a task to fix the login bug');
-  await waitFor(() => expect(screen.getByText('Logged PEL-900.')).toBeTruthy());
+  await waitFor(() => expect(screen.getByText('Logged ACME-900.')).toBeTruthy());
   const saves = endpoints.calls.filter((call) => call.endpointId === 'ai-assistant/save-thread');
   await waitFor(() => expect(saves.length).toBeGreaterThan(0));
   const [firstSave] = saves;
   expect(firstSave.payload).toMatchObject({
-    scope: 'pelican',
+    scope: 'acme',
     tag: null,
     title: 'Log a task to fix the login bug',
   });
-  expect(firstSave.payload.conversationId).toMatch(/^pelican_/);
+  expect(firstSave.payload.conversationId).toMatch(/^acme_/);
   await waitFor(() =>
     expect(
       endpoints.calls.find((call) => call.endpointId === 'ai-assistant/title-thread')
@@ -394,7 +394,7 @@ test('with threads, a new chat is saved on its first message and titled from its
   expect(title.payload).toEqual({
     conversationId: firstSave.payload.conversationId,
     prompt: 'Log a task to fix the login bug',
-    reply: 'Logged PEL-900.',
+    reply: 'Logged ACME-900.',
     replaces: 'Log a task to fix the login bug',
     context: null,
   });
@@ -403,8 +403,8 @@ test('with threads, a new chat is saved on its first message and titled from its
 test('the threads sheet lists recent chats, opens one with its messages and deletes one by swipe', async () => {
   const endpoints = createThreadEndpoints({
     stored: {
-      pelican_1: storedThread,
-      pelican_2: { title: 'Release notes', messages: [] },
+      acme_1: storedThread,
+      acme_2: { title: 'Release notes', messages: [] },
     },
   });
   const { calls } = await renderPage({
@@ -414,29 +414,29 @@ test('the threads sheet lists recent chats, opens one with its messages and dele
   await act(async () => {
     fireEvent.press(screen.getByText('Chats'));
   });
-  const sheet = await screen.findByTestId('nigel_threads');
+  const sheet = await screen.findByTestId('atlas_threads');
   await waitFor(() => expect(within(sheet).getByText('Payroll questions')).toBeTruthy());
   expect(within(sheet).getByText('Release notes')).toBeTruthy();
   await act(async () => {
     fireEvent.press(within(sheet).getByText('Payroll questions'));
   });
-  await waitFor(() => expect(screen.getByText('PEL-645 holds it.')).toBeTruthy());
+  await waitFor(() => expect(screen.getByText('ACME-645 holds it.')).toBeTruthy());
   expect(calls.find((call) => call.name === 'thread').event).toEqual({
-    conversationId: 'pelican_1',
+    conversationId: 'acme_1',
     title: 'Payroll questions',
   });
   await act(async () => {
     fireEvent.press(screen.getByText('Chats'));
   });
   // The row's swipe actions are its accessibility actions too.
-  await waitFor(() => expect(screen.getByTestId('nigel_thread_1_row')).toBeTruthy());
+  await waitFor(() => expect(screen.getByTestId('atlas_thread_1_row')).toBeTruthy());
   await act(async () => {
-    fireEvent(screen.getByTestId('nigel_thread_1_row'), 'accessibilityAction', {
+    fireEvent(screen.getByTestId('atlas_thread_1_row'), 'accessibilityAction', {
       nativeEvent: { actionName: 'delete' },
     });
   });
   await waitFor(() => expect(screen.queryByText('Release notes')).toBeNull());
-  expect(endpoints.threads.pelican_2).toBeUndefined();
+  expect(endpoints.threads.acme_2).toBeUndefined();
 });
 
 test('a long press on a reply copies its text or regenerates it', async () => {
@@ -453,12 +453,12 @@ test('a long press on a reply copies its text or regenerates it', async () => {
   const sheet = jest.spyOn(ActionSheetIOS, 'showActionSheetWithOptions');
   sheet.mockImplementationOnce((options, pick) => pick(options.options.indexOf('Copy')));
   await act(async () => {
-    fireEvent(screen.getByTestId('nigel_message_a1'), 'longPress');
+    fireEvent(screen.getByTestId('atlas_message_a1'), 'longPress');
   });
   expect(copied).toEqual(['First answer.']);
   sheet.mockImplementationOnce((options, pick) => pick(options.options.indexOf('Regenerate')));
   await act(async () => {
-    fireEvent(screen.getByTestId('nigel_message_a1'), 'longPress');
+    fireEvent(screen.getByTestId('atlas_message_a1'), 'longPress');
   });
   await waitFor(() => expect(screen.getByText('Second answer.')).toBeTruthy());
   expect(screen.queryByText('First answer.')).toBeNull();
@@ -477,7 +477,7 @@ test('setInput fills the composer and newChat starts an empty conversation', asy
             {
               id: 'fill',
               type: 'CallMethod',
-              params: { blockId: 'nigel', method: 'setInput', args: [{ text: 'Log a ticket' }] },
+              params: { blockId: 'atlas', method: 'setInput', args: [{ text: 'Log a ticket' }] },
             },
           ],
         },
@@ -488,14 +488,14 @@ test('setInput fills the composer and newChat starts an empty conversation', asy
         properties: { title: 'New' },
         events: {
           onClick: [
-            { id: 'new', type: 'CallMethod', params: { blockId: 'nigel', method: 'newChat' } },
+            { id: 'new', type: 'CallMethod', params: { blockId: 'atlas', method: 'newChat' } },
           ],
         },
       },
       {
-        id: 'nigel',
+        id: 'atlas',
         type: 'AgentChat',
-        properties: { agentId: 'nigel', welcome: { title: 'Hi' } },
+        properties: { agentId: 'atlas', welcome: { title: 'Hi' } },
       },
     ]),
   });
@@ -503,10 +503,10 @@ test('setInput fills the composer and newChat starts an empty conversation', asy
     fireEvent.press(screen.getByText('Fill'));
   });
   const footer = screen.getByTestId('screen-footer');
-  expect(within(footer).getByTestId('nigel_input').props.value).toEqual('Log a ticket');
+  expect(within(footer).getByTestId('atlas_input').props.value).toEqual('Log a ticket');
   host.streamFetch.mockImplementation(async () => sse(textReply({ text: 'Who is it for?' })));
   await act(async () => {
-    fireEvent.press(within(footer).getByTestId('nigel_send'));
+    fireEvent.press(within(footer).getByTestId('atlas_send'));
   });
   await waitFor(() => expect(screen.getByText('Who is it for?')).toBeTruthy());
   const firstConversation = host.streamFetch.mock.calls[0][0];
@@ -530,7 +530,7 @@ test('the thinking dots show until the reply has something to show, then the thi
   });
   host.streamFetch.mockImplementation(() => new Promise(() => undefined));
   await send('What moved?');
-  expect(screen.getByTestId('nigel_thinking')).toBeTruthy();
+  expect(screen.getByTestId('atlas_thinking')).toBeTruthy();
   await waitFor(() => expect(screen.getByText('Reading the space')).toBeTruthy(), {
     timeout: 1500,
   });
@@ -541,7 +541,7 @@ test('the user bubble takes the tint fill of the mode showing', async () => {
   host.streamFetch.mockImplementation(async () => sse(textReply({ text: 'Hi.' })));
   await send('Hello');
   await waitFor(() => expect(screen.getByText('Hi.')).toBeTruthy());
-  const bubble = screen.getByTestId(/^nigel_message_(?!a1)/);
+  const bubble = screen.getByTestId(/^atlas_message_(?!a1)/);
   const fill = StyleSheet.flatten(bubble.props.style).backgroundColor;
   expect(fill).toMatch(/^rgba\(/);
   expect(fill.endsWith('0.24)')).toBe(true);
@@ -550,27 +550,27 @@ test('the user bubble takes the tint fill of the mode showing', async () => {
 test('with sender.sticky false the composer sits under the conversation, not in the footer', async () => {
   await renderPage({ pageConfig: chatPage({ properties: { sender: { sticky: false } } }) });
   expect(screen.queryByTestId('screen-footer')).toBeNull();
-  expect(screen.getByTestId('nigel_input')).toBeTruthy();
+  expect(screen.getByTestId('atlas_input')).toBeTruthy();
 });
 
 test('a reply draws linkChips links as chips, as the Markdown block does, and a press reports it', async () => {
   const { calls, host } = await renderPage({
     pageConfig: chatPage({
       events: { onLinkClick: record('link') },
-      properties: { linkChips: [{ scheme: 'pelican', icon: 'House', tone: 'primary' }] },
+      properties: { linkChips: [{ scheme: 'acme', icon: 'House', tone: 'primary' }] },
     }),
   });
   host.streamFetch.mockImplementation(async () =>
-    sse(textReply({ text: 'Blocked on [PEL-12 Sign in with a passkey](pelican:PEL-12).' }))
+    sse(textReply({ text: 'Blocked on [ACME-12 Sign in with a passkey](acme:ACME-12).' }))
   );
   await send('What is blocked?');
-  const chip = await screen.findByLabelText('PEL-12 Sign in with a passkey');
-  expect(screen.getByTestId('markdown-chip-icon-PEL-12')).toBeTruthy();
+  const chip = await screen.findByLabelText('ACME-12 Sign in with a passkey');
+  expect(screen.getByTestId('markdown-chip-icon-ACME-12')).toBeTruthy();
   await act(async () => {
     fireEvent.press(chip);
   });
   expect(calls.find((call) => call.name === 'link').event).toEqual({
-    href: 'pelican:PEL-12',
+    href: 'acme:ACME-12',
     text: '',
   });
 });
@@ -618,16 +618,16 @@ test('newChat with a seed starts a chat about a record: its welcome, its input a
             {
               id: 'new',
               type: 'CallMethod',
-              params: { blockId: 'nigel', method: 'newChat', args: [recordSeed] },
+              params: { blockId: 'atlas', method: 'newChat', args: [recordSeed] },
             },
           ],
         },
       },
       {
-        id: 'nigel',
+        id: 'atlas',
         type: 'AgentChat',
         properties: {
-          agentId: 'nigel',
+          agentId: 'atlas',
           sharedState: { space: 'ACME' },
           welcome: { title: 'Hi', prompts: [{ label: 'What is waiting on me?' }] },
         },
@@ -644,11 +644,11 @@ test('newChat with a seed starts a chat about a record: its welcome, its input a
   const footer = screen.getByTestId('screen-footer');
   // The seed's welcome is laid over the property's, so its prompts stay.
   expect(within(footer).getByText('What is waiting on me?')).toBeTruthy();
-  expect(within(footer).getByTestId('nigel_input').props.value).toEqual('What is left on ACME-12?');
+  expect(within(footer).getByTestId('atlas_input').props.value).toEqual('What is left on ACME-12?');
   expect(calls.find((call) => call.name === 'thread').event.title).toEqual('ACME-12 questions');
   host.streamFetch.mockImplementation(async () => sse(textReply({ text: 'Only the review.' })));
   await act(async () => {
-    fireEvent.press(within(footer).getByTestId('nigel_send'));
+    fireEvent.press(within(footer).getByTestId('atlas_send'));
   });
   await waitFor(() => expect(screen.getByText('Only the review.')).toBeTruthy());
   const body = JSON.parse(host.streamFetch.mock.calls[0][1].body);
@@ -665,10 +665,10 @@ test('with threads, the seed property starts the chat when there is no thread to
     actions: { CallAPI: endpoints.CallAPI },
     pageConfig: page([
       {
-        id: 'nigel',
+        id: 'atlas',
         type: 'AgentChat',
         properties: {
-          agentId: 'nigel',
+          agentId: 'atlas',
           seed: recordSeed,
           threads: { module: 'ai-assistant', scope: 'acme', tag: 'tasks' },
         },
@@ -678,13 +678,13 @@ test('with threads, the seed property starts the chat when there is no thread to
   await waitFor(() => expect(screen.getByText('About ACME-12')).toBeTruthy());
   const footer = screen.getByTestId('screen-footer');
   await waitFor(() =>
-    expect(within(footer).getByTestId('nigel_input').props.value).toEqual(
+    expect(within(footer).getByTestId('atlas_input').props.value).toEqual(
       'What is left on ACME-12?'
     )
   );
   host.streamFetch.mockImplementation(async () => sse(textReply({ text: 'Only the review.' })));
   await act(async () => {
-    fireEvent.press(within(footer).getByTestId('nigel_send'));
+    fireEvent.press(within(footer).getByTestId('atlas_send'));
   });
   await waitFor(() => expect(screen.getByText('Only the review.')).toBeTruthy());
   const saves = endpoints.calls.filter((call) => call.endpointId === 'ai-assistant/save-thread');
@@ -715,20 +715,20 @@ test('with threads, a resumed thread opens in place of the seed property', async
     actions: { CallAPI: endpoints.CallAPI },
     pageConfig: page([
       {
-        id: 'nigel',
+        id: 'atlas',
         type: 'AgentChat',
         properties: {
-          agentId: 'nigel',
+          agentId: 'atlas',
           seed: recordSeed,
           threads: { module: 'ai-assistant', scope: 'acme' },
         },
       },
     ]),
   });
-  await waitFor(() => expect(screen.getByText('PEL-645 holds it.')).toBeTruthy());
+  await waitFor(() => expect(screen.getByText('ACME-645 holds it.')).toBeTruthy());
   expect(screen.queryByText('About ACME-12')).toBeNull();
   expect(
-    within(screen.getByTestId('screen-footer')).getByTestId('nigel_input').props.value
+    within(screen.getByTestId('screen-footer')).getByTestId('atlas_input').props.value
   ).toEqual('');
 });
 
@@ -768,16 +768,16 @@ function slowResumePage({ args } = {}) {
           {
             id: 'new',
             type: 'CallMethod',
-            params: { blockId: 'nigel', method: 'newChat', ...(args ? { args } : {}) },
+            params: { blockId: 'atlas', method: 'newChat', ...(args ? { args } : {}) },
           },
         ],
       },
     },
     {
-      id: 'nigel',
+      id: 'atlas',
       type: 'AgentChat',
       properties: {
-        agentId: 'nigel',
+        agentId: 'atlas',
         welcome: { title: 'Hi' },
         threads: { module: 'ai-assistant', scope: 'acme' },
       },
@@ -791,21 +791,21 @@ test('newChat while the last thread is still resuming cancels the resume, so the
     actions: { CallAPI: endpoints.CallAPI },
     pageConfig: slowResumePage({ args: [recordSeed] }),
   });
-  expect(screen.getByTestId('nigel_loading')).toBeTruthy();
+  expect(screen.getByTestId('atlas_loading')).toBeTruthy();
   await act(async () => {
     fireEvent.press(screen.getByText('New'));
   });
-  expect(screen.queryByTestId('nigel_loading')).toBeNull();
+  expect(screen.queryByTestId('atlas_loading')).toBeNull();
   expect(screen.getByText('About ACME-12')).toBeTruthy();
   await act(async () => {
     endpoints.resolveActive();
   });
   expect(screen.getByText('About ACME-12')).toBeTruthy();
-  expect(screen.queryByText('PEL-645 holds it.')).toBeNull();
+  expect(screen.queryByText('ACME-645 holds it.')).toBeNull();
   host.streamFetch.mockImplementation(async () => sse(textReply({ text: 'Only the review.' })));
   const footer = screen.getByTestId('screen-footer');
   await act(async () => {
-    fireEvent.press(within(footer).getByTestId('nigel_send'));
+    fireEvent.press(within(footer).getByTestId('atlas_send'));
   });
   await waitFor(() => expect(screen.getByText('Only the review.')).toBeTruthy());
   expect(host.streamFetch.mock.calls[0][0]).not.toMatch(/conversationId=acme_1$/);
@@ -817,7 +817,7 @@ test('an unseeded newChat while the last thread is still resuming keeps the empt
     actions: { CallAPI: endpoints.CallAPI },
     pageConfig: slowResumePage(),
   });
-  expect(screen.getByTestId('nigel_loading')).toBeTruthy();
+  expect(screen.getByTestId('atlas_loading')).toBeTruthy();
   await act(async () => {
     fireEvent.press(screen.getByText('New'));
   });
@@ -826,5 +826,5 @@ test('an unseeded newChat while the last thread is still resuming keeps the empt
     endpoints.resolveActive();
   });
   expect(screen.getByText('Hi')).toBeTruthy();
-  expect(screen.queryByText('PEL-645 holds it.')).toBeNull();
+  expect(screen.queryByText('ACME-645 holds it.')).toBeNull();
 });

@@ -30,7 +30,7 @@ function getWords(name) {
 
 /**
  * The initials an avatar shows for a name: the first letters of its first and last words
- * ("Gerrie van Wyk" is GW), or the first letter of a one-word name. An email address is read by
+ * ("Pieter van Dam" is PD), or the first letter of a one-word name. An email address is read by
  * its name part. `content` wins, so a person's own initials can be set.
  *
  * @param {Object} params

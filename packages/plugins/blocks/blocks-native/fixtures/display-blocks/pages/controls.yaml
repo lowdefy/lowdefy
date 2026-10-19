@@ -79,14 +79,14 @@ blocks:
               value: me
               pinned: true
               avatar:
-                name: Gerrie van Wyk
-                src: https://github.com/Gervwyk.png?size=96
-            - label: Sam Tolmay
+                name: Pieter van Dam
+                src: https://i.pravatar.cc/96?img=1
+            - label: Sam Taylor
               value: sam
-              description: Maintainer
+              description: Engineer
               avatar:
-                name: Sam Tolmay
-                src: https://github.com/SamTolmay.png?size=96
+                name: Sam Taylor
+                src: https://i.pravatar.cc/96?img=5
             - label: Ada Lovelace
               value: ada
               description: ada@example.com
@@ -115,7 +115,7 @@ blocks:
     properties:
       icon: Ellipsis
       title: More
-      menuTitle: PEL-645
+      menuTitle: ACME-645
       items:
         - id: copy_link
           title: Copy link

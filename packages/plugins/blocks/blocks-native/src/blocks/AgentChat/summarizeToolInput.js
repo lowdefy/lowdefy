@@ -25,7 +25,7 @@ function quote(value) {
 
 /**
  * The one line under a running tool call: the values it was called with, such as
- * `“payroll” · PEL` for a search. Only the input's top-level strings and numbers are read; a call
+ * `“payroll” · ACME` for a search. Only the input's top-level strings and numbers are read; a call
  * with none says it is running.
  *
  * @param {Object} params

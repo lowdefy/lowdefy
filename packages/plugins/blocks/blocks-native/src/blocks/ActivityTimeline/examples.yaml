@@ -20,7 +20,7 @@
       type: ActivityTimeline
       properties:
         user:
-          id: u-gerrie
+          id: u-pieter
         earlier: true
         formatEvent:
           status-change:
@@ -60,76 +60,76 @@
             at: '2026-10-14T08:12:00Z'
             tier: key
             type: status-change
-            subject: { kind: task, id: t-644, key: PEL-644 }
-            by: { id: u-sam, name: Sam Tolmay }
+            subject: { kind: task, id: t-644, key: ACME-644 }
+            by: { id: u-sam, name: Sam Taylor }
             what: { from: null, to: backlog }
           - type: gap
             id: gap-1
             count: 14
             actors:
-              - { id: u-sam, name: Sam Tolmay }
-              - { id: u-gerrie, name: Gerrie van Wyk }
-              - { id: u-nigel, name: Nigel, agent: true }
+              - { id: u-sam, name: Sam Taylor }
+              - { id: u-pieter, name: Pieter van Dam }
+              - { id: u-atlas, name: Atlas, agent: true }
               - { id: u-ada, name: Ada Lovelace }
             types: { edit: 11, file-added: 3 }
           - id: ev-2
             at: '2026-10-16T09:40:00Z'
             tier: key
             type: assignee-change
-            by: { id: u-gerrie, name: Gerrie van Wyk }
-            what: { to: u-nigel, name: Nigel }
+            by: { id: u-pieter, name: Pieter van Dam }
+            what: { to: u-atlas, name: Atlas }
           - id: ev-3
             at: '2026-10-16T09:41:00Z'
             tier: key
             type: status-change
-            by: { id: u-nigel, name: Nigel, agent: true }
+            by: { id: u-atlas, name: Atlas, agent: true }
             what: { from: todo, to: in_progress }
           - id: ev-4
             at: '2026-10-16T10:02:00Z'
             tier: detail
             type: edit
-            by: { id: u-nigel, name: Nigel, agent: true }
+            by: { id: u-atlas, name: Atlas, agent: true }
             what: { fields: [body] }
           - id: ev-5
             at: '2026-10-16T10:05:00Z'
             tier: detail
             type: decision-recorded
             subject: { kind: decision, id: d-1, title: Rail icons sit on a filled circle }
-            by: { id: u-nigel, name: Nigel, agent: true }
+            by: { id: u-atlas, name: Atlas, agent: true }
           - id: ev-6
             at: '2026-10-16T10:06:00Z'
             tier: detail
             type: decision-recorded
             subject: { kind: decision, id: d-2, title: Replies stay flat under the first comment }
-            by: { id: u-nigel, name: Nigel, agent: true }
+            by: { id: u-atlas, name: Atlas, agent: true }
           - id: c-1
             type: comment
             at: '2026-10-17T14:20:00Z'
             by: { id: u-ada, name: Ada Lovelace }
             body: |
               The rail looks right in dark mode now. [[user:u-sam]] can you check the
-              resolved thread fold on a small phone? It touches [[PEL-645]].
+              resolved thread fold on a small phone? It touches [[ACME-645]].
 
               - Avatars 28pt
               - Replies newest 3
             mentions:
-              - { user_id: u-sam, name: Sam Tolmay, sees: true }
+              - { user_id: u-sam, name: Sam Taylor, sees: true }
             reactions:
-              - { emoji: 👍, user_ids: [u-sam, u-gerrie] }
+              - { emoji: 👍, user_ids: [u-sam, u-pieter] }
               - { emoji: 🎉, user_ids: [u-sam] }
             reply_count: 5
             replies:
               - id: r-3
                 at: '2026-10-17T15:02:00Z'
-                by: { id: u-sam, name: Sam Tolmay }
+                by: { id: u-sam, name: Sam Taylor }
                 body: Checked on an SE. The fold reads well.
               - id: r-4
                 at: '2026-10-17T15:30:00Z'
-                by: { id: u-nigel, name: Nigel, agent: true }
+                by: { id: u-atlas, name: Atlas, agent: true }
                 body: I moved the chevron to the end of the line.
               - id: r-5
                 at: '2026-10-18T07:45:00Z'
-                by: { id: u-gerrie, name: Gerrie van Wyk }
+                by: { id: u-pieter, name: Pieter van Dam }
                 body: Thanks both. [[user:u-pat]] has a look tomorrow.
                 edited_at: '2026-10-18T07:50:00Z'
                 mentions:
@@ -137,16 +137,16 @@
           - id: c-2
             type: comment
             at: '2026-10-18T08:00:00Z'
-            by: { id: u-sam, name: Sam Tolmay }
+            by: { id: u-sam, name: Sam Taylor }
             body: Should the gap line load all 14 at once?
             resolved:
-              by: { id: u-gerrie, name: Gerrie van Wyk }
+              by: { id: u-pieter, name: Pieter van Dam }
               at: '2026-10-18T08:30:00Z'
             reply_count: 2
             replies:
               - id: r-6
                 at: '2026-10-18T08:10:00Z'
-                by: { id: u-gerrie, name: Gerrie van Wyk }
+                by: { id: u-pieter, name: Pieter van Dam }
                 body: Yes, the endpoint pages them.
           - id: c-3
             type: comment
@@ -157,7 +157,7 @@
             replies:
               - id: r-7
                 at: '2026-10-18T09:05:00Z'
-                by: { id: u-gerrie, name: Gerrie van Wyk }
+                by: { id: u-pieter, name: Pieter van Dam }
                 body: Reply to a deleted comment.
       events:
         onReact:
@@ -219,9 +219,9 @@
       type: ActivityTimeline
       properties:
         user:
-          id: u-gerrie
+          id: u-pieter
         linkChips:
-          - scheme: pelican
+          - scheme: acme
             icon: FileText
             tone: primary
         entries:
@@ -230,8 +230,8 @@
             at: '2026-10-18T09:12:00Z'
             by:
               id: u-sam
-              name: Sam Tolmay
-            body: Blocked on [PEL-12 Sign in with a passkey](pelican:PEL-12), picking it up next.
+              name: Sam Taylor
+            body: Blocked on [ACME-12 Sign in with a passkey](acme:ACME-12), picking it up next.
       events:
         onLinkPress:
           - id: open_record

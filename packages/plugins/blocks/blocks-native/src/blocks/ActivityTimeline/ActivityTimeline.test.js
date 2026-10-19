@@ -18,7 +18,7 @@ import { act, fireEvent, screen } from '@testing-library/react-native';
 
 import { page, record, renderPage } from '../../test/renderPage.js';
 
-const sam = { id: 'u1', name: 'Sam Tolmay' };
+const sam = { id: 'u1', name: 'Sam Taylor' };
 const ada = { id: 'u2', name: 'Ada Lovelace' };
 const minutesAgo = (n) => new Date(Date.now() - n * 60 * 1000).toISOString();
 
@@ -47,7 +47,7 @@ const entries = [
     at: minutesAgo(5),
     by: ada,
     body: 'Over to you [[user:u1]]',
-    mentions: [{ user_id: 'u1', name: 'Sam Tolmay', sees: true }],
+    mentions: [{ user_id: 'u1', name: 'Sam Taylor', sees: true }],
     reactions: [{ emoji: '👍', user_ids: ['u2'] }],
     reply_count: 5,
     replies: [
@@ -104,10 +104,10 @@ test('an ActivityTimeline opens a folded group to show each event', async () => 
 
 test('an ActivityTimeline draws a comment with its mention chip, newest replies and reactions', async () => {
   await renderTimeline();
-  expect(await screen.findByText('@Sam Tolmay')).toBeTruthy();
+  expect(await screen.findByText('@Sam Taylor')).toBeTruthy();
   expect(screen.getByText('Show 2 earlier replies')).toBeTruthy();
   expect(screen.getByText('Fifth')).toBeTruthy();
-  expect(screen.getByText(/Sam Tolmay 2m · edited/)).toBeTruthy();
+  expect(screen.getByText(/Sam Taylor 2m · edited/)).toBeTruthy();
   expect(screen.getByLabelText('👍 1')).toBeTruthy();
 });
 
@@ -233,20 +233,20 @@ test('an ActivityTimeline draws linkChips links in comment bodies as chips that 
               type: 'comment',
               at: minutesAgo(5),
               by: ada,
-              body: 'See [PEL-12 Sign in with a passkey](pelican:PEL-12)',
+              body: 'See [ACME-12 Sign in with a passkey](acme:ACME-12)',
             },
           ],
-          linkChips: [{ scheme: 'pelican', icon: 'FileText', tone: 'primary' }],
+          linkChips: [{ scheme: 'acme', icon: 'FileText', tone: 'primary' }],
           user: { id: 'u1' },
         },
         events: { onLinkPress: record('link') },
       },
     ]),
   });
-  const chip = await screen.findByLabelText('PEL-12 Sign in with a passkey');
-  expect(screen.getByText('PEL-12')).toBeTruthy();
+  const chip = await screen.findByLabelText('ACME-12 Sign in with a passkey');
+  expect(screen.getByText('ACME-12')).toBeTruthy();
   await act(async () => {
     fireEvent.press(chip);
   });
-  expect(calls).toEqual([{ name: 'link', event: { href: 'pelican:PEL-12' } }]);
+  expect(calls).toEqual([{ name: 'link', event: { href: 'acme:ACME-12' } }]);
 });

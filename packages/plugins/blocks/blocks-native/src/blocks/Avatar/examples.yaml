@@ -19,7 +19,7 @@
     - id: avatar_small
       type: Avatar
       properties:
-        name: Gerrie van Wyk
+        name: Pieter van Dam
         size: 20
     - id: avatar_comment
       type: Avatar
@@ -28,7 +28,7 @@
     - id: avatar_large
       type: Avatar
       properties:
-        name: Sam Tolmay
+        name: Sam Taylor
         size: 40
         src: https://example.com/sam.png
 
@@ -40,7 +40,7 @@
         size: 20
         max: 3
         avatars:
-          - name: Gerrie van Wyk
-          - name: Sam Tolmay
+          - name: Pieter van Dam
+          - name: Sam Taylor
           - name: Ada Lovelace
           - name: Grace Hopper

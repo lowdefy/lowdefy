@@ -20,13 +20,13 @@
     bar and the keyboard. A header action opens the sheet of recent chats; the block resumes the
     chat last opened, saves each one and names it from its first exchange.
   page:
-    id: nigel
+    id: atlas
     type: Screen
     properties:
       title:
         _if_none:
-          - _state: nigel_title
-          - Nigel
+          - _state: atlas_title
+          - Atlas
       headerActions:
         - id: chats
           sfSymbol: clock.arrow.circlepath
@@ -47,7 +47,7 @@
               - _event: id
               - chats
           params:
-            blockId: nigel_chat
+            blockId: atlas_chat
             method: openThreads
         - id: start_new_chat
           type: CallMethod
@@ -56,28 +56,28 @@
               - _event: id
               - new_chat
           params:
-            blockId: nigel_chat
+            blockId: atlas_chat
             method: newChat
     blocks:
-      - id: nigel_chat
+      - id: atlas_chat
         type: AgentChat
         properties:
-          agentId: nigel
+          agentId: atlas
           threads:
             module: ai-assistant
-            scope: pelican
+            scope: acme
           sharedState:
             now:
               _date: now
           welcome:
-            title: Hi, I'm Nigel
+            title: Hi, I'm Atlas
             description: I can log a task or a ticket, or tell you where things stand.
             prompts:
               - label: What is waiting on me?
                 description: Questions, reviews and tasks that need you
               - label: I want to log a task
           sender:
-            placeholder: Ask Nigel
+            placeholder: Ask Atlas
           messageDisplay:
             thinkingMessages:
               - Reading the space
@@ -88,7 +88,7 @@
             - id: set_title
               type: SetState
               params:
-                nigel_title:
+                atlas_title:
                   _event: title
 
 - title: A chat whose app keeps its conversation, in a sheet

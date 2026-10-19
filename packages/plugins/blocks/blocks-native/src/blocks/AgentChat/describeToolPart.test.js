@@ -24,14 +24,14 @@ test('describeToolPart names a running call and sums up what it was called with'
       type: 'tool-search_designs',
       toolCallId: 'c1',
       state: 'input-available',
-      input: { q: 'payroll', space: 'PEL', limit: 5 },
+      input: { q: 'payroll', space: 'ACME', limit: 5 },
     },
     translate,
   });
   expect(description).toMatchObject({
     id: 'c1',
     status: 'running',
-    summary: '“payroll” · “PEL”',
+    summary: '“payroll” · “ACME”',
     title: 'Search designs',
     icon: { symbol: 'magnifyingglass', fallback: 'Search' },
     detail: null,
@@ -54,7 +54,7 @@ test('describeToolPart sums up a finished call and opens to its output as readab
       toolCallId: 'c1',
       state: 'output-available',
       input: {},
-      output: { key: 'PEL-1', done: true },
+      output: { key: 'ACME-1', done: true },
     },
     translate,
   });
@@ -63,7 +63,7 @@ test('describeToolPart sums up a finished call and opens to its output as readab
   expect(description.detail).toEqual({
     kind: 'rows',
     rows: [
-      { depth: 0, kind: 'text', label: 'Key', text: 'PEL-1' },
+      { depth: 0, kind: 'text', label: 'Key', text: 'ACME-1' },
       { depth: 0, kind: 'text', label: 'Done', text: 'Yes' },
     ],
   });

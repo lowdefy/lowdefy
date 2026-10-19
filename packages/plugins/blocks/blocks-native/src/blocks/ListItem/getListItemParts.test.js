@@ -62,10 +62,10 @@ test('getListItemParts insets the separator by the row padding without a leading
 
 test('getListItemParts reads the phase 1 icon, avatar, description and extra properties', () => {
   const parts = getListItemParts({
-    properties: { icon: 'FileText', description: 'PEL-645', extra: '3' },
+    properties: { icon: 'FileText', description: 'ACME-645', extra: '3' },
   });
   expect(parts.leading).toEqual({ kind: 'icon', icon: 'FileText', width: 28 });
-  expect(parts.subtitle).toEqual('PEL-645');
+  expect(parts.subtitle).toEqual('ACME-645');
   expect(parts.trailing.text).toEqual('3');
   expect(
     getListItemParts({ properties: { avatar: { content: 'AL' }, subtitle: 'x' } }).leading

@@ -17,28 +17,28 @@
 import getLinkChip from './getLinkChip.js';
 
 const linkChips = [
-  { scheme: 'pelican', icon: 'FileText', tone: 'primary' },
+  { scheme: 'acme', icon: 'FileText', tone: 'primary' },
   { scheme: 'mention', tone: 'primary', prefix: '@' },
 ];
 
 test('getLinkChip splits a record link into its key and title', () => {
   expect(
-    getLinkChip({ href: 'pelican:PEL-12', linkChips, text: 'PEL-12 Sign in with a passkey' })
-  ).toEqual({ chip: linkChips[0], key: 'PEL-12', title: 'Sign in with a passkey' });
+    getLinkChip({ href: 'acme:ACME-12', linkChips, text: 'ACME-12 Sign in with a passkey' })
+  ).toEqual({ chip: linkChips[0], key: 'ACME-12', title: 'Sign in with a passkey' });
 });
 
 test('getLinkChip gives a record link with only its key no title', () => {
-  expect(getLinkChip({ href: 'pelican:PEL-12', linkChips, text: 'PEL-12' })).toEqual({
+  expect(getLinkChip({ href: 'acme:ACME-12', linkChips, text: 'ACME-12' })).toEqual({
     chip: linkChips[0],
-    key: 'PEL-12',
+    key: 'ACME-12',
     title: null,
   });
 });
 
 test('getLinkChip matches the key and the scheme in any case', () => {
-  expect(getLinkChip({ href: 'Pelican:pel-12', linkChips, text: 'PEL-12 Title' })).toEqual({
+  expect(getLinkChip({ href: 'Acme:acme-12', linkChips, text: 'ACME-12 Title' })).toEqual({
     chip: linkChips[0],
-    key: 'PEL-12',
+    key: 'ACME-12',
     title: 'Title',
   });
 });
@@ -55,7 +55,7 @@ test('getLinkChip keeps a mention whole, with its prefix once', () => {
 test('getLinkChip returns null for a link with no chip scheme', () => {
   expect(getLinkChip({ href: 'https://example.com', linkChips, text: 'Example' })).toBeNull();
   expect(getLinkChip({ href: '/relative', linkChips, text: 'Relative' })).toBeNull();
-  expect(getLinkChip({ href: 'pelican:PEL-1', text: 'PEL-1' })).toBeNull();
+  expect(getLinkChip({ href: 'acme:ACME-1', text: 'ACME-1' })).toBeNull();
 });
 
 const taskChips = [
@@ -126,15 +126,15 @@ test('getLinkChip shows the key alone, or the link text, by the chip label', () 
   });
   expect(
     getLinkChip({
-      href: 'pelican:PEL-12',
-      linkChips: [{ scheme: 'pelican', label: 'key' }],
-      text: 'PEL-12 Sign in',
+      href: 'acme:ACME-12',
+      linkChips: [{ scheme: 'acme', label: 'key' }],
+      text: 'ACME-12 Sign in',
     }).title
   ).toBeNull();
 });
 
 test('getLinkChip draws the first chip a link matches, and a path no pattern finds as a plain link', () => {
-  const linkChips = [{ scheme: 'pelican' }, ...taskChips, { pattern: '^/ACME/', tone: 'neutral' }];
+  const linkChips = [{ scheme: 'acme' }, ...taskChips, { pattern: '^/ACME/', tone: 'neutral' }];
   expect(getLinkChip({ href: '/ACME/tasks/ACME-3', linkChips, text: 'ACME-3' }).chip).toBe(
     linkChips[1]
   );

@@ -16,9 +16,9 @@
 
 import buildTimelineRows from './buildTimelineRows.js';
 
-const sam = { id: 'u1', name: 'Sam Tolmay' };
+const sam = { id: 'u1', name: 'Sam Taylor' };
 const ada = { id: 'u2', name: 'Ada Lovelace' };
-const nigel = { id: 'u1', name: 'Sam Tolmay', agent: true };
+const atlas = { id: 'u1', name: 'Sam Taylor', agent: true };
 
 const formatEvent = {
   edit: { summary: 'edited the {what.field}' },
@@ -75,7 +75,7 @@ test('buildTimelineRows keeps a lone detail event on its own line', () => {
 
 test('buildTimelineRows breaks a run at another actor, and tells an agent from the person', () => {
   const rows = buildTimelineRows({
-    entries: [detail('e1', sam), detail('e2', sam), detail('e3', nigel), detail('e4', nigel)],
+    entries: [detail('e1', sam), detail('e2', sam), detail('e3', atlas), detail('e4', atlas)],
     formatEvent,
   });
   expect(rows.map((row) => row.id)).toEqual(['group:e1', 'group:e3']);

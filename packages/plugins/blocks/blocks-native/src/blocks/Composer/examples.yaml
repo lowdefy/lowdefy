@@ -29,10 +29,10 @@
             then: Pat Contractor can't see this task, so they won't be notified.
             else: null
         mentions:
-          - { value: u-sam, label: Sam Tolmay, sees: true }
+          - { value: u-sam, label: Sam Taylor, sees: true }
           - { value: u-ada, label: Ada Lovelace, sees: true }
-          - { value: u-gerrie, label: Gerrie van Wyk, sees: true }
-          - { value: u-nigel, label: Nigel, sees: true }
+          - { value: u-pieter, label: Pieter van Dam, sees: true }
+          - { value: u-atlas, label: Atlas, sees: true }
           - { value: u-pat, label: Pat Contractor, sees: false }
         links:
           _state: comment_link_hits

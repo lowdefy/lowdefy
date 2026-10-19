@@ -182,12 +182,12 @@ test('a Markdown fires onLinkPress for every link, wherever it sits', async () =
   expect(WebBrowser.openBrowserAsync).not.toHaveBeenCalled();
 });
 
-const pelicanBody = [
-  'Blocked on [PEL-12 Sign in with a passkey](pelican:PEL-12); [@Ada Lovelace](mention:u_ada) owns it.',
+const acmeBody = [
+  'Blocked on [ACME-12 Sign in with a passkey](acme:ACME-12); [@Ada Lovelace](mention:u_ada) owns it.',
 ].join('\n');
 
 const linkChips = [
-  { scheme: 'pelican', icon: 'House', tone: 'primary' },
+  { scheme: 'acme', icon: 'House', tone: 'primary' },
   { scheme: 'mention', tone: 'primary', prefix: '@' },
 ];
 
@@ -197,18 +197,18 @@ test('a Markdown draws linkChips links as tinted chips with an icon, key and tit
       {
         id: 'body',
         type: 'Markdown',
-        properties: { content: pelicanBody, linkChips },
+        properties: { content: acmeBody, linkChips },
         events: { onLinkPress: record('link') },
       },
     ]),
   });
-  const key = await screen.findByText('PEL-12');
+  const key = await screen.findByText('ACME-12');
   expect(styleOf(key)).toMatchObject({ color: theme.light.colorPrimary, fontWeight: '500' });
   expect(styleOf(screen.getByText(' Sign in with a passkey')).color).toBe(ios.light.colorLabel);
-  expect(screen.getByTestId('markdown-chip-icon-PEL-12')).toBeTruthy();
+  expect(screen.getByTestId('markdown-chip-icon-ACME-12')).toBeTruthy();
   expect(styleOf(screen.getByText('@Ada Lovelace')).color).toBe(theme.light.colorPrimary);
   expect(screen.queryByTestId('markdown-chip-icon-@Ada Lovelace')).toBeNull();
-  expect(screen.getByLabelText('PEL-12 Sign in with a passkey')).toBeTruthy();
+  expect(screen.getByLabelText('ACME-12 Sign in with a passkey')).toBeTruthy();
 });
 
 test('a Markdown chip fires onLinkPress with its href', async () => {
@@ -217,15 +217,15 @@ test('a Markdown chip fires onLinkPress with its href', async () => {
       {
         id: 'body',
         type: 'Markdown',
-        properties: { content: pelicanBody, linkChips },
+        properties: { content: acmeBody, linkChips },
         events: { onLinkPress: record('link') },
       },
     ]),
   });
-  await press(await screen.findByLabelText('PEL-12 Sign in with a passkey'));
+  await press(await screen.findByLabelText('ACME-12 Sign in with a passkey'));
   await press(screen.getByLabelText('@Ada Lovelace'));
   expect(calls).toEqual([
-    { name: 'link', event: { href: 'pelican:PEL-12' } },
+    { name: 'link', event: { href: 'acme:ACME-12' } },
     { name: 'link', event: { href: 'mention:u_ada' } },
   ]);
 });
@@ -258,18 +258,18 @@ test('a Markdown chip takes the dark tone in dark mode', async () => {
   await renderPage({
     darkMode: 'dark',
     pageConfig: page([
-      { id: 'body', type: 'Markdown', properties: { content: pelicanBody, linkChips } },
+      { id: 'body', type: 'Markdown', properties: { content: acmeBody, linkChips } },
     ]),
   });
-  expect(styleOf(await screen.findByText('PEL-12')).color).toBe(theme.dark.colorPrimary);
+  expect(styleOf(await screen.findByText('ACME-12')).color).toBe(theme.dark.colorPrimary);
   expect(styleOf(screen.getByText(' Sign in with a passkey')).color).toBe(ios.dark.colorLabel);
 });
 
-test('a Markdown without linkChips draws a pelican link as a plain link', async () => {
+test('a Markdown without linkChips draws an acme link as a plain link', async () => {
   await renderPage({
-    pageConfig: page([{ id: 'body', type: 'Markdown', properties: { content: pelicanBody } }]),
+    pageConfig: page([{ id: 'body', type: 'Markdown', properties: { content: acmeBody } }]),
   });
-  expect(styleOf(await screen.findByText('PEL-12 Sign in with a passkey')).color).toBe(
+  expect(styleOf(await screen.findByText('ACME-12 Sign in with a passkey')).color).toBe(
     theme.light.colorPrimary
   );
   expect(screen.queryByTestId('markdown-chip')).toBeNull();

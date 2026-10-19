@@ -19,7 +19,7 @@ import getPageStateUpdates from './getPageStateUpdates.js';
 test('getPageStateUpdates writes only top-level keys the chat shares, and reports the others back', () => {
   expect(
     getPageStateUpdates({
-      sharedState: { space: 'PEL', filters: {} },
+      sharedState: { space: 'ACME', filters: {} },
       updates: { space: 'OPS', filters: { state: 'open' }, 'filters.state': 'open', admin: true },
     })
   ).toEqual({
@@ -41,7 +41,7 @@ test('getPageStateUpdates writes nothing without shared state or updates', () =>
   expect(getPageStateUpdates({ sharedState: null, updates: { space: 'OPS' } }).writable).toEqual(
     {}
   );
-  expect(getPageStateUpdates({ sharedState: { space: 'PEL' } }).output).toEqual({
+  expect(getPageStateUpdates({ sharedState: { space: 'ACME' } }).output).toEqual({
     ok: true,
     written: [],
   });

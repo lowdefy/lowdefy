@@ -18,7 +18,7 @@ import rankMentions from './rankMentions.js';
 
 const people = [
   { value: 'u1', label: 'Mark Adams', sees: true },
-  { value: 'u2', label: 'Sam Tolmay', sees: true },
+  { value: 'u2', label: 'Sam Taylor', sees: true },
   { value: 'u3', label: 'Amara Samuels', sees: true },
   { value: 'u4', label: 'Samantha Blind', sees: false },
   { value: 'u5', label: 'Rosamund Pike', sees: true },

@@ -20,7 +20,7 @@ import formPage from '../../test/formPage.js';
 import { press, record, renderPage, screen, styleOf, theme } from '../../test/renderPage.js';
 
 const people = [
-  { label: 'Assign to me', value: 'me', pinned: true, avatar: { name: 'Sam Tolmay' } },
+  { label: 'Assign to me', value: 'me', pinned: true, avatar: { name: 'Sam Taylor' } },
   {
     label: 'Ada Lovelace',
     value: 'ada',

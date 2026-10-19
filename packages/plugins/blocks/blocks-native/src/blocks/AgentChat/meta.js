@@ -104,7 +104,7 @@ export default {
       'Trigger when the agent sends a custom data part. Event contains type, data and id.',
     onError: 'Trigger on a stream error. Event contains message.',
     onLinkClick:
-      'Trigger when a link in a message is pressed. Event contains href and text (empty on mobile). Wiring it replaces the default, which opens an app path (`/PEL/tasks/PEL-1`) as a page and any other link outside the app.',
+      'Trigger when a link in a message is pressed. Event contains href and text (empty on mobile). Wiring it replaces the default, which opens an app path (`/ACME/tasks/ACME-1`) as a page and any other link outside the app.',
     onMessageComplete:
       'Trigger when a reply finishes streaming. Event contains role, content, messageId, parts, finishReason, isAbort, isDisconnect and messages.',
     onRegenerate:

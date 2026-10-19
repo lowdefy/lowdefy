@@ -20,7 +20,7 @@
       type: ListItem
       properties:
         title: Sign in with a passkey on iPhone
-        subtitle: PEL-644 · Pelican for iPhone
+        subtitle: ACME-644 · Acme for iPhone
         leading:
           status: inProgress
         trailing:
@@ -28,7 +28,7 @@
           textColor: orange
           status: priorityHigh
           avatar:
-            name: Gerrie van Wyk
+            name: Pieter van Dam
         swipeActions:
           fullSwipe: leading
           leading:
@@ -74,8 +74,8 @@
     - id: design_row
       type: ListItem
       properties:
-        title: Pelican for iPhone
-        subtitle: PEL-645 · discussing · 2d
+        title: Acme for iPhone
+        subtitle: ACME-645 · discussing · 2d
         leading:
           status:
             name: dot

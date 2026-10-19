@@ -32,12 +32,12 @@ test('screen globals read their own route and keep the app window and services',
   };
   const screen = createScreenGlobals({
     globals,
-    getPath: () => '/m-design?space=PEL&key=PEL-645',
+    getPath: () => '/m-design?space=ACME&key=ACME-645',
   });
   expect(screen.window.location.pathname).toEqual('/m-design');
-  expect(screen.window.location.search).toEqual('?space=PEL&key=PEL-645');
+  expect(screen.window.location.search).toEqual('?space=ACME&key=ACME-645');
   expect(screen.window.location.href).toEqual(
-    'https://app.lowdefy.test/m-design?space=PEL&key=PEL-645'
+    'https://app.lowdefy.test/m-design?space=ACME&key=ACME-645'
   );
   expect(globals.window.location.search).toEqual('');
   expect(screen.window.innerWidth).toEqual(globals.window.innerWidth);

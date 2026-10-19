@@ -108,8 +108,8 @@ function findAt({ endsText, match, max, names, startsText, text, final }) {
 }
 
 /**
- * Turns spoken addressing into mentions, for dictated comments: "for Puffin, please check" is
- * "@Puffin Agent please check". A trigger word (`for` by default) at the start of a sentence, or
+ * Turns spoken addressing into mentions, for dictated comments: "for Falcon, please check" is
+ * "@Falcon Agent please check". A trigger word (`for` by default) at the start of a sentence, or
  * a typed "@", followed by a person's full name, first name or a prefix of it (matchSpokenName)
  * becomes a mention of them; the trigger and a comma after the name go. Mentions already in the
  * text are left as they are.

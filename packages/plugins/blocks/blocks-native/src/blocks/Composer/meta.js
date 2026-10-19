@@ -141,7 +141,7 @@ export default {
         type: ['object', 'boolean'],
         default: { words: ['for'] },
         description:
-          'Turn spoken addressing into mentions, for comments dictated with the keyboard: "for Sam, can you look" becomes "@Sam Tolmay can you look". A trigger word at the start of the text, a line or a sentence, or after a comma, followed by the full name, first name or a unique prefix (three letters or more) of a person in `mentions` who sees the record, becomes a mention; the trigger word and a comma after the name go. A typed "@" and a name converts anywhere. A first name two people share is left for @. It runs once the text has been still for a moment, and on send. `false` turns it off.',
+          'Turn spoken addressing into mentions, for comments dictated with the keyboard: "for Sam, can you look" becomes "@Sam Taylor can you look". A trigger word at the start of the text, a line or a sentence, or after a comma, followed by the full name, first name or a unique prefix (three letters or more) of a person in `mentions` who sees the record, becomes a mention; the trigger word and a comma after the name go. A typed "@" and a name converts anywhere. A first name two people share is left for @. It runs once the text has been still for a moment, and on send. `false` turns it off.',
         properties: {
           words: {
             type: 'array',

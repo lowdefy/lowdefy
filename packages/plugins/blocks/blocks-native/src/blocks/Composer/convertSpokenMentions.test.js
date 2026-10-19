@@ -18,9 +18,9 @@ import convertSpokenMentions from './convertSpokenMentions.js';
 import { toDisplay, toValue } from './segmentText.js';
 
 const people = [
-  { value: 'u1', label: 'Sam Tolmay', sees: true },
-  { value: 'u2', label: 'Puffin Agent', sees: true },
-  { value: 'u3', label: 'Gerrie van Wyk', sees: true },
+  { value: 'u1', label: 'Sam Taylor', sees: true },
+  { value: 'u2', label: 'Falcon Agent', sees: true },
+  { value: 'u3', label: 'Pieter van Dam', sees: true },
   { value: 'u4', label: 'Hidden Person', sees: false },
 ];
 
@@ -36,14 +36,14 @@ function convert(text, options = {}) {
 }
 
 describe('the examples', () => {
-  test('"for Puffin," becomes a mention of Puffin Agent and the comma goes', () => {
-    expect(convert('for Puffin, please check the build')).toBe(
-      '@Puffin Agent please check the build'
+  test('"for Falcon," becomes a mention of Falcon Agent and the comma goes', () => {
+    expect(convert('for Falcon, please check the build')).toBe(
+      '@Falcon Agent please check the build'
     );
   });
 
-  test('"for Sam" becomes a mention of Sam Tolmay', () => {
-    expect(convert('for Sam can you look')).toBe('@Sam Tolmay can you look');
+  test('"for Sam" becomes a mention of Sam Taylor', () => {
+    expect(convert('for Sam can you look')).toBe('@Sam Taylor can you look');
   });
 
   test('the value holds the mention token', () => {
@@ -58,7 +58,7 @@ describe('the examples', () => {
     expect(result.segments[0]).toEqual({
       kind: 'mention',
       id: 'u1',
-      name: 'Sam Tolmay',
+      name: 'Sam Taylor',
       sees: true,
     });
   });
@@ -66,38 +66,38 @@ describe('the examples', () => {
 
 describe('where a trigger counts', () => {
   test('at the start of the text, after leading spaces', () => {
-    expect(convert('  for Sam can you look')).toBe('  @Sam Tolmay can you look');
+    expect(convert('  for Sam can you look')).toBe('  @Sam Taylor can you look');
   });
 
   test('at the start of a sentence', () => {
     expect(convert('The build failed. For Sam, can you look')).toBe(
-      'The build failed. @Sam Tolmay can you look'
+      'The build failed. @Sam Taylor can you look'
     );
-    expect(convert('Done! for Sam please merge')).toBe('Done! @Sam Tolmay please merge');
-    expect(convert('Ready? For Sam: merge it')).toBe('Ready? @Sam Tolmay: merge it');
-    expect(convert('It works… for Sam to merge')).toBe('It works… @Sam Tolmay to merge');
+    expect(convert('Done! for Sam please merge')).toBe('Done! @Sam Taylor please merge');
+    expect(convert('Ready? For Sam: merge it')).toBe('Ready? @Sam Taylor: merge it');
+    expect(convert('It works… for Sam to merge')).toBe('It works… @Sam Taylor to merge');
   });
 
   test('after a sentence that ends in a closing quote or bracket', () => {
     expect(convert('He said "ship it." For Sam, merge')).toBe(
-      'He said "ship it." @Sam Tolmay merge'
+      'He said "ship it." @Sam Taylor merge'
     );
-    expect(convert('(Tested on iOS.) For Sam, merge')).toBe('(Tested on iOS.) @Sam Tolmay merge');
+    expect(convert('(Tested on iOS.) For Sam, merge')).toBe('(Tested on iOS.) @Sam Taylor merge');
   });
 
   test('at the start of a line', () => {
     expect(convert('Looks good\nfor Sam please merge')).toBe(
-      'Looks good\n@Sam Tolmay please merge'
+      'Looks good\n@Sam Taylor please merge'
     );
   });
 
   test('after a comma', () => {
-    expect(convert('Thanks, for Sam can you merge')).toBe('Thanks, @Sam Tolmay can you merge');
+    expect(convert('Thanks, for Sam can you merge')).toBe('Thanks, @Sam Taylor can you merge');
   });
 
   test('not in the middle of a sentence', () => {
     expect(convert('wait for Sam to merge')).toBe('wait for Sam to merge');
-    expect(convert('We waited for Puffin, then merged')).toBe('We waited for Puffin, then merged');
+    expect(convert('We waited for Falcon, then merged')).toBe('We waited for Falcon, then merged');
     expect(convert('This is for Sam')).toBe('This is for Sam');
   });
 
@@ -112,7 +112,7 @@ describe('where a trigger counts', () => {
   test('not after a mention, which does not end a sentence', () => {
     const result = convertSpokenMentions({
       segments: [
-        { kind: 'mention', id: 'u2', name: 'Puffin Agent', sees: true },
+        { kind: 'mention', id: 'u2', name: 'Falcon Agent', sees: true },
         { kind: 'text', text: ' for Sam please' },
       ],
       people,
@@ -124,30 +124,30 @@ describe('where a trigger counts', () => {
   test('after a mention and a sentence end', () => {
     const result = convertSpokenMentions({
       segments: [
-        { kind: 'mention', id: 'u2', name: 'Puffin Agent', sees: true },
+        { kind: 'mention', id: 'u2', name: 'Falcon Agent', sees: true },
         { kind: 'text', text: ' thanks. For Sam, please merge' },
       ],
       people,
       words: ['for'],
     });
-    expect(toDisplay(result.segments)).toBe('@Puffin Agent thanks. @Sam Tolmay please merge');
+    expect(toDisplay(result.segments)).toBe('@Falcon Agent thanks. @Sam Taylor please merge');
   });
 
   test('the trigger word ignores case', () => {
-    expect(convert('FOR sam, merge')).toBe('@Sam Tolmay merge');
+    expect(convert('FOR sam, merge')).toBe('@Sam Taylor merge');
   });
 });
 
 describe('the name', () => {
   test('a full name takes all its words', () => {
-    expect(convert('for Sam Tolmay can you look')).toBe('@Sam Tolmay can you look');
-    expect(convert('for Gerrie van Wyk, please review')).toBe('@Gerrie van Wyk please review');
+    expect(convert('for Sam Taylor can you look')).toBe('@Sam Taylor can you look');
+    expect(convert('for Pieter van Dam, please review')).toBe('@Pieter van Dam please review');
   });
 
   test('a first name or a unique prefix of one, ignoring case', () => {
-    expect(convert('for gerrie, please review')).toBe('@Gerrie van Wyk please review');
-    expect(convert('for Ger, please review')).toBe('@Gerrie van Wyk please review');
-    expect(convert('for puff please check')).toBe('@Puffin Agent please check');
+    expect(convert('for pieter, please review')).toBe('@Pieter van Dam please review');
+    expect(convert('for Piet, please review')).toBe('@Pieter van Dam please review');
+    expect(convert('for falc please check')).toBe('@Falcon Agent please check');
   });
 
   test('a prefix shorter than three letters names no one', () => {
@@ -188,10 +188,10 @@ describe('the name', () => {
 
   test('a first name wins over a longer name it starts', () => {
     const both = [
-      { value: 'a', label: 'Sam Tolmay', sees: true },
+      { value: 'a', label: 'Sam Taylor', sees: true },
       { value: 'b', label: 'Samantha Jones', sees: true },
     ];
-    expect(convert('for Sam please look', { people: both })).toBe('@Sam Tolmay please look');
+    expect(convert('for Sam please look', { people: both })).toBe('@Sam Taylor please look');
   });
 
   test('a possessive is not a name', () => {
@@ -211,12 +211,12 @@ describe('the name', () => {
 describe('a name still being typed or spoken', () => {
   test('at the very end of the text is left until a word or mark follows it', () => {
     expect(convert('for Sam')).toBe('for Sam');
-    expect(convert('for Sam ')).toBe('@Sam Tolmay ');
-    expect(convert('for Sam,')).toBe('@Sam Tolmay');
+    expect(convert('for Sam ')).toBe('@Sam Taylor ');
+    expect(convert('for Sam,')).toBe('@Sam Taylor');
   });
 
   test('at the end of the text is converted when the text is final', () => {
-    expect(convert('Hey. For Sam', { final: true })).toBe('Hey. @Sam Tolmay');
+    expect(convert('Hey. For Sam', { final: true })).toBe('Hey. @Sam Taylor');
   });
 
   test('followed by more letters is not the name', () => {
@@ -226,38 +226,38 @@ describe('a name still being typed or spoken', () => {
 
 describe('the comma', () => {
   test('a comma after the name goes, keeping one space', () => {
-    expect(convert('for Sam, merge')).toBe('@Sam Tolmay merge');
+    expect(convert('for Sam, merge')).toBe('@Sam Taylor merge');
   });
 
   test('a comma with no space after it leaves a space after the mention', () => {
-    expect(convert('for Sam,merge')).toBe('@Sam Tolmay merge');
+    expect(convert('for Sam,merge')).toBe('@Sam Taylor merge');
   });
 
   test('other marks after the name stay', () => {
-    expect(convert('for Sam. Merge')).toBe('@Sam Tolmay. Merge');
+    expect(convert('for Sam. Merge')).toBe('@Sam Taylor. Merge');
   });
 });
 
 describe('the trigger words', () => {
   test('are configurable', () => {
     expect(convert('Hey Sam, can you look', { words: ['for', 'hey', 'at'] })).toBe(
-      '@Sam Tolmay can you look'
+      '@Sam Taylor can you look'
     );
-    expect(convert('at Puffin please check', { words: ['for', 'hey', 'at'] })).toBe(
-      '@Puffin Agent please check'
+    expect(convert('at Falcon please check', { words: ['for', 'hey', 'at'] })).toBe(
+      '@Falcon Agent please check'
     );
     expect(convert('Hey Sam, can you look')).toBe('Hey Sam, can you look');
   });
 
   test('a typed @ and a name becomes a mention anywhere in a sentence', () => {
-    expect(convert('please ask @Sam to look')).toBe('please ask @Sam Tolmay to look');
-    expect(convert('@puffin, check the build', { words: [] })).toBe(
-      '@Puffin Agent check the build'
+    expect(convert('please ask @Sam to look')).toBe('please ask @Sam Taylor to look');
+    expect(convert('@falcon, check the build', { words: [] })).toBe(
+      '@Falcon Agent check the build'
     );
   });
 
   test('an @ inside a word, as in an email address, is left', () => {
-    expect(convert('mail sam@sam.io now')).toBe('mail sam@sam.io now');
+    expect(convert('mail sam@example.com now')).toBe('mail sam@example.com now');
   });
 
   test('an @ name still being typed is left', () => {
@@ -267,15 +267,15 @@ describe('the trigger words', () => {
 
 describe('several mentions and existing mentions', () => {
   test('converts each address in the text', () => {
-    expect(convert('For Sam, merge it. For Puffin, run the tests')).toBe(
-      '@Sam Tolmay merge it. @Puffin Agent run the tests'
+    expect(convert('For Sam, merge it. For Falcon, run the tests')).toBe(
+      '@Sam Taylor merge it. @Falcon Agent run the tests'
     );
   });
 
   test('never changes a mention already in the text', () => {
     const segments = [
       { kind: 'text', text: 'for ' },
-      { kind: 'mention', id: 'u2', name: 'Puffin Agent', sees: true },
+      { kind: 'mention', id: 'u2', name: 'Falcon Agent', sees: true },
       { kind: 'text', text: ' and for Sam ok' },
     ];
     expect(convertSpokenMentions({ segments, people, words: ['for'] })).toBeNull();
@@ -284,15 +284,15 @@ describe('several mentions and existing mentions', () => {
   test('reports each replaced range of the shown text', () => {
     const result = convertSpokenMentions({
       segments: [
-        { kind: 'mention', id: 'u2', name: 'Puffin Agent', sees: true },
+        { kind: 'mention', id: 'u2', name: 'Falcon Agent', sees: true },
         { kind: 'text', text: '. For Sam, merge' },
       ],
       people,
       words: ['for'],
     });
-    // "@Puffin Agent" is 13 long; "For Sam," runs from 15 to 23 and "@Sam Tolmay" is 11 long.
+    // "@Falcon Agent" is 13 long; "For Sam," runs from 15 to 23 and "@Sam Taylor" is 11 long.
     expect(result.edits).toEqual([{ start: 15, end: 23, length: 11 }]);
-    expect(toDisplay(result.segments)).toBe('@Puffin Agent. @Sam Tolmay merge');
+    expect(toDisplay(result.segments)).toBe('@Falcon Agent. @Sam Taylor merge');
   });
 
   test('returns null when nothing changes or no one can be mentioned', () => {

@@ -68,7 +68,7 @@ test('a ListItem draws a leading status, a Headline title, a subtitle and traili
       type: 'ListItem',
       properties: {
         title: 'Fix sign in',
-        subtitle: 'PEL-644 · Auth',
+        subtitle: 'ACME-644 · Auth',
         leading: { status: 'inProgress' },
         trailing: {
           text: 'waiting',
@@ -83,7 +83,7 @@ test('a ListItem draws a leading status, a Headline title, a subtitle and traili
   const title = await screen.findByText('Fix sign in');
   expect(styleOf(title)).toMatchObject({ fontSize: 17, fontWeight: '600' });
   expect(title.props.numberOfLines).toEqual(2);
-  expect(styleOf(screen.getByText('PEL-644 · Auth'))).toMatchObject({ fontSize: 13 });
+  expect(styleOf(screen.getByText('ACME-644 · Auth'))).toMatchObject({ fontSize: 13 });
   expect(screen.getByLabelText('In progress')).toBeTruthy();
   expect(screen.getByLabelText('High priority')).toBeTruthy();
   expect(screen.getByLabelText('Ada Lovelace')).toBeTruthy();
@@ -99,15 +99,15 @@ test('a ListItem with a long title keeps its trailing badges at their natural wi
       type: 'ListItem',
       properties: {
         title:
-          'Pelican for iPhone: a native shell with large titles, inset grouped lists, sheets and swipe actions on every row',
-        subtitle: 'PEL-1842 · Ger Dev · 2d',
+          'Acme for iPhone: a native shell with large titles, inset grouped lists, sheets and swipe actions on every row',
+        subtitle: 'ACME-1842 · Pieter · 2d',
         trailing: { badges: [{ icon: 'House', text: 12 }], status: 'priorityHigh' },
         contextMenu: [{ id: 'open', title: 'Open' }],
       },
       events: { onClick: [] },
     }),
   });
-  const title = await screen.findByText(/^Pelican for iPhone/);
+  const title = await screen.findByText(/^Acme for iPhone/);
   expect(title.props.numberOfLines).toEqual(2);
   expect(title.props.ellipsizeMode).toEqual('tail');
   expect(styleOf(screen.getByTestId('design_text'))).toMatchObject({

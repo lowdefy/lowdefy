@@ -16,8 +16,8 @@
 
 import describeEvent from './describeEvent.js';
 
-const sam = { id: 'u1', name: 'Sam Tolmay' };
-const actor = { kind: 'actor', id: 'u1', name: 'Sam Tolmay', agent: false, picture: null };
+const sam = { id: 'u1', name: 'Sam Taylor' };
+const actor = { kind: 'actor', id: 'u1', name: 'Sam Taylor', agent: false, picture: null };
 
 const formatEvent = {
   'status-change': [
@@ -86,13 +86,13 @@ test('describeEvent fills a note from the event', () => {
 
 test('describeEvent words an unknown type with the default rule', () => {
   const line = describeEvent({
-    entry: { id: 'e1', type: 'file-added', by: { name: 'Nigel', agent: true } },
+    entry: { id: 'e1', type: 'file-added', by: { name: 'Atlas', agent: true } },
     formatEvent,
   });
   expect(line.icon).toBe('Pencil');
   expect(line.tone).toBe('neutral');
   expect(line.segments).toEqual([
-    { kind: 'actor', id: null, name: 'Nigel', agent: true, picture: null },
+    { kind: 'actor', id: null, name: 'Atlas', agent: true, picture: null },
     { kind: 'text', text: ' file added' },
   ]);
 });
@@ -106,7 +106,7 @@ test('describeEvent takes an entry already worded over its rule', () => {
       text: '{actor} shipped **{subject.key}**',
       icon: 'Rocket',
       tone: '#8B5CF6',
-      subject: { key: 'PEL-12' },
+      subject: { key: 'ACME-12' },
     },
     formatEvent,
   });
@@ -115,7 +115,7 @@ test('describeEvent takes an entry already worded over its rule', () => {
   expect(line.segments).toEqual([
     actor,
     { kind: 'text', text: ' shipped ' },
-    { kind: 'strong', text: 'PEL-12' },
+    { kind: 'strong', text: 'ACME-12' },
   ]);
 });
 

@@ -19,9 +19,9 @@ import matchSpokenName from './matchSpokenName.js';
 
 const names = indexSpokenNames({
   people: [
-    { value: 'u1', label: 'Sam Tolmay', sees: true },
-    { value: 'u2', label: 'Puffin Agent', sees: true },
-    { value: 'u3', label: '  Gerrie   van Wyk ', sees: true },
+    { value: 'u1', label: 'Sam Taylor', sees: true },
+    { value: 'u2', label: 'Falcon Agent', sees: true },
+    { value: 'u3', label: '  Pieter   van Dam ', sees: true },
     { value: 'u4', label: 'Hidden', sees: false },
     { value: 'u5', label: 'No Sees' },
     { label: 'No Id', sees: true },
@@ -33,23 +33,23 @@ function match(text) {
 }
 
 test('indexSpokenNames keeps people who see the record, with their name as lower case words', () => {
-  expect(names.map((name) => name.full)).toEqual(['sam tolmay', 'puffin agent', 'gerrie van wyk']);
-  expect(names[2].words).toEqual(['gerrie', 'van', 'wyk']);
+  expect(names.map((name) => name.full)).toEqual(['sam taylor', 'falcon agent', 'pieter van dam']);
+  expect(names[2].words).toEqual(['pieter', 'van', 'dam']);
 });
 
 test('matchSpokenName matches a full name and counts its words', () => {
-  expect(match('gerrie van wyk please')).toMatchObject({ person: { value: 'u3' }, count: 3 });
+  expect(match('pieter van dam please')).toMatchObject({ person: { value: 'u3' }, count: 3 });
 });
 
 test('matchSpokenName matches a first name as one word', () => {
-  expect(match('gerrie van der merwe')).toMatchObject({ person: { value: 'u3' }, count: 1 });
+  expect(match('pieter van der merwe')).toMatchObject({ person: { value: 'u3' }, count: 1 });
   expect(match('sam can')).toMatchObject({ person: { value: 'u1' }, count: 1 });
 });
 
 test('matchSpokenName matches a unique prefix of three or more letters of a first name', () => {
-  expect(match('puf')).toMatchObject({ person: { value: 'u2' }, count: 1 });
-  expect(match('pu')).toBeNull();
-  expect(match('tol')).toBeNull();
+  expect(match('fal')).toMatchObject({ person: { value: 'u2' }, count: 1 });
+  expect(match('fa')).toBeNull();
+  expect(match('tay')).toBeNull();
 });
 
 test('matchSpokenName ignores people who do not see the record', () => {
@@ -64,9 +64,9 @@ test('matchSpokenName matches no one for no words', () => {
 test('matchSpokenName matches no one for a full name two people share', () => {
   const twins = indexSpokenNames({
     people: [
-      { value: 'a', label: 'Sam Tolmay', sees: true },
-      { value: 'b', label: 'sam tolmay', sees: true },
+      { value: 'a', label: 'Sam Taylor', sees: true },
+      { value: 'b', label: 'sam taylor', sees: true },
     ],
   });
-  expect(matchSpokenName({ names: twins, spoken: ['sam', 'tolmay'] })).toBeNull();
+  expect(matchSpokenName({ names: twins, spoken: ['sam', 'taylor'] })).toBeNull();
 });

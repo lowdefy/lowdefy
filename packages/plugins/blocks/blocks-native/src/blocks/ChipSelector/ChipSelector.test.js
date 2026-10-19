@@ -29,7 +29,7 @@ const spaces = {
     title: 'Space',
     moreChip: { label: 'All spaces', icon: 'House' },
     options: [
-      { value: 'PEL', label: 'Pelican', icon: 'House', color: blue, badge: 3 },
+      { value: 'ACME', label: 'Acme', icon: 'House', color: blue, badge: 3 },
       { value: 'GRW', label: 'Growth', icon: 'House', color: green },
       { value: 'OPS', label: 'Operations', color: 'purple' },
     ],
@@ -51,7 +51,7 @@ function spacesPage(block = spaces, events = {}) {
   );
 }
 
-const selectPel = { onInit: [{ id: 'pel', type: 'SetState', params: { space: 'PEL' } }] };
+const selectAcme = { onInit: [{ id: 'acm', type: 'SetState', params: { space: 'ACME' } }] };
 
 test('pressing a chip sets its value and fires onChange, once', async () => {
   const { calls } = await renderPage({ pageConfig: spacesPage() });
@@ -67,22 +67,22 @@ test('pressing a chip sets its value and fires onChange, once', async () => {
 });
 
 test('an unselected chip sits on the system fill, a selected one on its own tint', async () => {
-  await renderPage({ pageConfig: spacesPage(spaces, selectPel) });
-  const pelican = await screen.findByTestId('space_PEL');
-  expect(styleOf(pelican)).toMatchObject({
+  await renderPage({ pageConfig: spacesPage(spaces, selectAcme) });
+  const acme = await screen.findByTestId('space_ACME');
+  expect(styleOf(acme)).toMatchObject({
     backgroundColor: '#E2EDF9',
     borderColor: '#0A6BC9',
     borderRadius: 16,
     borderWidth: 1,
     height: 32,
   });
-  expect(styleOf(screen.getByText('Pelican'))).toMatchObject({
+  expect(styleOf(screen.getByText('Acme'))).toMatchObject({
     color: '#0A6BC9',
     fontSize: 15,
     fontWeight: '600',
   });
   expect(screen.getByText('3')).toBeTruthy();
-  expect(pelican.props.accessibilityLabel).toBe('Pelican, 3');
+  expect(acme.props.accessibilityLabel).toBe('Acme, 3');
   const growth = screen.getByTestId('space_GRW');
   expect(styleOf(growth)).toMatchObject({
     backgroundColor: ios.light.colorSystemFill,
@@ -92,8 +92,8 @@ test('an unselected chip sits on the system fill, a selected one on its own tint
 });
 
 test('a chip takes the dark variants of its colour in dark mode', async () => {
-  await renderPage({ darkMode: 'dark', pageConfig: spacesPage(spaces, selectPel) });
-  expect(styleOf(await screen.findByTestId('space_PEL'))).toMatchObject({
+  await renderPage({ darkMode: 'dark', pageConfig: spacesPage(spaces, selectAcme) });
+  expect(styleOf(await screen.findByTestId('space_ACME'))).toMatchObject({
     backgroundColor: '#1E3B59',
     borderColor: '#85B5E4',
   });
@@ -116,7 +116,7 @@ test('a disabled strip ignores presses', async () => {
 });
 
 test('the strip scrolls the selected chip into view once it is laid out', async () => {
-  await renderPage({ pageConfig: spacesPage(spaces, selectPel) });
+  await renderPage({ pageConfig: spacesPage(spaces, selectAcme) });
   const scroll = await screen.findByTestId('space_scroll');
   // The selected chip ends past the strip's view: once the strip, its content and the chip are
   // laid out, the strip scrolls to it without animation.
@@ -128,7 +128,7 @@ test('the strip scrolls the selected chip into view once it is laid out', async 
   });
   expect(ScrollView.prototype.scrollTo).not.toHaveBeenCalled();
   await act(async () => {
-    fireEvent(screen.getByTestId('space_PEL').parent, 'layout', {
+    fireEvent(screen.getByTestId('space_ACME').parent, 'layout', {
       nativeEvent: { layout: { x: 300, y: 0, width: 100, height: 32 } },
     });
   });

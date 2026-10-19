@@ -57,10 +57,10 @@ test('an Avatar stacks several people and counts the rest past max', async () =>
 test('an Avatar draws an SVG data URI picture with react-native-svg, over its initials', async () => {
   await renderPage({
     pageConfig: page([
-      { id: 'ger', type: 'Avatar', properties: { name: 'Gerrie van Wyk', src: svgPicture } },
+      { id: 'pieter', type: 'Avatar', properties: { name: 'Pieter van Dam', src: svgPicture } },
     ]),
   });
-  const avatar = await screen.findByLabelText('Gerrie van Wyk');
+  const avatar = await screen.findByLabelText('Pieter van Dam');
   const svg = findAllOfType(avatar, 'RNSVGSvgView');
   expect(svg).toHaveLength(1);
   expect(styleOf(svg[0])).toMatchObject({ height: 28, width: 28 });

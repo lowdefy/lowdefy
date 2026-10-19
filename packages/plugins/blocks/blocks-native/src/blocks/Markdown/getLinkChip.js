@@ -37,7 +37,7 @@ function withPrefix({ chip, label }) {
  * The chip a link draws as, when it matches one of the block's `linkChips` (matchLinkChip): the
  * chip's config, its key and its title.
  *
- * The key is the value the address names: after the scheme (`PEL-12` in `pelican:PEL-12`), or
+ * The key is the value the address names: after the scheme (`ACME-12` in `acme:ACME-12`), or
  * the pattern's `key` group, else its first group (`ACME-12` in `/ACME/tasks/ACME-12`). Link
  * text that starts with the key gives the key as written and the title after it, without the
  * brackets or separator between them (`ACME-12 (Fix the menu)` has the title `Fix the menu`).

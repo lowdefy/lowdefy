@@ -17,18 +17,18 @@
 import getInitials from './getInitials.js';
 
 test('getInitials takes the first letters of the first and last words', () => {
-  expect(getInitials({ name: 'Gerrie van Wyk' })).toEqual('GW');
+  expect(getInitials({ name: 'Pieter van Dam' })).toEqual('PD');
   expect(getInitials({ name: 'ada lovelace' })).toEqual('AL');
-  expect(getInitials({ name: '  Sam   Tolmay ' })).toEqual('ST');
+  expect(getInitials({ name: '  Sam   Taylor ' })).toEqual('ST');
 });
 
 test('getInitials takes one letter of a one-word name', () => {
-  expect(getInitials({ name: 'Pelican' })).toEqual('P');
+  expect(getInitials({ name: 'Acme' })).toEqual('A');
 });
 
 test('getInitials reads an email address by its name part', () => {
   expect(getInitials({ name: 'ada.lovelace@example.com' })).toEqual('AL');
-  expect(getInitials({ name: 'gvw@example.com' })).toEqual('G');
+  expect(getInitials({ name: 'pvd@example.com' })).toEqual('P');
 });
 
 test('getInitials skips punctuation and keeps letters outside ASCII', () => {

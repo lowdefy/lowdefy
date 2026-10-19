@@ -44,7 +44,7 @@ function matchPattern({ address, pattern }) {
 
 /**
  * The first of the block's `linkChips` a link's address matches, with the value it names: a
- * chip with a `scheme` matches `scheme:value` in any case (`pelican:PEL-12`, value `PEL-12`); a
+ * chip with a `scheme` matches `scheme:value` in any case (`acme:ACME-12`, value `ACME-12`); a
  * chip with a `pattern` matches when the regular expression finds the address
  * (`^/ACME/tasks/(?<key>ACME-\d+)$` and `/ACME/tasks/ACME-12`), its value the `key` group, else
  * its first group, else null.

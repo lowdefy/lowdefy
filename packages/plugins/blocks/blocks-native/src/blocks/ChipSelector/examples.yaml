@@ -28,8 +28,8 @@
           icon: LayoutGrid
         options:
           # blue
-          - value: PEL
-            label: Pelican
+          - value: ACME
+            label: Acme
             icon: Bird
             color:
               fg: '#0A6BC9'

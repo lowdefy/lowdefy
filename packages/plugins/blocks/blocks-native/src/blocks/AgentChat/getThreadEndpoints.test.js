@@ -17,7 +17,7 @@
 import getThreadEndpoints from './getThreadEndpoints.js';
 
 test('getThreadEndpoints names every ai-assistant endpoint of the module entry', () => {
-  expect(getThreadEndpoints({ module: 'ai-assistant', scope: 'pelican' })).toEqual({
+  expect(getThreadEndpoints({ module: 'ai-assistant', scope: 'acme' })).toEqual({
     deleteThread: 'ai-assistant/delete-thread',
     getActiveThread: 'ai-assistant/get-active-thread',
     getThread: 'ai-assistant/get-thread',

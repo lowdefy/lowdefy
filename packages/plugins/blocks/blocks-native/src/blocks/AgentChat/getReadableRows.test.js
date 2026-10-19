@@ -46,11 +46,11 @@ test('getReadableRows labels fields with humanised keys and reads values as a pe
 
 test('getReadableRows nests objects and lists as groups and says when they are empty', () => {
   expect(
-    getReadableRows({ output: { tasks: [{ key: 'PEL-1' }], tags: [], meta: {} }, translate })
+    getReadableRows({ output: { tasks: [{ key: 'ACME-1' }], tags: [], meta: {} }, translate })
   ).toEqual([
     { depth: 0, kind: 'group', label: 'Tasks' },
     { depth: 1, kind: 'group', label: '1' },
-    { depth: 2, kind: 'text', label: 'Key', text: 'PEL-1' },
+    { depth: 2, kind: 'text', label: 'Key', text: 'ACME-1' },
     { depth: 0, kind: 'empty', label: 'Tags', text: 'agent.toolResult.emptyList' },
     { depth: 0, kind: 'empty', label: 'Meta', text: 'agent.toolResult.empty' },
   ]);

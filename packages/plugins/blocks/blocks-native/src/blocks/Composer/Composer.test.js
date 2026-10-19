@@ -21,7 +21,7 @@ import formPage from '../../test/formPage.js';
 import { renderPage } from '../../test/renderPage.js';
 
 const mentions = [
-  { value: 'u1', label: 'Sam Tolmay', sees: true },
+  { value: 'u1', label: 'Sam Taylor', sees: true },
   { value: 'u2', label: 'Samantha Hidden', sees: false },
 ];
 
@@ -46,13 +46,13 @@ test('a Composer offers people who see the record for an @ and stores the picked
   });
   const input = await screen.findByTestId('comment_input');
   await type(input, 'Thanks @sa');
-  expect(screen.getByLabelText('Mention Sam Tolmay')).toBeTruthy();
+  expect(screen.getByLabelText('Mention Sam Taylor')).toBeTruthy();
   expect(screen.queryByLabelText('Mention Samantha Hidden')).toBeNull();
   await act(async () => {
-    fireEvent.press(screen.getByLabelText('Mention Sam Tolmay'));
+    fireEvent.press(screen.getByLabelText('Mention Sam Taylor'));
   });
   expect(screen.getByText('Thanks [[user:u1]]')).toBeTruthy();
-  expect(screen.getByText('@Sam Tolmay')).toBeTruthy();
+  expect(screen.getByText('@Sam Taylor')).toBeTruthy();
   expect(screen.queryByTestId('composer_suggestions')).toBeNull();
 });
 
@@ -67,7 +67,7 @@ test('a Composer shows the picture of a person in the mention picker', async () 
             mentions: [
               {
                 value: 'u1',
-                label: 'Sam Tolmay',
+                label: 'Sam Taylor',
                 sees: true,
                 picture: 'https://img.example/sam.png',
               },
@@ -155,7 +155,7 @@ test('a Composer asks for record links after [[ and writes the picked key', asyn
         {
           id: 'comment',
           type: 'Composer',
-          properties: { links: [{ key: 'PEL-12', kind: 'task', title: 'Fix the rail' }] },
+          properties: { links: [{ key: 'ACME-12', kind: 'task', title: 'Fix the rail' }] },
           events: {
             onLinkSearch: [{ id: 'q', type: 'SetState', params: { q: { _event: 'query' } } }],
           },
@@ -166,22 +166,22 @@ test('a Composer asks for record links after [[ and writes the picked key', asyn
     }),
   });
   jest.useFakeTimers();
-  await type(await screen.findByTestId('comment_input'), 'See [[pel');
+  await type(await screen.findByTestId('comment_input'), 'See [[acm');
   await act(async () => {
     jest.advanceTimersByTime(250);
   });
   jest.useRealTimers();
-  expect(screen.getByText('pel')).toBeTruthy();
+  expect(screen.getByText('acm')).toBeTruthy();
   await act(async () => {
-    fireEvent.press(screen.getByLabelText('Link PEL-12 Fix the rail'));
+    fireEvent.press(screen.getByLabelText('Link ACME-12 Fix the rail'));
   });
-  expect(screen.getByText('See [[PEL-12]]')).toBeTruthy();
+  expect(screen.getByText('See [[ACME-12]]')).toBeTruthy();
 });
 
 describe('spoken mentions', () => {
   const people = [
-    { value: 'u1', label: 'Sam Tolmay', sees: true },
-    { value: 'u2', label: 'Puffin Agent', sees: true },
+    { value: 'u1', label: 'Sam Taylor', sees: true },
+    { value: 'u2', label: 'Falcon Agent', sees: true },
   ];
 
   function composerPage(properties = {}) {
@@ -209,13 +209,13 @@ describe('spoken mentions', () => {
     await renderPage({ pageConfig: composerPage() });
     const input = await screen.findByTestId('comment_input');
     jest.useFakeTimers();
-    await type(input, 'For Puffin, please check the build');
-    expect(screen.getAllByText('For Puffin, please check the build')).toHaveLength(2);
+    await type(input, 'For Falcon, please check the build');
+    expect(screen.getAllByText('For Falcon, please check the build')).toHaveLength(2);
     await act(async () => {
       jest.advanceTimersByTime(900);
     });
     expect(screen.getByText('[[user:u2]] please check the build')).toBeTruthy();
-    expect(screen.getByText('@Puffin Agent')).toBeTruthy();
+    expect(screen.getByText('@Falcon Agent')).toBeTruthy();
   });
 
   test('more dictated text holds the conversion back until it stops', async () => {

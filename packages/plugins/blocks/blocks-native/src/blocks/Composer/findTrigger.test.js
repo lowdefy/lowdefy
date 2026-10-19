@@ -94,13 +94,13 @@ test('findTrigger opens the link picker for an open [[', () => {
     at: 4,
     query: '',
   });
-  expect(findTrigger({ segments: text('See [[PEL-1'), cursor: 11 })).toEqual({
+  expect(findTrigger({ segments: text('See [[ACME-1'), cursor: 12 })).toEqual({
     kind: 'link',
     at: 4,
-    query: 'PEL-1',
+    query: 'ACME-1',
   });
 });
 
 test('findTrigger opens nothing once the link is closed', () => {
-  expect(findTrigger({ segments: text('See [[PEL-1]] '), cursor: 14 })).toBeNull();
+  expect(findTrigger({ segments: text('See [[ACME-1]] '), cursor: 15 })).toBeNull();
 });

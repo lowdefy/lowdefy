@@ -405,9 +405,9 @@ test('a screen reads its own route query, not the focused screen route', async (
   // Another screen (pushed on this one) is focused: the shell's shown route is its route.
   mockFocus.focused = false;
   await renderPageScreen({
-    beforeRender: ({ session }) => session.setCurrentPath('/today?key=PEL-1', 'route-top'),
+    beforeRender: ({ session }) => session.setCurrentPath('/today?key=ACME-1', 'route-top'),
     path: 'today',
-    query: 'space=PEL&key=PEL-645',
+    query: 'space=ACME&key=ACME-645',
     pages: {
       today: {
         pageConfig: screenPage('today', 'Today', [
@@ -425,7 +425,7 @@ test('a screen reads its own route query, not the focused screen route', async (
       typeSets: { screen: boxTypes },
     }),
   });
-  expect(await screen.findByText('key PEL-645')).toBeTruthy();
+  expect(await screen.findByText('key ACME-645')).toBeTruthy();
 });
 
 test('a changed page the shell fetches replaces the version the screen shows', async () => {

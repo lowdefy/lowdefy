@@ -21,7 +21,7 @@ import toTimelineMarkdown from './toTimelineMarkdown.js';
 
 const pattern = createMentionPattern();
 const mentions = [
-  { user_id: 'u1', name: 'Sam Tolmay', sees: true },
+  { user_id: 'u1', name: 'Sam Taylor', sees: true },
   { user_id: 'u2', name: 'Ada (Ops)', sees: false },
 ];
 
@@ -32,7 +32,7 @@ test('toTimelineMarkdown turns mention tokens into mention links, muted for peop
     pattern,
   });
   expect(markdown).toBe(
-    'Thanks [@](lowdefymention:seen:Sam%20Tolmay) and [@](lowdefymention:muted:Ada%20%28Ops%29)'
+    'Thanks [@](lowdefymention:seen:Sam%20Taylor) and [@](lowdefymention:muted:Ada%20%28Ops%29)'
   );
   expect(parseTimelineHref('lowdefymention:muted:Ada%20%28Ops%29')).toEqual({
     kind: 'mention',
@@ -49,15 +49,15 @@ test('toTimelineMarkdown names a mention from people when the comment does not',
 });
 
 test('toTimelineMarkdown turns other [[KEY]] links into record links', () => {
-  const markdown = toTimelineMarkdown({ body: 'See [[PEL-12]].', pattern });
-  expect(markdown).toBe('See [PEL-12](lowdefyrecord:PEL-12).');
-  expect(parseTimelineHref('lowdefyrecord:PEL-12')).toEqual({ kind: 'record', key: 'PEL-12' });
+  const markdown = toTimelineMarkdown({ body: 'See [[ACME-12]].', pattern });
+  expect(markdown).toBe('See [ACME-12](lowdefyrecord:ACME-12).');
+  expect(parseTimelineHref('lowdefyrecord:ACME-12')).toEqual({ kind: 'record', key: 'ACME-12' });
 });
 
 test('toTimelineMarkdown leaves code spans and fenced blocks as written', () => {
-  const body = 'Use `[[user:u1]]` or\n```\n[[PEL-1]]\n```\n[[PEL-2]]';
+  const body = 'Use `[[user:u1]]` or\n```\n[[ACME-1]]\n```\n[[ACME-2]]';
   expect(toTimelineMarkdown({ body, pattern })).toBe(
-    'Use `[[user:u1]]` or\n```\n[[PEL-1]]\n```\n[PEL-2](lowdefyrecord:PEL-2)'
+    'Use `[[user:u1]]` or\n```\n[[ACME-1]]\n```\n[ACME-2](lowdefyrecord:ACME-2)'
   );
 });
 
@@ -70,6 +70,6 @@ test('parseTimelineHref passes a plain link through', () => {
 
 test('toPlainText writes mentions as @Name', () => {
   expect(toPlainText({ body: 'Thanks [[user:u1]]!', mentions, pattern })).toBe(
-    'Thanks @Sam Tolmay!'
+    'Thanks @Sam Taylor!'
   );
 });

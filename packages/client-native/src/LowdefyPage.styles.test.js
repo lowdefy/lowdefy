@@ -174,15 +174,15 @@ test('blocks aligned in a gapped wrapping row size to their content, not the row
           type: 'Box',
           layout: { direction: 'row', wrap: 'wrap', gap: 8, align: 'middle' },
           blocks: [
-            { id: 'space', type: 'Paragraph', properties: { content: 'Pelican' } },
-            { id: 'key', type: 'Paragraph', properties: { content: 'PEL-645' } },
+            { id: 'space', type: 'Paragraph', properties: { content: 'Acme' } },
+            { id: 'key', type: 'Paragraph', properties: { content: 'ACME-645' } },
           ],
         },
         { id: 'title', type: 'Paragraph', properties: { content: 'Title' } },
       ],
     },
   });
-  await screen.findByText('PEL-645');
+  await screen.findByText('ACME-645');
   expect(styleOf(screen.getByTestId('space')).flexGrow).toBeUndefined();
   expect(styleOf(screen.getByTestId('key')).flexGrow).toBeUndefined();
   expect(styleOf(screen.getByTestId('key').parent)).toEqual({ paddingLeft: 8, width: '100%' });

@@ -28,8 +28,8 @@ test('getAvatarColor gives a name the same hue every time, whatever its case or 
 });
 
 test('getAvatarColor keeps the hue across modes and draws it with the theme of the mode', () => {
-  const lightColor = getAvatarColor({ isDark: false, name: 'Sam Tolmay', tokens: light });
-  const darkColor = getAvatarColor({ isDark: true, name: 'Sam Tolmay', tokens: dark });
+  const lightColor = getAvatarColor({ isDark: false, name: 'Sam Taylor', tokens: light });
+  const darkColor = getAvatarColor({ isDark: true, name: 'Sam Taylor', tokens: dark });
   expect(darkColor.hue).toEqual(lightColor.hue);
   expect(darkColor.color).toEqual(dark[`${darkColor.hue}-6`]);
 });

@@ -19,7 +19,7 @@ import parseMentionValue from './parseMentionValue.js';
 import { toDisplay, toValue } from './segmentText.js';
 
 const people = new Map([
-  ['u1', { label: 'Sam Tolmay', sees: true }],
+  ['u1', { label: 'Sam Taylor', sees: true }],
   ['u2', { label: 'Ada Lovelace', sees: false }],
 ]);
 
@@ -31,12 +31,12 @@ test('parseMentionValue splits text and mention tokens and names each mention', 
   });
   expect(segments).toEqual([
     { kind: 'text', text: 'Thanks ' },
-    { kind: 'mention', id: 'u1', name: 'Sam Tolmay', sees: true },
+    { kind: 'mention', id: 'u1', name: 'Sam Taylor', sees: true },
     { kind: 'text', text: ', over to ' },
     { kind: 'mention', id: 'u2', name: 'Ada Lovelace', sees: false },
     { kind: 'text', text: '.' },
   ]);
-  expect(toDisplay(segments)).toBe('Thanks @Sam Tolmay, over to @Ada Lovelace.');
+  expect(toDisplay(segments)).toBe('Thanks @Sam Taylor, over to @Ada Lovelace.');
 });
 
 test('parseMentionValue names a token for someone not in people Unknown and keeps its id', () => {
@@ -51,11 +51,11 @@ test('parseMentionValue names a token for someone not in people Unknown and keep
 
 test('parseMentionValue leaves record links as text', () => {
   const segments = parseMentionValue({
-    value: 'See [[PEL-12]]',
+    value: 'See [[ACME-12]]',
     pattern: createMentionPattern(),
     people,
   });
-  expect(segments).toEqual([{ kind: 'text', text: 'See [[PEL-12]]' }]);
+  expect(segments).toEqual([{ kind: 'text', text: 'See [[ACME-12]]' }]);
 });
 
 test('parseMentionValue and toValue round trip a value in a custom mention format', () => {
@@ -72,7 +72,7 @@ test('createMentionPattern takes the word run after a format that ends in {id}',
     pattern: createMentionPattern('@{id}'),
     people,
   });
-  expect(segments[1]).toEqual({ kind: 'mention', id: 'u1', name: 'Sam Tolmay', sees: true });
+  expect(segments[1]).toEqual({ kind: 'mention', id: 'u1', name: 'Sam Taylor', sees: true });
   expect(segments[2]).toEqual({ kind: 'text', text: ', bye' });
 });
 

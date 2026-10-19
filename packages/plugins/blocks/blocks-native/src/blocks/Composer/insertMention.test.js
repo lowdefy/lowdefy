@@ -19,13 +19,13 @@ import insertMention from './insertMention.js';
 import { toDisplay, toValue } from './segmentText.js';
 
 const format = '[[user:{id}]]';
-const sam = { value: 'u1', label: 'Sam Tolmay', sees: true };
+const sam = { value: 'u1', label: 'Sam Taylor', sees: true };
 
 test('insertMention replaces the @ and query with the mention token and a space', () => {
   const segments = [{ kind: 'text', text: 'Thanks @sa' }];
   const result = insertMention({ segments, at: 7, cursor: 10, person: sam });
   expect(toValue({ segments: result.segments, format })).toBe('Thanks [[user:u1]] ');
-  expect(toDisplay(result.segments)).toBe('Thanks @Sam Tolmay ');
+  expect(toDisplay(result.segments)).toBe('Thanks @Sam Taylor ');
   expect(result.cursor).toBe(19);
 });
 
@@ -43,15 +43,15 @@ test('insertMention writes the token in a custom mention format', () => {
 });
 
 test('insertLink replaces the open [[ and query with the record link and a space', () => {
-  const segments = [{ kind: 'text', text: 'See [[pel' }];
-  const result = insertLink({ segments, at: 4, cursor: 9, key: 'PEL-12' });
-  expect(toDisplay(result.segments)).toBe('See [[PEL-12]] ');
-  expect(result.cursor).toBe(15);
+  const segments = [{ kind: 'text', text: 'See [[acm' }];
+  const result = insertLink({ segments, at: 4, cursor: 9, key: 'ACME-12' });
+  expect(toDisplay(result.segments)).toBe('See [[ACME-12]] ');
+  expect(result.cursor).toBe(16);
 });
 
 test('insertLink takes in a ]] that already closes the link', () => {
-  const segments = [{ kind: 'text', text: 'See [[pel]] now' }];
-  const result = insertLink({ segments, at: 4, cursor: 9, key: 'PEL-12' });
-  expect(toDisplay(result.segments)).toBe('See [[PEL-12]] now');
-  expect(result.cursor).toBe(15);
+  const segments = [{ kind: 'text', text: 'See [[acm]] now' }];
+  const result = insertLink({ segments, at: 4, cursor: 9, key: 'ACME-12' });
+  expect(toDisplay(result.segments)).toBe('See [[ACME-12]] now');
+  expect(result.cursor).toBe(16);
 });
