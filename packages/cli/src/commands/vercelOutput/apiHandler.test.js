@@ -29,8 +29,8 @@ import apiHandler from './apiHandler.js';
 // app, the way Vercel runs it: the entry's default export is a Node HTTP
 // server. hono, @hono/node-server and ws resolve from the dev server package,
 // which installs the same versions as the production server. initServer's own
-// startup steps are tested in @lowdefy/server, so it is a stub here, with
-// Sentry enabled, and a stub @sentry/node and Vercel request context count the
+// startup steps are tested in @lowdefy/server, so it is a stub here that
+// returns a stub Sentry SDK, and it and a stub Vercel request context count the
 // flushes handed to waitUntil.
 const require = createRequire(import.meta.url);
 const serverDevDirectory = path.dirname(require.resolve('@lowdefy/server-dev/package.json'));
@@ -132,16 +132,17 @@ function tickingStream({ chunks, onDone, onCancel }) {
 `;
 
 const initServer = `
-export default async function initServer() {
-  const { default: createApp } = await import('./app.js');
-  return { createApp, sentryEnabled: true };
-}
-`;
+const sentry = {
+  flush() {
+    globalThis.sentry.flushes += 1;
+    return Promise.resolve(true);
+  },
+};
 
-const sentry = `
-export function flush() {
-  globalThis.sentry.flushes += 1;
-  return Promise.resolve(true);
+export default async function initServer(options) {
+  globalThis.sentry.initServerOptions = options;
+  const { default: createApp } = await import('./app.js');
+  return { createApp, sentry };
 }
 `;
 
@@ -180,13 +181,6 @@ beforeAll(async () => {
       'junction'
     );
   });
-  const sentryDirectory = path.join(serverDirectory, 'node_modules', '@sentry', 'node');
-  fs.mkdirSync(sentryDirectory, { recursive: true });
-  fs.writeFileSync(
-    path.join(sentryDirectory, 'package.json'),
-    '{"name":"@sentry/node","type":"module","main":"index.js"}'
-  );
-  fs.writeFileSync(path.join(sentryDirectory, 'index.js'), sentry);
 
   // import() takes a URL: a Windows path (C:\...) would read as a URL scheme.
   child = spawn(
@@ -343,6 +337,10 @@ test('the function entry gives an upgrade request the forwarded protocol and hos
 async function readSentry() {
   return (await fetch(`${baseUrl}/sentry`)).json();
 }
+
+test('the function entry starts the server as a serverless function', async () => {
+  expect((await readSentry()).initServerOptions).toEqual({ serverless: true });
+});
 
 test('the function entry flushes Sentry through waitUntil after each request', async () => {
   const before = await readSentry();

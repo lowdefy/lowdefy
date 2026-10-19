@@ -17,6 +17,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { addNonceToElements, createContentSecurityPolicy } from '@lowdefy/api';
+import { appStorageKey, serializer, type } from '@lowdefy/helpers';
+
 import isRecordingEnabled from '../../lib/server/recording/isRecordingEnabled.js';
 import safeScriptJson from '../lib/safeScriptJson.js';
 
@@ -27,7 +30,9 @@ import safeScriptJson from '../lib/safeScriptJson.js';
 //
 // @hono/vite-dev-server injects /@vite/client into this response; the
 // react-refresh preamble must be inlined here for @vitejs/plugin-react.
-const layerOrderScript = `(function(){var s=document.createElement("style");s.id="__lf-layer-order";s.textContent="@layer theme, base, antd, components, utilities;";document.head.prepend(s);new MutationObserver(function(){if(document.head.firstChild!==s)document.head.prepend(s)}).observe(document.head,{childList:true})})();`;
+// The layer order style takes its script's nonce, which a Content-Security-Policy
+// needs to apply it.
+const layerOrderScript = `(function(){var s=document.createElement("style");s.id="__lf-layer-order";var n=document.currentScript&&document.currentScript.nonce;if(n)s.nonce=n;s.textContent="@layer theme, base, antd, components, utilities;";document.head.prepend(s);new MutationObserver(function(){if(document.head.firstChild!==s)document.head.prepend(s)}).observe(document.head,{childList:true})})();`;
 
 function readBuildJson(name) {
   try {
@@ -37,13 +42,47 @@ function readBuildJson(name) {
   }
 }
 
+// Vite's dev server needs no source beyond the page's own origin: /@vite/client
+// and the modules load from 'self', Vite's style tags take the nonce from the
+// csp-nonce meta tag, and the hot reload socket connects back to the page's
+// host, which allowWebSocket names in connect-src for every dev page.
+function getContentSecurityPolicy(c) {
+  const security = serializer.deserialize(readBuildJson('security'));
+  if (type.isNone(security.contentSecurityPolicy)) {
+    return null;
+  }
+  return createContentSecurityPolicy({
+    policy: security.contentSecurityPolicy,
+    requestUrl: c.req.url,
+    allowWebSocket: true,
+  });
+}
+
 function renderDevPage(c, { basePath = '' }) {
   // The resolved caller, injected like the production server's template.js —
   // the client's Auth provider seeds _user from it (roles, organization_id).
   const user = c.get('lowdefyContext')?.user ?? null;
   const themeConfig = readBuildJson('theme');
   const appJson = readBuildJson('app');
+  // The client reads the slug before root config arrives, to key the dark mode and locale
+  // preferences per app.
+  const slug = readBuildJson('appMeta').slug ?? null;
   const recording = { enabled: isRecordingEnabled(c.req.header('cookie')) };
+
+  // Off unless config.security.contentSecurityPolicy is set. Each render gets its own nonce.
+  let nonceAttribute = '';
+  let nonceMeta = '';
+  let appendHead = appJson.html?.appendHead ?? '';
+  let appendBody = appJson.html?.appendBody ?? '';
+  const policy = getContentSecurityPolicy(c);
+  if (!type.isNull(policy)) {
+    const { nonce } = policy;
+    c.header(policy.name, policy.value);
+    nonceAttribute = ` nonce="${nonce}"`;
+    nonceMeta = `<meta property="csp-nonce" nonce="${nonce}" />`;
+    appendHead = addNonceToElements({ html: appendHead, nonce });
+    appendBody = addNonceToElements({ html: appendBody, nonce });
+  }
 
   const VALID_COLOR_MODES = ['system', 'light', 'dark'];
   const configColorMode = VALID_COLOR_MODES.includes(themeConfig.darkMode)
@@ -52,40 +91,44 @@ function renderDevPage(c, { basePath = '' }) {
   const darkBg = themeConfig?.antd?.darkToken?.colorBgLayout ?? '#000';
   const lightBg = themeConfig?.antd?.lightToken?.colorBgLayout ?? '';
 
+  const darkModeStorageKey = appStorageKey({ basePath, name: 'lowdefy_darkMode', slug });
+
   const darkModeScript = `(function(){var c=${safeScriptJson(
     configColorMode
-  )};var db=${safeScriptJson(darkBg)};var lb=${safeScriptJson(
-    lightBg
-  )};var d;if(c==="dark")d=true;else if(c==="light")d=false;else{try{var p=localStorage.getItem("lowdefy_darkMode");if(p==="dark")d=true;else if(p==="light")d=false;else d=window.matchMedia("(prefers-color-scheme:dark)").matches}catch(e){d=window.matchMedia("(prefers-color-scheme:dark)").matches}}var bg=d?db:lb;document.documentElement.style.colorScheme=d?"dark":"light";if(bg)document.documentElement.style.backgroundColor=bg})();`;
+  )};var db=${safeScriptJson(darkBg)};var lb=${safeScriptJson(lightBg)};var k=${safeScriptJson(
+    darkModeStorageKey
+  )};var d;if(c==="dark")d=true;else if(c==="light")d=false;else{try{var p=localStorage.getItem(k);if(p===null)p=localStorage.getItem("lowdefy_darkMode");if(p==="dark")d=true;else if(p==="light")d=false;else d=window.matchMedia("(prefers-color-scheme:dark)").matches}catch(e){d=window.matchMedia("(prefers-color-scheme:dark)").matches}}var bg=d?db:lb;document.documentElement.style.colorScheme=d?"dark":"light";if(bg)document.documentElement.style.backgroundColor=bg})();`;
 
   const html = `<!DOCTYPE html>
 <html class="lowdefy">
   <head>
     <meta charset="utf-8" />
-    <script>${layerOrderScript}</script>
-    <script>${darkModeScript}</script>
+    ${nonceMeta}
+    <script${nonceAttribute}>${layerOrderScript}</script>
+    <script${nonceAttribute}>${darkModeScript}</script>
     <link rel="manifest" href="${basePath}/manifest.webmanifest" />
     <link rel="icon" type="image/svg+xml" href="${basePath}/icon.svg" />
     <link rel="apple-touch-icon" href="${basePath}/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script type="module">
+    <script type="module"${nonceAttribute}>
 import RefreshRuntime from '${basePath}/@react-refresh';
 RefreshRuntime.injectIntoGlobalHook(window);
 window.$RefreshReg$ = () => {};
 window.$RefreshSig$ = () => (type) => type;
 window.__vite_plugin_react_preamble_installed__ = true;
     </script>
-    ${appJson.html?.appendHead ?? ''}
+    ${appendHead}
   </head>
   <body>
     <div id="root"></div>
-    <script id="__LOWDEFY_CONFIG__" type="application/json">${safeScriptJson({
+    <script id="__LOWDEFY_CONFIG__" type="application/json"${nonceAttribute}>${safeScriptJson({
       basePath,
-      user,
       recording,
+      slug,
+      user,
     })}</script>
-    ${appJson.html?.appendBody ?? ''}
-    <script type="module" src="${basePath}/client/main.jsx"></script>
+    ${appendBody}
+    <script type="module" src="${basePath}/client/main.jsx"${nonceAttribute}></script>
   </body>
 </html>`;
 

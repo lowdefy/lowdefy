@@ -105,6 +105,7 @@ function SearchResults({
             return (
               <div
                 key={item.id ?? currentIndex}
+                role="button"
                 ref={isSelected ? selectedRef : null}
                 className={cn(
                   'lf-search-item',

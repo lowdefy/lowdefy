@@ -22,7 +22,8 @@ const TESTING_RULES = `Verify a change by running the app's journeys (\`tests/jo
   happy paths.
 - Widen to \`tier: edge\` before you call the change done: the edge cases real users still reach.
   Journeys with no production counts for their current steps run in every tier.
-- In a terminal the same runs are \`lowdefy test --tier common\` and \`lowdefy test --tier edge\`.
+- In a terminal the same runs are \`lowdefy test --config-directory <app> --tier common\` and
+  \`lowdefy test --config-directory <app> --tier edge\`.
 - A tier is refused when the app has too little production use pulled; then run without \`tier\`.`;
 
 export default TESTING_RULES;

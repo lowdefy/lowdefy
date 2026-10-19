@@ -18,7 +18,7 @@ import React from 'react';
 import { FloatButton } from 'antd';
 
 import { type } from '@lowdefy/helpers';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { getSafeHref, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 // antd falls back to its own icons (a document, or an arrow for back to top),
@@ -83,7 +83,7 @@ function FloatButtonBlock({
     <FloatButton
       {...buttonProps}
       htmlType={properties.htmlType ?? undefined}
-      href={properties.href}
+      href={getSafeHref(properties.href)}
       target={properties.target}
     />
   );

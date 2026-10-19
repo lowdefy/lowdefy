@@ -78,8 +78,7 @@ pnpm test:mongodb
 through a real BetterAuth instance and the MongoDB auth adapter, for example the tenant signup
 mint under concurrent sessions. Name an api test `*.mongodb.test.js` when it needs a real
 server; the plain `pnpm test` run ignores those files. It also runs `@lowdefy/server-dev`'s
-`*.mongodb.test.mjs` suites (`pnpm --filter=@lowdefy/server-dev test:mongodb`), such as the
-journey data set pull, which spawns `lib/data/pullDataSet.mjs` against a memory server, the
+`*.mongodb.test.mjs` suites (`pnpm --filter=@lowdefy/server-dev test:mongodb`): the
 journey data sessions (`lib/docs/dataSets/openDataSession.mongodb.test.mjs`, which start the dev
 server's own data store), the data store's port, stop and replacement after its mongod dies
 (`getDataStore.mongodb.test.mjs`, which kills that mongod), and the data set journeys end to end
@@ -99,7 +98,8 @@ starts its own `mongod` on a free port, so worktrees can run it at the same time
 The tenant auth reference app (`apps/auth-reference-tenant`) carries config tests for the
 real auth path: sign-up with email verification, sign-in refusals, sign-out, magic link,
 invitations (including expired and cancelled ones), tenant isolation, organization
-switching and member removal (`tests/journeys/*.yaml`, all `user: none`). Run them with:
+switching, member removal and a role change seen by an open page (`tests/journeys/*.yaml`,
+all `user: none`). Run them with:
 
 ```bash
 pnpm test:journeys:auth                      # builds first, like pnpm dev
@@ -155,7 +155,8 @@ first compile and each page's first build happen before any test. It never touch
 at once in one worktree. With no Chromium every test skips.
 The dev server log is `apps/journey-fixture/.lowdefy/fixture-dev-server.log`. CI runs it on
 the complete path, before every release (see [CI](#ci)). Run it when
-changing the journey runner, journey cookies or mutants.
+changing the journey runner, journey cookies or mutants. Which page, data set and test covers
+which journey feature is listed under "Fixture app" in `code-docs/architecture/journeys.md`.
 
 ## An app from another repository
 

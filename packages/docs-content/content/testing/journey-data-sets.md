@@ -57,10 +57,31 @@ users:
 
 | Key        | Description                                                                                                                                                                                                                                                                                                                                        |
 | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `extends`  | Data sets to load first, by name, e.g. `[base]`. See [Extending a data set](#extending-a-data-set).                                                                                                                                                                                                                                                |
 | `fixtures` | Documents to load, keyed by connection id. Dates use the serializer's `{ "~d": "2026-01-02T00:00:00.000Z" }` marker and ObjectIds use `{ _oid: '<hex>' }`. A fixture with an `_id` replaces any earlier document with that `_id`; one without is inserted.                                                                                         |
 | `generate` | Documents made from a small spec with a fixed seed, keyed by connection id like `fixtures`. See [Generated documents](#generated-documents).                                                                                                                                                                                                       |
 | `users`    | The people journeys act as, keyed by name. Each is an inline user object, the shape a journey's inline `user:` takes. They are injected callers and carry no credentials: `password` is refused.                                                                                                                                                   |
 | `indexes`  | Indexes to create, keyed by connection id, in the shape MongoDB's `listIndexes()` returns: `key`, an optional `name`, and any other option (`unique`, `sparse`, `partialFilterExpression`, `collation`, `weights`, …), passed to `createIndexes` as given. `v` and `ns` are refused. Two connections that load one collection merge their indexes. |
+
+## Extending a data set
+
+A data set can load other data sets first with `extends`, so a set that is "the base tenant plus a second tenant" does not copy the base tenant's rows:
+
+```yaml
+# tests/data/two-orgs.yaml
+extends: [base]
+fixtures:
+  organizations:
+    - { _id: org_b, name: Beta Test Co }
+users:
+  outsider: { id: u_9, roles: [admin], organizationId: org_b }
+```
+
+- **Order.** Each extended set loads first, in the order `extends` lists them, then this file. An extended set can extend others; a set reached twice loads once, at its first place. A cycle is refused.
+- **Fixtures and indexes** add up per connection. The usual rules then apply across files: a later fixture with an `_id` replaces an earlier one, and a later index with the same `key` replaces an earlier one.
+- **Users** with the same name: the later file's user replaces the earlier one.
+- **`generate` stays per file.** Only the named data set's own `generate` runs. Its `ref` fields and `_id` checks see every fixture, including the extended sets' fixtures.
+- `lowdefy data list`, the `lowdefy journeys` commands and journey runs all read the merged data set.
 
 ## Generated documents
 
@@ -109,7 +130,7 @@ Each key under `generate` other than `seed` is a connection id, with `count` (ho
 
 Rules, checked before any browser opens:
 
-- **Plain YAML.** No `_ref` and no operators: a data set is test input, not app config.
+- **Plain YAML.** No `_ref` and no operators: a data set is test input, not app config. Share rows between data sets with `extends`.
 - **Connections.** Every connection id in `fixtures`, `generate` and `indexes` must be a `MongoDBCollection` connection whose `collection` is a literal string, and whose `databaseName` is a literal string or not set. Two connections that name one collection load into it together.
 - **One database.** Under a data set every redirected connection reads one database. Two connections that name the same collection in different databases (a different `databaseName` or `databaseUri` secret) would share one collection. When the data set names either of them, the journey is refused. When it names neither, the result carries a warning. A connection whose `collection` is computed per request cannot be checked.
 - **Indexes first.** Each collection's indexes are created before any document is loaded, so a fixture or generated document that breaks a unique index fails the load and names the document, the index and the duplicate key. A TTL index is loaded as a plain index, so old fixture dates are never deleted mid-run.
@@ -183,8 +204,9 @@ A data set journey runs on the running dev server, beside your own browser tabs:
 **What is redirected:** every connection read under a data set journey goes through one check, for requests, endpoint routines, background and detached endpoint calls, websocket change stream sources, and module connections alike. The check reads the connection type's `meta.dataSet` declaration:
 
 - `redirect`: the run's database URI and name are merged over the connection's `properties`, whether or not the data set lists the connection. Core `MongoDBCollection` declares it.
-- `external`: the type reaches an outside service, not your app's data, and keeps its real target. Core `AxiosHttp`, `SendGridMail`, `SMTP`, `Stripe`, `AIGateway`, `Anthropic`, `OpenAI`, `Google`, `Mcp` and `TregConnection` declare it.
-- No declaration: the journey fails with `Connection "<id>" (type <type>) cannot run under data set "<name>": its type does not say how to redirect it.` Core `Knex`, `Redis`, `Elasticsearch`, `GoogleSheet`, `TestConnection`, `AwsS3Bucket`, `AzureBlobContainer` and `GoogleCloudStorageBucket` refuse, and so does any plugin type that has not declared.
+- `walled`: the type holds no database address and reaches MongoDB only through the walled client, by naming walled `MongoDBCollection` connections. Its connection passes unchanged, and each walled connection it names is read through the same check, so it takes the run's database as any `redirect` connection does. Plugin types declare it; no core type does.
+- `external`: the type reaches an outside service, not your app's data. Under a data set journey every request of the type is sunk: it is recorded and answers `null`, and nothing is sent (see [Requests to outside services are sunk](#requests-to-outside-services-are-sunk)). Core `AxiosHttp`, `SendGridMail`, `SMTP`, `Stripe`, `AIGateway`, `Anthropic`, `OpenAI`, `Google`, `Mcp`, `TregConnection`, `AwsS3Bucket`, `AzureBlobContainer` and `GoogleCloudStorageBucket` declare it.
+- No declaration: the journey fails with `Connection "<id>" (type <type>) cannot run under data set "<name>": its type does not say how to redirect it.` Core `Knex`, `Redis`, `Elasticsearch`, `GoogleSheet` and `TestConnection` refuse, and so does any plugin type that has not declared.
 
 A `redirect` connection whose whole `properties` is an operator (a top-level key starting with `_`, such as `_if` or `_ref` evaluated at runtime) also refuses, because the check cannot see what it evaluates to. Operators inside the properties are fine: `databaseUri: { _secret: MONGODB_URI }` is replaced by the run's URI before any operator runs.
 
@@ -192,7 +214,7 @@ The browsers a data set journey opens stay on one host of the dev server. A requ
 
 **What is not redirected:**
 
-- Connection types declared `external` (HTTP APIs, email, payments, AI providers, MCP) keep their real targets.
+- Connection types declared `external` (HTTP APIs, email, payments, AI providers, MCP, object storage) are never given the run's database. Their requests are sunk, as described below. What does not go through a request resolver still reaches the real service: an agent calling its model provider through its connection is not sunk, and an `external` type with no request resolvers (such as `Mcp`) is refused by the click rails.
 - Code that reads a database URI from anywhere but its connection's `properties`, such as a secret or environment variable read directly. A plugin type that declares `redirect` and does this breaks its declaration.
 - The auth engine. Data set journeys never reach it: their requests carry injected users, and `/api/auth/*` answers 404 for them.
 - Atlas Search (`$search`, `$vectorSearch`): pages whose requests use it fail on the in-memory database, which has no search engine.
@@ -209,16 +231,88 @@ export default {
 };
 ```
 
-Declare `redirect` only when the type takes its database from `properties.databaseUri` and `properties.databaseName` and nothing else. It must honour `databaseName`, as `MongoDBCollection` does, and key any client it keeps between requests by the URI it is given, never by connection id alone: a client cached by connection id keeps the database it first opened, which can be your real one. Declare `external` only for a type that reaches an outside service and holds none of your app's data. Leave it undeclared for any other data store: data set journeys that use it are refused rather than run against your real data.
+Declare `redirect` only when the type takes its database from `properties.databaseUri` and `properties.databaseName` and nothing else. It must honour `databaseName`, as `MongoDBCollection` does, and key any client it keeps between requests by the URI it is given, never by connection id alone: a client cached by connection id keeps the database it first opened, which can be your real one.
+
+Declare `walled` when the type holds no database URI and reaches MongoDB only through the walled client: its requests call the resolver's `walled(connectionId)` argument and pass what it returns to `getWalledCollection` from `@lowdefy/connection-mongodb/walled`. The walled connections it names follow the data set on their own, so its writes land in the run's database:
+
+```js
+// connection export
+export default {
+  schema,
+  meta: { tenant: false, dataSet: 'walled' },
+  requests: { AcceptMatch },
+};
+
+// request resolver
+import { getWalledCollection } from '@lowdefy/connection-mongodb/walled';
+
+async function AcceptMatch({ connection, request, walled }) {
+  const matches = getWalledCollection(await walled(connection.mongoConnectionId));
+  return matches.updateOne({ _id: request.matchId }, { $set: { accepted: true } });
+}
+```
+
+A type that also calls an outside service declares `external` instead, and its requests are sunk under a data set journey. Declare `external` only for a type that reaches an outside service and holds none of your app's data. Leave it undeclared for any other data store: data set journeys that use it are refused rather than run against your real data.
+
+A `walled` type can have some request types that reach an outside service, such as one that downloads files or calls an AI provider. Declare `meta.dataSet: 'external'` on those request resolvers. Under a data set journey only those requests are sunk; the type's other requests run for real against the run's database:
+
+```js
+// request resolver
+async function GenerateAnswers({ connection, request, walled }) {
+  // calls an AI gateway
+}
+GenerateAnswers.meta = { checkRead: true, dataSet: 'external' };
+
+// connection export
+export default {
+  schema,
+  meta: { tenant: false, dataSet: 'walled' },
+  requests: { AcceptMatch, GenerateAnswers },
+};
+```
+
+The sunk request is recorded in `sunk` like any other, with its `connectionType` and `requestType`. A request-level `external` is honoured on any connection type that has request resolvers, not only `walled` ones.
+
+The dev server cannot check a `walled` or `external` declaration, since a connection's properties are evaluated later and may read secrets. It is your promise as the plugin author.
 
 ## Clicks a data set journey refuses
 
-A data set journey refuses two kinds of click, so that it never reaches a real service and never fails for a reason that is not the app's. The step fails before the click acts, naming the block and why:
+A data set journey fails two kinds of click, so that it never reaches a real service and never fails for a reason that is not the app's. A click on a connection the data set cannot run is refused before it acts, naming the block and why; a click that runs an auth action fails once it has run:
 
-- A click on a block whose events reach a connection that is not a `MongoDBCollection`, through a `Request` action or a `CallAPI` into an endpoint routine. That connection is not redirected (an `external` HTTP API, email or payment service), so the click would reach it for real: `Block "send_invoice" reaches connection "billing_api" (AxiosHttp), which a journey data set does not redirect, so a data-set journey cannot click it.`
-- A click on a block whose events run an action that calls the auth engine (`Logout`, `Login`, `ChangePassword` and the other auth actions). Data set users are injected and have no auth session, so these fail every time.
+- A click on a block whose events reach a connection, through a `Request` action or a `CallAPI` into an endpoint routine, whose type declares nothing, declares `external` but has no request resolvers, or that has no connection artifact. Connections whose type declares `redirect` or `walled` (such as `MongoDBCollection`) run against the run's database, and connections whose type declares `external` have their requests sunk, so both can be clicked. The message names the declaration, so you know what to change:
 
-The block is the one the click lands on: the target's block, or for a `text` or `containing` target, the nearest block around the element it matched. Request and endpoint ids computed by operators are not followed. Journeys without `data:` click anything. Cover such controls with a journey that runs off data sets, against a test database.
+  - No declaration: `Block "export_rows" reaches connection "warehouse" (Knex, no dataSet declaration), which a data set cannot redirect, so a data-set journey cannot click it.`
+  - No artifact: `Block "sync" reaches connection "legacy" (no connection artifact), which a data set cannot redirect, so a data-set journey cannot click it.`
+  - `external` with no request resolvers: `Block "connect" reaches connection "tools" (Mcp, dataSet: external), which reaches a real service, so a data-set journey cannot click it.`
+
+  The rails read the declaration only. A `redirect` connection whose `properties` the check above refuses passes the rails, and the step fails with that check's message when the request runs.
+
+- A click that runs an action that calls the auth engine (`Logout`, `Login`, `ChangePassword` and the other auth actions). Data set users are injected and have no auth session, so these fail every time. Unlike the connection check, this one is made while the click runs: the step fails only if the action executes, and the message names the block and the action (`Block "logout_button" ran the auth action Logout, which a data-set journey cannot run: ...`). A click whose auth action is skipped works, so you can test the paths that stop before it: a `Validate` that throws on an empty form, an endpoint that refuses a duplicate, an action with a `skip:` condition that is true.
+
+The block is the one the click lands on: the target's block, or for a `text` or `containing` target, the nearest block around the element it matched. Request and endpoint ids computed by operators are not followed by the connection check. Journeys without `data:` click anything. Cover such controls with a journey that runs off data sets, against a test database.
+
+## Requests to outside services are sunk
+
+Under a data set journey, every request of a connection type that declares `meta.dataSet: 'external'`, and every request type that declares `meta.dataSet: 'external'` on its own resolver, is replaced by a sink, in the dev server process that would have sent it. The request is still validated, read-checked and write-checked as for real, then recorded and answered with `null`; the service (mail, HTTP, payments, an AI provider, object storage) never sees it. Because the sink sits where the request runs, it holds for a branch of an endpoint the click does not take, a connection id an operator computes, and detached or background endpoint calls alike, which a check on the config could not promise.
+
+A run that sank requests returns them, in the order they ran, as `sunk` beside its result:
+
+```yaml
+sunk:
+  - connectionId: notifications-email
+    connectionType: SMTP
+    requestType: SMTPMailSend
+    requestId: send
+    pageId: evidence/review
+    endpointId: null
+    request: { to: owner@example.test, subject: ... }
+```
+
+`request` is the request's evaluated properties with the app's secrets scrubbed. The connection's own properties, which hold its credentials, are never recorded.
+
+A routine that reads a sunk request's response gets `null`, so a step that needs the response (an order id from a payment API) reads nothing: give such a branch a journey off data sets, or an endpoint that tolerates a missing response.
+
+One request is not sunk: an `SMTP` request whose connection points at the dev server's mail capture (`LOWDEFY_DEV_SMTP_PORT`, on `127.0.0.1`, `localhost` or `::1`), so the `email` step keeps reading the mail a journey sends there. Nothing leaves the machine.
 
 ## Auth journeys stay on their harness
 

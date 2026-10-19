@@ -25,6 +25,7 @@ import findPendingInvitation from '../routes/auth/organizations/findPendingInvit
 import { getRegisteredOrganization } from '../routes/auth/organizations/getOrganizationBinding.js';
 import { getAsIssuer, getMcpResourceUri } from '../routes/mcp/getMcpUri.js';
 import getMcpJwks from '../routes/mcp/getMcpJwks.js';
+import readMemberships from './readMemberships.js';
 import resolveStrategyCaller from './resolveStrategyCaller.js';
 
 // resolveAuthentication is the single writer of context.user - nothing
@@ -41,12 +42,16 @@ import resolveStrategyCaller from './resolveStrategyCaller.js';
 // before the strategies run.
 //
 // The active member row is the hard membership wall and the role source in
-// one indexed read ({ userId, organizationId } on the member model), live on
+// one indexed read on the { userId, organizationId } member index, live on
 // every request so membership removal and role changes take effect
-// immediately - roles are deliberately not stamped onto the session. A
-// session whose user holds no member row in the active org resolves to
-// unauthenticated: a stale cookie from another app's deployment and a member
-// removed mid-session are treated as logged out, not logged-in with no roles.
+// immediately - roles are deliberately not stamped onto the session. For a
+// session the read returns every member row the person holds (readMemberships),
+// so the same round trip names every organization they belong to, recorded on
+// context.authSession with the session id for the response's caller stamp
+// (callerStamp). A session whose user holds no member row in the active org
+// resolves to unauthenticated: a stale cookie from another app's deployment
+// and a member removed mid-session are treated as logged out, not logged-in
+// with no roles.
 // Under policy: pinned, a session whose active organization is not this app's
 // organization is treated the same way, member row there or not.
 //
@@ -102,19 +107,18 @@ function passkeyConfigured({ auth }) {
 
 // The membership wall and the caller assembly, shared verbatim by the session
 // and MCP bearer branches so the two ways to become a member caller cannot
-// drift - one member read, one role source, one caller shape.
+// drift - one role source, one caller shape. member is the caller's row in the
+// active organization, or null when they hold none. The session branch reads it
+// with every other row the person holds (readMemberships), since its response
+// is stamped with their memberships; the bearer branches read the one row.
 //
 // memberId is passed only by the member token branch: a token works for the
 // member row it was made for, so a member who left and rejoined - a new row -
 // holds no old tokens.
-async function resolveMemberCaller(context, { adapter, auth, memberId, organizationId, user }) {
-  const member = await adapter.findOne({
-    model: 'member',
-    where: [
-      { field: 'userId', value: user.id },
-      { field: 'organizationId', value: organizationId },
-    ],
-  });
+async function resolveMemberCaller(
+  context,
+  { adapter, auth, member, memberId, organizationId, user }
+) {
   if (type.isNone(member)) {
     context.logger.debug(
       `User "${user.id}" has no member row in organization "${organizationId}" - resolved unauthenticated.`
@@ -271,9 +275,17 @@ async function resolveBearerMember(context, { adapter, auth, memberId, organizat
     );
     return null;
   }
+  const memberRow = await adapter.findOne({
+    model: 'member',
+    where: [
+      { field: 'userId', value: user.id },
+      { field: 'organizationId', value: organizationId },
+    ],
+  });
   const member = await resolveMemberCaller(context, {
     adapter,
     auth,
+    member: memberRow,
     memberId,
     organizationId,
     user,
@@ -527,7 +539,14 @@ async function resolveMcpCaller(context, { auth, headers }) {
   context.user = { ...member, auth_method: 'mcp' };
 }
 
+// context.authSession is the session the caller was resolved from, for the
+// response's caller stamp: { id, memberOrganizationIds }. memberOrganizationIds
+// is every organization the person belongs to under tenant, this app's
+// organization alone under pinned, and null when the member rows were not read
+// (a session with no active organization) or did not fit one read. null for
+// every caller that is not a session caller.
 async function resolveAuthentication(context, { auth, headers, strategies, mcp }) {
+  context.authSession = null;
   if (type.isNone(auth)) {
     context.user = null;
     return;
@@ -590,6 +609,7 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
       : null;
     // No member row, so no per-organization attributes and no roles of either
     // kind - the global attributes ride alone.
+    context.authSession = { id: session.session.id, memberOrganizationIds: null };
     context.user = normalizeCaller({
       ...session.user,
       roles: [],
@@ -640,12 +660,28 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
     return;
   }
   const { adapter } = await auth.$context;
+  const { member, organizationIds } = await readMemberships({
+    adapter,
+    organizationId: activeOrganizationId,
+    userId: session.user.id,
+  });
   context.user = await resolveMemberCaller(context, {
     adapter,
     auth,
+    member,
     organizationId: activeOrganizationId,
     user: session.user,
   });
+  if (type.isNone(context.user)) {
+    return;
+  }
+  // A pinned app serves one organization, and this caller reached here as a
+  // member of it, so that is the one membership its stamp names: rows the same
+  // auth database holds for other apps' organizations never change this app's
+  // stamp. Under tenant every organization the person belongs to counts.
+  const memberOrganizationIds =
+    registered?.policy === 'pinned' ? [registered.slug] : organizationIds;
+  context.authSession = { id: session.session.id, memberOrganizationIds };
 }
 
 export default resolveAuthentication;

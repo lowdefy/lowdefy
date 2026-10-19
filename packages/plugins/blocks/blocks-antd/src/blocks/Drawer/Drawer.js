@@ -16,7 +16,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Drawer } from 'antd';
-import { get, type } from '@lowdefy/helpers';
+import { get, journeyTargetSelectors, type } from '@lowdefy/helpers';
 
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import getMask from '../getMask.js';
@@ -171,6 +171,7 @@ const DrawerBlock = ({
       }
       afterOpenChange={(drawerOpen) => handleAfterOpenChange({ drawerOpen, methods, rename })}
       className={classNames.element}
+      rootClassName={journeyTargetSelectors.portalClass(blockId)}
       classNames={{
         header: classNames.header,
         title: classNames.title,

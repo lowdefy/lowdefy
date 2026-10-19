@@ -19,6 +19,7 @@ import { ConfigError, UserError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import { createUrl } from '../adapters/url.js';
+import setLowdefyUser from '../setLowdefyUser.js';
 
 // Accepts only a path-absolute URL from the ?callbackUrl= query. A bare
 // startsWith('/') is not enough: "//evil.com" and "/\evil.com" also start with
@@ -174,11 +175,15 @@ function createAuthMethods(lowdefy, auth) {
   // half-applied. An external target leaves the app, so it cannot route through
   // the in-app router. A resolved page target is un-prefixed; the router
   // re-applies basePath, so nothing double-prefixes. A page target that names a
-  // page joins the path memory before the push, as a followed link does.
+  // page joins the path memory before the push, as a followed link does. The
+  // session provider's reloads on a session change are suppressed first: the
+  // full load renders the new session anyway, and a reload racing it would
+  // land back on the page being left.
   function navigateToTarget(target) {
     if (type.isNone(target)) {
       return;
     }
+    auth.suppressSessionReload();
     if (target.kind === 'external') {
       lowdefy._internal.globals.window.location.assign(target.href);
       return;
@@ -344,26 +349,33 @@ function createAuthMethods(lowdefy, auth) {
       if (type.isNone(provider)) {
         throw new ConfigError(`Login provider "${providerId}" is not a configured auth provider.`);
       }
-      if (provider.type === 'GenericOAuth') {
-        return unwrap(
-          auth.signInOauth2({
-            providerId,
-            callbackURL,
-            ...routingCallbacks,
-            ...rest,
-            ...captchaOptions,
-          })
-        );
-      }
-      return unwrap(
+      // BetterAuth registers a GenericOAuth provider as a social provider keyed
+      // by its providerId, the Lowdefy provider id; built-in ones are keyed by
+      // their lowercase type.
+      const socialProvider =
+        provider.type === 'GenericOAuth' ? provider.id : provider.type.toLowerCase();
+      const data = await unwrap(
         auth.signInSocial({
-          provider: provider.type.toLowerCase(),
+          provider: socialProvider,
           callbackURL,
           ...routingCallbacks,
           ...rest,
           ...captchaOptions,
         })
       );
+      // An idToken passed through rest signs in within this request, so a
+      // 2FA-enrolled user gets the challenge here, as on the password paths.
+      if (data?.twoFactorRedirect) {
+        return navigateToTwoFactorChallenge({ callbackTarget }) ? stopChain(data) : data;
+      }
+      // The redirect branch leaves navigation to BetterAuth's redirect to the
+      // IdP; a completed id token sign-in answers redirect: false with no url,
+      // so navigate to the callback as the password paths do.
+      const window = lowdefy._internal?.globals?.window;
+      if (data?.redirect === false && callbackTarget && window) {
+        navigateToTarget(callbackTarget);
+      }
+      return data;
     }
     if (magicLink === true) {
       assertCallbackUrlNavigable({ callbackUrl, method: 'Login with magicLink' });
@@ -463,12 +475,15 @@ function createAuthMethods(lowdefy, auth) {
     const callbackTarget = resolveTarget({ lowdefy, target: callbackUrl });
     const window = lowdefy._internal?.globals?.window;
     const willNavigate = Boolean(callbackTarget && window);
-    if (willNavigate && auth.suppressSignOutReload) {
+    if (willNavigate && auth.suppressSessionReload) {
       // The sign-out reload in the session provider would race the callback
       // navigation - suppress it for this sign-out.
-      auth.suppressSignOutReload();
+      auth.suppressSessionReload();
     }
     const data = await unwrap(auth.signOut());
+    // The next person on this browser must not read the signed-out person's data. Clearing
+    // before the navigation or the session provider's reload keeps it from any later page.
+    lowdefy._internal.storage.clearUserStorage({ keepUserId: null });
     if (willNavigate) {
       navigateToTarget(callbackTarget);
     }
@@ -504,7 +519,7 @@ function createAuthMethods(lowdefy, auth) {
     if (auth.updateResolvedUser) {
       auth.updateResolvedUser(user ?? null);
     }
-    lowdefy.user = user ?? null;
+    setLowdefyUser({ lowdefy, user });
   }
 
   // Accepts an organization invitation. BetterAuth's endpoint enforces the

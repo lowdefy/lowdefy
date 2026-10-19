@@ -81,6 +81,7 @@ test('readExercised returns the entry while the journey is unchanged, and null o
   const file = path.join('tests', 'journeys', 'a.yaml');
   expect(readExercised({ directories, file, journey: run.journey })).toEqual({
     hash: expect.stringMatching(/^[0-9a-f]{40}$/),
+    configHash: null,
     passed: false,
     exercised: run.exercised,
   });
@@ -117,4 +118,23 @@ test('readExercised keeps the entry when only evidence, name or tags change, and
       journey: { ...described, steps: [{ click: 'cancel' }] },
     })
   ).toBeNull();
+});
+
+test('writeExercised stamps each entry with the config it was measured on and keeps older entries as they were', () => {
+  const file = path.join(directories.config, '.lowdefy', 'test', 'exercised.json');
+  writeExercised({
+    directories,
+    results: [result({ name: 'first', file: 'tests/journeys/a.yaml' })],
+    buildId: 'build-1',
+    configHash: 'config-1',
+  });
+  writeExercised({
+    directories,
+    results: [result({ name: 'second', file: 'tests/journeys/b.yaml' })],
+    buildId: 'build-2',
+    configHash: 'config-2',
+  });
+  const { journeys } = JSON.parse(fs.readFileSync(file, 'utf8'));
+  expect(journeys['tests/journeys/a.yaml#first'].configHash).toEqual('config-1');
+  expect(journeys['tests/journeys/b.yaml#second'].configHash).toEqual('config-2');
 });

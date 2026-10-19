@@ -16,5 +16,7 @@
 
 import validate from './validate.js';
 import compile from './compile.js';
+import formatSchemaError from './formatSchemaError.js';
+import getConfigSchemaErrors from './getConfigSchemaErrors.js';
 
-export { validate, compile };
+export { validate, compile, formatSchemaError, getConfigSchemaErrors };

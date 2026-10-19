@@ -33,7 +33,17 @@ function buildProviders({ authConfig, plugins }) {
         { configKey: provider['~k'] }
       );
     }
-    const definition = providerPlugin({ id: provider.id, properties: provider.properties ?? {} });
+    let definition;
+    try {
+      definition = providerPlugin({ id: provider.id, properties: provider.properties ?? {} });
+    } catch (error) {
+      // Provider plugins throw plain errors (an invalid property) - attach the
+      // provider's id and config location.
+      throw new ConfigError(`Auth provider "${provider.id}" is invalid: ${error.message}`, {
+        cause: error,
+        configKey: provider['~k'],
+      });
+    }
     if (definition.kind === 'generic') {
       genericOAuthConfigs.push(definition.config);
       return;

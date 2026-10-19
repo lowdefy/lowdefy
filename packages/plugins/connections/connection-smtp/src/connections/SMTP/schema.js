@@ -96,7 +96,8 @@ export default {
     // null allowed on all filter values because they come from _secret;
     // unset secrets resolve null - an unset filter field is disabled. An unset
     // (null) filter falls back to the current environment's email filter;
-    // false turns filtering off, the environment's too.
+    // false turns filtering off, the environment's too. Recipients on the reserved
+    // .invalid domain are always dropped (applyMailFilter.js).
     filter: {
       type: ['object', 'null', 'boolean'],
       not: { const: true },

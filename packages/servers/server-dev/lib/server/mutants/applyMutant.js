@@ -17,16 +17,19 @@
 import { type } from '@lowdefy/helpers';
 
 import findNodeByKey from './findNodeByKey.js';
+import findNodeByPointer from './findNodeByPointer.js';
 import operators from './operators/index.js';
 
 // Applies one mutant to a deserialised artifact copy, in place. Reports
-// whether it applied, and why not when it did not, changing nothing then.
-function applyMutant({ root, mutant: { operator, key, arg } }) {
+// whether it applied, and why not when it did not, changing nothing then. The
+// node is found by its key; when the page was rebuilt since the mutant was
+// listed its keys are new, and the node is found by its pointer instead.
+function applyMutant({ root, mutant: { operator, key, arg, pointer, nodeHash } }) {
   const definition = operators[operator];
   if (type.isUndefined(definition)) {
     return { applied: false, reason: `unknown operator "${operator}"` };
   }
-  const found = findNodeByKey({ root, key });
+  const found = findNodeByKey({ root, key }) ?? findNodeByPointer({ root, pointer, nodeHash });
   if (found === null) {
     return { applied: false, reason: 'key not found' };
   }

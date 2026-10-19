@@ -10,6 +10,14 @@ lowdefy: local
 config:
   homePageId: home
 
+# A local plugin whose connection type reaches MongoDB only through the walled
+# client and declares dataSet: walled: the walled-client test
+# (packages/servers/server-dev/test/journeyFixture/walled.test.mjs) clicks
+# through its write on a data set.
+plugins:
+  - name: journey-fixture-walled-plugin
+    version: workspace:*
+
 connections:
   - id: fixture_db
     type: MongoDBCollection
@@ -25,6 +33,8 @@ connections:
     type: AxiosHttp
     properties:
       baseURL: http://127.0.0.1:9
+  - _ref: connections/storage_bucket.yaml
+  - _ref: connections/walled_runtime.yaml
 
 # Auth exists only to gate auditor_only, so a journey can be refused by a real
 # auth gate. An API key strategy is the one auth mechanism that needs no
@@ -55,6 +65,7 @@ api:
   - _ref: api/explode.yaml
   - _ref: api/auditor_only.yaml
   - _ref: api/typed_order.yaml
+  - _ref: api/save_walled.yaml
 
 pages:
   - _ref: pages/home.yaml
@@ -67,7 +78,13 @@ pages:
   - _ref: pages/app_errors_open.yaml
   - _ref: pages/timing.yaml
   - _ref: pages/targets.yaml
+  - _ref: pages/fill.yaml
   - _ref: pages/rails.yaml
   - _ref: pages/generated.yaml
   - _ref: pages/shared_alpha.yaml
   - _ref: pages/shared_beta.yaml
+  - _ref: pages/storage.yaml
+  - _ref: pages/walled.yaml
+  - _ref: pages/handoff.yaml
+  - _ref: pages/selectors.yaml
+  - _ref: pages/containing_split.yaml

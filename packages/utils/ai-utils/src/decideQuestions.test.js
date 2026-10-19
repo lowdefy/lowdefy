@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { fromEvaluationAnswer } from './decideQuestions.js';
+import { fromEvaluationAnswer, optionDescriptions } from './decideQuestions.js';
 
 const choice = { choice: 'Which team', options: { billing: null, tech: null } };
 const yesno = { yesno: 'The service is down' };
@@ -53,3 +53,17 @@ test.each([
     expect(fromEvaluationAnswer({ question, answer, providerConfidence: 0.95 })).toEqual(expected);
   }
 );
+
+test('optionDescriptions reads the description from object options and ignores their other keys', () => {
+  expect(
+    optionDescriptions({
+      choice: 'What the person wants to make',
+      options: {
+        event: { label: 'Event', icon: 'Calendar', description: 'A meeting at a time' },
+        timer: { label: 'Timer' },
+        split: 'Splitting money',
+        none: null,
+      },
+    })
+  ).toEqual({ event: 'A meeting at a time', timer: null, split: 'Splitting money', none: null });
+});

@@ -29,7 +29,7 @@ function countStepTypes(step, { typeCounters, stepTypes }) {
     typeCounters.steps.increment(step.type, step['~k']);
     return;
   }
-  typeCounters.requests.increment(step.type, step['~k']);
+  typeCounters.requests.increment(step.type, step['~k'], step);
 }
 
 export default countStepTypes;

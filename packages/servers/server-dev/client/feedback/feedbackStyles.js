@@ -18,6 +18,8 @@
 // above ErrorBar.jsx (bottom: 40px, zIndex 99999) but under nothing — this
 // overlay is the topmost thing on the page while active.
 
+import getCspNonce from '../../lib/client/getCspNonce.js';
+
 const STYLE_TAG_ID = 'lowdefy-feedback-style-tag';
 
 const colors = {
@@ -248,6 +250,7 @@ function injectFeedbackStyleTag() {
   }
   const style = document.createElement('style');
   style.id = STYLE_TAG_ID;
+  style.nonce = getCspNonce();
   style.textContent = `
     .lowdefy-feedback-picking, .lowdefy-feedback-picking * {
       cursor: crosshair !important;

@@ -61,7 +61,13 @@ function isAppError(finding) {
 function createJourneyAppErrors({ origin, basePath, recording, configDirectory }) {
   const buildDirectory = path.join(process.cwd(), 'build');
   const run = { run: recording.run.id, journey: recording.run.journey };
-  const events = { pageErrors: [], requests: [], responses: [], pendingClientErrors: new Set() };
+  const events = {
+    pageErrors: [],
+    requests: [],
+    responses: [],
+    abortedRequests: [],
+    pendingClientErrors: new Set(),
+  };
   let since = 0;
   let current = null;
   // The window the last step closed, which an expect.effect step reads for

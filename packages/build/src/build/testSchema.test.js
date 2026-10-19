@@ -779,3 +779,63 @@ test('menu item class as an operator or with operator slot values emits no warni
   testSchema({ components, context });
   expect(mockLogWarn).not.toHaveBeenCalled();
 });
+
+test.each([
+  [true],
+  [false],
+  [{}],
+  [{ reportOnly: true }],
+  [{ directives: { 'script-src': ['https://cdn.example.com'], 'upgrade-insecure-requests': [] } }],
+])('config.security.contentSecurityPolicy %j emits no warnings', (contentSecurityPolicy) => {
+  const components = {
+    lowdefy: '1.0.0',
+    config: { security: { contentSecurityPolicy } },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test.each([
+  ['security', 'strict', 'App "config.security" should be an object.'],
+  [
+    'contentSecurityPolicy',
+    { contentSecurityPolicy: 'enforce' },
+    'App "config.security.contentSecurityPolicy" should be a boolean or an object.',
+  ],
+  [
+    'reportOnly',
+    { contentSecurityPolicy: { reportOnly: 'yes' } },
+    'App "config.security.contentSecurityPolicy.reportOnly" should be a boolean.',
+  ],
+  [
+    'directives',
+    { contentSecurityPolicy: { directives: ['script-src'] } },
+    'App "config.security.contentSecurityPolicy.directives" should be an object.',
+  ],
+  [
+    'directive value',
+    { contentSecurityPolicy: { directives: { 'script-src': 'https://cdn.example.com' } } },
+    'App "config.security.contentSecurityPolicy.directives" values should be arrays of source strings.',
+  ],
+  [
+    'directive source',
+    { contentSecurityPolicy: { directives: { 'script-src': [1] } } },
+    'App "config.security.contentSecurityPolicy.directives" sources should be strings.',
+  ],
+])('config.security with an invalid %s emits a warning', (_, security, message) => {
+  const components = {
+    lowdefy: '1.0.0',
+    config: { security },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(message);
+});
+
+test('config.security with an unknown key emits a warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    config: { security: { contentSecurityPolicy: true, frameOptions: 'deny' } },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalled();
+});

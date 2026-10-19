@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-import * as Sentry from '@sentry/node';
 import { redactErrorResponse } from '@lowdefy/api';
 import { HTTPException } from 'hono/http-exception';
+
+import sentrySdk from '../../lib/server/sentry/sentrySdk.js';
 
 // Hono routes every handler error to the app-level error handler — upstream
 // middleware try/catch never sees them (compose catches per dispatch level).
@@ -91,8 +92,8 @@ function createErrorHandler({ basePath = '', logger }) {
       await context.handleError(error);
     } else {
       logger.error(error);
-      if (process.env.SENTRY_DSN) {
-        Sentry.captureException(error);
+      if (sentrySdk.current) {
+        sentrySdk.current.captureException(error);
       }
     }
     if (path.startsWith('/api/')) {

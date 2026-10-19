@@ -27,6 +27,7 @@ function setup({ signInResult, signUpResult } = {}) {
       globals: {
         window: { location: { assign, origin: 'https://app.lowdefy.test', search: '' } },
       },
+      storage: { clearUserStorage: jest.fn() },
     },
     home: { configured: false, pageId: 'home-page' },
     linkPaths: {},
@@ -44,6 +45,7 @@ function setup({ signInResult, signUpResult } = {}) {
   lowdefy._internal.router = { basePath: '', push, replace: jest.fn() };
   const auth = {
     authConfig: { providers: [] },
+    suppressSessionReload: jest.fn(),
     acceptInvitation: jest.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
     addPasskey: jest.fn(() => Promise.resolve({ data: { id: 'passkey-1' }, error: null })),
     changePassword: jest.fn(() =>
@@ -211,6 +213,26 @@ test('signUp lands the verification link on the callback ladder without authPage
   expect(auth.signUpEmail.mock.calls[0][0].callbackURL).toBe('/home-page');
 });
 
+test('login suppresses the session reload before navigating to its callback', async () => {
+  const { auth, lowdefy, assign } = setup();
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123', callbackUrl: '/dashboard' });
+  expect(auth.suppressSessionReload).toHaveBeenCalledTimes(1);
+  expect(auth.suppressSessionReload.mock.invocationCallOrder[0]).toBeLessThan(
+    assign.mock.invocationCallOrder[0]
+  );
+});
+
+test('login does not suppress the session reload when the sign-in fails', async () => {
+  const { auth, lowdefy } = setup();
+  auth.signInEmail = jest.fn(() =>
+    Promise.resolve({ data: null, error: { message: 'Invalid email or password' } })
+  );
+  const { login } = createAuthMethods(lowdefy, auth);
+  await expect(login({ email: 'user@example.com', password: 'wrong' })).rejects.toThrow();
+  expect(auth.suppressSessionReload).not.toHaveBeenCalled();
+});
+
 test('signUp passes through rest params to signUpEmail', async () => {
   const { auth, lowdefy } = setup();
   const { signUp } = createAuthMethods(lowdefy, auth);
@@ -222,10 +244,12 @@ test('logout prefixes basePath onto a relative callbackUrl and suppresses the si
   const { auth, lowdefy, assign } = setup();
   lowdefy.basePath = '/base';
   auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
-  auth.suppressSignOutReload = jest.fn();
+  auth.suppressSessionReload = jest.fn();
   const { logout } = createAuthMethods(lowdefy, auth);
   await logout({ callbackUrl: { pageId: 'goodbye' } });
-  expect(auth.suppressSignOutReload).toHaveBeenCalledTimes(1);
+  expect(auth.suppressSessionReload.mock.invocationCallOrder[0]).toBeLessThan(
+    auth.signOut.mock.invocationCallOrder[0]
+  );
   expect(assign.mock.calls).toEqual([['/base/goodbye']]);
 });
 
@@ -241,11 +265,36 @@ test('logout navigates to an absolute callbackUrl without prefixing basePath', a
 test('logout without a callbackUrl signs out without navigating or suppressing the reload', async () => {
   const { auth, lowdefy, assign } = setup();
   auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
-  auth.suppressSignOutReload = jest.fn();
+  auth.suppressSessionReload = jest.fn();
   const { logout } = createAuthMethods(lowdefy, auth);
   await logout();
-  expect(auth.suppressSignOutReload).not.toHaveBeenCalled();
+  expect(auth.suppressSessionReload).not.toHaveBeenCalled();
   expect(assign).not.toHaveBeenCalled();
+});
+
+test('logout clears user storage after signing out and before navigating', async () => {
+  const { auth, lowdefy, assign } = setup();
+  const order = [];
+  auth.signOut = jest.fn(() => {
+    order.push('signOut');
+    return Promise.resolve({ data: { success: true }, error: null });
+  });
+  lowdefy._internal.storage.clearUserStorage = jest.fn(() => order.push('clearUserStorage'));
+  assign.mockImplementation(() => order.push('navigate'));
+  const { logout } = createAuthMethods(lowdefy, auth);
+  await logout({ callbackUrl: { pageId: 'goodbye' } });
+  expect(lowdefy._internal.storage.clearUserStorage.mock.calls).toEqual([[{ keepUserId: null }]]);
+  expect(order).toEqual(['signOut', 'clearUserStorage', 'navigate']);
+});
+
+test('logout keeps user storage when signing out fails', async () => {
+  const { auth, lowdefy } = setup();
+  auth.signOut = jest.fn(() =>
+    Promise.resolve({ data: null, error: { message: 'Sign out failed.' } })
+  );
+  const { logout } = createAuthMethods(lowdefy, auth);
+  await expect(logout()).rejects.toThrow();
+  expect(lowdefy._internal.storage.clearUserStorage).not.toHaveBeenCalled();
 });
 
 test('login no longer handles signUp - a signUp-only call is rejected', async () => {
@@ -1341,20 +1390,20 @@ test('login with a social provider forwards newUserCallbackUrl and errorCallback
   ]);
 });
 
-test('login with a GenericOAuth provider forwards newUserCallbackUrl and errorCallbackUrl', async () => {
+test('login with a GenericOAuth provider signs in through signInSocial keyed by the provider id', async () => {
   const { auth, lowdefy } = setup();
   auth.authConfig.providers = [{ id: 'keycloak', type: 'GenericOAuth' }];
-  auth.signInOauth2 = jest.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
+  auth.signInSocial = jest.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({
     providerId: 'keycloak',
     newUserCallbackUrl: { pageId: 'welcome' },
     errorCallbackUrl: { pageId: 'sign-in-failed' },
   });
-  expect(auth.signInOauth2.mock.calls).toEqual([
+  expect(auth.signInSocial.mock.calls).toEqual([
     [
       {
-        providerId: 'keycloak',
+        provider: 'keycloak',
         callbackURL: '/home-page',
         newUserCallbackURL: '/welcome',
         errorCallbackURL: '/sign-in-failed',
@@ -1665,13 +1714,13 @@ test('logout with a home callbackUrl does not navigate when the home config name
   const { auth, lowdefy, assign } = setup();
   lowdefy.home = { configured: false, pageId: null };
   auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
-  auth.suppressSignOutReload = jest.fn();
+  auth.suppressSessionReload = jest.fn();
   const { logout } = createAuthMethods(lowdefy, auth);
   // logout gains no default and no throw, but inherits the correctness fix -
   // the post-sign-out reload takes over instead of navigating to /undefined.
   await logout({ callbackUrl: { home: true } });
   expect(assign).not.toHaveBeenCalled();
-  expect(auth.suppressSignOutReload).not.toHaveBeenCalled();
+  expect(auth.suppressSessionReload).not.toHaveBeenCalled();
 });
 
 test('login with email and callbackUrl false mints the session without navigating', async () => {
@@ -1758,13 +1807,13 @@ test('logout with an empty url callbackUrl neither navigates nor suppresses the 
   const { auth, lowdefy, assign } = setup();
   lowdefy.basePath = '/base';
   auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
-  auth.suppressSignOutReload = jest.fn();
+  auth.suppressSessionReload = jest.fn();
   const { logout } = createAuthMethods(lowdefy, auth);
   // The one input where resolving through resolveTargetURL changes when the
   // basePath prefix is applied - willNavigate must stay false either way.
   await logout({ callbackUrl: { url: '' } });
   expect(assign).not.toHaveBeenCalled();
-  expect(auth.suppressSignOutReload).not.toHaveBeenCalled();
+  expect(auth.suppressSessionReload).not.toHaveBeenCalled();
 });
 
 // The ?callbackUrl= query is attacker-supplied - a crafted sign-in link is the
@@ -1898,6 +1947,20 @@ test('updateSession updates the resolved user ref and lowdefy.user from /api/use
   expect(lowdefy.user).toEqual(resolved);
 });
 
+test('updateSession drops CallAPI results when the organization changes', async () => {
+  const { auth, lowdefy } = setup();
+  lowdefy._internal.apiResponsesOrganizationId = 'org-1';
+  lowdefy.apiResponses = { list: [{ response: ['org one'] }] };
+  lowdefy.lowdefyGlobal = { theme: 'dark' };
+  const resolved = { id: 'user-1', organization_id: 'org-2', roles: [] };
+  auth.getResolvedUser = jest.fn(() => Promise.resolve({ user: resolved }));
+  const { updateSession } = createAuthMethods(lowdefy, auth);
+  await updateSession();
+  expect(lowdefy.apiResponses).toEqual({});
+  expect(lowdefy.lowdefyGlobal).toEqual({ theme: 'dark' });
+  expect(lowdefy.user).toEqual(resolved);
+});
+
 test('updateSession throws when the session refresh fails and never reaches /api/user', async () => {
   const { auth, lowdefy } = setup();
   auth.refreshSession = jest.fn(() =>
@@ -1997,6 +2060,50 @@ test('login navigates to authPages.twoFactor on a two-factor challenge, carrying
     callbackUrl: { url: '/dashboard' },
   });
   expect(assign.mock.calls).toEqual([['/two-factor-challenge?callbackUrl=%2Fdashboard']]);
+});
+
+test('login with a provider and an idToken navigates to authPages.twoFactor on a two-factor challenge', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
+  auth.authConfig.providers = [{ id: 'google-sign-in', type: 'Google' }];
+  auth.signInSocial = jest.fn(() => Promise.resolve({ data: challenge, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    providerId: 'google-sign-in',
+    idToken: { token: 'id-token' },
+    callbackUrl: { url: '/dashboard' },
+  });
+  expect(auth.signInSocial.mock.calls[0][0]).toMatchObject({
+    provider: 'google',
+    idToken: { token: 'id-token' },
+  });
+  expect(assign.mock.calls).toEqual([['/two-factor-challenge?callbackUrl=%2Fdashboard']]);
+});
+
+test('login with a provider and an idToken navigates to the callback when the sign-in completes', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.authConfig.providers = [{ id: 'google-sign-in', type: 'Google' }];
+  auth.signInSocial = jest.fn(() =>
+    Promise.resolve({ data: { redirect: false, token: 't', url: undefined }, error: null })
+  );
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    providerId: 'google-sign-in',
+    idToken: { token: 'id-token' },
+    callbackUrl: { url: '/dashboard' },
+  });
+  expect(assign.mock.calls).toEqual([['/dashboard']]);
+});
+
+test('login with a provider leaves the redirect to the IdP to BetterAuth', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.authConfig.providers = [{ id: 'google-sign-in', type: 'Google' }];
+  auth.signInSocial = jest.fn(() =>
+    Promise.resolve({ data: { redirect: true, url: 'https://idp.test/authorize' }, error: null })
+  );
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ providerId: 'google-sign-in', callbackUrl: { url: '/dashboard' } });
+  expect(assign).not.toHaveBeenCalled();
 });
 
 test('login basePath-prefixes the authPages.twoFactor challenge destination', async () => {

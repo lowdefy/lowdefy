@@ -406,7 +406,7 @@ Any other save path works too: the value is plain data, so a request can read `_
 | `activeView` | string \| number \| object \| null | - | The id of the active saved view (an ObjectId id matches by its hex). Defaults to the first view. Changing it selects that view. |
 | `persist` | object | - | Keep the user's view between visits. Off by default. The selection is never persisted. |
 | `persist.key` | string | - | Storage key (localStorage) or query parameter name (url). |
-| `persist.storage` | string | `"local"` | `local` keeps the view in localStorage (none in a private window or with blocked storage); `url` writes a compact encoding to the query string, replacing history. Enum: `local`, `url`. |
+| `persist.storage` | string | `"local"` | `local` keeps the view in localStorage, per app and per signed-in user and cleared at sign-out (none in a private window or with blocked storage); `url` writes a compact encoding to the query string, replacing history. Enum: `local`, `url`. |
 | `emptyText` | string | `"No rows"` | What to show when there are no rows - supports html. |
 | `loading` | boolean | `false` | Show the loading state: skeleton rows without data, a progress bar with it. |
 | `pagination` | boolean | `false` | Show the rows in pages of `pageSize` with a pager below the table. Off by default, unlike TableLight: the Table scrolls any number of rows virtually. `true` means what it means on TableLight: pages, with the pager always shown. |

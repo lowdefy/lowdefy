@@ -16,13 +16,103 @@
 
 import { type } from '@lowdefy/helpers';
 
-function applyMailFilter({ filter, mail }) {
-  if (type.isNone(filter)) {
+function getBareAddress(recipient) {
+  if (type.isObject(recipient)) {
+    return recipient.email.toLowerCase();
+  }
+  const match = recipient.match(/<([^>]+)>/);
+  if (match) {
+    return match[1].toLowerCase();
+  }
+  return recipient.toLowerCase();
+}
+
+// SendGrid reads a string recipient as one address, so a string holding several addresses is
+// not split: it is dropped only when every address in it is .invalid, and otherwise reaches
+// SendGrid as written. Values of an unexpected shape are left for SendGrid to reject.
+function getAddresses(recipient) {
+  if (type.isObject(recipient)) {
+    return type.isString(recipient.email) ? [recipient.email] : [];
+  }
+  if (!type.isString(recipient)) {
+    return [];
+  }
+  return recipient.match(/[^\s<>,;"]+@[^\s<>,;"]+/g) ?? [];
+}
+
+// .invalid is reserved and never resolves (RFC 6761). A trailing dot is the fully qualified
+// form of the same domain.
+function isInvalidAddress(address) {
+  const domain = address
+    .slice(address.lastIndexOf('@') + 1)
+    .trim()
+    .toLowerCase()
+    .replace(/\.+$/, '');
+  return domain === 'invalid' || domain.endsWith('.invalid');
+}
+
+function isInvalid(recipient) {
+  const addresses = getAddresses(recipient);
+  return addresses.length > 0 && addresses.every(isInvalidAddress);
+}
+
+function toList(recipients) {
+  if (type.isNone(recipients)) {
+    return [];
+  }
+  return type.isArray(recipients) ? recipients : [recipients];
+}
+
+// Returns the field as written when nothing is dropped, so mail without .invalid recipients
+// reaches SendGrid unchanged.
+function dropInvalid(recipients) {
+  const list = toList(recipients);
+  const kept = list.filter((recipient) => !isInvalid(recipient));
+  if (kept.length === list.length) {
+    return recipients;
+  }
+  return kept.length === 0 ? undefined : kept;
+}
+
+// Mail to .invalid is dropped on every send, filter or not, and only those recipients are
+// dropped: a real cc or bcc recipient still gets the mail when every to recipient is .invalid.
+// Returns null when no recipient is left.
+function dropInvalidRecipients(mail) {
+  const to = dropInvalid(mail.to);
+  const cc = dropInvalid(mail.cc);
+  const bcc = dropInvalid(mail.bcc);
+  if (type.isNone(to) && type.isNone(cc) && type.isNone(bcc)) {
+    return null;
+  }
+  return { ...mail, to, cc, bcc };
+}
+
+// SendGrid rejects a message with no to recipient, so the remaining cc and bcc recipients become
+// to recipients with a copy each (isMultiple), which keeps a bcc recipient hidden from the others.
+function ensureToRecipient(mail) {
+  if (!type.isNone(mail.to)) {
     return mail;
+  }
+  return {
+    ...mail,
+    to: [...toList(mail.cc), ...toList(mail.bcc)],
+    cc: undefined,
+    bcc: undefined,
+    isMultiple: true,
+  };
+}
+
+function applyMailFilter({ filter, mail: received }) {
+  const mail = dropInvalidRecipients(received);
+  if (mail === null) {
+    return null;
+  }
+  if (type.isNone(filter)) {
+    return ensureToRecipient(mail);
   }
   const { replaceAddress, allowlist, regex } = filter;
   if (type.isNone(replaceAddress) && type.isNone(allowlist) && type.isNone(regex)) {
-    return mail;
+    return ensureToRecipient(mail);
   }
   if (!type.isNone(replaceAddress)) {
     return { ...mail, to: replaceAddress, cc: undefined, bcc: undefined };
@@ -32,17 +122,6 @@ function applyMailFilter({ filter, mail }) {
     ? null
     : allowlist.map((domain) => domain.toLowerCase());
   const addressRegex = type.isNone(regex) ? null : new RegExp(regex);
-
-  function getBareAddress(recipient) {
-    if (type.isObject(recipient)) {
-      return recipient.email.toLowerCase();
-    }
-    const match = recipient.match(/<([^>]+)>/);
-    if (match) {
-      return match[1].toLowerCase();
-    }
-    return recipient.toLowerCase();
-  }
 
   function isAllowed(recipient) {
     const address = getBareAddress(recipient);

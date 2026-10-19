@@ -62,6 +62,7 @@ test('AwsS3PutObject decodes base64 content and writes the object', async () => 
           secretAccessKey: 'secretAccessKey',
         },
         region: 'region',
+        requestStreamBufferSize: 65536,
       },
     ],
   ]);
@@ -110,6 +111,7 @@ test('AwsS3PutObject passes endpoint and forcePathStyle to the S3 client', async
           secretAccessKey: 'secretAccessKey',
         },
         region: 'auto',
+        requestStreamBufferSize: 65536,
         endpoint: 'https://account.r2.cloudflarestorage.com',
         forcePathStyle: true,
       },

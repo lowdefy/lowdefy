@@ -16,13 +16,16 @@
 
 import request from './request.js';
 
-function createCallRequest({ basePath, buildId }) {
+function createCallRequest(lowdefy) {
+  const { basePath, buildId } = lowdefy;
   function callRequest({ actionId, blockId, pageId, payload, requestId }) {
     return request({
       buildId,
       url: `${basePath}/api/request/${pageId}/${requestId}`,
       method: 'POST',
       body: { actionId, blockId, payload },
+      reloadOnAuthorizationError: true,
+      lowdefy,
     });
   }
   return callRequest;

@@ -111,11 +111,15 @@ function createLocator({ selector, page }) {
     first: jest.fn(() => locator),
     // A union reads as this locator: the fake page shows a block and its
     // control together.
-    or: jest.fn(() => locator),
+    or: jest.fn((other) => {
+      page.unions.push({ selector, other: other?.selector });
+      return locator;
+    }),
     last: jest.fn(() => locator),
     nth: jest.fn(() => locator),
     filter: jest.fn(() => locator),
     count: jest.fn(async () => 0),
+    isChecked: jest.fn(async () => false),
     selectOption: jest.fn(),
     waitFor: jest.fn(async () => {
       page.waits.push(selector);
@@ -138,6 +142,7 @@ function createPage({ window = createLowdefyWindow(), url = 'http://localhost:32
   const page = {
     clicks: [],
     fills: [],
+    unions: [],
     presses: [],
     missingBlocks: [],
     hiddenBlocks: [],
@@ -603,8 +608,8 @@ test('runJourney fails an action whose containing target matches several element
   openWith(page);
   page.locator.mockImplementation((selector) => {
     const locator = createLocator({ selector, page });
-    locator.getByText.mockImplementation((text) => {
-      const found = createLocator({ selector: `${selector} >> text=${text}`, page });
+    locator.locator.mockImplementation((child) => {
+      const found = createLocator({ selector: `${selector} ${child}`, page });
       found.count.mockResolvedValue(2);
       return found;
     });
@@ -947,6 +952,32 @@ test('runJourney fails expect.calls with no pageId when no Lowdefy page is showi
     expected: 'a Lowdefy page to count request "save" on',
     actual: null,
   });
+});
+
+test('runJourney fill looks in the block and in its portal for the input', async () => {
+  const page = createPage();
+  openWith(page);
+  await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ fill: { blockId: 'header_search', value: 'PAIA' } }],
+  });
+  expect(page.fills).toEqual([{ selector: '#bl-header_search input, textarea', value: 'PAIA' }]);
+  expect(page.unions).toContainEqual({
+    selector: '#bl-header_search',
+    other: '.ldf-portal-header_search',
+  });
+});
+
+test('runJourney fill of a grid cell does not look in a portal', async () => {
+  const page = createPage();
+  openWith(page);
+  await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ fill: { blockId: 'grid', row: 1, column: 'name', value: 'Ada' } }],
+  });
+  expect(page.unions.filter((union) => union.other?.startsWith('.ldf-portal'))).toEqual([]);
 });
 
 test('runJourney fills a numeric value as a string', async () => {
@@ -1297,6 +1328,91 @@ test('runJourney reports a radio option that is not in the block by its text', a
   });
 });
 
+function withCheckboxOptions({ page, checked = false, waitError } = {}) {
+  const filters = [];
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.locator.mockImplementation((child) => {
+      const inner = createLocator({ selector: `${selector} ${child}`, page });
+      if (child === 'label:has(input[type="checkbox"])') {
+        inner.count.mockResolvedValue(3);
+        inner.filter.mockImplementation((filter) => {
+          filters.push(filter);
+          return inner;
+        });
+        if (waitError) {
+          inner.waitFor.mockRejectedValue(waitError);
+        }
+        inner.locator.mockImplementation((input) => {
+          const box = createLocator({ selector: `${inner.selector} ${input}`, page });
+          box.isChecked.mockResolvedValue(checked);
+          return box;
+        });
+      }
+      return inner;
+    });
+    return locator;
+  });
+  return filters;
+}
+
+test('runJourney ticks a checkbox option in the block by its exact label', async () => {
+  const page = createPage();
+  openWith(page);
+  const filters = withCheckboxOptions({ page });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'reports',
+    steps: [{ select: { blockId: 'regions', value: 'North' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual(['#bl-regions label:has(input[type="checkbox"])']);
+  expect(filters[0].hasText.test('North')).toBe(true);
+  expect(filters[0].hasText.test('North East')).toBe(false);
+  expect(filters[1]).toEqual({ visible: true });
+});
+
+test('runJourney leaves a checkbox option that is already ticked', async () => {
+  const page = createPage();
+  openWith(page);
+  withCheckboxOptions({ page, checked: true });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'reports',
+    steps: [{ select: { blockId: 'regions', value: 'North' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([]);
+});
+
+test('runJourney reports a checkbox option that is not in the block by its text', async () => {
+  const page = createPage();
+  openWith(page);
+  withCheckboxOptions({
+    page,
+    waitError: new Error('locator.waitFor: Timeout 5000ms exceeded.'),
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'reports',
+    steps: [{ select: { blockId: 'regions', value: 'West' } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    index: 0,
+    expected: 'option "West" in block "regions"',
+    actual: 'locator.waitFor: Timeout 5000ms exceeded.',
+    message: 'No option with text "West" in block "regions".',
+  });
+  expect(page.clicks).toEqual([]);
+});
+
 test('runJourney reports a dropdown option that never appears by its text', async () => {
   const page = createPage();
   openWith(page);
@@ -1619,14 +1735,39 @@ test('runJourney waits for lazy blocks to load before it picks the control a cli
   expect(result.passed).toBe(false);
   expect(result.failure).toMatchObject({
     index: 0,
-    message: 'A lazy block was still loading after 5000 ms.',
-    expected: 'every lazy block on the page to have loaded',
+    message: 'A block was still loading after 5000 ms.',
+    expected:
+      'every lazy block on the page to have loaded and every loading skeleton to have cleared',
   });
   expect(page.clicks).toEqual([]);
 
   window.__lowdefyLazyLoads = 0;
   const loaded = await runJourney({ origin, pageId: 'form', steps: [{ click: 'table' }] });
   expect(loaded.passed).toBe(true);
+  expect(page.clicks).toEqual(['#bl-table']);
+});
+
+test('runJourney waits for a table holding its loading skeleton before it picks the control a click lands on', async () => {
+  const window = createLowdefyWindow();
+  window.__lowdefyLazyLoads = 0;
+  window.__lowdefySkeletonHolds = 1;
+  const page = createPage({ window });
+  openWith(page);
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ click: 'table' }] });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    index: 0,
+    message: 'A block was still loading after 5000 ms.',
+    expected:
+      'every lazy block on the page to have loaded and every loading skeleton to have cleared',
+  });
+  expect(page.clicks).toEqual([]);
+
+  window.__lowdefySkeletonHolds = 0;
+  const cleared = await runJourney({ origin, pageId: 'form', steps: [{ click: 'table' }] });
+  expect(cleared.passed).toBe(true);
   expect(page.clicks).toEqual(['#bl-table']);
 });
 
@@ -1985,9 +2126,9 @@ test.each([
   [
     'inside a block',
     { blockId: 'members_list', containing: 'ada@example.test' },
-    '#bl-members_list >> text=ada@example.test',
+    '#bl-members_list lowdefy-shown-text="ada@example.test"',
   ],
-  ['on the whole page', { containing: 'Invitation sent' }, 'text=Invitation sent'],
+  ['on the whole page', { containing: 'Invitation sent' }, 'lowdefy-shown-text="Invitation sent"'],
 ])(
   'runJourney clicks the element showing the text %s, not the first control in it',
   async (_, target, selector) => {
@@ -2214,4 +2355,29 @@ test('runJourney passes a wait on a request the interaction before it called', a
 
   expect(result.failure).toBeUndefined();
   expect(result.passed).toBe(true);
+});
+
+test('runJourney reports the text it read when the last poll of expect.text fails', async () => {
+  const page = createPage();
+  const locator = page.locator('#bl-label');
+  locator.allInnerTexts.mockResolvedValue(['1 LAPSED']);
+  let attached = 0;
+  locator.waitFor.mockImplementation(async () => {
+    attached += 1;
+    if (attached > 1) throw new Error('locator.waitFor: Timeout 1ms exceeded.');
+  });
+  page.locator = jest.fn(() => locator);
+  openWith(page);
+  const spy = advanceClockOnEveryRead();
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ expect: { text: { blockId: 'label', contains: 'lapsed' } } }],
+  });
+
+  spy.mockRestore();
+
+  expect(result.failure.actual).toEqual('1 LAPSED');
+  expect(result.failure.message).toContain('matches ignoring case');
 });

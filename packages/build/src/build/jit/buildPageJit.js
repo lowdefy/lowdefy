@@ -44,6 +44,7 @@ import detectMissingPluginPackages from './detectMissingPluginPackages.js';
 import getJitIconContext from './getJitIconContext.js';
 import prepareJitContext from './prepareJitContext.js';
 import resolvePageSource from './resolvePageSource.js';
+import runPluginChecks from '../runPluginChecks.js';
 import updateIconImportsJit from './updateIconImportsJit.js';
 import updateServerPackageJsonJit from './updateServerPackageJsonJit.js';
 import scanJitMaps from './scanJitMaps.js';
@@ -169,6 +170,14 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       }
       return { installing: true, packages: [...missingPackages.keys()] };
     }
+
+    // After the missing-package return: a page waiting on an install runs its
+    // rules once the server restarts with the package.
+    await runPluginChecks({
+      components: processed,
+      context: buildContext,
+      allSlugPackages: true,
+    });
 
     // Detect icons in the JIT-resolved page that weren't discovered during skeleton build.
     // Placed after detectMissingPluginPackages so we skip this when packages are being

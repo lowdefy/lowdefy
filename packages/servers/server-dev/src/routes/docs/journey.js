@@ -141,6 +141,9 @@ async function docsJourneyHandler(c) {
           buildId: body.mutant.buildId,
           artifact: body.mutant.artifact,
           key: body.mutant.key,
+          ...(type.isNone(body.mutant.pointer)
+            ? {}
+            : { pointer: body.mutant.pointer, nodeHash: body.mutant.nodeHash ?? null }),
           arg: body.mutant.arg ?? null,
           operator: body.mutant.operator,
         },

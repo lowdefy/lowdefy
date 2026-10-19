@@ -15,7 +15,7 @@
 */
 
 import React, { useEffect } from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { getSafeHref, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 import { EditorContent } from '@tiptap/react';
 import { mergeAttributes } from '@tiptap/core';
@@ -139,7 +139,7 @@ const TiptapMentionInput = ({
         modifier.style = `color: ${color}`;
       }
       const href = type.isFunction(properties.mentions?.getHref)
-        ? properties.mentions.getHref(id)
+        ? getSafeHref(properties.mentions.getHref(id))
         : undefined;
       if (!type.isNone(href)) {
         return [

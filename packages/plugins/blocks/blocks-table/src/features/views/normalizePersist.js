@@ -16,13 +16,22 @@
 
 import { type } from '@lowdefy/helpers';
 
-// `persist: { key, storage }`, off unless set (D6, D15).
-function normalizePersist(persist) {
+// `persist: { key, storage }`, off unless set (D6, D15). A view kept in local storage is the
+// signed-in person's, so it is kept under a user key: cleared at sign-out and never read by the
+// next person on the browser.
+function normalizePersist({ getUserStorageKey, persist }) {
   if (type.isNone(persist)) return null;
   if (!type.isObject(persist) || !type.isString(persist.key) || persist.key === '') {
     throw new Error(`Table persist requires a "key" string. Received ${JSON.stringify(persist)}.`);
   }
-  return { key: persist.key, storage: persist.storage === 'url' ? 'url' : 'local' };
+  if (persist.storage === 'url') {
+    return { key: persist.key, storage: 'url', storageKey: null };
+  }
+  return {
+    key: persist.key,
+    storage: 'local',
+    storageKey: getUserStorageKey(`lowdefy-table:${persist.key}`),
+  };
 }
 
 export default normalizePersist;

@@ -35,6 +35,7 @@ import openDataSession from './dataSets/openDataSession.js';
 import openJourney from './openJourney.js';
 import readBuildArtifact from './readBuildArtifact.js';
 import readDevAuthMode from './readDevAuthMode.js';
+import readConnectionPlugins from './readConnectionPlugins.js';
 import readPagePath from './readPagePath.js';
 import { registerRunBuffer, releaseRunBuffer } from './runErrorBuffers.js';
 import resolveJourneyDataSet from './dataSets/resolveJourneyDataSet.js';
@@ -283,6 +284,7 @@ async function runJourneyInBrowser({
     if (!type.isUndefined(dataSet)) {
       journey.dataSetRails = createDataSetRails({
         buildDirectory: path.join(process.cwd(), 'build'),
+        connections: await readConnectionPlugins(),
       });
     }
     const { results, screenshots, failure } = await runJourneySteps({ journey, steps });
@@ -307,6 +309,11 @@ async function runJourneyInBrowser({
     if (!type.isUndefined(dataSet)) {
       result.data = describeDataSetResult({ dataSet, loadMs });
       result.warnings = dataSet.warnings;
+    }
+    // Requests of external connections (mail, HTTP, ...) a data set run recorded instead of
+    // sending, in the order they ran.
+    if (session !== null && (session.sunk?.length ?? 0) > 0) {
+      result.sunk = session.sunk;
     }
     // openPage already waited for the page's async lifecycle; an unsettled page
     // still runs its steps and reports `ready: false` alongside the result.

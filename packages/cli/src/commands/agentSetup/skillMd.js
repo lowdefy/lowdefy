@@ -17,7 +17,7 @@
 import devServerRules from './devServerRules.js';
 import TESTING_RULES from './testingRules.js';
 
-function skillMd({ appPath }) {
+function skillMd() {
   return `---
 name: lowdefy-config
 description: Use when writing or editing Lowdefy YAML config — pages, blocks, operators, actions, connections, or requests. Looks up exact type names, schemas, and examples from the running dev server instead of guessing.
@@ -25,7 +25,7 @@ description: Use when writing or editing Lowdefy YAML config — pages, blocks, 
 
 # Writing Lowdefy config
 
-${devServerRules({ appPath })}
+${devServerRules()}
 
 Never guess type names or properties. Before writing config:
 

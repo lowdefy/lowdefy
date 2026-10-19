@@ -46,6 +46,20 @@ function validateMutantParam(mutant) {
   if (!type.isString(mutant.key)) {
     return `"mutant.key" must be a string. Received ${JSON.stringify(mutant.key)}.`;
   }
+  if (
+    !type.isNone(mutant.pointer) &&
+    !(
+      type.isArray(mutant.pointer) &&
+      mutant.pointer.every((step) => type.isString(step) || type.isInt(step))
+    )
+  ) {
+    return `"mutant.pointer" must be an array of keys and indexes. Received ${JSON.stringify(
+      mutant.pointer
+    )}.`;
+  }
+  if (!type.isNone(mutant.nodeHash) && !type.isString(mutant.nodeHash)) {
+    return `"mutant.nodeHash" must be a string. Received ${JSON.stringify(mutant.nodeHash)}.`;
+  }
   if (!type.isNone(mutant.arg) && !type.isString(mutant.arg)) {
     return `"mutant.arg" must be a string. Received ${JSON.stringify(mutant.arg)}.`;
   }

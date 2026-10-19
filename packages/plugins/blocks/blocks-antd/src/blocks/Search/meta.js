@@ -231,7 +231,8 @@ export default {
       },
       recentSearchesKey: {
         type: 'string',
-        description: 'localStorage key prefix for recent searches.',
+        description:
+          'localStorage key prefix for recent searches. Recent searches are kept per app and per signed-in user, and cleared at sign-out.',
         default: 'search',
       },
       recentSearchesCount: {

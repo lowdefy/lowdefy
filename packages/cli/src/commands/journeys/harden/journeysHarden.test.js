@@ -16,6 +16,8 @@
 
 import { jest } from '@jest/globals';
 import fs from 'fs';
+import hashBuild from '../../test/hashBuild.js';
+import hashJourney from '../../test/hashJourney.js';
 import os from 'os';
 import path from 'path';
 
@@ -146,6 +148,7 @@ beforeEach(() => {
   context = {
     directories: {
       config: configDirectory,
+      dev: path.join(configDirectory, '.lowdefy', 'dev'),
       journeys: path.join(configDirectory, 'tests', 'journeys'),
     },
     options: { url },
@@ -538,4 +541,115 @@ test('journeysHarden keeps an earlier mutant on a page that now fails to build, 
     'Kept the earlier mutants on "orders" as they were: harden could not check they still exist, since that page fails to build.',
   ]);
   expect(logs.info.length).toBeGreaterThan(0);
+});
+
+test('journeysHarden prints baseline and mutant progress and keeps the final report last', async () => {
+  await harden({ seed: '3' });
+  expect(logs.info).toContain('Baseline 2/2 journeys (0 failed)');
+  expect(logs.info.some((line) => /^Mutants 4\/4 run \(3 survived\)$/.test(line))).toBe(true);
+  expect(logs.info.at(-1)).toMatch(/^4 mutants run · /);
+});
+
+test('journeysHarden counts a failed baseline in the progress line', async () => {
+  mockPost.mockImplementationOnce(async () => ({
+    data: {
+      passed: false,
+      failure: { index: 0, message: 'boom' },
+      exercised: exercisedFor('orders'),
+    },
+  }));
+  await harden({ list: true });
+  expect(logs.info).toContain('Baseline 2/2 journeys (1 failed)');
+});
+
+function writeBuild(pageTitle) {
+  const build = path.join(configDirectory, '.lowdefy', 'dev', 'build');
+  fs.mkdirSync(path.join(build, 'plugins'), { recursive: true });
+  fs.mkdirSync(path.join(build, 'pages'), { recursive: true });
+  fs.writeFileSync(path.join(build, 'plugins', 'blockMetas.json'), '{}');
+  fs.writeFileSync(path.join(build, 'keyMap.json'), '{}');
+  fs.writeFileSync(path.join(build, 'refMap.json'), '{}');
+  fs.writeFileSync(
+    path.join(build, 'pages', 'orders.json'),
+    JSON.stringify({ id: 'page:orders', title: pageTitle })
+  );
+  // A fresh timestamp on every server start, not config.
+  fs.writeFileSync(
+    path.join(build, 'appMeta.json'),
+    JSON.stringify({ buildId: new Date().toISOString() })
+  );
+}
+
+function writeExercisedRecord(configHash) {
+  const file = path.join(configDirectory, '.lowdefy', 'test', 'exercised.json');
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  const journeys = {};
+  [
+    [
+      'orders',
+      {
+        name: 'orders',
+        pageId: 'orders',
+        data: 'shop',
+        steps: [{ click: 'save' }, { expect: { visible: 'alert' } }],
+      },
+    ],
+    [
+      'refunds',
+      {
+        name: 'refunds',
+        pageId: 'refunds',
+        data: 'shop',
+        steps: [{ click: 'save' }, { expect: { visible: 'alert' } }],
+      },
+    ],
+  ].forEach(([name, journey]) => {
+    journeys[`tests/journeys/${name}.yaml#${name}`] = {
+      hash: hashJourney(journey),
+      configHash,
+      passed: true,
+      exercised: exercisedFor(name),
+    };
+  });
+  fs.writeFileSync(file, JSON.stringify({ version: 1, buildId: 'timestamp', journeys }));
+}
+
+test('journeysHarden --page runs no baseline for journeys that cannot reach the page', async () => {
+  writeBuild('Orders');
+  writeExercisedRecord(hashBuild({ context }));
+  // A new server start rewrites the build timestamp but not the config.
+  writeBuild('Orders');
+  await harden({ page: ['refunds'], list: true });
+  expect(journeyRuns.map((run) => run.pageId)).toEqual(['refunds']);
+  expect(logs.info).toContain(
+    'Baseline: 1 of 2 journeys left out as off-path for --page (their last run touched none of the pages).'
+  );
+  expect(logs.info).toContain('Baseline 1/1 journeys (0 failed)');
+});
+
+test('journeysHarden --page says why the full baseline runs when there is no record', async () => {
+  writeBuild('Orders');
+  await harden({ page: ['refunds'], list: true });
+  expect(journeyRuns.map((run) => run.pageId).sort()).toEqual(['orders', 'refunds']);
+  expect(logs.info).toContain('Baseline: --page left no journey out, all 2 run.');
+  expect(logs.info).toContain(
+    'Baseline: kept without a usable record: 1 journey have no exercised record.'
+  );
+});
+
+test('journeysHarden --page says the config changed since the last test', async () => {
+  writeBuild('Orders');
+  writeExercisedRecord(hashBuild({ context }));
+  writeBuild('Orders, edited');
+  await harden({ page: ['refunds'], list: true });
+  expect(journeyRuns).toHaveLength(2);
+  expect(logs.info).toContain('Baseline: --page left no journey out, all 2 run.');
+  expect(
+    logs.info.some((line) => line.includes('last ran on a different config (it changed since'))
+  ).toBe(true);
+});
+
+test('journeysHarden without --page logs nothing about narrowing', async () => {
+  await harden({ list: true });
+  expect(logs.info.some((line) => line.startsWith('Baseline: '))).toBe(false);
 });

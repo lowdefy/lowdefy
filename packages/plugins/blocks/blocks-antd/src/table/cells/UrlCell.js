@@ -17,7 +17,7 @@
 import React from 'react';
 import { get, type } from '@lowdefy/helpers';
 
-import getSafeUrl from '../getSafeUrl.js';
+import getUrlCellHref from '../getUrlCellHref.js';
 import isEmptyValue from '../isEmptyValue.js';
 import EmptyCell from './EmptyCell.js';
 
@@ -28,8 +28,8 @@ function UrlCell({ value, row, column }) {
   const { cell } = column;
   const labelFromRow = type.isString(cell.labelField) ? get(row, cell.labelField) : undefined;
   const label = String(cell.label ?? labelFromRow ?? value);
-  const href = getSafeUrl(String(value));
-  if (href === null) return label;
+  const href = getUrlCellHref(value);
+  if (type.isNone(href)) return label;
   const newTab = cell.newTab !== false;
   return (
     <a

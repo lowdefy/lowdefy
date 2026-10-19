@@ -20,10 +20,17 @@ import { exportJWK, generateKeyPair, SignJWT } from 'jose';
 import { registerOrganizationBinding } from '../routes/auth/organizations/getOrganizationBinding.js';
 import resolveAuthentication from './resolveAuthentication.js';
 
-function mockAuth({ session, member, count, passkey, invitations } = {}) {
+// member is the caller's row in the session's active organization; memberRows
+// adds the rows they hold in other organizations.
+function mockAuth({ session, member, memberRows = [], count, passkey, invitations } = {}) {
   const findOne = jest.fn().mockResolvedValue(member ?? null);
   const countFn = jest.fn().mockResolvedValue(count ?? 0);
-  const findMany = jest.fn().mockResolvedValue(invitations ?? []);
+  const activeRows = member
+    ? [{ organizationId: session?.session?.activeOrganizationId, ...member }]
+    : [];
+  const findMany = jest.fn(async ({ model }) =>
+    model === 'member' ? [...activeRows, ...memberRows] : invitations ?? []
+  );
   const auth = {
     api: { getSession: jest.fn().mockResolvedValue(session ?? null) },
     $context: Promise.resolve({ adapter: { findOne, count: countFn, findMany } }),
@@ -58,7 +65,7 @@ test('sets context.user to null when auth.api.getSession resolves to null', asyn
 });
 
 test('sets context.user to null when the session has no active organization', async () => {
-  const { auth, findOne } = mockAuth({
+  const { auth, findMany, findOne } = mockAuth({
     session: { user: { id: 'user_1' }, session: { id: 'sess_1' } },
   });
   const context = { logger: mockLogger() };
@@ -66,31 +73,33 @@ test('sets context.user to null when the session has no active organization', as
   await resolveAuthentication(context, { auth, headers: {} });
 
   expect(context.user).toBe(null);
+  expect(context.authSession).toBe(null);
   expect(findOne).not.toHaveBeenCalled();
+  expect(findMany).not.toHaveBeenCalled();
   expect(context.logger.debug).toHaveBeenCalledWith(
     'Session for user "user_1" has no active organization - resolved unauthenticated.'
   );
 });
 
 test('sets context.user to null when the user holds no member row in the active org', async () => {
-  const { auth, findOne } = mockAuth({
+  const { auth, findMany } = mockAuth({
     session: {
       user: { id: 'user_1' },
       session: { id: 'sess_1', activeOrganizationId: 'org_1' },
     },
     member: null,
+    memberRows: [{ id: 'member_2', organizationId: 'org_2', appRoles: ['admin'] }],
   });
   const context = { logger: mockLogger() };
 
   await resolveAuthentication(context, { auth, headers: {} });
 
   expect(context.user).toBe(null);
-  expect(findOne).toHaveBeenCalledWith({
+  expect(context.authSession).toBe(null);
+  expect(findMany).toHaveBeenCalledWith({
     model: 'member',
-    where: [
-      { field: 'userId', value: 'user_1' },
-      { field: 'organizationId', value: 'org_1' },
-    ],
+    where: [{ field: 'userId', value: 'user_1' }],
+    limit: 1000,
   });
   expect(context.logger.debug).toHaveBeenCalledWith(
     'User "user_1" has no member row in organization "org_1" - resolved unauthenticated.'
@@ -98,7 +107,7 @@ test('sets context.user to null when the user holds no member row in the active 
 });
 
 test('sets context.user to null when a pinned app gets a session active in another organization', async () => {
-  const { auth, findOne } = mockAuth({
+  const { auth, findMany, findOne } = mockAuth({
     session: {
       user: { id: 'user_1' },
       session: { id: 'sess_1', activeOrganizationId: 'customer-portal' },
@@ -112,13 +121,14 @@ test('sets context.user to null when a pinned app gets a session active in anoth
 
   expect(context.user).toBe(null);
   expect(findOne).not.toHaveBeenCalled();
+  expect(findMany).not.toHaveBeenCalled();
   expect(context.logger.debug).toHaveBeenCalledWith(
     'Session for user "user_1" has active organization "customer-portal", which is not this app\'s pinned organization "team" - resolved unauthenticated.'
   );
 });
 
 test('resolves a session active in the pinned organization', async () => {
-  const { auth, findOne } = mockAuth({
+  const { auth, findMany } = mockAuth({
     session: {
       user: { id: 'user_1' },
       session: { id: 'sess_1', activeOrganizationId: 'team' },
@@ -139,7 +149,7 @@ test('resolves a session active in the pinned organization', async () => {
     organization_id: 'team',
     two_factor_enrolled: false,
   });
-  expect(findOne).toHaveBeenCalled();
+  expect(findMany).toHaveBeenCalledWith(expect.objectContaining({ model: 'member' }));
 });
 
 test('resolves any active organization under the tenant policy', async () => {
@@ -612,7 +622,7 @@ test('a session rejected by the membership wall does not fall through to strateg
 });
 
 test('resolves a caller awaiting an organization when a tenant session carries none', async () => {
-  const { auth, findOne } = mockAuth({
+  const { auth, findMany, findOne } = mockAuth({
     session: {
       user: { id: 'user_1', email: 'invited@example.com', name: 'Invited' },
       session: { id: 'sess_1' },
@@ -633,8 +643,11 @@ test('resolves a caller awaiting an organization when a tenant session carries n
     awaiting_organization: true,
     has_pending_invitation: false,
   });
-  // No organization means there is no member row to read.
+  // No organization means there is no member row to read, so the stamp names
+  // the session but not the memberships.
   expect(findOne).not.toHaveBeenCalled();
+  expect(findMany).not.toHaveBeenCalledWith(expect.objectContaining({ model: 'member' }));
+  expect(context.authSession).toEqual({ id: 'sess_1', memberOrganizationIds: null });
 });
 
 test('an awaiting caller with a pending invitation carries the diagnosis and the invitation id', async () => {
@@ -758,6 +771,98 @@ test('a tenant member removed mid-session stays unauthenticated', async () => {
   // Awaiting an organization covers a session carrying none at all. It must
   // never become a way around revocation.
   expect(context.user).toBe(null);
+});
+
+test('records the session id and every organization the session caller belongs to', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member', appRoles: ['editor'] },
+    memberRows: [{ id: 'member_2', organizationId: 'org_2', role: 'owner', appRoles: ['admin'] }],
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'tenant' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.authSession).toEqual({ id: 'sess_1', memberOrganizationIds: ['org_1', 'org_2'] });
+  // Roles come from the active organization's row only.
+  expect(context.user.roles).toEqual(['editor']);
+  expect(context.user.org_roles).toEqual(['member']);
+});
+
+test('records only the pinned organization as a membership under pinned', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'team' },
+    },
+    member: { id: 'member_1', role: 'member', appRoles: ['editor'] },
+    // Rows another app's organization holds in the same auth database.
+    memberRows: [{ id: 'member_2', organizationId: 'customer-portal', role: 'owner' }],
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.authSession).toEqual({ id: 'sess_1', memberOrganizationIds: ['team'] });
+});
+
+test('records every organization as a membership when no organization binding is registered', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member', appRoles: [] },
+    memberRows: [{ id: 'member_2', organizationId: 'org_2', role: 'owner' }],
+  });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.authSession).toEqual({ id: 'sess_1', memberOrganizationIds: ['org_1', 'org_2'] });
+});
+
+test('reads the memberships and the active member row in one round trip', async () => {
+  const { auth, count, findMany, findOne } = mockAuth({
+    session: {
+      user: { id: 'user_1', twoFactorEnabled: true },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member', appRoles: ['editor'] },
+    memberRows: [{ id: 'member_2', organizationId: 'org_2', role: 'owner' }],
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'tenant' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(findMany).toHaveBeenCalledTimes(1);
+  expect(findOne).not.toHaveBeenCalled();
+  expect(count).not.toHaveBeenCalled();
+});
+
+test('records no session for a strategy caller', async () => {
+  const { auth } = mockAuth({ session: null });
+  const context = { logger: mockLogger(), authSession: { id: 'stale' } };
+  const strategies = [
+    mockStrategy({ id: 'partner-access', match: { user: { id: 'apiKey:partner-access:acme' } } }),
+  ];
+
+  await resolveAuthentication(context, { auth, headers: {}, strategies });
+
+  expect(context.user.id).toBe('apiKey:partner-access:acme');
+  expect(context.authSession).toBe(null);
+});
+
+test('records no session when auth is not configured', async () => {
+  const context = { authSession: { id: 'stale' } };
+  await resolveAuthentication(context, { auth: null, headers: {} });
+  expect(context.authSession).toBe(null);
 });
 
 describe('MCP bearer branch and the general-path audience invariant', () => {

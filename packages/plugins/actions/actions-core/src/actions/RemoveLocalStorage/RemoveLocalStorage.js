@@ -19,13 +19,15 @@ import { type } from '@lowdefy/helpers';
 
 import validateStorageKey from '../../localStorage/validateStorageKey.js';
 
-function RemoveLocalStorage({ globals, params }) {
+function RemoveLocalStorage({ globals, methods, params }) {
   if (!type.isObject(params)) {
     throw new Error('RemoveLocalStorage params should be an object.');
   }
   const { key } = params;
   validateStorageKey({ actionType: 'RemoveLocalStorage', key });
   try {
+    globals.window.localStorage.removeItem(methods.getAppStorageKey(key));
+    // A value set before keys were kept per app would otherwise be moved back on the next read.
     globals.window.localStorage.removeItem(key);
   } catch (error) {
     // Blocked storage (SecurityError) comes from the user's browser, not the app config.

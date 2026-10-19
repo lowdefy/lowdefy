@@ -26,6 +26,14 @@ const RECONNECT_CAP_MS = 15 * 1000;
 // server that accepts connections and drops them straight away keeps backing
 // off instead of being retried every half second.
 const STABLE_CONNECTION_MS = 10 * 1000;
+// The server closes with this code when the socket's caller signed out or
+// changed (user, organization or roles). The client reconnects straight away,
+// which authenticates afresh, and resubscribes as the new caller.
+const CALLER_CHANGED_CODE = 4401;
+// A connection closed for a caller change again within this long of opening
+// reconnects with the normal backoff, so a server that keeps closing for that
+// reason does not get a tight reconnect loop.
+const CALLER_CHANGE_REPEAT_MS = 30 * 1000;
 
 // One websocket per browser tab, shared by all channels, created lazily on
 // the first subscribe or publish. Connections are ephemeral in production
@@ -51,6 +59,10 @@ function createWebSocketClient(lowdefy) {
   let reconnectTimer = null;
   let idleTimer = null;
   let stableTimer = null;
+  // When the current connection opened, and whether it was opened by the
+  // reconnect that follows a caller change.
+  let openedAt = null;
+  let reconnectingAfterCallerChange = false;
   let publishCounter = 0;
   let subscribeCounter = 0;
 
@@ -86,6 +98,7 @@ function createWebSocketClient(lowdefy) {
         socket.onclose = null;
         socket.onmessage = null;
         clearTimeout(stableTimer);
+        reconnectingAfterCallerChange = false;
         socket.close();
         socket = null;
         openPromise = null;
@@ -248,7 +261,7 @@ function createWebSocketClient(lowdefy) {
     }
   }
 
-  function handleClose() {
+  function handleClose(event) {
     socket = null;
     openPromise = null;
     clearTimeout(stableTimer);
@@ -263,6 +276,18 @@ function createWebSocketClient(lowdefy) {
     });
     if (subscriptions.size === 0 && !hasUnsentPublishes()) {
       return;
+    }
+    // A caller change is not a failing server, so the first reconnect after
+    // one does not back off.
+    if (event.code === CALLER_CHANGED_CODE) {
+      const repeated =
+        reconnectingAfterCallerChange && Date.now() - openedAt < CALLER_CHANGE_REPEAT_MS;
+      if (!repeated) {
+        reconnectAttempt = 0;
+      }
+      reconnectingAfterCallerChange = true;
+    } else {
+      reconnectingAfterCallerChange = false;
     }
     // Capped exponential backoff with full jitter.
     const base = Math.min(RECONNECT_BASE_MS * 2 ** reconnectAttempt, RECONNECT_CAP_MS);
@@ -283,6 +308,7 @@ function createWebSocketClient(lowdefy) {
       const ws = new window.WebSocket(url());
       ws.onopen = () => {
         socket = ws;
+        openedAt = Date.now();
         stableTimer = setTimeout(() => {
           reconnectAttempt = 0;
         }, STABLE_CONNECTION_MS);
@@ -302,13 +328,13 @@ function createWebSocketClient(lowdefy) {
         }
         handleFrame(frame);
       };
-      ws.onclose = () => {
+      ws.onclose = (event) => {
         if (socket !== ws) {
           // Never opened — treat as a failed connect and retry.
           openPromise = null;
           reject(new ServiceError('Connection failed.', { service: 'WebSocket' }));
         }
-        handleClose();
+        handleClose(event);
       };
       ws.onerror = () => {
         // onclose always follows onerror — reconnect is handled there.

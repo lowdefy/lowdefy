@@ -16,7 +16,9 @@
 
 import http from 'node:http';
 
-import { GetObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
+import { Readable } from 'node:stream';
+
+import { GetObjectCommand, HeadObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 
 import createS3Client from './createS3Client.js';
 
@@ -25,9 +27,22 @@ import createS3Client from './createS3Client.js';
 // request tests.
 let server;
 let endpoint;
+let putBodyLength;
 
 beforeAll(async () => {
   server = http.createServer((req, res) => {
+    if (req.method === 'PUT') {
+      let length = 0;
+      req.on('data', (data) => {
+        length += data.length;
+      });
+      req.on('end', () => {
+        putBodyLength = length;
+        res.writeHead(200, { etag: '"put123"' });
+        res.end();
+      });
+      return;
+    }
     if (req.method === 'HEAD') {
       res.writeHead(200, {
         'content-length': '11',
@@ -77,4 +92,25 @@ test('createS3Client parses an S3 XML error into a named SDK error', async () =>
   expect(error.name).toBe('NoSuchKey');
   expect(error.message).toBe('The specified key does not exist.');
   expect(error.$metadata.httpStatusCode).toBe(404);
+});
+
+test('createS3Client sets requestStreamBufferSize so the SDK buffers streamed uploads', async () => {
+  // The SDK only buffers a streamed body into aws-chunked frames when this is at least 8192;
+  // below that, a body arriving in small chunks fails with InvalidChunkSizeError.
+  expect(await client().config.requestStreamBufferSize).toBe(65536);
+});
+
+test('createS3Client uploads a streamed body that arrives in small chunks', async () => {
+  const chunk = Buffer.alloc(1000, 'a');
+  const chunks = Array.from({ length: 300 }, () => chunk);
+  const response = await client().send(
+    new PutObjectCommand({
+      Bucket: 'bucket',
+      Key: 'file.png',
+      Body: Readable.from(chunks, { objectMode: false }),
+      ContentLength: 300000,
+    })
+  );
+  expect(response.ETag).toBe('"put123"');
+  expect(putBodyLength).toBeGreaterThan(300000);
 });

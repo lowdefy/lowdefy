@@ -21,6 +21,7 @@ import collapsePersonas from './collapsePersonas.js';
 import fetchBuildId from './fetchBuildId.js';
 import formatNoTestsMatched from './formatNoTestsMatched.js';
 import formatSkippedJourney from './formatSkippedJourney.js';
+import hashBuild from './hashBuild.js';
 import isFullSuiteRun from './isFullSuiteRun.js';
 import lintJourneys from './lint/lintJourneys.js';
 import parseRepeat from './parseRepeat.js';
@@ -181,6 +182,7 @@ async function test({ context }) {
       directories: context.directories,
       results,
       buildId: await fetchBuildId({ url: server.url }),
+      configHash: hashBuild({ context }),
     });
     writeTestRun({ directories: context.directories, results });
   } finally {

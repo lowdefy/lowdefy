@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import journeysAutopilot from './journeysAutopilot.js';
 import journeysFromDev from './journeysFromDev.js';
 import journeysFromPr from './journeysFromPr.js';
 import journeysFromProduction from './journeysFromProduction.js';
@@ -52,6 +53,12 @@ const skills = [
     render: journeysHarden,
     agentsMdLine:
       '`journeys-harden`: proving journeys catch a broken feature: replay, lint, config mutants and edge-case variants, never deleting a journey.',
+  },
+  {
+    name: 'journeys-autopilot',
+    render: journeysAutopilot,
+    agentsMdLine:
+      "`journeys-autopilot`: one unattended agent that builds an app's journeys from nothing and keeps hardening them from a committed ledger, in its own worktree, shipping pull requests and findings.",
   },
 ];
 

@@ -205,3 +205,31 @@ test('runJourney posts data and passes the data set and warnings through', async
   });
   expect(result).toMatchObject({ passed: true, data, warnings: ['w'] });
 });
+
+test('runJourney does not apply the name limit to a persona run name', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  mockPost.mockResolvedValue({ data: { pageId: 'form', passed: true, steps: [{}], state: {} } });
+  const authored = { name: 'a'.repeat(92), pageId: 'form', data: 'base', steps: [{ click: 'go' }] };
+  const persona = { ...authored, name: `${authored.name} [control_owner]`, user: 'control_owner' };
+  const result = await runJourney({
+    item: {
+      filePath: '/app/j.yaml',
+      journey: persona,
+      persona: 'control_owner',
+      personaOf: authored,
+    },
+    url,
+  });
+  expect(result.refused).toBeUndefined();
+  expect(result.passed).toBe(true);
+  const tooLong = { ...authored, name: 'a'.repeat(101) };
+  const refused = await runJourney({
+    item: {
+      filePath: '/app/j.yaml',
+      journey: { ...tooLong, name: `${tooLong.name} [owner]` },
+      personaOf: tooLong,
+    },
+    url,
+  });
+  expect(refused.message).toContain('at most 100 characters');
+});

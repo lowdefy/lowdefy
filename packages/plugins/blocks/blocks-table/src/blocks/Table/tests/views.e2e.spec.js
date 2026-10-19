@@ -141,8 +141,13 @@ test.describe('Table view persistence', () => {
       .locator('.lf-table-body [data-row-key="2"] [data-lf-select-cell] input')
       .click();
     await expect(getBlock(page, 'persist_local_value')).toContainText('selected=[2]');
+    // The view is kept under the user key, so its key ends in the name the table gives it.
     const stored = await page.evaluate(() =>
-      JSON.parse(window.localStorage.getItem('lowdefy-table:e2e_people'))
+      JSON.parse(
+        window.localStorage.getItem(
+          Object.keys(window.localStorage).find((key) => key.endsWith(':lowdefy-table:e2e_people'))
+        )
+      )
     );
     expect(stored).toEqual({ view: { density: 'compact' }, activeView: null });
 
@@ -158,7 +163,20 @@ test.describe('Table view persistence', () => {
 
   test('persist local ignores stored views it cannot read', async ({ page }) => {
     await openTablePage(page, 'views');
-    await page.evaluate(() => window.localStorage.setItem('lowdefy-table:e2e_people', '{not json'));
+    // The table writes its view on mount; overwrite that entry with unreadable text.
+    await expect
+      .poll(() =>
+        page.evaluate(() =>
+          Object.keys(window.localStorage).find((key) => key.endsWith(':lowdefy-table:e2e_people'))
+        )
+      )
+      .toBeTruthy();
+    await page.evaluate(() =>
+      window.localStorage.setItem(
+        Object.keys(window.localStorage).find((key) => key.endsWith(':lowdefy-table:e2e_people')),
+        '{not json'
+      )
+    );
     await page.reload();
     await expect(getBlock(page, 'persist_local_value')).toContainText('"density":"default"');
   });

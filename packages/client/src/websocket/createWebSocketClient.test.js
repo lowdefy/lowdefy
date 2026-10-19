@@ -67,12 +67,13 @@ function createTestClient() {
     return socket;
   }
   // Like a browser, a socket whose onclose handler was removed fires nothing.
-  function closeSocket(socket) {
+  // 1006 is the code a browser reports for a connection that dropped.
+  function closeSocket(socket, { code = 1006 } = {}) {
     socket.readyState = MockWebSocket.CLOSED;
-    socket.onclose?.();
+    socket.onclose?.({ code });
   }
-  function close() {
-    closeSocket(currentSocket());
+  function close({ code } = {}) {
+    closeSocket(currentSocket(), { code });
   }
   function receive(frame) {
     currentSocket().onmessage({ data: JSON.stringify(frame) });
@@ -532,5 +533,99 @@ describe('subscribe ack timers', () => {
     close();
     jest.advanceTimersByTime(500);
     expect(sockets).toHaveLength(4);
+  });
+
+  test('a close for a changed caller reconnects without backing off and resubscribes', () => {
+    Math.random.mockReturnValue(0.99);
+    const { client, close, open, receive, sentFrames, sockets } = createTestClient();
+    const handlers = createHandlers();
+    client.subscribe({ handlers, payload: { room: 1 }, websocketId: 'chat' });
+    open();
+    receive({ type: 'subscribed', websocketId: 'chat', requestId: 's1' });
+    // Two dropped connections build up the backoff to 2000 ms.
+    close();
+    jest.advanceTimersByTime(500);
+    open();
+    close();
+    jest.advanceTimersByTime(1000);
+    expect(sockets).toHaveLength(3);
+    open();
+
+    close({ code: 4401 });
+    expect(handlers.onDisconnected).toHaveBeenCalledTimes(3);
+    // Within the first retry window, not the 4000 ms the backoff had reached.
+    jest.advanceTimersByTime(500);
+    expect(sockets).toHaveLength(4);
+    const reopened = open();
+    expect(sentFrames(reopened)).toEqual([
+      { type: 'subscribe', websocketId: 'chat', payload: { room: 1 }, requestId: 's4' },
+    ]);
+  });
+
+  test('a connection closed for a caller change again within 30 seconds of opening backs off as usual', () => {
+    Math.random.mockReturnValue(0.99);
+    const { client, close, open, sockets } = createTestClient();
+    client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
+    open();
+
+    close({ code: 4401 });
+    // The first reconnect after a caller change: up to 500 ms.
+    jest.advanceTimersByTime(500);
+    expect(sockets).toHaveLength(2);
+    open();
+    jest.advanceTimersByTime(5000);
+
+    close({ code: 4401 });
+    // Closed again soon after opening: up to 1000 ms.
+    jest.advanceTimersByTime(500);
+    expect(sockets).toHaveLength(2);
+    jest.advanceTimersByTime(500);
+    expect(sockets).toHaveLength(3);
+    open();
+
+    close({ code: 4401 });
+    // And up to 2000 ms after that.
+    jest.advanceTimersByTime(1000);
+    expect(sockets).toHaveLength(3);
+    jest.advanceTimersByTime(1000);
+    expect(sockets).toHaveLength(4);
+  });
+
+  test('a caller change after a connection closed for another reason reconnects without backing off', () => {
+    Math.random.mockReturnValue(0.99);
+    const { client, close, open, sockets } = createTestClient();
+    client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
+    open();
+    close({ code: 4401 });
+    jest.advanceTimersByTime(500);
+    open();
+    // Dropped straight after opening: up to 1000 ms.
+    close();
+    jest.advanceTimersByTime(1000);
+    expect(sockets).toHaveLength(3);
+    open();
+
+    close({ code: 4401 });
+    jest.advanceTimersByTime(500);
+    expect(sockets).toHaveLength(4);
+  });
+
+  test('a subscription the new caller may not hold reports the refusal after a caller change', () => {
+    const { client, close, open, receive } = createTestClient();
+    const handlers = createHandlers();
+    client.subscribe({ handlers, payload: {}, websocketId: 'chat' });
+    open();
+    receive({ type: 'subscribed', websocketId: 'chat', requestId: 's1' });
+
+    close({ code: 4401 });
+    jest.advanceTimersByTime(0);
+    open();
+    receive({
+      type: 'error',
+      websocketId: 'chat',
+      requestId: 's2',
+      error: { '~e': { ...wireError, message: 'Forbidden.' } },
+    });
+    expect(handlers.onError).toHaveBeenCalledWith('Forbidden.');
   });
 });

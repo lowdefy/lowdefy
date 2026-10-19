@@ -119,6 +119,10 @@ const options = {
     '--server-directory <server-directory>',
     'Change the server directory. Default is "<config-directory>/.lowdefy/server".'
   ).env('LOWDEFY_DIRECTORY_SERVER'),
+  skipPluginChecks: new Option(
+    '--skip-plugin-checks',
+    'Skip every plugin build check rule for this run. Built-in checks still run.'
+  ),
   watch: new Option(
     '--watch <paths...>',
     'A list of paths to files or directories that should be watched for changes. Globs are supported. Specify each path to watch separated by spaces.'
@@ -168,6 +172,7 @@ program
     ).choices(['e2e'])
   )
   .addOption(options.serverDirectory)
+  .addOption(options.skipPluginChecks)
   .action(runCommand({ cliVersion, handler: build }));
 
 const data = program
@@ -196,6 +201,7 @@ program
   .option('--no-open', 'Do not open a new tab in the default browser.')
   .addOption(options.port)
   .addOption(options.refResolver)
+  .addOption(options.skipPluginChecks)
   .addOption(options.watch)
   .addOption(options.watchIgnore)
   .action(runCommand({ cliVersion, handler: dev }));
@@ -486,6 +492,7 @@ journeys
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
   .addOption(options.refResolver)
+  .addOption(options.skipPluginChecks)
   .action(runCommand({ cliVersion, handler: journeysScope }));
 
 const productionWindowOptions = [
@@ -684,7 +691,7 @@ program
   .addOption(
     new Option(
       '--lint',
-      'Lint the journeys (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L5 named data set users, L6 final assertion) and run nothing.'
+      'Lint the journeys (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L5 named data set users, L6 final assertion, L7 pointless as) and run nothing.'
     )
   )
   .addOption(options.logLevel)

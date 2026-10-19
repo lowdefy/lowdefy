@@ -41,6 +41,7 @@ async function runConfigTreeBuild({
   devDirectory,
   logger,
   refResolver,
+  skipPluginChecks,
 }) {
   const directories = {
     config: configDirectory,
@@ -64,6 +65,7 @@ async function runConfigTreeBuild({
       directories,
       logger,
       refResolver,
+      skipPluginChecks,
       stage: 'dev',
     });
     const configText = await collectConfigText({

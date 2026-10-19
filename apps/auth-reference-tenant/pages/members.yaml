@@ -179,9 +179,21 @@ blocks:
       content: Update a member's roles
       level: 4
   - id: update_member_id
-    type: TextInput
+    type: Selector
     properties:
-      title: Member id
+      title: Member
+      options:
+        _array.map:
+          on:
+            _if_none:
+              - _state: members.members
+              - []
+          callback:
+            _function:
+              label:
+                __args: 0.user.email
+              value:
+                __args: 0.id
   - id: update_roles
     type: TextInput
     properties:

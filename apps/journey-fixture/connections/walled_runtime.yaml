@@ -1,0 +1,9 @@
+# A plugin connection that holds no database address and names the walled
+# fixture_db connection instead (packages/servers/server-dev/test/journeyFixture/walled.test.mjs).
+# Its type declares dataSet: walled, so a data set passes it through and
+# redirects fixture_db when the walled client reads it.
+id: walled_runtime
+type: WalledFixture
+properties:
+  mongoConnectionId: fixture_db
+  write: true

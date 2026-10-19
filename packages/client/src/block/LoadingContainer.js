@@ -68,7 +68,11 @@ const LoadingContainer = ({
         content={content}
         key={skeleton.id}
         menus={lowdefy.menus}
-        methods={loadingBlockMethods}
+        methods={{
+          ...loadingBlockMethods,
+          getAppStorageKey: lowdefy._internal.storage.appKey,
+          getUserStorageKey: lowdefy._internal.storage.userKey,
+        }}
         pageId={lowdefy.pageId}
         properties={skeleton.properties ?? blockProperties}
       />

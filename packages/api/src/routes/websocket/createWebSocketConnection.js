@@ -17,13 +17,28 @@
 import { type } from '@lowdefy/helpers';
 import { runInCredentialScope } from '@lowdefy/node-utils';
 
+import getCallerFingerprint from './getCallerFingerprint.js';
 import redactErrorResponse from '../../response/redactErrorResponse.js';
+import resolveWebsocketCaller from './resolveWebsocketCaller.js';
+
+const CALLER_CHECK_INTERVAL_MS = 60 * 1000;
+const CALLER_CHANGED_CODE = 4401;
+const CALLER_CHECK_FAILED_CODE = 1011;
 
 // Wraps one client websocket connection: parses frames, dispatches
 // subscribe/unsubscribe/publish to the channel registry, and answers every
 // frame with an ack or an error so client actions never hang.
-function createWebSocketConnection(context, { registry, send }) {
+//
+// The context, and the caller on it, is the upgrade request's. A socket can
+// stay open long after that request, so the caller is resolved again from the
+// upgrade's headers before every subscribe and once a minute. When it signed
+// out, lost its membership, changed roles or switched organization, the socket
+// closes with code 4401; the client reconnects, which authenticates afresh.
+// Each check is a live session read - nothing is cached, so a revoked session
+// closes the socket within a minute.
+function createWebSocketConnection(context, { closeSocket, headers, registry, send, strategies }) {
   const { logger } = context;
+  const callerFingerprint = getCallerFingerprint({ user: context.user });
   // websocketId → the tail of that feed's frame queue. A feed's frames are
   // handled one at a time, in the order they arrive. A subscribe awaits its
   // channel preparation, so without this an unsubscribe sent right after it
@@ -56,10 +71,58 @@ function createWebSocketConnection(context, { registry, send }) {
     );
   }
 
+  function close() {
+    if (closed) {
+      return;
+    }
+    closed = true;
+    clearInterval(callerCheckTimer);
+    registry.unsubscribeAll({ subscriber });
+    // A subscribe still being prepared registers after this point.
+    Promise.all(feedQueues.values())
+      .then(() => registry.unsubscribeAll({ subscriber }))
+      .catch((error) => context.handleError(error));
+    logger.debug({ event: 'ws_disconnect' });
+  }
+
+  function closeWith({ code, reason }) {
+    close();
+    closeSocket({ code, reason });
+  }
+
+  // Returns true while the socket still acts for the caller it was opened with.
+  // A check that can not complete closes the socket too: the caller can not be
+  // vouched for, and the client's reconnect authenticates afresh.
+  async function checkCaller() {
+    let user;
+    try {
+      user = await resolveWebsocketCaller(context, { headers, strategies });
+    } catch (error) {
+      if (!closed) {
+        context.handleError(error);
+        closeWith({ code: CALLER_CHECK_FAILED_CODE, reason: 'caller-check-failed' });
+      }
+      return false;
+    }
+    if (closed) {
+      return false;
+    }
+    if (getCallerFingerprint({ user }) !== callerFingerprint) {
+      logger.info({ event: 'ws_caller_changed' }, 'WebSocket caller changed - closing.');
+      closeWith({ code: CALLER_CHANGED_CODE, reason: 'caller-changed' });
+      return false;
+    }
+    return true;
+  }
+
   async function handleFrame(frame) {
     const { payload, requestId, websocketId } = frame;
     switch (frame.type) {
       case 'subscribe':
+        if (!(await checkCaller())) {
+          // The socket is closing; the client resubscribes on its next one.
+          return;
+        }
         await registry.subscribe(context, { websocketId, payload, subscriber });
         send(JSON.stringify({ type: 'subscribed', websocketId, requestId }));
         return;
@@ -140,15 +203,10 @@ function createWebSocketConnection(context, { registry, send }) {
     await enqueue(frame.websocketId, () => runInCredentialScope(() => processFrame(frame)));
   }
 
-  function close() {
-    closed = true;
-    registry.unsubscribeAll({ subscriber });
-    // A subscribe still being prepared registers after this point.
-    Promise.all(feedQueues.values())
-      .then(() => registry.unsubscribeAll({ subscriber }))
-      .catch((error) => context.handleError(error));
-    logger.debug({ event: 'ws_disconnect' });
-  }
+  // One timer per connection, cleared by close. It does not keep the process
+  // alive on its own.
+  const callerCheckTimer = setInterval(checkCaller, CALLER_CHECK_INTERVAL_MS);
+  callerCheckTimer.unref();
 
   logger.debug({ event: 'ws_connect' });
 

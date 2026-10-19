@@ -87,3 +87,62 @@ test('MCP lowdefy_run_journey passes pathParams and the basePath to a single run
   );
   await client.close();
 });
+
+const fullExercised = {
+  pages: [{ pageId: 'ticket' }],
+  requests: [{ id: 'get_a' }, { id: 'get_b' }],
+  endpoints: [],
+  events: [{ id: 'e1' }, { id: 'e2' }, { id: 'e3' }],
+  rendered: [{ blockId: 'a' }],
+  unfollowed: [],
+};
+
+async function callWith(extra, user) {
+  mockRunJourney.mockResolvedValue({
+    pageId: 'ticket',
+    passed: true,
+    steps: [],
+    screenshots: [],
+    exercised: fullExercised,
+  });
+  const client = await connectClient();
+  const result = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: { pageId: 'ticket', steps: [], ...(user ? { user, data: 'crm' } : {}), ...extra },
+  });
+  await client.close();
+  return JSON.parse(result.content[0].text);
+}
+
+test('MCP lowdefy_run_journey returns a count of each exercised list by default', async () => {
+  const body = await callWith({});
+  expect(body.exercised.counts).toEqual({
+    pages: 1,
+    requests: 2,
+    endpoints: 0,
+    events: 3,
+    rendered: 1,
+    unfollowed: 0,
+  });
+  expect(body.exercised.requests).toBeUndefined();
+});
+
+test('MCP lowdefy_run_journey returns the full exercised block with exercised: true', async () => {
+  const body = await callWith({ exercised: true });
+  expect(body.exercised).toEqual(fullExercised);
+});
+
+test('MCP lowdefy_run_journey leaves exercised out with exercised: false', async () => {
+  const body = await callWith({ exercised: false });
+  expect(body.exercised).toBeUndefined();
+});
+
+test('MCP lowdefy_run_journey applies exercised to every run of a user list', async () => {
+  const compact = await callWith({}, ['admin', 'member']);
+  expect(compact.runs).toHaveLength(2);
+  compact.runs.forEach((run) => expect(run.exercised.counts.events).toBe(3));
+  const none = await callWith({ exercised: false }, ['admin', 'member']);
+  none.runs.forEach((run) => expect(run.exercised).toBeUndefined());
+  const full = await callWith({ exercised: true }, ['admin', 'member']);
+  full.runs.forEach((run) => expect(run.exercised).toEqual(fullExercised));
+});

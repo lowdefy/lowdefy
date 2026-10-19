@@ -56,9 +56,10 @@ process.env.SENTRY_DSN = 'https://public@o0.ingest.sentry.io/1';
 process.env.LOWDEFY_SECRET_API_KEY = secret;
 
 const { default: initSentryServer } = await import('./initSentry.js');
+const { default: sentrySdk } = await import('./sentrySdk.js');
 const { default: sentryMiddleware } = await import('../../../src/middleware/sentry.js');
 
-const enabled = initSentryServer();
+const sentry = await initSentryServer();
 const client = RealSentry.getClient();
 const options = client.getOptions();
 
@@ -92,9 +93,15 @@ afterAll(async () => {
   await RealSentry.close();
 });
 
-test('initSentry initializes Sentry when SENTRY_DSN is set', () => {
-  expect(enabled).toBe(true);
+test('initSentry initializes Sentry when SENTRY_DSN is set and makes its SDK the server one', () => {
   expect(client).toBeDefined();
+  expect(sentry.captureException).toBe(RealSentry.captureException);
+  expect(sentrySdk.current).toBe(sentry);
+});
+
+test('initSentry traces requests and keeps client reports on a long-running server', () => {
+  expect(options.tracesSampleRate).toBe(1);
+  expect(options.sendClientReports).toBe(true);
 });
 
 test('initSentry installs exactly one Http integration, the one that attaches no request bodies', () => {

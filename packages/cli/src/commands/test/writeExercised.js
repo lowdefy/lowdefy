@@ -30,8 +30,10 @@ function readFile(filePath) {
 
 // Keeps the newest measured path of each journey in
 // .lowdefy/test/exercised.json, for lints, variants and harden. Journeys this
-// run did not measure keep their earlier entries.
-function writeExercised({ directories, results, buildId }) {
+// run did not measure keep their earlier entries. Each entry carries the
+// content hash of the config it was measured on (`configHash`, see hashBuild),
+// so an entry kept from an earlier run is not taken for one of this config.
+function writeExercised({ directories, results, buildId, configHash }) {
   const measured = results.filter(
     (result) => !type.isNone(result.exercised) && !type.isNone(result.journey)
   );
@@ -44,6 +46,7 @@ function writeExercised({ directories, results, buildId }) {
     const file = path.relative(directories.config, result.filePath);
     journeys[`${file}#${result.name}`] = {
       hash: hashJourney(result.journey),
+      configHash: configHash ?? null,
       passed: result.newestPassed,
       exercised: result.exercised,
     };

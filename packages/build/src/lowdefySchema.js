@@ -14,6 +14,21 @@
   limitations under the License.
 */
 
+// Plugin rule ids are check slugs too, so the schema accepts any kebab-case
+// slug; addKeys checks built-in slugs and records the rest for the rules runner.
+const ignoreBuildChecksSchema = {
+  oneOf: [
+    { const: true },
+    {
+      type: 'array',
+      items: {
+        type: 'string',
+        pattern: '^[a-z0-9]+(-[a-z0-9]+)*$',
+      },
+    },
+  ],
+};
+
 const apiScheduleSchema = {
   type: 'object',
   additionalProperties: false,
@@ -76,27 +91,7 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'types',
-                  'schema',
-                ],
-              },
-            },
-          ],
-        },
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},
         '~l': {},
         async: {
@@ -242,27 +237,7 @@ export default {
       additionalProperties: false,
       required: ['id', 'type', 'connectionId'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'types',
-                  'schema',
-                ],
-              },
-            },
-          ],
-        },
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},
         '~l': {},
         id: {
@@ -391,27 +366,7 @@ export default {
       type: 'object',
       additionalProperties: false,
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'types',
-                  'schema',
-                ],
-              },
-            },
-          ],
-        },
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},
         '~l': {},
         email: {
@@ -483,27 +438,7 @@ export default {
           'App "auth" contains an unknown property. Auth keys are registered explicitly; check for typos.',
       },
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'types',
-                  'schema',
-                ],
-              },
-            },
-          ],
-        },
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},
         '~l': {},
         database: {
@@ -1220,27 +1155,7 @@ export default {
             type: 'App "config.auth.pages" should be an object.',
           },
           properties: {
-            '~ignoreBuildChecks': {
-              oneOf: [
-                { const: true },
-                {
-                  type: 'array',
-                  items: {
-                    type: 'string',
-                    enum: [
-                      'state-refs',
-                      'payload-refs',
-                      'step-refs',
-                      'link-refs',
-                      'request-refs',
-                      'connection-refs',
-                      'types',
-                      'schema',
-                    ],
-                  },
-                },
-              ],
-            },
+            '~ignoreBuildChecks': ignoreBuildChecksSchema,
             '~r': {},
             '~l': {},
             protected: {
@@ -1299,27 +1214,7 @@ export default {
             type: 'App "config.auth.api" should be an object.',
           },
           properties: {
-            '~ignoreBuildChecks': {
-              oneOf: [
-                { const: true },
-                {
-                  type: 'array',
-                  items: {
-                    type: 'string',
-                    enum: [
-                      'state-refs',
-                      'payload-refs',
-                      'step-refs',
-                      'link-refs',
-                      'request-refs',
-                      'connection-refs',
-                      'types',
-                      'schema',
-                    ],
-                  },
-                },
-              ],
-            },
+            '~ignoreBuildChecks': ignoreBuildChecksSchema,
             '~r': {},
             '~l': {},
             protected: {
@@ -1378,27 +1273,7 @@ export default {
             type: 'App "config.auth.websockets" should be an object.',
           },
           properties: {
-            '~ignoreBuildChecks': {
-              oneOf: [
-                { const: true },
-                {
-                  type: 'array',
-                  items: {
-                    type: 'string',
-                    enum: [
-                      'state-refs',
-                      'payload-refs',
-                      'step-refs',
-                      'link-refs',
-                      'request-refs',
-                      'connection-refs',
-                      'types',
-                      'schema',
-                    ],
-                  },
-                },
-              ],
-            },
+            '~ignoreBuildChecks': ignoreBuildChecksSchema,
             '~r': {},
             '~l': {},
             protected: {
@@ -1914,27 +1789,7 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'types',
-                  'schema',
-                ],
-              },
-            },
-          ],
-        },
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},
         '~l': {},
         id: {
@@ -2053,27 +1908,7 @@ export default {
                   type: 'object',
                   additionalProperties: false,
                   properties: {
-                    '~ignoreBuildChecks': {
-                      oneOf: [
-                        { const: true },
-                        {
-                          type: 'array',
-                          items: {
-                            type: 'string',
-                            enum: [
-                              'state-refs',
-                              'payload-refs',
-                              'step-refs',
-                              'link-refs',
-                              'request-refs',
-                              'connection-refs',
-                              'types',
-                              'schema',
-                            ],
-                          },
-                        },
-                      ],
-                    },
+                    '~ignoreBuildChecks': ignoreBuildChecksSchema,
                     '~r': {},
                     '~l': {},
                     try: {
@@ -2098,27 +1933,7 @@ export default {
                       type: 'object',
                       additionalProperties: false,
                       properties: {
-                        '~ignoreBuildChecks': {
-                          oneOf: [
-                            { const: true },
-                            {
-                              type: 'array',
-                              items: {
-                                type: 'string',
-                                enum: [
-                                  'state-refs',
-                                  'payload-refs',
-                                  'step-refs',
-                                  'link-refs',
-                                  'request-refs',
-                                  'connection-refs',
-                                  'types',
-                                  'schema',
-                                ],
-                              },
-                            },
-                          ],
-                        },
+                        '~ignoreBuildChecks': ignoreBuildChecksSchema,
                         '~r': {},
                         '~l': {},
                         immediate: {
@@ -2225,27 +2040,7 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'types',
-                  'schema',
-                ],
-              },
-            },
-          ],
-        },
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},
         '~l': {},
         id: {
@@ -2357,27 +2152,7 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'types',
-                  'schema',
-                ],
-              },
-            },
-          ],
-        },
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},
         '~l': {},
         id: {
@@ -2425,27 +2200,7 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'types',
-                  'schema',
-                ],
-              },
-            },
-          ],
-        },
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},
         '~l': {},
         id: {
@@ -2492,27 +2247,7 @@ export default {
       additionalProperties: false,
       required: ['websocketId'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'types',
-                  'schema',
-                ],
-              },
-            },
-          ],
-        },
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},
         '~l': {},
         websocketId: {
@@ -2761,27 +2496,7 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'types',
-                  'schema',
-                ],
-              },
-            },
-          ],
-        },
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},
         '~l': {},
         id: {
@@ -2837,27 +2552,7 @@ export default {
       additionalProperties: false,
       required: ['id'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'types',
-                  'schema',
-                ],
-              },
-            },
-          ],
-        },
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},
         '~l': {},
         id: {
@@ -2894,27 +2589,7 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'types',
-                  'schema',
-                ],
-              },
-            },
-          ],
-        },
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},
         '~l': {},
         id: {
@@ -2968,27 +2643,7 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'types',
-                  'schema',
-                ],
-              },
-            },
-          ],
-        },
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},
         '~l': {},
         id: {
@@ -3046,27 +2701,7 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'types',
-                  'schema',
-                ],
-              },
-            },
-          ],
-        },
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},
         '~l': {},
         id: {
@@ -3147,27 +2782,7 @@ export default {
       additionalProperties: false,
       required: ['name', 'version'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'types',
-                  'schema',
-                ],
-              },
-            },
-          ],
-        },
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},
         '~l': {},
         name: {
@@ -3202,27 +2817,7 @@ export default {
       additionalProperties: false,
       required: ['id', 'type', 'connectionId'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'types',
-                  'schema',
-                ],
-              },
-            },
-          ],
-        },
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},
         '~l': {},
         id: {
@@ -3275,27 +2870,7 @@ export default {
   additionalProperties: false,
   required: ['lowdefy'],
   properties: {
-    '~ignoreBuildChecks': {
-      oneOf: [
-        { const: true },
-        {
-          type: 'array',
-          items: {
-            type: 'string',
-            enum: [
-              'state-refs',
-              'payload-refs',
-              'step-refs',
-              'link-refs',
-              'request-refs',
-              'connection-refs',
-              'types',
-              'schema',
-            ],
-          },
-        },
-      ],
-    },
+    '~ignoreBuildChecks': ignoreBuildChecksSchema,
     '~r': {},
     '~l': {},
     name: {
@@ -3359,27 +2934,7 @@ export default {
       },
       additionalProperties: false,
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'types',
-                  'schema',
-                ],
-              },
-            },
-          ],
-        },
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},
         '~l': {},
         basePath: {
@@ -3624,6 +3179,66 @@ export default {
             'Maximum time in milliseconds a request may run before the server returns a timeout. Protects against hung upstream calls (database, SMTP, external APIs) running to the platform function limit — important on serverless hosts billed by duration. Defaults to 30000 (30s). Set to 0 to disable. Agent streaming routes are exempt.',
           errorMessage: {
             type: 'App "config.requestTimeout" should be a number.',
+          },
+        },
+        security: {
+          type: 'object',
+          additionalProperties: false,
+          description: 'Opt-in browser security settings for the app.',
+          errorMessage: {
+            type: 'App "config.security" should be an object.',
+          },
+          properties: {
+            '~k': {},
+            '~r': {},
+            '~l': {},
+            contentSecurityPolicy: {
+              type: ['boolean', 'object'],
+              additionalProperties: false,
+              description:
+                'Send a Content-Security-Policy header with app pages. Set true for the default policy, or an object to send it report-only or add sources per directive. Inline scripts and styles Lowdefy writes carry a fresh nonce on every page render. Defaults to off.',
+              errorMessage: {
+                type: 'App "config.security.contentSecurityPolicy" should be a boolean or an object.',
+              },
+              properties: {
+                '~k': {},
+                '~r': {},
+                '~l': {},
+                reportOnly: {
+                  type: 'boolean',
+                  description:
+                    'Send the policy as Content-Security-Policy-Report-Only: the browser reports what the policy would block, without blocking it. Defaults to false.',
+                  errorMessage: {
+                    type: 'App "config.security.contentSecurityPolicy.reportOnly" should be a boolean.',
+                  },
+                },
+                directives: {
+                  type: 'object',
+                  description:
+                    'Sources to add to the default policy, keyed by directive name (for example "script-src" or "img-src"). Sources are added to the defaults; a directive the defaults do not set is added.',
+                  errorMessage: {
+                    type: 'App "config.security.contentSecurityPolicy.directives" should be an object.',
+                  },
+                  properties: {
+                    '~k': {},
+                    '~r': {},
+                    '~l': {},
+                  },
+                  additionalProperties: {
+                    type: 'array',
+                    errorMessage: {
+                      type: 'App "config.security.contentSecurityPolicy.directives" values should be arrays of source strings.',
+                    },
+                    items: {
+                      type: 'string',
+                      errorMessage: {
+                        type: 'App "config.security.contentSecurityPolicy.directives" sources should be strings.',
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
         },
         trustedProxies: {
@@ -3965,27 +3580,7 @@ export default {
         type: 'App "logger" should be an object.',
       },
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'types',
-                  'schema',
-                ],
-              },
-            },
-          ],
-        },
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},
         '~l': {},
         sentry: {
@@ -3995,27 +3590,7 @@ export default {
             type: 'App "logger.sentry" should be an object.',
           },
           properties: {
-            '~ignoreBuildChecks': {
-              oneOf: [
-                { const: true },
-                {
-                  type: 'array',
-                  items: {
-                    type: 'string',
-                    enum: [
-                      'state-refs',
-                      'payload-refs',
-                      'step-refs',
-                      'link-refs',
-                      'request-refs',
-                      'connection-refs',
-                      'types',
-                      'schema',
-                    ],
-                  },
-                },
-              ],
-            },
+            '~ignoreBuildChecks': ignoreBuildChecksSchema,
             '~r': {},
             '~l': {},
             client: {
@@ -4028,6 +3603,14 @@ export default {
               type: 'boolean',
               errorMessage: {
                 type: 'App "logger.sentry.server" should be a boolean.',
+              },
+            },
+            serverTracing: {
+              type: 'boolean',
+              description:
+                'Trace server requests as Sentry transactions, sampled at tracesSampleRate. Defaults to true on the Node server and false on Vercel, where the server reports errors only: tracing sets up OpenTelemetry on every cold start, and the function stays billed while each sampled transaction uploads.',
+              errorMessage: {
+                type: 'App "logger.sentry.serverTracing" should be a boolean.',
               },
             },
             tracesSampleRate: {

@@ -46,6 +46,7 @@ import runCheck from './runCheck.js';
 import runEndpoint from './runEndpoint.js';
 import runJourney from './runJourney.js';
 import runJourneyAsUsers from './runJourneyAsUsers.js';
+import selectExercised from './selectExercised.js';
 import runRequest from './runRequest.js';
 import snapshotState from './snapshotState.js';
 import { listStateCheckpoints } from './checkpointStore.js';
@@ -317,7 +318,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
 
   registerDevTool(
     'lowdefy_run_journey',
-    async ({ pageId, pathParams, steps, user, urlQuery, state, timeout, data }) => {
+    async ({ pageId, pathParams, steps, user, urlQuery, state, timeout, data, exercised }) => {
       if (!origin) {
         return notFoundResult('Journey unavailable: server origin unknown for this transport.');
       }
@@ -345,8 +346,9 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
         // the order of the runs, each named in its run.
         const summary = {
           passed,
-          runs: runs.map(({ screenshots = [], ...run }) => ({
+          runs: runs.map(({ screenshots = [], exercised: runExercised, ...run }) => ({
             ...run,
+            ...selectExercised({ exercised: runExercised, selection: exercised }),
             screenshots: screenshots.map(({ name }) => ({ name })),
           })),
         };
@@ -374,8 +376,12 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       }
       // The PNGs travel as image content blocks (the shape lowdefy_screenshot_page
       // returns) so an MCP client renders them; the JSON keeps only their names.
-      const { screenshots, ...rest } = result;
-      const summary = { ...rest, screenshots: screenshots.map(({ name }) => ({ name })) };
+      const { screenshots, exercised: resultExercised, ...rest } = result;
+      const summary = {
+        ...rest,
+        ...selectExercised({ exercised: resultExercised, selection: exercised }),
+        screenshots: screenshots.map(({ name }) => ({ name })),
+      };
       return {
         content: [
           { type: 'text', text: JSON.stringify(summary, null, 2) },

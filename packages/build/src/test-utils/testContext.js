@@ -34,6 +34,7 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
       server: '',
     },
     pageTypeCounters: new Map(),
+    pluginCheckSlugRefs: new Map(),
     typeCounters: {
       actions: createCounter(),
       agents: createCounter(),

@@ -69,6 +69,8 @@ async function openDataSession({ dataSet }) {
     // readDataSession serves only open and closing sessions.
     state: 'loading',
     work: new Set(),
+    // Requests sunk instead of sent to an outside service (see sinkExternalConnections).
+    sunk: [],
   };
   dataSessionRegistry.set(id, session);
   try {
@@ -110,7 +112,8 @@ async function openDataSession({ dataSet }) {
     throw error;
   }
   session.state = 'open';
-  return { id, cookie: id, session, close: createClose({ session, client }) };
+  // sunk is the session's own array, so requests sunk while the journey runs show in it.
+  return { id, cookie: id, session, sunk: session.sunk, close: createClose({ session, client }) };
 }
 
 export default openDataSession;

@@ -43,7 +43,7 @@ function buildRequest(request, pageContext) {
       { received: request.type, configKey }
     );
   }
-  typeCounters.requests.increment(request.type, configKey);
+  typeCounters.requests.increment(request.type, configKey, request);
 
   // Validate connectionId references an existing connection
   if (!type.isNone(request.connectionId)) {

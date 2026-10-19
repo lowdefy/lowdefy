@@ -1031,7 +1031,7 @@ test('lowdefy mcp names both versions and the fix on every failed call to a dev 
       expect(result.isError).toBe(true);
       expect(text(result)).toContain('Unknown option "wait".');
       expect(text(result)).toContain(
-        `Note: lowdefy mcp is 7.1.0 but this dev server is 7.0.0, so tools and their options can differ. To match them, run \`npx lowdefy agent-setup\` in ${root} to pin lowdefy mcp to the app's Lowdefy version, then restart the agent session.`
+        `Note: lowdefy mcp is 7.1.0 but this dev server is 7.0.0, so tools and their options can differ. Tell the developer; don't run agent-setup yourself. They fix it with \`npx lowdefy@7.0.0 agent-setup\` in ${root}, then restart the agent session.`
       );
     });
   } finally {

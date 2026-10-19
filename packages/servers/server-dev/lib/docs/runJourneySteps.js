@@ -23,6 +23,7 @@ import {
 } from '@lowdefy/e2e-utils/runtime';
 import { getStepKey } from '@lowdefy/node-utils';
 
+import checkAuthActionsRan from './rails/checkAuthActionsRan.js';
 import checkClickRails from './rails/checkClickRails.js';
 import checkStepReferences from './checkStepReferences.js';
 import createLeftOriginError from './createLeftOriginError.js';
@@ -34,6 +35,7 @@ import nextJourneySequence from './nextJourneySequence.js';
 import openJourneyEmail from './openJourneyEmail.js';
 import readJourneyEmailMatch from './readJourneyEmailMatch.js';
 import readPagePath from './readPagePath.js';
+import shownTextSelector from './shownTextSelector.js';
 
 // Structural equality over values that have already been through the JSON
 // round-trip getState performs in the page (no undefined, no Dates, no
@@ -96,6 +98,7 @@ function capitalise(text) {
 // @lowdefy/helpers, where the engine's describe functions read them too.
 const {
   cellAttribute: CELL_ATTRIBUTE,
+  checkboxOption: CHECKBOX_OPTION,
   dropdownOption: DROPDOWN_OPTION,
   interactiveControl: INTERACTIVE_CONTROL,
   layers: LAYERS,
@@ -204,6 +207,21 @@ function resolveScope({ page, target }) {
   return scope;
 }
 
+// The scope a `text` or `containing` target searches. A Modal or Drawer renders its content and
+// footer in a portal outside its #bl- wrapper, marked with a class naming the block, so a target
+// scoped to the block alone (no row or column) searches the wrapper and that portal's root.
+function resolveMatchScope({ page, target }) {
+  const scope = resolveScope({ page, target });
+  if (
+    type.isUndefined(scope) ||
+    !type.isUndefined(target.row) ||
+    !type.isUndefined(target.column)
+  ) {
+    return scope;
+  }
+  return scope.or(page.locator(`.${journeyTargetSelectors.portalClass(target.blockId)}`));
+}
+
 function controlsWithText({ root, text }) {
   return root
     .locator(INTERACTIVE_CONTROL)
@@ -235,7 +253,8 @@ function namesMatches(target) {
 
 // Every visible element a `text` or `containing` target matches, before `nth`
 // picks one, and where they were looked for. With `containing` they are the
-// elements whose text contains the string, inside the scope or on the page: a
+// innermost elements whose shown text contains the string, however the markup
+// splits it (registerShownTextEngine.js), inside the scope or on the page: a
 // list row a person picks by the name or address it shows, which is neither a
 // block nor an interactive control. With `text` they are the interactive
 // controls with exactly that text (a cell button, a confirm dialog's OK, a
@@ -243,11 +262,13 @@ function namesMatches(target) {
 // when there is no blockId — portal-rendered controls live outside every
 // block.
 async function locateMatches({ page, target }) {
-  const scope = resolveScope({ page, target });
+  const scope = resolveMatchScope({ page, target });
   const where = type.isUndefined(scope) ? 'the page' : describeScopeParts(target).join(' ');
   if (!type.isUndefined(target.containing)) {
     return {
-      matches: (scope ?? page).getByText(target.containing).filter({ visible: true }),
+      matches: (scope ?? page)
+        .locator(shownTextSelector(target.containing))
+        .filter({ visible: true }),
       where,
     };
   }
@@ -432,15 +453,32 @@ async function runOpen({ page, step, timeout }) {
 // double click is never turned into a second submit after the first settled.
 async function runClick({ journey, page, step, timeout }) {
   const { count = 1, ...target } = normaliseTarget(step.click);
+  let blockId = null;
   await actOnTarget({
     target,
     action: async () => {
       const located = await resolveActionTarget({ page, target, timeout });
       const locator = await resolveClickLocator({ located, target, timeout });
-      await checkClickRails({ journey, page, locator });
+      blockId = await checkClickRails({ journey, page, locator });
       await locator.click({ timeout, clickCount: count });
     },
   });
+  return { blockId };
+}
+
+// Where a fill looks for the input. A block that renders its input in a portal (the Search
+// modal) marks the portal root with the block's portal class, so a block-scoped fill also
+// searches that portal. The block's own input comes first in document order, and a closed
+// portal is not in the DOM, so a block with an input of its own is unaffected.
+function fillScope({ page, target, located }) {
+  const isBlockScope =
+    !type.isUndefined(target.blockId) &&
+    type.isUndefined(target.row) &&
+    type.isUndefined(target.column) &&
+    !namesMatches(target) &&
+    type.isUndefined(target.nth);
+  if (!isBlockScope) return located;
+  return located.or(page.locator(`.${journeyTargetSelectors.portalClass(target.blockId)}`));
 }
 
 // A fill types `value`, or text read from an email (`fromEmail`) - the way a
@@ -461,9 +499,110 @@ async function runFill({ journey, page, step, timeout }) {
     target,
     action: async () => {
       const located = await resolveActionTarget({ page, target, timeout });
-      await located.locator('input, textarea').first().fill(String(value), { timeout });
+      const input = fillScope({ page, target, located }).locator('input, textarea').first();
+      const colorTrigger = located.locator(COLOR_PICKER_TRIGGER).first();
+      // A colour picker shows no input until its popup opens, so its trigger counts too.
+      try {
+        await input.or(colorTrigger).first().waitFor({ state: 'visible', timeout });
+      } catch (error) {
+        // A block that never showed fails as not actionable, as any other step on it does.
+        if (!(await located.first().isVisible())) throw error;
+        throw await createNoInputError({ page, target, error });
+      }
+      if ((await input.count()) === 0 && (await colorTrigger.count()) > 0) {
+        await fillColorPicker({ page, target, trigger: colorTrigger, value, timeout });
+        return;
+      }
+      await input.fill(String(value), { timeout });
     },
   });
+}
+
+// The engine's type for the block a fill names, or null when the shown page does not
+// hold it or the tab is between pages.
+async function readBlockType({ page, blockId }) {
+  try {
+    return await page.evaluate((id) => {
+      const lowdefy = window.lowdefy;
+      if (!lowdefy?.pageId || lowdefy._devNavigating === true) return null;
+      const shownKey = lowdefy.pageInstances?.[lowdefy.pageId]?.at(-1);
+      return lowdefy.contexts?.[shownKey]?._internal?.RootSlots?.map?.[id]?.type ?? null;
+    }, blockId);
+  } catch {
+    return null;
+  }
+}
+
+async function createNoInputError({ page, target, error }) {
+  const description = describeTarget(target);
+  const blockType = await readBlockType({ page, blockId: target.blockId });
+  const named = blockType === null ? description : `${description} (${blockType})`;
+  return new JourneyStepError(
+    `Fill found no input in ${named} to type into: fill types into a text input, textarea or colour picker.`,
+    {
+      expected: `a text input or colour picker in ${description}`,
+      actual: cleanMessage(error),
+    }
+  );
+}
+
+// The antd colour picker (the ColorSelector block): its trigger opens a popup whose hex
+// input sets the colour once it holds a full 6 or 8 digit hex value.
+const COLOR_PICKER_TRIGGER = '.ant-color-picker-trigger';
+const COLOR_PICKER_TRIGGER_ACTIVE = 'ant-color-picker-trigger-active';
+const COLOR_PICKER_TRIGGER_DISABLED = 'ant-color-picker-trigger-disabled';
+const COLOR_PICKER_PANEL = '.ant-popover:not(.ant-popover-hidden) .ant-color-picker-inner';
+const COLOR_PICKER_HEX_INPUT =
+  '.ant-color-picker-hex-input input, input.ant-color-picker-hex-input';
+const HEX_COLOR = /^#?([\da-f]{6}|[\da-f]{8})$/i;
+
+// The hex input shows its "#" as a prefix, so only the digits are typed. Escape closes the
+// picker, leaving the page as a person who picked a colour leaves it. The close is waited
+// for briefly and never fails the fill: a picker whose `open` the config holds stays open.
+async function fillColorPicker({ page, target, trigger, value, timeout }) {
+  const description = describeTarget(target);
+  const hex = String(value);
+  if (!HEX_COLOR.test(hex)) {
+    throw new JourneyStepError(
+      `Fill of the colour picker in ${description} takes a 6 or 8 digit hex colour, such as #1677ff; got "${hex}".`,
+      { expected: 'a 6 or 8 digit hex colour', actual: hex }
+    );
+  }
+  const triggerClass = (await trigger.getAttribute('class', { timeout })) ?? '';
+  if (triggerClass.split(' ').includes(COLOR_PICKER_TRIGGER_DISABLED)) {
+    throw new JourneyStepError(`The colour picker in ${description} is disabled.`, {
+      expected: `an enabled colour picker in ${description}`,
+      actual: 'disabled',
+    });
+  }
+  // The picker's panel is not tied to its trigger in the DOM, so another picker's open
+  // panel is closed first: then the one panel showing is this picker's.
+  const panel = page.locator(COLOR_PICKER_PANEL).filter({ visible: true });
+  if (!triggerClass.split(' ').includes(COLOR_PICKER_TRIGGER_ACTIVE)) {
+    if ((await panel.count()) > 0) {
+      await page.keyboard.press('Escape');
+      await panel.first().waitFor({ state: 'hidden', timeout });
+    }
+    await trigger.click({ timeout });
+  }
+  const hexInput = panel.locator(COLOR_PICKER_HEX_INPUT).first();
+  try {
+    await hexInput.waitFor({ state: 'visible', timeout });
+  } catch (error) {
+    throw new JourneyStepError(
+      `The colour picker in ${description} showed no hex input: fill types a hex colour, and the picker shows another format.`,
+      {
+        expected: `a hex input in the colour picker of ${description}`,
+        actual: cleanMessage(error),
+      }
+    );
+  }
+  await hexInput.fill(hex.replace(/^#/, ''), { timeout });
+  await page.keyboard.press('Escape');
+  await panel
+    .first()
+    .waitFor({ state: 'hidden', timeout: Math.min(timeout, 1000) })
+    .catch(() => {});
 }
 
 // The options of a radio group, a button selector or a segmented control are
@@ -484,9 +623,31 @@ async function selectRadioOption({ options, target, text, timeout }) {
   }
 }
 
+// A checkbox option is ticked, never toggled: clicking one already ticked would
+// untick it, so a step that selects it reads the same on a rerun.
+async function tickCheckboxOption({ options, target, text, timeout }) {
+  const option = options
+    .filter({ hasText: exactText(text) })
+    .filter({ visible: true })
+    .first();
+  try {
+    await option.waitFor({ state: 'visible', timeout });
+  } catch (error) {
+    const description = describeTarget(target);
+    throw new JourneyStepError(`No option with text "${text}" in ${description}.`, {
+      expected: `option "${text}" in ${description}`,
+      actual: cleanMessage(error),
+    });
+  }
+  if (await option.locator('input[type="checkbox"]').isChecked()) {
+    return;
+  }
+  await actOnTarget({ target, action: () => option.click({ timeout }) });
+}
+
 // A native <select> inside the block is preferred when present (Playwright's
-// selectOption is exact and needs no open dropdown), then radio options
-// labelled in the block. Otherwise the block is clicked to open its dropdown
+// selectOption is exact and needs no open dropdown), then radio and checkbox
+// options labelled in the block. Otherwise the block is clicked to open its dropdown
 // and the option with exactly `value` as text is clicked — Ant Design renders
 // options into a portal, so they are searched page-wide, restricted to visible
 // ones so the hidden accessibility list is never matched.
@@ -498,8 +659,9 @@ async function runSelect({ page, step, timeout }) {
     target,
     action: async () => {
       scope = await resolveActionTarget({ page, target, timeout });
-      // A native select or the radio options render with the block; counted
-      // once it shows, so a late block does not fall through to the dropdown.
+      // A native select or the radio and checkbox options render with the
+      // block; counted once it shows, so a late block does not fall through to
+      // the dropdown.
       await scope.first().waitFor({ state: 'visible', timeout });
     },
   });
@@ -514,6 +676,11 @@ async function runSelect({ page, step, timeout }) {
   const radioOptions = scope.locator(RADIO_OPTION);
   if ((await radioOptions.count()) > 0) {
     await selectRadioOption({ options: radioOptions, target, text, timeout });
+    return;
+  }
+  const checkboxOptions = scope.locator(CHECKBOX_OPTION);
+  if ((await checkboxOptions.count()) > 0) {
+    await tickCheckboxOption({ options: checkboxOptions, target, text, timeout });
     return;
   }
   await actOnTarget({
@@ -805,7 +972,11 @@ async function expectCalls({ journey, page, params }) {
 // centre, pinned right), so a row target legitimately matches more than one
 // element; joining them reads the whole row.
 async function readTargetText({ page, target, timeout }) {
-  const located = await resolveTarget({ page, target });
+  // A block's text includes its Modal or Drawer portal's (see resolveMatchScope).
+  const located =
+    !namesMatches(target) && type.isUndefined(target.nth) && !type.isUndefined(target.blockId)
+      ? resolveMatchScope({ page, target })
+      : await resolveTarget({ page, target });
   await located.first().waitFor({ state: 'attached', timeout });
   const texts = await located.allInnerTexts();
   return texts.join('\n');
@@ -831,6 +1002,10 @@ async function expectText({ page, params, timeout }) {
   const expected = `${description} text to contain "${contains}"`;
   const deadline = Date.now() + timeout;
   let read = await tryReadTargetText({ page, target, timeout });
+  // The last text actually read. The final poll runs with whatever is left of
+  // the timeout (1ms at the end), which can fail on its own latency: that
+  // failure must not hide the text the earlier reads found.
+  let lastText = read.text;
   while (read.text?.includes(contains) !== true && Date.now() < deadline) {
     await page.waitForTimeout(50);
     read = await tryReadTargetText({
@@ -838,19 +1013,24 @@ async function expectText({ page, params, timeout }) {
       target,
       timeout: Math.max(deadline - Date.now(), 1),
     });
+    lastText = read.text ?? lastText;
   }
-  if (!type.isUndefined(read.error)) {
+  if (!type.isUndefined(read.error) && type.isUndefined(lastText)) {
     throw new JourneyStepError(`Expected ${description} to contain text "${contains}".`, {
       expected,
       actual: cleanMessage(read.error),
     });
   }
-  if (!read.text.includes(contains)) {
+  if (!lastText.includes(contains)) {
+    // innerText is the text as rendered, so CSS text-transform applies to it.
+    const hint = lastText.toLowerCase().includes(String(contains).toLowerCase())
+      ? ' It matches ignoring case: the block may render its text transformed (text-transform).'
+      : '';
     throw new JourneyStepError(
       `Expected ${description} text to contain "${contains}" but found ${JSON.stringify(
-        read.text
-      )}.`,
-      { expected, actual: read.text }
+        lastText
+      )}.${hint}`,
+      { expected, actual: lastText }
     );
   }
 }
@@ -988,8 +1168,7 @@ async function runStep({ journey, step, index, screenshots, requestWindowStart }
   await checkStepReferences({ journey, page, step });
   switch (getStepKey(step)) {
     case 'click':
-      await runClick({ journey, page, step, timeout });
-      return;
+      return runClick({ journey, page, step, timeout });
     case 'open':
       await runOpen({ page, step, timeout });
       return;
@@ -1083,11 +1262,18 @@ async function runJourneySteps({ journey, steps }) {
     }
     await appErrors?.openWindow({ page: journey.actors.current().page });
     try {
-      await runStep({ journey, step, index, screenshots, requestWindowStart });
+      const ran = await runStep({ journey, step, index, screenshots, requestWindowStart });
       if (INTERACTION_STEPS.includes(getStepKey(step))) {
         await settlePage({
           page: journey.actors.current().page,
           timeout: Math.min(journey.stepTimeout, SETTLE_TIMEOUT_MS),
+        });
+      }
+      if (getStepKey(step) === 'click') {
+        await checkAuthActionsRan({
+          journey,
+          page: journey.actors.current().page,
+          blockId: ran?.blockId,
         });
       }
       await journey.actors.sampleRendered();

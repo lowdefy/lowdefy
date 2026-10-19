@@ -18,7 +18,8 @@ const cycleOrder = { light: 'dark', dark: 'system', system: 'light' };
 
 function SetDarkMode({ globals, methods, params }) {
   const { window } = globals;
-  const currentPreference = window.localStorage?.getItem('lowdefy_darkMode') ?? 'system';
+  // The client keeps the preference it reads from storage, under the app's key.
+  const currentPreference = window.__lowdefy_darkModePreference ?? 'system';
   const newPreference = params?.darkMode ?? cycleOrder[currentPreference] ?? 'light';
 
   window.__lowdefy_setDarkMode?.(newPreference);

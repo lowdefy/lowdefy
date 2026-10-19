@@ -17,12 +17,9 @@
 import { getOperatorType, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-const OPERATOR_NAME = /^_[A-Za-z]\w*$/;
+import getOperatorParams from './getOperatorParams.js';
 
-function getOperatorParams(value) {
-  const [operatorKey] = Object.keys(value).filter((key) => !key.startsWith('~'));
-  return value[operatorKey];
-}
+const OPERATOR_NAME = /^_[A-Za-z]\w*$/;
 
 // The names an _operator `name` can evaluate to, when config fixes them: a
 // literal, or the literal branches an _if or _switch returns (anything an _if
@@ -119,7 +116,7 @@ function walkAndCount(value, counter, parentConfigKey) {
 
   const operator = getOperatorType(value);
   if (operator) {
-    counter.increment(operator, configKey);
+    counter.increment(operator, configKey, value);
   }
   if (operator === '_operator') {
     countNamedOperators(value, counter, configKey);

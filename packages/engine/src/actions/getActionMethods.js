@@ -21,6 +21,7 @@ import createChangePassword from './createChangePassword.js';
 import createEmailOtpSend from './createEmailOtpSend.js';
 import createEmailOtpVerify from './createEmailOtpVerify.js';
 import createGetActions from './createGetActions.js';
+import createGetAppStorageKey from './createGetAppStorageKey.js';
 import createGetBlockId from './createGetBlockId.js';
 import createGetEvent from './createGetEvent.js';
 import createGetGlobal from './createGetGlobal.js';
@@ -79,6 +80,7 @@ function getActionMethods(props) {
     emailOtpVerify: createEmailOtpVerify(props),
     displayMessage: createDisplayMessage(props),
     getActions: createGetActions(props),
+    getAppStorageKey: createGetAppStorageKey(props),
     getBlockId: createGetBlockId(props),
     getEvent: createGetEvent(props),
     getGlobal: createGetGlobal(props),

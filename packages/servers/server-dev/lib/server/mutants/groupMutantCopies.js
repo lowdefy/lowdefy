@@ -27,7 +27,8 @@ function copyPage(mutant) {
 // `copies`. Each other copy's own artifact, key and anchor are listed under
 // `copyTargets`, in the same order: the build keys every copy apart, so a
 // journey that reaches the node on another page is run against that page's
-// copy. Templated copies whose content differs stay apart.
+// copy. Each copy also carries its `pointer`, the path to it from the artifact
+// root, which finds it again when its page is rebuilt and its keys are not. Templated copies whose content differs stay apart.
 function groupMutantCopies({ mutants }) {
   const groups = new Map();
   mutants.forEach((mutant) => {
@@ -42,7 +43,12 @@ function groupMutantCopies({ mutants }) {
     return {
       ...kept,
       copies: others.map(copyPage),
-      copyTargets: others.map(({ artifact, key, anchor }) => ({ artifact, key, anchor })),
+      copyTargets: others.map(({ artifact, key, anchor, pointer }) => ({
+        artifact,
+        key,
+        anchor,
+        pointer,
+      })),
     };
   });
 }

@@ -22,7 +22,10 @@ import { Hono } from 'hono';
 import { jest } from '@jest/globals';
 
 const mockLaunch = jest.fn();
-jest.unstable_mockModule('playwright-core', () => ({ chromium: { launch: mockLaunch } }));
+jest.unstable_mockModule('playwright-core', () => ({
+  chromium: { launch: mockLaunch },
+  selectors: { register: jest.fn(async () => {}) },
+}));
 
 // openPage takes its browser as a parameter, so a fake one covers the cookie
 // injection without a real Chromium. lib/build/config.js reads build/config.json

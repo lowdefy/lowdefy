@@ -22,6 +22,7 @@ import { type } from '@lowdefy/helpers';
 const reportingMethods = new Set([
   'displayMessage',
   'getActions',
+  'getAppStorageKey',
   'getBlockId',
   'getEvent',
   'getGlobal',

@@ -16,7 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
-// Keys Lowdefy uses internally, e.g. lowdefy_darkMode, lowdefy_locale and lf-sider-open.
+// Lowdefy keeps its own keys in the app's storage namespace under these prefixes, e.g.
+// lowdefy_darkMode, lf-sider-open and the per-user keys under lowdefy_user:.
 const RESERVED_PREFIXES = ['lowdefy_', 'lf-'];
 
 function validateStorageKey({ actionType, key }) {

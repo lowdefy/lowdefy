@@ -596,9 +596,22 @@ function initialBuild(context) {
     await context.lowdefyBuild();
     await context.checkMockUserWarning();
     await context.installPlugins();
+    if (
+      !context.options.skipPluginChecks &&
+      pluginChecksNeedRebuild({
+        buildDirectory: context.directories.build,
+        serverDirectory: context.directories.server,
+      })
+    ) {
+      await context.lowdefyBuild();
+    }
   };
 }
 ```
+
+The first build cannot check a plugin that is not installed yet, so it lists the plugin in `plugin-checks-pending.json`. Once `installPlugins` has installed it, the build runs once more when that checks something new (see `pluginChecksNeedRebuild` in [build-pipeline.md](../architecture/build-pipeline.md)).
+
+A plugin's `./checks` and schemas are imported once per dev server process. Rules are functions, so they can't come back from `importFresh`'s worker, which copies its result by structured clone. An edit to a local plugin's rules or schemas takes effect when the dev server restarts.
 
 There is no client build step — Vite compiles client modules on demand when the browser requests them.
 
@@ -1161,7 +1174,7 @@ Auth itself is Auth.js v5 (`@auth/core` via `@hono/auth-js`), wired the same way
 
 With `LOWDEFY_DEV_SMTP_PORT` set, the manager (`manager/processes/startMailSink.mjs`, `smtp-server` + `postal-mime`) listens for SMTP on `127.0.0.1:<port>` and writes every message it receives as `<config>/.lowdefy/mail/<sequence>.json` (envelope recipients, subject, html, text, receive time) instead of delivering it. The directory is emptied at start. The app's own SMTP connection is pointed at the port through its secrets, so the real send path runs unchanged. The manager owns the listener so it survives child restarts, and `startServer` passes each child `LOWDEFY_SERVER_DEV_MAIL_SINK=true` only while it listens (a port added to `.env` later starts no sink); the journey `email` step (`lib/docs/openJourneyEmail.js`) checks that flag and reads the files from the server child. `smtp-server` and `postal-mime` load only when the port is set. Nothing in `@lowdefy/server` captures mail.
 
-Journeys that test auth run with `user: 'none'` (no injected caller) and one browser context per actor (`lib/docs/createJourneyActors.js`). Each actor gets an address from `203.0.113.0/24`, carried by a `lowdefy_journey_actor` cookie with a per-process token (`lib/server/auth/journeyActor.js`), which only the dev server's `getClientAddress` reads, so BetterAuth's per-address rate limits count each actor apart instead of one budget for the whole run. `X-Forwarded-For` is not believed: neither server reads it unless the connection comes from one of `config.trustedProxies`. See the config tests docs (`packages/docs/testing/config-tests.md`) and `code-docs/testing.md`.
+Journeys that test auth run with `user: 'none'` (no injected caller) and one browser context per actor (`lib/docs/createJourneyActors.js`). Each actor gets an address from `203.0.113.0/24`, carried by a `lowdefy_journey_actor` cookie prefixed with a per-process token (written and read through `lib/server/journeyCookies.js`, token in `lib/server/auth/journeyActor.js`; see `code-docs/architecture/journeys.md`, "Journey cookies"), which only the dev server's `getClientAddress` reads, so BetterAuth's per-address rate limits count each actor apart instead of one budget for the whole run. `X-Forwarded-For` is not believed: neither server reads it unless the connection comes from one of `config.trustedProxies`. See the config tests docs (`packages/docs/testing/config-tests.md`) and `code-docs/testing.md`.
 
 ## Plugin Strategy
 
@@ -1211,16 +1224,17 @@ If a user configures a plugin package that isn't installed in the dev server:
 
 ## Environment Variables
 
-| Variable                           | Purpose                                                    |
-| ---------------------------------- | ---------------------------------------------------------- |
-| `LOWDEFY_SERVER_DEV_OPEN_BROWSER`  | Open browser on start when set to `'true'`                 |
-| `LOWDEFY_DIRECTORY_CONFIG`         | Config directory path                                      |
-| `PORT` (or `--port`)               | Server port (default: 3000)                                |
-| `LOWDEFY_LOG_LEVEL`                | Log level (default: info)                                  |
-| `LOWDEFY_BUILD_REF_RESOLVER`       | Custom ref resolver                                        |
-| `LOWDEFY_DEV_USER`                 | Mock user JSON for testing                                 |
-| `LOWDEFY_DEV_SMTP_PORT`            | Capture app mail over SMTP (journeys)                      |
-| `LOWDEFY_SERVER_DEV_WATCH`         | Extra watch paths (JSON array)                             |
-| `LOWDEFY_SERVER_DEV_WATCH_IGNORE`  | Watch ignore paths (JSON array)                            |
-| `LOWDEFY_BROWSER_TAG`              | Set by the manager per child start; tags the agent browser |
-| `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD` | Turns off the headless shell download on first use         |
+| Variable                           | Purpose                                                                                                        |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `LOWDEFY_SERVER_DEV_OPEN_BROWSER`  | Open browser on start when set to `'true'`                                                                     |
+| `LOWDEFY_DIRECTORY_CONFIG`         | Config directory path                                                                                          |
+| `PORT` (or `--port`)               | Server port (default: 3000)                                                                                    |
+| `LOWDEFY_LOG_LEVEL`                | Log level (default: info)                                                                                      |
+| `LOWDEFY_BUILD_REF_RESOLVER`       | Custom ref resolver                                                                                            |
+| `LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS` | `'true'` skips plugin build check rules (`--skip-plugin-checks`); read by the manager and the JIT page builder |
+| `LOWDEFY_DEV_USER`                 | Mock user JSON for testing                                                                                     |
+| `LOWDEFY_DEV_SMTP_PORT`            | Capture app mail over SMTP (journeys)                                                                          |
+| `LOWDEFY_SERVER_DEV_WATCH`         | Extra watch paths (JSON array)                                                                                 |
+| `LOWDEFY_SERVER_DEV_WATCH_IGNORE`  | Watch ignore paths (JSON array)                                                                                |
+| `LOWDEFY_BROWSER_TAG`              | Set by the manager per child start; tags the agent browser                                                     |
+| `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD` | Turns off the headless shell download on first use                                                             |

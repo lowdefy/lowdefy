@@ -19,6 +19,13 @@ import { createStdOutLineHandler } from '@lowdefy/logger/cli';
 
 async function runLowdefyBuild({ context, directory }) {
   context.logger.info({ spin: 'start' }, 'Running Lowdefy build.');
+  const env = {
+    ...process.env,
+    LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
+    LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
+    LOWDEFY_LOG_LEVEL: context.options.logLevel,
+  };
+  if (context.options.skipPluginChecks) env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS = 'true';
   try {
     await spawnProcess({
       args: ['run', 'build:lowdefy'],
@@ -28,12 +35,7 @@ async function runLowdefyBuild({ context, directory }) {
         cwd: directory,
         // https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2#command-injection-via-args-parameter-of-child_processspawn-without-shell-option-enabled-on-windows-cve-2024-27980---high
         shell: process.platform === 'win32',
-        env: {
-          ...process.env,
-          LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
-          LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
-          LOWDEFY_LOG_LEVEL: context.options.logLevel,
-        },
+        env,
       },
     });
   } catch (error) {

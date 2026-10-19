@@ -26,7 +26,7 @@ function getDarkMode() {
 }
 
 function getDarkModePreference() {
-  return window.localStorage?.getItem('lowdefy_darkMode') ?? 'system';
+  return window.__lowdefy_darkModePreference ?? 'system';
 }
 
 function getDarkModeIcon() {

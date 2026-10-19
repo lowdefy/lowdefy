@@ -22,6 +22,14 @@ import createDataSetRails from './createDataSetRails.js';
 
 let buildDirectory;
 
+const connections = {
+  MongoDBCollection: { meta: { tenant: true, dataSet: 'redirect' } },
+  AxiosHttp: { meta: { dataSet: 'external' } },
+  FolderRuntime: { meta: { dataSet: 'redirect' } },
+  WalledRuntime: { meta: { tenant: false, dataSet: 'walled' } },
+  Knex: {},
+};
+
 function write(name, value) {
   const filePath = path.join(buildDirectory, name);
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
@@ -48,6 +56,16 @@ beforeEach(() => {
           button('save_button', { id: 's', type: 'Request', params: 'save' }),
           button('notify_button', { id: 'n', type: 'Request', params: 'notify' }),
           button('logout_button', { id: 'l', type: 'Logout' }),
+          button('accept_button', { id: 'a', type: 'Request', params: 'accept' }),
+          button('archive_button', { id: 'a', type: 'Request', params: 'archive' }),
+          button('report_button', { id: 'r', type: 'Request', params: 'report' }),
+          button('orphan_button', { id: 'o', type: 'Request', params: 'orphan' }),
+          button(
+            'everything_button',
+            { id: 'n', type: 'Request', params: 'notify' },
+            { id: 'r', type: 'Request', params: 'report' },
+            { id: 'o', type: 'Request', params: 'orphan' }
+          ),
           {
             blockId: 'rows',
             type: 'List',
@@ -65,45 +83,90 @@ beforeEach(() => {
   write('pages/orders/requests/notify.json', { requestId: 'notify', connectionId: 'mailer' });
   write('connections/orders_db.json', { connectionId: 'orders_db', type: 'MongoDBCollection' });
   write('connections/mailer.json', { connectionId: 'mailer', type: 'AxiosHttp' });
+  write('pages/orders/requests/accept.json', { requestId: 'accept', connectionId: 'runtime' });
+  write('pages/orders/requests/archive.json', { requestId: 'archive', connectionId: 'folders' });
+  write('pages/orders/requests/report.json', { requestId: 'report', connectionId: 'sql' });
+  write('pages/orders/requests/orphan.json', { requestId: 'orphan', connectionId: 'gone' });
+  write('connections/runtime.json', { connectionId: 'runtime', type: 'WalledRuntime' });
+  write('connections/folders.json', { connectionId: 'folders', type: 'FolderRuntime' });
+  write('connections/sql.json', { connectionId: 'sql', type: 'Knex' });
 });
 
 afterEach(() => {
   fs.rmSync(buildDirectory, { recursive: true, force: true });
 });
 
-test('a block whose request uses the data set connection may be clicked', () => {
-  const rails = createDataSetRails({ buildDirectory });
+test('a block whose request uses a MongoDBCollection connection, declaring redirect, may be clicked', () => {
+  const rails = createDataSetRails({ buildDirectory, connections });
   expect(rails.refusal({ pageId: 'orders', blockId: 'save_button' })).toBeNull();
 });
 
-test('a block that reaches another connection is refused, naming the connection and its type', () => {
-  const rails = createDataSetRails({ buildDirectory });
+test('a block that reaches a plugin type declaring redirect or walled may be clicked', () => {
+  const rails = createDataSetRails({ buildDirectory, connections });
+  expect(rails.refusal({ pageId: 'orders', blockId: 'archive_button' })).toBeNull();
+  expect(rails.refusal({ pageId: 'orders', blockId: 'accept_button' })).toBeNull();
+});
+
+test('a block that reaches a connection declaring external is refused, naming the declaration', () => {
+  const rails = createDataSetRails({ buildDirectory, connections });
   expect(rails.refusal({ pageId: 'orders', blockId: 'notify_button' })).toEqual({
     message:
-      'Block "notify_button" reaches connection "mailer" (AxiosHttp), which a journey data set does not redirect, so a data-set journey cannot click it.',
-    actual: 'a click that reaches connection "mailer" (AxiosHttp)',
+      'Block "notify_button" reaches connection "mailer" (AxiosHttp, dataSet: external), which reaches a real service, so a data-set journey cannot click it.',
+    actual: 'a click that reaches connection "mailer" (AxiosHttp, dataSet: external)',
   });
 });
 
-test('a list item block is matched through its template id', () => {
-  const rails = createDataSetRails({ buildDirectory });
-  expect(rails.refusal({ pageId: 'orders', blockId: 'rows.2.notify' })?.actual).toBe(
-    'a click that reaches connection "mailer" (AxiosHttp)'
+test('a block that reaches a connection whose type declares nothing is refused, saying so', () => {
+  const rails = createDataSetRails({ buildDirectory, connections });
+  expect(rails.refusal({ pageId: 'orders', blockId: 'report_button' })).toEqual({
+    message:
+      'Block "report_button" reaches connection "sql" (Knex, no dataSet declaration), which a data set cannot redirect, so a data-set journey cannot click it.',
+    actual: 'a click that reaches connection "sql" (Knex, no dataSet declaration)',
+  });
+});
+
+test('a block that reaches a connection with no artifact is refused, saying so', () => {
+  const rails = createDataSetRails({ buildDirectory, connections });
+  expect(rails.refusal({ pageId: 'orders', blockId: 'orphan_button' })).toEqual({
+    message:
+      'Block "orphan_button" reaches connection "gone" (no connection artifact), which a data set cannot redirect, so a data-set journey cannot click it.',
+    actual: 'a click that reaches connection "gone" (no connection artifact)',
+  });
+});
+
+test('a block that reaches several refused connections names each with its declaration', () => {
+  const rails = createDataSetRails({ buildDirectory, connections });
+  expect(rails.refusal({ pageId: 'orders', blockId: 'everything_button' })).toEqual({
+    message:
+      'Block "everything_button" reaches connection "gone" (no connection artifact), which a data set cannot redirect, and connection "mailer" (AxiosHttp, dataSet: external), which reaches a real service, and connection "sql" (Knex, no dataSet declaration), which a data set cannot redirect, so a data-set journey cannot click it.',
+    actual:
+      'a click that reaches connection "gone" (no connection artifact), "mailer" (AxiosHttp, dataSet: external), "sql" (Knex, no dataSet declaration)',
+  });
+});
+
+test('a MongoDBCollection connection is refused when the connection map does not declare it', () => {
+  const { MongoDBCollection, ...withoutMongo } = connections;
+  const rails = createDataSetRails({ buildDirectory, connections: withoutMongo });
+  expect(rails.refusal({ pageId: 'orders', blockId: 'save_button' })?.actual).toBe(
+    'a click that reaches connection "orders_db" (MongoDBCollection, no dataSet declaration)'
   );
 });
 
-test('a block that runs an auth action is refused, naming the action', () => {
-  const rails = createDataSetRails({ buildDirectory });
-  expect(rails.refusal({ pageId: 'orders', blockId: 'logout_button' })).toEqual({
-    message:
-      'Block "logout_button" runs the auth action Logout, so a data-set journey cannot click it: its users are injected and have no auth session.',
-    actual: 'a click that runs the auth action Logout',
-  });
+test('a list item block is matched through its template id', () => {
+  const rails = createDataSetRails({ buildDirectory, connections });
+  expect(rails.refusal({ pageId: 'orders', blockId: 'rows.2.notify' })?.actual).toBe(
+    'a click that reaches connection "mailer" (AxiosHttp, dataSet: external)'
+  );
+});
+
+test('a block that runs an auth action is not refused: the auth rail acts at runtime', () => {
+  const rails = createDataSetRails({ buildDirectory, connections });
+  expect(rails.refusal({ pageId: 'orders', blockId: 'logout_button' })).toBeNull();
 });
 
 test("a page's lists are read once per run", () => {
-  const rails = createDataSetRails({ buildDirectory });
+  const rails = createDataSetRails({ buildDirectory, connections });
   expect(rails.refusal({ pageId: 'orders', blockId: 'save_button' })).toBeNull();
   fs.rmSync(path.join(buildDirectory, 'pages'), { recursive: true });
-  expect(rails.refusal({ pageId: 'orders', blockId: 'logout_button' })).not.toBeNull();
+  expect(rails.refusal({ pageId: 'orders', blockId: 'notify_button' })).not.toBeNull();
 });

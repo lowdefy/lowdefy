@@ -74,7 +74,7 @@ function TableRoot({
   styles = {},
   value,
 }) {
-  const config = useTableConfig({ properties });
+  const config = useTableConfig({ methods, properties });
   // Lowdefy's `loading` (onMount actions running, the block's `loading` key) or the property.
   const loadingSignal = loading === true || properties.loading === true;
   const apiRef = useRef(null);

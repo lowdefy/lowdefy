@@ -108,6 +108,7 @@ test('check reports a prodError warning as an error, not a warning', async () =>
     config: expect.any(String),
     configKey: expect.any(String),
     checkSlug: 'link-refs',
+    checkGroup: null,
     prodError: true,
   });
   expect(fs.readdirSync(app.buildDirectory)).toEqual([]);

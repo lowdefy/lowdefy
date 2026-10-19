@@ -169,10 +169,22 @@ lowdefy = {
     callEndpoint: fn,            // Call API endpoints
     handleError: fn,             // Error handler with dedup, server round-trip, display
     logger: browserLogger,       // Shared browser logger (createBrowserLogger)
+    storage: { appKey, userKey, clearUserStorage, clearUserStorageOnOwnerChange },
     ...
   }
 }
 ```
+
+## Browser Storage
+
+Every key Lowdefy writes to `localStorage` is namespaced by app, because storage is shared by every app on an origin: `appStorageKey({ basePath, name, slug })` (`@lowdefy/helpers`) gives `lowdefy:<slug>:<basePath>:<name>`. The server templates use it for the pre-hydration dark mode script, `App.jsx` for the dark mode and locale preferences, and `src/storage/createStorage.js` for `lowdefy._internal.storage`.
+
+A person's data (Search recent searches, Table persisted views) goes under a user key: `lowdefy:<slug>:<basePath>:lowdefy_user:<encoded user id>:<name>`, with an empty id for an anonymous visitor. `lowdefy_` is a reserved prefix for `SetLocalStorage` keys, so no author key reads as a user key. User keys are removed:
+
+- by `Logout`, after the sign-out succeeds and before it navigates (`clearUserStorage({ keepUserId: null })`);
+- by `initLowdefyContext` on every render, when any user key belongs to someone other than the user now signed in (`clearUserStorageOnOwnerChange`). This covers a session that ended without `Logout` (the page reloads signed out) and another person signing in on the browser.
+
+Clearing also removes the `lowdefy_scroll` session storage entry; device preferences and the build reload markers stay. Blocks reach the keys through `methods.getAppStorageKey(name)` and `methods.getUserStorageKey(name)` (also on loading skeleton methods), actions through `methods.getAppStorageKey(name)` (engine `getActionMethods`). `useDarkMode` and `useLocale`, and `GetLocalStorage`, move a value found under the old bare key to the app key on first read. The dark mode preference is published as `window.__lowdefy_darkModePreference`, which `SetDarkMode`, `_media: darkModePreference` and the header toggles read instead of storage.
 
 ## Page Context
 

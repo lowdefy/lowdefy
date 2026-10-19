@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import appFolder from './appFolder.js';
+
 // The journeys-from-production skill: the coding agent mines journeys from
 // production analytics. It picks the window, pulls and measures, then reads
 // each session's log (or, at scale, the grouped flows) with the app's config
@@ -26,8 +28,7 @@
 // and reports the old flows users still follow and how the tiers moved; it
 // may suggest the developer delete an old flow that shows no use, and never
 // deletes one itself.
-function journeysFromProduction({ appPath }) {
-  const cd = appPath === '' ? '' : `cd ${appPath} && `;
+function journeysFromProduction() {
   return `---
 name: journeys-from-production
 description: Use when the developer wants journeys (tests) for what real users do in production, asks which production flows or failures no journey covers, or wants journey evidence refreshed. Pulls production analytics, reads each session's log with the app's config and code, and writes and proves the journeys that deserve one.
@@ -37,8 +38,9 @@ description: Use when the developer wants journeys (tests) for what real users d
 
 Apps that send analytics with the PostHog plugin can mine journeys (tests in \`tests/journeys/\`)
 from what real users do. In this skill you, not a rule, decide what each recorded routine means
-and which ones deserve a journey, by reading them next to the app's config and code. Run every
-command below from the app directory (\`${cd}…\`).
+and which ones deserve a journey, by reading them next to the app's config and code.
+
+${appFolder()}
 
 You write the journeys, from what the sessions show; the runner decides whether they pass. Write
 no interaction a session did not show. Nothing in this loop deletes a journey,
@@ -76,9 +78,9 @@ question you are answering, and say which and why in your report:
 
 Run, with your window:
 
-1. \`${cd}lowdefy journeys pull posthog --since 30d\`: one file per UTC day in
+1. \`lowdefy journeys pull posthog --config-directory <app> --since 30d\`: one file per UTC day in
    \`.lowdefy/traces/production/\`; each finished day is fetched once.
-2. \`${cd}lowdefy journeys coverage --source production --since 30d\`: what no journey covers
+2. \`lowdefy journeys coverage --config-directory <app> --source production --since 30d\`: what no journey covers
    yet, in \`.lowdefy/test/coverage.json\`. Its \`flowGrouping\` says whether the window was
    large enough (100,000 rows or more) to group sessions into flows.
 
@@ -102,10 +104,10 @@ Never ask for the key in chat, and never write it to a file yourself.
 
 Below 100,000 rows, read the sessions one by one:
 
-- \`${cd}lowdefy journeys session --source production --since 30d\` lists the window's sessions,
+- \`lowdefy journeys session --config-directory <app> --source production --since 30d\` lists the window's sessions,
   newest first, with their pages, interactions and failures. Start with the ones that failed,
   then the uncovered failure paths in \`coverage.json\` (\`measures.failure.uncovered\`).
-- \`${cd}lowdefy journeys session --source production --since 30d <id>\` prints one session as a
+- \`lowdefy journeys session --config-directory <app> --source production --since 30d <id>\` prints one session as a
   log, one line per interaction with what the app did in response, for example
   \`click save → Validate failed [priority]\`. Production records no typed values, so a
   \`fill\` line names the control only; a click on text that is not config text reads
@@ -164,7 +166,7 @@ and note why.
 
 ## 6. Prove it
 
-Run \`${cd}lowdefy test --repeat 3 tests/journeys/<file>.yaml\`. It records nothing.
+Run \`lowdefy test --config-directory <app> --repeat 3 <app>/tests/journeys/<file>.yaml\`. It records nothing.
 
 - **PASS** (three passes): keep it.
 - **FAIL** (three failures): read the failure. A step you wrote wrong, fix and run again. A
@@ -174,17 +176,17 @@ Run \`${cd}lowdefy test --repeat 3 tests/journeys/<file>.yaml\`. It records noth
 - **FLAKY** (one or two failures): fix the cause, a missing \`wait: { request }\` or a data
   dependency. Never add \`wait: { ms }\`. Then run it three more times.
 
-If \`${cd}lowdefy journeys --help\` lists \`variants\`, run
-\`${cd}lowdefy journeys variants <file>\` on each journey you kept.
+If \`lowdefy journeys --help\` lists \`variants\`, run
+\`lowdefy journeys variants --config-directory <app> <file>\` on each journey you kept.
 
 Then refresh evidence, with the usage report on either side of it:
 
-1. \`${cd}lowdefy journeys usage --json\`: keep its \`rows\` as the tiers before the refresh.
-2. \`${cd}lowdefy journeys evidence --refresh\`: counts each journey's production use by
+1. \`lowdefy journeys usage --config-directory <app> --json\`: keep its \`rows\` as the tiers before the refresh.
+2. \`lowdefy journeys evidence --config-directory <app> --refresh\`: counts each journey's production use by
    calendar month. When a journey's steps changed what it matches, its counted months move to a
    deprecated flow under \`evidence.production.deprecated\`, which is never run and is still
    counted.
-3. \`${cd}lowdefy journeys usage --json\` again: the tiers after it.
+3. \`lowdefy journeys usage --config-directory <app> --json\` again: the tiers after it.
 
 Compare the two by \`file\` and \`journeyIndex\`. Each row has the journey's \`tier\`, \`rank\`,
 \`rate\` (sessions a day over the usage window, the last \`windowMonths\`), \`unranked\` (no counts

@@ -1,0 +1,15 @@
+{
+  "name": "journey-fixture-walled-plugin",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "A walled-client connection type the journey fixture app runs under a data set.",
+  "type": "module",
+  "exports": {
+    "./connections": "./src/connections.js",
+    "./types": "./src/types.js"
+  },
+  "dependencies": {
+    "@lowdefy/connection-mongodb": "workspace:*"
+  }
+}

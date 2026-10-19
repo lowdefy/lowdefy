@@ -45,3 +45,8 @@ test('journeyTargetSelectors names the wrapper prefix, grid attributes, layers a
     rowAttribute: 'row-index',
   });
 });
+
+test('portalClass names a block in a class safe for a CSS selector', () => {
+  expect(journeyTargetSelectors.portalClass('unlink_modal')).toBe('ldf-portal-unlink_modal');
+  expect(journeyTargetSelectors.portalClass('rows.0.edit')).toBe('ldf-portal-rows_0_edit');
+});

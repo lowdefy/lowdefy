@@ -21,6 +21,8 @@ import {
   isWebSocketOriginAllowed,
 } from '@lowdefy/api';
 
+import getStrategies from '../../lib/server/auth/getStrategies.js';
+
 // One registry per server process — channels and their running source
 // resolvers are shared across all websocket connections on this instance.
 const registry = createChannelRegistry();
@@ -30,9 +32,14 @@ const upgrade = upgradeWebSocket((c) => {
   let connection;
   return {
     onOpen(event, ws) {
+      // The upgrade's headers stay with the connection: its caller is resolved
+      // from them again while the socket is open.
       connection = createWebSocketConnection(context, {
+        closeSocket: ({ code, reason }) => ws.close(code, reason),
+        headers: c.req.raw.headers,
         registry,
         send: (message) => ws.send(message),
+        strategies: getStrategies({ logger: context.logger }),
       });
     },
     onMessage(event) {

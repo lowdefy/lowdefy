@@ -118,3 +118,80 @@ test('upsertClaudeSettings leaves a settings.json that disables lowdefy unchange
 
   expect(readSettings('settings.json')).toEqual({ disabledMcpjsonServers: ['lowdefy'] });
 });
+
+test('upsertClaudeSettings renames lowdefy-docs tool permission rules in every list', async () => {
+  writeSettings('settings.local.json', {
+    permissions: {
+      allow: ['mcp__lowdefy-docs__lowdefy_get_schema', 'mcp__other__tool', 'Bash(ls:*)'],
+      ask: ['mcp__lowdefy-docs__lowdefy_run_request'],
+      deny: ['mcp__lowdefy-docs'],
+      defaultMode: 'default',
+    },
+  });
+
+  await upsertClaudeSettings({ context, projectDirectory });
+
+  expect(readSettings('settings.local.json')).toEqual({
+    permissions: {
+      allow: ['mcp__lowdefy__lowdefy_get_schema', 'mcp__other__tool', 'Bash(ls:*)'],
+      ask: ['mcp__lowdefy__lowdefy_run_request'],
+      deny: ['mcp__lowdefy'],
+      defaultMode: 'default',
+    },
+  });
+  expect(context.logger.info).toHaveBeenCalledWith(
+    `Renamed 3 'lowdefy-docs' tool permission rules in '${path.join(
+      '.claude',
+      'settings.local.json'
+    )}' to 'lowdefy'.`
+  );
+});
+
+test('upsertClaudeSettings drops a renamed permission rule that is already there under lowdefy', async () => {
+  writeSettings('settings.local.json', {
+    permissions: {
+      allow: ['mcp__lowdefy__lowdefy_get_doc', 'mcp__lowdefy-docs__lowdefy_get_doc'],
+    },
+  });
+
+  await upsertClaudeSettings({ context, projectDirectory });
+
+  expect(readSettings('settings.local.json')).toEqual({
+    permissions: { allow: ['mcp__lowdefy__lowdefy_get_doc'] },
+  });
+});
+
+test('upsertClaudeSettings renames permission rules in a settings.json that already enables lowdefy', async () => {
+  writeSettings('settings.json', {
+    enabledMcpjsonServers: ['lowdefy'],
+    permissions: { allow: ['mcp__lowdefy-docs__lowdefy_list_types'] },
+  });
+
+  await upsertClaudeSettings({ context, projectDirectory });
+
+  expect(readSettings('settings.json')).toEqual({
+    enabledMcpjsonServers: ['lowdefy'],
+    permissions: { allow: ['mcp__lowdefy__lowdefy_list_types'] },
+  });
+  expect(context.logger.info).toHaveBeenCalledWith(
+    `Renamed 1 'lowdefy-docs' tool permission rule in '${path.join(
+      '.claude',
+      'settings.json'
+    )}' to 'lowdefy'.`
+  );
+  expect(context.logger.info).not.toHaveBeenCalledWith(expect.stringContaining('Enabled the'));
+});
+
+test('upsertClaudeSettings leaves permission rules for other servers unchanged', async () => {
+  writeSettings('settings.json', {
+    enabledMcpjsonServers: ['lowdefy'],
+    permissions: { allow: ['mcp__lowdefy-docs-ops__tool', 'mcp__lowdefy__lowdefy_get_doc'] },
+  });
+
+  await upsertClaudeSettings({ context, projectDirectory });
+
+  expect(readSettings('settings.json')).toEqual({
+    enabledMcpjsonServers: ['lowdefy'],
+    permissions: { allow: ['mcp__lowdefy-docs-ops__tool', 'mcp__lowdefy__lowdefy_get_doc'] },
+  });
+});

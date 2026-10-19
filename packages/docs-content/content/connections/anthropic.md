@@ -277,7 +277,7 @@ Keep the state to what the questions need: an evaluation model reads the state l
 - `model: string`: **Required** - Model id to decide with, e.g. `typesafe-ai/jev`. Pin a version wherever a confidence threshold is tuned — a `latest` alias changes answers on release.
 - `state: string | object | array`: **Required** - What the questions are about.
 - `questions: object`: **Required** - Named questions, answered together against the state. Each question id becomes a key of the response (`usage` is reserved). A question is one of:
-  - `{ choice: string, options: object }` - Pick exactly one option. `options` maps option names (2 to 255) to what each one means (`null` for no description).
+  - `{ choice: string, options: object }` - Pick exactly one option. `options` maps option names (2 to 255) to what each one means (`null` for no description), or to an object with a `description` — its other keys are ignored, so one file can describe the options for `Decide` and for an [`IntentInput`](/IntentInput) block.
   - `{ yesno: string, criteria?: { yes: string, no: string } }` - Judge a statement true or false. `criteria` optionally says what counts as yes and as no.
   - `{ score: string, levels: string[] }` - Place the state on 2 to 10 ordered levels, lowest first.
 - `backend: enum`: `evaluation` or `structured-output`. Defaults to `evaluation` on `AIGateway` and `structured-output` elsewhere.

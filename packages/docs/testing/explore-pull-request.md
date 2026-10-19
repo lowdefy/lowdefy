@@ -40,7 +40,7 @@ steps:
 
 ## Clicks a data set journey refuses
 
-Journeys on a data set never reach a real service. A click on a block whose events reach a connection the data set does not redirect (any connection that is not a `MongoDBCollection`), or run an auth action such as `Logout`, fails at that step and names the block and the connection or action. See [Clicks a data set journey refuses](/journey-data-sets#clicks-a-data-set-journey-refuses).
+Journeys on a data set never reach a real service. A click on a block whose events reach a connection whose type declares nothing, or declares `meta.dataSet: 'external'` but has no request resolvers, fails at that step and names the block and the connection's declaration. Requests of other `external` connection types are sunk: recorded and answered with `null`. A click that runs an auth action such as `Logout` fails at that step and names the action; a click that skips it does not. Connections that declare `redirect` or `walled`, such as `MongoDBCollection`, can be clicked. See [Clicks a data set journey refuses](/journey-data-sets#clicks-a-data-set-journey-refuses).
 
 ## lowdefy journeys scope
 
@@ -65,7 +65,7 @@ lowdefy journeys scope
 | `--dev-directory`       | The installed dev server, whose builder builds both revisions. Default is `<config-directory>/.lowdefy/dev`.                           |
 | `--ref-resolver <path>` | A `_ref` resolver function for both builds.                                                                                            |
 
-The command needs no running dev server and no data set. It needs the dev server installed once (run `lowdefy dev` once in the app), because that is where the full builder and your plugins live.
+The command needs no running dev server and no data set. It builds with the installed dev server, where the full builder and your plugins live, and installs it first when the app has none, without starting it.
 
 ### What is in scope
 

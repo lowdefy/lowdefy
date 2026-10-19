@@ -101,7 +101,11 @@ import resolveConfigLocation from './resolveConfigLocation.js';
 import loadAndResolveErrorLocation from './loadAndResolveErrorLocation.js';
 import resolveErrorLocation from './resolveErrorLocation.js';
 import ServiceError from './ServiceError.js';
-import shouldSuppressBuildCheck, { VALID_CHECK_SLUGS } from './shouldSuppressBuildCheck.js';
+import shouldSuppressBuildCheck, {
+  PLUGIN_CHECKS_SLUG,
+  PLUGIN_SCHEMA_SLUG,
+  VALID_CHECK_SLUGS,
+} from './shouldSuppressBuildCheck.js';
 import TenantIntegrityError from './TenantIntegrityError.js';
 import TwoFactorEnrolmentRequiredError from './TwoFactorEnrolmentRequiredError.js';
 import UserError from './UserError.js';
@@ -121,6 +125,8 @@ export {
   lowdefyErrorTypes,
   OperatorError,
   PluginError,
+  PLUGIN_CHECKS_SLUG,
+  PLUGIN_SCHEMA_SLUG,
   readErrorCodes,
   RequestError,
   resolveConfigLocation,

@@ -17,9 +17,10 @@
 import { type } from '@lowdefy/helpers';
 
 import parseStoredValue from '../../localStorage/parseStoredValue.js';
+import readAppStorageItem from '../../localStorage/readAppStorageItem.js';
 import validateStorageKey from '../../localStorage/validateStorageKey.js';
 
-function GetLocalStorage({ globals, params }) {
+function GetLocalStorage({ globals, methods, params }) {
   if (!type.isObject(params)) {
     throw new Error('GetLocalStorage params should be an object.');
   }
@@ -27,7 +28,11 @@ function GetLocalStorage({ globals, params }) {
   validateStorageKey({ actionType: 'GetLocalStorage', key });
   let item;
   try {
-    item = globals.window.localStorage.getItem(key);
+    item = readAppStorageItem({
+      appKey: methods.getAppStorageKey(key),
+      key,
+      storage: globals.window.localStorage,
+    });
   } catch {
     // The browser blocks storage access (e.g. Safari with site data disabled), so read it as
     // not set - the user's browser settings are not an app config error.

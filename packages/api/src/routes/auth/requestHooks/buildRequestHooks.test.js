@@ -254,43 +254,46 @@ function createOAuthHooks(mfaTrustedProviderKeys) {
   });
 }
 
-function createOAuthCtx(path) {
+// BetterAuth hands hooks the route template as ctx.path and the provider key
+// as ctx.params.id.
+function createOAuthCtx(providerKey) {
   const ctx = createEnrolledCtx();
-  ctx.path = path;
+  ctx.path = '/callback/:id';
+  ctx.params = { id: providerKey };
   return ctx;
 }
 
-test('buildRequestHooks challenges both OAuth callbacks when no provider is trusted', async () => {
+test('buildRequestHooks challenges built-in and GenericOAuth callbacks when no provider is trusted', async () => {
   const hooks = createOAuthHooks([]);
 
-  expect((await catchAfter(hooks, createOAuthCtx('/callback/google'))).thrown.redirectTo).toBe(
+  expect((await catchAfter(hooks, createOAuthCtx('google'))).thrown.redirectTo).toBe(
     'https://app.example.com/app/two-factor?callbackUrl=%2Finvoices'
   );
-  expect(
-    (await catchAfter(hooks, createOAuthCtx('/oauth2/callback/my-idp'))).thrown.redirectTo
-  ).toBe('https://app.example.com/app/two-factor?callbackUrl=%2Finvoices');
+  expect((await catchAfter(hooks, createOAuthCtx('my-idp'))).thrown.redirectTo).toBe(
+    'https://app.example.com/app/two-factor?callbackUrl=%2Finvoices'
+  );
   expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(2);
 });
 
 test('buildRequestHooks skips a trusted built-in provider by its lowercase type key and still challenges a generic provider', async () => {
   const hooks = createOAuthHooks(['google']);
 
-  expect(await hooks.after(createOAuthCtx('/callback/google'))).toBeUndefined();
+  expect(await hooks.after(createOAuthCtx('google'))).toBeUndefined();
   expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
 
-  expect(
-    (await catchAfter(hooks, createOAuthCtx('/oauth2/callback/my-idp'))).thrown.redirectTo
-  ).toBe('https://app.example.com/app/two-factor?callbackUrl=%2Finvoices');
+  expect((await catchAfter(hooks, createOAuthCtx('my-idp'))).thrown.redirectTo).toBe(
+    'https://app.example.com/app/two-factor?callbackUrl=%2Finvoices'
+  );
   expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(1);
 });
 
 test('buildRequestHooks skips a trusted GenericOAuth provider by its id and still challenges a built-in provider', async () => {
   const hooks = createOAuthHooks(['my-idp']);
 
-  expect(await hooks.after(createOAuthCtx('/oauth2/callback/my-idp'))).toBeUndefined();
+  expect(await hooks.after(createOAuthCtx('my-idp'))).toBeUndefined();
   expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
 
-  expect((await catchAfter(hooks, createOAuthCtx('/callback/google'))).thrown.redirectTo).toBe(
+  expect((await catchAfter(hooks, createOAuthCtx('google'))).thrown.redirectTo).toBe(
     'https://app.example.com/app/two-factor?callbackUrl=%2Finvoices'
   );
   expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(1);
@@ -299,7 +302,7 @@ test('buildRequestHooks skips a trusted GenericOAuth provider by its id and stil
 test('buildRequestHooks challenges the OAuth callbacks with mfaTrustedProviderKeys unset', async () => {
   const hooks = createOAuthHooks(undefined);
 
-  expect((await catchAfter(hooks, createOAuthCtx('/callback/google'))).thrown.redirectTo).toBe(
+  expect((await catchAfter(hooks, createOAuthCtx('google'))).thrown.redirectTo).toBe(
     'https://app.example.com/app/two-factor?callbackUrl=%2Finvoices'
   );
   expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(1);
@@ -313,13 +316,13 @@ test('buildRequestHooks challenges an OAuth callback with magicLink disabled', a
     getAuth: jest.fn(),
   });
 
-  expect((await catchAfter(hooks, createOAuthCtx('/callback/google'))).thrown.redirectTo).toBe(
+  expect((await catchAfter(hooks, createOAuthCtx('google'))).thrown.redirectTo).toBe(
     'https://app.example.com/app/two-factor?callbackUrl=%2Finvoices'
   );
   expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(1);
 });
 
-test('buildRequestHooks challenges neither OAuth callback when twoFactor is disabled', async () => {
+test('buildRequestHooks challenges no OAuth callback when twoFactor is disabled', async () => {
   const hooks = buildRequestHooks({
     authConfig: { ...twoFactorAuthConfig, twoFactor: { enabled: false } },
     basePath: '/app',
@@ -327,8 +330,8 @@ test('buildRequestHooks challenges neither OAuth callback when twoFactor is disa
     getAuth: jest.fn(),
   });
 
-  expect(await hooks.after(createOAuthCtx('/callback/google'))).toBeUndefined();
-  expect(await hooks.after(createOAuthCtx('/oauth2/callback/my-idp'))).toBeUndefined();
+  expect(await hooks.after(createOAuthCtx('google'))).toBeUndefined();
+  expect(await hooks.after(createOAuthCtx('my-idp'))).toBeUndefined();
   expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
 });
 
@@ -337,7 +340,7 @@ test('buildRequestHooks challenges neither OAuth callback when twoFactor is disa
 // newSession there is the ordinary linking case and must pass through untouched.
 test('buildRequestHooks leaves an account linking callback with no new session untouched', async () => {
   const hooks = createOAuthHooks([]);
-  const ctx = createOAuthCtx('/callback/google');
+  const ctx = createOAuthCtx('google');
   ctx.context.newSession = null;
 
   const { returned, thrown } = await catchAfter(hooks, ctx);
@@ -360,6 +363,65 @@ function createPhoneHooks(authConfig) {
     getAuth: jest.fn(),
   });
 }
+
+// An id token posted straight to /sign-in/social, which mints the session in
+// the request itself.
+function createIdTokenCtx(provider) {
+  const ctx = createEnrolledCtx();
+  ctx.path = '/sign-in/social';
+  ctx.body = { provider, idToken: { token: 'id-token' } };
+  return ctx;
+}
+
+test('buildRequestHooks challenges an id token sign-in with a JSON response', async () => {
+  const hooks = createOAuthHooks([]);
+
+  expect(await hooks.after(createIdTokenCtx('my-idp'))).toEqual({
+    jsonBody: { twoFactorRedirect: true, twoFactorMethods: ['totp'] },
+  });
+  expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(1);
+});
+
+test('buildRequestHooks skips an id token sign-in for a provider trusted for two-factor', async () => {
+  const hooks = createOAuthHooks(['my-idp']);
+
+  expect(await hooks.after(createIdTokenCtx('my-idp'))).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
+test('buildRequestHooks skips an id token sign-in for a trusted built-in provider by its lowercase type key and still challenges a generic provider', async () => {
+  const hooks = createOAuthHooks(['google']);
+
+  expect(await hooks.after(createIdTokenCtx('google'))).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+
+  expect(await hooks.after(createIdTokenCtx('my-idp'))).toEqual({
+    jsonBody: { twoFactorRedirect: true, twoFactorMethods: ['totp'] },
+  });
+  expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(1);
+});
+
+test('buildRequestHooks does not challenge an id token sign-in when twoFactor is disabled', async () => {
+  const hooks = buildRequestHooks({
+    authConfig: { ...twoFactorAuthConfig, twoFactor: { enabled: false } },
+    basePath: '/app',
+    baseUrlOrigin: 'https://app.example.com',
+    getAuth: jest.fn(),
+  });
+
+  expect(await hooks.after(createIdTokenCtx('google'))).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
+test('buildRequestHooks leaves the redirect branch of /sign-in/social untouched', async () => {
+  const hooks = createOAuthHooks([]);
+  const ctx = createIdTokenCtx('my-idp');
+  ctx.body = { provider: 'my-idp', callbackURL: '/home' };
+  ctx.context.newSession = null;
+
+  expect(await hooks.after(ctx)).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
 
 function createPhoneVerifyCtx(path = '/phone-number/verify') {
   const ctx = createEnrolledCtx();

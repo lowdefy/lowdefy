@@ -18,11 +18,7 @@ import { MCP_SERVER_NAME } from './mcpServerNames.js';
 
 // The dev-server rules both AGENTS.md and the skill teach. One text, so the
 // two never disagree.
-function devServerRules({ appPath }) {
-  const appNote =
-    appPath === ''
-      ? ''
-      : `\n- The app lives in \`${appPath}/\`. If the repository holds several apps, pass that app's directory as \`directory\`.`;
+function devServerRules() {
   return `Your Lowdefy tools come from the \`${MCP_SERVER_NAME}\` MCP server (\`lowdefy mcp\`, see \`.mcp.json\`). It routes every
 \`lowdefy_\` tool to the dev server of the app and git checkout you are working in, and starts that server when needed.
 
@@ -32,7 +28,13 @@ function devServerRules({ appPath }) {
   stale, or after secrets a wrapper (for example infisical) injects have changed. \`.env\` edits and local
   plugin code are picked up without a restart.
 - Working in a different git worktree from the session (for example as a subagent)? Pass your working
-  directory as \`directory\` on every \`lowdefy_\` call.${appNote}
+  directory as \`directory\` on every \`lowdefy_\` call.
+- A Lowdefy app is a folder containing \`lowdefy.yaml\`. \`lowdefy_\` tools pick the app themselves: the app
+  folder the session started in, else the repository's only app; otherwise they fail and list the apps. When
+  the developer named an app, or a call listed several, pass its folder as \`directory\`.
+- Shell commands (\`lowdefy test\`, \`lowdefy journeys …\`) choose the app the same way and pass its folder as
+  \`--config-directory <app>\`. Paths in their arguments are relative to where you run them, so start them
+  with the app folder (\`<app>/tests/journeys/…\`).
 - After every config edit, call \`lowdefy_build_status\` with \`wait: true\` and fix what it reports.
 - When you finish work in a git worktree you created for the task, call \`lowdefy_dev_stop\` with that
   \`directory\` before you report back. Do not stop a server in a checkout you share with another agent. A server

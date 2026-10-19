@@ -25,10 +25,12 @@ import createCallRequest from './createCallRequest.js';
 import createWebSocketClient from './websocket/createWebSocketClient.js';
 import createIcon from './createIcon.js';
 import createShortcutBadge from './createShortcutBadge.js';
+import createStorage from './storage/createStorage.js';
 import createLinkComponent from './createLinkComponent.js';
 import createHandleError from './createHandleError.js';
 import getActiveLocale from './getActiveLocale.js';
 import { createBrowserLogger } from '@lowdefy/logger/browser';
+import setLowdefyUser from './setLowdefyUser.js';
 import setupLink from './setupLink.js';
 import { createUrl } from './adapters/url.js';
 
@@ -63,6 +65,10 @@ function initLowdefyContext({
       actions: types.actions,
       blockComponents: types.blocks,
       blockMetas: types.blockMetas ?? {},
+      // The last caller stamp a response carried (recordCallerStamp). It names
+      // the session, not the page context, so it outlives a dev config reload,
+      // and the dev server records the first page config's before this runs.
+      callerStamp: lowdefy._internal?.callerStamp ?? null,
       components: {
         Icon: createIcon({ icons: types.icons, loadAllIcons }),
         ShortcutBadge: createShortcutBadge(lowdefy),
@@ -97,6 +103,12 @@ function initLowdefyContext({
     lowdefy.lowdefyApp = config.rootConfig.lowdefyApp;
     lowdefy.lowdefyGlobal = config.rootConfig.lowdefyGlobal;
     lowdefy.theme = config.rootConfig.theme ?? {};
+    lowdefy._internal.storage = createStorage({
+      basePath: lowdefy.basePath,
+      getUserId: () => lowdefy.user?.id ?? null,
+      slug: lowdefy.lowdefyApp?.slug,
+      window,
+    });
 
     lowdefy._internal.callAPI = createCallAPI(lowdefy);
     lowdefy._internal.auth = createAuthMethods(lowdefy, auth);
@@ -151,7 +163,9 @@ function initLowdefyContext({
   lowdefy.menus = config.rootConfig.menus;
   lowdefy.pageId = config.pageConfig.pageId;
   lowdefy.pagePaths = config.rootConfig.pagePaths;
-  lowdefy.user = auth?.user ?? null;
+  setLowdefyUser({ lowdefy, user: auth?.user });
+  // Runs on every render, so it sees the person signed in on load and any later change.
+  lowdefy._internal.storage.clearUserStorageOnOwnerChange();
 
   // The shown page's path joins the path memory before its context is built,
   // so the first load's page is known before any plugin reads the memory.

@@ -50,16 +50,16 @@ test('twoFactor plugin sign-in matcher only covers email, username and phone-num
   expect(matcher({ path: '/sign-in/phone-number' })).toBe(true);
 
   // These are the four paths the engine hooks precisely because the
-  // plugin's matcher does not cover them - magic link, OAuth and phone
-  // OTP verification all complete a sign-in without ever triggering a 2FA
-  // challenge. If upstream extends the matcher to any of these, this
+  // plugin's matcher does not cover them - magic link, the OAuth callback,
+  // id token sign-in and phone OTP verification all complete a sign-in
+  // without ever triggering a 2FA challenge. If upstream extends the matcher to any of these, this
   // assertion turns red the moment the engine's hook becomes redundant or
   // starts double-firing for that path. On failure, delete the matching
   // branch of the engine hook - do not update this expectation to keep it
   // passing.
   expect(matcher({ path: '/magic-link/verify' })).toBe(false);
-  expect(matcher({ path: '/callback/google' })).toBe(false);
-  expect(matcher({ path: '/oauth2/callback/my-idp' })).toBe(false);
+  expect(matcher({ path: '/callback/:id' })).toBe(false);
+  expect(matcher({ path: '/sign-in/social' })).toBe(false);
   expect(matcher({ path: '/phone-number/verify' })).toBe(false);
 });
 

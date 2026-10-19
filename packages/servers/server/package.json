@@ -79,6 +79,7 @@
     "@lowdefy/websockets-core": "6.0.0",
     "@sentry/browser": "10.57.0",
     "@sentry/node": "10.57.0",
+    "@sentry/node-core": "10.57.0",
     "@sentry/vite-plugin": "5.3.0",
     "@tailwindcss/postcss": "4.3.3",
     "@vitejs/plugin-react": "6.0.2",

@@ -15,6 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { callerStamp } from '@lowdefy/helpers';
 
 // usePageConfig imports swr and useMutateCache only for the hook; the fetcher
 // under test needs neither. Mock them so the module loads in the node test env.
@@ -32,12 +33,26 @@ beforeEach(() => {
   getReloadVersion.mockReturnValue(0);
 });
 
-function mockJsonResponse(body) {
-  return { status: 200, ok: true, json: async () => body };
+function mockJsonResponse(body, { headers = {} } = {}) {
+  return { status: 200, ok: true, headers: new Headers(headers), json: async () => body };
 }
+
+beforeEach(() => {
+  const stored = {};
+  global.window = {
+    location: { reload: jest.fn() },
+    sessionStorage: {
+      getItem: (key) => stored[key] ?? null,
+      setItem: (key, value) => {
+        stored[key] = value;
+      },
+    },
+  };
+});
 
 afterEach(() => {
   delete global.fetch;
+  delete global.window;
 });
 
 test('fetchPageConfig compiles inlined _jsEntries module text into a { hash: fn } object', async () => {
@@ -54,7 +69,10 @@ test('fetchPageConfig compiles inlined _jsEntries module text into a { hash: fn 
     })
   );
 
-  const { pageConfig } = await fetchPageConfig('http://localhost/api/page/p');
+  const { pageConfig } = await fetchPageConfig('http://localhost/api/page/p', {
+    lowdefy: {},
+    user: null,
+  });
 
   expect(typeof pageConfig._jsEntries.h1).toBe('function');
   expect(pageConfig._jsEntries.h1({ args: { x: 1 } })).toBe(2);
@@ -72,7 +90,7 @@ test('fetchPageConfig issues only the page-config request — no /api/js or /api
     })
   );
 
-  const data = await fetchPageConfig('http://localhost/api/page/p');
+  const data = await fetchPageConfig('http://localhost/api/page/p', { lowdefy: {}, user: null });
 
   expect(data.pageConfig._jsEntries).toBeUndefined();
   expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -146,7 +164,10 @@ test('fetchPageConfig returns the page a patterned path matched with its values'
     })
   );
 
-  const data = await fetchPageConfig('http://localhost/api/page/tickets/a%2Bb/1');
+  const data = await fetchPageConfig('http://localhost/api/page/tickets/a%2Bb/1', {
+    lowdefy: {},
+    user: null,
+  });
 
   expect(global.fetch.mock.calls[0][0]).toBe('http://localhost/api/page/tickets/a%2Bb/1');
   expect(data).toEqual({
@@ -154,5 +175,73 @@ test('fetchPageConfig returns the page a patterned path matched with its values'
     pathParams: { space: 'a+b', ticket_id: '1' },
     matchedPath: 'tickets/a%2Bb/1',
     pageConfig: { id: 'page:ticket', path: 'tickets/{space}/{ticket_id}' },
+  });
+});
+
+test('fetchPageConfig reloads instead of settling when the server answered as another caller', async () => {
+  global.fetch = jest.fn(async () =>
+    mockJsonResponse(
+      { pageId: 'p', pathParams: {}, matchedPath: 'p', pageConfig: { id: 'page:p' } },
+      { headers: { 'x-lowdefy-caller': 'aaaaaaaaaaaaaaaa' } }
+    )
+  );
+  const settled = jest.fn();
+  fetchPageConfig('http://localhost/api/page/p', {
+    lowdefy: {},
+    user: { id: 'user_1', organization_id: 'org_1' },
+  }).then(settled);
+  await new Promise((resolve) => setTimeout(resolve, 20));
+  expect(global.window.location.reload).toHaveBeenCalledTimes(1);
+  expect(settled).not.toHaveBeenCalled();
+});
+
+test('fetchPageConfig returns the page when the server answered as the rendered caller', async () => {
+  global.fetch = jest.fn(async () =>
+    mockJsonResponse(
+      { pageId: 'p', pathParams: {}, matchedPath: 'p', pageConfig: { id: 'page:p' } },
+      { headers: { 'x-lowdefy-caller': '' } }
+    )
+  );
+  const data = await fetchPageConfig('http://localhost/api/page/p', { lowdefy: {}, user: null });
+  expect(data.pageId).toBe('p');
+  expect(global.window.location.reload).not.toHaveBeenCalled();
+});
+
+test('fetchPageConfig reloads when the server answered the rendered caller with other roles', async () => {
+  const user = { id: 'user_1', organization_id: 'org_1', roles: ['editor', 'admin'] };
+  global.fetch = jest.fn(async () =>
+    mockJsonResponse(
+      { pageId: 'p', pathParams: {}, matchedPath: 'p', pageConfig: { id: 'page:p' } },
+      { headers: { 'x-lowdefy-caller': callerStamp({ user: { ...user, roles: ['editor'] } }) } }
+    )
+  );
+  const settled = jest.fn();
+  fetchPageConfig('http://localhost/api/page/p', { lowdefy: {}, user }).then(settled);
+  await new Promise((resolve) => setTimeout(resolve, 20));
+  expect(global.window.location.reload).toHaveBeenCalledTimes(1);
+  expect(settled).not.toHaveBeenCalled();
+});
+
+test('fetchPageConfig keeps the caller stamp of a page answered as the rendered caller', async () => {
+  const user = { id: 'user_1', organization_id: 'org_1', roles: ['editor', 'admin'] };
+  // The fixed vector callerStamp's own tests pin, so server and client agree.
+  const header =
+    '82e92667feb5824d; session=3a1d7b6848ba4816; roles=228d50a09b1b1e2b; memberships=476954726056d64d';
+  global.fetch = jest.fn(async () =>
+    mockJsonResponse(
+      { pageId: 'p', pathParams: {}, matchedPath: 'p', pageConfig: { id: 'page:p' } },
+      { headers: { 'x-lowdefy-caller': header } }
+    )
+  );
+  // The first page config arrives before the page context exists.
+  const lowdefy = {};
+  const data = await fetchPageConfig('http://localhost/api/page/p', { lowdefy, user });
+  expect(data.pageId).toBe('p');
+  expect(global.window.location.reload).not.toHaveBeenCalled();
+  expect(lowdefy._internal.callerStamp).toEqual({
+    caller: '82e92667feb5824d',
+    session: '3a1d7b6848ba4816',
+    roles: '228d50a09b1b1e2b',
+    memberships: '476954726056d64d',
   });
 });

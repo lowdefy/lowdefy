@@ -17,13 +17,18 @@
 import isOnPath from './isOnPath.js';
 
 // The copy of a mutant one journey's baseline exercised, as { artifact, key,
-// anchor }, or undefined when it exercised none. A `_ref`'d layout, menu or
+// anchor, pointer }, or undefined when it exercised none. A `_ref`'d layout, menu or
 // template node is listed as one mutant kept on its first page, with every
 // other page's copy, under that page's own artifact and key, in
 // `copyTargets`. The kept copy is tried first.
 function findOnPathCopy({ mutant, exercised }) {
   const copies = [
-    { artifact: mutant.artifact, key: mutant.key, anchor: mutant.anchor },
+    {
+      artifact: mutant.artifact,
+      key: mutant.key,
+      anchor: mutant.anchor,
+      pointer: mutant.pointer,
+    },
     ...mutant.copyTargets,
   ];
   return copies.find(({ anchor }) => isOnPath({ anchor, operator: mutant.operator, exercised }));

@@ -16,6 +16,7 @@
 
 import { expectedErrorNames } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
+import { getStepKey } from '@lowdefy/node-utils';
 
 import findingKey from './findingKey.js';
 import hasNoEffect from './hasNoEffect.js';
@@ -74,6 +75,23 @@ function isDeadClick({ step, result, window }) {
 // (entry) and resolveSource(configKey) read the dev server's build. Sources
 // are made relative to configDirectory. Returns findings { kind, severity,
 // message, pageId, source, configKey, key }, one per key.
+// The browser's TypeError for a fetch that did not complete, in each engine.
+const FETCH_FAILURE =
+  /^(TypeError: )?(Failed to fetch|NetworkError when attempting to fetch|Load failed)/;
+
+// A goto replaces the page, and the browser aborts the requests the page left
+// behind had in flight; the page reports each as a failed fetch. That is the
+// runner's own navigation, not an app error, so a goto step's fetch failures
+// are dropped when the window also saw the browser abort a request. A failed
+// fetch with no aborted request, or in any other step, is still an error.
+function isCausedByGoto({ step, window, message }) {
+  return (
+    getStepKey(step ?? {}) === 'goto' &&
+    (window.abortedRequests ?? []).length > 0 &&
+    FETCH_FAILURE.test(message ?? '')
+  );
+}
+
 async function evaluateInvariants({
   step,
   result,
@@ -109,12 +127,15 @@ async function evaluateInvariants({
     });
   }
 
-  const clientEntries = window.errors.filter((entry) => entry.store === 'client');
+  const clientEntries = window.errors
+    .filter((entry) => entry.store === 'client')
+    .filter((entry) => !isCausedByGoto({ step, window, message: entry.message ?? entry.name }));
   const serverEntries = window.errors.filter((entry) => entry.store === 'server');
   clientEntries.forEach((entry) => {
     add({ kind: 'client-error', message: entry.message ?? entry.name, source: entry.source });
   });
   window.pageErrors
+    .filter((pageError) => !isCausedByGoto({ step, window, message: pageError.message }))
     .filter((pageError) => !clientEntries.some((entry) => entry.message === pageError.message))
     .forEach((pageError) => {
       add({ kind: 'client-error', message: `${pageError.name}: ${pageError.message}` });

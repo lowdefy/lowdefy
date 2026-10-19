@@ -36,6 +36,7 @@ async function runDevServer({ context, directory }) {
   if (context.options.mockUser) {
     env.LOWDEFY_DEV_USER = resolveMockUser(context.options.mockUser);
   }
+  if (context.options.skipPluginChecks) env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS = 'true';
   // Set only when requested, so an inherited LOWDEFY_EXIT_WITH_PID passes through.
   if (context.options.exitWithPid) {
     env.LOWDEFY_EXIT_WITH_PID = String(context.options.exitWithPid);

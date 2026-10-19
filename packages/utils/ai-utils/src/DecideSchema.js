@@ -28,8 +28,17 @@ const choiceQuestion = {
       type: 'object',
       minProperties: 2,
       maxProperties: 255,
-      additionalProperties: { type: ['string', 'null'] },
-      description: 'Option names mapped to what each one means (null for no description).',
+      additionalProperties: {
+        anyOf: [
+          { type: ['string', 'null'] },
+          {
+            type: 'object',
+            properties: { description: { type: ['string', 'null'] } },
+          },
+        ],
+      },
+      description:
+        'Option names mapped to what each one means (null for no description), or to an object with a "description" — its other keys are ignored, so one file can describe the options for Decide and for a block such as IntentInput.',
     },
   },
 };

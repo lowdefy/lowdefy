@@ -44,6 +44,7 @@ function readResult({ outDirectory, code }) {
 async function spawnConfigTreeBuild({ context, script, configDirectory, outDirectory }) {
   const env = { ...process.env };
   if (context.options.refResolver) env.LOWDEFY_BUILD_REF_RESOLVER = context.options.refResolver;
+  if (context.options.skipPluginChecks) env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS = 'true';
   if (context.options.logLevel) env.LOWDEFY_LOG_LEVEL = context.options.logLevel;
   const start = Date.now();
   const child = spawnProcess({

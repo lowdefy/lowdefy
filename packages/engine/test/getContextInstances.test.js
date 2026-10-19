@@ -200,3 +200,50 @@ test('getContext throws when a page with placeholders gets no value for one', ()
     })
   ).toThrow('Link to page "ticket" is missing a value for path placeholder "ticket_id".');
 });
+
+test('an organization switch rebuilds a kept page instance under the same instance key', async () => {
+  const lowdefy = getLowdefy();
+  lowdefy.user = { id: 'user_1', organization_id: 'org_1' };
+  const config = ticketConfig();
+  const first = await visit({ lowdefy, config, ticket_id: '1' });
+  first.state.title = 'Org one ticket';
+  lowdefy.inputs[first.instanceKey].from = 'list';
+  lowdefy.user = { id: 'user_1', organization_id: 'org_2' };
+  const switched = await visit({ lowdefy, config, ticket_id: '1' });
+  expect(switched).not.toBe(first);
+  expect(switched.instanceKey).toEqual(first.instanceKey);
+  expect(switched.state).toEqual({});
+  expect(switched._internal.organizationId).toEqual('org_2');
+  expect(lowdefy.contexts[first.instanceKey]).toBe(switched);
+  // Link input for the instance is navigation data, set before the page renders.
+  expect(lowdefy.inputs[first.instanceKey]).toEqual({ from: 'list' });
+});
+
+test('a page instance built with no organization is kept when the caller gains one', async () => {
+  const lowdefy = getLowdefy();
+  const config = ticketConfig();
+  const before = await visit({ lowdefy, config, ticket_id: '1' });
+  expect(before._internal.organizationId).toBe(null);
+  before.state.accepted = true;
+  lowdefy.user = { id: 'user_1', organization_id: 'org_1' };
+  const joined = await visit({ lowdefy, config, ticket_id: '1' });
+  expect(joined).toBe(before);
+  expect(joined.state).toEqual({ accepted: true });
+  expect(joined._internal.organizationId).toBe('org_1');
+  lowdefy.user = { id: 'user_1', organization_id: 'org_1', roles: ['admin'] };
+  expect(await visit({ lowdefy, config, ticket_id: '1' })).toBe(before);
+  // From then on it belongs to that organization: a switch rebuilds it.
+  lowdefy.user = { id: 'user_1', organization_id: 'org_2' };
+  expect(await visit({ lowdefy, config, ticket_id: '1' })).not.toBe(before);
+});
+
+test('leaving the organization rebuilds a page instance built in it', async () => {
+  const lowdefy = getLowdefy();
+  lowdefy.user = { id: 'user_1', organization_id: 'org_1' };
+  const config = ticketConfig();
+  const member = await visit({ lowdefy, config, ticket_id: '1' });
+  lowdefy.user = { id: 'user_1', organization_id: null };
+  const left = await visit({ lowdefy, config, ticket_id: '1' });
+  expect(left).not.toBe(member);
+  expect(left._internal.organizationId).toBe(null);
+});

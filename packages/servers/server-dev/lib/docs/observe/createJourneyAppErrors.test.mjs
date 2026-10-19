@@ -50,6 +50,12 @@ function createContext() {
     on: (event, callback) => {
       listeners[event] = callback;
     },
+    abort({ url }) {
+      listeners.requestfailed({
+        url: () => url,
+        failure: () => ({ errorText: 'net::ERR_ABORTED' }),
+      });
+    },
     respond({ url, status }) {
       listeners.response({
         url: () => url,
@@ -346,4 +352,34 @@ test('previousWindow is the window the last step closed, for expect.effect to re
       urlAfter: `${origin}/orders`,
     })
   );
+});
+
+function clientEntry({ message }) {
+  return {
+    timestamp: new Date().toISOString(),
+    name: 'TypeError',
+    message,
+    source: null,
+    store: 'client',
+    recording: { source: 'journey', run: run.run, journey: null },
+  };
+}
+
+test("a goto whose navigation aborted the old page's requests is not failed by their fetch errors", async () => {
+  const findings = await runStepWindow({
+    step: { goto: 'onboarding-step-connect' },
+    during: () => {
+      context.abort({ url: `${origin}/api/request/step/get_header` });
+      recordRunError(clientEntry({ message: 'Failed to fetch at onboarding-step-2.' }));
+    },
+  });
+  expect(findings).toEqual([]);
+});
+
+test('a failed fetch with no aborted request still fails a goto step', async () => {
+  const findings = await runStepWindow({
+    step: { goto: 'onboarding-step-connect' },
+    during: () => recordRunError(clientEntry({ message: 'Failed to fetch at onboarding-step-2.' })),
+  });
+  expect(findings.map((finding) => finding.kind)).toEqual(['client-error']);
 });
