@@ -441,8 +441,10 @@ test.describe('DateRangeSelector typed dates', () => {
     await page.keyboard.press('Enter');
 
     await expect(getBlock(page, 'drs_typed_display')).toHaveText('2024-05-01 ~ 2024-06-30');
+    await expect(getEndInput(page, 'drs_typed')).toBeFocused();
 
     await page.keyboard.press('Escape');
+    await dateRangeSelector.expect.closed(page, 'drs_typed');
     await expect(getStartInput(page, 'drs_typed')).toHaveValue('2024-05-01');
     await expect(getEndInput(page, 'drs_typed')).toHaveValue('2024-06-30');
     await expect(getBlock(page, 'drs_typed_display')).toHaveText('2024-05-01 ~ 2024-06-30');
@@ -457,6 +459,34 @@ test.describe('DateRangeSelector typed dates', () => {
     await page.keyboard.press('Escape');
     await expect(getStartInput(page, 'drs_typed')).toHaveValue('2024-06-01');
     await expect(getEndInput(page, 'drs_typed')).toHaveValue('2024-07-15');
+  });
+
+  test('Enter on the start date and then the end date closes the popup', async ({ page }) => {
+    await typeDate(getStartInput(page, 'drs_typed'), '2024-05-01');
+    await page.keyboard.press('Enter');
+    await expect(getEndInput(page, 'drs_typed')).toBeFocused();
+    await page.keyboard.press('Enter');
+
+    await dateRangeSelector.expect.closed(page, 'drs_typed');
+    await expect(getBlock(page, 'drs_typed_display')).toHaveText('2024-05-01 ~ 2024-06-30');
+  });
+
+  test('Enter on a typed start date after the end date applies the range in order', async ({
+    page,
+  }) => {
+    await typeDate(getStartInput(page, 'drs_typed'), '2024-07-20');
+    await page.keyboard.press('Enter');
+
+    await expect(getBlock(page, 'drs_typed_display')).toHaveText('2024-06-30 ~ 2024-07-20');
+  });
+
+  test('Enter on a typed date the block disables does not apply it', async ({ page }) => {
+    await typeDate(getStartInput(page, 'drs_typed_min'), '2024-05-01');
+    await page.keyboard.press('Enter');
+    await page.keyboard.press('Escape');
+
+    await expect(getStartInput(page, 'drs_typed_min')).toHaveValue('2024-06-01');
+    await expect(getBlock(page, 'drs_typed_min_display')).toHaveText('');
   });
 
   test('Enter on the start date of an empty range moves on to the end date', async ({ page }) => {

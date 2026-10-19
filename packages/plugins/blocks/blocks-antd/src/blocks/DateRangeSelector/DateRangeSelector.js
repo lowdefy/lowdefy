@@ -38,6 +38,17 @@ function toRangeDate(val, format) {
   return dayjs.utc(val).startOf('day');
 }
 
+// The value holds each date as a UTC midnight of the calendar date the picker shows.
+function toValue(dates) {
+  if (!dates) return null;
+  return dates.map((date) => {
+    if (type.isNone(date)) return null;
+    // Wrap with our dayjs — antd v6's internal dayjs may lack the utc plugin.
+    const d = dayjs(date);
+    return dayjs.utc(d.add(d.utcOffset(), 'minutes')).startOf('day').toDate();
+  });
+}
+
 function rangeValue(value, format) {
   if (value) return value.map((val) => toRangeDate(val, format));
   return null;
@@ -57,17 +68,33 @@ const DateRangeSelector = ({
   value,
 }) => {
   const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
-  // The picker commits a range only once both dates are confirmed or the popup closes, so Enter
-  // on a typed date closes the popup when the other date is set: the picker then commits the range
-  // with its own checks, as it does on a click outside.
-  const [open, setOpen] = useState(false);
-  // The dates the picker shows, typed or picked but not yet committed. They reset to the value
+  // The dates the picker shows, typed or picked but not yet applied. They reset to the value
   // whenever it changes.
   const calendarDates = useRef(null);
   const valueKey = JSON.stringify(value ?? null);
   useEffect(() => {
     calendarDates.current = null;
   }, [valueKey]);
+  const isDisabledDate = disabledDate(properties.disabledDates);
+  const onChange = (newVal) => {
+    const val = toValue(newVal);
+    methods.setValue(val);
+    methods.triggerEvent({ name: 'onChange', event: { value: val } });
+  };
+  // The picker applies a range only once both dates are confirmed, so Enter on a typed date only
+  // moves focus to the other date, and Escape then drops the typed one. When the other date is set,
+  // Enter applies the range here, with the checks the picker makes on a range: dates in order and
+  // none disabled. The picker keeps its own focus and popup handling.
+  const onKeyDown = (event) => {
+    if (event.key !== 'Enter' || !calendarDates.current) return;
+    const [start, end] = calendarDates.current;
+    if (!start || !end || isDisabledDate(start) || isDisabledDate(end)) return;
+    const range = start.isAfter(end) ? [end, start] : [start, end];
+    const unchanged = toValue(range).every(
+      (date, index) => type.isDate(value?.[index]) && value[index].getTime() === date.getTime()
+    );
+    if (!unchanged) onChange(range);
+  };
   return (
     <Label
       blockId={blockId}
@@ -105,7 +132,7 @@ const DateRangeSelector = ({
               style={{ width: '100%', ...styles.element }}
               styles={{ popup: { root: styles.popup } }}
               disabled={getDisabled({ loading, properties })}
-              disabledDate={disabledDate(properties.disabledDates)}
+              disabledDate={isDisabledDate}
               format={
                 properties.format ?? getLocaleDateFormat(methods.getLocale?.()) ?? 'YYYY-MM-DD'
               }
@@ -155,32 +182,14 @@ const DateRangeSelector = ({
               onFocus={(event, info) => {
                 methods.triggerEvent({ name: 'onFocus', event: { range: info.range } });
               }}
-              open={open}
-              onOpenChange={(nextOpen) => {
-                setOpen(nextOpen);
-                methods.triggerEvent({ name: 'onOpenChange', event: { open: nextOpen } });
+              onOpenChange={(open) => {
+                methods.triggerEvent({ name: 'onOpenChange', event: { open } });
               }}
               onCalendarChange={(dates) => {
                 calendarDates.current = dates;
               }}
-              onKeyDown={(event) => {
-                if (event.key !== 'Enter' || !open) return;
-                const dates = calendarDates.current ?? rangeValue(value) ?? [];
-                const otherIndex = event.target.id === `${blockId}_input` ? 1 : 0;
-                if (dates[otherIndex]) setOpen(false);
-              }}
-              onChange={(newVal) => {
-                const val = !newVal
-                  ? null
-                  : newVal.map((v) => {
-                      if (type.isNone(v)) return null;
-                      // Wrap with our dayjs — antd v6's internal dayjs may lack the utc plugin.
-                      const d = dayjs(v);
-                      return dayjs.utc(d.add(d.utcOffset(), 'minutes')).startOf('day').toDate();
-                    });
-                methods.setValue(val);
-                methods.triggerEvent({ name: 'onChange', event: { value: val } });
-              }}
+              onChange={onChange}
+              onKeyDown={onKeyDown}
               value={rangeValue(value)}
             />
           </div>
