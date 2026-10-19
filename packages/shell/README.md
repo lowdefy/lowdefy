@@ -149,6 +149,12 @@ the slot) a custom item; elsewhere a side is a row of icon buttons. A side with 
 stack's own (a drawer's menu button). Pull-to-refresh (`onRefresh`) and `onFocus` come from the
 page's screen: `PageScreen` passes `useIsFocused()`.
 
+Before a page is first drawn, `PageScreen` sets the bar its config gives
+(`navigation/getInitialScreenOptions.js`: a literal `largeTitle`, `headerSearch`, `title`,
+`presentation` and `backgroundTint`) and waits a frame: iOS keeps a large title collapsed when
+the page's scroll view was first laid out under a standard bar, and the Screen reports its options
+only once it renders inside that scroll view.
+
 A Screen's `headerBottom` slot pins its blocks under the bar. `PageScreen` passes `headerInset`,
 where the bar's bottom edge is in the page's scroll view: the native stack's
 `useAnimatedHeaderHeight()` (from `expo-router/native-stack`), which follows a large title as it

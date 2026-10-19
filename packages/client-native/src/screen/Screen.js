@@ -219,9 +219,11 @@ function useRefreshEvent({ events, methodsRef, setRefresh }) {
  * - `backgroundTint`: whether the page draws a backgroundTint, so the router makes the bar clear
  *   over it and the page scrolls under the bar.
  *
- * The options are reported as the Screen is laid out, before the native views are drawn, so the
- * router enables a large title in the same update as the page's first content: the scroll view
- * then starts at the top of a large title's inset, with the title expanded.
+ * The options are reported as the Screen is laid out, before the native views are drawn. The
+ * page's scroll view is laid out before the Screen renders in it, so a router sets the bar the
+ * page's config gives (a large title, a search field) before it draws the page: iOS keeps a large
+ * title collapsed when the scroll view was first laid out under a standard bar (the shell's
+ * PageScreen, getInitialScreenOptions).
  *
  * The headerBackdrop slot is drawn here, as the page's first content, lifted above the top of the
  * content behind the large title (HeaderBackdrop). The headerBottom slot is drawn after it,
