@@ -119,7 +119,7 @@ function DevShell({
 
   useEffect(() => installInjector(injections), [injections]);
 
-  // The native inputs' dictation plays injected transcripts in place of the microphone.
+  // The native inputs' dictation plays injected transcripts, and uses the microphone otherwise.
   useEffect(() => installDictationSource(injected), []);
 
   useEffect(() => {

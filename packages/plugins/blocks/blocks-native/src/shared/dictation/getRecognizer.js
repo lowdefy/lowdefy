@@ -30,15 +30,16 @@ function getRecognizer() {
 }
 
 /**
- * Makes dictation play injected transcripts in place of the microphone (createQueuedRecognizer).
- * blocks-native cannot import the shell, so the shell's dev build passes in its `injected`.
+ * Makes dictation play injected transcripts, and use the microphone when none is injected
+ * (createQueuedRecognizer). blocks-native cannot import the shell, so the shell's dev build passes
+ * in its `injected`.
  *
  * @param {(name: string) => any} read Reads an injection: `transcript` and
  *   `permission:microphone`.
  * @returns {() => void} Removes it.
  */
 function installDictationSource(read) {
-  const recognizer = createQueuedRecognizer({ read });
+  const recognizer = createQueuedRecognizer({ device: ExpoSpeechRecognitionModule, read });
   installed = recognizer;
   return () => {
     if (installed === recognizer) {

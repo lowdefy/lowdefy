@@ -242,8 +242,9 @@ permissions. `--control` first checks that the `dev` variant holds and links the
   - `inject` `{ inject: { kind, value, name } }`: fakes the next device result
     (`src/dev/inject`): `scan` `{ data, type }`, `photo` `{ base64, ... }` and `nfc` for the next
     read; `transcript` `{ partials?, final }` or `{ error }` for the next dictation session, which
-    plays the partials and the final a moment apart (blocks-native's `installDictationSource`,
-    which Lowdefy Dev fills with `injected`; `permission` `microphone` answers its prompt);
+    plays the partials and the final a moment apart, while a session with nothing injected uses
+    the microphone (blocks-native's `installDictationSource`, which Lowdefy Dev fills with
+    `injected`; `permission` `microphone` answers its prompt);
     `location` `{ latitude, longitude, ... }`, or a route as a list, read one at a time with
     the last one staying; `permission` with `name` and `'granted' | 'denied'`, standing until
     changed; `network` `'offline' | 'online'`, which fails the app's every fetch as offline (the tab

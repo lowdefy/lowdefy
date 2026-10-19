@@ -18,6 +18,7 @@ import { jest } from '@jest/globals';
 import { act, renderHook } from '@testing-library/react-native';
 
 import {
+  emitSpeechEvent,
   ExpoSpeechRecognitionModule as speech,
   setSpeechRecognition,
 } from '../../test/expoSpeechRecognition.js';
@@ -145,14 +146,46 @@ test('an injected denied microphone permission gives denied', async () => {
   expect(onFinal).not.toHaveBeenCalled();
 });
 
-test('a session with nothing queued ends quietly, as no speech', async () => {
+test('a queued transcript is granted without asking the phone', async () => {
+  remove = installDictationSource(createReads({ transcript: [{ final: 'ship it' }] }));
+  const { result } = await renderDictation();
+  await start(result);
+  expect(speech.requestPermissionsAsync).not.toHaveBeenCalled();
+  expect(result.current.status).toBe('listening');
+});
+
+test('a session with nothing queued asks the phone and listens on its microphone', async () => {
+  setSpeechRecognition({ available: false });
   remove = installDictationSource(createReads({}));
   const { onFinal, result } = await renderDictation();
+  expect(result.current.available).toBe(true);
   await start(result);
-  await advance(300);
+  expect(speech.requestPermissionsAsync).toHaveBeenCalledTimes(1);
+  expect(speech.start).toHaveBeenCalledTimes(1);
+  expect(speech.start.mock.calls[0][0].requiresOnDeviceRecognition).toBe(true);
+  await act(async () => {
+    emitSpeechEvent('result', { isFinal: false, results: [{ transcript: 'ship' }] });
+  });
+  expect(result.current.partial).toBe('ship');
+  await act(async () => {
+    result.current.stop();
+  });
+  expect(speech.stop).toHaveBeenCalledTimes(1);
+  await act(async () => {
+    emitSpeechEvent('result', { isFinal: true, results: [{ transcript: 'ship it' }] });
+    emitSpeechEvent('end');
+  });
+  expect(onFinal.mock.calls).toEqual([['ship it']]);
   expect(result.current.status).toBe('idle');
-  expect(result.current.warning).toBe(null);
-  expect(onFinal).not.toHaveBeenCalled();
+});
+
+test('a session with nothing queued is refused when the phone refuses the microphone', async () => {
+  setSpeechRecognition({ granted: false });
+  remove = installDictationSource(createReads({}));
+  const { result } = await renderDictation();
+  await start(result);
+  expect(result.current.warning).toBe('denied');
+  expect(speech.start).not.toHaveBeenCalled();
 });
 
 test('removing the source goes back to expo-speech-recognition', () => {
