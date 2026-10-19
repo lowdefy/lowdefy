@@ -7,6 +7,8 @@
 #   [Config Error] Pages "ticket" and "ticket-copy" match the same URLs ...
 #
 # The error points to the second page, and names where the first is defined.
+# That location is a native absolute path inside the message (backslashes on
+# Windows), so expected.json checks its line number, not the path.
 
 lowdefy: local
 
