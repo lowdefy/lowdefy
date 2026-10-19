@@ -43,6 +43,7 @@ const defaultArgs = {
   idPrefix: 'block:page1:section_1:0',
   types,
   blockMetas: {},
+  usedTypes: { actions: new Set(), blocks: new Set(), operators: new Set() },
 };
 
 test('buildDynamicBlocks builds blocks with namespaced ids and moved slots', () => {
@@ -150,6 +151,33 @@ test('buildDynamicBlocks throws when a client operator is not in the client bund
   );
 });
 
+test('buildDynamicBlocks treats a key that names no client operator the app knows as data', () => {
+  const usedTypes = { actions: new Set(), blocks: new Set(), operators: new Set() };
+  const blocks = [
+    {
+      id: 'wrapper',
+      type: 'Html',
+      properties: { hit: { _score: 0.5 }, html: { _number: { round: 1.5 } } },
+    },
+  ];
+  // _number is installed but not bundled: still an operator, still refused.
+  expect(() =>
+    buildDynamicBlocks({
+      ...defaultArgs,
+      blocks,
+      clientOperators: new Set(['_number', '_state']),
+      usedTypes,
+    })
+  ).toThrow('resolved content uses operator type "_number"');
+  expect(usedTypes.operators.has('_score')).toBe(false);
+  const result = buildDynamicBlocks({
+    ...defaultArgs,
+    blocks: [{ id: 'hit', type: 'Html', properties: { hit: { _score: 0.5 } } }],
+    clientOperators: new Set(['_number', '_state']),
+  });
+  expect(result.blocks[0].properties.hit).toEqual({ _score: 0.5 });
+});
+
 test('buildDynamicBlocks allows bundled client operators', () => {
   const blocks = [
     {
@@ -213,4 +241,69 @@ test('buildDynamicBlocks throws when a block is missing a type', () => {
   expect(() => buildDynamicBlocks({ ...defaultArgs, blocks })).toThrow(
     'Block type is not defined at "wrapper" on page "page1".'
   );
+});
+
+test('buildDynamicBlocks records every client type the fragment uses', () => {
+  const usedTypes = { actions: new Set(), blocks: new Set(), operators: new Set() };
+  const blocks = [
+    {
+      id: 'wrapper',
+      type: 'Box',
+      blocks: [
+        {
+          id: 'name',
+          type: 'TextInput',
+          visible: { _not: { _state: 'hidden' } },
+          events: { onChange: [{ id: 'set', type: 'SetState', params: { changed: true } }] },
+        },
+      ],
+    },
+  ];
+  buildDynamicBlocks({ ...defaultArgs, blocks, usedTypes });
+  expect([...usedTypes.blocks].sort()).toEqual(['Box', 'TextInput']);
+  expect([...usedTypes.actions]).toEqual(['SetState']);
+  expect([...usedTypes.operators].sort()).toEqual(['_not', '_state']);
+});
+
+const formPolicy = {
+  id: 'form',
+  blocks: ['TextInput'],
+  actions: ['SetState'],
+  operators: ['_state'],
+};
+
+test('buildDynamicBlocks limits membership to the policy lists', () => {
+  expect(() =>
+    buildDynamicBlocks({
+      ...defaultArgs,
+      policy: formPolicy,
+      blocks: [{ id: 'box', type: 'Box' }],
+    })
+  ).toThrow(
+    'Dynamic block "section_1" on page "page1" resolved content uses block type "Box" which dynamic blocks policy "form" does not allow.'
+  );
+});
+
+test('buildDynamicBlocks builds content within the policy', () => {
+  const result = buildDynamicBlocks({
+    ...defaultArgs,
+    policy: formPolicy,
+    blocks: [{ id: 'form.name', type: 'TextInput', visible: { _state: 'form.show' } }],
+  });
+  expect(result.blocks[0].blockId).toBe('form.name');
+});
+
+test('buildDynamicBlocks accepts per-organization client actions in content', () => {
+  const result = buildDynamicBlocks({
+    ...defaultArgs,
+    types: { ...types, actions: { ...types.actions, LeaveOrganization: {} } },
+    blocks: [
+      {
+        id: 'box',
+        type: 'Box',
+        events: { onClick: [{ id: 'leave', type: 'LeaveOrganization' }] },
+      },
+    ],
+  });
+  expect(result.blocks[0].blockId).toBe('box');
 });

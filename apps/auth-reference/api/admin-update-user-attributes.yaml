@@ -1,0 +1,15 @@
+# Role-gated admin step endpoint (see admin-list-users.yaml for the model).
+# user.attributes is the admin-set, cross-app half of the merged
+# _user.attributes bag (the active member's attributes win on key clashes).
+id: admin-update-user-attributes
+type: Api
+routine:
+  - id: update_user_attributes
+    type: UpdateUserAttributes
+    properties:
+      userId:
+        _payload: userId
+      attributes:
+        _payload: attributes
+  - ':return':
+      _step: update_user_attributes

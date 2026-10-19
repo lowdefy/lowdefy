@@ -47,8 +47,8 @@ export default createBlockHelper({
     enabled: (page, blockId) =>
       expect(locator(page, blockId)).not.toHaveClass(/ant-select-disabled/),
     value: (page, blockId, val) =>
-      expect(locator(page, blockId).locator('.ant-select-selection-item')).toHaveText(val),
+      expect(locator(page, blockId).locator('.ant-select-content')).toHaveText(val),
     placeholder: (page, blockId, text) =>
-      expect(locator(page, blockId).locator('.ant-select-selection-placeholder')).toHaveText(text),
+      expect(locator(page, blockId).locator('.ant-select-placeholder')).toHaveText(text),
   },
 });

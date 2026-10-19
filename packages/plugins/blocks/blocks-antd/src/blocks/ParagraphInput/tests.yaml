@@ -67,14 +67,14 @@
 #   type: ParagraphInput
 #   properties:
 #     copyable:
-#       icon: AiOutlineWarning
+#       icon: warning
 # - id: 'properties.copyable: icon: []'
 #   type: ParagraphInput
 #   properties:
 #     copyable:
 #       icon:
-#         - AiOutlineWarning
-#         - AiOutlineRocket
+#         - warning
+#         - Rocket
 # - id: 'properties.copyable: tooltips: []'
 #   type: ParagraphInput
 #   properties:
@@ -132,7 +132,7 @@
 #   type: ParagraphInput
 #   properties:
 #     editable:
-#       icon: AiOutlinePlus
+#       icon: add
 # - id: 'properties.editable.tooltip'
 #   type: ParagraphInput
 #   properties:

@@ -13,8 +13,16 @@ permissions:
   id-token: write
 
 jobs:
+  # The complete path (test-complete.yml): the full OS and Node matrix and the slow
+  # suites. Nothing below versions or publishes unless it passes.
+  test:
+    name: Complete tests
+    if: github.repository == 'lowdefy/lowdefy'
+    uses: ./.github/workflows/test-complete.yml
+
   release:
     name: Release
+    needs: test
     runs-on: ubuntu-latest
     environment: publish
     if: github.repository == 'lowdefy/lowdefy'

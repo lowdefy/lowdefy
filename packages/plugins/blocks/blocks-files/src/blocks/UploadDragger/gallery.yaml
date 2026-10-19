@@ -45,6 +45,16 @@
         emitFileContent: true
         singleFile: true
 
+- title: Drop Only Area
+  blocks:
+    - id: dragger_drop_only
+      type: UploadDragger
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+        title: Drop files here, or paste them with Ctrl+V.
+        openFileDialogOnClick: false
+        listType: picture
+
 - title: Disabled State
   blocks:
     - id: disabled_default

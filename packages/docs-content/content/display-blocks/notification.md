@@ -43,7 +43,7 @@ Notification message displayed in the corner of the page.
     title: Success
     color: primary
     variant: outlined
-    icon: AiOutlineCheckCircle
+    icon: check-circle
   events:
     onClick:
       - id: open_status_success
@@ -59,7 +59,7 @@ Notification message displayed in the corner of the page.
     title: Error
     color: danger
     variant: outlined
-    icon: AiOutlineCloseCircle
+    icon: close-circle
   events:
     onClick:
       - id: open_status_error
@@ -75,7 +75,7 @@ Notification message displayed in the corner of the page.
     title: Warning
     color: default
     variant: outlined
-    icon: AiOutlineWarning
+    icon: warning
   events:
     onClick:
       - id: open_status_warning
@@ -91,7 +91,7 @@ Notification message displayed in the corner of the page.
     title: Info
     color: primary
     variant: text
-    icon: AiOutlineInfoCircle
+    icon: info
   events:
     onClick:
       - id: open_status_info
@@ -299,6 +299,35 @@ Notification message displayed in the corner of the page.
 ```
 
 ```yaml
+- id: notif_progress
+  type: Notification
+  layout:
+    span: 0
+  properties:
+    status: info
+    title: Export started
+    description: The progress bar counts down to when this notification closes.
+      Hover to pause it.
+    duration: 8
+    showProgress: true
+- id: btn_progress
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Show Progress Bar
+    color: default
+    variant: outlined
+  events:
+    onClick:
+      - id: open_progress
+        type: CallMethod
+        params:
+          blockId: notif_progress
+          method: open
+```
+
+```yaml
 - id: notif_icon_string
   type: Notification
   layout:
@@ -307,7 +336,7 @@ Notification message displayed in the corner of the page.
     status: success
     title: Download Complete
     description: Your file has been downloaded successfully.
-    icon: AiOutlineDownload
+    icon: download
 - id: notif_icon_colored
   type: Notification
   layout:
@@ -317,7 +346,7 @@ Notification message displayed in the corner of the page.
     title: Starred Item
     description: Item has been added to your favorites.
     icon:
-      name: AiOutlineStar
+      name: star
       color: "#faad14"
 - id: notif_icon_sized
   type: Notification
@@ -328,7 +357,7 @@ Notification message displayed in the corner of the page.
     title: Session Expiring
     description: Your session will expire in 5 minutes.
     icon:
-      name: AiOutlineLock
+      name: lock
       color: "#fa8c16"
       size: 28
 - id: btn_icon_string
@@ -339,7 +368,7 @@ Notification message displayed in the corner of the page.
     title: String Icon
     color: primary
     variant: outlined
-    icon: AiOutlineDownload
+    icon: download
   events:
     onClick:
       - id: open_icon_string
@@ -355,7 +384,7 @@ Notification message displayed in the corner of the page.
     title: Colored Icon
     color: default
     variant: outlined
-    icon: AiOutlineStar
+    icon: star
   events:
     onClick:
       - id: open_icon_colored
@@ -371,7 +400,7 @@ Notification message displayed in the corner of the page.
     title: Sized Icon
     color: default
     variant: outlined
-    icon: AiOutlineLock
+    icon: lock
   events:
     onClick:
       - id: open_icon_sized
@@ -390,7 +419,7 @@ Notification message displayed in the corner of the page.
     status: info
     title: Custom Close
     description: This notification has a custom close icon.
-    closeIcon: AiOutlineCloseSquare
+    closeIcon: SquareX
     duration: 0
 - id: notif_close_icon_styled
   type: Notification
@@ -401,7 +430,7 @@ Notification message displayed in the corner of the page.
     title: Styled Close
     description: Close icon with custom color and size.
     closeIcon:
-      name: AiOutlineCloseCircle
+      name: close-circle
       color: "#ff4d4f"
       size: 18
     duration: 0
@@ -413,7 +442,7 @@ Notification message displayed in the corner of the page.
     status: success
     title: Arrow Close
     description: Uses an arrow icon instead of the default close.
-    closeIcon: AiOutlineArrowRight
+    closeIcon: arrow-right
     duration: 0
 - id: btn_close_icon_string
   type: Button
@@ -474,7 +503,7 @@ Notification message displayed in the corner of the page.
     duration: 0
     button:
       title: Confirm
-      icon: AiOutlineCheck
+      icon: check
       color: primary
       variant: solid
       size: small
@@ -489,7 +518,7 @@ Notification message displayed in the corner of the page.
     duration: 0
     button:
       title: Retry
-      icon: AiOutlineReload
+      icon: refresh
       color: danger
       variant: solid
       size: small
@@ -551,83 +580,6 @@ Notification message displayed in the corner of the page.
         type: CallMethod
         params:
           blockId: notif_btn_undo
-          method: open
-```
-
-```yaml
-- id: notif_top_offset
-  type: Notification
-  layout:
-    span: 0
-  properties:
-    status: info
-    title: Top Offset
-    description: Positioned 80px from the top of the viewport.
-    placement: topRight
-    top: 80
-- id: notif_bottom_offset
-  type: Notification
-  layout:
-    span: 0
-  properties:
-    status: info
-    title: Bottom Offset
-    description: Positioned 80px from the bottom of the viewport.
-    placement: bottomRight
-    bottom: 80
-- id: notif_default_offset
-  type: Notification
-  layout:
-    span: 0
-  properties:
-    status: info
-    title: Default Offset
-    description: Uses the default 24px offset.
-    placement: topRight
-- id: btn_top_offset
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Top 80px
-    color: default
-    variant: outlined
-  events:
-    onClick:
-      - id: open_top_offset
-        type: CallMethod
-        params:
-          blockId: notif_top_offset
-          method: open
-- id: btn_bottom_offset
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Bottom 80px
-    color: default
-    variant: outlined
-  events:
-    onClick:
-      - id: open_bottom_offset
-        type: CallMethod
-        params:
-          blockId: notif_bottom_offset
-          method: open
-- id: btn_default_offset
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Default (24px)
-    color: default
-    variant: outlined
-  events:
-    onClick:
-      - id: open_default_offset
-        type: CallMethod
-        params:
-          blockId: notif_default_offset
           method: open
 ```
 
@@ -718,7 +670,7 @@ Notification message displayed in the corner of the page.
     description: This notification has a left green border.
   style:
     .element:
-      borderLeft: 4px solid
+      borderLeft: "4px solid #52c41a"
 - id: notif_style_bg
   type: Notification
   layout:
@@ -805,7 +757,7 @@ Notification message displayed in the corner of the page.
     title: Override as Success
     color: primary
     variant: solid
-    icon: AiOutlineCheckCircle
+    icon: check-circle
   events:
     onClick:
       - id: open_override_success
@@ -825,7 +777,7 @@ Notification message displayed in the corner of the page.
     title: Override as Error
     color: danger
     variant: solid
-    icon: AiOutlineCloseCircle
+    icon: close-circle
   events:
     onClick:
       - id: open_override_error
@@ -845,7 +797,7 @@ Notification message displayed in the corner of the page.
     title: Override Duration
     color: default
     variant: outlined
-    icon: AiOutlineClockCircle
+    icon: clock
   events:
     onClick:
       - id: open_override_duration
@@ -992,7 +944,7 @@ Notification message displayed in the corner of the page.
   style:
     .element:
       borderRadius: 12
-      border: 2px solid
+      border: "2px solid #1890ff"
   properties:
     status: info
     title: Inline Style
@@ -1044,112 +996,6 @@ Notification message displayed in the corner of the page.
           method: open
 ```
 
-```yaml
-- id: notif_theme_wide
-  type: Notification
-  layout:
-    span: 0
-  properties:
-    status: info
-    title: Wide Notification
-    description: This notification is wider than the default 384px.
-    theme:
-      width: 500
-- id: notif_theme_zindex
-  type: Notification
-  layout:
-    span: 0
-  properties:
-    status: warning
-    title: High Z-Index
-    description: This notification has an elevated z-index of 2000.
-    theme:
-      zIndexPopup: 2000
-- id: notif_theme_progress
-  type: Notification
-  layout:
-    span: 0
-  properties:
-    status: success
-    title: Custom Progress Bar
-    description: The auto-close progress bar has a custom gradient.
-    duration: 8
-    theme:
-      progressBg: "linear-gradient(to right, #52c41a, #1890ff)"
-- id: notif_theme_combined
-  type: Notification
-  layout:
-    span: 0
-  properties:
-    status: info
-    title: Combined Tokens
-    description: Wide notification with custom progress bar.
-    duration: 6
-    theme:
-      width: 450
-      progressBg: "linear-gradient(to right, #722ed1, #eb2f96)"
-- id: btn_theme_wide
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Wide (500px)
-    color: default
-    variant: outlined
-  events:
-    onClick:
-      - id: open_theme_wide
-        type: CallMethod
-        params:
-          blockId: notif_theme_wide
-          method: open
-- id: btn_theme_zindex
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Z-Index 2000
-    color: default
-    variant: outlined
-  events:
-    onClick:
-      - id: open_theme_zindex
-        type: CallMethod
-        params:
-          blockId: notif_theme_zindex
-          method: open
-- id: btn_theme_progress
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Custom Progress
-    color: default
-    variant: outlined
-  events:
-    onClick:
-      - id: open_theme_progress
-        type: CallMethod
-        params:
-          blockId: notif_theme_progress
-          method: open
-- id: btn_theme_combined
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Combined Tokens
-    color: default
-    variant: outlined
-  events:
-    onClick:
-      - id: open_theme_combined
-        type: CallMethod
-        params:
-          blockId: notif_theme_combined
-          method: open
-```
-
 **Customer:** Sarah Johnson
 **Items:** 3 items totaling $247.50
 **Status:** Pending fulfillment
@@ -1158,7 +1004,7 @@ Notification message displayed in the corner of the page.
 - id: order_card
   type: Card
   properties:
-    title: Order
+    title: "Order #12847"
     size: small
   blocks:
     - id: order_status_text
@@ -1177,7 +1023,7 @@ Notification message displayed in the corner of the page.
         title: Order Shipped
         description: "Order #12847 has been shipped. Tracking number:
           <b>1Z999AA10123456784</b>"
-        icon: AiOutlineRocket
+        icon: Rocket
         duration: 0
         button:
           title: View Tracking
@@ -1199,7 +1045,7 @@ Notification message displayed in the corner of the page.
         status: error
         title: Order Cancelled
         description: "Order #12847 has been cancelled. Refund of $247.50 initiated."
-        icon: AiOutlineStop
+        icon: Ban
         duration: 0
     - id: order_actions
       type: Box
@@ -1215,7 +1061,7 @@ Notification message displayed in the corner of the page.
             title: Cancel Order
             color: danger
             variant: outlined
-            icon: AiOutlineStop
+            icon: Ban
           events:
             onClick:
               - id: order_cancel_notif
@@ -1231,7 +1077,7 @@ Notification message displayed in the corner of the page.
             title: Mark as Shipped
             color: primary
             variant: solid
-            icon: AiOutlineRocket
+            icon: Rocket
           events:
             onClick:
               - id: order_ship_notif
@@ -1266,7 +1112,7 @@ Monitor system health and receive real-time alerts. Click a button below to simu
         description: CPU usage has exceeded <b>90%</b> on server <b>web-prod-03</b>.
           Consider scaling up or optimizing workloads.
         icon:
-          name: AiOutlineDashboard
+          name: Gauge
           color: "#fa8c16"
         duration: 0
         placement: topRight
@@ -1290,7 +1136,7 @@ Monitor system health and receive real-time alerts. Click a button below to simu
         status: success
         title: Deployment Successful
         description: Version <b>2.4.1</b> deployed to production. All health checks passing.
-        icon: AiOutlineCheckCircle
+        icon: check-circle
         duration: 8
       events:
         onClose:
@@ -1309,7 +1155,7 @@ Monitor system health and receive real-time alerts. Click a button below to simu
         description: Multiple failed login attempts detected from IP
           <b>192.168.1.42</b>. Account temporarily locked.
         icon:
-          name: AiOutlineLock
+          name: lock
           color: "#ff4d4f"
         duration: 0
         button:
@@ -1336,7 +1182,7 @@ Monitor system health and receive real-time alerts. Click a button below to simu
             title: CPU Warning
             color: default
             variant: outlined
-            icon: AiOutlineDashboard
+            icon: Gauge
           events:
             onClick:
               - id: trigger_alert_cpu
@@ -1352,7 +1198,7 @@ Monitor system health and receive real-time alerts. Click a button below to simu
             title: Deploy Success
             color: primary
             variant: outlined
-            icon: AiOutlineCheckCircle
+            icon: check-circle
           events:
             onClick:
               - id: trigger_alert_deploy
@@ -1368,7 +1214,7 @@ Monitor system health and receive real-time alerts. Click a button below to simu
             title: Security Alert
             color: danger
             variant: outlined
-            icon: AiOutlineLock
+            icon: lock
           events:
             onClick:
               - id: trigger_alert_security
@@ -1380,17 +1226,39 @@ Monitor system health and receive real-time alerts. Click a button below to simu
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `bottom` | number | `24` | Distance from the bottom of the viewport, when placement is bottomRight or bottomLeft (unit: pixels). |
-| `button` | object | - | Button object to customized the close button. Triggers onClose event when clicked. |
+| `bottom` | number | `24` | Has no effect: notifications open in the app-wide notification holder, which keeps them 24px from the bottom of the viewport. To move every bottom notification, set the `--notification-bottom` CSS variable on `.ant-notification` in `public/styles.css`, for example `.ant-notification { --notification-bottom: 80px; }`. |
+| `closable` | boolean | `true` | Whether to show the close button. |
+| `button` | object | - | Button object to customize the close button. Closes the notification and triggers the onClose event when clicked. |
 | `description` | string | - | The content of notification box - supports html. |
 | `duration` | number | `4.5` | Time in seconds before Notification is closed. When set to 0 or null, it will never be closed automatically. |
-| `icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize notification icon. |
-| `closeIcon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize close icon. |
+| `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize notification icon. |
+| `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `icon.color` | string | - | Icon color. |
+| `icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `closeIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize close icon. |
+| `closeIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `closeIcon.color` | string | - | Icon color. |
+| `closeIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `closeIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `closeIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `closeIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `closeIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `closeIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `closeIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `title` | string | - | The title of notification box - supports html. |
-| `placement` | string | `"topRight"` | Position of Notification. Enum: `topLeft`, `topRight`, `bottomLeft`, `bottomRight`. |
-| `top` | number | `24` | Distance from the top of the viewport, when placement is topRight or topLeft (unit: pixels). |
-| `status` | string | - | Notification status type. Enum: `success`, `error`, `info`, `warning`. |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design notification tokens](https://ant.design/components/notification#design-token). |
+| `pauseOnHover` | boolean | `true` | Pause the auto-close timer while the mouse is over the notification. |
+| `placement` | string | `"topRight"` | Position of Notification. Enum: `top`, `topLeft`, `topRight`, `bottom`, `bottomLeft`, `bottomRight`. |
+| `role` | string | `"alert"` | How screen readers announce the notification. `alert` interrupts the reader immediately, `status` waits until it is idle. Enum: `alert`, `status`. |
+| `showProgress` | boolean | `false` | Show a progress bar counting down to when the notification closes. |
+| `top` | number | `24` | Has no effect: notifications open in the app-wide notification holder, which keeps them 24px from the top of the viewport. To move every top notification, set the `--notification-top` CSS variable on `.ant-notification` in `public/styles.css`, for example `.ant-notification { --notification-top: 80px; }`. |
+| `status` | string | `"success"` | Notification status type. Enum: `success`, `error`, `info`, `warning`. |
+| `theme` | object | - | Has no effect: notifications render in the app-wide notification holder, outside the block. Set these Notification design tokens for the whole app in `lowdefy.yaml` under `theme.antd.components.Notification`. See [Ant Design notification tokens](https://ant.design/components/notification#design-token). |
 | `theme.zIndexPopup` | number | `1100` | Z-index of the notification popup. |
 | `theme.width` | number | `384` | Width of the notification box. |
 | `theme.progressBg` | string | - | Background gradient for the auto-close progress bar. Defaults to a gradient from colorPrimaryBorderHover to colorPrimary. |
@@ -1404,6 +1272,10 @@ Monitor system health and receive real-time alerts. Click a button below to simu
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Notification element. |
+| `/title` | The Notification title. |
+| `/description` | The Notification description. |
+| `/actions` | The area holding the Notification button. |
+| `/progress` | The auto-close progress bar, shown with showProgress. |
 | `/closeIcon` | The close icon in the Notification. |
 | `/icon` | The icon in the Notification. |
 

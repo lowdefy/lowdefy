@@ -6,7 +6,7 @@
 }): void
 ```
 
-The `SetLocale` action sets the user's active locale preference for the app. The preference is persisted to `localStorage` (`lowdefy_locale`) and triggers re-rendering of the root Ant Design `ConfigProvider`. All blocks, `_t` translations, `_locale` operators, antd-built-in strings (date pickers, modals, validation), and dayjs date formatting update automatically.
+The `SetLocale` action sets the user's active locale preference for the app. The preference is persisted to `localStorage`, per app, and triggers re-rendering of the root Ant Design `ConfigProvider`. All blocks, `_t` translations, `_locale` operators, antd-built-in strings (date pickers, modals, validation), and dayjs date formatting update automatically.
 
 - `locale`: A BCP 47 code declared in `config.i18n.locales` (e.g. `'en-US'`, `'de-DE'`).
 - `'auto'` (or no params): Clears the user preference. The app falls back to the browser language best-fit, then to `config.i18n.defaultLocale`.

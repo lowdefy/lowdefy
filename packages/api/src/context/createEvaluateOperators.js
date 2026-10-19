@@ -14,20 +14,24 @@
   limitations under the License.
 */
 
+import { markCredential } from '@lowdefy/node-utils';
 import { ServerParser } from '@lowdefy/operators';
 
 function createEvaluateOperators(context) {
-  const { appMeta, i18n, jsMap, operators, secrets, user } = context;
+  const { appMeta, i18n, jsMap, operators, organization, secrets, user } = context;
 
   const operatorsParser = new ServerParser({
     i18n,
     jsMap,
     lowdefyApp: appMeta,
+    markCredential,
     operators,
+    organization,
     secrets,
     user,
   });
   function evaluateOperators({
+    agent,
     arrayIndices,
     error,
     input,
@@ -39,6 +43,7 @@ function createEvaluateOperators(context) {
     steps,
   }) {
     const { output, errors } = operatorsParser.parse({
+      agent,
       arrayIndices,
       error,
       input,

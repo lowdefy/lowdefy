@@ -17,6 +17,7 @@
 import React from 'react';
 import { Input } from 'antd';
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import useRunAfterUpdate from '../../useRunAfterUpdate.js';
@@ -52,12 +53,23 @@ const TextInput = ({
           return (
             <Input
               id={`${blockId}_input`}
-              allowClear={properties.allowClear}
+              allowClear={
+                properties.allowClear && {
+                  clearIcon: (
+                    <Icon
+                      blockId={`${blockId}_clearIcon`}
+                      properties={{ name: 'clear', title: '' }}
+                    />
+                  ),
+                }
+              }
               autoFocus={properties.autoFocus}
-              variant={properties.bordered === false ? 'borderless' : properties.variant}
+              variant={
+                properties.bordered === false ? 'borderless' : properties.variant ?? undefined
+              }
               className={classNames.element}
               style={styles.element}
-              disabled={properties.disabled || loading}
+              disabled={getDisabled({ loading, properties })}
               maxLength={properties.maxLength}
               placeholder={properties.placeholder}
               size={properties.size}
@@ -105,6 +117,9 @@ const TextInput = ({
               }
               onPressEnter={() => {
                 methods.triggerEvent({ name: 'onPressEnter' });
+              }}
+              onClear={() => {
+                methods.triggerEvent({ name: 'onClear' });
               }}
               onBlur={() => {
                 methods.triggerEvent({ name: 'onBlur' });

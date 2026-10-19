@@ -1,0 +1,26 @@
+# U4: Placeholder on the Sign-in Page
+# ====================================
+# Tests that an auth page (here the default authPages.signIn, "/login")
+# cannot have placeholders in its path.
+#
+# Expected error:
+#   [Config Error] Page "login" is the "auth.authPages.signIn" page ...
+
+lowdefy: local
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  emailAndPassword:
+    enabled: true
+
+pages:
+  - id: home
+    type: Box
+  - id: login
+    type: Box
+    path: '{tenant}/login'

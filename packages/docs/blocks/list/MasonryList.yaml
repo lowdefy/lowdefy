@@ -20,8 +20,8 @@ _ref:
     section: List Blocks
     filePath: blocks/list/MasonryList.yaml
     block_type: MasonryList
-    antd_component: List
-    antd_url: list
+    antd_component: Masonry
+    antd_url: masonry
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/MasonryList
     schema: ../plugins/blocks/blocks-antd/src/blocks/MasonryList/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/MasonryList/gallery.yaml
@@ -160,31 +160,3 @@ _ref:
               initials: DK
               role: Backend Engineer
               bg: '#2f54eb'
-          ml_seq:
-            - title: Getting Started
-              desc: A quick intro to the platform.
-              bg: bg-blue-50
-            - title: Authentication
-              desc: Set up login providers, configure session handling, manage user roles and permissions, and integrate with external identity services like Auth0 and Okta.
-              bg: bg-purple-50
-            - title: API Reference
-              desc: Full endpoint documentation with request and response examples.
-              bg: bg-green-50
-            - title: Deployment Guide
-              desc: Step-by-step deployment to Docker, Vercel, and Node.js. Covers environment variables, build configuration, CI/CD pipelines, secrets management, and production monitoring setup.
-              bg: bg-orange-50
-            - title: Theming
-              desc: Colors, fonts, and tokens.
-              bg: bg-cyan-50
-            - title: FAQ
-              desc: Answers to common questions about setup, configuration, limits, and troubleshooting. Covers billing, rate limits, version compatibility, and migration between major releases.
-              bg: bg-pink-50
-            - title: Changelog
-              desc: What's new in each release.
-              bg: bg-yellow-50
-            - title: Security
-              desc: Best practices for securing your Lowdefy application in production, including HTTPS, CSP headers, secret management, and input validation.
-              bg: bg-red-50
-            - title: Plugins
-              desc: Extend Lowdefy with custom blocks, actions, operators, and connections.
-              bg: bg-indigo-50

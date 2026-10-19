@@ -1,0 +1,27 @@
+# 101: MCP endpoints exposed as tools
+# Verifies mcp.json carries { name, version, configured, hasPublicTool, endpoints } and
+# that a public tool set builds without auth.oauthProvider.
+lowdefy: local
+name: Mcp Endpoints Test
+
+api:
+  - id: search-orders
+    type: Api
+    description: Search orders by free-text query.
+    payloadSchema:
+      type: object
+      properties:
+        query:
+          type: string
+    routine: []
+
+mcp:
+  name: order-tools
+  version: '1.1.0'
+  endpoints:
+    - id: search-orders
+      scope: mcp:read
+
+pages:
+  - id: home
+    type: Box

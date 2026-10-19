@@ -18,12 +18,12 @@ Browse the full API reference and configuration guides.
           type: MenuLink
           properties:
             title: Home
-            icon: AiOutlineHome
+            icon: home
         - id: phm_basic_products
           type: MenuLink
           properties:
             title: Products
-            icon: AiOutlineAppstore
+            icon: grid
         - id: phm_basic_pricing
           type: MenuLink
           properties:
@@ -67,6 +67,62 @@ Browse the full API reference and configuration guides.
                 content: Browse the full API reference and configuration guides.
 ```
 
+padding: compact trims the content padding from 40px to 16px, so data-heavy pages show more.
+
+```yaml
+- id: phm_compact
+  type: PageHeaderMenu
+  properties:
+    padding: compact
+    menu:
+      links:
+        - id: phm_compact_home
+          type: MenuLink
+          properties:
+            title: Home
+        - id: phm_compact_invoices
+          type: MenuLink
+          properties:
+            title: Invoices
+  blocks:
+    - id: phm_compact_text
+      type: Paragraph
+      properties:
+        content: "padding: compact trims the content padding from 40px to 16px, so
+          data-heavy pages show more."
+    - id: phm_compact_card
+      type: Card
+      properties:
+        title: Recent invoices
+        padding: none
+      blocks:
+        - id: phm_compact_card_rows
+          type: Html
+          properties:
+            html: >
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 24px; border-bottom: 1px solid
+              var(--ant-color-border-secondary);"><span>INV-1042</span><span
+              style="color:
+              var(--ant-color-text-secondary);">$1,280.00</span></div>
+
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 24px; border-bottom: 1px solid
+              var(--ant-color-border-secondary);"><span>INV-1041</span><span
+              style="color:
+              var(--ant-color-text-secondary);">$640.00</span></div>
+
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 24px; border-bottom: 1px solid
+              var(--ant-color-border-secondary);"><span>INV-1040</span><span
+              style="color:
+              var(--ant-color-text-secondary);">$2,115.50</span></div>
+
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 24px;"><span>INV-1039</span><span style="color:
+              var(--ant-color-text-secondary);">$96.00</span></div>
+```
+
 Analytics Overview
 
 ```yaml
@@ -78,7 +134,7 @@ Analytics Overview
       separator: /
       list:
         - label: Home
-          icon: AiOutlineHome
+          icon: home
         - label: Analytics
         - label: Overview
     menu:
@@ -87,12 +143,12 @@ Analytics Overview
           type: MenuLink
           properties:
             title: Dashboard
-            icon: AiOutlineDashboard
+            icon: Gauge
         - id: phm_g_analytics
           type: MenuGroup
           properties:
             title: Analytics
-            icon: AiOutlineBarChart
+            icon: chart
           links:
             - id: phm_g_overview
               type: MenuLink
@@ -110,7 +166,7 @@ Analytics Overview
           type: MenuLink
           properties:
             title: Settings
-            icon: AiOutlineSetting
+            icon: settings
   blocks:
     - id: phm_g_title
       type: Title
@@ -179,19 +235,19 @@ Dashboard
           type: MenuLink
           properties:
             title: My Profile
-            icon: AiOutlineUser
+            icon: user
         - id: phm_prof_settings
           type: MenuLink
           properties:
             title: Settings
-            icon: AiOutlineSetting
+            icon: settings
         - id: phm_prof_divider
           type: MenuDivider
         - id: phm_prof_logout
           type: MenuLink
           properties:
             title: Logout
-            icon: AiOutlineLogout
+            icon: logout
             danger: true
     menu:
       links:
@@ -199,17 +255,17 @@ Dashboard
           type: MenuLink
           properties:
             title: Home
-            icon: AiOutlineHome
+            icon: home
         - id: phm_prof_projects
           type: MenuLink
           properties:
             title: Projects
-            icon: AiOutlineProject
+            icon: SquareKanban
         - id: phm_prof_reports
           type: MenuLink
           properties:
             title: Reports
-            icon: AiOutlineBarChart
+            icon: chart
   blocks:
     - id: phm_prof_title
       type: Title
@@ -268,7 +324,7 @@ View Expense Reports
       dot: true
     profile:
       avatar:
-        icon: AiOutlineUser
+        icon: user
     breadcrumb:
       list:
         - Intranet
@@ -279,17 +335,17 @@ View Expense Reports
           type: MenuLink
           properties:
             title: Home
-            icon: AiOutlineHome
+            icon: home
         - id: phm_full_directory
           type: MenuLink
           properties:
             title: Directory
-            icon: AiOutlineTeam
+            icon: users
         - id: phm_full_resources
           type: MenuGroup
           properties:
             title: Resources
-            icon: AiOutlineBook
+            icon: Book
           links:
             - id: phm_full_policies
               type: MenuLink
@@ -303,7 +359,7 @@ View Expense Reports
           type: MenuLink
           properties:
             title: IT Support
-            icon: AiOutlineQuestionCircle
+            icon: help
   slots:
     footer:
       blocks:
@@ -311,7 +367,8 @@ View Expense Reports
           type: Paragraph
           properties:
             content: Acme Corp Intranet - Internal Use Only
-            style:
+          style:
+            .element:
               margin: 0
               color: "#888"
               textAlign: center
@@ -381,22 +438,22 @@ Get started by installing the framework via npm or yarn. Follow the steps below 
           type: MenuLink
           properties:
             title: Guide
-            icon: AiOutlineBook
+            icon: Book
         - id: phm_light_api
           type: MenuLink
           properties:
             title: API Reference
-            icon: AiOutlineApi
+            icon: Plug
         - id: phm_light_examples
           type: MenuLink
           properties:
             title: Examples
-            icon: AiOutlineCode
+            icon: CodeXml
         - id: phm_light_community
           type: MenuLink
           properties:
             title: Community
-            icon: AiOutlineGlobal
+            icon: globe
     breadcrumb:
       separator: /
       list:
@@ -412,7 +469,7 @@ Get started by installing the framework via npm or yarn. Follow the steps below 
             flex: 0 0 auto
           properties:
             title: Search
-            icon: AiOutlineSearch
+            icon: search
             color: default
             variant: outlined
             size: small
@@ -480,12 +537,12 @@ Profile from _menu
           type: MenuLink
           properties:
             title: Home
-            icon: AiOutlineHome
+            icon: home
         - id: phm_mo_settings
           type: MenuLink
           properties:
             title: Settings
-            icon: AiOutlineSetting
+            icon: settings
   blocks:
     - id: phm_mo_title
       type: Title
@@ -511,6 +568,7 @@ Profile from _menu
 | `logo.alt` | string | `"Lowdefy"` | Logo image alt text. |
 | `header` | object | - | Header properties. |
 | `footer` | object | - | Footer properties. |
+| `padding` | string | `"default"` | Space around the page content. `compact` tightens it to 16px for dense, data-heavy pages. `none` removes it so content such as a table or grid runs edge to edge; the breadcrumb keeps its own inset. Enum: `default`, `compact`, `none`. |
 | `content` | object | - | Content properties. |
 | `breadcrumb` | object | - | Breadcrumb properties. |
 | `breadcrumb.separator` | string | `"/"` | Use a custom separator string. |
@@ -519,14 +577,36 @@ Profile from _menu
 | `breadcrumb.list.$.pageId` | string | - | Page id to link to when clicked. |
 | `breadcrumb.list.$.url` | string | - | External url link. |
 | `breadcrumb.list.$.style` | object | - | Css style to apply to link. |
-| `breadcrumb.list.$.icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to use an icon in breadcrumb link. |
+| `breadcrumb.list.$.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use an icon in breadcrumb link. |
+| `breadcrumb.list.$.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `breadcrumb.list.$.icon.color` | string | - | Icon color. |
+| `breadcrumb.list.$.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `breadcrumb.list.$.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `breadcrumb.list.$.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `breadcrumb.list.$.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `breadcrumb.list.$.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `breadcrumb.list.$.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `breadcrumb.list.$.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `breadcrumb.list.$.links` | array | - | Links shown in a dropdown menu on the breadcrumb item. |
+| `breadcrumb.list.$.links.$.label` | string | - | Label of the dropdown link. |
+| `breadcrumb.list.$.links.$.pageId` | string | - | Page id to link to when clicked. |
+| `breadcrumb.list.$.links.$.url` | string | - | External url link. |
 | `menu` | object | - | Menu properties. |
 | `menu.links` | array | - |  |
 | `menu.links.$.id` | string | - | Menu item id. |
 | `menu.links.$.pageId` | string | - | Page to link to. |
 | `menu.links.$.properties` | object | - | properties from menu item. |
 | `menu.links.$.properties.title` | string | - | Menu item title. |
-| `menu.links.$.properties.icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon on menu item. |
+| `menu.links.$.properties.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on menu item. |
+| `menu.links.$.properties.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `menu.links.$.properties.icon.color` | string | - | Icon color. |
+| `menu.links.$.properties.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `menu.links.$.properties.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `menu.links.$.properties.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `menu.links.$.properties.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `menu.links.$.properties.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `menu.links.$.properties.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `menu.links.$.properties.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `menuLg` | object | - | Menu large screen properties. Overwrites menu properties on desktop screen sizes. |
 | `menuMd` | object | - | Mobile menu properties. Overwrites menu properties on mobile screen sizes. |
 | `notifications` | object | - | Notification bell icon with badge in the header. Renders when configured. Use the link property to navigate when clicked. |
@@ -539,15 +619,33 @@ Profile from _menu
 | `notifications.showZero` | boolean | `false` | Show badge when count is zero. |
 | `notifications.overflowCount` | number | `99` | Max count to show. Values above this display as "N+". |
 | `notifications.color` | string | - | Badge color. |
-| `notifications.icon` | string \| object | - | Icon for the notification button. Defaults to AiOutlineBell. |
+| `notifications.icon` | string \| object | - | Icon for the notification button. Defaults to `bell`. |
+| `notifications.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `notifications.icon.color` | string | - | Icon color. |
+| `notifications.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `notifications.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `notifications.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `notifications.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `notifications.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `notifications.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `notifications.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `notifications.size` | string | `"small"` | Size of the notification button. Enum: `small`, `default`, `large`. |
 | `profile` | object | - | Profile avatar with optional dropdown menu in the header. Renders when configured. Use with the _user operator to populate from the authenticated user. |
 | `profile.avatar` | object | - | Avatar display properties. |
 | `profile.avatar.src` | string | - | Image URL for the avatar. Typically bound to _user: image. |
 | `profile.avatar.content` | string | - | Text content inside the avatar (e.g. user initials). Shown when no src is provided. |
-| `profile.avatar.icon` | string \| object | - | Icon to display in avatar when no src or content is set. Defaults to AiOutlineUser. |
+| `profile.avatar.icon` | string \| object | - | Icon to display in avatar when no src or content is set. Defaults to `user`. |
+| `profile.avatar.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `profile.avatar.icon.color` | string | - | Icon color. |
+| `profile.avatar.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `profile.avatar.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `profile.avatar.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `profile.avatar.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `profile.avatar.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `profile.avatar.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `profile.avatar.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `profile.avatar.color` | string | - | Background color of the avatar when not using src. |
-| `profile.avatar.size` | string \| number | `"small"` | Size of the avatar. Enum: `default`, `small`, `large`. |
+| `profile.avatar.size` | string \| number | `"small"` | Size of the avatar: default, small, large or a pixel number. |
 | `profile.avatar.shape` | string | `"circle"` | Shape of the avatar. Enum: `circle`, `square`. |
 | `profile.links` | array | - | Dropdown menu items. Uses the same MenuLink/MenuGroup/MenuDivider schema as Menu. Compatible with _menu operator output for access-filtered menus. |
 | `profile.links.$.id` | string | - | Menu item id. |
@@ -559,6 +657,15 @@ Profile from _menu
 | `profile.links.$.properties` | object | - | Properties for the menu item. |
 | `profile.links.$.properties.title` | string | - | Menu item title. |
 | `profile.links.$.properties.icon` | string \| object | - | Icon for the menu item. |
+| `profile.links.$.properties.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `profile.links.$.properties.icon.color` | string | - | Icon color. |
+| `profile.links.$.properties.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `profile.links.$.properties.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `profile.links.$.properties.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `profile.links.$.properties.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `profile.links.$.properties.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `profile.links.$.properties.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `profile.links.$.properties.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `profile.links.$.properties.danger` | boolean | `false` | Apply danger style to menu item. |
 | `profile.links.$.properties.disabled` | boolean | `false` | Disable the menu item. |
 | `profile.links.$.properties.dashed` | boolean | `false` | Whether the divider line is dashed. |
@@ -570,7 +677,7 @@ Profile from _menu
 | `profile.arrow.pointAtCenter` | boolean | - |  |
 | `darkModeToggle` | boolean | `false` | Show a dark mode toggle button in the header. Toggles the Ant Design dark theme for the entire page. Preference is persisted to localStorage. |
 | `localeSelector` | boolean | `false` | Show a locale picker dropdown in the header. Lists locales declared in `config.i18n.locales` and dispatches `SetLocale` on selection. Renders nothing when `config.i18n` is not configured. |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+| `theme` | object | - | Antd global design token overrides, such as colorPrimary or borderRadius, applied to everything in the page layout. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design component tokens](https://ant.design/docs/react/customize-theme#seedtoken). |
 
 | Event | Event Data | Description |
 | --- | --- | --- |

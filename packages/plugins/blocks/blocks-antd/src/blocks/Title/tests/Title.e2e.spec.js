@@ -176,4 +176,54 @@ test.describe('Title Block', () => {
     // The ellipsis class is applied
     await expect(title).toHaveClass(/ant-typography-ellipsis/);
   });
+
+  // ============================================
+  // KEYBOARD, TYPE DEFAULT, ACTIONS AND ELLIPSIS OPTIONS
+  // ============================================
+
+  test('renders with keyboard style', async ({ page }) => {
+    await expect(getTitle(page, 'title_keyboard').locator('kbd')).toHaveText('Ctrl');
+  });
+
+  test('type default adds no type class', async ({ page }) => {
+    const el = getTitle(page, 'title_type_default');
+    await expect(el).toBeVisible();
+    await expect(el).not.toHaveClass(/ant-typography-default/);
+  });
+
+  test('places the action buttons at the start', async ({ page }) => {
+    const actions = getTitle(page, 'title_actions_start').locator('.ant-typography-actions');
+    await expect(actions).toHaveClass(/ant-typography-actions-start/);
+    await expect(actions).toHaveClass(/title-actions-class/);
+    await expect(actions.getByRole('button', { name: 'Copy' })).toBeVisible();
+  });
+
+  test('collapsible ellipsis expands and collapses with custom symbols', async ({ page }) => {
+    const el = getTitle(page, 'title_ellipsis_collapsible');
+    const display = getBlock(page, 'title_expanded_display');
+    await expect(display).toHaveText('Collapsed');
+    // The content is cut to one row, not hidden.
+    await expect(el).toContainText(/^This.*\.\.\./);
+    await expect(el).not.toContainText('the box it sits in.');
+    const expand = el.locator('.ant-typography-expand');
+    await expect(expand).toHaveText('Show more');
+    await expand.click();
+    await expect(display).toHaveText('Expanded');
+    await expect(el).toContainText('the box it sits in.');
+    const collapse = el.locator('.ant-typography-collapse');
+    await expect(collapse).toHaveText('Show less');
+    await collapse.click();
+    await expect(display).toHaveText('Collapsed');
+  });
+
+  test('defaultExpanded starts with the text expanded', async ({ page }) => {
+    const el = getTitle(page, 'title_ellipsis_default_expanded');
+    await expect(el.getByRole('button', { name: 'Collapse' })).toBeVisible();
+    await expect(el).toContainText('the box it sits in.');
+  });
+
+  test('ellipsis tooltip shows on hover', async ({ page }) => {
+    await getTitle(page, 'title_ellipsis_tooltip').hover();
+    await expect(page.locator('.ant-tooltip')).toContainText('Full text in a tooltip');
+  });
 });

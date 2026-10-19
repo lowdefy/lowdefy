@@ -42,6 +42,8 @@ const Label = ({
   methods,
   properties,
   required,
+  rowClassName: blockRowClassName,
+  rowStyle: blockRowStyle,
   styles = {},
   validation,
 }) => {
@@ -51,6 +53,7 @@ const Label = ({
     feedbackClassName,
     feedbackStyle,
     iconClassName,
+    iconStyle,
     label,
     labelClassName,
     labelCol,
@@ -63,18 +66,28 @@ const Label = ({
     showFeedback,
     showFeedbackIcon,
     wrapperCol,
-  } = labelLogic({ blockId, blockClassNames, content, properties, required, styles, validation });
+  } = labelLogic({
+    blockId,
+    blockClassNames,
+    content,
+    properties,
+    required,
+    rowClassName: blockRowClassName,
+    rowStyle: blockRowStyle,
+    styles,
+    validation,
+  });
   if (!iconMap) {
     iconMap = {
-      error: () => <Icon properties="AiFillCloseCircle" />,
-      success: () => <Icon properties="AiFillCheckCircle" />,
-      validating: () => <Icon properties="AiOutlineLoading" />,
-      warning: () => <Icon properties="AiFillExclamationCircle" />,
+      error: () => <Icon properties={{ name: 'error', title: '' }} />,
+      success: () => <Icon properties={{ name: 'success', title: '' }} />,
+      validating: () => <Icon properties={{ name: 'loading', spin: true, title: '' }} />,
+      warning: () => <Icon properties={{ name: 'warning', title: '' }} />,
     };
   }
   const IconNode = showFeedbackIcon && iconMap[validation.status];
   const icon = IconNode ? (
-    <span className={iconClassName}>
+    <span className={iconClassName} style={iconStyle}>
       <IconNode />
     </span>
   ) : null;
@@ -102,7 +115,7 @@ const Label = ({
                     methods?.triggerEvent({ name: 'onTooltipClick' });
                   }}
                 >
-                  <Icon properties={tooltip.icon ?? 'AiOutlineQuestionCircle'} />
+                  <Icon properties={tooltip.icon ?? { name: 'help', title: '' }} />
                 </span>
               </Tooltip>
             )}

@@ -14,84 +14,57 @@
   limitations under the License.
 */
 
-import { WebParser } from '@lowdefy/operators';
+import { LowdefyInternalError } from '@lowdefy/errors';
+import { pageInstanceKey, type } from '@lowdefy/helpers';
 
-import Actions from './Actions.js';
-import Slots from './Slots.js';
-import Requests from './Requests.js';
-import State from './State.js';
-import WebSockets from './WebSockets.js';
+import createContext from './createContext.js';
+import keepPageInstance from './keepPageInstance.js';
 
-const blockData = (config) => {
-  const {
-    slots,
-    blockId,
-    blocks,
-    events,
-    field,
-    id,
-    layout,
-    pageId,
-    properties,
-    requests,
-    required,
-    style,
-    subscriptions,
-    type,
-    validate,
-    visible,
-  } = config;
-  const result = {
-    slots,
-    blockId,
-    blocks,
-    events,
-    field,
-    id,
-    layout,
-    pageId,
-    properties,
-    requests,
-    required,
-    style,
-    subscriptions,
-    type,
-    validate,
-    visible,
-  };
-  // Preserve ~k (configKey) for error tracing - it's non-enumerable so must be copied explicitly
-  if (config['~k']) {
-    Object.defineProperty(result, '~k', {
-      value: config['~k'],
-      enumerable: false,
-      writable: true,
-      configurable: true,
-    });
-  }
-  return result;
-};
-
+// A page with placeholders in its path has one context per set of values (pathParams, as the
+// server matched them from the URL), stored under its instance key. A page without placeholders
+// has one context, under `page:{pageId}`.
 function getContext({
   config,
   jsMap = {},
   lowdefy,
+  pathParams = {},
   resetContext = { reset: false, setReset: () => undefined },
 }) {
   if (!config) {
-    throw new Error('A page must be provided to get context.');
+    throw new LowdefyInternalError('A page must be provided to get context.');
   }
-  const { id } = config;
+  const { pageId } = config;
+  const instanceKey = pageInstanceKey({ pageId, path: config.path, pathParams });
+  keepPageInstance({ lowdefy, pageId, instanceKey });
+  // A page instance belongs to the organization its caller acted in: after an
+  // organization switch it is rebuilt, never rendered with the previous
+  // organization's state and request results. Kept under the same instance
+  // key, which path memory and Link input already name. A context built while
+  // the caller had no organization holds no organization's data, so it is kept
+  // when the caller gains one (accepting an invitation activates it) and
+  // belongs to that organization from then on.
+  const organizationId = lowdefy.user?.organization_id ?? null;
+  const keptOrganizationId = lowdefy.contexts[instanceKey]?._internal.organizationId;
+  const sameOrganization = type.isNone(keptOrganizationId) || keptOrganizationId === organizationId;
   // Dynamic pages are server-resolved per request — a context memoized across
   // navigations would render the previous request's content. Rebuild when a
   // new config object arrives (a fresh fetch), but stay memoized across
   // re-renders of the same config: getContext runs in the render body, so
   // rebuilding per render would loop.
   const sameDynamicConfig =
-    config.dynamic !== true || lowdefy.contexts[id]?._internal.pageConfig === config;
-  if (lowdefy.contexts[id] && !resetContext.reset && sameDynamicConfig) {
-    // memoize context if already created, eg between page transitions, unless the reset flag is raised
-    lowdefy.contexts[id]._internal.update();
-    return lowdefy.contexts[id];
+    config.dynamic !== true || lowdefy.contexts[instanceKey]?._internal.pageConfig === config;
+  if (
+    lowdefy.contexts[instanceKey] &&
+    !resetContext.reset &&
+    sameDynamicConfig &&
+    sameOrganization
+  ) {
+    // memoize context if already created, eg between page transitions, unless the reset flag is
+    // raised. A full pass: this render-time update is how changes with no reporting hook reach the
+    // page - user, i18n, theme, menus, inputs and the URL.
+    lowdefy.contexts[instanceKey]._internal.organizationId = organizationId;
+    lowdefy.contexts[instanceKey]._internal.update();
+    return lowdefy.contexts[instanceKey];
   }
   // Lower the context reset flag — only when raised: setReset is a React
   // state setter on the Reload component, and getContext runs in the render
@@ -100,67 +73,11 @@ function getContext({
   if (resetContext.reset) {
     resetContext.setReset(false);
   }
-  if (!lowdefy.inputs[id]) {
-    lowdefy.inputs[id] = {};
+  if (!lowdefy.inputs[instanceKey]) {
+    lowdefy.inputs[instanceKey] = {};
   }
-  const ctx = {
-    id,
-    pageId: config.pageId,
-    eventLog: [],
-    jsMap,
-    requests: {},
-    state: {},
-    _internal: {
-      lowdefy,
-      // Config object reference for dynamic page memoization — identity marks
-      // which fetch this context was built from.
-      pageConfig: config,
-      rootBlock: blockData(config), // filter block to prevent circular structure
-      update: () => {}, // Initialize update since Requests might call it during context creation
-      // React updaters register here per block id when the context's Block
-      // components mount — scoped per context so rebuilding over a live
-      // context (dynamic page navigation, reset) never notifies the previous
-      // context's still-mounted components.
-      updaters: {},
-    },
-  };
-  const _internal = ctx._internal;
-  _internal.parser = new WebParser({ context: ctx, operators: lowdefy._internal.operators });
-  _internal.State = new State(ctx);
-  _internal.Actions = new Actions(ctx);
-  _internal.Requests = new Requests(ctx);
-  _internal.WebSockets = new WebSockets(ctx);
-  _internal.RootSlots = new Slots({
-    slots: { root: { blocks: [_internal.rootBlock] } },
-    context: ctx,
-  });
-  _internal.RootSlots.init();
-  _internal.update = () => {
-    _internal.RootSlots.update();
-  };
-  _internal.runOnInit = async (progress) => {
-    progress();
-    if (!_internal.onInitDone) {
-      await _internal.RootSlots.slots.root.blocks[0].triggerEvent({
-        name: 'onInit',
-        progress,
-      });
-      _internal.update();
-      _internal.State.freezeState();
-      _internal.onInitDone = true;
-    }
-  };
-  _internal.runOnInitAsync = async (progress) => {
-    if (_internal.onInitDone && !_internal.onInitAsyncDone) {
-      await _internal.RootSlots.slots.root.blocks[0].triggerEvent({
-        name: 'onInitAsync',
-        progress,
-      });
-      _internal.onInitAsyncDone = true;
-    }
-  };
-  ctx._internal.update();
-  lowdefy.contexts[id] = ctx;
+  const ctx = createContext({ config, instanceKey, jsMap, lowdefy, organizationId, pathParams });
+  lowdefy.contexts[instanceKey] = ctx;
   return ctx;
 }
 

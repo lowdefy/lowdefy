@@ -24,5 +24,6 @@ function _or({ params }) {
 }
 
 _or.dynamic = false;
+_or.tracking = { kind: 'pure' };
 
 export default _or;

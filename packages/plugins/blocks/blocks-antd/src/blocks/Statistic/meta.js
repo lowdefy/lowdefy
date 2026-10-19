@@ -14,15 +14,24 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'display',
   icons: [],
   valueType: null,
   cssKeys: {
     element: 'The Statistic element.',
+    title: 'The Statistic title.',
+    content: 'The value section, with the prefix, value and suffix.',
+    prefix: 'The prefix of the value.',
     prefixIcon: 'The prefix icon in the Statistic.',
+    suffix: 'The suffix of the value.',
     suffixIcon: 'The suffix icon in the Statistic.',
     value: 'The Statistic value.',
+  },
+  events: {
+    onFinish: 'Trigger actions when a countdown timer reaches zero.',
   },
   properties: {
     type: 'object',
@@ -52,23 +61,40 @@ export default {
         description: 'Prefix text, priority over prefixIcon.',
       },
       prefixIcon: {
-        type: ['string', 'object'],
+        ...icon,
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon which prefix the statistic.",
-        docs: {
-          displayType: 'icon',
-        },
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon which prefix the statistic.',
       },
       suffix: {
         type: 'string',
         description: 'Suffix text, priority over suffixIcon.',
       },
       suffixIcon: {
-        type: ['string', 'object'],
+        ...icon,
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon which suffix the statistic.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon which suffix the statistic.',
+      },
+      timer: {
+        type: 'object',
+        additionalProperties: false,
+        description:
+          'Show a live timer instead of a static value. `value` is the target time for a countdown, or the start time for a count up, as a date or a timestamp in milliseconds.',
         docs: {
-          displayType: 'icon',
+          displayType: 'yaml',
+        },
+        required: ['type'],
+        properties: {
+          type: {
+            type: 'string',
+            enum: ['countdown', 'countup'],
+            description: 'Count down to value, or count up from value.',
+          },
+          format: {
+            type: 'string',
+            default: 'HH:mm:ss',
+            description:
+              'Format of the time, using the tokens Y, M, D, H, m, s and S, like `D [days] HH:mm:ss`.',
+          },
         },
       },
       title: {

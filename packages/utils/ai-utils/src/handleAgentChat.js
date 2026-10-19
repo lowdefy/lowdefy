@@ -22,6 +22,7 @@ import {
   generateId,
   generateText,
   pruneMessages,
+  toUIMessageStream,
   validateUIMessages,
 } from 'ai';
 
@@ -118,7 +119,7 @@ async function handleAgentChat({ connection, properties, context }) {
       const steps = [];
       let agentStream;
       // The AI SDK delivers the full updated UI message list (input + generated
-      // assistant reply) to the stream-level onFinish. Capture it so onFinish
+      // assistant reply) to the stream-level onEnd. Capture it so onFinish
       // hooks persist the complete conversation, not just the request input.
       let capturedMessages;
 
@@ -158,7 +159,7 @@ async function handleAgentChat({ connection, properties, context }) {
               }
             })
             .catch((error) => {
-              console.warn(`generateTitle failed: ${error.message}`);
+              context.logger.warn({ err: error }, 'generateTitle failed.');
             });
         }
       }
@@ -185,14 +186,18 @@ async function handleAgentChat({ connection, properties, context }) {
           const result = await agentInstance.stream({
             prompt: prunedMessages,
             ...timeoutConfig,
-            onStepFinish: collectStep,
+            onStepEnd: collectStep,
           });
-          agentStream = result.toUIMessageStream({
+          // ai v7: the stream-result method is deprecated for the stateless
+          // helper over the result's part stream.
+          agentStream = toUIMessageStream({
+            stream: result.stream,
+            tools: agentInstance.tools,
             originalMessages: validatedMessages,
-            // Without a generator the assistant message reaches onFinish with
+            // Without a generator the assistant message reaches onEnd with
             // id: '' — see the createAgentUIStream call below.
             generateMessageId: generateId,
-            onFinish: captureMessages,
+            onEnd: captureMessages,
             onError: clientErrorText,
           });
         } else {
@@ -215,8 +220,8 @@ async function handleAgentChat({ connection, properties, context }) {
             // generates its own id while streaming, so the damage only shows up
             // after a reload.
             generateMessageId: generateId,
-            onStepFinish: collectStep,
-            onFinish: captureMessages,
+            onStepEnd: collectStep,
+            onEnd: captureMessages,
             onError: clientErrorText,
           });
         }
@@ -231,9 +236,9 @@ async function handleAgentChat({ connection, properties, context }) {
           writer.write(value);
         }
       } catch (error) {
-        // The client only sees the (possibly redacted) error text, so the fault
-        // is logged server-side before it is written to the stream.
-        console.error(`Agent stream failed: ${error.message}`);
+        // The client only ever sees the redacted error text, so the fault is
+        // logged server-side before it is written to the stream.
+        context.logger.error({ err: error }, 'Agent stream failed.');
         writer.write({ type: 'error', errorText: writer.onError(error) });
       }
       // Ensure the title (if any) is written before the stream closes.
@@ -264,7 +269,7 @@ async function handleAgentChat({ connection, properties, context }) {
               }
             }
           } catch (error) {
-            console.warn(`onFinish hook "${endpointId}" failed: ${error.message}`);
+            context.logger.error({ err: error }, `onFinish hook "${endpointId}" failed.`);
           }
         }
       }

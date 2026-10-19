@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
-import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
+import { buildPagePath, type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 import getHomePathname from './getHomePathname.js';
+import getPathEntry from './getPathEntry.js';
 
 // The target's own urlQuery combines with any query the url string already
 // carries, matching the grammar semantics createLink resolved before.
@@ -24,33 +26,85 @@ function combineQuery(ownQuery, query) {
   return [ownQuery, query].filter((part) => part !== '').join('&');
 }
 
+// "/reports" is an app page. "//host" and "/\host" start with a slash too, but
+// the URL parser reads both as a link to another host.
+const appPathPattern = /^\/(?![/\\])/;
+// Relative to the current page: a query alone ("?tab=2"), a dot path
+// ("./reports", "../reports"), or a protocol-relative url ("//host/x").
+const relativePattern = /^(\?|\.|\/)/;
+// Schemes that run script when navigated to.
+const scriptProtocols = new Set(['javascript:', 'vbscript:', 'data:']);
+
+// The URL parser removes tabs and newlines anywhere, and strips leading and
+// trailing C0 controls and spaces, before it reads a url. Classifying the string
+// it reads keeps "/\t/host" (a link to another host) from passing as an app path.
+function normalizeUrl(url) {
+  const value = url.replace(/[\t\n\r]/g, '');
+  let start = 0;
+  let end = value.length;
+  while (start < end && value.charCodeAt(start) <= 0x20) start += 1;
+  while (end > start && value.charCodeAt(end - 1) <= 0x20) end -= 1;
+  return value.slice(start, end);
+}
+
+// A url is data an app may take from the query string or a database, and the
+// URL parser is the only complete check of it, so a value it rejects resolves
+// to no target instead of throwing while a link renders.
+function parseUrl(value, base) {
+  try {
+    return new URL(value, base);
+  } catch (error) {
+    return null;
+  }
+}
+
 // Classifies a `url` grammar value into a page or external target. basePath is
 // stripped here, never applied - the single application boundary is createUrl.
-function classifyUrl({ lowdefy, url, query }) {
+function classifyUrl({ lowdefy, url: rawUrl, query }) {
+  const url = normalizeUrl(rawUrl);
+  if (url === '') {
+    return undefined;
+  }
   // The leading-slash test runs before the colon-less test: `/2fa` is an
   // app-relative page and colon-less, and the colon-less branch would wrongly
   // give it an `https://` scheme and parse it as an off-app origin.
-  if (url.startsWith('/')) {
+  if (appPathPattern.test(url)) {
     const questionMark = url.indexOf('?');
     const pathname = questionMark === -1 ? url : url.slice(0, questionMark);
     const ownQuery = questionMark === -1 ? '' : url.slice(questionMark + 1);
     return { kind: 'page', pathname, query: combineQuery(ownQuery, query) };
   }
 
-  // A colon-less value like `example.com` is a schemeless hostname, not a path -
-  // prepend `https://` so the URL parser reads it as an absolute URL rather than
-  // the app-relative path `/example.com`. Confined to here by the leading-slash
-  // test above, so a colon-bearing path like `/path:1` never reaches it.
-  const value = url.includes(':') ? url : `https://${url}`;
-
-  const origin = lowdefy._internal?.globals?.window?.location?.origin;
-  // No window (SSR, tests): a `url` that reaches origin classification cannot be
-  // placed, so it resolves to nothing rather than dereferencing a missing window.
-  if (type.isNone(origin)) {
-    return undefined;
+  // A fragment moves within the current document, which only the browser can
+  // do: the router has no fragment, and a push re-renders and scrolls to the top.
+  if (url.startsWith('#')) {
+    return { kind: 'external', href: query === '' ? url : `?${query}${url}` };
   }
 
-  const parsed = new URL(value, origin);
+  const location = lowdefy._internal?.globals?.window?.location;
+  // No window (SSR, tests): a `url` that reaches origin classification cannot be
+  // placed, so it resolves to nothing rather than dereferencing a missing window.
+  if (type.isNone(location?.origin)) {
+    return undefined;
+  }
+  const { origin } = location;
+
+  // Any other colon-less value like `example.com` is a schemeless hostname, not
+  // a path - prepend `https://` so the URL parser reads it as an absolute URL
+  // rather than the app-relative path `/example.com`. Confined to here by the
+  // leading-slash test above, so a colon-bearing path like `/path:1` never
+  // reaches it.
+  const relative = relativePattern.test(url);
+  const value = relative || url.includes(':') ? url : `https://${url}`;
+  const parsed = parseUrl(value, relative ? location.href : origin);
+
+  if (parsed === null || scriptProtocols.has(parsed.protocol)) {
+    return undefined;
+  }
+  // mailto:, tel: and app schemes have no origin; they are whole URLs.
+  if (parsed.origin === 'null') {
+    return externalTarget({ parsed, query });
+  }
   const basePath = lowdefy.basePath ?? '';
   if (parsed.origin === origin) {
     const insideBasePath = basePath === '' || parsed.pathname.startsWith(basePath);
@@ -76,16 +130,37 @@ function classifyUrl({ lowdefy, url, query }) {
 
 // An external target is handed on as one finished href, so the target's own
 // urlQuery has to be folded in here - the consumer has no separate query to
-// append once the value is a whole URL.
+// append once the value is a whole URL. The URL object writes it back, so a
+// scheme without an origin (mailto:) keeps its own shape.
 function externalTarget({ parsed, query }) {
-  const search = combineQuery(parsed.search.replace(/^\?/, ''), query);
-  const href = `${parsed.origin}${parsed.pathname}${search === '' ? '' : `?${search}`}${
-    parsed.hash
-  }`;
-  return { kind: 'external', href };
+  const target = new URL(parsed.href);
+  target.search = combineQuery(parsed.search.replace(/^\?/, ''), query);
+  return { kind: 'external', href: target.href };
 }
 
-// The single resolver of the navigation grammar { home, pageId, url, urlQuery }
+// The pattern of a page the current page links to: the page's own linkPaths (patterned pages its
+// collected links target), then the patterned pages the user may open. A page in neither is served
+// at its id.
+function getPagePattern({ lowdefy, pageId }) {
+  return lowdefy.linkPaths[pageId] ?? lowdefy.pagePaths[pageId];
+}
+
+// A page target names the page, its values and the instance they open. Resolving writes nothing:
+// a link is resolved on every render, and rememberTarget records it only when it is followed.
+function pageTarget({ pathname, pageId, pathParams, pattern, query }) {
+  const entry = getPathEntry({ pageId, pathParams, pattern });
+  return { kind: 'page', pathname, query, ...entry };
+}
+
+function buildPathname({ pageId, pathParams, pattern }) {
+  try {
+    return `/${buildPagePath({ pageId, path: pattern, pathParams })}`;
+  } catch (error) {
+    throw new ConfigError(error.message, { cause: error });
+  }
+}
+
+// The single resolver of the navigation grammar { home, pageId, url, urlQuery, pathParams }
 // for every reader. Returns a discriminated, un-prefixed target - never a string,
 // never basePath-prefixed - so the page/external distinction is data the consumer
 // reads rather than a shape it guesses from a leading slash.
@@ -93,17 +168,14 @@ function resolveTarget({ lowdefy, target, name = 'Link' }) {
   if (!type.isObject(target)) {
     return undefined;
   }
-  const { home, pageId, url, urlQuery } = target;
-
+  const { home, pageId, pathParams, url, urlQuery } = target;
   const defined = [home, pageId, url].filter((value) => value);
   if (defined.length > 1) {
-    throw new Error(
+    throw new ConfigError(
       `Invalid ${name}: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined.`
     );
   }
-
   const query = type.isNone(urlQuery) ? '' : `${urlQueryFn.stringify(urlQuery)}`;
-
   if (home === true) {
     const pathname = getHomePathname({ lowdefy });
     // An app whose home config names no page has no resolvable home - propagate
@@ -111,14 +183,30 @@ function resolveTarget({ lowdefy, target, name = 'Link' }) {
     if (type.isNone(pathname)) {
       return undefined;
     }
-    return { kind: 'page', pathname, query };
+    return pageTarget({
+      pathname,
+      pageId: lowdefy.home.pageId,
+      pathParams: lowdefy.home.pathParams,
+      pattern: lowdefy.pagePaths[lowdefy.home.pageId],
+      query,
+    });
   }
   if (type.isString(pageId)) {
-    return { kind: 'page', pathname: `/${pageId}`, query };
+    const pattern = getPagePattern({ lowdefy, pageId });
+    return pageTarget({
+      pathname: buildPathname({ pageId, pathParams, pattern }),
+      pageId,
+      pathParams,
+      pattern,
+      query,
+    });
   }
-  if (type.isString(url)) {
+  if (type.isString(url) && url !== '') {
     return classifyUrl({ lowdefy, url, query });
   }
+  // An empty url string is absence of a target, not the origin root: it is
+  // already excluded from the ambiguity check above, and classifying '' would
+  // dereference `new URL('https://', origin)` into a throw.
   return undefined;
 }
 

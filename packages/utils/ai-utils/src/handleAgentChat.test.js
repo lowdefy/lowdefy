@@ -42,16 +42,17 @@ const mockWriter = {
   write: jest.fn(),
 };
 // The AI SDK delivers the full updated UI message list (input + this assistant
-// message) to the stream-level onFinish. The mocks below invoke onFinish with
-// that shape so tests can assert the onFinish hook payload includes the reply.
+// message) to the stream-level onEnd (ai v7's name for onFinish). The mocks
+// below invoke onEnd with that shape so tests can assert the onFinish hook
+// payload includes the reply.
 const MOCK_ASSISTANT_MESSAGE = {
   id: 'assistant-1',
   role: 'assistant',
   parts: [{ type: 'text', text: 'Hello there' }],
 };
 async function defaultCreateAgentUIStream(opts) {
-  if (opts?.onFinish) {
-    opts.onFinish({ messages: [...(opts.uiMessages ?? []), MOCK_ASSISTANT_MESSAGE] });
+  if (opts?.onEnd) {
+    opts.onEnd({ messages: [...(opts.uiMessages ?? []), MOCK_ASSISTANT_MESSAGE] });
   }
   return createMockReadableStream();
 }
@@ -66,9 +67,10 @@ const mockGenerateId = jest.fn(() => 'generated-id');
 
 let lastAgentConfig = null;
 let lastAgentInstance = null;
+const MOCK_PART_STREAM = { type: 'mock-part-stream' };
 const mockToUIMessageStream = jest.fn().mockImplementation((opts) => {
-  if (opts?.onFinish) {
-    opts.onFinish({ messages: [...(opts?.originalMessages ?? []), MOCK_ASSISTANT_MESSAGE] });
+  if (opts?.onEnd) {
+    opts.onEnd({ messages: [...(opts?.originalMessages ?? []), MOCK_ASSISTANT_MESSAGE] });
   }
   return createMockReadableStream();
 });
@@ -80,9 +82,7 @@ class MockToolLoopAgent {
     lastAgentInstance = this;
   }
 
-  stream = jest.fn().mockResolvedValue({
-    toUIMessageStream: mockToUIMessageStream,
-  });
+  stream = jest.fn().mockResolvedValue({ stream: MOCK_PART_STREAM });
 }
 
 const mockConvertToModelMessages = jest.fn().mockResolvedValue([]);
@@ -107,8 +107,9 @@ jest.unstable_mockModule('ai', () => ({
   pruneMessages: mockPruneMessages,
   tool: mockTool,
   jsonSchema: mockJsonSchema,
-  stepCountIs: mockStepCountIs,
+  isStepCount: mockStepCountIs,
   hasToolCall: mockHasToolCall,
+  toUIMessageStream: mockToUIMessageStream,
   validateUIMessages: mockValidateUIMessages,
 }));
 
@@ -138,6 +139,8 @@ jest.unstable_mockModule('./handleAgentGenerate.js', () => ({
 
 const MOCK_SCHEMA = { type: 'object', properties: {} };
 
+const testLogger = { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() };
+
 test('dispatches to handleAgentGenerate when context.mode is generate', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
   const mockResult = { result: { text: 'done', finishReason: 'stop' } };
@@ -146,7 +149,7 @@ test('dispatches to handleAgentGenerate when context.mode is generate', async ()
   const args = {
     connection: { provider: jest.fn() },
     properties: { agent: { properties: { model: 'test-model' } }, prompt: 'Go.' },
-    context: { mode: 'generate' },
+    context: { logger: testLogger, mode: 'generate' },
   };
   const result = await handleAgentChat(args);
 
@@ -185,7 +188,7 @@ test('creates ToolLoopAgent with correct parameters', async () => {
   const result = await handleAgentChat({
     connection: { provider },
     properties: { agent, messages },
-    context: { callEndpoint, getEndpointConfig },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig },
   });
 
   expect(provider).toHaveBeenCalledWith('claude-3-5-sonnet');
@@ -229,7 +232,7 @@ test('builds tools from endpoint configs', async () => {
       agent: { tools: [{ endpointId: 'search' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig },
   });
 
   expect(getEndpointConfig).toHaveBeenCalledWith({ endpointId: 'search' });
@@ -246,7 +249,7 @@ test('builds tools from endpoint configs', async () => {
   const toolDef = mockTool.mock.calls[0][0];
   const input = { query: 'test' };
   const executeResult = await toolDef.execute(input);
-  expect(callEndpoint).toHaveBeenCalledWith('search', { payload: input });
+  expect(callEndpoint).toHaveBeenCalledWith('search', { payload: input, outsideCaller: true });
   expect(executeResult).toEqual({ hits: [] });
 });
 
@@ -265,7 +268,7 @@ test('uses default stopWhen and toolChoice when optional properties missing', as
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   expect(mockStepCountIs).toHaveBeenCalledWith(10);
@@ -289,7 +292,7 @@ test('handles agent with no tools property defined', async () => {
       agent: { properties: { model: 'gpt-4o' } },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig },
   });
 
   expect(getEndpointConfig).not.toHaveBeenCalled();
@@ -317,7 +320,7 @@ test('throws when tool endpoint execution fails with error message', async () =>
       agent: { tools: [{ endpointId: 'db-query' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig },
   });
 
   const toolDef = mockTool.mock.calls[0][0];
@@ -344,7 +347,7 @@ test('throws generic message when tool endpoint fails without error message', as
       agent: { tools: [{ endpointId: 'db-query' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig },
   });
 
   const toolDef = mockTool.mock.calls[0][0];
@@ -372,7 +375,7 @@ test('builds multiple tools from multiple endpoint configs', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig },
   });
 
   expect(getEndpointConfig).toHaveBeenCalledTimes(2);
@@ -400,7 +403,7 @@ test('tool execute returns null when endpoint response is null', async () => {
       agent: { tools: [{ endpointId: 'nullable' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig },
   });
 
   const toolDef = mockTool.mock.calls[0][0];
@@ -428,7 +431,7 @@ test('cleanBuildArtifact strips non-enumerable serializer markers from payload s
       agent: { tools: [{ endpointId: 'schema-test' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig },
   });
 
   const cleanedSchema = mockJsonSchema.mock.calls[0][0];
@@ -457,7 +460,7 @@ test('tool execute cleans build artifact markers from response', async () => {
       agent: { tools: [{ endpointId: 'response-test' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig },
   });
 
   const toolDef = mockTool.mock.calls[0][0];
@@ -487,7 +490,7 @@ test('providerOptions passed to ToolLoopAgent', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   expect(lastAgentConfig.providerOptions).toEqual(providerOptions);
@@ -508,7 +511,7 @@ test('undefined providerOptions does not break agent creation', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   expect(lastAgentConfig.providerOptions).toBeUndefined();
@@ -534,11 +537,11 @@ test('hook callbacks are passed to ToolLoopAgent constructor', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
-  expect(lastAgentConfig.experimental_onToolCallFinish).toEqual(expect.any(Function));
-  expect(lastAgentConfig.experimental_onStart).toBeUndefined();
+  expect(lastAgentConfig.onToolExecutionEnd).toEqual(expect.any(Function));
+  expect(lastAgentConfig.onStart).toBeUndefined();
 });
 
 test('hook callback calls callEndpoint with cleaned event payload', async () => {
@@ -559,10 +562,10 @@ test('hook callback calls callEndpoint with cleaned event payload', async () => 
       },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
-  const onStepFinish = lastAgentConfig.onStepFinish;
+  const onStepFinish = lastAgentConfig.onStepEnd;
   onStepFinish({
     stepType: 'tool-result',
     usage: { totalTokens: 100 },
@@ -596,10 +599,10 @@ test('non-onFinish hook callbacks strip messages from event payload', async () =
       },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
-  const onStepFinish = lastAgentConfig.onStepFinish;
+  const onStepFinish = lastAgentConfig.onStepEnd;
   onStepFinish({
     stepType: 'tool-result',
     messages: [{ role: 'user', content: 'hi' }],
@@ -629,10 +632,10 @@ test('hook callback errors do not propagate', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
-  const onStepFinish = lastAgentConfig.onStepFinish;
+  const onStepFinish = lastAgentConfig.onStepEnd;
   // Should not throw
   expect(() => onStepFinish({ stepType: 'tool-result' })).not.toThrow();
 });
@@ -652,12 +655,12 @@ test('no hooks produces no callbacks on ToolLoopAgent', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
-  expect(lastAgentConfig.experimental_onStart).toBeUndefined();
-  expect(lastAgentConfig.experimental_onToolCallFinish).toBeUndefined();
-  expect(lastAgentConfig.onStepFinish).toBeUndefined();
+  expect(lastAgentConfig.onStart).toBeUndefined();
+  expect(lastAgentConfig.onToolExecutionEnd).toBeUndefined();
+  expect(lastAgentConfig.onStepEnd).toBeUndefined();
   expect(lastAgentConfig.onFinish).toBeUndefined();
 });
 
@@ -675,14 +678,14 @@ test('empty tools array produces empty tools object', async () => {
       agent: { tools: [], properties: { model: 'gpt-4o' } },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig },
   });
 
   expect(lastAgentConfig.tools).toEqual({});
   expect(mockTool).not.toHaveBeenCalled();
 });
 
-test('tool with confirm true sets needsApproval', async () => {
+test('tool with confirm true asks for user approval', async () => {
   mockJsonSchema.mockImplementation((schema) => schema);
   mockTool.mockImplementation((def) => def);
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
@@ -699,12 +702,13 @@ test('tool with confirm true sets needsApproval', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig },
   });
-  expect(mockTool).toHaveBeenCalledWith(expect.objectContaining({ needsApproval: true }));
+  // ai v7: approval is set on the agent, by tool name.
+  expect(lastAgentConfig.toolApproval).toEqual({ dangerous: 'user-approval' });
 });
 
-test('tool without confirm does not set needsApproval', async () => {
+test('tool without confirm asks for no approval', async () => {
   mockJsonSchema.mockImplementation((schema) => schema);
   mockTool.mockImplementation((def) => def);
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
@@ -721,11 +725,9 @@ test('tool without confirm does not set needsApproval', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig },
   });
-  expect(mockTool).toHaveBeenCalledWith(
-    expect.not.objectContaining({ needsApproval: expect.anything() })
-  );
+  expect(lastAgentConfig.toolApproval).toEqual({});
 });
 
 test('creates MCP clients from agent mcp config', async () => {
@@ -751,7 +753,12 @@ test('creates MCP clients from agent mcp config', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn(), evaluateOperators },
+    context: {
+      logger: testLogger,
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      evaluateOperators,
+    },
   });
 
   expect(mockCreateMCPClient).toHaveBeenCalledWith({
@@ -768,7 +775,8 @@ test('endpoint tools take precedence over MCP tools on name conflict', async () 
     close: jest.fn().mockResolvedValue(undefined),
   };
   mockCreateMCPClient.mockResolvedValue(mockClient);
-  const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  testLogger.warn.mockClear();
+  testLogger.error.mockClear();
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
@@ -788,17 +796,17 @@ test('endpoint tools take precedence over MCP tools on name conflict', async () 
       messages: [],
     },
     context: {
+      logger: testLogger,
       callEndpoint: jest.fn(),
       getEndpointConfig,
       evaluateOperators: jest.fn((x) => x),
     },
   });
 
-  expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('MCP tool "search"'));
-  consoleSpy.mockRestore();
+  expect(testLogger.warn).toHaveBeenCalledWith(expect.stringContaining('MCP tool "search"'));
 });
 
-test('MCP source with confirm applies needsApproval to all tools', async () => {
+test('MCP source with confirm asks approval for all its tools', async () => {
   mockJsonSchema.mockImplementation((schema) => schema);
   mockTool.mockImplementation((def) => def);
   const mockClient = {
@@ -823,22 +831,25 @@ test('MCP source with confirm applies needsApproval to all tools', async () => {
       messages: [],
     },
     context: {
+      logger: testLogger,
       callEndpoint: jest.fn(),
       getEndpointConfig: jest.fn(),
       evaluateOperators: jest.fn((x) => x),
     },
   });
 
-  expect(lastAgentConfig.tools['mcp-tool-a']).toEqual(
-    expect.objectContaining({ needsApproval: true })
-  );
+  expect(lastAgentConfig.toolApproval).toEqual({
+    'mcp-tool-a': 'user-approval',
+    'mcp-tool-b': 'user-approval',
+  });
 });
 
 test('unreachable MCP server logs warning and continues', async () => {
   mockJsonSchema.mockImplementation((schema) => schema);
   mockTool.mockImplementation((def) => def);
   mockCreateMCPClient.mockRejectedValue(new Error('Connection refused'));
-  const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  testLogger.warn.mockClear();
+  testLogger.error.mockClear();
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
@@ -853,15 +864,18 @@ test('unreachable MCP server logs warning and continues', async () => {
       messages: [],
     },
     context: {
+      logger: testLogger,
       callEndpoint: jest.fn(),
       getEndpointConfig: jest.fn(),
       evaluateOperators: jest.fn((x) => x),
     },
   });
 
-  expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('unreachable'));
+  expect(testLogger.warn).toHaveBeenCalledWith(
+    expect.objectContaining({ err: expect.any(Error) }),
+    expect.stringContaining('unreachable')
+  );
   expect(result.response).toEqual({ type: 'web-response' });
-  consoleSpy.mockRestore();
 });
 
 test('MCP clients closed on finish', async () => {
@@ -887,6 +901,7 @@ test('MCP clients closed on finish', async () => {
       messages: [],
     },
     context: {
+      logger: testLogger,
       callEndpoint: jest.fn(),
       getEndpointConfig: jest.fn(),
       evaluateOperators: jest.fn((x) => x),
@@ -929,6 +944,7 @@ test('stdio MCP source creates StdioMCPTransport with command and args', async (
       messages: [],
     },
     context: {
+      logger: testLogger,
       callEndpoint: jest.fn(),
       getEndpointConfig: jest.fn(),
       evaluateOperators: jest.fn((x) => x),
@@ -958,6 +974,7 @@ test('no mcp config produces no MCP clients', async () => {
       messages: [],
     },
     context: {
+      logger: testLogger,
       callEndpoint: jest.fn(),
       getEndpointConfig: jest.fn(),
       evaluateOperators: jest.fn((x) => x),
@@ -975,7 +992,8 @@ test('MCP tool listing failure logs warning and continues', async () => {
     close: jest.fn().mockResolvedValue(undefined),
   };
   mockCreateMCPClient.mockResolvedValue(mockClient);
-  const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  testLogger.warn.mockClear();
+  testLogger.error.mockClear();
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
@@ -990,15 +1008,18 @@ test('MCP tool listing failure logs warning and continues', async () => {
       messages: [],
     },
     context: {
+      logger: testLogger,
       callEndpoint: jest.fn(),
       getEndpointConfig: jest.fn(),
       evaluateOperators: jest.fn((x) => x),
     },
   });
 
-  expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('tool listing failed'));
+  expect(testLogger.warn).toHaveBeenCalledWith(
+    expect.objectContaining({ err: expect.any(Error) }),
+    expect.stringContaining('tool listing failed')
+  );
   expect(result.response).toEqual({ type: 'web-response' });
-  consoleSpy.mockRestore();
 });
 
 test('stream-level onFinish calls hook endpoints with messages payload', async () => {
@@ -1020,7 +1041,7 @@ test('stream-level onFinish calls hook endpoints with messages payload', async (
       },
       messages,
     },
-    context: { callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
@@ -1057,7 +1078,7 @@ test('no onFinish hooks does not call callEndpoint in execute', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
@@ -1090,7 +1111,7 @@ test('onFinish hook dataParts are written to the stream writer', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
@@ -1102,10 +1123,11 @@ test('onFinish hook dataParts are written to the stream writer', async () => {
   expect(localWriter.write).toHaveBeenNthCalledWith(2, dataParts[1]);
 });
 
-test('onFinish hook failure logs warning and continues to next hook', async () => {
+test('onFinish hook failure logs an error and continues to the next hook', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
-  const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  testLogger.warn.mockClear();
+  testLogger.error.mockClear();
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
@@ -1124,7 +1146,7 @@ test('onFinish hook failure logs warning and continues to next hook', async () =
       },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
@@ -1132,12 +1154,12 @@ test('onFinish hook failure logs warning and continues to next hook', async () =
   await execute({ writer: localWriter });
 
   expect(callEndpoint).toHaveBeenCalledTimes(2);
-  expect(consoleSpy).toHaveBeenCalledWith(
+  expect(testLogger.error).toHaveBeenCalledWith(
+    expect.objectContaining({ err: expect.any(Error) }),
     expect.stringContaining('onFinish hook "failing-hook" failed')
   );
   expect(localWriter.write).toHaveBeenCalledTimes(1);
   expect(localWriter.write).toHaveBeenCalledWith({ type: 'data', value: { ok: true } });
-  consoleSpy.mockRestore();
 });
 
 test('onFinish hook without dataParts does not write to stream', async () => {
@@ -1158,7 +1180,7 @@ test('onFinish hook without dataParts does not write to stream', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
@@ -1184,7 +1206,7 @@ test('stopOnToolCall with single string creates array stopWhen', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   expect(mockHasToolCall).toHaveBeenCalledWith('submit_form');
@@ -1209,7 +1231,7 @@ test('stopOnToolCall with array creates stopWhen with multiple conditions', asyn
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   expect(mockHasToolCall).toHaveBeenCalledWith('submit_form');
@@ -1236,7 +1258,7 @@ test('no stopOnToolCall produces single stopWhen condition', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   expect(lastAgentConfig.stopWhen).toEqual({ type: 'stepCount', count: 10 });
@@ -1257,7 +1279,7 @@ test('activeTools passed to ToolLoopAgent', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   expect(lastAgentConfig.activeTools).toEqual(['search', 'write']);
@@ -1285,7 +1307,7 @@ test('sampling parameters passed to ToolLoopAgent', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   expect(lastAgentConfig.topP).toBe(0.9);
@@ -1310,7 +1332,7 @@ test('stopSequences passed to ToolLoopAgent', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   expect(lastAgentConfig.stopSequences).toEqual(['END', 'STOP']);
@@ -1331,7 +1353,7 @@ test('maxRetries passed to ToolLoopAgent', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   expect(lastAgentConfig.maxRetries).toBe(5);
@@ -1352,7 +1374,7 @@ test('timeout as number passed to createAgentUIStream', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
@@ -1379,7 +1401,7 @@ test('timeout as object passed to createAgentUIStream', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
@@ -1406,7 +1428,7 @@ test('no timeout omits key from createAgentUIStream', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
@@ -1433,7 +1455,7 @@ test('undefined new properties do not break agent creation', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   expect(lastAgentConfig.activeTools).toBeUndefined();
@@ -1464,7 +1486,7 @@ test('tool execute passes abortSignal to callEndpoint', async () => {
       agent: { tools: [{ endpointId: 'signal-test' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig },
   });
 
   const toolDef = mockTool.mock.calls[0][0];
@@ -1474,6 +1496,7 @@ test('tool execute passes abortSignal to callEndpoint', async () => {
   expect(callEndpoint).toHaveBeenCalledWith('signal-test', {
     payload: { query: 'test' },
     abortSignal: mockSignal,
+    outsideCaller: true,
   });
 });
 
@@ -1492,10 +1515,10 @@ test('repairToolCall is passed to ToolLoopAgent when enabled', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
-  expect(lastAgentConfig.experimental_repairToolCall).toEqual(expect.any(Function));
+  expect(lastAgentConfig.repairToolCall).toEqual(expect.any(Function));
 });
 
 test('repairToolCall is not set when not configured', async () => {
@@ -1513,10 +1536,10 @@ test('repairToolCall is not set when not configured', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
-  expect(lastAgentConfig.experimental_repairToolCall).toBeUndefined();
+  expect(lastAgentConfig.repairToolCall).toBeUndefined();
 });
 
 test('onFinish hook payload messages include the generated assistant reply', async () => {
@@ -1538,7 +1561,7 @@ test('onFinish hook payload messages include the generated assistant reply', asy
       },
       messages: inputMessages,
     },
-    context: { callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
   // Execute the stream to trigger onFinish
@@ -1578,7 +1601,7 @@ test('onFinish hook payload includes agentContext fields', async () => {
       },
       messages,
     },
-    context: { callEndpoint, getEndpointConfig: jest.fn(), agentContext },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn(), agentContext },
   });
 
   await mockCreateUIMessageStream._lastExecute({ writer: mockWriter });
@@ -1603,8 +1626,8 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
 
   // Mock createAgentUIStream to simulate multiple steps completing during execution
   mockCreateAgentUIStream.mockImplementation(async (opts) => {
-    if (opts.onStepFinish) {
-      opts.onStepFinish({
+    if (opts.onStepEnd) {
+      opts.onStepEnd({
         stepNumber: 0,
         text: 'Looking up products...',
         toolCalls: [{ toolCallId: 'tc1', toolName: 'search', input: { q: 'laptop' } }],
@@ -1625,7 +1648,7 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
           outputTokenDetails: { reasoningTokens: 5 },
         },
       });
-      opts.onStepFinish({
+      opts.onStepEnd({
         stepNumber: 1,
         text: 'Here are the results.',
         toolCalls: [],
@@ -1653,7 +1676,7 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
       },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
   await mockCreateUIMessageStream._lastExecute({ writer: mockWriter });
@@ -1684,9 +1707,9 @@ test('usage accumulator handles missing usage gracefully', async () => {
   const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
 
   mockCreateAgentUIStream.mockImplementation(async (opts) => {
-    if (opts.onStepFinish) {
-      opts.onStepFinish({ usage: undefined });
-      opts.onStepFinish({ usage: { inputTokens: 50 } });
+    if (opts.onStepEnd) {
+      opts.onStepEnd({ usage: undefined });
+      opts.onStepEnd({ usage: { inputTokens: 50 } });
     }
     return createMockReadableStream();
   });
@@ -1701,7 +1724,7 @@ test('usage accumulator handles missing usage gracefully', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
   await mockCreateUIMessageStream._lastExecute({ writer: mockWriter });
@@ -1750,6 +1773,7 @@ test('pageContext true prepends context block to instructions', async () => {
         userId: 'user_abc',
         conversationId: 'conv_123',
         urlQuery: { principle_id: 'P3' },
+        pathParams: { ticket_id: '1' },
       },
     },
   });
@@ -1760,6 +1784,7 @@ test('pageContext true prepends context block to instructions', async () => {
       '  userId: user_abc\n' +
       '  conversationId: conv_123\n' +
       '  urlQuery: {"principle_id":"P3"}\n' +
+      '  pathParams: {"ticket_id":"1"}\n' +
       '</context>\n' +
       '\n' +
       'You are a governance advisor.'
@@ -1816,11 +1841,12 @@ test('pageContext omits empty urlQuery from context block', async () => {
     context: {
       callEndpoint: jest.fn(),
       getEndpointConfig: jest.fn(),
-      agentContext: { pageId: 'my-page', userId: 'user_1', urlQuery: {} },
+      agentContext: { pageId: 'my-page', userId: 'user_1', urlQuery: {}, pathParams: {} },
     },
   });
 
   expect(lastAgentConfig.instructions).not.toContain('urlQuery');
+  expect(lastAgentConfig.instructions).not.toContain('pathParams');
   expect(lastAgentConfig.instructions).toContain('<context>');
   expect(lastAgentConfig.instructions).toContain('pageId: my-page');
 });
@@ -1946,6 +1972,37 @@ test('does not merge update-page-state tool when sharedState is absent', async (
   expect(lastAgentConfig.tools['update-page-state']).toBeUndefined();
 });
 
+test('does not merge update-page-state tool when sharedStateReadOnly is true', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockBuildUpdatePageStateTool.mockReset();
+  mockBuildUpdatePageStateTool.mockReturnValue({ __sentinel: 'update-page-state-tool' });
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o', pageContext: true } },
+      messages: [],
+    },
+    context: {
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      agentContext: {
+        pageId: 'p1',
+        userId: 'u1',
+        sharedState: { space: 'PEL' },
+        sharedStateReadOnly: true,
+      },
+    },
+  });
+
+  expect(mockBuildUpdatePageStateTool).not.toHaveBeenCalled();
+  expect(lastAgentConfig.tools['update-page-state']).toBeUndefined();
+  expect(lastAgentConfig.instructions).toContain('sharedState: {"space":"PEL"}');
+});
+
 test('onFinish hook payload includes steps with toolCalls and toolResults', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
@@ -1958,8 +2015,8 @@ test('onFinish hook payload includes steps with toolCalls and toolResults', asyn
   const mockToolResult = { ...mockToolCall, output: { success: true } };
 
   mockCreateAgentUIStream.mockImplementation(async (opts) => {
-    if (opts.onStepFinish) {
-      opts.onStepFinish({
+    if (opts.onStepEnd) {
+      opts.onStepEnd({
         stepNumber: 0,
         text: 'Setting form fields.',
         toolCalls: [mockToolCall],
@@ -1981,7 +2038,7 @@ test('onFinish hook payload includes steps with toolCalls and toolResults', asyn
       },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
   await mockCreateUIMessageStream._lastExecute({ writer: mockWriter });
@@ -2011,8 +2068,8 @@ test('onFinish hook payload has empty toolResults when no tools called', async (
   const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
 
   mockCreateAgentUIStream.mockImplementation(async (opts) => {
-    if (opts.onStepFinish) {
-      opts.onStepFinish({
+    if (opts.onStepEnd) {
+      opts.onStepEnd({
         stepNumber: 0,
         text: 'Hello!',
         toolCalls: [],
@@ -2034,7 +2091,7 @@ test('onFinish hook payload has empty toolResults when no tools called', async (
       },
       messages: [],
     },
-    context: { callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
   await mockCreateUIMessageStream._lastExecute({ writer: mockWriter });
@@ -2078,7 +2135,7 @@ test('prune config triggers decomposed stream pipeline instead of createAgentUIS
       },
       messages,
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   const localWriter = { write: jest.fn() };
@@ -2097,12 +2154,14 @@ test('prune config triggers decomposed stream pipeline instead of createAgentUIS
   });
   expect(lastAgentInstance.stream).toHaveBeenCalledWith({
     prompt: mockPruned,
-    onStepFinish: expect.any(Function),
+    onStepEnd: expect.any(Function),
   });
   expect(mockToUIMessageStream).toHaveBeenCalledWith({
+    stream: MOCK_PART_STREAM,
+    tools: lastAgentInstance.tools,
     originalMessages: mockValidated,
     generateMessageId: mockGenerateId,
-    onFinish: expect.any(Function),
+    onEnd: expect.any(Function),
     onError: expect.any(Function),
   });
   expect(mockCreateAgentUIStream).not.toHaveBeenCalled();
@@ -2129,7 +2188,7 @@ test('the assistant message is given an id on both stream paths', async () => {
     await handleAgentChat({
       connection: { provider: jest.fn().mockReturnValue({}) },
       properties,
-      context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+      context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
     });
     await mockCreateUIMessageStream._lastExecute({ writer: { write: jest.fn() } });
   }
@@ -2169,7 +2228,7 @@ test('without prune config, createAgentUIStream is used and prune functions are 
       },
       messages: [{ role: 'user', parts: [{ type: 'text', text: 'hi' }] }],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   const localWriter = { write: jest.fn() };
@@ -2206,7 +2265,7 @@ test('all pruneConfig properties are spread into pruneMessages call', async () =
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   await mockCreateUIMessageStream._lastExecute({
@@ -2239,7 +2298,7 @@ test('prune branch passes timeout to agentInstance.stream', async () => {
       },
       messages: [],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   await mockCreateUIMessageStream._lastExecute({
@@ -2249,7 +2308,7 @@ test('prune branch passes timeout to agentInstance.stream', async () => {
   expect(lastAgentInstance.stream).toHaveBeenCalledWith({
     prompt: [],
     timeout: 30000,
-    onStepFinish: expect.any(Function),
+    onStepEnd: expect.any(Function),
   });
 });
 
@@ -2275,7 +2334,7 @@ test('onFinish hook payload messages include the assistant reply on the prune pa
       },
       messages: [{ role: 'user', parts: [{ type: 'text', text: 'Hi' }] }],
     },
-    context: { callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
   await mockCreateUIMessageStream._lastExecute({ writer: { write: jest.fn() } });
@@ -2300,7 +2359,7 @@ test('generateTitle disabled does not call generateText or write a title part', 
       agent: { tools: [], properties: { model: 'gpt-4o' } },
       messages: [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   const localWriter = { write: jest.fn() };
@@ -2326,7 +2385,7 @@ test('generateTitle true generates a title from the first user message on the fi
       agent: { tools: [], properties: { model: 'gpt-4o', generateTitle: true } },
       messages: [{ role: 'user', parts: [{ type: 'text', text: 'Help me find a laptop' }] }],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   const localWriter = { write: jest.fn() };
@@ -2359,7 +2418,7 @@ test('generateTitle does not run when the conversation already has an assistant 
         { role: 'user', parts: [{ type: 'text', text: 'Tell me more' }] },
       ],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   await mockCreateUIMessageStream._lastExecute({ writer: { write: jest.fn() } });
@@ -2372,7 +2431,8 @@ test('generateTitle failure is non-fatal and does not break the stream', async (
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
   mockGenerateText.mockClear();
   mockGenerateText.mockRejectedValueOnce(new Error('model unavailable'));
-  const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  testLogger.warn.mockClear();
+  testLogger.error.mockClear();
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
@@ -2382,7 +2442,7 @@ test('generateTitle failure is non-fatal and does not break the stream', async (
       agent: { tools: [], properties: { model: 'gpt-4o', generateTitle: true } },
       messages: [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   const localWriter = { write: jest.fn() };
@@ -2390,12 +2450,14 @@ test('generateTitle failure is non-fatal and does not break the stream', async (
     mockCreateUIMessageStream._lastExecute({ writer: localWriter })
   ).resolves.toBeUndefined();
 
-  expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('generateTitle failed'));
+  expect(testLogger.warn).toHaveBeenCalledWith(
+    expect.objectContaining({ err: expect.any(Error) }),
+    'generateTitle failed.'
+  );
   expect(localWriter.write).not.toHaveBeenCalledWith(
     expect.objectContaining({ type: 'data-chat-title' })
   );
 
-  consoleSpy.mockRestore();
   mockGenerateText.mockResolvedValue({ text: 'Generated Title' });
 });
 
@@ -2417,7 +2479,7 @@ test('messages without parts are dropped before the agent runs', async () => {
       agent: { tools: [], properties: { model: 'gpt-4o' } },
       messages: [user, emptyShell, retry],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   await mockCreateUIMessageStream._lastExecute({ writer: { write: jest.fn() } });
@@ -2434,7 +2496,7 @@ test('a validation failure is logged and written to the stream as an error, not 
   mockCreateAgentUIStream.mockRejectedValueOnce(validationError);
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
-  const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const logger = { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() };
 
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
@@ -2442,18 +2504,17 @@ test('a validation failure is logged and written to the stream as an error, not 
       agent: { tools: [], properties: { model: 'gpt-4o' } },
       messages: [{ id: 'msg-1', role: 'user', parts: [{ type: 'text', text: 'hi' }] }],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   const writer = { write: jest.fn(), onError: (error) => `redacted: ${error.message}` };
   await expect(mockCreateUIMessageStream._lastExecute({ writer })).resolves.toBeUndefined();
 
-  expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Agent stream failed'));
+  expect(logger.error).toHaveBeenCalledWith({ err: validationError }, 'Agent stream failed.');
   expect(writer.write).toHaveBeenCalledWith({
     type: 'error',
     errorText: 'redacted: Type validation failed: Value: [...]',
   });
-  consoleSpy.mockRestore();
 });
 
 // Stands in for the wire policy prepareAgent builds from @lowdefy/api's
@@ -2474,7 +2535,12 @@ async function runChat({ properties }) {
       messages: [{ id: 'msg-1', role: 'user', parts: [{ type: 'text', text: 'hi' }] }],
       ...properties,
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn(), wireErrorMessage },
+    context: {
+      logger: testLogger,
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      wireErrorMessage,
+    },
   });
   const { onError } = mockCreateUIMessageStream.mock.calls.at(-1)[0];
   // The AI SDK hands execute a writer whose onError is the one given to
@@ -2556,13 +2622,11 @@ test.each([
         read: jest.fn().mockRejectedValue(error),
       }),
     }));
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
     const writer = await runChat({
       properties: { agent: { tools: [], properties: { model: 'gpt-4o' } } },
     });
 
     expect(writer.write).toHaveBeenCalledWith({ type: 'error', errorText: expected });
-    consoleSpy.mockRestore();
   }
 );

@@ -896,7 +896,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineRocket
+                name: Rocket
                 size: 32
                 color: '#1677ff'
             - id: box_feature_a_title
@@ -918,7 +918,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineSafety
+                name: Shield
                 size: 32
                 color: '#52c41a'
             - id: box_feature_b_title
@@ -940,7 +940,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineApi
+                name: Plug
                 size: 32
                 color: '#722ed1'
             - id: box_feature_c_title
@@ -1110,7 +1110,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineCheckCircle
+                name: check-circle
                 size: 20
                 color: '#52c41a'
             - id: box_inbox_item_1_body
@@ -1147,7 +1147,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineUserAdd
+                name: UserPlus
                 size: 20
                 color: '#1677ff'
             - id: box_inbox_item_2_body
@@ -1184,7 +1184,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineWarning
+                name: warning
                 size: 20
                 color: '#faad14'
             - id: box_inbox_item_3_body
@@ -1247,7 +1247,7 @@
                   layout:
                     flex: 0 0 auto
                   properties:
-                    name: AiOutlineDashboard
+                    name: Gauge
                     size: 16
                     color: '#1677ff'
                 - id: box_sidebar_text_dashboard
@@ -1274,7 +1274,7 @@
                   layout:
                     flex: 0 0 auto
                   properties:
-                    name: AiOutlineProject
+                    name: SquareKanban
                     size: 16
                     color: rgba(128, 128, 128, 0.7)
                 - id: box_sidebar_text_projects
@@ -1301,7 +1301,7 @@
                   layout:
                     flex: 0 0 auto
                   properties:
-                    name: AiOutlineSetting
+                    name: settings
                     size: 16
                     color: rgba(128, 128, 128, 0.7)
                 - id: box_sidebar_text_settings

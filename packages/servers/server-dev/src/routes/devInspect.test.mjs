@@ -17,7 +17,7 @@
 import { Hono } from 'hono';
 import { jest } from '@jest/globals';
 
-const { listTabs, registerTab, requestFromTab, unregisterTab } = await import(
+const { listTabs, registerTab, requestFromTab, unregisterTab, updateTabPage } = await import(
   '../../lib/docs/tabChannel.js'
 );
 const { default: devInspectHandler } = await import('./devInspect.js');
@@ -41,8 +41,13 @@ afterEach(() => {
   listTabs().forEach((tab) => unregisterTab({ id: tab.id }));
 });
 
+function connectTab({ id, pageId, send = jest.fn() }) {
+  registerTab({ id, send });
+  updateTabPage({ id, pageId, pathParams: {}, instanceKey: `page:${pageId}` });
+}
+
 test('GET /api/dev-inspect lists connected tabs', async () => {
-  registerTab({ id: 'tab-1', pageId: 'home', send: jest.fn() });
+  connectTab({ id: 'tab-1', pageId: 'home' });
   const res = await createApp().request('/api/dev-inspect');
   expect(res.status).toBe(200);
   const body = await res.json();
@@ -51,7 +56,7 @@ test('GET /api/dev-inspect lists connected tabs', async () => {
 });
 
 test('POST /api/dev-inspect/page returns 403 when the Origin header is missing', async () => {
-  registerTab({ id: 'tab-1', pageId: 'home', send: jest.fn() });
+  connectTab({ id: 'tab-1', pageId: 'home' });
   const res = await createApp().request('/api/dev-inspect/page', {
     method: 'POST',
     headers: { host: 'localhost:3001', 'content-type': 'application/json' },
@@ -62,15 +67,47 @@ test('POST /api/dev-inspect/page returns 403 when the Origin header is missing',
 });
 
 test('POST /api/dev-inspect/page moves a connected tab to the posted page', async () => {
-  registerTab({ id: 'tab-1', pageId: 'home', send: jest.fn() });
+  connectTab({ id: 'tab-1', pageId: 'home' });
+  const res = await createApp().request('/api/dev-inspect/page', {
+    method: 'POST',
+    headers: sameOriginHeaders,
+    body: JSON.stringify({ tabId: 'tab-1', pageId: 'about', instanceKey: 'page:about' }),
+  });
+  expect(res.status).toBe(200);
+  expect(await res.json()).toEqual({ ok: true });
+  expect(listTabs()[0].pageId).toBe('about');
+});
+
+test('POST /api/dev-inspect/page records the page instance a tab shows', async () => {
+  connectTab({ id: 'tab-1', pageId: 'home' });
+  const res = await createApp().request('/api/dev-inspect/page', {
+    method: 'POST',
+    headers: sameOriginHeaders,
+    body: JSON.stringify({
+      tabId: 'tab-1',
+      pageId: 'ticket',
+      pathParams: { space: 's', ticket_id: '2' },
+      instanceKey: 'page:ticket#tickets/s/2',
+    }),
+  });
+  expect(res.status).toBe(200);
+  expect(listTabs()[0]).toMatchObject({
+    pageId: 'ticket',
+    pathParams: { space: 's', ticket_id: '2' },
+    instanceKey: 'page:ticket#tickets/s/2',
+  });
+});
+
+test('POST /api/dev-inspect/page returns 400 when the instance key is missing', async () => {
+  connectTab({ id: 'tab-1', pageId: 'home' });
   const res = await createApp().request('/api/dev-inspect/page', {
     method: 'POST',
     headers: sameOriginHeaders,
     body: JSON.stringify({ tabId: 'tab-1', pageId: 'about' }),
   });
-  expect(res.status).toBe(200);
-  expect(await res.json()).toEqual({ ok: true });
-  expect(listTabs()[0].pageId).toBe('about');
+  expect(res.status).toBe(400);
+  expect(await res.json()).toEqual({ error: 'Missing "pageId" or "instanceKey".' });
+  expect(listTabs()[0].pageId).toBe('home');
 });
 
 test('POST /api/dev-inspect/page returns 400 when tabId is missing', async () => {
@@ -87,7 +124,7 @@ test('POST /api/dev-inspect/page for a tab that already disconnected returns ok'
   const res = await createApp().request('/api/dev-inspect/page', {
     method: 'POST',
     headers: sameOriginHeaders,
-    body: JSON.stringify({ tabId: 'gone', pageId: 'about' }),
+    body: JSON.stringify({ tabId: 'gone', pageId: 'about', instanceKey: 'page:about' }),
   });
   expect(res.status).toBe(200);
   expect(listTabs()).toHaveLength(0);
@@ -95,7 +132,7 @@ test('POST /api/dev-inspect/page for a tab that already disconnected returns ok'
 
 test('POST /api/dev-inspect resolves a pending tab request with the posted result', async () => {
   const send = jest.fn();
-  registerTab({ id: 'tab-1', pageId: 'home', send });
+  connectTab({ id: 'tab-1', pageId: 'home', send });
   const pending = requestFromTab({ pageId: 'home', event: 'inspect-request' });
   const [, { requestId }] = send.mock.calls[0];
 

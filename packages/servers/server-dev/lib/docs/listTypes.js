@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-import getDocsManifest from './getDocsManifest.js';
+import getDocsIndex from './getDocsIndex.js';
 import normalizeTypeKind from './normalizeTypeKind.js';
 import readBuildArtifact from './readBuildArtifact.js';
 
@@ -52,19 +52,27 @@ function listTypes({ kind }) {
   const normalizedKind = normalizeTypeKind({ kind });
   if (type.isNone(normalizedKind)) {
     throw new Error(
-      `Unknown type kind. Received ${JSON.stringify(kind)}. Use one of: blocks, operators, actions, connections, requests, agents, notifications, websockets.`
+      `Unknown type kind. Received ${JSON.stringify(
+        kind
+      )}. Use one of: blocks, operators, actions, connections, requests, agents, notifications, websockets.`
     );
   }
   const availableTypes = readBuildArtifact({ name: 'plugins/availableTypes.json' }) ?? {};
   const types = readBuildArtifact({ name: 'types.json', deserialize: true }) ?? {};
   const blockMetas = readBuildArtifact({ name: 'plugins/blockMetas.json' }) ?? {};
-  const manifest = getDocsManifest();
+  const { entries, typeDocs } = getDocsIndex();
 
   const docSlugsByType = new Map();
   const kindSingular = normalizedKind.slice(0, -1);
-  for (const doc of manifest?.docs ?? []) {
-    if (doc.kind === kindSingular && doc.typeName) {
-      docSlugsByType.set(doc.typeName, doc.slug);
+  for (const entry of entries) {
+    if (entry.source === 'core' && entry.kind === kindSingular && entry.typeName) {
+      docSlugsByType.set(entry.typeName, entry.slug);
+    }
+  }
+  for (const [key, slug] of typeDocs) {
+    const separator = key.indexOf(':');
+    if (key.slice(0, separator) === kindSingular) {
+      docSlugsByType.set(key.slice(separator + 1), slug);
     }
   }
 

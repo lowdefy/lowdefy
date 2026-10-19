@@ -38,7 +38,7 @@ jest.unstable_mockModule('ai', () => ({
   ToolLoopAgent: MockToolLoopAgent,
   tool: mockTool,
   jsonSchema: mockJsonSchema,
-  stepCountIs: mockStepCountIs,
+  isStepCount: mockStepCountIs,
   hasToolCall: mockHasToolCall,
   generateText: mockGenerateText,
 }));
@@ -91,18 +91,21 @@ const GENERATE_RESULT = {
 };
 
 function mockGenerateSteps(result = GENERATE_RESULT) {
-  mockGenerate.mockImplementation(async ({ onStepFinish }) => {
-    if (onStepFinish) {
+  mockGenerate.mockImplementation(async ({ onStepEnd }) => {
+    if (onStepEnd) {
       for (const step of result.steps) {
-        onStepFinish(step);
+        onStepEnd(step);
       }
     }
     return result;
   });
 }
 
+const testLogger = { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() };
+
 function createTestContext(overrides = {}) {
   return {
+    logger: testLogger,
     mode: 'generate',
     agentContext: {
       conversationId: null,
@@ -144,7 +147,7 @@ test('handleAgentGenerate returns a serializable summary with accumulated usage'
 
   const { result } = await handleAgentGenerate({
     connection,
-    properties: { agent: createAgent(), prompt: 'Summarize the signups.' },
+    properties: { agent: createAgent(), prompt: 'Summarize the signups.', files: [] },
     context: createTestContext(),
   });
 
@@ -166,20 +169,57 @@ test('handleAgentGenerate returns a serializable summary with accumulated usage'
   });
 });
 
+test('handleAgentGenerate sends files as parts of one user message after the prompt', async () => {
+  const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
+  mockGenerateSteps();
+
+  await handleAgentGenerate({
+    connection,
+    properties: {
+      agent: createAgent(),
+      prompt: 'Describe the screenshots.',
+      files: [
+        { url: 'https://files.example.com/one.png?sig=a', mediaType: 'image/png' },
+        { url: 'https://files.example.com/two.jpg?sig=b', mediaType: 'image/jpeg' },
+      ],
+    },
+    context: createTestContext(),
+  });
+
+  expect(mockGenerate.mock.calls[0][0].prompt).toEqual([
+    {
+      role: 'user',
+      content: [
+        { type: 'text', text: 'Describe the screenshots.' },
+        {
+          type: 'image',
+          image: new URL('https://files.example.com/one.png?sig=a'),
+          mediaType: 'image/png',
+        },
+        {
+          type: 'image',
+          image: new URL('https://files.example.com/two.jpg?sig=b'),
+          mediaType: 'image/jpeg',
+        },
+      ],
+    },
+  ]);
+});
+
 test('handleAgentGenerate does not build the update-page-state tool when sharedState is undefined', async () => {
   const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
   mockGenerateSteps();
 
   await handleAgentGenerate({
     connection,
-    properties: { agent: createAgent(), prompt: 'Go.' },
+    properties: { agent: createAgent(), prompt: 'Go.', files: [] },
     context: createTestContext(),
   });
 
   expect(lastAgentConfig.tools['update-page-state']).toBeUndefined();
 });
 
-test('handleAgentGenerate builds confirm tools without needsApproval (autoApprove)', async () => {
+test('handleAgentGenerate asks no approval for confirm tools (autoApprove)', async () => {
   const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
   mockGenerateSteps();
 
@@ -188,12 +228,13 @@ test('handleAgentGenerate builds confirm tools without needsApproval (autoApprov
     properties: {
       agent: createAgent({ tools: [{ endpointId: 'lookup-data', confirm: true }] }),
       prompt: 'Go.',
+      files: [],
     },
     context: createTestContext(),
   });
 
   expect(mockTool).toHaveBeenCalledTimes(1);
-  expect(mockTool.mock.calls[0][0].needsApproval).toBeUndefined();
+  expect(lastAgentConfig.toolApproval).toEqual({});
   expect(lastAgentConfig.tools['lookup-data']).toBeDefined();
 });
 
@@ -206,12 +247,14 @@ test('handleAgentGenerate wires agent-level hook callbacks onto the ToolLoopAgen
     properties: {
       agent: createAgent({ hooks: { onStart: ['log-start'], onStepFinish: ['log-step'] } }),
       prompt: 'Go.',
+      files: [],
     },
     context: createTestContext(),
   });
 
-  expect(lastAgentConfig.experimental_onStart).toBeInstanceOf(Function);
-  expect(lastAgentConfig.onStepFinish).toBeInstanceOf(Function);
+  // The YAML hook names map onto ai v7's callbacks.
+  expect(lastAgentConfig.onStart).toBeInstanceOf(Function);
+  expect(lastAgentConfig.onStepEnd).toBeInstanceOf(Function);
 });
 
 test('handleAgentGenerate awaits onFinish hooks with the finish payload and ignores dataParts', async () => {
@@ -229,6 +272,7 @@ test('handleAgentGenerate awaits onFinish hooks with the finish payload and igno
     properties: {
       agent: createAgent({ hooks: { onFinish: ['save-run'] } }),
       prompt: 'Go.',
+      files: [],
     },
     context,
   });
@@ -246,10 +290,9 @@ test('handleAgentGenerate awaits onFinish hooks with the finish payload and igno
   expect(result.text).toBe('Final answer');
 });
 
-test('handleAgentGenerate warns and continues when an onFinish hook fails', async () => {
+test('handleAgentGenerate logs an error and continues when an onFinish hook fails', async () => {
   const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
   mockGenerateSteps();
-  const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
   const callEndpoint = jest.fn().mockRejectedValue(new Error('hook broke'));
   const { result } = await handleAgentGenerate({
@@ -257,13 +300,16 @@ test('handleAgentGenerate warns and continues when an onFinish hook fails', asyn
     properties: {
       agent: createAgent({ hooks: { onFinish: ['save-run'] } }),
       prompt: 'Go.',
+      files: [],
     },
     context: createTestContext({ callEndpoint }),
   });
 
   expect(result.text).toBe('Final answer');
-  expect(warnSpy).toHaveBeenCalledWith('onFinish hook "save-run" failed: hook broke');
-  warnSpy.mockRestore();
+  expect(testLogger.error).toHaveBeenCalledWith(
+    expect.objectContaining({ err: expect.any(Error) }),
+    'onFinish hook "save-run" failed.'
+  );
 });
 
 test('handleAgentGenerate closes MCP clients when generate rejects', async () => {
@@ -281,6 +327,7 @@ test('handleAgentGenerate closes MCP clients when generate rejects', async () =>
       properties: {
         agent: createAgent({ mcp: [{ url: 'https://mcp.example.com' }] }),
         prompt: 'Go.',
+        files: [],
       },
       context: createTestContext(),
     })
@@ -298,11 +345,52 @@ test('handleAgentGenerate passes the agent timeout to generate', async () => {
     properties: {
       agent: createAgent({ properties: { model: 'test-model', timeout: 60000 } }),
       prompt: 'Go.',
+      files: [],
     },
     context: createTestContext(),
   });
 
   expect(mockGenerate.mock.calls[0][0].timeout).toBe(60000);
+});
+
+test('handleAgentGenerate cancels the run with the signal of the request that started it', async () => {
+  const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
+  mockGenerateSteps();
+  const signal = new AbortController().signal;
+
+  await handleAgentGenerate({
+    connection,
+    properties: { agent: createAgent(), prompt: 'Go.', files: [] },
+    context: { ...createTestContext(), signal },
+  });
+
+  expect(mockGenerate.mock.calls[0][0].abortSignal).toBe(signal);
+});
+
+test('handleAgentGenerate falls back to the connection maxOutputTokens and timeout', async () => {
+  const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
+  mockGenerateSteps();
+  const limited = { ...connection, maxOutputTokens: 800, timeout: 45000 };
+
+  await handleAgentGenerate({
+    connection: limited,
+    properties: { agent: createAgent(), prompt: 'Go.', files: [] },
+    context: createTestContext(),
+  });
+  expect(lastAgentConfig.maxOutputTokens).toBe(800);
+  expect(mockGenerate.mock.calls[0][0].timeout).toBe(45000);
+
+  await handleAgentGenerate({
+    connection: limited,
+    properties: {
+      agent: createAgent({ properties: { model: 'm', maxOutputTokens: 200, timeout: 5000 } }),
+      prompt: 'Go.',
+      files: [],
+    },
+    context: createTestContext(),
+  });
+  expect(lastAgentConfig.maxOutputTokens).toBe(200);
+  expect(mockGenerate.mock.calls[1][0].timeout).toBe(5000);
 });
 
 test('handleAgentGenerate never generates a conversation title', async () => {
@@ -314,6 +402,7 @@ test('handleAgentGenerate never generates a conversation title', async () => {
     properties: {
       agent: createAgent({ properties: { model: 'test-model', generateTitle: true } }),
       prompt: 'Go.',
+      files: [],
     },
     context: createTestContext(),
   });

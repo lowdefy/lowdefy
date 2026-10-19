@@ -20,7 +20,7 @@ import buildGenerateCallOptions from './buildGenerateCallOptions.js';
 
 // generateObject is deprecated in ai v6 — structured output is generateText
 // with an Output.object spec, which also keeps both handlers on one code path.
-async function handleGenerateObject({ model, request }) {
+async function handleGenerateObject({ model, request, limits, signal }) {
   const result = await generateText({
     model,
     output: Output.object({
@@ -28,14 +28,15 @@ async function handleGenerateObject({ model, request }) {
       name: request.schemaName,
       description: request.schemaDescription,
     }),
-    ...buildGenerateCallOptions({ request }),
+    ...buildGenerateCallOptions({ request, signal }),
+    ...limits,
   });
   return {
     object: result.output,
-    reasoningText: result.reasoningText,
+    reasoningText: result.finalStep?.reasoningText,
     finishReason: result.finishReason,
     usage: result.usage,
-    providerMetadata: result.providerMetadata,
+    providerMetadata: result.finalStep?.providerMetadata,
     warnings: result.warnings,
   };
 }

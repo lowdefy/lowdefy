@@ -35,15 +35,18 @@ async function readNotificationArtifacts({ context }) {
     );
   }
 
-  const app = JSON.parse(
-    await fs.promises.readFile(path.join(buildDirectory, 'app.json'), 'utf8')
-  );
+  const app = JSON.parse(await fs.promises.readFile(path.join(buildDirectory, 'app.json'), 'utf8'));
   const types = JSON.parse(
     await fs.promises.readFile(path.join(buildDirectory, 'types.json'), 'utf8')
   );
 
+  const routes = JSON.parse(
+    await fs.promises.readFile(path.join(buildDirectory, 'routes.json'), 'utf8')
+  );
+
   return {
     notifications,
+    paths: Object.fromEntries(routes.map((route) => [route.pageId, route.path])),
     appEmail: app.email ?? {},
     notificationTypes: types.notifications ?? {},
   };

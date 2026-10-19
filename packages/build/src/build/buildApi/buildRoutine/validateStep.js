@@ -17,9 +17,24 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import validateCallBinding from './validateCallBinding.js';
 import validateId from '../../../utils/validateId.js';
+import validateSharedPipelineWrite from '../../validateSharedPipelineWrite.js';
+import validateTenantNoneRead from '../../validateTenantNoneRead.js';
+import validateTenantPipelineEntry from '../../validateTenantPipelineEntry.js';
 
-function validateStep(step, { endpointId }) {
+function validateStep(
+  step,
+  {
+    dynamicPolicies,
+    endpointId,
+    requestMetas,
+    sharedTargets,
+    stepTypes,
+    tenantConnectionIds,
+    walledTargets,
+  }
+) {
   const configKey = step['~k'];
   if (Object.keys(step).length === 0) {
     throw new ConfigError(`Step is not defined at endpoint "${endpointId}".`, { configKey });
@@ -35,10 +50,9 @@ function validateStep(step, { endpointId }) {
   }
   validateId({ id: step.id, field: 'Step id', location: `endpoint "${endpointId}"`, configKey });
   if (type.isNone(step.type)) {
-    throw new ConfigError(
-      `Step type is not defined at "${step.id}" on endpoint "${endpointId}".`,
-      { configKey }
-    );
+    throw new ConfigError(`Step type is not defined at "${step.id}" on endpoint "${endpointId}".`, {
+      configKey,
+    });
   }
   if (!type.isString(step.type)) {
     throw new ConfigError(
@@ -66,6 +80,7 @@ function validateStep(step, { endpointId }) {
         { configKey }
       );
     }
+    validateCallBinding({ step, endpointId, configKey });
     return;
   }
 
@@ -92,6 +107,16 @@ function validateStep(step, { endpointId }) {
       throw new ConfigError(
         `CallAgent step "${step.id}" at endpoint "${endpointId}" properties.prompt is not a string.`,
         { received: step.properties.prompt, configKey }
+      );
+    }
+    if (
+      !type.isNone(step.properties.files) &&
+      !type.isArray(step.properties.files) &&
+      !type.isObject(step.properties.files)
+    ) {
+      throw new ConfigError(
+        `CallAgent step "${step.id}" at endpoint "${endpointId}" properties.files is not an array.`,
+        { received: step.properties.files, configKey }
       );
     }
     if (!type.isNone(step.connectionId)) {
@@ -141,6 +166,36 @@ function validateStep(step, { endpointId }) {
     return;
   }
 
+  if (step.type === 'ValidateDynamic' || step.type === 'DescribeDynamicPolicy') {
+    // The policy is read from the build artifact at runtime, so the id must be
+    // known now: a literal string naming a declared policy.
+    if (!type.isString(step.properties?.policy)) {
+      throw new ConfigError(
+        `${step.type} step "${step.id}" at endpoint "${endpointId}" requires properties.policy as a literal policy id string.`,
+        { received: step.properties?.policy, configKey }
+      );
+    }
+    if (type.isUndefined(dynamicPolicies?.[step.properties.policy])) {
+      throw new ConfigError(
+        `${step.type} step "${step.id}" at endpoint "${endpointId}" references dynamic blocks policy "${step.properties.policy}" which does not exist.`,
+        { configKey }
+      );
+    }
+    if (step.type === 'ValidateDynamic' && type.isUndefined(step.properties.blocks)) {
+      throw new ConfigError(
+        `ValidateDynamic step "${step.id}" at endpoint "${endpointId}" requires properties.blocks.`,
+        { configKey }
+      );
+    }
+    if (!type.isNone(step.connectionId)) {
+      throw new ConfigError(
+        `${step.type} step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,
+        { configKey }
+      );
+    }
+    return;
+  }
+
   if (step.type === 'ValidateSchema') {
     if (type.isNone(step.properties?.schema)) {
       throw new ConfigError(
@@ -163,6 +218,28 @@ function validateStep(step, { endpointId }) {
     return;
   }
 
+  if (stepTypes?.[step.type]) {
+    if (!type.isNone(step.connectionId)) {
+      throw new ConfigError(
+        `Auth step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,
+        { configKey }
+      );
+    }
+    if (!type.isNone(step.properties) && !type.isObject(step.properties)) {
+      throw new ConfigError(
+        `Auth step "${step.id}" at endpoint "${endpointId}" properties is not an object.`,
+        { received: step.properties, configKey }
+      );
+    }
+    if (!type.isNone(step.system) && !type.isBoolean(step.system)) {
+      throw new ConfigError(
+        `Auth step "${step.id}" at endpoint "${endpointId}" system must be a boolean.`,
+        { received: step.system, configKey }
+      );
+    }
+    return;
+  }
+
   if (type.isUndefined(step.connectionId)) {
     throw new ConfigError(`Step connectionId missing at endpoint "${endpointId}".`, {
       configKey,
@@ -174,6 +251,40 @@ function validateStep(step, { endpointId }) {
       configKey,
     });
   }
+  // Step-level tenant values are the exception sentinels — the wall itself is
+  // declared on the connection, never per step. "none" opts the step out of
+  // the wall (system context); "authored" declares the step authors its own
+  // tenant clause in a stage the wall can not scope mechanically, audited at
+  // runtime.
+  if (!type.isUndefined(step.tenant) && step.tenant !== 'none' && step.tenant !== 'authored') {
+    throw new ConfigError(
+      `Step "${step.id}" at endpoint "${endpointId}" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.`,
+      { received: step.tenant, configKey }
+    );
+  }
+
+  validateTenantNoneRead({
+    config: step,
+    location: `Step "${step.id}" at endpoint "${endpointId}"`,
+    requestMetas,
+    tenantConnectionIds,
+    configKey,
+  });
+  // Best-effort (literal pipelines only): a walled pipeline the wall can not
+  // scope mechanically must declare tenant: authored. Runtime re-checks.
+  validateTenantPipelineEntry({
+    config: step,
+    location: `Step "${step.id}" at endpoint "${endpointId}"`,
+    tenantConnectionIds,
+    configKey,
+  });
+  validateSharedPipelineWrite({
+    config: step,
+    location: `Step "${step.id}" at endpoint "${endpointId}"`,
+    sharedTargets,
+    walledTargets,
+    configKey,
+  });
 }
 
 export default validateStep;

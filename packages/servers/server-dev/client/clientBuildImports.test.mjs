@@ -36,6 +36,8 @@ const allowed = new Set([
   'plugins/icons.js',
   'plugins/operators/client.js',
   'plugins/operators/clientJsMap.js',
+  // The whole theme already reaches the browser in the root config.
+  'theme.json',
 ]);
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');

@@ -38,6 +38,14 @@ test.describe('Upload Block', () => {
     await expect(button).toHaveClass(/ant-btn-primary/);
   });
 
+  test('button iconPlacement end places the upload icon after the title', async ({ page }) => {
+    const button = getButton(page, 'upload_button_icon_end');
+    await expect(button).toHaveClass(/ant-btn-icon-end/);
+    const iconBox = await button.locator('.ant-btn-icon').boundingBox();
+    const titleBox = await button.locator(':scope > span:not(.ant-btn-icon)').first().boundingBox();
+    expect(iconBox.x).toBeGreaterThan(titleBox.x);
+  });
+
   test('renders disabled state', async ({ page }) => {
     const button = getButton(page, 'upload_disabled');
     await expect(button).toBeDisabled();
@@ -76,5 +84,48 @@ test.describe('Upload Block', () => {
     const item = getBlock(page, 'upload_emit').locator('.ant-upload-list-item');
     await expect(item).toContainText('report.txt');
     await expect(item).not.toHaveClass(/ant-upload-list-item-error/);
+  });
+
+  test('listType picture and showUploadList options shape the file list', async ({ page }) => {
+    await getFileInput(page, 'upload_picture_list').setInputFiles({
+      name: 'notes.txt',
+      mimeType: 'text/plain',
+      buffer: Buffer.from('notes'),
+    });
+    const block = getBlock(page, 'upload_picture_list');
+    await expect(block.locator('.ant-upload-list-picture')).toBeVisible();
+    const item = block.locator('.ant-upload-list-item');
+    await expect(item).toContainText('notes.txt');
+    await expect(block.locator('[id$="_downloadIcon"]')).toBeAttached();
+    await expect(block.locator('[id$="_removeIcon"]')).toHaveCount(0);
+  });
+
+  test('directory sets the folder picker attributes on the input', async ({ page }) => {
+    const input = getFileInput(page, 'upload_directory');
+    await expect(input).toHaveAttribute('webkitdirectory', 'webkitdirectory');
+  });
+
+  test('pastable uploads a file pasted on the page', async ({ page }) => {
+    // rc-upload adds its document paste listener when it mounts, which can land after page.goto
+    // resolves; a rendered block means the listener is in place.
+    await expect(getBlock(page, 'upload_pastable').locator('.ant-upload-select')).toBeVisible();
+    await page.evaluate(() => {
+      const data = new DataTransfer();
+      data.items.add(new File(['pasted'], 'pasted.txt', { type: 'text/plain' }));
+      document.dispatchEvent(new ClipboardEvent('paste', { clipboardData: data }));
+    });
+    const item = getBlock(page, 'upload_pastable').locator('.ant-upload-list-item');
+    await expect(item).toContainText('pasted.txt');
+  });
+
+  test('showUploadList false hides the file list', async ({ page }) => {
+    await getFileInput(page, 'upload_hidden_list').setInputFiles({
+      name: 'hidden.txt',
+      mimeType: 'text/plain',
+      buffer: Buffer.from('hidden'),
+    });
+    await expect(getBlock(page, 'upload_hidden_list').locator('.ant-upload-list-item')).toHaveCount(
+      0
+    );
   });
 });

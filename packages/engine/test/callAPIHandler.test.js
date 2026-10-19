@@ -18,20 +18,24 @@ import { expect, jest } from '@jest/globals';
 
 import callAPIHandler from '../src/callAPIHandler.js';
 import { getDevError } from '../src/decodeServerError.js';
+import DependencyTracker from '../src/tracking/DependencyTracker.js';
 
 function createContext({ callAPI }) {
-  return {
+  const context = {
     pageId: 'page1',
     _internal: {
       update: jest.fn(),
       lowdefy: {
         apiResponses: {},
+        contexts: {},
         _internal: {
           callAPI,
         },
       },
     },
   };
+  context._internal.DependencyTracker = new DependencyTracker(context);
+  return context;
 }
 
 test('callAPIHandler stores response and resolves', async () => {
@@ -206,4 +210,16 @@ test('callAPIHandler stores and rethrows an error from callAPI unchanged', async
     })
   ).rejects.toBe(error);
   expect(context._internal.lowdefy.apiResponses.ep_one[0].error).toBe(error);
+});
+
+test('callAPIHandler reports the endpoint change to every context the app holds', async () => {
+  const callAPI = jest.fn().mockResolvedValue({ response: {}, status: 'success', success: true });
+  const context = createContext({ callAPI });
+  const other = { _internal: { lowdefy: context._internal.lowdefy } };
+  other._internal.DependencyTracker = new DependencyTracker(other);
+  context._internal.lowdefy.contexts = { other };
+  await callAPIHandler(context, { blockId: 'block_id', params: { endpointId: 'ep_one' } });
+  expect(context._internal.DependencyTracker.takeChanges()).toEqual(['api:ep_one']);
+  expect(other._internal.DependencyTracker.takeChanges()).toEqual(['api:ep_one']);
+  expect(context._internal.update).toHaveBeenCalledWith();
 });

@@ -23,7 +23,7 @@
       properties:
         uploadPolicyRequestId: upload_policy_request
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Choose File
           type: default
     - id: basic_custom_icon
@@ -31,8 +31,17 @@
       properties:
         uploadPolicyRequestId: upload_policy_request
         button:
-          icon: AiOutlineCloudUpload
+          icon: CloudUpload
           title: Upload to Cloud
+          type: default
+    - id: basic_icon_end
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+        button:
+          icon: upload
+          iconPlacement: end
+          title: Attach
           type: default
 
 - title: File Type Restrictions
@@ -43,7 +52,7 @@
         uploadPolicyRequestId: upload_policy_request
         accept: 'image/*'
         button:
-          icon: AiOutlinePicture
+          icon: image
           title: Upload Image
           type: default
     - id: accept_pdf
@@ -52,7 +61,7 @@
         uploadPolicyRequestId: upload_policy_request
         accept: '.pdf'
         button:
-          icon: AiOutlineFilePdf
+          icon: FileText
           title: Upload PDF
           type: default
 
@@ -64,7 +73,7 @@
         uploadPolicyRequestId: upload_policy_request
         singleFile: true
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Upload Single File
           type: default
     - id: limit_max_three
@@ -73,7 +82,7 @@
         uploadPolicyRequestId: upload_policy_request
         maxCount: 3
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Upload (Max 3)
           type: default
 
@@ -85,8 +94,34 @@
         emitFileContent: true
         singleFile: true
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Attach File
+          type: default
+
+- title: Picture List and Folder Upload
+  blocks:
+    - id: list_picture
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+        accept: 'image/*'
+        listType: picture
+        showUploadList:
+          showRemoveIcon: true
+          showDownloadIcon: false
+        button:
+          icon: image
+          title: Upload Images
+          type: default
+    - id: upload_directory
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+        directory: true
+        pastable: true
+        button:
+          icon: folder
+          title: Upload Folder
           type: default
 
 - title: Disabled State
@@ -100,14 +135,21 @@
 - title: Label Options
   blocks:
     - id: label_default
-      type: Upload
+      type: Label
       properties:
         title: Upload Attachment
-        uploadPolicyRequestId: upload_policy_request
+      blocks:
+        - id: label_default_upload
+          type: Upload
+          properties:
+            uploadPolicyRequestId: upload_policy_request
     - id: label_extra
-      type: Upload
+      type: Label
       properties:
         title: Upload Document
-        uploadPolicyRequestId: upload_policy_request
-        label:
-          extra: Accepted formats are PDF, DOCX, and PNG. Max size 10MB.
+        extra: Accepted formats are PDF, DOCX, and PNG. Max size 10MB.
+      blocks:
+        - id: label_extra_upload
+          type: Upload
+          properties:
+            uploadPolicyRequestId: upload_policy_request

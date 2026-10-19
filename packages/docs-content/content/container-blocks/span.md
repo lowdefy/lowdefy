@@ -53,7 +53,7 @@ This content property overrides the content area below.
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineInfoCircle
+        name: info
         size: 14
         color: "#1677ff"
     - id: span_content_area_text
@@ -338,7 +338,7 @@ Status:
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineCheckCircle
+            name: check-circle
             size: 14
             color: "#52c41a"
         - id: span_nested_value_text
@@ -465,7 +465,7 @@ LIVE
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineSmile
+        name: FaceSlightlySmiling
         size: 16
         color: "#faad14"
     - id: span_icon_smile_label
@@ -487,7 +487,7 @@ LIVE
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineCheckCircle
+        name: check-circle
         size: 16
         color: "#52c41a"
     - id: span_icon_check_label
@@ -509,7 +509,7 @@ LIVE
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineWarning
+        name: warning
         size: 16
         color: "#ff4d4f"
     - id: span_icon_warning_label
@@ -563,7 +563,7 @@ Estimated delivery Mar 18, 2026
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineCheckCircle
+            name: check-circle
             size: 14
             color: "#52c41a"
         - id: span_order_shipped_text
@@ -679,7 +679,7 @@ Admin
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineUser
+        name: user
         size: 20
         color: "#1677ff"
     - id: span_profile_name

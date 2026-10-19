@@ -60,3 +60,35 @@ blocks:
         type: Paragraph
         properties:
           content: Rotated watermark content
+
+  # ============================================
+  # PER-LINE FONT
+  # ============================================
+
+  - id: wm_lines_plain
+    type: Watermark
+    properties:
+      text:
+        - Confidential
+        - Internal
+    blocks:
+      - id: wm_lines_plain_content
+        type: Paragraph
+        properties:
+          content: Plain lines
+
+  - id: wm_lines_font
+    type: Watermark
+    properties:
+      text:
+        - text: Confidential
+          font:
+            fontSize: 24
+            fontWeight: bold
+            color: 'rgba(255, 0, 0, 0.3)'
+        - Internal
+    blocks:
+      - id: wm_lines_font_content
+        type: Paragraph
+        properties:
+          content: Styled first line

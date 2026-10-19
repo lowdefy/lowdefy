@@ -524,3 +524,33 @@ test('CallMethod with method does not exist', async () => {
   expect(res.error.error._message).toContain('is a valid block method');
   expect(blockMethod.mock.calls).toEqual([]);
 });
+
+test('CallMethod with a blockId that does not exist on the page fails with a clear message', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'CallMethod',
+              params: { blockId: 'missingBlock', method: 'blockMethod' },
+            },
+          ],
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const button = context._internal.RootSlots.map['button'];
+  const res = await button.triggerEvent({ name: 'onClick' });
+  expect(res.success).toBe(false);
+  expect(res.error.error._message).toContain('block "missingBlock" does not exist on this page');
+});

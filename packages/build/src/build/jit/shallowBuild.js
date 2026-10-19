@@ -16,10 +16,13 @@
   limitations under the License.
 */
 
+import { randomBytes } from 'crypto';
+
 import { serializer } from '@lowdefy/helpers';
-import { BuildError, LowdefyInternalError } from '@lowdefy/errors';
+import { BuildError } from '@lowdefy/errors';
 
 import createContext from '../../createContext.js';
+import createInternalBuildError from '../../utils/createInternalBuildError.js';
 import logCollectedErrors from '../../utils/logCollectedErrors.js';
 import makeId from '../../utils/makeId.js';
 import tryBuildStep from '../../utils/tryBuildStep.js';
@@ -27,22 +30,33 @@ import tryBuildStep from '../../utils/tryBuildStep.js';
 import addDefaultPages from '../addDefaultPages/addDefaultPages.js';
 import addKeys from '../addKeys.js';
 import buildApp from '../buildApp.js';
+import buildAppEvents from '../buildAppEvents.js';
 import buildAppMeta from '../buildAppMeta.js';
 import buildAuth from '../buildAuth/buildAuth.js';
 import buildConnections from '../buildConnections.js';
+import buildDynamicPolicies from '../buildDynamicPolicies.js';
 import buildAgents from '../buildAgents.js';
 import buildApi from '../buildApi/buildApi.js';
+import validateApiHtmlLinks from '../buildApi/validateApiHtmlLinks.js';
 import buildLogger from '../buildLogger.js';
 import buildImports from '../buildImports/buildImports.js';
+import buildIconContext from '../icons/buildIconContext.js';
 import buildMcp from '../buildMcp.js';
 import buildMenu from '../buildMenu.js';
 import buildModuleDefs from '../buildModuleDefs.js';
+import { resolveModuleManifests } from '../registerModules.js';
 import buildModules from '../buildModules.js';
 import buildNotifications from '../buildNotifications.js';
 import buildRefs from '../buildRefs/buildRefs.js';
+import buildRoutes from '../buildRoutes/buildRoutes.js';
+import validateAuthPagePaths from '../buildRoutes/validateAuthPagePaths.js';
 import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.js';
+import resolveAuthConfigProjection from '../buildAuth/resolveAuthConfigProjection.js';
 import { serializeRegistry } from '../buildRefs/deferredRegistry.js';
 import buildTypes from '../buildTypes.js';
+import clearRuleTargetNodes from '../pluginChecks/clearRuleTargetNodes.js';
+import runPluginChecks from '../runPluginChecks.js';
+import buildSecurity from '../buildSecurity/buildSecurity.js';
 import buildWebsockets from '../buildWebsockets.js';
 import validateCallAgentSteps from '../validateCallAgentSteps.js';
 import validateRenderNotificationSteps from '../validateRenderNotificationSteps.js';
@@ -52,10 +66,14 @@ import copyPublicFolder from '../copyPublicFolder.js';
 import testSchema from '../testSchema.js';
 import validateConfig from '../validateConfig.js';
 import writeApp from '../writeApp.js';
+import writeAppEvents from '../writeAppEvents.js';
 import writeAppMeta from '../writeAppMeta.js';
 import writeAuth from '../writeAuth.js';
 import writeConfig from '../writeConfig.js';
+import writeSecurity from '../writeSecurity.js';
 import writeConnections from '../writeConnections.js';
+import writeDynamicPolicies from '../writeDynamicPolicies.js';
+import writeTenantTargets from '../writeTenantTargets.js';
 import writeAgents from '../writeAgents.js';
 import writeApi from '../writeApi.js';
 import writeMcp from '../writeMcp.js';
@@ -70,8 +88,10 @@ import writeTheme from '../writeTheme.js';
 import writeMaps from '../writeMaps.js';
 import updateServerPackageJson from '../full/updateServerPackageJson.js';
 import writeMenus from '../writeMenus.js';
+import writeRoutes from '../writeRoutes.js';
 import writeTypes from '../full/writeTypes.js';
 import writePageRegistry from './writePageRegistry.js';
+import writePluginChecksPending from '../writePluginChecksPending.js';
 import writePluginImports from '../writePluginImports/writePluginImports.js';
 
 import addInstalledTypes from './addInstalledTypes.js';
@@ -82,7 +102,7 @@ import collectSkeletonSourceFiles from './collectSkeletonSourceFiles.js';
 import writeSourcelessPages from './writeSourcelessPages.js';
 
 async function shallowBuild(options) {
-  makeId.reset();
+  makeId.reset({ prefix: `${randomBytes(2).toString('hex')}_` });
 
   let context;
   try {
@@ -96,6 +116,15 @@ async function shallowBuild(options) {
     // Phase 1: Build module definitions
     await buildModuleDefs({ context });
 
+    // Scoped pre-pass: resolve the auth: subtree and compute the
+    // _build.authConfig projection so the operator can resolve during buildRefs
+    // and the dev server's JIT page walks (matches the full build in index.js).
+    await resolveAuthConfigProjection({ context });
+
+    // Step 3 (moved out of buildModuleDefs): full-resolve module manifests now
+    // that the projection exists (matches the full build in index.js).
+    await resolveModuleManifests({ context });
+
     let components;
     try {
       // Phase 2: Ref resolution (with shallow options)
@@ -104,11 +133,11 @@ async function shallowBuild(options) {
         shallowOptions: true,
       });
     } catch (err) {
-      if (err.isLowdefyError) {
-        context.handleError(err);
-        throw new BuildError('Build failed with 1 error(s). See above for details.');
+      // Root lowdefy.yaml failure still throws from buildRefs — collect it
+      if (!err.isLowdefyError) {
+        throw err;
       }
-      throw err;
+      context.errors.push(err);
     }
 
     // Stop early if buildRefs collected errors (e.g., YAML parse errors).
@@ -160,12 +189,17 @@ async function shallowBuild(options) {
     tryBuildStep(buildLogger, 'buildLogger', { components, context });
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
     tryBuildStep(addKeys, 'addKeys', { components, context });
+    tryBuildStep(buildRoutes, 'buildRoutes', { components, context });
     tryBuildStep(buildAuth, 'buildAuth', { components, context });
+    tryBuildStep(validateAuthPagePaths, 'validateAuthPagePaths', { components, context });
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
+    tryBuildStep(buildDynamicPolicies, 'buildDynamicPolicies', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
     tryBuildStep(buildMcp, 'buildMcp', { components, context });
     tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
+    // After buildWebsockets: the policy allows the page's websocket when the app has websockets.
+    tryBuildStep(buildSecurity, 'buildSecurity', { components, context });
     tryBuildStep(buildNotifications, 'buildNotifications', { components, context });
     // Cross-config validations — need buildApi (stepIds) and the buildAgents/
     // buildNotifications id sets. Match the full build (index.js).
@@ -175,7 +209,25 @@ async function shallowBuild(options) {
       context,
     });
 
+    // Icon sets load asynchronously; a bad theme.icons stops the build here.
+    // buildShallowPages validates the icon names of sourceless pages, and
+    // buildImports resolves every icon name, against context.icons.
+    await buildIconContext({ components, context });
+    logCollectedErrors(context);
+
     const { pageRegistry, sourcelessPageArtifacts } = buildShallowPages({ components, context });
+    // After buildShallowPages: Link actions in app events are checked against the page ids.
+    tryBuildStep(buildAppEvents, 'buildAppEvents', { components, context });
+    // App-level config and inline pages; page builds check their own pages.
+    const { pending: pluginChecksPending } = await runPluginChecks({
+      components,
+      context,
+      allSlugPackages: true,
+    });
+    clearRuleTargetNodes({ context });
+    // Now, so a build that fails later leaves no stale list behind.
+    await writePluginChecksPending({ context, packages: pluginChecksPending });
+    tryBuildStep(validateApiHtmlLinks, 'validateApiHtmlLinks', { components, context });
 
     tryBuildStep(buildJsShallow, 'buildJsShallow', { components, context });
 
@@ -196,17 +248,22 @@ async function shallowBuild(options) {
 
     // Write all build artifacts
     await cleanBuildDirectory({ context });
+    // Again: cleanBuildDirectory removed it.
+    await writePluginChecksPending({ context, packages: pluginChecksPending });
     await writeSourcelessPages({ sourcelessPageArtifacts, context });
     await writeApp({ components, context });
+    await writeAppEvents({ components, context });
     await writeAppMeta({ components, context });
     await writeAuth({ components, context });
     await writeConnections({ components, context });
+    await writeDynamicPolicies({ context });
     await writeApi({ components, context });
     await writeMcp({ components, context });
     await writeAgents({ components, context });
     await writeWebsockets({ components, context });
     await writeNotifications({ components, context });
     await writeConfig({ components, context });
+    await writeSecurity({ context });
     await writeGlobal({ components, context });
     await writeTheme({ components, context });
     await writeI18n({ components, context });
@@ -217,6 +274,7 @@ async function shallowBuild(options) {
       'connectionIds.json',
       JSON.stringify([...context.connectionIds].sort())
     );
+    await writeTenantTargets({ context });
     await context.writeBuildArtifact(
       'websocketIds.json',
       JSON.stringify([...context.websocketIds].sort())
@@ -226,13 +284,20 @@ async function shallowBuild(options) {
       JSON.stringify([...skeletonSourceFiles].sort())
     );
     await writeMenus({ components, context });
+    await writeRoutes({ components, context });
     // The dev client bundle imports every installed type (addInstalledTypes),
     // so types.json here describes that full bundle — dynamic page content
     // resolution validates fragment types against it at page get.
     await writeTypes({ components, context });
+    // null: the dev client is not split per page, so dynamic content can never
+    // reach outside a page's client types (see flagTypesOutsidePage).
+    await context.writeBuildArtifact('pageTypeSets.json', 'null');
     await writeJs({ context });
     await context.writeBuildArtifact('jsMap.json', JSON.stringify(context.jsMap));
-    await context.writeBuildArtifact('idCounter.json', JSON.stringify(makeId.counter));
+    await context.writeBuildArtifact(
+      'idCounter.json',
+      JSON.stringify({ prefix: makeId.prefix, counter: makeId.counter })
+    );
     await context.writeBuildArtifact(
       'customTypesMap.json',
       JSON.stringify(options.customTypesMap ?? {})
@@ -252,17 +317,18 @@ async function shallowBuild(options) {
       'modules.json',
       serializer.serializeToString(context.modules ?? {})
     );
+    // Persist the auth config projection so JIT page builds (separate process)
+    // resolve _build.authConfig identically to the skeleton build.
+    await context.writeBuildArtifact(
+      'authConfigProjection.json',
+      JSON.stringify(context.authConfigProjection)
+    );
     // Deferred-record bodies referenced by placeholders in modules.json.
     // JIT hydrates the registry from this artifact (hydrateDeferredRecords).
     await context.writeBuildArtifact('deferredRecords.json', serializeRegistry(context));
+    // Also writes iconImports.json, the icon names snapshot JIT page builds
+    // compare discovered icons against.
     await writePluginImports({ components, context });
-    // Persist icon imports snapshot for JIT icon detection.
-    // When buildPageJit resolves a page, it compares discovered icons against
-    // this snapshot and regenerates plugins/icons.js if new icons are found.
-    await context.writeBuildArtifact(
-      'iconImports.json',
-      JSON.stringify(components.imports.icons)
-    );
     await writePageRegistry({ pageRegistry, context });
     await copyPublicFolder({ components, context });
     await copyAgentFileSystems({ components, context });
@@ -272,17 +338,7 @@ async function shallowBuild(options) {
     if (err instanceof BuildError) {
       throw err;
     }
-    // Unexpected internal error - preserve Lowdefy errors as-is, wrap plain errors
-    const lowdefyErr = err.isLowdefyError
-      ? err
-      : new LowdefyInternalError(err.message, { cause: err });
-    if (context) {
-      context.handleError(lowdefyErr);
-    } else {
-      const logger = options.logger ?? console;
-      logger.error(lowdefyErr);
-    }
-    throw new BuildError('Build failed due to internal error. See above for details.');
+    throw createInternalBuildError({ error: err, context, logger: options.logger ?? console });
   }
 }
 

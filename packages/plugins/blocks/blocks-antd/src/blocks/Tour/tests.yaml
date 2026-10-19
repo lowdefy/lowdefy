@@ -113,8 +113,8 @@
   properties:
     open: true
     gap:
-      x: 10
-      y: 10
+      offset: 10
+      radius: 6
     steps:
       - title: Step 1
         description: Tour with gap offset.
@@ -149,3 +149,18 @@
         description: Step with close button visible.
         closable: true
         mask: true
+- id: properties.steps.nextButtonProps
+  type: Tour
+  properties:
+    open: true
+    steps:
+      - title: Welcome
+        description: A short tour of the dashboard.
+        nextButtonProps:
+          children: Show me
+      - title: Done
+        description: You are ready to go.
+        prevButtonProps:
+          children: Back
+        nextButtonProps:
+          children: Got it

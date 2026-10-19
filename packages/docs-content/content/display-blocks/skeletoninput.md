@@ -206,6 +206,7 @@ Input-shaped skeleton loading placeholder.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `label` | boolean | `true` | Render the label skeleton. Set to false for an input without a label. |
 | `size` | string | `"medium"` | Size of the skeleton. Enum: `small`, `medium`, `large`. |
 | `width` | number \| string | - | Width of the skeleton. |
 | `labelHeight` | number \| string | - | Height of the skeleton. |

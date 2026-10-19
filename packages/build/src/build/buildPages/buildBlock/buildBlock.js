@@ -18,6 +18,7 @@ import buildDynamicBlock from './buildDynamicBlock.js';
 import buildEvents from './buildEvents.js';
 import buildRequests from './buildRequests.js';
 import buildSubBlocks from './buildSubBlocks.js';
+import collectBlockHtmlLinks from './collectBlockHtmlLinks.js';
 import countBlockOperators from './countBlockOperators.js';
 import countBlockTypes from './countBlockTypes.js';
 import moveAreasToSlots from './moveAreasToSlots.js';
@@ -36,6 +37,7 @@ function buildBlock(block, pageContext, parentConfigKey) {
   normalizeLayout(block, pageContext);
   moveAreasToSlots(block, pageContext);
   countBlockOperators(block, pageContext);
+  collectBlockHtmlLinks(block, pageContext);
   buildEvents(block, pageContext);
   buildRequests(block, pageContext);
   normalizeClassAndStyles(block, pageContext);

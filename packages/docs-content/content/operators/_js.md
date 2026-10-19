@@ -16,7 +16,7 @@ Certain Lowdefy operators can be used inside of the JavaScript function block. T
 ###### Client JavaScript function prototype:
 _Function parameters passed to the operator method._
 ```js
-function ({ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user }) {
+function ({ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, pathParams, request, state, urlQuery, user }) {
   // Your JavaScript code here
 };
 ```
@@ -29,6 +29,7 @@ The function arguments available to the JavaScript function are:
   - `location: function`: Implements the [_location](/_location) operator.
   - `lowdefyApp: function`: Implements the [_app](/_app) operator.
   - `lowdefyGlobal: function`: Implements the [_global](/_global) operator.
+  - `pathParams: function`: Implements the [_path_params](/_path_params) operator.
   - `request: function`: Implements the [_request](/_request) operator.
   - `state: function`: Implements the [_state](/_state) operator.
   - `urlQuery: function`: Implements the [_url_query](/_url_query) operator.

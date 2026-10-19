@@ -1,0 +1,51 @@
+# 104: Module-level websockets — a module ships the change streams its pages
+# subscribe to. Ids scope per entry ({entryId}/{id}); _module.connectionId
+# points a websocket at the module's own connection or the app connection it is
+# remapped to; _module.websocketId resolves in module pages (string form) and
+# at the app level (object form); auth.websockets rules match the scoped ids.
+# With no app public rule a module websocket is protected (user-changes) unless
+# the manifest declares it public (ticket-status).
+lowdefy: local
+name: Module Websockets Test
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: websockets_app_auth_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  emailAndPassword:
+    enabled: true
+  roles:
+    - id: agent
+  websockets:
+    roles:
+      agent:
+        - help/thread-messages
+
+connections:
+  - id: app-users
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: MONGODB_URI
+      collection: users
+
+modules:
+  - id: help
+    source: 'file:modules/support'
+    connections:
+      users: app-users
+
+pages:
+  - id: home
+    type: Box
+    subscriptions:
+      - websocketId:
+          _module.websocketId: { id: user-changes, module: help }
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Home

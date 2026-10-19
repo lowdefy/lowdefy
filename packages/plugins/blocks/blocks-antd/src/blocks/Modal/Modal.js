@@ -16,10 +16,18 @@
 
 import React, { useState, useEffect } from 'react';
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
-import { get } from '@lowdefy/helpers';
+import { get, journeyTargetSelectors } from '@lowdefy/helpers';
 import { Modal } from 'antd';
 
+import getMask from '../getMask.js';
 import withTheme from '../withTheme.js';
+
+// antd pads the whole modal box, with the header, body and footer inside it. The close button is
+// placed by antd on its own, so the top insets keep the title centred with it.
+const containerPadding = { compact: '16px 16px 12px', none: 0 };
+// With no box padding the header and footer carry their own inset, and only the body is flush.
+const headerSpacing = { none: { padding: '16px 24px 8px', marginBottom: 0 } };
+const footerSpacing = { none: { padding: '12px 24px 16px', marginTop: 0 } };
 
 const triggerSetOpen = ({ methods, setOpen, state }) => {
   if (!state) {
@@ -61,31 +69,50 @@ const ModalBlock = ({
       <Modal
         id={`${blockId}_modal`}
         afterClose={() => methods.triggerEvent({ name: 'afterClose' })}
+        afterOpenChange={(open) =>
+          methods.triggerEvent({ name: 'afterOpenChange', event: { open } })
+        }
         cancelButtonProps={properties.cancelButtonProps}
         cancelText={properties.cancelText}
         centered={!!properties.centered}
-        closable={properties.closable !== undefined ? properties.closable : true}
+        closable={properties.closable ?? true}
         confirmLoading={get(events, 'onOk.loading')}
-        mask={properties.mask !== undefined ? properties.mask : true}
-        maskClosable={properties.maskClosable !== undefined ? properties.maskClosable : true}
+        destroyOnHidden={properties.destroyOnHidden}
+        focusable={properties.focusable}
+        forceRender={properties.forceRender}
+        keyboard={properties.keyboard}
+        loading={properties.loading}
+        mask={getMask({ mask: properties.mask, maskClosable: properties.maskClosable })}
         okButtonProps={properties.okButtonProps}
         okText={properties.okText}
         okType={properties.okButtonType ?? 'primary'}
+        scrollLock={properties.scrollLock}
         title={renderHtml({ html: properties.title, methods })}
         open={openState}
-        width={properties.width}
+        width={properties.width ?? undefined}
         zIndex={properties.zIndex}
         className={classNames.element}
+        rootClassName={journeyTargetSelectors.portalClass(blockId)}
         classNames={{
           header: classNames.header,
+          title: classNames.title,
           body: classNames.body,
           footer: classNames.footer,
           mask: classNames.mask,
-          content: classNames.content,
+          // antd 6 renamed the Modal content area from `content` to `container`.
+          container: classNames.content,
           wrapper: classNames.wrapper,
         }}
         style={styles.element}
-        styles={{ body: styles.body, mask: styles.mask, wrapper: styles.wrapper }}
+        styles={{
+          header: { ...headerSpacing[properties.padding], ...styles.header },
+          title: styles.title,
+          body: styles.body,
+          footer: { ...footerSpacing[properties.padding], ...styles.footer },
+          mask: styles.mask,
+          container: { padding: containerPadding[properties.padding], ...styles.content },
+          wrapper: styles.wrapper,
+        }}
         onOk={async () => {
           const response = await methods.triggerEvent({ name: 'onOk' });
           if (response.success === false) return;

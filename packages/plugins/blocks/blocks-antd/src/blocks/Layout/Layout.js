@@ -18,6 +18,8 @@ import React from 'react';
 import { Layout } from 'antd';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
+import withTheme from '../withTheme.js';
+
 const LayoutBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
   <Layout
     id={blockId}
@@ -33,4 +35,4 @@ const LayoutBlock = ({ blockId, classNames = {}, content, properties, styles = {
   </Layout>
 );
 
-export default withBlockDefaults(LayoutBlock);
+export default withTheme('Layout', withBlockDefaults(LayoutBlock));

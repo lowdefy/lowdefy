@@ -25,7 +25,7 @@
       properties:
         label:
           title: With prefix icon
-        prefixIcon: AiOutlineUser
+        prefixIcon: user
         placeholder: Username
     - id: ig_text_count
       type: TextInput
@@ -271,8 +271,8 @@
       properties:
         label:
           title: Switch (with icons)
-        checkedIcon: AiOutlineCheck
-        uncheckedIcon: AiOutlineClose
+        checkedIcon: check
+        uncheckedIcon: close
     - id: ig_checkbox_sw
       type: CheckboxSwitch
       properties:

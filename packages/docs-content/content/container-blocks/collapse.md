@@ -221,6 +221,132 @@ Our mission is to democratize application development through low-code and open-
               and open-source technologies.
 ```
 
+Orders ship within two business days.
+
+Unused items can be returned within 30 days.
+
+Compact header and content padding.
+
+Roomy header and content padding.
+
+```yaml
+- id: ghost_collapse
+  type: Collapse
+  properties:
+    ghost: true
+    panels:
+      - key: ghost_shipping
+        title: Shipping (ghost)
+      - key: ghost_returns
+        title: Returns
+  slots:
+    ghost_shipping:
+      blocks:
+        - id: ghost_shipping_text
+          type: Paragraph
+          properties:
+            content: Orders ship within two business days.
+    ghost_returns:
+      blocks:
+        - id: ghost_returns_text
+          type: Paragraph
+          properties:
+            content: Unused items can be returned within 30 days.
+- id: small_collapse
+  type: Collapse
+  properties:
+    size: small
+    panels:
+      - key: small_panel
+        title: Small size
+  slots:
+    small_panel:
+      blocks:
+        - id: small_panel_text
+          type: Paragraph
+          properties:
+            content: Compact header and content padding.
+- id: large_collapse
+  type: Collapse
+  properties:
+    size: large
+    panels:
+      - key: large_panel
+        title: Large size
+  slots:
+    large_panel:
+      blocks:
+        - id: large_panel_text
+          type: Paragraph
+          properties:
+            content: Roomy header and content padding.
+```
+
+With padding none, panel content sets its own spacing.
+
+Tighter panel content, still aligned with the header.
+
+```yaml
+- id: padding_none_collapse
+  type: Collapse
+  properties:
+    padding: none
+    panels:
+      - key: padding_none_invoices
+        title: Invoices (padding none)
+      - key: padding_none_notes
+        title: Notes
+  slots:
+    padding_none_invoices:
+      blocks:
+        - id: padding_none_invoices_rows
+          type: Html
+          properties:
+            html: >
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 16px; border-bottom: 1px solid
+              var(--ant-color-border-secondary);"><span>INV-1042</span><span
+              style="color:
+              var(--ant-color-text-secondary);">$1,280.00</span></div>
+
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 16px; border-bottom: 1px solid
+              var(--ant-color-border-secondary);"><span>INV-1041</span><span
+              style="color:
+              var(--ant-color-text-secondary);">$640.00</span></div>
+
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 16px; border-bottom: 1px solid
+              var(--ant-color-border-secondary);"><span>INV-1040</span><span
+              style="color:
+              var(--ant-color-text-secondary);">$2,115.50</span></div>
+
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 16px;"><span>INV-1039</span><span style="color:
+              var(--ant-color-text-secondary);">$96.00</span></div>
+    padding_none_notes:
+      blocks:
+        - id: padding_none_notes_text
+          type: Paragraph
+          class: px-4 py-2
+          properties:
+            content: With padding none, panel content sets its own spacing.
+- id: padding_compact_collapse
+  type: Collapse
+  properties:
+    padding: compact
+    panels:
+      - key: padding_compact_panel
+        title: Compact padding
+  slots:
+    padding_compact_panel:
+      blocks:
+        - id: padding_compact_panel_text
+          type: Paragraph
+          properties:
+            content: Tighter panel content, still aligned with the header.
+```
+
 **Start (default):**
 
 Premium wireless headphones with active noise cancellation, 30-hour battery life, and multipoint connection.
@@ -306,7 +432,7 @@ The icon rotates 90 degrees when the panel is expanded, providing a visual cue f
 - id: custom_icon_collapse
   type: Collapse
   properties:
-    expandIcon: AiOutlinePlusCircle
+    expandIcon: add-circle
     panels:
       - key: ci_features
         title: Key Features
@@ -340,7 +466,7 @@ The icon rotates 90 degrees when the panel is expanded, providing a visual cue f
   type: Collapse
   properties:
     expandIcon:
-      name: AiOutlineArrowRight
+      name: arrow-right
       color: "#1677ff"
     panels:
       - key: cio_one
@@ -882,7 +1008,7 @@ Local development environment running via Docker Compose. Hot-reload enabled for
                 flex: 0 0 auto
               properties:
                 title: View Logs
-                icon: AiOutlineFileText
+                icon: document
                 color: primary
                 variant: outlined
                 size: small
@@ -892,7 +1018,7 @@ Local development environment running via Docker Compose. Hot-reload enabled for
                 flex: 0 0 auto
               properties:
                 title: Metrics
-                icon: AiOutlineBarChart
+                icon: chart
                 color: primary
                 variant: outlined
                 size: small
@@ -1294,23 +1420,40 @@ Full platform access with dedicated infrastructure, custom integrations, and whi
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `accordion` | boolean | `false` | If true, only one panel is open at a time. |
-| `activeKey` | string | - | Current panel's key. |
+| `activeKey` | string \| array | - | Current panel's key, or a list of keys of the open panels. |
 | `bordered` | boolean | `true` | Toggles rendering of the border around the collapse block. |
-| `defaultActiveKey` | string | - | Initial active panel's key, if activeKey is not set. |
-| `destroyInactivePanel` | boolean | `false` | Destroy inactive panel. |
-| `expandIcon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block for expand icon on the right of selector. |
+| `collapsible` | string | - | How panels are toggled: by clicking anywhere in the `header` (default), only the expand `icon`, or `disabled` to stop all panels from toggling. Enum: `header`, `icon`, `disabled`. |
+| `defaultActiveKey` | string \| array | - | Initial active panel key, or a list of keys, if activeKey is not set. |
+| `destroyInactivePanel` | boolean | `false` | Destroy inactive panel. Maps to antd's `destroyOnHidden`. |
+| `expandIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block for expand icon on the right of selector. |
+| `expandIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `expandIcon.color` | string | - | Icon color. |
+| `expandIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `expandIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `expandIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `expandIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `expandIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `expandIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `expandIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `expandIconPlacement` | string | `"start"` | Set placement of the expand icon. Enum: `start`, `end`. |
-| `forceRender` | boolean | `"false"` | Force render for all panels. |
+| `forceRender` | boolean | `false` | Force render for all panels. |
+| `ghost` | boolean | `false` | Make the collapse borderless with a transparent background. |
+| `padding` | string | `"default"` | Space inside each panel body. `compact` tightens it to 8px 16px. `none` removes it so content such as a table or list runs edge to edge; the panel headers keep their padding. Enum: `default`, `compact`, `none`. |
 | `panels` | array | - |  |
 | `panels.$.title` | string | - | Title of the panel - supports html. |
 | `panels.$.key` | string | - | Key of the panel. |
 | `panels.$.extraKey` | string | - | Key for the extra area of the panel. |
 | `panels.$.disabled` | boolean | `false` | Disable the panel if true. |
 | `showArrow` | boolean | `true` | Show expand icon. |
+| `size` | string | `"medium"` | Size of the panel headers and content padding. Enum: `small`, `medium`, `large`. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design collapse tokens](https://ant.design/components/collapse#design-token). |
 | `theme.headerPadding` | string | `"12px 16px"` | Padding of the collapse header. |
+| `theme.headerPaddingSM` | string | `"8px 12px 8px 8px"` | Padding of the collapse header when size is small. |
+| `theme.headerPaddingLG` | string | `"16px 24px 16px 16px"` | Padding of the collapse header when size is large. |
 | `theme.headerBg` | string | `"rgba(0, 0, 0, 0.02)"` | Background color of the collapse header. |
 | `theme.contentPadding` | string | `"16px 16px"` | Padding of the collapse content area. |
+| `theme.contentPaddingSM` | number \| string | `12` | Padding of the collapse content area when size is small. |
+| `theme.contentPaddingLG` | number \| string | `24` | Padding of the collapse content area when size is large. |
 | `theme.contentBg` | string | `"#ffffff"` | Background color of the collapse content area. |
 | `theme.borderlessContentPadding` | string | `"4px 16px 16px"` | Padding of the content area in borderless (ghost) style. |
 | `theme.borderlessContentBg` | string | `"transparent"` | Background color of the content area in borderless (ghost) style. |
@@ -1330,6 +1473,7 @@ Full platform access with dedicated infrastructure, custom integrations, and whi
 | `/element` | The Collapse element. |
 | `/expandIcon` | The expand icon in the Collapse. |
 | `/header` | The Collapse header. |
+| `/title` | The panel title text in the Collapse header. |
 | `/content` | The Collapse content. |
 
 Slot keys are user-defined in your config and resolved at build time — not generated at runtime. The block typically pairs slots with an array property (`tabs`, `panels`, `slides`) listed in the Properties table; see the examples above for the expected shape.

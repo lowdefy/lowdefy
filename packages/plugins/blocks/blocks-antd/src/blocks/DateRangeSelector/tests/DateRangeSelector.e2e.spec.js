@@ -333,3 +333,90 @@ test.describe('DateRangeSelector Block presets and disabledDates', () => {
     await dateRangeSelector.expect.endValue(page, 'drs_presets_min_now', '2026-07-22');
   });
 });
+
+test.describe('DateRangeSelector antd 6 features', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'daterangeselector');
+  });
+
+  const dropdown = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .ant-picker-dropdown`);
+
+  test('renders the underlined variant', async ({ page }) => {
+    await expect(getPicker(page, 'drs_underlined')).toHaveClass(/ant-picker-underlined/);
+  });
+
+  test('renders prefix text', async ({ page }) => {
+    await expect(getPicker(page, 'drs_prefix_text').locator('.ant-picker-prefix')).toHaveText(
+      'From'
+    );
+  });
+
+  test('renders a prefix icon', async ({ page }) => {
+    await expect(
+      getPicker(page, 'drs_prefix_icon').locator('.ant-picker-prefix svg')
+    ).toBeAttached();
+  });
+
+  test('inputReadOnly makes the text input read-only', async ({ page }) => {
+    await expect(getStartInput(page, 'drs_readonly')).toHaveAttribute('readonly', '');
+  });
+
+  test('placement and the popup cssKey apply to the calendar popup', async ({ page }) => {
+    await getPicker(page, 'drs_placement').click();
+    const popup = dropdown(page, 'drs_placement');
+    await expect(popup).toBeVisible();
+    // The popup flips to the top when there is no room below, but keeps the right alignment.
+    await expect(popup).toHaveClass(/ant-picker-dropdown-placement-(bottom|top)Right/);
+    await expect(popup).toHaveClass(/drs-custom-popup/);
+  });
+
+  test('fires onFocus, onOpenChange and onBlur', async ({ page }) => {
+    await getStartInput(page, 'drs_events').click();
+    await expect(getBlock(page, 'drs_focus_display')).toHaveText('Focus: "start"');
+    await expect(getBlock(page, 'drs_open_display')).toHaveText('Open: true');
+
+    await page.keyboard.press('Escape');
+    await expect(getBlock(page, 'drs_open_display')).toHaveText('Open: false');
+
+    await getBlock(page, 'drs_underlined').click();
+    await expect(getBlock(page, 'drs_blur_display')).toHaveText('Blur: "start"');
+  });
+
+  test('fires onClear when the clear button is clicked', async ({ page }) => {
+    const picker = getPicker(page, 'drs_onclear');
+    await expect(getStartInput(page, 'drs_onclear')).not.toHaveValue('');
+    await picker.hover();
+    await picker.locator('.ant-picker-clear').click();
+    await expect(getStartInput(page, 'drs_onclear')).toHaveValue('');
+    await expect(getBlock(page, 'drs_onclear_display')).toHaveText('Clear fired');
+  });
+
+  test('showWeek adds week numbers to the calendar', async ({ page }) => {
+    await getPicker(page, 'drs_show_week').click();
+    const popup = dropdown(page, 'drs_show_week');
+    await expect(popup.locator('.ant-picker-date-panel-show-week').first()).toBeVisible();
+    await expect(popup.locator('.ant-picker-cell-week').first()).toBeVisible();
+  });
+});
+
+test.describe('DateRangeSelector open and fixed ends', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'daterangeselector');
+  });
+
+  test('allowEmpty lets the end date be left empty', async ({ page }) => {
+    await getStartInput(page, 'drs_allow_empty').click();
+    await page.keyboard.type('2024-06-10');
+    await page.keyboard.press('Enter');
+    await getBlock(page, 'drs_basic').click();
+
+    await expect(getStartInput(page, 'drs_allow_empty')).toHaveValue('2024-06-10');
+    await expect(getEndInput(page, 'drs_allow_empty')).toHaveValue('');
+    await expect(getBlock(page, 'drs_allow_empty_display')).toHaveText('Open end');
+  });
+
+  test('an array of disabled flags disables only the start input', async ({ page }) => {
+    await expect(getStartInput(page, 'drs_disabled_start')).toBeDisabled();
+    await expect(getEndInput(page, 'drs_disabled_start')).toBeEnabled();
+  });
+});

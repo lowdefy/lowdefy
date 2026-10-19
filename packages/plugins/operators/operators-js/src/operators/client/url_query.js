@@ -32,5 +32,7 @@ function _url_query({ arrayIndices, globals, location, params }) {
 }
 
 _url_query.dynamic = true;
+// Reads window.location.search live, which changes with no update to report it.
+_url_query.tracking = { kind: 'volatile' };
 
 export default _url_query;

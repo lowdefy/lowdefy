@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError, ServiceError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
 import Events from './Events.js';
@@ -30,6 +31,8 @@ class WebSockets {
     this.buffers = {};
     this.flushTimers = {};
     this.active = new Set();
+    this.payloads = {};
+    this.replacing = new Set();
 
     this.publish = this.publish.bind(this);
     this.subscribe = this.subscribe.bind(this);
@@ -96,6 +99,11 @@ class WebSockets {
     if (!this.active.has(websocketId)) {
       return;
     }
+    // Until the server acknowledges a replacing subscribe, messages on this
+    // websocketId still come from the channel it replaced.
+    if (this.replacing.has(websocketId)) {
+      return;
+    }
     const data = serializer.deserialize(serializedPayload)?.data;
     this.buffers[websocketId].push(data);
     // Leading-edge throttle: the first message in a window renders
@@ -116,21 +124,22 @@ class WebSockets {
     }
   }
 
+  clearChannel(websocketId) {
+    if (this.flushTimers[websocketId]) {
+      clearTimeout(this.flushTimers[websocketId]);
+      this.flushTimers[websocketId] = null;
+    }
+    this.buffers[websocketId] = [];
+    this.initChannelState(websocketId);
+  }
+
   async subscribe({ actions, arrayIndices, event, websocketId }) {
     if (!type.isString(websocketId)) {
       throw new Error('Subscribe requires a websocketId.');
     }
-    if (this.active.has(websocketId)) {
-      return;
-    }
-    const config = this.subscriptionConfig[websocketId] ?? {
-      client: {},
-      events: {},
-      payload: {},
-      websocketId,
-    };
-    if (!this.context.websockets[websocketId]) {
-      this.initChannelState(websocketId);
+    const config = this.subscriptionConfig[websocketId];
+    if (type.isNone(config)) {
+      throw new ConfigError(`Subscription "${websocketId}" is not defined on this page.`);
     }
 
     const { output: payload, errors: parserErrors } = this.context._internal.parser.parse({
@@ -143,6 +152,19 @@ class WebSockets {
     if (parserErrors.length > 0) {
       throw parserErrors[0];
     }
+    const serializedPayload = serializer.serialize(payload);
+    const payloadKey = JSON.stringify(serializedPayload);
+
+    if (this.active.has(websocketId)) {
+      if (this.payloads[websocketId] === payloadKey) {
+        return;
+      }
+      // The client and the server replace the open channel with the new one.
+      this.clearChannel(websocketId);
+      this.replacing.add(websocketId);
+      this.context._internal.update();
+    }
+    this.payloads[websocketId] = payloadKey;
 
     const events = this.getEvents(websocketId, config);
     const channel = this.context.websockets[websocketId];
@@ -158,9 +180,10 @@ class WebSockets {
     try {
       await this.client().subscribe({
         websocketId,
-        payload: serializer.serialize(payload),
+        payload: serializedPayload,
         handlers: {
           onConnected: () => {
+            this.replacing.delete(websocketId);
             channel.connected = true;
             channel.error = null;
             this.context._internal.update();
@@ -182,14 +205,22 @@ class WebSockets {
       });
     } catch (error) {
       this.active.delete(websocketId);
+      this.replacing.delete(websocketId);
+      delete this.payloads[websocketId];
       channel.error = { message: error.message };
       this.context._internal.update();
-      throw error;
+      if (error.isLowdefyError) {
+        throw error;
+      }
+      throw new ServiceError(undefined, { cause: error, service: 'WebSocket' });
     }
   }
 
   subscribeAll() {
     Object.keys(this.subscriptionConfig).forEach((websocketId) => {
+      if (this.subscriptionConfig[websocketId].client?.subscribeOnMount === false) {
+        return;
+      }
       this.subscribe({ websocketId }).catch((error) => {
         this.context._internal.lowdefy._internal.handleError(error);
       });
@@ -204,13 +235,10 @@ class WebSockets {
       return;
     }
     this.active.delete(websocketId);
-    if (this.flushTimers[websocketId]) {
-      clearTimeout(this.flushTimers[websocketId]);
-      this.flushTimers[websocketId] = null;
-    }
-    this.buffers[websocketId] = [];
+    this.replacing.delete(websocketId);
+    delete this.payloads[websocketId];
+    this.clearChannel(websocketId);
     this.client().unsubscribe({ websocketId });
-    this.initChannelState(websocketId);
     this.context._internal.update();
   }
 

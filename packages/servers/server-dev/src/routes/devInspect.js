@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
+import { parseRequestBody } from '@lowdefy/api';
+import { serializer, type } from '@lowdefy/helpers';
 
 import { readCheckpoint } from '../../lib/docs/checkpointStore.js';
 import { loadMocks } from '../../lib/docs/devMockRegistry.js';
@@ -62,15 +63,21 @@ function handleCheckpointBootstrap(c, { name }) {
   );
 }
 
-// Inspector.jsx posts { tabId, pageId } here whenever its tab navigates, so
-// the tab registry (lib/docs/tabChannel.js) knows which page each connected
-// tab is on without the tab reconnecting its event stream.
+// Inspector.jsx posts { tabId, pageId, pathParams, instanceKey } here whenever
+// the page instance on screen in its tab changes, so the tab registry
+// (lib/docs/tabChannel.js) knows which instance each connected tab shows, and
+// which it has rendered, without the tab reconnecting its event stream.
 async function handleTabPage(c) {
-  const { tabId, pageId } = await c.req.json();
+  const { tabId, pageId, pathParams, instanceKey } = parseRequestBody({
+    text: await c.req.text(),
+  });
   if (!tabId) {
     return c.json({ error: 'Missing "tabId".' }, 400);
   }
-  updateTabPage({ id: tabId, pageId });
+  if (!type.isString(pageId) || !type.isString(instanceKey)) {
+    return c.json({ error: 'Missing "pageId" or "instanceKey".' }, 400);
+  }
+  updateTabPage({ id: tabId, pageId, pathParams, instanceKey });
   return c.json({ ok: true });
 }
 
@@ -89,7 +96,9 @@ async function devInspectHandler(c) {
   }
 
   if (c.req.method !== 'POST') {
-    throw new Error('Only GET and POST requests are supported.');
+    // A wrong-method request is client-caused: answer 405 rather than raising a
+    // fault that would be logged at error level and answered with a 500.
+    return c.json({ error: 'Method not allowed.' }, 405);
   }
 
   if (!checkOrigin(c)) {
@@ -100,7 +109,7 @@ async function devInspectHandler(c) {
     return handleTabPage(c);
   }
 
-  const { requestId, result } = await c.req.json();
+  const { requestId, result } = parseRequestBody({ text: await c.req.text() });
   if (!requestId) {
     return c.json({ error: 'Missing "requestId".' }, 400);
   }

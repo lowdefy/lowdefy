@@ -24,14 +24,35 @@ import createCounter from '../utils/createCounter.js';
 // At build time, type counters feed types.json and import generation. At
 // runtime the client bundle is fixed, so the same counter calls become
 // membership checks against the bundled types instead.
-function createMembershipCounter({ category, allowed, dynamicBlockId, pageId }) {
+// Each type is also recorded in `used`, so the caller can tell whether the
+// fragment stays within its page's own client types.
+function createMembershipCounter({
+  category,
+  allowed,
+  dynamicBlockId,
+  known = null,
+  pageId,
+  policy,
+  used,
+}) {
   return {
     increment: (typeName) => {
-      if (!allowed.has(typeName)) {
+      // A key that names no client operator the app knows is data to the client.
+      if (known !== null && !known.has(typeName)) {
+        return;
+      }
+      used.add(typeName);
+      if (allowed.has(typeName)) {
+        return;
+      }
+      if (policy) {
         throw new ConfigError(
-          `Dynamic block "${dynamicBlockId}" on page "${pageId}" resolved content uses ${category} type "${typeName}" which is not included in the app's client bundle. Declare it in the Dynamic block's properties.types.`
+          `Dynamic block "${dynamicBlockId}" on page "${pageId}" resolved content uses ${category} type "${typeName}" which dynamic blocks policy "${policy.id}" does not allow.`
         );
       }
+      throw new ConfigError(
+        `Dynamic block "${dynamicBlockId}" on page "${pageId}" resolved content uses ${category} type "${typeName}" which is not included in the app's client bundle. Declare it in the Dynamic block's properties.types.`
+      );
     },
   };
 }
@@ -53,11 +74,37 @@ function getAllowedSets(types) {
   return sets;
 }
 
+// A policy narrows membership to its own lists. Build counted those lists into
+// the bundle, so they are always a subset of it.
+function getPolicySets(policy) {
+  let sets = allowedSetsCache.get(policy);
+  if (!sets) {
+    sets = {
+      actions: new Set(policy.actions),
+      blocks: new Set(policy.blocks),
+      operators: new Set(policy.operators),
+    };
+    allowedSetsCache.set(policy, sets);
+  }
+  return sets;
+}
+
 // Counter for categories dynamic content cannot reach (requests are forbidden,
 // so request types and server operators never occur in a valid fragment).
 const noopCounter = { increment: () => {} };
 
-function buildDynamicBlocks({ blocks, pageId, dynamicBlockId, idPrefix, types, blockMetas }) {
+function buildDynamicBlocks({
+  blocks,
+  pageId,
+  dynamicBlockId,
+  idPrefix,
+  types,
+  blockMetas,
+  clientOperators = null,
+  dynamicPolicies,
+  policy = null,
+  usedTypes,
+}) {
   if (!type.isArray(blocks)) {
     throw new ConfigError(
       `Dynamic block "${dynamicBlockId}" on page "${pageId}" endpoint must return an object with a "blocks" array.`,
@@ -67,18 +114,23 @@ function buildDynamicBlocks({ blocks, pageId, dynamicBlockId, idPrefix, types, b
   const warnings = [];
   const callApiActionRefs = [];
   const requestActionRefs = [];
-  const allowed = getAllowedSets(types);
+  const allowed = policy ? getPolicySets(policy) : getAllowedSets(types);
   const pageContext = {
     blockIdCounter: createCounter(),
     // Namespace runtime ids under the resolving Dynamic block's built id —
     // unique by construction, so they can never collide with static block ids.
     blockIdPrefix: idPrefix,
     callApiActionRefs,
+    // Sink: dynamic content can target blocks on the static page, which this
+    // fragment cannot see, so a missing block surfaces when the action runs.
+    callMethodActionRefs: [],
     checkDuplicateRequestId: createCheckDuplicateId({
       message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
     }),
     context: {
       blockMetas,
+      // A nested Dynamic block in the content may name a policy.
+      dynamicPolicies,
       handleWarning: (warning) => {
         warnings.push(warning);
       },
@@ -88,6 +140,9 @@ function buildDynamicBlocks({ blocks, pageId, dynamicBlockId, idPrefix, types, b
     dynamicBlockRefs: [],
     forbidRequests: true,
     linkActionRefs: [],
+    // Sink: org actions in content are gated by their own endpoints when they
+    // run, as on a static page.
+    orgClientActionRefs: [],
     pageId,
     requestActionRefs,
     requests: [],
@@ -98,19 +153,26 @@ function buildDynamicBlocks({ blocks, pageId, dynamicBlockId, idPrefix, types, b
         allowed: allowed.actions,
         dynamicBlockId,
         pageId,
+        policy,
+        used: usedTypes.actions,
       }),
       blocks: createMembershipCounter({
         category: 'block',
         allowed: allowed.blocks,
         dynamicBlockId,
         pageId,
+        policy,
+        used: usedTypes.blocks,
       }),
       operators: {
         client: createMembershipCounter({
           category: 'operator',
           allowed: allowed.operators,
           dynamicBlockId,
+          known: clientOperators,
           pageId,
+          policy,
+          used: usedTypes.operators,
         }),
         server: noopCounter,
       },

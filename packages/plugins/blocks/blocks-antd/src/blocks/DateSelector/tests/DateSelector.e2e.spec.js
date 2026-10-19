@@ -327,3 +327,85 @@ test.describe('DateSelector Block disabledDates ranges', () => {
     );
   });
 });
+
+test.describe('DateSelector antd 6 features', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'dateselector');
+  });
+
+  const dropdown = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .ant-picker-dropdown`);
+
+  test('renders the underlined variant', async ({ page }) => {
+    await expect(getPicker(page, 'ds_underlined')).toHaveClass(/ant-picker-underlined/);
+  });
+
+  test('renders prefix text', async ({ page }) => {
+    await expect(getPicker(page, 'ds_prefix_text').locator('.ant-picker-prefix')).toHaveText(
+      'From'
+    );
+  });
+
+  test('renders a prefix icon', async ({ page }) => {
+    await expect(
+      getPicker(page, 'ds_prefix_icon').locator('.ant-picker-prefix svg')
+    ).toBeAttached();
+  });
+
+  test('inputReadOnly makes the text input read-only', async ({ page }) => {
+    await expect(getInput(page, 'ds_readonly')).toHaveAttribute('readonly', '');
+  });
+
+  test('placement and the popup cssKey apply to the calendar popup', async ({ page }) => {
+    await getPicker(page, 'ds_placement').click();
+    const popup = dropdown(page, 'ds_placement');
+    await expect(popup).toBeVisible();
+    // The popup flips to the top when there is no room below, but keeps the right alignment.
+    await expect(popup).toHaveClass(/ant-picker-dropdown-placement-(bottom|top)Right/);
+    await expect(popup).toHaveClass(/ds-custom-popup/);
+  });
+
+  test('fires onFocus, onOpenChange and onBlur', async ({ page }) => {
+    await getInput(page, 'ds_events').click();
+    await expect(getBlock(page, 'ds_focus_display')).toHaveText('Focus: true');
+    await expect(getBlock(page, 'ds_open_display')).toHaveText('Open: true');
+
+    await page.keyboard.press('Escape');
+    await expect(getBlock(page, 'ds_open_display')).toHaveText('Open: false');
+
+    await getBlock(page, 'ds_underlined').click();
+    await expect(getBlock(page, 'ds_blur_display')).toHaveText('Blur: true');
+  });
+
+  test('fires onClear when the clear button is clicked', async ({ page }) => {
+    const picker = getPicker(page, 'ds_onclear');
+    await expect(getInput(page, 'ds_onclear')).not.toHaveValue('');
+    await picker.hover();
+    await picker.locator('.ant-picker-clear').click();
+    await expect(getInput(page, 'ds_onclear')).toHaveValue('');
+    await expect(getBlock(page, 'ds_onclear_display')).toHaveText('Clear fired');
+  });
+
+  test('showWeek adds week numbers to the calendar', async ({ page }) => {
+    await getPicker(page, 'ds_show_week').click();
+    const popup = dropdown(page, 'ds_show_week');
+    await expect(popup.locator('.ant-picker-date-panel-show-week').first()).toBeVisible();
+    await expect(popup.locator('.ant-picker-cell-week').first()).toBeVisible();
+  });
+});
+
+test.describe('DateSelector today button', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'dateselector');
+  });
+
+  test('shows the today button by default', async ({ page }) => {
+    await getPicker(page, 'ds_basic').click();
+    await expect(page.locator('#bl-ds_basic .ant-picker-now')).toHaveText('Today');
+  });
+
+  test('showToday false hides the today button', async ({ page }) => {
+    await getPicker(page, 'ds_show_today_false').click();
+    await expect(page.locator('#bl-ds_show_today_false .ant-picker-dropdown')).toBeVisible();
+    await expect(page.locator('#bl-ds_show_today_false .ant-picker-now')).toHaveCount(0);
+  });
+});

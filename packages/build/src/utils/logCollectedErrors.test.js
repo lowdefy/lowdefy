@@ -95,6 +95,8 @@ test('logCollectedErrors attaches serialized errors array to the thrown BuildErr
         config: 'root.pages[0:home]',
         configKey: 'abc123',
         checkSlug: null,
+        checkGroup: null,
+        prodError: false,
       },
     ]);
   }
@@ -118,6 +120,8 @@ test('logCollectedErrors attaches serialized warnings array to the thrown BuildE
         config: null,
         configKey: null,
         checkSlug: null,
+        checkGroup: null,
+        prodError: false,
       },
     ]);
   }

@@ -37,14 +37,14 @@ packages/
 
 ## Server Architecture
 
-| Package               | Purpose     | Entry Point       | Key Feature                             |
-| --------------------- | ----------- | ----------------- | --------------------------------------- |
-| `@lowdefy/server`     | Production  | `node src/index.js` | Hono app serving the Vite-built client |
-| `@lowdefy/server-dev` | Development | `manager/run.mjs` | File watching, hot reload, auto-rebuild |
+| Package               | Purpose     | Entry Point         | Key Feature                             |
+| --------------------- | ----------- | ------------------- | --------------------------------------- |
+| `@lowdefy/server`     | Production  | `node src/index.js` | Hono app serving the Vite-built client  |
+| `@lowdefy/server-dev` | Development | `manager/run.mjs`   | File watching, hot reload, auto-rebuild |
 
 **server-dev manager** orchestrates: initial build → file watchers → Vite + Hono child process → Vite HMR for client code, SSE reload for config. See `code-docs/architecture/` for details.
 
-**Docs/MCP endpoint for AI agents**: the dev server always serves `/lowdefy-docs` (REST) and `/lowdefy-docs/mcp` (MCP streamable HTTP) — schemas, examples, and markdown docs for every installed plugin type, including local plugins, plus the feedback loop: `GET /lowdefy-docs/build-status` (current build errors/warnings + browser runtime errors with file locations), `/page-config/{pageId}`, `/screenshot/{pageId}`, `/find/{id}`. When a Lowdefy dev server is running, prefer these routes over guessing type names or re-running builds (`GET /lowdefy-docs` lists everything). Implementation: `packages/servers/server-dev/lib/docs/` + `src/routes/docs/`; core docs content ships in `@lowdefy/docs-content` (regenerate with `pnpm docs:content`); roadmap in `code-docs/plans/agentic-coding-roadmap.md`. The `/lowdefy-docs` page-path prefix is reserved in dev. `lowdefy agent-setup` (CLI) writes .mcp.json/AGENTS.md/skill into a project.
+**Docs/MCP endpoint for AI agents**: the dev server always serves `/lowdefy-docs` (REST) and `/lowdefy-docs/mcp` (MCP streamable HTTP) — schemas, examples, and markdown docs for every installed plugin type, including local plugins, plus the feedback loop: `GET /lowdefy-docs/build-status` (current build errors/warnings + browser runtime errors with file locations), `/page-config/{pageId}`, `/screenshot/{pageId}`, `/find/{id}`. When a Lowdefy dev server is running, prefer these routes over guessing type names or re-running builds (`GET /lowdefy-docs` lists everything). Implementation: `packages/servers/server-dev/lib/docs/` + `src/routes/docs/`; core docs content ships in `@lowdefy/docs-content` (regenerate with `pnpm docs:content`); roadmap in `code-docs/plans/agentic-coding-roadmap.md`. The `/lowdefy-docs` page-path prefix is reserved in dev. `lowdefy agent-setup` (CLI) writes .mcp.json/AGENTS.md/skill into a project; its `.mcp.json` entry runs `lowdefy mcp`, a stdio MCP server that routes each tool call to the right app/worktree's dev server and starts it through the per-user `lowdefy hub` — see `code-docs/architecture/agent-dev-hub.md`. A running dev server records itself in `<app>/.lowdefy/instance.json`.
 
 ## Code Principles
 
@@ -229,7 +229,7 @@ export default _myOperator;
 
 ### Actions
 
-Actions throw simple errors. The engine's action interface layer (Actions.js) catches and wraps them in `PluginError` with the `received` value. For expected user-facing errors (validation, intentional throws), throw `UserError` instead — it logs to the browser console only and is never sent to the server terminal:
+Actions throw simple errors. The engine's action interface layer (Actions.js) catches and wraps them in `PluginError` with the `received` value. For expected outcomes of user interaction (validation failures, intentional throws, an auth server rejecting a sign-in attempt), throw `UserError` instead — it still displays and still triggers catch actions, but it logs to the browser console only and is never sent to the server terminal. The test is "would a developer need to change config to stop this?" — if not, it is a `UserError`, not an `ActionError`:
 
 ```javascript
 function MyAction({ methods: { setState }, params }) {
@@ -275,19 +275,22 @@ import {
 } from '@lowdefy/errors';
 ```
 
-| Class                  | Purpose                                                     | Catch Layer                      |
-| ---------------------- | ----------------------------------------------------------- | -------------------------------- |
-| `LowdefyInternalError` | Internal Lowdefy bugs                                       | Top-level in build/server/client |
-| `BuildError`           | Summary error after build fails (`Build failed with N...`)  | `logCollectedErrors`             |
-| `PluginError`          | Base class for plugin failures (not used directly)          | Plugin interface layer           |
-| `OperatorError`        | Operator failures (`_if`, `_get`, etc.)                     | Operator parsers                 |
-| `ActionError`          | Action failures (`SetState`, `Request`, etc.)               | Action runner (engine)           |
-| `RequestError`         | Request/connection failures (`MongoDBFind`, etc.)           | Request handler (API)            |
-| `BlockError`           | Block rendering failures                                    | ErrorBoundary (client)           |
-| `ServiceError`         | External service failures (network, timeout, 5xx)           | Request/connection layer         |
-| `ConfigError`          | YAML config validation errors                               | Build validation, runtime        |
-| `ConfigWarning`        | Config inconsistencies (warning in dev, error in prod)      | Build validation                 |
-| `UserError`            | Expected user interaction (validation, throws), client-only | Browser console only             |
+| Class                             | Purpose                                                                                                       | Catch Layer                      |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| `LowdefyInternalError`            | Internal Lowdefy bugs                                                                                         | Top-level in build/server/client |
+| `BuildError`                      | Summary error after build fails (`Build failed with N...`)                                                    | `logCollectedErrors`             |
+| `PluginError`                     | Base class for plugin failures (not used directly)                                                            | Plugin interface layer           |
+| `OperatorError`                   | Operator failures (`_if`, `_get`, etc.)                                                                       | Operator parsers                 |
+| `ActionError`                     | Action failures (`SetState`, `Request`, etc.)                                                                 | Action runner (engine)           |
+| `RequestError`                    | Request/connection failures (`MongoDBFind`, etc.)                                                             | Request handler (API)            |
+| `BlockError`                      | Block rendering failures                                                                                      | ErrorBoundary (client)           |
+| `ServiceError`                    | External service failures (network failures, timeouts, 5xx, 429/rate limits)                                  | Request/connection layer         |
+| `ConfigError`                     | YAML config validation errors                                                                                 | Build validation, runtime        |
+| `ConfigWarning`                   | Config inconsistencies (warning in dev, error in prod)                                                        | Build validation                 |
+| `AuthenticationError`             | Unauthenticated request to a protected endpoint (401)                                                         | Server error handler (warn only) |
+| `TwoFactorEnrolmentRequiredError` | Authorized caller with no enrolled second factor (403)                                                        | Server error handler (warn only) |
+| `AuthorizationError`              | Authenticated caller refused by an authorization gate (wrong roles, 403)                                      | Server error handler (warn only) |
+| `UserError`                       | Expected outcome of user interaction (validation, throws, rejected auth attempt), never a config/system fault | Browser console only             |
 
 **Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches errors and adds `configKey` for location resolution to ALL error types - this helps developers trace any error back to its config source.
 
@@ -359,8 +362,11 @@ See `code-docs/architecture/error-tracing.md` for the complete error system.
 - Test files: `{name}.test.js` co-located with source
 - **Do not create tests for blocks** (currently disabled)
 - **NEVER run `pnpm jest` or `npx jest` directly** — always use `pnpm test`
+- **CI does not test pull requests by default** — run the tests your change needs before you push (`code-docs/testing.md`, "Before pushing") and list them in the PR body. The `ci` label runs the fast affected-only job on a PR, `ci-full` the complete matrix with the MongoDB, journey fixture and block e2e suites; pushes to `main` always run the complete path.
 
 ### Running Tests
+
+`code-docs/testing.md` covers worktree setup (`pnpm worktree <branch>`), MongoDB tests (`pnpm test:mongodb`), ports and e2e, and running an app from another repository on this checkout ("An app from another repository": `node scripts/dev.mjs --config-directory <app> --dev-directory _server/dev-<name>`, never hand-written overrides or a copied server).
 
 ```bash
 # All tests (from repo root)

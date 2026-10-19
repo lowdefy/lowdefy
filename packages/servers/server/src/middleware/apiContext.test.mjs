@@ -24,7 +24,18 @@ import { jest } from '@jest/globals';
 const secret = 'planted-apicontext-secret';
 process.env.LOWDEFY_SECRET_TEST = secret;
 
-jest.unstable_mockModule('@lowdefy/api', () => ({ createApiContext: jest.fn() }));
+jest.unstable_mockModule('@lowdefy/api', () => ({
+  createApiContext: jest.fn(),
+  createRequestSignal: jest.fn(({ clientSignal, timeoutSignal }) =>
+    AbortSignal.any([clientSignal, timeoutSignal].filter(Boolean))
+  ),
+  // Returns what the server passes, so the test reads the auth-hook system context inputs.
+  createSystemContext: jest.fn((options) => options),
+  ensureMcpOauthResource: jest.fn(async () => {}),
+  resolveAuthentication: jest.fn(async () => {}),
+  resolvePinnedOrganization: jest.fn(async () => {}),
+  resolveTenantPreflight: jest.fn(async () => {}),
+}));
 jest.unstable_mockModule('../../lib/build/appMeta.js', () => ({ default: {} }));
 jest.unstable_mockModule('../../lib/build/config.js', () => ({ default: {} }));
 jest.unstable_mockModule('../../lib/build/i18n.js', () => ({ default: {} }));
@@ -33,14 +44,19 @@ jest.unstable_mockModule('../../lib/server/log/createHandleError.js', () => ({
   default: jest.fn(() => jest.fn()),
 }));
 jest.unstable_mockModule('../../lib/server/log/createLogger.js', () => ({
-  default: jest.fn(() => ({ debug: jest.fn(), info: jest.fn(), warn: jest.fn(), error: jest.fn() })),
+  default: jest.fn(() => ({
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  })),
 }));
 jest.unstable_mockModule('../../lib/server/fileCache.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/server/auth/session.js', () => ({
-  default: jest.fn(async () => undefined),
+jest.unstable_mockModule('../../lib/server/auth/getAuth.js', () => ({
+  default: jest.fn(() => null),
 }));
-jest.unstable_mockModule('../../lib/server/auth/strategies.js', () => ({
-  default: jest.fn(async () => null),
+jest.unstable_mockModule('../../lib/server/auth/getStrategies.js', () => ({
+  default: jest.fn(() => null),
 }));
 jest.unstable_mockModule('../../lib/server/log/logRequest.js', () => ({ default: jest.fn() }));
 jest.unstable_mockModule('../../lib/server/sentry/setSentryUser.js', () => ({
@@ -62,6 +78,7 @@ const fixtures = [
   },
   { file: path.join('operators', 'server.js'), content: 'export default {};\n' },
   { file: path.join('operators', 'serverJsMap.js'), content: 'export default {};\n' },
+  { file: 'steps.js', content: 'export default {};\n' },
   { file: 'websockets.js', content: 'export default {};\n' },
 ].map(({ file, content }) => ({ absolutePath: path.join(pluginsDir, file), content }));
 
@@ -89,6 +106,10 @@ afterAll(() => {
 });
 
 const { default: apiContext } = await import('./apiContext.js');
+const { default: requestTimeout } = await import('./requestTimeout.js');
+const { default: createSystemContext } = await import(
+  '../../lib/server/auth/createSystemContext.js'
+);
 
 function createApp() {
   const app = new Hono();
@@ -115,4 +136,43 @@ test('apiContext scrubSecrets redacts a planted secret', async () => {
   expect(res.status).toEqual(200);
   const body = await res.json();
   expect(body.scrubbed).toEqual('token [REDACTED] end');
+});
+
+test('the auth-hook system context is built with mode prod and a scrubSecrets that redacts', () => {
+  const context = createSystemContext({ auth: null });
+  expect(context.mode).toEqual('prod');
+  expect(context.scrubSecrets(`token ${secret} end`)).toEqual('token [REDACTED] end');
+});
+
+test('the request timeout answers 504 and cancels the work the request left running', async () => {
+  const app = new Hono();
+  app.use('*', requestTimeout({ timeoutMs: 20 }));
+  app.use('*', apiContext());
+  let reason;
+  app.get('/api/slow', async (c) => {
+    const { signal } = c.get('lowdefyContext');
+    reason = await new Promise((resolve) => {
+      signal.addEventListener('abort', () => resolve(signal.reason), { once: true });
+    });
+    return c.json({ finished: true });
+  });
+  const res = await app.request('/api/slow');
+  expect(res.status).toEqual(504);
+  expect(reason.name).toEqual('TimeoutError');
+  expect(reason.message).toEqual('The request timeout of 20ms was exceeded.');
+});
+
+test('a request that answers within the timeout leaves its signal unaborted', async () => {
+  const app = new Hono();
+  app.use('*', requestTimeout({ timeoutMs: 20 }));
+  app.use('*', apiContext());
+  let signal;
+  app.get('/api/fast', (c) => {
+    signal = c.get('lowdefyContext').signal;
+    return c.json({ finished: true });
+  });
+  const res = await app.request('/api/fast');
+  expect(res.status).toEqual(200);
+  await new Promise((resolve) => setTimeout(resolve, 40));
+  expect(signal.aborted).toBe(false);
 });

@@ -52,6 +52,13 @@
         variant: borderless
         label:
           disabled: true
+    - id: drs_variant_underlined
+      type: DateRangeSelector
+      properties:
+        title: Underlined
+        variant: underlined
+        label:
+          disabled: true
 
 - title: Format Variations
   blocks:
@@ -186,14 +193,14 @@
       type: DateRangeSelector
       properties:
         title: Clock Icon
-        suffixIcon: AiOutlineClockCircle
+        suffixIcon: clock
         label:
           disabled: true
     - id: drs_icon_schedule
       type: DateRangeSelector
       properties:
         title: Schedule Icon
-        suffixIcon: AiOutlineSchedule
+        suffixIcon: CalendarDays
         label:
           disabled: true
     - id: drs_icon_custom_color
@@ -201,7 +208,7 @@
       properties:
         title: Custom Color Icon
         suffixIcon:
-          name: AiOutlineCalendar
+          name: calendar
           color: '#1677ff'
         label:
           disabled: true
@@ -210,10 +217,70 @@
       properties:
         title: Heart Icon
         suffixIcon:
-          name: AiOutlineHeart
+          name: heart
           color: '#ff4d4f'
         label:
           disabled: true
+
+- title: Prefix, Placement and Read-only Input
+  blocks:
+    - id: drs_prefix_icon
+      type: DateRangeSelector
+      properties:
+        title: Prefix Icon
+        prefixIcon: clock
+        suffixIcon:
+          name: calendar
+          color: '#8c8c8c'
+    - id: drs_prefix_text
+      type: DateRangeSelector
+      properties:
+        title: Prefix Text
+        prefix: 'From:'
+    - id: drs_placement
+      type: DateRangeSelector
+      properties:
+        title: Popup Opens Top Right
+        placement: topRight
+    - id: drs_read_only
+      type: DateRangeSelector
+      properties:
+        title: Pick From Calendar Only
+        inputReadOnly: true
+        label:
+          extra: The input is read-only, so touch devices do not open the keyboard.
+
+- title: Open-ended and Fixed Ranges
+  blocks:
+    - id: drs_open_end
+      type: DateRangeSelector
+      properties:
+        title: Start Date, Optional End
+        allowEmpty:
+          - false
+          - true
+        label:
+          extra: Leave the end date empty for an ongoing range.
+    - id: drs_fixed_start
+      type: DateRangeSelector
+      properties:
+        title: Fixed Start Date
+        disabled:
+          - true
+          - false
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              drs_fixed_start:
+                - _date: '2026-01-01'
+                - _date: '2026-01-31'
+    - id: drs_show_week
+      type: DateRangeSelector
+      properties:
+        title: Show Week Numbers
+        showWeek: true
 
 - title: Disabled State
   blocks:
@@ -572,6 +639,7 @@
       type: DateRangeSelector
       style:
         .element:
+          backgroundColor: var(--ant-color-primary-bg)
       properties:
         title: Custom Background
         label:
@@ -664,7 +732,7 @@
         format: DD MMMM YYYY
         size: large
         separator: '→'
-        suffixIcon: AiOutlineSchedule
+        suffixIcon: CalendarDays
         allowClear: true
         label:
           extra: Select your check-in and check-out dates.
@@ -692,7 +760,7 @@
           - Event end
         format: DD MMM YYYY
         suffixIcon:
-          name: AiOutlineCalendar
+          name: calendar
           color: '#1677ff'
         disabledDates:
           min: '2026-01-01'
@@ -711,7 +779,7 @@
           - Start date
           - End date
         suffixIcon:
-          name: AiOutlineHeart
+          name: heart
           color: '#eb2f96'
         label:
           disabled: true
@@ -732,7 +800,7 @@
         variant: outlined
         size: large
         suffixIcon:
-          name: AiOutlineFlag
+          name: Flag
           color: '#722ed1'
         label:
           extra: 'Specify the <b>full duration</b> of the contract.'
@@ -792,7 +860,7 @@
           type: Button
           properties:
             title: Generate Report
-            icon: AiOutlineFileText
+            icon: document
             type: primary
             size: large
             block: true
@@ -842,7 +910,7 @@
           type: Button
           properties:
             title: Submit Request
-            icon: AiOutlineSend
+            icon: send
             type: primary
             size: large
             block: true

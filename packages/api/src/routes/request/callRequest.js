@@ -25,6 +25,7 @@ import getConnection from '../connections/getConnection.js';
 import getConnectionConfig from '../connections/getConnectionConfig.js';
 import getRequestConfig from './getRequestConfig.js';
 import getRequestResolver from './getRequestResolver.js';
+import resolveTenancy from './resolveTenancy.js';
 import validateSchemas from './validateSchemas.js';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
@@ -35,6 +36,7 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
 
   context.blockId = blockId;
   context.pageId = pageId;
+  context.requestId = requestId;
   const requestPayload = serializer.deserialize(payload);
   context.payload = requestPayload;
   context.evaluateOperators = createEvaluateOperators(context);
@@ -49,19 +51,26 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
 
   const connection = getConnection(context, { connectionConfig });
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
+  const { tenant, tenantGuard } = resolveTenancy(context, {
+    connection,
+    connectionConfig,
+    requestConfig,
+    writes: requestResolver.meta.checkWrite === true,
+  });
 
+  // A page request runs outside any routine, so it evaluates against an empty frame.
+  const routineContext = {
+    arrayIndices: [],
+    error: null,
+    items: {},
+    payload: requestPayload,
+    state: {},
+    steps: {},
+  };
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
     requestConfig,
-    // A page request runs outside any routine, so it evaluates against an empty frame.
-    routineContext: {
-      arrayIndices: [],
-      error: null,
-      items: {},
-      payload: requestPayload,
-      state: {},
-      steps: {},
-    },
+    routineContext,
   });
 
   checkConnectionRead(context, {
@@ -89,6 +98,9 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
     requestConfig,
     requestProperties,
     requestResolver,
+    routineContext,
+    tenant,
+    tenantGuard,
   });
   return {
     id: requestConfig.id,

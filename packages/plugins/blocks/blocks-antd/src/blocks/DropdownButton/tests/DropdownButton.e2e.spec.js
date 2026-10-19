@@ -173,3 +173,59 @@ test.describe('DropdownButton split mode', () => {
     await expect(display).toContainText('draft');
   });
 });
+
+async function expectIconAfterTitle(button) {
+  const iconBox = await button.locator('.ant-btn-icon').boundingBox();
+  const titleBox = await button.locator(':scope > span:not(.ant-btn-icon)').first().boundingBox();
+  expect(iconBox.x).toBeGreaterThan(titleBox.x);
+}
+
+test.describe('DropdownButton icon placement and css keys', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'dropdown_button');
+  });
+
+  test('places the button icon at the end', async ({ page }) => {
+    const button = getBlock(page, 'db_icon_end').locator('.ant-btn');
+    await button.scrollIntoViewIfNeeded();
+    await expect(button).toHaveClass(/ant-btn-icon-end/);
+    await expectIconAfterTitle(button);
+  });
+
+  test('places the split main button icon at the end', async ({ page }) => {
+    const block = getBlock(page, 'db_split_icon_end');
+    await block.scrollIntoViewIfNeeded();
+    const mainButton = block.locator('.ant-space-compact button').first();
+    await expect(mainButton).toHaveClass(/ant-btn-icon-end/);
+    await expectIconAfterTitle(mainButton);
+    const arrowButton = block.locator('.ant-space-compact button').last();
+    await expect(arrowButton).not.toHaveClass(/ant-btn-icon-end/);
+  });
+
+  test('applies the element id and style to the button outside split mode', async ({ page }) => {
+    const button = page.locator('#db_icon_end');
+    await button.scrollIntoViewIfNeeded();
+    await expect(button).toHaveClass(/ant-btn/);
+    await expect(button).toHaveCSS('color', 'rgb(255, 0, 0)');
+  });
+
+  test('applies the menu and item classes to the dropdown', async ({ page }) => {
+    const button = getBlock(page, 'db_icon_end').locator('.ant-btn');
+    await button.scrollIntoViewIfNeeded();
+    await button.click();
+    const dropdown = page.locator('.ant-dropdown.db-icon-end-menu');
+    await expect(dropdown).toBeVisible();
+    await expect(dropdown.locator('.ant-dropdown-menu-item.db-icon-end-item')).toContainText(
+      'Rename'
+    );
+  });
+
+  test('opens the menu to the right with placement right', async ({ page }) => {
+    const button = getBlock(page, 'db_placement_right').locator('.ant-btn');
+    await button.scrollIntoViewIfNeeded();
+    await button.click();
+    const dropdown = page.locator('.ant-dropdown').filter({ hasText: 'Right item' });
+    await expect(dropdown).toBeVisible();
+    await expect(dropdown).toHaveClass(/ant-dropdown-placement-right/);
+  });
+});

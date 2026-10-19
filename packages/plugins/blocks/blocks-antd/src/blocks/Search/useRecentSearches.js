@@ -16,10 +16,6 @@
 
 import { useState, useCallback } from 'react';
 
-function getStorageKey(storageKey) {
-  return `lf-${storageKey}-recent`;
-}
-
 function readFromStorage(key) {
   try {
     const raw = localStorage.getItem(key);
@@ -37,8 +33,10 @@ function writeToStorage(key, items) {
   }
 }
 
-function useRecentSearches({ enabled, storageKey = 'search', maxCount = 5 }) {
-  const key = getStorageKey(storageKey);
+// Recent searches are the signed-in person's data, so they are kept under a user key: cleared at
+// sign-out and never read by the next person on the browser.
+function useRecentSearches({ enabled, getUserStorageKey, storageKey = 'search', maxCount = 5 }) {
+  const key = getUserStorageKey(`lf-${storageKey}-recent`);
   const [recentSearches, setRecentSearches] = useState(() => {
     if (!enabled) return [];
     return readFromStorage(key);

@@ -14,16 +14,28 @@
   limitations under the License.
 */
 
-import { RequestError, ServiceError } from '@lowdefy/errors';
+import { RequestError, ServiceError, UserError } from '@lowdefy/errors';
 
 import getCurrentEnvironment from '../../context/getCurrentEnvironment.js';
+import createWalledResolver from './createWalledResolver.js';
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
+import maskCredentialProperties from './maskCredentialProperties.js';
 
 async function callRequestResolver(
   context,
-  { connectionProperties, endpointDepth, requestConfig, requestProperties, requestResolver }
+  {
+    agent = null,
+    connectionProperties,
+    endpointDepth,
+    requestConfig,
+    requestProperties,
+    requestResolver,
+    routineContext,
+    tenant,
+    tenantGuard,
+  }
 ) {
-  const { blockId, endpointId, logger, pageId, payload } = context;
+  const { blockId, endpointId, logger, pageId, payload, signal } = context;
   // stepId for endpoint steps (after build), requestId for page requests
   const stepOrRequestId = requestConfig.stepId ?? requestConfig.requestId;
 
@@ -36,6 +48,7 @@ async function callRequestResolver(
     });
 
     const result = await invokeEndpoint(context, {
+      agent,
       endpointId: targetEndpointId,
       payload: targetPayload,
       endpointDepth,
@@ -71,6 +84,25 @@ async function callRequestResolver(
       payload,
       request: requestProperties,
       requestId: stepOrRequestId,
+      // Aborts when the request that started this work closes: the client
+      // disconnected or the server's request timeout answered. Undefined for work
+      // nobody waits on (background runs, agent chat). Connection types hand it to
+      // their upstream calls so a closed request stops them.
+      signal,
+      // Names a walled MongoDB connection and returns the bound arguments of
+      // getWalledCollection (@lowdefy/connection-mongodb/walled): the only way a
+      // plugin reaches a walled database.
+      walled: createWalledResolver(context, { requestConfig, routineContext }),
+      // The tenant verdict ({ field, value } or null/undefined) computed by
+      // resolveTenancy - connection types implementing the scoping contract
+      // enforce it (stamp writes, merge filters, inject pipeline matches).
+      tenant: tenant ?? null,
+      // The unscoped guard ({ field, readOnly } or null) computed by
+      // resolveTenancy: readOnly for tenant: none requests, which scoping
+      // connection types refuse to write under, and the write guard for shared
+      // connections over a walled collection, under which they assert every
+      // row the request writes still carries a real organization id.
+      tenantGuard: tenantGuard ?? null,
     });
     return response;
   } catch (error) {
@@ -89,7 +121,18 @@ async function callRequestResolver(
       throw error;
     }
 
-    // Check if this is a service error (network, timeout, 5xx)
+    // The client left before the resolver finished and the resolver stopped on the
+    // signal: the cancellation is the caller's doing, not a fault in the request.
+    if (signal?.reason?.name === 'AbortError' && error.name === 'AbortError') {
+      const cancelled = new UserError(signal.reason.message, { cause: error });
+      logger.debug(
+        { params: { id: stepOrRequestId, type: requestConfig.type }, err: cancelled },
+        cancelled.message
+      );
+      throw cancelled;
+    }
+
+    // Check if this is a service error (network, timeout, 5xx, 429)
     if (ServiceError.isServiceError(error)) {
       const serviceError = new ServiceError(undefined, {
         cause: error,
@@ -107,7 +150,7 @@ async function callRequestResolver(
     const requestError = new RequestError(error.message, {
       cause: error,
       typeName: requestConfig.type,
-      received: requestProperties,
+      received: maskCredentialProperties({ requestProperties, requestResolver }),
       location: `${requestConfig.connectionId}/${stepOrRequestId}`,
       configKey: requestConfig['~k'],
     });

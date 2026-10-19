@@ -16,13 +16,14 @@
 
 export default {
   category: 'display',
-  icons: ['AiOutlineCloseCircle'],
+  icons: ['loading'],
   valueType: null,
   cssKeys: {
     element: 'The Icon element.',
   },
   events: {
-    onClick: 'Trigger actions when icon is clicked.',
+    onClick:
+      'Trigger actions when icon is clicked. The icon then takes keyboard focus, and Enter or Space trigger it too.',
   },
   properties: {
     type: 'object',
@@ -37,8 +38,13 @@ export default {
       },
       name: {
         type: 'string',
-        default: 'AiOutlineCloseCircle',
-        description: 'Name of icon to be displayed.',
+        description:
+          'Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. Add your own semantic names with `theme.icons.aliases`.',
+      },
+      nonScalingStroke: {
+        type: 'boolean',
+        description:
+          'Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`.',
       },
       rotate: {
         type: 'number',
@@ -50,6 +56,11 @@ export default {
         docs: {
           displayType: 'number',
         },
+      },
+      strokeWidth: {
+        type: 'number',
+        description:
+          'Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2).',
       },
       spin: {
         type: 'boolean',

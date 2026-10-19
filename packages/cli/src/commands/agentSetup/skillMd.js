@@ -14,11 +14,10 @@
   limitations under the License.
 */
 
-function skillMd({ port, appPath }) {
-  const appPathLine =
-    appPath === ''
-      ? ''
-      : `\nThe Lowdefy app config (lowdefy.yaml, pages, requests) lives in \`${appPath}/\`.\n`;
+import devServerRules from './devServerRules.js';
+import TESTING_RULES from './testingRules.js';
+
+function skillMd() {
   return `---
 name: lowdefy-config
 description: Use when writing or editing Lowdefy YAML config — pages, blocks, operators, actions, connections, or requests. Looks up exact type names, schemas, and examples from the running dev server instead of guessing.
@@ -26,20 +25,44 @@ description: Use when writing or editing Lowdefy YAML config — pages, blocks, 
 
 # Writing Lowdefy config
 
-The dev server serves docs for everything installed in this project at
-\`http://localhost:${port}/lowdefy-docs\` (also as MCP tools via the \`lowdefy-docs\` server).
-${appPathLine}
+${devServerRules()}
+
 Never guess type names or properties. Before writing config:
 
-1. Call \`lowdefy_list_types\` (or \`GET /lowdefy-docs/blocks\`, \`/lowdefy-docs/operators\`,
-   \`/lowdefy-docs/actions\`, \`/lowdefy-docs/connections\`, \`/lowdefy-docs/requests\`) to find the exact
-   type name — this includes this project's local plugins.
-2. Call \`lowdefy_get_schema\` (or \`GET /lowdefy-docs/schema/{kind}/{type}\`) for the
-   exact properties and events of that type.
-3. Call \`lowdefy_get_examples\` (or \`GET /lowdefy-docs/examples/{type}\`) to see real
-   usage YAML for blocks.
-4. For concepts (state, operators, events, requests), call \`lowdefy_get_doc\`
-   or \`lowdefy_search_docs\`.
+1. Call \`lowdefy_list_types\` to find the exact type name — this includes this project's local plugins.
+2. Call \`lowdefy_get_schema\` for the exact properties and events of that type.
+3. Call \`lowdefy_get_examples\` to see real usage YAML for blocks.
+4. For concepts (state, operators, events, requests), call \`lowdefy_get_doc\` or \`lowdefy_search_docs\`.
+
+## Icons and interactive HTML
+
+- Icons: use a semantic name (\`icon: edit\`, \`delete\`, \`warning\`). Otherwise use a Lucide name in
+  PascalCase (\`Receipt\`), found with \`lowdefy_search_icons\`. Never invent a name, and never use emoji.
+  Do not write old react-icons names (\`AiOutlineUser\`). Add app-specific semantic names under
+  \`theme.icons.aliases\` in lowdefy.yaml.
+- In any HTML string (Html, ClickableHtml, DangerousHtml, and html properties like Tooltip titles)
+  write \`<i data-icon="edit"></i>\` — never paste inline SVG. Add \`data-tooltip="Text"\` for hover
+  help and \`data-popover="id"\` with a hidden \`data-popover-content="id"\` element for a popover.
+- For clicks inside HTML use ClickableHtml: \`data-event="onEdit"\` fires that block event, with the
+  element's other \`data-*\` attributes as the event object, when the block lists it in
+  \`properties.dataEvents\` (unlisted events do nothing). Escape data in HTML built from requests or
+  users: \`_nunjucks\` escapes \`{{ values }}\`; \`_string.concat\` and \`_js\` do not.
+- Links in HTML: \`<a data-page-id="contacts" data-url-query="_id=42">\` — never a hard-coded
+  \`href="/contacts?..."\` (it reloads the app and ignores basePath). \`data-new-tab\` instead of
+  \`target="_blank"\` (sanitising strips \`target\`).
+- Statuses in HTML: \`<span data-tag="success">Approved</span>\` or \`<span data-status="warning">…</span>\`
+  — never inline-styled pills or hex status colours.
+- Dates, numbers, people and copyable values in HTML: \`<time datetime="{{ iso }}" data-time="relative">\`
+  (or \`date\`, \`datetime\`, \`time\`), \`data-format="currency" data-currency="USD"\` (or \`number\`,
+  \`percent\`, \`compact\`, \`bytes\`) on the raw number, \`data-avatar="{{ name }}"\` (never an avatar image
+  service), and \`data-copy\` for a copy button.
+- \`data-truncate="2"\` clamps block text (full text in a tooltip when cut off), \`data-tone="secondary"\`
+  mutes text (never inline grey hex colours), and in ClickableHtml a destructive event is listed as
+  \`{ name: onDelete, confirm: "Delete this row?" }\` in \`dataEvents\` so every click asks first. See the \`concepts/html-attributes\` doc.
+
+## Testing a change
+
+${TESTING_RULES}
 
 ## Visual feedback
 

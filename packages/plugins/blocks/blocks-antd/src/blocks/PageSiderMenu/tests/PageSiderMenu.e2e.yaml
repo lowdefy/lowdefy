@@ -14,11 +14,12 @@
 
 id: pagesidermenu
 type: PageSiderMenu
+class:
+  .siderBody: psm-sider-body
 properties:
-  header:
-    theme: dark
+  theme:
+    colorBgLayout: rgb(250, 240, 255)
   sider:
-    theme: light
     initialCollapsed: false
     collapsible: true
   menu:
@@ -27,17 +28,17 @@ properties:
         type: MenuLink
         properties:
           title: Dashboard
-          icon: AiOutlineDashboard
+          icon: Gauge
       - id: psm_link2
         type: MenuLink
         properties:
           title: Users
-          icon: AiOutlineUser
+          icon: user
       - id: psm_group
         type: MenuGroup
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
         links:
           - id: psm_sub1
             type: MenuLink

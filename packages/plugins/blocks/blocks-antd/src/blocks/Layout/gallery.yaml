@@ -91,12 +91,12 @@
                         type: MenuLink
                         properties:
                           title: Dashboard
-                          icon: AiOutlineDashboard
+                          icon: Gauge
                       - id: layout_sider_nav_2
                         type: MenuLink
                         properties:
                           title: Settings
-                          icon: AiOutlineSetting
+                          icon: settings
             - id: layout_sider_content
               type: Content
               layout:
@@ -153,7 +153,7 @@
                 width: 250
                 reverseArrow: true
               style:
-                borderLeft: 1px solid #f0f0f0
+                borderLeft: '1px solid #f0f0f0'
               blocks:
                 - id: layout_right_sider_side_text
                   type: Paragraph
@@ -171,10 +171,13 @@
         minHeight: 280px
       properties:
         theme:
-          headerBg: '#1d39c4'
-          triggerBg: '#597ef7'
-          triggerColor: '#ffffff'
-          triggerHeight: 48
+          bodyBg: '#f0f5ff'
+          headerHeight: 48
+          headerColor: '#1d39c4'
+          footerBg: '#d6e4ff'
+          footerPadding: 12px 24px
+          lightTriggerBg: '#adc6ff'
+          lightTriggerColor: '#1d39c4'
       blocks:
         - id: layout_theme_header
           type: Header
@@ -184,7 +187,7 @@
             - id: layout_theme_header_text
               type: Html
               properties:
-                html: '<span class="text-base font-semibold">Custom themed header via Layout design tokens</span>'
+                html: '<span class="text-base font-semibold">48px header from the headerHeight token</span>'
         - id: layout_theme_inner
           type: Layout
           properties:
@@ -197,13 +200,15 @@
               properties:
                 theme: light
                 width: 180
+                collapsible: true
+                initialCollapsed: false
               blocks:
                 - id: layout_theme_sider_text
                   type: Paragraph
                   style:
                     padding: 16px
                   properties:
-                    content: Sider with custom background color set via the siderBg token. The trigger bar uses triggerBg and triggerColor tokens.
+                    content: The collapse trigger uses the lightTriggerBg and lightTriggerColor tokens.
             - id: layout_theme_content
               type: Content
               layout:
@@ -214,7 +219,7 @@
                 - id: layout_theme_content_text
                   type: Paragraph
                   properties:
-                    content: The Layout theme property accepts antd design tokens like headerBg, footerBg, siderBg, bodyBg, triggerBg, triggerColor, and triggerHeight. These cascade to child Header, Footer, Sider, and Content blocks.
+                    content: The Layout theme property accepts antd Layout design tokens like bodyBg, headerHeight, footerBg and the Sider trigger tokens. They apply to the Header, Footer and Sider blocks inside the layout.
         - id: layout_theme_footer
           type: Footer
           style:
@@ -223,7 +228,7 @@
             - id: layout_theme_footer_text
               type: Paragraph
               properties:
-                content: Footer styled with footerBg token
+                content: Footer styled with the footerBg and footerPadding tokens
 
 - title: Styled Layout (Tailwind CSS)
   fullWidth: true
@@ -282,7 +287,7 @@
               count: 5
             profile:
               avatar:
-                icon: AiOutlineUser
+                icon: user
           style:
             paddingInline: 24px
             borderBottom: 1px solid var(--ant-color-border)
@@ -317,27 +322,27 @@
                         type: MenuLink
                         properties:
                           title: Dashboard
-                          icon: AiOutlineDashboard
+                          icon: Gauge
                       - id: layout_admin_menu_users
                         type: MenuLink
                         properties:
                           title: Users
-                          icon: AiOutlineTeam
+                          icon: users
                       - id: layout_admin_menu_orders
                         type: MenuLink
                         properties:
                           title: Orders
-                          icon: AiOutlineShoppingCart
+                          icon: ShoppingCart
                       - id: layout_admin_menu_reports
                         type: MenuLink
                         properties:
                           title: Reports
-                          icon: AiOutlineBarChart
+                          icon: chart
                       - id: layout_admin_menu_settings
                         type: MenuLink
                         properties:
                           title: Settings
-                          icon: AiOutlineSetting
+                          icon: settings
             - id: layout_admin_content_area
               type: Content
               layout:
@@ -435,7 +440,8 @@
               properties:
                 content: DevDocs
                 level: 4
-                style:
+              style:
+                .element:
                   margin: 0
             - id: layout_docs_version_tag
               type: Tag
@@ -453,7 +459,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                icon: AiOutlineSearch
+                icon: search
                 title: Search docs...
                 color: default
                 variant: outlined
@@ -462,7 +468,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                icon: AiOutlineGithub
+                icon: GitBranch
                 color: default
                 variant: text
                 hideTitle: true
@@ -480,7 +486,7 @@
                 width: 260
                 breakpoint: md
               style:
-                borderRight: 1px solid #f0f0f0
+                borderRight: '1px solid #f0f0f0'
               blocks:
                 - id: layout_docs_nav_title
                   type: Paragraph
@@ -499,22 +505,22 @@
                         type: MenuLink
                         properties:
                           title: Introduction
-                          icon: AiOutlineRead
+                          icon: BookOpen
                       - id: layout_docs_nav_install
                         type: MenuLink
                         properties:
                           title: Installation
-                          icon: AiOutlineDownload
+                          icon: download
                       - id: layout_docs_nav_config
                         type: MenuLink
                         properties:
                           title: Configuration
-                          icon: AiOutlineTool
+                          icon: Wrench
                       - id: layout_docs_nav_deploy
                         type: MenuLink
                         properties:
                           title: Deployment
-                          icon: AiOutlineCloudUpload
+                          icon: CloudUpload
             - id: layout_docs_content_area
               type: Content
               layout:

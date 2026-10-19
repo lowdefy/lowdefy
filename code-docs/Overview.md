@@ -81,8 +81,9 @@ Lowdefy is extensible via npm packages. Everything the user sees or interacts wi
 These ship with Lowdefy and don't need explicit installation:
 
 - `@lowdefy/blocks-antd` - Primary UI components (Ant Design based)
-- `@lowdefy/blocks-antd-x` - AI chat components (AgentChat, AgentConversations)
+- `@lowdefy/blocks-antd-x` - AI components (AgentChat, AgentConversations, IntentInput)
 - `@lowdefy/blocks-basic` - HTML primitives
+- `@lowdefy/blocks-table` - Table and TableInput data tables (see [plugins/blocks/table.md](./plugins/blocks/table.md))
 - `@lowdefy/operators-js` - Core JavaScript operators
 - `@lowdefy/actions-core` - Standard actions
 - `@lowdefy/connection-anthropic` - Anthropic Claude models
@@ -90,6 +91,7 @@ These ship with Lowdefy and don't need explicit installation:
 - `@lowdefy/connection-google` - Google Gemini models
 - `@lowdefy/connection-ai-gateway` - Vercel AI Gateway (multi-provider routing)
 - `@lowdefy/connection-mcp` - MCP server connections
+- `@lowdefy/connection-treg` - treg API catalog (paid external endpoints, enrichment providers)
 
 See [Plugin System Architecture](./architecture/plugin-system.md) for internals.
 
@@ -156,10 +158,10 @@ Requests are server-side data operations:
 
 ## Server Variants
 
-| Server       | Use Case                                                                                     |
-| ------------ | -------------------------------------------------------------------------------------------- |
-| `server`     | Production — Hono app serving the Vite-built client                                           |
-| `server-dev` | Local development — Vite owns HTTP with the Hono app mounted via `@hono/vite-dev-server`      |
+| Server       | Use Case                                                                                       |
+| ------------ | ---------------------------------------------------------------------------------------------- |
+| `server`     | Production — Hono app serving the Vite-built client                                            |
+| `server-dev` | Local development — Vite owns HTTP with the Hono app mounted via `@hono/vite-dev-server`       |
 | `server-e2e` | Playwright e2e testing — production server minus auth/Sentry, with a cookie-based session mock |
 
 ## File Structure
@@ -193,6 +195,8 @@ lowdefy/
 - [Agent System](./architecture/agent-system.md) - AI agent orchestration, tools, and streaming
 - [Build Pipeline](./architecture/build-pipeline.md) - How YAML becomes a runnable server
 - [Request Lifecycle](./architecture/request-lifecycle.md) - Data flow from action to database
+- [How Pages Load Data](./architecture/page-data-loading.md) - Parallel requests, page instances, websocket subscriptions and their costs
+- [Journeys](./architecture/journeys.md) - Config tests: grammar, runner, data sets, traces, evidence, hardening
 - [State Management](./architecture/state-management.md) - Page state and reactivity
 - [Plugin System](./architecture/plugin-system.md) - How plugins are loaded and registered
 - [Auth System](./architecture/auth-system.md) - Authentication integration

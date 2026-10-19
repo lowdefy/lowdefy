@@ -14,18 +14,21 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 import { AuthenticationError, ConfigError } from '@lowdefy/errors';
 
 import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
-import isUnauthenticatedHuman from './isUnauthenticatedHuman.js';
 import runRoutine from './runRoutine.js';
 import scheduleBackground from './scheduleBackground.js';
+import validatePayload from './validatePayload.js';
 
-async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
+async function callEndpoint(
+  context,
+  { blockId, endpointId, outsideCaller = false, pageId, payload }
+) {
   const { logger } = context;
 
   context.blockId = blockId;
@@ -37,10 +40,12 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   const endpointConfig = await getEndpointConfig(context, { endpointId });
 
   // Block HTTP access to InternalApi endpoints - same error as a missing
-  // endpoint, including the unauthenticated fork, so an internal endpoint is
-  // indistinguishable from one that does not exist on both paths.
+  // endpoint, including the guarded unauthenticated fork, so an internal
+  // endpoint is indistinguishable from one that does not exist on both paths.
   if (endpointConfig.type === 'InternalApi') {
-    const err = (await isUnauthenticatedHuman(context))
+    const unauthenticatedHuman =
+      type.isNone(context.user) && !type.isNone(context.authEnforcement) && context.system !== true;
+    const err = unauthenticatedHuman
       ? new AuthenticationError(`Authentication required for API endpoint "${endpointId}".`)
       : new ConfigError(`API Endpoint "${endpointId}" does not exist.`);
     logger.debug({ params: { endpointId }, err }, err.message);
@@ -49,9 +54,22 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
 
   authorizeApiEndpoint(context, { endpointConfig });
 
+  // Validated before the async fork, so a refused payload is answered to the
+  // caller rather than failing in the background. A page CallAPI without a
+  // payload sends none; it is an empty object here as on every other caller.
+  // A page's CallAPI names its page, whose config built the payload. A call that
+  // names no page is an API client's own, as is an MCP tool call
+  // (outsideCaller), so a refusal is that caller's mistake (validatePayload).
+  const deserializedPayload = serializer.deserialize(payload ?? {});
+  validatePayload({
+    endpointConfig,
+    payload: deserializedPayload,
+    outsideCaller: outsideCaller || type.isNone(pageId),
+  });
+
   const routineContext = {
     steps: {},
-    payload: serializer.deserialize(payload),
+    payload: deserializedPayload,
     arrayIndices: [],
     error: null,
     items: {},
@@ -63,6 +81,8 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   // Auth was already checked above; the outcome lands in logs (scheduleBackground)
   // and in whatever the routine itself records.
   if (endpointConfig.async === true) {
+    // The run outlives this request, so the request closing must not cancel it.
+    context.signal = undefined;
     scheduleBackground(context, { event: 'background_endpoint', endpointId }, () =>
       runRoutine(context, routineContext, { routine: endpointConfig.routine })
     );

@@ -101,10 +101,11 @@ test.describe('ControlledList Block', () => {
     const list = getList(page, 'controlledlist_minitems');
     await expect(list).toBeVisible();
 
-    // Should have at least 2 items due to minItems: 2
-    const items = getListItems(list);
-    const count = await items.count();
-    expect(count).toBeGreaterThanOrEqual(2);
+    // One item from state, plus one pushed to reach minItems: 2
+    await expect(getListItems(list)).toHaveCount(2);
+    await expect(getListItems(list).nth(0)).toContainText('Name: Item 1');
+    // At minItems there is nothing to remove
+    await expect(list.locator('.lf-controlled-list-remove')).toHaveCount(0);
   });
 
   test('can add new item', async ({ page }) => {
@@ -137,5 +138,84 @@ test.describe('ControlledList Block', () => {
     // Should have one less item
     items = getListItems(list);
     await expect(items).toHaveCount(2);
+  });
+
+  // ============================================
+  // LOOK: antd List styles and theme tokens
+  // ============================================
+
+  test('renders the bordered antd List look', async ({ page }) => {
+    const list = getList(page, 'controlledlist_with_items');
+    await expect(list).toHaveClass(/ant-list-split/);
+    await expect(list).toHaveClass(/ant-list-bordered/);
+    await expect(list).toHaveClass(/ant-list-something-after-last-item/);
+    await expect(list).toHaveCSS('border-top', '1px solid rgb(217, 217, 217)');
+    await expect(list).toHaveCSS('border-radius', '8px');
+    const header = list.locator('.ant-list-header');
+    await expect(header).toHaveCSS('padding', '12px 24px');
+    await expect(header).toHaveCSS('border-bottom', '1px solid rgba(5, 5, 5, 0.06)');
+    const items = getListItems(list);
+    await expect(items.first()).toHaveCSS('display', 'flex');
+    await expect(items.first()).toHaveCSS('padding', '12px 24px');
+    // The footer follows the items, so the last item keeps its bottom border
+    await expect(items.last()).toHaveCSS('border-bottom', '1px solid rgba(5, 5, 5, 0.06)');
+    await expect(list.locator('.ant-list-footer')).toHaveCSS('padding', '12px 24px');
+  });
+
+  test('drops the last item border when nothing follows the items', async ({ page }) => {
+    const list = getList(page, 'controlledlist_front_items');
+    await expect(list).not.toHaveClass(/ant-list-something-after-last-item/);
+    await expect(getListItems(list).last()).toHaveCSS('border-bottom-style', 'none');
+  });
+
+  test('borders the last item of a list nested in a list with a footer', async ({ page }) => {
+    // antd's rule matches any list inside a list that has something after its items
+    const inner = getBlock(page, 'controlledlist_nested').locator('.ant-list .ant-list');
+    await expect(inner).not.toHaveClass(/ant-list-something-after-last-item/);
+    await expect(getListItems(inner)).toHaveCount(2);
+    await expect(getListItems(inner).last()).toHaveCSS(
+      'border-bottom',
+      '1px solid rgba(5, 5, 5, 0.06)'
+    );
+  });
+
+  test('pads items for the small and large sizes', async ({ page }) => {
+    const small = getList(page, 'controlledlist_small_items');
+    await expect(getListItems(small).first()).toHaveCSS('padding', '8px 16px');
+    await expect(small.locator('.ant-list-header')).toHaveCSS('padding', '8px 16px');
+    const large = getList(page, 'controlledlist_large_items');
+    await expect(getListItems(large).first()).toHaveCSS('padding', '16px 24px');
+  });
+
+  test('styles the empty state like antd List', async ({ page }) => {
+    const empty = getList(page, 'controlledlist_nodata').locator('.ant-list-empty-text');
+    await expect(empty).toHaveText('No items available');
+    await expect(empty).toHaveCSS('padding', '16px');
+    await expect(empty).toHaveCSS('text-align', 'center');
+    await expect(empty).toHaveCSS('color', 'rgba(0, 0, 0, 0.25)');
+  });
+
+  test('applies List and global tokens from theme', async ({ page }) => {
+    const list = getList(page, 'controlledlist_theme');
+    await expect(list).toHaveCSS('border-top-color', 'rgb(114, 46, 209)');
+    await expect(list).toHaveCSS('border-radius', '2px');
+    await expect(list.locator('.ant-list-header')).toHaveCSS(
+      'background-color',
+      'rgb(230, 244, 255)'
+    );
+    await expect(list.locator('.ant-list-footer')).toHaveCSS(
+      'background-color',
+      'rgb(246, 255, 237)'
+    );
+    const item = getListItems(list).first();
+    await expect(item).toHaveCSS('padding', '20px 24px');
+    await expect(item).toHaveCSS('border-bottom-color', 'rgb(255, 77, 79)');
+    await expect(getListItems(getList(page, 'controlledlist_theme_small')).first()).toHaveCSS(
+      'padding',
+      '2px 40px'
+    );
+    await expect(
+      getList(page, 'controlledlist_theme_empty').locator('.ant-list-empty-text')
+    ).toHaveCSS('padding', '4px');
   });
 });

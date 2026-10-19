@@ -32,8 +32,53 @@ const SERVICE_ERROR_CODES = new Set([
   'DEPTH_ZERO_SELF_SIGNED_CERT',
 ]);
 
+// The HTTP status an error carries, in the places client libraries put it: most HTTP
+// clients use `statusCode`, `status` or `response.status`, AWS SDK v3 uses
+// `$metadata.httpStatusCode`, and @google-cloud and SendGrid use a numeric `code`. A
+// numeric `code` outside the HTTP range is a driver's own code (MongoDB), not a status.
+function readHttpStatus(error) {
+  if (!error || typeof error !== 'object') return undefined;
+  const numericCode =
+    Number.isInteger(error.code) && error.code >= 100 && error.code < 600 ? error.code : undefined;
+  return (
+    error.statusCode ??
+    error.status ??
+    error.response?.status ??
+    error.$metadata?.httpStatusCode ??
+    numericCode
+  );
+}
+
+// The first HTTP status down a retrying client's lastError and the cause chain.
+function findHttpStatus(error, seen = new Set()) {
+  if (!error || typeof error !== 'object' || seen.has(error)) return undefined;
+  seen.add(error);
+  return (
+    readHttpStatus(error) ??
+    findHttpStatus(error.lastError, seen) ??
+    findHttpStatus(error.cause, seen)
+  );
+}
+
+// 5xx is a failing service; 429 is a service throttling its callers. Both pass with
+// time, and neither is fixed by changing config.
+function isServiceStatus(statusCode) {
+  return statusCode === 429 || (statusCode >= 500 && statusCode < 600);
+}
+
+// Retry-After from response headers, which clients expose as a plain object (the AI
+// SDK's responseHeaders, axios and SendGrid response.headers, Stripe headers) or as a
+// fetch Headers instance.
+function readRetryAfterHeader(headers) {
+  if (!headers || typeof headers !== 'object') return undefined;
+  if (typeof headers.get === 'function') {
+    return headers.get('retry-after') ?? undefined;
+  }
+  return headers['retry-after'] ?? headers['Retry-After'];
+}
+
 /**
- * Error class for external service failures (network, timeout, database, 5xx).
+ * Error class for external service failures (network, timeout, database, 5xx, 429).
  *
  * ServiceError represents infrastructure/service issues that are NOT caused by
  * invalid configuration. The config location is still resolved to help developers
@@ -63,12 +108,15 @@ class ServiceError extends Error {
    * @param {string} [options.code] - Error code (e.g., 'ECONNREFUSED')
    * @param {number} [options.statusCode] - HTTP status code if applicable
    * @param {string} [options.configKey] - Config key for location resolution
+   * @param {string} [options.hint] - A sentence telling the developer what to do about the
+   *   failure. Enumerable, so it survives serialization to the client.
+   * @param {string} [options.retryAfter] - The Retry-After a throttling service sent
+   *   (seconds or an HTTP date). Read from the cause when not given.
    */
-  constructor(message, { cause, service, code, statusCode, configKey } = {}) {
+  constructor(message, { cause, service, code, statusCode, configKey, hint, retryAfter } = {}) {
     // Extract info from wrapped error if provided
     const errorCode = code ?? cause?.code;
-    const errorStatusCode =
-      statusCode ?? cause?.statusCode ?? cause?.status ?? cause?.response?.status;
+    const errorStatusCode = statusCode ?? findHttpStatus(cause);
 
     // Use provided message, or enhance wrapped error's message
     const baseMessage = message ?? (cause ? ServiceError.enhanceMessage(cause) : 'Service error');
@@ -83,26 +131,48 @@ class ServiceError extends Error {
     this._message = baseMessage;
     this.service = service;
     this.code = errorCode;
+    this.hint = hint ?? cause?.hint ?? null;
     this.statusCode = errorStatusCode;
-    this.configKey = configKey ?? null;
+    this.retryAfter = retryAfter ?? ServiceError.readRetryAfter(cause);
+    // Extract from the wrapped error like PluginError does, so a ServiceError
+    // wrapped around an error that already resolved its config location keeps it.
+    this.configKey = configKey ?? cause?.configKey ?? null;
   }
 
   /**
-   * Checks if an error is a service error (network issues, timeouts, 5xx).
+   * Checks if an error is a service error (network issues, timeouts, 5xx, rate limits).
    * @param {Error} error - The error to check
+   * @param {Set} [seen] - Errors already checked, so a cyclic cause chain ends
    * @returns {boolean} True if this is a service error
    */
-  static isServiceError(error) {
-    if (!error) return false;
+  static isServiceError(error, seen = new Set()) {
+    if (!error || seen.has(error)) return false;
+    seen.add(error);
+
+    // A client that retried and gave up (the AI SDK's RetryError) carries the
+    // failure it retried on; its own message and fields hold no status.
+    if (error.lastError) {
+      return ServiceError.isServiceError(error.lastError, seen);
+    }
 
     // Check error code
     if (error.code && SERVICE_ERROR_CODES.has(error.code)) {
       return true;
     }
 
-    // Check HTTP status codes (5xx = server error)
-    const statusCode = error.statusCode ?? error.status ?? error.response?.status;
-    if (statusCode && statusCode >= 500 && statusCode < 600) {
+    // A call cancelled because it ran out of time (AbortSignal.timeout, the AI SDK's
+    // timeout option, the server's request timeout).
+    if (error.name === 'TimeoutError') {
+      return true;
+    }
+
+    // AWS SDK v3 marks throttling exceptions as retryable throttling; some services
+    // answer them with 400 rather than 429.
+    if (error.$retryable?.throttling === true) {
+      return true;
+    }
+
+    if (isServiceStatus(readHttpStatus(error))) {
       return true;
     }
 
@@ -111,6 +181,7 @@ class ServiceError extends Error {
     if (
       message.includes('network') ||
       message.includes('timeout') ||
+      message.includes('too many requests') ||
       message.includes('connection refused') ||
       message.includes('dns lookup failed') ||
       message.includes('socket hang up') ||
@@ -120,7 +191,9 @@ class ServiceError extends Error {
       return true;
     }
 
-    return false;
+    // A client error that wraps the network failure underneath it (the AI
+    // SDK's "Cannot connect to API" around a refused or timed-out fetch).
+    return ServiceError.isServiceError(error.cause, seen);
   }
 
   /**
@@ -130,7 +203,7 @@ class ServiceError extends Error {
    */
   static enhanceMessage(error) {
     const code = error.code;
-    const statusCode = error.statusCode ?? error.status ?? error.response?.status;
+    const statusCode = findHttpStatus(error);
 
     if (code === 'ECONNREFUSED') {
       return `Connection refused. The service may be down or the address may be incorrect. ${
@@ -146,11 +219,40 @@ class ServiceError extends Error {
     if (code === 'ECONNRESET') {
       return `Connection reset by the server. ${error.message ?? ''}`;
     }
+    if (statusCode === 429) {
+      const retryAfter = ServiceError.readRetryAfter(error);
+      const retry = retryAfter ? ` Retry after ${retryAfter}.` : '';
+      return `Rate limited by the service (429 Too Many Requests).${retry} ${error.message ?? ''}`;
+    }
     if (statusCode && statusCode >= 500) {
       return `Server returned error ${statusCode}. ${error.message ?? ''}`;
     }
 
     return error.message;
+  }
+
+  /**
+   * Reads the Retry-After header a throttling service sent, from the error, the
+   * failure a retrying client gave up on, or its cause chain.
+   * @param {Error} error - The error to read
+   * @param {Set} [seen] - Errors already read, so a cyclic cause chain ends
+   * @returns {string|null} The header value (seconds or an HTTP date), or null
+   */
+  static readRetryAfter(error, seen = new Set()) {
+    if (!error || typeof error !== 'object' || seen.has(error)) return null;
+    seen.add(error);
+    const retryAfter =
+      readRetryAfterHeader(error.responseHeaders) ??
+      readRetryAfterHeader(error.response?.headers) ??
+      readRetryAfterHeader(error.headers) ??
+      readRetryAfterHeader(error.$response?.headers);
+    if (retryAfter !== undefined && retryAfter !== null) {
+      return String(retryAfter);
+    }
+    return (
+      ServiceError.readRetryAfter(error.lastError, seen) ??
+      ServiceError.readRetryAfter(error.cause, seen)
+    );
   }
 }
 

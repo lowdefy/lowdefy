@@ -1,0 +1,160 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
+import { spawnSync } from 'child_process';
+
+import { getProcessStartTime, isProcessStartTime, readDevInstance } from '@lowdefy/node-utils';
+
+import acquireDevInstance from './acquireDevInstance.mjs';
+
+let configDirectory;
+
+beforeEach(() => {
+  configDirectory = fs.realpathSync.native(fs.mkdtempSync(path.join(os.tmpdir(), 'dev-instance-')));
+});
+
+afterEach(() => {
+  fs.rmSync(configDirectory, { recursive: true, force: true });
+});
+
+function instancePath() {
+  return path.join(configDirectory, '.lowdefy', 'instance.json');
+}
+
+function readRecord() {
+  return JSON.parse(fs.readFileSync(instancePath(), 'utf8'));
+}
+
+// Windows has no owner-only file mode bits.
+const onPosix = process.platform === 'win32' ? test.skip : test;
+
+test('acquireDevInstance writes a starting record for this process', () => {
+  const instance = acquireDevInstance({ configDirectory, owner: 'terminal', version: '6.0.0' });
+  expect(instance.acquired).toBe(true);
+  expect(readRecord()).toMatchObject({
+    pid: process.pid,
+    configDirectory,
+    owner: 'terminal',
+    state: 'starting',
+    version: '6.0.0',
+  });
+});
+
+onPosix('acquireDevInstance writes the record readable only by the owner', () => {
+  acquireDevInstance({ configDirectory, owner: 'terminal', version: '6.0.0' });
+  expect(fs.statSync(instancePath()).mode & 0o777).toBe(0o600);
+});
+
+test('acquireDevInstance update merges fields into the record', () => {
+  const instance = acquireDevInstance({ configDirectory, owner: 'hub', version: '6.0.0' });
+  instance.update({ port: 4100, internalPort: 4101 });
+  instance.update({ state: 'ready' });
+  expect(readRecord()).toMatchObject({
+    owner: 'hub',
+    port: 4100,
+    internalPort: 4101,
+    state: 'ready',
+  });
+});
+
+test('acquireDevInstance release removes the record', () => {
+  const instance = acquireDevInstance({ configDirectory, owner: 'terminal', version: '6.0.0' });
+  instance.release();
+  expect(fs.existsSync(instancePath())).toBe(false);
+});
+
+test('acquireDevInstance refuses when a live process holds this app', () => {
+  // The parent process is alive for the whole test and is never this process,
+  // on every platform (Windows has no pid 1).
+  const livePid = process.ppid;
+  fs.mkdirSync(path.dirname(instancePath()), { recursive: true });
+  fs.writeFileSync(instancePath(), JSON.stringify({ pid: livePid, configDirectory, port: 3000 }));
+  const instance = acquireDevInstance({ configDirectory, owner: 'terminal', version: '6.0.0' });
+  expect(instance.acquired).toBe(false);
+  expect(instance.holder).toEqual({ pid: livePid, configDirectory, port: 3000 });
+});
+
+test('acquireDevInstance takes over a record whose process has exited', () => {
+  const dead = spawnSync(process.execPath, ['-e', '']).pid;
+  fs.mkdirSync(path.dirname(instancePath()), { recursive: true });
+  fs.writeFileSync(instancePath(), JSON.stringify({ pid: dead, configDirectory }));
+  const instance = acquireDevInstance({ configDirectory, owner: 'terminal', version: '6.0.0' });
+  expect(instance.acquired).toBe(true);
+  expect(readRecord().pid).toBe(process.pid);
+});
+
+test('acquireDevInstance takes over a record copied from another checkout', () => {
+  fs.mkdirSync(path.dirname(instancePath()), { recursive: true });
+  fs.writeFileSync(instancePath(), JSON.stringify({ pid: 1, configDirectory: '/other/checkout' }));
+  const instance = acquireDevInstance({ configDirectory, owner: 'terminal', version: '6.0.0' });
+  expect(instance.acquired).toBe(true);
+});
+
+test('acquireDevInstance release leaves a record taken over by a newer manager', () => {
+  const instance = acquireDevInstance({ configDirectory, owner: 'terminal', version: '6.0.0' });
+  fs.writeFileSync(instancePath(), JSON.stringify({ pid: 1, configDirectory }));
+  instance.release();
+  expect(fs.existsSync(instancePath())).toBe(true);
+});
+
+// A start time in the form this platform reads, but not the one the pid's process has: on
+// Linux, the same ticks in another boot.
+function otherStartTime(pid) {
+  const startTime = getProcessStartTime({ pid });
+  if (typeof startTime === 'string') {
+    return startTime.replace(/^linux:[^:]+:/, 'linux:00000000-0000-0000-0000-000000000000:');
+  }
+  return 0;
+}
+
+test('acquireDevInstance takes over a record left on a pid another process now has', () => {
+  // pid 1 is alive, but it is not the manager that wrote this record.
+  fs.mkdirSync(path.dirname(instancePath()), { recursive: true });
+  fs.writeFileSync(
+    instancePath(),
+    JSON.stringify({ pid: 1, processStartTime: otherStartTime(1), configDirectory })
+  );
+  const instance = acquireDevInstance({ configDirectory, owner: 'terminal', version: '6.0.0' });
+  expect(instance.acquired).toBe(true);
+  expect(isProcessStartTime(readRecord().processStartTime)).toBe(true);
+});
+
+// Case variants name one directory only where the file system ignores case.
+const tmpReal = fs.realpathSync.native(os.tmpdir());
+const onCaseInsensitiveFs =
+  tmpReal !== tmpReal.toUpperCase() && fs.existsSync(tmpReal.toUpperCase()) ? test : test.skip;
+
+onCaseInsensitiveFs(
+  'acquireDevInstance records the path as stored on disk when started from a case variant of it',
+  () => {
+    const variant = configDirectory.toUpperCase();
+    const instance = acquireDevInstance({
+      configDirectory: variant,
+      owner: 'terminal',
+      version: '6.0.0',
+    });
+    try {
+      expect(readRecord().configDirectory).toEqual(configDirectory);
+      expect(readDevInstance({ configDirectory })).toMatchObject({ pid: process.pid });
+      expect(readDevInstance({ configDirectory: variant })).toMatchObject({ pid: process.pid });
+    } finally {
+      instance.release();
+    }
+  }
+);

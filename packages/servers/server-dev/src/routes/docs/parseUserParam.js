@@ -16,36 +16,42 @@
 
 import { type } from '@lowdefy/helpers';
 
-// The docs routes take the headless caller as a JSON string on the GET routes
-// (query params are always strings) and as an object in the POST bodies, so both
-// arrive here and every route answers a bad `user` with the same message.
-// Returns { user } or { error }.
+const SHAPE =
+  'The "user" param must be a user object (JSON on a query string), e.g. {"roles":["admin"]}, "none" to act signed out, or the name of a user in the data set the "data" param names.';
+
+// The docs routes take the caller in the forms the MCP tools take (see
+// lib/docs/resolveToolCaller.js): a user object - a JSON string on the GET
+// routes, since query params are always strings, and an object in the POST
+// bodies - "none", or a data set user name. Both arrive here, so every route
+// answers a bad `user` with the same message. Returns { user } or { error }.
 function parseUserParam({ value }) {
   if (type.isNone(value)) {
     return {};
   }
-
-  let user = value;
-  if (type.isString(value)) {
-    try {
-      user = JSON.parse(value);
-    } catch {
-      return {
-        error: `The "user" param must be JSON, e.g. {"roles":["admin"]}. Received ${JSON.stringify(
-          value
-        )}.`,
-      };
-    }
+  if (type.isObject(value)) {
+    return { user: value };
   }
-
-  if (!type.isObject(user)) {
+  if (!type.isString(value) || value === '') {
+    return { error: `${SHAPE} Received ${JSON.stringify(value)}.` };
+  }
+  // A plain string is "none" or a data set user name; one that opens like JSON
+  // is a user object written as a query param.
+  if (!value.startsWith('{') && !value.startsWith('[')) {
+    return { user: value };
+  }
+  let user;
+  try {
+    user = JSON.parse(value);
+  } catch {
     return {
-      error: `The "user" param must be an object, e.g. {"roles":["admin"]}. Received ${JSON.stringify(
-        user
+      error: `The "user" param must be JSON, e.g. {"roles":["admin"]}. Received ${JSON.stringify(
+        value
       )}.`,
     };
   }
-
+  if (!type.isObject(user)) {
+    return { error: `${SHAPE} Received ${JSON.stringify(user)}.` };
+  }
   return { user };
 }
 

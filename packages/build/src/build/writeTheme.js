@@ -16,6 +16,8 @@
 
 import { type, serializer } from '@lowdefy/helpers';
 
+import iconThemeDefaults from './icons/iconThemeDefaults.js';
+
 async function writeTheme({ components, context }) {
   if (type.isNone(components.theme)) {
     components.theme = {};
@@ -26,6 +28,16 @@ async function writeTheme({ components, context }) {
   if (type.isNone(components.theme.darkMode)) {
     components.theme.darkMode = 'system';
   }
+  // The client reads theme.icons.{size,strokeWidth,nonScalingStroke} with no
+  // fallbacks, so every theme.json carries them.
+  if (type.isNone(components.theme.icons)) {
+    components.theme.icons = {};
+  }
+  Object.entries(iconThemeDefaults).forEach(([key, value]) => {
+    if (type.isNone(components.theme.icons[key])) {
+      components.theme.icons[key] = value;
+    }
+  });
   await context.writeBuildArtifact('theme.json', serializer.serializeToString(components.theme));
 }
 

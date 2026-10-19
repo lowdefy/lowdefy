@@ -180,4 +180,11 @@ test.describe('PageHeaderMenu Block', () => {
     // After clicking, the item should be active
     await expect(dashboardItem).toHaveClass(/ant-menu-item-active/);
   });
+
+  test('applies theme tokens to the page layout', async ({ page }) => {
+    await expect(page.locator('.ant-layout').first()).toHaveCSS(
+      'background-color',
+      'rgb(250, 240, 255)'
+    );
+  });
 });

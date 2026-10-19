@@ -1,0 +1,5 @@
+id: ai
+type: Anthropic
+properties:
+  apiKey:
+    _secret: ANTHROPIC_API_KEY

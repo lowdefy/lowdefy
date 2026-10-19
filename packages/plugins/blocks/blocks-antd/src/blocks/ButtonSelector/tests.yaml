@@ -165,3 +165,17 @@
           background: red
       - label: two
         value: 2
+- id: 'properties.block: true'
+  type: ButtonSelector
+  properties:
+    block: true
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.direction: vertical'
+  type: ButtonSelector
+  properties:
+    direction: vertical
+    options:
+      - Option 1
+      - Option 2

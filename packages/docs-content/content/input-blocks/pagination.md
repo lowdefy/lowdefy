@@ -60,6 +60,8 @@ blocks:
 
 **Small size:**
 
+**Large size:**
+
 ```yaml
 - id: size_default_label
   type: Markdown
@@ -78,6 +80,36 @@ blocks:
   properties:
     total: 100
     size: small
+- id: size_large_label
+  type: Markdown
+  properties:
+    content: "**Large size:**"
+- id: size_large
+  type: Pagination
+  properties:
+    total: 100
+    size: large
+```
+
+```yaml
+- id: align_center
+  type: Pagination
+  properties:
+    total: 100
+    align: center
+- id: align_end
+  type: Pagination
+  properties:
+    total: 100
+    align: end
+```
+
+```yaml
+- id: less_items
+  type: Pagination
+  properties:
+    total: 500
+    showLessItems: true
 ```
 
 **Simple (default size):**
@@ -106,9 +138,11 @@ blocks:
     size: small
 ```
 
-**Boolean (default format):**
+**Default format:**
 
 **Custom string:**
+
+**Hidden:**
 
 **Show total (small):**
 
@@ -116,7 +150,7 @@ blocks:
 - id: show_total_bool_label
   type: Markdown
   properties:
-    content: "**Boolean (default format):**"
+    content: "**Default format:**"
 - id: show_total_bool
   type: Pagination
   properties:
@@ -131,6 +165,15 @@ blocks:
   properties:
     total: 85
     showTotal: 85 results found
+- id: show_total_hidden_label
+  type: Markdown
+  properties:
+    content: "**Hidden:**"
+- id: show_total_hidden
+  type: Pagination
+  properties:
+    total: 85
+    showTotal: false
 - id: show_total_small_label
   type: Markdown
   properties:
@@ -457,19 +500,26 @@ blocks:
 
 ```yaml
 - id: with_label_default
-  type: Pagination
+  type: Label
   properties:
     title: Page Navigation
-    total: 100
+  blocks:
+    - id: with_label_default_pagination
+      type: Pagination
+      properties:
+        total: 100
 - id: with_label_inline
-  type: Pagination
+  type: Label
   properties:
     title: Results
-    total: 200
-    showTotal: true
-    label:
-      inline: true
-      span: 6
+    inline: true
+    span: 6
+  blocks:
+    - id: with_label_inline_pagination
+      type: Pagination
+      properties:
+        total: 200
+        showTotal: true
 ```
 
 **Custom background and padding:**
@@ -500,7 +550,7 @@ blocks:
   type: Pagination
   style:
     .element:
-      border: 1px solid
+      border: "1px solid #d9d9d9"
       borderRadius: 8
       padding: 12
       display: flex
@@ -633,9 +683,12 @@ blocks:
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `total` | integer | `100` | Total number of items to be displayed in pagination. |
-| `size` | string | `"default"` | Pagination element size. Enum: `small`, `default`. |
+| `size` | string | `"default"` | Pagination element size. Enum: `small`, `default`, `large`. |
+| `align` | string | `"start"` | Horizontal alignment of the pagination. Enum: `start`, `center`, `end`. |
+| `responsive` | boolean | `false` | Switch to the small size on narrow screens. Only applies when size is not set. |
+| `showLessItems` | boolean | `false` | Show fewer page number items around the current page. |
 | `simple` | boolean | `false` | Use simplified pagination display. |
-| `showTotal` | boolean \| string \| object | `false` | Show pagination total number and range if boolean, or define a custom string or function to display. |
+| `showTotal` | boolean \| string \| object | `true` | Show the item range and total, such as "1-10 of 100 items". Set false to hide it, a string to show custom text, or a function that receives the total and the range. |
 | `showSizeChanger` | boolean | `false` | Determine whether to show page size select, it will be true when total > 50. |
 | `showQuickJumper` | boolean | `false` | Determine whether you can jump to pages directly. |
 | `pageSizeOptions` | array | `[10,20,30,40]` | Specify the page size changer options. |
@@ -645,8 +698,10 @@ blocks:
 | `theme.itemBg` | string | `"#ffffff"` | Background color for pagination items. |
 | `theme.itemSize` | number | `32` | Size of pagination items. |
 | `theme.itemSizeSM` | number | `24` | Size of pagination items in small mode. |
+| `theme.itemSizeLG` | number | `40` | Size of pagination items in large mode. |
 | `theme.itemActiveBg` | string | `"#ffffff"` | Background color for the active pagination item. |
-| `theme.itemActiveColor` | string | - | Text color for the active pagination item. |
+| `theme.itemActiveColor` | string | `"#1677ff"` | Text color for the active pagination item. |
+| `theme.itemActiveColorHover` | string | `"#4096ff"` | Text color for the active pagination item on hover. |
 | `theme.itemActiveColorDisabled` | string | `"rgba(0,0,0,0.25)"` | Text color for the active item when disabled. |
 | `theme.itemActiveBgDisabled` | string | `"rgba(0,0,0,0.15)"` | Background color for the active item when disabled. |
 | `theme.itemLinkBg` | string | `"#ffffff"` | Background color for prev/next link items. |
@@ -675,5 +730,6 @@ blocks:
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Pagination element. |
+| `/item` | Each page number item. |
 
 No slots defined.

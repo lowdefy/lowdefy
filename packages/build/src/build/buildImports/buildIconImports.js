@@ -14,32 +14,70 @@
   limitations under the License.
 */
 
-import iconPackages from './iconPackages.js';
-import validateIconImports from './validateIconImports.js';
+import { ConfigWarning } from '@lowdefy/errors';
 
-function getConfigIcons({ components, icons, regex }) {
-  [...JSON.stringify(components.global || {}).matchAll(regex)].map((match) => icons.add(match[1]));
-  [...JSON.stringify(components.menus || []).matchAll(regex)].map((match) => icons.add(match[1]));
-  [...JSON.stringify(components.pages || []).matchAll(regex)].map((match) => icons.add(match[1]));
+import alwaysBundledIcons from '../icons/alwaysBundledIcons.js';
+import resolveIconName from '../icons/resolveIconName.js';
+import validateIconNames from '../icons/validateIconNames.js';
+import collectIconNames from './collectIconNames.js';
+
+function getConfigTexts({ components, context }) {
+  // Endpoints are scanned too: HTML built on the server (event messages,
+  // notifications) reaches the client as data. buildJs has already replaced
+  // _js bodies with hashes, so names used in _js code (ag-grid cells,
+  // formatters, server routines) are only visible in the JS sources.
+  return [
+    JSON.stringify(components.global ?? {}),
+    JSON.stringify(components.menus ?? []),
+    JSON.stringify(components.pages ?? []),
+    JSON.stringify(components.api ?? []),
+    ...Object.values(context.jsMap.client ?? {}),
+    ...Object.values(context.jsMap.server ?? {}),
+  ];
 }
 
-function getBlockDefaultIcons({ blocks, context, icons, regex }) {
+// Returns the sorted icon names (semantic, set and qualified, as the app
+// writes them) that plugins/icons.js carries. Each resolves; the client looks
+// every name up in that map, so "edit", "Pencil" and "lucide:Pencil" are all
+// keys.
+function buildIconImports({ blocks, components, context }) {
+  const { icons } = context;
+  validateIconNames({
+    config: [components.global ?? {}, components.menus ?? [], components.pages ?? []],
+    icons,
+    context,
+  });
+
+  const names = new Set(alwaysBundledIcons);
+  function addIfResolves(name) {
+    if (resolveIconName({ name, ...icons }) !== null) {
+      names.add(name);
+    }
+  }
+
+  getConfigTexts({ components, context }).forEach((text) => {
+    collectIconNames({ text }).forEach(addIfResolves);
+  });
+
   blocks.forEach((block) => {
-    (context.typesMap.icons[block.typeName] || []).forEach((icon) => {
-      [...JSON.stringify(icon).matchAll(regex)].map((match) => icons.add(match[1]));
+    (context.typesMap.icons[block.typeName] ?? []).forEach((name) => {
+      if (resolveIconName({ name, ...icons }) === null) {
+        context.handleWarning(
+          new ConfigWarning(
+            `Block type "${block.typeName}" (${block.package}) lists icon "${name}" in its meta.icons, which is not an icon name. The block may render the fallback icon.`,
+            { checkSlug: 'icons' }
+          )
+        );
+        return;
+      }
+      names.add(name);
     });
   });
-}
 
-function buildIconImports({ blocks, components, context, defaults = {} }) {
-  const iconImports = [];
-  Object.entries(iconPackages).forEach(([iconPackage, regex]) => {
-    const icons = new Set(defaults[iconPackage]);
-    getConfigIcons({ components, icons, regex });
-    getBlockDefaultIcons({ blocks, context, icons, regex });
-    iconImports.push({ icons: [...icons], package: iconPackage });
-  });
-  return validateIconImports({ iconImports, context });
+  // buildIconContext validated every entry.
+  (components.theme?.icons?.include ?? []).forEach((name) => names.add(name));
+
+  return [...names].sort();
 }
 
 export default buildIconImports;

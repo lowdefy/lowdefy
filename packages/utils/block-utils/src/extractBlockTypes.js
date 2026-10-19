@@ -26,6 +26,10 @@ function extractBlockTypes(metas) {
     if (meta.initValue !== undefined) entry.initValue = meta.initValue;
     if (meta.slots !== undefined) entry.slots = meta.slots;
     if (meta.cssKeys) entry.cssKeys = Object.keys(meta.cssKeys);
+    // Action and operator types the block runs through events it registers
+    // itself; the build counts them wherever the block is used.
+    if (meta.actions) entry.actions = meta.actions;
+    if (meta.operators) entry.operators = meta.operators;
     blockMetas[name] = entry;
   }
   return { blocks, icons, blockMetas };

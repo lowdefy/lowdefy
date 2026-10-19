@@ -14,10 +14,18 @@
   limitations under the License.
 */
 
+import { EventEmitter } from 'node:events';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import { Hono } from 'hono';
 import { jest } from '@jest/globals';
+
+const mockLaunch = jest.fn();
+jest.unstable_mockModule('playwright-core', () => ({
+  chromium: { launch: mockLaunch },
+  selectors: { register: jest.fn(async () => {}) },
+}));
 
 // openPage takes its browser as a parameter, so a fake one covers the cookie
 // injection without a real Chromium. lib/build/config.js reads build/config.json
@@ -29,11 +37,22 @@ fs.mkdirSync(path.join(fixtureDir, 'build'), { recursive: true });
 fs.writeFileSync(path.join(fixtureDir, 'build', 'config.json'), JSON.stringify({ basePath: '' }));
 process.chdir(fixtureDir);
 
-const { openPage } = await import('./getBrowser.js');
+const { getBrowser, openPage, buildPageUrl } = await import('./getBrowser.js');
+const { default: isPageReady } = await import('./isPageReady.js');
+const { default: getClientAddress } = await import('../server/getClientAddress.js');
+const { default: readRecordingCookie } = await import('../server/recording/readRecordingCookie.js');
 
 afterAll(() => {
   process.chdir(originalCwd);
   fs.rmSync(fixtureDir, { recursive: true, force: true });
+});
+
+// Every caller closes the contexts openPage gives it; the tests do too, so the
+// module's open-context count starts each test at 0.
+const openedContexts = [];
+
+afterEach(async () => {
+  await Promise.all(openedContexts.splice(0).map((context) => context.close()));
 });
 
 function createBrowser() {
@@ -42,36 +61,159 @@ function createBrowser() {
     goto: jest.fn().mockResolvedValue(undefined),
     waitForFunction: jest.fn().mockResolvedValue(undefined),
   };
-  const context = {
+  // Like Playwright's, the context emits close once, when it first closes.
+  const context = Object.assign(new EventEmitter(), {
     addCookies,
     newPage: jest.fn().mockResolvedValue(page),
-  };
+    route: jest.fn().mockResolvedValue(undefined),
+  });
+  let closed = false;
+  context.close = jest.fn(async () => {
+    if (closed) return;
+    closed = true;
+    context.emit('close');
+  });
+  openedContexts.push(context);
   return {
     browser: { newContext: jest.fn().mockResolvedValue(context) },
     addCookies,
     context,
+    page,
   };
 }
 
-function decodeUserCookie(addCookies) {
+function decodeCallerCookie(addCookies) {
   const [[[cookie]]] = addCookies.mock.calls;
   return JSON.parse(Buffer.from(cookie.value, 'base64').toString());
 }
 
-test('openPage injects the default roleless user when no user is given', async () => {
+function decodeUserCookie(addCookies) {
+  return decodeCallerCookie(addCookies).user;
+}
+
+test('openPage opens a 1280x800 light viewport by default', async () => {
+  const { browser } = createBrowser();
+
+  await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+
+  expect(browser.newContext).toHaveBeenCalledWith({
+    viewport: { width: 1280, height: 800 },
+    colorScheme: 'light',
+  });
+});
+
+test('openPage opens the viewport size and colour scheme it is given', async () => {
+  const { browser } = createBrowser();
+
+  await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    width: 390,
+    height: 844,
+    colorScheme: 'dark',
+  });
+
+  expect(browser.newContext).toHaveBeenCalledWith({
+    viewport: { width: 390, height: 844 },
+    colorScheme: 'dark',
+  });
+});
+
+test('openPage injects the default roleless user when no user is given, not marked explicit', async () => {
   const { browser, addCookies } = createBrowser();
 
   await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
 
-  expect(decodeUserCookie(addCookies)).toEqual({
-    sub: 'lowdefy-headless',
-    id: 'lowdefy-headless',
-    name: 'Lowdefy Headless',
-    roles: [],
+  expect(decodeCallerCookie(addCookies)).toEqual({
+    user: { id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: [] },
+    explicit: false,
   });
 });
 
-test('openPage injects a per-call user with roles', async () => {
+test('openPage injects no user for user none, so the app resolves its own sessions', async () => {
+  const { browser, addCookies } = createBrowser();
+
+  const opened = await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'login',
+    user: 'none',
+  });
+
+  const names = addCookies.mock.calls.map(([[cookie]]) => cookie.name);
+  expect(names).toEqual(['lowdefy_recording']);
+  expect(opened.ready).toBe(true);
+});
+
+function findCookie(addCookies, name) {
+  return addCookies.mock.calls.map(([[cookie]]) => cookie).find((cookie) => cookie.name === name);
+}
+
+test('openPage marks a context with no recording as off, so screenshots and inspection never record', async () => {
+  const { browser, addCookies } = createBrowser();
+
+  await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+
+  const cookie = findCookie(addCookies, 'lowdefy_recording');
+  expect(cookie).toMatchObject({ url: 'http://localhost:3001', httpOnly: true, sameSite: 'Lax' });
+  expect(readRecordingCookie(`lowdefy_recording=${cookie.value}`)).toBe('off');
+});
+
+test('openPage marks a recording context with a cookie readRecordingCookie verifies', async () => {
+  const { browser, addCookies, page } = createBrowser();
+  const recording = {
+    source: 'journey',
+    run: {
+      id: '20261003T151200Z-p0d4rm',
+      by: 'test',
+      journey: 'tests/journeys/tickets.yaml#Assign a ticket',
+      actor: 'main',
+    },
+  };
+
+  await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home', recording });
+
+  const cookie = findCookie(addCookies, 'lowdefy_recording');
+  expect(readRecordingCookie(`lowdefy_recording=${cookie.value}`)).toEqual(recording);
+  const recordingCall = addCookies.mock.invocationCallOrder[addCookies.mock.calls.length - 1];
+  expect(recordingCall).toBeLessThan(page.goto.mock.invocationCallOrder[0]);
+});
+
+test('openPage gives the context the client address it is given, which the dev server resolves', async () => {
+  const { browser, addCookies } = createBrowser();
+
+  await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'login',
+    user: 'none',
+    clientAddress: '203.0.113.7',
+  });
+
+  expect(browser.newContext).toHaveBeenCalledWith({
+    viewport: { width: 1280, height: 800 },
+    colorScheme: 'light',
+  });
+  const [[[cookie]]] = addCookies.mock.calls;
+  expect(cookie).toMatchObject({
+    name: 'lowdefy_journey_actor',
+    url: 'http://localhost:3001',
+    httpOnly: true,
+    sameSite: 'Lax',
+  });
+  const app = new Hono();
+  app.get('/', (c) => c.text(getClientAddress(c)));
+  const env = { incoming: { socket: { remoteAddress: '127.0.0.1' } } };
+  const response = await app.request(
+    '/',
+    { headers: { cookie: `${cookie.name}=${cookie.value}` } },
+    env
+  );
+  expect(await response.text()).toBe('203.0.113.7');
+});
+
+test('openPage injects a per-call user with roles, marked explicit so it beats a mock user', async () => {
   const { browser, addCookies } = createBrowser();
 
   await openPage({
@@ -81,11 +223,9 @@ test('openPage injects a per-call user with roles', async () => {
     user: { id: 'agent', roles: ['user-admin'] },
   });
 
-  expect(decodeUserCookie(addCookies)).toEqual({
-    sub: 'lowdefy-headless',
-    id: 'agent',
-    name: 'Lowdefy Headless',
-    roles: ['user-admin'],
+  expect(decodeCallerCookie(addCookies)).toEqual({
+    user: { id: 'agent', name: 'Lowdefy Headless', roles: ['user-admin'] },
+    explicit: true,
   });
 });
 
@@ -119,4 +259,255 @@ test('openPage rejects an invalid user before opening a browser context', async 
     openPage({ browser, origin: 'http://localhost:3001', pageId: 'home', user: 'admin' })
   ).rejects.toThrow('Headless "user" must be an object. Received "admin".');
   expect(browser.newContext).not.toHaveBeenCalled();
+});
+
+test('openPage loads the page and waits on isPageReady for the page the app shows', async () => {
+  const { browser } = createBrowser();
+
+  const opened = await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+
+  // Not networkidle: the dev reload event stream keeps the network busy for the
+  // life of the page, so that wait only ever ran out its timeout.
+  expect(opened.page.goto).toHaveBeenCalledTimes(1);
+  expect(opened.page.goto).toHaveBeenCalledWith('http://localhost:3001/home', {
+    waitUntil: 'load',
+    timeout: 15000,
+  });
+  // The page shown, so a redirect to the sign-in page settles too.
+  expect(opened.page.waitForFunction).toHaveBeenCalledWith(isPageReady, undefined, {
+    timeout: 15000,
+  });
+  expect(opened.ready).toBe(true);
+});
+
+test.each([
+  ['every image has loaded', [{ complete: true }], true],
+  ['an image is still loading', [{ complete: true }, { complete: false, loading: 'eager' }], false],
+  // Below the fold a lazy image never loads, so waiting on it would always
+  // run out the timeout.
+  [
+    'the only one loading is lazy',
+    [{ complete: true }, { complete: false, loading: 'lazy' }],
+    true,
+  ],
+])('openPage treats the page images as loaded when %s', async (_, images, loaded) => {
+  const { browser, page } = createBrowser();
+
+  await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+
+  const imagesLoaded = page.waitForFunction.mock.calls[1][0];
+  global.document = { images };
+  try {
+    expect(imagesLoaded()).toBe(loaded);
+  } finally {
+    delete global.document;
+  }
+});
+
+test('openPage resolves with ready false when the readiness wait times out', async () => {
+  const { browser, page } = createBrowser();
+  page.waitForFunction.mockRejectedValueOnce(new Error('Timeout 15000ms exceeded.'));
+
+  const opened = await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+
+  expect(opened.ready).toBe(false);
+  expect(opened.page).toBe(page);
+});
+
+test('openPage closes the context it created when the navigation fails', async () => {
+  const { browser, context, page } = createBrowser();
+  page.goto.mockRejectedValue(new Error('Timeout 15000ms exceeded.'));
+
+  await expect(
+    openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' })
+  ).rejects.toThrow('Timeout 15000ms exceeded.');
+  expect(context.close).toHaveBeenCalledTimes(1);
+});
+
+test('openPage closes the context it created when opening a page fails', async () => {
+  const { browser, context } = createBrowser();
+  context.newPage.mockRejectedValue(new Error('Browser crashed.'));
+
+  await expect(
+    openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' })
+  ).rejects.toThrow('Browser crashed.');
+  expect(context.close).toHaveBeenCalledTimes(1);
+});
+
+test('buildPageUrl returns the bare page route without a urlQuery', () => {
+  expect(buildPageUrl({ origin: 'http://localhost:3001', pageId: 'home' })).toEqual(
+    'http://localhost:3001/home'
+  );
+  expect(buildPageUrl({ origin: 'http://localhost:3001', pageId: 'home', urlQuery: {} })).toEqual(
+    'http://localhost:3001/home'
+  );
+});
+
+test('buildPageUrl appends urlQuery the way the engine serializes Link urlQuery', () => {
+  expect(
+    buildPageUrl({
+      origin: 'http://localhost:3001',
+      pageId: 'detail',
+      urlQuery: { id: 'abc 1', page: 2, filter: { open: true } },
+    })
+  ).toEqual('http://localhost:3001/detail?id=abc+1&page=2&filter=%7B%22open%22%3Atrue%7D');
+});
+
+test('buildPageUrl fills the page pattern with pathParams, encoding each value', () => {
+  expect(
+    buildPageUrl({
+      origin: 'http://localhost:3001',
+      pageId: 'ticket',
+      path: 'tickets/{space}/{ticket_id}',
+      pathParams: { space: 'a b/c', ticket_id: 1 },
+      urlQuery: { tab: 'notes' },
+    })
+  ).toEqual('http://localhost:3001/tickets/a%20b%2Fc/1?tab=notes');
+});
+
+test('buildPageUrl serves a multi-segment page id without a path as is', () => {
+  expect(buildPageUrl({ origin: 'http://localhost:3001', pageId: 'support/inbox' })).toEqual(
+    'http://localhost:3001/support/inbox'
+  );
+});
+
+test('openPage opens the page instance its pathParams name', async () => {
+  const { browser, page } = createBrowser();
+
+  const opened = await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'ticket',
+    path: 'tickets/{space}/{ticket_id}',
+    pathParams: { space: 's', ticket_id: '1' },
+  });
+
+  expect(opened.url).toEqual('http://localhost:3001/tickets/s/1');
+  expect(page.goto.mock.calls[0][0]).toEqual('http://localhost:3001/tickets/s/1');
+});
+
+test('openPage opens the page at the urlQuery it was given', async () => {
+  const { browser, page } = createBrowser();
+
+  const opened = await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'detail',
+    urlQuery: { id: '1' },
+  });
+
+  expect(opened.url).toEqual('http://localhost:3001/detail?id=1');
+  expect(page.goto.mock.calls[0][0]).toEqual('http://localhost:3001/detail?id=1');
+});
+
+test('openPage sets the data cookie with the actor cookie attributes before the first navigation', async () => {
+  const { journeyActorToken } = await import('../server/auth/journeyActor.js');
+  const { browser, addCookies, page } = createBrowser();
+  addCookies.mockImplementation(async () => {
+    expect(page.goto).not.toHaveBeenCalled();
+  });
+
+  await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'tickets',
+    clientAddress: '203.0.113.7',
+    dataCookie: 'session1',
+  });
+
+  const cookies = addCookies.mock.calls.map(([[cookie]]) => cookie);
+  const actor = cookies.find((cookie) => cookie.name === 'lowdefy_journey_actor');
+  const data = cookies.find((cookie) => cookie.name === 'lowdefy_journey_data');
+  expect(data).toEqual({
+    name: 'lowdefy_journey_data',
+    value: `${journeyActorToken}.session1`,
+    url: 'http://localhost:3001',
+    httpOnly: actor.httpOnly,
+    sameSite: actor.sameSite,
+  });
+});
+
+test('openPage sets no data cookie without a dataCookie', async () => {
+  const { browser, addCookies } = createBrowser();
+  await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home', user: 'none' });
+  const names = addCookies.mock.calls.map(([[cookie]]) => cookie.name);
+  expect(names).not.toContain('lowdefy_journey_data');
+});
+
+test('openPage aborts and records a data set journey request to the dev server port on another host', async () => {
+  const { browser, context, page } = createBrowser();
+  context.route.mockImplementation(async () => {
+    expect(page.goto).not.toHaveBeenCalled();
+  });
+  const opened = await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'tickets',
+    dataCookie: 'session1',
+  });
+  expect(context.route).toHaveBeenCalledTimes(1);
+  const [[matches, handle]] = context.route.mock.calls;
+  for (const url of [
+    'http://127.0.0.1:3001/api/page/tickets',
+    'http://[::1]:3001/tickets',
+    'http://192.168.1.20:3001/tickets',
+    'https://127.0.0.1:3001/tickets',
+  ]) {
+    expect([url, matches(new URL(url))]).toEqual([url, true]);
+  }
+  for (const url of [
+    'http://localhost:3001/api/page/tickets',
+    'http://127.0.0.1:9000/assets/app.js',
+    'https://example.com/logo.png',
+    'http://127.0.0.1/tickets',
+  ]) {
+    expect([url, matches(new URL(url))]).toEqual([url, false]);
+  }
+  const route = {
+    request: () => ({ url: () => 'http://127.0.0.1:3001/api/page/tickets' }),
+    abort: jest.fn(async () => {}),
+  };
+  await handle(route);
+  expect(route.abort).toHaveBeenCalledTimes(1);
+  expect(opened.leftOrigin).toEqual(['http://127.0.0.1:3001/api/page/tickets']);
+});
+
+test('openPage matches the default port of an origin that names none', async () => {
+  const { browser, context } = createBrowser();
+  await openPage({ browser, origin: 'http://localhost', pageId: 'home', dataCookie: 'session1' });
+  const [[matches]] = context.route.mock.calls;
+  expect(matches(new URL('http://127.0.0.1/home'))).toBe(true);
+  expect(matches(new URL('http://127.0.0.1:80/home'))).toBe(true);
+  expect(matches(new URL('http://127.0.0.1:3001/home'))).toBe(false);
+});
+
+test('openPage routes nothing and records no departures without a dataCookie', async () => {
+  const { browser, context } = createBrowser();
+  const opened = await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+  expect(context.route).not.toHaveBeenCalled();
+  expect(opened.leftOrigin).toEqual([]);
+});
+
+test('a failed openPage closes its context, so the idle browser still closes', async () => {
+  jest.useFakeTimers({ doNotFake: ['performance'] });
+  try {
+    const { browser, page } = createBrowser();
+    browser.isConnected = () => true;
+    browser.close = jest.fn(async () => {});
+    mockLaunch.mockResolvedValue(browser);
+    page.goto.mockRejectedValue(new Error('net::ERR_CONNECTION_REFUSED'));
+
+    const launched = await getBrowser();
+    await expect(
+      openPage({ browser: launched, origin: 'http://localhost:3001', pageId: 'home' })
+    ).rejects.toThrow('net::ERR_CONNECTION_REFUSED');
+    jest.advanceTimersByTime(90_000);
+    for (let i = 0; i < 5; i += 1) {
+      await Promise.resolve();
+    }
+
+    expect(browser.close).toHaveBeenCalledTimes(1);
+  } finally {
+    jest.useRealTimers();
+  }
 });

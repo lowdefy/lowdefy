@@ -81,6 +81,41 @@ blocks:
           content: Deadline
           status: error
 
+  - id: cal_year_cell_data
+    type: Calendar
+    properties:
+      mode: year
+      dateCellData:
+        - date:
+            _date: '2026-03-15'
+          content: Quarter review
+          status: processing
+
+  # ============================================
+  # SHOW WEEK AND SEMANTIC KEYS
+  # ============================================
+
+  - id: cal_show_week
+    type: Calendar
+    properties:
+      fullscreen: false
+      showWeek: true
+
+  - id: cal_css_keys
+    type: Calendar
+    class:
+      .header: cal-header-class
+      .item: cal-item-class
+      .itemContent: cal-item-content-class
+    style:
+      .header:
+        backgroundColor: 'rgb(240, 248, 255)'
+    properties:
+      dateCellData:
+        - date:
+            _date: '2026-03-15'
+          content: Styled
+
   # ============================================
   # EVENTS
   # ============================================

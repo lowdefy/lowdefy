@@ -263,6 +263,76 @@
         steps: 5
         strokeColor: '#52c41a'
 
+- title: Gradient Stroke
+  blocks:
+    - id: gradient_line
+      type: Progress
+      properties:
+        percent: 80
+        strokeColor:
+          from: '#108ee9'
+          to: '#87d068'
+    - id: gradient_circle
+      type: Progress
+      properties:
+        type: circle
+        percent: 90
+        strokeColor:
+          '0%': '#108ee9'
+          '100%': '#87d068'
+
+- title: Value Position
+  blocks:
+    - id: percent_inner_start
+      type: Progress
+      properties:
+        percent: 45
+        size:
+          - -1
+          - 20
+        percentPosition:
+          align: start
+          type: inner
+    - id: percent_inner_center
+      type: Progress
+      properties:
+        percent: 65
+        size:
+          - -1
+          - 20
+        percentPosition:
+          align: center
+          type: inner
+    - id: percent_outer_center
+      type: Progress
+      properties:
+        percent: 30
+        percentPosition:
+          align: center
+          type: outer
+
+- title: Sizes and Circle Steps
+  blocks:
+    - id: size_small_line
+      type: Progress
+      properties:
+        percent: 50
+        size: small
+    - id: size_circle_small
+      type: Progress
+      properties:
+        type: circle
+        percent: 50
+        size: small
+    - id: circle_steps
+      type: Progress
+      properties:
+        type: dashboard
+        percent: 60
+        steps:
+          count: 8
+          gap: 4
+
 - title: Circle Width
   blocks:
     - id: width_small
@@ -440,7 +510,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineFile
+                name: file
                 size: 20
                 color: '#1677ff'
             - id: upload_file_1_info
@@ -469,7 +539,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineFile
+                name: file
                 size: 20
                 color: '#1677ff'
             - id: upload_file_2_info
@@ -500,7 +570,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineFile
+                name: file
                 size: 20
                 color: '#ff4d4f'
             - id: upload_file_3_info
@@ -531,7 +601,7 @@
                 title: Retry Failed
                 color: danger
                 variant: outlined
-                icon: AiOutlineReload
+                icon: refresh
                 size: small
               events:
                 onClick:
@@ -548,7 +618,7 @@
                 title: Upload More
                 color: primary
                 variant: solid
-                icon: AiOutlineUpload
+                icon: upload
                 size: small
               events:
                 onClick:
@@ -604,7 +674,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineCheckCircle
+                name: check-circle
                 size: 18
                 color: '#52c41a'
             - id: onboarding_step_1_label
@@ -632,7 +702,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineCheckCircle
+                name: check-circle
                 size: 18
                 color: '#52c41a'
             - id: onboarding_step_2_label
@@ -660,7 +730,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineCheckCircle
+                name: check-circle
                 size: 18
                 color: '#52c41a'
             - id: onboarding_step_3_label
@@ -688,7 +758,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineClockCircle
+                name: clock
                 size: 18
                 color: '#1677ff'
             - id: onboarding_step_4_label
@@ -716,7 +786,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineClockCircle
+                name: clock
                 size: 18
                 color: '#d9d9d9'
             - id: onboarding_step_5_label
@@ -762,7 +832,7 @@
                 title: Continue Setup
                 color: primary
                 variant: solid
-                icon: AiOutlineArrowRight
+                icon: arrow-right
               events:
                 onClick:
                   - id: continue_msg

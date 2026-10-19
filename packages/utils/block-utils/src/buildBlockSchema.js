@@ -119,7 +119,7 @@ function buildBlockSchema(meta) {
     },
   };
 
-  if (meta.category === 'container') {
+  if (meta.category === 'container' || meta.category === 'input-container') {
     schema.properties.blocks = { type: 'array', items: { type: 'object' } };
     schema.properties.areas = { type: 'object' };
   }

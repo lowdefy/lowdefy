@@ -26,7 +26,12 @@ export default {
     afterChange: 'Trigger actions after the slide is changed.',
     beforeChange: 'Trigger actions before the slide is changed.',
     onInit: 'Trigger actions when the carousel is initialized.',
-    onSwipe: 'Trigger actions when the carousel is swiped.',
+    onSwipe: {
+      description: 'Trigger actions when the user starts to swipe or drag the carousel.',
+      event: {
+        direction: 'The swipe direction: left, right, up or down.',
+      },
+    },
   },
   properties: {
     type: 'object',
@@ -53,9 +58,20 @@ export default {
         description: 'Delay between each auto scroll (in milliseconds).',
       },
       autoplay: {
-        type: 'boolean',
+        type: ['boolean', 'object'],
         default: false,
-        description: 'Toggles whether or not to scroll automatically.',
+        description:
+          'Toggles whether or not to scroll automatically. Set to `{ dotDuration: true }` to show the time until the next slide as a progress bar in the active dot.',
+        docs: {
+          displayType: 'yaml',
+        },
+        properties: {
+          dotDuration: {
+            type: 'boolean',
+            default: false,
+            description: 'Show the autoplay progress in the active dot.',
+          },
+        },
       },
       centerMode: {
         type: 'boolean',
@@ -71,7 +87,8 @@ export default {
         type: 'string',
         enum: ['left', 'right', 'top', 'bottom'],
         default: 'bottom',
-        description: 'The position of the dots, which can be one of top, bottom, left or right.',
+        description:
+          'The position of the dots, which can be one of top, bottom, left or right. Left and right dots make the carousel vertical.',
       },
       dots: {
         type: 'boolean',
@@ -97,6 +114,11 @@ export default {
         type: 'boolean',
         default: false,
         description: 'Go to slide on click.',
+      },
+      initialSlide: {
+        type: 'integer',
+        default: 0,
+        description: 'Index of the slide to show first.',
       },
       infinite: {
         type: 'boolean',
@@ -182,7 +204,7 @@ export default {
       speed: {
         type: 'integer',
         default: 500,
-        description: 'Number of slides to display in grid mode, this is useful with rows option.',
+        description: 'Slide transition animation speed in milliseconds.',
       },
       swipeToSlide: {
         type: 'boolean',
@@ -198,6 +220,11 @@ export default {
         type: 'boolean',
         default: false,
         description: 'Whether or not the slides are shown in a column.',
+      },
+      waitForAnimate: {
+        type: 'boolean',
+        default: false,
+        description: 'Ignore requests to change slide while a slide transition is animating.',
       },
       theme: {
         type: 'object',

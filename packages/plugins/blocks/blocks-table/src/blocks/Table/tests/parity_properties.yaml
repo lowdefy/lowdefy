@@ -1,0 +1,144 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# One TableLight config, rendered by TableParity.e2e.yaml under both `type: TableLight` and
+# `type: Table`: every key here is valid on both blocks with the same meaning.
+user:
+  role: admin
+rowRules:
+  - when: { key: overdue, op: isTrue }
+    className: parity-overdue
+columns:
+  - name
+  - key: amount
+    type: currency
+    cell: { currency: EUR, locale: en-US }
+    aggregate: sum
+  - title: Rates
+    children:
+      - { key: rate, type: percent, cell: { locale: en-US } }
+      - key: score
+        type: number
+        cell: { locale: en-US, decimals: 1 }
+        aggregate: avg
+        rules:
+          - when: { op: lt, value: 5 }
+            className: parity-low
+  - { key: created, type: date }
+  - { key: active, type: boolean, cell: { trueLabel: Active, falseLabel: Idle } }
+  - key: stage
+    type: tag
+    options:
+      - { value: lead, label: Lead }
+      - { value: won, label: Won, color: success }
+  - { key: labels, type: tags, cell: { max: 2 } }
+  - key: state
+    type: status
+    options:
+      open: { label: Open, color: processing }
+      closed: { label: Closed, color: error }
+  - { key: owner, type: avatar }
+  - { key: team, type: people }
+  - { key: profile, type: link, cell: { pageId: table-link-target, urlQuery: { id: _id } } }
+  - { key: email, type: email }
+  - { key: site, type: url }
+  - { key: progress, type: progress }
+  - { key: stars, type: rating }
+  - key: bio
+    type: html
+    cell:
+      template: '<b>{{ value }}</b> in {{ row.city }}'
+  - { key: meta, type: json }
+  - key: note
+    tooltip: '{{ row.name }}: {{ value }}'
+  - key: actions
+    type: buttons
+    cell:
+      buttons:
+        - eventName: onEdit
+          title: Edit
+        - eventName: onPromote
+          title: Promote
+          hidden:
+            when: { key: role, op: ne, value: { $user: role } }
+data:
+  - _id: a
+    name: Alice
+    amount: 1200.5
+    rate: 0.125
+    score: 8.25
+    created: '2026-03-01'
+    active: true
+    stage: won
+    labels: [red, green, blue]
+    state: open
+    owner: Alice Adams
+    team: [{ name: Ann Lee }, { name: Bo Kim }]
+    profile: Alice profile
+    email: alice@example.com
+    site: example.com
+    progress: 40
+    stars: 4
+    bio: Engineer
+    city: Paarl
+    meta: { a: 1 }
+    note: First
+    role: admin
+    overdue: true
+  - _id: b
+    name: bob
+    amount: 99
+    rate: 0.5
+    score: 3
+    created: '2025-12-31'
+    active: false
+    stage: lead
+    labels: [green]
+    state: closed
+    owner: Bob Brown
+    team: [{ name: Cy Dunn }]
+    profile: Bob profile
+    email: bob@example.com
+    site: https://example.org/path
+    progress: 100
+    stars: 2
+    bio: Designer
+    city: Durban
+    meta: [1, 2]
+    note: Second
+    role: viewer
+    overdue: false
+  - _id: c
+    name: Charlie
+    amount: null
+    rate: null
+    score: null
+    created: null
+    active: null
+    stage: unknown
+    labels: []
+    state: null
+    owner: null
+    team: []
+    profile: null
+    email: null
+    site: null
+    progress: null
+    stars: null
+    bio: null
+    city: Cape Town
+    meta: null
+    note: null
+    role: admin
+    overdue: false

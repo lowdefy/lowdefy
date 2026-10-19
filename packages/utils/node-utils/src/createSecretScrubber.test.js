@@ -15,6 +15,8 @@
 */
 
 import createSecretScrubber from './createSecretScrubber.js';
+import markCredential from './markCredential.js';
+import runInCredentialScope from './runInCredentialScope.js';
 
 // '?' and '>' runs put '/' and '+' into the base64, so the standard and URL-safe alphabets differ.
 const BASE64_SECRET = 'PLANTED???>>>secret???>>>';
@@ -112,12 +114,12 @@ test('createSecretScrubber collects a secret with a nested name', () => {
   expect(scrub('value PLANTEDNESTED123')).toEqual('value [REDACTED]');
 });
 
-test('createSecretScrubber collects CRON_SECRET and AUTH_SECRET from env', () => {
+test('createSecretScrubber collects CRON_SECRET and BETTER_AUTH_SECRET from env', () => {
   const scrub = createSecretScrubber({
     secrets: {},
     env: {
       CRON_SECRET: 'PLANTEDCRONSECRET',
-      AUTH_SECRET: 'PLANTEDAUTHSECRET',
+      BETTER_AUTH_SECRET: 'PLANTEDAUTHSECRET',
       OTHER: 'PLANTEDOTHER',
     },
   });
@@ -176,4 +178,15 @@ test('createSecretScrubber returns non-string input unchanged', () => {
 test('createSecretScrubber returns its input when there are no secrets', () => {
   const scrub = createSecretScrubber({ secrets: {}, env: {} });
   expect(scrub('nothing to hide here')).toEqual('nothing to hide here');
+});
+
+test('createSecretScrubber replaces a credential marked in the current scope', () => {
+  const scrub = createSecretScrubber({ secrets: { API_KEY: 'PLANTEDAPIKEY123' }, env: {} });
+  runInCredentialScope(() => {
+    markCredential('runtime-made-key-0001');
+    expect(scrub('PLANTEDAPIKEY123 then runtime-made-key-0001')).toEqual(
+      '[REDACTED] then [REDACTED]'
+    );
+  });
+  expect(scrub('runtime-made-key-0001')).toEqual('runtime-made-key-0001');
 });

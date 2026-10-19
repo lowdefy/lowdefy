@@ -18,11 +18,13 @@ import breadcrumbList from '../../schemas/breadcrumbList.js';
 
 export default {
   category: 'display',
-  icons: [],
+  icons: ['chevron-down'],
   valueType: null,
   cssKeys: {
     element: 'The Breadcrumb element.',
     icon: 'The icon in the Breadcrumb.',
+    item: 'Each breadcrumb item.',
+    separator: 'The separator between items.',
   },
   events: {
     onClick: {

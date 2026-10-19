@@ -14,24 +14,27 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
 import { createStdOutLineHandler } from '@lowdefy/logger/cli';
 
+import spawnServer from '../../utils/spawnServer.js';
+
 async function runStart({ context, directory }) {
-  await spawnProcess({
-    args: ['run', 'start'],
-    command: context.pnpmCmd,
+  const env = {
+    ...process.env,
+    LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
+    LOWDEFY_LOG_LEVEL: context.options.logLevel,
+    PORT: context.options.port,
+  };
+  // Set only when requested, so an inherited LOWDEFY_EXIT_WITH_PID (from a
+  // test runner that started this CLI) passes through to the server.
+  if (context.options.exitWithPid) {
+    env.LOWDEFY_EXIT_WITH_PID = String(context.options.exitWithPid);
+  }
+  await spawnServer({
+    directory,
+    entry: 'src/index.js',
+    env,
     stdOutLineHandler: createStdOutLineHandler({ context }),
-    processOptions: {
-      cwd: directory,
-      // https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2#command-injection-via-args-parameter-of-child_processspawn-without-shell-option-enabled-on-windows-cve-2024-27980---high
-      shell: process.platform === 'win32',
-      env: {
-        ...process.env,
-        LOWDEFY_LOG_LEVEL: context.options.logLevel,
-        PORT: context.options.port,
-      },
-    },
   });
 }
 

@@ -1,0 +1,37 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import createActivateRow from './createActivateRow.js';
+import handleAuxClick from './handleAuxClick.js';
+import handlePointerDown from './handlePointerDown.js';
+import handleRowClick from './handleRowClick.js';
+import handleRowDoubleClick from './handleRowDoubleClick.js';
+
+// Row and cell events through the grid's one delegated listener (D5): onRowClick,
+// onRowDoubleClick, onCellClick and rowLink. Cell renderers fire their own events (buttons, menus,
+// onCellLink) with full payloads through `api.onCellEvent`.
+const eventsFeature = {
+  name: 'events',
+  actions: { activateRow: createActivateRow },
+  gridHandlers: {
+    auxclick: handleAuxClick,
+    click: handleRowClick,
+    dblclick: handleRowDoubleClick,
+    pointerdown: handlePointerDown,
+  },
+};
+
+export default eventsFeature;

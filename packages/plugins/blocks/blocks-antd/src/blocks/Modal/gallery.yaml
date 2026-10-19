@@ -74,6 +74,38 @@
           properties:
             content: The modal title supports HTML markup for rich text formatting.
 
+- title: Padding
+  blocks:
+    - id: modal_padding_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Modal with padding none
+      events:
+        onClick:
+          - id: modal_padding_open
+            type: CallMethod
+            params:
+              blockId: modal_padding
+              method: setOpen
+              args:
+                - open: true
+    - id: modal_padding
+      type: Modal
+      properties:
+        title: Recent invoices
+        padding: none
+      blocks:
+        - id: modal_padding_rows
+          type: Html
+          properties:
+            html: |
+              <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1042</span><span style="color: var(--ant-color-text-secondary);">$1,280.00</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1041</span><span style="color: var(--ant-color-text-secondary);">$640.00</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1040</span><span style="color: var(--ant-color-text-secondary);">$2,115.50</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 24px;"><span>INV-1039</span><span style="color: var(--ant-color-text-secondary);">$96.00</span></div>
+
 - title: Custom Button Text
   blocks:
     - id: modal_btn_text_trigger
@@ -370,6 +402,67 @@
           type: Paragraph
           properties:
             content: No mask overlay is shown behind the modal. The page content remains fully visible.
+    - id: modal_blur_mask_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Blurred Mask
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: modal_blur_mask_open
+            type: CallMethod
+            params:
+              blockId: modal_blur_mask
+              method: setOpen
+              args:
+                - open: true
+    - id: modal_blur_mask
+      type: Modal
+      properties:
+        title: Blurred Mask
+        mask:
+          blur: true
+      blocks:
+        - id: modal_blur_mask_content
+          type: Paragraph
+          properties:
+            content: The page behind the mask is blurred, which keeps attention on the dialog.
+
+- title: Loading and Responsive Width
+  blocks:
+    - id: modal_loading_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Loading Modal
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: modal_loading_open
+            type: CallMethod
+            params:
+              blockId: modal_loading
+              method: setOpen
+              args:
+                - open: true
+    - id: modal_loading
+      type: Modal
+      properties:
+        title: Customer Details
+        loading: true
+        width:
+          xs: 90%
+          md: 600
+      blocks:
+        - id: modal_loading_content
+          type: Paragraph
+          properties:
+            content: The body shows a skeleton while loading is true, for example while a request that fills the modal is running.
 
 - title: No Footer
   blocks:
@@ -457,7 +550,7 @@
                     title: Delete
                     color: danger
                     variant: text
-                    icon: AiOutlineDelete
+                    icon: delete
                 - id: modal_footer_actions
                   type: Box
                   layout:
@@ -489,7 +582,7 @@
                         title: Save
                         color: primary
                         variant: solid
-                        icon: AiOutlineSave
+                        icon: save
                       events:
                         onClick:
                           - id: modal_footer_save_close
@@ -528,13 +621,14 @@
       type: Modal
       properties:
         title: Wrapper Style Modal
-        wrapperStyle:
+      style:
+        .wrapper:
           overflow: hidden
       blocks:
         - id: modal_wrapper_style_content
           type: Paragraph
           properties:
-            content: The wrapperStyle property applies CSS to the modal wrapper element. This can control overflow, positioning, and other layout aspects of the wrapper container.
+            content: The style .wrapper key applies CSS to the modal wrapper element. This can control overflow, positioning, and other layout aspects of the wrapper container.
 
 - title: Custom Z-Index
   blocks:
@@ -576,7 +670,7 @@
         title: Toggle Modal
         color: primary
         variant: solid
-        icon: AiOutlineSwap
+        icon: ArrowRightLeft
       events:
         onClick:
           - id: modal_toggle_call
@@ -706,8 +800,8 @@
           titleColor: '#d46b08'
           colorBgMask: 'rgba(250, 173, 20, 0.1)'
           borderRadiusLG: 20
-          headerBorderBottom: 1px solid #ffd591
-          footerBorderTop: 1px solid #ffd591
+          headerBorderBottom: '1px solid #ffd591'
+          footerBorderTop: '1px solid #ffd591'
           headerMarginBottom: 0
           footerMarginTop: 0
           headerPadding: 16px 24px
@@ -808,10 +902,10 @@
       properties:
         title: Tailwind Styled Modal
       class:
-        header: bg-bg-layout
-        body: bg-bg-layout p-8
-        footer: bg-bg-layout
-        content: rounded-2xl overflow-hidden
+        .header: bg-bg-layout
+        .body: bg-bg-layout p-8
+        .footer: bg-bg-layout
+        .content: rounded-2xl overflow-hidden
       blocks:
         - id: modal_css_keys_content
           type: Paragraph
@@ -828,7 +922,7 @@
         title: Edit Profile
         color: primary
         variant: solid
-        icon: AiOutlineEdit
+        icon: edit
       events:
         onClick:
           - id: modal_profile_open
@@ -847,7 +941,7 @@
         cancelText: Cancel
         centered: true
         theme:
-          headerBorderBottom: 1px solid #f0f0f0
+          headerBorderBottom: '1px solid #f0f0f0'
           headerMarginBottom: 0
       events:
         onOk:
@@ -868,10 +962,9 @@
               layout:
                 flex: 0 0 auto
               properties:
-                icon: AiOutlineUser
+                icon: user
                 size: 72
-                color: '#fff'
-                backgroundColor: '#1677ff'
+                color: '#1677ff'
             - id: modal_profile_info
               type: Box
               layout:
@@ -917,7 +1010,7 @@
         title: Delete Project
         color: danger
         variant: solid
-        icon: AiOutlineDelete
+        icon: delete
       events:
         onClick:
           - id: modal_confirm_open
@@ -982,7 +1075,7 @@
         title: Preview Image
         color: primary
         variant: outlined
-        icon: AiOutlinePicture
+        icon: image
       events:
         onClick:
           - id: modal_image_open

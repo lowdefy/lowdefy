@@ -16,12 +16,7 @@
 
 import { jest } from '@jest/globals';
 import { operatorsServer } from '@lowdefy/operators-js';
-import {
-  ConfigError,
-  RequestError,
-  ServiceError,
-  UserError,
-} from '@lowdefy/errors';
+import { ConfigError, RequestError, ServiceError, UserError } from '@lowdefy/errors';
 
 import callRequestResolver from './callRequestResolver.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
@@ -54,7 +49,7 @@ function createTestContext({ endpointConfigs = {} } = {}) {
       error: jest.fn(),
     },
     readConfigFile: createMockReadConfigFile(endpointConfigs),
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.blockId = 'blockId';
   context.pageId = 'pageId';
@@ -151,8 +146,7 @@ test('callApi works with module endpoint id (slash in id)', async () => {
 
 test('callApi throws ConfigError when endpoint is missing', async () => {
   const context = createTestContext();
-  const requestResolver = async ({ callApi }) =>
-    callApi({ endpointId: 'missing', payload: {} });
+  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'missing', payload: {} });
   await expect(
     callRequestResolver(context, {
       connectionProperties: {},
@@ -174,8 +168,7 @@ test('callApi throws UserError on :throw in target routine', async () => {
       },
     },
   });
-  const requestResolver = async ({ callApi }) =>
-    callApi({ endpointId: 'target', payload: {} });
+  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'target', payload: {} });
   await expect(
     callRequestResolver(context, {
       connectionProperties: {},
@@ -197,8 +190,7 @@ test('callApi throws UserError on :reject in target routine', async () => {
       },
     },
   });
-  const requestResolver = async ({ callApi }) =>
-    callApi({ endpointId: 'target', payload: {} });
+  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'target', payload: {} });
   await expect(
     callRequestResolver(context, {
       connectionProperties: {},
@@ -220,8 +212,7 @@ test('depth cap throws ConfigError at depth >= 10', async () => {
       },
     },
   });
-  const requestResolver = async ({ callApi }) =>
-    callApi({ endpointId: 'target', payload: {} });
+  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'target', payload: {} });
   await expect(
     callRequestResolver(context, {
       connectionProperties: {},
@@ -267,8 +258,7 @@ test('debug events emitted on success: start and end', async () => {
       },
     },
   });
-  const requestResolver = async ({ callApi }) =>
-    callApi({ endpointId: 'target', payload: {} });
+  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'target', payload: {} });
   await callRequestResolver(context, {
     connectionProperties: {},
     endpointDepth: 0,
@@ -310,8 +300,7 @@ test('debug end event NOT emitted when callApi throws', async () => {
       },
     },
   });
-  const requestResolver = async ({ callApi }) =>
-    callApi({ endpointId: 'target', payload: {} });
+  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'target', payload: {} });
   await callRequestResolver(context, {
     connectionProperties: {},
     endpointDepth: 0,
@@ -404,6 +393,7 @@ test('raw Error is wrapped into RequestError', async () => {
   const requestResolver = async () => {
     throw new Error('raw');
   };
+  requestResolver.meta = { checkRead: false, checkWrite: false };
   let caught;
   try {
     await callRequestResolver(context, {
@@ -449,6 +439,7 @@ test('configKey attached when missing', async () => {
   const requestResolver = async () => {
     throw new Error('raw');
   };
+  requestResolver.meta = { checkRead: false, checkWrite: false };
   let caught;
   try {
     await callRequestResolver(context, {
@@ -462,4 +453,119 @@ test('configKey attached when missing', async () => {
     caught = e;
   }
   expect(caught.configKey).toBe('request_key');
+});
+
+test('a RequestError masks the properties its request type names as credentials in received', async () => {
+  const context = createTestContext();
+  const url = 'https://client.test/shot.png?X-Amz-Signature=abc';
+  const requestProperties = { key: 'copies/shot.png', url, maxBytes: 100 };
+  const requestResolver = async () => {
+    throw new Error('AwsS3PutObject url content type "text/html" is not one of image/*.');
+  };
+  requestResolver.meta = { checkRead: false, checkWrite: true, credentialProperties: ['url'] };
+  let caught;
+  try {
+    await callRequestResolver(context, {
+      connectionProperties: {},
+      endpointDepth: 0,
+      requestConfig,
+      requestProperties,
+      requestResolver,
+    });
+  } catch (e) {
+    caught = e;
+  }
+  expect(caught).toBeInstanceOf(RequestError);
+  expect(caught.received).toEqual({
+    key: 'copies/shot.png',
+    url: '[REDACTED]',
+    maxBytes: 100,
+  });
+  expect(JSON.stringify(caught.received)).not.toContain('X-Amz-Signature');
+  expect(requestProperties.url).toBe(url);
+});
+
+test('a RequestError keeps every request property in received when none is a credential', async () => {
+  const context = createTestContext();
+  const requestProperties = { url: 'https://example.test/', body: { a: 1 } };
+  const requestResolver = async () => {
+    throw new Error('raw');
+  };
+  requestResolver.meta = { checkRead: false, checkWrite: false };
+  let caught;
+  try {
+    await callRequestResolver(context, {
+      connectionProperties: {},
+      endpointDepth: 0,
+      requestConfig,
+      requestProperties,
+      requestResolver,
+    });
+  } catch (e) {
+    caught = e;
+  }
+  expect(caught.received).toBe(requestProperties);
+});
+
+// A resolver that runs until its signal aborts, then rejects with the abort reason,
+// as fetch and the AI SDK do.
+function resolverUntilAborted() {
+  return ({ signal }) =>
+    new Promise((resolve, reject) => {
+      signal.addEventListener('abort', () => reject(signal.reason), { once: true });
+    });
+}
+
+test('the resolver receives the request signal from the context', async () => {
+  const context = createTestContext();
+  context.signal = new AbortController().signal;
+  const requestResolver = jest.fn(() => 'ok');
+  await callRequestResolver(context, {
+    connectionProperties: {},
+    endpointDepth: 0,
+    requestConfig,
+    requestProperties: {},
+    requestResolver,
+  });
+  expect(requestResolver.mock.calls[0][0].signal).toBe(context.signal);
+});
+
+test('a resolver stopped because the client left fails with a UserError, not a RequestError', async () => {
+  const context = createTestContext();
+  const controller = new AbortController();
+  context.signal = controller.signal;
+  const pending = callRequestResolver(context, {
+    connectionProperties: {},
+    endpointDepth: 0,
+    requestConfig,
+    requestProperties: {},
+    requestResolver: resolverUntilAborted(),
+  });
+  controller.abort(
+    new DOMException('The client closed the connection before the response was sent.', 'AbortError')
+  );
+  const error = await pending.catch((e) => e);
+  expect(error).toBeInstanceOf(UserError);
+  expect(error.message).toBe('The client closed the connection before the response was sent.');
+  expect(error.cause.name).toBe('AbortError');
+});
+
+test('a resolver stopped by the request timeout fails with a ServiceError', async () => {
+  const context = createTestContext();
+  const controller = new AbortController();
+  context.signal = controller.signal;
+  const pending = callRequestResolver(context, {
+    connectionProperties: {},
+    endpointDepth: 0,
+    requestConfig,
+    requestProperties: {},
+    requestResolver: resolverUntilAborted(),
+  });
+  controller.abort(
+    new DOMException('The request timeout of 30000ms was exceeded.', 'TimeoutError')
+  );
+  const error = await pending.catch((e) => e);
+  expect(error).toBeInstanceOf(ServiceError);
+  expect(error.message).toBe('conn1: The request timeout of 30000ms was exceeded.');
+  expect(error.configKey).toBe('request_key');
 });

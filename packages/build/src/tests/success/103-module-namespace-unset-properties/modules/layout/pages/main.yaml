@@ -1,0 +1,13 @@
+id: main
+type: Box
+blocks:
+  - id: sider
+    type: Paragraph
+    properties:
+      content:
+        _module.var: sider
+  - id: collapsed_width
+    type: Paragraph
+    properties:
+      content:
+        _module.var: sider.collapsedWidth

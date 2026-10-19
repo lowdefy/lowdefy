@@ -18,6 +18,8 @@ The first time a `Validate` action is called, validation errors and warnings are
 
 The `Validate` action `blockIds` or `regex` params are used to limit which blocks are validated. Only the matched blocks will be validated, and validation results are shown for only those matched blocks.
 
+When the action runs in a list row, `$` in a blockId is replaced with the row index, as in `SetState` and `CallMethod`, so `list.$.name` matches the `name` input in the same row. `$` in a `regex` pattern keeps its regex meaning.
+
 #### Parameters
 
 ###### void
@@ -30,7 +32,7 @@ A blockId of the block to validate.
 An array of blockIds of the blocks to validate.
 
 ###### object
-  - `blockId?: string|string[]`: A blockId or an array of the blockIds of the blocks to validate.
+  - `blockIds?: string|string[]`: A blockId or an array of the blockIds of the blocks to validate.
   - `regex?: string|string[]`: A regex string pattern or an array of regex string patterns to match the blockIds to validate.
 
 #### Examples

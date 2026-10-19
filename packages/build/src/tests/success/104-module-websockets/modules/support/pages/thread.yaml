@@ -1,0 +1,27 @@
+id: thread
+type: Box
+subscriptions:
+  - websocketId:
+      _module.websocketId: thread-messages
+    payload:
+      ticket_id:
+        _state: ticket_id
+    client:
+      subscribeOnMount: false
+blocks:
+  - id: resubscribe
+    type: Button
+    properties:
+      title: Refresh
+    events:
+      onClick:
+        - id: unsubscribe
+          type: Unsubscribe
+          params:
+            websocketId:
+              _module.websocketId: thread-messages
+        - id: subscribe
+          type: Subscribe
+          params:
+            websocketId:
+              _module.websocketId: thread-messages

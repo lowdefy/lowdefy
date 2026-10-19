@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
-import * as Sentry from '@sentry/node';
 import { redactErrorResponse } from '@lowdefy/api';
+import { HTTPException } from 'hono/http-exception';
+
+import sentrySdk from '../../lib/server/sentry/sentrySdk.js';
 
 // Hono routes every handler error to the app-level error handler — upstream
 // middleware try/catch never sees them (compose catches per dispatch level).
@@ -35,14 +37,64 @@ function createErrorHandler({ basePath = '', logger }) {
       }
       return c.text('Unauthorized', 401);
     }
+    // An authenticated caller whose roles do not permit the resource. Expected
+    // traffic, not a fault: one warning line, no structured error log and no
+    // Sentry capture.
+    if (error.name === 'AuthorizationError') {
+      logger.warn(`Forbidden: ${c.req.method} ${c.req.path}`);
+      if (path.startsWith('/api/')) {
+        return c.json({ name: error.name, message: error.message }, 403);
+      }
+      return c.text('Forbidden', 403);
+    }
+    // An authorized caller who has not enrolled a second factor under
+    // auth.twoFactor.required. 403, not 401 - a 401 reads to the client as a dead
+    // session and bounces the user to sign-in, which is the loop the gate exists to
+    // avoid. Expected traffic under required: true, so one warning line and no
+    // Sentry capture, exactly as for AuthenticationError.
+    if (error.name === 'TwoFactorEnrolmentRequiredError') {
+      logger.warn(`Two-factor enrolment required: ${c.req.method} ${c.req.path}`);
+      if (path.startsWith('/api/')) {
+        return c.json({ name: error.name, message: error.message }, 403);
+      }
+      return c.text('Two-factor enrolment required', 403);
+    }
+    // An API client whose payload does not match the endpoint's declared
+    // payloadSchema (or any other UserError raised before a routine starts). A
+    // page's CallAPI payload the schema refuses is a ConfigError instead: the
+    // page's own config built it (validatePayload). The caller's own
+    // request is wrong, not the config or the server: a 400 with the message the
+    // caller needs, one warning line, no structured error log and no Sentry
+    // capture. A UserError raised inside a routine never gets here - it returns
+    // 200 with success: false through buildEndpointResult.
+    if (error.name === 'UserError') {
+      logger.warn(`Bad request: ${c.req.method} ${c.req.path} - ${error.message}`);
+      if (path.startsWith('/api/')) {
+        return c.json({ name: error.name, message: error.message }, 400);
+      }
+      return c.text('Bad Request', 400);
+    }
+    // A route or transport that has already decided its own HTTP answer - hono's
+    // HTTPException carries the response to send. The MCP transport refuses an
+    // unsupported protocol-version header this way (a 404 with a JSON-RPC body
+    // that the client SDK falls back on to negotiate a version both sides
+    // know). Not a fault: send its response and log one warning line, no
+    // structured error log and no Sentry capture. Turning it into a 500 would
+    // hide the status the client acts on.
+    if (error instanceof HTTPException) {
+      logger.warn(`${error.status} answered by the route: ${c.req.method} ${c.req.path}`);
+      return error.getResponse();
+    }
     const context = c.get('lowdefyContext');
     if (context) {
+      // context.handleError already captures to Sentry (createHandleError ->
+      // captureSentryError), so capturing here too would report the fault twice.
       await context.handleError(error);
     } else {
       logger.error(error);
-    }
-    if (process.env.SENTRY_DSN) {
-      Sentry.captureException(error);
+      if (sentrySdk.current) {
+        sentrySdk.current.captureException(error);
+      }
     }
     if (path.startsWith('/api/')) {
       return c.json(redactErrorResponse(context, error), 500);

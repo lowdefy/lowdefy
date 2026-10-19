@@ -89,7 +89,7 @@
       properties:
         title: Feedback
         value: 1128
-        prefixIcon: AiOutlineLike
+        prefixIcon: ThumbsUp
     - id: prefixicon_arrow_up
       type: Statistic
       layout:
@@ -99,7 +99,7 @@
         value: 11.28
         suffix: '%'
         prefixIcon:
-          name: AiOutlineArrowUp
+          name: arrow-up
           color: '#3f8600'
     - id: prefixicon_arrow_down
       type: Statistic
@@ -110,7 +110,7 @@
         value: 9.3
         suffix: '%'
         prefixIcon:
-          name: AiOutlineArrowDown
+          name: arrow-down
           color: '#cf1322'
     - id: suffixicon_rise
       type: Statistic
@@ -121,7 +121,7 @@
         value: 12500
         prefix: $
         suffixIcon:
-          name: AiOutlineRise
+          name: TrendingUp
           color: '#3f8600'
     - id: suffixicon_info
       type: Statistic
@@ -130,7 +130,7 @@
       properties:
         title: Sessions
         value: 8920
-        suffixIcon: AiOutlineInfoCircle
+        suffixIcon: info
 
 - title: Precision
   blocks:
@@ -189,6 +189,37 @@
         precision: 2
         groupSeparator: '.'
         decimalSeparator: ','
+
+- title: Countdown and Count Up Timers
+  blocks:
+    - id: timer_countdown
+      type: Statistic
+      layout:
+        span: 12
+      properties:
+        title: Launch in
+        value:
+          _date: '2030-01-01T00:00:00.000Z'
+        timer:
+          type: countdown
+          format: 'D [days] HH:mm:ss'
+      events:
+        onFinish:
+          - id: timer_countdown_finished
+            type: DisplayMessage
+            params:
+              content: We have launched.
+    - id: timer_countup
+      type: Statistic
+      layout:
+        span: 12
+      properties:
+        title: Incident open for
+        value:
+          _date: '2026-01-01T00:00:00.000Z'
+        timer:
+          type: countup
+          format: 'D [days] HH:mm'
 
 - title: Loading State
   blocks:
@@ -262,7 +293,7 @@
       properties:
         title: Active Users
         value: 2847
-        prefixIcon: AiOutlineTeam
+        prefixIcon: users
     - id: css_tailwind_center
       type: Statistic
       layout:
@@ -284,7 +315,7 @@
         .element:
           padding: 16px 24px
           borderRadius: 8px
-          border: 1px solid #ffa39e
+          border: '1px solid #ffa39e'
         .value:
           color: '#cf1322'
           fontSize: 28
@@ -345,7 +376,7 @@
                 prefix: $
                 precision: 0
                 prefixIcon:
-                  name: AiOutlineDollarCircle
+                  name: CircleDollarSign
                   color: '#52c41a'
             - id: dash_users
               type: Statistic
@@ -356,7 +387,7 @@
                 title: Active Users
                 value: 8920
                 prefixIcon:
-                  name: AiOutlineTeam
+                  name: users
                   color: '#1677ff'
             - id: dash_errors
               type: Statistic
@@ -369,7 +400,7 @@
                 suffix: '%'
                 precision: 2
                 prefixIcon:
-                  name: AiOutlineBug
+                  name: Bug
                   color: '#ff4d4f'
         - id: dashboard_updated
           type: Markdown
@@ -399,7 +430,7 @@
                 prefix: $
                 precision: 0
                 prefixIcon:
-                  name: AiOutlineArrowUp
+                  name: arrow-up
                   color: '#3f8600'
                 theme:
                   contentFontSize: 28
@@ -410,7 +441,7 @@
               properties:
                 title: Orders
                 value: 1523
-                prefixIcon: AiOutlineShoppingCart
+                prefixIcon: ShoppingCart
             - id: sales_avg
               type: Statistic
               layout:
@@ -432,7 +463,7 @@
                 flex: 0 0 auto
               properties:
                 title: Export Report
-                icon: AiOutlineDownload
+                icon: download
                 color: primary
                 variant: outlined
               events:
@@ -448,7 +479,7 @@
                 flex: 0 0 auto
               properties:
                 title: Share
-                icon: AiOutlineShareAlt
+                icon: share
                 color: primary
                 variant: solid
               events:

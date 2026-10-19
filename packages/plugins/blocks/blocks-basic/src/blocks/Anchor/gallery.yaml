@@ -68,7 +68,7 @@
       properties:
         title: Link with Icon
         url: https://lowdefy.com
-        icon: AiOutlineLink
+        icon: link
     - id: icon_download
       type: Anchor
       layout:
@@ -76,7 +76,7 @@
       properties:
         title: Download
         url: https://lowdefy.com
-        icon: AiOutlineDownload
+        icon: download
     - id: icon_external
       type: Anchor
       layout:
@@ -84,7 +84,7 @@
       properties:
         title: External Link
         url: https://lowdefy.com
-        icon: AiOutlineExport
+        icon: SquareArrowOutUpRight
     - id: icon_mail
       type: Anchor
       layout:
@@ -92,7 +92,7 @@
       properties:
         title: Send Email
         url: https://lowdefy.com
-        icon: AiOutlineMail
+        icon: mail
     - id: icon_github
       type: Anchor
       layout:
@@ -100,7 +100,7 @@
       properties:
         title: GitHub
         url: https://github.com/lowdefy/lowdefy
-        icon: AiOutlineGithub
+        icon: GitBranch
     - id: icon_object
       type: Anchor
       layout:
@@ -109,7 +109,7 @@
         title: Colored Icon
         url: https://lowdefy.com
         icon:
-          name: AiOutlineHeart
+          name: heart
           color: '#ff4d4f'
 
 - title: New Tab
@@ -130,7 +130,7 @@
         title: External Docs
         url: https://docs.lowdefy.com
         newTab: true
-        icon: AiOutlineExport
+        icon: SquareArrowOutUpRight
 
 - title: Disabled
   blocks:
@@ -150,7 +150,7 @@
         title: Disabled with Icon
         url: https://lowdefy.com
         disabled: true
-        icon: AiOutlineLock
+        icon: lock
     - id: enabled_link
       type: Anchor
       layout:
@@ -159,7 +159,7 @@
         title: Enabled Link
         url: https://lowdefy.com
         disabled: false
-        icon: AiOutlineUnlock
+        icon: unlock
 
 - title: Aria Label
   blocks:
@@ -177,7 +177,7 @@
         flex: 0 0 auto
       properties:
         url: https://lowdefy.com
-        icon: AiOutlineHome
+        icon: home
         ariaLabel: Go to home page
 
 - title: Rel Attribute
@@ -209,7 +209,7 @@
       properties:
         title: Go Back
         back: true
-        icon: AiOutlineArrowLeft
+        icon: arrow-left
     - id: nav_home
       type: Anchor
       layout:
@@ -217,7 +217,7 @@
       properties:
         title: Go Home
         home: true
-        icon: AiOutlineHome
+        icon: home
 
 - title: Keyboard Shortcuts
   blocks:
@@ -228,7 +228,7 @@
       properties:
         title: Documentation
         url: https://docs.lowdefy.com
-        icon: AiOutlineBook
+        icon: Book
       events:
         onClick:
           shortcut: mod+shift+d
@@ -313,4 +313,4 @@
       properties:
         title: Large Red Link
         url: https://lowdefy.com
-        icon: AiOutlineHeart
+        icon: heart

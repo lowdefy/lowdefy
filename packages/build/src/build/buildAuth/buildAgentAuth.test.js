@@ -95,31 +95,96 @@ test('buildAuth stamps agent auth alongside api and page auth', () => {
     agents: [{ id: 'agent-a' }],
     api: [{ id: 'endpoint-a', type: 'Api' }],
     pages: [{ id: 'page-a', type: 'Context' }],
-    auth: { api: { protected: true } },
+    auth: {
+      secret: { _secret: 'BETTER_AUTH_SECRET' },
+      database: { id: 'auth_db', type: 'MongoDBAuthAdapter', properties: {} },
+      emailAndPassword: { enabled: true },
+      api: { protected: true },
+    },
   };
   const res = buildAuth({ components, context });
   expect(res.agents).toEqual([{ id: 'agent-a', auth: { public: false } }]);
   expect(res.api).toEqual([{ id: 'endpoint-a', type: 'Api', auth: { public: false } }]);
 });
 
-test('buildAgentAuth throws a located error when an agent id is a reserved name', () => {
-  const agent = { id: '__proto__' };
-  Object.defineProperty(agent, '~k', { value: 'agentKey', enumerable: false });
-  const components = { agents: [agent], auth: { api: { roles: {} } } };
+test('buildAgentAuth rejects a reserved agent id with the validateId message', () => {
+  const components = {
+    agents: [{ id: '__proto__' }],
+    auth: { api: { roles: {} } },
+  };
   expect(() => buildAgentAuth({ components, context })).toThrow(
     'Agent id "__proto__" is a reserved name and cannot be used as an id.'
   );
-  try {
-    buildAgentAuth({ components, context });
-  } catch (e) {
-    expect(e.configKey).toBe('agentKey');
-  }
 });
 
-test('buildAgentAuth does not stamp Object.prototype as an agent roles list', () => {
-  const before = Object.getOwnPropertyNames(Object.prototype);
-  const components = { agents: [{ id: '__proto__' }], auth: { api: { roles: {} } } };
-  expect(() => buildAgentAuth({ components, context })).toThrow();
-  expect(components.agents[0].auth).toBeUndefined();
-  expect(Object.getOwnPropertyNames(Object.prototype)).toEqual(before);
+describe('buildAgentAuth agents from a module', () => {
+  const moduleAgentId = 'support/triage';
+
+  function moduleComponents(apiAuth) {
+    return {
+      agents: [{ id: 'concierge' }, { id: moduleAgentId }],
+      auth: { configured: true, api: { roles: {}, ...apiAuth } },
+    };
+  }
+
+  function moduleContext({ declaredPublic = [] } = {}) {
+    return {
+      ...context,
+      moduleEntityIds: { agents: [moduleAgentId] },
+      moduleAuthPublicEntities: { agents: declaredPublic },
+    };
+  }
+
+  function resolvedAuth(components) {
+    return components.agents.map((agent) => agent.auth);
+  }
+
+  test('a module agent is protected when auth is configured and the app sets no rule', () => {
+    const components = moduleComponents({});
+    buildAgentAuth({ components, context: moduleContext() });
+    expect(resolvedAuth(components)).toEqual([{ public: true }, { public: false }]);
+  });
+
+  test('a module agent a protected list does not name stays protected', () => {
+    const components = moduleComponents({ protected: ['concierge'] });
+    buildAgentAuth({ components, context: moduleContext() });
+    expect(resolvedAuth(components)).toEqual([{ public: false }, { public: false }]);
+  });
+
+  test('app api public true makes a module agent public', () => {
+    const components = moduleComponents({ public: true });
+    buildAgentAuth({ components, context: moduleContext() });
+    expect(resolvedAuth(components)).toEqual([{ public: true }, { public: true }]);
+  });
+
+  test('an app api public list naming a module agent makes it public', () => {
+    const components = moduleComponents({ public: ['support/**'] });
+    buildAgentAuth({ components, context: moduleContext() });
+    expect(resolvedAuth(components)).toEqual([{ public: false }, { public: true }]);
+  });
+
+  test('app api roles on a module agent apply as for an app agent', () => {
+    const components = moduleComponents({ roles: { agent: ['support/**'] } });
+    buildAgentAuth({ components, context: moduleContext() });
+    expect(components.agents[1].auth).toEqual({ public: false, roles: ['agent'] });
+  });
+
+  test('a module-declared public agent is public with no app rule', () => {
+    const components = moduleComponents({});
+    buildAgentAuth({ components, context: moduleContext({ declaredPublic: [moduleAgentId] }) });
+    expect(components.agents[1].auth).toEqual({ public: true });
+  });
+
+  test('a module-declared public agent stays public under protected true', () => {
+    const components = moduleComponents({ protected: true });
+    buildAgentAuth({ components, context: moduleContext({ declaredPublic: [moduleAgentId] }) });
+    expect(resolvedAuth(components)).toEqual([{ public: false }, { public: true }]);
+  });
+
+  test('a module agent follows the app rules when auth is not configured', () => {
+    const components = moduleComponents({});
+    components.auth.configured = false;
+    buildAgentAuth({ components, context: moduleContext() });
+    expect(resolvedAuth(components)).toEqual([{ public: true }, { public: true }]);
+  });
 });

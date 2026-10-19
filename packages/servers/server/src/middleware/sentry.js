@@ -14,16 +14,24 @@
   limitations under the License.
 */
 
-import * as Sentry from '@sentry/node';
+import { bindCredentialScrub } from '@lowdefy/node-utils';
 
-// Replaces @sentry/nextjs route auto-instrumentation: every request becomes
-// an http.server transaction. Handler errors never propagate through
-// middleware in Hono — captureException happens in the app error handler.
+import sentrySdk from '../../lib/server/sentry/sentrySdk.js';
+
+// Every request becomes an http.server transaction when the server traces requests. Handler
+// errors never propagate through middleware in Hono — captureException happens in the app error
+// handler.
 function sentryMiddleware() {
   return async function sentry(c, next) {
-    if (!process.env.SENTRY_DSN) {
+    const Sentry = sentrySdk.current;
+    if (!Sentry) {
       return next();
     }
+    // The request's transaction is sent once the response is written, after its credential scope
+    // has ended, so the scope's scrub rides on the request's isolation scope to scrubEvent.
+    Sentry.getIsolationScope().setSDKProcessingMetadata({
+      scrubRequestCredentials: bindCredentialScrub(),
+    });
     return Sentry.startSpan({ name: `${c.req.method} ${c.req.path}`, op: 'http.server' }, () =>
       next()
     );

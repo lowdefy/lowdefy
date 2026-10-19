@@ -76,6 +76,7 @@ export default {
       },
       image: {
         type: 'string',
+        urlKind: 'src',
         description: 'Image URL to use as watermark. If set, text content is ignored.',
       },
       inherit: {
@@ -97,9 +98,27 @@ export default {
       },
       text: {
         type: ['string', 'array'],
-        description: 'Watermark text content. Maps to antd "content" prop.',
+        description:
+          'Watermark text content. An array renders one line per item. A line can be a string, or `{ text, font }` to give that line its own font style.',
         docs: {
           displayType: 'yaml',
+        },
+        items: {
+          type: ['string', 'object'],
+          properties: {
+            text: {
+              type: 'string',
+              description: 'Line text.',
+            },
+            font: {
+              type: 'object',
+              description:
+                'Font style for this line, with color, fontSize, fontWeight, fontFamily and fontStyle.',
+              docs: {
+                displayType: 'yaml',
+              },
+            },
+          },
         },
       },
       theme: {

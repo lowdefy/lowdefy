@@ -209,7 +209,7 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 | `rows` | integer | - | Fix the editor height to exactly this many rows. Takes precedence over autoSize. |
 | `downloadPolicyRequestId` | string | - | Id of a download request (e.g. AwsS3PresignedGetObject) used to resolve the inserted image URL after upload. Inline images persist in saved content, so the request should set public: true (and the upload request the provider public-read acl) to return a stable, non-expiring URL. When unset, a legacy unsigned object URL is constructed from the upload response (S3-shaped, deprecated). |
 | `s3PostPolicyRequestId` | string | - | Deprecated — use uploadPolicyRequestId instead. |
-| `uploadPolicyRequestId` | string | - | Id of an upload-policy request (e.g. AwsS3PresignedPostPolicy, GcsSignedPostPolicy, AzureBlobUploadSas). When set, images dragged or pasted into the editor are uploaded via that request and inserted as  nodes. Leave unset to disable image uploads. |
+| `uploadPolicyRequestId` | string | - | Id of an upload-policy request (e.g. AwsS3PresignedPostPolicy, GcsSignedPostPolicy, AzureBlobUploadSas). When set, images dragged or pasted into the editor are uploaded via that request and inserted as &lt;img> nodes. Leave unset to disable image uploads. |
 | `size` | string | - | Label size forwarded to the Label block. Enum: `small`, `middle`, `large`. |
 | `starterKit` | object | - | Options forwarded to TipTap StarterKit (https://tiptap.dev/docs/editor/extensions/functionality/starterkit). Use this to disable bundled extensions (e.g. {heading: false, codeBlock: false}). |
 | `table` | object | - | Table extension settings. |

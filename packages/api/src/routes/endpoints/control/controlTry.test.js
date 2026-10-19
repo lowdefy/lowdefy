@@ -128,6 +128,17 @@ test('try catch with unsuccessful try', async () => {
       },
       'Try and fail at test/try_fail.',
     ],
+    // Handled by the :catch, so logged at debug, not as an error.
+    [
+      {
+        err: new RequestError('Try and fail', {
+          cause: new Error('Try and fail'),
+          location: 'test/try_fail',
+        }),
+        event: 'debug_routine_caught_error',
+      },
+      'Try and fail at test/try_fail.',
+    ],
     [
       {
         event: 'debug_control_catch',
@@ -573,6 +584,17 @@ test('try catch finally, try fail', async () => {
       },
       'Try and fail at test/try_fail.',
     ],
+    // Handled by the :catch, so logged at debug, not as an error.
+    [
+      {
+        err: new RequestError('Try and fail', {
+          cause: new Error('Try and fail'),
+          location: 'test/try_fail',
+        }),
+        event: 'debug_routine_caught_error',
+      },
+      'Try and fail at test/try_fail.',
+    ],
     [
       {
         event: 'debug_control_catch',
@@ -691,6 +713,17 @@ test('try catch finally, try and catch fail', async () => {
           id: 'try_fail',
           type: 'TestRequestError',
         },
+      },
+      'Try and fail at test/try_fail.',
+    ],
+    // Handled by the :catch, so logged at debug, not as an error.
+    [
+      {
+        err: new RequestError('Try and fail', {
+          cause: new Error('Try and fail'),
+          location: 'test/try_fail',
+        }),
+        event: 'debug_routine_caught_error',
       },
       'Try and fail at test/try_fail.',
     ],

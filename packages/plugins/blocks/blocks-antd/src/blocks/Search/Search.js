@@ -16,7 +16,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
 import { cn, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
@@ -54,7 +53,7 @@ function matchesShortcut(e, parsed) {
 function SearchBlock({
   blockId,
   classNames = {},
-  components: { ShortcutBadge },
+  components: { Icon, ShortcutBadge },
   methods,
   properties,
   styles = {},
@@ -71,6 +70,7 @@ function SearchBlock({
 
   const recentSearches = useRecentSearches({
     enabled: properties.recentSearches !== false,
+    getUserStorageKey: methods.getUserStorageKey,
     storageKey: properties.recentSearchesKey,
     maxCount: properties.recentSearchesCount,
   });
@@ -126,13 +126,18 @@ function SearchBlock({
         style={styles.trigger}
         onClick={handleOpen}
       >
-        <SearchOutlined />
+        <Icon
+          blockId={`${blockId}_icon`}
+          properties={properties.icon ?? { name: 'search', title: '' }}
+        />
         <span className="lf-search-trigger-label">{properties.label ?? 'Search'}</span>
         {properties.showShortcut !== false && (
           <ShortcutBadge shortcut={properties.shortcut ?? 'mod+k'} />
         )}
       </Button>
       <SearchModal
+        blockId={blockId}
+        components={{ Icon }}
         open={open}
         onClose={handleClose}
         properties={properties}
@@ -146,4 +151,5 @@ function SearchBlock({
   );
 }
 
-export default withTheme('Search', withBlockDefaults(SearchBlock));
+// antd has no Search component: the block draws a Button trigger, a Modal and an Input.
+export default withTheme(['Button', 'Modal', 'Input'], withBlockDefaults(SearchBlock));

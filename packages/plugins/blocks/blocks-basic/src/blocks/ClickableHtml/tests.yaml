@@ -16,6 +16,8 @@
 - id: properties.html
   type: ClickableHtml
   properties:
+    dataEvents:
+      - onGoClick
     html: |
       <p>Plain markup <button data-event="onGoClick" data-item-id="1">Go</button></p>
 - id: properties.html-no-events
@@ -26,6 +28,8 @@
 - id: properties.html-bad-code
   type: ClickableHtml
   properties:
+    dataEvents:
+      - onOkClick
     html: |
       <button data-event="onOkClick" onclick="alert('inline handler stripped')">Ok</button>
       <script>alert('script tag');</script>
@@ -33,3 +37,12 @@
   type: ClickableHtml
   properties:
     html: 0
+- id: properties.dataEvents
+  type: ClickableHtml
+  properties:
+    dataEvents:
+      - onEditClick
+      - name: onDeleteClick
+        confirm: Delete this row?
+    html: |
+      <p><button data-event="onEditClick">Edit</button> <button data-event="onDeleteClick">Delete</button></p>

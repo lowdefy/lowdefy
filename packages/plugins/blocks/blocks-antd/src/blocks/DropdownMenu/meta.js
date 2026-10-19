@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'container',
-  icons: [],
+  icons: ['chevron-right', 'more'],
   valueType: null,
   slots: {
     content: 'Blocks that trigger the dropdown.',
@@ -26,8 +28,9 @@ export default {
     menu: 'The floating menu container.',
     item: 'Individual menu items.',
     itemIcon: 'Icon within menu items.',
-    subMenu: 'Submenu/group containers.',
-    arrow: 'Dropdown arrow indicator.',
+    subMenu:
+      'Has no effect: antd does not expose submenu containers as a separately styled part. The item key also applies to submenu items.',
+    arrow: 'Has no effect: antd does not expose the dropdown arrow as a separately styled part.',
   },
   events: {
     onClick: {
@@ -40,7 +43,7 @@ export default {
       },
     },
     onSelect: {
-      description: 'Trigger action when a menu item is selected.',
+      description: 'Trigger action when a menu item is selected. Requires `selectable: true`.',
       event: {
         key: 'The selected menu item key.',
         selectedKeys: 'All selected menu item keys.',
@@ -80,6 +83,7 @@ export default {
             },
             url: {
               type: 'string',
+              urlKind: 'url',
               description: 'External URL to link to.',
             },
             newTab: {
@@ -108,12 +112,9 @@ export default {
                   description: 'Menu item title.',
                 },
                 icon: {
-                  type: ['string', 'object'],
+                  ...icon,
                   description:
-                    'Name of a React-Icon or properties of an Icon block to customize icon on menu item.',
-                  docs: {
-                    displayType: 'icon',
-                  },
+                    'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on menu item.',
                 },
                 danger: {
                   type: 'boolean',
@@ -161,7 +162,7 @@ export default {
                     description: 'Menu item type.',
                   },
                   pageId: { type: 'string', description: 'Page to link to.' },
-                  url: { type: 'string', description: 'External URL to link to.' },
+                  url: { type: 'string', urlKind: 'url', description: 'External URL to link to.' },
                   newTab: { type: 'boolean', description: 'Open link in new tab.' },
                   style: {
                     type: ['object', 'string', 'array'],
@@ -179,9 +180,8 @@ export default {
                     properties: {
                       title: { type: 'string', description: 'Menu item title.' },
                       icon: {
-                        type: ['string', 'object'],
+                        ...icon,
                         description: 'Icon name or config.',
-                        docs: { displayType: 'icon' },
                       },
                       danger: { type: 'boolean', default: false, description: 'Danger style.' },
                       disabled: {
@@ -224,7 +224,20 @@ export default {
       },
       placement: {
         type: 'string',
-        enum: ['bottomLeft', 'bottom', 'bottomRight', 'topLeft', 'top', 'topRight'],
+        enum: [
+          'bottomLeft',
+          'bottom',
+          'bottomRight',
+          'topLeft',
+          'top',
+          'topRight',
+          'left',
+          'leftTop',
+          'leftBottom',
+          'right',
+          'rightTop',
+          'rightBottom',
+        ],
         default: 'bottomLeft',
         description: 'Position relative to trigger.',
       },
@@ -248,6 +261,12 @@ export default {
         type: 'boolean',
         default: false,
         description: 'Unmount menu DOM when closed.',
+      },
+      selectable: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Allow menu items to be selected. Selecting an item highlights it and fires onSelect.',
       },
       selectedKeys: {
         type: 'array',

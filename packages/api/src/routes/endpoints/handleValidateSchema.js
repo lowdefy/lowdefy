@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { validate } from '@lowdefy/ajv';
 import { UserError } from '@lowdefy/errors';
 
 import addStepResult from './addStepResult.js';
 import evaluateRoutineOperators from './evaluateRoutineOperators.js';
+import getSchemaValidator from './getSchemaValidator.js';
 
 function buildErrorMessage(errors, stepId) {
   const first = errors?.[0];
@@ -41,8 +41,8 @@ async function handleValidateSchema(context, routineContext, { step }) {
   });
 
   const { schema, data, throwOnInvalid = true } = evaluatedProperties;
-  const { valid, errors } = validate({ schema, data, returnErrors: true });
-  const result = { valid, errors: errors ?? [] };
+  const result = getSchemaValidator({ schema })(data);
+  const { valid } = result;
 
   addStepResult(context, routineContext, {
     result,
@@ -50,19 +50,22 @@ async function handleValidateSchema(context, routineContext, { step }) {
   });
 
   if (!valid && throwOnInvalid) {
-    // A UserError, so the caller sees which field failed: the message is built from the schema
-    // path and rule, never the data, and every other server error reaches the client generic.
+    // Failed validation of caller-supplied data is an expected user outcome,
+    // not a config or system fault.
     // No cause: a UserError's cause crosses the wire as author data, and the ajv errors carry
     // server schema detail. They stay in the step result and the log.
     const error = new UserError(buildErrorMessage(result.errors, step.stepId));
+    // A webhook answers an invalid request with 400 rather than 500 (createWebhookAnswer).
+    error.isInvalidRequest = true;
     // Log under `err` — see controlThrow: only the `err` key runs the pino error
     // serializer, so `error` would drop the message from the log line.
-    logger.error({
-      event: 'error_validate_schema',
+    logger.warn({
+      event: 'warn_validate_schema',
       stepId: step.stepId,
       err: error,
       errors: result.errors,
     });
+    error.handled = true;
     return { status: 'error', error };
   }
 

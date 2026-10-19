@@ -64,7 +64,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Upgrade Guide
-            previous_page_id: upgrade-guide
+            previous_page_title: Version 6 to Version 7
+            previous_page_id: v6-to-v7
             next_page_title: Version 4 to Version 5
             next_page_id: v4-to-v5

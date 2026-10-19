@@ -17,9 +17,10 @@
 import { mergeObjects } from '@lowdefy/helpers';
 
 import createBuildHandleError from './utils/createBuildHandleError.js';
-import createCounter from './utils/createCounter.js';
 import createHandleWarning from './utils/createHandleWarning.js';
+import createImportAppCode from './utils/createImportAppCode.js';
 import createReadConfigFile from './utils/readConfigFile.js';
+import createTypeCounters from './utils/createTypeCounters.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 import defaultMessagesMap from './defaultMessagesMap.js';
 import defaultPackages from './defaultPackages.js';
@@ -31,18 +32,29 @@ function createContext({
   directories,
   logger,
   refResolver,
+  skipPluginChecks = false,
   stage = 'prod',
+  validateOnly = false,
 }) {
   const context = {
     defaultPackageNames: new Set(defaultPackages),
     agentIds: new Set(),
     connectionIds: new Set(),
+    // Set by buildConnections, or restored onto a dev page build
+    // (restoreTenantTargets). Empty until then, so a page built without the
+    // connections (buildTestPage) gets no tenant checks rather than a crash.
+    tenantConnectionIds: new Set(),
+    walledTargets: new Map(),
+    sharedTargets: new Map(),
     notificationIds: new Set(),
     websocketIds: new Set(),
     directories,
+    // Null prototype: policy ids come from app config.
+    dynamicPolicies: Object.create(null),
     errors: [],
     jsMap: {},
     warnings: [],
+    importAppCode: createImportAppCode({ directories }),
     keyMap: {},
     logger,
     // Null prototype prevents pollution via attacker-controlled entry.id.
@@ -50,36 +62,34 @@ function createContext({
     readConfigFile: createReadConfigFile({ directories }),
     refMap: {},
     refResolver,
+    skipPluginChecks,
     unresolvedRefVars: {},
+    unsetEnvReads: new Map(),
     seenSourceLines: new Set(),
     stage,
-    typeCounters: {
-      actions: createCounter(),
-      agents: createCounter(),
-      auth: {
-        adapters: createCounter(),
-        callbacks: createCounter(),
-        events: createCounter(),
-        providers: createCounter(),
-        strategies: createCounter(),
-      },
-      blocks: createCounter(),
-      connections: createCounter(),
-      notifications: createCounter(),
-      requests: createCounter(),
-      websockets: createCounter(),
-      controls: createCounter(),
-      operators: {
-        client: createCounter('client'),
-        server: createCounter('server'),
-      },
-    },
+    validateOnly,
+    pageTypeCounters: new Map(),
+    // ~ignoreBuildChecks slugs that are not built-in, mapped to the ~k of each
+    // node listing them. The plugin rules runner checks them once rules load.
+    pluginCheckSlugRefs: new Map(),
+    // Each plugin's loaded ./checks, by package. Dev page builds share it.
+    pluginChecksCache: new Map(),
+    // Each plugin module imported for its schemas, by specifier. Dev page builds share it.
+    pluginModuleCache: new Map(),
+    typeCounters: createTypeCounters(),
     typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
     messagesMap: mergeObjects([defaultMessagesMap, customMessagesMap]),
-    writeBuildArtifact: createWriteBuildArtifact({ directories }),
   };
 
   context.blockMetas = context.typesMap.blockMetas ?? {};
+
+  // A check run must never touch the build directory. The no-op makes that
+  // structural instead of relying on every validation step to stay write-free.
+  if (validateOnly) {
+    context.writeBuildArtifact = async () => {};
+  } else {
+    context.writeBuildArtifact = createWriteBuildArtifact({ directories });
+  }
 
   context.handleError = createBuildHandleError({ context });
   context.handleWarning = createHandleWarning({ context });

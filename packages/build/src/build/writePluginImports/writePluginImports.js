@@ -21,12 +21,14 @@ import writeAuthImports from './writeAuthImports.js';
 import writeAvailableTypes from './writeAvailableTypes.js';
 import writeBlockImports from './writeBlockImports.js';
 import writeBlockSchemaMap from './writeBlockSchemaMap.js';
+import writeClientOperators from './writeClientOperators.js';
 import writeConnectionImports from './writeConnectionImports.js';
 import writeConnectionSchemaMap from './writeConnectionSchemaMap.js';
 import writeIconImports from './writeIconImports.js';
 import writeNotificationImports from './writeNotificationImports.js';
 import writeOperatorImports from './writeOperatorImports.js';
 import writeOperatorSchemaMap from './writeOperatorSchemaMap.js';
+import writeStepImports from './writeStepImports.js';
 import writeWebsocketImports from './writeWebsocketImports.js';
 import writeGlobalsCss from './writeGlobalsCss.js';
 
@@ -37,21 +39,21 @@ async function writePluginImports({ components, context }) {
   await writeAuthImports({ components, context });
   await writeBlockImports({ components, context });
   await writeBlockSchemaMap({ components, context });
+  await writeClientOperators({ context });
   await writeConnectionImports({ components, context });
   await writeConnectionSchemaMap({ context });
   await writeIconImports({ components, context });
   await writeNotificationImports({ components, context });
   await writeOperatorImports({ components, context });
   await writeOperatorSchemaMap({ components, context });
+  await writeStepImports({ components, context });
   await writeWebsocketImports({ components, context });
   await writeAvailableTypes({ context });
   await writeGlobalsCss({ components, context });
 
   // Write block package names — available as a vite.config.js escape hatch
   // (optimizeDeps/noExternal lists) for packages that don't resolve cleanly.
-  const blockPackages = [
-    ...new Set((components.imports.blocks ?? []).map((b) => b.package)),
-  ];
+  const blockPackages = [...new Set((components.imports.blocks ?? []).map((b) => b.package))];
   await context.writeBuildArtifact('blockPackages.json', JSON.stringify(blockPackages));
 }
 

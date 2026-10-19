@@ -15,12 +15,14 @@
 */
 
 import { serve } from '@hono/node-server';
-import * as Sentry from '@sentry/node';
 import { WebSocketServer } from 'ws';
+
+import registerServer from '@lowdefy/node-utils/registerServer.js';
+import watchOwner from '@lowdefy/node-utils/watchOwner.js';
 
 import initServer from './initServer.js';
 
-const { createApp, logger } = await initServer();
+const { createApp, logger, sentry } = await initServer();
 const { default: appMeta } = await import('../lib/build/appMeta.js');
 
 const app = createApp();
@@ -37,6 +39,14 @@ const server = serve({ fetch: app.fetch, port, websocket: { server: wss } }, (in
     { port: info.port, lowdefy_version: appMeta.lowdefyVersion },
     `Lowdefy server listening on http://localhost:${info.port}`
   );
+  // Only when the CLI asks (it sets the registry directory), so a server run
+  // directly - Docker, Vercel, systemd - records nothing.
+  registerServer({
+    kind: 'server',
+    port: info.port,
+    configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG,
+    logger,
+  });
 });
 
 // Container runtimes send SIGTERM and escalate to SIGKILL after a grace period
@@ -54,8 +64,12 @@ function shutdown() {
   // Drop idle keep-alive connections so close() only waits on in-flight requests.
   server.closeIdleConnections?.();
   server.close(() => {
-    // Flush queued Sentry events; resolves immediately when Sentry is not enabled.
-    Sentry.close(2000).finally(() => process.exit(0));
+    if (!sentry) {
+      process.exit(0);
+      return;
+    }
+    // Send queued Sentry events before exiting.
+    sentry.close(2000).finally(() => process.exit(0));
   });
   // In-flight requests that outlive the grace period would otherwise hold the
   // process open until SIGKILL — exit first so shutdown stays clean.
@@ -64,6 +78,16 @@ function shutdown() {
 
 process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
+process.on('SIGHUP', shutdown);
+
+// A server started by the CLI, a test runner or a script stops when that
+// owner stops, however it ends. Inert unless the spawner set its variables.
+watchOwner({
+  onExit: ({ reason }) => {
+    logger.info({ reason }, 'The process that started this server is gone. Shutting down.');
+    shutdown();
+  },
+});
 
 // Vercel's Node.js builder consumes the exported server — the same pattern
 // Vercel documents for WebSocket support with Hono on Fluid compute.

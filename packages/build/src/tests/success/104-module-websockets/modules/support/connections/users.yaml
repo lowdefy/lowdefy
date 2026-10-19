@@ -1,0 +1,6 @@
+id: users
+type: MongoDBCollection
+properties:
+  databaseUri:
+    _secret: SUPPORT_MONGODB_URI
+  collection: users

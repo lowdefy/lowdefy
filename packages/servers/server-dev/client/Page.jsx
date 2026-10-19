@@ -15,11 +15,12 @@
 */
 
 import React, { useEffect, useRef } from 'react';
-import { GenIcon } from 'react-icons/lib';
 import Client from '@lowdefy/client';
+import { pageInstanceKey } from '@lowdefy/helpers';
 
 import BuildErrorPage from '../lib/client/BuildErrorPage.jsx';
 import InstallingPluginsPage from '../lib/client/InstallingPluginsPage.jsx';
+import RedirectingPage from '../lib/client/RedirectingPage.jsx';
 import usePageConfig from '../lib/client/utils/usePageConfig.js';
 
 const Page = ({
@@ -28,12 +29,18 @@ const Page = ({
   config,
   jsMap,
   lowdefy,
-  pageId,
+  onPageShown,
+  path,
   resetContext,
   router,
   types,
 }) => {
-  const { data: pageConfig } = usePageConfig(pageId, router.basePath);
+  const { data } = usePageConfig(path, router.basePath, auth.user, lowdefy);
+  const pageConfig = data?.pageConfig;
+  // Past the config fetch (which suspends), this render shows the page the
+  // URL names, so a navigation Routing marked has landed. Set during render,
+  // like lowdefy.pageId (initLowdefyContext), so the two change together.
+  lowdefy._devNavigating = false;
 
   // Push build warnings to ErrorBar via runtime error callback
   const pushedWarningsRef = useRef(null);
@@ -46,36 +53,59 @@ const Page = ({
     }
   }, [pageConfig?._warnings, lowdefy]);
 
-  if (!pageConfig) {
+  // Tells the in-page dev tools which page instance is on screen, from the fetched page.
+  useEffect(() => {
+    if (pageConfig) {
+      onPageShown({
+        pageId: data.pageId,
+        pathParams: data.pathParams,
+        instanceKey: pageInstanceKey({
+          pageId: data.pageId,
+          path: pageConfig.path,
+          pathParams: data.pathParams,
+        }),
+      });
+    }
+  }, [pageConfig, data?.pageId, data?.pathParams, onPageShown]);
+
+  // Full load to the sign-in page so it can return here after sign-in — an
+  // effect, not a fetcher side effect, so the redirect re-fires if the same
+  // cached result renders again.
+  useEffect(() => {
+    if (data?.authRedirect) {
+      window.location.assign(data.authRedirect);
+    }
+  }, [data?.authRedirect]);
+
+  if (!data) {
     router.replace({ pathname: '/404' });
     return '';
   }
-  if (pageConfig.buildError) {
-    return (
-      <BuildErrorPage
-        errors={pageConfig.errors}
-        message={pageConfig.message}
-        source={pageConfig.source}
-      />
-    );
+  if (data.authRedirect) {
+    return <RedirectingPage redirect={data.authRedirect} />;
   }
-  if (pageConfig.installing) {
-    return <InstallingPluginsPage packages={pageConfig.packages} />;
+  if (data.buildError) {
+    return <BuildErrorPage errors={data.errors} message={data.message} source={data.source} />;
+  }
+  if (data.installing) {
+    return <InstallingPluginsPage packages={data.packages} />;
   }
 
   // Merge dynamic JS entries fetched after JIT build with the static jsMap
   const mergedJsMap = pageConfig._jsEntries ? { ...jsMap, ...pageConfig._jsEntries } : jsMap;
 
-  // Merge JIT-discovered icon data into the static icons object.
-  // createIcon.js looks up Icons[name] on every render from the captured reference,
-  // so mutating the original object makes new icons available immediately.
+  // Merge JIT-delivered icon data into the static icons map. Icons are data
+  // (IconData), and createIcon looks up Icons[name] on every render from the
+  // captured reference, so mutating the original object makes them available
+  // immediately.
   if (pageConfig._dynamicIcons) {
-    for (const [name, data] of Object.entries(pageConfig._dynamicIcons)) {
-      if (!types.icons[name]) {
-        types.icons[name] = GenIcon(data);
-      }
-    }
+    Object.assign(types.icons, pageConfig._dynamicIcons);
   }
+
+  // The build this config was served under, for the recorder to stamp on each
+  // interaction. Set during render, like the icons above, so it is in place
+  // before any interaction on this config.
+  lowdefy._devBuildId = pageConfig._buildId ?? null;
 
   return (
     <Client
@@ -87,6 +117,8 @@ const Page = ({
       }}
       jsMap={mergedJsMap}
       lowdefy={lowdefy}
+      matchedPath={data.matchedPath}
+      pathParams={data.pathParams}
       resetContext={resetContext}
       router={router}
       stage="dev"

@@ -151,40 +151,58 @@ test.describe('TitleInput Block', () => {
   // EDITABLE TESTS
   // ============================================
 
-  test('renders edit button when editable', async ({ page }) => {
+  test('does not render an edit icon by default', async ({ page }) => {
     const block = getBlock(page, 'titleinput_editable');
-    const editBtn = block.getByRole('button', { name: 'Edit' }).first();
-    await expect(editBtn).toBeVisible();
+    await expect(block).toContainText('Click to Edit');
+    await expect(block.getByRole('button', { name: 'Edit' })).toHaveCount(0);
   });
 
-  test('hides edit button when editable is false', async ({ page }) => {
+  test('renders an edit icon that starts editing when editable.icon is set', async ({ page }) => {
+    const block = getBlock(page, 'titleinput_edit_icon');
+    const editBtn = block.getByRole('button', { name: 'Edit' });
+    await expect(editBtn).toBeVisible();
+    await editBtn.click();
+    await expect(block.locator('textarea')).toBeFocused();
+  });
+
+  test('clicking the text does not edit when editable is false', async ({ page }) => {
     const block = getBlock(page, 'titleinput_not_editable');
-    const editBtn = block.getByRole('button', { name: 'Edit' }).first();
-    await expect(editBtn).toBeHidden();
+    await block.getByText('Read only title').click();
+    await expect(block.locator('textarea')).toHaveCount(0);
+  });
+
+  test('shows the placeholder when the value is empty', async ({ page }) => {
+    const block = getBlock(page, 'titleinput_empty');
+    await expect(block).toHaveText('Name this document');
   });
 
   // ============================================
   // EDIT INTERACTION TESTS
   // ============================================
 
-  test('can edit title and onChange fires', async ({ page }) => {
+  test('can edit title by clicking the text and onChange fires', async ({ page }) => {
     const block = getBlock(page, 'titleinput_onchange');
+    await block.getByText('Change me').click();
 
-    // Click the edit button
-    const editBtn = block.getByRole('button', { name: 'Edit' }).first();
-    await editBtn.click();
-
-    // After clicking, the heading is replaced with an editable div containing a textarea
-    // The textarea appears inside the .ant-typography-edit-content wrapper
-    const textarea = page.locator('.ant-typography-edit-content textarea');
-    await expect(textarea).toBeVisible();
+    // The title is edited in place: a textarea replaces the text inside the same element.
+    const textarea = block.locator('textarea');
+    await expect(textarea).toBeFocused();
     await textarea.fill('New Title Value');
-
-    // Press Enter to confirm
     await textarea.press('Enter');
 
-    // Verify the onChange event fired
     const display = getBlock(page, 'onchange_display');
     await expect(display).toHaveText('Value: New Title Value');
+    await expect(block).toContainText('New Title Value');
+  });
+
+  test('Escape cancels the edit and keeps the value', async ({ page }) => {
+    const block = getBlock(page, 'titleinput_editable');
+    await block.getByText('Click to Edit').click();
+    const textarea = block.locator('textarea');
+    await textarea.fill('Discarded');
+    await textarea.press('Escape');
+
+    await expect(textarea).toHaveCount(0);
+    await expect(block).toContainText('Click to Edit');
   });
 });

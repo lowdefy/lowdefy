@@ -22,18 +22,20 @@ import redactUrlQuery from './redactUrlQuery.js';
 // full URL there and that URL can carry a sign-in token or a signed OAuth
 // query (see redactUrlQuery).
 function logRequest({ context, status, durationMs }) {
-  const { headers = {}, user = {} } = context;
+  const { headers = {} } = context;
+  const user = context.user ?? {};
   context.logger.info(
     {
       user: {
         id: user.id,
         roles: user.roles,
-        sub: user.sub,
-        session_id: user.session_id, // TODO: Implement session id
       },
       url: context.req.url,
       method: context.req.method,
       hostname: context.req.hostname,
+      // The address the server resolved (see getClientAddress). The forwarding
+      // headers below are logged as the client sent them, and are not it.
+      client_address: context.clientAddress,
       status,
       duration_ms: durationMs,
       headers: {

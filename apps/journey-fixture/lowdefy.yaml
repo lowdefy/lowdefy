@@ -1,0 +1,90 @@
+name: journey-fixture
+lowdefy: local
+
+# The app the journey runner's real-Chromium tests drive
+# (packages/servers/server-dev/test/journeyFixture, started by
+# scripts/lib/startJourneyFixture.mjs): every page, request, endpoint and block here exists for a test that
+# asserts what a journey exercised, or what a config mutant does to it.
+# Change one only together with the test that reads it.
+
+config:
+  homePageId: home
+
+# A local plugin whose connection type reaches MongoDB only through the walled
+# client and declares dataSet: walled: the walled-client test
+# (packages/servers/server-dev/test/journeyFixture/walled.test.mjs) clicks
+# through its write on a data set.
+plugins:
+  - name: journey-fixture-walled-plugin
+    version: workspace:*
+
+connections:
+  - id: fixture_db
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: FIXTURE_DATABASE_URI
+      collection: items
+      write: true
+  # A connection no journey data set redirects: the data-set rails test
+  # (packages/servers/server-dev/test/journeyFixture/rails.test.mjs) clicks a
+  # button whose request uses it and is refused. Nothing listens at the URL.
+  - id: rails_external
+    type: AxiosHttp
+    properties:
+      baseURL: http://127.0.0.1:9
+  - _ref: connections/storage_bucket.yaml
+  - _ref: connections/walled_runtime.yaml
+
+# Auth exists only to gate auditor_only, so a journey can be refused by a real
+# auth gate. An API key strategy is the one auth mechanism that needs no
+# database and no login method; every page and every other endpoint stays
+# public, and journeys still act as injected callers.
+auth:
+  secret:
+    _secret: FIXTURE_AUTH_SECRET
+  strategies:
+    - id: fixture_key
+      type: apiKey
+      properties:
+        keys:
+          - id: fixture
+            value:
+              _secret: FIXTURE_API_KEY
+  roles:
+    - id: auditor
+  api:
+    roles:
+      auditor:
+        - auditor_only
+
+api:
+  - _ref: api/notify.yaml
+  - _ref: api/log_activity.yaml
+  - _ref: api/detached_log.yaml
+  - _ref: api/explode.yaml
+  - _ref: api/auditor_only.yaml
+  - _ref: api/typed_order.yaml
+  - _ref: api/save_walled.yaml
+
+pages:
+  - _ref: pages/home.yaml
+  - _ref: pages/second.yaml
+  - _ref: pages/explore.yaml
+  - _ref: pages/explore_guarded.yaml
+  - _ref: pages/explore_pr.yaml
+  - _ref: pages/ticket.yaml
+  - _ref: pages/app_errors.yaml
+  - _ref: pages/app_errors_open.yaml
+  - _ref: pages/timing.yaml
+  - _ref: pages/targets.yaml
+  - _ref: pages/fill.yaml
+  - _ref: pages/rails.yaml
+  - _ref: pages/generated.yaml
+  - _ref: pages/shared_alpha.yaml
+  - _ref: pages/shared_beta.yaml
+  - _ref: pages/storage.yaml
+  - _ref: pages/walled.yaml
+  - _ref: pages/handoff.yaml
+  - _ref: pages/selectors.yaml
+  - _ref: pages/containing_split.yaml

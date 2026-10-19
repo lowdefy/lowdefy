@@ -1,0 +1,7 @@
+# The data set the data-set storage test runs on
+# (packages/servers/server-dev/test/journeyFixture/storage.test.mjs).
+fixtures:
+  fixture_db:
+    - { _id: storage-item, kind: item, page: storage, name: Storage item }
+users:
+  member: { id: u_storage_member, roles: [member] }

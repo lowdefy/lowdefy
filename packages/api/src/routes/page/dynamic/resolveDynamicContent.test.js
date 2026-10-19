@@ -21,7 +21,18 @@ import { ConfigError } from '@lowdefy/errors';
 import resolveDynamicContent from './resolveDynamicContent.js';
 import testContext from '../../../test/testContext.js';
 
-const operators = { ...operatorsServer };
+// A plugin operator can return a class instance whose toJSON differs from its own keys.
+class Hider {
+  constructor() {
+    this.x = { _request: 'secret' };
+  }
+
+  toJSON() {
+    return { safe: true };
+  }
+}
+
+const operators = { ...operatorsServer, _hider: () => new Hider() };
 
 const logger = {
   debug: jest.fn(),
@@ -48,11 +59,15 @@ function createTestContext({ files = {}, session } = {}) {
   });
 }
 
+// Every client operator name the app knows (installed, bundled or not).
+const clientOperators = ['_args', '_global', '_if', '_not', '_request', '_state', '_type', '_user'];
+
 function baseFiles(endpointConfigs = {}) {
   const files = {
     'types.json': types,
     'plugins/blockMetas.json': {},
     'plugins/blockSchemas.json': {},
+    'plugins/clientOperators.json': clientOperators,
   };
   Object.entries(endpointConfigs).forEach(([endpointId, config]) => {
     files[`api/${endpointId}.json`] = {
@@ -129,6 +144,32 @@ test('resolveDynamicContent splices resolved blocks into the Dynamic block conte
   expect(dynamicBlock.slots.fallback).toBe(undefined);
 });
 
+test('resolveDynamicContent asks for every icon when resolved content names one outside the page', async () => {
+  const pageConfig = makePageConfig(makeDynamicBlock());
+  const context = createTestContext({
+    files: {
+      ...baseFiles({
+        resolve_section: {
+          routine: {
+            ':return': {
+              blocks: [
+                { id: 'note', type: 'Html', properties: { html: '<i data-icon="Rocket"></i>' } },
+              ],
+            },
+          },
+        },
+      }),
+      'iconImports.json': ['close', 'Rocket'],
+      'pageTypeSets.json': {
+        page1: { actions: ['Request'], blocks: ['Box', 'Dynamic', 'Html'], icons: ['close'] },
+      },
+    },
+  });
+  await resolveDynamicContent(context, { pageConfig, urlQuery: {} });
+  expect(pageConfig.loadAllIcons).toBe(true);
+  expect(pageConfig.loadAllTypes).toBe(undefined);
+});
+
 test('resolveDynamicContent passes pageId, blockId and urlQuery in the payload', async () => {
   const dynamicBlock = makeDynamicBlock();
   const pageConfig = makePageConfig(dynamicBlock);
@@ -158,6 +199,34 @@ test('resolveDynamicContent passes pageId, blockId and urlQuery in the payload',
   expect(generated.properties.html).toBe('hello');
   expect(generated.properties.pageId).toBe('page1');
   expect(generated.properties.blockId).toBe('section_1');
+});
+
+test('resolveDynamicContent passes pathParams in the payload', async () => {
+  const dynamicBlock = makeDynamicBlock();
+  const pageConfig = makePageConfig(dynamicBlock);
+  const context = createTestContext({
+    files: baseFiles({
+      resolve_section: {
+        routine: {
+          ':return': {
+            blocks: [
+              {
+                id: 'generated',
+                type: 'Html',
+                properties: { html: { _payload: 'pathParams.ticket_id' } },
+              },
+            ],
+          },
+        },
+      },
+    }),
+  });
+  await resolveDynamicContent(context, {
+    pageConfig,
+    pathParams: { ticket_id: '1234' },
+    urlQuery: {},
+  });
+  expect(dynamicBlock.slots.content.blocks[0].properties.html).toBe('1234');
 });
 
 test('resolveDynamicContent unescapes double-underscore operators for client evaluation', async () => {
@@ -248,7 +317,7 @@ test('resolveDynamicContent renders empty content on failure without a fallback 
   expect(dynamicBlock.slots.content.blocks).toEqual([]);
 });
 
-test('resolveDynamicContent throws when a required Dynamic block fails', async () => {
+test('resolveDynamicContent rethrows a typed Lowdefy error when a required Dynamic block fails', async () => {
   const dynamicBlock = makeDynamicBlock({
     properties: { endpointId: 'missing_endpoint', required: true },
   });
@@ -258,7 +327,7 @@ test('resolveDynamicContent throws when a required Dynamic block fails', async (
     ConfigError
   );
   await expect(() => resolveDynamicContent(context, { pageConfig, urlQuery: {} })).rejects.toThrow(
-    'Dynamic block "section_1" on page "page1" failed to resolve'
+    'API Endpoint "missing_endpoint" does not exist.'
   );
 });
 
@@ -293,7 +362,57 @@ test('resolveDynamicContent falls back when the routine rejects', async () => {
   });
   await resolveDynamicContent(context, { pageConfig, urlQuery: {} });
   expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  // The reject logged its own warning; the fallback does not log it again.
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.error).not.toHaveBeenCalled();
+});
+
+test('resolveDynamicContent logs a payload its endpoint refuses as an error: the page config built it', async () => {
+  const dynamicBlock = await resolveWithRoutine(
+    { ':return': { blocks: [] } },
+    {
+      payloadSchema: {
+        type: 'object',
+        properties: { params: { type: 'object', properties: { area: { type: 'number' } } } },
+      },
+    }
+  );
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(logger.warn).not.toHaveBeenCalled();
   expect(logger.error).toHaveBeenCalledTimes(1);
+  expect(logger.error.mock.calls[0][0].event).toBe('dynamic_block_error');
+  expect(logger.error.mock.calls[0][0].err.name).toBe('ConfigError');
+  expect(logger.error.mock.calls[0][1]).toContain('at /params/area: must be number.');
+});
+
+test('resolveDynamicContent logs a nested CallApi payload its target refuses as an error, not a warning', async () => {
+  const dynamicBlock = await resolveWithRoutine(
+    [
+      {
+        id: 'endpoint:resolve_section:inner',
+        stepId: 'inner',
+        type: 'CallApi',
+        properties: { endpointId: 'inner_api', payload: { quantity: 'two' } },
+      },
+      { ':return': { blocks: [] } },
+    ],
+    {
+      extraEndpoints: {
+        inner_api: {
+          payloadSchema: { type: 'object', properties: { quantity: { type: 'number' } } },
+          routine: { ':return': { ok: true } },
+        },
+      },
+    }
+  );
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(logger.warn).not.toHaveBeenCalled();
+  expect(logger.error.mock.calls[0][0]).toMatchObject({
+    name: 'ConfigError',
+    message: expect.stringContaining(
+      'Payload for endpoint "inner_api" does not match its payloadSchema at /quantity'
+    ),
+  });
 });
 
 test('resolveDynamicContent falls back when resolved content uses an unbundled block type', async () => {
@@ -475,13 +594,13 @@ function dynamicBlockError() {
   return call?.[1];
 }
 
-function resolveWithRoutine(routine, { urlQuery = {}, extraEndpoints = {} } = {}) {
+function resolveWithRoutine(routine, { urlQuery = {}, extraEndpoints = {}, payloadSchema } = {}) {
   const dynamicBlock = makeDynamicBlock({
     fallbackBlocks: [{ id: 'fb', blockId: 'fb', type: 'Html', properties: { html: 'fallback' } }],
   });
   const pageConfig = makePageConfig(dynamicBlock);
   const context = createTestContext({
-    files: baseFiles({ resolve_section: { routine }, ...extraEndpoints }),
+    files: baseFiles({ resolve_section: { routine, payloadSchema }, ...extraEndpoints }),
   });
   return resolveDynamicContent(context, { pageConfig, urlQuery }).then(() => dynamicBlock);
 }
@@ -637,6 +756,89 @@ test('resolveDynamicContent falls back when parsed data text carries an operator
   );
 });
 
+test('resolveDynamicContent falls back when a __proto__ key in parsed data text hides an operator', async () => {
+  const dynamicBlock = await resolveWithRoutine([
+    { ':set_state': { stored: '{"_request":"secret","__proto__":{}}' } },
+    {
+      ':return': {
+        blocks: [
+          {
+            id: 'field',
+            type: 'Html',
+            properties: { html: { '_json.parse': { _state: 'stored' } } },
+          },
+        ],
+      },
+    },
+  ]);
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(dynamicBlockError()).toContain(
+    'Data returned by "_json.parse" contains the operator "_request".'
+  );
+});
+
+// Serializer wrappers: the server revives { "~e": ... } as an Error, which the page
+// writes back as "~e" and the client revives only after evaluating what is inside.
+test.each([
+  ['an error message', { '~e': { name: 'Error', message: { _request: 'secret' } } }],
+  ['an error cause', { '~e': { name: 'Error', message: 'x', cause: { _request: 'secret' } } }],
+  [
+    'an error inside an error',
+    { '~e': { name: 'Error', message: { '~e': { name: 'Error', message: { _request: 's' } } } } },
+  ],
+  ['an error in a list', [{ '~e': { name: 'Error', message: { _request: 'secret' } } }]],
+  ['a date wrapper', { '~d': { _request: 'secret' } }],
+  ['an array wrapper', { '~arr': [{ _request: 'secret' }] }],
+])(
+  'resolveDynamicContent falls back when payload data hides an operator in %s',
+  async (_, html) => {
+    const dynamicBlock = await resolveWithRoutine(
+      {
+        ':return': {
+          blocks: [
+            { id: 'field', type: 'Html', properties: { html: { _payload: 'urlQuery.html' } } },
+          ],
+        },
+      },
+      { urlQuery: { html } }
+    );
+    expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+    expect(dynamicBlockError()).toContain(
+      'Data returned by "_payload" contains the operator "_request"'
+    );
+  }
+);
+
+test('resolveDynamicContent falls back when parsed data text hides an operator in an error', async () => {
+  const dynamicBlock = await resolveWithRoutine([
+    { ':set_state': { stored: '{"~e":{"name":"Error","message":{"_request":"secret"}}}' } },
+    {
+      ':return': {
+        blocks: [
+          {
+            id: 'field',
+            type: 'Html',
+            properties: { html: { '_json.parse': { _state: 'stored' } } },
+          },
+        ],
+      },
+    },
+  ]);
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(dynamicBlockError()).toContain(
+    'Data returned by "_json.parse" contains the operator "_request"'
+  );
+});
+
+test('resolveDynamicContent sends the form of operator data it checked, not a class instance', async () => {
+  const dynamicBlock = await resolveWithRoutine({
+    ':return': { blocks: [{ id: 'field', type: 'Html', properties: { html: { _hider: true } } }] },
+  });
+  const { properties } = dynamicBlock.slots.content.blocks[0];
+  expect(properties.html).toEqual({ safe: true });
+  expect(JSON.stringify(properties)).not.toContain('_request');
+});
+
 test('resolveDynamicContent rejects blocks built up in routine state', async () => {
   const dynamicBlock = await resolveWithRoutine([
     {
@@ -648,4 +850,320 @@ test('resolveDynamicContent rejects blocks built up in routine state', async () 
   ]);
   expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
   expect(dynamicBlockError()).toContain('Data returned by "_state"');
+});
+
+function dynamicBlockErrorMessage() {
+  return dynamicBlockError() ?? '';
+}
+
+const storedBlocks = [
+  {
+    id: 'stored',
+    type: 'Html',
+    properties: { html: 'Stored' },
+    events: { onClick: [{ id: 'go', type: 'Request', params: 'load' }] },
+  },
+];
+
+// Without a policy, data an operator returns fills values inside the blocks the
+// :return writes, but it is never a block or an action itself.
+test.each([
+  [
+    'returned by a nested endpoint',
+    [
+      {
+        id: 'endpoint:resolve_section:inner',
+        stepId: 'inner',
+        type: 'CallApi',
+        properties: { endpointId: 'inner_api' },
+      },
+      { ':return': { blocks: { _step: 'inner.blocks' } } },
+    ],
+    'Block at "blocks.0" is data returned by "_step"',
+  ],
+  [
+    'built up in routine state',
+    [{ ':set_state': { built: storedBlocks } }, { ':return': { blocks: { _state: 'built' } } }],
+    'Block at "blocks.0" is data returned by "_state"',
+  ],
+  [
+    'read with _get from data',
+    [
+      { ':set_state': { page: { blocks: storedBlocks } } },
+      { ':return': { blocks: { _get: { from: { _state: 'page' }, key: 'blocks' } } } },
+    ],
+    'Block at "blocks.0" is data returned by "_state"',
+  ],
+  [
+    'copied whole by a mapping function',
+    [
+      { ':set_state': { built: storedBlocks } },
+      {
+        ':return': {
+          blocks: {
+            '_array.map': { on: { _state: 'built' }, callback: { _function: { __args: 0 } } },
+          },
+        },
+      },
+    ],
+    'Block at "blocks.0" is data returned by "_state"',
+  ],
+  [
+    'merged into config by a mapping function',
+    [
+      { ':set_state': { built: storedBlocks } },
+      {
+        ':return': {
+          blocks: {
+            '_array.map': {
+              on: { _state: 'built' },
+              callback: {
+                _function: { '__object.assign': [{}, { __args: 0 }, { layout: { span: 12 } }] },
+              },
+            },
+          },
+        },
+      },
+    ],
+    'Block at "blocks.0" is data returned by "_state"',
+  ],
+  [
+    'nested in a written block',
+    [
+      { ':set_state': { built: storedBlocks } },
+      { ':return': { blocks: [{ id: 'wrapper', type: 'Box', blocks: { _state: 'built' } }] } },
+    ],
+    'Block at "blocks.0.blocks.0" is data returned by "_state"',
+  ],
+  [
+    'an action list read into a written block',
+    [
+      { ':set_state': { actions: [{ id: 'go', type: 'Request', params: 'load' }] } },
+      {
+        ':return': {
+          blocks: [{ id: 'button', type: 'Box', events: { onClick: { _state: 'actions' } } }],
+        },
+      },
+    ],
+    'Action at "blocks.0.events.onClick.0" is data returned by "_state"',
+  ],
+])(
+  'resolveDynamicContent falls back when a block or action is data %s',
+  async (_, routine, message) => {
+    const dynamicBlock = await resolveWithRoutine(routine, {
+      extraEndpoints: { inner_api: { routine: { ':return': { blocks: storedBlocks } } } },
+    });
+    expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+    expect(dynamicBlockErrorMessage()).toContain(message);
+  }
+);
+
+test('resolveDynamicContent maps data rows that carry a type into written blocks', async () => {
+  const dynamicBlock = await resolveWithRoutine([
+    { ':set_state': { rows: [{ id: 'name', type: 'Html', label: 'Name' }] } },
+    {
+      ':return': {
+        blocks: {
+          '_array.map': {
+            on: { _state: 'rows' },
+            callback: {
+              _function: {
+                id: { __args: '0.id' },
+                type: { __args: '0.type' },
+                properties: { html: { __args: '0.label' } },
+              },
+            },
+          },
+        },
+      },
+    },
+  ]);
+  expect(dynamicBlockError()).toBe(undefined);
+  expect(dynamicBlock.slots.content.blocks[0].properties.html).toBe('Name');
+});
+
+// A form builder stores fields in block shape; developer config maps each field
+// into a block, so the rendered blocks are config even where they equal a row.
+test.each([
+  ['with the same keys as the row', {}],
+  ['with keys the row does not have', { label: 'Name' }],
+])('resolveDynamicContent renders stored fields mapped into blocks %s', async (_, extra) => {
+  const fields = [{ id: 'name', type: 'Html', properties: { html: 'Name' }, ...extra }];
+  const dynamicBlock = await resolveWithRoutine([
+    { ':set_state': { fields } },
+    {
+      ':return': {
+        blocks: {
+          '_array.map': {
+            on: { _state: 'fields' },
+            callback: {
+              _function: {
+                id: { __args: '0.id' },
+                type: { __args: '0.type' },
+                properties: { __args: '0.properties' },
+              },
+            },
+          },
+        },
+      },
+    },
+  ]);
+  expect(dynamicBlockError()).toBe(undefined);
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('name');
+  expect(dynamicBlock.slots.content.blocks[0].properties.html).toBe('Name');
+});
+
+test('resolveDynamicContent renders a written block equal to data read elsewhere', async () => {
+  const block = { id: 'intro', type: 'Html', properties: { html: 'Intro' } };
+  const dynamicBlock = await resolveWithRoutine([
+    { ':set_state': { stored: [block] } },
+    {
+      ':return': {
+        blocks: [block, { id: 'raw', type: 'Html', properties: { stored: { _state: 'stored' } } }],
+      },
+    },
+  ]);
+  expect(dynamicBlockError()).toBe(undefined);
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('intro');
+});
+
+test.each([
+  ['is data', { _function: { _state: 'stored.0' } }],
+  ['merges data', { _function: { '__object.assign': [{ _state: 'stored.0' }, { layout: {} }] } }],
+])('resolveDynamicContent falls back when a mapping function body %s', async (_, callback) => {
+  const dynamicBlock = await resolveWithRoutine([
+    { ':set_state': { stored: storedBlocks } },
+    { ':return': { blocks: { '_array.map': { on: [1], callback } } } },
+  ]);
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(dynamicBlockErrorMessage()).toContain('Block at "blocks.0" is data returned by "_state"');
+});
+
+test('resolveDynamicContent keeps written block config chosen from a literal map', async () => {
+  const dynamicBlock = await resolveWithRoutine({
+    ':return': {
+      blocks: {
+        _get: {
+          from: { admin: [{ id: 'admin_panel', type: 'Html', properties: { html: 'Admin' } }] },
+          key: 'admin',
+        },
+      },
+    },
+  });
+  expect(dynamicBlockError()).toBe(undefined);
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('admin_panel');
+});
+
+// The client runs an object as an operator once its other keys evaluate to
+// undefined, so data merged next to such a key must not be left holding one.
+test.each([
+  ['a key the client evaluates to undefined', { note: { __if: { test: false, then: 1 } } }],
+  ['a function the server never sends', { note: { _function: { x: 1 } } }],
+])(
+  'resolveDynamicContent falls back when data merged with %s can run as an operator',
+  async (_, merged) => {
+    const dynamicBlock = await resolveWithRoutine(
+      {
+        ':return': {
+          blocks: [
+            {
+              id: 'field',
+              type: 'Html',
+              properties: {
+                html: { '_object.assign': [{ _payload: 'urlQuery.row' }, merged] },
+              },
+            },
+          ],
+        },
+      },
+      { urlQuery: { row: { _user: 'email', note: 'x' } } }
+    );
+    expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+    expect(dynamicBlockErrorMessage()).toContain(
+      'Data returned by "_payload" can run as the operator "_user" at "blocks.0.properties.html"'
+    );
+  }
+);
+
+test('resolveDynamicContent keeps data keys that name no client operator as data', async () => {
+  const hit = { _score: 0.5 };
+  const source = { _source: { title: 'Chair' } };
+  const dynamicBlock = await resolveWithRoutine([
+    { ':set_state': { hit, source, typename: { __typename: 'Product' } } },
+    {
+      ':return': {
+        blocks: [
+          {
+            id: 'field',
+            type: 'Html',
+            properties: {
+              hit: { _state: 'hit' },
+              source: { _state: 'source' },
+              typename: { _state: 'typename' },
+            },
+          },
+        ],
+      },
+    },
+  ]);
+  expect(dynamicBlockError()).toBe(undefined);
+  expect(dynamicBlock.slots.content.blocks[0].properties).toEqual({
+    hit,
+    source,
+    typename: { __typename: 'Product' },
+  });
+});
+
+test('resolveDynamicContent falls back when data used as a _function body names a server operator', async () => {
+  const dynamicBlock = await resolveWithRoutine(
+    {
+      ':return': {
+        blocks: [
+          {
+            id: 'field',
+            type: 'Html',
+            properties: {
+              html: {
+                '_array.map': { on: [1], callback: { _function: { _payload: 'urlQuery.body' } } },
+              },
+            },
+          },
+        ],
+      },
+    },
+    { urlQuery: { body: { value: { __payload: 'blockId' } } } }
+  );
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(dynamicBlockErrorMessage()).toContain(
+    'Data returned by "_payload" contains the operator "_payload" at "value".'
+  );
+});
+
+function nestPayload(depth) {
+  let nested = { value: 'x' };
+  for (let level = 1; level < depth; level += 1) {
+    nested = { child: nested };
+  }
+  return nested;
+}
+
+// Data an outside caller controls (the query string here) can nest arbitrarily
+// deep. It fails closed with a clear error whether the depth limit or an
+// operator's own recursion catches it first.
+test.each([
+  ['past the Dynamic data depth limit', 201, 'is nested more than 200 levels deep'],
+  ['far deeper than the stack', 100000, 'is nested too deeply to check'],
+])('resolveDynamicContent falls back when payload data is nested %s', async (_, depth, message) => {
+  const dynamicBlock = await resolveWithRoutine(
+    {
+      ':return': {
+        blocks: [
+          { id: 'field', type: 'Html', properties: { html: { _payload: 'urlQuery.deep' } } },
+        ],
+      },
+    },
+    { urlQuery: { deep: nestPayload(depth) } }
+  );
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(dynamicBlockErrorMessage()).toContain(message);
 });

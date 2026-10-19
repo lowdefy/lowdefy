@@ -16,6 +16,8 @@
 
 import { unset, get, joinPath, serializer, set, splitPath, swap, type } from '@lowdefy/helpers';
 
+import valuesEqual from './tracking/valuesEqual.js';
+
 class State {
   constructor(context) {
     this.context = context;
@@ -23,6 +25,7 @@ class State {
     this.initialized = false;
 
     this.set = this.set.bind(this);
+    this.republish = this.republish.bind(this);
     this.del = this.del.bind(this);
     this.swapItems = this.swapItems.bind(this);
     this.removeItem = this.removeItem.bind(this);
@@ -30,10 +33,17 @@ class State {
     this.resetState = this.resetState.bind(this);
   }
 
+  // Every write reports the path it changed, so dependency-tracked updates re-evaluate the blocks
+  // that read it.
+  reportChange(field) {
+    this.context._internal.DependencyTracker.reportChange(`state:${field}`);
+  }
+
   resetState() {
     Object.keys(this.context.state).forEach((key) => {
       delete this.context.state[key];
     });
+    this.context._internal.DependencyTracker.reportChange('state:*');
     const frozenCopy = serializer.deserializeFromString(this.frozenState);
     Object.keys(frozenCopy).forEach((key) => {
       this.set(key, frozenCopy[key]);
@@ -47,12 +57,30 @@ class State {
     }
   }
 
+  // An explicit write: setValue, SetState, list operations and tools. Always reported, even when the
+  // value is the same object, since a caller may have mutated it in place.
   set(field, value) {
     set(this.context.state, field, value);
+    this.reportChange(field);
+  }
+
+  // The engine writing a value back that state may already hold (input values, container
+  // defaults, restored hidden list values). Written as before, but reported only when the value
+  // differs, so a pass that changes nothing leaves no changes behind.
+  republish(field, value) {
+    const unchanged = valuesEqual(get(this.context.state, field), value);
+    set(this.context.state, field, value);
+    if (!unchanged) {
+      this.reportChange(field);
+    }
   }
 
   del(field) {
+    const existed = !type.isUndefined(get(this.context.state, field));
     unset(this.context.state, field);
+    if (existed) {
+      this.reportChange(field);
+    }
     // remove all empty objects from state as an effect of deleted values
     const fields = splitPath(field);
     if (fields.length > 1) {
@@ -70,6 +98,7 @@ class State {
       return;
     }
     swap(arr, from, to);
+    this.reportChange(field);
   }
 
   removeItem(field, index) {
@@ -78,6 +107,7 @@ class State {
       return;
     }
     arr.splice(index, 1);
+    this.reportChange(field);
   }
 }
 

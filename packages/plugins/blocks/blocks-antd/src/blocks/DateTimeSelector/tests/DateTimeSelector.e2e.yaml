@@ -24,6 +24,8 @@ events:
           _date: '2024-06-15T10:30:00'
         dts_clearable:
           _date: '2024-01-01T09:00:00'
+        dts_onclear:
+          _date: '2024-03-01T10:30:00.000Z'
 
 blocks:
   # ============================================
@@ -161,3 +163,169 @@ blocks:
         - label: Noon UTC
           value:
             _date: '2024-06-15T12:00:00.000Z'
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: dts_underlined
+    type: DateTimeSelector
+    properties:
+      title: Underlined
+      variant: underlined
+
+  - id: dts_prefix_text
+    type: DateTimeSelector
+    properties:
+      title: Prefix Text
+      prefix: From
+
+  - id: dts_prefix_icon
+    type: DateTimeSelector
+    properties:
+      title: Prefix Icon
+      prefixIcon: clock
+
+  - id: dts_readonly
+    type: DateTimeSelector
+    properties:
+      title: Read-only Input
+      inputReadOnly: true
+
+  - id: dts_placement
+    type: DateTimeSelector
+    class:
+      .popup: dts-custom-popup
+    properties:
+      title: Placement and Popup Class
+      placement: bottomRight
+
+  - id: dts_events
+    type: DateTimeSelector
+    properties:
+      title: Focus, Blur and Open Events
+    events:
+      onFocus:
+        - id: set_focus
+          type: SetState
+          params:
+            dts_focus_event: true
+      onBlur:
+        - id: set_blur
+          type: SetState
+          params:
+            dts_blur_event: true
+      onOpenChange:
+        - id: set_open
+          type: SetState
+          params:
+            dts_open_event:
+              _event: open
+
+  - id: dts_focus_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: dts_focus_event
+              - null
+          then:
+            _string.concat:
+              - 'Focus: '
+              - _json.stringify:
+                  - _state: dts_focus_event
+          else: ''
+
+  - id: dts_blur_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: dts_blur_event
+              - null
+          then:
+            _string.concat:
+              - 'Blur: '
+              - _json.stringify:
+                  - _state: dts_blur_event
+          else: ''
+
+  - id: dts_open_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: dts_open_event
+              - null
+          then:
+            _string.concat:
+              - 'Open: '
+              - _json.stringify:
+                  - _state: dts_open_event
+          else: ''
+
+  - id: dts_onclear
+    type: DateTimeSelector
+    properties:
+      title: OnClear Test
+    events:
+      onClear:
+        - id: set_onclear
+          type: SetState
+          params:
+            dts_onclear_fired: true
+
+  - id: dts_onclear_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: dts_onclear_fired
+              - true
+          then: Clear fired
+          else: ''
+
+  - id: dts_show_week
+    type: DateTimeSelector
+    properties:
+      title: Show Week
+      showWeek: true
+
+  - id: dts_no_confirm
+    type: DateTimeSelector
+    properties:
+      title: No Confirm
+      needConfirm: false
+
+  - id: dts_no_confirm_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: dts_no_confirm
+              - null
+          then: Value set
+          else: ''
+
+  - id: dts_show_today_false
+    type: DateTimeSelector
+    properties:
+      title: No Now Button
+      showToday: false
+
+  - id: dts_twelve_hour
+    type: DateTimeSelector
+    properties:
+      title: 12 Hour Clock
+      format: YYYY-MM-DD hh:mm a
+      timeFormat: hh:mm a

@@ -24,21 +24,31 @@ import { jest } from '@jest/globals';
 const secret = 'planted-e2e-secret';
 process.env.LOWDEFY_SECRET_TEST = secret;
 
-jest.unstable_mockModule('@lowdefy/api', () => ({ createApiContext: jest.fn() }));
+jest.unstable_mockModule('@lowdefy/api', () => ({
+  createApiContext: jest.fn(),
+  createRequestSignal: jest.fn(({ clientSignal }) => clientSignal),
+  normalizeInjectedCaller: jest.fn((user) => user),
+}));
 jest.unstable_mockModule('../../lib/build/appMeta.js', () => ({ default: {} }));
 jest.unstable_mockModule('../../lib/build/config.js', () => ({ default: {} }));
+jest.unstable_mockModule('../../lib/build/auth.js', () => ({ default: {} }));
 jest.unstable_mockModule('../../lib/build/i18n.js', () => ({ default: {} }));
 jest.unstable_mockModule('../../lib/server/log/createHandleError.js', () => ({
   default: jest.fn(() => jest.fn()),
 }));
 jest.unstable_mockModule('../../lib/server/log/createLogger.js', () => ({
-  default: jest.fn(() => ({ debug: jest.fn(), info: jest.fn(), warn: jest.fn(), error: jest.fn() })),
+  default: jest.fn(() => ({
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  })),
 }));
 jest.unstable_mockModule('../../lib/server/fileCache.js', () => ({ default: {} }));
 jest.unstable_mockModule('../../lib/server/getE2eSecrets.js', () => ({
   default: jest.fn(() => ({ TEST: process.env.LOWDEFY_SECRET_TEST })),
 }));
-jest.unstable_mockModule('../../lib/server/auth/session.js', () => ({
+jest.unstable_mockModule('../../lib/server/auth/getUser.js', () => ({
   default: jest.fn(() => undefined),
 }));
 jest.unstable_mockModule('../../lib/server/log/logRequest.js', () => ({ default: jest.fn() }));
@@ -53,6 +63,7 @@ const fixtures = [
   { file: 'connections.js', content: 'export default {};\n' },
   { file: path.join('operators', 'server.js'), content: 'export default {};\n' },
   { file: path.join('operators', 'serverJsMap.js'), content: 'export default {};\n' },
+  { file: 'steps.js', content: 'export default {};\n' },
   { file: 'websockets.js', content: 'export default {};\n' },
 ].map(({ file, content }) => ({ absolutePath: path.join(pluginsDir, file), content }));
 

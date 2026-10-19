@@ -53,3 +53,76 @@ test('validateConfig config error when basePath does not start with "/".', () =>
   };
   expect(() => validateConfig({ components, context })).toThrow('Base path must start with "/".');
 });
+
+test.each([
+  ['/app/', '/app'],
+  ['/app//', '/app'],
+  ['/app/nested/', '/app/nested'],
+  ['/', ''],
+])('validateConfig removes the trailing slash from basePath %s', (basePath, expected) => {
+  const components = { config: { basePath } };
+  validateConfig({ components, context });
+  expect(components.config.basePath).toEqual(expected);
+});
+
+test('validateConfig leaves appMeta unchanged when config.dependencyTracking is not set', () => {
+  const components = { appMeta: { slug: 'app' }, config: {} };
+  validateConfig({ components, context });
+  expect(components.appMeta).toEqual({ slug: 'app' });
+});
+
+test('validateConfig carries config.dependencyTracking false to appMeta', () => {
+  const components = { appMeta: { slug: 'app' }, config: { dependencyTracking: false } };
+  validateConfig({ components, context });
+  expect(components.appMeta).toEqual({ slug: 'app', dependencyTracking: false });
+});
+
+test('validateConfig leaves appMeta unchanged when config.dependencyTracking is true', () => {
+  const components = { appMeta: { slug: 'app' }, config: { dependencyTracking: true } };
+  validateConfig({ components, context });
+  expect(components.appMeta).toEqual({ slug: 'app' });
+});
+
+test('validateConfig throws when config.dependencyTracking is not a boolean', () => {
+  const components = { appMeta: {}, config: { dependencyTracking: 'no' } };
+  expect(() => validateConfig({ components, context })).toThrow(
+    'App "config.dependencyTracking" should be a boolean.'
+  );
+});
+
+test('validateConfig accepts trustedProxies addresses and CIDR ranges', () => {
+  const components = { config: { trustedProxies: ['10.0.0.0/8', '127.0.0.1', 'fd00::/8'] } };
+  validateConfig({ components, context });
+  expect(components.config.trustedProxies).toEqual(['10.0.0.0/8', '127.0.0.1', 'fd00::/8']);
+});
+
+test.each([
+  ['not an array', '10.0.0.0/8', 'should be an array of IP address or CIDR range strings'],
+  ['a hostname entry', ['proxy.internal'], 'entries should be IP addresses'],
+  ['an out-of-range prefix', ['10.0.0.0/40'], 'entries should be IP addresses'],
+  ['a non-string entry', [10], 'entries should be IP addresses'],
+])('validateConfig throws when trustedProxies is %s', (_, trustedProxies, message) => {
+  const components = { config: { trustedProxies } };
+  expect(() => validateConfig({ components, context })).toThrow(message);
+});
+
+test.each([['0.0.0.0/0'], ['::/0']])(
+  'validateConfig warns that trustedProxies range %s trusts every address',
+  (range) => {
+    const warnings = [];
+    const warnContext = { ...context, handleWarning: (warning) => warnings.push(warning) };
+    const components = { config: { trustedProxies: ['10.0.0.0/8', range] } };
+    validateConfig({ components, context: warnContext });
+    expect(warnings.map((warning) => warning.message)).toEqual([
+      `App "config.trustedProxies" entry "${range}" trusts every address, so any client can choose the address auth rate limits and sessions record by sending X-Forwarded-For. List only the addresses or ranges of your proxies.`,
+    ]);
+  }
+);
+
+test('validateConfig does not warn for trustedProxies ranges narrower than every address', () => {
+  const warnings = [];
+  const warnContext = { ...context, handleWarning: (warning) => warnings.push(warning) };
+  const components = { config: { trustedProxies: ['10.0.0.0/8', '0.0.0.0/1', '127.0.0.1'] } };
+  validateConfig({ components, context: warnContext });
+  expect(warnings).toEqual([]);
+});

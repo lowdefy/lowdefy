@@ -410,7 +410,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
         assignee: Diana
         priority: Low
         status: To Do
-      - task: Code review PR
+      - task: "Code review PR #42"
         assignee: Erik
         priority: Medium
         status: In Progress
@@ -1064,20 +1064,25 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
             Archived: default
       - headerName: Actions
         field: _id
-        width: 220
+        width: 300
         cell:
           type: buttons
           buttons:
             - eventName: onEditClick
               title: Edit
-              icon: AiOutlineEdit
+              icon: edit
               type: primary
             - eventName: onDeleteClick
               title: Delete
-              icon: AiOutlineDelete
+              icon: delete
               danger: true
               disabledField: locked
               hiddenField: archived
+            - eventName: onOpenClick
+              title: Open
+              icon: arrow-right
+              iconPlacement: end
+              type: link
     rowData:
       - _id: TSK-001
         name: Wire main switchboard
@@ -1112,6 +1117,14 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
             _string.concat:
               - "Delete "
               - _event: row.name
+    onOpenClick:
+      - id: open_msg
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - "Open "
+              - _event: row._id
 ```
 
 ```yaml
@@ -1307,6 +1320,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `themeParams` | object | - | AG Grid Theming API parameters merged onto this block's theme, for per-grid overrides. Keys are AG Grid param names, e.g. `headerBackgroundColor`, `rowHoverColor`, `borderColor`. Values are CSS strings and may reference antd tokens, e.g. `var(--ant-color-primary)`. An unrecognised param name has no effect — neither Lowdefy nor AG Grid validates the names — so check spelling against AG Grid's theming parameter reference. |
 | `height` | number \| string | `"auto"` | Specify table height explicitly, in pixel. |
 | `rowData` | array | - | The list of data to display on the table. |
+| `quickFilterValue` | string | - | Show only rows with a cell containing this text. Bind it to state to drive a search box; the `setQuickFilter` method does the same imperatively. |
 | `rowId` | string | - | The data field to use in `getRowId` which results in Row Selection being maintained across Row Data changes (assuming the Row exists in both sets). See Ag Grid docs for more details (https://www.ag-grid.com/react-data-grid/data-update-row-data/). |
 | `enableBrowserTooltips` | boolean | `false` | Set to `true` to use the browser native `title` attribute tooltips instead of AG Grid's styled tooltip component. |
 | `suppressCellFocus` | boolean | `true` | When `true` (default), clicking a cell does not draw the AG Grid cell-focus border. Set to `false` to enable spreadsheet-style cell focus and keyboard navigation. |
@@ -1320,14 +1334,14 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.sortable` | boolean | `false` | Set to true to allow sorting on this column. |
 | `columnDefs.$.resizable` | boolean | `false` | Set to true to allow this column should be resized. |
 | `columnDefs.$.width` | number | - | Initial width in pixels for the cell. |
-| `columnDefs.$.cellStyle` | number | - | An object of css values returning an object of css values for a particular cell. |
+| `columnDefs.$.cellStyle` | object | - | An object of css values returning an object of css values for a particular cell. |
 | `columnDefs.$.cellRenderer` | object | - | Provide your own cell Renderer function (using the `_function` operator) for this column's cells. |
 | `columnDefs.$.valueFormatter` | object \| string | - | A function (using the `_function` operator) or expression to format a value, should return a string. Not used for CSV export or copy to clipboard, only for UI cell rendering. |
 | `columnDefs.$.tooltipField` | string | - | The field of the row object to read the tooltip value from. When set, hovering a cell shows a tooltip with that value using the grid's default tooltip component. |
 | `columnDefs.$.tooltipValueGetter` | object | - | Provide a function (using the `_function` operator) that returns the tooltip value for a cell. Overrides `tooltipField`. |
 | `columnDefs.$.tooltipComponent` | object | - | Provide a custom tooltip component. See AG Grid tooltip component docs (https://www.ag-grid.com/react-data-grid/component-tooltip/). |
 | `columnDefs.$.ellipsis` | number | - | Line-clamp count for long text. Automatically enables `wrapText` and `autoHeight` and applies the `.lf-ellipsis-N` class (1–6). |
-| `columnDefs.$.cell` | object | - | Built-in cell renderer. Takes precedence over `cellRenderer` when `type` is set. Field-valued keys (e.g. `nameField`, `srcField`, `urlQuery.*`) are row-data paths. |
+| `columnDefs.$.cell` | object | - | Built-in cell renderer. Takes precedence over `cellRenderer` when `type` is set. Field-valued keys (e.g. `nameField`, `srcField`, `urlQuery.*`, `pathParams.*`) are row-data paths. |
 | `columnDefs.$.cell.type` | string | - | The built-in renderer to use. Enum: `tag`, `avatar`, `link`, `date`, `boolean`, `progress`, `number`, `buttons`, `menu`, `selector`, `multipleSelector`, `switch`, `textInput`, `paragraphInput`. |
 | `columnDefs.$.cell.colorMap` | object | - | Tag: map of cell value → color (antd tag color name or hex). Used when `cell.type: tag`. The cell value may be a single string or an array of strings; arrays render one tag per item. If neither `colorMap`, `colorFrom`, nor `default` is set, tag values are auto-coloured from a stable hash for consistency across rows. |
 | `columnDefs.$.cell.colorFrom` | string | - | Tag: row-data path to a color value. Takes precedence over `colorMap`. |
@@ -1336,13 +1350,14 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.srcField` | string | - | Avatar: row-data path for the image src (optional). |
 | `columnDefs.$.cell.idField` | string | - | Avatar: row-data path for an id used to seed initials colour. |
 | `columnDefs.$.cell.shape` | string | - | Avatar shape. Defaults to `circle`. Enum: `circle`, `square`. |
-| `columnDefs.$.cell.link` | object | - | Avatar/Link: navigation config. Emits `onCellLink` on click. `pageId`/`href`/`back`/`home`/`newTab` are literal; `urlQuery` values are row-data paths. |
+| `columnDefs.$.cell.link` | object | - | Avatar/Link: navigation config. Emits `onCellLink` on click. `pageId`/`href`/`back`/`home`/`newTab` are literal; `urlQuery` and `pathParams` values are row-data paths. |
 | `columnDefs.$.cell.pageId` | string | - | Link: target page id (literal). |
 | `columnDefs.$.cell.href` | string | - | Link: literal href (overrides `pageId`). |
 | `columnDefs.$.cell.back` | boolean | - | Link: navigate back. |
 | `columnDefs.$.cell.home` | boolean | - | Link: navigate home. |
 | `columnDefs.$.cell.newTab` | boolean | - | Link: open in a new tab. |
 | `columnDefs.$.cell.urlQuery` | object | - | Link: query params. Each value is a row-data path. |
+| `columnDefs.$.cell.pathParams` | object | - | Link: values for the page path's placeholders. Each value is a row-data path. |
 | `columnDefs.$.cell.labelField` | string | - | Link: row-data path for the visible label (falls back to cell value). |
 | `columnDefs.$.cell.format` | string | - | Number: `number` (default), `currency`, `percent`, or `compact` (K/M/B). Date: dayjs format string (default `YYYY-MM-DD HH:mm`). |
 | `columnDefs.$.cell.relative` | boolean | - | Date: render as relative time (e.g. "3 hours ago"). |
@@ -1365,7 +1380,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.negative` | string | `"minus"` | Number: how to render negative numbers — `minus` (default) or `parentheses` for accounting. Enum: `minus`, `parentheses`. |
 | `columnDefs.$.cell.signColor` | boolean | `false` | Number: when true, positives use `positiveColor` (default success token), negatives use `negativeColor` (default error token). |
 | `columnDefs.$.cell.positiveColor` | string | - | Number: CSS colour when value > 0 (requires `signColor: true`). |
-| `columnDefs.$.cell.negativeColor` | string | - | Number: CSS colour when value < 0 (requires `signColor: true`). |
+| `columnDefs.$.cell.negativeColor` | string | - | Number: CSS colour when value &lt; 0 (requires `signColor: true`). |
 | `columnDefs.$.cell.zeroColor` | string | - | Number: CSS colour when value === 0 (requires `signColor: true`). |
 | `columnDefs.$.cell.color` | string | - | Number: CSS colour applied to all values (overridden by `signColor`). |
 | `columnDefs.$.cell.prefix` | string | - | Number: literal prefix (e.g. `Δ `, `~`). |
@@ -1374,8 +1389,9 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.buttons.$.eventName` | string | - | Block-level event name to trigger on click. |
 | `columnDefs.$.cell.buttons.$.title` | string | - | Title text on the button - supports html. |
 | `columnDefs.$.cell.buttons.$.titleField` | string | - | Row-data path for the title. |
-| `columnDefs.$.cell.buttons.$.icon` | string \| object | - | Name of a React-Icon or Icon block config. |
+| `columnDefs.$.cell.buttons.$.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or Icon block config. |
 | `columnDefs.$.cell.buttons.$.iconField` | string | - | Row-data path for the icon name or config. |
+| `columnDefs.$.cell.buttons.$.iconPlacement` | string | `"start"` | Place the icon before (start) or after (end) the title. Enum: `start`, `end`. |
 | `columnDefs.$.cell.buttons.$.type` | string | - | antd Button type. Enum: `primary`, `default`, `dashed`, `link`, `text`. |
 | `columnDefs.$.cell.buttons.$.variant` | string | - | antd Button variant. Takes precedence over `type` when set. Enum: `solid`, `outlined`, `dashed`, `filled`, `text`, `link`. |
 | `columnDefs.$.cell.buttons.$.color` | string | - | Button color (antd preset or hex). |
@@ -1384,6 +1400,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.buttons.$.danger` | boolean | `false` |  |
 | `columnDefs.$.cell.buttons.$.ghost` | boolean | `false` |  |
 | `columnDefs.$.cell.buttons.$.hideTitle` | boolean | `false` | Hide the button's title (icon-only). |
+| `columnDefs.$.cell.buttons.$.tooltip` | string | - | Hover text for the button. An icon-only button (`hideTitle: true`) shows its `title` as the tooltip when this is not set. |
 | `columnDefs.$.cell.buttons.$.disabled` | boolean | `false` |  |
 | `columnDefs.$.cell.buttons.$.disabledField` | string | - | Row-data path → boolean. |
 | `columnDefs.$.cell.buttons.$.hidden` | boolean | `false` | Hide the button entirely. |
@@ -1392,15 +1409,15 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.items.$.eventName` | string | - | Block-level event name to trigger on click. Event payload is `{ row, value, item: { eventName, title }, itemIndex }`. |
 | `columnDefs.$.cell.items.$.title` | string | - | Item label - supports html. |
 | `columnDefs.$.cell.items.$.titleField` | string | - | Row-data path for the label. |
-| `columnDefs.$.cell.items.$.icon` | string \| object | - | Name of a React-Icon or Icon block config. |
+| `columnDefs.$.cell.items.$.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or Icon block config. |
 | `columnDefs.$.cell.items.$.iconField` | string | - | Row-data path for the icon name or config. |
 | `columnDefs.$.cell.items.$.danger` | boolean | `false` | Render the item in the danger colour. |
 | `columnDefs.$.cell.items.$.disabled` | boolean | `false` |  |
 | `columnDefs.$.cell.items.$.disabledField` | string | - | Row-data path → boolean. |
 | `columnDefs.$.cell.items.$.hidden` | boolean | `false` | Hide the item entirely. |
 | `columnDefs.$.cell.items.$.hiddenField` | string | - | Row-data path → boolean. |
-| `columnDefs.$.cell.icon` | string \| object | `"AiOutlineMore"` | Menu cell: the trigger icon. Name of a React-Icon or Icon block config. The trigger is icon-only. |
-| `columnDefs.$.cell.placement` | string | `"bottomRight"` | Menu cell: where the dropdown opens relative to its trigger. Enum: `bottomLeft`, `bottom`, `bottomRight`, `topLeft`, `top`, `topRight`. |
+| `columnDefs.$.cell.icon` | string \| object | `"more-vertical"` | Menu cell: the trigger icon. Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or Icon block config. The trigger is icon-only. |
+| `columnDefs.$.cell.placement` | string | `"bottomRight"` | Menu cell: where the dropdown opens relative to its trigger. Enum: `bottomLeft`, `bottom`, `bottomRight`, `topLeft`, `top`, `topRight`, `left`, `leftTop`, `leftBottom`, `right`, `rightTop`, `rightBottom`. |
 | `columnDefs.$.cell.options` | array | - | Selector / Multiple selector cell: dropdown options. An array of primitives, or objects mirroring the `Selector` block options: `{ label, value, disabled, color, filterString, style }`. `label` supports html. |
 | `columnDefs.$.cell.valueKey` | string | - | Selector / Multiple selector: field on each option object to use as its value. Defaults to `value`. |
 | `columnDefs.$.cell.primaryKey` | string | - | Selector / Multiple selector: field used to match the cell value to an option (identity key for object values). |
@@ -1418,8 +1435,8 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.autoClearSearchValue` | boolean | - | Multiple selector: clear the search box after each selection. |
 | `columnDefs.$.cell.checkedText` | string | - | Switch: label shown inside the switch when on. |
 | `columnDefs.$.cell.uncheckedText` | string | - | Switch: label shown inside the switch when off. |
-| `columnDefs.$.cell.checkedIcon` | string \| object | - | Switch: icon shown when on (React-Icon name or Icon block config). |
-| `columnDefs.$.cell.uncheckedIcon` | string \| object | - | Switch: icon shown when off (React-Icon name or Icon block config). |
+| `columnDefs.$.cell.checkedIcon` | string \| object | - | Switch: icon shown when on (icon name like `edit`, `Pencil` or `tabler:Pencil`, or Icon block config). |
+| `columnDefs.$.cell.uncheckedIcon` | string \| object | - | Switch: icon shown when off (icon name like `edit`, `Pencil` or `tabler:Pencil`, or Icon block config). |
 | `columnDefs.$.cell.inputType` | string | - | Text input: the HTML input type (e.g. `text`, `email`, `number`, `password`). Named `inputType` to avoid clashing with `cell.type`. |
 | `columnDefs.$.cell.maxLength` | number | - | Text input / Paragraph input: maximum number of characters. |
 | `columnDefs.$.cell.showCount` | boolean | - | Text input: show the character count. |
@@ -1438,9 +1455,9 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onCellClick` | `{ cell, colId, row, rowIndex, selected }` | Trigger event when a cell is clicked. |
+| `onCellClick` | `{ cell, colId, row, rowIndex, selected }` | Trigger event when a cell is clicked. Clicks on a button, link, menu, input or checkbox in the cell do not trigger it. |
 | `onFilterChanged` | `{ rows, filter }` | Trigger event when the filter changes. |
-| `onRowClick` | `{ row, selected, rowIndex }` | Trigger event when a row is clicked. |
+| `onRowClick` | `{ row, selected, rowIndex }` | Trigger event when a row is clicked. Clicks on a button, link, menu, input or checkbox in a cell do not trigger it. |
 | `onRowSelected` | `{ row, rowIndex, selected }` | Trigger event when a row is selected. |
 | `onSelectionChanged` | `{ selected }` | Triggered when the selected rows are changed. |
 | `onSortChanged` | `{ rows, sort }` | Trigger event when the sort changes. |

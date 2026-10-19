@@ -69,6 +69,17 @@ test.describe('Pagination Block', () => {
     await expect(total).toContainText('85');
   });
 
+  test('shows the total by default', async ({ page }) => {
+    const pagination = getPagination(page, 'pagination_basic');
+    await expect(pagination.locator('.ant-pagination-total-text')).toHaveText('1-10 of 100 items');
+  });
+
+  test('hides the total with showTotal false', async ({ page }) => {
+    const pagination = getPagination(page, 'pagination_hide_total');
+    await expect(pagination.locator('.ant-pagination-item')).not.toHaveCount(0);
+    await expect(pagination.locator('.ant-pagination-total-text')).toHaveCount(0);
+  });
+
   test('renders with size changer', async ({ page }) => {
     const pagination = getPagination(page, 'pagination_size_changer');
     await expect(pagination).toBeVisible();
@@ -128,5 +139,51 @@ test.describe('Pagination Block', () => {
 
     const display = getBlock(page, 'onsizechange_display');
     await expect(display).toHaveText('New Size: 20');
+  });
+
+  test('aligns to the center and renders the large size', async ({ page }) => {
+    const pagination = getPagination(page, 'pagination_align_center');
+    await expect(pagination).toHaveClass(/ant-pagination-center/);
+    await expect(pagination).toHaveClass(/ant-pagination-large/);
+    await expect(getPageItems(pagination).first()).toHaveCSS('min-width', '40px');
+  });
+
+  test('applies the item class to each page item', async ({ page }) => {
+    const pagination = getPagination(page, 'pagination_align_center');
+    await expect(pagination.locator('.ant-pagination-item.pagination-custom-item')).toHaveCount(5);
+  });
+
+  test('shows fewer page items with showLessItems', async ({ page }) => {
+    const pagination = getPagination(page, 'pagination_less_items');
+    // 50 pages: 1, 2, 3, ellipsis, 50 instead of 1..5, ellipsis, 50.
+    await expect(getPageItems(pagination)).toHaveCount(4);
+  });
+
+  test('wraps a narrow row and keeps the total on one line', async ({ page }) => {
+    const pagination = getPagination(page, 'pagination_narrow');
+    const total = pagination.locator('.ant-pagination-total-text');
+    await expect(total).toHaveText('1-10 of 646 items');
+    await expect(pagination.locator('.ant-pagination-options-size-changer')).toBeVisible();
+
+    const row = await pagination.boundingBox();
+    expect(row.width).toBe(480);
+    const item = await getPageItems(pagination).first().boundingBox();
+    const totalBox = await total.boundingBox();
+    // One line of text is no taller than a page item.
+    expect(totalBox.height).toBeLessThanOrEqual(item.height);
+
+    const tops = new Set();
+    for (const li of await pagination.locator(':scope > li').all()) {
+      const box = await li.boundingBox();
+      expect(box.x + box.width).toBeLessThanOrEqual(row.x + row.width);
+      tops.add(Math.round(box.y));
+    }
+    expect(tops.size).toBeGreaterThan(1);
+  });
+
+  test('onChange event skip counts the items before the page', async ({ page }) => {
+    const pagination = getPagination(page, 'pagination_skip');
+    await getPageItems(pagination).filter({ hasText: '3' }).click();
+    await expect(getBlock(page, 'pagination_skip_display')).toHaveText('skip:20');
   });
 });

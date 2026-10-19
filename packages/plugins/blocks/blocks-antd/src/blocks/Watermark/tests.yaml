@@ -84,3 +84,17 @@
     text: Lowdefy
     font:
       textAlign: center
+- id: 'properties.text lines with their own font'
+  type: Watermark
+  properties:
+    text:
+      - text: Confidential
+        font:
+          fontSize: 20
+          fontWeight: bold
+      - Internal use only
+  blocks:
+    - id: per_line_font_content
+      type: Paragraph
+      properties:
+        content: Watermarked content.

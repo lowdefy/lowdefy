@@ -23,6 +23,11 @@ import collectExceptions from '../utils/collectExceptions.js';
 import countOperators from '../utils/countOperators.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 import validateId from '../utils/validateId.js';
+import collectSharedTargets from './collectSharedTargets.js';
+import collectWalledTargets from './collectWalledTargets.js';
+import markWalledSharedConnections from './markWalledSharedConnections.js';
+import validateSharedChangeLog from './validateSharedChangeLog.js';
+import validateUnwalledSecretReach from './validateUnwalledSecretReach.js';
 
 function validateConnection(connection, context) {
   const configKey = connection?.['~k'];
@@ -34,10 +39,7 @@ function validateConnection(connection, context) {
     return false;
   }
   if (type.isUndefined(connection.id)) {
-    collectExceptions(
-      context,
-      new ConfigError('Connection id missing.', { configKey })
-    );
+    collectExceptions(context, new ConfigError('Connection id missing.', { configKey }));
     return false;
   }
   if (!type.isString(connection.id)) {
@@ -69,28 +71,158 @@ function validateConnection(connection, context) {
   return true;
 }
 
+// The app's organizations policy sets the scoping default for every
+// connection (amendment-3): under policy: tenant a connection whose type
+// implements the scoping contract is scoped unless it declares
+// tenant: shared. The connection position therefore accepts only the
+// exception — "shared", or { field } to scope on a non-default field.
+// tenant: true restates the default and is rejected naming its replacement.
+//
+// The wall is only real if the connection type implements the scoping
+// contract — a declared-but-unenforced wall would read as protection while
+// providing none — so any tenant: declaration on a type without the contract
+// is a build error under both policies, never a silent no-op. And because
+// silence now means scoped, every connection type used under policy: tenant
+// must declare its capability in connectionMetas in its types.js —
+// { tenant: true } implements the contract, { tenant: false } is
+// non-scopable (object storage, SMTP) — so a data-bearing type that never
+// considered tenancy can not be silently unscoped.
+function validateTenant(connection, context, { tenantPolicy }) {
+  const configKey = connection['~k'];
+  const connectionMeta = context.typesMap?.connectionMetas?.[connection.type];
+  if (!type.isUndefined(connection.tenant)) {
+    if (connection.tenant === true) {
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Connection "tenant: true" was removed at connection "${connection.id}" — under auth.organizations.policy: tenant a scoping-capable connection is scoped by default, so the declaration restates the default. Remove the key, or declare tenant: shared for data deliberately shared across organizations.`,
+          { configKey }
+        )
+      );
+      return;
+    }
+    if (connection.tenant === 'none' || connection.tenant === 'authored') {
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Connection "tenant" does not accept "${connection.tenant}" at connection "${connection.id}" — "none" and "authored" are declared on the request, step or websocket that needs the exception, not on the connection.`,
+          { configKey }
+        )
+      );
+      return;
+    }
+    const valid =
+      connection.tenant === 'shared' ||
+      (type.isObject(connection.tenant) && type.isString(connection.tenant.field));
+    if (!valid) {
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Connection "tenant" should be "shared" or an object with a "field" string at connection "${connection.id}".`,
+          { received: connection.tenant, configKey }
+        )
+      );
+      return;
+    }
+    // The wall stamps and matches the field as a single top-level document
+    // key ({ [field]: value }), so a dotted path would stamp a literal
+    // dotted key that path-based read filters never match, and the authored
+    // scan could not see nested writes onto it - both silent wall breaks.
+    if (
+      type.isObject(connection.tenant) &&
+      (connection.tenant.field === '' || connection.tenant.field.includes('.'))
+    ) {
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Connection "tenant.field" should be a non-empty top-level field name (no dots) at connection "${connection.id}" — the tenant wall stamps and matches it as a single document key.`,
+          { received: connection.tenant.field, configKey }
+        )
+      );
+      return;
+    }
+    if (connectionMeta?.tenant !== true) {
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Connection type "${connection.type}" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "${connection.id}". Use a connection type that enforces the tenant wall.`,
+          { configKey }
+        )
+      );
+      return;
+    }
+  }
+  if (tenantPolicy && type.isUndefined(connectionMeta?.tenant)) {
+    collectExceptions(
+      context,
+      new ConfigError(
+        `Connection type "${connection.type}" declares no tenant capability at connection "${connection.id}". Under auth.organizations.policy: tenant every connection type must declare connectionMetas tenant: true (implements the tenant scoping contract) or tenant: false (non-scopable), so no connection is ever silently unscoped.`,
+        { configKey }
+      )
+    );
+  }
+}
+
 function buildConnections({ components, context }) {
   // Store connection IDs for validation in buildRequests
   context.connectionIds = new Set();
+  // Scoped connection ids - scoping-capable type, no tenant: shared - for
+  // the best-effort entry-stage check on requests and steps
+  // (validateTenantPipelineEntry). Populated only under the tenant policy -
+  // the wall does not engage under pinned, so demanding an authored clause
+  // there would be a false alarm for a filter that never runs.
+  context.tenantConnectionIds = new Set();
+  // The walled collections and the shared connections that could write into
+  // them - read by validateSharedPipelineWrite for requests and steps. Empty
+  // under pinned, for the same reason as tenantConnectionIds.
+  context.walledTargets = new Map();
+  context.sharedTargets = new Map();
+  const tenantPolicy = components.auth?.organizations?.policy === 'tenant';
 
   const checkDuplicateConnectionId = createCheckDuplicateId({
     message: 'Duplicate connectionId "{{ id }}".',
   });
 
+  const validConnections = [];
   (components.connections ?? []).forEach((connection) => {
     if (!validateConnection(connection, context)) return;
+    validConnections.push(connection);
 
     const configKey = connection['~k'];
 
     checkDuplicateConnectionId({ id: connection.id, configKey });
     validateId({ id: connection.id, field: 'Connection id', configKey });
+    validateTenant(connection, context, { tenantPolicy });
 
     // Track type usage for buildTypes validation
-    context.typeCounters.connections.increment(connection.type, configKey);
+    context.typeCounters.connections.increment(connection.type, configKey, connection);
 
     // Store connectionId for request validation and rename id
     connection.connectionId = connection.id;
     context.connectionIds.add(connection.connectionId);
+    // Stamp the build-validated tenant capability onto the connection
+    // artifact, so the runtime check in resolveTenant reads the SAME
+    // declaration validateTenant just validated (types.js connectionMetas)
+    // instead of requiring every connection package to mirror it onto its
+    // runtime export — which only MongoDBCollection did, so every other type
+    // (SMTP, SendGrid, AxiosHttp, the AI connections, third-party plugins)
+    // threw on first use under policy: tenant. Only the two valid booleans
+    // are stamped: an absent declaration stays absent, keeping the runtime
+    // fail-closed error for artifacts of types that declare nothing. A
+    // runtime meta.tenant still wins over the stamp (resolveTenant), and a
+    // stamp of true without runtime enforcement refuses rather than serves,
+    // so a drifted artifact can never silently unscope.
+    const tenantCapability = context.typesMap?.connectionMetas?.[connection.type]?.tenant;
+    if (tenantCapability === true || tenantCapability === false) {
+      connection.tenantCapability = tenantCapability;
+    }
+    if (
+      tenantPolicy &&
+      context.typesMap?.connectionMetas?.[connection.type]?.tenant === true &&
+      connection.tenant !== 'shared'
+    ) {
+      context.tenantConnectionIds.add(connection.connectionId);
+    }
     connection.id = `connection:${connection.id}`;
 
     // Count operators in connection properties
@@ -98,6 +230,15 @@ function buildConnections({ components, context }) {
       counter: context.typeCounters.operators.server,
     });
   });
+
+  if (tenantPolicy) {
+    const walledTargets = collectWalledTargets({ connections: validConnections, context });
+    validateSharedChangeLog({ connections: validConnections, context, walledTargets });
+    validateUnwalledSecretReach({ connections: validConnections, context });
+    markWalledSharedConnections({ connections: validConnections, context, walledTargets });
+    context.walledTargets = walledTargets;
+    context.sharedTargets = collectSharedTargets({ connections: validConnections, context });
+  }
 
   return components;
 }

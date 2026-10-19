@@ -1,0 +1,184 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: default
+  type: TreeSelector
+  properties:
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.treeDefaultExpandAll: true'
+  type: TreeSelector
+  properties:
+    treeDefaultExpandAll: true
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.treeLine: true'
+  type: TreeSelector
+  properties:
+    treeLine: true
+    treeDefaultExpandAll: true
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.treeExpandAction: click'
+  type: TreeSelector
+  properties:
+    treeExpandAction: click
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.showSearch: false'
+  type: TreeSelector
+  properties:
+    showSearch: false
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.variant: underlined'
+  type: TreeSelector
+  properties:
+    variant: underlined
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.placement: topLeft'
+  type: TreeSelector
+  properties:
+    placement: topLeft
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.listHeight: 128'
+  type: TreeSelector
+  properties:
+    listHeight: 128
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.popupMatchSelectWidth: false'
+  type: TreeSelector
+  properties:
+    popupMatchSelectWidth: false
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.virtual: false'
+  type: TreeSelector
+  properties:
+    virtual: false
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.prefixIcon: search'
+  type: TreeSelector
+  properties:
+    prefixIcon: search
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.theme: selectorBg'
+  type: TreeSelector
+  properties:
+    theme:
+      selectorBg: '#f9f0ff'
+      nodeSelectedBg: '#efdbff'
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }

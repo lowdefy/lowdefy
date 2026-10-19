@@ -1,6 +1,6 @@
 # S3UploadDragger
 
-__Deprecated__ — use the provider-neutral &lt;a href=&quot;/UploadDragger&quot;&gt;UploadDragger&lt;/a&gt; block with `uploadPolicyRequestId` instead. S3UploadDragger remains as an alias so existing apps keep working. Drag-and-drop file upload area for AWS S3. Supports file type filtering, upload limits, custom drag zone styling, and paste-to-upload. Requires an `AwsS3PresignedPostPolicy` request to define the S3 upload policy.
+__Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragger</a> block with `uploadPolicyRequestId` instead. S3UploadDragger remains as an alias so existing apps keep working. Drag-and-drop file upload area for AWS S3. Supports file type filtering, upload limits, custom drag zone styling, and paste-to-upload. Requires an `AwsS3PresignedPostPolicy` request to define the S3 upload policy.
 
 > The S3UploadDragger requires an AwsS3Bucket connection and AwsS3PresignedPostPolicy request to upload files. The examples on this page demonstrate UI configuration only — uploads will not function without a configured S3 connection.
 
@@ -210,7 +210,7 @@ __Deprecated__ — use the provider-neutral &lt;a href=&quot;/UploadDragger&quot
             title: Submit
             color: primary
             variant: solid
-            icon: AiOutlineUpload
+            icon: upload
           events:
             onClick:
               - id: submit_validate
@@ -256,7 +256,7 @@ __Deprecated__ — use the provider-neutral &lt;a href=&quot;/UploadDragger&quot
             title: Upload Photos
             color: primary
             variant: solid
-            icon: AiOutlineCloudUpload
+            icon: CloudUpload
           events:
             onClick:
               - id: gallery_msg

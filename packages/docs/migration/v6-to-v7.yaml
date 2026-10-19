@@ -1,0 +1,37 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: v6-to-v7
+    pageTitle: Version 6 to Version 7
+    section: Migration
+    filePath: migration/v6-to-v7.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        style:
+          maxWidth: 800
+        properties:
+          content:
+            _ref: migration/v6-to-v7.md
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Auth Upgrade
+            previous_page_id: auth-upgrade
+            next_page_title: Version 5 to Version 6
+            next_page_id: v5-to-v6

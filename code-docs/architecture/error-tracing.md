@@ -38,6 +38,20 @@ The build pipeline tracks the origin of every config value:
 - `~l` (line): Line number in the source file
 - `~r` (ref): Reference ID linking to the source file
 
+#### Keys across dev rebuilds
+
+`~k` values come from the `makeId` counter. The dev server rebuilds config without restarting, and a page loaded, or a request started, before a rebuild still reports errors with the earlier build's keys, while `keyMap.json` already holds the new build. If every build numbered its keys from 1, an old key would name some other node of the new build and the error would point at the wrong config.
+
+So each dev skeleton build (`shallowBuild`) resets `makeId` with a fresh random prefix (`a1b2_1`, `a1b2_2`, ...) and writes `{ prefix, counter }` to `idCounter.json`. JIT page builds continue from it with a prefix of their own: the config build's prefix plus a random id per dev server process (`a1b2_c3d4e5_1`, see `server-dev/lib/server/continueJitKeys.js`), so a restarted server, which continues the same config build, never hands out a key the previous process used. Within a process the counter only moves forward, so every key in a dev session names one node. A key from an earlier build is simply absent from the live maps, and its location resolves to nothing rather than to the wrong node. Production builds (`build()`) keep unprefixed keys: they run once per server start.
+
+#### JIT keys live in `jitMaps/`
+
+In dev, `keyMap.json` and `refMap.json` hold only what the config build wrote. A JIT page build never rewrites them: it writes the key and ref entries its build context added while the build ran to a new file, `jitMaps/<processId>-<generation>-<write>.json` (`{ keyMap, refMap }`, written by `writeJitMaps` in `@lowdefy/build`). It writes when the build succeeds and when it throws, so an error thrown after `addKeys` resolves from disk. Pages build concurrently on one context, so a file can repeat an entry another build added; that build writes it again when it ends, with its ref paths filled in, and readers apply files in write order. JIT refs take counter ids rather than walker paths, which repeat from page to page, so files of different build contexts never name different refs with one id.
+
+The dev server keeps the `jitMaps/` files of its current and previous build contexts only (`pruneJitMaps`, run when a page edit drops the context), and a config publish removes them all as stale files. A key from an older context may stop resolving; it is then logged without a location. The JIT page builder also skips `jitMaps/` writes (and any `keyMap.json`/`refMap.json` write) when the live `idCounter.json` prefix is no longer the one its build context was created from, so a page build that outlives a rebuild cannot leave files describing the old build (`server-dev/lib/server/skipStaleMapWrites.js`). For that check to hold, the manager's `publishBuildDirectory` moves `idCounter.json` into the live build directory before any other file, so the new prefix is live before the new maps are.
+
+Dev readers resolve a key against the skeleton maps plus every `jitMaps/` file (`server-dev/lib/server/readMergedMaps.js`): server errors through `createHandleError` and client errors through `logClientError`, both via the request context's `readMaps`, and `/lowdefy-docs/find/{id}`. `loadAndResolveErrorLocation` takes `readMaps` as an option and reads `keyMap.json`/`refMap.json` without it, so production and e2e servers are unchanged.
+
 ### Location Resolution
 
 Three functions handle different resolution contexts (all in `@lowdefy/errors`):
@@ -68,21 +82,39 @@ const location = resolveConfigLocation({
 
 All error classes in `@lowdefy/errors` with single flat entry point:
 
-| Error Class            | Purpose                        | Thrown By                 | Stack in CLI      |
-| ---------------------- | ------------------------------ | ------------------------- | ----------------- |
-| `LowdefyInternalError` | Internal Lowdefy bugs          | Anywhere inside Lowdefy   | Yes (bugs)        |
-| `ConfigError`          | Config validation errors       | Build validation          | No (use source)   |
-| `ConfigWarning`        | Config inconsistencies         | Build validation          | No (use source)   |
-| `BuildError`           | Summary after errors logged    | `logCollectedErrors`      | No (summary)      |
-| `PluginError`          | Base class (not used directly) | —                         | —                 |
-| `OperatorError`        | Operator failures              | Operator parsers          | No (use received) |
-| `ActionError`          | Action failures                | Action runner (engine)    | No (use received) |
-| `RequestError`         | Request/connection failures    | Request handler (API)     | No (use received) |
-| `BlockError`           | Block rendering failures       | ErrorBoundary (client)    | No (use received) |
-| `ServiceError`         | External service failures      | Plugin interface layer    | No (use service)  |
-| `UserError`            | Expected user interaction      | Actions (Validate, Throw) | No (client-only)  |
+| Error Class                       | Purpose                                                   | Thrown By                                                | Stack in CLI      |
+| --------------------------------- | --------------------------------------------------------- | -------------------------------------------------------- | ----------------- |
+| `LowdefyInternalError`            | Internal Lowdefy bugs                                     | Anywhere inside Lowdefy                                  | Yes (bugs)        |
+| `ConfigError`                     | Config validation errors                                  | Build validation                                         | No (use source)   |
+| `ConfigWarning`                   | Config inconsistencies                                    | Build validation                                         | No (use source)   |
+| `BuildError`                      | Summary after errors logged                               | `logCollectedErrors`                                     | No (summary)      |
+| `PluginError`                     | Base class (not used directly)                            | —                                                        | —                 |
+| `OperatorError`                   | Operator failures                                         | Operator parsers                                         | No (use received) |
+| `ActionError`                     | Action failures                                           | Action runner (engine)                                   | No (use received) |
+| `RequestError`                    | Request/connection failures                               | Request handler (API)                                    | No (use received) |
+| `BlockError`                      | Block rendering failures                                  | ErrorBoundary (client)                                   | No (use received) |
+| `ServiceError`                    | External service failures (network, timeout, 5xx, 429)    | Plugin interface layer                                   | No (use service)  |
+| `AuthenticationError`             | Unauthenticated request (401)                             | API authorization gates                                  | No (warn line)    |
+| `TwoFactorEnrolmentRequiredError` | Unenrolled caller under `twoFactor.required` (403)        | Authorization gate                                       | No (warn line)    |
+| `AuthorizationError`              | Authenticated caller refused by a gate (wrong roles, 403) | Request/endpoint/agent/websocket/auth-step gates         | No (warn line)    |
+| `UserError`                       | Expected user-interaction outcome                         | Validate, Throw, `:throw`/`:reject`, client auth methods | No (client-only)  |
 
 **Key markers:** All classes set `isLowdefyError = true` — survives serialization, replaces `instanceof` checks.
+
+### Faults vs. expected outcomes
+
+Every error is one of two things, and the class says which:
+
+- **A fault** — something a developer (config) or Lowdefy (internal) or an operator (service) has to fix. `ConfigError`, `LowdefyInternalError`, `ServiceError` and the `PluginError` subclasses are faults. They are logged at error level, resolved to a config location where one exists, captured to Sentry, and a browser-originated one is POSTed to `/api/client-error` so the server can log it with its source line.
+- **An expected outcome** — the system worked and said no. `UserError` (validation failed, the author's `Throw`, a rejected sign-in), `AuthenticationError` (no credentials, 401), `AuthorizationError` (authenticated but wrong roles, 403 — the gate's message may stay deliberately generic so it does not reveal what exists) and `TwoFactorEnrolmentRequiredError` (403) are expected. They still surface to the caller — the message displays, `catch:` actions run, the HTTP status is right — but they log as one warn line on the server or to the browser console only, never at error level, never to Sentry, never against a config location.
+
+The test when classifying: _would a developer need to change config to stop this from happening?_ If not, it is not an `ActionError`/`RequestError`/`ConfigError`.
+
+`expectedErrorNames` (`@lowdefy/errors`) is the set of these four names, and every consumer that tells the two apart reads it: the client `handleError` (console only, no POST, no dev error bar) and the dev server's `evaluateInvariants` (never an `action-error` for a journey). The servers' error handlers answer an expected outcome themselves as `{ name, message }` with a 400, 401 or 403 and no `~e` marker, so `client/src/request.js` rebuilds its class from `name`; without that the client threw a plain `Error`, the action runner wrapped it as an `ActionError`, and a role refusal was reported and failed journeys as a fault.
+
+**A refused endpoint payload is classified by who built it.** `validatePayload` (`packages/api/src/routes/endpoints/`) throws a `ConfigError` carrying the endpoint's `configKey` when the app's own config built the payload: a page's `CallAPI` (a call that names its page), a `CallApi` step, a detached target, a Dynamic block's endpoint, an auth or agent hook, a `schedule.payload`. Only an outside caller's payload (`outsideCaller`: an API client that names no page, an MCP tool call, an agent tool call, whose model wrote the input) is refused with a `UserError`. A page sending a payload its own endpoint refuses is a config fault, so it is logged as one and fails a journey.
+
+**Auth server rejections are expected outcomes.** BetterAuth's client resolves `{ data, error }`; `unwrap` in `packages/client/src/auth/createAuthMethods.js` rethrows an `error.status` in the 4xx range as a `UserError` (with `metaData: { code, status }` for page config to branch on) and anything else — a 5xx or network failure — as a plain `Error`, which the action runner wraps as an `ActionError` and reports. Server-side, `options.onAPIError.onError` (`packages/api/src/routes/auth/createOnAPIError.js`) owns BetterAuth's API-error logging: a 4xx `APIError` is one warn line, everything else is `logger.error(error)`. Without it BetterAuth's router logged every 4xx at error level whenever the logger level was `warn` or `debug`, so a wrong password or an expired magic link produced an `ERROR [Better Auth]` line on every attempt.
 
 **Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches all errors and adds `configKey` for location resolution.
 
@@ -179,7 +211,7 @@ Three-layer safety net: resolve + log → log without resolve → console.error.
 
 **Server handleError** (`packages/servers/*/lib/server/log/createHandleError.js`):
 
-Per-request, async. Reads keyMap/refMap from build artifacts, resolves location, logs with request metadata (user, URL, headers), captures to Sentry. It also sets `error.handled = true` — the signal the browser reads to know this error was already logged server-side. Once `handleError` has run, the error crosses the wire under the wire policy in [Readers and their policies](#readers-and-their-policies).
+Per-request, async. Reads keyMap/refMap from build artifacts (in dev, merged with the JIT page builds' `jitMaps/` files through the context's `readMaps`), resolves location, logs with request metadata (user, URL, headers), captures to Sentry. It also sets `error.handled = true` — the signal the browser reads to know this error was already logged server-side. Once `handleError` has run, the error crosses the wire under the wire policy in [Readers and their policies](#readers-and-their-policies).
 
 **Browser handleError** (`packages/client/src/createHandleError.js`):
 
@@ -234,12 +266,12 @@ context.handleWarning(
 
 A server error has four readers, and each gets its own policy:
 
-| Reader                                                                                                                                                                | Sees                                                                                                           | Where                                                        |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| **End user and app config** (toast, `_actions: x.error`, `_request_details`, client `_error`, websocket `onError`, AgentChat `_event: message`, an app agent's model) | The author's message, or the generic one                                                                       | Every Lowdefy route and transport, identical in dev and prod |
-| **Dev tools** (error bar, browser console, dev terminal, agent error feed, dev MCP tool results)                                                                      | The full error, through `devError`                                                                             | Dev server only                                              |
-| **Prod logs and Sentry**                                                                                                                                              | Allowlisted fields per error node, every emitted string scrubbed of known secret values                        | Prod server only                                             |
-| **Routine and client catch config** (`_error`)                                                                                                                        | An Error with name, message, code, statusCode and cause; secrets scrubbed; generic again if sent to the client | Identical in dev and prod                                    |
+| Reader                                                                                                                                                                | Sees                                                                                                                                        | Where                                                        |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| **End user and app config** (toast, `_actions: x.error`, `_request_details`, client `_error`, websocket `onError`, AgentChat `_event: message`, an app agent's model) | The author's message, or the generic one                                                                                                    | Every Lowdefy route and transport, identical in dev and prod |
+| **Dev tools** (error bar, browser console, dev terminal, agent error feed, dev MCP tool results)                                                                      | The full error, through `devError`                                                                                                          | Dev server only                                              |
+| **Prod logs and Sentry**                                                                                                                                              | Allowlisted fields per error node, every emitted string scrubbed of known secret values                                                     | Prod server only                                             |
+| **Routine and client catch config** (`_error`)                                                                                                                        | An Error with name, message, code, statusCode, a ServiceError's retryAfter and cause; secrets scrubbed; generic again if sent to the client | Identical in dev and prod                                    |
 
 The dev/prod split never touches anything config can read. A `:catch` or a client `catch` list behaves the same on a laptop and in production, so an author cannot write error handling that only works in dev.
 
@@ -258,7 +290,7 @@ The rule reads each node's own fields, so the top-level error must carry them fo
 
 **Every error a server sends to a user or app config goes through one projection, `createWireProjection(context)`** (`packages/api/src/response/createWireProjection.js`). Three functions exported from `@lowdefy/api` apply it, one per call shape: `redactErrorResponse(context, error)` for an error alone, `redactResponse(context, response)` for a response value that may contain one, and `buildEndpointResult(context, { error, response, status })` for the endpoint wire object. All three own the serialization as well as the policy, so there is no bare `serializer.serialize(error)` in response position for a caller to forget.
 
-`redactResponse` exists because a response is an error-serialization site whenever it holds an error — `makeReplacer` wraps any `Error` it meets anywhere in a value. That is invisible to a grep for `serialize(error)`, which is why it is a function rather than a rule to remember. It governs the `response` field of `buildEndpointResult` and the request body from `callRequest`.
+`redactResponse` exists because a response is an error-serialization site whenever it holds an error — `makeReplacer` wraps any `Error` it meets anywhere in a value. That is invisible to a grep for `serialize(error)`, which is why it is a function rather than a rule to remember. It governs the `response` field of `buildEndpointResult` and the request body from `callRequest`. It also serializes with `skipMarkers`: a response built from config (a `:return` literal, a `:set_state` value read back) carries that config's hidden `~k`, `~r` and `~l` markers, and the plain `serialize` would write them out as keys and wrap marked arrays as `{ '~arr': [...] }`. A webhook response goes to a third party verbatim and the dev tools return the wire as it is, so the markers stay off the wire.
 
 **Only the author's message crosses.** A library's message embeds whatever the library saw — a URL with credentials, SQL, a hostname — so every error except the pass-through classes becomes:
 
@@ -278,7 +310,7 @@ Nothing else crosses: no cause chain, no `source` or `config`, no `received`, no
 **Pass-through classes.** Keyed on `err.name`, not `instanceof`: the error may come from another copy of `@lowdefy/errors` or from a serializer round trip, where the class identity is gone but the name survives.
 
 - **`UserError`** keeps `name`, `message`, `cause`, `metaData`, `blockId`, `pageId`, `isReject`, `configKey`, `handled` and `requestId`, and sends `isLowdefyError: true` whether or not the node has it — an `_error` value rebuilt from a caught `UserError` keeps only its class. `UserError` is what an author or plugin throws when the message is meant for the user: `:throw`, `:reject`, a failed `ValidateSchema` step (its message is built from the schema path and rule, never the data, and it has no cause: the ajv errors stay in the step result and the log), and plugins such as the MCP payload check. Its `cause` is returned raw so the walk projects it too: an `Error` cause takes the generic shape, and a non-`Error` cause is author data, cleaned as a value.
-- **Auth refusals** keep their message, like `UserError`, because the framework writes those messages to reveal nothing and clients act on them. On this branch that is `AuthenticationError`; `AUTH_REFUSAL_NAMES` also lists `AuthorizationError` and `TwoFactorEnrolmentRequiredError`, which no code here throws. The `server` and `server-dev` error handlers answer an `AuthenticationError` directly with `{ name, message }` and a 401, before the projection; the projection matters where one reaches an endpoint result or an MCP tool result instead.
+- **Auth refusals** keep their message, like `UserError`, because the framework writes those messages to reveal nothing and clients act on them. `AUTH_REFUSAL_NAMES` lists `AuthenticationError`, `AuthorizationError` and `TwoFactorEnrolmentRequiredError`. The server error handlers answer each directly with `{ name, message }` and a 401 or 403, before the projection; the projection matters where one reaches an endpoint result, a websocket reply or an MCP tool result instead.
 
 **The generic message is translated on the server.** `server.genericError` (English "Something went wrong.") is a built-in i18n string in `builtinMessages.js`, overridable per locale in `config.i18n.messages`. `createWireProjection` translates it once per projection with `translate({ key: 'server.genericError', i18n: context?.i18n })`, where `context.i18n.active` is the locale `createApiContext` resolved from the request headers. Translating on the server needs no wire flag to mark generic errors and covers every transport alike: a websocket broadcast and the agent chat stream carry a bare string, and MCP clients never run the browser's decode. The context is optional — a websocket broadcast has no single request and the server error handler can run before any request context exists — so without one the message is the English default and there is no `requestId`.
 
@@ -289,7 +321,7 @@ Nothing else crosses: no cause chain, no `source` or `config`, no `received`, no
 - **`redactResponse`**: `callRequest`'s response and the `response` field of every endpoint result.
 - **Websocket replies.** `createWebSocketConnection`'s `sendErrorPayload` answers a failed subscribe or publish with `{ type: 'error', websocketId, requestId, error: redactErrorResponse(context, error) }`. The client decodes it with `decodeServerError` and rejects the pending action with it.
 - **Websocket broadcasts.** `createChannelRegistry`'s `broadcastError` sends a running channel's failure to each subscriber as a `message` string — `createWireProjection({ i18n: subscriber.i18n })(error).message`. Config reads a broadcast error only as a string (the channel's `onError`). The channel's context belongs to whoever subscribed first, so each subscriber object carries its own connection's `i18n` and the message is translated per subscriber. No `requestId`, since no single request raised it, and no `devError`, since the dev terminal already logs it and no dev tool displays a broadcast.
-- **MCP tool errors.** `createMcpServer` returns the wire message for a failed endpoint (from the endpoint result) and, on its catch branch, `createWireProjection(context)(error).message` for an error that never went through an endpoint result. In dev both branches return the full message instead — see [Dev tools](#dev-tools).
+- **MCP tool errors.** Both branches of `createMcpServer` format through `formatErrorForAgent`, which in prod returns `createWireProjection(context)(error).message`: the wire message for a failed endpoint (from the endpoint result), and the projection of an error that never went through an endpoint result on the catch branch. In dev both branches return the full message instead — see [Dev tools](#dev-tools).
 - **The agent chat stream.** `prepareAgent` passes `wireErrorMessage` into the agent context, since agent plugins cannot import `@lowdefy/api`. `handleAgentChat`'s `clientErrorText` returns it and is the `onError` of the outer `createUIMessageStream` and of both inner streams (`toUIMessageStream`, `createAgentUIStream`) — the AI SDK's default `onError` writes a tool error or in-stream error to the client raw. The AgentChat block hands that text to config as `_event: message`.
 - **An app agent's tool results.** `buildAgentTools` throws the wire message of a failed endpoint back to the model, in both modes. The model's reply reaches the end user, so the model is a reader of the end-user kind, and an agent behaves in dev as it will in prod.
 
@@ -311,13 +343,13 @@ BetterAuth's own route bodies (`/api/auth/*`) are outside this policy: the auth 
 
 The `WeakMap` is the guarantee that config never reads `devError`. The decoded error is stored as `request.error` / `api.error`, rethrown, and read by config through `_actions`, `_request_details` and `_error`, so any property on it — enumerable or not — is one operator change away from config. The error handler calls `getDevError(error)` instead and shows the dev error when there is one; every other decision (the `UserError` branch, the `handled` gate, the POST to `/api/client-error`) stays on the error config sees. The module also records each decoded error in a `WeakSet` (`isDecodedServerError`), which the action runner uses to pass a server error to a `catch` list's `_error` as decoded.
 
-**`context.mode` is set by the server package.** Each server package sets it when it builds the request context: `server-dev`'s `createLowdefyContext` sets `dev`; `server`'s and `server-e2e`'s `apiContext` middleware set `prod`. `@lowdefy/api` has no other environment signal. `NODE_ENV` is the wrong one: `lowdefy start` runs the production server on a laptop, and `NODE_ENV` is easy to mis-set on a deployment, while the package that is running cannot be wrong. Nor is `configDirectory`: production leaves it unset by omission, not by contract, and the e2e server sets it for location resolution. The e2e server takes `prod` so end-to-end tests assert what production users and config see. Only the dev-tool branches read `mode` — `redactErrorResponse`'s `devError` and `createMcpServer`'s dev branches — never anything config reads.
+**`context.mode` is set by the server package.** Each server package sets it when it builds a request or system context: `server-dev`'s `createLowdefyContext` and auth-hook `createSystemContext` set `dev`; `server`'s auth-hook `createSystemContext` and `server`'s and `server-e2e`'s `apiContext` middleware set `prod`. `@lowdefy/api`'s `createSystemContext` takes `mode` and `scrubSecrets` from the server like its other fields. `@lowdefy/api` has no other environment signal. `NODE_ENV` is the wrong one: `lowdefy start` runs the production server on a laptop, and `NODE_ENV` is easy to mis-set on a deployment, while the package that is running cannot be wrong. Nor is `configDirectory`: production leaves it unset by omission, not by contract, and the e2e server sets it for location resolution. The e2e server takes `prod` so end-to-end tests assert what production users and config see. Only the dev-tool branches read `mode` — `redactErrorResponse`'s `devError` and `formatErrorForAgent` — never anything config reads.
 
 **Dedup.** The browser error handler dedups on `${shown.message}:${error.configKey}:${error.requestId}`, where `shown` is the dev error when there is one. Every server failure carries its own `requestId`, so each one logs with the ID support will ask for — in prod, where every server failure has the same generic message, a key without it would log only an action's first failure per page load. One failure reaching `handleError` twice still logs once, and a client error, which has no `requestId`, dedups on message and `configKey` as before. That key is the only dedup for errors bound for `handleError`: `Actions.logActionError` keeps its own `${message}:${action.id}` set only for the `UserError` console line, which bypasses `handleError`. Deduping every error there would, with every server message identical, hide each later failure of an action in dev too.
 
 **`requestId` on the console line.** The browser logger prints `  Request ID: <id>` under a Lowdefy error that carries one. The console, not the toast, carries it: it is what a user or support quotes to find the matching log line and Sentry event.
 
-**Other dev tools.** The dev terminal and the agent error feed (`GET /lowdefy-docs/build-status`) read the server's own logging, never the wire, so they keep full fidelity; `server-dev` builds its logger with `createNodeLogger`'s default `err` serializer. The dev MCP route serves a coding agent, a dev tool: for a failed endpoint `createMcpServer` returns `devError`'s message with ` (at <source>)` and ` Hint: <hint>` appended, and on its catch branch the raw `error.message`.
+**Other dev tools.** The dev terminal and the agent error feed (`GET /lowdefy-docs/build-status`) read the server's own logging, never the wire, so they keep full fidelity for every error that reaches `handleError`. An expected error a routine `:catch` handles — a `RequestError`, `ServiceError` or `UserError` (a provider's 404 in a waterfall) — is logged once at debug by `runRoutine` instead, so it reaches neither the feed nor Sentry; a caught `ConfigError`, `OperatorError`, `LowdefyInternalError` or any other error still goes through `handleError` at error level, then the `:catch` runs (`routineContext.caught`, set by `controlTry` and inherited by nested controls and endpoint calls); `server-dev` builds its logger with `createNodeLogger`'s default `err` serializer. The dev MCP route serves a coding agent, a dev tool: `formatErrorForAgent` returns the message with ` (at <source>)` and ` Hint: <hint>` appended — `devError`'s for a failed endpoint, the caught error's on the catch branch.
 
 **Dev-only exemptions.** `logClientError` returns `configError: serializer.serialize(validationError)` plus an absolute `source` at HTTP 200, and `server-dev`'s `clientError.js` is the only route that forwards them to the browser (prod and e2e return `{ success: true }`). `jitPage` sends build-error `stack` because `BuildErrorPage.jsx` renders it. Both carry more than the wire allows, on the developer's own machine.
 
@@ -336,18 +368,23 @@ Everything else is dropped: axios's `config`, `request` and `response`, pg's `de
 
 **Inside `received`, credential-named keys are masked.** `received` is the one kept field holding values the server fetched at runtime — a token from one step sent as `headers.Authorization` in the next — which the by-value scrub cannot recognise. `maskCredentialKeys` replaces, at any depth, the value under any key that, lower-cased with `-` and `_` removed, contains `authorization`, `token`, `secret`, `password`, `apikey` or `cookie` with `[REDACTED]`. That catches `Authorization`, `access_token`, `x-api-key` and `client_secret`, and masks a harmless `tokenCount` too, which costs a log nothing. The wire and `_error` never carry `received`, so the mask exists only in the log projection.
 
-**Layer 2 — every emitted string is scrubbed by value.** The allowlist cannot make a message safe: a client library can put an API key into the URL in its message. The server knows every secret it holds, so `createSecretScrubber` (`@lowdefy/node-utils`) removes them from the finished output. Each server package builds it once at startup as `scrubSecrets` (`servers/*/lib/server/scrubSecrets.js`) and puts it on every request context beside `secrets`.
+**Credentials derived from a secret are kept out of `received` at the source.** A value derived from a secret (an HMAC of it, a presigned link's signature) is neither a known secret nor under a credential-named key, so neither layer would catch it. A request type names such properties in `meta.credentialProperties` (`AwsS3PutObject` names `url`), and `callRequestResolver` builds the `RequestError`'s `received` with their values replaced by `[REDACTED]` (`maskCredentialProperties`). An operator whose params can hold one throws its refusals as a `ConfigError`, which the server parser reports without `received`: every `_hmac` refusal does, since its `key` is often derived from a root secret.
 
-- **Which values:** every string leaf of the `LOWDEFY_SECRET_*` secrets (`getSecretsFromEnv`), plus `CRON_SECRET` and `AUTH_SECRET`. Authors JSON-encode structured secrets and pick a leaf with `_json.parse`, and the log then holds the leaf, not the whole string, so when a value parses as a JSON object or array each of its string leaves joins the set too. Values shorter than 8 characters are skipped, so a secret like `true` or a port number does not shred unrelated text.
+**Layer 2 — every emitted string is scrubbed by value.** The allowlist cannot make a message safe: a client library can put an API key into the URL in its message. The server knows every secret it holds, so `createSecretScrubber` (`@lowdefy/node-utils`) removes them from the finished output. Each server package builds it once at startup as `scrubSecrets` (`servers/*/lib/server/scrubSecrets.js`) and puts it on every request context and auth-hook system context beside `secrets`.
+
+- **Which values:** every string leaf of the `LOWDEFY_SECRET_*` secrets (`getSecretsFromEnv`), plus `CRON_SECRET` and `BETTER_AUTH_SECRET`. Authors JSON-encode structured secrets and pick a leaf with `_json.parse`, and the log then holds the leaf, not the whole string, so when a value parses as a JSON object or array each of its string leaves joins the set too. Values shorter than 8 characters are skipped, so a secret like `true` or a port number does not shred unrelated text.
+- **Values marked as credentials:** a value a routine makes at runtime (a new API key, a secret derived with `_hmac`) is not a secret the server holds. The `_credential` operator marks it: the server parser hands every operator `markCredential` (`@lowdefy/node-utils`), which adds the value's string leaves to the current credential scope. Each server runs every HTTP request in its own scope (`runInCredentialScope`, an `AsyncLocalStorage` entered by an `app.use('*')` middleware in `src/app.js`), and `createWebSocketConnection` runs each websocket frame in one. The scrub `createSecretScrubber` returns also applies `scrubCredentials`, which reads the scope of the code that writes the line, so a marked value is scrubbed from every log line, Sentry event and `_error` message for the rest of that request, whichever logger writes it. Outside a scope (server start-up) `markCredential` throws, and `scrubCredentials` has nothing to replace.
+  - **Work that outlives the scope.** The prod server's root span ends when `@hono/node-server` writes the response, after the middleware chain (and the scope) has returned, so `beforeSendTransaction` runs with no scope. The Sentry middleware puts `bindCredentialScrub()` on the request's Sentry isolation scope as `sdkProcessingMetadata.scrubRequestCredentials`; Sentry copies that onto every event of the request, transactions included, and `scrubEvent` applies it. Spans are scrubbed with their transaction: `beforeSendSpan` gets no event to read it from.
+  - **Detached calls.** A `CallApi` with `detached: true` runs its target as a new request with a new scope. The dispatcher sends the values it has marked (`getMarkedCredentials`) in the `CRON_SECRET`-gated body as `credentials`, and `runDetachedEndpoint` marks them before it logs anything.
 - **Which forms:** the raw value, its `encodeURIComponent` form, its JSON-escaped form, and its base64 and base64url forms at all three byte alignments, each replaced with `[REDACTED]`. A secret inside a larger base64 payload — a Basic auth header built from `user:password` — only matches the secret's own base64 when both start on the same 3-byte boundary, so the scrubber encodes the value at each offset and keeps only the characters whose bits fall wholly inside the secret. Forms are replaced longest first, so a form is removed whole before a shorter form it contains can break it up.
 - **Where, for the log:** pino's `hooks.streamWrite` on the prod logger, through `createNodeLogger`'s `hooks` option. It sees each finished JSON line, so it covers every field of every log call — `err`, debug payloads, request results — with no walker to miss one.
 - **Where, for Sentry:** `initSentry` sets `beforeSend`, `beforeSendTransaction`, `beforeSendSpan` and `beforeBreadcrumb`, each running `scrubEvent`, which scrubs every string in the event. `beforeSend` covers error events with their cause chain; the transaction and span hooks cover outgoing request URLs with their query strings, sent on every sampled request whether it failed or not; `beforeBreadcrumb` covers the outgoing request URLs the HTTP integration records. `captureSentryError` sends `serializeErrorForLog(error)` as `extra.error` — Sentry's own serialization carries only names, messages and stacks — and adds `requestId` as a tag.
-- **Incoming request bodies are off.** `@sentry/node` attaches incoming request bodies to error events by default — an endpoint payload, a sign-in password — and no value scrub can recognise them. `initSentry` passes `httpIntegration({ maxIncomingRequestBodySize: 'none' })`, which replaces the default HTTP integration by name.
+- **Incoming request bodies are off.** `@sentry/node` attaches incoming request bodies to error events by default — an endpoint payload, a sign-in password — and no value scrub can recognise them. `initSentry` passes `httpIntegration({ maxIncomingRequestBodySize: 'none' })` to `@sentry/node`, and `httpIntegration({ maxRequestBodySize: 'none' })` to the light SDK, either replacing the default HTTP integration by name.
 - **The error sink's fallback.** When location resolution or the log call throws, the prod `createHandleError` falls back to `console.error`, which writes to stderr past pino and its line scrub. It writes `scrubSecrets(JSON.stringify(serializeErrorForLog(error)))` so the fallback gets both layers by hand.
 
-**The dev and e2e servers keep the full default.** `server-dev` builds its logger with `createNodeLogger`'s default `err` serializer and no hooks, because the CLI's dev terminal is parsed from that pino output and the developer needs the full error. `server-e2e`'s logs belong to a test run and never reach a log drain. Both still build `scrubSecrets`, because `_error` reads it off the context and must behave identically in every mode.
+**The dev and e2e servers keep the full default.** `server-dev` builds its logger with `createNodeLogger`'s default `err` serializer and no secret scrub, because the CLI's dev terminal is parsed from that pino output and the developer needs the full error. `server-e2e`'s logs belong to a test run and never reach a log drain. Both still build `scrubSecrets`, because `_error` reads it off the context and must behave identically in every mode. Their loggers do run `scrubCredentials` as their `streamWrite` hook, so a value marked with `_credential` never prints there either: agents read the dev log.
 
-**The gap, stated.** A credential the server never held — an OAuth token fetched at runtime, a session token from an upstream — survives layer 2. Layer 1 drops it from library fields such as axios's `config`, and the key mask drops it from `received` when it sits under a credential-named key. It still reaches the log when a library writes it into a message, when it sits in `received` under a key the mask does not match (a body field named `assertion` or `code`), or inside a URL query string in `received`. Sentry's own server-side scrubbing is the backstop.
+**The gap, stated.** A credential the server never held and config did not mark with `_credential` — an OAuth token fetched at runtime, a session token from an upstream — survives layer 2. Layer 1 drops it from library fields such as axios's `config`, and the key mask drops it from `received` when it sits under a credential-named key. It still reaches the log when a library writes it into a message, when it sits in `received` under a key the mask does not match (a body field named `assertion` or `code`), or inside a URL query string in `received`. Sentry's own server-side scrubbing is the backstop.
 
 **Personal data stays in the log.** Driver messages quote row data: SQL with bound values, MongoDB E11000 duplicate keys, Postgres constraint text. The scrub removes secrets, not personal data, which is normal practice for error logs.
 
@@ -369,6 +406,7 @@ On the client, `Actions.callActions` runs the main pass with `parseScope: { erro
 - `message`, scrubbed, defined as non-enumerable as on a constructed Error, so `JSON.stringify` skips it and an `_error` sent to a plugin as data (an HTTP body, a database insert) records no message.
 - `code` (scrubbed when it is a string) and `statusCode`, by `readErrorCodes`.
 - `handled`, copied. The server's error sink sets it once it has logged the error, and the client skips reporting a handled error back to the server, so a rethrown `_error` without it would be logged a second time.
+- `retryAfter`, on a `ServiceError` that has one: the Retry-After the service sent (seconds or an HTTP date), so a routine can back off as long as the service asked, as an enrichment worker does for a throttled or out-of-capacity treg call.
 - `cause`, when it is an Error, projected the same way down the chain (a cycle is cut, not followed).
 - For a `UserError` only: a non-Error `cause` and `metaData`, deep-scrubbed. The author wrote them in config; any other class's non-Error cause is library data, such as a response body.
 
@@ -467,11 +505,16 @@ try {
 
 ```javascript
 try {
-  return await requestResolver({ ... });
+  return await requestResolver({ ..., signal: context.signal });
 } catch (error) {
   if (!error.configKey) error.configKey = requestConfig['~k'];
 
-  if (error instanceof ConfigError) throw error;
+  if (error.isLowdefyError) throw error;
+
+  // The client left and the resolver stopped on the request signal: not a fault.
+  if (signal?.reason?.name === 'AbortError' && error.name === 'AbortError') {
+    throw new UserError(signal.reason.message, { cause: error });
+  }
 
   if (ServiceError.isServiceError(error)) {
     throw new ServiceError(undefined, {
@@ -484,11 +527,15 @@ try {
   throw new RequestError(error.message, {
     cause: error,
     typeName: requestType,
-    received: requestProperties,
+    received: maskCredentialProperties({ requestProperties, requestResolver }),
     configKey: requestConfig['~k'],
   });
 }
 ```
+
+**What is a ServiceError.** `ServiceError.isServiceError` decides it, for every connection: network error codes, a `TimeoutError`, HTTP 5xx and HTTP 429 (from `statusCode`, `status`, `response.status`, `$metadata.httpStatusCode` or a numeric `code`), AWS SDK throttling exceptions (`$retryable.throttling`), and service-sounding messages, following a retrying client's `lastError` and the `cause` chain. 429 counts because throttling is an external condition that passes with time; a developer cannot fix it in config. The wrapped `ServiceError` keeps the service's Retry-After as `retryAfter` (`ServiceError.readRetryAfter`), which the server log projection (`logErrorProjection.js`) keeps.
+
+**Cancelled requests.** Request resolvers receive `signal` (`context.signal`, built by `createRequestSignal` in the server's apiContext). It aborts with an `AbortError` when the client closes the connection before the response is sent, and with a `TimeoutError` when the server's request timeout (`src/middleware/requestTimeout.js`, `config.requestTimeout`) answers first. A resolver that stopped because the client left fails with a `UserError` (warn level, no Sentry: nobody is left to answer, and nothing needs fixing). One stopped by the request timeout fails with a `ServiceError` at the request's config location, which is how a timed-out provider call shows up in the log. Work that outlives its request (`async: true` endpoints, detached runs, agent chat turns) runs with no signal.
 
 ### Operator Key Extraction
 
@@ -558,20 +605,9 @@ The `~ignoreBuildChecks` property allows developers to suppress specific or all 
   - types
 ```
 
-**Available Check Slugs:**
+**Available Check Slugs:** the built-in slugs are `VALID_CHECK_SLUGS` in `utils/errors/src/shouldSuppressBuildCheck.js`. Plugin rule ids are slugs too, and `plugin-checks` names every plugin rule. The schema and `addKeys` accept any kebab-case slug; `addKeys` records slugs that are not built-in on `context.pluginCheckSlugRefs`. Printed errors and warnings show their slug: `[ConfigError · if-test] message`. The plugin schema check (`build/pluginChecks/runSchemaChecks.js`, run by `runPluginChecks`) reports with slug `plugin-schema` and group `plugin-checks`, as a warning unless the package's `./checks` export sets `schemaLevel: 'error'`. It validates block `properties`, action `params` and operator params with `getConfigSchemaErrors` from `@lowdefy/ajv`, against schemas from `writePluginImports/loadPluginTypeSchema.js`, the loader the schema-map writers use, and locates each finding at the deepest `~k` on the error's path.
 
-| Slug              | Description                                    |
-| ----------------- | ---------------------------------------------- |
-| `state-refs`      | Undefined `_state` reference warnings          |
-| `payload-refs`    | Undefined `_payload` reference warnings        |
-| `step-refs`       | Undefined `_step` reference warnings           |
-| `link-refs`       | Invalid Link action page reference warnings    |
-| `request-refs`    | Invalid Request action reference warnings      |
-| `connection-refs` | Nonexistent connection ID references           |
-| `types`           | All type validation                            |
-| `schema`          | JSON schema validation warnings (non-blocking) |
-
-**Implementation:** `shouldSuppressBuildCheck(error, keyMap)` walks up the `~k_parent` chain looking for `~ignoreBuildChecks` settings.
+**Implementation:** `shouldSuppressBuildCheck(error, keyMap)` walks up the `~k_parent` chain looking for `~ignoreBuildChecks` settings, matching a listed slug against the error's `checkSlug` or `checkGroup`.
 
 ### Circular Reference Detection (`recursiveBuild.js`)
 
@@ -679,7 +715,7 @@ In `Actions.js`, `UserError` is detected by `instanceof` and routed to the brows
    - Reads schema from build artifact (e.g., `plugins/blockSchemas.json`)
    - Validates `received` data against the plugin's JSON schema
    - If invalid, formats AJV errors into readable messages and creates a `ConfigError` with the original error as `cause`
-3. Calls `loadAndResolveErrorLocation()` — reads keyMap/refMap from build artifacts
+3. Calls `loadAndResolveErrorLocation()` — reads keyMap/refMap from build artifacts (through `context.readMaps` when the context has one: the dev server's adds `jitMaps/`)
 4. Sets `error.source` and `error.config`
 5. Logs the `ConfigError` (if schema validation failed) or original error via `logger.error()`
 6. Returns `{ source, configError }` to client — client logs the `ConfigError` if present
@@ -727,10 +763,21 @@ logger:
   sentry:
     client: true
     server: true
+    serverTracing: true # default: true on the Node server, false on Vercel
     tracesSampleRate: 0.1
     replaysOnErrorSampleRate: 0.1
     userFields: ['id', '_id']
 ```
+
+### Which server SDK starts
+
+`initSentryServer` (`lib/server/sentry/initSentry.js`) imports a Sentry SDK only when `SENTRY_DSN` is set and `server` is not `false`, and stores it in `lib/server/sentry/sentrySdk.js`; every server module that reports to Sentry reads it from there, so no module imports a Sentry package statically.
+
+- **Tracing** (`serverTracing`, default `true` for the Node server): `@sentry/node`, with `tracesSampleRate`. It sets up OpenTelemetry and registers ESM loader hooks that wrap every module the app imports after it.
+- **Errors only** (`serverTracing: false`, the default for a serverless entry, which passes `initServer({ serverless: true })`): the SDK's light mode, `@sentry/node-core/light`, with no OpenTelemetry and no loader hooks. It isolates each request's scope through Node's `http.server.request.start` diagnostics channel (Node 22.12+), so `setSentryUser` and the credential scrub stay per request on a function serving several requests at once.
+- **Serverless** also turns `sendClientReports` off. A function stays billed until the flush after each response settles, and with client reports on every flush posted one (the outcome of each unsampled transaction), so every request waited on an upload. The Vercel entry starts its flush once the response closes, which is when the request's server span ends and queues its transaction, so a flush waits only on what that request queued: a captured error, or a sampled transaction.
+
+Importing a small app's Vercel function entry locally (median of 11 to 21 cold imports), light mode added about 80 ms and 4 MB of resident memory over no Sentry, where `@sentry/node` without tracing still added about 270 ms and 110 MB, most of it from its loader hooks.
 
 ### Error Context
 
@@ -743,7 +790,7 @@ Every event, transaction, span and breadcrumb passes through the secret scrub, a
 
 ### Graceful Degradation
 
-All Sentry functions are no-ops when `SENTRY_DSN` is not set.
+All Sentry functions are no-ops when Sentry was not started (`sentrySdk.current` is `null`): `SENTRY_DSN` unset or `logger.sentry.server: false`.
 
 ## Error Serialization
 
@@ -777,6 +824,8 @@ Errors cross the HTTP boundary in both directions using the `~e` serialization f
 `redactErrorResponse` / `buildEndpointResult` serialize the error through the wire projection, and in dev add `devError` beside it — see [Wire](#wire-end-user-and-app-config) and [Dev tools](#dev-tools). This covers every status, not only 500: the hono error handlers (500), endpoint result bodies (200), cron, webhook and detached routes, and websocket reply frames.
 
 The client `request.js` checks for `body['~e']` and decodes it with `decodeServerError`, reconstructing the Lowdefy error class by name (e.g., `RequestError`) and recording `devError` in its `WeakMap`. Server-originated errors keep their class name across the boundary, and the wire's `isLowdefyError: true` makes the engine pass them through without wrapping in `ActionError`.
+
+A body without `~e` whose `name` is in `expectedErrorNames` is an expected outcome the error handler answered itself (a 400, 401 or 403 `{ name, message }`); `request.js` rebuilds it with `lowdefyErrorTypes[name]`, so it too keeps its class and passes through unwrapped. Any other body becomes a plain `Error`.
 
 **Browser → Server (client-error API):**
 
@@ -837,12 +886,15 @@ traverseConfig({
 - `packages/api/src/response/wireErrorPolicy.test.js` — Regression tests for the wire policy across real plugin errors and transports
 - `packages/api/src/routes/websocket/createWebSocketConnection.js`, `createChannelRegistry.js` — Websocket reply and broadcast errors
 - `packages/api/src/routes/mcp/createMcpServer.js` — MCP tool errors, dev and prod
+- `packages/api/src/response/formatErrorForAgent.js` — MCP tool error text: full message with source and hint in dev, the wire message in prod
 - `packages/api/src/routes/endpoints/control/controlTry.js` — Builds the `_error` value for a `:catch`
 - `packages/api/src/routes/endpoints/operatorScope.js`, `evaluateRoutineOperators.js` — The routine operator scope, `error` included
 - `packages/utils/helpers/src/projectCaughtError.js` — The `_error` shape
 - `packages/utils/errors/src/readErrorCodes.js` — The `code` / `statusCode` rule
 - `packages/utils/node-utils/src/createSecretScrubber.js` — The secret scrub
 - `packages/servers/*/lib/server/scrubSecrets.js` — Each server package's scrubber, on every request context
+- `packages/utils/node-utils/src/markCredential.js`, `scrubCredentials.js`, `runInCredentialScope.js`, `bindCredentialScrub.js`, `getMarkedCredentials.js` — The per-request credential scope behind `_credential`
+- `packages/api/src/context/createSystemContext.js`, `packages/servers/{server,server-dev}/lib/server/auth/createSystemContext.js` — Auth-hook system contexts, which carry `mode` and `scrubSecrets` like request contexts
 - `packages/servers/server/lib/server/log/projectErrorForLog.js` — The prod log allowlist
 - `packages/servers/server/lib/server/log/maskCredentialKeys.js` — The `received` key mask
 - `packages/servers/server/lib/server/log/createLogger.js` — Prod logger: allowlist serializer and `streamWrite` scrub

@@ -19,7 +19,10 @@ import { serializer } from '@lowdefy/helpers';
 import buildPage from '../buildPages/buildPage.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
+import removeRequestServerKeys from '../../utils/removeRequestServerKeys.js';
 import createPageRegistry from './createPageRegistry.js';
+import validatePageReferences from '../buildPages/validatePageReferences.js';
+import validateIconNames from '../icons/validateIconNames.js';
 import PAGE_CONTENT_KEYS from './pageContentKeys.js';
 
 function buildShallowPages({ components, context }) {
@@ -40,9 +43,16 @@ function buildShallowPages({ components, context }) {
     checkDuplicatePageId({ id: page.id, configKey: page['~k'] });
   }
 
-  // Build sourceless pages (e.g., default 404) — no YAML to JIT-resolve from.
+  // Build sourceless pages: pages written inline in lowdefy.yaml and default
+  // pages such as the 404. They have no source file to JIT-resolve from, so
+  // this is their only build - and so the only place their link, CallAPI,
+  // websocket and state references, and their icon names, can be checked.
   context.linkActionRefs = [];
-  const sourcelessPageArtifacts = [];
+  context.callApiActionRefs = [];
+  context.websocketActionRefs = [];
+  context.dynamicBlockRefs = [];
+  context.orgClientActionRefs = [];
+  const sourcelessPages = [];
 
   (components.pages ?? []).forEach((page, index) => {
     const entry = pageRegistry.get(page.id);
@@ -50,7 +60,18 @@ function buildShallowPages({ components, context }) {
     if (!entry || entry.refPath !== null || entry.resolverOriginal) return;
 
     buildPage({ page, index, context });
+    validateIconNames({ config: page, icons: context.icons, context });
+    sourcelessPages.push(page);
+  });
 
+  validatePageReferences({
+    components,
+    pages: sourcelessPages,
+    pageIds: [...pageRegistry.keys()],
+    context,
+  });
+
+  const sourcelessPageArtifacts = sourcelessPages.map((page) => {
     const pageRequests = [...(page.requests ?? [])];
     delete page.requests;
     const cleanPage = jsMapParser({ input: page, jsMap: context.jsMap, env: 'client' });
@@ -61,19 +82,26 @@ function buildShallowPages({ components, context }) {
     });
     const builtPage = { ...cleanPage, requests: cleanRequests };
 
-    sourcelessPageArtifacts.push({
-      pageId: builtPage.pageId,
-      pageJson: serializer.serializeToString(builtPage),
-      requests: (builtPage.requests ?? []).map((req) => ({
-        requestId: req.requestId,
-        requestJson: serializer.serializeToString(req),
-      })),
-    });
-
     // Strip content for subsequent skeleton steps
     for (const key of PAGE_CONTENT_KEYS) {
       delete page[key];
     }
+
+    // Requests are serialized and stripped of their server-only keys before
+    // the page is serialized, as the full build does (writeRequests runs
+    // before writePages), so the page artifact sent to the client never
+    // carries them.
+    const requests = builtPage.requests.map((request) => {
+      const requestJson = serializer.serializeToString(request);
+      removeRequestServerKeys({ request });
+      return { requestId: request.requestId, requestJson };
+    });
+
+    return {
+      pageId: builtPage.pageId,
+      pageJson: serializer.serializeToString(builtPage),
+      requests,
+    };
   });
 
   return { pageRegistry, sourcelessPageArtifacts };

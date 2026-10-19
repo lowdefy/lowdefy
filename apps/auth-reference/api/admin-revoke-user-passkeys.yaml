@@ -1,0 +1,49 @@
+# Role-gated admin recovery endpoint (see admin-revoke-user-sessions.yaml for
+# the model). Revokes a user's passkeys after a security key is lost or stolen.
+# The endpoint gate (auth.api.roles) decides who reaches the routine;
+# RevokeUserPasskeys's own org-scoped authority (user: [revoke-passkeys],
+# bounded to a target member of the caller's organization) decides whether the
+# delete lands.
+#
+# passkeyId is OPTIONAL: omitted revokes ALL of the user's passkeys (the stolen
+# bag), supplied revokes the one row (a lost YubiKey beside a working phone
+# passkey). Both shapes are wired from /users so the reference app can exercise
+# revoke-all and revoke-one.
+#
+# This routine does NOT pair RevokeUserSessions. Unlike ResetUserTwoFactor -
+# whose whole premise is an attacker holding a live session while the factor is
+# cleared, making the session revocation mandatory - revoking a passkey is the
+# surgical removal of one credential; whether to also end existing sessions is
+# an incident-response judgement left to the operator, reachable via the
+# separate "Revoke sessions" control on the same page. Folding it in
+# unconditionally would also be incoherent with the revoke-one shape.
+id: admin-revoke-user-passkeys
+type: Api
+routine:
+  - id: revoke_passkeys
+    type: RevokeUserPasskeys
+    properties:
+      userId:
+        _payload: userId
+      passkeyId:
+        _payload: passkeyId
+  - ':try':
+      - id: write_audit
+        type: MongoDBInsertOne
+        connectionId: audit_db
+        properties:
+          doc:
+            event: admin.revoke-user-passkeys
+            userId:
+              _payload: userId
+            passkeyId:
+              _payload: passkeyId
+            actedBy:
+              _user: id
+            at:
+              _date: now
+    ':catch':
+      - ':log':
+          - 'admin-revoke-user-passkeys hook failed to write the audit row'
+  - ':return':
+      _step: revoke_passkeys

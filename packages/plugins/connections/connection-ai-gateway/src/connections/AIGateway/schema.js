@@ -42,6 +42,26 @@ export default {
         type: 'AIGateway connection property "headers" should be an object of strings.',
       },
     },
+    maxOutputTokens: {
+      type: 'integer',
+      minimum: 1,
+      description:
+        'Default maximum number of tokens a model call generates, for the requests and agents on this connection that do not set their own.',
+      errorMessage: {
+        type: 'AIGateway connection property "maxOutputTokens" should be an integer.',
+        minimum: 'AIGateway connection property "maxOutputTokens" should be at least 1.',
+      },
+    },
+    timeout: {
+      type: 'integer',
+      minimum: 1,
+      description:
+        'Default milliseconds a model call may take, retries included, before it is cancelled, for the requests and agents on this connection that do not set their own.',
+      errorMessage: {
+        type: 'AIGateway connection property "timeout" should be an integer.',
+        minimum: 'AIGateway connection property "timeout" should be at least 1.',
+      },
+    },
   },
   errorMessage: {
     type: 'AIGateway connection properties should be an object.',

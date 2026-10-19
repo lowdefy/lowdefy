@@ -31,10 +31,25 @@ import getConnection from '../connections/getConnection.js';
 // config, evaluates operators, creates the provider connection, and builds the
 // resolver context. mode ('chat' | 'generate') selects the resolver's execution
 // path; endpointDepth threads the endpoint call depth cap through agent tool
-// and hook endpoint calls.
-async function prepareAgent(context, { agentId, agentContext, endpointDepth = 0, mode = 'chat' }) {
+// and hook endpoint calls; files are the chat's attached files `_agent: files` reads.
+async function prepareAgent(
+  context,
+  { agentId, agentContext, endpointDepth = 0, files, mode = 'chat' }
+) {
   const agentConfig = await getAgentConfig(context, { agentId });
   authorizeAgent(context, { agentConfig });
+
+  // What `_agent` reads in the tool and hook endpoints this agent calls. Built here from the
+  // agent being run, its conversation and the files of the chat request, so no tool input can
+  // set or change it.
+  // sharedState is the chat's shared state the browser sent with the request, the same value
+  // the agent's own context reads.
+  const agent = {
+    id: agentId,
+    conversationId: agentContext.conversationId ?? null,
+    files,
+    sharedState: agentContext.sharedState ?? null,
+  };
 
   // Evaluate operators in agent properties (e.g. _user, _secret, _payload)
   agentConfig.properties = context.evaluateOperators({
@@ -73,7 +88,11 @@ async function prepareAgent(context, { agentId, agentContext, endpointDepth = 0,
   const resolverContext = {
     agentContext,
     i18n: context.i18n,
+    logger: context.logger,
     mode,
+    // Cancels a headless (CallAgent) run when the request that started it closes;
+    // undefined for chat runs and background routines (see callAgent).
+    signal: context.signal,
     // The agent stream's error text reaches the end user and AgentChat config, so it takes
     // the wire policy. Built here because the agent plugins cannot import @lowdefy/api.
     // The AI SDK types onError's argument as unknown: a tool can reject with null or a
@@ -88,11 +107,15 @@ async function prepareAgent(context, { agentId, agentContext, endpointDepth = 0,
         state: {},
         steps: {},
       }),
-    callEndpoint: async (endpointId, { payload }) => {
+    // outsideCaller marks a tool call, whose input the model built; a hook's
+    // payload is built by Lowdefy for the hook endpoint the config names.
+    callEndpoint: async (endpointId, { payload, outsideCaller = false }) => {
       const { error, response, status } = await invokeEndpoint(context, {
+        agent,
         endpointId,
         payload,
         endpointDepth,
+        outsideCaller,
       });
       return buildEndpointResult(context, { error, response, status });
     },

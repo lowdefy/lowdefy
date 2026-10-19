@@ -1,0 +1,33 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blocks/gallery.yaml.njk
+  vars:
+    pageId: IntentInput
+    pageTitle: IntentInput
+    section: Input Blocks
+    filePath: blocks/input/IntentInput.yaml
+    block_type: IntentInput
+    fullWidthExamples: true
+    github_path: packages/plugins/blocks/blocks-antd-x/src/blocks/IntentInput
+    schema: ../plugins/blocks/blocks-antd-x/src/blocks/IntentInput/meta.js
+    gallery: ../plugins/blocks/blocks-antd-x/src/blocks/IntentInput/gallery.yaml
+    description: >
+      A text input that becomes what the user means. The user types in their own words, a
+      classifier (typically a `Decide` request) picks the intent, and the box grows to show that
+      intent's slot: a faded preview while unsure, a choice between two intents when they are
+      close, and the slot solid when sure. Each intent's slot holds ordinary blocks.
+    guide:
+      _ref: blocks/input/IntentInputGuide.md

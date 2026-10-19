@@ -41,7 +41,12 @@ const pluginTypesEsm = {
   },
 };
 
+// The module under test imports @lowdefy/build, which links against every
+// export it uses, so the real module passes through and only file access is
+// replaced.
+const realNodeUtils = await import('@lowdefy/node-utils');
 jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+  ...realNodeUtils,
   cleanDirectory: jest.fn(),
   copyFileOrDirectory: jest.fn(),
   getFileExtension: jest.fn(),

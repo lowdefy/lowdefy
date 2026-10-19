@@ -300,7 +300,7 @@ _ref:
                 ```
 
                 - The `NEXTAUTH_SECRET` environment variable needs to be set to a secure secret value (replacing `LOWDEFY_SECRET_JWT_SECRET`).
-                - The callback URLs configured with the provider change from `{{ protocol }}{{ host }}/auth/openid-callback` to `{{ protocol }}{{ host }}/api/auth/callback/{{ providerId }}`.
+                - The callback URLs configured with the provider change from `{% raw %}{{ protocol }}{{ host }}{% endraw %}/auth/openid-callback` to `{% raw %}{{ protocol }}{{ host }}{% endraw %}/api/auth/callback/{% raw %}{{ providerId }}{% endraw %}`.
                 - The `Login` and `Logout` action params have changed between V3 and V4.
 
                 ## Custom Blocks, Actions and Operators

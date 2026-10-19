@@ -16,21 +16,10 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { isReserved, normalizeCaller, splitPath, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 const strategyTypes = ['apiKey', 'jwt'];
-
-// Prototype-pollution vectors rejected as claimMapping path segments.
-const reservedKeys = new Set([
-  '__proto__',
-  'constructor',
-  'prototype',
-  '__defineGetter__',
-  '__defineSetter__',
-  '__lookupGetter__',
-  '__lookupSetter__',
-]);
 
 function setDefault(object, key, value) {
   if (type.isNone(object[key])) {
@@ -74,11 +63,21 @@ function validateJwtStrategy({ strategy, configKey }) {
       { configKey }
     );
   }
-  // claimMapping field names become object keys on the user and attributes
-  // objects the jwt verifier builds per request - gated here where the config
-  // location is available, so a pollution-vector key never reaches runtime.
+  // claimMapping field names become object keys on the user and attributes objects the strategy
+  // builds per request (jwt.js:117,121). A throw from there lands outside the strategy's token catch
+  // and surfaces as an unlocated 500 on every authenticated request, so the gate goes here where the
+  // config location is available.
   Object.keys(properties.claimMapping ?? {}).forEach((field) => {
-    const reservedSegment = field.split('.').find((segment) => reservedKeys.has(segment));
+    // _user.system marks the stand-in caller a bound CallApi names (applySystemTrust); apps branch
+    // on it, so no token claim may set it. The strategy caller's keys are snake_cased
+    // (normalizeCaller), so "System" or "_system" would land on _user.system too.
+    if (Object.hasOwn(normalizeCaller({ [field]: true }), 'system')) {
+      throw new ConfigError(
+        `Auth strategy "${strategy.id}" claimMapping field "${field}" sets _user.system, which is reserved. Only the stand-in caller a CallApi "caller" names carries _user.system.`,
+        { configKey }
+      );
+    }
+    const reservedSegment = splitPath(field).find(isReserved);
     if (!type.isNone(reservedSegment)) {
       throw new ConfigError(
         `Auth strategy "${strategy.id}" claimMapping field "${field}" uses reserved name "${reservedSegment}".`,

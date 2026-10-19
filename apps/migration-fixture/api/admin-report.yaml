@@ -1,0 +1,14 @@
+# A request filter keyed on an old attribute path (class B).
+id: admin-report
+type: Api
+routine:
+  - id: find_records
+    type: MongoDBFind
+    connectionId: app_db
+    properties:
+      query:
+        branch:
+          _user: app_attributes.branch # B → _user.attributes.branch
+  - :return:
+      records:
+        _step: find_records

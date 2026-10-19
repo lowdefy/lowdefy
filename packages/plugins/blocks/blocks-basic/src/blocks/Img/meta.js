@@ -28,6 +28,7 @@ export default {
     properties: {
       src: {
         type: 'string',
+        urlKind: 'src',
         description: 'The image URL.',
       },
       alt: {
@@ -46,8 +47,9 @@ export default {
           'An image decoding hint to the browser. Sync for atomic presentation with other content, async,  to reduce delay in presenting other content and auto leave to browser to decide.',
       },
       height: {
-        type: 'number',
-        description: 'Height of the image.',
+        type: ['number', 'string'],
+        description:
+          'Height of the image: a number of pixels, or a string such as `100%` or `auto` that the browser reads as the height attribute.',
       },
       loading: {
         type: 'string',
@@ -61,6 +63,7 @@ export default {
       },
       srcSet: {
         type: 'string',
+        urlKind: 'srcSet',
         description:
           'Possible image sources for the user agent to use, strings separated by commas.',
         docs: {
@@ -68,8 +71,9 @@ export default {
         },
       },
       width: {
-        type: 'number',
-        description: 'Width of the image.',
+        type: ['number', 'string'],
+        description:
+          'Width of the image: a number of pixels, or a string such as `100%` that the browser reads as the width attribute.',
       },
     },
   },

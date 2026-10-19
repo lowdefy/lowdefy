@@ -1,0 +1,14 @@
+name: Auth Module
+description: Module whose content reads the auth config projection
+
+connections:
+  - id: authmod_db
+    type: MongoDBCollection
+    properties:
+      databaseUri: mongodb://localhost:27017/authmod
+      collection: records
+      read:
+        _build.authConfig: emailAndPassword.enabled
+
+pages:
+  - _ref: pages/panel.yaml

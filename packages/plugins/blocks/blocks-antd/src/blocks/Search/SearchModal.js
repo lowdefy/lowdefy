@@ -16,13 +16,15 @@
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Empty, Input, Modal, Spin } from 'antd';
-import { ClockCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { cn } from '@lowdefy/block-utils';
+import { journeyTargetSelectors } from '@lowdefy/helpers';
 
 import SearchResults, { groupResults } from './SearchResults.js';
 import useListKeyboardNav from './useListKeyboardNav.js';
 
 function SearchModal({
+  blockId,
+  components: { Icon },
   open,
   onClose,
   properties,
@@ -146,15 +148,22 @@ function SearchModal({
       onCancel={onClose}
       className={cn(classNames.modal)}
       style={styles.modal}
-      destroyOnClose
+      destroyOnHidden
+      rootClassName={journeyTargetSelectors.portalClass(blockId)}
     >
       <Input
         ref={inputRef}
         className={cn(classNames.input)}
         style={styles.input}
-        prefix={<SearchOutlined />}
+        prefix={
+          <Icon blockId={`${blockId}_input_icon`} properties={{ name: 'search', title: '' }} />
+        }
         placeholder={properties.placeholder ?? 'Search...'}
-        allowClear
+        allowClear={{
+          clearIcon: (
+            <Icon blockId={`${blockId}_clearIcon`} properties={{ name: 'clear', title: '' }} />
+          ),
+        }}
         value={query}
         onChange={handleInputChange}
         onKeyDown={onKeyDown}
@@ -176,6 +185,8 @@ function SearchModal({
       )}
       {!searchIndex.loading && flatResults.length > 0 && (
         <SearchResults
+          blockId={blockId}
+          components={{ Icon }}
           grouped={grouped}
           resultMapping={resultMapping}
           selectedIndex={selectedIndex}
@@ -194,11 +205,16 @@ function SearchModal({
           {recentSearches.recentSearches.map((item) => (
             <div
               key={item.query}
+              role="button"
               className={cn('lf-search-item', classNames.item)}
               style={styles.item}
               onClick={() => handleRecentClick(item.query)}
             >
-              <ClockCircleOutlined style={{ color: 'var(--ant-color-text-quaternary)' }} />
+              <Icon
+                blockId={`${blockId}_recent_icon`}
+                properties={{ name: 'history', title: '' }}
+                styles={{ element: { color: 'var(--ant-color-text-quaternary)' } }}
+              />
               <span>{item.query}</span>
             </div>
           ))}

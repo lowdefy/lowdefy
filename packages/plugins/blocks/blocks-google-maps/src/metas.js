@@ -17,3 +17,4 @@
 export { default as GoogleMaps } from './blocks/GoogleMaps/meta.js';
 export { default as GoogleMapsHeatmap } from './blocks/GoogleMapsHeatmap/meta.js';
 export { default as GoogleMapsScript } from './blocks/GoogleMapsScript/meta.js';
+export { default as PlacesAutocomplete } from './blocks/PlacesAutocomplete/meta.js';

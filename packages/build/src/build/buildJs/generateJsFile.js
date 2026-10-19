@@ -16,16 +16,22 @@
 
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
+// A volatile function carries `volatile: true`, which the _js operator's tracking declaration reads.
+// It is set inline so `export default` stays the first statement of the module.
 const template = `
 export default {
   {% for hash in hashes -%}
+  {% if volatileHashes.has(hash) -%}
+  '{{ hash }}': Object.assign(({{ functionPrototype }}) => { {{ map[hash] | safe }} }, { volatile: true }),
+  {% else -%}
   '{{ hash }}': ({{ functionPrototype }}) => { {{ map[hash] | safe }} },
+  {% endif -%}
   {% endfor -%}
 };`;
 
-function generateJsFile({ map, functionPrototype }) {
+function generateJsFile({ map, functionPrototype, volatileHashes = new Set() }) {
   const templateFn = nunjucksFunction(template);
-  return templateFn({ hashes: Object.keys(map), map, functionPrototype });
+  return templateFn({ hashes: Object.keys(map), map, functionPrototype, volatileHashes });
 }
 
 export default generateJsFile;

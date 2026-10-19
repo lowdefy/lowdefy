@@ -14,7 +14,10 @@
   limitations under the License.
 */
 
-import { translate } from '@lowdefy/helpers';
+import React from 'react';
+import { registerHtmlEnhancements } from '@lowdefy/block-utils';
+import { rememberPath, resolveTarget } from '@lowdefy/engine';
+import { translate, type } from '@lowdefy/helpers';
 
 import createCallAPI from './createCallAPI.js';
 import createAuthMethods from './auth/createAuthMethods.js';
@@ -22,19 +25,52 @@ import createCallRequest from './createCallRequest.js';
 import createWebSocketClient from './websocket/createWebSocketClient.js';
 import createIcon from './createIcon.js';
 import createShortcutBadge from './createShortcutBadge.js';
+import createStorage from './storage/createStorage.js';
 import createLinkComponent from './createLinkComponent.js';
 import createHandleError from './createHandleError.js';
+import getActiveLocale from './getActiveLocale.js';
 import { createBrowserLogger } from '@lowdefy/logger/browser';
+import setLowdefyUser from './setLowdefyUser.js';
 import setupLink from './setupLink.js';
+import { createUrl } from './adapters/url.js';
 
-function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, types, window }) {
+// loadAllIcons (production server only) loads every icon the app bundles into
+// types.icons; a page loads only its own icons, so a name that arrives at
+// runtime may need it. Dev and e2e bundle every icon.
+//
+// matchedPath and pathParams are the server's match of the shown page: the
+// path it was matched on (no basePath, no leading "/") and the values it
+// carries.
+function initLowdefyContext({
+  auth,
+  Components,
+  config,
+  loadAllIcons,
+  lowdefy,
+  matchedPath,
+  pathParams,
+  router,
+  stage,
+  types,
+  window,
+}) {
+  // The path memory lasts the session. A dev config reload clears initialised
+  // to rebuild the page contexts, but the paths this tab followed still name
+  // the same pages, and the page response it fetches next rewrites its own.
+  if (type.isUndefined(lowdefy.pathMemory)) {
+    lowdefy.pathMemory = new Map();
+  }
   if (!lowdefy._internal?.initialised) {
     lowdefy._internal = {
       actions: types.actions,
       blockComponents: types.blocks,
       blockMetas: types.blockMetas ?? {},
+      // The last caller stamp a response carried (recordCallerStamp). It names
+      // the session, not the page context, so it outlives a dev config reload,
+      // and the dev server records the first page config's before this runs.
+      callerStamp: lowdefy._internal?.callerStamp ?? null,
       components: {
-        Icon: createIcon(types.icons),
+        Icon: createIcon({ icons: types.icons, loadAllIcons }),
         ShortcutBadge: createShortcutBadge(lowdefy),
       },
       displayMessage: ({ content }) => {
@@ -58,12 +94,21 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
       router,
     };
     lowdefy.apiResponses = {};
+    // Rebuilt with the page contexts, so a dev config reload runs the app events again.
+    lowdefy.appContext = null;
     lowdefy.basePath = router.basePath;
     lowdefy.contexts = {};
     lowdefy.inputs = {};
+    lowdefy.pageInstances = {};
     lowdefy.lowdefyApp = config.rootConfig.lowdefyApp;
     lowdefy.lowdefyGlobal = config.rootConfig.lowdefyGlobal;
     lowdefy.theme = config.rootConfig.theme ?? {};
+    lowdefy._internal.storage = createStorage({
+      basePath: lowdefy.basePath,
+      getUserId: () => lowdefy.user?.id ?? null,
+      slug: lowdefy.lowdefyApp?.slug,
+      window,
+    });
 
     lowdefy._internal.callAPI = createCallAPI(lowdefy);
     lowdefy._internal.auth = createAuthMethods(lowdefy, auth);
@@ -71,11 +116,42 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
     lowdefy._internal.websocketClient = createWebSocketClient(lowdefy);
     lowdefy._internal.components.Link = createLinkComponent(lowdefy, Components.Link);
     lowdefy._internal.link = setupLink(lowdefy);
-    lowdefy._internal.translate = (key, values) =>
-      translate({ key, values, i18n: lowdefy.i18n });
+    lowdefy._internal.translate = (key, values) => translate({ key, values, i18n: lowdefy.i18n });
     lowdefy._internal.logger = createBrowserLogger();
     lowdefy._internal.handleError = createHandleError(lowdefy);
     lowdefy._internal.components.handleError = lowdefy._internal.handleError;
+    // HtmlComponent (block-utils) gives data-* attributes meaning in every
+    // sanitised HTML string. The overlay pulls in antd Tooltip and Popover, so
+    // it loads the first time HTML needs one. Links build hrefs with createUrl,
+    // the one place basePath is applied, and navigate like the Link action. A
+    // page link's pathname comes from resolveTarget, as the Link action's does.
+    registerHtmlEnhancements({
+      createHref: ({ pathname, query }) =>
+        createUrl({ basePath: lowdefy.basePath, pathname, query }),
+      createPageHref: ({ pageId, pathParams, urlQuery }) => {
+        const target = resolveTarget({ lowdefy, target: { pageId, pathParams, urlQuery } });
+        return createUrl({
+          basePath: lowdefy.basePath,
+          pathname: target.pathname,
+          query: target.query,
+        });
+      },
+      getLocale: () => getActiveLocale(window),
+      // The overlay is lazy, so the app's Icon is bound in when it loads.
+      HtmlOverlay: React.lazy(async () => {
+        const { default: HtmlOverlay } = await import('./HtmlOverlay.js');
+        const Icon = lowdefy._internal.components.Icon;
+        function HtmlOverlayWithIcon(props) {
+          return <HtmlOverlay {...props} Icon={Icon} />;
+        }
+        return { default: HtmlOverlayWithIcon };
+      }),
+      Icon: lowdefy._internal.components.Icon,
+      icons: types.icons,
+      link: lowdefy._internal.link,
+      loadAllIcons,
+      translate: lowdefy._internal.translate,
+    });
 
     if (stage === 'dev' || stage === 'e2e') {
       window.lowdefy = lowdefy;
@@ -83,9 +159,23 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
   }
 
   lowdefy.home = config.rootConfig.home || {};
+  lowdefy.linkPaths = config.pageConfig.linkPaths;
   lowdefy.menus = config.rootConfig.menus;
   lowdefy.pageId = config.pageConfig.pageId;
-  lowdefy.user = auth?.session?.user ?? null;
+  lowdefy.pagePaths = config.rootConfig.pagePaths;
+  setLowdefyUser({ lowdefy, user: auth?.user });
+  // Runs on every render, so it sees the person signed in on load and any later change.
+  lowdefy._internal.storage.clearUserStorageOnOwnerChange();
+
+  // The shown page's path joins the path memory before its context is built,
+  // so the first load's page is known before any plugin reads the memory.
+  rememberPath({
+    lowdefy,
+    path: matchedPath,
+    pageId: config.pageConfig.pageId,
+    pathParams,
+    pattern: config.pageConfig.path,
+  });
 
   return lowdefy;
 }

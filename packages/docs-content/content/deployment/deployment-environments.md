@@ -1,6 +1,6 @@
 # Deployment environments
 
-Most apps run as more than one deployment: production, a staging copy, a developer's machine. Everything that differs between them is declared once, under `config.environments`, and each deployment says which environment it is with the `LOWDEFY_ENVIRONMENT` environment variable. Lowdefy then takes every environment-specific default from the **current environment** — the app URL, crons, the email delivery filter, Sentry, and the feature switches — so none of them needs its own variable or operator chain.
+Most apps run as more than one deployment: production, a staging copy, a developer's machine. Everything that differs between them is declared once, under `config.environments`, and each deployment says which environment it is with the `LOWDEFY_ENVIRONMENT` environment variable. Lowdefy then takes every environment-specific default from the **current environment** — the app URL, crons, the email delivery filter, Sentry, PostHog, and the feature switches — so none of them needs its own variable or operator chain.
 
 ```yaml
 # lowdefy.yaml
@@ -46,17 +46,18 @@ Every setting is optional, and every feature is **on by default**: only an expli
 | `email.filter` | none | Delivery filter (`replaceAddress`, `allowlist`, `regex`) for mail requests. |
 | `email.enabled` | `true` | `false`: mail requests send nothing. |
 | `sentry.enabled` | `true` | `false`: Sentry off, server and client. |
+| `posthog.enabled` | `true` | `false`: PostHog off — `PostHogInit` behaves as `enabled: false`. |
 | `guards.secrets`, `guards.env` | none | Regular expressions the named secrets and environment variables must match, or the build fails. |
 
 ## URL
 
 The current environment's `url` is the default for:
 
-- the auth base URL (`AUTH_URL`) — sign-in callbacks and auth links;
+- the auth canonical URL (`BETTER_AUTH_URL`) — password-reset, magic-link and verification links, the CSRF origin allowlist, and the MCP resource URIs;
 - the `serverUrl` of `RenderNotification` steps — the links and logo in notification emails;
 - where crons are forwarded to, when another environment forwards to this one.
 
-An explicit `AUTH_URL` / `NEXTAUTH_URL` or `serverUrl` still wins. The dev server (`lowdefy dev`) never uses the current environment's `url`: auth and notification links use the request origin, the local app, even when your local `.env` names a deployed environment. Production never uses the request origin, since a spoofed `Host` header would then steer the links in outgoing mail.
+An explicit `BETTER_AUTH_URL` or `serverUrl` still wins. The dev server (`lowdefy dev`) never uses the current environment's `url`: notification and auth links use the request origin, the local app, even when your local `.env` names a deployed environment. On the dev server, a `BETTER_AUTH_URL` on `localhost`, `127.0.0.1` or `[::1]` follows the port the dev server runs on: the port it names is usually the one you ran on before, while `lowdefy dev` skips a busy port and the dev hub allocates its own. Any other origin, such as a tunnel, is used as set. Production never uses the request origin, since a spoofed `Host` header would then steer the links in outgoing mail. A production server with `auth.email` configured refuses to start when neither `BETTER_AUTH_URL` nor the current environment's `url` is set.
 
 Every deployment that names an environment is taken to be served at its `url`. Preview deployments that should not sign users in on the staging host need their own environment, e.g. a `preview` environment with no `url` and the same `email.filter` and guards as staging.
 
@@ -75,15 +76,17 @@ Endpoint `schedules` can be keyed by environment name, with a `default` for the 
 
 - **`email.filter`** is applied to every `SMTPMailSend` and `SendGridMailSend` request whose connection sets no `filter` of its own, or a filter whose fields all resolve to `null` (a `_secret` that is not set on this deployment, say). Put a catch-all `replaceAddress` on every non-production environment and no environment can email real users by accident.
 - A connection's own `filter` wins when it sets at least one field, and **`filter: false`** on a connection turns filtering off entirely, the environment's too — for mail that must reach its real recipient everywhere, such as an invite.
+- Addresses on the reserved `.invalid` domain are always dropped before any filter, in every environment and for auth emails too. So test users with addresses such as `user@audit.invalid` never reach a `replaceAddress` catch-all. Use `.invalid` for test users that must never receive mail, and `example.com` or `.test` for journey users whose mail a journey reads.
 - **`email.enabled: false`** sends nothing: each message reports `{ messageId: null, to: null, disabled: true }`.
-- Auth emails (magic links, verification, invitations sent by the auth engine) never go through a mail request, so neither setting affects them — sign-in keeps working in every environment.
+- Auth emails (magic links, verification, invitations sent by the auth engine) never go through a mail request, so neither setting affects them — sign-in keeps working in every environment. The `auth.email` connection's own `filter` still applies to them, so set one there to catch auth emails outside production.
 
 See the [SMTP](/SMTP) and [SendGridMail](/SendGridMail) connections for the filter fields.
 
-## Logs and Sentry
+## Logs, Sentry and PostHog
 
 - Every server log line carries `environment` next to `app_name`, `app_version` and `git_sha`, so one log drain can hold every environment. Logging cannot be switched off.
 - Sentry reports under the environment name unless `logger.sentry.environment` is set, and `sentry.enabled: false` turns it off on the server and in the browser.
+- `PostHogInit` registers the environment name as the `environment` super property, so every PostHog event carries it. `posthog.enabled: false` switches PostHog off in that environment: `PostHogInit` behaves as `enabled: false` whatever its params say, needs no `apiKey`, and every other PostHog action is a no-op.
 
 ## Guards
 
@@ -98,7 +101,7 @@ config:
         secrets: # Lowdefy secrets, by name (LOWDEFY_SECRET_<name>)
           MONGODB_URI: 'acme-prod\.a1b2c\.mongodb\.net'
         env: # any environment variable
-          AUTH_URL: '^https://app\.example\.com$'
+          BETTER_AUTH_URL: '^https://app\.example\.com$'
 ```
 
 - Patterns match anywhere in the value, so a distinctive substring is enough; add `^` and `$` to pin the whole value. A pattern is committed with your config, so never put the sensitive part of a secret in it — a host name or database name is enough.
@@ -111,7 +114,7 @@ config:
 Environment settings stay on the server. The browser only learns the current environment's **name** and the list of features it switches off, through the app metadata:
 
 - `_app: environment` — the current environment's name.
-- `_app: disabled` — the switched-off features, e.g. `[email, sentry]`.
+- `_app: disabled` — the switched-off features, e.g. `[email, posthog]`.
 
 Other environments' settings, URLs, secret names, email filters and guards never reach the client bundle. Only the current environment's guards are kept in the build output, in the server-only `config.json`, for the startup check.
 

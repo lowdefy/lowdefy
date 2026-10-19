@@ -152,6 +152,12 @@ pnpm e2e --headed     # Run with visible browser
 pnpm e2e --debug      # Debug mode
 ```
 
+The test app is built and served with the Lowdefy CLI from `packages/cli/dist`, in
+`_server/e2e/<package>` at the monorepo root: an untracked copy of `packages/servers/server`
+that `scripts/prepare-e2e-server.mjs` prepares on each run. Build the monorepo first
+(`pnpm build`). A run leaves tracked files unchanged, and different packages can run at the
+same time.
+
 ## Port Assignments
 
 Use unique ports to allow parallel test runs:

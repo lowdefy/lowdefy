@@ -247,3 +247,17 @@ test('collectPageContent collects _js source in block.class', () => {
   expect(result).toContain('border-primary');
   expect(result).toContain('border-transparent');
 });
+
+// A root operator at `class` is normalized to the block slot by buildPages, and
+// collectPageContent runs after buildPages, so this is the shape it sees.
+test('collectPageContent collects class strings inside an operator under the block slot', () => {
+  const result = collectPageContent([
+    {
+      id: 'p1',
+      type: 'Box',
+      class: { block: { _if: [{ _state: 'x' }, 'bg-red-500', 'bg-blue-500'] } },
+    },
+  ]);
+  expect(result).toContain('bg-red-500');
+  expect(result).toContain('bg-blue-500');
+});

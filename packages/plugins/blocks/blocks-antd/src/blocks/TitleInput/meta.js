@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'input',
-  icons: [],
+  icons: ['copy', 'check'],
   valueType: 'string',
   cssKeys: {
     element: 'The TitleInput element.',
@@ -131,22 +133,21 @@ export default {
           {
             type: 'boolean',
             description:
-              'Allow paragraph editing when true, editable settings can be provided with editable object.',
+              'Allow editing the title in place. Click the text, or focus it and press Enter, to edit. Enter saves, Escape cancels. Provide an object for editable settings.',
           },
           {
             type: 'object',
             additionalProperties: false,
             properties: {
               icon: {
-                type: ['string', 'object'],
-                description: 'Edit icon.',
-                docs: {
-                  displayType: 'icon',
-                },
+                ...icon,
+                description:
+                  'Show an edit icon button after the text, like `edit`. No icon is shown by default, since clicking the text edits it.',
               },
               tooltip: {
                 type: 'string',
-                description: 'Edit tooltip text.',
+                description:
+                  'Tooltip text, shown on the edit icon, or on the text when no icon is set.',
               },
               editing: {
                 type: 'boolean',
@@ -177,6 +178,11 @@ export default {
         default: false,
         description: 'Apply marked (highlighted) style.',
       },
+      placeholder: {
+        type: 'string',
+        default: 'Untitled',
+        description: 'Muted text shown when the title is empty and editable.',
+      },
       type: {
         type: 'string',
         default: 'default',
@@ -198,14 +204,20 @@ export default {
         },
         properties: {
           titleMarginBottom: {
-            type: 'string',
+            type: ['string', 'number'],
             default: '0.5em',
-            description: 'Margin bottom for title elements.',
+            description: 'Margin bottom for title elements, as a CSS length or a number of pixels.',
+            docs: {
+              displayType: 'string',
+            },
           },
           titleMarginTop: {
-            type: 'string',
+            type: ['string', 'number'],
             default: '1.2em',
-            description: 'Margin top for title elements.',
+            description: 'Margin top for title elements, as a CSS length or a number of pixels.',
+            docs: {
+              displayType: 'string',
+            },
           },
           colorText: {
             type: 'string',

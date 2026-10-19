@@ -12,7 +12,7 @@ The `SetDarkMode` action sets the user's dark mode preference. When called witho
 - `'light'`: Force light mode.
 - `'dark'`: Force dark mode.
 
-The preference is persisted to `localStorage` and triggers re-rendering of the root Ant Design `ConfigProvider`. All blocks and `_media: darkMode` expressions update automatically.
+The preference is persisted to `localStorage`, per app, and triggers re-rendering of the root Ant Design `ConfigProvider`. All blocks and `_media: darkMode` expressions update automatically.
 
 > **Note:** If the app's `theme.darkMode` config is set to `'light'` or `'dark'`, the developer has locked the mode. `SetDarkMode` still stores the user's preference, but it won't take visual effect until the config is changed to `'system'`.
 
@@ -33,8 +33,8 @@ The preference is persisted to `localStorage` and triggers re-rendering of the r
       _if:
         test:
           _media: darkMode
-        then: AiOutlineSun
-        else: AiOutlineMoon
+        then: Sun
+        else: Moon
   events:
     onClick:
       - id: toggle

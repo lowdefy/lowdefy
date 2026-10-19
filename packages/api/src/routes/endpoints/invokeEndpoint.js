@@ -15,14 +15,24 @@
 */
 
 import { ConfigError } from '@lowdefy/errors';
+import { createLiteralData } from '@lowdefy/operators';
 
 import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import runRoutine from './runRoutine.js';
+import validatePayload from './validatePayload.js';
 
 async function invokeEndpoint(
   context,
-  { endpointId, payload, endpointDepth, literalData = false }
+  {
+    agent = null,
+    endpointId,
+    payload,
+    endpointDepth,
+    literalData = null,
+    caught = false,
+    outsideCaller = false,
+  }
 ) {
   if (endpointDepth >= 10) {
     throw new ConfigError(
@@ -33,19 +43,32 @@ async function invokeEndpoint(
   const endpointConfig = await getEndpointConfig(context, { endpointId });
   authorizeApiEndpoint(context, { endpointConfig });
 
+  const childPayload = payload ?? {};
+  // The calling config built the payload, except an agent's tool call, whose
+  // model did (outsideCaller): see validatePayload.
+  validatePayload({ endpointConfig, payload: childPayload, outsideCaller });
+
   const childRoutineContext = {
     steps: {},
-    payload: payload ?? {},
+    payload: childPayload,
     arrayIndices: [],
     error: null,
     items: {},
     state: {},
     endpointDepth: endpointDepth + 1,
+    // Called from inside a :try with a :catch: an expected error the called endpoint does not
+    // catch itself is handled by the caller's :catch, so it is logged at debug (runRoutine).
+    caught,
+    // The agent ({ id, conversationId, files }) whose tool call started this chain of endpoint
+    // calls, or null. Set by the engine from the running agent, never from the payload, so
+    // `_agent` can mark agent work.
+    agent,
     // Set only for the endpoint a Dynamic block calls: its :return becomes page
     // config, so data read into it must not carry operators. Nested CallApi
     // endpoints get a fresh context without it; their result arrives through
-    // _step, which the outer :return checks.
-    literalData,
+    // _step, which the outer :return checks. The control spreads share the one
+    // object, so a :return nested in a control sees the same state.
+    literalData: literalData === null ? null : createLiteralData(literalData),
   };
 
   return runRoutine(context, childRoutineContext, {

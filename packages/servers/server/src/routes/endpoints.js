@@ -14,55 +14,56 @@
   limitations under the License.
 */
 
-import { callEndpoint, getEndpointConfig, runWebhookEndpoint } from '@lowdefy/api';
+import {
+  callEndpoint,
+  getEndpointConfig,
+  parseRequestBody,
+  runWebhookEndpoint,
+} from '@lowdefy/api';
 
 import getPathSegments from '../lib/getPathSegments.js';
 
 async function endpointsHandler(c) {
   if (c.req.method !== 'POST') {
-    throw new Error('Only POST requests are supported.');
+    // A wrong-method request is client-caused: answer 405 rather than raising a
+    // fault that would be logged at error level and answered with a 500.
+    return c.json({ error: 'Method not allowed.' }, 405);
   }
   const context = c.get('lowdefyContext');
   const endpointId = getPathSegments(c, '/api/endpoints/').join('/');
 
-  // Endpoints opting in with `webhook: true` are third-party webhook receivers
-  // (SNS, Event Grid, Stripe, ...): they take the request RAW — body in the
-  // caller's own format (not the { payload } envelope), plus query + headers —
-  // and their return value is sent back verbatim, because webhook handshakes
-  // (e.g. Event Grid's validationResponse) require exact response shapes.
-  // The config lookup is a cached file read; an unknown endpoint falls through
-  // to the standard path so its error shape is unchanged. Everything about
-  // non-webhook endpoints is untouched.
+  // Endpoints opting in with `webhook` (true or a { verify } object) are
+  // third-party webhook receivers (SNS, Event Grid, Stripe, ...): they take the
+  // request RAW — body in the caller's own format (not the { payload }
+  // envelope), plus query + headers — and their return value is sent back
+  // verbatim, because webhook handshakes (e.g. Event Grid's validationResponse)
+  // require exact response shapes. The config lookup is a cached file read; an
+  // unknown endpoint falls through to the standard path so its error shape is
+  // unchanged. Everything about non-webhook endpoints is untouched.
   let endpointConfig = null;
   try {
     endpointConfig = await getEndpointConfig(context, { endpointId });
   } catch {
     /* unknown endpoint — the standard path below reports it exactly as before */
   }
-  if (endpointConfig?.webhook === true) {
-    // SNS posts JSON as text/plain — parse regardless of content-type; an
-    // unparseable body arrives as the raw string.
-    const raw = await c.req.text();
-    let body = raw;
-    try {
-      body = JSON.parse(raw);
-    } catch {
-      /* non-JSON body — raw string passthrough */
-    }
+  if (endpointConfig?.webhook) {
     context.logger.info({ event: 'call_webhook_endpoint', endpointId });
-    const result = await runWebhookEndpoint(context, {
+    const { status, body, contentType } = await runWebhookEndpoint(context, {
       endpointId,
-      body,
+      rawBody: await c.req.text(),
       query: c.req.query(),
       headers: c.req.header(),
     });
-    if (!result.success) {
-      return c.json({ error: 'Webhook failed.' }, 500);
+    if (contentType === 'text/plain') {
+      // A text answer often echoes a value from the request (a handshake token), so the browser
+      // must not sniff it into HTML.
+      c.header('X-Content-Type-Options', 'nosniff');
+      return c.text(body, status);
     }
-    return c.json(result.response ?? { ok: true });
+    return c.json(body, status);
   }
 
-  const { blockId, payload, pageId } = await c.req.json();
+  const { blockId, payload, pageId } = parseRequestBody({ text: await c.req.text() });
   context.logger.info({ event: 'call_api_endpoint', blockId, endpointId, pageId });
   const response = await callEndpoint(context, { blockId, endpointId, pageId, payload });
   return c.json(response);

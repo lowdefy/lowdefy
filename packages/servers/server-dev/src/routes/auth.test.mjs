@@ -14,71 +14,45 @@
   limitations under the License.
 */
 
-import { Hono } from 'hono';
 import { jest } from '@jest/globals';
 
-// Only the route wiring is under test here — getDevSession's own behaviour
-// (mock/headless resolution, session-callback parity) is covered in
-// lib/server/auth/getDevSession.test.mjs, and the real Auth.js engine is
-// stubbed with a sentinel handler so "delegated to Auth.js" is observable.
-const mockAuthHandler = jest.fn(() => (c) => c.json({ delegated: true }));
-jest.unstable_mockModule('@hono/auth-js', () => ({
-  authHandler: mockAuthHandler,
+const handleAuthRequest = jest.fn(async () => new Response('engine'));
+const getAuth = jest.fn(() => ({}));
+
+jest.unstable_mockModule('@lowdefy/api', () => ({ handleAuthRequest }));
+jest.unstable_mockModule('../../lib/build/auth.js', () => ({ default: { configured: true } }));
+jest.unstable_mockModule('../../lib/server/auth/getAuth.js', () => ({ default: getAuth }));
+jest.unstable_mockModule('../../lib/server/auth/getMockUser.js', () => ({
+  default: jest.fn(() => undefined),
 }));
-jest.unstable_mockModule('../../lib/build/auth.js', () => ({
-  default: { configured: true },
-}));
-const mockGetDevSession = jest.fn(async () => undefined);
-jest.unstable_mockModule('../../lib/server/auth/getDevSession.js', () => ({
-  default: mockGetDevSession,
+jest.unstable_mockModule('../../lib/server/getClientAddress.js', () => ({
+  default: jest.fn(() => '127.0.0.1'),
 }));
 
 const { default: authMiddleware } = await import('./auth.js');
 
-function createApp() {
-  const app = new Hono();
-  app.use('/api/auth/*', authMiddleware());
-  return app;
+function createHonoContext({ context }) {
+  return {
+    get: (key) => (key === 'lowdefyContext' ? context : undefined),
+    json: (body, status) => ({ body, status }),
+    body: (body, status) => ({ body, status }),
+    req: { method: 'POST', raw: new Request('http://localhost/api/auth/sign-out') },
+  };
 }
 
-afterEach(() => {
-  mockGetDevSession.mockReset();
-  mockGetDevSession.mockResolvedValue(undefined);
+test('authMiddleware refuses a data-session request without reaching the auth engine', async () => {
+  const handler = authMiddleware({ logger: {} });
+  const result = await handler(createHonoContext({ context: { dataSet: 'staging-sample' } }));
+  expect(result).toEqual({
+    body: { message: 'Auth engine disabled for journeys on a data set' },
+    status: 404,
+  });
+  expect(getAuth).not.toHaveBeenCalled();
+  expect(handleAuthRequest).not.toHaveBeenCalled();
 });
 
-test('GET /api/auth/session returns the dev session so the client matches the server', async () => {
-  const devSession = {
-    user: {
-      id: 'dev-mock-user',
-      roles: ['admin'],
-      global_attributes: { company_ids: ['C-1'] },
-    },
-    hashed_id: 'abc',
-    expires: '2100-01-01T00:00:00.000Z',
-  };
-  mockGetDevSession.mockResolvedValue(devSession);
-
-  const res = await createApp().request('/api/auth/session');
-  expect(res.status).toEqual(200);
-  expect(await res.json()).toEqual(devSession);
-});
-
-test('GET /api/auth/session delegates to Auth.js when no dev session exists', async () => {
-  const res = await createApp().request('/api/auth/session');
-  expect(res.status).toEqual(200);
-  expect(await res.json()).toEqual({ delegated: true });
-});
-
-test('other auth routes delegate to Auth.js even when a dev session exists', async () => {
-  mockGetDevSession.mockResolvedValue({ user: { id: 'mock' } });
-
-  const res = await createApp().request('/api/auth/csrf');
-  expect(await res.json()).toEqual({ delegated: true });
-});
-
-test('POST /api/auth/session delegates to Auth.js even when a dev session exists', async () => {
-  mockGetDevSession.mockResolvedValue({ user: { id: 'mock' } });
-
-  const res = await createApp().request('/api/auth/session', { method: 'POST' });
-  expect(await res.json()).toEqual({ delegated: true });
+test('authMiddleware hands a request with no data session to the auth engine', async () => {
+  const handler = authMiddleware({ logger: {} });
+  await handler(createHonoContext({ context: {} }));
+  expect(handleAuthRequest).toHaveBeenCalledTimes(1);
 });

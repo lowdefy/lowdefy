@@ -154,3 +154,26 @@ test.describe('TextArea Block', () => {
     await expect(display).toContainText('Line 1');
   });
 });
+
+test.describe('TextArea antd 6 features', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'textarea');
+  });
+
+  test('renders the underlined variant', async ({ page }) => {
+    const textarea = getTextArea(page, 'textarea_underlined');
+    await expect(textarea).toHaveClass(/ant-input-underlined/);
+  });
+
+  test('onClear event fires when the clear button is clicked', async ({ page }) => {
+    const block = getBlock(page, 'textarea_onclear');
+    const textarea = getTextArea(page, 'textarea_onclear');
+    await expect(textarea).toHaveValue('Clear me too');
+
+    await block.hover();
+    await block.locator('.ant-input-clear-icon').click();
+
+    await expect(textarea).toHaveValue('');
+    await expect(getBlock(page, 'onclear_display')).toHaveText('Clear fired');
+  });
+});

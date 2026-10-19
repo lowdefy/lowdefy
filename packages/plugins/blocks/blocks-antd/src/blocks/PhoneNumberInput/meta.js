@@ -30,7 +30,7 @@ import {
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons],
+  icons: [...LabelMeta.icons, 'chevron-down', 'clear'],
   valueType: 'object',
   cssKeys: {
     element: 'The PhoneNumberInput element.',
@@ -52,6 +52,7 @@ export default {
       },
     },
     onBlur: 'Trigger action event occurs when input loses focus.',
+    onClear: 'Trigger action when the clear button is clicked.',
     onFocus: 'Trigger action when input gets focus.',
     onPressEnter: 'Trigger action when enter is pressed while text input is focused.',
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
@@ -60,6 +61,11 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
+      showFlags: {
+        type: 'boolean',
+        default: true,
+        description: 'Show country flags in the country selector and input.',
+      },
       allowClear: { ...allowClear, default: false },
       allowedRegions: {
         type: 'array',
@@ -87,12 +93,12 @@ export default {
       placeholder,
       prefix: {
         type: 'string',
-        description: 'Prefix text for the block, priority over $prefix_con.',
+        description: 'Prefix text for the block, priority over prefixIcon.',
       },
       prefixIcon: {
         ...icon,
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to prefix the text input.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to prefix the text input.',
       },
       label,
       replaceInput: {
@@ -120,24 +126,25 @@ export default {
       showArrow: {
         type: 'boolean',
         default: true,
-        description: 'Show the suffix icon at the drop-down position of the selector.',
+        description:
+          'Show the suffix icon at the drop-down position of the selector. antd shows the arrow by default; `false` hides it by clearing the suffix icon.',
       },
       size: sizeSmallMiddleLarge,
       suffix: {
         type: 'string',
-        description: 'Suffix text for the block, priority over suffixIcon.',
+        description: 'Suffix text for the block, shown before suffixIcon.',
       },
       suffixIcon: {
         ...icon,
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to suffix the text input.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to suffix the text input.',
       },
       title: inputTitle,
       variant,
       theme: {
         type: 'object',
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'Antd design token overrides for this block, applied to both the region selector (antd Select) and the phone number input (antd Input). See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
           link: 'https://ant.design/components/input#design-token',
@@ -150,11 +157,6 @@ export default {
           activeShadow: {
             type: 'string',
             description: 'Box shadow when the input is focused.',
-          },
-          addonBg: {
-            type: 'string',
-            default: 'rgba(0, 0, 0, 0.02)',
-            description: 'Background color of addon elements.',
           },
           colorBgContainer: {
             type: 'string',
@@ -226,6 +228,11 @@ export default {
             type: 'number',
             default: 11,
             description: 'Horizontal padding.',
+          },
+          selectorBg: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color of the region selector.',
           },
           warningActiveShadow: {
             type: 'string',

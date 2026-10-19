@@ -17,6 +17,12 @@
 import React from 'react';
 import { ConfigProvider as AntdConfigProvider, theme } from 'antd';
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import { type } from '@lowdefy/helpers';
+
+// antd 6 deprecates the `middle` size in favour of `medium`.
+const sizeMap = {
+  middle: 'medium',
+};
 
 const algorithmMap = {
   default: theme.defaultAlgorithm,
@@ -34,8 +40,9 @@ function resolveAlgorithm(algorithm) {
 
 const ConfigProviderBlock = ({ blockId, content, properties }) => {
   const themeConfig = {};
-  if (properties.token) {
-    themeConfig.token = properties.token;
+  // `theme` holds design token overrides like every block's theme property; `token` wins.
+  if (type.isObject(properties.theme) || properties.token) {
+    themeConfig.token = { ...properties.theme, ...properties.token };
   }
   if (properties.algorithm) {
     themeConfig.algorithm = resolveAlgorithm(properties.algorithm);
@@ -47,10 +54,14 @@ const ConfigProviderBlock = ({ blockId, content, properties }) => {
   return (
     <AntdConfigProvider
       componentDisabled={properties.componentDisabled}
-      componentSize={properties.componentSize}
+      componentSize={sizeMap[properties.componentSize] ?? properties.componentSize}
       direction={properties.direction}
       locale={properties.locale}
+      popupMatchSelectWidth={properties.popupMatchSelectWidth}
+      popupOverflow={properties.popupOverflow}
       variant={properties.variant}
+      virtual={properties.virtual}
+      wave={properties.wave}
       theme={Object.keys(themeConfig).length > 0 ? themeConfig : undefined}
     >
       <div id={blockId}>{content.content && content.content()}</div>

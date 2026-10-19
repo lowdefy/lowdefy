@@ -22,6 +22,7 @@ If a operator has special environment considerations, it is indicated on the ind
 - [_location](/_location)
 - [_media](/_media)
 - [_menu](/_menu)
+- [_path_params](/_path_params)
 - [_request](/_request)
 - [_url_query](/_url_query)
 

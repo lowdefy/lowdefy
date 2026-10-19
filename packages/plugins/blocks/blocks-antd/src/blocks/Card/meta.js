@@ -19,6 +19,7 @@ export default {
   icons: [],
   valueType: null,
   slots: {
+    actions: 'Action bar at the bottom of the card.',
     content: 'Main Card body.',
     cover: 'Image or content above the body.',
     extra: 'Extra content in the top-right header.',
@@ -27,6 +28,7 @@ export default {
   cssKeys: {
     element: 'The Card element.',
     header: 'The Card header.',
+    title: 'The Card title.',
     body: 'The Card body.',
     cover: 'The Card cover.',
     actions: 'The Card actions.',
@@ -42,17 +44,30 @@ export default {
       bordered: {
         type: 'boolean',
         default: true,
-        description: 'Toggles rendering of the border around the card.',
+        description:
+          'Toggles rendering of the border around the card. `bordered: false` is the same as `variant: borderless`.',
       },
       hoverable: {
         type: 'boolean',
         default: false,
         description: 'Lift up when hovering card.',
       },
+      loading: {
+        type: 'boolean',
+        default: false,
+        description: 'Show a loading skeleton in place of the card content.',
+      },
       inner: {
         type: 'boolean',
         default: false,
         description: 'Change the card style to inner.',
+      },
+      padding: {
+        type: 'string',
+        enum: ['default', 'compact', 'none'],
+        default: 'default',
+        description:
+          'Space inside the card body. `compact` tightens the body to 12px and aligns the header with it. `none` removes the body padding so content such as a table, list or image runs edge to edge; the header keeps its padding.',
       },
       size: {
         type: 'string',
@@ -64,6 +79,12 @@ export default {
         type: 'string',
         description:
           'Title to show in the title area - supports html. Overwritten by blocks in the title content area.',
+      },
+      variant: {
+        type: 'string',
+        enum: ['outlined', 'borderless'],
+        default: 'outlined',
+        description: 'Card style variant.',
       },
       theme: {
         type: 'object',
@@ -120,12 +141,13 @@ export default {
             description: 'Text color for the extra content area in the header.',
           },
           bodyPadding: {
-            type: 'number',
+            type: ['number', 'string'],
             default: 24,
-            description: 'Padding of the card body.',
+            description:
+              'Padding of the card body: a number of pixels, or a CSS padding string such as `28px 32px`.',
           },
           bodyPaddingSM: {
-            type: 'number',
+            type: ['number', 'string'],
             default: 12,
             description: 'Padding of the card body for small cards.',
           },

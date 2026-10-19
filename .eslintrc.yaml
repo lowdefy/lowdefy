@@ -53,6 +53,8 @@ rules:
     # Because of https://github.com/import-js/eslint-plugin-import/issues/1868
     - ignore:
         - "^@lowdefy\/.*$"
+        # Exports-map-only packages (no "main"), which the node resolver cannot read.
+        - "^@tanstack\/(react-table|react-virtual)$"
 parserOptions:
   sourceType: module
   ecmaVersion: latest

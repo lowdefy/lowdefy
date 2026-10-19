@@ -19,6 +19,7 @@ import { InputNumber } from 'antd';
 import { getLocaleDecimalSeparator } from '@lowdefy/helpers';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 
@@ -35,6 +36,7 @@ const NumberInput = ({
   validation,
   value,
 }) => {
+  const isSpinner = properties.mode === 'spinner';
   return (
     <Label
       blockId={blockId}
@@ -52,24 +54,69 @@ const NumberInput = ({
             id={`${blockId}_input`}
             autoComplete="off"
             autoFocus={properties.autoFocus}
-            variant={properties.bordered === false ? 'borderless' : properties.variant}
+            changeOnWheel={properties.changeOnWheel}
+            variant={properties.bordered === false ? 'borderless' : properties.variant ?? undefined}
             className={classNames.element}
             style={{ width: '100%', ...styles.element }}
-            controls={properties.controls}
+            controls={
+              properties.controls !== false && {
+                upIcon: (
+                  <components.Icon
+                    blockId={`${blockId}_upIcon`}
+                    properties={{ name: isSpinner ? 'add' : 'chevron-up', title: '' }}
+                  />
+                ),
+                downIcon: (
+                  <components.Icon
+                    blockId={`${blockId}_downIcon`}
+                    properties={{ name: isSpinner ? 'minus' : 'chevron-down', title: '' }}
+                  />
+                ),
+              }
+            }
             decimalSeparator={
               properties.decimalSeparator ?? getLocaleDecimalSeparator(methods.getLocale?.()) ?? '.'
             }
-            disabled={properties.disabled || loading}
+            disabled={getDisabled({ loading, properties })}
             formatter={properties.formatter}
             keyboard={properties.keyboard}
             max={properties.max}
             min={properties.min}
+            mode={properties.mode ?? undefined}
             parser={properties.parser}
             placeholder={properties.placeholder}
-            precision={properties.precision}
+            precision={properties.precision ?? undefined}
+            prefix={
+              properties.prefix ||
+              (properties.prefixIcon && (
+                <components.Icon
+                  blockId={`${blockId}_prefixIcon`}
+                  classNames={{ element: classNames.prefixIcon }}
+                  events={events}
+                  properties={properties.prefixIcon}
+                  styles={{ element: styles.prefixIcon }}
+                />
+              ))
+            }
             size={properties.size}
             status={validation.status}
-            step={properties.step}
+            step={properties.step ?? undefined}
+            suffix={
+              (properties.suffix || properties.suffixIcon) && (
+                <>
+                  {properties.suffix && properties.suffix}
+                  {properties.suffixIcon && (
+                    <components.Icon
+                      blockId={`${blockId}_suffixIcon`}
+                      classNames={{ element: classNames.suffixIcon }}
+                      events={events}
+                      properties={properties.suffixIcon}
+                      styles={{ element: styles.suffixIcon }}
+                    />
+                  )}
+                </>
+              )
+            }
             onChange={(newVal) => {
               methods.setValue(newVal);
               methods.triggerEvent({ name: 'onChange', event: { value: newVal } });

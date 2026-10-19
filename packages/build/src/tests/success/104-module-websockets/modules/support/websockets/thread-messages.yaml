@@ -1,0 +1,10 @@
+id: thread-messages
+type: MongoDBChangeStream
+connectionId:
+  _module.connectionId: messages
+properties:
+  pipeline:
+    - $match:
+        operationType: insert
+        fullDocument.ticket_id:
+          _payload: ticket_id

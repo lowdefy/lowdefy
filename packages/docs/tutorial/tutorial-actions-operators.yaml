@@ -53,7 +53,7 @@ _ref:
                     properties:
                       title: Reset
                       block: true
-                      icon: AiOutlineClear
+                      icon: Eraser
             ################ -------- Copy from here -------- ################
                     events:
                       onClick:
@@ -124,7 +124,7 @@ _ref:
                       block: true
                       color: primary
                       variant: solid
-                      icon: AiOutlineSave
+                      icon: save
             ################ -------- Copy from here -------- ################
                     events:
                       onClick:
@@ -180,7 +180,7 @@ _ref:
                 properties:
                   title: Reset
                   block: true
-                  icon: AiOutlineClear
+                  icon: Eraser
                 events:
                   onClick:
                     - id: reset
@@ -194,7 +194,7 @@ _ref:
                   block: true
                   color: primary
                   variant: solid
-                  icon: AiOutlineSave
+                  icon: save
                 events:
                   onClick:
                     - id: validate
@@ -380,7 +380,7 @@ _ref:
                   title: Reset
                   block: true # Make the button fill all the space available to it
                   type: default # Make the button a plain button
-                  icon: AiOutlineClear
+                  icon: Eraser
                 events:
                   onClick:
                     - id: reset
@@ -393,7 +393,7 @@ _ref:
                   title: Submit
                   block: true
                   type: primary # Make the button a primary button with color
-                  icon: AiOutlineSave
+                  icon: save
                 events:
                   onClick:
                     - id: validate

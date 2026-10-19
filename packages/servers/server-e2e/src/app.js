@@ -17,18 +17,22 @@
 import { Hono } from 'hono';
 import { compress } from 'hono/compress';
 import { serveStatic } from '@hono/node-server/serve-static';
+import { runInCredentialScope } from '@lowdefy/node-utils';
 
 import apiContext from './middleware/apiContext.js';
 import apiPageHandler from './routes/apiPage.js';
 import clientErrorHandler from './routes/clientError.js';
 import createErrorHandler from './middleware/errorHandler.js';
 import createLogger from '../lib/server/log/createLogger.js';
+import e2eIdentityHandler from './routes/e2eIdentity.js';
 import endpointsHandler from './routes/endpoints.js';
+import mountPageRoutes from './routes/mountPageRoutes.js';
 import lowdefyConfig from '../lib/build/config.js';
 import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
 import sessionMockHandler from './routes/sessionMock.js';
 import usageHandler from './routes/usage.js';
+import userHandler from './routes/user.js';
 import websocketHandler from './routes/websocket.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
@@ -36,6 +40,10 @@ const basePath = lowdefyConfig.basePath ?? '';
 function createApp() {
   const app = basePath ? new Hono().basePath(basePath) : new Hono();
   const logger = createLogger({ server: 'lowdefy' });
+
+  // Each request runs in its own credential scope: what it marks with _credential is scrubbed
+  // from every log line written while it is handled.
+  app.use('*', (c, next) => runInCredentialScope(next));
 
   app.use('*', async (c, next) => {
     if (c.req.path.includes('/api/websocket')) {
@@ -45,15 +53,16 @@ function createApp() {
   });
 
   app.use('/api/*', apiContext());
-  // Mock session endpoint — reads the lowdefy_e2e_user cookie; also the
-  // e2e harness health check (e2e-utils polls /api/auth/session).
+  // Mock session endpoint — reads the lowdefy_e2e_user cookie.
   app.get('/api/auth/session', sessionMockHandler);
+  app.get('/api/e2e/identity', e2eIdentityHandler);
   app.all('/api/request/*', requestHandler);
   app.all('/api/endpoints/*', endpointsHandler);
   app.all('/api/client-error', clientErrorHandler);
   app.all('/api/usage', usageHandler);
   app.get('/api/websocket', websocketHandler);
   app.get('/api/page/*', apiPageHandler);
+  app.get('/api/user', userHandler);
 
   // Vite build output (includes public/ via Vite's publicDir copy). Falls
   // through to the page routes when no file matches.
@@ -66,9 +75,7 @@ function createApp() {
   );
 
   app.use('/*', apiContext());
-  app.get('/', (c) => renderPage(c, { pageId: '' }));
-  app.get('/404', (c) => renderPage(c, { pageId: '404', status: 404 }));
-  app.get('/:rest{.+}', (c) => renderPage(c, { pageId: c.req.param('rest') }));
+  mountPageRoutes({ app, basePath, renderPage });
 
   app.onError(createErrorHandler({ basePath, logger }));
 

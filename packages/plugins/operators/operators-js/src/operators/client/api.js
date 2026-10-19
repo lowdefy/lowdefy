@@ -48,5 +48,10 @@ function _api({ params, apiResponses }) {
 }
 
 _api.dynamic = true;
+// Keyed by endpoint id, the first path segment, which is what an API call update reports.
+_api.tracking = {
+  kind: 'read',
+  keys: ({ params }) => (type.isString(params) ? [`api:${params.split('.')[0]}`] : ['api:*']),
+};
 
 export default _api;

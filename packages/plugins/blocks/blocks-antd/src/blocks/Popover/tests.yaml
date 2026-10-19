@@ -103,3 +103,18 @@
   properties:
     title: Popover
     mouseLeaveDelay: 0.5
+- id: 'properties.arrow: false'
+  type: Popover
+  properties:
+    title: Popover without an arrow
+    arrow: false
+- id: 'properties.destroyOnHidden: true'
+  type: Popover
+  properties:
+    title: Popover title
+    destroyOnHidden: true
+- id: 'properties.trigger: contextMenu'
+  type: Popover
+  properties:
+    title: Opens on right click
+    trigger: contextMenu

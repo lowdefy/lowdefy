@@ -26,6 +26,12 @@ events:
         drs_clearable:
           - _date: '2024-01-01'
           - _date: '2024-01-31'
+        drs_onclear:
+          - _date: '2024-03-01'
+          - _date: '2024-03-10'
+        drs_disabled_start:
+          - _date: '2024-06-01'
+          - _date: '2024-06-30'
 
 blocks:
   # ============================================
@@ -202,3 +208,173 @@ blocks:
           value:
             - _dayjs: [now, { format: YYYY-MM-DD }]
             - _dayjs: [now, { add: [7, days] }, { format: YYYY-MM-DD }]
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: drs_underlined
+    type: DateRangeSelector
+    properties:
+      title: Underlined
+      variant: underlined
+
+  - id: drs_prefix_text
+    type: DateRangeSelector
+    properties:
+      title: Prefix Text
+      prefix: From
+
+  - id: drs_prefix_icon
+    type: DateRangeSelector
+    properties:
+      title: Prefix Icon
+      prefixIcon: clock
+
+  - id: drs_readonly
+    type: DateRangeSelector
+    properties:
+      title: Read-only Input
+      inputReadOnly: true
+
+  - id: drs_placement
+    type: DateRangeSelector
+    class:
+      .popup: drs-custom-popup
+    properties:
+      title: Placement and Popup Class
+      placement: bottomRight
+
+  - id: drs_events
+    type: DateRangeSelector
+    properties:
+      title: Focus, Blur and Open Events
+    events:
+      onFocus:
+        - id: set_focus
+          type: SetState
+          params:
+            drs_focus_event:
+              _event: range
+      onBlur:
+        - id: set_blur
+          type: SetState
+          params:
+            drs_blur_event:
+              _event: range
+      onOpenChange:
+        - id: set_open
+          type: SetState
+          params:
+            drs_open_event:
+              _event: open
+
+  - id: drs_focus_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: drs_focus_event
+              - null
+          then:
+            _string.concat:
+              - 'Focus: '
+              - _json.stringify:
+                  - _state: drs_focus_event
+          else: ''
+
+  - id: drs_blur_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: drs_blur_event
+              - null
+          then:
+            _string.concat:
+              - 'Blur: '
+              - _json.stringify:
+                  - _state: drs_blur_event
+          else: ''
+
+  - id: drs_open_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: drs_open_event
+              - null
+          then:
+            _string.concat:
+              - 'Open: '
+              - _json.stringify:
+                  - _state: drs_open_event
+          else: ''
+
+  - id: drs_onclear
+    type: DateRangeSelector
+    properties:
+      title: OnClear Test
+    events:
+      onClear:
+        - id: set_onclear
+          type: SetState
+          params:
+            drs_onclear_fired: true
+
+  - id: drs_onclear_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: drs_onclear_fired
+              - true
+          then: Clear fired
+          else: ''
+
+  - id: drs_show_week
+    type: DateRangeSelector
+    properties:
+      title: Show Week
+      showWeek: true
+
+  - id: drs_allow_empty
+    type: DateRangeSelector
+    properties:
+      title: Open End
+      format: YYYY-MM-DD
+      allowEmpty:
+        - false
+        - true
+
+  - id: drs_allow_empty_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _and:
+              - _ne:
+                  - _state: drs_allow_empty.0
+                  - null
+              - _eq:
+                  - _state: drs_allow_empty.1
+                  - null
+          then: Open end
+          else: ''
+
+  - id: drs_disabled_start
+    type: DateRangeSelector
+    properties:
+      title: Fixed Start
+      disabled:
+        - true
+        - false

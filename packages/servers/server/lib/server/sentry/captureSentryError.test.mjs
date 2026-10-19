@@ -15,15 +15,16 @@
 */
 
 import { jest } from '@jest/globals';
-import { RequestError } from '@lowdefy/errors';
+import { RequestError, TenantIntegrityError } from '@lowdefy/errors';
 
 const captureException = jest.fn();
 
-jest.unstable_mockModule('@sentry/node', () => ({ captureException }));
-
-process.env.SENTRY_DSN = 'https://public@o0.ingest.sentry.io/1';
-
+const { default: sentrySdk } = await import('./sentrySdk.js');
 const { default: captureSentryError } = await import('./captureSentryError.js');
+
+beforeEach(() => {
+  sentrySdk.current = { captureException };
+});
 
 function createAxiosError() {
   const error = new Error('Request failed with status code 401');
@@ -92,13 +93,36 @@ test('captureSentryError leaves out the requestId tag when the context has no re
   expect(Object.keys(tags)).not.toContain('requestId');
 });
 
-test('captureSentryError does nothing when SENTRY_DSN is not set', () => {
-  const dsn = process.env.SENTRY_DSN;
-  delete process.env.SENTRY_DSN;
-  try {
-    captureSentryError({ error: new Error('Failed.'), context: { rid: 'req-1' } });
-  } finally {
-    process.env.SENTRY_DSN = dsn;
-  }
+test('captureSentryError does nothing when Sentry was not started', () => {
+  sentrySdk.current = null;
+  captureSentryError({ error: new Error('Failed.'), context: { rid: 'req-1' } });
   expect(captureException).not.toHaveBeenCalled();
+});
+
+test('captureSentryError tags integrity fields and fingerprints a TenantIntegrityError by collection', () => {
+  captureException.mockClear();
+  const error = new TenantIntegrityError('bad row', {
+    collection: 'contacts',
+    connectionId: 'contacts_conn',
+    organizationId: 'org_a',
+    endpointId: 'save',
+  });
+  captureSentryError({ error, context: { rid: 'req-2' } });
+  const [, options] = captureException.mock.calls[0];
+  expect(options.tags).toMatchObject({
+    collection: 'contacts',
+    connectionId: 'contacts_conn',
+    organizationId: 'org_a',
+    endpointId: 'save',
+    errorName: 'TenantIntegrityError',
+  });
+  expect(options.fingerprint).toEqual(['TenantIntegrityError', 'contacts']);
+});
+
+test('captureSentryError sets no fingerprint or integrity tags on an ordinary error', () => {
+  captureException.mockClear();
+  captureSentryError({ error: new Error('x'), context: { rid: 'req-3' } });
+  const [, options] = captureException.mock.calls[0];
+  expect(options.fingerprint).toBeUndefined();
+  expect(options.tags.errorName).toBeUndefined();
 });

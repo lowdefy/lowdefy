@@ -45,6 +45,17 @@
         emitFileContent: true
         singleFile: true
 
+- title: Camera Capture and Round Tiles
+  blocks:
+    - id: photo_capture
+      type: UploadPhoto
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+        title: Take photo
+        capture: environment
+        listType: picture-circle
+        singleFile: true
+
 - title: Disabled State
   blocks:
     - id: disabled_default

@@ -44,5 +44,6 @@ function _menu({ params, arrayIndices, menus, location }) {
 }
 
 _menu.dynamic = true;
+_menu.tracking = { kind: 'read', keys: () => ['menu'] };
 
 export default _menu;

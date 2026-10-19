@@ -1,0 +1,13 @@
+name: Roles Module
+description: Declares a role_catalog var supplied by the app entry
+
+vars:
+  role_catalog:
+    description: Role catalog passed in from the app
+
+pages:
+  - id: roles-view
+    type: Box
+    properties:
+      catalog:
+        _module.var: role_catalog

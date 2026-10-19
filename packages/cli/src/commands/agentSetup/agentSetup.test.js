@@ -19,7 +19,12 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import agentSetup from './agentSetup.js';
+// The pin check runs npx; no test reaches npm.
+const spawnSync = jest.fn();
+const childProcess = await import('child_process');
+jest.unstable_mockModule('child_process', () => ({ ...childProcess, spawnSync }));
+
+const { default: agentSetup } = await import('./agentSetup.js');
 
 let configDirectory;
 let context;
@@ -29,9 +34,13 @@ beforeEach(() => {
   // A .git directory pins project-root detection to the temp directory, so
   // tests never depend on whether os.tmpdir() has a .git ancestor.
   fs.mkdirSync(path.join(configDirectory, '.git'));
+  spawnSync.mockReset();
+  spawnSync.mockReturnValue({ status: 0, stdout: '', stderr: '' });
   context = {
+    cliConfig: {},
+    cliVersion: '6.0.0',
     directories: { config: configDirectory },
-    options: { port: 3000 },
+    options: {},
     logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
     sendTelemetry: jest.fn(),
   };
@@ -45,33 +54,64 @@ function read(relativePath) {
   return fs.readFileSync(path.join(configDirectory, relativePath), 'utf8');
 }
 
+// A lowdefy CLI installed in <directory>/node_modules, as a package manager
+// lays it out. withMcp: false is a version from before `lowdefy mcp`.
+function installCli(directory, { withMcp = true } = {}) {
+  const cliDirectory = path.join(directory, 'node_modules', 'lowdefy');
+  fs.mkdirSync(path.join(cliDirectory, 'dist', 'commands', 'mcp'), { recursive: true });
+  fs.writeFileSync(
+    path.join(cliDirectory, 'package.json'),
+    JSON.stringify({ name: 'lowdefy', version: '7.1.0', bin: './dist/index.js' })
+  );
+  if (withMcp) {
+    fs.writeFileSync(path.join(cliDirectory, 'dist', 'commands', 'mcp', 'mcp.js'), '');
+  }
+}
+
+// Pinned to the version of the CLI running agent-setup, not the app's
+// installed one; upsertMcpServer.test.js covers the .mcp.json merge.
+const STDIO_ENTRY = {
+  type: 'stdio',
+  command: 'npx',
+  args: ['--prefer-offline', '--yes', 'lowdefy@6.0.0', 'mcp'],
+};
+
 test('agentSetup creates .mcp.json, the Claude Code skill, and AGENTS.md from scratch', async () => {
+  installCli(configDirectory);
   await agentSetup({ context });
 
   const mcpJson = JSON.parse(read('.mcp.json'));
-  expect(mcpJson).toEqual({
-    mcpServers: {
-      'lowdefy-docs': { type: 'http', url: 'http://localhost:3000/lowdefy-docs/mcp' },
-    },
-  });
+  expect(mcpJson).toEqual({ mcpServers: { lowdefy: STDIO_ENTRY } });
 
   const skillMd = read(path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md'));
   expect(skillMd).toContain('name: lowdefy-config');
-  expect(skillMd).toContain('http://localhost:3000/lowdefy-docs');
+  expect(skillMd).toContain('Never run `lowdefy dev` yourself');
   expect(skillMd).toContain('Never guess type names or properties.');
+  expect(skillMd).toContain('When you finish work in a git worktree you created for the task');
+  expect(skillMd).toContain('stops once it has been idle for 15 minutes');
+  expect(skillMd).toContain('## Testing a change');
+  expect(skillMd).toContain('Run `tier: common` first');
+  expect(skillMd).toContain('Widen to `tier: edge` before you call the change done');
+  expect(skillMd).not.toContain('localhost:');
 
   const agentsMd = read('AGENTS.md');
   expect(agentsMd).toContain('## Lowdefy');
-  expect(agentsMd).toContain('npx lowdefy dev');
-  expect(agentsMd).toContain('http://localhost:3000/lowdefy-docs');
+  expect(agentsMd).not.toContain('Developers start it');
+  expect(agentsMd).toContain('A Lowdefy app is a folder containing `lowdefy.yaml`.');
+  expect(agentsMd).toContain('lowdefy_dev_start');
+  expect(agentsMd).toContain('When you finish work in a git worktree you created for the task');
+  expect(agentsMd).toContain('### Testing a change');
+  expect(agentsMd).toContain('Run `tier: common` first');
+  expect(agentsMd).toContain('`lowdefy test --config-directory <app> --tier common`');
+  expect(agentsMd).not.toContain('localhost:');
 
   const settings = JSON.parse(read(path.join('.claude', 'settings.json')));
-  expect(settings).toEqual({ enabledMcpjsonServers: ['lowdefy-docs'] });
+  expect(settings).toEqual({ enabledMcpjsonServers: ['lowdefy'] });
 
   expect(context.sendTelemetry).toHaveBeenCalled();
 });
 
-test('agentSetup enables lowdefy-docs in an existing .claude/settings.json without dropping other keys', async () => {
+test('agentSetup enables lowdefy in an existing .claude/settings.json without dropping other keys', async () => {
   const claudeDir = path.join(configDirectory, '.claude');
   fs.mkdirSync(claudeDir, { recursive: true });
   fs.writeFileSync(
@@ -82,22 +122,22 @@ test('agentSetup enables lowdefy-docs in an existing .claude/settings.json witho
   await agentSetup({ context });
 
   const settings = JSON.parse(read(path.join('.claude', 'settings.json')));
-  expect(settings.enabledMcpjsonServers).toEqual(['other-server', 'lowdefy-docs']);
+  expect(settings.enabledMcpjsonServers).toEqual(['other-server', 'lowdefy']);
   expect(settings.model).toEqual('sonnet');
 });
 
-test('agentSetup leaves .claude/settings.json unchanged when lowdefy-docs is already enabled', async () => {
+test('agentSetup leaves .claude/settings.json unchanged when lowdefy is already enabled', async () => {
   const claudeDir = path.join(configDirectory, '.claude');
   fs.mkdirSync(claudeDir, { recursive: true });
   fs.writeFileSync(
     path.join(claudeDir, 'settings.json'),
-    JSON.stringify({ enabledMcpjsonServers: ['lowdefy-docs'] })
+    JSON.stringify({ enabledMcpjsonServers: ['lowdefy'] })
   );
 
   await agentSetup({ context });
 
   const settings = JSON.parse(read(path.join('.claude', 'settings.json')));
-  expect(settings.enabledMcpjsonServers).toEqual(['lowdefy-docs']);
+  expect(settings.enabledMcpjsonServers).toEqual(['lowdefy']);
   expect(context.logger.info).toHaveBeenCalledWith(expect.stringContaining('already enables'));
 });
 
@@ -110,71 +150,112 @@ test('agentSetup warns and leaves .claude/settings.json unchanged when it is not
 
   expect(read(path.join('.claude', 'settings.json'))).toEqual('{ not json');
   expect(context.logger.warn).toHaveBeenCalledWith(
-    expect.stringContaining("Could not parse existing '.claude/settings.json'")
+    expect.stringContaining(`Could not parse existing '${path.join('.claude', 'settings.json')}'`)
   );
 });
 
-test('agentSetup uses the port option to parameterize the generated URLs', async () => {
-  context.options.port = 4123;
+test('agentSetup swaps a lowdefy-docs approval in .claude/settings.json for lowdefy', async () => {
+  const claudeDir = path.join(configDirectory, '.claude');
+  fs.mkdirSync(claudeDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(claudeDir, 'settings.json'),
+    JSON.stringify({ enabledMcpjsonServers: ['lowdefy-docs', 'other-server'] })
+  );
 
   await agentSetup({ context });
 
-  const mcpJson = JSON.parse(read('.mcp.json'));
-  expect(mcpJson.mcpServers['lowdefy-docs'].url).toEqual('http://localhost:4123/lowdefy-docs/mcp');
-  expect(read('AGENTS.md')).toContain('http://localhost:4123/lowdefy-docs');
+  const settings = JSON.parse(read(path.join('.claude', 'settings.json')));
+  expect(settings.enabledMcpjsonServers).toEqual(['lowdefy', 'other-server']);
 });
 
-test('agentSetup merges the lowdefy-docs server into an existing .mcp.json', async () => {
+test('agentSetup keeps a lowdefy-docs entry beside lowdefy and carries tool approvals over', async () => {
+  installCli(configDirectory);
+  const remote = { type: 'http', url: 'https://staging.example.com/api/mcp' };
   fs.writeFileSync(
     path.join(configDirectory, '.mcp.json'),
-    JSON.stringify({ mcpServers: { other: { type: 'stdio', command: 'other-server' } } }, null, 2)
+    JSON.stringify({
+      mcpServers: {
+        'lowdefy-docs': {
+          type: 'stdio',
+          command: 'node',
+          args: ['node_modules/lowdefy/dist/index.js', 'mcp'],
+        },
+        remote,
+      },
+    })
+  );
+  const claudeDir = path.join(configDirectory, '.claude');
+  fs.mkdirSync(claudeDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(claudeDir, 'settings.local.json'),
+    JSON.stringify({
+      permissions: {
+        allow: ['mcp__lowdefy-docs__lowdefy_get_schema', 'mcp__remote__search', 'Bash(ls:*)'],
+      },
+      enabledMcpjsonServers: ['lowdefy-docs', 'remote'],
+    })
   );
 
   await agentSetup({ context });
 
-  const mcpJson = JSON.parse(read('.mcp.json'));
-  expect(mcpJson.mcpServers.other).toEqual({ type: 'stdio', command: 'other-server' });
-  expect(mcpJson.mcpServers['lowdefy-docs']).toEqual({
-    type: 'http',
-    url: 'http://localhost:3000/lowdefy-docs/mcp',
+  expect(JSON.parse(read('.mcp.json')).mcpServers).toEqual({
+    'lowdefy-docs': {
+      type: 'stdio',
+      command: 'node',
+      args: ['node_modules/lowdefy/dist/index.js', 'mcp'],
+    },
+    remote,
+    lowdefy: STDIO_ENTRY,
+  });
+  expect(JSON.parse(read(path.join('.claude', 'settings.local.json')))).toEqual({
+    permissions: {
+      allow: ['mcp__lowdefy__lowdefy_get_schema', 'mcp__remote__search', 'Bash(ls:*)'],
+    },
+    enabledMcpjsonServers: ['lowdefy', 'remote'],
   });
 });
 
-test('agentSetup leaves a matching lowdefy-docs entry in .mcp.json unchanged and notes it', async () => {
+test('agentSetup leaves an old Lowdefy section and a hashless lowdefy-config skill as they are', async () => {
+  const skillDir = path.join(configDirectory, '.claude', 'skills', 'lowdefy-config');
+  fs.mkdirSync(skillDir, { recursive: true });
   fs.writeFileSync(
-    path.join(configDirectory, '.mcp.json'),
-    JSON.stringify({
-      mcpServers: {
-        'lowdefy-docs': { type: 'http', url: 'http://localhost:3000/lowdefy-docs/mcp' },
-      },
-    })
+    path.join(skillDir, 'SKILL.md'),
+    'Edited.\nYour Lowdefy tools come from the `lowdefy-docs` MCP server (`lowdefy mcp`).\n'
+  );
+  fs.writeFileSync(
+    path.join(configDirectory, 'AGENTS.md'),
+    '# Project\n\n## Lowdefy\n\nYour Lowdefy tools come from the `lowdefy-docs` MCP server.\n'
   );
 
   await agentSetup({ context });
 
-  const mcpJson = JSON.parse(read('.mcp.json'));
-  expect(mcpJson.mcpServers['lowdefy-docs'].url).toEqual('http://localhost:3000/lowdefy-docs/mcp');
-  expect(context.logger.info).toHaveBeenCalledWith(
-    expect.stringContaining("already has a 'lowdefy-docs' MCP server")
+  // Earlier output is not migrated: the hashless skill reads as edited and
+  // freezes its twin, and the block is appended after the unmarked section.
+  expect(read(path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md'))).toEqual(
+    'Edited.\nYour Lowdefy tools come from the `lowdefy-docs` MCP server (`lowdefy mcp`).\n'
   );
+  expect(
+    fs.existsSync(path.join(configDirectory, '.agents', 'skills', 'lowdefy-config', 'SKILL.md'))
+  ).toBe(false);
+  expect(
+    read('AGENTS.md').startsWith(
+      '# Project\n\n## Lowdefy\n\nYour Lowdefy tools come from the `lowdefy-docs` MCP server.\n\n<!-- BEGIN:lowdefy-agent-rules version=6.0.0 -->\n'
+    )
+  ).toBe(true);
 });
 
-test('agentSetup warns when an existing lowdefy-docs entry points at a different URL', async () => {
+test('agentSetup leaves a matching lowdefy entry in .mcp.json unchanged and notes it', async () => {
+  installCli(configDirectory);
   fs.writeFileSync(
     path.join(configDirectory, '.mcp.json'),
-    JSON.stringify({
-      mcpServers: {
-        'lowdefy-docs': { type: 'http', url: 'http://localhost:9999/lowdefy-docs/mcp' },
-      },
-    })
+    JSON.stringify({ mcpServers: { lowdefy: STDIO_ENTRY } })
   );
 
   await agentSetup({ context });
 
-  const mcpJson = JSON.parse(read('.mcp.json'));
-  expect(mcpJson.mcpServers['lowdefy-docs'].url).toEqual('http://localhost:9999/lowdefy-docs/mcp');
-  expect(context.logger.warn).toHaveBeenCalledWith(
-    expect.stringContaining("pointing at 'http://localhost:9999/lowdefy-docs/mcp'")
+  expect(JSON.parse(read('.mcp.json')).mcpServers.lowdefy).toEqual(STDIO_ENTRY);
+  expect(context.logger.info).toHaveBeenCalledWith(
+    expect.stringContaining("already runs 'lowdefy mcp'")
   );
 });
 
@@ -187,22 +268,7 @@ test('agentSetup warns and leaves .mcp.json unchanged when it is not valid JSON'
   expect(context.logger.warn).toHaveBeenCalledWith(expect.stringContaining('Could not parse'));
 });
 
-test('agentSetup skips the skill file when it already exists', async () => {
-  const skillDir = path.join(configDirectory, '.claude', 'skills', 'lowdefy-config');
-  fs.mkdirSync(skillDir, { recursive: true });
-  fs.writeFileSync(path.join(skillDir, 'SKILL.md'), 'custom content');
-
-  await agentSetup({ context });
-
-  expect(read(path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md'))).toEqual(
-    'custom content'
-  );
-  expect(context.logger.info).toHaveBeenCalledWith(
-    expect.stringContaining('already exists - skipping.')
-  );
-});
-
-test('agentSetup appends a Lowdefy section to an existing AGENTS.md', async () => {
+test('agentSetup appends the Lowdefy block to an existing AGENTS.md', async () => {
   fs.writeFileSync(path.join(configDirectory, 'AGENTS.md'), '# My Project\n\nSome instructions.\n');
 
   await agentSetup({ context });
@@ -210,33 +276,65 @@ test('agentSetup appends a Lowdefy section to an existing AGENTS.md', async () =
   const agentsMd = read('AGENTS.md');
   expect(agentsMd).toContain('# My Project');
   expect(agentsMd).toContain('Some instructions.');
-  expect(agentsMd).toContain('## Lowdefy');
+  expect(agentsMd).toContain('<!-- BEGIN:lowdefy-agent-rules version=6.0.0 -->\n## Lowdefy');
 });
 
-test('agentSetup skips AGENTS.md when a Lowdefy section already exists', async () => {
-  fs.writeFileSync(
-    path.join(configDirectory, 'AGENTS.md'),
-    '# My Project\n\n## Lowdefy\n\nCustom lowdefy notes.\n'
-  );
-
+test('agentSetup writes lowdefy-config to both skills folders under the hash rule', async () => {
   await agentSetup({ context });
 
-  expect(read('AGENTS.md')).toEqual('# My Project\n\n## Lowdefy\n\nCustom lowdefy notes.\n');
-  expect(context.logger.info).toHaveBeenCalledWith(
-    expect.stringContaining("already has a 'Lowdefy' section")
-  );
+  const skillPath = path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md');
+  const written = read(skillPath);
+  expect(written).toMatch(/lowdefy-skill-hash: [a-f0-9]{64}/);
+  expect(read(path.join('.agents', 'skills', 'lowdefy-config', 'SKILL.md'))).toEqual(written);
 });
 
-test('agentSetup prefers a package.json dev script that runs lowdefy dev', async () => {
+test('agentSetup warns when several scripts run lowdefy dev and cli.devScript is not set', async () => {
   fs.writeFileSync(
     path.join(configDirectory, 'package.json'),
-    JSON.stringify({ scripts: { dev: 'lowdefy dev' } })
+    JSON.stringify({
+      scripts: { dev: 'lowdefy dev', 'dev:prod': 'secrets run --env=prod -- lowdefy dev' },
+    })
   );
-  fs.writeFileSync(path.join(configDirectory, 'pnpm-lock.yaml'), '');
 
   await agentSetup({ context });
 
-  expect(read('AGENTS.md')).toContain('pnpm dev');
+  expect(context.logger.warn).toHaveBeenCalledWith(
+    expect.stringContaining('Set cli.devScript in lowdefy.yaml')
+  );
+});
+
+test('agentSetup does not warn about several dev scripts when cli.devScript names one', async () => {
+  fs.writeFileSync(
+    path.join(configDirectory, 'package.json'),
+    JSON.stringify({ scripts: { dev: 'lowdefy dev', 'dev:prod': 'lowdefy dev --log-level debug' } })
+  );
+  context.cliConfig = { devScript: 'dev' };
+
+  await agentSetup({ context });
+
+  expect(context.logger.warn).not.toHaveBeenCalledWith(expect.stringContaining('cli.devScript'));
+});
+
+test('agentSetup leaves AGENTS.md as it is when its Lowdefy block is current', async () => {
+  await agentSetup({ context });
+  const first = read('AGENTS.md');
+  context.logger.info.mockClear();
+
+  await agentSetup({ context });
+
+  expect(read('AGENTS.md')).toEqual(first);
+  expect(context.logger.info).toHaveBeenCalledWith(
+    "The Lowdefy block in 'AGENTS.md' is up to date."
+  );
+});
+
+test('agentSetup writes one AGENTS.md line per skill in the list', async () => {
+  const { default: skills } = await import('./skills/index.js');
+  await agentSetup({ context });
+  const agentsMd = read('AGENTS.md');
+  skills.forEach((skill) => {
+    expect(agentsMd.split(`- ${skill.agentsMdLine}`)).toHaveLength(2);
+  });
 });
 
 describe('monorepo layout (app in a subdirectory of the git root)', () => {
@@ -260,71 +358,71 @@ describe('monorepo layout (app in a subdirectory of the git root)', () => {
   }
 
   test('agentSetup writes .mcp.json, the skill, and AGENTS.md at the project root, not the app directory', async () => {
+    installCli(configDirectory);
     await agentSetup({ context });
 
     const mcpJson = JSON.parse(readRoot('.mcp.json'));
-    expect(mcpJson.mcpServers['lowdefy-docs'].url).toEqual(
-      'http://localhost:3000/lowdefy-docs/mcp'
+    expect(mcpJson.mcpServers.lowdefy).toEqual(STDIO_ENTRY);
+    expect(readRoot(path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md'))).not.toContain(
+      'apps/myapp'
     );
-    expect(readRoot(path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md'))).toContain(
-      'lives in `apps/myapp/`'
-    );
-    const agentsMd = readRoot('AGENTS.md');
-    expect(agentsMd).toContain('Lowdefy](https://lowdefy.com) app in `apps/myapp/`');
-    expect(agentsMd).toContain('cd apps/myapp && npx lowdefy dev');
+    expect(readRoot('AGENTS.md')).not.toContain('apps/myapp');
 
     expect(fs.existsSync(path.join(configDirectory, '.mcp.json'))).toBe(false);
     expect(fs.existsSync(path.join(configDirectory, 'AGENTS.md'))).toBe(false);
     expect(fs.existsSync(path.join(configDirectory, '.claude'))).toBe(false);
   });
 
-  test('agentSetup appends the Lowdefy section to an existing root AGENTS.md', async () => {
+  test('agentSetup appends the Lowdefy block to an existing root AGENTS.md and imports it in a new CLAUDE.md', async () => {
     fs.writeFileSync(path.join(projectDirectory, 'AGENTS.md'), '# Monorepo\n\nRoot docs.\n');
 
     await agentSetup({ context });
 
     const agentsMd = readRoot('AGENTS.md');
     expect(agentsMd).toContain('# Monorepo');
-    expect(agentsMd).toContain('## Lowdefy');
-    expect(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md'))).toBe(false);
+    expect(agentsMd).toContain('<!-- BEGIN:lowdefy-agent-rules version=6.0.0 -->');
+    expect(readRoot('CLAUDE.md')).toEqual('@AGENTS.md\n');
   });
 
-  test('agentSetup appends the Lowdefy section to a root CLAUDE.md instead of creating AGENTS.md', async () => {
+  test('agentSetup appends the Lowdefy block to a root CLAUDE.md instead of creating AGENTS.md', async () => {
     fs.writeFileSync(path.join(projectDirectory, 'CLAUDE.md'), '# Monorepo\n\nClaude docs.\n');
 
     await agentSetup({ context });
 
     const claudeMd = readRoot('CLAUDE.md');
     expect(claudeMd).toContain('# Monorepo');
-    expect(claudeMd).toContain('## Lowdefy');
+    expect(claudeMd).toContain('<!-- BEGIN:lowdefy-agent-rules version=6.0.0 -->');
     expect(fs.existsSync(path.join(projectDirectory, 'AGENTS.md'))).toBe(false);
-    expect(context.logger.info).toHaveBeenCalledWith(
-      expect.stringContaining("Added a 'Lowdefy' section to 'CLAUDE.md'")
-    );
+    expect(context.logger.info).toHaveBeenCalledWith("Added the Lowdefy block to 'CLAUDE.md'.");
   });
 
-  test('agentSetup skips the instructions file when CLAUDE.md already has a Lowdefy section', async () => {
-    fs.writeFileSync(path.join(projectDirectory, 'CLAUDE.md'), '## Lowdefy\n\nCustom notes.\n');
+  test('agentSetup writes the same skills and guidance from either of two apps in one repository', async () => {
+    const otherProject = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-agent-setup-test-'));
+    try {
+      fs.mkdirSync(path.join(otherProject, '.git'));
+      const otherApp = path.join(otherProject, 'apps', 'other');
+      fs.mkdirSync(otherApp, { recursive: true });
+      fs.mkdirSync(path.join(otherProject, 'apps', 'myapp'), { recursive: true });
+      fs.mkdirSync(path.join(projectDirectory, 'apps', 'other'), { recursive: true });
 
-    await agentSetup({ context });
+      await agentSetup({ context });
+      await agentSetup({ context: { ...context, directories: { config: otherApp } } });
 
-    expect(readRoot('CLAUDE.md')).toEqual('## Lowdefy\n\nCustom notes.\n');
-    expect(fs.existsSync(path.join(projectDirectory, 'AGENTS.md'))).toBe(false);
-    expect(context.logger.info).toHaveBeenCalledWith(
-      expect.stringContaining("'CLAUDE.md' already has a 'Lowdefy' section")
-    );
-  });
-
-  test('agentSetup uses a root lockfile for the dev command', async () => {
-    fs.writeFileSync(
-      path.join(configDirectory, 'package.json'),
-      JSON.stringify({ scripts: { dev: 'lowdefy dev' } })
-    );
-    fs.writeFileSync(path.join(projectDirectory, 'pnpm-lock.yaml'), '');
-
-    await agentSetup({ context });
-
-    expect(readRoot('AGENTS.md')).toContain('cd apps/myapp && pnpm dev');
+      const files = [
+        'AGENTS.md',
+        ...['.agents', '.claude'].flatMap((folder) =>
+          fs
+            .readdirSync(path.join(projectDirectory, folder, 'skills'))
+            .map((name) => path.join(folder, 'skills', name, 'SKILL.md'))
+        ),
+      ];
+      expect(files.length).toBeGreaterThan(2);
+      files.forEach((file) => {
+        expect(fs.readFileSync(path.join(otherProject, file), 'utf8')).toEqual(readRoot(file));
+      });
+    } finally {
+      fs.rmSync(otherProject, { recursive: true, force: true });
+    }
   });
 
   test('agentSetup warns about a stale .mcp.json left in the app directory', async () => {
@@ -332,7 +430,7 @@ describe('monorepo layout (app in a subdirectory of the git root)', () => {
 
     await agentSetup({ context });
 
-    expect(JSON.parse(readRoot('.mcp.json')).mcpServers['lowdefy-docs']).toBeDefined();
+    expect(JSON.parse(readRoot('.mcp.json')).mcpServers.lowdefy).toBeDefined();
     expect(context.logger.warn).toHaveBeenCalledWith(
       expect.stringContaining('agents launched from the project root will not discover it')
     );
@@ -359,4 +457,114 @@ describe('monorepo layout (app in a subdirectory of the git root)', () => {
     );
     expect(fs.existsSync(path.join(configDirectory, '.mcp.json'))).toBe(true);
   });
+});
+
+test('agentSetup writes the journeys-from-production skill and lists it in AGENTS.md', async () => {
+  const skillPath = path.join('.claude', 'skills', 'journeys-from-production', 'SKILL.md');
+  await agentSetup({ context });
+  const written = read(skillPath);
+  expect(written).toContain('name: journeys-from-production');
+  expect(written).toMatch(/lowdefy-skill-hash: [a-f0-9]{64}/);
+  expect(read('AGENTS.md')).toContain('`journeys-from-production`');
+});
+
+test('agentSetup writes the journeys-from-pr skill, with the bug bash folded in, and no journeys-bug-bash', async () => {
+  await agentSetup({ context });
+  const written = read(path.join('.claude', 'skills', 'journeys-from-pr', 'SKILL.md'));
+  expect(written).toContain('name: journeys-from-pr');
+  expect(written).toContain(
+    'lowdefy journeys scope --config-directory <app> --base <base branch> --json'
+  );
+  expect(written).toContain('**A bug bash**');
+  expect(written).toMatch(/lowdefy-skill-hash: [a-f0-9]{64}/);
+  expect(fs.existsSync(path.join(configDirectory, '.claude', 'skills', 'journeys-bug-bash'))).toBe(
+    false
+  );
+  const agentsMd = read('AGENTS.md');
+  expect(agentsMd).toContain('`journeys-from-pr`');
+  expect(agentsMd).toContain('bug bash');
+  expect(agentsMd).not.toContain('`journeys-bug-bash`');
+});
+
+test('agentSetup writes the journeys-from-dev skill, refreshes it unedited and skips it edited', async () => {
+  const skillPath = path.join('.claude', 'skills', 'journeys-from-dev', 'SKILL.md');
+  await agentSetup({ context });
+  const written = read(skillPath);
+  expect(written).toContain('name: journeys-from-dev');
+  expect(written).toMatch(/lowdefy-skill-hash: [a-f0-9]{64}/);
+
+  fs.writeFileSync(
+    path.join(configDirectory, skillPath),
+    written.replace(/^lowdefy-skill-hash: .*$/m, `lowdefy-skill-hash: ${'0'.repeat(64)}`)
+  );
+  await agentSetup({ context });
+  expect(read(skillPath)).toContain(`lowdefy-skill-hash: ${'0'.repeat(64)}`);
+
+  fs.writeFileSync(path.join(configDirectory, skillPath), written);
+  context.logger.info.mockClear();
+  await agentSetup({ context });
+  expect(read(skillPath)).toEqual(written);
+  expect(context.logger.info).toHaveBeenCalledWith(`'${skillPath}' is up to date.`);
+});
+
+test('agentSetup writes the journeys-harden skill, skips it edited and keeps it current unedited', async () => {
+  const skillPath = path.join('.claude', 'skills', 'journeys-harden', 'SKILL.md');
+  await agentSetup({ context });
+  const written = read(skillPath);
+  expect(written).toContain('name: journeys-harden');
+  expect(written).toMatch(/lowdefy-skill-hash: [a-f0-9]{64}/);
+  expect(read('AGENTS.md')).toContain('`journeys-harden`');
+
+  const edited = `${written}\nA note the developer added.\n`;
+  fs.writeFileSync(path.join(configDirectory, skillPath), edited);
+  await agentSetup({ context });
+  expect(read(skillPath)).toEqual(edited);
+
+  fs.writeFileSync(path.join(configDirectory, skillPath), written);
+  context.logger.info.mockClear();
+  await agentSetup({ context });
+  expect(read(skillPath)).toEqual(written);
+  expect(context.logger.info).toHaveBeenCalledWith(`'${skillPath}' is up to date.`);
+});
+
+test('agentSetup writes the journeys-autopilot skill and lists it in AGENTS.md', async () => {
+  const skillPath = path.join('.claude', 'skills', 'journeys-autopilot', 'SKILL.md');
+  await agentSetup({ context });
+  const written = read(skillPath);
+  expect(written).toContain('name: journeys-autopilot');
+  expect(written).toContain('tests/autopilot.yaml');
+  expect(written).toMatch(/lowdefy-skill-hash: [a-f0-9]{64}/);
+  expect(read('AGENTS.md')).toContain('`journeys-autopilot`');
+});
+
+test('agentSetup refuses an app on lowdefy: local and writes nothing', async () => {
+  context.lowdefyVersion = 'local';
+  fs.writeFileSync(path.join(configDirectory, 'AGENTS.md'), '# Project\n');
+
+  await expect(agentSetup({ context })).rejects.toThrow(
+    "agent-setup does not support apps on 'lowdefy: local'."
+  );
+
+  expect(fs.readdirSync(configDirectory).sort()).toEqual(['.git', 'AGENTS.md']);
+  expect(read('AGENTS.md')).toEqual('# Project\n');
+});
+
+test('agentSetup stamps the block with its own version and warns when the app runs another', async () => {
+  context.cliVersion = '7.2.0';
+  context.lowdefyVersion = '7.0.0';
+
+  await agentSetup({ context });
+
+  expect(read('AGENTS.md')).toContain('<!-- BEGIN:lowdefy-agent-rules version=7.2.0 -->');
+  expect(context.logger.warn).toHaveBeenCalledWith(
+    'agent-setup is Lowdefy 7.2.0, this app runs 7.0.0: run `npx lowdefy@7.0.0 agent-setup`.'
+  );
+});
+
+test('agentSetup does not warn about versions when the app runs the CLI version', async () => {
+  context.lowdefyVersion = '6.0.0';
+
+  await agentSetup({ context });
+
+  expect(context.logger.warn).not.toHaveBeenCalledWith(expect.stringContaining('this app runs'));
 });

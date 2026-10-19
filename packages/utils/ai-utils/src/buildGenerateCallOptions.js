@@ -16,9 +16,10 @@
 
 import { type } from '@lowdefy/helpers';
 
+import createFileDownload from './fileDownload/createFileDownload.js';
+
+// maxOutputTokens is a limit with a connection default, so buildCallLimits sets it.
 const callSettings = [
-  'system',
-  'maxOutputTokens',
   'temperature',
   'topP',
   'topK',
@@ -30,7 +31,7 @@ const callSettings = [
   'providerOptions',
 ];
 
-function buildGenerateCallOptions({ request }) {
+function buildGenerateCallOptions({ request, signal }) {
   if (type.isNone(request.prompt) && type.isNone(request.messages)) {
     throw new Error('Either "prompt" or "messages" must be provided.');
   }
@@ -43,6 +44,23 @@ function buildGenerateCallOptions({ request }) {
   }
   if (!type.isNone(request.messages)) {
     options.messages = request.messages;
+    // A file part the model does not take as a link is downloaded by the server, within
+    // fileDownload's limits and only from a public https: address.
+    options.experimental_download = createFileDownload({ ...request.fileDownload, signal });
+  }
+  // A system turn instructs the model as the app itself, and `messages` is
+  // often built from a user's input (`_payload`, `_state`), so ai v7 rejects
+  // one unless the call opts in. The request opts in explicitly.
+  if (request.allowSystemInMessages === true) {
+    options.allowSystemInMessages = true;
+  } else if ((request.messages ?? []).some((message) => message?.role === 'system')) {
+    throw new Error(
+      '"messages" includes a system message. Use the "system" property for the system prompt, or set "allowSystemInMessages: true" if the system message comes from the app, never from a user.'
+    );
+  }
+  // `system` is the request's public property; ai v7 calls it `instructions`.
+  if (!type.isNone(request.system)) {
+    options.instructions = request.system;
   }
   callSettings.forEach((setting) => {
     if (!type.isNone(request[setting])) {

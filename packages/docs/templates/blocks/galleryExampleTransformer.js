@@ -182,7 +182,7 @@ function buildCopyButton({ slug, configBlocks }) {
         id: `gallery_copy_${slug}`,
         type: 'Button',
         properties: {
-          icon: 'AiOutlineCopy',
+          icon: 'copy',
           type: 'text',
           size: 'small',
           shape: 'circle',
@@ -220,20 +220,20 @@ function buildCard({ section, slug, showState }) {
     panels.push({
       key: 'state',
       title: 'State',
-      icon: 'AiOutlineDatabase',
+      icon: 'Database',
     });
   }
   panels.push({
     key: 'config',
     title: 'Config',
-    icon: 'AiOutlineCode',
+    icon: 'CodeXml',
     extraKey: `config_extra_${slug}`,
   });
   if (sectionHasOperators) {
     panels.push({
       key: 'resolved',
       title: 'Resolved',
-      icon: 'AiOutlineEye',
+      icon: 'view',
     });
   }
 

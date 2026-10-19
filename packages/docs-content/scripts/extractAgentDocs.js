@@ -18,6 +18,8 @@ import fs from 'fs';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
+import { nunjucksFunction } from '@lowdefy/nunjucks';
+
 // Runs inside the docs app build (see packages/docs/templates/generateSiteAssets.js),
 // where pages are fully resolved: _refs inlined, template vars substituted.
 // Markdown content lives on Markdown/MarkdownWithCode block properties in
@@ -51,12 +53,37 @@ function resolvePageSections(pages, menus) {
   return sectionMap;
 }
 
+function isPlainObject(value) {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+// Many docs pages write their markdown as a `_nunjucks` template so it can
+// print the current version (`on: { version: _ref: version.yaml }`). With its
+// _refs resolved, such a template renders to the same markdown at build time
+// as in the browser. A template that reads state or other runtime operators
+// (the live examples on block pages) has no static rendering and is skipped.
+function renderStaticNunjucks(value) {
+  if (!isPlainObject(value) || !isPlainObject(value._nunjucks)) return undefined;
+  const { template, on = {} } = value._nunjucks;
+  if (typeof template !== 'string' || !isPlainObject(on)) return undefined;
+  const vars = {};
+  for (const [key, varValue] of Object.entries(on)) {
+    if (key.startsWith('~')) continue;
+    if (key.startsWith('_') || (typeof varValue === 'object' && varValue !== null)) {
+      return undefined;
+    }
+    vars[key] = varValue;
+  }
+  return nunjucksFunction(template)(vars);
+}
+
 function extractPageMarkdown(page) {
   const parts = [];
   function collect(value) {
-    // Unresolved runtime operators are objects — only static strings are docs content.
-    if (typeof value === 'string' && value.trim() !== '') {
-      parts.push(value.trim());
+    const markdown = typeof value === 'string' ? value : renderStaticNunjucks(value);
+    // Other runtime operators are objects — only static content is docs content.
+    if (typeof markdown === 'string' && markdown.trim() !== '') {
+      parts.push(markdown.trim());
     }
   }
   function walkBlock(block) {
@@ -99,6 +126,10 @@ function extractAgentDocs({ pages, menus, outputDir }) {
   fs.rmSync(contentDir, { recursive: true, force: true });
 
   const docs = [];
+  // The ref each page was resolved from (a non-enumerable build marker).
+  // recordSourceHashes, which runs after the build, maps it to the page's
+  // source files through the build's refMap.
+  const sources = {};
   pages.filter(Boolean).forEach((page) => {
     const title = page.properties?.title ?? page.id;
     const section = sectionMap.get(page.id)?.label ?? 'Other';
@@ -119,11 +150,12 @@ function extractAgentDocs({ pages, menus, outputDir }) {
       doc.typeName = title;
     }
     docs.push(doc);
+    sources[slug] = { refId: page['~r'] };
   });
 
   fs.writeFileSync(
     path.join(outputDir, 'index.json'),
-    JSON.stringify({ version: packageJson.version, docs }, null, 2)
+    JSON.stringify({ version: packageJson.version, docs, sources }, null, 2)
   );
 }
 

@@ -36,6 +36,7 @@ const AffixBlock = ({
     offsetBottom={properties.offsetBottom}
     offsetTop={properties.offsetTop}
     style={styles.element}
+    target={properties.target ? () => document.getElementById(properties.target) : undefined}
     onChange={(affixed) => {
       methods.triggerEvent({
         name: get(rename, 'events.onChange', { default: 'onChange' }),

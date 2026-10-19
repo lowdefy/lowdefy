@@ -21,7 +21,7 @@ import { disabled, inputTitle, autoFocus } from '../../schemas/inputProperties.j
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons, 'AiOutlineCheck', 'AiOutlineClose'],
+  icons: [...LabelMeta.icons, 'check', 'close'],
   valueType: 'boolean',
   cssKeys: {
     element: 'The Switch element.',
@@ -45,9 +45,9 @@ export default {
       autoFocus,
       checkedIcon: {
         ...icon,
-        default: 'AiOutlineCheck',
+        default: 'check',
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to shown when switch is checked (true).",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to shown when switch is checked (true).',
       },
       checkedText: {
         type: 'string',
@@ -62,6 +62,12 @@ export default {
       },
       disabled,
       label,
+      loading: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Show a loading indicator in the switch handle and block changes, eg. while a request saves the new value.',
+      },
       size: {
         type: 'string',
         enum: ['small', 'default'],
@@ -71,9 +77,9 @@ export default {
       title: inputTitle,
       uncheckedIcon: {
         ...icon,
-        default: 'AiOutlineClose',
+        default: 'close',
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to shown when switch is unchecked (false).",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to shown when switch is unchecked (false).',
       },
       uncheckedText: {
         type: 'string',

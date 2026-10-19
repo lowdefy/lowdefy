@@ -14,11 +14,13 @@
   limitations under the License.
 */
 
+import showUploadList from '../../schemas/showUploadList.js';
 import uploadTheme from '../../schemas/uploadTheme.js';
 
 export default {
   category: 'input',
-  icons: ['AiOutlineUpload'],
+  actions: ['Request'],
+  icons: ['upload', 'loading', 'attach', 'delete', 'download', 'view'],
   valueType: 'object',
   cssKeys: {
     element: 'The outer block wrapper around the upload button and list.',
@@ -69,7 +71,7 @@ export default {
         description:
           'Button block properties. See <a href="/Button">Button</a> for all properties.',
         default: {
-          icon: 'UploadOutlined',
+          icon: 'upload',
           title: 'Upload',
           type: 'default',
         },
@@ -87,6 +89,12 @@ export default {
             docs: {
               displayType: 'icon',
             },
+          },
+          iconPlacement: {
+            type: 'string',
+            enum: ['start', 'end'],
+            default: 'start',
+            description: 'Place the icon before (`start`) or after (`end`) the button title.',
           },
           type: {
             type: 'string',
@@ -111,6 +119,23 @@ export default {
             description: 'Button size.',
           },
         },
+      },
+      directory: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Select a whole folder instead of files. Every file in the folder is uploaded.',
+      },
+      listType: {
+        type: 'string',
+        enum: ['text', 'picture'],
+        default: 'text',
+        description: 'Style of the file list. `picture` shows a thumbnail for each image.',
+      },
+      pastable: {
+        type: 'boolean',
+        default: false,
+        description: 'Upload files pasted anywhere on the page.',
       },
       disabled: {
         type: 'boolean',
@@ -158,11 +183,7 @@ export default {
           },
         },
       },
-      showUploadList: {
-        type: 'boolean',
-        default: true,
-        description: 'Whether to show default upload list.',
-      },
+      showUploadList,
       singleFile: {
         type: 'boolean',
         default: false,

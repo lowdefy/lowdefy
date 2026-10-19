@@ -21,6 +21,7 @@ import { ConfigError } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
 import makeRefDefinition from './makeRefDefinition.js';
 import rebaseModuleRefPaths from './rebaseModuleRefPaths.js';
+import isPathInsideRoot from './isPathInsideRoot.js';
 import getRefContent from './getRefContent.js';
 import getModuleRefContent from './getModuleRefContent.js';
 import runTransformer from './runTransformer.js';
@@ -53,6 +54,7 @@ class WalkContext {
     currentFile,
     refChain,
     deferModuleRefs,
+    deferAuthConfig,
     operators,
     env,
     lowdefyApp,
@@ -83,6 +85,14 @@ class WalkContext {
     this.currentFile = currentFile;
     this.refChain = refChain;
     this.deferModuleRefs = deferModuleRefs ?? false;
+    // Walks that run before the auth-config projection is computed AND whose
+    // output is guaranteed a later post-projection walk (entry-config
+    // prepare/sweep, deferred-record bodies) leave _build.authConfig folds
+    // unevaluated instead of erroring — the operator resolves where the
+    // deferred value is consumed. Walks whose output is final (app metadata,
+    // the auth pre-pass itself) stay strict, so a genuinely-unresolvable read
+    // is still a loud build error.
+    this.deferAuthConfig = deferAuthConfig ?? false;
     // Which entry-config section a prepare walk serves ('consumerVars' or
     // 'connections') — entryRef record coordinates and slots need it.
     this.entrySection = entrySection ?? null;
@@ -107,6 +117,7 @@ class WalkContext {
       currentFile: this.currentFile,
       refChain: this.refChain,
       deferModuleRefs: this.deferModuleRefs,
+      deferAuthConfig: this.deferAuthConfig,
       entrySection: this.entrySection,
       operators: this.operators,
       env: this.env,
@@ -118,7 +129,16 @@ class WalkContext {
     });
   }
 
-  forRef({ refId, vars, filePath, moduleRoot, packageRoot, moduleDependencies, moduleEntry, extraRefChainKeys }) {
+  forRef({
+    refId,
+    vars,
+    filePath,
+    moduleRoot,
+    packageRoot,
+    moduleDependencies,
+    moduleEntry,
+    extraRefChainKeys,
+  }) {
     const newChain = new Set(this.refChain);
     if (filePath) {
       newChain.add(filePath);
@@ -141,6 +161,7 @@ class WalkContext {
       currentFile: filePath ?? this.currentFile,
       refChain: newChain,
       deferModuleRefs: this.deferModuleRefs,
+      deferAuthConfig: this.deferAuthConfig,
       entrySection: this.entrySection,
       operators: this.operators,
       env: this.env,
@@ -197,15 +218,43 @@ function tagRefDeep(node, refId) {
   }
 }
 
+// Operator nodes in a ref walk have no ~k yet (addKeys runs after buildRefs), so their
+// errors locate by the file being walked and the ~l line addLineNumbers stamped at parse.
+function nodeLocation(node, ctx) {
+  return { filePath: ctx.currentFile, lineNumber: node['~l'] };
+}
+
+// A _build.env read is inlined here, so a name the environment does not set
+// becomes a literal null in the artifact before any check can see it. Record
+// the read site on every build: unlike a _secret, which is read where the app
+// runs, the value is frozen in the environment the build runs in. The reads are
+// warned once per variable when the walk ends (warnUnsetEnvReads), so a variable
+// read in many places does not bury the other warnings.
+function recordUnsetEnvRead(node, ctx) {
+  const params = node['_build.env'];
+  const name = type.isString(params) ? params : params?.key;
+  if (!type.isString(name)) return;
+  if (type.isObject(params) && Object.hasOwn(params, 'default')) return;
+  if (!type.isUndefined(process.env[name])) return;
+  const { unsetEnvReads } = ctx.buildContext;
+  if (!unsetEnvReads.has(name)) {
+    unsetEnvReads.set(name, []);
+  }
+  unsetEnvReads.get(name).push(nodeLocation(node, ctx));
+}
 
 // Evaluate a _build.* operator using evaluateOperators
 function evaluateBuildOperator(node, ctx) {
+  if (type.isObject(node) && Object.hasOwn(node, '_build.env')) {
+    recordUnsetEnvRead(node, ctx);
+  }
   const { output, errors } = evaluateOperators({
     input: node,
     operators: ctx.operators,
     operatorPrefix: '_build.',
     env: ctx.env,
     lowdefyApp: ctx.lowdefyApp,
+    authConfig: ctx.buildContext.authConfigProjection,
     dynamicIdentifiers: ctx.dynamicIdentifiers,
   });
   if (errors.length > 0) {
@@ -222,14 +271,14 @@ function evaluateBuildOperator(node, ctx) {
 // site below passes no `options` argument at all, so a missing key comes back from `get` as
 // `undefined` instead of a default — resolveVar relies on that `undefined` to tell "var not
 // provided" apart from "var provided as null".
-function readVar(key, ctx, options) {
+function readVar({ key, node, ctx, options }) {
   try {
     return get(ctx.vars, key, options);
   } catch (error) {
     if (!(error instanceof ReservedKeyError)) throw error;
     throw new ConfigError(`_var key "${key}" is a reserved name.`, {
       cause: error,
-      filePath: ctx.currentFile,
+      ...nodeLocation(node, ctx),
     });
   }
 }
@@ -240,13 +289,13 @@ function resolveVar(node, ctx) {
 
   // String form: { _var: "key" }
   if (type.isString(varDef)) {
-    const value = readVar(varDef, ctx, { default: null });
+    const value = readVar({ key: varDef, node, ctx, options: { default: null } });
     return cloneWithMarkers(value, { assignRefId: ctx.sourceRefId });
   }
 
   // Object form: { _var: { key, default } }
   if (type.isObject(varDef) && type.isString(varDef.key)) {
-    const varFromParent = readVar(varDef.key, ctx);
+    const varFromParent = readVar({ key: varDef.key, node, ctx });
 
     // Var provided (even if null) → use parent's sourceRefId for location
     if (!type.isUndefined(varFromParent)) {
@@ -258,9 +307,10 @@ function resolveVar(node, ctx) {
     return cloneWithMarkers(defaultValue);
   }
 
-  throw new ConfigError('_var operator takes a string or object with "key" field as arguments.', {
-    filePath: ctx.currentFile,
-  });
+  throw new ConfigError(
+    '_var operator takes a string or object with "key" field as arguments.',
+    nodeLocation(node, ctx)
+  );
 }
 
 // Resolve a _module.var node via lazy resolution against the module entry.
@@ -268,9 +318,7 @@ async function resolveModuleVar(node, ctx) {
   const key = node['_module.var'];
 
   if (!type.isString(key)) {
-    throw new ConfigError('_module.var operator takes a string argument.', {
-      filePath: ctx.currentFile,
-    });
+    throw new ConfigError('_module.var operator takes a string argument.', nodeLocation(node, ctx));
   }
 
   const value = await resolveEffectiveVar(key, ctx.moduleEntry, ctx);
@@ -322,14 +370,19 @@ async function deepForcePlaceholders(value, ctx) {
 }
 
 // Build a merged object for namespace vars (vars with `properties`). Each
-// declared property resolves through resolveEffectiveVar — consumer values
-// take precedence per-leaf; missing leaves fall back to defaults.
+// declared property resolves through resolveVarValue — consumer values take
+// precedence per-leaf; missing leaves fall back to defaults. A property with
+// neither stays absent rather than null: blocks forward these objects as
+// props, and libraries apply their own defaults only to undefined.
 async function resolveNamespaceVar(prefix, varDef, moduleEntry, ctx) {
   const result = {};
 
   for (const propName of Object.keys(varDef.properties)) {
     const fullKey = `${prefix}.${propName}`;
-    result[propName] = await resolveEffectiveVar(fullKey, moduleEntry, ctx);
+    const value = await resolveVarValue(fullKey, moduleEntry, ctx);
+    if (!type.isUndefined(value)) {
+      result[propName] = value;
+    }
   }
 
   return result;
@@ -364,8 +417,17 @@ async function readConsumerValue(moduleEntry, key, ctx) {
   return undefined;
 }
 
-// Core lazy var resolution with caching on the module entry.
+// The value a _module.var read returns: an unset var with no default reads as
+// null, like _var.
 async function resolveEffectiveVar(key, moduleEntry, ctx) {
+  const value = await resolveVarValue(key, moduleEntry, ctx);
+  return type.isUndefined(value) ? null : value;
+}
+
+// Core lazy var resolution with caching on the module entry. Returns undefined
+// for a var the consumer never set and the manifest gives no default, so a
+// namespace object can leave it out; a consumer's explicit null stays null.
+async function resolveVarValue(key, moduleEntry, ctx) {
   if (Object.hasOwn(moduleEntry.resolvedVarCache, key)) {
     return moduleEntry.resolvedVarCache[key];
   }
@@ -387,11 +449,9 @@ async function resolveEffectiveVar(key, moduleEntry, ctx) {
     // stay raw in varDefs and need no walk.
     const defaultRecordId = getPlaceholderId(varDef.default);
     result =
-      defaultRecordId !== undefined
-        ? await resolveDeferred(ctx, defaultRecordId)
-        : varDef.default;
+      defaultRecordId !== undefined ? await resolveDeferred(ctx, defaultRecordId) : varDef.default;
   } else {
-    result = null;
+    result = consumerValue;
   }
 
   moduleEntry.resolvedVarCache[key] = result;
@@ -405,6 +465,7 @@ const MODULE_ID_OPERATOR_KEYS = [
   '_module.endpointId',
   '_module.agentId',
   '_module.notificationId',
+  '_module.websocketId',
   '_module.id',
 ];
 
@@ -574,6 +635,34 @@ function resolveModuleNotificationId(arg, moduleEntry, context, configKey) {
   });
 }
 
+// Resolve _module.websocketId
+function resolveModuleWebsocketId(arg, moduleEntry, context, configKey) {
+  if (type.isString(arg)) {
+    if (!moduleEntry) {
+      throw new ConfigError(
+        '_module.websocketId string form is ambiguous at the app level — no module to scope against. Use { id, module } to specify the target module.',
+        { configKey }
+      );
+    }
+    return `${moduleEntry.id}/${arg}`;
+  }
+
+  if (type.isObject(arg) && type.isString(arg.id) && type.isString(arg.module)) {
+    const targetEntry = resolveDepTarget({
+      moduleEntry,
+      depName: arg.module,
+      context,
+      configKey,
+      usage: `_module.websocketId { id: "${arg.id}", module: "${arg.module}" }`,
+    });
+    return `${targetEntry.id}/${arg.id}`;
+  }
+
+  throw new ConfigError('_module.websocketId requires a string or object { id, module }.', {
+    configKey,
+  });
+}
+
 // Resolve _module.id
 function resolveModuleId(arg, moduleEntry, context, configKey) {
   if (!type.isObject(arg)) {
@@ -636,9 +725,7 @@ async function resolveModuleIdOperator(node, ctx) {
           refId: ctx.refId,
           configKey: configKey ?? null,
         },
-        slot: nested
-          ? null
-          : { entryId: ctx.entryId, section, path: ctx.path },
+        slot: nested ? null : { entryId: ctx.entryId, section, path: ctx.path },
       });
       return makePlaceholder(recordId);
     }
@@ -658,6 +745,9 @@ async function resolveModuleIdOperator(node, ctx) {
       configKey
     );
   }
+  if (!type.isUndefined(node['_module.websocketId'])) {
+    return resolveModuleWebsocketId(node['_module.websocketId'], moduleEntry, context, configKey);
+  }
   if (!type.isUndefined(node['_module.id'])) {
     return resolveModuleId(node['_module.id'], moduleEntry, context, configKey);
   }
@@ -672,7 +762,11 @@ async function resolveModuleIdOperator(node, ctx) {
 async function prepareRef(node, ctx) {
   // 1. Create ref definition
   const lineNumber = node['~l'];
-  const refDef = makeRefDefinition(node._ref, ctx.refId, ctx.refMap, lineNumber, ctx.path);
+  // A JIT page build writes its refs to its own jitMaps file, and readers merge
+  // the files of several build contexts. Walker paths repeat from page to page
+  // and context to context, so a JIT ref takes a counter id, which never does.
+  const walkerPath = type.isUndefined(ctx.buildContext.jitMaps) ? ctx.path : null;
+  const refDef = makeRefDefinition(node._ref, ctx.refId, ctx.refMap, lineNumber, walkerPath);
 
   // 2. Store unresolved vars before resolution mutates them, and clone so
   //    resolution operates on a copy (preserving original.vars for resolver refs).
@@ -704,7 +798,7 @@ async function prepareRef(node, ctx) {
             ctx.deferModuleRefs && refDef.module ? ctx.child('$refvars').child(varKey) : ctx;
           refDef.vars[varKey] = await resolve(refDef.vars[varKey], varCtx);
         }
-      }),
+      })
     );
   }
   if (type.isObject(refDef.key)) {
@@ -714,22 +808,25 @@ async function prepareRef(node, ctx) {
   // 4. Module path resolution: resolve relative paths from the module root
   rebaseModuleRefPaths({ refDef, moduleRoot: ctx.moduleRoot });
 
-  // 5. Update refMap with resolved path; store original for resolver refs
+  // 5. Update refMap with resolved path; store original for resolver refs, and
+  //    the transformer, which a JIT page build runs again on a page's own ref.
   ctx.refMap[refDef.id].path = refDef.path;
   if (!refDef.path) {
     ctx.refMap[refDef.id].original = refDef.original;
+  }
+  if (!type.isNone(refDef.transformer)) {
+    ctx.refMap[refDef.id].transformer = refDef.transformer;
   }
 
   // 6. Path escape constraint: module refs cannot escape the package root
   if (ctx.packageRoot) {
     for (const field of ['path', 'resolver', 'transformer']) {
       const value = refDef[field];
-      if (
-        type.isString(value) &&
-        !value.startsWith(ctx.packageRoot + '/') &&
-        value !== ctx.packageRoot
-      ) {
-        throw new ConfigError(`Module ref ${field} "${value}" escapes the package root.`);
+      if (type.isString(value) && !isPathInsideRoot({ root: ctx.packageRoot, target: value })) {
+        throw new ConfigError(`Module ref ${field} "${value}" escapes the package root.`, {
+          filePath: ctx.currentFile,
+          lineNumber: ctx.currentFile ? lineNumber : null,
+        });
       }
     }
   }
@@ -892,6 +989,8 @@ async function loadAndWalkRef(refDef, ctx, { configKey, referencedFrom } = {}) {
       ctx.collectError(error);
       return null;
     }
+    // The innermost ref being resolved is the file an unexpected error came from.
+    error.filePath ??= refDef.path;
     throw error;
   }
 }
@@ -966,7 +1065,7 @@ async function resolve(node, ctx) {
     await Promise.all(
       node.map(async (item, i) => {
         node[i] = await resolve(item, ctx.child(String(i)));
-      }),
+      })
     );
     return node;
   }
@@ -1020,7 +1119,7 @@ async function resolve(node, ctx) {
         }
       }
       node[key] = await resolve(node[key], ctx.child(key));
-    }),
+    })
   );
 
   // 6. _var — substitution (children already resolved)
@@ -1051,7 +1150,9 @@ async function resolve(node, ctx) {
           { filePath: ctx.currentFile }
         );
       }
-      throw new ConfigError('_module.var cannot be used at the app level.');
+      throw new ConfigError('_module.var cannot be used at the app level.', {
+        filePath: ctx.currentFile,
+      });
     }
     return resolve(await resolveModuleVar(node, ctx), ctx);
   }
@@ -1071,6 +1172,19 @@ async function resolve(node, ctx) {
     if (ctx.deferModuleRefs && findPlaceholderInSubtree(node)) {
       return node;
     }
+    // Before the auth-config projection is computed, a fold over
+    // _build.authConfig cannot resolve. On walks whose output is re-walked
+    // post-projection (deferAuthConfig), leave the node unevaluated — its
+    // children (_ref, _var) are already resolved, so the fold happens where
+    // the deferred value is consumed. Bottom-up resolution makes this guard
+    // cover every enclosing _build.* fold of the authConfig read too.
+    if (
+      ctx.deferAuthConfig &&
+      type.isUndefined(ctx.buildContext.authConfigProjection) &&
+      findAuthConfigInSubtree(node)
+    ) {
+      return node;
+    }
     const result = evaluateBuildOperator(node, ctx);
     tagRefDeep(result, ctx.refId);
     return result;
@@ -1087,6 +1201,19 @@ function findPlaceholderInSubtree(node) {
   }
   if (type.isObject(node)) {
     return Object.keys(node).some((key) => findPlaceholderInSubtree(node[key]));
+  }
+  return false;
+}
+
+// Does any node in the subtree read _build.authConfig?
+function findAuthConfigInSubtree(node) {
+  if (type.isArray(node)) {
+    return node.some((item) => findAuthConfigInSubtree(item));
+  }
+  if (type.isObject(node)) {
+    return Object.keys(node).some(
+      (key) => key === '_build.authConfig' || findAuthConfigInSubtree(node[key])
+    );
   }
   return false;
 }

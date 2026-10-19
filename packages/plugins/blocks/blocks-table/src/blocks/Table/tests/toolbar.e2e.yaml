@@ -1,0 +1,140 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: toolbar
+type: Box
+
+blocks:
+  # ============================================
+  # EVERY TOOLBAR ITEM
+  # ============================================
+
+  - id: tb
+    type: Table
+    properties:
+      toolbar:
+        search: true
+        quickFilters: [team, city]
+        filter: true
+        sort: true
+        group: true
+        columns: true
+        density: true
+        export: true
+      defaultView:
+        filter:
+          and:
+            - key: age
+              op: gte
+              value: 20
+      columns:
+        - key: name
+          title: Name
+        - key: team
+          options: [Blue, Red]
+          groupable: true
+        - key: age
+          type: number
+          width: 100
+        - key: city
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+    slots:
+      toolbarStart:
+        blocks:
+          - id: tb_new
+            type: Button
+            properties:
+              title: New person
+      toolbarEnd:
+        blocks:
+          - id: tb_end
+            type: Span
+            properties:
+              content: end slot
+    events:
+      onChange:
+        - id: set_cause
+          type: SetState
+          params:
+            tb_cause:
+              _event: cause
+
+  - id: tb_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'view='
+          - _json.stringify:
+              - _state: tb.view
+              - space: 0
+          - ' cause='
+          - _if_none:
+              - _state: tb_cause
+              - none
+
+  # ============================================
+  # toolbar: true
+  # ============================================
+
+  - id: tb_true
+    type: Table
+    properties:
+      toolbar: true
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+
+  # ============================================
+  # OFF BY DEFAULT, SLOTS ONLY, EMPTY SLOT
+  # ============================================
+
+  - id: tb_off
+    type: Table
+    properties:
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+
+  - id: tb_slots
+    type: Table
+    properties:
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+    slots:
+      toolbarEnd:
+        blocks:
+          - id: tb_slots_button
+            type: Button
+            properties:
+              title: Only a slot
+
+  - id: tb_empty
+    type: Table
+    properties:
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data: []
+    slots:
+      empty:
+        blocks:
+          - id: tb_empty_message
+            type: Paragraph
+            properties:
+              content: No people yet. Add the first one.

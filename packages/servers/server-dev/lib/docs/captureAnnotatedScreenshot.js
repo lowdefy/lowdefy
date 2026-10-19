@@ -17,34 +17,40 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { urlQuery as urlQueryFn } from '@lowdefy/helpers';
+
 import drawAnnotationsSvg from '../../client/feedback/drawAnnotationsSvg.js';
 import { getBrowser, openPage } from './getBrowser.js';
+import noBrowserError from './noBrowserError.js';
+import readPagePath from './readPagePath.js';
+import withBrowserSlot from './withBrowserSlot.js';
 
-// Renders the page headless at the batch's recorded viewport/scroll, injects
-// the developer's drawn shapes and element outlines as an SVG layer inside
-// the page, screenshots the composite, and saves it under the config dir's
-// .lowdefy/annotations/ (gitignored). The saved path goes into the formatted
-// feedback text so an agent can read the image. Never throws — returns
-// { path } or { error }.
-async function captureAnnotatedScreenshot({ origin, batch, fileName }) {
+// Renders the batch's page instance (pageId, pathParams, urlQuery) headless at
+// the batch's recorded viewport/scroll, injects the developer's drawn shapes
+// and element outlines as an SVG layer inside the page, screenshots the
+// composite, and saves it under the config dir's .lowdefy/annotations/
+// (gitignored). The saved path goes into the formatted feedback text so an
+// agent can read the image. Never throws — returns { path } or { error }.
+async function captureInBrowser({ origin, batch, fileName }) {
   let browser;
   try {
     browser = await getBrowser();
   } catch (error) {
-    return { error: `No Chromium available for the annotated screenshot (${error.message}).` };
+    return { error: noBrowserError(error) };
   }
 
   const viewport = batch.viewport ?? {};
   const width = viewport.width || 1280;
   const height = viewport.height || 800;
-  const urlQuery = batch.urlQuery && batch.urlQuery !== '?' ? batch.urlQuery : '';
-
   let context;
   try {
     const opened = await openPage({
       browser,
       origin,
-      pageId: `${batch.pageId}${urlQuery}`,
+      pageId: batch.pageId,
+      path: readPagePath({ pageId: batch.pageId }),
+      pathParams: batch.pathParams,
+      urlQuery: urlQueryFn.parse(batch.urlQuery ?? ''),
       width,
       height,
     });
@@ -75,7 +81,7 @@ async function captureAnnotatedScreenshot({ origin, batch, fileName }) {
       fileName ?? `${batch.pageId}-${new Date().toISOString().replace(/[:.]/g, '-')}.png`;
     fs.writeFileSync(path.join(dir, name), buffer);
 
-    return { path: path.join('.lowdefy', 'annotations', name) };
+    return { path: path.posix.join('.lowdefy', 'annotations', name) };
   } catch (error) {
     return { error: `Failed to capture annotated screenshot: ${error.message}` };
   } finally {
@@ -83,6 +89,11 @@ async function captureAnnotatedScreenshot({ origin, batch, fileName }) {
       await context.close();
     }
   }
+}
+
+// One browser slot for the whole capture.
+async function captureAnnotatedScreenshot({ origin, batch, fileName }) {
+  return withBrowserSlot({ task: () => captureInBrowser({ origin, batch, fileName }) });
 }
 
 export default captureAnnotatedScreenshot;

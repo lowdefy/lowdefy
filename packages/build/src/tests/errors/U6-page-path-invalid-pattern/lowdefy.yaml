@@ -1,0 +1,14 @@
+# U6: Invalid Path Pattern
+# =========================
+# Tests that a path the pattern parser refuses (here a placeholder inside a
+# segment) fails the build at the page.
+#
+# Expected error:
+#   [Config Error] Page "ticket": Page path "tickets/ticket-{id}" has a placeholder inside segment ...
+
+lowdefy: local
+
+pages:
+  - id: ticket
+    type: Box
+    path: tickets/ticket-{id}

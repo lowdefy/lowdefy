@@ -1,0 +1,29 @@
+# Writes nothing itself: it writes only through log_activity, so the
+# exercised path marks it write: true through its nested endpoint.
+id: notify
+type: Api
+routine:
+  - id: call_log_activity
+    type: CallApi
+    properties:
+      endpointId: log_activity
+      payload:
+        source: notify
+  - id: call_detached_log
+    type: CallApi
+    properties:
+      endpointId: detached_log
+      detached: true
+  # A computed endpointId cannot be followed from config: counted as
+  # unfollowed on the exercised path.
+  - id: call_computed
+    type: CallApi
+    properties:
+      endpointId:
+        _if_none:
+          - _payload: target
+          - log_activity
+      payload:
+        source: computed
+  - ':return':
+      notified: true

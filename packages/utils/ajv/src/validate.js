@@ -14,19 +14,35 @@
   limitations under the License.
 */
 
-import ajv from './ajvInstance.js';
+import compile from './compile.js';
 import createErrorMessage from './createErrorMessage.js';
 
+// A schema object that stays the same (a plugin schema, a cached artifact)
+// compiles once; a fresh object compiles again and is released with it.
+const validators = new WeakMap();
+
+function getValidator(schema) {
+  if (typeof schema !== 'object') {
+    return compile({ schema });
+  }
+  let validator = validators.get(schema);
+  if (!validator) {
+    validator = compile({ schema });
+    validators.set(schema, validator);
+  }
+  return validator;
+}
+
 function validate({ schema, data, returnErrors = false }) {
-  const valid = ajv.validate(schema, data);
+  const { valid, errors } = getValidator(schema)(data);
   if (!valid) {
     if (returnErrors) {
       return {
         valid: false,
-        errors: ajv.errors,
+        errors,
       };
     }
-    throw new Error(createErrorMessage(ajv.errors));
+    throw new Error(createErrorMessage(errors));
   }
   return { valid: true };
 }

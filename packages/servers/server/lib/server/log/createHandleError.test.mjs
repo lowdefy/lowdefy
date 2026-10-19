@@ -15,6 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { TenantIntegrityError } from '@lowdefy/errors';
 
 const secret = 'planted-handle-error-secret';
 
@@ -82,4 +83,20 @@ test('handleError fallback output carries no axios config auth and no planted se
   expect(logged.message).toBe('Request failed for key [REDACTED]');
   expect(logged.code).toBe('ERR_BAD_REQUEST');
   expect(JSON.parse(console.error.mock.calls[2][0]).message).toBe('Log sink rejected [REDACTED]');
+});
+
+test('handleError logs a TenantIntegrityError as tenant_integrity_error with endpoint and organization', async () => {
+  const context = testContext();
+  context.endpointId = 'save-contact';
+  context.user = { id: 'u1', organization_id: 'org_a' };
+  const handleError = createHandleError({ context });
+
+  await handleError(
+    new TenantIntegrityError('bad row', { collection: 'contacts', organizationId: 'org_a' })
+  );
+
+  const [fields] = context.logger.error.mock.calls[0];
+  expect(fields.event).toBe('tenant_integrity_error');
+  expect(fields.endpointId).toBe('save-contact');
+  expect(fields.organization_id).toBe('org_a');
 });

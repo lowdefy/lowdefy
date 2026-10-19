@@ -14,9 +14,19 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { withBlockDefaults } from '@lowdefy/block-utils';
-import ReactECharts from 'echarts-for-react';
+
+import createLazyReactECharts from './createLazyReactECharts.js';
+
+// EChart stays an eager block: it registers no methods, and its outer div owns
+// the size. Only the renderer inside that div is lazy, so the box is identical
+// before and after echarts loads.
+let LazyReactECharts = createLazyReactECharts({
+  onFailure: (retry) => {
+    LazyReactECharts = retry;
+  },
+});
 
 class EChart extends React.Component {
   constructor(props) {
@@ -108,26 +118,28 @@ class EChart extends React.Component {
           ...this.props.styles?.element,
         }}
       >
-        <ReactECharts
-          lazyUpdate={true}
-          notMerge={true}
-          onEvents={this.onEvents ?? {}}
-          option={{
-            ...(this.props.properties.option ?? {}),
-            dataset:
-              this.props.properties.option?.dataset &&
-              this.props.properties.option?.dataset?.source === null
-                ? {
-                    ...this.props.properties.option.dataset,
-                    source: [],
-                  }
-                : this.props.properties.option?.dataset,
-          }}
-          opts={this.props.properties.init}
-          style={{ width: '100%', height: '100%' }}
-          theme={this.initialTheme}
-          onChartReady={this.onChartReady}
-        />
+        <Suspense fallback={null}>
+          <LazyReactECharts
+            lazyUpdate={true}
+            notMerge={true}
+            onEvents={this.onEvents ?? {}}
+            option={{
+              ...(this.props.properties.option ?? {}),
+              dataset:
+                this.props.properties.option?.dataset &&
+                this.props.properties.option?.dataset?.source === null
+                  ? {
+                      ...this.props.properties.option.dataset,
+                      source: [],
+                    }
+                  : this.props.properties.option?.dataset,
+            }}
+            opts={this.props.properties.init}
+            style={{ width: '100%', height: '100%' }}
+            theme={this.initialTheme}
+            onChartReady={this.onChartReady}
+          />
+        </Suspense>
       </div>
     );
   }

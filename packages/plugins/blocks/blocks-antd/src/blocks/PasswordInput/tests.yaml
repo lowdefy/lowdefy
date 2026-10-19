@@ -76,3 +76,23 @@
   properties:
     label:
       extra: showing extra
+- id: 'properties.prefixIcon: lock'
+  type: PasswordInput
+  properties:
+    prefixIcon: lock
+- id: 'properties.prefix: PIN'
+  type: PasswordInput
+  properties:
+    prefix: PIN
+- id: 'properties.allowClear: true'
+  type: PasswordInput
+  properties:
+    allowClear: true
+- id: 'properties.maxLength: 16'
+  type: PasswordInput
+  properties:
+    maxLength: 16
+- id: 'properties.variant: underlined'
+  type: PasswordInput
+  properties:
+    variant: underlined

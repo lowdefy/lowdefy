@@ -16,16 +16,18 @@
 
 import { jest } from '@jest/globals';
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { act, render } from '@testing-library/react';
+import { LucideProvider } from 'lucide-react/dist/esm/context.mjs';
 
-// Mock @ant-design/icons to avoid ESM/CJS interop issues in Jest.
-// The real Icon component wraps children in <span role="img" class="anticon">.
+// Mock @ant-design/icons to avoid ESM/CJS interop issues in Jest. Like the real
+// Icon, it renders `component` inside <span role="img" class="anticon">.
 jest.unstable_mockModule('@ant-design/icons', () => ({
   __esModule: true,
-  default: React.forwardRef(({ component: Component, ...rest }, ref) =>
-    Component ? <Component /> : null
-  ),
+  default: React.forwardRef(({ className, component: Component, children }, ref) => (
+    <span ref={ref} role="img" className={['anticon', className].filter(Boolean).join(' ')}>
+      <Component>{children}</Component>
+    </span>
+  )),
 }));
 
 const { default: createIcon } = await import('./createIcon.js');
@@ -39,98 +41,530 @@ beforeAll(() => {
 });
 
 const Icons = {
-  AiIcon: (props) => <svg {...props} data-testid="AiIcon" />,
-  AiOutlineExclamationCircle: (props) => (
-    <svg {...props} data-testid="AiOutlineExclamationCircle" />
-  ),
-  AiOutlineLoading3Quarters: (props) => <svg {...props} data-testid="AiOutlineLoading3Quarters" />,
-  ErrorIcon: () => {
-    throw new Error('ErrorIcon');
+  Pencil: {
+    node: [
+      ['path', { d: 'M21 6.8a1 1 0 0 0-3.9-3.9L3.8 16.2' }],
+      ['path', { d: 'm15 5 4 4' }],
+    ],
+  },
+  edit: {
+    node: [
+      ['path', { d: 'M21 6.8a1 1 0 0 0-3.9-3.9L3.8 16.2' }],
+      ['path', { d: 'm15 5 4 4' }],
+    ],
+  },
+  Nested: {
+    node: [
+      ['g', { transform: 'translate(2 2)' }, [['circle', { cx: 10, cy: 10, r: 8 }]]],
+      ['path', { d: 'M2 2h4' }],
+    ],
+  },
+  'react-icons:AiOutlineUser': {
+    node: [['path', { d: 'M858.5 763.6' }]],
+    size: 1024,
+    attrs: { fill: 'currentColor', stroke: 'none' },
+  },
+  Tall: {
+    node: [['rect', { x: 2, y: 2, width: 12, height: 16 }]],
+    width: 16,
+    height: 20,
+  },
+  Broken: { node: 'not-a-node-array' },
+  loading: { node: [['path', { d: 'M21 12a9 9 0 1 1-6.219-8.56' }]] },
+  'icon-missing': {
+    node: [
+      ['circle', { cx: 12, cy: 12, r: 10 }],
+      ['line', { x1: 12, x2: 12, y1: 8, y2: 12 }],
+    ],
   },
 };
 
-test('Icon default', () => {
-  const IconComponent = createIcon(Icons);
+function getSvg(container) {
+  return container.querySelector('svg');
+}
+
+test('Icon renders icon data as a lucide svg inside the antd anticon span', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <IconComponent blockId="test-id" methods={methods} properties={{ name: 'Pencil' }} />
+  );
+  expect(container.firstChild).toMatchSnapshot();
+  const span = container.firstChild;
+  expect(span.getAttribute('class')).toBe('anticon');
+  expect(span.firstChild.tagName).toBe('svg');
+  expect(getSvg(container).getAttribute('class')).toBe('lucide');
+  expect(getSvg(container).getAttribute('viewBox')).toBe('0 0 24 24');
+});
+
+test('Icon keeps the page path params off the svg', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const { container } = render(
+    <IconComponent
+      blockId="test-id"
+      methods={methods}
+      pathParams={{ id: '1' }}
+      properties={{ name: 'Pencil' }}
+    />
+  );
+  expect(getSvg(container).hasAttribute('pathParams')).toBe(false);
+  expect(getSvg(container).hasAttribute('pathparams')).toBe(false);
+  expect(errorSpy).not.toHaveBeenCalled();
+  errorSpy.mockRestore();
+});
+
+test('Icon accepts a string as properties', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <IconComponent blockId="test-id" methods={methods} properties="Pencil" />
+  );
+  expect(getSvg(container).querySelectorAll('path')).toHaveLength(2);
+  expect(getSvg(container).querySelector('title').textContent).toBe('Pencil');
+});
+
+test('Icon renders nested icon nodes', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <IconComponent blockId="nested" methods={methods} properties={{ name: 'Nested' }} />
+  );
+  const group = getSvg(container).querySelector('g');
+  expect(group.getAttribute('transform')).toBe('translate(2 2)');
+  expect(group.querySelector('circle').getAttribute('r')).toBe('8');
+  expect(getSvg(container).querySelector(':scope > path').getAttribute('d')).toBe('M2 2h4');
+});
+
+test('Icon uses lucide defaults when there is no provider', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <IconComponent blockId="defaults" methods={methods} properties={{ name: 'Pencil' }} />
+  );
+  const svg = getSvg(container);
+  expect(svg.getAttribute('width')).toBe('24');
+  expect(svg.getAttribute('stroke-width')).toBe('2');
+  expect(svg.getAttribute('stroke')).toBe('currentColor');
+  expect(svg.getAttribute('fill')).toBe('none');
+});
+
+test('Icon applies LucideProvider size and strokeWidth defaults', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <LucideProvider size="1em" strokeWidth={1.5}>
+      <IconComponent blockId="provider" methods={methods} properties={{ name: 'Pencil' }} />
+    </LucideProvider>
+  );
+  const svg = getSvg(container);
+  expect(svg.getAttribute('width')).toBe('1em');
+  expect(svg.getAttribute('height')).toBe('1em');
+  expect(svg.getAttribute('stroke-width')).toBe('1.5');
+});
+
+test('Icon per-icon size and strokeWidth override the provider', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <LucideProvider size="1em" strokeWidth={1.5}>
+      <IconComponent
+        blockId="override"
+        methods={methods}
+        properties={{ name: 'Pencil', size: 32, strokeWidth: 1 }}
+      />
+    </LucideProvider>
+  );
+  const svg = getSvg(container);
+  expect(svg.getAttribute('width')).toBe('32');
+  expect(svg.getAttribute('height')).toBe('32');
+  expect(svg.getAttribute('stroke-width')).toBe('1');
+});
+
+test('Icon nonScalingStroke from the provider reaches every shape, including nested ones', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <LucideProvider nonScalingStroke={true}>
+      <IconComponent blockId="nss" methods={methods} properties={{ name: 'Nested' }} />
+    </LucideProvider>
+  );
+  const svg = getSvg(container);
+  expect(svg.querySelector('circle').getAttribute('vector-effect')).toBe('non-scaling-stroke');
+  expect(svg.querySelector(':scope > path').getAttribute('vector-effect')).toBe(
+    'non-scaling-stroke'
+  );
+  expect(svg.querySelector('g').hasAttribute('vector-effect')).toBe(false);
+});
+
+test('Icon per-icon nonScalingStroke overrides the provider', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container: offContainer } = render(
+    <LucideProvider nonScalingStroke={true}>
+      <IconComponent
+        blockId="nss-off"
+        methods={methods}
+        properties={{ name: 'Pencil', nonScalingStroke: false }}
+      />
+    </LucideProvider>
+  );
+  getSvg(offContainer)
+    .querySelectorAll('path')
+    .forEach((path) => expect(path.hasAttribute('vector-effect')).toBe(false));
+  const { container: onContainer } = render(
+    <IconComponent
+      blockId="nss-on"
+      methods={methods}
+      properties={{ name: 'Pencil', nonScalingStroke: true }}
+    />
+  );
+  getSvg(onContainer)
+    .querySelectorAll('path')
+    .forEach((path) => expect(path.getAttribute('vector-effect')).toBe('non-scaling-stroke'));
+});
+
+test('Icon color and rotate go through CSS, not SVG attributes', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <IconComponent
+      blockId="css"
+      methods={methods}
+      properties={{ name: 'Pencil', color: 'red', rotate: 90 }}
+    />
+  );
+  const svg = getSvg(container);
+  expect(svg.style.color).toBe('red');
+  expect(svg.style.transform).toBe('rotate(90deg)');
+  expect(svg.getAttribute('stroke')).toBe('currentColor');
+  expect(svg.hasAttribute('color')).toBe(false);
+  expect(svg.hasAttribute('rotate')).toBe(false);
+});
+
+test('Icon styles.element and classNames.element reach the svg', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <IconComponent
+      blockId="styled"
+      classNames={{ element: 'my-icon' }}
+      methods={methods}
+      properties={{ name: 'Pencil', color: 'red' }}
+      styles={{ element: { background: 'yellow', color: 'blue' } }}
+    />
+  );
+  const svg = getSvg(container);
+  expect(svg.style.background).toBe('yellow');
+  expect(svg.style.color).toBe('blue');
+  expect(svg.getAttribute('class')).toBe('lucide my-icon');
+});
+
+test('Icon className from antd goes on the anticon span', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <IconComponent
+      blockId="classed"
+      className="ant-collapse-arrow"
+      methods={methods}
+      properties={{ name: 'Pencil' }}
+    />
+  );
+  expect(container.firstChild.getAttribute('class')).toBe('anticon ant-collapse-arrow');
+  expect(getSvg(container).getAttribute('class')).toBe('lucide');
+});
+
+test('Icon renders a title child and no aria-hidden when it has a title', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <IconComponent
+      blockId="titled"
+      methods={methods}
+      properties={{ name: 'Pencil', title: 'Edit' }}
+    />
+  );
+  const svg = getSvg(container);
+  expect(svg.firstChild.tagName).toBe('title');
+  expect(svg.firstChild.textContent).toBe('Edit');
+  expect(svg.hasAttribute('aria-hidden')).toBe(false);
+  expect(svg.hasAttribute('title')).toBe(false);
+});
+
+test('Icon sets aria-hidden and renders no title when the title is empty', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <IconComponent
+      blockId="decorative"
+      methods={methods}
+      properties={{ name: 'Pencil', title: '' }}
+    />
+  );
+  const svg = getSvg(container);
+  expect(svg.getAttribute('aria-hidden')).toBe('true');
+  expect(svg.querySelector('title')).toBe(null);
+});
+
+test('Icon with an empty title but an aria-label is not hidden', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <IconComponent
+      aria-label="Close"
+      blockId="labelled"
+      methods={methods}
+      properties={{ name: 'Pencil', title: '' }}
+    />
+  );
+  const svg = getSvg(container);
+  expect(svg.hasAttribute('aria-hidden')).toBe(false);
+  expect(svg.getAttribute('aria-label')).toBe('Close');
+});
+
+test('Icon generates titles from semantic, set and qualified names', () => {
+  const IconComponent = createIcon({ icons: { ...Icons, 'more-vertical': Icons.Pencil } });
+  render(
+    <>
+      <IconComponent blockId="a" methods={methods} properties={{ name: 'more-vertical' }} />
+      <IconComponent blockId="b" methods={methods} properties={{ name: 'Pencil' }} />
+      <IconComponent
+        blockId="c"
+        methods={methods}
+        properties={{ name: 'react-icons:AiOutlineUser' }}
+      />
+    </>
+  );
+  expect(document.querySelector('#a title').textContent).toBe('More vertical');
+  expect(document.querySelector('#b title').textContent).toBe('Pencil');
+  expect(document.querySelector('#c title').textContent).toBe('Ai outline user');
+});
+
+test('Icon spin renders the spinning loading icon', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <IconComponent blockId="spin" methods={methods} properties={{ name: 'Pencil', spin: true }} />
+  );
+  const svg = getSvg(container);
+  expect(svg.getAttribute('class')).toBe('lucide undefined');
+  expect(svg.querySelector('path').getAttribute('d')).toBe(Icons.loading.node[0][1].d);
+});
+
+test('Icon onClick loading renders the loading icon unless disableLoadingIcon is set', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container: loadingContainer } = render(
+    <IconComponent
+      blockId="click-loading"
+      events={{ onClick: { loading: true } }}
+      methods={methods}
+      properties={{ name: 'Pencil' }}
+    />
+  );
+  expect(getSvg(loadingContainer).querySelector('path').getAttribute('d')).toBe(
+    Icons.loading.node[0][1].d
+  );
+  const { container: disabledContainer } = render(
+    <IconComponent
+      blockId="click-disabled"
+      events={{ onClick: { loading: true } }}
+      methods={methods}
+      properties={{ name: 'Pencil', disableLoadingIcon: true }}
+    />
+  );
+  expect(getSvg(disabledContainer).querySelectorAll('path')).toHaveLength(2);
+});
+
+test('Icon onClick event triggers onClick and shows a pointer cursor', () => {
+  const triggerEvent = jest.fn();
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <IconComponent
+      blockId="click"
+      events={{ onClick: { loading: false } }}
+      methods={{ triggerEvent }}
+      properties={{ name: 'Pencil' }}
+    />
+  );
+  const svg = getSvg(container);
+  expect(svg.style.cursor).toBe('pointer');
+  svg.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  expect(triggerEvent).toHaveBeenCalledWith({ name: 'onClick' });
+});
+
+test('Icon with an unknown name renders icon-missing in red', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <IconComponent blockId="unknown" methods={methods} properties={{ name: 'NotAnIcon' }} />
+  );
+  const svg = getSvg(container);
+  expect(svg.style.color).toBe('rgb(255, 0, 0)');
+  expect(svg.querySelector('circle')).not.toBe(null);
+  expect(svg.querySelector('title').textContent).toBe('Not an icon');
+});
+
+test('Icon without a name renders icon-missing in red', () => {
+  const IconComponent = createIcon({ icons: Icons });
   const { container } = render(<IconComponent methods={methods} />);
   expect(container.firstChild).toMatchSnapshot();
 });
 
-test('Icon default and id', () => {
-  const IconComponent = createIcon(Icons);
-  const { container } = render(<IconComponent id="test-id" methods={methods} />);
-  expect(container.firstChild).toMatchSnapshot();
-});
-
-test('Icon properties.name', () => {
-  const IconComponent = createIcon(Icons);
+test('Icon does not resolve object prototype keys as icon names', () => {
+  const IconComponent = createIcon({ icons: Icons });
   const { container } = render(
-    <IconComponent id="test-id" methods={methods} properties={{ name: 'AiIcon' }} />
+    <IconComponent blockId="proto" methods={methods} properties={{ name: 'constructor' }} />
   );
-  expect(container.firstChild).toMatchSnapshot();
+  expect(getSvg(container).querySelector('circle')).not.toBe(null);
 });
 
-test('Icon properties string', () => {
-  const IconComponent = createIcon(Icons);
+test('Icon with icon data that fails to render falls back to icon-missing in red', () => {
+  const IconComponent = createIcon({ icons: Icons });
   const { container } = render(
-    <IconComponent id="test-id" methods={methods} properties="AiIcon" />
+    <IconComponent blockId="broken" methods={methods} properties={{ name: 'Broken' }} />
   );
-  expect(container.firstChild).toMatchSnapshot();
+  const svg = getSvg(container);
+  expect(svg.style.color).toBe('rgb(255, 0, 0)');
+  expect(svg.querySelector('circle')).not.toBe(null);
 });
 
-test('Icon properties.spin', () => {
-  const IconComponent = createIcon(Icons);
-  const { container } = render(
-    <IconComponent id="test-id" methods={methods} properties={{ name: 'AiIcon', spin: true }} />
+test('Icon recovers from a failed icon when its name changes', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container, rerender } = render(
+    <IconComponent blockId="recover" methods={methods} properties={{ name: 'Broken' }} />
   );
-  expect(container.firstChild).toMatchSnapshot();
+  rerender(<IconComponent blockId="recover" methods={methods} properties={{ name: 'Pencil' }} />);
+  expect(getSvg(container).querySelectorAll('path')).toHaveLength(2);
+  expect(getSvg(container).style.color).toBe('');
 });
 
-test('Icon styles.element', () => {
-  const IconComponent = createIcon(Icons);
-  const { container } = render(
+test('Icon keeps the same svg element across re-renders', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container, rerender } = render(
+    <IconComponent blockId="keep" methods={methods} properties={{ name: 'Pencil', color: 'red' }} />
+  );
+  const svg = getSvg(container);
+  rerender(
     <IconComponent
-      id="test-id"
+      blockId="keep"
       methods={methods}
-      properties={{ name: 'AiIcon' }}
-      styles={{ element: { background: 'yellow' } }}
+      properties={{ name: 'Pencil', color: 'blue' }}
     />
   );
-  expect(container.firstChild).toMatchSnapshot();
+  expect(getSvg(container)).toBe(svg);
+  expect(svg.style.color).toBe('blue');
 });
 
-test('Icon properties.name error', () => {
-  const IconComponent = createIcon(Icons);
-  const { container } = render(
-    <IconComponent id="test-id" methods={methods} properties={{ name: 'ErrorIcon' }} />
+test('Icon looks names up at render, so names added to the map later render', () => {
+  const liveIcons = { ...Icons };
+  const IconComponent = createIcon({ icons: liveIcons });
+  const { container, rerender } = render(
+    <IconComponent blockId="late" methods={methods} properties={{ name: 'Late' }} />
   );
-  expect(container.firstChild).toMatchSnapshot();
+  expect(getSvg(container).style.color).toBe('rgb(255, 0, 0)');
+  liveIcons.Late = { node: [['path', { d: 'M1 1h2' }]] };
+  rerender(<IconComponent blockId="late" methods={methods} properties={{ name: 'Late' }} />);
+  expect(getSvg(container).querySelector('path').getAttribute('d')).toBe('M1 1h2');
+  expect(getSvg(container).style.color).toBe('');
 });
 
-// TODO
-// test('Icon onClick.loading false', () => {
-//   const IconComponent = createIcon(Icons);
-//   const { container } = render(
-//     <IconComponent
-//       id="test-id"
-//       methods={methods}
-//       properties={{ name: 'AiIcon' }}
-//       events={{ onClick: { loading: false } }}
-//     />
-//   );
-//   expect(container.firstChild).toMatchSnapshot();
-//   userEvent.click(screen.getByTestId('AiIcon'));
-//   expect(methods.triggerEvent).toHaveBeenCalledWith({ name: 'onClick' });
-// });
+// A deferred loadAllIcons that adds `added` to the live map when resolved.
+function createLoader({ icons, added = {} }) {
+  const deferred = {};
+  const loadAllIcons = jest.fn(() => {
+    deferred.promise ??= new Promise((resolve, reject) => {
+      deferred.resolve = () => {
+        Object.assign(icons, added);
+        resolve();
+      };
+      deferred.reject = reject;
+    });
+    return deferred.promise;
+  });
+  return { deferred, loadAllIcons };
+}
 
-// test('Icon onClick.loading true', () => {
-//   const IconComponent = createIcon(Icons);
-//   const { container } = render(
-//     <IconComponent
-//       id="test-id"
-//       methods={methods}
-//       properties={{ name: 'AiIcon' }}
-//       events={{ onClick: { loading: true } }}
-//     />
-//   );
-//   expect(container.firstChild).toMatchSnapshot();
-// });
+test('Icon draws an empty placeholder for a name outside the page icons until every icon loads', async () => {
+  const icons = { ...Icons };
+  const { deferred, loadAllIcons } = createLoader({
+    icons,
+    added: { Rocket: { node: [['path', { d: 'M4 4h2' }]] } },
+  });
+  const IconComponent = createIcon({ icons, loadAllIcons });
+  const { container } = render(
+    <>
+      <IconComponent blockId="a" methods={methods} properties={{ name: 'Rocket' }} />
+      <IconComponent blockId="b" methods={methods} properties={{ name: 'Rocket' }} />
+    </>
+  );
+  const svgs = container.querySelectorAll('svg');
+  expect([...svgs].map((svg) => [svg.id, svg.childElementCount, svg.style.color])).toEqual([
+    ['a', 1, ''],
+    ['b', 1, ''],
+  ]);
+  expect(svgs[0].firstChild.tagName).toBe('title');
+  await act(async () => deferred.resolve());
+  expect([...container.querySelectorAll('svg path')].map((path) => path.getAttribute('d'))).toEqual(
+    ['M4 4h2', 'M4 4h2']
+  );
+});
+
+test('Icon draws icon-missing for a name every icon lacks, and later misses skip the load', async () => {
+  const icons = { ...Icons };
+  const { deferred, loadAllIcons } = createLoader({ icons });
+  const IconComponent = createIcon({ icons, loadAllIcons });
+  const { container } = render(
+    <IconComponent blockId="unknown" methods={methods} properties={{ name: 'NotAnIcon' }} />
+  );
+  expect(getSvg(container).style.color).toBe('');
+  await act(async () => deferred.resolve());
+  expect(getSvg(container).style.color).toBe('rgb(255, 0, 0)');
+  const later = render(
+    <IconComponent blockId="later" methods={methods} properties={{ name: 'AlsoNotAnIcon' }} />
+  );
+  expect(getSvg(later.container).style.color).toBe('rgb(255, 0, 0)');
+  expect(loadAllIcons).toHaveBeenCalledTimes(1);
+});
+
+test('Icon draws icon-missing when loading every icon fails, and a later miss tries again', async () => {
+  const icons = { ...Icons };
+  const failing = createLoader({ icons });
+  const IconComponent = createIcon({ icons, loadAllIcons: failing.loadAllIcons });
+  const { container } = render(
+    <IconComponent blockId="offline" methods={methods} properties={{ name: 'Rocket' }} />
+  );
+  await act(async () => failing.deferred.reject(new Error('offline')));
+  expect(getSvg(container).style.color).toBe('rgb(255, 0, 0)');
+  render(<IconComponent blockId="retry" methods={methods} properties={{ name: 'Rocket' }} />);
+  expect(failing.loadAllIcons).toHaveBeenCalledTimes(2);
+});
+
+test('Icon never waits for names that are in the page icons', () => {
+  const loadAllIcons = jest.fn(() => new Promise(() => {}));
+  const IconComponent = createIcon({ icons: Icons, loadAllIcons });
+  const { container } = render(
+    <IconComponent blockId="known" methods={methods} properties={{ name: 'Pencil' }} />
+  );
+  expect(getSvg(container).querySelectorAll('path')).toHaveLength(2);
+  expect(loadAllIcons).not.toHaveBeenCalled();
+});
+
+test('Icon uses the data size as a square viewBox', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <IconComponent
+      blockId="square"
+      methods={methods}
+      properties={{ name: 'react-icons:AiOutlineUser' }}
+    />
+  );
+  expect(getSvg(container).getAttribute('viewBox')).toBe('0 0 1024 1024');
+});
+
+test('Icon uses the data width and height as a non-square viewBox', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <IconComponent blockId="tall" methods={methods} properties={{ name: 'Tall' }} />
+  );
+  expect(getSvg(container).getAttribute('viewBox')).toBe('0 0 16 20');
+});
+
+test('Icon applies the data root attrs for fill-based icons', () => {
+  const IconComponent = createIcon({ icons: Icons });
+  const { container } = render(
+    <IconComponent
+      blockId="filled"
+      methods={methods}
+      properties={{ name: 'react-icons:AiOutlineUser', color: 'green' }}
+    />
+  );
+  const svg = getSvg(container);
+  expect(svg.getAttribute('fill')).toBe('currentColor');
+  expect(svg.getAttribute('stroke')).toBe('none');
+  expect(svg.style.color).toBe('green');
+});

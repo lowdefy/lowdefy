@@ -1,0 +1,13 @@
+# Object storage a data-set journey keeps pointed at its real target
+# (packages/servers/server-dev/test/journeyFixture/storage.test.mjs). The
+# storage page only presigns a URL, which needs no network, so nothing listens
+# at the endpoint and the credentials are placeholders.
+id: storage_bucket
+type: AwsS3Bucket
+properties:
+  accessKeyId: fixture-access-key
+  secretAccessKey: fixture-secret-key
+  region: us-east-1
+  bucket: fixture-bucket
+  endpoint: http://127.0.0.1:9
+  forcePathStyle: true

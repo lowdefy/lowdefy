@@ -49,6 +49,9 @@ const map = {
   c10: ({ lowdefyApp }) => {
     return lowdefyApp('slug');
   },
+  c11: ({ pathParams }) => {
+    return pathParams('pp');
+  },
 };
 
 test('js default', async () => {
@@ -59,6 +62,7 @@ test('js default', async () => {
     _global: jest.fn(),
     _input: jest.fn(),
     _location: jest.fn(),
+    _path_params: jest.fn(),
     _state: jest.fn(),
     _request: jest.fn(),
     _url_query: jest.fn(),
@@ -79,6 +83,19 @@ test('js default', async () => {
   expect(lowdefyOperators._user.mock.calls[0][0]['params']).toEqual('u');
   expect(lowdefyOperators._global.mock.calls[0][0]['params']).toEqual('g');
   expect(lowdefyOperators._app.mock.calls[0][0]['params']).toEqual('slug');
+  expect(lowdefyOperators._path_params.mock.calls[0][0]['params']).toEqual('pp');
+});
+
+test('js pathParams accessor returns a path value through _path_params', async () => {
+  const { default: _path_params } = await import('./path_params.js');
+  const result = js({
+    jsMap: { h1: ({ pathParams }) => pathParams('ticket_id') },
+    operators: { _path_params },
+    location: rootLocation,
+    params: 'h1',
+    pathParams: { ticket_id: '1234' },
+  });
+  expect(result).toEqual('1234');
 });
 
 test('js throw when invalid javascript function', async () => {
@@ -145,4 +162,21 @@ test('js throws when object-form hash is not in map', async () => {
   ).toThrow(
     '_js function not found. The function may not have been built yet, or the page is running a client bundle from an older build - reload the page to update. Received hash: missing'
   );
+});
+
+test('js execution error names the original JavaScript error and not the function source', () => {
+  const fn = () => {
+    return unlinked.value; // eslint-disable-line no-undef
+  };
+  let thrown;
+  try {
+    js({ jsMap: { h1: fn }, operators: {}, location: rootLocation, params: 'h1' });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown.message).toEqual(
+    '_js function execution error. ReferenceError: unlinked is not defined'
+  );
+  expect(thrown.message).not.toContain('return unlinked.value');
+  expect(thrown.cause).toBeInstanceOf(ReferenceError);
 });

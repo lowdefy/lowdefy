@@ -55,13 +55,14 @@
         value: 1
       - label: two
         value: 2
-- id: 'properties.inputStyle. CSS style'
+- id: 'style.element: CSS style'
   type: RadioSelector
   properties:
     options:
       - Option 1
       - Option 2
-    inputStyle:
+  style:
+    .element:
       borderBottom: 1px solid red
 - id: 'properties.color_red'
   type: RadioSelector

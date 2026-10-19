@@ -39,7 +39,7 @@
         - id: drawer_basic_p1
           type: Paragraph
           properties:
-            content: This is a basic drawer with a title and default settings. It opens from the right side with a width of 256px.
+            content: This is a basic drawer with a title and default settings. It opens from the right side with the default width of 378px.
         - id: drawer_basic_p2
           type: Paragraph
           properties:
@@ -245,6 +245,38 @@
           properties:
             content: Using a percentage width makes the drawer responsive. This drawer takes up 60% of the viewport width.
 
+- title: Padding
+  blocks:
+    - id: drawer_padding_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Drawer with padding none
+      events:
+        onClick:
+          - id: drawer_padding_open
+            type: CallMethod
+            params:
+              blockId: drawer_padding
+              method: setOpen
+              args:
+                - open: true
+    - id: drawer_padding
+      type: Drawer
+      properties:
+        title: Recent invoices
+        padding: none
+      blocks:
+        - id: drawer_padding_rows
+          type: Html
+          properties:
+            html: |
+              <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1042</span><span style="color: var(--ant-color-text-secondary);">$1,280.00</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1041</span><span style="color: var(--ant-color-text-secondary);">$640.00</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1040</span><span style="color: var(--ant-color-text-secondary);">$2,115.50</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 24px;"><span>INV-1039</span><span style="color: var(--ant-color-text-secondary);">$96.00</span></div>
+
 - title: Closable Options
   blocks:
     - id: drawer_closable_btn
@@ -402,6 +434,49 @@
           type: Paragraph
           properties:
             content: The mask is visible but clicking it does not close the drawer. Users must use the close button or Escape key.
+
+- title: Resizable Drawer
+  blocks:
+    - id: drawer_resizable_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Resizable Drawer
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_resizable_open
+            type: CallMethod
+            params:
+              blockId: drawer_resizable
+              method: setOpen
+              args:
+                - open: true
+    - id: drawer_resizable
+      type: Drawer
+      properties:
+        title: Resizable Drawer
+        size: 480
+        resizable: true
+        maxSize: 900
+        closable:
+          placement: end
+        mask:
+          blur: true
+      events:
+        onResizeEnd:
+          - id: drawer_resizable_save_size
+            type: SetState
+            params:
+              drawer_size:
+                _event: size
+      blocks:
+        - id: drawer_resizable_p1
+          type: Paragraph
+          properties:
+            content: Drag the left edge to resize the drawer. The onResizeEnd event receives the new size, so it can be saved as a user preference.
 
 - title: Keyboard Close
   blocks:
@@ -636,7 +711,7 @@
         title: Toggle Drawer
         color: primary
         variant: solid
-        icon: AiOutlineMenu
+        icon: menu
       events:
         onClick:
           - id: drawer_toggle_call
@@ -732,8 +807,10 @@
         title: Styled Drawer
       style:
         .header:
-          borderBottom: 1px solid #91caff
+          backgroundColor: var(--ant-color-primary-bg)
+          borderBottom: 1px solid var(--ant-color-primary-border)
         .body:
+          backgroundColor: var(--ant-color-fill-quaternary)
       blocks:
         - id: drawer_inline_style_content
           type: Paragraph
@@ -764,8 +841,8 @@
       properties:
         title: Tailwind CSS Keys
       class:
-        header: bg-bg-layout
-        body: bg-bg-layout
+        .header: bg-bg-layout
+        .body: bg-bg-layout
       blocks:
         - id: drawer_css_keys_content
           type: Paragraph
@@ -794,8 +871,8 @@
       properties:
         title: Accent Header
       class:
-        header: bg-gradient-to-r from-primary/100 to-indigo-600 text-white
-        body: bg-bg-layout
+        .header: bg-gradient-to-r from-primary/100 to-indigo-600 text-white
+        .body: bg-bg-layout
       blocks:
         - id: drawer_css_accent_content
           type: Paragraph
@@ -824,8 +901,8 @@
       properties:
         title: Custom Mask Style
       class:
-        mask: backdrop-blur-sm
-        content: rounded-l-xl
+        .mask: backdrop-blur-sm
+        .content: rounded-l-xl
       blocks:
         - id: drawer_css_mask_content
           type: Paragraph
@@ -939,7 +1016,7 @@
         title: Edit Record
         color: primary
         variant: solid
-        icon: AiOutlineEdit
+        icon: edit
       events:
         onClick:
           - id: drawer_edit_form_open
@@ -1049,7 +1126,7 @@
         title: Filters
         color: default
         variant: outlined
-        icon: AiOutlineFilter
+        icon: filter
       events:
         onClick:
           - id: drawer_filter_panel_open
@@ -1125,7 +1202,7 @@
                 value: 3
               - label: 4+
                 value: 4
-              - label: 5
+              - label: '5'
                 value: 5
         - id: drawer_filter_panel_in_stock
           type: Switch
@@ -1164,7 +1241,7 @@
         title: View Profile
         color: primary
         variant: solid
-        icon: AiOutlineUser
+        icon: user
       events:
         onClick:
           - id: drawer_profile_open
@@ -1191,10 +1268,9 @@
               layout:
                 flex: 0 0 auto
               properties:
-                icon: AiOutlineUser
+                icon: user
                 size: 64
-                color: '#fff'
-                backgroundColor: '#1677ff'
+                color: '#1677ff'
             - id: drawer_profile_info
               type: Box
               layout:
@@ -1245,7 +1321,7 @@
                 title: Edit Profile
                 color: primary
                 variant: outlined
-                icon: AiOutlineEdit
+                icon: edit
             - id: drawer_profile_message_btn
               type: Button
               layout:
@@ -1254,4 +1330,4 @@
                 title: Send Message
                 color: primary
                 variant: solid
-                icon: AiOutlineMail
+                icon: mail

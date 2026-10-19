@@ -1,0 +1,42 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+export default {
+  type: 'object',
+  params: {
+    type: 'object',
+    description:
+      'Parameters for responding to the pending OAuth authorization request. The signed authorization query the consent page was redirected with is read from the page URL automatically, so the action must be called while the page still holds it.',
+    required: ['accept'],
+    properties: {
+      accept: {
+        type: 'boolean',
+        description:
+          'Approve (true) or deny (false) the authorization request. On deny the returned redirect URI carries the access_denied OAuth error.',
+      },
+      scope: {
+        type: 'string',
+        description:
+          'Space-separated subset of the requested scopes to grant. When omitted, all requested scopes are granted.',
+      },
+      claims: {
+        type: 'object',
+        description:
+          'Subset of the requested OIDC claims to grant. When omitted, all requested claims are granted.',
+      },
+    },
+  },
+};

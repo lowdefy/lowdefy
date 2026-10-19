@@ -73,10 +73,20 @@ export default {
         type: 'GenerateObject request property "system" should be a string.',
       },
     },
+    allowSystemInMessages: {
+      type: 'boolean',
+      default: false,
+      description:
+        'Allow "system" role messages in "messages". Off by default, since a system message instructs the model as the app: only enable it when the messages come from the app, never from a user.',
+      errorMessage: {
+        type: 'GenerateObject request property "allowSystemInMessages" should be a boolean.',
+      },
+    },
     maxOutputTokens: {
       type: 'integer',
       minimum: 1,
-      description: 'Maximum number of tokens to generate.',
+      description:
+        "Maximum number of tokens to generate. Defaults to the connection's maxOutputTokens.",
       errorMessage: {
         type: 'GenerateObject request property "maxOutputTokens" should be an integer.',
         minimum: 'GenerateObject request property "maxOutputTokens" should be at least 1.',
@@ -135,6 +145,48 @@ export default {
       errorMessage: {
         type: 'GenerateObject request property "maxRetries" should be an integer.',
         minimum: 'GenerateObject request property "maxRetries" should be at least 0.',
+      },
+    },
+    timeout: {
+      type: 'integer',
+      minimum: 1,
+      description:
+        "Milliseconds the model call may take, retries included, before it is cancelled. Defaults to the connection's timeout.",
+      errorMessage: {
+        type: 'GenerateObject request property "timeout" should be an integer.',
+        minimum: 'GenerateObject request property "timeout" should be at least 1.',
+      },
+    },
+    fileDownload: {
+      type: 'object',
+      description:
+        'Limits for a file link in "messages" the server downloads because the model does not take it as a link.',
+      properties: {
+        maxBytes: {
+          type: 'integer',
+          minimum: 1,
+          description: 'Largest file the server downloads, in bytes. Default: 20971520 (20 MB).',
+          errorMessage: {
+            type: 'GenerateObject request property "fileDownload.maxBytes" should be an integer.',
+            minimum:
+              'GenerateObject request property "fileDownload.maxBytes" should be at least 1.',
+          },
+        },
+        timeout: {
+          type: 'integer',
+          minimum: 1,
+          description: 'Milliseconds a file download may take. Default: 30000.',
+          errorMessage: {
+            type: 'GenerateObject request property "fileDownload.timeout" should be an integer.',
+            minimum: 'GenerateObject request property "fileDownload.timeout" should be at least 1.',
+          },
+        },
+      },
+      additionalProperties: false,
+      errorMessage: {
+        type: 'GenerateObject request property "fileDownload" should be an object.',
+        additionalProperties:
+          'GenerateObject request property "fileDownload" should only have maxBytes and timeout.',
       },
     },
     providerOptions: {

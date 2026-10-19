@@ -207,27 +207,27 @@
       type: PhoneNumberInput
       properties:
         title: Prefix Phone Icon
-        prefixIcon: AiOutlinePhone
+        prefixIcon: phone
         placeholder: Enter phone number
     - id: icon_suffix_check
       type: PhoneNumberInput
       properties:
         title: Suffix Check Icon
-        suffixIcon: AiOutlineCheckCircle
+        suffixIcon: check-circle
         placeholder: Verified number
     - id: icon_both
       type: PhoneNumberInput
       properties:
         title: Both Icons
-        prefixIcon: AiOutlinePhone
-        suffixIcon: AiOutlineInfoCircle
+        prefixIcon: phone
+        suffixIcon: info
         placeholder: Enter number
     - id: icon_custom_color
       type: PhoneNumberInput
       properties:
         title: Custom Icon Color
         prefixIcon:
-          name: AiOutlinePhone
+          name: phone
           color: '#1677ff'
         placeholder: Blue phone icon
 
@@ -450,7 +450,7 @@
         placeholder: (555) 123-4567
         allowClear: true
         size: large
-        prefixIcon: AiOutlinePhone
+        prefixIcon: phone
         replaceInput:
           pattern: '[^0-9()\-\s]'
           flags: g
@@ -466,7 +466,7 @@
         placeholder: Enter international number
         allowClear: true
         maxLength: 15
-        suffixIcon: AiOutlineGlobal
+        suffixIcon: globe
         label:
           inline: true
           span: 8
@@ -490,7 +490,7 @@
         allowClear: true
         maxLength: 10
         placeholder: Enter mobile number
-        prefixIcon: AiOutlineMobile
+        prefixIcon: Smartphone
         replaceInput:
           pattern: '[^0-9]'
           flags: g
@@ -512,7 +512,7 @@
         allowClear: true
         size: large
         prefixIcon:
-          name: AiOutlinePhone
+          name: phone
           color: '#52c41a'
         theme:
           colorPrimary: '#52c41a'
@@ -539,7 +539,7 @@
           required: true
           properties:
             title: Full Name
-            prefixIcon: AiOutlineUser
+            prefixIcon: user
             placeholder: John Doe
             label:
               colon: false
@@ -549,7 +549,7 @@
           properties:
             title: Email Address
             type: email
-            prefixIcon: AiOutlineMail
+            prefixIcon: mail
             placeholder: john@example.com
             label:
               colon: false
@@ -560,7 +560,7 @@
             title: Phone Number
             defaultRegion: US
             allowClear: true
-            prefixIcon: AiOutlinePhone
+            prefixIcon: phone
             placeholder: (555) 123-4567
             label:
               colon: false
@@ -586,7 +586,7 @@
                 title: Send Message
                 color: primary
                 variant: solid
-                icon: AiOutlineSend
+                icon: send
               events:
                 onClick:
                   - id: contact_validate
@@ -619,7 +619,7 @@
             title: Mobile Number
             defaultRegion: US
             allowClear: true
-            prefixIcon: AiOutlineMobile
+            prefixIcon: Smartphone
             placeholder: Enter mobile number
             label:
               colon: false
@@ -636,7 +636,7 @@
           required: true
           properties:
             title: Password
-            prefixIcon: AiOutlineLock
+            prefixIcon: lock
             placeholder: At least 8 characters
             label:
               colon: false
@@ -661,7 +661,7 @@
                 title: Create Account
                 color: primary
                 variant: solid
-                icon: AiOutlineArrowRight
+                icon: arrow-right
               events:
                 onClick:
                   - id: register_validate

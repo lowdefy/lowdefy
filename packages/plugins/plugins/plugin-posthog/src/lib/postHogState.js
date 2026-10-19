@@ -1,0 +1,42 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+// The singleton behind every action in this package. PostHogInit fills it in
+// once per browser session; every other action reads it.
+//
+// status is one of:
+// - uninitialized: PostHogInit has not run. Actions do nothing and warn once,
+//   because a missing PostHogInit is a config mistake.
+// - disabled: PostHogInit ran with enabled: false. Actions do nothing, silently.
+// - loading: PostHogInit is downloading posthog-js. Actions wait for it.
+// - failed: posthog-js could not be downloaded. Actions do nothing, silently.
+// - enabled: client is the initialised posthog-js instance.
+//
+// trace is the engine's trace registry, set by every PostHogInit; the before_send hook reads it.
+// maskDataText is the PostHogInit param of that name, set beside trace; false sends full text.
+// subscription is the lowdefy_event_failed listener: { trace, unsubscribe, count }.
+const postHogState = {
+  apiKey: null,
+  client: null,
+  loading: null,
+  maskDataText: true,
+  status: 'uninitialized',
+  subscription: null,
+  trace: null,
+  warnedUninitialized: false,
+};
+
+export default postHogState;

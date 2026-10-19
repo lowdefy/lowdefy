@@ -1,0 +1,40 @@
+# The invitation.send hook body - bind it by uncommenting the invitation-send
+# entry under auth.hooks in lowdefy.yaml. When bound, this routine owns
+# invitation email dispatch: the stock auth.email template does NOT send
+# (Mailpit stays empty) and the audit row below is the proof the hook fired
+# with the catalog payload { invitation, organization, inviter }. A real
+# module hook would render and send the email itself; the walkthrough takes
+# the invitation id from the invite response instead.
+id: invitation-send
+type: InternalApi
+routine:
+  - ':try':
+      - id: write_invitation_audit
+        type: MongoDBInsertOne
+        connectionId: audit_db
+        properties:
+          doc:
+            event: invitation.send
+            invitationId:
+              _payload: invitation.id
+            email:
+              _payload: invitation.email
+            # The invitation carries the two authorities in separate fields:
+            # appRoles is the app's own role array, role is the
+            # owner/admin/member tier the minted member row will hold.
+            appRoles:
+              _payload: invitation.appRoles
+            orgRole:
+              _payload: invitation.role
+            organizationSlug:
+              _payload: organization.slug
+            inviterEmail:
+              _payload: inviter.user.email
+            payloadKeys:
+              _object.keys:
+                _payload: true
+            at:
+              _date: now
+    ':catch':
+      - ':log':
+          - 'invitation-send hook failed to write the audit row'

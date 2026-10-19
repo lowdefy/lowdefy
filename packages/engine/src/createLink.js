@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { getSafeHref, type } from '@lowdefy/helpers';
 
+import rememberTarget from './rememberTarget.js';
 import resolveTarget from './resolveTarget.js';
 
 function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sameOriginLink }) {
@@ -28,8 +29,13 @@ function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sa
       return backLink(props);
     }
     // href is an HTML-attribute passthrough the <Link> component reads, not a
-    // navigation target, so it never enters the grammar resolver.
+    // navigation target, so it never enters the grammar resolver. It is used only
+    // with a safe scheme; any other href resolves no link, and does not fall back
+    // to the link's pageId or url.
     if (type.isString(props.href)) {
+      if (type.isNone(getSafeHref(props.href))) {
+        return noLink(props);
+      }
       return newOriginLink(props);
     }
     const target = resolveTarget({
@@ -37,6 +43,7 @@ function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sa
       target: {
         home: props.home,
         pageId: props.pageId,
+        pathParams: props.pathParams,
         url: props.url,
         urlQuery: props.urlQuery,
       },
@@ -53,26 +60,24 @@ function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sa
       ...props,
       pathname: target.pathname,
       query: target.query,
-      setInput: getSetInput({ lowdefy, props }),
+      setInput: getSetInput({ lowdefy, props, target }),
     });
   }
   return link;
 }
 
-// A page-kind url names no page, so it seeds no input - writing
-// inputs['page:undefined'] is the bug family a no-op setInput avoids.
-function getSetInput({ lowdefy, props }) {
-  if (props.home === true) {
-    return () => {
-      lowdefy.inputs[`page:${lowdefy.home.pageId}`] = props.input ?? {};
-    };
+// Both callers run setInput only when the link is followed, before the router pushes it, so this is
+// where the path memory learns the path. A page-kind url names no page, so it seeds no input and
+// writes no memory - writing inputs['page:undefined'] is the bug family a no-op setInput avoids.
+// Home and pageId targets carry the instance key their values open.
+function getSetInput({ lowdefy, props, target }) {
+  if (type.isNone(target.instanceKey)) {
+    return () => {};
   }
-  if (type.isString(props.pageId)) {
-    return () => {
-      lowdefy.inputs[`page:${props.pageId}`] = props.input ?? {};
-    };
-  }
-  return () => {};
+  return () => {
+    rememberTarget({ lowdefy, target });
+    lowdefy.inputs[target.instanceKey] = props.input ?? {};
+  };
 }
 
 export default createLink;
