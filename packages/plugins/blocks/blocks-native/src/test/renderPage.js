@@ -58,8 +58,9 @@ function createRecord() {
  * @param {'light'|'dark'} [params.darkMode] The theme mode, light unless asked.
  * @param {boolean} [params.focused] Whether the page's screen is the one shown, true unless asked.
  * @param {Object} [params.rootConfig] Root config keys over the test root config.
- * @returns {Promise<{ calls: Object[], host: Object, lowdefy: Object }>} The Record action's
- *   params in the order they ran, the fake host and the lowdefy object.
+ * @returns {Promise<{ calls: Object[], host: Object, lowdefy: Object, setFocused: Function }>}
+ *   The Record action's params in the order they ran, the fake host, the lowdefy object and
+ *   `setFocused(focused)`, which shows or hides the page's screen.
  */
 async function renderPage({
   actions = {},
@@ -71,7 +72,8 @@ async function renderPage({
   const { calls, Record } = createRecord();
   const host = createFakeHost({ path: `/${pageConfig.id}` });
   const lowdefy = { buildId: 'build-1' };
-  await render(
+  const builtPage = buildPage(pageConfig);
+  const pageElement = (isFocused) => (
     <LowdefyPage
       core={{
         apiBase: 'https://app.lowdefy.test',
@@ -79,9 +81,9 @@ async function renderPage({
         basePath: '',
         lowdefy,
       }}
-      focused={focused}
+      focused={isFocused}
       host={host}
-      pageConfig={buildPage(pageConfig)}
+      pageConfig={builtPage}
       rootConfig={{
         classMap: {},
         home: { configured: true, pageId: pageConfig.id },
@@ -99,7 +101,14 @@ async function renderPage({
       }}
     />
   );
-  return { calls, host, lowdefy };
+  const { rerender } = await render(pageElement(focused));
+  // Shows or hides the page's screen, as a tab switch or a pushed screen would.
+  const setFocused = async (isFocused) => {
+    await act(async () => {
+      rerender(pageElement(isFocused));
+    });
+  };
+  return { calls, host, lowdefy, setFocused };
 }
 
 // A page of one Box holding the blocks under test.
