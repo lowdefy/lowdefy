@@ -1,5 +1,675 @@
 # Change Log
 
+## 7.0.0
+
+### Major Changes
+
+- d2c8e01: feat(api)!: Data read into a Dynamic block's `:return` stays data.
+
+  **Breaking:** a Dynamic block without a dynamic blocks policy no longer renders blocks or actions that its endpoint read as data. In v6, stored operator-free block config returned from a Dynamic endpoint rendered as it was; in v7 the block renders its fallback. Every block and action in the returned content must be written in the endpoint's `:return` config. A block or action that is data an operator returned (a step result, routine state, the payload, a `:for` item, a nested endpoint's result), or a copy or extension of one made with `_get`, `__args` or `__object.assign`, fails resolution. Operators that only pass their checked params through (`_if`, `_switch`, `_if_none`, `_get`, `_args`, `_function`, `_log`, `_array`, and `_object` except `fromEntries` and `defineProperty`) may return written config; content that breaks the rule renders the fallback, with an error naming the operator and the path in its result. Blocks built up in routine state, returned by a nested endpoint, looped over with `_item`, or built by `_js`/`_jsonata` fail: build them inside `:return` with `_array.map`/`_array.concat`, share block config with `_ref`, and write client operators (`__state`, `_array.map` callbacks) in the `:return` config. Data may still fill values inside written blocks, as in the documented `_array.map` pattern, and a block built by config from a stored field renders even when it equals the field. To render stored or generated block config, put the Dynamic block under a dynamic blocks policy and return the content through a `ValidateDynamic` step. See the v6 to v7 migration guide.
+
+  Also:
+
+  - Only operator keys lose their escaping underscore in the returned content (`__state` becomes `_state`); data keys such as `__typename` pass through unchanged.
+  - Data read into a Dynamic `:return` may nest at most 200 levels deep, and dynamic blocks policy content likewise (`limits.depth`); deeper data fails resolution with an error saying so.
+  - An object from data that `_object.assign` merges with other config can no longer end up as an operator on the client, for example next to a key whose value is a function or evaluates to undefined.
+  - Only keys that name one of the app's operators count as operators: in the literal data check an installed client or server operator, in dynamic blocks policies and the fragment build a client operator. Data such as `{ _score: 0.5 }` or `{ _source: { ... } }` now renders as data instead of failing. The build writes `plugins/clientOperators.json` with every client operator name the app knows.
+  - Dynamic blocks policies: with `state` set, every `_state` read in the content must name a literal key under that path. URLs are judged by the block's properties schema, which now marks URL-valued properties with `urlKind` (`Search` `indexUrl`, `QRCode` `icon`, `Watermark` `image`, `Tour` step covers, avatar and logo sources, link `url`s and `href`s, `Img` `src`/`srcSet`, AgGrid link cells), whatever the property is called. Every value no schema marks is still judged by its key name; `urlKind: false` opts a URL-named property out (`Search` `result.url`, the Tiptap `image` settings). URLs are read as the browser's URL parser reads them, so surrounding spaces and embedded tabs or newlines do not change the verdict.
+
+- 6b3a9bb: feat!: Replace the NextAuth-shaped auth system with BetterAuth.
+
+  Lowdefy auth now runs on [BetterAuth](https://www.better-auth.com) 1.7.7 through the new `@lowdefy/plugin-better-auth` package; `@lowdefy/plugin-next-auth` and `@lowdefy/plugin-auth0` are removed. Every app with an `auth:` block is affected — follow the migration guide at `/migration/auth-upgrade` in the docs.
+
+  Breaking changes:
+
+  - **`auth.database` is required** for any login method; sessions are database-backed only (`session.maxAge` → `expiresIn`, no JWT strategy). Collections follow the `user-*` convention fixed by the adapter and auth columns are stored in snake_case.
+  - **Provider type names change** — `GoogleProvider`, `GitHubProvider`, ... become `Google`, `GitHub`, ...; `OpenIDConnectProvider` → `GenericOAuth`. Provider `id`s and `/api/auth/callback/<id>` URLs are unchanged. Built-in and `GenericOAuth` providers share one id namespace, so the build fails when a `GenericOAuth` `id` is the key of a built-in provider the app also configures. `GenericOAuth` takes `trustEmail: true` to mark its users' emails verified, for an issuer that sends no `email_verified` claim. An invalid provider property fails startup with the provider id and its config location.
+  - **`auth.callbacks` / `auth.events` JS plugins are replaced by `auth.hooks`** — bindings to `InternalApi` endpoints fired in a system context. Verification identifiers carry a `magic-link:` or `auth-state:` prefix, which a `verification.create.before` / `after` hook matching on the identifier must allow for.
+  - **`NEXTAUTH_SECRET` / `AUTH_SECRET` env vars are replaced by `auth.secret`** (use the `_secret` operator); pin the canonical URL with `BETTER_AUTH_URL`, or the `url` of the current environment in `config.environments`. With `auth.email` configured, a production server refuses to start (`ConfigError`) until one of them is set, since every emailed link is built from it; without `auth.email` it logs a warning. While unpinned, auth trusts only the origin the request arrived on, so behind a proxy that ends TLS and forwards plain `http`, sign-in is refused until the URL is pinned. The dev server uses the request origin.
+  - **Built-in auth UI and `auth.theme` are removed** — the app provides its own pages via `authPages` (`signIn`, `signUp`, `error`, `forgotPassword`, `resetPassword`, `verifyEmail`, `twoFactor`, `twoFactorEnrol`, `acceptInvitation`). The emailed verification link from `SignUp` / `SendVerificationEmail` without a `callbackUrl` lands on `verifyEmail` (default `/verify-email`), with `?error=INVALID_TOKEN` or `TOKEN_EXPIRED` when it fails. The reset link from `RequestPasswordReset` without a `redirectTo` lands on `resetPassword` (default `/reset-password`) with `?token=`, or `?error=INVALID_TOKEN`. The build warns when the app sends these emails (`auth.email` with `emailAndPassword`) and the page is missing.
+  - **`EmailProvider` becomes `auth.magicLink` + `auth.email`**, with branded auth emails sent over an SMTP connection.
+  - **The session user shape changes** — `userFields` is removed; `_user` carries `id`, `name`, `email`, `image`, `email_verified`, `active_organization_id`, `profile`, plus `roles` (app roles from the active membership's `appRoles`), `org_roles` (the `owner`/`admin`/`member` tier), `attributes` (merged global + per-organization bag), `two_factor_enrolled` and `auth_method`. `name` and `image` resolve per organization, from the member row `UpdateUserProfile` writes, falling back to the user row. A caller awaiting an organization carries `has_pending_invitation` and, when there is one, `pending_invitation_id`. `_user.sub` is gone — `_user.id` is the internal id.
+  - **Organizations are always on** — roles live on organization memberships; `auth.organizations` configures `pinned` vs `tenant` policy, invitations, the role catalog and the tenant wall that scopes connections by `organization_id`. `invitationExpiresIn` sets how long an invitation stays acceptable (seconds, at least 60, default 48 hours); an expired or cancelled invitation fails with code `INVITATION_EXPIRED`. Accepting an invitation does not switch a session already active in another organization. Organizations have no practical member cap (default 1,000,000); `membershipLimit` sets one, and an unpaged `ListMembers` returns every member.
+  - **Retired client actions** — `ImpersonateUser`, `StopImpersonating` (no replacement); `InviteMember`, `CancelInvitation`, `UpdateMemberRole`, `RemoveMember`, `UpdateOrganization` are now auth steps run from routines.
+  - **Signed-out requests no longer reveal page or endpoint existence** — protected apps answer sign-in for every URL and `401` for missing or protected requests alike.
+
+  New in this line: two-factor auth (TOTP, backup codes, passkeys, `twoFactor.required` enrolment; id token sign-ins are challenged too unless the provider sets `twoFactorTrusted: true`, and `Login` with an `idToken` then navigates to `authPages.twoFactor`), phone number and captcha sign-in, the app as an OAuth 2.1 authorization server for MCP clients (`auth.oauthProvider`, scoped MCP tools), the `_organization` server operator and the `_build.authConfig` projection, and a self-service auth action catalog (`SignUp`, `PasskeySignIn`, `PasskeyUpdate`, `TwoFactorGenerateBackupCodes`, `SetActiveOrganization`, `AcceptInvitation`, `LeaveOrganization`, ...). Auth rate limits (sign-in and sign-up: 3 attempts per 10 seconds per address), the session's recorded address and the captcha check use the client address the server resolves; behind a reverse proxy, list the proxy in `config.trustedProxies`.
+
+- 662eaa9: feat: Tenant wall — multi-tenant isolation on MongoDB connections, scoped by default
+
+  `auth.organizations.policy` sets the scoping default for every connection in the app. Under `policy: tenant`, every connection whose type implements the scoping contract is walled to the caller's active organization — enforced mechanically on reads **and** writes, with nothing to declare per connection and no per-request filters to remember. A connection declares only its **exception** to that default: `tenant: shared`, for data deliberately shared across organizations, or `tenant: { field: ... }` to scope on a non-default field. A connection carries no default of its own — the same connection file is scoped in a `tenant` app and unscoped in a `pinned` one, with nothing in the file about tenancy.
+
+  **The wall is policy-conditional.** It engages only when the app declares `auth.organizations.policy: tenant`. Under `pinned` (the default, including apps with no `organizations:` block) no connection is scoped and none can be — the wall applies nothing: no read filter, no write stamp, no selector merge, no change-stream scoping, no authored-clause audit, no fail-closed error for organization-less callers, and no rejection of an authored tenant field. A single-organization deployment therefore adopts scoping-capable connections with no data migration — no backfill, no index changes. One check stays on under both policies: declaring `tenant:` on a connection type that does not implement the scoping contract is a config error, so it surfaces on the current deployment rather than on the day the app flips to `tenant`. `_build.authConfig` projects `organizations.policy`, so config can branch on the policy at build time, including in module entry vars and cross-module components consumed through them. (Reading it inside the `auth:` block itself, or in app metadata, is a build error.)
+
+  **Tenant preflight.** Under `policy: tenant` the server probes every walled collection (lazily, once per process) for documents missing the tenant field or carrying it as `null` — rows no walled read can see. It keeps serving and reports each offending collection once: a `TenantIntegrityError` log line and a Sentry event tagged with collection, connection and endpoint. A probe that cannot reach the database logs a warning and retries on the next request. The probe is a connection-type capability (`tenantPreflight`, implemented by `MongoDBCollection`); the walled set — every scoping-capable connection that does not declare `tenant: shared` — is enumerated from the `tenantConnections.json` build artifact.
+
+  **Tenant wall (`@lowdefy/connection-mongodb`, `@lowdefy/api`)**
+
+  - Every find/findOne/update/delete selector is merged with the caller's organization equality; every insert, replacement, and upsert is stamped server-side with the organization id. Every insert into a walled collection (including upserts, bulk writes, table changes and the version copy of a versioned update) is read back by `_id`; a row missing the tenant field or carrying another organization is deleted and the request fails with `TenantIntegrityError`.
+  - Aggregation pipelines: the wall's one pipeline move is prepending the tenant `$match` at every pipeline entry — the root pipeline and every `$lookup` (both forms) / `$unionWith` sub-pipeline entry, recursing through `$facet` branches. The wall never rewrites the inside of a stage. `$out`/`$merge` are rejected on tenant connections, and `$collStats`/`$indexStats` too — collection-level statistics cannot be tenant-scoped.
+  - Stages the prepend cannot scope — a pipeline-leading `$search`/`$searchMeta`/`$vectorSearch`/`$geoNear`, and `$graphLookup` at any position — are **refused** unless the request declares `tenant: authored`: the request then authors the tenant clause itself (a `compound.filter` `equals` for `$search`/`$searchMeta`, the `filter` for `$vectorSearch`, the `query` for `$geoNear`, `restrictSearchWithMatch` for `$graphLookup`, typically with `_user: organization_id` as the value), and the wall **audits** it at runtime — clause present, tenant field, value strictly equal to the caller's resolved organization — refusing to run on any miss. The rest of an authored request's pipeline is still walled mechanically, and the caller must still resolve an organization. Atlas index requirements for authored clauses: the tenant field `token`-mapped in the Atlas Search index (and in `storedSource` where `returnStoredSource` is used); indexed as the `filter` type for Atlas Vector Search.
+  - Change streams are scoped via a `fullDocument` match with `updateLookup` forced; events that cannot prove they match (deletes) are not delivered, and callers from different organizations never share a change-stream channel.
+  - The tenant field may be read but never authored in a write or filter position — authored usage is rejected loudly. In writes this means a top-level key of an insert or replacement document or of an update operator's argument; a nested key of that name inside stored data is ordinary data. (On a `tenant: authored` request the audited stage position is the one place it is instead _required_.)
+  - Fail-closed everywhere under `policy: tenant`: system-context and strategy callers carry no organization, so their requests to tenant connections fail. A read fails with an `AuthenticationError` unless the request or step declares `tenant: none`, the only opt-out, authored at the point of use; `tenant: none` reads reach every organization's rows. A write in a run bound to no organization fails with `TenantIntegrityError` (naming the collection, connection and tenant field, logged at error level and sent to Sentry). To write from a caller-less run (a schedule, an auth hook, a verified webhook), call an endpoint with a `CallApi` step that names the `organization`: its requests run with the wall on, filtered and stamped with that organization.
+  - **`tenant: none` is read-only.** A request, routine step or webhook verifier with `tenant: none` on a scoped connection whose type writes (`MongoDBInsertOne`, `MongoDBUpdateMany`, `MongoDBBulkWrite`, `MongoDBTableChanges`, the enrichment requests and the rest) fails the build with a `ConfigError` naming the step, request or verifier, its type and its connection, and the same write is refused at runtime. An aggregation with `$out` or `$merge` under `tenant: none` fails the build when the target is a literal collection name and is refused at runtime otherwise.
+  - A `tenant: shared` connection over the same collection and database as a scoped connection (compared as authored; a collection name resolved at runtime is not compared) keeps unscoped reads, but every row it inserts, replaces, upserts or updates must keep a non-empty `organization_id`, and each `MongoDBBulkWrite` operation must name exactly one operation kind.
+  - `context.user.organization_id` (the caller's active organization id) is exposed and readable as `_user: organization_id` under both organizations policies.
+
+  **Walled MongoDB client for plugins**
+
+  `@lowdefy/connection-mongodb/walled` exports `getWalledCollection`, a client whose `find`, `findOne`, `aggregate`, `countDocuments`, `insertOne`, `insertMany`, `updateOne`, `updateMany`, `findOneAndUpdate`, `deleteOne`, `deleteMany` and `bulkWrite` apply the wall exactly as the matching MongoDB requests do: scoped reads and writes, stamped and read-back inserts and upserts, change logs kept, `$out` and `$merge` refused, and every write method refused under `tenant: none`. A plugin's request resolver receives `walled(connectionId)` and passes its result to `getWalledCollection`. Under `policy: tenant`, a non-scopable connection (SMTP, a plugin's own connection type) may not reach a walled database: the build fails when such a connection reads the secret behind a walled connection's `databaseUri`, and when one holds a URI to a walled database under another secret or as a literal, the server logs an error at start and refuses that connection's requests with a `ConfigError` while the rest of the app keeps serving. There is no opt-out (`~ignoreBuildChecks` does not suppress it): give the plugin a `mongoConnectionId` and use `getWalledCollection`.
+
+  **Build validation (`@lowdefy/build`)**
+
+  - The connection position accepts only the exception: `tenant: shared`, or `tenant: { field: ... }`. Any `tenant:` declaration on a connection type that does not implement the scoping contract is a build error under both policies.
+  - Connection types declare their tenancy capability in `connectionMetas`: `{ tenant: true }` implements the scoping contract (v1: `MongoDBCollection`), `{ tenant: false }` is non-scopable — every first-party connection type declares one or the other. Under `policy: tenant` a connection whose type declares neither is a build error naming the type, so a data-bearing custom type can never be silently unscoped. Connection plugins can also declare `requestMetas` (`{ checkRead, checkWrite }` per request type) in their `types.js`, which the build reads to know which request types write.
+  - The request/step-level sentinel accepts `none` and `authored`; websockets accept `none` only (`authored` is aggregation-only). Declaring `none`/`authored` on a connection, or `shared`/`{ field }` on a request, is a build error naming the position the value belongs to.
+  - Best-effort entry-stage check: a literal walled pipeline leading with `$search`/`$searchMeta`/`$vectorSearch`/`$geoNear` or containing `$graphLookup` without `tenant: authored` is a build error (operator-composed pipelines are checked at runtime, which is the enforcement gate). The check only runs under `policy: tenant` — under `pinned` the wall never engages, so a missing authored clause is not an error.
+  - Shared connections and walled collections: a request or step on a `tenant: shared` connection whose literal aggregation pipeline writes into a scoped connection's collection with `$out` or `$merge` is a build error, and so is a `tenant: shared` connection whose `changeLog.collection` is a collection a scoped connection reads — give shared connections their own change-log collection. Both checks compare literal collection names and database properties as authored; `MongoDBCollection` declares the properties that name its collections in `connectionMetas.tenantTarget`.
+  - Remap guard: a connection remap on a module entry swaps the module's whole connection definition for the app's — including its position against the wall. Under `policy: tenant`, remapping a scoped module connection to a target that is not scoped — one that declares `tenant: shared`, or whose type does not implement the scoping contract — is a build error (it would silently run the module's requests outside the wall). Remapping onto a target that declares nothing is safe: both sides are scoped. Under `pinned` remaps stay unrestricted; the flip to `tenant` is a rebuild, so the guard fires there.
+
+  **Signup under `policy: tenant`**
+
+  With `organizations.signup: open` and `create: auto`, a user without a membership gets a fresh organization, as its owner, at their next session — exactly one organization and one owner row even under concurrent sessions, and never an organization the user was a member of before. The server creates unique indexes on the organization `slug` and the member `(user, organization)` pair at startup (an equivalent index created by hand, under any name, is accepted). If they cannot be created — the database user lacks the privilege, or duplicate rows exist — the server logs an error naming the index, and a sign-in that needs a new organization is refused with status 503 and the code `ORGANIZATION_SETUP_UNAVAILABLE`; the server retries at most every 30 seconds, so a fix recovers without a restart.
+
+  **Enabling the wall**
+
+  Under `pinned`, adopting scoping-capable connections changes nothing — no migration, no new requirements, no declaration. Enforcement starts when the app declares `policy: tenant`, and that flip is deliberately breaking, in the fail-closed direction:
+
+  - Documents without the tenant field fall outside every walled read — the tenant preflight names the collections to backfill.
+  - Every system-context caller of the connection (webhook verifiers, hook routines, scheduled endpoints) and every strategy caller starts failing until it runs with an organization: reads can declare `tenant: none` at the point of use, writes go through `CallApi` with `organization`. Declaring `tenant: none` on a read is inert under `pinned`, so authoring it ahead of the flip is safe and recommended wherever a caller-less context reads a walled connection.
+
+- aa6bb38: feat(api)!: A declared `payloadSchema` is now enforced on every caller.
+
+  **Breaking:** a caller that sends a payload outside an endpoint's `payloadSchema` is now refused
+  before the routine runs. Until now the schema was only advertised to MCP clients and agents, and
+  nothing checked a payload against it. This is a major bump for `@lowdefy/api` and `@lowdefy/build`
+  because apps whose callers relied on the schema not being checked will see those calls fail.
+
+  Every payload is validated on every call path, and a non-conforming one is refused. Who built
+  the payload decides how the refusal is reported:
+
+  - **An outside caller's payload** is the caller's mistake, a `UserError` logged at warn level and
+    never captured to Sentry. REST (`POST /api/endpoints/<endpointId>` without naming a page)
+    answers `400` with `{ name: 'UserError', message }`; MCP `tools/call` answers `isError: true`
+    carrying the message, and agent tool calls get it as a tool error, so the model can retry.
+  - **A payload the app's own config built** (a page's `CallAPI`, a nested or detached `CallApi`
+    step, a Dynamic block's endpoint, an auth or agent hook, a scheduled run's `schedule.payload`)
+    breaks the endpoint's own contract, so the refusal is a `ConfigError`, logged as a server error
+    with its config location. A page's `CallAPI` fails with `_error.name: ConfigError` (outside
+    development with the generic server error message), a nested `CallApi` reaches the routine's
+    `:catch` as a `ConfigError`, and a detached target or scheduled run fails its run.
+
+  The message names the endpoint, the failing location and what would be accepted, e.g.
+
+  - `Payload for endpoint "create_order" does not match its payloadSchema at /quantity: must be number.`
+  - `... at /status: must be equal to one of the allowed values (draft, placed).`
+  - `... at (root): must NOT have additional properties (colour).`
+  - `... at /slug: must match pattern "^[a-z0-9-]+$".`
+
+  When a location fails both its `type` and one of `enum`, `pattern`, `required` or
+  `additionalProperties`, that keyword is reported.
+
+  There is no opt-out: the way to not validate is to not declare a `payloadSchema`. The build now fails
+  when an endpoint declares both `webhook` and `payloadSchema`, since a webhook routine receives the
+  `{ body, query, headers }` envelope rather than the schema's shape.
+
+  `cleanBuildArtifact` (strips `~k`/`~r`/`~l` markers and unwraps `~arr`) moves into
+  `@lowdefy/helpers`, replacing the private copies in `@lowdefy/api` and `@lowdefy/ai-utils`.
+
+- 06a3a4a: feat(api)!: RenderNotification's landingPage names the page by id
+
+  **Breaking:** `properties.landingPage` is now a page id (or `{ pageId, pathParams }`) instead of a page path. Change `landingPage: /notifications/link` to the landing page's id, for example `landingPage: notifications-link`. A value that names no page, such as a path, fails the step with a `ConfigError` that says to pass the page id.
+
+  The step builds the landing URL path from the route table with `buildPagePath`, like every other notification link, so a landing page with a `path` gets the right URL.
+
+### Minor Changes
+
+- cf25c09: feat(api): `CallAgent` routine steps take `files` beside their prompt
+
+  A `CallAgent` step can now hand the model images and documents: `files: [{ url, mediaType }]` sends the prompt and one part per file as a single user message, an image part for `image/*` and a document part otherwise. The link goes to the provider as a URL, which a provider that takes that media type as a link fetches itself; otherwise the server downloads the file first, within the agent's `fileDownload` limits. Pass a presigned link to a private file. A `files` that is not an array, or an entry without a `url` and a `mediaType`, fails the step with a `ConfigError`. Without `files` a step runs as before.
+
+- 08d8938: feat(api): Tool endpoints read the files attached in an agent chat with `_agent: files`
+
+  An `AgentChat` file uploaded through `uploadPolicyRequestId` now keeps its storage key on its message part, as `providerMetadata: { lowdefy: { key } }`, so saved conversations and `onFinish` hooks hold it beside the signed link. `_agent: files` gives a tool endpoint, and the endpoints it calls with `CallApi`, the files of every message the chat request carried, as `[{ key, filename, mediaType }]`; it is `[]` under a `CallAgent` step. The model gets a line naming each file before it (`Attached file: screenshot.png`), so it can pass the name to a tool, and the storage key is not sent to the model. The saved messages are unchanged. The files come from the person's own chat request, so a tool should look a file up by name in `_agent: files` and check that the key is one the caller may read before reading it.
+
+- b3ba6fb: feat: Tool endpoints know the calling agent with the `_agent` operator
+
+  - **`_agent` server operator.** `_agent: id` returns the id of the agent that called the endpoint as a tool or hook, `_agent: conversationId` the chat's conversation id, and `_agent: true` both as `{ id, conversationId }`. On a call that did not come from an agent (a page request, an MCP tool call, a scheduled, webhook or auth hook run), it returns `null`, or the `default` when one is given, and never throws.
+  - **Set by the engine, not the model.** The agent runtime puts the running agent on the tool endpoint's routine. Nothing in the tool's payload or the chat request can set or change it, so an app can record agent work apart from a person's.
+  - **Inherited by nested calls.** Endpoints a tool endpoint calls through `CallApi` (including `detached: true`) or a connection's `callApi` see the same agent.
+  - **Headless agents.** Tools an agent run by a `CallAgent` routine step calls see the agent with `conversationId: null`.
+
+- f7fa621: feat(agent): agent calls carry the page's path parameters
+
+  `AgentChat` sends the page's `pathParams` with each call next to `urlQuery`, the agent route accepts them, and the page-context option adds a `pathParams` line to the agent's instructions when the page has any. A record id moved from the query into the page path is still known to the agent. Links in agent messages are resolved to their page and path values through the engine's path memory.
+
+- aad166b: feat(api): `_agent: sharedState` gives an agent's tool endpoint the chat's shared state
+
+  A tool endpoint an agent calls can now read the shared state the `AgentChat` block sent with the message, for example the page or browser details an app puts there, with `_agent: sharedState`. The tool reads it from the chat instead of from its input, which the model writes. It is `null` for an agent run by a `CallAgent` step.
+
+- 099d412: AgentChat: send `sharedState` as read-only context
+
+  - **`sharedStateReadOnly: boolean`** (default `false`). When `true`, the block still sends `sharedState` with each turn (to `_payload`, and to the agent's context block with `pageContext: true`), but the server does not register the `update-page-state` tool, so the model is never offered a write to page state. Use it to give an agent context such as the current time or the record on screen when some of those values are also bound to inputs the agent should not change. Without it, an app that wanted context but no writes had to list every other tool in the agent's `activeTools`.
+
+- 07a67b5: AI requests take `maxOutputTokens` and `timeout`, and a closed request cancels its model call.
+
+  - `GenerateText`, `GenerateObject` and `Decide` take `timeout`: the milliseconds a model call may take, retries included, before it is cancelled. `Decide` also takes `maxOutputTokens`.
+  - The `Anthropic`, `OpenAI`, `Google` and `AIGateway` connections take `maxOutputTokens` and `timeout` as defaults for every request and agent on the connection that does not set its own.
+  - Request resolvers receive `signal`, which aborts when the request that started the work closes: when the server's request timeout (`config.requestTimeout`) answers first, or, on the Node server, when the client disconnects. The AI requests pass it to the model call, so a call that nobody is waiting for stops instead of running, and billing, to its end. A call stopped by the request timeout fails with a `ServiceError`. A call stopped because the client left fails with a `UserError`, which is logged as a warning.
+  - Work that outlives its request is not cancelled with it: endpoints with `async: true`, detached runs, and agent chat turns, which still run to their end so `onFinish` hooks save the conversation. A `CallAgent` step is cancelled with the routine that runs it.
+
+  A synchronous routine that kept running after its request timed out now has its AI calls cancelled at the timeout. Use `async: true` for work that takes longer than `config.requestTimeout`.
+
+- cad92af: feat: The server matches page paths to pages
+
+  - `matchPagePath({ routes, path })` (exported by `@lowdefy/node-utils`, so the journey tools match paths the way the server does) matches a request path to `{ pageId, pathParams }` against the route table. A fixed segment beats a placeholder at the first position where patterns differ; fixed segments match case-sensitively; each segment is decoded once; an empty segment (other than one trailing `/`), an undecodable segment and a `.` or `..` segment match no page.
+  - `getPageConfig` takes the request `path` instead of the page id, loads the matched page and returns its `pageId` and `pathParams` with the status. An unmatched path answers as an unknown page id did.
+  - `getRootConfig` returns `pagePaths`, the path of every page with one that the caller may open.
+  - Dynamic block endpoints receive `pathParams` in their payload next to `urlQuery`.
+  - A same-origin navigation URL in Dynamic content is checked on the page its path matches.
+
+- 660157b: Add app events. The `events` object at the root of `lowdefy.yaml` takes `onInit` and `onInitAsync` actions that run once each time the app loads in the browser, whichever page opens first, and do not run again on navigation. The app `onInit` runs before the first page's own events and keeps the page in its loading state until it finishes, so a page's `onInit` can read the global values it set. The app `onInitAsync` runs after it without blocking the page, and pages re-render when it sets global values. Use them to set up `global`, for example user settings fetched with `CallAPI`. App events run outside any page, so the build fails if one uses a page-scoped action (`SetState`, `Request`, `Validate`, `Reset`, `CallMethod`, ...) or operator (`_state`, `_input`, `_request`, ...). Errors display and log like page event errors, run the `catch` actions, and do not stop the page from loading.
+
+  Closes #815.
+
+- 6d311c8: feat: AwsS3PutObject copies a file from a URL
+
+  `AwsS3PutObject` takes a `url` in place of `content` and streams what that `https:` link answers into the bucket, so a routine can copy a file it is handed as a presigned link without the bytes passing through the routine as base64.
+
+  - **Limits.** `maxBytes` (required with `url`) caps the copy: a `Content-Length` over it is refused before reading, and a body that passes it is cut off. `contentTypes` (such as `image/*`) limits what the link may answer with, and `timeout` (default 20 seconds) covers the whole fetch and upload.
+  - **Refusals name their reason.** A refused copy stores nothing and throws an error whose `code` is `url_not_https`, `url_not_public`, `too_large`, `content_type`, `fetch_failed` or `timeout`, so a `:catch` can answer each its own way.
+  - **Public addresses only.** The link, and every link it redirects to, must lead to a public address. Loopback, private, link-local (cloud metadata), unique-local, carrier-grade NAT, unspecified and multicast addresses are refused with `url_not_public`, checked on the address the connection opens to, so a name that resolves differently a second time cannot get past it.
+  - **The link stays out of logs.** When the request fails, the error's `received` holds `[REDACTED]` in place of `url`, since a presigned link carries its signature. Request types name such properties in `meta.credentialProperties`, which plugin authors can use for any property derived from a secret.
+  - **Return value.** `AwsS3PutObject` returns `{ bucket, key, size, contentType }`, with `content` as well as with `url`.
+
+- 7636cca: feat: `CallApi` can run its target in one organization, as a named stand-in caller.
+
+  A `CallApi` step in a trusted system run (a scheduled run, an auth hook, a webhook whose `verify` request passed, or a detached run from one) can name `organization` and, optionally, `caller: { id, name }`. The target runs as a system run bound to that organization: under the `tenant` organizations policy every walled request inside it, and in the endpoints it calls, is filtered and stamped with the organization, with the wall on. `_user` inside it is `{ id, name, organization_id, system: true }` when `caller` is named (no roles), or null otherwise, so routines and change logs that stamp writes with the caller run unchanged. A detached call carries the binding.
+
+  The step is refused in a signed-in caller's routine, a strategy caller's, or a webhook with no passing verifier, and a bound run can not name a different organization or caller. A `caller` without `organization`, or a static value of the wrong shape, is a build error.
+
+  Only the stand-in caller carries `_user.system`. A `jwt` auth strategy whose `claimMapping` names `system` is a build error, and the dev server refuses a mock user, headless user or e2e user that sets `system`.
+
+- f889c26: feat: dynamic blocks policies. Declare `policies.dynamicBlocks` in `lowdefy.yaml` to render block config stored as data — generated forms, model output — through a `Dynamic` block within limits the app sets. A policy lists the blocks, actions, operators, endpoints, requests, pages and origins content may use, an optional state path it must write under, whether HTML is allowed, and size, depth and actions-per-event limits. It requires literal values wherever content names a target.
+
+  - `Dynamic` blocks take `properties.policy`. The policy's types are bundled into the page, and the resolved content is checked against the policy on every page get; a violation renders the fallback and logs each rule broken.
+  - New built-in routine step `ValidateDynamic` runs the same check and returns `{ valid, errors, blocks }`, with a content path, rule and message per error, for a generator to correct and retry. In a Dynamic block's endpoint, `_step: <stepId>.blocks` of a passing step with the block's policy is returned as config; all other data stays literal.
+  - New built-in routine step `DescribeDynamicPolicy` returns what a policy allows, with the schemas of its blocks, actions and operators, to build a model's prompt from.
+  - The build validates policies (installed types, exact origins, no `Dynamic` or `_operator`), checks their pages, endpoints and requests on every page that hosts them, and warns when a policy without HTML lists operators that build strings.
+
+- b56bb7a: feat: Lowdefy apps as OAuth 2.1 authorization server for external MCP clients.
+
+  The app's MCP endpoint gains an app-issued OAuth 2.1 envelope, so external MCP clients connect with app-issued bearer tokens.
+
+  - One MCP address per deployment: `POST /api/mcp`, with RFC 9728 metadata at `/.well-known/oauth-protected-resource/api/mcp`. The resource URIs default to the current environment's `url` in `config.environments`. The organization a token acts in is chosen at authorization, not encoded in the address.
+  - After login and before consent the authorization server sends the user to `auth.oauthProvider.postLoginPage` (required under the `tenant` organizations policy) to choose one of their organizations; the page runs `SetActiveOrganization` then the new `OAuthContinue` action. Consent is then per (client, user, organization), and every access token carries the choice as its `organization_id` claim — refresh grants keep it.
+  - Scopes are `mcp:read`, `mcp:write` and `offline_access`, so clients get refresh tokens: access tokens last 1 hour, refresh tokens 30 days. A rotated refresh token is accepted again for two minutes, so several sessions sharing one sign-in can refresh together.
+  - The `/api/mcp` route resolves the member from that claim, refuses a token whose grant no longer stands (consent deleted), and stamps `auth_method: 'mcp'` on the caller. A token whose user is no longer a member of its organization gets the `401` `WWW-Authenticate` challenge and cannot be refreshed, which sends the client back through authorization.
+  - New `RevokeMcpGrant` auth step: an MCP tool built on it gives up the calling assistant's own grant, so the assistant's next call is challenged to reconnect — and to choose an organization again.
+  - `mcp.endpoints` entries carry a `scope` (`mcp:read` | `mcp:write`); tools are listed and callable only when the caller's role gate and token scope both allow.
+
+- 1d31a29: feat: Set MCP server instructions with `mcp.instructions`.
+
+  The app's `mcp` block takes an optional `instructions` string, sent to MCP clients in the `initialize` result. Clients such as Claude Code place it in the model's system prompt, so it suits a short note on how the app's tools fit together. Clients may truncate long instructions, so keep it to a few lines.
+
+- 09717e8: MongoDB driver errors become `ServiceError`s with a code and a hint.
+
+  Every MongoDBCollection request now maps a driver failure to a `ServiceError` whose message names the collection and the operation, whose `code` is the MongoDB error code, and whose new `hint` says what to do about it — add `upsert: true` on a duplicate key, index the filter fields on a time limit, grant the database user a role on an authorization failure, and so on.
+
+  The driver's raw message is no longer sent to the browser: it can quote values from the document that triggered the error. A `ServiceError`'s cause is now dropped when the error is serialized to the client, so the raw text stays in the server log, where the dev terminal prints it as `Caused by: MongoServerError: …` under the located error line.
+
+- 6b4bd99: Runtime errors reach the agent feedback channel with their config source.
+
+  - The dev server now collects server-side failures — request, endpoint, MCP and agent tool errors — into a ring buffer surfaced as `serverErrors` in `GET /lowdefy-docs/build-status` and the `lowdefy_build_status` MCP tool, beside `clientErrors`. Each entry carries the resolved yaml `source` and `config` path, plus `endpointId`, `requestId` and `pageId` where known (page request failures name the request).
+  - MCP tool errors carry their config source (` (at file.yaml:line)`) and hint in dev. Unexpected tool-call failures now go through the server's error sink so they are logged with their source. Production keeps returning the bare message.
+  - `_js` execution errors report the original JavaScript error (`ReferenceError: x is not defined`) instead of pasting the whole function source into the message.
+
+- 7bd38cb: Implement the `:while` routine control. A routine using `:while` now runs its `:do` routine repeatedly while the condition holds, instead of failing at request time with "Unexpected control" for config that built cleanly.
+
+  The condition is re-evaluated before every iteration against the routine's current `state` and `steps`. Unlike `:for`, a `:while` loop does not index the step results of its body, so each iteration overwrites the previous one and `_step: my_step` reads the latest iteration's value. There is no iteration cap - a condition the body never falsifies loops forever, as it would in JavaScript.
+
+- d46ce43: feat(api): The app's MCP server can run an endpoint after every tool call
+
+  The `mcp` block takes an optional `afterToolCall`, the id of an API endpoint the server runs after each tool call that reached its endpoint, once the reply to the client is built. It runs as the tool's caller with the payload `{ tool, endpoint_id, scope, payload, success, response }`, so an app can record what agents do with its tools, refusals included.
+
+  ```yaml
+  mcp:
+    afterToolCall: record-tool-call
+    endpoints:
+      - id: search-customers
+        scope: mcp:read
+  ```
+
+  The hook never changes the reply: a hook that fails is logged as a warning and the client gets its reply as if there were no hook. It does not run for an unknown or hidden tool, a role or scope shortfall, or a payload the tool's `payloadSchema` rejects. The reply waits for the hook, so it is not cut short on serverless platforms. The build checks that the named endpoint exists; it is normally an `InternalApi` endpoint, not listed as a tool.
+
+- 60fb714: feat: Member tokens for MCP scripts
+
+  A script that runs on its own can now call an app's MCP tools with a long-lived **member token** instead of an OAuth grant, which a crashed refresh can sign out with no way back short of a person signing in again. A member creates a token for themselves from a signed-in session with the new `CreateMcpToken` auth step, choosing an expiry in days or none. The script sends it as `Authorization: Bearer ldf_mcp_…` to `/api/mcp` and is served as that member, with their roles and organization, exactly as an OAuth-connected assistant is (`_user.auth_method` is `'mcp'`).
+
+  - Tokens are stored hashed in the new `user-mcp-tokens` auth collection, created only in apps that set `auth.oauthProvider`.
+  - `RevokeMcpToken` switches off one of the caller's own tokens; `RevokeOrgMcpToken` lets owners and admins switch off any token in their organization. `RemoveMember`, `LeaveOrganization` and `DeleteUser` delete the member's tokens too.
+  - A token stops working when its member leaves, is removed or is banned. A refused token gets a `401` whose `error_description` says why.
+  - A banned user's OAuth access tokens are refused on `/api/mcp` too.
+
+  See "Tokens for scripts" on the MCP Server & OAuth docs page.
+
+- ee7285c: feat(build): MCP tools can declare annotations
+
+  An `mcp.endpoints` entry takes an optional `annotations` object with the MCP tool annotations: `title`, `readOnlyHint`, `destructiveHint`, `idempotentHint` and `openWorldHint`. They are validated at build time and sent with the tool in `tools/list`, so clients such as Claude can show a readable tool name and skip the confirmation prompt for read-only tools.
+
+  ```yaml
+  mcp:
+    endpoints:
+      - id: search-customers
+        scope: mcp:read
+        annotations:
+          title: Search customers
+          readOnlyHint: true
+  ```
+
+  Annotations are declared, never derived from `scope`: an `mcp:read` tool can still write.
+
+- 31605fb: Notification and email links to patterned pages: a `{ pageId, urlQuery, pathParams }` link builds its URL from the page's pattern in `routes.json` with `buildPagePath`, and a missing path value fails with the builder's error. The stored notification record keeps `pathParams` on the link object. `resolveLink` in `@lowdefy/email-templates` now takes `{ link, paths }`, `buildPreviewProps` takes `paths`, and `lowdefy emails` passes the page paths from `routes.json`.
+- 959ec32: feat: The `_credential` operator keeps a runtime-made credential out of the server logs
+
+  The log scrub only knew the secrets the server holds, so a value a routine made at runtime, such as a new API key or a secret derived with `_hmac`, printed in plain text at debug level in every `:set_state`, `:return`, step result and error `received` that held it. Wrap the value in `_credential` where it is made: it is returned unchanged, so the routine and its caller still get it, and every log line for the rest of that request shows `[REDACTED]` in its place, on the production and development servers alike. Marked values are also scrubbed from the request's Sentry events, and an endpoint run through a `CallApi` step with `detached: true` keeps the marks its dispatcher made. The development server still logs `_secret` values in full.
+
+- cda22c0: feat: Pages carry the paths of the pages they link to, and static links to pages with placeholders are checked
+
+  - Each page artifact carries `linkPaths`, `{ [pageId]: path }` for every page that declares a `path` and that the page's collected links target: Link actions with a static `pageId`, HTML `data-page-id` links and Dynamic block link policies. It is `{}` when there are none.
+  - A Link action with a static `pageId`, or an HTML `data-page-id` link, to a page with placeholders must give every placeholder a value, in `pathParams` or `data-path-params` (a JSON object). Values an operator computes are checked at runtime.
+  - `MenuLink` takes `pathParams`. A menu link to a page with placeholders must give every placeholder a static value, and the default menu leaves such pages out. When `homePageId` is unset, the root config's `home` carries the chosen menu link's `pathParams`.
+  - A module auth page is contributed at its `path` when it declares one, and auth page URLs are mapped to pages through the route table.
+
+- e6302c6: fix: Reload when the server answers as another caller
+
+  Page, request and endpoint responses now carry an `x-lowdefy-caller` header naming who the server answered as: `<caller>; session=<hash>; roles=<hash>; memberships=<hash>`. `<caller>` is a short hash of the user id and active organization id, empty when anonymous. `session` hashes the session id, `roles` the caller's app roles and organization role (owner, admin or member) in the active organization, and `memberships` the ids of every organization the person belongs to (under the pinned organization policy, only the app's own organization). A field the server does not know is left out, such as `session` for an API key caller. The browser compares the header with the caller the page renders and reloads the page when the caller or their roles differ, so a page never keeps showing one person's or organization's data after a sign-in as someone else or an organization switch in another tab, and `_user.roles`, `_user.org_roles` and role-gated blocks always match the server. A new session or a changed list of organizations for the same person, organization and roles does not reload the page.
+
+  - A request or endpoint call answered with a 401 while the page shows a signed-in user reloads the page, since the session has ended. A 403 from a page request reloads too; a 403 from an endpoint, and a two-factor enrolment refusal, are thrown as before.
+  - When the session names a different user than the page renders, the page reloads instead of keeping the previous user rendered.
+  - A kept page instance is rebuilt after `SetActiveOrganization` and `UpdateSession` instead of rendering the state and request results it had under the previous organization.
+  - `CallAPI` results read by `_api` are dropped when the organization changes, so a result fetched for one organization is never read under another. Global state is left as it is.
+  - A tab reloads at most once every 10 seconds for these reasons; a second difference inside that window fails the call with an `AuthenticationError` instead of reloading again.
+  - `@lowdefy/helpers` exports `callerStamp`, `parseCallerStamp` and `rolesHash`.
+
+- 43e5dc4: `:parallel_for` takes `:concurrency`, and expected errors a `:catch` handles log at debug
+
+  - **`:concurrency`** on `:parallel_for` runs at most that many iterations at once (a positive integer; operators allowed), for routines that call a rate-limited service for every item. Every item still runs, and the result is the same as without it.
+  - **Caught errors.** A request, service or user error inside a `:try` that has a `:catch` was logged as an error before the `:catch` handled it, so a routine that expects failures (a provider waterfall's 404s) filled the log. Those expected outcomes are now logged at debug. Config, operator and internal errors still go through full error handling (config location, the dev error feed, Sentry) even when caught. Errors with no `:catch`, and errors in `:catch` or `:finally`, are logged as before.
+  - A request's schema errors in an endpoint step now name the step instead of `Request "undefined"`.
+  - `createPlaywrightConfig` (`@lowdefy/block-dev-e2e`) takes optional `appDir`, `name`, `testMatch`, `services`, `env`, `fullyParallel` and `workers`, for suites that need their own app and services.
+
+- 7623c86: The server resolves each request's client address itself, and a new `config.trustedProxies` setting names the proxies it believes.
+
+  - Auth rate limits (sign-in and sign-up: 3 attempts per 10 seconds per address), the session's recorded address and the captcha check use the address the server resolved, not the `X-Forwarded-For` header a client sent. A self-hosted server takes the address from the connection. Behind a reverse proxy, load balancer or ingress, every connection comes from the proxy, so list its addresses or CIDR ranges in `config.trustedProxies`; the server then reads `X-Forwarded-For` from the right, skips trusted hops and takes the first untrusted address. Without it every client shares the proxy's rate limits. The server logs a warning the first time a request carries `X-Forwarded-For` while `trustedProxies` is not set.
+  - On Vercel the function entry `lowdefy vercel-output` writes takes the address from `x-real-ip`, which the platform sets on every request.
+  - The production request and error logs record the resolved address as `client_address`.
+  - `lowdefy build` fails when a `config.trustedProxies` entry is not an IP address or CIDR range.
+  - In `lowdefy test` journeys, each actor keeps its own client address.
+
+- 4f37391: feat: Webhook endpoints answer with the HTTP status their routine sets
+
+  - **`:reject` takes `:status` and `:body`.** In a webhook endpoint, `:status` (400 to 499) sets the HTTP status and `:body` the body, sent as is. A `:reject` without `:status` answers 400 with `{ error: { code: 'rejected', message } }`.
+  - **Through `CallApi`.** A `:reject` in an `InternalApi` endpoint the webhook calls sets the answer the same way, so the work can live in the called endpoint.
+  - **Clear statuses for the rest.** A failed `ValidateSchema` step answers 400 (`invalid_request`, naming the failing path), a failed verifier 401 (`unauthorized`), and any other error 500 (`internal_error`) with nothing from the error. A successful routine still answers 200 with its return value.
+  - **Build check.** `:status` and `:body` on a `:reject` in any endpoint other than a webhook or an `InternalApi` endpoint is a build error.
+
+- 5d951af: feat: Webhook endpoints can answer with plain text
+
+  - **`:return` takes `:content_type: text/plain`.** In a webhook endpoint, the endpoint answers `200` with the returned string as the body, `Content-Type: text/plain; charset=UTF-8` and `X-Content-Type-Options: nosniff`. This completes subscription handshakes that want the token echoed as text, such as Microsoft Graph's `validationToken` check.
+  - **Strings only.** The returned value must be a string; any other value fails the run with the `500` answer.
+  - **Build check.** `:content_type` on a `:return` outside a webhook endpoint, or with any value other than `text/plain`, is a build error.
+  - A `:return` without `:content_type` answers JSON exactly as before.
+
+- 4b3f5bd: feat: Webhook verifiers get the raw request body as `rawBody`.
+
+  A webhook endpoint's `verify` request now receives `{ body, rawBody, query, headers }`, where `rawBody` is the request body exactly as received, as a string. Senders such as GitHub (`X-Hub-Signature-256`), Stripe and Slack sign the exact bytes they post, which serialising the parsed `body` again does not reproduce, so a signature check reads `_payload: rawBody`. A body that is not JSON reaches the verifier as `rawBody` too. `rawBody` is given only to the verifier: the routine's payload stays `{ body, query, headers }`.
+
+### Patch Changes
+
+- d12c7cc: fix: Schema validation no longer grows server memory or fails on a schema with an `$id`.
+
+  - The shared ajv instance kept every schema object it compiled. A `ValidateSchema` step compiled a fresh copy of its schema on every call, and an endpoint's `payloadSchema` was compiled again whenever its config file was read again, so the server's memory grew for its whole life.
+  - A second copy of a schema with an `$id` failed with `schema with key or id ... already exists`: a `ValidateSchema` step with such a schema worked once and then failed on every call, and so did a `payloadSchema` after a dev rebuild or a config cache eviction.
+
+- d7b2029: chore: Update the MCP SDK to 1.31.0 and `@hono/mcp` to 0.3.2.
+- ebf95f8: fix(server-dev): Cheaper rebuilds and restarts in the dev server
+
+  - **Restarts no longer fail with "Port in use".** A restart now waits for the old server process to exit before it starts the new one (up to 10 s, then a forced stop and up to 5 s more), so the new process never finds the port still taken and the server no longer stays down until the next restart.
+  - **No more endless rebuild loop.** An app whose own local plugin package is its config directory (its plugin lives next to `lowdefy.yaml`) rebuilt itself every few seconds when its ref resolvers wrote into `public/`. The local plugin watcher now reacts only to code files (`.js`, `.mjs`, `.cjs`, `.jsx`, `.ts`, `.tsx`, `.json`) and ignores `public/`, `node_modules` and the build directories. YAML and Markdown edits stay with the config watcher, so a page edit no longer runs a full build as well.
+  - **Page builds no longer rewrite the whole key maps.** Every page the dev server built rewrote `keyMap.json` and `refMap.json` twice, and the files only grew (tens of MB on large apps, with a full parse after each edit). They now hold only what the config build wrote; each page build writes the keys it added to a small file under `build/jitMaps/`. Error locations, `/lowdefy-docs/find` and the file watcher read those files. A key from a page built before the last two page edits may resolve without a location.
+  - **Unchanged build files are left alone.** After a config build, artifacts whose bytes did not change are no longer replaced, so Vite does not reload modules that did not change.
+  - **Agents restart less.** The MCP tools and agent guidance now say to restart the dev server only when it seems stuck or build status looks stale, or after secrets a wrapper injects have changed. `.env` edits and local plugin code are picked up without a restart.
+
+- 8c68631: feat: Opt-in Content-Security-Policy and no-store caching for pages and API responses
+
+  - **`config.security.contentSecurityPolicy`.** Set `true` to send a Content-Security-Policy header with every app page, or an object with `reportOnly: true` to send it as `Content-Security-Policy-Report-Only`, and `directives` to add sources per directive (for example `script-src: ['https://www.googletagmanager.com']`). Sources are added to the default policy, never replace it. The build checks the option and writes the resolved policy to `build/security.json`. Off by default: without the option nothing changes.
+  - **A nonce per render.** With the policy on, every page render draws a new 128-bit nonce. Lowdefy's inline scripts, the page config script, and every `<script>` and `<style>` element in `app.html.appendHead` and `appendBody` carry it, and antd's style tags take it through `ConfigProvider`. Styles allow `'unsafe-inline'`, since parts of antd (the modal and drawer scroll lock, text area auto size, watermarks) add styles that cannot carry a nonce.
+  - **Dev server too.** `lowdefy dev` sends the same header, and allows the page's own websocket origin for hot reload.
+  - **No-store responses.** HTML pages, `/api/page`, `/api/user`, `/api/request` and `/api/endpoints` (and `/api/root` in dev) send `Cache-Control: private, no-store`, so neither the browser nor a shared proxy stores them. Hashed assets under `/assets` keep their long-lived immutable caching.
+
+- 71fef2d: fix(api): A forwarded cron pings the target environment's `<basePath>/api/cron/<endpointId>`. It pinged `<url>/api/cron/<endpointId>`, so with `config.basePath` set every forwarded schedule missed the app's cron route.
+- dda12e3: fix(api,servers): detached calls release the dispatcher at once. The `/api/detached` route awaited the target's whole routine before replying, and the dispatching invocation keeps itself alive (`waitUntil`) until that reply arrives — so every parent stayed in flight for as long as its detached children ran (a cron tick that answers in milliseconds was held open by its slowest dispatched job, keeping its instance's memory billed), and a chain of detached hops was a chain of nested in-flight requests. The route now answers `202` as soon as the call is authorized and runs the target after the response under its own `waitUntil` (new `acceptDetachedEndpoint` in `@lowdefy/api`); the outcome is logged as `detached_run_done` / `detached_run_failed`.
+- a6e7e42: fix(api): A detached `CallApi` checks the target endpoint's `auth` like a synchronous call
+
+  A `CallApi` step with `detached: true` now runs its target only when the dispatching user could call that endpoint synchronously. System dispatchers (cron, hooks, verified webhooks) pass as before.
+
+- 550be9f: feat(api,client,build): email one-time code sign-in, and the magic-link email carries the code
+
+  Magic-link sign-in fails behind corporate mail security that opens links before the
+  person does: the scanner follows the link, the single-use token is spent, and the
+  click that follows is rejected. Apps can now offer a one-time code instead. Enable
+  `auth.emailOTP` and the app emails a short code the person types into the tab they
+  started from, which no link scanner can consume, and which also works when the email
+  is read on a different device from the one signing in. Two new actions drive it,
+  `EmailOtpSend` and `EmailOtpVerify`.
+
+  With both `auth.magicLink` and `auth.emailOTP` enabled, the magic-link email carries
+  the code as well, so one email serves both paths and nothing about the existing
+  `Login` flow changes: the person clicks the button, or falls back to typing the code.
+
+- 238cba5: fix: A page `CallAPI` without a `payload` is checked against the endpoint's `payloadSchema` as an empty object, as a nested `CallApi`, agent tool, MCP call and schedule already were. Before, a schema with `type: object` refused it.
+- 8398345: fix(api,build,servers): Model caller-less system contexts on a single `context.system` trust property, and correct the per-runner trust scope for cron, webhook, and detached endpoint runs.
+
+  Scheduled (cron), webhook, and detached endpoint runs execute with no user session. Nested
+  `CallApi` steps in those routines were re-authorized against that session-less context, so any
+  call to a protected (`auth.public: false`) endpoint failed — silently breaking runs that compose
+  other endpoints. This replaces the previous blanket `system` flag with one run-level trust
+  marker, `context.system`, read by every authorization layer, and scopes trust correctly per
+  runner:
+
+  - **Cron** is trusted at the transport (`CRON_SECRET`) and holds a system context from
+    construction — nested `CallApi` steps blanket-pass (endpoint role-authorization is undefined
+    without a caller, so it is skipped, not denied). Unchanged in behaviour.
+  - **Webhook** now starts caller-less **and untrusted**: its public transport proves nothing, so a
+    nested protected `CallApi` fails closed until the run earns trust. An endpoint declares trust
+    through a `webhook.verify` request plugin that runs as a gate against the raw request before the
+    routine body; on success the run becomes trusted, on failure the route returns 401 and the
+    routine never runs. A webhook with no verifier runs untrusted throughout. The build now requires
+    a webhook endpoint to be declared explicitly public (listed in `auth.api.public`) — an implicit
+    or protected webhook is a build error.
+  - **Detached** now carries the dispatching run's identity across the loopback hop instead of
+    forcing a system context. A user-dispatched detached run authorizes nested calls against the
+    user's roles exactly as a synchronous call would; a cron-, hook-, or verified-webhook-dispatched
+    run inherits the system context and blanket-passes.
+
+  User-session behaviour is unchanged: a user-initiated `CallApi` chain still re-authorizes each
+  target against the user's roles.
+
+- bfc6a00: fix: Endpoint responses no longer carry build markers, and the dev run-endpoint tool reports a failed routine's own error.
+
+  - Endpoint and request responses built from config (a `:return` object, a `:set_state` value read back) no longer include `~k`, `~r` and `~l` keys or wrap arrays as `{ "~arr": [...] }`. A webhook endpoint now sends its `:return` value to the caller in exactly the shape the config gives it.
+  - The dev server's run-endpoint and run-request tools (`lowdefy_run_endpoint`, `lowdefy_run_request`) no longer answer with `TypeError: Cannot read properties of undefined (reading 'length')` when a routine fails or ends without `:return`. They return the routine's result, including its error and the error's config source.
+  - `serializer.serialize` accepts `skipMarkers`, as `serializeToString` already does.
+
+- b226c43: fix: Classify expected outcomes and faults consistently across the v7 runtime and build.
+
+  A sign-in the auth server rejects - a wrong password, an expired or already-used link, a stale
+  OAuth authorization query - was reported as an `ActionError`: logged in the browser, posted to
+  `/api/client-error`, and logged again on the server at error level against the action's config
+  location, while BetterAuth itself logged every 4xx as `ERROR [Better Auth]`. These are expected
+  outcomes of user interaction, not app faults. Auth client methods now throw a `UserError` for a
+  4xx (with `metaData.code` / `metaData.status` for `catch` actions to branch on), and the server
+  owns BetterAuth's API-error logging so a rejected attempt is one warn line.
+
+  The same rule was applied across the code new in v7:
+
+  - New `AuthorizationError` (403): an authenticated caller refused by a request, endpoint, agent,
+    websocket or auth-step gate is one warn line and a 403, not a `ConfigError` logged at error
+    level with a 500 and a Sentry event. The agent and websocket gates now also return 401 to an
+    unauthenticated caller. All three servers handle `AuthenticationError`,
+    `TwoFactorEnrolmentRequiredError` and `AuthorizationError` the same way; `server` no longer
+    reports each fault to Sentry twice.
+  - A wrong HTTP method on an API route is a 405, not an error-level log and a 500.
+  - Routine `:throw`, schema validation failures and a nested `CallApi` that ended in `:throw` are
+    `UserError`s logged at warn, not error.
+  - Config faults that were plain `Error`s are `ConfigError`s (unconfigured auth, mock user without
+    auth, missing `auth.email`, unknown block type, ambiguous link targets, strategy secrets,
+    tenant-wall refusals, storage post-policy fields, `_organization` / `_build.authConfig`
+    misuse); invariant violations are `LowdefyInternalError`s (write-phase artifact checks, invalid
+    routine, auth adapter contract); upstream failures are `ServiceError`s (websocket transport,
+    JWKS fetch, BetterAuth 5xx, tenant preflight probes, SMTP only when the network failed).
+    `ServiceError.isServiceError` also recognises AWS SDK `$metadata.httpStatusCode` and numeric
+    5xx codes.
+  - Build: agents, MCP endpoints, notifications, websockets, `CallAgent` / `RenderNotification`
+    step references and organization client-action references collect every error instead of
+    stopping at the first; `websocket-refs`, `dynamic-endpoint-refs`, `callapi-refs`,
+    `callapi-internal-refs` and `icons` are valid `~ignoreBuildChecks` slugs; a plugin module that
+    resolves but fails to load is reported instead of surfacing later as an unknown type (a plugin
+    without an optional subpath such as `schemas` is not a failure); the deprecated
+    `public/styles.less` check runs as a validation step rather than failing the write phase.
+  - Errors revived from the wire keep their class for the auth gate errors, and the dev client
+    revives serialized Lowdefy errors instead of flattening them to their message.
+
+- f278706: fix: Websocket subscribes and unsubscribes are handled in the order they are sent, and each reply is matched to the subscribe it answers.
+
+  The server handled a connection's frames concurrently, so an unsubscribe sent while a subscribe was still being set up ran first and removed nothing. The subscription and its source then kept running for a page that had left, until the connection closed. The server now handles each feed's frames in the order they arrive, while different feeds on a connection still run side by side, and a subscribe that finishes after its connection closed is removed.
+
+  Subscribe frames now carry a `requestId` that the server echoes in its reply, so a late reply to a subscribe that a newer one replaced no longer settles or fails the newer subscribe. A server that does not echo the id is still matched by websocket id.
+
+  The browser client also keeps an idle connection open until its publishes are answered, closes a connection that finishes opening after its last feed was unsubscribed, and resets its reconnect backoff only after a connection has stayed open for ten seconds, so a server that drops connections straight after accepting them is not retried every half second.
+
+- 4cc0f36: feat: Journeys run on named data sets
+
+  Journeys can run on named data sets. Declare one in `tests/data/<name>.yaml` with committed fixtures and named users. A journey with `data:` runs against a fresh in-memory MongoDB database of its own, on the running dev server, and your own browser tabs keep using your real database. `user:` and `as:` can name a data set user.
+
+  Under a data set no request reaches your real data: every connection reads the run's database, is sunk, or fails the journey. Connection plugins gain a `meta.dataSet` declaration:
+
+  - `'redirect'`: the run's database URI and name are merged in (core `MongoDBCollection`).
+  - `'walled'`: a type that holds no database URI and reaches MongoDB only through the walled client (`walled(connectionId)` with `getWalledCollection` from `@lowdefy/connection-mongodb/walled`) passes unchanged, and the walled connections it names take the run's database.
+  - `'external'`: an outside service (core `AxiosHttp`, `SendGridMail`, `SMTP`, `Stripe`, the AI providers, `Mcp`, `TregConnection`, `AwsS3Bucket`, `AzureBlobContainer` and `GoogleCloudStorageBucket`). Its requests are still validated and checked, then recorded and answered with `null`, never sent. The run's result lists them as `sunk`, with the connection, request and evaluated request properties (secrets scrubbed). Mail sent to the dev server's mail capture still reaches it, so the `email` step works. A request resolver can declare `meta.dataSet: 'external'` itself, so a connection that holds database access sinks only that request type and runs the rest against the run's database.
+
+  A connection whose type declares nothing, such as `Knex`, `Redis`, `Elasticsearch` or `GoogleSheet`, or a redirected connection whose whole `properties` is an operator, fails the journey with an error naming the connection. A data set journey's browser that reaches the dev server on another host fails the step instead of reading your real database. The in-memory store binds a free port from 49152 up, stops with its files removed when the dev server stops, and is replaced after its `mongod` dies.
+
+- 69c31e8: feat: Replay journeys with `--repeat`, measure what each journey exercised, and run config mutants through journeys
+
+  - **`lowdefy test [paths...] --repeat <n>`.** Run journey files or directories anywhere under the config directory, candidates in `tests/journeys/_candidates/` included; `--filter` still applies on top. `--repeat` (1 to 10) runs each journey n times and classifies it `PASS`, `FLAKY` (some runs failed, each failing run's step printed) or `FAIL` (every run failed: a finding, not a test to fix by retrying). Any `FLAKY` or `FAIL` exits 1. A journey file the runner refuses fails once and is not repeated. Run once, the output is unchanged. `lowdefy_run_tests` takes `paths` and `repeat` with the same meaning, and each result carries `class`.
+  - **What a journey exercised.** Every journey result carries `exercised`: the pages, requests (with call counts), endpoints and app events its browsers asked the dev server for, merged across actors, plus the endpoints a routine reached through `CallApi` (`via`) and whether each request and endpoint writes. `lowdefy test` keeps each journey's newest path in `.lowdefy/test/exercised.json`.
+  - **Config mutants (dev server).** `POST /lowdefy-docs/mutants` lists the mutants on what a set of journeys exercised (dropped actions, skipped validation, flipped visibility, swapped `_if` branches, dropped payload keys, retargeted links, dropped blocks and routine steps), each with an id that is stable across builds and the source line it changes. A journey POST can carry one `mutant`: the dev server applies it only to the requests of that journey's own browsers, including detached endpoint calls, and reports how often it applied. Your own browser tabs keep seeing the unmutated app.
+
+- e5cffa6: feat(api,client,build,actions-core): magic-link landing page keeps the token unconsumed until a real click
+
+  A magic-link sign-in token can only be used once, and the auth server spends it on
+  the first request to the link — including a request nobody made. Corporate email
+  security (Microsoft Defender Safe Links, Proofpoint URL Defense, Mimecast) opens
+  every link in a message as it is delivered, so by the time the person clicks, the
+  link is already used up and they land on the error page.
+
+  Set the new `auth.authPages.magicLink` to a page in your app and the sign-in email
+  links there instead, carrying the token and the sign-in destinations along. The
+  page just sits there when a scanner fetches it; a button on it runs the new
+  `MagicLinkVerify` action, which finishes the sign-in. The token is only spent when
+  a person clicks, so scanned mailboxes can sign in again.
+
+  `MagicLinkVerify` needs no configuration — it reads the token and the destinations
+  from the page's own address. Bind it to a button click, never to page load: a
+  scanner that runs the page's JavaScript would use up the token all the same.
+
+  Leave `auth.authPages.magicLink` unset and magic-link sign-in behaves exactly as
+  before. The sign-in email also now shows the link as readable text under the
+  button, for mail clients that strip or rewrite buttons.
+
+- 5355d30: fix: A POST whose body is not a JSON object is answered with 400 and logged as a warning, instead of a 500 logged as a server error. This covers `/api/endpoints/*`, `/api/request/*`, `/api/agent/*`, `/api/detached/*`, `/api/usage` and `/api/client-error` on every server, plus the dev server's `/api/dev-inspect`, `/lowdefy-feedback` and `/lowdefy-docs/state-checkpoints/{load,snapshot}`. The dev tool routes that already treat a missing or unreadable body as empty keep doing so.
+- a9442cc: Production pages load only the plugin code they use.
+
+  The production client used to ship every block, action, operator and icon the app uses anywhere in one main bundle, and every first visit downloaded all of it. Now the build writes one small module per distinct page type set, and each page loads its own. On the docs app the main bundle drops from 6,016 kB to 1,021 kB (1,778 kB to 332 kB gzipped). A simple page's first load drops from 1,720 kB to 529 kB gzipped.
+
+  - The HTML preloads the page's chunks alongside the main bundle, so the first page does not wait an extra round trip.
+  - Content-hashed assets are served with `Cache-Control: public, max-age=31536000, immutable`, on the Node server and in `lowdefy vercel-output`.
+  - Lowdefy's plugin packages declare `"sideEffects": ["**/*.css"]`, so a page that uses one block no longer loads the whole package.
+  - The build adds the types a page runs without naming them: the operators the `_js` accessors call, and the actions and operators a block runs for events it registers itself (such as `Request` in `Upload` or `SetLocale` in `PageHeaderMenu`), which blocks list in `meta.actions` and `meta.operators`. Plugin blocks that register their own events should list them the same way.
+  - A Dynamic block whose content uses a type its `properties.types` did not declare still works: the page loads the full type set and the server logs a warning naming the type to declare.
+
+  No config changes. The dev server is unchanged.
+
+- 3c2258c: Production pages load only the icons they use.
+
+  Icons used to be one app-wide chunk that every page loaded, which is costly for apps with a long `theme.icons.include` list or the react-icons compatibility set. Each page's plugin chunk now carries its own icons: the names in its config and `_js` functions, the icons its blocks draw, and the icons in `menus` and `global`.
+
+  - An icon name that only arrives at runtime (from state, a request, HTML built from data, `theme.icons.include`, or another page) still renders. The first time a page draws a bundled icon that is not one of its own, it loads the rest of the app's icons once; the icon keeps its space, empty, until they arrive. A `data-icon` name renders nothing until then.
+  - A page whose Dynamic content names such an icon loads the app's icons before it first renders, and the HTML preloads them.
+  - `Client` takes an optional `loadAllIcons` prop, and `createIcon` now takes `{ icons, loadAllIcons }`.
+
+  No config changes. The dev server still loads every icon.
+
+- 2755501: feat: The build checks block properties, action params and operator params against their plugin schemas
+
+  - After refs resolve, every block's `properties`, action's `params` and operator's params is validated against the schema its plugin ships. A finding is a warning with the type, the field, and the file and line of the field: `[ConfigWarning · plugin-schema] Block "Button" property "colr" is not allowed.`
+  - A value an operator gives at runtime is not judged. A missing required key or a misspelt key still reports, even beside operators.
+  - `~ignoreBuildChecks: [plugin-schema]` silences the check on a node, and `plugin-checks` and `--skip-plugin-checks` cover it. A plugin makes its schema findings errors with `schemaLevel: 'error'` in its `./checks` export.
+  - `@lowdefy/ajv` exports `getConfigSchemaErrors` and `formatSchemaError`. Dynamic pages validate block properties with the same function, so a `oneOf` above an operator no longer reports at runtime.
+  - The `Validate` and `ResetValidation` schemas accept `true` and the `{ blockIds, regex }` form the actions already take.
+
+- 56dfd8e: fix: A Dynamic block whose endpoint routine ends with `:reject` is logged once, as the warning the reject writes. It is no longer logged again at error level when the fallback renders.
+- 2486253: fix: A `ValidateSchema` step compiles its schema once and reuses it, instead of compiling it again on every call. Validators are cached by schema content, so a schema built by operators still gets checked as it is on each call.
+- afd1fa2: fix: A webhook endpoint sends its response as plain JSON. A date in the `:return` value now arrives as an ISO string instead of `{ "~d": 1767323045000 }`, and an error as its message fields instead of `{ "~e": ... }`.
+- b8beaa3: Websocket upgrades from another origin are refused. `/api/websocket` accepts an upgrade whose `Origin` matches the `Host` it arrived on, the first `X-Forwarded-Host`, or the app's configured public URL (`BETTER_AUTH_URL`, the current environment's `url`, or an auth trusted origin), and one that sends no `Origin` (a server or script). Any other upgrade gets a 403, and the server logs a warning with its `Origin` and `Host`. Behind a proxy or CDN, pass the original `Host` or set `X-Forwarded-Host`. Hosts compare without case and without default ports. In `lowdefy dev`, the upgrade's `Host` must also be `localhost`, a `*.localhost` name or an IP address, as for every other dev request. The rule lives in `@lowdefy/api` (`isSameOriginRequest`, `isWebSocketOriginAllowed`), shared by every server.
+- 36c9d6a: fix(api): A websocket re-subscribe that fails leaves nothing open
+
+  A re-subscribe to an open websocket (the `Subscribe` action with a changed payload) removes the previous subscription before preparing the new one. A re-subscribe that fails, such as one the caller is not authorized for, no longer leaves the previous channel running for a client that has stopped reading it.
+
+- f160307: fix(api): Websockets re-check their caller and close when it changes
+
+  An open websocket now follows the session it was opened with. The server resolves the caller again from the connection's upgrade headers before every subscribe and at least once a minute. When the user signed out, the session ended, the membership was removed, the roles changed or the user switched organization, the server closes the connection with code `4401`. The client reconnects straight away, which authenticates afresh, and resubscribes as the current caller (a connection closed this way again within 30 seconds of opening reconnects with the normal backoff); a subscription that caller may not hold fails as it would on a freshly loaded page.
+
+  Subscriptions now run the connection `read` check, as requests do: a connection with `read: false` refuses a `MongoDBChangeStream` subscription. A websocket type on a connection is checked unless its meta sets `checkRead: false`.
+
+- Updated dependencies [cf25c09]
+- Updated dependencies [08d8938]
+- Updated dependencies [14c4764]
+- Updated dependencies [b3ba6fb]
+- Updated dependencies [f7fa621]
+- Updated dependencies [aad166b]
+- Updated dependencies [099d412]
+- Updated dependencies [d12c7cc]
+- Updated dependencies [cad92af]
+- Updated dependencies [660157b]
+- Updated dependencies [5ad581d]
+- Updated dependencies [4d08b55]
+- Updated dependencies [6144814]
+- Updated dependencies [db1a4d3]
+- Updated dependencies [04077d9]
+- Updated dependencies [baf6576]
+- Updated dependencies [d42f420]
+- Updated dependencies [e024e63]
+- Updated dependencies [3be51e0]
+- Updated dependencies [7636cca]
+- Updated dependencies [ebf95f8]
+- Updated dependencies [24383b5]
+- Updated dependencies [81a5ad3]
+- Updated dependencies [91740e6]
+- Updated dependencies [2595439]
+- Updated dependencies [8c68631]
+- Updated dependencies [460fdaa]
+- Updated dependencies [badaa49]
+- Updated dependencies
+- Updated dependencies [2ef077f]
+- Updated dependencies [fc8a168]
+- Updated dependencies [8348aa9]
+- Updated dependencies [a354a1f]
+- Updated dependencies [f9e483f]
+- Updated dependencies [588344b]
+- Updated dependencies [d2c8e01]
+- Updated dependencies [f889c26]
+- Updated dependencies [550be9f]
+- Updated dependencies [46d28c4]
+- Updated dependencies [7c20d1b]
+- Updated dependencies [6b3a9bb]
+- Updated dependencies [4a35ba2]
+- Updated dependencies [36f864c]
+- Updated dependencies [eaa6517]
+- Updated dependencies [b56bb7a]
+- Updated dependencies [1d31a29]
+- Updated dependencies [09717e8]
+- Updated dependencies [2baefc1]
+- Updated dependencies [6b4bd99]
+- Updated dependencies [662eaa9]
+- Updated dependencies [8398345]
+- Updated dependencies [8c50bfc]
+- Updated dependencies [bfc6a00]
+- Updated dependencies [b226c43]
+- Updated dependencies [c744e40]
+- Updated dependencies [de6a268]
+- Updated dependencies [239a3a7]
+- Updated dependencies [49490b6]
+- Updated dependencies [ec6d2e7]
+- Updated dependencies [a79fb1d]
+- Updated dependencies [d5f7f3f]
+- Updated dependencies [4cc0f36]
+- Updated dependencies [ef64856]
+- Updated dependencies [cb0acad]
+- Updated dependencies [9a92898]
+- Updated dependencies [0205b5a]
+- Updated dependencies [316f5be]
+- Updated dependencies [ba86509]
+- Updated dependencies [f9d8520]
+- Updated dependencies [e5b2f83]
+- Updated dependencies [da76905]
+- Updated dependencies [1766343]
+- Updated dependencies [9ed1386]
+- Updated dependencies [73c5e14]
+- Updated dependencies [c3e0d79]
+- Updated dependencies [e5cffa6]
+- Updated dependencies [1d547f3]
+- Updated dependencies [d46ce43]
+- Updated dependencies [5e6bed8]
+- Updated dependencies [ee7285c]
+- Updated dependencies [371a4a6]
+- Updated dependencies [c6b598a]
+- Updated dependencies [d455e25]
+- Updated dependencies [aa510ca]
+- Updated dependencies [31605fb]
+- Updated dependencies [959ec32]
+- Updated dependencies [856e65d]
+- Updated dependencies [c1bb9a0]
+- Updated dependencies [409c918]
+- Updated dependencies [5060cdf]
+- Updated dependencies [05b66f2]
+- Updated dependencies [a34939d]
+- Updated dependencies [cda22c0]
+- Updated dependencies [366ed1e]
+- Updated dependencies [33f4bba]
+- Updated dependencies [e6302c6]
+- Updated dependencies [43e5dc4]
+- Updated dependencies [1f58d7f]
+- Updated dependencies [aa6bb38]
+- Updated dependencies [a9442cc]
+- Updated dependencies [3c2258c]
+- Updated dependencies [94fc9e0]
+- Updated dependencies [81bd4f0]
+- Updated dependencies [2755501]
+- Updated dependencies [5017abe]
+- Updated dependencies [99fcb06]
+- Updated dependencies [588ca93]
+- Updated dependencies [25ce8ba]
+- Updated dependencies [ae3541c]
+- Updated dependencies [cac0798]
+- Updated dependencies [9512788]
+- Updated dependencies [99c9dac]
+- Updated dependencies [fa02e14]
+- Updated dependencies [537bf54]
+- Updated dependencies [7623c86]
+- Updated dependencies [26d905c]
+- Updated dependencies [7ab8964]
+- Updated dependencies [712d6ef]
+- Updated dependencies [4f37391]
+- Updated dependencies [5d951af]
+- Updated dependencies [4b3f5bd]
+- Updated dependencies [31911e7]
+- Updated dependencies [242746a]
+- Updated dependencies [aca0ddf]
+  - @lowdefy/build@7.0.0
+  - @lowdefy/operators-js@7.0.0
+  - @lowdefy/node-utils@7.0.0
+  - @lowdefy/operators@7.0.0
+  - @lowdefy/helpers@7.0.0
+  - @lowdefy/ajv@7.0.0
+  - @lowdefy/errors@7.0.0
+  - @lowdefy/connection-smtp@7.0.0
+  - @lowdefy/email-templates@7.0.0
+  - @lowdefy/nunjucks@7.0.0
+
 ## 6.1.0
 
 ### Minor Changes
