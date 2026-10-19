@@ -347,7 +347,8 @@ blocks:
 
   # Narrow columns whose text is wider than them, one per way text reaches the cell: straight into
   # the cell, through a cellRenderer function, through a built-in cell type, and inside
-  # .ag-cell-wrapper, which AG Grid adds for a checkbox column.
+  # .ag-cell-wrapper, which AG Grid adds for a checkbox column. The right-aligned column is plain text
+  # with cell.align and no renderer.
 
   - id: theming_cell_ellipsis
     type: AgGridLowdefy
@@ -373,6 +374,12 @@ blocks:
           field: dealer
           width: 120
           checkboxSelection: true
+        - headerName: Right
+          field: dealer
+          width: 120
+          cell:
+            align: right
       rowData:
         - dealer: A dealership name far wider than its column
         - dealer: Another dealership name far wider than its column
+        - dealer: Short

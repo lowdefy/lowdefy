@@ -486,7 +486,7 @@ test.describe('AG Grid theming', () => {
   // anonymous flex item the ellipsis never reaches, and an element that grows to its text's width is
   // clipped by the cell with no "…".
   test.describe('cell overflow', () => {
-    ['Plain', 'Renderer', 'Link', 'Checkbox'].forEach((column, index) => {
+    ['Plain', 'Renderer', 'Link', 'Checkbox', 'Right'].forEach((column, index) => {
       test(`${column} column ends long text in an ellipsis`, async ({ page }) => {
         await navigateToTestPage(page, 'aggridtheming');
         const cell = getBlock(page, 'theming_cell_ellipsis')
@@ -501,6 +501,8 @@ test.describe('AG Grid theming', () => {
           const holder = walker.nextNode().parentElement;
           return {
             display: getComputedStyle(holder).display,
+            overflowX: getComputedStyle(holder).overflowX,
+            whiteSpace: getComputedStyle(holder).whiteSpace,
             textOverflow: getComputedStyle(holder).textOverflow,
             overflows: holder.scrollWidth > holder.clientWidth,
             holderRight: holder.getBoundingClientRect().right,
@@ -508,10 +510,37 @@ test.describe('AG Grid theming', () => {
           };
         });
         expect(box.display).not.toMatch(/flex|grid/);
+        expect(box.overflowX).not.toBe('visible');
+        expect(box.whiteSpace).toBe('nowrap');
         expect(box.textOverflow).toBe('ellipsis');
         expect(box.overflows).toBe(true);
         expect(box.holderRight).toBeLessThanOrEqual(box.cellRight);
       });
+    });
+
+    // A cell holding only text is a block, not a flex container, so its alignment comes from
+    // text-align and align-content rather than justify-content and align-items.
+    test('plain text keeps cell.align and stays vertically centred', async ({ page }) => {
+      await navigateToTestPage(page, 'aggridtheming');
+      const cell = getBlock(page, 'theming_cell_ellipsis')
+        .locator('.ag-row[row-index="2"] .ag-cell')
+        .nth(4);
+      await expect(cell).toHaveText('Short');
+      const box = await cell.evaluate((el) => {
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        const text = range.getBoundingClientRect();
+        const cellBox = el.getBoundingClientRect();
+        const style = getComputedStyle(el);
+        return {
+          gapRight: cellBox.right - parseFloat(style.paddingRight) - text.right,
+          gapLeft: text.left - cellBox.left - parseFloat(style.paddingLeft),
+          offCentre: Math.abs((text.top + text.bottom) / 2 - (cellBox.top + cellBox.bottom) / 2),
+        };
+      });
+      expect(box.gapRight).toBeLessThan(2);
+      expect(box.gapLeft).toBeGreaterThan(20);
+      expect(box.offCentre).toBeLessThan(2);
     });
   });
 
