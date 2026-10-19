@@ -305,6 +305,30 @@ test('useDictation stops when the app goes to the background', async () => {
   await emit('end');
 });
 
+test('useDictation keeps a session the Android permission prompt sends to the background', async () => {
+  let grant;
+  speech.requestPermissionsAsync.mockReturnValue(
+    new Promise((resolve) => {
+      grant = resolve;
+    })
+  );
+  const { result } = await renderDictation();
+  let started;
+  await act(async () => {
+    started = result.current.start();
+  });
+  const [, onChange] = AppState.addEventListener.mock.calls.at(-1);
+  await act(async () => onChange('background'));
+  await act(async () => onChange('active'));
+  await act(async () => {
+    grant({ granted: true, status: 'granted' });
+    await started;
+  });
+  expect(result.current.status).toBe('listening');
+  expect(speech.start).toHaveBeenCalledTimes(1);
+  expect(speech.stop).not.toHaveBeenCalled();
+});
+
 test('useDictation aborts when the host unmounts, and frees the mic for another input', async () => {
   const first = await renderDictation();
   await startListening(first.result);

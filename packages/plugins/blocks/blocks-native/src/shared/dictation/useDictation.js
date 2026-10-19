@@ -249,7 +249,9 @@ function useDictation({ disabled = false, hints, onFinal }) {
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (state) => {
-      if (state === 'background') stopRef.current();
+      // Android's permission prompt sends the app to the background too, so a session still
+      // waiting on the prompt or the mic carries on: only one that listens ends.
+      if (state === 'background' && sessionRef.current?.mic) stopRef.current();
     });
     return () => subscription.remove();
   }, []);
