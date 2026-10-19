@@ -303,28 +303,28 @@
           pageId: selectors
           properties:
             title: Driving Selectors
-    - id: websockets
-      type: MenuGroup
-      properties:
-        docsSection: WebSockets
-        title: WebSockets
-        icon: Radio
-      links:
-        - id: websockets-introduction
-          type: MenuLink
-          pageId: websockets-introduction
+        - id: websockets
+          type: MenuGroup
           properties:
-            title: Introduction
-        - id: websocket-subscriptions
-          type: MenuLink
-          pageId: websocket-subscriptions
-          properties:
-            title: Page Subscriptions
-        - id: websocket-publish
-          type: MenuLink
-          pageId: websocket-publish
-          properties:
-            title: Publish and Actions
+            docsSection: WebSockets
+            title: WebSockets
+            icon: Radio
+          links:
+            - id: websockets-introduction
+              type: MenuLink
+              pageId: websockets-introduction
+              properties:
+                title: Introduction
+            - id: websocket-subscriptions
+              type: MenuLink
+              pageId: websocket-subscriptions
+              properties:
+                title: Page Subscriptions
+            - id: websocket-publish
+              type: MenuLink
+              pageId: websocket-publish
+              properties:
+                title: Publish and Actions
     - id: testing
       type: MenuGroup
       properties:
