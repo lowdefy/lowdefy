@@ -1,5 +1,356 @@
 # Change Log
 
+## 7.0.0
+
+### Major Changes
+
+- 6b3a9bb: feat!: Replace the NextAuth-shaped auth system with BetterAuth.
+
+  Lowdefy auth now runs on [BetterAuth](https://www.better-auth.com) 1.7.7 through the new `@lowdefy/plugin-better-auth` package; `@lowdefy/plugin-next-auth` and `@lowdefy/plugin-auth0` are removed. Every app with an `auth:` block is affected — follow the migration guide at `/migration/auth-upgrade` in the docs.
+
+  Breaking changes:
+
+  - **`auth.database` is required** for any login method; sessions are database-backed only (`session.maxAge` → `expiresIn`, no JWT strategy). Collections follow the `user-*` convention fixed by the adapter and auth columns are stored in snake_case.
+  - **Provider type names change** — `GoogleProvider`, `GitHubProvider`, ... become `Google`, `GitHub`, ...; `OpenIDConnectProvider` → `GenericOAuth`. Provider `id`s and `/api/auth/callback/<id>` URLs are unchanged. Built-in and `GenericOAuth` providers share one id namespace, so the build fails when a `GenericOAuth` `id` is the key of a built-in provider the app also configures. `GenericOAuth` takes `trustEmail: true` to mark its users' emails verified, for an issuer that sends no `email_verified` claim. An invalid provider property fails startup with the provider id and its config location.
+  - **`auth.callbacks` / `auth.events` JS plugins are replaced by `auth.hooks`** — bindings to `InternalApi` endpoints fired in a system context. Verification identifiers carry a `magic-link:` or `auth-state:` prefix, which a `verification.create.before` / `after` hook matching on the identifier must allow for.
+  - **`NEXTAUTH_SECRET` / `AUTH_SECRET` env vars are replaced by `auth.secret`** (use the `_secret` operator); pin the canonical URL with `BETTER_AUTH_URL`, or the `url` of the current environment in `config.environments`. With `auth.email` configured, a production server refuses to start (`ConfigError`) until one of them is set, since every emailed link is built from it; without `auth.email` it logs a warning. While unpinned, auth trusts only the origin the request arrived on, so behind a proxy that ends TLS and forwards plain `http`, sign-in is refused until the URL is pinned. The dev server uses the request origin.
+  - **Built-in auth UI and `auth.theme` are removed** — the app provides its own pages via `authPages` (`signIn`, `signUp`, `error`, `forgotPassword`, `resetPassword`, `verifyEmail`, `twoFactor`, `twoFactorEnrol`, `acceptInvitation`). The emailed verification link from `SignUp` / `SendVerificationEmail` without a `callbackUrl` lands on `verifyEmail` (default `/verify-email`), with `?error=INVALID_TOKEN` or `TOKEN_EXPIRED` when it fails. The reset link from `RequestPasswordReset` without a `redirectTo` lands on `resetPassword` (default `/reset-password`) with `?token=`, or `?error=INVALID_TOKEN`. The build warns when the app sends these emails (`auth.email` with `emailAndPassword`) and the page is missing.
+  - **`EmailProvider` becomes `auth.magicLink` + `auth.email`**, with branded auth emails sent over an SMTP connection.
+  - **The session user shape changes** — `userFields` is removed; `_user` carries `id`, `name`, `email`, `image`, `email_verified`, `active_organization_id`, `profile`, plus `roles` (app roles from the active membership's `appRoles`), `org_roles` (the `owner`/`admin`/`member` tier), `attributes` (merged global + per-organization bag), `two_factor_enrolled` and `auth_method`. `name` and `image` resolve per organization, from the member row `UpdateUserProfile` writes, falling back to the user row. A caller awaiting an organization carries `has_pending_invitation` and, when there is one, `pending_invitation_id`. `_user.sub` is gone — `_user.id` is the internal id.
+  - **Organizations are always on** — roles live on organization memberships; `auth.organizations` configures `pinned` vs `tenant` policy, invitations, the role catalog and the tenant wall that scopes connections by `organization_id`. `invitationExpiresIn` sets how long an invitation stays acceptable (seconds, at least 60, default 48 hours); an expired or cancelled invitation fails with code `INVITATION_EXPIRED`. Accepting an invitation does not switch a session already active in another organization. Organizations have no practical member cap (default 1,000,000); `membershipLimit` sets one, and an unpaged `ListMembers` returns every member.
+  - **Retired client actions** — `ImpersonateUser`, `StopImpersonating` (no replacement); `InviteMember`, `CancelInvitation`, `UpdateMemberRole`, `RemoveMember`, `UpdateOrganization` are now auth steps run from routines.
+  - **Signed-out requests no longer reveal page or endpoint existence** — protected apps answer sign-in for every URL and `401` for missing or protected requests alike.
+
+  New in this line: two-factor auth (TOTP, backup codes, passkeys, `twoFactor.required` enrolment; id token sign-ins are challenged too unless the provider sets `twoFactorTrusted: true`, and `Login` with an `idToken` then navigates to `authPages.twoFactor`), phone number and captcha sign-in, the app as an OAuth 2.1 authorization server for MCP clients (`auth.oauthProvider`, scoped MCP tools), the `_organization` server operator and the `_build.authConfig` projection, and a self-service auth action catalog (`SignUp`, `PasskeySignIn`, `PasskeyUpdate`, `TwoFactorGenerateBackupCodes`, `SetActiveOrganization`, `AcceptInvitation`, `LeaveOrganization`, ...). Auth rate limits (sign-in and sign-up: 3 attempts per 10 seconds per address), the session's recorded address and the captcha check use the client address the server resolves; behind a reverse proxy, list the proxy in `config.trustedProxies`.
+
+### Minor Changes
+
+- 660157b: Add app events. The `events` object at the root of `lowdefy.yaml` takes `onInit` and `onInitAsync` actions that run once each time the app loads in the browser, whichever page opens first, and do not run again on navigation. The app `onInit` runs before the first page's own events and keeps the page in its loading state until it finishes, so a page's `onInit` can read the global values it set. The app `onInitAsync` runs after it without blocking the page, and pages re-render when it sets global values. Use them to set up `global`, for example user settings fetched with `CallAPI`. App events run outside any page, so the build fails if one uses a page-scoped action (`SetState`, `Request`, `Validate`, `Reset`, `CallMethod`, ...) or operator (`_state`, `_input`, `_request`, ...). Errors display and log like page event errors, run the `catch` actions, and do not stop the page from loading.
+
+  Closes #815.
+
+- 81a5ad3: Client navigation by path. The production, e2e and dev clients fetch pages by URL path and learn the page id and path values from the server. Each set of path values is its own page instance: `Client` keys the page tree by the instance key, so following a link from one ticket to another remounts the page, and passes `pathParams` to the page context. The engine keeps up to 10 instances per page and gives actions `getPathParams`. The shown page is written to the path memory before its context is built, and auth callbacks write their target before navigating. A navigation to the path the shown page was matched on skips the fetch, unless the page is dynamic. The router's location carries the path instead of a page id. `setUrlQuery` waits for a page refetch only on dynamic pages.
+- badaa49: Pages re-evaluate only the blocks whose inputs changed.
+
+  Every change - a keystroke, SetState, a request completing - used to re-evaluate every block on the page. The engine now records what each block reads (the state paths, requests, globals and other values its operators read) and re-evaluates only the blocks whose reads changed. Values that change without notice - the clock, the URL, window size, randomness - keep their blocks evaluating on every update, exactly as before. On the docs app and a large production app, a keystroke evaluates 6-8x fewer blocks overall (from all blocks on a page to a handful), with identical output.
+
+  - Every core operator declares how it reads (`tracking`); an operator without a declaration keeps its blocks evaluating every time, so third-party plugins keep working unchanged.
+  - `_js` functions that use the clock, randomness or browser globals are detected at build and treated as always changing.
+  - Set `config.dependencyTracking: false` in `lowdefy.yaml` to evaluate every block on every update as before.
+
+- 7c20d1b: feat: Events no longer bubble to the blocks around the block that handled them
+
+  A click on a block inside another clickable block used to run the events of both, so a Button in a clickable Card also opened the card, and a Box in a List row also ran the row's `onClick`. Now a browser event runs only the innermost event that handles it: once a block with actions for the event fires, the blocks around it skip that same browser event. A block without an event for the interaction, like a Paragraph in the card, still passes the click on to the card. Only blocks on the browser event's own path skip it: events that blocks fire from effects, events of blocks inside the one that handled it, events from method calls, and events a block runs for its own machinery (a file upload's policy request, a table's row fetch) all still run.
+
+  Set `bubble: true` on an event to also run the events of the blocks around it:
+
+  ```yaml
+  events:
+    onClick:
+      bubble: true
+      try:
+        - id: select
+          type: SetState
+          params:
+            selected: true
+  ```
+
+  Inside AgGrid blocks, clicks on a cell's buttons, links, menus, inputs, selectors, switches or selection checkbox no longer trigger `onRowClick` or `onCellClick`. They only fire the control's own event.
+
+  This changes behaviour for apps that relied on a nested click running both events: add `bubble: true` to the inner event to keep it. The `nested-event-bubbling` codemod in `lowdefy upgrade` adds `bubble: true` only where an outer event reads a value the inner event sets, moves AgGrid row-click state setup into the cell control events that relied on it, and lists the other nested events for review. Closes #1154.
+
+- b56bb7a: feat: Lowdefy apps as OAuth 2.1 authorization server for external MCP clients.
+
+  The app's MCP endpoint gains an app-issued OAuth 2.1 envelope, so external MCP clients connect with app-issued bearer tokens.
+
+  - One MCP address per deployment: `POST /api/mcp`, with RFC 9728 metadata at `/.well-known/oauth-protected-resource/api/mcp`. The resource URIs default to the current environment's `url` in `config.environments`. The organization a token acts in is chosen at authorization, not encoded in the address.
+  - After login and before consent the authorization server sends the user to `auth.oauthProvider.postLoginPage` (required under the `tenant` organizations policy) to choose one of their organizations; the page runs `SetActiveOrganization` then the new `OAuthContinue` action. Consent is then per (client, user, organization), and every access token carries the choice as its `organization_id` claim — refresh grants keep it.
+  - Scopes are `mcp:read`, `mcp:write` and `offline_access`, so clients get refresh tokens: access tokens last 1 hour, refresh tokens 30 days. A rotated refresh token is accepted again for two minutes, so several sessions sharing one sign-in can refresh together.
+  - The `/api/mcp` route resolves the member from that claim, refuses a token whose grant no longer stands (consent deleted), and stamps `auth_method: 'mcp'` on the caller. A token whose user is no longer a member of its organization gets the `401` `WWW-Authenticate` challenge and cannot be refreshed, which sends the client back through authorization.
+  - New `RevokeMcpGrant` auth step: an MCP tool built on it gives up the calling assistant's own grant, so the assistant's next call is challenged to reconnect — and to choose an organization again.
+  - `mcp.endpoints` entries carry a `scope` (`mcp:read` | `mcp:write`); tools are listed and callable only when the caller's role gate and token scope both allow.
+
+- db99f9f: feat(client,engine): page lifecycle events for the browser tab, network and window
+
+  Pages can now react to the browser instead of polling to notice that something
+  changed while the user was away. Five new events can be defined on the first
+  blocks of a page: `onVisible` and `onHidden` when the tab is shown or hidden, or
+  the window regains or loses focus (coalesced over 300ms so a focus and
+  visibility pair only runs the chain once, with `_event` carrying `visible` and
+  `reason`); `onOnline` and `onOffline` when the browser reports the network
+  connection was regained or lost (`_event` carrying `online`); and `onResize`
+  when the window is resized, debounced by 200ms (`_event` carrying `width` and
+  `height`).
+
+  The listeners are attached once while the page is mounted and removed when the
+  user navigates away, so they never trigger for a page that is no longer open,
+  and none of them trigger on the initial page load. The action chains run
+  non-blocking, like `onMountAsync`, so they never hold the page in loading.
+
+- 81bd4f0: feat(plugin-posthog): new PostHog product analytics plugin
+
+  A default plugin that wraps the `posthog-js` browser SDK, so no script tag or snippet is
+  needed. `posthog-js` is loaded lazily by `PostHogInit`, so an app with `enabled: false`
+  never downloads it. Run `PostHogInit` from the app's root `events.onInitAsync`, which runs
+  once per app load on whichever page opens first; repeat calls with the same `apiKey` do nothing.
+
+  Adds `PostHogInit`, `PostHogCapture`, `PostHogPageview`, `PostHogCapturePageLeave`,
+  `PostHogIdentify`, `PostHogSetPersonProperties`, `PostHogAlias`, `PostHogGroup`,
+  `PostHogReset`, `PostHogOptIn`, `PostHogOptOut`, `PostHogFeatureFlag` and
+  `PostHogReloadFeatureFlags`, each with a params schema.
+
+  With PostHog disabled every other action is a silent no-op, so analytics can never break an
+  app, but invalid params still throw and an action that runs before `PostHogInit` logs a
+  console warning. `PostHogIdentify` reads the identity `posthog-js` holds and resets before
+  identifying a different person on a shared browser.
+
+  - **Lowdefy semantics** — every event gets `lowdefy_page_id` (the page id, also on a page with a
+    path pattern) and `lowdefy_path_params` (the page's path values, `{}` without a pattern).
+    Autocaptured clicks, rage clicks and dead clicks also get `lowdefy_block_id`,
+    `lowdefy_block_type`, `lowdefy_block_ids`, `lowdefy_option` on a dropdown option, `lowdefy_row`
+    and `lowdefy_column` inside a grid, and `lowdefy_text`: the text of the control the click
+    reached (a button, menu item, option or label), even when the click lands on its icon, a child
+    or a wrapper.
+  - **Event failures** — a `lowdefy_event_failed` event is captured when a block or app event fails,
+    with ids only, never messages or values, and at most 50 per app load. Failures in the app's
+    `onInit` are captured too, although `PostHogInit` runs later in `onInitAsync`. Set
+    `captureEventFailures: false` on `PostHogInit` to turn it off.
+  - **Click text masking** — on by default. Click text (`$el_text`, `lowdefy_text`, `text` entries in
+    `$elements_chain` and `$elements`, `$selected_content` and link targets) is kept only when the
+    config of the page it was clicked on, the menus, the i18n messages or the antd locale spell it
+    out. Grid and table cell values, options and menu items filled by requests, labels built from
+    records and `Dynamic` block output are removed; button, menu, tab, column header and literal
+    option labels stay. Element attributes other than structural ones (tag, classes, `class`,
+    `role`, `type`, `row-index`, `col-id`, `nth-child`, `nth-of-type`) are removed, including
+    `title`, `aria-label` and `data-*`, and `id` is kept only as a block wrapper id. Classes and
+    `data-ph-capture-attribute-*` values are not masked, so apps must not build them from data. URLs
+    are not masked. Set `maskDataText: false` on `PostHogInit` to send full click text, or
+    `options.mask_all_text: true` to send none.
+  - **Deployment environments** — `PostHogInit` registers the current environment as the
+    `environment` super property on every event, and `posthog.enabled: false` in an environment
+    turns PostHog off there (`PostHogInit` behaves as `enabled: false`), alongside the `cron`,
+    `email` and `sentry` switches.
+
+  For plugin authors: action plugins receive a `trace` argument for observing completed events and
+  the read-only app metadata as `lowdefyApp`; the engine trace gains `isConfigText({ text, pageId })`,
+  and `@lowdefy/helpers` exports `filterElementsChain`.
+
+  AutoComplete and PhoneNumberInput render their dropdowns inside the block, like Selector.
+
+- 5017abe: feat: `_media` updates when the browser window is resized
+
+  Blocks that use `_media` now re-evaluate when the window is resized, so `_media` can drive responsive `visible` conditions and properties the way CSS breakpoints do. The page keeps one resize listener, shared with the `onResize` event, and waits until the resize settles (150ms) before doing any work. Only blocks that read a `media` value that changed are re-evaluated: a block that reads `_media: size` updates when the window crosses a breakpoint, not on every pixel of a resize, and blocks that do not use `_media` are never touched. Blocks reading `_media` are also no longer re-evaluated on every unrelated page update.
+
+  The `onResize` page event is now debounced by 150ms (was 200ms), and runs after `_media` blocks have been updated for the new size.
+
+  Fixes #799.
+
+- fa02e14: feat: Page subscriptions that wait for the Subscribe action
+
+  - **`client.subscribeOnMount`.** A page subscription with `client.subscribeOnMount: false` is declared on the page but does not open when the page mounts. The `Subscribe` action opens it, evaluating its `payload` at that moment, and `Unsubscribe` closes it. A widget on every page can then hold its channel only while it is in use. The default, `true`, keeps subscribing on mount.
+  - **`Subscribe` with a changed payload replaces the channel.** Running `Subscribe` on an open subscription evaluates its payload again. When the payload changed, the channel is replaced and its `_websocket` state starts empty, and messages from the old channel are dropped. When it did not change, nothing happens, as before.
+
+### Patch Changes
+
+- 6144814: Allow only safe link schemes in block hrefs
+
+  An `href` is used only when its scheme is one DOMPurify allows by default (`http`, `https`, `ftp`, `ftps`, `mailto`, `tel`, `callto`, `sms`, `cid`, `xmpp`, `matrix`), or it is a relative path, a query or a fragment. Any other value, including one with leading whitespace or control characters, renders no link. This applies to `Button`, `Tag` and `FloatButton`, the url cell of table, AgentChat message and tool result links, `TiptapMentionInput` mention links, and every `href` given to the Lowdefy `Link` component, which covers table and ag-grid link, avatar and relation cells. A `Link` whose `href` is refused renders a span without navigating, and does not fall back to its `pageId` or `url`; the `Link` action with such an `href` throws "Invalid Link: no target resolved." as it does for a `url` it cannot resolve.
+
+  `@lowdefy/helpers` exports the check as `getSafeHref(href)`, which returns the href or `undefined`; `@lowdefy/block-utils` re-exports it.
+
+- db1a4d3: fix(client): Keep browser storage per app and clear user data at sign-out
+
+  Every key Lowdefy writes to the browser's local storage now names the app it belongs to (its `slug` and base path), so apps served from one origin no longer read or overwrite each other's values. The dark mode, locale and sider open preferences are kept per app and stay across sign-outs; a preference stored before this change is moved to the app's key the first time it is read.
+
+  Data that belongs to a person is also kept per signed-in user: the `Search` block's recent searches. It is cleared when the user signs out with `Logout`, and on page load when a different user, or nobody, is signed in on the browser. The scroll positions Lowdefy keeps in session storage are cleared at the same time.
+
+  Blocks reach the keys through two new block methods, `methods.getAppStorageKey(name)` and `methods.getUserStorageKey(name)`, and actions through `methods.getAppStorageKey(name)`.
+
+- 04077d9: fix(build): Check that CallMethod actions target a block on the page
+
+  A CallMethod whose `blockId` did not exist on the page failed at runtime with `Cannot read properties of undefined (reading 'methods')`. The build now warns when a static CallMethod `blockId` names no block on the page (an error in production builds), pointing at the action's config location. A concrete list row such as `list.0.input` matches the configured `list.$.input` block, and pages with Dynamic blocks are not checked because their blocks are only known at runtime. The check can be suppressed with `~ignoreBuildChecks: [callmethod-refs]`. At runtime, a `blockId` produced by an operator that names no block now fails with `block "<id>" does not exist on this page`. Fixes #1176.
+
+- 550be9f: feat(api,client,build): email one-time code sign-in, and the magic-link email carries the code
+
+  Magic-link sign-in fails behind corporate mail security that opens links before the
+  person does: the scanner follows the link, the single-use token is spent, and the
+  click that follows is rejected. Apps can now offer a one-time code instead. Enable
+  `auth.emailOTP` and the app emails a short code the person types into the tab they
+  started from, which no link scanner can consume, and which also works when the email
+  is read on a different device from the one signing in. Two new actions drive it,
+  `EmailOtpSend` and `EmailOtpVerify`.
+
+  With both `auth.magicLink` and `auth.emailOTP` enabled, the magic-link email carries
+  the code as well, so one email serves both paths and nothing about the existing
+  `Login` flow changes: the person clicks the button, or falls back to typing the code.
+
+- eaf9cf8: fix(engine): list row moves and removals no longer leave stale entries in the page's block map.
+
+  Moving or removing a list row whose nested lists differed in length, or a `SetState` or `Reset`
+  that shortened a list, left block map entries that named a moved or removed block, which
+  `CallMethod` and keyboard shortcuts could reach. A `Reset` also cloned the frozen page state one
+  more time than it needed.
+
+- 0f56696: fix(engine): Hiding a display or container block no longer deletes state at its id
+
+  Only inputs and lists own a state field at their block id. Hiding a Button, Paragraph, Box or any other display or container block used to delete the state field with the same name, so `state.status` disappeared when a Button with id `status` was hidden. Hidden display and container blocks now leave state alone, while hidden inputs and lists (including those nested in a hidden container) are still removed as before. Fixes #1521.
+
+- eaf9cf8: fix(engine): a hidden block no longer deletes the state field of a visible block in another container.
+
+  Hidden blocks' fields are removed from state after each evaluation, but a visible block only kept
+  its field from a hidden block with the same id inside the same container. A hidden block with the
+  same id in another container, a hidden duplicate of a list, or a hidden container named like the
+  parent of a visible field deleted the visible block's field, including a visible list row's field.
+  Fields are now collected over the whole page and a field that holds a visible block's value is
+  kept.
+
+- 42bc1ac: fix(engine): Event names are looked up as the block's own events. A `ClickableHtml` `data-event` that names no event declared on the block fires nothing.
+- b308c78: fix(engine): Links and auth callbacks resolve every `url` shape. A fragment (`#section`) moves within the current page, a bare query (`?tab=2`) or a dot path (`./reports`) is relative to the current page, and `mailto:`, `tel:` and app-scheme urls keep their shape, with `urlQuery` as their query. A url is read the way the browser reads it, and a url the browser cannot parse resolves to no link instead of stopping the block from rendering.
+- 3688c5f: fix(engine): A message that fails to display no longer breaks the action that raised it. When the Message block threw while showing an action's loading, success or error message, the raw error replaced the action's result: a failed action lost its error, `catch` actions were skipped, and the page threw an unhandled `Cannot read properties of undefined (reading 'message')`. The display failure is now reported through the error handler on its own, and the action's result stands.
+- a1367df: fix(engine): Resolve `$` row indices in Validate and ResetValidation blockIds
+
+  `Validate` and `ResetValidation` matched blockIds literally, so `params: list.$.name` in a list row matched nothing and the validation passed without checking the row. The blockIds are now resolved from the action's array indices, the same way `SetState` and `CallMethod` resolve them, so `list.$.name` validates the `name` input in the row where the action ran. `regex` patterns are not changed, because `$` already means end of string there. The docs also now name the object param `blockIds`, which is the key the actions read. Fixes #927.
+
+- 4a35ba2: An operator at a block's `class` is now evaluated at runtime instead of being silently dropped. Previously `class: { _if: [...] }` was read as a CSS slot map with a slot named `_if`, so the classes were applied to a slot nothing renders. The operator is now kept under the block slot, and its result may be a string, an array of strings, or an object of `{ class: boolean }`. A result that is a map of CSS keys is reported as a config error at the block's location.
+- 8c50bfc: fix: Operators in `class` no longer give schema warnings, and a page's own `class` reaches the page
+
+  - **Operators in `class` pass the build's schema check (`@lowdefy/build`).** `class: { _if: ... }`, operators as slot values (`class: { .element: { _if: ... } }`) and operators inside a class array printed false `"_if" must be string` or `".element" must be string` warnings, although the operators were evaluated at runtime as expected. An operator is now accepted anywhere a class string is. A `class` of the wrong type now gets the `Block "class" should be ...` message instead of a bare type error.
+  - **Page-level `class` is applied (`@lowdefy/engine`).** A `class` set on the page block (for example `class: { .menu: ... }` on `PageSiderMenu`) was dropped before the page rendered, while `style` on the page worked. It now reaches the page block the same way `style` does.
+
+- 760b660: fix(engine): A page's own `loading` and `skeleton` reach the page.
+
+  `loading` and `skeleton` set on the page block were dropped before the page rendered, the same way a page's `class` was, so a page never showed its loading state or skeleton. They now reach the page block like on any other block.
+
+- 4943f2d: fix(engine): Copy the page state once per SetState, SetGlobal and Reset.
+
+  Every state change resets the block tree, and that reset copied the whole page state again for every container and every list row. On pages with many containers and a large state, each SetState could take seconds. The state is now copied once per reset, so a SetState costs about the same however many containers the page has.
+
+- b226c43: fix: Classify expected outcomes and faults consistently across the v7 runtime and build.
+
+  A sign-in the auth server rejects - a wrong password, an expired or already-used link, a stale
+  OAuth authorization query - was reported as an `ActionError`: logged in the browser, posted to
+  `/api/client-error`, and logged again on the server at error level against the action's config
+  location, while BetterAuth itself logged every 4xx as `ERROR [Better Auth]`. These are expected
+  outcomes of user interaction, not app faults. Auth client methods now throw a `UserError` for a
+  4xx (with `metaData.code` / `metaData.status` for `catch` actions to branch on), and the server
+  owns BetterAuth's API-error logging so a rejected attempt is one warn line.
+
+  The same rule was applied across the code new in v7:
+
+  - New `AuthorizationError` (403): an authenticated caller refused by a request, endpoint, agent,
+    websocket or auth-step gate is one warn line and a 403, not a `ConfigError` logged at error
+    level with a 500 and a Sentry event. The agent and websocket gates now also return 401 to an
+    unauthenticated caller. All three servers handle `AuthenticationError`,
+    `TwoFactorEnrolmentRequiredError` and `AuthorizationError` the same way; `server` no longer
+    reports each fault to Sentry twice.
+  - A wrong HTTP method on an API route is a 405, not an error-level log and a 500.
+  - Routine `:throw`, schema validation failures and a nested `CallApi` that ended in `:throw` are
+    `UserError`s logged at warn, not error.
+  - Config faults that were plain `Error`s are `ConfigError`s (unconfigured auth, mock user without
+    auth, missing `auth.email`, unknown block type, ambiguous link targets, strategy secrets,
+    tenant-wall refusals, storage post-policy fields, `_organization` / `_build.authConfig`
+    misuse); invariant violations are `LowdefyInternalError`s (write-phase artifact checks, invalid
+    routine, auth adapter contract); upstream failures are `ServiceError`s (websocket transport,
+    JWKS fetch, BetterAuth 5xx, tenant preflight probes, SMTP only when the network failed).
+    `ServiceError.isServiceError` also recognises AWS SDK `$metadata.httpStatusCode` and numeric
+    5xx codes.
+  - Build: agents, MCP endpoints, notifications, websockets, `CallAgent` / `RenderNotification`
+    step references and organization client-action references collect every error instead of
+    stopping at the first; `websocket-refs`, `dynamic-endpoint-refs`, `callapi-refs`,
+    `callapi-internal-refs` and `icons` are valid `~ignoreBuildChecks` slugs; a plugin module that
+    resolves but fails to load is reported instead of surfacing later as an unknown type (a plugin
+    without an optional subpath such as `schemas` is not a failure); the deprecated
+    `public/styles.less` check runs as a validation step rather than failing the write phase.
+  - Errors revived from the wire keep their class for the auth gate errors, and the dev client
+    revives serialized Lowdefy errors instead of flattening them to their message.
+
+- c3e0d79: feat(cli): `lowdefy journeys session` prints a recorded dev session as a log to write journeys from
+
+  `lowdefy journeys session` lists the sessions the development server recorded, newest first, with each one's id, time span, pages, interactions and failures. `lowdefy journeys session <id>` prints that session as a log, one line per interaction with what the app did in response, such as `click save → Validate failed [priority]` and `click save → ran Validate, request createTicket ok`, with a `page <pageId>` line per page view. A failed attempt and its retry both show, typed values and generated ids show as recorded, and nothing is turned into an assertion. Agents connected to the development server read the same list and logs with the new `lowdefy_journey_session` tool.
+
+  The development recorder records which actions an event ran and which API endpoints its `CallAPI` actions called, so a log can say `endpoint syncInvoices ok`.
+
+- e5cffa6: feat(api,client,build,actions-core): magic-link landing page keeps the token unconsumed until a real click
+
+  A magic-link sign-in token can only be used once, and the auth server spends it on
+  the first request to the link — including a request nobody made. Corporate email
+  security (Microsoft Defender Safe Links, Proofpoint URL Defense, Mimecast) opens
+  every link in a message as it is delivered, so by the time the person clicks, the
+  link is already used up and they land on the error page.
+
+  Set the new `auth.authPages.magicLink` to a page in your app and the sign-in email
+  links there instead, carrying the token and the sign-in destinations along. The
+  page just sits there when a scanner fetches it; a button on it runs the new
+  `MagicLinkVerify` action, which finishes the sign-in. The token is only spent when
+  a person clicks, so scanned mailboxes can sign in again.
+
+  `MagicLinkVerify` needs no configuration — it reads the token and the destinations
+  from the page's own address. Bind it to a button click, never to page load: a
+  scanner that runs the page's JavaScript would use up the token all the same.
+
+  Leave `auth.authPages.magicLink` unset and magic-link sign-in behaves exactly as
+  before. The sign-in email also now shows the link as readable text under the
+  button, for mail clients that strip or rewrite buttons.
+
+- e6302c6: fix: Reload when the server answers as another caller
+
+  Page, request and endpoint responses now carry an `x-lowdefy-caller` header naming who the server answered as: `<caller>; session=<hash>; roles=<hash>; memberships=<hash>`. `<caller>` is a short hash of the user id and active organization id, empty when anonymous. `session` hashes the session id, `roles` the caller's app roles and organization role (owner, admin or member) in the active organization, and `memberships` the ids of every organization the person belongs to (under the pinned organization policy, only the app's own organization). A field the server does not know is left out, such as `session` for an API key caller. The browser compares the header with the caller the page renders and reloads the page when the caller or their roles differ, so a page never keeps showing one person's or organization's data after a sign-in as someone else or an organization switch in another tab, and `_user.roles`, `_user.org_roles` and role-gated blocks always match the server. A new session or a changed list of organizations for the same person, organization and roles does not reload the page.
+
+  - A request or endpoint call answered with a 401 while the page shows a signed-in user reloads the page, since the session has ended. A 403 from a page request reloads too; a 403 from an endpoint, and a two-factor enrolment refusal, are thrown as before.
+  - When the session names a different user than the page renders, the page reloads instead of keeping the previous user rendered.
+  - A kept page instance is rebuilt after `SetActiveOrganization` and `UpdateSession` instead of rendering the state and request results it had under the previous organization.
+  - `CallAPI` results read by `_api` are dropped when the organization changes, so a result fetched for one organization is never read under another. Global state is left as it is.
+  - A tab reloads at most once every 10 seconds for these reasons; a second difference inside that window fails the call with an `AuthenticationError` instead of reloading again.
+  - `@lowdefy/helpers` exports `callerStamp`, `parseCallerStamp` and `rolesHash`.
+
+- effdeb3: Journey steps can reach controls that are not blocks. Wherever `click`, `fill`, `select`, `expect.visible` and `expect.text` take a `blockId`, they also take a target object: `{ blockId, row, column }` narrows to a grid row (zero-based, as displayed) or cell (by col-id), `text` names the interactive control with exactly that visible text, and `nth` picks among several matches. `text` on its own searches the page front-most layer first — an open dropdown menu, then an open dialog, then the page — so a confirm dialog's `Delete` is clicked over the grid's `Delete` cell buttons behind its mask. This makes grid cell buttons, confirm dialogs, modal footers and menu items addressable by `lowdefy_run_journey`, `POST /lowdefy-docs/journey` and `lowdefy test`. Unknown target keys are rejected before a browser opens, and a failed step names the target the way it was written (`block "grid" row 1 control "Edit" to be actionable`).
+
+  A `click`, `open`, `fill` or `select` whose `text` or `containing` target has no `nth` must match exactly one visible element, or the step fails and says how to narrow it:
+
+  ```
+  Matched 3 controls with text "Delete" in the page; add nth: 0..2, or a blockId/row to narrow it.
+  ```
+
+  Expectations do not need one match: `expect.visible` passes when any match is visible and `expect.hidden` when none is.
+
+- Updated dependencies [b3ba6fb]
+- Updated dependencies [f7fa621]
+- Updated dependencies [099d412]
+- Updated dependencies [4d08b55]
+- Updated dependencies [6144814]
+- Updated dependencies [db1a4d3]
+- Updated dependencies [04077d9]
+- Updated dependencies [d42f420]
+- Updated dependencies [ebf95f8]
+- Updated dependencies [81a5ad3]
+- Updated dependencies [91740e6]
+- Updated dependencies [2595439]
+- Updated dependencies [badaa49]
+- Updated dependencies [f9e483f]
+- Updated dependencies [d2c8e01]
+- Updated dependencies [f889c26]
+- Updated dependencies [09717e8]
+- Updated dependencies [2baefc1]
+- Updated dependencies [662eaa9]
+- Updated dependencies [bfc6a00]
+- Updated dependencies [b226c43]
+- Updated dependencies [239a3a7]
+- Updated dependencies [1766343]
+- Updated dependencies [959ec32]
+- Updated dependencies [a34939d]
+- Updated dependencies [e6302c6]
+- Updated dependencies [1f58d7f]
+- Updated dependencies [aa6bb38]
+- Updated dependencies [94fc9e0]
+- Updated dependencies [81bd4f0]
+- Updated dependencies [2755501]
+- Updated dependencies [5017abe]
+- Updated dependencies [cac0798]
+- Updated dependencies [9512788]
+  - @lowdefy/operators@7.0.0
+  - @lowdefy/helpers@7.0.0
+  - @lowdefy/errors@7.0.0
+
 ## 6.1.0
 
 ### Minor Changes

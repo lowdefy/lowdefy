@@ -1,5 +1,749 @@
 # Change Log
 
+## 7.0.0
+
+### Major Changes
+
+- 36f864c: feat!: Lucide icons replace react-icons, with icon settings and icon-set plugins.
+
+  Lowdefy icons are now [Lucide](https://lucide.dev) icons rendered by `lucide-react`. react-icons names such as `AiOutlineUser` no longer resolve. Run `lowdefy upgrade` to rewrite them, or follow the migration guide at `/v6-to-v7` in the docs.
+
+  Breaking changes:
+
+  - **Icon names.** Use a semantic name (`edit`, `delete`, `chevron-down`, …), a Lucide name in PascalCase (`Pencil`, `Trash`), or a set-qualified name (`lucide:Pencil`). An unknown name at an icon property fails the build with a suggestion; old react-icons and Ant Design names get a migration message.
+  - **Block and Ant Design icons are Lucide.** Every icon a block chooses (validation marks, date picker calendar, menu and sidebar toggles, dark-mode switch, upload lists, pagination arrows, …) and Ant Design's own close, status, expand and loading icons now render through semantic names, so they follow the app's icon set and `theme.icons.aliases`.
+  - **`theme.icons.aliases` targets lose the `Lu` prefix** (`LuPencil` → `Pencil`), and several semantic names now point at Lucide 1.x names (`delete` → `Trash`, `filter` → `Funnel`, `help` → `CircleQuestionMark`, `history` → `RotateCcwClock`).
+  - **Icon hover titles** are generated from the new names ("Pencil", "Arrow left right").
+
+  New:
+
+  - **Icon settings.** `theme.icons.size` (default `1em`), `theme.icons.strokeWidth` (default `2`) and `theme.icons.nonScalingStroke` set app-wide defaults; every icon accepts `strokeWidth` and `nonScalingStroke`.
+  - **Icon-set plugins.** A plugin declares `iconSets` in `types.js` and exports icon data from `./iconSets`. Sets are layered in plugin order - the last plugin wins per icon name, and a partial set falls through - so a plugin can add a single icon to `lucide` or replace one. `theme.icons.set` picks the default set for PascalCase names and can re-skin semantic names.
+  - **`@lowdefy/icons-react-icons`** holds every react-icons 5.6.0 icon under its old name. Install it and set `theme.icons.set: react-icons` to keep old names, for example icon names stored in a database.
+  - **`lowdefy upgrade`** gains a `7.0.0` phase that rewrites react-icons names to semantic or Lucide names from a table covering every Ant Design, Lucide and commonly used react-icons name.
+
+  Fixes: the header locale selector and the AgGrid row menu icons now bundle in production builds, and the dev server reports unknown icon names on pages written inline in `lowdefy.yaml`.
+
+### Minor Changes
+
+- 2735310: feat: Add icon placement to buttons and expose more antd 6.6 features on button, menu, navigation and page layout blocks.
+
+  Buttons can now put their icon after the title. Set `iconPlacement: end` on a `Button`, on a
+  `DropdownButton` (the main button, in normal and split mode), or on each button of an ag-grid
+  `buttons` cell.
+
+  New properties, events and CSS keys:
+
+  - `Button`: `iconPlacement`, `target` (open an `href` in a new tab), and more design tokens in
+    `theme` (`fontWeight`, `iconGap`, `contentFontSize*`, `default*` colors, shadows and more).
+  - `DropdownButton`: `iconPlacement`, and `left`/`right` placements.
+  - `DropdownMenu`: `selectable` (needed for `onSelect` to fire), and `left`/`right` placements.
+  - `FloatButton`: `disabled`, and a back to top mode with `backTop`, `visibilityHeight`,
+    `duration` and `showProgress` (a scroll progress ring).
+  - `Menu`: `triggerSubMenuAction` (open submenus on click), `tooltip` for collapsed inline
+    menus, a `popup` CSS key for submenu popups, and `keyPath` in the `onClick` and `onSelect`
+    events. Horizontal menus draw their overflow indicator with the app's icons.
+  - `Breadcrumb`: `item` and `separator` CSS keys, and `links` on a breadcrumb item to show a
+    dropdown menu of links (also on the page layout `breadcrumb` property).
+  - `Pagination`: `align`, `size: large`, `showLessItems`, `responsive`, an `item` CSS key, and
+    more design tokens.
+  - `Steps`: `maxCount` to collapse long step lists, `item`, `itemTitle`, `itemSubtitle` and
+    `itemContent` CSS keys, and more design tokens.
+  - `Tabs`: `centered`, `tabBarGutter`, `indicator` (size and alignment of the ink bar),
+    `destroyOnHidden`, and `item` and `popup` CSS keys.
+  - `Affix`: `target`, the id of a scrollable element to stick to.
+  - `Tour`: `gap.offset` and `gap.radius`, `nextButtonProps` and `prevButtonProps` for step
+    button text, object `scrollIntoViewOptions`, and `title`, `description`, `cover` and `footer`
+    CSS keys.
+  - `Layout` and `Sider`: the `theme` property now applies antd Layout design tokens (such as
+    `bodyBg`, `headerHeight`, `footerBg` and the sider trigger tokens), and the docs list them.
+  - `Sider`: a `body` CSS key, `xxxl` breakpoint, and `onBreakpoint` now passes `{ broken }`.
+  - `PageSiderMenu` and `PageSidebarLayout`: a `siderBody` CSS key, and `sider.collapsible` is
+    documented on both.
+  - ag-grid `buttons` cell: per-button `iconPlacement`. ag-grid `menu` cell: `left`/`right`
+    placements.
+
+  Fixes that change what existing apps see or receive:
+
+  - `Pagination` passed the wrong `skip` in its `onChange` and `onSizeChange` event payloads: one
+    page too many (`current * pageSize`). The event `skip` now matches the block value
+    (`(current - 1) * pageSize`). Apps that corrected for this, for example by subtracting the
+    page size from `_event: skip`, must remove that correction. Apps that read `skip` from the
+    block value in state are not affected.
+  - An inline `Menu` with `collapsed: true` outside a `Sider` now collapses. Before, antd never
+    received the setting and the menu rendered expanded.
+  - A collapsible `Sider`'s trigger (and the trigger shown when `collapsedWidth` is 0) did nothing
+    when clicked. It now toggles the sider, and in `PageSiderMenu` and `PageSidebarLayout` it
+    toggles the page's sider state. Responsive collapse is unchanged: crossing the breakpoint
+    only fires `onBreakpoint`.
+  - The `theme` property of `Layout`, `Sider`, `PageHeaderMenu` and `PageSiderMenu` had no effect.
+    `Layout` and `Sider` now apply it as antd Layout design tokens, and `PageHeaderMenu` and
+    `PageSiderMenu`, like `PageSidebarLayout`, apply it as global design tokens for the page.
+    Apps that set it will now see it applied.
+  - `DropdownButton` and `DropdownMenu` applied the `menu` CSS key through props antd ignores, so
+    menu classes and styles never reached the popup. The `profileMenu` and `localeSelectorMenu`
+    CSS keys of `Header` and the page layouts had the same problem. `DropdownButton` also dropped
+    its `item` CSS key, and outside split mode, like `DropdownMenu`, its element id, class and
+    style: these now land on the button (`DropdownButton`) and the trigger wrapper
+    (`DropdownMenu`).
+  - `Tabs` passed its `tabBar`, `tabPane` and `inkBar` CSS keys under names antd 6 does not use,
+    so they had no effect. They now style the tab bar, each tab pane and the ink bar.
+  - The `item` style of `Menu` and `DropdownMenu` was ignored; only the class applied. Both now
+    apply.
+  - `Tour` ignored `gap: { x, y }`. It now maps to antd's `gap.offset`.
+
+  Other fixes:
+
+  - `Pagination` always showed the item range and total, although the docs said `showTotal`
+    defaults to false. The docs now say it defaults to true, and `showTotal: false` hides it.
+  - `Steps` no longer logs antd deprecation warnings for `size: default`, `progressDot` and item
+    `description`.
+  - `FloatButton` no longer logs a deprecation warning for `description`, and draws its default
+    icon with the app's icons.
+  - `DropdownButton` passes antd's `medium` size for `size: middle`.
+  - The `Header`, `Footer` and `Content` `theme` docs now say antd only applies Layout tokens
+    from the parent `Layout` block. The `arrow` CSS key of `DropdownButton` and `DropdownMenu` and
+    the `subMenu` CSS key of `DropdownMenu` are documented as having no effect, since antd does
+    not expose those parts.
+
+- 80b5cbf: feat: Expose more antd 6.6 features on the text, number, date, colour and range input blocks.
+
+  Existing properties, events, cssKeys and defaults are unchanged. A few fixes change what existing
+  apps see; they are listed under **Behaviour changes**.
+
+  **Text inputs**
+
+  - `TextInput`, `TextArea`: new `onClear` event. New Input tokens on the `TextInput` theme:
+    `inputFontSize`, `inputFontSizeLG`, `inputFontSizeSM`.
+  - `PasswordInput`: new `allowClear`, `maxLength`, `prefix` and `prefixIcon` properties, a
+    `prefixIcon` cssKey, an `onClear` event, and the Input font size tokens.
+  - `NumberInput`: new `prefix`, `prefixIcon`, `suffix` and `suffixIcon` properties (with
+    `prefixIcon` and `suffixIcon` cssKeys), `mode: spinner` for minus and plus buttons on either side
+    of the input, and `changeOnWheel`.
+  - `AutoComplete`: new `prefix` and `prefixIcon` properties, an `onSelect` event that fires when an
+    option is picked from the dropdown, and `popup` and `prefixIcon` cssKeys.
+  - `PhoneNumberInput`: new `onClear` event, and a `selectorBg` theme token for the region selector
+    background.
+  - The `underlined` variant works on every input with a `variant` property.
+
+  **Date selectors** (`DateSelector`, `DateTimeSelector`, `DateRangeSelector`, `MonthSelector`,
+  `WeekSelector`)
+
+  - New `prefix`, `prefixIcon`, `placement` and `inputReadOnly` properties, a `prefixIcon` cssKey,
+    the `underlined` variant, and `onFocus`, `onBlur`, `onClear` and `onOpenChange` events.
+    `DateRangeSelector` passes `{ range: 'start' | 'end' }` with `onFocus` and `onBlur`.
+  - `showWeek` on `DateSelector`, `DateTimeSelector` and `DateRangeSelector`.
+  - `DateTimeSelector`: `needConfirm: false` removes the OK button and saves the selection when the
+    popup closes.
+  - `DateRangeSelector`: `allowEmpty` for open-ended ranges (the empty end is `null` in the value), and
+    `disabled` accepts `[true, false]` to disable only one end.
+  - The five blocks document the same design token set, now including `presetsWidth`,
+    `presetsMaxWidth`, `hoverBg`, `activeBg` and `withoutTimeCellHeight`.
+
+  **Colour, range and toggle inputs**
+
+  - `ColorSelector`: `mode` accepts `[single, gradient]` to offer both, `presets` items are
+    documented, and a new `popup` cssKey.
+  - `Slider`: `disabled` accepts an array to disable individual range handles, `range` accepts
+    `{ draggableTrack, editable, minCount, maxCount }`, new `autoFocus` and `keyboard` properties,
+    `onChangeComplete`, `onFocus` and `onBlur` events, and `rail`, `track` and `handle` cssKeys.
+  - `Switch`: new `loading` property.
+  - `CheckboxSwitch`: new `indeterminate` and `autoFocus` properties.
+
+  **Behaviour changes**
+
+  - `ColorSelector`: clearing the colour sets the value to `null`, where it used to be the last colour
+    with zero alpha, eg. `#1677ff00`. A cleared, required ColorSelector now fails validation. In
+    gradient mode the value is a `linear-gradient(...)` CSS string.
+  - `PhoneNumberInput`: the region selector and the input are siblings in an `.ant-space-compact`
+    group instead of an `.ant-input-group-addon`. The `ldf-phone-number-input` class and the `element`
+    style stay on the outer wrapper, but CSS that targets `.ant-input-group-addon` or
+    `.ant-input-group-wrapper` needs updating. The `theme` applies to both the region selector and the
+    input. `addonBg` no longer applies, since there is no addon; use `selectorBg`.
+  - `AutoComplete` and `ColorSelector`: `theme` tokens used to be ignored and now apply (see Fixes).
+
+  **Fixes**
+
+  - `AutoComplete` theme tokens now apply. They targeted a component token set antd does not have;
+    they now target `Select`, which AutoComplete renders.
+  - `ColorSelector` theme tokens now apply (they targeted `ColorSelector` instead of `ColorPicker`).
+    The `colorPicker*` tokens are no longer documented, since antd computes them and ignores
+    overrides.
+  - `ColorSelector` gradient mode works: a gradient is stored as a `linear-gradient(...)` CSS string
+    and read back as a gradient, where it used to collapse to its first colour and switch the picker
+    back to single mode. Clearing the colour sets the value to `null` instead of a transparent hex.
+  - The `popup` cssKey of the date selectors now reaches the calendar popup. The date selectors no
+    longer document `addonBg`, which the DatePicker never reads.
+  - The `variant` description says that `bordered: false` takes precedence, which is how the input
+    blocks behave.
+  - `PhoneNumberInput` renders the region selector and the input in a `Space.Compact` group instead of
+    the deprecated `addonBefore`.
+  - `AutoComplete` and `PhoneNumberInput` pass options as an `options` array and search settings
+    through `showSearch`, instead of the deprecated `Select.Option` children and top-level
+    `filterOption`, `onSearch` and `optionFilterProp`.
+  - `DateTimeSelector` no longer passes the deprecated `onSelect`, which antd 6 ignores.
+    `showToday` is passed to antd as `showNow` on `DateSelector` and `DateTimeSelector`.
+  - `Switch` passes `size: medium` to antd for the `default` size, which antd 6 deprecates.
+  - `Search` passes `destroyOnHidden` to its modal instead of the deprecated `destroyOnClose`.
+  - `Search` `theme` now applies. It targeted an antd component that doesn't exist; the tokens now style the trigger Button, the search Modal and its Input.
+  - `RatingSlider` no longer passes Lowdefy's `components` and `events` to the antd Slider.
+  - `DateTimeSelector` documents the `secondStep` default (30) and description correctly, and
+    `MonthSelector` and `WeekSelector` document that `showToday` has no effect.
+  - Examples that used the removed `inputStyle`, `optionsStyle` and object `options` properties now
+    use `style` cssKeys or are removed.
+
+- 26a1894: feat: Expose antd 6.6 dropdown, tree and label features on the selector blocks and fix their antd deprecations.
+
+  The selector, tree, list and Label blocks were audited against antd 6.6.5. New properties, events
+  and style keys are additive; existing properties keep their names and defaults.
+
+  **Selector, MultipleSelector, TreeSelector, TreeMultipleSelector**
+
+  - New properties `placement`, `listHeight`, `virtual`, `popupMatchSelectWidth`, `prefix` and
+    `prefixIcon`.
+  - New `onOpenChange` event with `{ open }`.
+  - New `popup` and `prefixIcon` style keys. TreeSelector and TreeMultipleSelector also get the
+    `selector` key that the other two already had.
+  - While the block is loading, the suffix icon becomes a spinner.
+  - Selector and MultipleSelector accept `variant: underlined`.
+
+  **MultipleSelector**
+
+  - New `maxCount`, `showSearch` and `removeIcon` properties (plus a `removeIcon` style key).
+    `maxTagCount` also accepts `responsive`.
+  - `onChange` now passes `{ value }`, as Selector does.
+
+  **TreeSelector and TreeMultipleSelector**
+
+  - New `treeLine` and `treeExpandAction` properties.
+  - TreeSelector opens its dropdown with the selected node's parents expanded (unless
+    `treeDefaultExpandAll` is set), so a nested value is visible instead of hidden under a collapsed
+    parent.
+  - `theme` now also applies the selector tokens (`selectorBg`, `hoverBorderColor`,
+    `activeBorderColor`, the `multipleItem*` tokens and so on). They were documented but had no
+    effect, because antd styles the TreeSelect input with the Select tokens. New tree node tokens:
+    `indentSize`, `nodeHoverColor`, `nodeSelectedColor` and `switcherSize`.
+  - TreeMultipleSelector gets `maxCount`, `checkStrictly` (with `checkable`),
+    `autoClearSearchValue` and `removeIcon`. `maxTagCount` also accepts `responsive`.
+
+  **TreeInput**
+
+  - New `blockNode` and `height` properties. Setting `height` turns on virtual scrolling for large
+    trees.
+  - New `item`, `itemTitle` and `itemSwitcher` style keys.
+  - `theme` now documents the Tree tokens instead of the TreeSelect ones.
+
+  **RadioSelector, CheckboxSelector, ButtonSelector, SegmentedSelector**
+
+  - New `options` style key for styling each option.
+  - ButtonSelector gets `block`, which stretches the buttons to full width, and `direction`, which
+    can stack them vertically.
+  - SegmentedSelector options accept a `tooltip`, and `icon` can be an Icon properties object.
+
+  **ControlledList**
+
+  - No longer renders antd's `List`, which antd 6.6 deprecates. ControlledList renders the same markup
+    and `ant-list-*` class names itself and ships the List styles it uses, so it looks the same and
+    existing CSS and tests keep matching. Its `theme` tokens, List tokens from the app theme or a
+    ConfigProvider block, and a ConfigProvider `componentSize` still apply.
+
+  **Label**
+
+  - New `wrap` property (also on every input's `label`), for wrapping long inline labels.
+  - The per-breakpoint label widths `xs`, `sm`, `md`, `lg`, `xl` and `xxl` (each `{ span }`), which
+    already worked, are now documented on the Label block and on every input's `label`.
+  - Fixed: the Label block's `theme` tokens (`labelColor`, `labelFontSize`,
+    `labelRequiredMarkColor`, colon margins, feedback colors) had no effect and now apply.
+  - Fixed: `class.element` and `style.element` now reach the Label block's row.
+
+  **Fixes**
+
+  - RadioSelector and CheckboxSelector no longer trigger antd's deprecated `Space` `direction` prop.
+  - ListSelector no longer passes the deprecated Card `size="default"`. It and the Select-based
+    blocks now pass antd's `medium` for the default size, and SegmentedSelector maps `middle` to
+    `medium`.
+  - Selector and MultipleSelector build antd `options` instead of `Select.Option` children. The
+    search props (`filterOption`, `onSearch`, `autoClearSearchValue`, `treeNodeFilterProp`) now go
+    inside `showSearch`, where antd 6 expects them.
+  - ControlledList: the `addItemButton.title` lookup had a stray trailing space in its path. Items
+    added for `minItems` are now pushed after render instead of during it, before the list paints.
+    The remove icon no longer causes a React key warning.
+  - Tree dropdown nodes no longer log antd's "`key` or `value` must be the same" warning.
+  - The Selector and TreeSelector e2e helpers `value` and `placeholder` read antd 6's class names.
+  - TreeInput examples use the flat `primaryKey`/`parentKey` data model instead of nested
+    `children`, which TreeInput does not read.
+
+- 6f20e75: feat: Expose antd 6.6 features on the display and typography blocks, and stop passing deprecated props to antd.
+
+  The display and typography blocks were audited against the antd 6.6.5 docs. New properties,
+  events and CSS keys are additive; existing property names and values keep working and are
+  translated to the antd 6 names where antd renamed them.
+
+  New features:
+
+  - `Alert`: `variant` (`outlined` or `filled`) and `closeIcon`. The `message`, `action` and
+    `closeIcon` CSS keys now style the title, actions and close button.
+  - `Avatar`: `srcSet`, and `focus` as a `group.maxPopoverTrigger`. In group mode `onClick` fires
+    for each avatar with `event.index`.
+  - `Badge`: `ribbon` (`text`, `color`, `placement`) renders a corner ribbon around the content,
+    `title: false` removes the native tooltip, and the `paddingInline` theme token. The `indicator`
+    CSS key now styles the count.
+  - `Calendar`: `showWeek`, and `header`, `item` and `itemContent` CSS keys.
+  - `Card`: `variant`, `loading`, an `actions` slot for the bar at the bottom of the card, and a
+    `title` CSS key. The `cover`, `actions` and `extra` CSS keys now also take styles.
+  - `Carousel`: `autoplay: { dotDuration: true }` for a progress dot, `initialSlide` and
+    `waitForAnimate`. `onSwipe` passes `event.direction`.
+  - `Collapse`: `ghost`, `size` (`small`, `medium`, `large`), `collapsible` (`header`, `icon`,
+    `disabled`), a list `activeKey`, a `title` CSS key and the `headerPaddingSM`, `headerPaddingLG`,
+    `contentPaddingSM` and `contentPaddingLG` theme tokens.
+  - `Descriptions`: `size: medium`, item `span: filled` and breakpoint spans, `xxl` and `xxxl`
+    columns, and `header` and `title` CSS keys.
+  - `Divider`: `variant` (`solid`, `dashed`, `dotted`), `size` (`small`, `medium`, `large`), and
+    `title` and `rail` CSS keys.
+  - `Title` and `Paragraph`: `actions.placement` to put the copy and expand buttons before the text,
+    `keyboard`, ellipsis `expandable: collapsible`, `defaultExpanded`, `symbol` and `tooltip`, and an
+    `actions` CSS key. `onExpand` passes `event.expanded`.
+  - `Progress`: `size`, `percentPosition`, gradient and per-step `strokeColor`, circle `steps` with a
+    `gap`, `butt` line caps, and `rail`, `track` and `indicator` CSS keys.
+  - `QRCode`: `iconSize` as `{ width, height }` and a `cover` CSS key.
+  - `Result`: `title` and `subTitle` CSS keys.
+  - `Statistic`: `timer` (`countdown` or `countup`, with a `format`) and an `onFinish` event, and
+    `title`, `content`, `prefix` and `suffix` CSS keys.
+  - `Tag`: `variant` (`filled`, `solid`, `outlined`), `disabled`, `href`, `target`, `closeIcon` and
+    a `closeIcon` CSS key.
+  - `TimelineList`: `orientation`, `variant`, `titleSpan`, a `label` CSS key and the `dotSize` theme
+    token.
+  - `Watermark`: `text` lines can be `{ text, font }` to style each line.
+
+  Fixes:
+
+  - `Title` and `Paragraph` with an expandable ellipsis, an ellipsis suffix or a copy button cut plain
+    text content to the given rows instead of collapsing it to "...".
+  - `Calendar` in year mode with `dateCellData` no longer repeats the month name in each cell.
+  - `Carousel` `onSwipe` fires. react-slick drops an `onSwipe` prop, so the event never ran.
+  - `Collapse` renders when `panels` is an empty list, and the `content` CSS key styles the panel
+    body.
+  - `Avatar` group `onClick` fires. It was set on the group, which antd does not forward.
+  - Deprecated antd props are no longer passed: `Alert` `message`, `closeText`, `onClose` and
+    `afterClose`; `Avatar.Group` `maxCount`, `maxStyle` and popover props; `size: default` on
+    `Avatar`, `Badge`, `Card` and `Descriptions`; `Carousel` `dotPosition`; `Collapse.Panel` and
+    `Descriptions.Item` children; `Progress` `width`, `trailColor`, `gapPosition` and line
+    `strokeWidth`; `Timeline.Item` children, `pending`, `pendingDot` and `mode: left|right`.
+  - `Progress` `gapPosition` is applied. It was documented but not passed to antd.
+  - Examples in `tests.yaml` use `slots` instead of the deprecated `areas`, and no longer use
+    properties the blocks do not have.
+
+- 7c4879b: feat: Expose antd 6 options on the overlay, feedback, layout and file blocks.
+
+  The overlay, feedback, layout and upload blocks now expose the antd 6.6 features that fit
+  declarative config, and several properties that silently did nothing now work.
+
+  **Modal, ConfirmModal and Drawer**
+
+  - `mask` also takes an object: `enabled`, `blur` (blur the page behind the dialog) and `closable`.
+    `maskClosable` still works and is folded into `mask.closable`.
+  - `closable` also takes an object: `disabled` shows the close button disabled; on Drawer,
+    `placement: end` moves it to the end of the header.
+  - New `focusable` object (`trap`, `focusTriggerAfterClose`; ConfirmModal adds `autoFocusButton`).
+  - New `keyboard` (Modal, ConfirmModal) and `scrollLock` (Modal, ConfirmModal).
+  - New `loading`, `destroyOnHidden` and `forceRender` (Modal, Drawer).
+  - Modal: responsive `width` object (`xs` to `xxl`), `afterOpenChange` event with `{ open }`, `title`
+    cssKey. The `afterClose` event it already fired is now documented.
+  - Drawer: `size` (`default`, `large`, a number or a CSS length), `resizable` with `maxSize` and an
+    `onResizeEnd` event with `{ size }`, html `title`, `title` cssKey, and `open` on the
+    `afterOpenChange` event. The `getContainer` property it already passed to antd is now documented:
+    `false` renders the drawer in place, a CSS selector mounts it in the matching element.
+  - ConfirmModal: `okButton` and `cancelButton` document their button properties, including
+    `iconPlacement: end`.
+
+  **Message and Notification**
+
+  - Notification: `showProgress`, `pauseOnHover`, `closable`, `role`, the `placement` values `top`
+    and `bottom`, and `title`, `description`, `actions` and `progress` cssKeys.
+  - Notification: the `button` now closes the notification when clicked, as documented.
+  - Message: `pauseOnHover` and an `onClick` event.
+
+  **Tooltip and Popover**
+
+  - `arrow` (`false` hides it, `{ pointAtCenter: true }` centres it), the `contextMenu` trigger, and
+    `{ open }` on the `onOpenChange` event.
+  - Popover: `destroyOnHidden`, html `title`, and the `width` and `minWidth` theme tokens.
+  - Tooltip: `destroyOnHidden`, the antd 6 name for `destroyTooltipOnHide`, which still works.
+
+  **Flex, Masonry, MasonryList, Splitter and ConfigProvider**
+
+  - Flex: `orientation`, the `medium` gap preset, and the `start`, `end`, `left`, `right`, `normal`,
+    `self-start` and `self-end` alignment values.
+  - Masonry and MasonryList: `item` cssKey and responsive `gutter` objects.
+  - Splitter: `collapsible` (`motion`, custom `icon.start` and `icon.end`), `destroyOnHidden` (also per
+    panel), `draggerIcon`, the `onDraggerDoubleClick` event with `{ index }`, and `panel`, `dragger`,
+    `draggerIcon` and `collapseIcon` cssKeys. Panel `collapsible` objects document `start`, `end` and
+    `showCollapsibleIcon`. The default collapse arrows are now the `chevron-left`, `chevron-right`,
+    `chevron-up` and `chevron-down` icons, so they follow the app icon set.
+  - ConfigProvider: `virtual`, `popupMatchSelectWidth`, `popupOverflow`, `wave` and the `medium`
+    component size.
+
+  **Upload, UploadDragger and UploadPhoto**
+
+  - `showUploadList` also takes an object with `showPreviewIcon`, `showRemoveIcon` and
+    `showDownloadIcon`.
+  - Upload and UploadDragger: `directory` (upload a folder) and `listType` (`text` or `picture`).
+  - Upload and UploadPhoto: `pastable` (upload files pasted on the page).
+  - UploadDragger: `openFileDialogOnClick`, for a drop or paste only area.
+  - UploadPhoto: `capture` (`user` or `environment` camera on mobile) and `listType`
+    (`picture-card` or `picture-circle`).
+  - Upload documents `iconPlacement` on its `button`.
+
+  **Fixes**
+
+  - Notification status icons lost their colour on antd 6.6; the colour class now reaches antd's icon
+    wrapper. Notification passes `actions` instead of the deprecated `btn`.
+  - Modal and ConfirmModal no longer pass the deprecated `maskClosable`, Tooltip no longer passes
+    `destroyTooltipOnHide` or the removed `arrowPointAtCenter`, Popover no longer passes
+    `overlayInnerStyle`, and Splitter no longer passes `layout`. The Lowdefy properties keep working.
+  - The Modal `content` cssKey and the Tooltip `inner` cssKey styled nothing, because antd 6 renamed
+    those parts to `container`. Modal `header`, `footer` and `content` styles were not passed.
+  - The Popover `inner`, `title` and `content` cssKeys were never wired.
+  - ConfirmModal ignored `theme` and never fired its `onClose` event.
+  - ConfigProvider ignored its `theme` property; it is now merged into the design tokens, with
+    `token` taking precedence.
+  - ConfigProvider `componentSize: middle` and Flex `gap: middle` now reach antd as `medium`, the
+    name antd 6 uses.
+  - Corrected documented defaults and descriptions: Drawer size (378px), Message duration (3s) and
+    status (`success`), Popover placement (`top`) and hover delays (seconds), Masonry `fresh`, and
+    the Flex theme tokens (the gap preset tokens `paddingXS`, `padding` and `paddingLG`).
+  - The MasonryList docs page linked to the antd List component instead of Masonry.
+  - Message and Notification `theme`, Notification `top` and `bottom`, and Masonry and MasonryList
+    `sequential` never had an effect. They stay valid, and their descriptions now say so: set
+    Message and Notification tokens app-wide under `theme.antd.components` in `lowdefy.yaml`, and
+    move notifications with the `--notification-top` and `--notification-bottom` CSS variables on
+    `.ant-notification`.
+
+- 7836aa2: fix: ConfigProvider `componentDisabled` now disables the Lowdefy blocks inside it.
+
+  `componentDisabled: true` on a ConfigProvider block was documented to disable every child
+  component, but Lowdefy's input blocks and buttons ignored it: they passed `disabled={false}` to
+  antd whenever the block was not loading, and antd lets an explicit `false` beat the
+  ConfigProvider. Blocks now pass their `disabled` property through unchanged (and `true` while
+  loading), so inside a ConfigProvider with `componentDisabled: true`:
+
+  - Every input, selector, date selector, switch, slider, color selector and button is disabled,
+    including TagSelector and TagMultipleSelector pills, SegmentedSelector, RatingSlider,
+    PhoneNumberInput, DropdownButton (its hover menu no longer opens either), the ControlledList add
+    button and remove icons, and the textInput, selector, switch and buttons cells of the AgGrid
+    blocks.
+  - A block that sets `disabled: false` itself stays enabled, and `disabled: true` still disables a
+    block anywhere.
+  - Pasting into an UploadDragger does nothing while it is disabled by the ConfigProvider.
+
+  Nothing changes for blocks outside a ConfigProvider, or when `componentDisabled` is not set. As in
+  antd, ParagraphInput, TitleInput (whose `disabled` is a style only) and Pagination don't follow
+  `componentDisabled`.
+
+  AutoComplete now matches the other Select-based blocks:
+
+  - New `onOpenChange` event with `{ open }` when the dropdown opens or closes.
+  - New `listHeight`, `placement`, `popupMatchSelectWidth` and `virtual` properties, the same as
+    Selector.
+  - `size: default` is passed to antd as `medium`, so antd 6 no longer warns about it.
+  - An empty `prefix` no longer falls back to `prefixIcon`, matching Selector.
+
+- 1227e62: feat: Table, grid, Anchor and HTML links carry `pathParams`
+
+  Links set as block properties fill a page path's placeholders with `pathParams`, next to `urlQuery`. In TableLight, Table and AgGrid cell and row links the values are row field paths, as `urlQuery` values are there: `link: { pageId: ticket, pathParams: { ticket_id: _id } }`. A relation cell defaults `urlQuery` to `{ _id: _id }` only when neither `urlQuery` nor `pathParams` is set. `Anchor` takes `pathParams`, and an HTML link takes `data-path-params` as a JSON object: `<a data-page-id="ticket" data-path-params='{"ticket_id":"1"}'>`.
+
+  AgGrid link and avatar link cells now build their href through the Lowdefy Link, so it includes the app's `basePath`. A plain click still emits `onCellLink` without navigating.
+
+- ae6afbf: Added a `padding` property for denser, edge-to-edge layouts. It takes `default`, `compact` or `none`.
+
+  - **Page layouts** (`PageHeaderMenu`, `PageSiderMenu`, `PageSidebarLayout`): `compact` cuts the space around the page content from 40px to 16px. `none` removes it, so a table or grid can fill the page. The breadcrumb keeps its own inset.
+  - **`Card`**: `compact` sets the body padding to 12px and lines the header up with it, while keeping the header height. `none` removes the body padding so a list, table or image runs to the card edges.
+  - **`Drawer`**: `compact` tightens the header and body. `none` removes the body padding.
+  - **`Modal`**: `compact` tightens the modal to 16px. `none` removes the body padding; the header and footer keep theirs.
+  - **`Collapse`**: `compact` tightens the panel body. `none` removes it.
+
+  `default` keeps the current spacing, and styles set on the block's CSS keys still override these values.
+
+- 81bd4f0: feat(blocks-antd): new `EventLog` block
+
+  A virtualised log viewer for any array of records - audit trails, job runs, deploys or
+  application events. Rows are searchable, filtered by severity and expandable to show the actor,
+  a rich detail body and a flattened context table that can be copied as JSON. The record shape is
+  mapped with the `fields` property, event types are labelled, coloured and iconed with
+  `eventTypeConfig`, severity is read from an explicit `level`, and every string the block renders
+  can be changed with the `text` property. Large logs can be set imperatively with the `setData`
+  method.
+
+- 1bb3012: feat(blocks-antd): Sider header slots in `PageSidebarLayout`, and a drawer header slot in `MobileMenu`.
+
+  `PageSidebarLayout` takes two new slots above the sider menu: `siderHeader` while the sider is expanded and `siderHeaderClosed` while it is collapsed. They sit between the collapse toggle and the menu, outside the menu's scroll box, so they stay in place while a long menu scrolls. The `siderHeader` css key styles the box that holds them. A `mobileDrawerHeader` slot puts content above the menu in the mobile drawer, drawn by the new `drawerHeader` slot on `MobileMenu`. A page that sets none of them renders as before.
+
+- 537bf54: New table blocks: `Table`, `TableInput` and `TableLight`
+
+  Three blocks with the antd look, sharing one column model and one set of cell types. The ag-grid blocks are unchanged.
+
+  - **`Table`** (new package `@lowdefy/blocks-table`, installed by default) is built for large datasets and record lists. Rows and columns are virtualised, so 100k rows × 50 columns scroll smoothly. It has:
+
+    - sort, column resize and reorder, pinned columns, a header menu with column filters, and a column manager, all on by default;
+    - an optional toolbar with search, quick filters, a nested And/Or filter builder, grouping, density and CSV export (cells that start like a spreadsheet formula, `=`, `+`, `-` or `@`, are exported as text, so an opened file never runs them);
+    - saved views, and optional persistence in the browser or the URL (browser persistence,
+      `persist.storage: local`, is kept per signed-in user and cleared at sign-out);
+    - row selection with a bulk-action bar;
+    - grouping with per-group totals, tree rows, expandable detail rows, and a summary footer;
+    - keyboard navigation and inline editing;
+    - row drag reorder, and server mode.
+
+    Its value is the table's state (`{ view, selected, expanded }`), so `_state: <id>.selected` is always the selection and `_state: <id>.view` the current view.
+
+  - **`TableInput`** edits rows in a form. Its value is a changeset of only what changed (`{ updated, added, removed, moved?, order? }`), never the rows themselves, so page state stays small. Row drag uses fractional positions, so moving a row writes one field.
+  - **`TableLight`** (in `@lowdefy/blocks-antd`) is antd's own `Table` for small tables and adds no dependencies. Its config is a strict subset of `Table`'s: to switch, change the `type`.
+  - **Columns** declare a `type` that drives display, sorting, filter operators, totals, the editor and export:
+
+    - text, number, currency, percent, date, datetime, boolean;
+    - tag, tags, status, avatar, people;
+    - link, email, phone, url, relation;
+    - progress, rating, image, html (nunjucks templates), json;
+    - buttons, menu.
+
+    An `avatar` column takes `descriptionField`, a row path shown as a second line under the name,
+    such as a person's email; the table then needs `size: default` or `size: comfortable`.
+    `options` give enum values a label and colour in one place. `rules` and `rowRules` add conditional formatting with the same condition language as filters, with no `_function` needed. `rowLink` makes rows real links.
+
+  - `@lowdefy/block-utils` exports `getHtmlEnhancements`, so blocks can navigate the same way the `Link` action does, and it reuses `Intl.NumberFormat` instances when formatting.
+
+- 9de3cf9: feat(blocks-table): Collapsible column groups
+
+  A `Table` column group with `collapsible: true` shows a chevron in its header that collapses the group to a summary column and expands it to its breakdown columns, as AG Grid's `columnGroupShow` does. `collapsed: true` starts the group collapsed. Each column or inner group takes `showWhen`: `closed` shows it while its group is collapsed, `open` while it is expanded, and `always` (the default) in both. Collapsing an outer group also hides an inner group with `showWhen: open`.
+
+  The collapsed groups are the view's `collapsedColumnGroups`, saved and persisted with the view. A column its group hides is not displayed, searched or exported, and the column manager lists it as unavailable. `TableLight` refuses the three keys with a message naming `Table`.
+
+- 3f3a320: `Table` enrichment columns
+
+  Columns that compute per row from other columns: `enrichment` (a provider endpoint of the app), `ai` (a prompt), `formula` (a template filled in the browser) and `extract` (a value from another column's result), with a run state per cell, header progress, an add-column picker (`addColumn`, `providers`), column management for user-defined columns, runs of a column, row, selection or cell, a cell details panel, "+ New row" (`addRow`) and CSV import (`importCsv`). Live results arrive with `applyTransaction({ update })`. Whole documents, such as a change stream's `fullDocument`, merge shallow, so fields the server removed disappear. `merge: 'deep'` is for partial patches.
+
+  - The feature loads in its own chunk, only for tables that use it; the picker, details panel and import dialog load on first use.
+  - Formula templates and AI prompts take `{{ column }}` placeholders only, filled in as plain text, never a template engine.
+  - A user-defined column with an invalid config renders as an error column with Edit and Delete, instead of breaking the table. User-defined columns are limited to text-safe types (no html, image, avatar, link or buttons), and any `cell` or template tooltip on them is dropped.
+  - CSV import parses in time slices and refuses files over 50 MB or 100,000 rows.
+  - `inputFieldPrefix` puts new input columns' values under a path, so `onRowAdd` and `onImport` values are all at field paths.
+  - `TableInput` takes formula columns; the other enrichment keys are `Table` only, and `TableInput` refuses them with a message naming `Table`.
+  - Enrichment and ai inputs read input, data, enrichment and ai columns: the picker offers only those as provider inputs and prompt placeholders, and a column reading a formula or extract column is refused (a declared one is a config error, a user-defined one an error column).
+  - A cell's error tooltip says "Failed after N attempts" with the stored message, shortened, below the cell; the details panel has the whole message. Store messages users can read in your worker and provider endpoints, not a connection's error (see the guide).
+  - Header progress chips take their most severe status' colour (errors red) and collapse to fit beside the title: the full counts, an icon and count per status, or a dot, with the counts in the tooltip.
+  - The details panel titles each input by its provider input and column ("Full name ← Person"), and the raw result tree colours keys and values, cuts values to its width and shows an always-visible "+" to add a node as a column.
+  - CSV import suggests columns for common synonyms and close spellings of a header, marked until changed.
+  - AI tag and tags answers take `{ value, color }` options; the picker gives each a distinct tone. A user-defined column's option colours must be tone names.
+  - Run states use the cell's font size on the text baseline; Run selected and the new-row editor leave out hidden columns; the select-all checkbox lines up with the row checkboxes; the Run submenu shows a right chevron.
+
+- ecdfb65: feat(blocks-table): Show a total row from data in the Table summary footer
+
+  `summaryRow` takes one row object, such as a report total computed by the request, and the summary footer shows it in place of the aggregates. Each column renders it as it renders a body row, with its type, cell options and rules. Use it for totals the table can not compute from its rows, such as a rate whose total is not the sum or average of the rows' rates.
+
+  The row is not a data row: sorting, filtering, search, selection and the record count leave it out, it stays in view under `height`, and `exportCsv` adds it as the last line. Group headers keep their aggregates. `TableLight` refuses `summaryRow` with a message naming `Table`.
+
+- 4a69885: feat(blocks-antd): `TitleInput` and `ParagraphInput` edit in place like a proper inline title. Click the text to edit it where you clicked. The text keeps its font, size and position while editing, and gets a focus ring instead of a bordered box that jumped 12px into the margin with an enter glyph. Hovering editable text shows a soft background, and the text can be focused with Tab and edited with Enter or F2. Enter saves, Escape cancels without closing a surrounding modal, and clicking away saves. `onChange` fires only when the value changed.
+
+  No edit icon is shown by default any more. Set `editable.icon` (for example `icon: edit`) to add one. Edit and copy icons are muted, sized to the text instead of the heading font (so an `h1` no longer gets a heading-sized pencil), and drawn with the app's icon set. The new `placeholder` property (default `Untitled` for `TitleInput`, `Empty` for `ParagraphInput`) is shown when the value is empty, instead of a lone pencil. With no icon, `editable.tooltip` shows on the text. `onCopy` now also fires for `copyable: true`, and `ParagraphInput` fires `onExpand` (not `onCopy`) when its ellipsis is expanded.
+
+### Patch Changes
+
+- f0162f4: fix(blocks-antd): Accept numeric title margins and avatar sizes.
+
+  - The `titleMarginTop` and `titleMarginBottom` theme tokens of Title, TitleInput, Paragraph and
+    ParagraphInput accept a number of pixels as well as a CSS length, as antd does.
+  - The `size` of the avatars in an Avatar group, and of the profile avatar on Header,
+    PageHeaderMenu, PageSidebarLayout and PageSiderMenu, accepts a pixel number as well as
+    `default`, `small` or `large`.
+
+- 2bdb855: A block property that resolves to `null` now falls back to the antd default, the same as when it is not set. `_state`, `_get` and the other getter operators return `null` for a missing key, and antd applies a default only to an `undefined` prop, so a `null` used to reach antd as a real value. Fixed:
+
+  - Errors and hangs: QRCode `errorLevel`, Flex `component`, Result `status`, Watermark `font` and DropdownMenu `placement` threw, and a Carousel `slidesToScroll` froze the page. Carousel now leaves every `null` setting out.
+  - Layout: `variant` on the text inputs, NumberInput, the date selectors, the selectors, AutoComplete and Card (the border disappeared), Slider `min`, `max` and `step`, NumberInput `step`, `precision` and `mode`, Modal `width`, Drawer `placement`, Tooltip and Popover `placement`, Popover and ColorSelector `trigger` (the popup never opened), and Progress `type`, `showInfo`, `strokeLinecap` and circle `size`.
+  - Smaller fallbacks: QRCode `size`, `status`, `bordered`, `bgColor` and `type`, Statistic `groupSeparator`, Descriptions `colon`, Calendar `mode`, Menu `mode`, Steps `status`, `percent` and `variant`, Alert `type`, FloatButton `type`, `shape` and `htmlType`, ColorSelector `placement` and `format`, and Watermark `rotate` and `zIndex`.
+
+- 80c0ad2: fix(blocks-antd): Pagination wraps on a narrow row, SegmentedSelector selects nothing for an unmatched value, Sider ignores null widths
+
+  - **Pagination**: antd 6 lays the pagination out as one flex row that does not wrap. When the total text, page buttons and size changer were wider than their container, the total text collapsed to one word per line and the rest overflowed to the right. The row now wraps onto a second line and the total text stays on one line.
+  - **SegmentedSelector**: a value that matches none of the options (or an empty value) no longer draws the first option as selected. antd's `Segmented` fell back to its first option when it received no value, and clicking that option then fired no `onChange`. Now no option is selected and every option can be picked.
+  - **Sider** (and `PageSidebarLayout`, `PageSiderMenu`): a `null` `collapsedWidth`, `width` or `breakpoint`, as an unset property of a module var gives, now leaves antd's default in place. Before, the sider wrote a width of `"null"`, so it kept its expanded width when collapsed, or had no width at all when the page loaded collapsed.
+
+- 6144814: Allow only safe link schemes in block hrefs
+
+  An `href` is used only when its scheme is one DOMPurify allows by default (`http`, `https`, `ftp`, `ftps`, `mailto`, `tel`, `callto`, `sms`, `cid`, `xmpp`, `matrix`), or it is a relative path, a query or a fragment. Any other value, including one with leading whitespace or control characters, renders no link. This applies to `Button`, `Tag` and `FloatButton`, the url cell of table, AgentChat message and tool result links, `TiptapMentionInput` mention links, and every `href` given to the Lowdefy `Link` component, which covers table and ag-grid link, avatar and relation cells. A `Link` whose `href` is refused renders a span without navigating, and does not fall back to its `pageId` or `url`; the `Link` action with such an `href` throws "Invalid Link: no target resolved." as it does for a `url` it cannot resolve.
+
+  `@lowdefy/helpers` exports the check as `getSafeHref(href)`, which returns the href or `undefined`; `@lowdefy/block-utils` re-exports it.
+
+- cfc8f71: fix(blocks-antd): Export the e2e helpers of ColorSelector, ConfigProvider, Flex, FloatButton, Masonry, MasonryList, PageSidebarLayout, QRCode, SegmentedSelector, Splitter, Tour and Watermark
+
+  These blocks had e2e helpers that `@lowdefy/blocks-antd/e2e` did not export, so
+  `ldf.block(...)` on them failed with "does not have e2e helpers".
+
+- 10bee50: fix(blocks-antd): Place the PageSiderMenu footer at the bottom of the page
+
+  PageSiderMenu rendered its footer inside the padded content area, directly after the page content, so on a short page the footer floated halfway up the screen and was offset by the content padding. The footer is now a sibling of the content, as in PageHeaderMenu: the content grows to fill the viewport and the footer sits centered at the bottom, below the page padding. The content and footer are wrapped in a new `{blockId}_main` layout element. Fixes #959.
+
+- cb3551c: fix(blocks): Clicks inside a Modal or Drawer no longer fire the parent block's onClick
+
+  React bubbles events through the component tree, so a click inside a Modal, Drawer or dropdown also reached the Box, Card, Span or Dynamic block that contained it in config, even though the popup renders elsewhere in the document. A Modal placed in a clickable Box that opens it would reopen as soon as its Cancel, OK or close button was clicked. These blocks now fire `onClick` (and Box `onPaste`) only for events from DOM they contain, using the new `isEventFromDomDescendant` helper from `@lowdefy/block-utils`. Fixes #1188.
+
+- db1a4d3: fix(client): Keep browser storage per app and clear user data at sign-out
+
+  Every key Lowdefy writes to the browser's local storage now names the app it belongs to (its `slug` and base path), so apps served from one origin no longer read or overwrite each other's values. The dark mode, locale and sider open preferences are kept per app and stay across sign-outs; a preference stored before this change is moved to the app's key the first time it is read.
+
+  Data that belongs to a person is also kept per signed-in user: the `Search` block's recent searches. It is cleared when the user signs out with `Logout`, and on page load when a different user, or nobody, is signed in on the browser. The scroll positions Lowdefy keeps in session storage are cleared at the same time.
+
+  Blocks reach the keys through two new block methods, `methods.getAppStorageKey(name)` and `methods.getUserStorageKey(name)`, and actions through `methods.getAppStorageKey(name)`.
+
+- 5852b65: The `Drawer` block (used by `PageHeaderMenu`'s mobile menu) no longer logs antd 6 deprecation warnings for `width`, `height` and `classNames.content` on every page load. It passes antd's `size` and `classNames.section` / `styles.section` internally; the block's own config properties and rendered output are unchanged.
+- d2c8e01: feat(api)!: Data read into a Dynamic block's `:return` stays data.
+
+  **Breaking:** a Dynamic block without a dynamic blocks policy no longer renders blocks or actions that its endpoint read as data. In v6, stored operator-free block config returned from a Dynamic endpoint rendered as it was; in v7 the block renders its fallback. Every block and action in the returned content must be written in the endpoint's `:return` config. A block or action that is data an operator returned (a step result, routine state, the payload, a `:for` item, a nested endpoint's result), or a copy or extension of one made with `_get`, `__args` or `__object.assign`, fails resolution. Operators that only pass their checked params through (`_if`, `_switch`, `_if_none`, `_get`, `_args`, `_function`, `_log`, `_array`, and `_object` except `fromEntries` and `defineProperty`) may return written config; content that breaks the rule renders the fallback, with an error naming the operator and the path in its result. Blocks built up in routine state, returned by a nested endpoint, looped over with `_item`, or built by `_js`/`_jsonata` fail: build them inside `:return` with `_array.map`/`_array.concat`, share block config with `_ref`, and write client operators (`__state`, `_array.map` callbacks) in the `:return` config. Data may still fill values inside written blocks, as in the documented `_array.map` pattern, and a block built by config from a stored field renders even when it equals the field. To render stored or generated block config, put the Dynamic block under a dynamic blocks policy and return the content through a `ValidateDynamic` step. See the v6 to v7 migration guide.
+
+  Also:
+
+  - Only operator keys lose their escaping underscore in the returned content (`__state` becomes `_state`); data keys such as `__typename` pass through unchanged.
+  - Data read into a Dynamic `:return` may nest at most 200 levels deep, and dynamic blocks policy content likewise (`limits.depth`); deeper data fails resolution with an error saying so.
+  - An object from data that `_object.assign` merges with other config can no longer end up as an operator on the client, for example next to a key whose value is a function or evaluates to undefined.
+  - Only keys that name one of the app's operators count as operators: in the literal data check an installed client or server operator, in dynamic blocks policies and the fragment build a client operator. Data such as `{ _score: 0.5 }` or `{ _source: { ... } }` now renders as data instead of failing. The build writes `plugins/clientOperators.json` with every client operator name the app knows.
+  - Dynamic blocks policies: with `state` set, every `_state` read in the content must name a literal key under that path. URLs are judged by the block's properties schema, which now marks URL-valued properties with `urlKind` (`Search` `indexUrl`, `QRCode` `icon`, `Watermark` `image`, `Tour` step covers, avatar and logo sources, link `url`s and `href`s, `Img` `src`/`srcSet`, AgGrid link cells), whatever the property is called. Every value no schema marks is still judged by its key name; `urlKind: false` opts a URL-named property out (`Search` `result.url`, the Tiptap `image` settings). URLs are read as the browser's URL parser reads them, so surrounding spaces and embedded tabs or newlines do not change the verdict.
+
+- eaa6517: feat(server-dev): Return contextual hazards from the dev MCP with schemas, docs and config lookups.
+
+  `lowdefy_get_schema`, `lowdefy_get_doc` (by kind and type) and `lowdefy_find_config` (per match) now
+  include `hazards: [{ id, message, see }]` — behaviours of a type that its schema does not show, such as
+  `Html` stripping `<style>`, a closed `Modal` keeping its state, `_state` being `undefined` inside request
+  properties, or the tenant wall injecting a `$match` into every `$lookup` of a request over a walled
+  connection (`tenant-wall-lookup`, returned only when the request's connection is walled).
+
+  Hazards come from two channels. Plugins declare type-attached hazards through `meta.hazards`: the build
+  now carries them into `plugins/blockMetas.json`, request metas already ride along in
+  `plugins/requestSchemas.json`, and operator packages can export a `./metas` module which the build
+  writes to the new `plugins/operatorMetas.json`. Framework-level hazards ship hand-authored in
+  `@lowdefy/docs-content/hazards.json`. Seeds: `Html`, `DangerousHtml`, `Modal` and `_js` carry their
+  first hazards; the docs describe hazards and the `meta.hazards` plugin contract.
+
+- 2ffac21: fix: Clear antd 6 deprecation warnings from the block console.
+
+  Four blocks passed props that antd 6.3.1 marks `@deprecated`, so every dev console carried
+  `[antd: <Component>] ...` noise that crowded out real errors. The Lowdefy-facing property names
+  are unchanged — `showArrow`, `destroyInactivePanel`, `mask` and `maskClosable` are still the
+  app's API; only what reaches antd changed:
+
+  - `PhoneNumberInput` now passes `popupMatchSelectWidth` instead of `dropdownMatchSelectWidth`.
+  - `Collapse` now passes `destroyOnHidden` instead of `destroyInactivePanel`.
+  - `Selector`, `MultipleSelector` and `PhoneNumberInput` no longer pass `showArrow`. antd shows the
+    arrow by default, so `showArrow: false` now hides it by clearing the suffix icon.
+  - `Drawer` now passes antd's object mask form, `mask={{ closable: ... }}`, instead of the
+    deprecated top-level `maskClosable`.
+
+  A new e2e spec, `e2e/tests/no-antd-deprecations.e2e.spec.js`, opens every page of the blocks-antd
+  e2e app and fails on any `[antd` console message.
+
+- a2b5466: fix: Block meta now declares the events and properties the components already support.
+
+  The `EChart` block declares all 35 ECharts events it wires through, not just `onClick`, so they are valid config and appear on the docs page. `AgGrid`, `Tabs` and `DropdownButton` mark themselves as firing event names authored in their own properties.
+
+  Several property schemas were narrower than the components that read them and are widened to match: numeric `Avatar` and `Spinner` sizes, `Collapse` `defaultActiveKey` arrays, `Layout` `hasSider`, `SkeletonInput` `label`, `SkeletonButton` `shape`, `ProgressBar` `progress`, `PhoneNumberInput` `showFlags`, `ColorSelector` `label` and `title`, `Sider` and `Menu` theme strings, `TimelineList` pending text, `SegmentedSelector` middle size, selector option values of any type, and the AgGrid grid-option passthrough and cell types.
+
+- a79fb1d: feat: semantic icon names, and icons, tooltips and popovers in HTML.
+
+  - **Semantic icon names.** Anywhere an icon name is accepted you can now write a name like `edit`, `delete`, `warning` or `external-link` (67 built-in names plus Ant Design spellings like `plus` and `setting`). They map to Lucide icons, so apps look consistent without picking a pack per icon. Add or override names with `theme.icons.aliases` in `lowdefy.yaml`, and list icon names that only exist at runtime under `theme.icons.include`. Existing React Icons names work exactly as before, and the build still bundles only the icons your config uses.
+  - **Icons, tooltips and popovers in HTML.** Every block that renders HTML (`Html`, `ClickableHtml`, `DangerousHtml`, and HTML properties such as Tooltip and Card titles) understands `<i data-icon="edit"></i>`, `data-tooltip="Text"`, and `data-popover="id"` with a matching `data-popover-content="id"` element. Tooltips and popovers use the app's antd theme and load on first use. An open popover stays open with its new content when the HTML changes, as long as the new HTML still has its trigger. In `ClickableHtml`, `data-event` targets are now keyboard focusable (Enter and Space click them), and a `data-event` inside a popover fires and closes it.
+  - **Icon fixes.** Icons no longer remount on every parent render, an icon that failed recovers when its name changes, and a clickable `Icon` block is keyboard focusable.
+  - **Agents.** The dev server adds `lowdefy_search_icons` and `GET /lowdefy-docs/icons?q=`, and the agent setup files explain the icon and HTML conventions.
+
+- a9442cc: Production pages load only the plugin code they use.
+
+  The production client used to ship every block, action, operator and icon the app uses anywhere in one main bundle, and every first visit downloaded all of it. Now the build writes one small module per distinct page type set, and each page loads its own. On the docs app the main bundle drops from 6,016 kB to 1,021 kB (1,778 kB to 332 kB gzipped). A simple page's first load drops from 1,720 kB to 529 kB gzipped.
+
+  - The HTML preloads the page's chunks alongside the main bundle, so the first page does not wait an extra round trip.
+  - Content-hashed assets are served with `Cache-Control: public, max-age=31536000, immutable`, on the Node server and in `lowdefy vercel-output`.
+  - Lowdefy's plugin packages declare `"sideEffects": ["**/*.css"]`, so a page that uses one block no longer loads the whole package.
+  - The build adds the types a page runs without naming them: the operators the `_js` accessors call, and the actions and operators a block runs for events it registers itself (such as `Request` in `Upload` or `SetLocale` in `PageHeaderMenu`), which blocks list in `meta.actions` and `meta.operators`. Plugin blocks that register their own events should list them the same way.
+  - A Dynamic block whose content uses a type its `properties.types` did not declare still works: the page loads the full type set and the server logs a warning naming the type to declare.
+
+  No config changes. The dev server is unchanged.
+
+- 81bd4f0: feat(plugin-posthog): new PostHog product analytics plugin
+
+  A default plugin that wraps the `posthog-js` browser SDK, so no script tag or snippet is
+  needed. `posthog-js` is loaded lazily by `PostHogInit`, so an app with `enabled: false`
+  never downloads it. Run `PostHogInit` from the app's root `events.onInitAsync`, which runs
+  once per app load on whichever page opens first; repeat calls with the same `apiKey` do nothing.
+
+  Adds `PostHogInit`, `PostHogCapture`, `PostHogPageview`, `PostHogCapturePageLeave`,
+  `PostHogIdentify`, `PostHogSetPersonProperties`, `PostHogAlias`, `PostHogGroup`,
+  `PostHogReset`, `PostHogOptIn`, `PostHogOptOut`, `PostHogFeatureFlag` and
+  `PostHogReloadFeatureFlags`, each with a params schema.
+
+  With PostHog disabled every other action is a silent no-op, so analytics can never break an
+  app, but invalid params still throw and an action that runs before `PostHogInit` logs a
+  console warning. `PostHogIdentify` reads the identity `posthog-js` holds and resets before
+  identifying a different person on a shared browser.
+
+  - **Lowdefy semantics** — every event gets `lowdefy_page_id` (the page id, also on a page with a
+    path pattern) and `lowdefy_path_params` (the page's path values, `{}` without a pattern).
+    Autocaptured clicks, rage clicks and dead clicks also get `lowdefy_block_id`,
+    `lowdefy_block_type`, `lowdefy_block_ids`, `lowdefy_option` on a dropdown option, `lowdefy_row`
+    and `lowdefy_column` inside a grid, and `lowdefy_text`: the text of the control the click
+    reached (a button, menu item, option or label), even when the click lands on its icon, a child
+    or a wrapper.
+  - **Event failures** — a `lowdefy_event_failed` event is captured when a block or app event fails,
+    with ids only, never messages or values, and at most 50 per app load. Failures in the app's
+    `onInit` are captured too, although `PostHogInit` runs later in `onInitAsync`. Set
+    `captureEventFailures: false` on `PostHogInit` to turn it off.
+  - **Click text masking** — on by default. Click text (`$el_text`, `lowdefy_text`, `text` entries in
+    `$elements_chain` and `$elements`, `$selected_content` and link targets) is kept only when the
+    config of the page it was clicked on, the menus, the i18n messages or the antd locale spell it
+    out. Grid and table cell values, options and menu items filled by requests, labels built from
+    records and `Dynamic` block output are removed; button, menu, tab, column header and literal
+    option labels stay. Element attributes other than structural ones (tag, classes, `class`,
+    `role`, `type`, `row-index`, `col-id`, `nth-child`, `nth-of-type`) are removed, including
+    `title`, `aria-label` and `data-*`, and `id` is kept only as a block wrapper id. Classes and
+    `data-ph-capture-attribute-*` values are not masked, so apps must not build them from data. URLs
+    are not masked. Set `maskDataText: false` on `PostHogInit` to send full click text, or
+    `options.mask_all_text: true` to send none.
+  - **Deployment environments** — `PostHogInit` registers the current environment as the
+    `environment` super property on every event, and `posthog.enabled: false` in an environment
+    turns PostHog off there (`PostHogInit` behaves as `enabled: false`), alongside the `cron`,
+    `email` and `sentry` switches.
+
+  For plugin authors: action plugins receive a `trace` argument for observing completed events and
+  the read-only app metadata as `lowdefyApp`; the engine trace gains `isConfigText({ text, pageId })`,
+  and `@lowdefy/helpers` exports `filterElementsChain`.
+
+  AutoComplete and PhoneNumberInput render their dropdowns inside the block, like Selector.
+
+- Updated dependencies [f7fa621]
+- Updated dependencies [099d412]
+- Updated dependencies [99a4f35]
+- Updated dependencies [1227e62]
+- Updated dependencies [6144814]
+- Updated dependencies [cb3551c]
+- Updated dependencies [db1a4d3]
+- Updated dependencies [575a5ee]
+- Updated dependencies [2595439]
+- Updated dependencies [f9e483f]
+- Updated dependencies [36f864c]
+- Updated dependencies [bfc6a00]
+- Updated dependencies [b226c43]
+- Updated dependencies [239a3a7]
+- Updated dependencies [49490b6]
+- Updated dependencies [a79fb1d]
+- Updated dependencies [1766343]
+- Updated dependencies [08f76bb]
+- Updated dependencies [a34939d]
+- Updated dependencies [e6302c6]
+- Updated dependencies [aa6bb38]
+- Updated dependencies [a9442cc]
+- Updated dependencies [3c2258c]
+- Updated dependencies [81bd4f0]
+- Updated dependencies [3eb3691]
+- Updated dependencies [537bf54]
+  - @lowdefy/helpers@7.0.0
+  - @lowdefy/block-utils@7.0.0
+  - @lowdefy/nunjucks@7.0.0
+
 ## 6.1.0
 
 ### Patch Changes

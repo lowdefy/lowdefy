@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/docs-content",
-  "version": "6.1.0",
+  "version": "7.0.0",
   "license": "Apache-2.0",
   "description": "Lowdefy documentation extracted as markdown for AI coding agents.",
   "homepage": "https://lowdefy.com",
@@ -35,7 +35,7 @@
     "scripts/*"
   ],
   "dependencies": {
-    "@lowdefy/nunjucks": "6.1.0"
+    "@lowdefy/nunjucks": "7.0.0"
   },
   "publishConfig": {
     "access": "public"
