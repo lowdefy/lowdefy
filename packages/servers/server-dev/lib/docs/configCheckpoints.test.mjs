@@ -141,9 +141,6 @@ test('revertConfigCheckpoint throws an actionable error when the checkpoint id d
   );
 });
 
-// Twenty-one checkpoints, each a directory, file copies and a manifest, run
-// well past Jest's 5 s default on a loaded Windows runner, where every file
-// operation is scanned; locally the test takes well under a second.
 test('createConfigCheckpoint evicts the oldest checkpoint once more than the cap are stored', async () => {
   for (let i = 0; i < MAX_CHECKPOINTS + 1; i += 1) {
     createConfigCheckpoint({ label: `checkpoint-${i}` });
@@ -156,4 +153,4 @@ test('createConfigCheckpoint evicts the oldest checkpoint once more than the cap
   expect(
     checkpoints.some((checkpoint) => checkpoint.label === `checkpoint-${MAX_CHECKPOINTS}`)
   ).toBe(true);
-}, 30000);
+});
