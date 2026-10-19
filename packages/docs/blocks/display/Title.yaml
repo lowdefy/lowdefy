@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Title
     pageTitle: Title
-    section: Display Blocks
     filePath: blocks/display/Title.yaml
     block_type: Title
     antd_component: Typography

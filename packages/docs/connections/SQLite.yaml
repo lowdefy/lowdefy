@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: SQLite
     pageTitle: SQLite
-    section: Connections
     filePath: connections/SQLite.yaml
     content:
       - id: markdown_intro

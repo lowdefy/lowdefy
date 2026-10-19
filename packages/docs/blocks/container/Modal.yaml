@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Modal
     pageTitle: Modal
-    section: Container Blocks
     filePath: blocks/container/Modal.yaml
     block_type: Modal
     antd_component: Modal

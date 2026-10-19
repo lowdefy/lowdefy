@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Search
     pageTitle: Search
-    section: Display Blocks
     filePath: blocks/display/Search.yaml
     block_type: Search
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Search

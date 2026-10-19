@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Switch
     pageTitle: Switch
-    section: Input Blocks
     filePath: blocks/input/Switch.yaml
     block_type: Switch
     antd_component: Switch

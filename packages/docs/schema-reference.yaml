@@ -1,0 +1,117 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: schema-reference
+    pageTitle: Schema Reference
+    filePath: schema-reference.yaml
+    content:
+      - id: schema_intro
+        type: Markdown
+        properties:
+          content: |
+            Every Lowdefy app is one config object, assembled from your YAML files at build time.
+            The schema material lives with the concept that owns it — this hub points to each area.
+
+      - id: schema_cards
+        type: Box
+        layout:
+          gap: 16
+        blocks:
+          - id: schema_card_app
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: App & page config
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: schema_link_app
+                  type: Link
+                  params:
+                    pageId: lowdefy-schema
+            blocks:
+              - id: schema_card_app_text
+                type: Paragraph
+                properties:
+                  content: The lowdefy.yaml root object, pages, and how config is assembled.
+          - id: schema_card_blocks
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: Block config
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: schema_link_blocks
+                  type: Link
+                  params:
+                    pageId: blocks
+            blocks:
+              - id: schema_card_blocks_text
+                type: Paragraph
+                properties:
+                  content: The block object — id, type, properties, layout, style, events, and slots.
+          - id: schema_card_requests
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: Request config
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: schema_link_requests
+                  type: Link
+                  params:
+                    pageId: connections-and-requests
+            blocks:
+              - id: schema_card_requests_text
+                type: Paragraph
+                properties:
+                  content: Connections, requests, and payloads.
+          - id: schema_card_auth
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: Auth config
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: schema_link_auth
+                  type: Link
+                  params:
+                    pageId: auth-configuration
+            blocks:
+              - id: schema_card_auth_text
+                type: Paragraph
+                properties:
+                  content: Providers, adapters, callbacks, and protected pages.

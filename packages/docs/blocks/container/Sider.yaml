@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Sider
     pageTitle: Sider
-    section: Container Blocks
     filePath: blocks/container/Sider.yaml
     block_type: Sider
     antd_component: Sider

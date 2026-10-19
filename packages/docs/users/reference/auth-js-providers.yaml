@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: auth-js-providers
     pageTitle: Auth.js Providers
-    section: User Authentication
     filePath: users/reference/auth-js-providers.yaml
     content:
       - id: content

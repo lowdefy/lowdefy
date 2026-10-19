@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: ControlledList
     pageTitle: ControlledList
-    section: List Blocks
     filePath: blocks/list/ControlledList.yaml
     block_type: ControlledList
     antd_component: List

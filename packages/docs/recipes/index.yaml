@@ -1,0 +1,39 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: recipes
+    pageTitle: Recipes
+    filePath: recipes/index.yaml
+    content:
+      - id: recipes_intro
+        type: Markdown
+        properties:
+          content: |
+            Recipes are end-to-end compositions — complete, copyable examples that show how
+            blocks, operators, actions, and connections work together to solve a real problem.
+
+            The first recipes are on their way:
+
+            - Login flow with protected pages
+            - CRUD table with edit modal
+            - File upload with live preview
+            - Multi-step form with validation
+            - Dashboard with filters, KPIs, and a chart
+
+            Until they land, the [tutorial](/tutorial-start) builds a complete app step by step,
+            and the [example repositories](https://github.com/lowdefy?q=example) on GitHub cover
+            common patterns like CRUD, surveys, and authentication.

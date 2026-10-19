@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Menu
     pageTitle: Menu
-    section: Display Blocks
     filePath: blocks/display/Menu.yaml
     block_type: Menu
     antd_component: Menu

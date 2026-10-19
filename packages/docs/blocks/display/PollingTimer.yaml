@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: PollingTimer
     pageTitle: PollingTimer
-    section: Display Blocks
     filePath: blocks/display/PollingTimer.yaml
     block_type: PollingTimer
     github_path: packages/plugins/blocks/blocks-basic/src/blocks/PollingTimer

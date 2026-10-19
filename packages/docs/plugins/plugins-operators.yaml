@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: plugins-operators
     pageTitle: Operator Plugins
-    section: Plugins
     filePath: plugins/plugins-operators.yaml
     content:
       - id: md1

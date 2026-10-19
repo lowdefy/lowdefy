@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: PhoneNumberInput
     pageTitle: PhoneNumberInput
-    section: Input Blocks
     filePath: blocks/input/PhoneNumberInput.yaml
     block_type: PhoneNumberInput
     antd_component: Input

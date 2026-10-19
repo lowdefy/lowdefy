@@ -1044,6 +1044,7 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 | `collapsed` | boolean | `false` | Collapse the inline menu. |
 | `inlineIndent` | number | `24` | Indent width for each sub menu level in pixels (inline mode only). |
 | `forceSubMenuRender` | boolean | `false` | Render submenu into DOM before it becomes visible. |
+| `nestedGroupAsGroup` | boolean | `true` | Render nested MenuGroups as always-visible headed sections (antd item groups). Set false to render them as collapsible submenus at every depth. |
 | `subMenuCloseDelay` | number | - | Delay time to hide submenu when mouse leaves (in seconds). |
 | `subMenuOpenDelay` | number | - | Delay time to show submenu when mouse enters (in seconds). |
 | `triggerSubMenuAction` | string | `"hover"` | Open and close submenus on hover or on click. Enum: `hover`, `click`. |

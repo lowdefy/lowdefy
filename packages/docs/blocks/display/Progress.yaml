@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Progress
     pageTitle: Progress
-    section: Display Blocks
     filePath: blocks/display/Progress.yaml
     block_type: Progress
     antd_component: Progress

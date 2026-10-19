@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Tabs
     pageTitle: Tabs
-    section: Container Blocks
     filePath: blocks/container/Tabs.yaml
     block_type: Tabs
     antd_component: Tabs

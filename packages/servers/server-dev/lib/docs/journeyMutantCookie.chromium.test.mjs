@@ -18,6 +18,8 @@ import http from 'node:http';
 
 import { jest } from '@jest/globals';
 
+import pageReadyScript from '../../test-utils/pageReadyScript.mjs';
+
 // A real Chromium against a small server that resolves every request's
 // cookie header the way createLowdefyContext does, so the browser leg of a
 // mutant run is pinned: the cookie openPage writes is the one the dev server
@@ -32,11 +34,16 @@ const { openMutantRun, readMutantRun } = await import('../server/mutants/mutantR
 const { forwardJourneyCookies } = await import('../server/journeyCookies.js');
 const { journeyActorToken } = await import('../server/auth/journeyActor.js');
 
+// The page marks itself ready once its requests finish, so every request the
+// test counts is made before openPage returns.
 function pageHtml(pageId) {
   return `<!doctype html><html><head><title>loading</title></head><body><script>
     fetch('/api/page/${pageId}', { credentials: 'same-origin' })
       .then(() => fetch('/api/request/${pageId}/save', { method: 'POST' }))
-      .then(() => { document.title = 'done'; });
+      .then(() => {
+        ${pageReadyScript({ pageId })}
+        document.title = 'done';
+      });
   </script></body></html>`;
 }
 
@@ -67,10 +74,17 @@ beforeAll(async () => {
   origin = `http://127.0.0.1:${server.address().port}`;
 });
 
+// Closing Chromium on Windows can take longer than Jest's 5 s hook default.
 afterAll(async () => {
   await browser?.close();
+  server.closeAllConnections();
   await new Promise((resolve) => server.close(resolve));
-});
+}, 30000);
+
+// What is pinned is which requests carry the cookie, not how fast a page
+// loads: a cold Chromium on a Windows runner can take seconds over the first
+// navigation.
+const PAGE_TIMEOUT = 15000;
 
 chromiumTest(
   'a mutant cookie reaches only the journey actors, unreadable by the page, and alone on the loopback hop',
@@ -90,7 +104,7 @@ chromiumTest(
       basePath: '',
       pageId: 'journey',
       user: 'none',
-      timeout: 2000,
+      timeout: PAGE_TIMEOUT,
       mutantCookie: opened.cookiePayload,
     });
     let bystander;
@@ -105,7 +119,7 @@ chromiumTest(
         origin,
         pageId: 'bystander',
         user: 'none',
-        timeout: 2000,
+        timeout: PAGE_TIMEOUT,
       });
       await bystander.page.waitForFunction(() => document.title === 'done');
 

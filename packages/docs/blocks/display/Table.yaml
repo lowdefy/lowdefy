@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Table
     pageTitle: Table
-    section: Display Blocks
     filePath: blocks/display/Table.yaml
     block_type: Table
     fullWidthExamples: true

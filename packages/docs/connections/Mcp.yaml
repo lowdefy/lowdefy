@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Mcp
     pageTitle: MCP
-    section: Connections
     filePath: connections/Mcp.yaml
     content:
       - id: md1

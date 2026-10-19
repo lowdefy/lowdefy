@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Header
     pageTitle: Header
-    section: Container Blocks
     filePath: blocks/container/Header.yaml
     block_type: Header
     antd_component: Header
