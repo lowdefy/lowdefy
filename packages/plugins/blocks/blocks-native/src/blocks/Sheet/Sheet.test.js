@@ -78,6 +78,16 @@ test('the open method presents the sheet with its blocks, and close dismisses it
   expect(calls.map((call) => call.name)).toEqual(['open', 'close']);
 });
 
+test('an open sheet closes when its screen stops being the one shown', async () => {
+  const { setFocused } = await renderPage({ pageConfig: sheetPage() });
+  await screen.findByText('Answer');
+  await press(screen.getByText('Answer'));
+  expect(screen.getByTestId('expo-ui-bottom-sheet').props.index).toBe(0);
+
+  await setFocused(false);
+  expect(screen.getByTestId('expo-ui-bottom-sheet').props.index).toBe(-1);
+});
+
 test('a swipe down closes the sheet and fires onClose once', async () => {
   const { calls } = await renderPage({ pageConfig: sheetPage() });
   await press(await screen.findByText('Answer'));

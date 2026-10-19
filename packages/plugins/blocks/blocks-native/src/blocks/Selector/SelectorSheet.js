@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable } from 'react-native';
+import { useScreenFocused } from '@lowdefy/client-native';
 
 import getLabelProperties from '../Label/getLabelProperties.js';
 import getLabelState from '../Label/getLabelState.js';
@@ -51,6 +52,12 @@ function SelectorSheet({
   const { accessibilityLabel, labelProperties } = getLabelProperties({ blockId, properties });
   const { title } = getLabelState({ blockId, properties: labelProperties });
   const [open, setOpen] = useState(false);
+  // The picker is drawn above the whole app, so it closes when its screen stops being the one
+  // shown.
+  const focused = useScreenFocused();
+  useEffect(() => {
+    if (!focused) setOpen(false);
+  }, [focused]);
   const options = properties.options ?? [];
   const selectedIndex = getOptionIndex({ options, value });
   const selected = selectedIndex === null ? null : options[selectedIndex];

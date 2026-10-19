@@ -17,7 +17,13 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Platform, ScrollView, Text, View } from 'react-native';
 import { BottomSheet } from '@expo/ui/community/bottom-sheet';
-import { iosColors, NaturalSizeContext, ThemeContext, useTheme } from '@lowdefy/client-native';
+import {
+  iosColors,
+  NaturalSizeContext,
+  ThemeContext,
+  useScreenFocused,
+  useTheme,
+} from '@lowdefy/client-native';
 import { type } from '@lowdefy/helpers';
 
 import getSheetDetents from './getSheetDetents.js';
@@ -55,6 +61,15 @@ function Sheet({ blockId, components, content, methods, properties, styles = {} 
   // The latest open state, read by the registered methods.
   const isOpenRef = useRef(isOpen);
   isOpenRef.current = isOpen;
+
+  // A sheet is drawn above the whole app, so it closes when its screen stops being the one shown
+  // (another tab picked, or a screen pushed over it); otherwise it would sit over the next screen.
+  const focused = useScreenFocused();
+  useEffect(() => {
+    if (!focused && isOpenRef.current) {
+      setIndex(CLOSED);
+    }
+  }, [focused]);
 
   useEffect(() => {
     methods.registerMethod('open', () => {
