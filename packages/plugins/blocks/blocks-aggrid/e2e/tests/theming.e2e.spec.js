@@ -394,6 +394,44 @@ test.describe('AG Grid theming', () => {
   });
 
   // ============================================
+  // CELL OVERFLOW
+  // ============================================
+
+  // The browser draws "…" only when the element holding the text is a block container with
+  // text-overflow: ellipsis, narrower than its text. Text straight in a flex container sits in an
+  // anonymous flex item the ellipsis never reaches, and an element that grows to its text's width is
+  // clipped by the cell with no "…".
+  test.describe('cell overflow', () => {
+    ['Plain', 'Renderer', 'Link', 'Checkbox'].forEach((column, index) => {
+      test(`${column} column ends long text in an ellipsis`, async ({ page }) => {
+        await navigateToTestPage(page, 'aggridtheming');
+        const cell = getBlock(page, 'theming_cell_ellipsis')
+          .locator('.ag-row[row-index="0"] .ag-cell')
+          .nth(index);
+        await expect(cell).toContainText('A dealership name');
+        const box = await cell.evaluate((el) => {
+          // AG Grid's checkbox markup holds whitespace text nodes, so skip to the value's text.
+          const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, (node) =>
+            node.textContent.trim() === '' ? NodeFilter.FILTER_SKIP : NodeFilter.FILTER_ACCEPT
+          );
+          const holder = walker.nextNode().parentElement;
+          return {
+            display: getComputedStyle(holder).display,
+            textOverflow: getComputedStyle(holder).textOverflow,
+            overflows: holder.scrollWidth > holder.clientWidth,
+            holderRight: holder.getBoundingClientRect().right,
+            cellRight: el.getBoundingClientRect().right,
+          };
+        });
+        expect(box.display).not.toMatch(/flex|grid/);
+        expect(box.textOverflow).toBe('ellipsis');
+        expect(box.overflows).toBe(true);
+        expect(box.holderRight).toBeLessThanOrEqual(box.cellRight);
+      });
+    });
+  });
+
+  // ============================================
   // NO LEGACY-CSS ERROR
   // ============================================
 

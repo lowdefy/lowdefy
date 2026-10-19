@@ -289,3 +289,39 @@ blocks:
       rowData:
         - name: Alice
         - name: Bob
+
+  # ============================================
+  # CELL OVERFLOW — ellipsis
+  # ============================================
+
+  # Narrow columns whose text is wider than them, one per way text reaches the cell: straight into
+  # the cell, through a cellRenderer function, through a built-in cell type, and inside
+  # .ag-cell-wrapper, which AG Grid adds for a checkbox column.
+
+  - id: theming_cell_ellipsis
+    type: AgGridLowdefy
+    properties:
+      height: 200
+      columnDefs:
+        - headerName: Plain
+          field: dealer
+          width: 120
+        - headerName: Renderer
+          field: dealer
+          width: 120
+          cellRenderer:
+            _function:
+              __args: 0.value
+        - headerName: Link
+          field: dealer
+          width: 120
+          cell:
+            type: link
+            href: https://example.com
+        - headerName: Checkbox
+          field: dealer
+          width: 120
+          checkboxSelection: true
+      rowData:
+        - dealer: A dealership name far wider than its column
+        - dealer: Another dealership name far wider than its column
