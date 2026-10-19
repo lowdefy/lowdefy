@@ -107,6 +107,12 @@ test('writeMobile writes mobile.events for the mobile root', async () => {
   expect(getArtifacts()['mobile/events.json']).toEqual(events);
 });
 
+test('writeMobile writes empty events for a mobile root without events', async () => {
+  const context = createContext();
+  await writeMobile({ components: { mobile: { homePageId: 'today' } }, context });
+  expect(getArtifacts()['mobile/events.json']).toEqual({});
+});
+
 test('writeMobile takes the home page from the first menu item', async () => {
   const context = createContext();
   await writeMobile({

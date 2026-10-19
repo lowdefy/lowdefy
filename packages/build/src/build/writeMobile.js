@@ -127,8 +127,8 @@ async function buildMobileConfig({ components, context }) {
 // "dark:<class>" before "<class>", which the build adds for classes that use
 // an antd theme colour.
 // mobile/events.json: mobile.events, the app events a shell runs in place of
-// the web app's events, serialized like events.json so their ~k markers reach
-// the shell's error locations.
+// the web app's events ({} when it has none), serialized like events.json so
+// their ~k markers reach the shell's error locations.
 // mobile/appJs.json: { jsEntries }, the client _js of mobile.events as module
 // text (buildMobileAppJs), or null.
 async function writeMobile({ components, context }) {
@@ -137,7 +137,7 @@ async function writeMobile({ components, context }) {
   await context.writeBuildArtifact('mobile/config.json', JSON.stringify(config));
   await context.writeBuildArtifact(
     'mobile/events.json',
-    serializer.serializeToString(hasMobile ? components.mobile.events : {})
+    serializer.serializeToString(components.mobile?.events ?? {})
   );
   await context.writeBuildArtifact(
     'mobile/pageIndex.json',
