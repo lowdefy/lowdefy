@@ -71,13 +71,13 @@ function createMockReadConfigFile({ agentConfig, endpointConfigs = {} }) {
   });
 }
 
-function createTestContext({ agentConfig, endpointConfigs, session } = {}) {
+function createTestContext({ agentConfig, endpointConfigs, user } = {}) {
   const context = testContext({
     connections: { Anthropic: { create: mockCreate, requests: {} } },
     operators,
     logger,
     readConfigFile: createMockReadConfigFile({ agentConfig, endpointConfigs }),
-    session: session === undefined ? { user: { id: 'user_1', sub: 'user_1' } } : session,
+    user: user === undefined ? { id: 'user_1', sub: 'user_1' } : user,
   });
   context.agents = { TestAgent: { resolver: mockResolver, schema: {} } };
   context.evaluateOperators = createEvaluateOperators(context);
@@ -135,6 +135,7 @@ test('CallAgent step runs the agent in generate mode and stores the result in st
   expect(resolverArgs.context.agentContext).toEqual({
     conversationId: null,
     pageId: null,
+    pathParams: {},
     sharedState: undefined,
     urlQuery: {},
     userId: 'user_1',
@@ -244,7 +245,7 @@ test('CallAgent step returns error status when prompt does not evaluate to a str
 
 test('CallAgent step runs with userId null in system (scheduled) context', async () => {
   mockResolver.mockResolvedValue({ result: AGENT_RESULT });
-  const context = createTestContext({ agentConfig: createAgentConfig(), session: null });
+  const context = createTestContext({ agentConfig: createAgentConfig(), user: null });
   const routineContext = createRoutineContext();
 
   const res = await runRoutine(context, routineContext, {
@@ -313,4 +314,120 @@ test('CallAgent step evaluates agent properties operators against the headless a
   });
 
   expect(mockResolver.mock.calls[0][0].properties.agent.properties.instructions).toBe('user_1');
+});
+
+test('CallAgent step passes files resolved with operators to the resolver beside the prompt', async () => {
+  mockResolver.mockResolvedValue({ result: AGENT_RESULT });
+  const context = createTestContext({ agentConfig: createAgentConfig() });
+  const files = [
+    { url: 'https://files.example.com/one.png?sig=a', mediaType: 'image/png' },
+    { url: 'https://files.example.com/two.png?sig=b', mediaType: 'image/png' },
+  ];
+  const routineContext = createRoutineContext({ payload: { files } });
+
+  const res = await runRoutine(context, routineContext, {
+    routine: {
+      id: 'agent:test_endpoint:run_agent',
+      type: 'CallAgent',
+      stepId: 'run_agent',
+      endpointId: 'test_endpoint',
+      properties: {
+        agentId: 'research_agent',
+        prompt: 'Describe the screenshots.',
+        files: { _payload: 'files' },
+      },
+    },
+  });
+
+  expect(res).toEqual({ status: 'continue' });
+  expect(mockResolver.mock.calls[0][0].properties.prompt).toBe('Describe the screenshots.');
+  expect(mockResolver.mock.calls[0][0].properties.files).toEqual(files);
+  expect(routineContext.steps.run_agent).toEqual(AGENT_RESULT);
+});
+
+test('CallAgent step without files passes the prompt and an empty files list', async () => {
+  mockResolver.mockResolvedValue({ result: AGENT_RESULT });
+  const context = createTestContext({ agentConfig: createAgentConfig() });
+  const routineContext = createRoutineContext();
+
+  await runRoutine(context, routineContext, {
+    routine: {
+      id: 'agent:test_endpoint:run_agent',
+      type: 'CallAgent',
+      stepId: 'run_agent',
+      endpointId: 'test_endpoint',
+      properties: { agentId: 'research_agent', prompt: 'Go.', files: { _payload: 'missing' } },
+    },
+  });
+
+  expect(mockResolver.mock.calls[0][0].properties.prompt).toBe('Go.');
+  expect(mockResolver.mock.calls[0][0].properties.files).toEqual([]);
+});
+
+test('CallAgent step returns error status when files does not evaluate to an array', async () => {
+  const context = createTestContext({ agentConfig: createAgentConfig() });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: {
+      id: 'agent:test_endpoint:run_agent',
+      type: 'CallAgent',
+      stepId: 'run_agent',
+      endpointId: 'test_endpoint',
+      properties: {
+        agentId: 'research_agent',
+        prompt: 'Go.',
+        files: { url: 'https://files.example.com/one.png?sig=secret', mediaType: 'image/png' },
+      },
+    },
+  });
+
+  expect(res.status).toBe('error');
+  expect(res.error.name).toBe('ConfigError');
+  expect(res.error.message).toContain(
+    'CallAgent step "run_agent" properties.files must evaluate to an array. Received a value of type "object".'
+  );
+  expect(res.error.message).not.toContain('sig=secret');
+  expect(mockResolver).not.toHaveBeenCalled();
+});
+
+test('CallAgent step returns error status when a file has no mediaType or no valid url', async () => {
+  const context = createTestContext({ agentConfig: createAgentConfig() });
+
+  const missingMediaType = await runRoutine(context, createRoutineContext(), {
+    routine: {
+      id: 'agent:test_endpoint:run_agent',
+      type: 'CallAgent',
+      stepId: 'run_agent',
+      endpointId: 'test_endpoint',
+      properties: {
+        agentId: 'research_agent',
+        prompt: 'Go.',
+        files: [{ url: 'https://files.example.com/one.png?sig=secret' }],
+      },
+    },
+  });
+  expect(missingMediaType.status).toBe('error');
+  expect(missingMediaType.error.name).toBe('ConfigError');
+  expect(missingMediaType.error.message).toContain(
+    'CallAgent step "run_agent" properties.files[0] must have a url and a mediaType string. Received a url of type "string" and a mediaType of type "undefined".'
+  );
+  expect(missingMediaType.error.message).not.toContain('sig=secret');
+
+  const badUrl = await runRoutine(context, createRoutineContext(), {
+    routine: {
+      id: 'agent:test_endpoint:run_agent',
+      type: 'CallAgent',
+      stepId: 'run_agent',
+      endpointId: 'test_endpoint',
+      properties: {
+        agentId: 'research_agent',
+        prompt: 'Go.',
+        files: [{ url: 'not a url', mediaType: 'image/png' }],
+      },
+    },
+  });
+  expect(badUrl.status).toBe('error');
+  expect(badUrl.error.message).toContain('properties.files[0] must have a url');
+  expect(mockResolver).not.toHaveBeenCalled();
 });

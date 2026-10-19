@@ -16,7 +16,10 @@
 
 async function sessionMockHandler(c) {
   const context = c.get('lowdefyContext');
-  return c.json(context.session ?? {});
+  if (!context.user) {
+    return c.json(null);
+  }
+  return c.json({ session: { id: 'e2e' }, user: context.user });
 }
 
 export default sessionMockHandler;

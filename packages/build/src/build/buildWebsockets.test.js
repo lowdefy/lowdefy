@@ -198,6 +198,43 @@ test('buildWebsockets throws when properties is not an object', () => {
   );
 });
 
+test('buildWebsockets tenant none is accepted', () => {
+  const context = createTestContext();
+  const components = {
+    websockets: [{ id: 'ws1', type: 'Channel', tenant: 'none' }],
+  };
+  const res = buildWebsockets({ components, context });
+  expect(res.websockets).toEqual([
+    {
+      id: 'websocket:ws1',
+      websocketId: 'ws1',
+      type: 'Channel',
+      tenant: 'none',
+      properties: {},
+    },
+  ]);
+});
+
+test('buildWebsockets throws when tenant is true', () => {
+  const context = createTestContext();
+  const components = {
+    websockets: [{ id: 'ws1', type: 'Channel', tenant: true }],
+  };
+  expect(() => buildWebsockets({ components, context })).toThrow(
+    'Websocket "ws1" "tenant" only accepts "none" — the tenant wall is declared on the connection, and "authored" is aggregation-only.'
+  );
+});
+
+test('buildWebsockets throws when tenant is another string', () => {
+  const context = createTestContext();
+  const components = {
+    websockets: [{ id: 'ws1', type: 'Channel', tenant: 'off' }],
+  };
+  expect(() => buildWebsockets({ components, context })).toThrow(
+    'Websocket "ws1" "tenant" only accepts "none" — the tenant wall is declared on the connection, and "authored" is aggregation-only.'
+  );
+});
+
 test('buildWebsockets renames id to internal format and sets websocketId', () => {
   const context = createTestContext();
   const components = {
@@ -270,4 +307,34 @@ test('buildWebsockets counts server operators in websocket properties', () => {
     _string: 1,
     _secret: 2,
   });
+});
+
+test('buildWebsockets collects an error per invalid websocket and still builds the valid ones', () => {
+  const context = createTestContext();
+  context.errors = [];
+  const components = {
+    websockets: [
+      { type: 'Channel', '~k': 'k1' },
+      { id: 'ws2', type: 'Channel', connectionId: 'missing', '~k': 'k2' },
+      { id: 'ws3', type: 'Channel', '~k': 'k3' },
+    ],
+  };
+  buildWebsockets({ components, context });
+  expect(context.errors.length).toBe(2);
+  expect(context.errors[0].message).toBe('Websocket id missing at websocket 0.');
+  expect(context.errors[0].configKey).toBe('k1');
+  expect(context.errors[1].checkSlug).toBe('connection-refs');
+  expect(context.websocketIds).toEqual(new Set(['ws3']));
+});
+
+test('buildWebsockets names the config root when websockets is not an array', () => {
+  const context = createTestContext();
+  const components = { websockets: 'websockets', '~k': 'root' };
+  let thrown;
+  try {
+    buildWebsockets({ components, context });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown.configKey).toBe('root');
 });

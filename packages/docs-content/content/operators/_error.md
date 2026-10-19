@@ -25,10 +25,11 @@ Dot notation is supported for reading fields of the error, such as `_error: stat
 Inside a `:catch`, `_error` is an Error rebuilt from the caught error with only these fields:
 
 - `name`: The error class name, such as `RequestError`.
-- `message`: The real error message, with the values of known secrets (`_secret` values, `CRON_SECRET` and `AUTH_SECRET`) replaced by `[REDACTED]`.
+- `message`: The real error message, with the values of known secrets (`_secret` values, `CRON_SECRET`, `BETTER_AUTH_SECRET` and values marked with [`_credential`](/_credential)) replaced by `[REDACTED]`.
 - `code`: The error's `code`, if it has one.
 - `statusCode`: The error's HTTP status, if it has one.
 - `handled`: `true` once the server has logged the error.
+- `retryAfter`: On a `ServiceError`, the wait the service asked for before a retry (seconds or an HTTP date), if it sent one.
 - `cause`: The error that caused this one, with the same fields, down the chain.
 
 A caught `UserError` (from a [`:throw`](/:throw) or a plugin) also keeps its `:cause` and `metaData`. The error carries no `received`, `source`, `config`, `configKey`, `location` or `stack`.
@@ -59,6 +60,28 @@ error:
 ##### `code` and `statusCode`
 
 `code` and `statusCode` follow one rule across connection libraries. `code` is the error's own `code`, such as `ERR_BAD_REQUEST` from AxiosHttp or `11000` from MongoDB. `statusCode` is the first number among the error's `statusCode`, `status` and `response.status`. A request error takes both from the error the connection threw, so `_error: statusCode` reads the HTTP status of a failed `AxiosHttp` request without reading the cause.
+
+##### Service errors and rate limits
+
+A request that fails because of the service it calls, not its config, is a `ServiceError`: a network failure, a timeout, a 5xx response, or a rate limit (HTTP 429, including a provider's throttling error). Every other request failure is a `RequestError`. A routine can tell a rate limit from a fault and try again later:
+
+```yaml
+- :try:
+    - id: summarize
+      type: GenerateText
+      connectionId: claude
+      properties:
+        model: claude-haiku-4-5
+        prompt:
+          _payload: text
+  :catch:
+    - :if:
+        _eq: [{ _error: statusCode }, 429]
+      :then:
+        - :return:
+            status: busy
+    - :throw: Summary failed
+```
 
 #### Arguments
 

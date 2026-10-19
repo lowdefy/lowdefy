@@ -24,12 +24,12 @@
               type: MenuLink
               properties:
                 title: Home
-                icon: AiOutlineHome
+                icon: home
             - id: phm_basic_products
               type: MenuLink
               properties:
                 title: Products
-                icon: AiOutlineAppstore
+                icon: grid
             - id: phm_basic_pricing
               type: MenuLink
               properties:
@@ -72,6 +72,43 @@
                   properties:
                     content: Browse the full API reference and configuration guides.
 
+- title: Compact Padding
+  fullWidth: true
+  blocks:
+    - id: phm_compact
+      type: PageHeaderMenu
+      properties:
+        padding: compact
+        menu:
+          links:
+            - id: phm_compact_home
+              type: MenuLink
+              properties:
+                title: Home
+            - id: phm_compact_invoices
+              type: MenuLink
+              properties:
+                title: Invoices
+      blocks:
+        - id: phm_compact_text
+          type: Paragraph
+          properties:
+            content: 'padding: compact trims the content padding from 40px to 16px, so data-heavy pages show more.'
+        - id: phm_compact_card
+          type: Card
+          properties:
+            title: Recent invoices
+            padding: none
+          blocks:
+            - id: phm_compact_card_rows
+              type: Html
+              properties:
+                html: |
+                  <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1042</span><span style="color: var(--ant-color-text-secondary);">$1,280.00</span></div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1041</span><span style="color: var(--ant-color-text-secondary);">$640.00</span></div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1040</span><span style="color: var(--ant-color-text-secondary);">$2,115.50</span></div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 24px;"><span>INV-1039</span><span style="color: var(--ant-color-text-secondary);">$96.00</span></div>
+
 - title: Menu Groups & Breadcrumb
   fullWidth: true
   blocks:
@@ -83,7 +120,7 @@
           separator: /
           list:
             - label: Home
-              icon: AiOutlineHome
+              icon: home
             - label: Analytics
             - label: Overview
         menu:
@@ -92,12 +129,12 @@
               type: MenuLink
               properties:
                 title: Dashboard
-                icon: AiOutlineDashboard
+                icon: Gauge
             - id: phm_g_analytics
               type: MenuGroup
               properties:
                 title: Analytics
-                icon: AiOutlineBarChart
+                icon: chart
               links:
                 - id: phm_g_overview
                   type: MenuLink
@@ -115,7 +152,7 @@
               type: MenuLink
               properties:
                 title: Settings
-                icon: AiOutlineSetting
+                icon: settings
       blocks:
         - id: phm_g_title
           type: Title
@@ -183,19 +220,19 @@
               type: MenuLink
               properties:
                 title: My Profile
-                icon: AiOutlineUser
+                icon: user
             - id: phm_prof_settings
               type: MenuLink
               properties:
                 title: Settings
-                icon: AiOutlineSetting
+                icon: settings
             - id: phm_prof_divider
               type: MenuDivider
             - id: phm_prof_logout
               type: MenuLink
               properties:
                 title: Logout
-                icon: AiOutlineLogout
+                icon: logout
                 danger: true
         menu:
           links:
@@ -203,17 +240,17 @@
               type: MenuLink
               properties:
                 title: Home
-                icon: AiOutlineHome
+                icon: home
             - id: phm_prof_projects
               type: MenuLink
               properties:
                 title: Projects
-                icon: AiOutlineProject
+                icon: SquareKanban
             - id: phm_prof_reports
               type: MenuLink
               properties:
                 title: Reports
-                icon: AiOutlineBarChart
+                icon: chart
       blocks:
         - id: phm_prof_title
           type: Title
@@ -263,7 +300,7 @@
           dot: true
         profile:
           avatar:
-            icon: AiOutlineUser
+            icon: user
         breadcrumb:
           list:
             - Intranet
@@ -274,17 +311,17 @@
               type: MenuLink
               properties:
                 title: Home
-                icon: AiOutlineHome
+                icon: home
             - id: phm_full_directory
               type: MenuLink
               properties:
                 title: Directory
-                icon: AiOutlineTeam
+                icon: users
             - id: phm_full_resources
               type: MenuGroup
               properties:
                 title: Resources
-                icon: AiOutlineBook
+                icon: Book
               links:
                 - id: phm_full_policies
                   type: MenuLink
@@ -298,7 +335,7 @@
               type: MenuLink
               properties:
                 title: IT Support
-                icon: AiOutlineQuestionCircle
+                icon: help
       slots:
         footer:
           blocks:
@@ -306,7 +343,8 @@
               type: Paragraph
               properties:
                 content: Acme Corp Intranet - Internal Use Only
-                style:
+              style:
+                .element:
                   margin: 0
                   color: '#888'
                   textAlign: center
@@ -365,22 +403,22 @@
               type: MenuLink
               properties:
                 title: Guide
-                icon: AiOutlineBook
+                icon: Book
             - id: phm_light_api
               type: MenuLink
               properties:
                 title: API Reference
-                icon: AiOutlineApi
+                icon: Plug
             - id: phm_light_examples
               type: MenuLink
               properties:
                 title: Examples
-                icon: AiOutlineCode
+                icon: CodeXml
             - id: phm_light_community
               type: MenuLink
               properties:
                 title: Community
-                icon: AiOutlineGlobal
+                icon: globe
         breadcrumb:
           separator: /
           list:
@@ -396,7 +434,7 @@
                 flex: 0 0 auto
               properties:
                 title: Search
-                icon: AiOutlineSearch
+                icon: search
                 color: default
                 variant: outlined
                 size: small
@@ -460,12 +498,12 @@
               type: MenuLink
               properties:
                 title: Home
-                icon: AiOutlineHome
+                icon: home
             - id: phm_mo_settings
               type: MenuLink
               properties:
                 title: Settings
-                icon: AiOutlineSetting
+                icon: settings
       blocks:
         - id: phm_mo_title
           type: Title

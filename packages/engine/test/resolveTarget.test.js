@@ -16,9 +16,17 @@
 
 import resolveTarget from '../src/resolveTarget.js';
 
-function createLowdefy({ basePath, home, origin = 'https://app.lowdefy.test' } = {}) {
+function createLowdefy({
+  basePath,
+  home,
+  origin = 'https://app.lowdefy.test',
+  href = `${origin}${basePath ?? ''}/admin/current?tab=1`,
+} = {}) {
   const lowdefy = {
-    _internal: { globals: { window: { location: { origin } } } },
+    linkPaths: {},
+    pagePaths: {},
+    pathMemory: new Map(),
+    _internal: { globals: { window: { location: { href, origin } } } },
   };
   if (basePath !== undefined) {
     lowdefy.basePath = basePath;
@@ -44,6 +52,9 @@ test('resolveTarget resolves home to the app root when a homePageId is configure
     kind: 'page',
     pathname: '/',
     query: '',
+    pageId: 'dashboard',
+    pathParams: {},
+    instanceKey: 'page:dashboard',
   });
 });
 
@@ -53,6 +64,9 @@ test('resolveTarget resolves home to the menu-derived pageId when no homePageId 
     kind: 'page',
     pathname: '/first-page',
     query: '',
+    pageId: 'first-page',
+    pathParams: {},
+    instanceKey: 'page:first-page',
   });
 });
 
@@ -62,6 +76,9 @@ test('resolveTarget carries urlQuery on a home target', () => {
     kind: 'page',
     pathname: '/',
     query: 'p=3',
+    pageId: 'dashboard',
+    pathParams: {},
+    instanceKey: 'page:dashboard',
   });
 });
 
@@ -79,6 +96,9 @@ test('resolveTarget resolves a pageId without urlQuery', () => {
     kind: 'page',
     pathname: '/page_1',
     query: '',
+    pageId: 'page_1',
+    pathParams: {},
+    instanceKey: 'page:page_1',
   });
 });
 
@@ -89,6 +109,9 @@ test('resolveTarget resolves a pageId with urlQuery', () => {
     kind: 'page',
     pathname: '/page_1',
     query: 'p=3',
+    pageId: 'page_1',
+    pathParams: {},
+    instanceKey: 'page:page_1',
   });
 });
 
@@ -246,4 +269,222 @@ test('resolveTarget folds urlQuery into an absolute same-origin page url', () =>
     pathname: '/reports',
     query: 'theme=dark&a=1',
   });
+});
+
+test.each([
+  [
+    'a fragment moves within the current page',
+    '#products',
+    undefined,
+    { kind: 'external', href: '#products' },
+  ],
+  [
+    'a fragment keeps the urlQuery',
+    '#products',
+    { a: 1 },
+    { kind: 'external', href: '?a=1#products' },
+  ],
+  [
+    'a query alone is the current page with that query',
+    '?q=1',
+    { a: 1 },
+    { kind: 'page', pathname: '/admin/current', query: 'q=1&a=1' },
+  ],
+  [
+    'a dot path is relative to the current page',
+    './reports?x=1',
+    undefined,
+    { kind: 'page', pathname: '/admin/reports', query: 'x=1' },
+  ],
+  [
+    'a parent path is relative to the current page',
+    '../reports',
+    undefined,
+    { kind: 'page', pathname: '/reports', query: '' },
+  ],
+  [
+    'mailto keeps its address',
+    'mailto:help@example.com',
+    { subject: 'Hi there' },
+    { kind: 'external', href: 'mailto:help@example.com?subject=Hi+there' },
+  ],
+  [
+    'tel keeps its number',
+    'tel:+27123456789',
+    undefined,
+    { kind: 'external', href: 'tel:+27123456789' },
+  ],
+  [
+    'an app scheme keeps its host',
+    'myapp://open/item?id=4',
+    undefined,
+    { kind: 'external', href: 'myapp://open/item?id=4' },
+  ],
+  [
+    'a protocol-relative url to another host is external',
+    '//example.com/x',
+    undefined,
+    { kind: 'external', href: 'https://example.com/x' },
+  ],
+  [
+    'a backslash url to another host is external',
+    '/\\example.com/x',
+    undefined,
+    { kind: 'external', href: 'https://example.com/x' },
+  ],
+  [
+    'a protocol-relative url to this origin is a page',
+    '//app.lowdefy.test/app/reports',
+    undefined,
+    { kind: 'page', pathname: '/reports', query: '' },
+  ],
+])('resolveTarget url: %s', (_, url, urlQuery, expected) => {
+  const lowdefy = createLowdefy({ basePath: '/app' });
+  expect(resolveTarget({ lowdefy, target: { url, urlQuery } })).toEqual(expected);
+});
+
+test.each([
+  'javascript:alert(1)',
+  'JavaScript:alert(1)',
+  'java\tscript:alert(1)',
+  'vbscript:msgbox(1)',
+  'data:text/html,<script>alert(1)</script>',
+])('resolveTarget resolves no target for the script url %s', (url) => {
+  expect(resolveTarget({ lowdefy: createLowdefy(), target: { url } })).toBeUndefined();
+});
+
+test('resolveTarget resolves a fragment without a window', () => {
+  const lowdefy = { _internal: { globals: {} } };
+  expect(resolveTarget({ lowdefy, target: { url: '#top' } })).toEqual({
+    kind: 'external',
+    href: '#top',
+  });
+});
+
+test.each([
+  ['a tab', '/\t/example.com/x'],
+  ['a newline', '/\n/example.com/x'],
+  ['a carriage return', '/\r/example.com/x'],
+  ['a leading space', ' //example.com/x'],
+  ['a leading control character', '\u0001//example.com/x'],
+])('resolveTarget reads a url with %s the way the URL parser does, as another host', (_, url) => {
+  expect(resolveTarget({ lowdefy: createLowdefy(), target: { url } })).toEqual({
+    kind: 'external',
+    href: 'https://example.com/x',
+  });
+});
+
+test('resolveTarget trims spaces around an app path', () => {
+  expect(resolveTarget({ lowdefy: createLowdefy(), target: { url: ' /page\n' } })).toEqual({
+    kind: 'page',
+    pathname: '/page',
+    query: '',
+  });
+});
+
+test.each(['not a url', 'http://', 'https://exa mple.com', ' \t '])(
+  'resolveTarget resolves no target for the unparseable url %j',
+  (url) => {
+    expect(resolveTarget({ lowdefy: createLowdefy(), target: { url } })).toBeUndefined();
+  }
+);
+
+function createPathsLowdefy({ linkPaths = {}, pagePaths = {} } = {}) {
+  const lowdefy = createLowdefy();
+  lowdefy.linkPaths = linkPaths;
+  lowdefy.pagePaths = pagePaths;
+  return lowdefy;
+}
+
+test('resolveTarget builds a patterned page path from pagePaths without remembering it', () => {
+  const lowdefy = createPathsLowdefy({ pagePaths: { ticket: 'tickets/{space}/{ticket_id}' } });
+  const target = resolveTarget({
+    lowdefy,
+    target: { pageId: 'ticket', pathParams: { space: 's', ticket_id: 1 }, urlQuery: { tab: 2 } },
+  });
+  expect(target).toEqual({
+    kind: 'page',
+    pathname: '/tickets/s/1',
+    query: 'tab=2',
+    pageId: 'ticket',
+    pathParams: { space: 's', ticket_id: '1' },
+    instanceKey: 'page:ticket#tickets/s/1',
+  });
+  expect(lowdefy.pathMemory.size).toBe(0);
+});
+
+test('resolveTarget writes no path memory however often a page target is resolved', () => {
+  const lowdefy = createPathsLowdefy({ pagePaths: { ticket: 'tickets/{space}/{ticket_id}' } });
+  for (let ticketId = 0; ticketId < 50; ticketId += 1) {
+    resolveTarget({
+      lowdefy,
+      target: { pageId: 'ticket', pathParams: { space: 's', ticket_id: ticketId } },
+    });
+    resolveTarget({
+      lowdefy,
+      target: { pageId: 'ticket', pathParams: { space: 's', ticket_id: ticketId } },
+    });
+  }
+  resolveTarget({ lowdefy, target: { home: true } });
+  expect(lowdefy.pathMemory.size).toBe(0);
+});
+
+test('resolveTarget builds a page in neither paths list at its id', () => {
+  const lowdefy = createPathsLowdefy();
+  const target = resolveTarget({
+    lowdefy,
+    target: { pageId: 'ticket', pathParams: { space: 's', ticket_id: 1 } },
+  });
+  expect(target.pathname).toEqual('/ticket');
+  expect(target.pathParams).toEqual({});
+  expect(target.instanceKey).toEqual('page:ticket');
+});
+
+test('resolveTarget prefers the page linkPaths over pagePaths', () => {
+  const lowdefy = createPathsLowdefy({
+    linkPaths: { ticket: 'support/{ticket_id}' },
+    pagePaths: { ticket: 'tickets/{ticket_id}' },
+  });
+  expect(
+    resolveTarget({ lowdefy, target: { pageId: 'ticket', pathParams: { ticket_id: 'a/b' } } })
+      .pathname
+  ).toEqual('/support/a%2Fb');
+});
+
+test('resolveTarget throws a ConfigError naming the page and a missing placeholder', () => {
+  const lowdefy = createPathsLowdefy({ pagePaths: { ticket: 'tickets/{space}/{ticket_id}' } });
+  let error;
+  try {
+    resolveTarget({ lowdefy, target: { pageId: 'ticket', pathParams: { space: 's' } } });
+  } catch (e) {
+    error = e;
+  }
+  expect(error.name).toEqual('ConfigError');
+  expect(error.message).toEqual(
+    'Link to page "ticket" is missing a value for path placeholder "ticket_id".'
+  );
+  expect(lowdefy.pathMemory.size).toBe(0);
+});
+
+test('resolveTarget builds a patterned home page with its values', () => {
+  const lowdefy = createPathsLowdefy({ pagePaths: { board: 'boards/{board}' } });
+  lowdefy.home = { configured: false, pageId: 'board', pathParams: { board: 'main' } };
+  expect(resolveTarget({ lowdefy, target: { home: true } })).toEqual({
+    kind: 'page',
+    pathname: '/boards/main',
+    query: '',
+    pageId: 'board',
+    pathParams: { board: 'main' },
+    instanceKey: 'page:board#boards/main',
+  });
+});
+
+test('resolveTarget leaves the path memory alone for a url target', () => {
+  const lowdefy = createPathsLowdefy();
+  expect(resolveTarget({ lowdefy, target: { url: '/tickets/s/1' } })).toEqual({
+    kind: 'page',
+    pathname: '/tickets/s/1',
+    query: '',
+  });
+  expect(lowdefy.pathMemory.size).toBe(0);
 });

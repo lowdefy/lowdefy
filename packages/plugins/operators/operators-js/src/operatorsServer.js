@@ -54,11 +54,15 @@ export { default as _type } from './operators/shared/type.js';
 export { default as _uri } from './operators/shared/uri.js';
 export { default as _user } from './operators/shared/user.js';
 
+export { default as _agent } from './operators/server/agent.js';
 export { default as _base64 } from './operators/server/base64.js';
+export { default as _credential } from './operators/server/credential.js';
 export { default as _error } from './operators/shared/error.js';
 export { default as _hash } from './operators/server/hash.js';
+export { default as _hmac } from './operators/server/hmac.js';
 export { default as _item } from './operators/server/item.js';
 export { default as _js } from './operators/server/js.js';
+export { default as _organization } from './operators/server/organization.js';
 export { default as _payload } from './operators/server/payload.js';
 export { default as _secret } from './operators/server/secret.js';
 export { default as _step } from './operators/server/step.js';

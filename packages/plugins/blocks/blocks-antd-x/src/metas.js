@@ -16,3 +16,4 @@
 
 export { default as AgentChat } from './blocks/AgentChat/meta.js';
 export { default as AgentConversations } from './blocks/AgentConversations/meta.js';
+export { default as IntentInput } from './blocks/IntentInput/meta.js';

@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
+// BetterAuth's session user carries `id`, never `sub`. The roles/attributes
+// floor happens at injection via normalizeInjectedCaller (server-dev), so only
+// an explicit, readable roles default is kept here.
 const defaultMockUser = {
-  sub: 'lowdefy-dev',
   id: 'lowdefy-dev',
   name: 'Lowdefy Dev User',
   roles: [],

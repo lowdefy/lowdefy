@@ -1,0 +1,8 @@
+# The data set the app error and step reference journeys run on
+# (packages/servers/server-dev/test/journeyFixture/appErrors.test.mjs,
+# pageRoot.test.mjs and references.test.mjs). Change it only together with them.
+fixtures:
+  fixture_db:
+    - { _id: item-1, kind: item, page: home, name: Fixture item }
+users:
+  member: { id: u_member, roles: [member] }

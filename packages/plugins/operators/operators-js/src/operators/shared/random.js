@@ -72,5 +72,6 @@ function _random({ params }) {
 }
 
 _random.dynamic = true;
+_random.tracking = { kind: 'volatile' };
 
 export default _random;

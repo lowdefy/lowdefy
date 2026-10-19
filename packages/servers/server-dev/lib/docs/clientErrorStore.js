@@ -14,6 +14,11 @@
   limitations under the License.
 */
 
+import { publish } from './devEventBus.js';
+import getBuildId from './getBuildId.js';
+import isRunErrorEntry from './isRunErrorEntry.js';
+import { recordRunError } from './runErrorBuffers.js';
+
 // Module-level ring buffer of recent client-reported errors — feeds the
 // getBuildStatus feedback endpoint so agents can see browser errors without
 // tailing server logs. Deliberately in-memory only: entries are lost on
@@ -22,11 +27,23 @@ const MAX_ENTRIES = 50;
 
 const entries = [];
 
+// Each entry is stamped with the build it happened under (see getBuildId).
+// An entry a journey run caused goes to that run's own
+// buffer only (see runErrorBuffers), or is dropped when the run has ended:
+// kept out of this ring and the event bus, it never reaches build-status or
+// an agent's event stream, and a run that trips many errors cannot evict the
+// developer's own. The run reports its errors in its own result.
 function push(entry) {
-  entries.push(entry);
+  const stamped = { ...entry, buildId: getBuildId() };
+  if (isRunErrorEntry(stamped)) {
+    recordRunError({ ...stamped, store: 'client' });
+    return;
+  }
+  entries.push(stamped);
   if (entries.length > MAX_ENTRIES) {
     entries.shift();
   }
+  publish({ type: 'client_error', ...stamped });
 }
 
 function list() {

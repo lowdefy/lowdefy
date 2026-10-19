@@ -14,9 +14,15 @@
   limitations under the License.
 */
 
+import fs from 'node:fs';
+import path from 'node:path';
+import { Readable } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
+
 import axios from 'axios';
-import decompress from 'decompress';
-import decompressTargz from 'decompress-targz';
+import { Unpack } from 'tar';
+
+import verifyIntegrity from './verifyIntegrity.js';
 
 async function fetchNpmTarball({ packageName, version, directory }) {
   const registryUrl = `https://registry.npmjs.org/${packageName}`;
@@ -37,30 +43,64 @@ async function fetchNpmTarball({ packageName, version, directory }) {
   if (!packageInfo.data.versions[version]) {
     throw new Error(`Invalid version. "${packageName}" does not have version "${version}".`);
   }
+  const { dist } = packageInfo.data.versions[version];
   let tarball;
 
   try {
-    tarball = await axios.get(packageInfo.data.versions[version].dist.tarball, {
+    tarball = await axios.get(dist.tarball, {
       responseType: 'arraybuffer',
     });
   } catch (error) {
     if (error.response && error.response.status === 404) {
-      throw new Error(
-        `Package "${packageName}" tarball could not be found at ${packageInfo.data.versions[version].dist.tarball}.`
-      );
+      throw new Error(`Package "${packageName}" tarball could not be found at ${dist.tarball}.`);
     }
     throw error;
   }
 
   if (!tarball || !tarball.data) {
-    throw new Error(
-      `Package "${packageName}" tarball could not be found at ${packageInfo.data.versions[version].dist.tarball}.`
-    );
+    throw new Error(`Package "${packageName}" tarball could not be found at ${dist.tarball}.`);
   }
-  await decompress(tarball.data, directory, {
-    plugins: [decompressTargz()],
-    strip: 1, // Removes leading /package dir from the file path
+  verifyIntegrity({
+    data: tarball.data,
+    integrity: dist.integrity,
+    name: `Package "${packageName}@${version}" tarball`,
   });
+  // The tarball extracts next to the target and moves into place only once
+  // every entry is written. getServer takes a directory with a package.json
+  // for a complete server, so a failed extraction must leave nothing behind.
+  // The server's entries replace their namesakes in the directory one by one,
+  // package.json last, and everything else in the directory stays: a
+  // --server-directory can hold the deployment's own files (a Vercel deploy
+  // directory keeps its build scripts there).
+  await fs.promises.mkdir(path.dirname(directory), { recursive: true });
+  const staging = await fs.promises.mkdtemp(`${directory}-download-`);
+  try {
+    // strict turns tar's warnings into errors, so an entry that would land
+    // outside the directory (a "../" path, an absolute path or a link out)
+    // fails the extraction instead of being skipped.
+    await pipeline(
+      Readable.from([tarball.data]),
+      new Unpack({
+        cwd: staging,
+        strict: true,
+        strip: 1, // Removes the leading package/ directory from each path
+      })
+    );
+    await fs.promises.mkdir(directory, { recursive: true });
+    // A package.json left from an earlier server goes first, so an
+    // interrupted move never looks like a complete server.
+    await fs.promises.rm(path.join(directory, 'package.json'), { force: true });
+    const entries = (await fs.promises.readdir(staging)).sort(
+      (a, b) => (a === 'package.json') - (b === 'package.json')
+    );
+    for (const entry of entries) {
+      const target = path.join(directory, entry);
+      await fs.promises.rm(target, { recursive: true, force: true });
+      await fs.promises.rename(path.join(staging, entry), target);
+    }
+  } finally {
+    await fs.promises.rm(staging, { recursive: true, force: true });
+  }
 }
 
 export default fetchNpmTarball;

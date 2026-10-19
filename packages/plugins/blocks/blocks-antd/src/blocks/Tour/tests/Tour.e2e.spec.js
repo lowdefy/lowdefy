@@ -86,4 +86,32 @@ test.describe('Tour Block', () => {
     // Tour should be hidden
     await expect(tour).toBeHidden();
   });
+
+  // ============================================
+  // GAP, CSS KEYS AND BUTTON TEXT
+  // ============================================
+
+  test('applies title and description classes and next button text', async ({ page }) => {
+    await getBlock(page, 'tour_custom_trigger').locator('.ant-btn').click();
+    const tour = getTour(page);
+    await expect(tour.locator('.ant-tour-title.tour-custom-title')).toHaveText('Custom Step');
+    await expect(tour.locator('.ant-tour-description.tour-custom-description')).toHaveText(
+      'Custom description'
+    );
+    await expect(tour.locator('.ant-tour-next-btn')).toHaveText('Got it');
+  });
+
+  test('applies the gap offset and radius around the target', async ({ page }) => {
+    await getBlock(page, 'tour_custom_trigger').locator('.ant-btn').click();
+    await expect(getTour(page)).toBeVisible();
+    const target = await page.locator('#tour_target_1').boundingBox();
+    const hole = page.locator('.ant-tour-mask mask rect[fill="black"]');
+    await expect(hole).toHaveAttribute('rx', '12');
+    await expect
+      .poll(async () => Math.round(Number(await hole.getAttribute('width'))))
+      .toBe(Math.round(target.width + 20));
+    await expect
+      .poll(async () => Math.round(Number(await hole.getAttribute('height'))))
+      .toBe(Math.round(target.height + 8));
+  });
 });

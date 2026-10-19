@@ -1,0 +1,13 @@
+# U5: Path on the 404 Page
+# =========================
+# Tests that the 404 page cannot declare a path.
+#
+# Expected error:
+#   [Config Error] Page "404" cannot have a path. ...
+
+lowdefy: local
+
+pages:
+  - id: '404'
+    type: Box
+    path: not-found

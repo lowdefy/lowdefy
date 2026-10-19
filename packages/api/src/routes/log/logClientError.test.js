@@ -88,6 +88,28 @@ describe('logClientError', () => {
     expect(error.source).toBe('pages/home.yaml:8');
   });
 
+  test('resolves the location through the context readMaps when it has one', async () => {
+    const context = {
+      logger: { error: jest.fn(), warn: jest.fn() },
+      readConfigFile: jest.fn(),
+      readMaps: jest.fn(async () => ({
+        keyMap: { 'jit-key': { key: 'root.blocks[0:button]', '~r': 'jit-ref', '~l': 4 } },
+        refMap: { 'jit-ref': { path: 'pages/about.yaml' } },
+      })),
+    };
+
+    const data = serializer.serialize(new ConfigError('Test error', { configKey: 'jit-key' }));
+    const { error, ...response } = await logClientError(context, data);
+
+    expect(response).toEqual({
+      success: true,
+      source: 'pages/about.yaml:4',
+      config: 'root.blocks[0:button]',
+    });
+    expect(context.readMaps).toHaveBeenCalledTimes(1);
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('keyMap.json');
+  });
+
   test('logs OperatorError with configKey and resolves location', async () => {
     const mockLogger = {
       error: jest.fn(),

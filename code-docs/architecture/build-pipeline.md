@@ -27,8 +27,11 @@ The build pipeline is an 8-phase process (Phases 0–7) that:
 4. installServer() - Run npm install
 5. runLowdefyBuild() - Execute core build (pnpm run build:lowdefy)
 6. installServer() - Second install for updated deps
-7. runClientBuild() - Vite client build (pnpm run build:client → vite build)
+7. runLowdefyBuild() - Again, only when pluginChecksNeedRebuild() says the install gave something new to check, and plugin checks are not skipped
+8. runClientBuild() - Vite client build (pnpm run build:client → vite build)
 ```
+
+A plugin the app uses that is not installed can't be checked, so the build lists it in `build/plugin-checks-pending.json` as `{ name, schemaChecked }`, `schemaChecked` being whether it owns a block, action or operator type. Step 6 installs it. Step 7 builds once more only when that checks something new: `pluginChecksNeedRebuild` (`@lowdefy/node-utils`) is true when a listed package is schema-checked or now resolves `./checks` from the server directory. A plugin that only adds connections or requests and ships no rules costs no second build. There is no third pass. `--skip-plugin-checks` sets `LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS=true` for the build process, which `lowdefy/build.mjs` passes to `build()` as `skipPluginChecks`.
 
 The client build is skipped with `--no-client-build` (`--no-next-build` is kept as a deprecated, hidden alias). `runClientBuild` (`packages/cli/src/utils/runClientBuild.js`) spawns `pnpm run build:client` in the server directory and parses the gzip bundle size from the Vite output.
 
@@ -131,7 +134,9 @@ testSchema()        // Validate against schema (unchanged)
 buildApp()          // Process app.html, app.git_sha; default app.email branding from name/theme
 validateConfig()    // Validate basePath and config
 addDefaultPages()   // Generate 404 if missing
+buildRoutes()       // Route table: every page's path (its id when it has none), ties, home and 404 path rules
 buildAuth()         // Process authentication (MODIFIED: wildcard auth matching)
+validateAuthPagePaths() // Auth pages: no placeholders, authPages URLs name the page's path
 buildConnections()  // Process data connections
 buildApi()          // Process API endpoints
 buildPages()        // Process pages, blocks, requests
@@ -139,6 +144,8 @@ buildMenu()         // Build navigation structure
 ```
 
 Auth matching now supports wildcard glob patterns (`team-users/*`) for module page access rules.
+
+`buildRoutes` parses each page's `path` (`parsePathPattern` from `@lowdefy/helpers`) or takes its id as an all-fixed pattern, refuses ties (`checkRouteTies`: same length, placeholders in the same positions, fixed segments equal ignoring case) and placeholders on the `homePageId` page or any `path` on the `404` page, and keeps the table on `context.routes`. `writeRoutes` writes it as `routes.json` (`[{ pageId, path, auth }]`), which the server matcher (`matchPagePath` in `@lowdefy/node-utils`) and the server-side URL builders read. `buildPages` writes each page's `linkPaths` (the paths of the pages its collected links target) and checks those links' `pathParams`; `buildMenu` checks menu links' `pathParams`.
 
 ### Phase 6: Finalization
 
@@ -516,7 +523,7 @@ The shallow build then:
 1. Collects **skeleton source files** from `~r` markers on non-page components (before `addKeys` removes them)
 2. Collects all string content from pages via `collectPageContent()` into `context.tailwindContentMap` (before stripping)
 3. Strips page content keys from pages (`stripPageContent`)
-4. Runs skeleton build steps (buildApp, buildAuth, buildConnections, buildApi, buildMenu)
+4. Runs skeleton build steps (buildApp, buildRoutes, buildAuth, buildConnections, buildApi, buildMenu) and writes `routes.json`. `path` is a top-level page key, not a page content key, so the skeleton resolves it behind `_ref`, `_build.*` and `_var` as it resolves `id`, and the dev server can match URLs before any page is built.
 5. Creates a **page registry** with page metadata and source file references
 6. Adds all types from installed packages (since page-level types aren't counted)
 7. Writes skeleton artifacts + `pageRegistry.json` + `jsMap.json` + `skeletonSourceFiles.json`
@@ -542,8 +549,47 @@ When a page is requested, uses the walker to resolve page content:
 9. validatePageTypes() — check block/action/operator types exist
 10. validateLinkReferences(), validateStateReferences(), etc.
 11. jsMapParser() — extract _js functions (client + server)
-12. writePageJit() — write page JSON, request JSONs, updated keyMap/refMap/jsMap, per-page tailwind HTML
+12. writePageJit() — write page JSON, request JSONs, updated jsMap, per-page tailwind HTML; writeJitMaps() (also on failure) writes the keys and refs the build added to a new jitMaps/ file
 ```
+
+### The JIT build context
+
+The dev server keeps one build context (the **kept context**) across page builds and page
+edits; it is recreated only when a config build is published or its maps pass a budget (see
+[server-dev JIT page build flow](../servers/server-dev.md#jit-page-build-flow)). Pages build
+concurrently on it, so `buildPageJit` never runs a step on the kept context itself:
+
+- **`prepareJitContext(keptContext)`** (`jit/prepareJitContext.js`) fills, once, every field
+  build code would otherwise fill on first use: `authConfigProjection` (read from its
+  artifact), `iconContextPromise` (the icon set load starts with the context), `jitMaps`,
+  `deferred`, `unresolvedRefVars`, `dynamicIconData`, and `websocketIds` (filled in place).
+  The dev server calls it when it makes the context; `buildPageJit` calls it too, so a caller
+  that passes a bare context stays correct (it only fills what is missing).
+- **`createPageBuildContext(keptContext)`** (`jit/createPageBuildContext.js`) returns the
+  context one page build runs on: a shallow copy of the kept context, so `keyMap`, `refMap`,
+  `jsMap`, `dynamicIconData`, `modules`, `deferred`, `unresolvedRefVars`, `jitMaps`,
+  `seenSourceLines`, `readConfigFile`, `importAppCode`, `writeBuildArtifact`, `websocketIds`
+  and the tenant targets are shared by reference, with the fields in `pageBuildOwnedFields`
+  fresh: `errors`, `warnings`, `typeCounters`, `pageTypeCounters`, the five action-reference
+  lists, and `handleError`/`handleWarning` made over the copy. So a page with an unknown block
+  type no longer fails every page built after it (`validatePageTypes` and
+  `detectMissingPluginPackages` read the build's own counters), and concurrent builds keep
+  their own error lists.
+- A build's own warning list is not deduplicated against other pages; only the terminal log
+  is (`createHandleWarning` lists each warning once per handler, and logs it once per
+  `seenSourceLines`, which the dev server clears on every change event).
+
+`pageBuildInputs.integration.test.js` holds both rules: a guard test runs JIT builds of a
+fixture app (file refs, refs with vars, a `.njk` ref, a module page, a resolver, a
+transformer, a `.js` ref) with `fs` reads observed and fails on a config read that bypasses
+`context.readConfigFile` and `context.importAppCode`; a field test fails when a page build
+leaves an own field outside `pageBuildOwnedFields` on its context. The dev server's content
+check is only sound while every page input passes those two channels.
+
+`context.importAppCode(filePath)` (`utils/createImportAppCode.js`, set by `createContext`) is
+the single place a build loads app code: ref resolvers, transformers, `_ref` to a `.js` file,
+module resolvers and the global ref resolver all go through `getUserJavascriptFunction`, which
+calls it.
 
 ### Supporting Modules
 
@@ -567,8 +613,12 @@ export { default as buildModuleDefs } from './build/buildModuleDefs.js';
 export { default as buildModules } from './build/buildModules.js';
 export { default as shallowBuild } from './build/jit/shallowBuild.js';
 export { default as buildPageJit } from './build/jit/buildPageJit.js';
+export { default as createPageBuildContext } from './build/jit/createPageBuildContext.js';
+export { default as pageBuildOwnedFields } from './build/jit/pageBuildOwnedFields.js';
+export { default as prepareJitContext } from './build/jit/prepareJitContext.js';
 export { default as createPageRegistry } from './build/jit/createPageRegistry.js';
 export { default as createContext } from './createContext.js';
+export { default as createReadConfigFile } from './utils/readConfigFile.js';
 export { default as makeId } from './utils/makeId.js';
 ```
 
@@ -584,7 +634,7 @@ In dev mode, the build directory contains additional JIT artifacts:
 │   ├── pageRegistry.json      # Page metadata + source refs for JIT
 │   ├── jsMap.json             # JS hash maps (restored by JIT build context)
 │   ├── skeletonSourceFiles.json # Source files that affect skeleton (for watcher)
-│   ├── invalidatePages        # Timestamp file — triggers JIT cache invalidation
+│   ├── invalidatePages        # Change signal (timestamp, read by value) — JIT pages are checked
 │   ├── globals.css            # Generated CSS with @source, @theme, layer order
 │   ├── layer-order.css        # Standalone @layer order statement (first CSS import)
 │   ├── tailwind-candidates.css # Trigger file — rewritten to invalidate Vite's CSS module
@@ -603,6 +653,7 @@ There is no compiled CSS artifact in dev. `globals.css` is in Vite's dev module 
 ## Customization Points
 
 1. **Custom Ref Resolvers**: `--refResolver` or `LOWDEFY_BUILD_REF_RESOLVER`
+   (`--skip-plugin-checks` sets `LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS` beside it, read by every entry point that reads the resolver: both servers' `lowdefy/build.mjs`, the dev manager, the dev server's JIT page builder, the journeys config-tree build and `build/src/scripts/run.js`.)
 2. **Custom Transformers**: Define in `_ref` object
 3. **Custom Plugins**: Via dependencies in package.json
 4. **Build Operators**: `_build.*` operators during buildRefs

@@ -304,4 +304,13 @@ test.describe('RadioSelector Block', () => {
     // Should still be unchecked
     await expect(disabledRadio).not.toBeChecked();
   });
+
+  test('class.options and style.options reach every radio option', async ({ page }) => {
+    const options = getRadioGroup(page, 'rs_options_css').locator('.ant-radio-wrapper');
+    await expect(options).toHaveCount(2);
+    for (const option of await options.all()) {
+      await expect(option).toHaveClass(/rs-option-tailwind/);
+      await expect(option).toHaveCSS('font-style', 'italic');
+    }
+  });
 });

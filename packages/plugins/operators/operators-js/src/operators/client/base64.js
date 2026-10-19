@@ -42,5 +42,6 @@ function _base64({ params, location, methodName }) {
 }
 
 _base64.dynamic = true;
+_base64.tracking = { kind: 'pure' };
 
 export default _base64;

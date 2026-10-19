@@ -51,6 +51,7 @@ Connections are:
 | [@lowdefy/connection-sendgrid](./sendgrid.md)           | SendGrid                    | Send emails            |
 | [@lowdefy/connection-smtp](./connection-smtp.md)        | SMTP (any provider)         | SMTPMailSend           |
 | [@lowdefy/connection-stripe](./stripe.md)               | Stripe                      | Payments, Customers    |
+| [@lowdefy/connection-treg](./treg.md)                   | treg API catalog            | TregCall, catalog      |
 | [@lowdefy/connection-anthropic](./anthropic.md)         | Anthropic Claude            | ClaudeAgent            |
 | [@lowdefy/connection-openai](./openai.md)               | OpenAI GPT                  | OpenAIAgent            |
 | [@lowdefy/connection-google](./google.md)               | Google Gemini               | GeminiAgent            |

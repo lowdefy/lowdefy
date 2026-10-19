@@ -186,6 +186,30 @@ _ref:
                     confirm: true
             ```
 
+            ## Knowing the Calling Agent
+
+            A tool endpoint can read which agent called it with the [`_agent`](/_agent) operator: `_agent: id` is the agent's `id`, `_agent: conversationId` the chat's conversation id. Lowdefy sets both from the running agent, so the model cannot set or hide them through the tool's input. Endpoints the tool endpoint calls in turn see the same agent. On a call that did not come from an agent, `_agent` returns `null`.
+
+            ```yaml
+            api:
+              - id: create-support-ticket
+                type: Api
+                # ...
+                routine:
+                  - id: insert
+                    type: MongoDBInsertOne
+                    connectionId: tickets_db
+                    properties:
+                      doc:
+                        subject:
+                          _payload: subject
+                        createdBy:
+                          userId:
+                            _user: id
+                          agentId:
+                            _agent: id
+            ```
+
             ## Reserved Tool Names
 
             Lowdefy registers a small set of platform tools automatically (for example, `update-page-state`, which the [`AgentChat`](/AgentChat#shared-state) block wires up when `sharedState` is set). The following tool names are reserved and cannot be used as endpoint ids or sub-agent ids — the build will fail if one is encountered:

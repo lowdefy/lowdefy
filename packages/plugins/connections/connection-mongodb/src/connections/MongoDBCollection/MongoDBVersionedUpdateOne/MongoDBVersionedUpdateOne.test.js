@@ -445,7 +445,13 @@ test('updateInsertOne response shape is invariant to logCollection', async () =>
     disableNoMatchError: true,
   };
 
-  const expectedKeys = ['acknowledged', 'matchedCount', 'modifiedCount', 'upsertedCount', 'upsertedId'];
+  const expectedKeys = [
+    'acknowledged',
+    'matchedCount',
+    'modifiedCount',
+    'upsertedCount',
+    'upsertedId',
+  ];
   for (const request of [match, upsert, noMatch]) {
     const resNoLog = await MongoDBVersionedUpdateOne({ request, connection: baseConnection });
     const resWithLog = await MongoDBVersionedUpdateOne({
@@ -490,7 +496,7 @@ test('updateInsertOne mongodb error', async () => {
     write: true,
   };
   await expect(MongoDBVersionedUpdateOne({ request, connection })).rejects.toThrow(
-    'Unknown modifier: $badOp'
+    'MongoDB: MongoDB rejected the MongoDBVersionedUpdateOne command on collection "updateInsertOne" as malformed.'
   );
 });
 

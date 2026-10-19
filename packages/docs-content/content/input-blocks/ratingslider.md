@@ -164,24 +164,24 @@ Rating slider with customizable range, icons, and N/A option.
   type: RatingSlider
   properties:
     title: Custom Icons (Dislike / Like)
-    minIcon: AiOutlineDislike
-    maxIcon: AiOutlineLike
+    minIcon: ThumbsDown
+    maxIcon: ThumbsUp
     min: 0
     max: 10
 - id: icons_star
   type: RatingSlider
   properties:
     title: Star Icons
-    minIcon: AiOutlineStar
-    maxIcon: AiFillStar
+    minIcon: star
+    maxIcon: star
     min: 1
     max: 5
 - id: icons_heart
   type: RatingSlider
   properties:
     title: Heart Icons
-    minIcon: AiOutlineHeart
-    maxIcon: AiFillHeart
+    minIcon: heart
+    maxIcon: heart
     min: 0
     max: 10
 - id: icons_object_config
@@ -189,10 +189,10 @@ Rating slider with customizable range, icons, and N/A option.
   properties:
     title: Icon Object Config (colored)
     minIcon:
-      name: AiOutlineArrowDown
+      name: arrow-down
       color: "#ff4d4f"
     maxIcon:
-      name: AiOutlineArrowUp
+      name: arrow-up
       color: "#52c41a"
     min: 0
     max: 10
@@ -352,8 +352,8 @@ Rating slider with customizable range, icons, and N/A option.
     max: 5
     step: 1
     color: "#52c41a"
-    minIcon: AiOutlineFrown
-    maxIcon: AiOutlineSmile
+    minIcon: FaceSlightlyFrowning
+    maxIcon: FaceSlightlySmiling
     tooltipVisible: always
     showMarks: true
     showDots: true
@@ -367,8 +367,8 @@ Rating slider with customizable range, icons, and N/A option.
     max: 10
     step: 1
     color: "#1677ff"
-    minIcon: AiOutlineDislike
-    maxIcon: AiOutlineLike
+    minIcon: ThumbsDown
+    maxIcon: ThumbsUp
     tooltipVisible: onClick
     showMarks: true
     showDots: true
@@ -399,10 +399,10 @@ Rating slider with customizable range, icons, and N/A option.
     step: 1
     color: "#ff4d4f"
     minIcon:
-      name: AiOutlineSmile
+      name: FaceSlightlySmiling
       color: "#52c41a"
     maxIcon:
-      name: AiOutlineWarning
+      name: warning
       color: "#ff4d4f"
     disableNotApplicable: true
     showMarks: true
@@ -520,8 +520,8 @@ Rating slider with customizable range, icons, and N/A option.
         max: 5
         step: 1
         color: "#fa8c16"
-        minIcon: AiOutlineStar
-        maxIcon: AiFillStar
+        minIcon: star
+        maxIcon: star
         showMarks: true
         showDots: true
         disableNotApplicable: true
@@ -545,7 +545,7 @@ Rating slider with customizable range, icons, and N/A option.
       type: Button
       properties:
         title: Submit Review
-        icon: AiOutlineSend
+        icon: send
         type: primary
         block: true
       events:
@@ -573,8 +573,8 @@ Rating slider with customizable range, icons, and N/A option.
         min: 1
         max: 10
         color: "#1677ff"
-        minIcon: AiOutlineFrown
-        maxIcon: AiOutlineSmile
+        minIcon: FaceSlightlyFrowning
+        maxIcon: FaceSlightlySmiling
         showMarks: true
         label:
           extra: How would you rate the service you received?
@@ -585,8 +585,8 @@ Rating slider with customizable range, icons, and N/A option.
         min: 1
         max: 10
         color: "#52c41a"
-        minIcon: AiOutlineDislike
-        maxIcon: AiOutlineLike
+        minIcon: ThumbsDown
+        maxIcon: ThumbsUp
         showMarks: true
         label:
           extra: How would you rate the quality of our products?
@@ -604,7 +604,7 @@ Rating slider with customizable range, icons, and N/A option.
       type: Button
       properties:
         title: Submit Survey
-        icon: AiOutlineCheck
+        icon: check
         type: primary
         block: true
       events:
@@ -623,21 +623,52 @@ Rating slider with customizable range, icons, and N/A option.
 | `disabled` | boolean | `false` | Disable the block if true. |
 | `disableIcons` | boolean | `false` | Hides minimum and maximum icons. |
 | `disableNotApplicable` | boolean | `false` | Disables the N/A option left of slider. |
-| `minIcon` | string \| object | `"AiOutlineFrown"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize the icon to the left of the minimum side of the slider. |
-| `maxIcon` | string \| object | `"AiOutlineSmile"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize the icon to the right of the maximum side of the slider. |
+| `minIcon` | string \| object | `"rating-low"` | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize the icon to the left of the minimum side of the slider. |
+| `minIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `minIcon.color` | string | - | Icon color. |
+| `minIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `minIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `minIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `minIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `minIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `minIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `minIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `maxIcon` | string \| object | `"rating-high"` | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize the icon to the right of the maximum side of the slider. |
+| `maxIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `maxIcon.color` | string | - | Icon color. |
+| `maxIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `maxIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `maxIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `maxIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `maxIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `maxIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `maxIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `label` | object | - | Label properties. |
+| `label.xs` | object | - | Label width on extra small screens (below 576px) when the label is not inline. |
+| `label.xs.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.sm` | object | - | Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set. |
+| `label.sm.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.md` | object | - | Label width on medium screens (768px and up) when the label is not inline. Overrides `span`. |
+| `label.md.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.lg` | object | - | Label width on large screens (992px and up) when the label is not inline. |
+| `label.lg.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xl` | object | - | Label width on extra large screens (1200px and up) when the label is not inline. |
+| `label.xl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xxl` | object | - | Label width on extra extra large screens (1600px and up) when the label is not inline. |
+| `label.xxl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |
 | `label.extra` | string | - | Extra text to display beneath the content - supports html. |
 | `label.title` | string | - | Label title - supports html. |
 | `label.tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
-| `label.tooltip.icon` | string | `"AiOutlineQuestionCircle"` | Name of the icon to show beside the label. |
+| `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
-| `label.span` | number | - | Label inline span. |
+| `label.span` | number | - | Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns. |
 | `label.disabled` | boolean | `false` | Hide input label. |
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
+| `label.wrap` | boolean | `false` | Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap. |
 | `min` | number | `0` | The minimum value of the slider. |
 | `max` | number | `10` | The maximum value of the slider. |
 | `notApplicableLabel` | string | `"N/A"` | Label shown at the null value of the slider. |

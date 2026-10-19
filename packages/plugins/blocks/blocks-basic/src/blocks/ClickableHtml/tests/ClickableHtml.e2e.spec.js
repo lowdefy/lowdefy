@@ -55,4 +55,84 @@ test.describe('ClickableHtml Block', () => {
     const scripts = await html.locator('script').count();
     expect(scripts).toBe(0);
   });
+
+  test('data-confirm fires the event only after OK, and only once', async ({ page }) => {
+    const target = page.locator('#confirm_delete');
+    const confirm = page.locator('.ant-popconfirm');
+    await target.click();
+    await expect(confirm).toContainText('Delete row 7?');
+    await confirm.getByRole('button', { name: 'Cancel' }).click();
+    await expect(confirm).toBeHidden();
+    await expect(page.locator('#delete_count')).toHaveText('0');
+    await target.click();
+    await confirm.getByRole('button', { name: 'OK' }).dblclick();
+    await expect(page.locator('#delete_count')).toHaveText('1');
+    await expect(confirm).toBeHidden();
+    await expect(page.locator('#delete_count')).toHaveText('1');
+  });
+
+  test('only the events dataEvents lists fire, and unlisted targets are not focusable', async ({
+    page,
+  }) => {
+    const warnings = [];
+    page.on('console', (message) => {
+      if (message.type() === 'warning') warnings.push(message.text());
+    });
+    await expect(page.locator('#listed_target')).toHaveAttribute('tabindex', '0');
+    await expect(page.locator('#unlisted_target')).not.toHaveAttribute('tabindex', /.*/);
+    await page.locator('#unlisted_target').click();
+    await expect
+      .poll(() => warnings)
+      .toContain(
+        `data-event="onUnlistedClick" did not fire: the block's dataEvents does not list it.`
+      );
+    await expect(page.locator('#allowlist_fired')).toHaveText('');
+    await page.locator('#listed_target').click();
+    await expect(page.locator('#allowlist_fired')).toHaveText('listed');
+  });
+
+  test('an event listed with confirm asks first, without data-confirm in the markup', async ({
+    page,
+  }) => {
+    const confirm = page.locator('.ant-popconfirm');
+    await page.locator('#declared_remove').click();
+    await expect(confirm).toContainText('Remove row 3?');
+    await expect(page.locator('#removed_row')).toHaveText('');
+    await confirm.getByRole('button', { name: 'OK' }).click();
+    await expect(page.locator('#removed_row')).toHaveText('3');
+  });
+
+  test('an open confirm closes without firing when the HTML changes', async ({ page }) => {
+    const confirm = page.locator('.ant-popconfirm');
+    await page.locator('#refresh_soon').click();
+    await page.locator('#refresh_delete').click();
+    await expect(confirm).toContainText('Delete 5?');
+    await expect(page.locator('#refresh_count')).toHaveText('Refreshed 1');
+    await expect(confirm).toBeHidden();
+    await expect(page.locator('#refresh_deleted')).toHaveText('');
+  });
+
+  test('an open popover stays open with its new content when the HTML changes', async ({
+    page,
+  }) => {
+    const menu = page.locator('.ant-popover .refresh-menu');
+    await page.locator('#refresh_soon').click();
+    await page.locator('#refresh_more').click();
+    await expect(menu).toHaveText('Menu after 0');
+    await expect(page.locator('#refresh_count')).toHaveText('Refreshed 1');
+    await expect(menu).toHaveText('Menu after 1');
+    await expect(page.locator('#refresh_more')).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  test('a data-event naming an inherited property fires nothing', async ({ page }) => {
+    const errors = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    await page.locator('#proto_event').click();
+    await getHtmlElement(page, 'clickable_basic')
+      .locator('button[data-event="onGreetClick"]')
+      .click();
+    await expect(page.locator('#clicked_event')).toHaveText('greet');
+    expect(await page.evaluate(() => Object.hasOwn(Object.prototype, 'loading'))).toBe(false);
+    expect(errors).toEqual([]);
+  });
 });

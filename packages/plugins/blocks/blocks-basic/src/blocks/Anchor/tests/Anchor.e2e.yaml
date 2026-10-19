@@ -25,7 +25,7 @@ blocks:
     type: Anchor
     properties:
       title: With Icon
-      icon: AiOutlineLink
+      icon: link
 
   - id: anchor_disabled
     type: Anchor
@@ -45,6 +45,15 @@ blocks:
       title: New Tab Link
       href: https://lowdefy.com
       newTab: true
+
+  - id: anchor_path_params
+    type: Anchor
+    properties:
+      title: Ticket
+      pageId: anchor-path-target
+      pathParams:
+        space: support
+        ticket_id: 1234
 
   - id: anchor_clickable
     type: Anchor

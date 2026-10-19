@@ -12,7 +12,7 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuLink
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
       - id: mh_about
         type: MenuLink
         properties:
@@ -45,17 +45,17 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuLink
         properties:
           title: Dashboard
-          icon: AiOutlineHome
+          icon: home
       - id: mv_users
         type: MenuLink
         properties:
           title: Users
-          icon: AiOutlineUser
+          icon: user
       - id: mv_settings
         type: MenuGroup
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
         links:
           - id: mv_profile
             type: MenuLink
@@ -78,7 +78,7 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuGroup
         properties:
           title: Navigation
-          icon: AiOutlineAppstore
+          icon: grid
         links:
           - id: mi_option1
             type: MenuLink
@@ -92,7 +92,7 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuGroup
         properties:
           title: Tools
-          icon: AiOutlineTool
+          icon: Wrench
         links:
           - id: mi_option3
             type: MenuLink
@@ -116,17 +116,17 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuLink
         properties:
           title: Mail
-          icon: AiOutlineMail
+          icon: mail
       - id: lt_calendar
         type: MenuLink
         properties:
           title: Calendar
-          icon: AiOutlineCalendar
+          icon: calendar
       - id: lt_settings
         type: MenuLink
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
 - id: lt_dividers_menu
   type: Menu
   style:
@@ -138,19 +138,19 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuLink
         properties:
           title: General
-          icon: AiOutlineSetting
+          icon: settings
       - id: lt_profile
         type: MenuLink
         properties:
           title: Profile
-          icon: AiOutlineUser
+          icon: user
       - id: lt_solid_divider
         type: MenuDivider
       - id: lt_files
         type: MenuLink
         properties:
           title: Files
-          icon: AiOutlineFile
+          icon: file
       - id: lt_dashed_divider
         type: MenuDivider
         properties:
@@ -159,7 +159,7 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuLink
         properties:
           title: Logout
-          icon: AiOutlineLogout
+          icon: logout
 - id: lt_nested_menu
   type: Menu
   style:
@@ -173,7 +173,7 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuGroup
         properties:
           title: Navigation
-          icon: AiOutlineAppstore
+          icon: grid
         links:
           - id: lt_child_group
             type: MenuGroup
@@ -203,19 +203,19 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuLink
         properties:
           title: Edit
-          icon: AiOutlineEdit
+          icon: edit
       - id: lt_copy
         type: MenuLink
         properties:
           title: Copy
-          icon: AiOutlineCopy
+          icon: copy
       - id: lt_danger_divider
         type: MenuDivider
       - id: lt_delete
         type: MenuLink
         properties:
           title: Delete
-          icon: AiOutlineDelete
+          icon: delete
           danger: true
 ```
 
@@ -253,7 +253,7 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuGroup
         properties:
           title: Group 1
-          icon: AiOutlineFolder
+          icon: folder
         links:
           - id: dok_item1
             type: MenuLink
@@ -267,7 +267,7 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuGroup
         properties:
           title: Group 2
-          icon: AiOutlineFolderOpen
+          icon: FolderOpen
         links:
           - id: dok_item3
             type: MenuLink
@@ -286,17 +286,17 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuLink
         properties:
           title: Dashboard
-          icon: AiOutlineHome
+          icon: home
       - id: sk_multi_b
         type: MenuLink
         properties:
           title: Reports
-          icon: AiOutlineBarChart
+          icon: chart
       - id: sk_multi_c
         type: MenuLink
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
 ```
 
 ```yaml
@@ -312,17 +312,17 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuLink
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
       - id: io_users
         type: MenuLink
         properties:
           title: Users
-          icon: AiOutlineUser
+          icon: user
       - id: io_settings
         type: MenuLink
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
 - id: io_indent_menu
   type: Menu
   style:
@@ -337,7 +337,7 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuGroup
         properties:
           title: Deep Indent
-          icon: AiOutlineMenuFold
+          icon: sidebar-collapse
         links:
           - id: io_ind_a
             type: MenuLink
@@ -353,7 +353,7 @@ Horizontal or vertical navigation menu with nested items.
     width: 256
   properties:
     mode: inline
-    expandIcon: AiOutlineRight
+    expandIcon: chevron-right
     defaultOpenKeys:
       - io_exp_group
     links:
@@ -361,7 +361,7 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuGroup
         properties:
           title: Custom Expand Icon
-          icon: AiOutlineAppstore
+          icon: grid
         links:
           - id: io_exp_a
             type: MenuLink
@@ -387,7 +387,7 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuGroup
         properties:
           title: Instant Open
-          icon: AiOutlineThunderbolt
+          icon: Zap
         links:
           - id: sd_fast_a
             type: MenuLink
@@ -410,7 +410,7 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuGroup
         properties:
           title: Slow Submenu
-          icon: AiOutlineClockCircle
+          icon: clock
         links:
           - id: sd_slow_a
             type: MenuLink
@@ -432,7 +432,7 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuGroup
         properties:
           title: Pre-rendered Submenu
-          icon: AiOutlineSync
+          icon: RefreshCw
         links:
           - id: sd_force_a
             type: MenuLink
@@ -442,6 +442,37 @@ Horizontal or vertical navigation menu with nested items.
             type: MenuLink
             properties:
               title: Before Visible
+```
+
+```yaml
+- id: tsa_click_menu
+  type: Menu
+  style:
+    .element:
+      width: 256px
+  properties:
+    mode: vertical
+    triggerSubMenuAction: click
+    links:
+      - id: tsa_reports
+        type: MenuGroup
+        properties:
+          title: Reports
+          icon: chart
+        links:
+          - id: tsa_sales
+            type: MenuLink
+            properties:
+              title: Sales
+          - id: tsa_stock
+            type: MenuLink
+            properties:
+              title: Stock
+      - id: tsa_settings
+        type: MenuLink
+        properties:
+          title: Settings
+          icon: settings
 ```
 
 ```yaml
@@ -457,22 +488,22 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuLink
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
       - id: css_tw_reports
         type: MenuLink
         properties:
           title: Reports
-          icon: AiOutlineBarChart
+          icon: chart
       - id: css_tw_settings
         type: MenuLink
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
 - id: css_inline_menu
   type: Menu
   style:
     width: 256
-    border: 1px solid
+    border: "1px solid #d9d9d9"
     borderRadius: 8
     padding: 4
   properties:
@@ -482,12 +513,12 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuLink
         properties:
           title: Dashboard
-          icon: AiOutlineDashboard
+          icon: Gauge
       - id: css_in_analytics
         type: MenuLink
         properties:
           title: Analytics
-          icon: AiOutlineLineChart
+          icon: ChartLine
 - id: css_dark_bg
   type: Box
   class: bg-gradient-to-b from-slate-900 to-slate-800 p-4 rounded-lg
@@ -502,17 +533,17 @@ Horizontal or vertical navigation menu with nested items.
             type: MenuLink
             properties:
               title: Home
-              icon: AiOutlineHome
+              icon: home
           - id: css_dk_explore
             type: MenuLink
             properties:
               title: Explore
-              icon: AiOutlineCompass
+              icon: Compass
           - id: css_dk_profile
             type: MenuLink
             properties:
               title: Profile
-              icon: AiOutlineUser
+              icon: user
 - id: css_link_style_menu
   type: Menu
   style:
@@ -556,17 +587,17 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuLink
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
       - id: tt_active
         type: MenuLink
         properties:
           title: Active
-          icon: AiOutlineStar
+          icon: star
       - id: tt_settings
         type: MenuLink
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
 - id: tt_sizing_menu
   type: Menu
   style:
@@ -584,17 +615,17 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuLink
         properties:
           title: Dashboard
-          icon: AiOutlineHome
+          icon: home
       - id: tt_sz_reports
         type: MenuLink
         properties:
           title: Reports
-          icon: AiOutlineBarChart
+          icon: chart
       - id: tt_sz_settings
         type: MenuLink
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
 - id: tt_dark_custom_menu
   type: Menu
   style:
@@ -615,17 +646,17 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuLink
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
       - id: tt_dc_analytics
         type: MenuLink
         properties:
           title: Analytics
-          icon: AiOutlineLineChart
+          icon: ChartLine
       - id: tt_dc_team
         type: MenuLink
         properties:
           title: Team
-          icon: AiOutlineTeam
+          icon: users
 - id: tt_danger_menu
   type: Menu
   style:
@@ -642,14 +673,14 @@ Horizontal or vertical navigation menu with nested items.
         type: MenuLink
         properties:
           title: My Files
-          icon: AiOutlineFile
+          icon: file
       - id: tt_dg_divider
         type: MenuDivider
       - id: tt_dg_delete
         type: MenuLink
         properties:
           title: Delete Account
-          icon: AiOutlineDelete
+          icon: delete
           danger: true
 ```
 
@@ -694,12 +725,12 @@ Manage your blog posts here. Use the sidebar to navigate between sections.
                 type: MenuLink
                 properties:
                   title: Overview
-                  icon: AiOutlineDashboard
+                  icon: Gauge
               - id: adm_content
                 type: MenuGroup
                 properties:
                   title: Content
-                  icon: AiOutlineFileText
+                  icon: document
                 links:
                   - id: adm_posts
                     type: MenuLink
@@ -717,7 +748,7 @@ Manage your blog posts here. Use the sidebar to navigate between sections.
                 type: MenuGroup
                 properties:
                   title: Users
-                  icon: AiOutlineTeam
+                  icon: users
                 links:
                   - id: adm_all_users
                     type: MenuLink
@@ -733,7 +764,7 @@ Manage your blog posts here. Use the sidebar to navigate between sections.
                 type: MenuLink
                 properties:
                   title: Danger Zone
-                  icon: AiOutlineWarning
+                  icon: warning
                   danger: true
           events:
             onSelect:
@@ -800,12 +831,12 @@ Learn how to configure your Lowdefy application with YAML configuration files.
             type: MenuLink
             properties:
               title: Getting Started
-              icon: AiOutlineRocket
+              icon: Rocket
           - id: docs_guides
             type: MenuLink
             properties:
               title: Guides
-              icon: AiOutlineBook
+              icon: Book
           - id: docs_api_ref
             type: MenuGroup
             properties:
@@ -829,7 +860,7 @@ Learn how to configure your Lowdefy application with YAML configuration files.
             type: MenuLink
             properties:
               title: Examples
-              icon: AiOutlineCode
+              icon: CodeXml
       events:
         onClick:
           - id: docs_click_msg
@@ -881,7 +912,7 @@ Learn how to configure your Lowdefy application with YAML configuration files.
         class: rounded-lg
         properties:
           title: Dashboard
-          icon: AiOutlineDashboard
+          icon: Gauge
       - id: ip_reports
         type: MenuLink
         class:
@@ -890,17 +921,17 @@ Learn how to configure your Lowdefy application with YAML configuration files.
           .label: font-semibold
         properties:
           title: Reports
-          icon: AiOutlineBarChart
+          icon: chart
       - id: ip_settings
         type: MenuLink
         style:
           .element:
-            borderLeft: 3px solid '#1677ff'
+            borderLeft: "3px solid #1677ff"
           .label:
             letterSpacing: 0.05em
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
 - id: ip_disabled_tooltip_extra_menu
   type: Menu
   style:
@@ -912,14 +943,14 @@ Learn how to configure your Lowdefy application with YAML configuration files.
         type: MenuLink
         properties:
           title: Search
-          icon: AiOutlineSearch
+          icon: search
           extra: ⌘K
           tooltip: Open command palette
       - id: ip_history
         type: MenuLink
         properties:
           title: History
-          icon: AiOutlineHistory
+          icon: history
           disabled: true
           tooltip: Coming soon
       - id: ip_divider
@@ -928,7 +959,7 @@ Learn how to configure your Lowdefy application with YAML configuration files.
         type: MenuLink
         properties:
           title: Delete account
-          icon: AiOutlineDelete
+          icon: delete
           danger: true
           extra: irreversible
 - id: ip_popup_class_menu
@@ -944,7 +975,7 @@ Learn how to configure your Lowdefy application with YAML configuration files.
           .popup: shadow-2xl rounded-lg
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
         links:
           - id: ip_general
             type: MenuLink
@@ -968,19 +999,19 @@ Learn how to configure your Lowdefy application with YAML configuration files.
         type: MenuLink
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
           shortcut: mod+1
       - id: ks_search
         type: MenuLink
         properties:
           title: Search
-          icon: AiOutlineSearch
+          icon: search
           shortcut: mod+k
       - id: ks_settings
         type: MenuLink
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
           shortcut: mod+,
   events:
     onSelect:
@@ -997,6 +1028,15 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `expandIcon` | string \| object | - | Menu expand icon. |
+| `expandIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `expandIcon.color` | string | - | Icon color. |
+| `expandIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `expandIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `expandIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `expandIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `expandIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `expandIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `expandIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `menuId` | string | - | App menu id used to get menu links. |
 | `mode` | string | `"vertical"` | Type of menu to render. Enum: `vertical`, `horizontal`, `inline`. |
 | `selectedKeys` | array | - | Array with the keys of currently selected menu items. |
@@ -1006,7 +1046,11 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 | `forceSubMenuRender` | boolean | `false` | Render submenu into DOM before it becomes visible. |
 | `subMenuCloseDelay` | number | - | Delay time to hide submenu when mouse leaves (in seconds). |
 | `subMenuOpenDelay` | number | - | Delay time to show submenu when mouse enters (in seconds). |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design menu tokens](https://ant.design/components/menu#design-token). |
+| `triggerSubMenuAction` | string | `"hover"` | Open and close submenus on hover or on click. Enum: `hover`, `click`. |
+| `tooltip` | boolean \| object | `true` | Tooltip of menu items in a collapsed inline menu. Set false to hide it, or an object to configure it. |
+| `tooltip.placement` | string | `"right"` | Position of the tooltip relative to the menu item. Enum: `top`, `left`, `right`, `bottom`, `topLeft`, `topRight`, `bottomLeft`, `bottomRight`, `leftTop`, `leftBottom`, `rightTop`, `rightBottom`. |
+| `tooltip.color` | string | - | Background color of the tooltip. |
+| `theme` | string \| object | - | The Menu color theme, light or dark, or antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design menu tokens](https://ant.design/components/menu#design-token). |
 | `theme.dropdownWidth` | number | `160` | Width of dropdown submenus. |
 | `theme.zIndexPopup` | number | `1050` | Z-index for popup submenus. |
 | `theme.itemBorderRadius` | number | `8` | Border radius for menu items. |
@@ -1067,7 +1111,16 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 | `links.$.class` | string \| array \| object | - | CSS classes for the menu item (including Tailwind utilities). Flat string/array applies to the item wrapper. Use an object with dot-prefixed slot keys (`.element`, `.icon`, `.label`, `.popup` — popup only on MenuGroup) to target specific parts. |
 | `links.$.properties` | object | - | properties from menu item. |
 | `links.$.properties.title` | string | - | Menu item title. |
-| `links.$.properties.icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon on menu item. |
+| `links.$.properties.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on menu item. |
+| `links.$.properties.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `links.$.properties.icon.color` | string | - | Icon color. |
+| `links.$.properties.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `links.$.properties.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `links.$.properties.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `links.$.properties.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `links.$.properties.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `links.$.properties.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `links.$.properties.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `links.$.properties.danger` | boolean | `false` | Apply danger style (MenuLink only). Switches the item onto the `dangerItem*` token set — theme via `properties.theme.dangerItemColor` etc. |
 | `links.$.properties.disabled` | boolean | `false` | Disable the menu item (blocks clicks and applies a greyed style). |
 | `links.$.properties.tooltip` | string | - | Tooltip text shown on hover when the menu is collapsed. Maps to antd item `title`. |
@@ -1083,6 +1136,15 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 | `links.$.links.$.properties` | object | - | properties from menu item. |
 | `links.$.links.$.properties.title` | string | - | Menu item title. |
 | `links.$.links.$.properties.icon` | string \| object | - | Icon name or Icon block properties. |
+| `links.$.links.$.properties.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `links.$.links.$.properties.icon.color` | string | - | Icon color. |
+| `links.$.links.$.properties.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `links.$.links.$.properties.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `links.$.links.$.properties.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `links.$.links.$.properties.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `links.$.links.$.properties.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `links.$.links.$.properties.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `links.$.links.$.properties.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `links.$.links.$.properties.danger` | boolean | `false` | Apply danger style (MenuLink only). |
 | `links.$.links.$.properties.disabled` | boolean | `false` | Disable the menu item. |
 | `links.$.links.$.properties.tooltip` | string | - | Tooltip text shown when the menu is collapsed. |
@@ -1098,6 +1160,15 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 | `links.$.links.$.links.$.properties` | object | - | properties from menu item. |
 | `links.$.links.$.links.$.properties.title` | string | - | Menu item title. |
 | `links.$.links.$.links.$.properties.icon` | string \| object | - | Icon name or Icon block properties. |
+| `links.$.links.$.links.$.properties.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `links.$.links.$.links.$.properties.icon.color` | string | - | Icon color. |
+| `links.$.links.$.links.$.properties.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `links.$.links.$.links.$.properties.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `links.$.links.$.links.$.properties.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `links.$.links.$.links.$.properties.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `links.$.links.$.links.$.properties.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `links.$.links.$.links.$.properties.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `links.$.links.$.links.$.properties.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `links.$.links.$.links.$.properties.danger` | boolean | `false` | Apply danger style (MenuLink only). |
 | `links.$.links.$.links.$.properties.disabled` | boolean | `false` | Disable the menu item. |
 | `links.$.links.$.links.$.properties.tooltip` | string | - | Tooltip text shown when the menu is collapsed. |
@@ -1107,8 +1178,8 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onSelect` | `{ key }` | Trigger action when menu item is selected. |
-| `onClick` | `{ key }` | Trigger action when menu item is clicked. |
+| `onSelect` | `{ key, keyPath }` | Trigger action when menu item is selected. |
+| `onClick` | `{ key, keyPath }` | Trigger action when menu item is clicked. |
 | `onToggleMenuGroup` | `{ openKeys }` | Trigger action when mobile menu group is opened. |
 
 | Key | Target |
@@ -1119,5 +1190,6 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 | `/icon` | Deprecated alias for `itemIcon`. |
 | `/itemIcon` | The icon shown in each menu item. |
 | `/item` | The Menu item wrapper (li). |
+| `/popup` | The floating popup of a submenu in vertical and horizontal modes. |
 
 No slots defined.

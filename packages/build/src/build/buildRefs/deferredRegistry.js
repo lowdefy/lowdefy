@@ -188,6 +188,11 @@ async function resolveRecordBody(ctx, id, record) {
     env: ctx.env,
     lowdefyApp: ctx.lowdefyApp,
     dynamicIdentifiers: ctx.dynamicIdentifiers,
+    // A record demanded before the auth-config projection exists (the entry
+    // sweep) memoizes its value, and that value is re-walked wherever it is
+    // consumed — so _build.authConfig folds defer instead of erroring. Once
+    // the projection exists the guard never fires and folds run here.
+    deferAuthConfig: true,
     activeRecord: id,
   });
   let value;

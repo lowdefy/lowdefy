@@ -15,12 +15,9 @@
 */
 
 import React from 'react';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime.js';
+import formatDate from '@lowdefy/block-utils/format/formatDate.js';
 import { type } from '@lowdefy/helpers';
 import NullCell from './NullCell.js';
-
-dayjs.extend(relativeTime);
 
 const DEFAULT_FORMAT = 'YYYY-MM-DD HH:mm';
 
@@ -29,11 +26,14 @@ function DateCell(params) {
   if (type.isNone(value) || value === '') {
     return <NullCell />;
   }
-  const d = dayjs(value);
-  if (!d.isValid()) {
+  const text = formatDate({
+    value,
+    format: cellConfig?.format ?? DEFAULT_FORMAT,
+    relative: cellConfig?.relative,
+  });
+  if (text === null) {
     return <NullCell placeholder="—" />;
   }
-  const text = cellConfig?.relative ? d.fromNow() : d.format(cellConfig?.format ?? DEFAULT_FORMAT);
   return <span>{text}</span>;
 }
 

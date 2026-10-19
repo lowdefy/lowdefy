@@ -14,11 +14,20 @@
   limitations under the License.
 */
 
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
+import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
+import applyTenantToUpdate from '../tenant/applyTenantToUpdate.js';
+import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
+import { assertUnscopedUpdate } from '../tenant/guardUnscopedWrite.js';
 import getCollection from '../getCollection.js';
+import verifyStoredTenant from '../tenant/verifyStoredTenant.js';
+import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 async function MongodbUpdateMany({
+  endpointId,
   blockId,
   connection,
   connectionId,
@@ -26,33 +35,66 @@ async function MongodbUpdateMany({
   payload,
   request,
   requestId,
+  tenant,
+  tenantGuard,
 }) {
+  assertTenantWritable({ tenantGuard, requestType: 'MongoDBUpdateMany' });
   const deserializedRequest = deserialize(request);
-  const { filter, update, options } = deserializedRequest;
-  const { collection, logCollection } = await getCollection({ connection });
-  const response = await collection.updateMany(filter, update, options);
-  if (logCollection) {
-    await logCollection.insertOne({
-      args: { filter, update, options },
-      blockId,
-      connectionId,
-      pageId,
-      payload,
-      requestId,
-      response,
-      timestamp: new Date(),
-      type: 'MongoDBUpdateMany',
-      meta: connection.changeLog?.meta,
+  const { options } = deserializedRequest;
+  let { filter, update } = deserializedRequest;
+  if (tenant) {
+    filter = applyTenantToFilter({ filter, tenant, position: 'a filter' });
+    update = applyTenantToUpdate({ update, tenant, upsert: options?.upsert === true });
+  }
+  if (tenantGuard) {
+    assertUnscopedUpdate({
+      update,
+      filter,
+      field: tenantGuard.field,
+      upsert: options?.upsert === true,
     });
   }
+  const { collection, logCollection } = await getCollection({ connection });
+  let response;
+  try {
+    response = await collection.updateMany(filter, update, options);
+    if (logCollection) {
+      await logCollection.insertOne(
+        stampTenantOnLogRecord({
+          record: {
+            args: { filter, update, options },
+            blockId,
+            connectionId,
+            pageId,
+            payload,
+            requestId,
+            response,
+            timestamp: new Date(),
+            type: 'MongoDBUpdateMany',
+            meta: connection.changeLog?.meta,
+          },
+          tenant,
+        })
+      );
+    }
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBUpdateMany' });
+  }
+  await verifyStoredTenant({
+    collection,
+    connectionId,
+    endpointId,
+    ids: response.upsertedId,
+    requestId,
+    requestType: 'MongoDBUpdateMany',
+    tenant,
+    tenantGuard,
+  });
   const { modifiedCount, upsertedId, upsertedCount, matchedCount } = serialize(response);
   return { modifiedCount, upsertedId, upsertedCount, matchedCount };
 }
 
 MongodbUpdateMany.schema = schema;
-MongodbUpdateMany.meta = {
-  checkRead: false,
-  checkWrite: true,
-};
+MongodbUpdateMany.meta = requestMetas.MongoDBUpdateMany;
 
 export default MongodbUpdateMany;

@@ -1,0 +1,12 @@
+name: Provider Module
+description: Exports a component that reads the auth config projection
+
+exports:
+  components:
+    - id: policy-badge
+      description: Badge that bakes the organizations policy in at build time
+
+components:
+  - id: policy-badge
+    component:
+      _ref: components/policy_badge.yaml

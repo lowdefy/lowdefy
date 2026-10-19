@@ -72,3 +72,15 @@ blocks:
               - 'Name: '
               - _state: emitted_drop.name
           else: ''
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: uploaddragger_drop_only
+    type: UploadDragger
+    properties:
+      emitFileContent: true
+      openFileDialogOnClick: false
+      directory: true
+      listType: picture

@@ -27,5 +27,7 @@ function _actions({ actions, arrayIndices, location, params }) {
 }
 
 _actions.dynamic = true;
+// Reads only the action results of its own parse frame, which no update changes.
+_actions.tracking = { kind: 'pure' };
 
 export default _actions;

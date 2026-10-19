@@ -1,0 +1,36 @@
+# Role-gated admin step endpoint (see admin-list-users.yaml for the model).
+# BanUser refuses the banned user's next sign-in and revokes their existing
+# sessions; the member row (roles, attributes) is untouched, so an unban
+# restores access intact. The optional keys are only forwarded when the
+# payload carries them - BetterAuth's endpoint validation rejects nulls.
+id: admin-ban-user
+type: Api
+routine:
+  - id: ban
+    type: BanUser
+    properties:
+      _object.assign:
+        - userId:
+            _payload: userId
+        - _if:
+            test:
+              _type:
+                type: string
+                on:
+                  _payload: banReason
+            then:
+              banReason:
+                _payload: banReason
+            else: {}
+        - _if:
+            test:
+              _ne:
+                - _payload: banExpiresIn
+                - null
+            then:
+              # Seconds until the ban lifts on its own; omitted = permanent.
+              banExpiresIn:
+                _payload: banExpiresIn
+            else: {}
+  - ':return':
+      _step: ban

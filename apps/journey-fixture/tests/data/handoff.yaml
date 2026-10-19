@@ -1,0 +1,9 @@
+# The data set the cross-user fixture test runs on
+# (packages/servers/server-dev/test/journeyFixture/crossUser.test.mjs): two users and a collection holding no notes yet
+# collection. Change it only together with that test.
+fixtures:
+  fixture_db:
+    - { _id: seed, kind: seed }
+users:
+  writer: { id: u_writer, roles: [member] }
+  reader: { id: u_reader, roles: [member] }

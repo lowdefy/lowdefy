@@ -25,7 +25,7 @@ import validateEnvironmentGuards from './validateEnvironmentGuards.js';
 const environmentNamePattern = /^[A-Za-z0-9\-_]+$/;
 
 // Features an environment can switch off with `<feature>.enabled: false`. Logging has no switch.
-const switchableFeatures = ['cron', 'email', 'sentry'];
+const switchableFeatures = ['cron', 'email', 'posthog', 'sentry'];
 
 function isAbsoluteHttpUrl(value) {
   try {
@@ -96,7 +96,7 @@ function validateEnvironment({ name, environment, configKey }) {
     });
   }
   const key = environment['~k'] ?? configKey;
-  const { url, cron, email, sentry } = environment;
+  const { url, cron, email, posthog, sentry } = environment;
   if (!type.isUndefined(url) && (!type.isString(url) || !isAbsoluteHttpUrl(url))) {
     throw new ConfigError(
       `App "config.environments.${name}.url" should be an absolute http(s) URL, e.g. "https://staging.example.com".`,
@@ -125,12 +125,17 @@ function validateEnvironment({ name, environment, configKey }) {
       }
     }
   }
-  if (!type.isUndefined(sentry) && !type.isObject(sentry)) {
-    throw new ConfigError(`App "config.environments.${name}.sentry" should be an object.`, {
-      received: sentry,
-      configKey: key,
-    });
-  }
+  [
+    ['posthog', posthog],
+    ['sentry', sentry],
+  ].forEach(([feature, value]) => {
+    if (!type.isUndefined(value) && !type.isObject(value)) {
+      throw new ConfigError(`App "config.environments.${name}.${feature}" should be an object.`, {
+        received: value,
+        configKey: key,
+      });
+    }
+  });
   switchableFeatures.forEach((feature) => {
     const enabled = environment[feature]?.enabled;
     if (!type.isUndefined(enabled) && !type.isBoolean(enabled)) {
@@ -242,11 +247,11 @@ function buildEnvironments({ components, context }) {
         configKey: environments[current]['~k'] ?? configKey,
       });
     }
-    getEnvironmentNames(environments)
-      .filter((name) => name !== current)
-      .forEach((name) => {
+    getEnvironmentNames(environments).forEach((name) => {
+      if (name !== current) {
         delete environments[name].guards;
-      });
+      }
+    });
   }
 
   if (type.isUndefined(current)) {

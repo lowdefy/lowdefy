@@ -1,0 +1,23 @@
+# The page the data-set storage test drives
+# (packages/servers/server-dev/test/journeyFixture/storage.test.mjs): it signs
+# a file URL on the storage_bucket connection as it loads. Under a data set the
+# request is sunk (recorded, answered null) rather than refused.
+id: storage
+type: Box
+requests:
+  - id: sign_file
+    type: AwsS3PresignedGetObject
+    connectionId: storage_bucket
+    properties:
+      key: reports/fixture.txt
+events:
+  onMount:
+    - id: sign_file
+      type: Request
+      params: sign_file
+blocks:
+  - id: storage_title
+    type: Title
+    properties:
+      content: Storage
+      level: 2

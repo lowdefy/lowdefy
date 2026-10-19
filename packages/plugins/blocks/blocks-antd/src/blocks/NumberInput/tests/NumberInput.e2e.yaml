@@ -22,6 +22,8 @@ events:
       params:
         numberinput_with_value: 42
         numberinput_controls: 10
+        numberinput_spinner: 5
+        numberinput_wheel: 5
 
 blocks:
   # ============================================
@@ -226,3 +228,39 @@ blocks:
               - 'Typed: '
               - _state: numberinput_typing
           else: ''
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: numberinput_prefix_suffix
+    type: NumberInput
+    properties:
+      title: Prefix and Suffix Text
+      prefix: $
+      suffix: USD
+
+  - id: numberinput_prefix_suffix_icons
+    type: NumberInput
+    properties:
+      title: Prefix and Suffix Icons
+      prefixIcon: tag
+      suffixIcon: info
+
+  - id: numberinput_underlined
+    type: NumberInput
+    properties:
+      title: Underlined
+      variant: underlined
+
+  - id: numberinput_spinner
+    type: NumberInput
+    properties:
+      title: Spinner Mode
+      mode: spinner
+
+  - id: numberinput_wheel
+    type: NumberInput
+    properties:
+      title: Change On Wheel
+      changeOnWheel: true

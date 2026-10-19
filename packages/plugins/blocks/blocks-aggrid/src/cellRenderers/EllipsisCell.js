@@ -15,19 +15,13 @@
 */
 
 import React from 'react';
+import lineClampStyle from '@lowdefy/block-utils/format/lineClampStyle.js';
 import { type } from '@lowdefy/helpers';
 
 function createEllipsisCell(lines) {
   const clamp = Math.max(1, Math.min(6, Math.floor(lines)));
-  const style = {
-    display: '-webkit-box',
-    WebkitBoxOrient: 'vertical',
-    WebkitLineClamp: clamp,
-    overflow: 'hidden',
-    whiteSpace: 'normal',
-    wordBreak: 'break-word',
-    width: '100%',
-  };
+  const style = { ...lineClampStyle(clamp), width: '100%' };
+
   function EllipsisCell(params) {
     const { value } = params;
     if (type.isNone(value)) return null;

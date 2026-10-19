@@ -39,7 +39,7 @@ test.describe('Download Block', () => {
   test('shows download icon on file items', async ({ page }) => {
     const item = getBlock(page, 'download_basic').locator('.ant-upload-list-item').first();
     await item.hover();
-    await expect(item.locator('.anticon-download')).toBeVisible();
+    await expect(item.locator('button[title="Download file"] svg')).toBeVisible();
   });
 
   test('onRemove fires with the file and does not remove the item from the list', async ({
@@ -49,7 +49,7 @@ test.describe('Download Block', () => {
     const item = block.locator('.ant-upload-list-item');
     await expect(item).toHaveCount(1);
     await item.hover();
-    await item.locator('.anticon-delete').click();
+    await item.locator('button[title="Remove file"]').click();
     const display = getBlock(page, 'remove_display');
     await expect(display).toHaveText('Removed: removable.pdf');
     // The handler owns fileList updates — the item must remain rendered.

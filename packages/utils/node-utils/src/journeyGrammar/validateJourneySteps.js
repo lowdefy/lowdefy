@@ -1,0 +1,626 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { type } from '@lowdefy/helpers';
+
+import JOURNEY_STEP_EXAMPLES from './journeyStepExamples.js';
+
+const STEP_KEYS = [
+  'click',
+  'open',
+  'fill',
+  'select',
+  'press',
+  'back',
+  'goto',
+  'email',
+  'as',
+  'wait',
+  'screenshot',
+  'expect',
+];
+// The steps a person does to the page. An app error one causes can be
+// asserted by an expect.error step straight after it.
+const INTERACTION_STEP_KEYS = ['click', 'open', 'fill', 'select', 'press', 'back'];
+const EXPECT_KEYS = [
+  'state',
+  'visible',
+  'hidden',
+  'text',
+  'url',
+  'title',
+  'calls',
+  'error',
+  'effect',
+];
+const WAIT_KEYS = ['ms', 'request', 'state'];
+// `from` marks where a fill, select or expect.state value came from:
+// `recorded` was observed in a trace and runs normally; `shape` is a
+// placeholder (value: null) the trace could not hold, which the runner refuses
+// until someone fills it in.
+const FROM_VALUES = ['recorded', 'shape'];
+
+function describe(value) {
+  return JSON.stringify(value);
+}
+
+// Returns the single key of a step object, or undefined when the object does
+// not have exactly one key.
+function getStepKey(step) {
+  const keys = Object.keys(step);
+  if (keys.length !== 1) {
+    return undefined;
+  }
+  return keys[0];
+}
+
+// A step's target is a blockId string or an object that narrows the search:
+// `blockId` scopes to the block's #bl- wrapper, `row` and `column` to a grid
+// row (zero-based, as displayed) and cell (by col-id) inside it, `text` to the
+// interactive control with exactly that text, `containing` to the element
+// whose text contains the string (a list row that shows an email address),
+// `nth` picks among several matches. `text` alone, with no blockId, searches
+// the whole page — that is how portal-rendered controls (confirm dialog
+// buttons, modal footers, dropdown menu items) are reached, since they render
+// outside every block.
+const TARGET_KEYS = ['blockId', 'text', 'containing', 'row', 'column', 'nth'];
+
+function isIndex(value) {
+  return type.isInt(value) && value >= 0;
+}
+
+// Names the keys outside `allowed`, so a typo (`colum`, `subjet`) fails before
+// the browser opens instead of being ignored.
+function findUnknownKeys({ key, params, allowed }) {
+  const unknown = Object.keys(params).filter((k) => !allowed.includes(k));
+  if (unknown.length === 0) {
+    return undefined;
+  }
+  return `Step "${key}" has unknown key${unknown.length > 1 ? 's' : ''} ${unknown
+    .map((k) => `"${k}"`)
+    .join(', ')}. Keys are: ${allowed.join(', ')}.`;
+}
+
+// Validates the target keys of a step object; `extraKeys` are the step's own
+// keys (`value`, `contains`) that may sit beside them. Returns an error
+// message, or undefined when the target is well-formed.
+function validateTargetObject({ key, params, extraKeys = [], requireBlockId = false }) {
+  const unknownKeys = findUnknownKeys({ key, params, allowed: [...TARGET_KEYS, ...extraKeys] });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  if (!type.isUndefined(params.blockId) && !type.isString(params.blockId)) {
+    return `Step "${key}" requires "blockId" to be a string. Received ${describe(params.blockId)}.`;
+  }
+  if (!type.isUndefined(params.text) && !type.isString(params.text)) {
+    return `Step "${key}" requires "text" to be a string. Received ${describe(params.text)}.`;
+  }
+  if (
+    !type.isUndefined(params.containing) &&
+    (!type.isString(params.containing) || params.containing === '')
+  ) {
+    return `Step "${key}" requires "containing" to be a non-empty string. Received ${describe(
+      params.containing
+    )}.`;
+  }
+  if (!type.isUndefined(params.text) && !type.isUndefined(params.containing)) {
+    return `Step "${key}" takes "text" (a control's exact text) or "containing" (text an element contains), not both. Received ${describe(
+      params
+    )}.`;
+  }
+  if (requireBlockId && type.isUndefined(params.blockId)) {
+    return `Step "${key}" requires a "blockId" string. Received ${describe(params)}.`;
+  }
+  if (
+    type.isUndefined(params.blockId) &&
+    type.isUndefined(params.text) &&
+    type.isUndefined(params.containing)
+  ) {
+    return `Step "${key}" requires a "blockId", a "text" or a "containing" to target. Received ${describe(
+      params
+    )}.`;
+  }
+  if (!type.isUndefined(params.row) && !isIndex(params.row)) {
+    return `Step "${key}" requires "row" to be a zero-based row index. Received ${describe(
+      params.row
+    )}.`;
+  }
+  if (!type.isUndefined(params.column) && !type.isString(params.column)) {
+    return `Step "${key}" requires "column" to be a column id string. Received ${describe(
+      params.column
+    )}.`;
+  }
+  if (
+    (!type.isUndefined(params.row) || !type.isUndefined(params.column)) &&
+    type.isUndefined(params.blockId)
+  ) {
+    return `Step "${key}" requires a "blockId" (the grid block) when "row" or "column" is given. Received ${describe(
+      params
+    )}.`;
+  }
+  if (!type.isUndefined(params.nth) && !isIndex(params.nth)) {
+    return `Step "${key}" requires "nth" to be a zero-based index. Received ${describe(
+      params.nth
+    )}.`;
+  }
+  return undefined;
+}
+
+// click and expect.visible take a blockId string or a target object.
+function validateTarget({ key, params }) {
+  if (type.isString(params)) {
+    return undefined;
+  }
+  if (!type.isObject(params)) {
+    return `Step "${key}" requires a blockId string or a target object { blockId, text, containing, row, column, nth }. Received ${describe(
+      params
+    )}.`;
+  }
+  return validateTargetObject({ key, params });
+}
+
+// click takes a target and an optional `count` of 1 to 3: that many clicks in
+// quick succession, as a person's double click, before the runner settles.
+function validateClick(params) {
+  if (type.isString(params)) {
+    return undefined;
+  }
+  if (!type.isObject(params)) {
+    return validateTarget({ key: 'click', params });
+  }
+  if (
+    !type.isUndefined(params.count) &&
+    !(type.isInt(params.count) && params.count >= 1 && params.count <= 3)
+  ) {
+    return `Step "click" requires "count" to be 1, 2 or 3. Received ${describe(params.count)}.`;
+  }
+  return validateTargetObject({ key: 'click', params, extraKeys: ['count'] });
+}
+
+// expect.calls counts the calls the current actor has made to one request
+// (scoped to a page, which defaults to the page the actor is on) or one
+// endpoint since the journey started.
+function validateCalls(value) {
+  if (!type.isObject(value)) {
+    return `Step "expect.calls" requires { request, pageId?, count } or { endpoint, count }. Received ${describe(
+      value
+    )}.`;
+  }
+  const isRequest = !type.isUndefined(value.request);
+  const isEndpoint = !type.isUndefined(value.endpoint);
+  if (isRequest === isEndpoint) {
+    return `Step "expect.calls" requires exactly one of "request" or "endpoint". Received ${describe(
+      value
+    )}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'expect.calls',
+    params: value,
+    allowed: isRequest ? ['request', 'pageId', 'count'] : ['endpoint', 'count'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  const idKey = isRequest ? 'request' : 'endpoint';
+  if (!type.isString(value[idKey]) || value[idKey] === '') {
+    return `Step "expect.calls" requires "${idKey}" to be a non-empty string. Received ${describe(
+      value[idKey]
+    )}.`;
+  }
+  if (!type.isUndefined(value.pageId) && (!type.isString(value.pageId) || value.pageId === '')) {
+    return `Step "expect.calls" requires "pageId" to be a non-empty string. Received ${describe(
+      value.pageId
+    )}.`;
+  }
+  if (!isIndex(value.count)) {
+    return `Step "expect.calls" requires "count" to be a whole number of calls, 0 or more. Received ${describe(
+      value.count
+    )}.`;
+  }
+  return undefined;
+}
+
+function validateFrom({ key, from }) {
+  if (type.isUndefined(from) || FROM_VALUES.includes(from)) {
+    return undefined;
+  }
+  return `Step "${key}" requires "from" to be one of ${FROM_VALUES.map((v) => `"${v}"`).join(
+    ', '
+  )}. Received ${describe(from)}.`;
+}
+
+// fill and select take the target keys beside `value`; the block is required
+// because a value is typed into a block's input, never a page-wide control. A
+// null value is only a placeholder, so it needs `from: shape` to say so.
+function validateBlockValue({ key, params }) {
+  if (!type.isObject(params)) {
+    return `Step "${key}" requires { blockId, value }. Received ${describe(params)}.`;
+  }
+  if (type.isUndefined(params.value)) {
+    return `Step "${key}" requires a "value". Received ${describe(params)}.`;
+  }
+  const fromError = validateFrom({ key, from: params.from });
+  if (!type.isUndefined(fromError)) {
+    return fromError;
+  }
+  if (params.value === null && params.from !== 'shape') {
+    return `Step "${key}" requires a non-null "value"; a placeholder value: null is marked from: shape. Received ${describe(
+      params
+    )}.`;
+  }
+  return validateTargetObject({
+    key,
+    params,
+    extraKeys: ['value', 'from'],
+    requireBlockId: true,
+  });
+}
+
+// wait takes { ms }, { request } or { state }; a bare number is read as { ms }.
+function validateWait(params) {
+  if (type.isNumber(params)) {
+    return undefined;
+  }
+  if (!type.isObject(params)) {
+    return `Step "wait" requires one of { ms }, { request }, { state }. Received ${describe(
+      params
+    )}.`;
+  }
+  const key = getStepKey(params);
+  if (!WAIT_KEYS.includes(key)) {
+    return `Step "wait" requires exactly one of ${WAIT_KEYS.map((k) => `"${k}"`).join(
+      ', '
+    )}. Received ${describe(params)}.`;
+  }
+  if (key === 'ms' && !type.isNumber(params.ms)) {
+    return `Step "wait" requires "ms" to be a number. Received ${describe(params.ms)}.`;
+  }
+  if (key !== 'ms' && !type.isString(params[key])) {
+    return `Step "wait" requires "${key}" to be a string. Received ${describe(params[key])}.`;
+  }
+  return undefined;
+}
+
+// goto takes a pageId string, or { pageId, pathParams, urlQuery } for a page
+// whose path has placeholders or that reads _url_query. Path values are the
+// strings the URL carries.
+function validateGoto(params) {
+  if (type.isString(params) && params !== '') {
+    return undefined;
+  }
+  if (!type.isObject(params)) {
+    return `Step "goto" requires a pageId string or { pageId, pathParams, urlQuery }. Received ${describe(
+      params
+    )}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'goto',
+    params,
+    allowed: ['pageId', 'pathParams', 'urlQuery'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  if (!type.isString(params.pageId) || params.pageId === '') {
+    return `Step "goto" requires a "pageId" string. Received ${describe(params.pageId)}.`;
+  }
+  if (
+    !type.isUndefined(params.pathParams) &&
+    (!type.isObject(params.pathParams) || !Object.values(params.pathParams).every(type.isString))
+  ) {
+    return `Step "goto" requires "pathParams" to be an object of strings, one per path placeholder. Received ${describe(
+      params.pathParams
+    )}.`;
+  }
+  if (!type.isUndefined(params.urlQuery) && !type.isObject(params.urlQuery)) {
+    return `Step "goto" requires "urlQuery" to be an object. Received ${describe(
+      params.urlQuery
+    )}.`;
+  }
+  return undefined;
+}
+
+// fill takes { blockId, value }, or { blockId, fromEmail } to type text read
+// from an email - a one-time code - instead of a literal value.
+function validateFill(params) {
+  if (!type.isObject(params) || type.isUndefined(params.fromEmail)) {
+    return validateBlockValue({ key: 'fill', params });
+  }
+  if (!type.isUndefined(params.value)) {
+    return `Step "fill" takes a "value" or a "fromEmail", not both. Received ${describe(params)}.`;
+  }
+  const fromEmailError = validateFromEmail(params.fromEmail);
+  if (!type.isUndefined(fromEmailError)) {
+    return fromEmailError;
+  }
+  return validateTargetObject({
+    key: 'fill',
+    params,
+    extraKeys: ['fromEmail'],
+    requireBlockId: true,
+  });
+}
+
+// fill.fromEmail reads the newest message to `to` (optionally narrowed by
+// subject) and takes the first match of the regular expression `match`.
+function validateFromEmail(params) {
+  if (!type.isObject(params)) {
+    return `Step "fill" requires "fromEmail" to be { to, subject, match }. Received ${describe(
+      params
+    )}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'fill.fromEmail',
+    params,
+    allowed: ['to', 'subject', 'match'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  if (!type.isString(params.to) || params.to === '') {
+    return `Step "fill.fromEmail" requires a "to" address string. Received ${describe(params.to)}.`;
+  }
+  if (!type.isUndefined(params.subject) && !type.isString(params.subject)) {
+    return `Step "fill.fromEmail" requires "subject" to be a string. Received ${describe(
+      params.subject
+    )}.`;
+  }
+  if (!type.isString(params.match) || params.match === '') {
+    return `Step "fill.fromEmail" requires a "match" regular expression string, e.g. "\\b\\d{6}\\b" for a six-digit code. Received ${describe(
+      params.match
+    )}.`;
+  }
+  try {
+    new RegExp(params.match);
+  } catch (error) {
+    return `Step "fill.fromEmail" requires "match" to be a valid regular expression: ${error.message}.`;
+  }
+  return undefined;
+}
+
+// email opens the newest message to `to`, optionally narrowed by subject.
+function validateEmail(params) {
+  if (!type.isObject(params)) {
+    return `Step "email" requires { to, subject }. Received ${describe(params)}.`;
+  }
+  const unknownKeys = findUnknownKeys({ key: 'email', params, allowed: ['to', 'subject'] });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  if (!type.isString(params.to) || params.to === '') {
+    return `Step "email" requires a "to" address string. Received ${describe(params.to)}.`;
+  }
+  if (!type.isUndefined(params.subject) && !type.isString(params.subject)) {
+    return `Step "email" requires "subject" to be a string. Received ${describe(params.subject)}.`;
+  }
+  return undefined;
+}
+
+// expect.state checks its own keys because a mistyped `from` (`form: shape`)
+// would otherwise pass silently, and the runner would never refuse the
+// placeholder it was meant to mark.
+function validateExpectState(value) {
+  if (!type.isObject(value) || !type.isString(value.path) || !('equals' in value)) {
+    return `Step "expect.state" requires { path, equals }. Received ${describe(value)}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'expect.state',
+    params: value,
+    allowed: ['path', 'equals', 'from'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  return validateFrom({ key: 'expect.state', from: value.from });
+}
+
+function validateExpect(params) {
+  if (!type.isObject(params)) {
+    return `Step "expect" requires one of { state }, { visible }, { hidden }, { text }, { url }, { title }, { calls }, { error }, { effect }. Received ${describe(
+      params
+    )}.`;
+  }
+  const key = getStepKey(params);
+  if (!EXPECT_KEYS.includes(key)) {
+    return `Step "expect" requires exactly one of ${EXPECT_KEYS.map((k) => `"${k}"`).join(
+      ', '
+    )}. Received ${describe(params)}.`;
+  }
+  const value = params[key];
+  switch (key) {
+    case 'state':
+      return validateExpectState(value);
+    case 'visible':
+      return validateTarget({ key: 'expect.visible', params: value });
+    case 'hidden':
+      return validateTarget({ key: 'expect.hidden', params: value });
+    case 'calls':
+      return validateCalls(value);
+    case 'text':
+      if (!type.isObject(value) || !type.isString(value.contains)) {
+        return `Step "expect.text" requires { blockId, contains }. Received ${describe(value)}.`;
+      }
+      return validateTargetObject({
+        key: 'expect.text',
+        params: value,
+        extraKeys: ['contains'],
+        requireBlockId: true,
+      });
+    case 'url':
+      if (!type.isObject(value) || !type.isString(value.contains)) {
+        return `Step "expect.url" requires { contains }. Received ${describe(value)}.`;
+      }
+      return undefined;
+    case 'title': {
+      const titleKey = type.isObject(value) ? getStepKey(value) : undefined;
+      if (!['equals', 'contains'].includes(titleKey) || !type.isString(value[titleKey])) {
+        return `Step "expect.title" requires { equals } or { contains } with a string. Received ${describe(
+          value
+        )}.`;
+      }
+      return undefined;
+    }
+    case 'error':
+      if (!type.isString(value) || value.length === 0) {
+        return `Step "expect.error" requires a non-empty string, text the app error's message contains. Received ${describe(
+          value
+        )}.`;
+      }
+      return undefined;
+    case 'effect':
+      if (value !== true) {
+        return `Step "expect.effect" takes only true: write { "expect": { "effect": true } }. Received ${describe(
+          value
+        )}.`;
+      }
+      return undefined;
+    default:
+      return undefined;
+  }
+}
+
+// What an expectation that reads the interaction just before it does with
+// that interaction, for the placement message.
+const FOLLOWS_INTERACTION = {
+  error: 'whose app errors it claims',
+  effect: 'whose effect it checks',
+};
+
+// expect.error claims the app errors of the interaction just before it, and
+// expect.effect checks that interaction did something, so each must follow
+// one.
+function validatePlacement({ step, previous }) {
+  if (getStepKey(step) !== 'expect') {
+    return undefined;
+  }
+  const expectKey = getStepKey(step.expect);
+  if (type.isUndefined(FOLLOWS_INTERACTION[expectKey])) {
+    return undefined;
+  }
+  const previousKey = type.isUndefined(previous) ? undefined : getStepKey(previous);
+  if (!INTERACTION_STEP_KEYS.includes(previousKey)) {
+    return `Step "expect.${expectKey}" must directly follow an interaction step (${INTERACTION_STEP_KEYS.join(
+      ', '
+    )}), ${FOLLOWS_INTERACTION[expectKey]}. Received it after ${
+      type.isUndefined(previousKey) ? 'the start of the journey' : `a "${previousKey}" step`
+    }.`;
+  }
+  return undefined;
+}
+
+// The examples an error about this step ends with: the expect kind's own when
+// the step names a known one.
+function getExamplesKey(step) {
+  const key = getStepKey(step);
+  if (key === 'expect' && type.isObject(step.expect)) {
+    const expectKey = getStepKey(step.expect);
+    if (EXPECT_KEYS.includes(expectKey)) {
+      return `expect.${expectKey}`;
+    }
+  }
+  return key;
+}
+
+function withExamples({ message, step }) {
+  const examples = JOURNEY_STEP_EXAMPLES[getExamplesKey(step)];
+  return `${message} Example: ${examples.map(describe).join(' or ')}.`;
+}
+
+// Validates one step's shape. Returns an error message, or undefined when the
+// step is well-formed.
+function validateStep(step) {
+  if (!type.isObject(step)) {
+    return `Journey steps must be objects with one key. Received ${describe(step)}.`;
+  }
+  const key = getStepKey(step);
+  if (type.isUndefined(key) || !STEP_KEYS.includes(key)) {
+    const received = type.isUndefined(key) ? Object.keys(step).join(', ') : key;
+    return `Unknown journey step "${received}". Steps are: ${STEP_KEYS.join(', ')}.`;
+  }
+  const message = validateStepParams({ key, params: step[key] });
+  if (type.isUndefined(message)) {
+    return undefined;
+  }
+  return withExamples({ message, step });
+}
+
+function validateStepParams({ key, params }) {
+  switch (key) {
+    case 'click':
+      return validateClick(params);
+    case 'open':
+      return validateTarget({ key: 'open', params });
+    case 'fill':
+      return validateFill(params);
+    case 'select':
+      return validateBlockValue({ key, params });
+    case 'press':
+      if (!type.isString(params)) {
+        return `Step "press" requires a key string such as "Enter" or "Mod+k". Received ${describe(
+          params
+        )}.`;
+      }
+      return undefined;
+    case 'back':
+      if (!type.isNone(params) && params !== true) {
+        return `Step "back" takes no value: write { "back": true }. Received ${describe(params)}.`;
+      }
+      return undefined;
+    case 'goto':
+      return validateGoto(params);
+    case 'email':
+      return validateEmail(params);
+    case 'as':
+      if (!type.isString(params) || params === '') {
+        return `Step "as" requires an actor name string, e.g. "invitee". Received ${describe(
+          params
+        )}.`;
+      }
+      return undefined;
+    case 'wait':
+      return validateWait(params);
+    case 'screenshot':
+      if (!type.isNone(params) && !type.isString(params) && params !== true) {
+        return `Step "screenshot" takes an optional name string. Received ${describe(params)}.`;
+      }
+      return undefined;
+    case 'expect':
+      return validateExpect(params);
+    default:
+      return undefined;
+  }
+}
+
+// Checks the whole journey before a browser is opened, so an agent gets a
+// grammar mistake back in milliseconds instead of after a page load. Returns
+// { error } naming the offending step, or {} when every step is well-formed.
+function validateJourneySteps({ steps }) {
+  if (!type.isArray(steps)) {
+    return { error: `runJourney requires "steps" to be an array. Received ${describe(steps)}.` };
+  }
+  for (let index = 0; index < steps.length; index += 1) {
+    const message =
+      validateStep(steps[index]) ??
+      validatePlacement({ step: steps[index], previous: steps[index - 1] });
+    if (!type.isUndefined(message)) {
+      return { error: `Step ${index}: ${message}` };
+    }
+  }
+  return {};
+}
+
+export { INTERACTION_STEP_KEYS, STEP_KEYS, TARGET_KEYS, getStepKey };
+export default validateJourneySteps;

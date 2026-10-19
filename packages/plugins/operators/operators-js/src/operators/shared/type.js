@@ -57,6 +57,10 @@ function _type({ location, params, state }) {
       return type.isUndefined(on);
     case 'none':
       return type.isNone(on);
+    // `empty` is what a form author means by "no value" - null, undefined, '' and [];
+    // 0, false and {} are values.
+    case 'empty':
+      return type.isNone(on) || on === '' || (type.isArray(on) && on.length === 0);
     case 'primitive':
       return type.isPrimitive(on);
     default:
@@ -65,5 +69,15 @@ function _type({ location, params, state }) {
 }
 
 _type.dynamic = true;
+// With no `on`, _type reads state at `key`, or at its own location: the engine's required check
+// is a _type on the input's own value.
+_type.tracking = ({ location, params }) => {
+  const typeName = type.isObject(params) ? params.type : params;
+  if (!type.isString(typeName) || Object.prototype.hasOwnProperty.call(params, 'on')) {
+    return { kind: 'pure' };
+  }
+  const key = get(params, 'key', { default: location });
+  return { kind: 'read', keys: [type.isString(key) ? `state:${key}` : 'state:*'] };
+};
 
 export default _type;

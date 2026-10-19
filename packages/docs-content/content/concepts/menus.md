@@ -19,12 +19,13 @@ The schema for a `MenuLink` is:
 - `id: string`: __Required__ - A identifier for the link unique to the menu.
 - `type: string`: __Required__ - The type should be `MenuLink`.
 - `pageId: string`: The id of the page to link to. Used as the menu item title if no title is provided.
+- `pathParams: object`: Values for the placeholders in the linked page's [`path`](/page-paths), by placeholder name. The values must be strings written in the config, since menus are built once for the app, and the build fails when a placeholder has no value. A menu link to a page with a path is highlighted on every instance of the page, whatever its values.
 - `url: string`: An external url to link to.
 - `class: string | array | object`: CSS classes (including Tailwind utilities) for the item. Flat applies to the item wrapper; use an object with dot-prefixed slot keys (`.element`, `.icon`, `.label`) to target specific parts.
 - `style: object`: CSS styles for the item. Flat applies to the wrapper; use dot-prefixed slot keys (`.element`, `.icon`, `.label`) to target specific parts.
 -  `properties: object`: The properties of the menu link. These are:
     - `title: string`: The title to display for the link.
-    - `icon: string | object`: The name of a [React Icon](https://react-icons.github.io/react-icons/search) or properties of an Icon block to use as the icon for the link.
+    - `icon: string | object`: An icon name, such as the semantic name `home` or the [Lucide](https://lucide.dev/icons) name `House`, or properties of an [Icon](/Icon) block to use as the icon for the link.
     - `danger: boolean`: Apply danger style (switches the item onto antd's `dangerItem*` token set).
     - `disabled: boolean`: Disable the item — blocks clicks and applies a greyed style.
     - `tooltip: string`: Tooltip text shown when the menu is collapsed.
@@ -38,7 +39,7 @@ The schema for a `MenuGroup` is:
 - `style: object`: CSS styles for the group's title row. Use dot-prefixed slot keys to target specific parts.
 -  `properties: object`: The properties of the menu group. These are:
     - `title: string`: The title to display for the group.
-    - `icon: string | object`: The name of a [React Icon](https://react-icons.github.io/react-icons/search) or properties of an Icon block to use as the icon for the group.
+    - `icon: string | object`: An icon name, such as the semantic name `home` or the [Lucide](https://lucide.dev/icons) name `House`, or properties of an [Icon](/Icon) block to use as the icon for the group.
     - `disabled: boolean`: Disable the group — blocks expansion and applies a greyed style.
     - `tooltip: string`: Tooltip text shown when the menu is collapsed.
 - `links: object[]`: An array of `MenuLink` or `MenuGroup` objects that should be grouped together in the group.
@@ -62,11 +63,11 @@ menus:
         pageId: page1
         properties:
           title: Page 1
-          icon: AiOutlineFile
+          icon: file
       - id: top-group
         properties:
           title: Group
-          icon: AiOutlineGroup
+          icon: Group
         links:
           - id: page2
             type: MenuLink
@@ -93,13 +94,13 @@ menus:
         pageId: page1
         properties:
           title: Page 1
-          icon: AiOutlineFile
+          icon: file
       - id: page3
         type: MenuLink
         pageId: page3
         properties:
           title: Page 3
-          icon: AiOutlineControl
+          icon: SlidersHorizontal
 ```
 
 We can make use of [protected pages and APIs](/protected-pages-apis) and [roles](/roles) to filter the menu items according to the pages that the user has access to.
@@ -130,7 +131,7 @@ menus:
         pageId: page1
         properties:
           title: Page 1
-          icon: AiOutlineFile
+          icon: file
       - id: page2
         type: MenuLink
         pageId: page2 # pageId will be used as link title

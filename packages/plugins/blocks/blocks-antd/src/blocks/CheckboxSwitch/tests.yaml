@@ -88,9 +88,8 @@
   type: CheckboxSwitch
   properties:
     description: '<span style="color:blue">I agree to the terms and conditions and privacy policy as found on the website blah blah blah....</span>'
-- id: 'properties.inputStyle'
+- id: 'properties.indeterminate: true'
   type: CheckboxSwitch
   properties:
-    description: Option
-    inputStyle:
-      fontSize: 20
+    description: Select all
+    indeterminate: true

@@ -14,14 +14,13 @@
   limitations under the License.
 */
 
-function stripHtmlTags(str) {
-  let result = str;
-  let prev;
-  do {
-    prev = result;
-    result = result.replace(/<[^>]*>/g, '');
-  } while (result !== prev);
-  return result;
+// Meta descriptions are text, not HTML: an `<a href>` becomes a markdown link, and any other
+// `<` outside a code span is escaped, so a placeholder (`enrich_<id>`, "Invalid column:
+// <reason>") or a named element ("<style> is removed") shows as written instead of being taken
+// for a tag and dropped. Code spans are left as they are: markdown shows them literally.
+function formatDescription(str) {
+  const withLinks = str.replace(/<a\s+href=(["'])(.*?)\1[^>]*>([^<]*)<\/a>/gi, '[$3]($2)');
+  return withLinks.replace(/(`+)[\s\S]*?\1|</g, (match, fence) => (fence ? match : '&lt;'));
 }
 
 function escapeMarkdownCell(str) {
@@ -46,10 +45,7 @@ function flattenProperties(properties, prefix, rows) {
     const defaultVal = def.default !== undefined ? `\`${JSON.stringify(def.default)}\`` : '-';
     const enumVals = def.enum ? ` Enum: ${def.enum.map((v) => `\`${v}\``).join(', ')}.` : '';
     const description = def.description ?? (variants && variants[0]?.description) ?? '';
-    let desc =
-      escapeMarkdownCell(
-        stripHtmlTags(description.replace(/<a\s+href="([^"]*)"[^>]*>([^<]*)<\/a>/gi, '[$2]($1)'))
-      ) + enumVals;
+    let desc = escapeMarkdownCell(formatDescription(description)) + enumVals;
     if (def.docs?.link) {
       const label = def.docs.link.match(/components\/([^#]+)/)?.[1] ?? 'component';
       desc += ` See [Ant Design ${label} tokens](${def.docs.link}).`;
@@ -109,7 +105,7 @@ function buildEventsTable(events) {
   if (entries.length === 0) return 'No events defined.';
   const rows = entries.map(([name, desc, eventData]) => {
     const dataCell = eventData ? `\`{ ${Object.keys(eventData).join(', ')} }\`` : '\\-';
-    return `| \`${name}\` | ${dataCell} | ${escapeMarkdownCell(desc ?? '')} |`;
+    return `| \`${name}\` | ${dataCell} | ${escapeMarkdownCell(formatDescription(desc ?? ''))} |`;
   });
   return `| Event | Event Data | Description |\n| --- | --- | --- |\n${rows.join('\n')}`;
 }
@@ -124,7 +120,7 @@ function buildCssKeysTable(cssKeys) {
   if (entries.length === 0) return 'No CSS keys defined.';
   const rows = ['| `/block` | Outer block wrapper (always available). |'];
   entries.forEach(([key, desc]) => {
-    rows.push(`| \`/${key}\` | ${escapeMarkdownCell(desc ?? '')} |`);
+    rows.push(`| \`/${key}\` | ${escapeMarkdownCell(formatDescription(desc ?? ''))} |`);
   });
   return `| Key | Target |\n| --- | --- |\n${rows.join('\n')}`;
 }
@@ -136,7 +132,7 @@ function buildSlotsTable(slots) {
   const entries = Array.isArray(slots) ? slots.map((key) => [key, '']) : Object.entries(slots);
   if (entries.length === 0) return 'No slots defined.';
   const rows = entries.map(([key, desc]) => {
-    return `| \`${key}\` | ${escapeMarkdownCell(desc ?? '')} |`;
+    return `| \`${key}\` | ${escapeMarkdownCell(formatDescription(desc ?? ''))} |`;
   });
   return `| Slot | Description |\n| --- | --- |\n${rows.join('\n')}`;
 }

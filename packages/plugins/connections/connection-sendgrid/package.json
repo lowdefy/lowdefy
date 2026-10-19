@@ -27,6 +27,9 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
     "./connections": "./dist/connections.js",
     "./types": "./dist/types.js"
@@ -42,7 +45,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "6.1.0",
-    "@sendgrid/mail": "7.7.0"
+    "@sendgrid/mail": "8.1.6"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",

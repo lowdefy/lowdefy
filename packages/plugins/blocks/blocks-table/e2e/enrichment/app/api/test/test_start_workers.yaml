@@ -1,0 +1,37 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# ============================================================================================
+# E2E ONLY. DO NOT COPY: this endpoint starts workers on demand.
+# It refuses every call without the e2e secret (api/test/e2e_guard.yaml), and is no part
+# of the enrichment reference.
+# ============================================================================================
+# E2E only: starts two workers at once, each in its own invocation, to check that concurrent
+# workers never run the same cell.
+id: test_start_workers
+type: Api
+routine:
+  - _ref: api/test/e2e_guard.yaml
+  - id: worker_one
+    type: CallApi
+    properties:
+      endpointId: enrichment_worker
+      detached: true
+  - id: worker_two
+    type: CallApi
+    properties:
+      endpointId: enrichment_worker
+      detached: true
+  - :return:
+      started: 2

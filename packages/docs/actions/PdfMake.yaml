@@ -43,7 +43,7 @@ _ref:
         type: Button
         properties:
           title: Download PDF
-          icon: AiOutlineDownload
+          icon: download
         events:
           onClick:
             - id: make_pdf
@@ -68,7 +68,7 @@ _ref:
           textAlign: center
         properties:
           title: Generate & Download PDF
-          icon: AiOutlineDownload
+          icon: download
           color: '#6293F8'
         events:
           onMount:

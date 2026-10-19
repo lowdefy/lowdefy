@@ -1,0 +1,62 @@
+# Role-gated admin step endpoint (see admin-list-users.yaml for the model).
+# No invitation.send hook is bound in this app, so InviteMember dispatches
+# the stock template through auth.email (Mailpit). profile and attributes
+# are only forwarded when the payload carries them - accepting the
+# invitation shallow-merges profile onto the user's profile bag (invitation
+# wins per key) and copies attributes and appRoles onto the minted member row.
+# The two authorities ride the invitation separately: appRoles is the app's
+# own role array (unvalidated - an unrecognised name grants nothing), orgRole
+# is the owner/admin/member tier. orgRole is passed explicitly rather than
+# left to the step's default so inviting an organization administrator is one
+# payload key, and so the value in the invitation row is never implicit.
+# organizationId is omitted: it defaults to the pinned org (org-a here);
+# pass one explicitly to invite into another org.
+# Correction semantics (cancelPendingInvitationsOnReInvite): inviting a
+# pending email again REPLACES the invitation (new roles/attributes/
+# profile; the old accept link dies), so repeat invites stay repeatable.
+# resend: true instead re-sends the existing invitation unchanged with a
+# refreshed expiry - it never rewrites what was invited.
+id: admin-invite-member
+type: Api
+routine:
+  - id: invite
+    type: InviteMember
+    properties:
+      _object.assign:
+        - email:
+            _payload: email
+          appRoles:
+            _payload: appRoles
+          orgRole:
+            _if_none:
+              - _payload: orgRole
+              - member
+          resend:
+            _payload: resend
+        # contactId is a first-class platform field on the invitation, beside
+        # profile and attributes - accepting sets it on the user row outright
+        # rather than merging it into the profile bag. The step param is
+        # camelCase like every action param; the column it lands in is
+        # contact_id.
+        - _if:
+            test:
+              _type:
+                type: string
+                on:
+                  _payload: contactId
+            then:
+              contactId:
+                _payload: contactId
+            else: {}
+        - _if:
+            test:
+              _type:
+                type: object
+                on:
+                  _payload: attributes
+            then:
+              attributes:
+                _payload: attributes
+            else: {}
+  - ':return':
+      _step: invite

@@ -1,3 +1,4 @@
+{% raw %}
 Lowdefy can render branded notification emails from config. You define a notification's content once in a `notifications:` section — as a template with interpolated properties — and render it from an API routine with the `RenderNotification` step. Rendering is all the framework does: **storing a notification, deduplicating, sending the email, and tracking delivery are composed in your API routines**, either by hand or with a notifications module.
 
 This split is deliberate. Rendering an email safely (turning template properties and data into HTML, with a guarantee that user data can never inject links or markup) and composing link URLs are the two things config alone cannot do, so they live in the framework. Everything else — inserting a record, sending, retrying — is ordinary [requests](/connections-and-requests) and [API routines](/lowdefy-api), which you already have. A consequence worth knowing: because storing is just a request and sending is just a request, notifications work with any database and any email provider Lowdefy connects to.
@@ -57,7 +58,20 @@ There is no operator evaluation inside template properties — they are data tem
 
 ### Links
 
-Links live under `data.links` (and inside the arrays a template declares, like `data.actions`), supplied as Lowdefy-native `{ pageId, urlQuery }` objects. The `RenderNotification` step resolves them to full URLs at render time — see [Rendering notifications as a routine step](/lowdefy-api#rendering-notifications-as-a-routine-step). A link that is already an absolute URL string passes through unchanged.
+Links live under `data.links` (and inside the arrays a template declares, like `data.actions`), supplied as Lowdefy-native `{ pageId, urlQuery, pathParams }` objects. The `RenderNotification` step resolves them to full URLs at render time — see [Rendering notifications as a routine step](/lowdefy-api#rendering-notifications-as-a-routine-step). A link that is already an absolute URL string passes through unchanged.
+
+A link to a page with a [`path`](/page-paths) gives the values of its placeholders in `pathParams`, as the `Link` action does:
+
+```yaml
+links:
+  button:
+    pageId: ticket
+    pathParams:
+      space: support
+      ticket_id: T-001
+```
+
+For a page with `path: tickets/{space}/{ticket_id}`, this renders as `https://myapp.com/tickets/support/T-001`. Every placeholder needs a value, or rendering fails with an error naming the page and the placeholder. The step resolves links in a copy of the item, so the item you store keeps the original `{ pageId, urlQuery, pathParams }` link, and the app can open it in the browser with a `Link` action, or from a landing page.
 
 ## Built-in templates
 
@@ -151,3 +165,4 @@ That pipeline is about sixty lines of routine YAML, and you own every choice in 
 ## Previewing emails
 
 The [`lowdefy emails`](/cli#emails) CLI command renders every notification from its `testData` and opens [React Email](https://react.email/)'s preview server, so you can iterate on templates without sending real mail. It warns when a template renders a data key that your `testData` is missing. The preview has no server URL, so a relative `logo` falls back to the `companyName` text header there.
+{% endraw %}

@@ -65,4 +65,25 @@ test.describe('Box Block', () => {
     await box.click();
     await expect(box).toHaveText('Clicked!');
   });
+
+  test('a click handled by a nested block does not fire the outer onClick', async ({ page }) => {
+    await getBoxElement(page, 'box_nested_inner').click();
+    await expect(getBoxElement(page, 'box_nested_display')).toHaveText(
+      'outer=0 inner=true bubble=false'
+    );
+  });
+
+  test('bubble: true on the nested event also fires the outer onClick', async ({ page }) => {
+    await getBoxElement(page, 'box_nested_inner_bubble').click();
+    await expect(getBoxElement(page, 'box_nested_display')).toHaveText(
+      'outer=1 inner=false bubble=true'
+    );
+  });
+
+  test('a click on a nested block without onClick fires the outer onClick', async ({ page }) => {
+    await getBoxElement(page, 'box_nested_plain').click();
+    await expect(getBoxElement(page, 'box_nested_display')).toHaveText(
+      'outer=1 inner=false bubble=false'
+    );
+  });
 });

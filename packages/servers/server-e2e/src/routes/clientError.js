@@ -14,27 +14,21 @@
   limitations under the License.
 */
 
-import { logClientError } from '@lowdefy/api';
+import { isSameOriginRequest, logClientError, parseRequestBody } from '@lowdefy/api';
 
 async function clientErrorHandler(c) {
   if (c.req.method !== 'POST') {
-    throw new Error('Only POST requests are supported.');
+    // A wrong-method request is client-caused: answer 405 rather than raising a
+    // fault that would be logged at error level and answered with a 500.
+    return c.json({ error: 'Method not allowed.' }, 405);
   }
   const context = c.get('lowdefyContext');
 
-  const origin = c.req.header('origin');
-  if (!origin) {
-    return c.json({ error: 'Forbidden' }, 403);
-  }
-  try {
-    if (new URL(origin).host !== c.req.header('host')) {
-      return c.json({ error: 'Forbidden' }, 403);
-    }
-  } catch {
+  if (!isSameOriginRequest({ getHeader: (name) => c.req.header(name) })) {
     return c.json({ error: 'Forbidden' }, 403);
   }
 
-  const body = await c.req.json();
+  const body = parseRequestBody({ text: await c.req.text() });
   // Strip received from payload — prod doesn't need it for schema validation
   if (body?.['~e']) {
     delete body['~e'].received;

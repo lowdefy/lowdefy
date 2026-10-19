@@ -321,6 +321,30 @@ export default createConfig({
 });
 ```
 
+The server Playwright starts stops when the Playwright run stops, however the run ends, so a killed or timed-out run leaves no server behind.
+
+| Variable                        | Effect                                                                                                                                                                                      |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `LOWDEFY_E2E_PORT`              | Runs on this port instead of the configured one, so two git worktrees can run the same suite at once.                                                                                       |
+| `LOWDEFY_E2E_REUSE_SERVER=true` | Reuses a server already running on the port (for example one started with `pnpm e2e:server`) instead of failing the run. The global setup still checks that it serves this app's e2e build. |
+
+## Starting a Server Outside Playwright
+
+`startServer` builds and starts an app's e2e server for other test runners (a vitest or Jest `globalSetup`) and scripts. The server stops when the process that called `startServer` exits, however it exits, so a killed or timed-out run leaves nothing behind.
+
+```javascript
+import startServer from '@lowdefy/e2e-utils/startServer';
+
+const server = await startServer({
+  appDir: './', // Where lowdefy.yaml is
+  port: 3191, // Fails at once if the port is already in use
+  env: { MY_SECRET: 'value' }, // Extra environment variables for the server
+  build: true, // Run `lowdefy build --server e2e` first (default: true)
+});
+// server.url === 'http://localhost:3191'
+await server.stop(); // SIGTERM, then SIGKILL after a grace period
+```
+
 ## Adding E2E Support to a Block
 
 Use `createBlockHelper` to define a block's e2e helper. Common methods (visible, hidden, disabled, enabled, validation) are auto-provided from the locator:

@@ -144,6 +144,371 @@ test('throw on Duplicate ids', () => {
   );
 });
 
+function tenantContext({ connectionMetas } = {}) {
+  const tenantTestContext = testContext();
+  tenantTestContext.typesMap = { connectionMetas };
+  return tenantTestContext;
+}
+
+test('buildConnections tenant shared on an implementing connection type passes', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: 'shared',
+      },
+    ],
+  };
+  const res = buildConnections({
+    components,
+    context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+  });
+  expect(res.connections).toEqual([
+    {
+      id: 'connection:connection1',
+      connectionId: 'connection1',
+      type: 'TestType',
+      tenant: 'shared',
+      tenantCapability: true,
+    },
+  ]);
+});
+
+// The artifact stamp is what resolveTenant serves non-scoping types from at
+// runtime - types.js is build-side only, and only MongoDBCollection mirrors
+// its capability onto the runtime export.
+test('buildConnections stamps the build-validated tenant capability onto the artifact', () => {
+  const components = {
+    connections: [
+      { id: 'scoping', type: 'TestType' },
+      { id: 'nonScoping', type: 'PlainType' },
+      { id: 'undeclared', type: 'UnknownType' },
+    ],
+  };
+  const res = buildConnections({
+    components,
+    context: tenantContext({
+      connectionMetas: { TestType: { tenant: true }, PlainType: { tenant: false } },
+    }),
+  });
+  expect(res.connections[0].tenantCapability).toBe(true);
+  expect(res.connections[1].tenantCapability).toBe(false);
+  // An absent declaration stays absent so the runtime keeps its fail-closed
+  // error for undeclared types.
+  expect(res.connections[2]).not.toHaveProperty('tenantCapability');
+});
+
+test('buildConnections throws when tenant is true', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: true,
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({
+      components,
+      context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+    })
+  ).toThrow(
+    'Connection "tenant: true" was removed at connection "connection1" — under auth.organizations.policy: tenant a scoping-capable connection is scoped by default, so the declaration restates the default. Remove the key, or declare tenant: shared for data deliberately shared across organizations.'
+  );
+});
+
+test('buildConnections throws when a request-level sentinel is declared on a connection', () => {
+  ['none', 'authored'].forEach((sentinel) => {
+    const components = {
+      connections: [
+        {
+          id: 'connection1',
+          type: 'TestType',
+          tenant: sentinel,
+        },
+      ],
+    };
+    expect(() =>
+      buildConnections({
+        components,
+        context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+      })
+    ).toThrow(
+      `Connection "tenant" does not accept "${sentinel}" at connection "connection1" — "none" and "authored" are declared on the request, step or websocket that needs the exception, not on the connection.`
+    );
+  });
+});
+
+test('buildConnections tenant with a field object on an implementing connection type passes', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: { field: 'organization_id' },
+      },
+    ],
+  };
+  const res = buildConnections({
+    components,
+    context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+  });
+  expect(res.connections[0].tenant).toEqual({ field: 'organization_id' });
+});
+
+test('buildConnections throws when tenant field is a dotted path', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: { field: 'meta.organizationId' },
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({
+      components,
+      context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+    })
+  ).toThrow(
+    'Connection "tenant.field" should be a non-empty top-level field name (no dots) at connection "connection1" — the tenant wall stamps and matches it as a single document key.'
+  );
+});
+
+test('buildConnections throws when tenant field is an empty string', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: { field: '' },
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({
+      components,
+      context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+    })
+  ).toThrow(
+    'Connection "tenant.field" should be a non-empty top-level field name (no dots) at connection "connection1" — the tenant wall stamps and matches it as a single document key.'
+  );
+});
+
+test('buildConnections throws when tenant is false', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: false,
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({
+      components,
+      context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+    })
+  ).toThrow(
+    'Connection "tenant" should be "shared" or an object with a "field" string at connection "connection1".'
+  );
+});
+
+test('buildConnections throws when tenant is an arbitrary string', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: 'organizationId',
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({
+      components,
+      context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+    })
+  ).toThrow(
+    'Connection "tenant" should be "shared" or an object with a "field" string at connection "connection1".'
+  );
+});
+
+test('buildConnections throws when tenant object has no field', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: {},
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({
+      components,
+      context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+    })
+  ).toThrow(
+    'Connection "tenant" should be "shared" or an object with a "field" string at connection "connection1".'
+  );
+});
+
+test('buildConnections throws when tenant field is not a string', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: { field: 42 },
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({
+      components,
+      context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+    })
+  ).toThrow(
+    'Connection "tenant" should be "shared" or an object with a "field" string at connection "connection1".'
+  );
+});
+
+test('buildConnections throws when the connection type does not implement the tenant contract', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: 'shared',
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({ components, context: tenantContext({ connectionMetas: {} }) })
+  ).toThrow(
+    'Connection type "TestType" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "connection1". Use a connection type that enforces the tenant wall.'
+  );
+});
+
+test('buildConnections throws when no connectionMetas store exists in the typesMap', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: 'shared',
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context: tenantContext() })).toThrow(
+    'Connection type "TestType" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "connection1". Use a connection type that enforces the tenant wall.'
+  );
+});
+
+test('buildConnections throws when the connection type meta tenant is not exactly true', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: { field: 'organization_id' },
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({
+      components,
+      context: tenantContext({ connectionMetas: { TestType: { tenant: 'yes' } } }),
+    })
+  ).toThrow(
+    'Connection type "TestType" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "connection1". Use a connection type that enforces the tenant wall.'
+  );
+});
+
+test('buildConnections throws when tenant is declared on a non-scopable connection type', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: 'shared',
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({
+      components,
+      context: tenantContext({ connectionMetas: { TestType: { tenant: false } } }),
+    })
+  ).toThrow(
+    'Connection type "TestType" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "connection1". Use a connection type that enforces the tenant wall.'
+  );
+});
+
+test('buildConnections throws under the tenant policy when the type declares no capability', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({ components, context: tenantContext({ connectionMetas: {} }) })
+  ).toThrow(
+    'Connection type "TestType" declares no tenant capability at connection "connection1". Under auth.organizations.policy: tenant every connection type must declare connectionMetas tenant: true (implements the tenant scoping contract) or tenant: false (non-scopable), so no connection is ever silently unscoped.'
+  );
+});
+
+test('buildConnections passes under the tenant policy when the type declares non-scopable', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+      },
+    ],
+  };
+  const buildContext = tenantContext({ connectionMetas: { TestType: { tenant: false } } });
+  buildConnections({ components, context: buildContext });
+  expect([...buildContext.tenantConnectionIds]).toEqual([]);
+});
+
+test('buildConnections passes under the pinned policy when the type declares no capability', () => {
+  const components = {
+    auth: { organizations: { policy: 'pinned' } },
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+      },
+    ],
+  };
+  const res = buildConnections({ components, context: tenantContext({ connectionMetas: {} }) });
+  expect(res.connections[0].connectionId).toBe('connection1');
+});
+
+test('buildConnections without tenant does not require the typesMap', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+      },
+    ],
+  };
+  const res = buildConnections({ components, context: testContext() });
+  expect(res.connections[0].connectionId).toBe('connection1');
+});
+
 test('count operators', () => {
   const components = {
     connections: [
@@ -179,4 +544,312 @@ test('count operators', () => {
     _payload: 2,
     _string: 1,
   });
+});
+
+test('buildConnections populates tenantConnectionIds with the inverted set under the tenant policy', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [
+      {
+        id: 'walled-by-default',
+        type: 'TestType',
+      },
+      {
+        id: 'walled-custom-field',
+        type: 'TestType',
+        tenant: { field: 'organization_id' },
+      },
+      {
+        id: 'shared',
+        type: 'TestType',
+        tenant: 'shared',
+      },
+      {
+        id: 'non-scopable',
+        type: 'PlainType',
+      },
+    ],
+  };
+  const buildContext = tenantContext({
+    connectionMetas: { TestType: { tenant: true }, PlainType: { tenant: false } },
+  });
+  buildConnections({ components, context: buildContext });
+  expect([...buildContext.tenantConnectionIds]).toEqual([
+    'walled-by-default',
+    'walled-custom-field',
+  ]);
+});
+
+test('buildConnections leaves tenantConnectionIds empty under the pinned policy', () => {
+  const components = {
+    auth: { organizations: { policy: 'pinned' } },
+    connections: [
+      {
+        id: 'walled',
+        type: 'TestType',
+      },
+    ],
+  };
+  const buildContext = tenantContext({ connectionMetas: { TestType: { tenant: true } } });
+  buildConnections({ components, context: buildContext });
+  expect([...buildContext.tenantConnectionIds]).toEqual([]);
+});
+
+test('buildConnections leaves tenantConnectionIds empty when auth declares no policy', () => {
+  const components = {
+    connections: [
+      {
+        id: 'walled',
+        type: 'TestType',
+      },
+    ],
+  };
+  const buildContext = tenantContext({ connectionMetas: { TestType: { tenant: true } } });
+  buildConnections({ components, context: buildContext });
+  expect([...buildContext.tenantConnectionIds]).toEqual([]);
+});
+
+test('buildConnections still validates the tenant contract under the pinned policy', () => {
+  const components = {
+    auth: { organizations: { policy: 'pinned' } },
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: 'shared',
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({ components, context: tenantContext({ connectionMetas: {} }) })
+  ).toThrow(
+    'Connection type "TestType" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "connection1".'
+  );
+});
+
+const mongoTenantTarget = {
+  database: ['databaseUri', 'databaseName'],
+  collection: 'collection',
+  changeLogCollection: 'changeLog.collection',
+};
+
+function sharedChangeLogContext() {
+  return tenantContext({
+    connectionMetas: { MongoDBCollection: { tenant: true, tenantTarget: mongoTenantTarget } },
+  });
+}
+
+test('buildConnections throws when a shared connection change-logs into a collection a scoped connection reads', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [
+      {
+        id: 'log-changes',
+        type: 'MongoDBCollection',
+        properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'log-changes' },
+      },
+      {
+        id: 'contacts-system',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: {
+          databaseUri: { _secret: 'MONGODB_URI' },
+          collection: 'contacts',
+          changeLog: { collection: 'log-changes' },
+        },
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context: sharedChangeLogContext() })).toThrow(
+    'Connection "contacts-system" is tenant: shared but change-logs into collection "log-changes", which scoped connection "log-changes" reads. A shared connection\'s change-log records belong to no organization and carry no tenant field, so in a walled collection they are invisible to every walled read and make the tenant preflight refuse to serve the app. Point this connection\'s change log at a collection no scoped connection reads.'
+  );
+});
+
+test('buildConnections passes a shared connection that change-logs into a collection no scoped connection reads', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [
+      {
+        id: 'contacts',
+        type: 'MongoDBCollection',
+        properties: {
+          databaseUri: { _secret: 'MONGODB_URI' },
+          collection: 'contacts',
+          changeLog: { collection: 'log-changes' },
+        },
+      },
+      {
+        id: 'log-changes',
+        type: 'MongoDBCollection',
+        properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'log-changes' },
+      },
+      {
+        id: 'contacts-system',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: {
+          databaseUri: { _secret: 'MONGODB_URI' },
+          collection: 'contacts',
+          changeLog: { collection: 'log-changes-shared' },
+        },
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context: sharedChangeLogContext() })).not.toThrow();
+});
+
+test('buildConnections passes a shared change log into a same-named collection in another database', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [
+      {
+        id: 'log-changes',
+        type: 'MongoDBCollection',
+        properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'log-changes' },
+      },
+      {
+        id: 'contacts-system',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: {
+          databaseUri: { _secret: 'MONGODB_URI' },
+          databaseName: 'system',
+          collection: 'contacts',
+          changeLog: { collection: 'log-changes' },
+        },
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context: sharedChangeLogContext() })).not.toThrow();
+});
+
+test('buildConnections passes a shared change log into a collection only a shared connection reads', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [
+      {
+        id: 'log-changes-shared',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'log-changes' },
+      },
+      {
+        id: 'contacts-system',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: {
+          databaseUri: { _secret: 'MONGODB_URI' },
+          collection: 'contacts',
+          changeLog: { collection: 'log-changes' },
+        },
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context: sharedChangeLogContext() })).not.toThrow();
+});
+
+test('buildConnections does not check shared change logs under the pinned policy', () => {
+  const components = {
+    auth: { organizations: { policy: 'pinned' } },
+    connections: [
+      {
+        id: 'log-changes',
+        type: 'MongoDBCollection',
+        properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'log-changes' },
+      },
+      {
+        id: 'contacts-system',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: {
+          databaseUri: { _secret: 'MONGODB_URI' },
+          collection: 'contacts',
+          changeLog: { collection: 'log-changes' },
+        },
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context: sharedChangeLogContext() })).not.toThrow();
+});
+
+test('buildConnections skips a shared change log whose collection resolves at runtime', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [
+      {
+        id: 'log-changes',
+        type: 'MongoDBCollection',
+        properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'log-changes' },
+      },
+      {
+        id: 'contacts-system',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: {
+          databaseUri: { _secret: 'MONGODB_URI' },
+          collection: 'contacts',
+          changeLog: { collection: { _secret: 'LOG_COLLECTION' } },
+        },
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context: sharedChangeLogContext() })).not.toThrow();
+});
+
+function walledMarks({ policy = 'tenant', connections }) {
+  const components = { auth: { organizations: { policy } }, connections };
+  buildConnections({ components, context: sharedChangeLogContext() });
+  return Object.fromEntries(
+    components.connections.map((connection) => [connection.connectionId, connection.walled])
+  );
+}
+
+const scopedContacts = {
+  id: 'contacts',
+  type: 'MongoDBCollection',
+  properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'contacts' },
+};
+
+test('buildConnections marks a shared connection whose collection a scoped connection reads', () => {
+  expect(
+    walledMarks({
+      connections: [
+        { ...scopedContacts, tenant: { field: 'tenant_id' } },
+        {
+          id: 'contacts-admin',
+          type: 'MongoDBCollection',
+          tenant: 'shared',
+          properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'contacts' },
+        },
+      ],
+    })
+  ).toEqual({
+    contacts: undefined,
+    'contacts-admin': { connectionId: 'contacts', field: 'tenant_id' },
+  });
+});
+
+test.each([
+  ['a collection no scoped connection reads', { collection: 'countries' }, 'tenant'],
+  [
+    'a same-named collection in another database',
+    { collection: 'contacts', databaseName: 'x' },
+    'tenant',
+  ],
+  ['a collection named at runtime', { collection: { _secret: 'COLLECTION' } }, 'tenant'],
+  ['any collection under the pinned policy', { collection: 'contacts' }, 'pinned'],
+])('buildConnections does not mark a shared connection over %s', (_, properties, policy) => {
+  const marks = walledMarks({
+    policy,
+    connections: [
+      scopedContacts,
+      {
+        id: 'shared',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: { databaseUri: { _secret: 'MONGODB_URI' }, ...properties },
+      },
+    ],
+  });
+  expect(marks.shared).toBe(undefined);
 });

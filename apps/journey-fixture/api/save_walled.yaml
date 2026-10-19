@@ -1,0 +1,15 @@
+# The endpoint the walled page's button calls
+# (packages/servers/server-dev/test/journeyFixture/walled.test.mjs): it writes
+# a row through the walled-client plugin connection.
+id: save_walled
+type: Api
+routine:
+  - id: insert_walled
+    type: WalledFixtureInsert
+    connectionId: walled_runtime
+    properties:
+      doc:
+        kind: walled
+        page: walled
+  - ':return':
+      saved: true

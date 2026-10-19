@@ -17,6 +17,7 @@
 import fs from 'node:fs';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { Features } from 'lightningcss';
 
 // basePath from the Lowdefy build — assets are served under it.
 let basePath = '';
@@ -26,6 +27,18 @@ try {
 } catch (e) {
   // No build yet (e.g. editor tooling) — default base.
 }
+
+// The @lowdefy packages this server depends on. A linked plugin pinned to
+// another release brings its own copies, and the client would then mix
+// versions: the dev server pre-bundles one copy per package for every
+// importer (whichever its scan meets first, so the server's own code can get
+// a plugin's older @lowdefy/helpers without an export it imports), and a
+// production build bundles both, so blocks read module state the client never
+// filled (the HTML enhancements it registers in @lowdefy/block-utils). The
+// server's copies are the ones its client and blocks were released with.
+const lowdefyDependencies = Object.keys(
+  JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8')).dependencies ?? {}
+).filter((name) => name.startsWith('@lowdefy/'));
 
 // Vite 8 tree-shakes a `.module.css` imported only for its side effects
 // (`import './style.module.css'`), and its CSS goes with it: `:global(...)` rules in block and
@@ -51,11 +64,38 @@ export default defineConfig(({ mode }) => ({
     // plugin and client code branch on it.
     'process.env.NODE_ENV': JSON.stringify(mode === 'production' ? 'production' : 'development'),
   },
+  css: {
+    // Vite minifies client CSS with Lightning CSS, which by default lowers
+    // light-dark() into --lightningcss-light/--lightningcss-dark variables that
+    // only a CSS color-scheme declaration defines. The client sets color-scheme
+    // from JavaScript (useDarkMode), so the lowered values never resolve and
+    // every light-dark() colour is dropped. Tailwind leaves light-dark()
+    // unlowered in its own Lightning CSS pass for the same reason.
+    lightningcss: {
+      exclude: Features.LightDark,
+    },
+  },
   build: {
     outDir: 'dist/client',
     manifest: true,
     rollupOptions: {
       input: 'client/main.jsx',
     },
+  },
+  resolve: {
+    // Linked plugin packages (pnpm link: / workspace) resolve their own copies of
+    // shared libraries. They must share one React, the antd/X/cssinjs copies
+    // whose context providers (App, ConfigProvider, StyleProvider) the client
+    // renders, the dayjs whose global locale the client sets, and the server's
+    // @lowdefy packages (see lowdefyDependencies).
+    dedupe: [
+      'react',
+      'react-dom',
+      'antd',
+      '@ant-design/x',
+      '@ant-design/cssinjs',
+      'dayjs',
+      ...lowdefyDependencies,
+    ],
   },
 }));

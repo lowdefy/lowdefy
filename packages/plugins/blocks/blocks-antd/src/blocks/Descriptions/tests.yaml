@@ -199,7 +199,7 @@
       'False': false
       'True': true
       Empty: ''
-- id: 'areas.extra:'
+- id: 'slots.extra:'
   type: Descriptions
   properties:
     title: Descriptions block
@@ -207,25 +207,27 @@
       field_one: value one
       field_two: 2
       field_three: value three
-  areas:
+  slots:
     extra:
       blocks:
         - id: test
           type: Test
-- id: 'contentStyle: color: red'
+- id: 'style.content: color: red'
   type: Descriptions
-  properties:
-    contentStyle:
+  style:
+    .content:
       color: red
+  properties:
     items:
       field_one: value one
       field_two: 2
       field_three: value three
-- id: 'labelStyle: color: blue'
+- id: 'style.label: color: blue'
   type: Descriptions
-  properties:
-    labelStyle:
+  style:
+    .label:
       color: blue
+  properties:
     items:
       field_one: value one
       field_two: 2
@@ -254,3 +256,38 @@
         value: red value
         contentStyle:
           background: red
+- id: 'properties.size: medium'
+  type: Descriptions
+  properties:
+    size: medium
+    bordered: true
+    items:
+      field_one: value one
+      field_two: value two
+- id: 'properties.items.span: filled'
+  type: Descriptions
+  properties:
+    bordered: true
+    column: 3
+    items:
+      - label: Name
+        value: Order 1042
+      - label: Notes
+        value: Fills the rest of the row.
+        span: filled
+      - label: Status
+        value: Shipped
+- id: 'properties.items.span responsive'
+  type: Descriptions
+  properties:
+    column:
+      xs: 1
+      md: 3
+    items:
+      - label: Summary
+        value: One column on phones, two of three columns on larger screens.
+        span:
+          xs: 1
+          md: 2
+      - label: Owner
+        value: Ops team

@@ -411,3 +411,90 @@ test('api endpoint schedules throw when an environment entry is not an array', (
     'Endpoint schedules for environment "staging" is not an array at "scheduled_api".'
   );
 });
+
+test('api endpoint declaring both webhook and payloadSchema throws', () => {
+  const message =
+    'Endpoint "hook" declares both "webhook" and "payloadSchema". A webhook routine receives { body, query, headers }, not the payloadSchema shape. Validate the body with a ValidateSchema step instead.';
+  const withFlag = {
+    api: [
+      { id: 'hook', type: 'Api', routine: [], webhook: true, payloadSchema: { type: 'object' } },
+    ],
+  };
+  expect(() => buildApi({ components: withFlag, context })).toThrow(message);
+  const withVerify = {
+    api: [
+      {
+        id: 'hook',
+        type: 'Api',
+        routine: [],
+        webhook: { verify: { type: 'StripeVerify' } },
+        payloadSchema: { type: 'object' },
+      },
+    ],
+  };
+  expect(() => buildApi({ components: withVerify, context })).toThrow(message);
+});
+
+test('api endpoint with webhook false and a payloadSchema is valid', () => {
+  const components = {
+    api: [
+      { id: 'plain', type: 'Api', routine: [], webhook: false, payloadSchema: { type: 'object' } },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+const reportSchema = {
+  type: 'object',
+  properties: { days: { type: 'number' } },
+  required: ['days'],
+};
+
+test('api endpoint with a payloadSchema ajv cannot compile throws', () => {
+  const components = {
+    api: [{ id: 'report', type: 'Api', routine: [], payloadSchema: { type: 'nope' } }],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    /^Endpoint "report" payloadSchema is not a valid JSON Schema: schema is invalid: data\/type/
+  );
+});
+
+test.each([
+  [
+    'a schedule payload of the wrong type',
+    [{ cron: '0 6 * * *', payload: { days: 'seven' } }],
+    'Endpoint schedule 0 payload does not match the payloadSchema of "report" at /days: must be number.',
+  ],
+  [
+    'a schedule without a payload, checked as an empty object',
+    [{ cron: '0 6 * * *', payload: { days: 7 } }, { cron: '0 7 * * *' }],
+    'Endpoint schedule 1 payload does not match the payloadSchema of "report" at (root): must have required property \'days\'.',
+  ],
+  [
+    'an environment schedule payload',
+    { default: [{ cron: '0 6 * * *', payload: { days: 7 } }], staging: [{ cron: '0 6 * * *' }] },
+    'Endpoint schedule 0 for environment "staging" payload does not match the payloadSchema of "report" at (root): must have required property \'days\'.',
+  ],
+])('api endpoint throws for %s that misses the payloadSchema', (_, schedules, message) => {
+  const components = {
+    config: { environments },
+    api: [{ id: 'report', type: 'Api', routine: [], payloadSchema: reportSchema, schedules }],
+  };
+  expect(() => buildApi({ components, context })).toThrow(message);
+});
+
+test('api endpoint schedule payloads that match the payloadSchema are valid', () => {
+  const components = {
+    config: { environments },
+    api: [
+      {
+        id: 'report',
+        type: 'Api',
+        routine: [],
+        payloadSchema: reportSchema,
+        schedules: { default: [{ cron: '0 6 * * *', payload: { days: 7 } }] },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});

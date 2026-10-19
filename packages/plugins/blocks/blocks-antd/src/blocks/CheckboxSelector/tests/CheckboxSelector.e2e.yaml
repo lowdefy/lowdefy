@@ -270,3 +270,20 @@ blocks:
         - B
         - C
         - D
+
+  # ============================================
+  # OPTIONS CSS KEY
+  # ============================================
+
+  - id: cs_options_css
+    type: CheckboxSelector
+    class:
+      .options: cs-option-tailwind
+    style:
+      .options:
+        fontStyle: italic
+    properties:
+      options:
+        - A
+        - label: B
+          value: b

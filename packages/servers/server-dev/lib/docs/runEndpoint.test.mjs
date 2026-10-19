@@ -1,0 +1,509 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
+import { jest } from '@jest/globals';
+
+// runEndpoint reads lowdefy.yaml, builds a Lowdefy context and calls into
+// @lowdefy/api - all of which only exist in a running server directory, so mock
+// them and leave runEndpoint's own validation, gating and pass-through under
+// test.
+const mockCallEndpoint = jest.fn();
+const mockRunDetachedEndpoint = jest.fn();
+const mockGetEndpointConfig = jest.fn();
+const mockIsWriteRequestsAllowed = jest.fn();
+const mockCreateLowdefyContext = jest.fn();
+const mockLoggerInfo = jest.fn();
+
+jest.unstable_mockModule('@lowdefy/api', () => ({
+  callEndpoint: mockCallEndpoint,
+  getEndpointConfig: mockGetEndpointConfig,
+  runDetachedEndpoint: mockRunDetachedEndpoint,
+}));
+jest.unstable_mockModule('./isWriteRequestsAllowed.js', () => ({
+  default: mockIsWriteRequestsAllowed,
+}));
+jest.unstable_mockModule('../server/createLowdefyContext.js', () => ({
+  default: mockCreateLowdefyContext,
+}));
+// A data set caller loads a data set into the dev server's memory store; both
+// are mocked so the test checks who the routine runs as and on which database.
+const mockReadDataSet = jest.fn();
+const mockOpenDataSession = jest.fn();
+jest.unstable_mockModule('./dataSets/readDataSet.js', () => ({ default: mockReadDataSet }));
+jest.unstable_mockModule('./dataSets/getDataStore.js', () => ({ default: async () => ({}) }));
+jest.unstable_mockModule('./dataSets/openDataSession.js', () => ({
+  default: mockOpenDataSession,
+}));
+jest.unstable_mockModule('./readDevAuthMode.js', () => ({
+  default: () => ({ authConfigured: true, mockUserActive: false }),
+}));
+
+const { ConfigError } = await import('@lowdefy/errors');
+const { MAX_INLINE_RESPONSE_CHARS } = await import('./fitResponse.js');
+const { default: runEndpoint } = await import('./runEndpoint.js');
+
+const honoContext = { req: { path: '/lowdefy-docs/run-endpoint' } };
+const context = { logger: { info: mockLoggerInfo } };
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockIsWriteRequestsAllowed.mockResolvedValue(true);
+  mockCreateLowdefyContext.mockResolvedValue(context);
+  mockGetEndpointConfig.mockResolvedValue({ id: 'endpoint:create_order', type: 'Api' });
+  mockCallEndpoint.mockResolvedValue({
+    error: null,
+    response: { orderId: 'o_1' },
+    status: 'success',
+    success: true,
+  });
+  mockRunDetachedEndpoint.mockResolvedValue({
+    error: null,
+    response: { purged: 3 },
+    status: 'success',
+    success: true,
+  });
+});
+
+test('runEndpoint throws a ConfigError when endpointId is missing', async () => {
+  await expect(runEndpoint({ honoContext })).rejects.toThrow(ConfigError);
+  await expect(runEndpoint({ honoContext })).rejects.toThrow(
+    'run_endpoint requires an "endpointId" string. Received undefined.'
+  );
+  expect(mockIsWriteRequestsAllowed).not.toHaveBeenCalled();
+  expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
+});
+
+test('runEndpoint throws a ConfigError when endpointId is not a string', async () => {
+  await expect(runEndpoint({ endpointId: 42, honoContext })).rejects.toThrow(
+    'run_endpoint requires an "endpointId" string. Received 42.'
+  );
+  expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
+});
+
+test('runEndpoint throws a ConfigError when user is neither an object nor a name', async () => {
+  await expect(
+    runEndpoint({ endpointId: 'create_order', user: ['admin'], honoContext })
+  ).rejects.toThrow(ConfigError);
+  await expect(
+    runEndpoint({ endpointId: 'create_order', user: ['admin'], honoContext })
+  ).rejects.toThrow(/run_endpoint: "user" should be a user object/);
+  expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
+});
+
+test('runEndpoint throws a ConfigError for a data set user name without data', async () => {
+  await expect(
+    runEndpoint({ endpointId: 'create_order', user: 'member', honoContext })
+  ).rejects.toThrow(
+    'run_endpoint: The call\'s user "member" names a data set user, but the call has no "data".'
+  );
+  expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
+});
+
+test("runEndpoint runs as a data set user, on the data set's own database", async () => {
+  const member = { id: 'u_member', roles: ['member'] };
+  const dataSet = { name: 'crm', users: { member } };
+  const session = { id: 'session1', state: 'open' };
+  const close = jest.fn(async () => {});
+  mockReadDataSet.mockResolvedValue(dataSet);
+  mockOpenDataSession.mockResolvedValue({ cookie: 'session1', session, close });
+
+  const result = await runEndpoint({
+    endpointId: 'create_order',
+    user: 'member',
+    data: 'crm',
+    honoContext,
+  });
+
+  expect(result.refused).toBe(false);
+  expect(result.success).toBe(true);
+  expect(mockOpenDataSession).toHaveBeenCalledWith({ dataSet });
+  expect(mockCreateLowdefyContext).toHaveBeenCalledWith({
+    c: honoContext,
+    user: member,
+    dataSession: session,
+  });
+  expect(close).toHaveBeenCalledTimes(1);
+});
+
+test('runEndpoint closes the data session when the routine throws', async () => {
+  const close = jest.fn(async () => {});
+  mockReadDataSet.mockResolvedValue({ name: 'crm', users: { member: { id: 'u_member' } } });
+  mockOpenDataSession.mockResolvedValue({ cookie: 'session1', session: {}, close });
+  mockCallEndpoint.mockRejectedValue(new Error('boom'));
+
+  const result = await runEndpoint({
+    endpointId: 'create_order',
+    user: 'member',
+    data: 'crm',
+    honoContext,
+  });
+
+  expect(result.error.message).toEqual('boom');
+  expect(close).toHaveBeenCalledTimes(1);
+});
+
+test('runEndpoint refuses a data set that fails to load without running the routine', async () => {
+  mockReadDataSet.mockResolvedValue({ name: 'crm', users: { member: { id: 'u_member' } } });
+  mockOpenDataSession.mockRejectedValue(new Error('Data set "crm": fixture orders is not valid.'));
+
+  const result = await runEndpoint({
+    endpointId: 'create_order',
+    user: 'member',
+    data: 'crm',
+    honoContext,
+  });
+
+  expect(result).toEqual({
+    refused: true,
+    reason: 'Data set "crm": fixture orders is not valid.',
+  });
+  expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
+});
+
+test('runEndpoint runs signed out for user "none", with no injected caller', async () => {
+  await runEndpoint({ endpointId: 'create_order', user: 'none', honoContext });
+
+  expect(mockCreateLowdefyContext).toHaveBeenCalledWith({
+    c: honoContext,
+    user: undefined,
+    dataSession: undefined,
+  });
+  expect(mockOpenDataSession).not.toHaveBeenCalled();
+});
+
+test('runEndpoint refuses every endpoint when agent write access is disabled', async () => {
+  mockIsWriteRequestsAllowed.mockResolvedValue(false);
+
+  const result = await runEndpoint({ endpointId: 'create_order', honoContext });
+
+  expect(result).toEqual({
+    refused: true,
+    reason:
+      'Api endpoint routines are not classified read-only — a routine can write, call other endpoints and send notifications — so running one needs agent write access.',
+    howToEnable: 'Set cli.agentTools.allowWriteRequests: true in lowdefy.yaml (dev only).',
+  });
+  expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
+  expect(mockGetEndpointConfig).not.toHaveBeenCalled();
+  expect(mockCallEndpoint).not.toHaveBeenCalled();
+});
+
+test('runEndpoint refuses a write-gated endpoint for an impersonated caller too', async () => {
+  mockIsWriteRequestsAllowed.mockResolvedValue(false);
+
+  const result = await runEndpoint({
+    endpointId: 'create_order',
+    user: { roles: ['admin'] },
+    honoContext,
+  });
+
+  expect(result.refused).toBe(true);
+  expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
+});
+
+test('runEndpoint returns a not-found refusal when the endpoint does not exist', async () => {
+  mockGetEndpointConfig.mockRejectedValue(
+    new ConfigError('API Endpoint "missing_endpoint" does not exist.')
+  );
+
+  const result = await runEndpoint({ endpointId: 'missing_endpoint', honoContext });
+
+  expect(result).toEqual({
+    refused: true,
+    reason:
+      'Endpoint "missing_endpoint" was not found. See GET /lowdefy-docs/app-map for the endpoints that exist.',
+  });
+  expect(mockGetEndpointConfig).toHaveBeenCalledWith(context, { endpointId: 'missing_endpoint' });
+  expect(mockCallEndpoint).not.toHaveBeenCalled();
+  expect(mockLoggerInfo).not.toHaveBeenCalled();
+});
+
+test('runEndpoint runs a successful routine and returns its result', async () => {
+  const result = await runEndpoint({
+    endpointId: 'create_order',
+    payload: { sku: 'A1' },
+    honoContext,
+  });
+
+  expect(mockCreateLowdefyContext).toHaveBeenCalledWith({ c: honoContext, user: undefined });
+  expect(mockCallEndpoint).toHaveBeenCalledWith(context, {
+    blockId: undefined,
+    endpointId: 'create_order',
+    outsideCaller: true,
+    pageId: undefined,
+    payload: { sku: 'A1' },
+  });
+  expect(result).toEqual({
+    refused: false,
+    error: null,
+    response: { orderId: 'o_1' },
+    status: 'success',
+    success: true,
+  });
+});
+
+test('runEndpoint defaults the payload to an empty object', async () => {
+  await runEndpoint({ endpointId: 'create_order', honoContext });
+
+  expect(mockCallEndpoint).toHaveBeenCalledWith(context, expect.objectContaining({ payload: {} }));
+});
+
+test('runEndpoint passes the user to createLowdefyContext and logs the run', async () => {
+  const user = { roles: ['admin'], organization_id: 'org_1' };
+
+  await runEndpoint({ endpointId: 'create_order', user, honoContext });
+
+  expect(mockCreateLowdefyContext).toHaveBeenCalledWith({ c: honoContext, user });
+  expect(mockLoggerInfo).toHaveBeenCalledWith({
+    event: 'agent_run_endpoint',
+    endpointId: 'create_order',
+    user,
+    system: false,
+  });
+});
+
+test('runEndpoint with system: true runs through runDetachedEndpoint instead of callEndpoint', async () => {
+  const result = await runEndpoint({
+    endpointId: 'purge_stale',
+    payload: { mode: 'full' },
+    system: true,
+    honoContext,
+  });
+
+  expect(mockCreateLowdefyContext).toHaveBeenCalledWith({ c: honoContext, user: undefined });
+  expect(mockRunDetachedEndpoint).toHaveBeenCalledWith(context, {
+    endpointId: 'purge_stale',
+    outsideCaller: true,
+    payload: { mode: 'full' },
+  });
+  expect(mockCallEndpoint).not.toHaveBeenCalled();
+  expect(mockLoggerInfo).toHaveBeenCalledWith({
+    event: 'agent_run_endpoint',
+    endpointId: 'purge_stale',
+    user: undefined,
+    system: true,
+  });
+  expect(result).toEqual({
+    refused: false,
+    error: null,
+    response: { purged: 3 },
+    status: 'success',
+    success: true,
+  });
+});
+
+test('runEndpoint with system: true still needs agent write access', async () => {
+  mockIsWriteRequestsAllowed.mockResolvedValue(false);
+
+  const result = await runEndpoint({ endpointId: 'purge_stale', system: true, honoContext });
+
+  expect(result.refused).toBe(true);
+  expect(mockRunDetachedEndpoint).not.toHaveBeenCalled();
+});
+
+test('runEndpoint with system: true returns a :reject as data', async () => {
+  mockRunDetachedEndpoint.mockResolvedValue({
+    error: { name: 'Error', message: 'Nothing to purge.' },
+    response: null,
+    status: 'reject',
+    success: false,
+  });
+
+  const result = await runEndpoint({ endpointId: 'purge_stale', system: true, honoContext });
+
+  expect(result).toEqual({
+    refused: false,
+    error: { name: 'Error', message: 'Nothing to purge.' },
+    response: null,
+    status: 'reject',
+    success: false,
+  });
+});
+
+test('runEndpoint with system: true returns faults that escape runDetachedEndpoint as an error object', async () => {
+  const fault = new ConfigError('CallApi detached requires CRON_SECRET.', { configKey: 'k2' });
+  mockRunDetachedEndpoint.mockRejectedValue(fault);
+
+  const result = await runEndpoint({ endpointId: 'purge_stale', system: true, honoContext });
+
+  expect(result).toEqual({
+    refused: false,
+    error: {
+      name: 'ConfigError',
+      message: 'CallApi detached requires CRON_SECRET.',
+      source: null,
+      configKey: 'k2',
+    },
+  });
+});
+
+test('runEndpoint throws a ConfigError when system is combined with user', async () => {
+  await expect(
+    runEndpoint({
+      endpointId: 'purge_stale',
+      system: true,
+      user: { roles: ['admin'] },
+      honoContext,
+    })
+  ).rejects.toThrow(ConfigError);
+  await expect(
+    runEndpoint({
+      endpointId: 'purge_stale',
+      system: true,
+      user: { roles: ['admin'] },
+      honoContext,
+    })
+  ).rejects.toThrow('run_endpoint "system" cannot be combined with "user"');
+  expect(mockIsWriteRequestsAllowed).not.toHaveBeenCalled();
+  expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
+});
+
+test('runEndpoint throws a ConfigError when system is not a boolean', async () => {
+  await expect(
+    runEndpoint({ endpointId: 'purge_stale', system: 'yes', honoContext })
+  ).rejects.toThrow('run_endpoint "system" must be a boolean. Received "yes".');
+  expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
+});
+
+test('runEndpoint with system: false runs through callEndpoint as before', async () => {
+  await runEndpoint({ endpointId: 'create_order', system: false, honoContext });
+
+  expect(mockCallEndpoint).toHaveBeenCalled();
+  expect(mockRunDetachedEndpoint).not.toHaveBeenCalled();
+});
+
+test('runEndpoint returns a :reject as data rather than throwing', async () => {
+  mockCallEndpoint.mockResolvedValue({
+    error: { name: 'Error', message: 'Out of stock.' },
+    response: null,
+    status: 'reject',
+    success: false,
+  });
+
+  const result = await runEndpoint({ endpointId: 'create_order', honoContext });
+
+  expect(result).toEqual({
+    refused: false,
+    error: { name: 'Error', message: 'Out of stock.' },
+    response: null,
+    status: 'reject',
+    success: false,
+  });
+});
+
+test('runEndpoint returns a :throw as data with status error', async () => {
+  mockCallEndpoint.mockResolvedValue({
+    error: { name: 'Error', message: 'Payment provider down.' },
+    response: null,
+    status: 'error',
+    success: false,
+  });
+
+  const result = await runEndpoint({ endpointId: 'create_order', honoContext });
+
+  expect(result.refused).toBe(false);
+  expect(result.success).toBe(false);
+  expect(result.status).toBe('error');
+  expect(result.error.message).toBe('Payment provider down.');
+});
+
+test('runEndpoint returns the routine error of a failed endpoint, which has no response', async () => {
+  // callEndpoint's result for a failed routine: the wire error with the full error
+  // beside it as devError, and response undefined.
+  const endpointError = {
+    '~e': { name: 'ServiceError', message: 'Something went wrong.', configKey: 'k9' },
+    devError: {
+      '~e': {
+        name: 'ServiceError',
+        message: 'MongoDB: MongoDB rejected the MongoDBFind on collection "docs" (code 27).',
+        source: 'api/search.yaml:40',
+        configKey: 'k9',
+      },
+    },
+  };
+  mockCallEndpoint.mockResolvedValue({
+    error: endpointError,
+    response: undefined,
+    status: 'error',
+    success: false,
+  });
+
+  const result = await runEndpoint({ endpointId: 'search', honoContext });
+
+  expect(result).toEqual({
+    refused: false,
+    error: endpointError,
+    response: undefined,
+    status: 'error',
+    success: false,
+  });
+});
+
+test('runEndpoint returns faults that escape callEndpoint as an error object', async () => {
+  const fault = new ConfigError('API Endpoint "internal_only" does not exist.', {
+    configKey: 'k1',
+  });
+  fault.source = 'api/internal.yaml:3';
+  mockCallEndpoint.mockRejectedValue(fault);
+
+  const result = await runEndpoint({ endpointId: 'internal_only', honoContext });
+
+  expect(result).toEqual({
+    refused: false,
+    error: {
+      name: 'ConfigError',
+      message: 'API Endpoint "internal_only" does not exist.',
+      source: 'api/internal.yaml:3',
+      configKey: 'k1',
+    },
+  });
+});
+
+test('runEndpoint writes an oversized response to a file', async () => {
+  const configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-run-endpoint-'));
+  process.env.LOWDEFY_DIRECTORY_CONFIG = configDirectory;
+  const response = 'x'.repeat(MAX_INLINE_RESPONSE_CHARS + 10);
+  mockCallEndpoint.mockResolvedValue({
+    error: null,
+    response,
+    status: 'success',
+    success: true,
+  });
+
+  try {
+    const result = await runEndpoint({ endpointId: 'create_order', honoContext });
+
+    expect(result.refused).toBe(false);
+    expect(result.response).toBeUndefined();
+    expect(result.responseChars).toBe(MAX_INLINE_RESPONSE_CHARS + 12);
+    expect(path.dirname(result.responseFile)).toBe(
+      path.join(configDirectory, '.lowdefy', 'responses')
+    );
+    expect(JSON.parse(fs.readFileSync(result.responseFile, 'utf8'))).toBe(response);
+    expect(result.status).toBe('success');
+  } finally {
+    delete process.env.LOWDEFY_DIRECTORY_CONFIG;
+  }
+});
+
+test('runEndpoint throws a ConfigError when saveResponse is not a boolean', async () => {
+  await expect(
+    runEndpoint({ endpointId: 'create_order', saveResponse: 'yes', honoContext })
+  ).rejects.toThrow(ConfigError);
+});

@@ -1,0 +1,15 @@
+# Role-gated admin step endpoint (see admin-list-users.yaml for the model).
+# member.attributes is the per-organization half of the merged
+# _user.attributes bag - it wins over user.attributes on key clashes.
+id: admin-update-member-attributes
+type: Api
+routine:
+  - id: update_member_attributes
+    type: UpdateMemberAttributes
+    properties:
+      memberId:
+        _payload: memberId
+      attributes:
+        _payload: attributes
+  - ':return':
+      _step: update_member_attributes

@@ -17,7 +17,13 @@
 */
 
 import { jest } from '@jest/globals';
-import { ActionError, OperatorError, UserError } from '@lowdefy/errors';
+import {
+  ActionError,
+  AuthorizationError,
+  ConfigError,
+  OperatorError,
+  UserError,
+} from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 import decodeServerError from '../src/decodeServerError.js';
@@ -1658,6 +1664,90 @@ test('call 2 actions, first with async: null', async () => {
   });
 });
 
+test('a plugin ConfigError without a configKey is located at the action config key', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+  };
+  const actions = getActions();
+  actions.ActionConfigError = jest.fn(() => {
+    throw new ConfigError('Action config is wrong.');
+  });
+  lowdefy._internal.actions = actions;
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const Actions = context._internal.Actions;
+  const res = await Actions.callActions({
+    actions: [{ id: 'test', type: 'ActionConfigError', params: {}, '~k': 'action_key' }],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(res.error.error).toBeInstanceOf(ConfigError);
+  expect(res.error.error.configKey).toBe('action_key');
+});
+
+test('a plugin ConfigError that carries its own configKey keeps it', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+  };
+  const actions = getActions();
+  actions.ActionConfigError = jest.fn(() => {
+    throw new ConfigError('Action config is wrong.', { configKey: 'own_key' });
+  });
+  lowdefy._internal.actions = actions;
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const Actions = context._internal.Actions;
+  const res = await Actions.callActions({
+    actions: [{ id: 'test', type: 'ActionConfigError', params: {}, '~k': 'action_key' }],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(res.error.error.configKey).toBe('own_key');
+});
+
+test('a UserError logs to the browser console only, never through handleError', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+  };
+  const handleError = jest.fn();
+  const loggerError = jest.fn();
+  const actions = getActions();
+  actions.ActionUserError = jest.fn(() => {
+    throw new UserError('Not allowed.');
+  });
+  lowdefy._internal.actions = actions;
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  context._internal.lowdefy._internal.handleError = handleError;
+  context._internal.lowdefy._internal.logger = { error: loggerError };
+  const Actions = context._internal.Actions;
+  await Actions.callActions({
+    actions: [{ id: 'test', type: 'ActionUserError', params: {}, '~k': 'action_key' }],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(loggerError).toHaveBeenCalled();
+  expect(handleError).not.toHaveBeenCalled();
+});
+
 test('a revived generic server error passes through callAction unwrapped and keeps requestId', async () => {
   const pageConfig = {
     id: 'root',
@@ -1780,6 +1870,99 @@ test('repeated server errors from the same action each call handleError', async 
   expect(handleError.mock.calls[0][0]).not.toBe(handleError.mock.calls[1][0]);
 });
 
+test.each(['error', 'success'])(
+  'an action result stands when its %s message fails to display',
+  async (status) => {
+    const handleError = jest.fn();
+    const displayFailure = new TypeError('message.error is not a function');
+    const actionError = new Error('Test error');
+    const context = await testContext({
+      lowdefy: {
+        _internal: {
+          displayMessage: (args) => {
+            if (args.status === status) throw displayFailure;
+            return () => undefined;
+          },
+          handleError,
+          actions: {
+            Fails: jest.fn(() => {
+              throw actionError;
+            }),
+            Succeeds: jest.fn(() => 'ok'),
+          },
+        },
+        pageId,
+      },
+      pageConfig: { id: 'root', type: 'Box' },
+    });
+    const type = status === 'error' ? 'Fails' : 'Succeeds';
+    const res = await context._internal.Actions.callActions({
+      actions: [{ id: 'act', type, messages: { success: 'Done' } }],
+      arrayIndices,
+      block: { blockId: 'blockId' },
+      catchActions: [],
+      event: {},
+      eventName,
+    });
+
+    expect(res.success).toBe(status === 'success');
+    expect(handleError.mock.calls.map(([error]) => error.message)).toEqual(
+      status === 'error'
+        ? ['message.error is not a function', 'Test error at blockId.']
+        : ['message.error is not a function']
+    );
+  }
+);
+
+test('an action succeeds when its loading message returns no close function', async () => {
+  const context = await testContext({
+    lowdefy: {
+      _internal: { displayMessage: () => undefined, actions: { Succeeds: jest.fn(() => 'ok') } },
+      pageId,
+    },
+    pageConfig: { id: 'root', type: 'Box' },
+  });
+  const res = await context._internal.Actions.callActions({
+    actions: [{ id: 'act', type: 'Succeeds', messages: { loading: 'Working', success: 'Done' } }],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(res.success).toBe(true);
+});
+
+test('a failure to report a message that did not display is logged', async () => {
+  const reportFailure = new Error('client-error route unreachable');
+  const logger = { error: jest.fn(), warn: () => {}, log: () => {}, debug: () => {} };
+  const context = await testContext({
+    lowdefy: {
+      _internal: {
+        displayMessage: () => {
+          throw new TypeError('message.success is not a function');
+        },
+        handleError: jest.fn(() => Promise.reject(reportFailure)),
+        logger,
+        actions: { Succeeds: jest.fn(() => 'ok') },
+      },
+      pageId,
+    },
+    pageConfig: { id: 'root', type: 'Box' },
+  });
+  const res = await context._internal.Actions.callActions({
+    actions: [{ id: 'act', type: 'Succeeds', messages: { success: 'Done' } }],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  await Promise.resolve();
+  expect(res.success).toBe(true);
+  expect(logger.error).toHaveBeenCalledWith(reportFailure);
+});
+
 describe('_error in catch lists', () => {
   const wire = {
     name: 'RequestError',
@@ -1835,6 +2018,41 @@ describe('_error in catch lists', () => {
     expect(fromActions.name).toBe(caught.name);
     expect(fromActions.message).toBe(caught.message);
     expect(fromActions.requestId).toBe(caught.requestId);
+  });
+
+  // client/src/request.js rebuilds an auth gate's refusal from its { name, message } answer.
+  test('_error in a catch action names the refusal class of a refused request, not ActionError', async () => {
+    const Actions = await setupErrorContext({
+      callRequest: () => {
+        throw new AuthorizationError('Forbidden.');
+      },
+    });
+    const res = await Actions.callActions({
+      actions: [{ id: 'fetch', type: 'Request', params: 'fetch_req', messages: { error: false } }],
+      arrayIndices,
+      block: { blockId: 'blockId' },
+      catchActions: [
+        {
+          id: 'read',
+          type: 'ActionSync',
+          params: {
+            name: { _error: 'name' },
+            message: { _error: 'message' },
+            cause: { _error: 'cause' },
+            fromActions: { _actions: 'fetch.error.name' },
+          },
+        },
+      ],
+      event: {},
+      eventName,
+    });
+    expect(res.success).toBe(false);
+    expect(res.responses.read.response).toEqual({
+      name: 'AuthorizationError',
+      message: 'Forbidden.',
+      cause: null,
+      fromActions: 'AuthorizationError',
+    });
   });
 
   test('_error returns a control-raised error projected, with no actionId', async () => {

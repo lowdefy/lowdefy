@@ -16,11 +16,11 @@
 
 import React, { useEffect, useState } from 'react';
 
-const MountEvents = ({ children, context, triggerEvent, triggerEventAsync }) => {
-  const [loading, setLoading] = useState(true);
+const MountEvents = ({ children, context, triggerEvent, triggerEventAsync, waitForMount }) => {
+  const [loading, setLoading] = useState(waitForMount);
   const [error, setError] = useState(null);
   useEffect(() => {
-    setLoading(true);
+    setLoading(waitForMount);
     const mount = async () => {
       try {
         await triggerEvent();

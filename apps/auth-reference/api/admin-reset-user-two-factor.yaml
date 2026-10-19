@@ -1,0 +1,50 @@
+# Role-gated admin recovery endpoint (see admin-revoke-user-sessions.yaml for
+# the model). Recovers a user who lost their authenticator. The endpoint gate
+# (auth.api.roles) decides who reaches the routine; ResetUserTwoFactor's own
+# org-scoped authority (user: [reset-two-factor], bounded to a target who holds
+# a member row in the caller's organization) decides whether the writes land.
+#
+# The three steps run IN ORDER and all three are required to recover the
+# account:
+#   1. ResetUserTwoFactor clears the deployment-wide factor (deletes the
+#      user-two-factors row, sets users.twoFactorEnabled false, and deletes the
+#      trust-device verification records). Its reach is suite-wide: one
+#      enrolment per user, so a reset in one organization clears it everywhere.
+#   2. RevokeUserSessions is the MANDATORY pairing, not an option. Clearing the
+#      factor does NOT end a session - an attacker already holding one keeps it,
+#      which is precisely the incident being recovered from. A reset without
+#      this has not recovered the account.
+#   3. The app's own audit write (following audit-login.yaml's shape).
+id: admin-reset-user-two-factor
+type: Api
+routine:
+  - id: reset_two_factor
+    type: ResetUserTwoFactor
+    properties:
+      userId:
+        _payload: userId
+  - id: revoke_sessions
+    type: RevokeUserSessions
+    properties:
+      userId:
+        _payload: userId
+  - ':try':
+      - id: write_audit
+        type: MongoDBInsertOne
+        connectionId: audit_db
+        properties:
+          doc:
+            event: admin.reset-user-two-factor
+            userId:
+              _payload: userId
+            resetUserEmail:
+              _step: reset_two_factor.email
+            actedBy:
+              _user: id
+            at:
+              _date: now
+    ':catch':
+      - ':log':
+          - 'admin-reset-user-two-factor hook failed to write the audit row'
+  - ':return':
+      _step: revoke_sessions

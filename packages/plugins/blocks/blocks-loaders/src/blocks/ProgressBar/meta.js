@@ -25,6 +25,21 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
+      progress: {
+        type: 'number',
+        default: 30,
+        description: 'Progress percentage to show, from 0 to 100.',
+      },
+      shadow: {
+        type: 'boolean',
+        default: true,
+        description: 'Render the glowing shadow at the head of the bar.',
+      },
+      transitionTime: {
+        type: 'number',
+        default: 1000,
+        description: 'Width transition duration in milliseconds.',
+      },
       height: {
         type: ['number', 'string'],
         description: 'Height of the skeleton.',

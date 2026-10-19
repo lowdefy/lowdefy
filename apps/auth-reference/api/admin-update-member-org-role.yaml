@@ -1,0 +1,22 @@
+# Role-gated admin step endpoint (see admin-list-users.yaml for the model).
+# The grant surface for organization authority: it writes member.role -
+# BetterAuth's owner/admin/member tier - and nothing else. App roles go
+# through admin-update-member-roles; the two fields take separate writes so a
+# failure can never leave one tier changed and the other not.
+# "member" is the revoked value; there is no fourth value, and no other name
+# is accepted (the step runs through the organization plugin's
+# updateMemberRole endpoint, which registers only those three). That endpoint
+# is also where the creator-protection and last-owner guards live, so
+# demoting the organization's sole owner fails here.
+id: admin-update-member-org-role
+type: Api
+routine:
+  - id: update_member_org_role
+    type: UpdateMemberOrgRole
+    properties:
+      memberId:
+        _payload: memberId
+      orgRole:
+        _payload: orgRole
+  - ':return':
+      _step: update_member_org_role

@@ -29,7 +29,7 @@ import {
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons],
+  icons: [...LabelMeta.icons, 'clear'],
   valueType: 'string',
   cssKeys: {
     element: 'The TextArea element.',
@@ -43,6 +43,7 @@ export default {
       description: 'Trigger action when text input is changed.',
       event: { value: 'The current input value.' },
     },
+    onClear: 'Trigger action when the clear button is clicked.',
     onFocus: 'Trigger action when text input gets focus.',
     onPressEnter: 'Trigger action when enter is pressed while text input is focused.',
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',

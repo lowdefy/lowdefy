@@ -72,6 +72,12 @@ events:
             age: 25
           - name: Bob
             age: 30
+        aggridlowdefyinput_edit_sorted:
+          - name: Charlie
+          - name: Alice
+          - name: Bob
+        aggridlowdefyinput_cell_buttons:
+          - _id: TSK-001
         aggridlowdefyinput_editable_no_events:
           - name: Alice
             age: 25
@@ -377,9 +383,9 @@ blocks:
               - _state: aggridlowdefyinput_cell_old_value
           else: ''
 
-  # Reads the grid's own state key. The core mutates the edited row object in place before calling
-  # methods.setValue, and that row object is the same reference the engine already holds in state,
-  # so this display follows the edit whether or not setValue ran. It shows the edit reaches the
+  # Reads the grid's own state key. ag-grid writes the edit into the row object in place before
+  # the core calls methods.setValue, and that row object is the same reference the engine already
+  # holds in state, so this display follows the edit whether or not setValue ran. It shows the edit reaches the
   # engine's state — it does not isolate the setValue call. aggridlowdefyinput_editable_no_events
   # below is the grid that does isolate it.
   - id: aggridlowdefyinput_value_display
@@ -431,6 +437,30 @@ blocks:
               - 'No events value: '
               - _state: aggridlowdefyinput_editable_no_events.0.name
           else: ''
+
+  # Sorted so that displayed positions differ from positions in the value: an edit must reach the
+  # edited row and no other.
+  - id: aggridlowdefyinput_edit_sorted
+    type: AgGridLowdefyInput
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+          editable: true
+          sortable: true
+          sort: asc
+
+  - id: aggridlowdefyinput_edit_sorted_value_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'Value: '
+          - _state: aggridlowdefyinput_edit_sorted.0.name
+          - ', '
+          - _state: aggridlowdefyinput_edit_sorted.1.name
+          - ', '
+          - _state: aggridlowdefyinput_edit_sorted.2.name
 
   # ============================================
   # INPUT-SPECIFIC: ROW DRAGGING
@@ -656,6 +686,19 @@ blocks:
               - 'Row name: '
               - _state: aggridlowdefyinput_cell_inputs.0.name
           else: ''
+
+  - id: aggridlowdefyinput_cell_buttons
+    type: AgGridLowdefyInput
+    properties:
+      columnDefs:
+        - headerName: Actions
+          field: _id
+          cell:
+            type: buttons
+            buttons:
+              - eventName: onEditClick
+                title: Edit
+                icon: edit
 
   # ============================================
   # SIZE — avatar CSS custom properties

@@ -72,3 +72,14 @@ blocks:
               - 'Name: '
               - _state: emitted_photo.name
           else: ''
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: uploadphoto_capture
+    type: UploadPhoto
+    properties:
+      emitFileContent: true
+      capture: environment
+      listType: picture-circle

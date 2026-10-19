@@ -95,6 +95,15 @@ function buildSubscription({ subscription, pageContext }) {
     );
     subscription.client.throttleRender = MIN_THROTTLE_RENDER;
   }
+  if (type.isNone(subscription.client.subscribeOnMount)) {
+    subscription.client.subscribeOnMount = true;
+  }
+  if (!type.isBoolean(subscription.client.subscribeOnMount)) {
+    throw new ConfigError(
+      `Subscription "${subscription.websocketId}" at page "${pageId}" client.subscribeOnMount should be a boolean.`,
+      { received: subscription.client.subscribeOnMount, configKey }
+    );
+  }
 
   if (type.isNone(subscription.events)) {
     subscription.events = {};

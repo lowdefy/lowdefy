@@ -66,3 +66,28 @@
   properties:
     tooltip:
       open: true
+- id: 'properties.range.draggableTrack: true'
+  type: Slider
+  properties:
+    range:
+      draggableTrack: true
+- id: 'properties.disabled: [true, false]'
+  type: Slider
+  properties:
+    range: true
+    disabled:
+      - true
+      - false
+- id: 'properties.keyboard: false'
+  type: Slider
+  properties:
+    keyboard: false
+- id: 'events.onChangeComplete'
+  type: Slider
+  events:
+    onChangeComplete:
+      - id: complete_message
+        type: DisplayMessage
+        params:
+          content:
+            _event: value

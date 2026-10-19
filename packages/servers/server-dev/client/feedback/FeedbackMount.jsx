@@ -53,7 +53,7 @@ const LazyOverlay = React.lazy(() => import('./FeedbackOverlay.jsx'));
 // contract — nothing here may ever throw into the app it's riding along
 // with. Stays inert until the developer presses Cmd/Ctrl+/, at which point
 // the overlay mounts.
-function FeedbackMount({ basePath, lowdefy, pageId }) {
+function FeedbackMount({ basePath, lowdefy, page }) {
   const [active, setActive] = useState(false);
 
   useFeedbackToggle({
@@ -71,7 +71,7 @@ function FeedbackMount({ basePath, lowdefy, pageId }) {
           <LazyOverlay
             basePath={basePath}
             lowdefy={lowdefy}
-            pageId={pageId}
+            page={page}
             onClose={() => setActive(false)}
           />
         </Suspense>

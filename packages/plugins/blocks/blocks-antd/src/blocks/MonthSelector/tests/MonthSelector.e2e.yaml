@@ -24,6 +24,8 @@ events:
           _date: '2024-06-01'
         ms_clearable:
           _date: '2024-01-01'
+        ms_onclear:
+          _date: '2024-03-01'
 
 blocks:
   # ============================================
@@ -165,3 +167,132 @@ blocks:
               - now
               - startOf: month
               - format: YYYY-MM-DD
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: ms_underlined
+    type: MonthSelector
+    properties:
+      title: Underlined
+      variant: underlined
+
+  - id: ms_prefix_text
+    type: MonthSelector
+    properties:
+      title: Prefix Text
+      prefix: From
+
+  - id: ms_prefix_icon
+    type: MonthSelector
+    properties:
+      title: Prefix Icon
+      prefixIcon: clock
+
+  - id: ms_readonly
+    type: MonthSelector
+    properties:
+      title: Read-only Input
+      inputReadOnly: true
+
+  - id: ms_placement
+    type: MonthSelector
+    class:
+      .popup: ms-custom-popup
+    properties:
+      title: Placement and Popup Class
+      placement: bottomRight
+
+  - id: ms_events
+    type: MonthSelector
+    properties:
+      title: Focus, Blur and Open Events
+    events:
+      onFocus:
+        - id: set_focus
+          type: SetState
+          params:
+            ms_focus_event: true
+      onBlur:
+        - id: set_blur
+          type: SetState
+          params:
+            ms_blur_event: true
+      onOpenChange:
+        - id: set_open
+          type: SetState
+          params:
+            ms_open_event:
+              _event: open
+
+  - id: ms_focus_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ms_focus_event
+              - null
+          then:
+            _string.concat:
+              - 'Focus: '
+              - _json.stringify:
+                  - _state: ms_focus_event
+          else: ''
+
+  - id: ms_blur_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ms_blur_event
+              - null
+          then:
+            _string.concat:
+              - 'Blur: '
+              - _json.stringify:
+                  - _state: ms_blur_event
+          else: ''
+
+  - id: ms_open_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ms_open_event
+              - null
+          then:
+            _string.concat:
+              - 'Open: '
+              - _json.stringify:
+                  - _state: ms_open_event
+          else: ''
+
+  - id: ms_onclear
+    type: MonthSelector
+    properties:
+      title: OnClear Test
+    events:
+      onClear:
+        - id: set_onclear
+          type: SetState
+          params:
+            ms_onclear_fired: true
+
+  - id: ms_onclear_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: ms_onclear_fired
+              - true
+          then: Clear fired
+          else: ''

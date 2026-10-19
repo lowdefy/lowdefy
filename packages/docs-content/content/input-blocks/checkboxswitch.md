@@ -20,6 +20,34 @@ Single checkbox for boolean input.
 ```
 
 ```yaml
+- id: select_all
+  type: CheckboxSwitch
+  properties:
+    title: Recipients
+    description: Select all
+    indeterminate:
+      _ne:
+        - _if_none:
+            - _state: recipient_alice
+            - false
+        - _if_none:
+            - _state: recipient_bob
+            - false
+- id: recipient_alice
+  type: CheckboxSwitch
+  properties:
+    description: Alice
+    label:
+      disabled: true
+- id: recipient_bob
+  type: CheckboxSwitch
+  properties:
+    description: Bob
+    label:
+      disabled: true
+```
+
+```yaml
 - id: desc_terms
   type: CheckboxSwitch
   properties:
@@ -369,7 +397,7 @@ Single checkbox for boolean input.
       properties:
         title: Create Account
         type: primary
-        icon: AiOutlineUserAdd
+        icon: UserPlus
         block: true
       events:
         onClick:
@@ -436,7 +464,7 @@ Single checkbox for boolean input.
       properties:
         title: Save Preferences
         type: primary
-        icon: AiOutlineSave
+        icon: save
       events:
         onClick:
           - id: save_notif
@@ -448,9 +476,11 @@ Single checkbox for boolean input.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
 | `color` | string | - | Selected checkbox color. |
 | `disabled` | boolean | `false` | Disable the block if true. |
 | `description` | string | - | Text to display next to the checkbox - supports html. |
+| `indeterminate` | boolean | `false` | Show the checkbox as partly checked, eg. for a select all checkbox when only some items are selected. Only changes how the checkbox looks, not its value. |
 | `label` | object | - | Label properties. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |
@@ -458,7 +488,7 @@ Single checkbox for boolean input.
 | `label.title` | string | - | Label title - supports html. |
 | `label.tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
-| `label.tooltip.icon` | string | `"AiOutlineQuestionCircle"` | Name of the icon to show beside the label. |
+| `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
 | `label.span` | number | - | Label inline span. |
 | `label.disabled` | boolean | `false` | Hide input label. |

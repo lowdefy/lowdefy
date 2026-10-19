@@ -8,7 +8,7 @@ modules:
     vars:
       event_types:
         custom_action:
-          icon: AiOutlineThunderbolt
+          icon: Zap
           color: purple
           title: Custom Action
 

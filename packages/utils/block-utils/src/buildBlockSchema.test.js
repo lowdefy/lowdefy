@@ -55,6 +55,12 @@ test('container block includes blocks and areas', () => {
   expect(schema.properties.areas).toEqual({ type: 'object' });
 });
 
+test('input-container block includes blocks and areas', () => {
+  const schema = buildBlockSchema({ category: 'input-container', valueType: 'object' });
+  expect(schema.properties.blocks).toEqual({ type: 'array', items: { type: 'object' } });
+  expect(schema.properties.areas).toEqual({ type: 'object' });
+});
+
 test('no cssKeys produces only /block in class/style properties', () => {
   const meta = { category: 'display' };
   const schema = buildBlockSchema(meta);

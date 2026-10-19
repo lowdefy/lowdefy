@@ -45,5 +45,11 @@ function _request({ arrayIndices, params, requests }) {
 }
 
 _request.dynamic = true;
+// Keyed by request id, the first path segment, which is what a request update reports.
+_request.tracking = {
+  kind: 'read',
+  keys: ({ params }) =>
+    type.isString(params) ? [`request:${params.split('.')[0]}`] : ['request:*'],
+};
 
 export default _request;

@@ -17,18 +17,7 @@ import React, { useEffect } from 'react';
 import { BlockLayout } from '@lowdefy/layout';
 import LoadingContainer from './LoadingContainer.js';
 import LoadingList from './LoadingList.js';
-
-const blockMethods = {
-  moveItemDown: () => {},
-  moveItemUp: () => {},
-  pushItem: () => {},
-  registerEvent: () => {},
-  registerMethod: () => {},
-  removeItem: () => {},
-  setValue: () => {},
-  triggerEvent: () => {},
-  unshiftItem: () => {},
-};
+import loadingBlockMethods from './loadingBlockMethods.js';
 
 const LoadingBlock = ({
   blockClass,
@@ -95,7 +84,11 @@ const LoadingBlock = ({
             components={lowdefy._internal.components}
             key={`s-${blockId}-${skeleton.id}`}
             menus={lowdefy.menus}
-            methods={blockMethods}
+            methods={{
+              ...loadingBlockMethods,
+              getAppStorageKey: lowdefy._internal.storage.appKey,
+              getUserStorageKey: lowdefy._internal.storage.userKey,
+            }}
             pageId={lowdefy.pageId}
             properties={skeleton.properties ?? blockProperties}
           />

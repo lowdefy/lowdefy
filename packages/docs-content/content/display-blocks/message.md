@@ -47,7 +47,7 @@ Loading data...
     title: Success
     color: primary
     variant: outlined
-    icon: AiOutlineCheckCircle
+    icon: check-circle
   events:
     onClick:
       - id: call_status_success
@@ -63,7 +63,7 @@ Loading data...
     title: Error
     color: danger
     variant: outlined
-    icon: AiOutlineCloseCircle
+    icon: close-circle
   events:
     onClick:
       - id: call_status_error
@@ -79,7 +79,7 @@ Loading data...
     title: Warning
     color: default
     variant: outlined
-    icon: AiOutlineWarning
+    icon: warning
   events:
     onClick:
       - id: call_status_warning
@@ -95,7 +95,7 @@ Loading data...
     title: Info
     color: primary
     variant: text
-    icon: AiOutlineInfoCircle
+    icon: info
   events:
     onClick:
       - id: call_status_info
@@ -111,7 +111,7 @@ Loading data...
     title: Loading
     color: default
     variant: outlined
-    icon: AiOutlineLoading
+    icon: loading
   events:
     onClick:
       - id: call_status_loading
@@ -227,20 +227,20 @@ Custom colored star icon
   properties:
     status: success
     content: File saved
-    icon: AiOutlineSave
+    icon: save
 - id: icon_bell_msg
   type: Message
   properties:
     status: info
     content: Notification sent
-    icon: AiOutlineBell
+    icon: bell
 - id: icon_star_msg
   type: Message
   properties:
     status: info
     content: Custom colored star icon
     icon:
-      name: AiOutlineStar
+      name: star
       color: "#faad14"
 - id: btn_icon_save
   type: Button
@@ -250,7 +250,7 @@ Custom colored star icon
     title: Save Icon
     color: primary
     variant: outlined
-    icon: AiOutlineSave
+    icon: save
   events:
     onClick:
       - id: call_icon_save
@@ -266,7 +266,7 @@ Custom colored star icon
     title: Bell Icon
     color: primary
     variant: outlined
-    icon: AiOutlineBell
+    icon: bell
   events:
     onClick:
       - id: call_icon_bell
@@ -282,7 +282,7 @@ Custom colored star icon
     title: Star Icon (colored)
     color: default
     variant: outlined
-    icon: AiOutlineStar
+    icon: star
   events:
     onClick:
       - id: call_icon_star
@@ -458,7 +458,7 @@ Default message
     title: Open as Success
     color: primary
     variant: solid
-    icon: AiOutlineCheckCircle
+    icon: check-circle
   events:
     onClick:
       - id: call_override_success
@@ -478,7 +478,7 @@ Default message
     title: Open as Error
     color: danger
     variant: solid
-    icon: AiOutlineCloseCircle
+    icon: close-circle
   events:
     onClick:
       - id: call_override_error
@@ -498,7 +498,7 @@ Default message
     title: Open with Custom Icon
     color: default
     variant: solid
-    icon: AiOutlineRocket
+    icon: Rocket
   events:
     onClick:
       - id: call_override_icon
@@ -509,7 +509,7 @@ Default message
           args:
             - status: info
               content: Launched with a rocket icon!
-              icon: AiOutlineRocket
+              icon: Rocket
               duration: 3
 ```
 
@@ -541,7 +541,7 @@ Close me to trigger the onClose event
     title: Open Message with onClose
     color: primary
     variant: outlined
-    icon: AiOutlineNotification
+    icon: Megaphone
   events:
     onClick:
       - id: call_onclose
@@ -561,14 +561,14 @@ Message with inline border style
 - id: css_shadow_msg
   type: Message
   class:
-    element: shadow-lg
+    .element: shadow-lg
   properties:
     status: success
     content: Message with shadow via Tailwind class
 - id: css_rounded_msg
   type: Message
   class:
-    element: rounded-full
+    .element: rounded-full
   properties:
     status: info
     content: Message with rounded corners via Tailwind class
@@ -625,103 +625,6 @@ Message with inline border style
         type: CallMethod
         params:
           blockId: css_custom_msg
-          method: open
-```
-
-Custom background via theme token
-
-Extra padding via theme token
-
-Custom z-index via theme token
-
-Combined theme overrides
-
-```yaml
-- id: theme_bg_msg
-  type: Message
-  properties:
-    status: success
-    content: Custom background via theme token
-- id: theme_padding_msg
-  type: Message
-  properties:
-    status: info
-    content: Extra padding via theme token
-    theme:
-      contentPadding: 14px 20px
-- id: theme_zindex_msg
-  type: Message
-  properties:
-    status: warning
-    content: Custom z-index via theme token
-    theme:
-      zIndexPopup: 2000
-- id: theme_combined_msg
-  type: Message
-  properties:
-    status: info
-    content: Combined theme overrides
-    theme:
-      contentPadding: 16px 24px
-- id: btn_theme_bg
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Custom Background
-    color: primary
-    variant: outlined
-  events:
-    onClick:
-      - id: call_theme_bg
-        type: CallMethod
-        params:
-          blockId: theme_bg_msg
-          method: open
-- id: btn_theme_padding
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Extra Padding
-    color: primary
-    variant: outlined
-  events:
-    onClick:
-      - id: call_theme_padding
-        type: CallMethod
-        params:
-          blockId: theme_padding_msg
-          method: open
-- id: btn_theme_zindex
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Custom Z-Index
-    color: primary
-    variant: outlined
-  events:
-    onClick:
-      - id: call_theme_zindex
-        type: CallMethod
-        params:
-          blockId: theme_zindex_msg
-          method: open
-- id: btn_theme_combined
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Combined Tokens
-    color: primary
-    variant: outlined
-  events:
-    onClick:
-      - id: call_theme_combined
-        type: CallMethod
-        params:
-          blockId: theme_combined_msg
           method: open
 ```
 
@@ -805,7 +708,7 @@ Please fill in all required fields.
             title: Submit Feedback
             color: primary
             variant: solid
-            icon: AiOutlineSend
+            icon: send
           events:
             onClick:
               - id: form_validate
@@ -853,7 +756,7 @@ Upload failed. Please try again.
       properties:
         status: success
         content: File uploaded successfully!
-        icon: AiOutlineCloudUpload
+        icon: CloudUpload
         duration: 3
     - id: upload_fail_msg
       type: Message
@@ -875,7 +778,7 @@ Upload failed. Please try again.
             title: Start Upload
             color: primary
             variant: solid
-            icon: AiOutlineUpload
+            icon: upload
           events:
             onClick:
               - id: upload_show_progress
@@ -891,7 +794,7 @@ Upload failed. Please try again.
             title: Simulate Success
             color: green
             variant: outlined
-            icon: AiOutlineCheckCircle
+            icon: check-circle
           events:
             onClick:
               - id: upload_show_success
@@ -907,7 +810,7 @@ Upload failed. Please try again.
             title: Simulate Failure
             color: danger
             variant: outlined
-            icon: AiOutlineCloseCircle
+            icon: close-circle
           events:
             onClick:
               - id: upload_show_fail
@@ -920,16 +823,27 @@ Upload failed. Please try again.
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `content` | string | - | The content of the message - supports html. |
-| `duration` | number | `4.5` | Time(seconds) before auto-dismiss, don't dismiss if set to 0. |
-| `icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize message icon. |
-| `status` | string | `"info"` | Message status type. Enum: `success`, `error`, `info`, `warning`, `loading`. |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design message tokens](https://ant.design/components/message#design-token). |
+| `duration` | number | `3` | Time(seconds) before auto-dismiss, don't dismiss if set to 0. |
+| `pauseOnHover` | boolean | `true` | Pause the auto-dismiss timer while the mouse is over the message. |
+| `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize message icon. |
+| `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `icon.color` | string | - | Icon color. |
+| `icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `status` | string | `"success"` | Message status type. Enum: `success`, `error`, `info`, `warning`, `loading`. |
+| `theme` | object | - | Has no effect: messages render in the app-wide message holder, outside the block. Set these Message design tokens for the whole app in `lowdefy.yaml` under `theme.antd.components.Message`. See [Ant Design message tokens](https://ant.design/components/message#design-token). |
 | `theme.zIndexPopup` | number | `1080` | Z-index of the message popup. |
 | `theme.contentBg` | string | - | Background color of the message content. |
 | `theme.contentPadding` | string | - | Padding of the message content. Calculated from controlHeightLG, fontSize, lineHeight, and paddingSM. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |
+| `onClick` | \- | Trigger actions when the message is clicked. |
 | `onClose` | \- | Trigger actions when message is closed. |
 
 | Key | Target |

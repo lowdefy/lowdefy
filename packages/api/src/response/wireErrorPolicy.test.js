@@ -439,13 +439,15 @@ const cases = [
 // properties otherwise.
 async function throwFromRequest(thrown) {
   const context = testContext({ logger: silentLogger });
+  async function requestResolver() {
+    throw thrown;
+  }
+  requestResolver.meta = { checkRead: false, checkWrite: false };
   return callRequestResolver(context, {
     connectionProperties: {},
     requestConfig,
     requestProperties,
-    requestResolver: async () => {
-      throw thrown;
-    },
+    requestResolver,
   }).catch((error) => error);
 }
 
@@ -550,8 +552,9 @@ async function flushMicrotasks() {
 const mcpJson = {
   name: 'test-tools',
   version: '1.0.0',
-  endpoints: ['get-customer'],
   configured: true,
+  hasPublicTool: true,
+  endpoints: [{ id: 'get-customer', scope: 'mcp:read' }],
 };
 
 function createMcpContext({ thrown }) {
@@ -589,8 +592,8 @@ function createMcpContext({ thrown }) {
     logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() },
     mode: 'prod',
     readConfigFile: jest.fn((path) => files[path] ?? null),
-    session: { user: { id: 'user_1' } },
   });
+  context.mcpAuth = { orgId: 'org_1', tokenStatus: 'none', parseableJwt: true };
   return { context, failingRequest };
 }
 

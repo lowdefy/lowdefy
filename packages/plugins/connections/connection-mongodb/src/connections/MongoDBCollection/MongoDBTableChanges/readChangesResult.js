@@ -1,0 +1,54 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+// The response: row counts, the key each added row got, by its temporary browser key, and
+// the existing rows the changes named that matched nothing (outside the filter, deleted, or
+// never there), which an app should treat as a failed save. Collection mode counts rows (one
+// operation per row). In array mode every operation matches the one document, so
+// matchedCount and modifiedCount are 0 or 1 for it, insertedCount is the items pushed and
+// deletedCount the removed items that were in the array. An array document outside the
+// filter matches no operation, and nothing is written: that is an error, not an empty save.
+// A bulk selection save returns the rows its updateMany matched and modified.
+function readChangesResult({ compiled, result, unmatchedRemoved, unmatchedUpdated }) {
+  if (compiled.mode === 'bulk') {
+    return { matchedCount: result.matchedCount, modifiedCount: result.modifiedCount };
+  }
+  const unmatchedKeys = [...unmatchedRemoved, ...unmatchedUpdated];
+  if (compiled.mode === 'collection') {
+    return {
+      matchedCount: result.matchedCount,
+      modifiedCount: result.modifiedCount,
+      insertedCount: result.insertedCount,
+      deletedCount: result.deletedCount,
+      insertedKeys: compiled.insertedKeys,
+      unmatchedKeys,
+    };
+  }
+  if (result.matchedCount === 0) {
+    throw new Error(
+      'MongoDBTableChanges found no document with "array.documentId" inside "filter", so nothing was written.'
+    );
+  }
+  return {
+    matchedCount: 1,
+    modifiedCount: result.modifiedCount > 0 ? 1 : 0,
+    insertedCount: compiled.insertedCount,
+    deletedCount: compiled.removedCount - unmatchedRemoved.length,
+    insertedKeys: compiled.insertedKeys,
+    unmatchedKeys,
+  };
+}
+
+export default readChangesResult;

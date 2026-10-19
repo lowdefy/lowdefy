@@ -106,6 +106,7 @@ test('init Events', async () => {
       catchActions: [],
       debounce: undefined,
       shortcut: null,
+      bubble: false,
       history: [],
       loading: false,
     },
@@ -143,6 +144,45 @@ test('triggerEvent no event defined', async () => {
   });
 });
 
+// ClickableHtml fires the event an HTML attribute names (data-event), so the
+// name can come from data.
+test.each(['__proto__', 'constructor', 'toString', 'hasOwnProperty'])(
+  'triggerEvent treats the inherited name %s as an undeclared event',
+  async (name) => {
+    const pageConfig = {
+      id: 'root',
+      type: 'Box',
+      blocks: [
+        {
+          id: 'button',
+          type: 'Button',
+          events: {
+            onClick: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+          },
+        },
+      ],
+    };
+    const context = await testContext({
+      lowdefy,
+      pageConfig,
+    });
+    const { button } = context._internal.RootSlots.map;
+    const res = await button.triggerEvent({ name });
+    expect(res).toEqual({
+      blockId: 'button',
+      bounced: false,
+      endTimestamp: { date: 0 },
+      event: undefined,
+      eventName: name,
+      responses: {},
+      startTimestamp: { date: 0 },
+      success: true,
+    });
+    expect(Object.hasOwn(Object.prototype, 'loading')).toBe(false);
+    expect(context.eventLog).toEqual([]);
+  }
+);
+
 test('triggerEvent x1', async () => {
   const pageConfig = {
     id: 'root',
@@ -169,6 +209,7 @@ test('triggerEvent x1', async () => {
       catchActions: [],
       debounce: undefined,
       shortcut: null,
+      bubble: false,
       history: [],
       loading: true,
     },
@@ -314,7 +355,9 @@ test('registerEvent then triggerEvent x1', async () => {
       catchActions: [],
       debounce: null,
       shortcut: null,
+      bubble: false,
       history: [],
+      internal: true,
       loading: false,
     },
   });
@@ -381,6 +424,7 @@ test('triggerEvent skip', async () => {
             "type": "SetState",
           },
         ],
+        "bubble": false,
         "catchActions": Array [],
         "debounce": undefined,
         "history": Array [
@@ -502,6 +546,7 @@ test('triggerEvent skip tests === true', async () => {
             "type": "SetState",
           },
         ],
+        "bubble": false,
         "catchActions": Array [],
         "debounce": undefined,
         "history": Array [
@@ -667,6 +712,7 @@ test('Actions try catch arrays', async () => {
       catchActions: [{ id: 'b', type: 'SetState', params: { b: 'b' } }],
       debounce: undefined,
       shortcut: null,
+      bubble: false,
       history: [],
       loading: false,
     },
@@ -708,6 +754,7 @@ test('Actions try catch arrays and debounce.immediate == true (leading edge)', a
         ms: 100,
       },
       shortcut: null,
+      bubble: false,
       history: [],
       loading: false,
     },
@@ -821,6 +868,7 @@ test('Actions try catch arrays and debounce.immediate == undefined (trailing edg
         ms: 100,
       },
       shortcut: null,
+      bubble: false,
       history: [],
       loading: false,
     },
@@ -931,6 +979,7 @@ test('Actions try catch arrays and debounce.immediate == false default ms (trail
         immediate: false,
       },
       shortcut: null,
+      bubble: false,
       history: [],
       loading: false,
     },

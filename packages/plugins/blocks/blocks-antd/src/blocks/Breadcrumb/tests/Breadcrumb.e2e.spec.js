@@ -137,4 +137,28 @@ test.describe('Breadcrumb Block', () => {
     await expect(items).toHaveCount(2);
     // Individual item styles are applied via className
   });
+
+  // ============================================
+  // SEMANTIC CSS KEYS AND DROPDOWN LINKS
+  // ============================================
+
+  test('applies item and separator classes and styles', async ({ page }) => {
+    const block = getBreadcrumb(page, 'breadcrumb_semantic');
+    await expect(block.locator('.ant-breadcrumb-item.bc-semantic-item')).toHaveCount(2);
+    const separator = block.locator('.ant-breadcrumb-separator.bc-semantic-separator');
+    await expect(separator).toHaveCount(1);
+    await expect(separator).toHaveCSS('color', 'rgb(255, 0, 0)');
+  });
+
+  test('shows dropdown links on an item with links', async ({ page }) => {
+    const block = getBreadcrumb(page, 'breadcrumb_dropdown');
+    const trigger = block.locator('.ant-breadcrumb-overlay-link');
+    await expect(trigger).toContainText('Products');
+    await expect(trigger.locator('svg.lucide')).toBeAttached();
+    await trigger.hover();
+    const dropdown = page.locator('.ant-dropdown').filter({ hasText: 'Laptops' });
+    await expect(dropdown).toBeVisible();
+    await expect(dropdown.locator('.ant-dropdown-menu-item')).toHaveCount(2);
+    await expect(dropdown.locator('a[href="#phones"]')).toHaveText('Phones');
+  });
 });

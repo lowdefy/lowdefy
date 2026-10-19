@@ -39,6 +39,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
+    "@lowdefy/helpers": "6.1.0",
     "@lowdefy/nunjucks": "6.1.0",
     "ajv": "8.20.0",
     "ajv-errors": "3.0.0",

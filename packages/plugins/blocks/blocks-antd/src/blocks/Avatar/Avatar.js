@@ -20,6 +20,11 @@ import { Avatar } from 'antd';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
+// antd 6 renamed the `default` size to `medium`.
+function getAvatarSize(size) {
+  return size === 'default' ? 'medium' : size;
+}
+
 const AvatarBlock = ({
   blockId,
   classNames = {},
@@ -32,19 +37,21 @@ const AvatarBlock = ({
   if (properties.group) {
     return (
       <Avatar.Group
-        id={blockId}
         className={classNames.element}
         style={{
           cursor: events.onClick && 'pointer',
           ...styles.element,
         }}
-        maxCount={properties.group.maxCount}
-        maxPopoverPlacement={properties.group.maxPopoverPlacement}
-        maxPopoverTrigger={properties.group.maxPopoverTrigger}
-        maxStyle={styles.max}
+        max={{
+          count: properties.group.maxCount,
+          style: styles.max,
+          popover: {
+            placement: properties.group.maxPopoverPlacement,
+            trigger: properties.group.maxPopoverTrigger,
+          },
+        }}
         shape={properties.group.shape ?? properties.shape}
-        size={properties.group.size ?? properties.size}
-        onClick={() => methods.triggerEvent({ name: 'onClick' })}
+        size={getAvatarSize(properties.group.size ?? properties.size)}
       >
         {(properties.group.avatars ?? []).map((avatar, i) => (
           <Avatar
@@ -52,9 +59,11 @@ const AvatarBlock = ({
             alt={avatar.alt}
             gap={avatar.gap}
             shape={avatar.shape}
-            size={avatar.size}
+            size={getAvatarSize(avatar.size)}
             src={avatar.src}
+            srcSet={avatar.srcSet}
             style={{ backgroundColor: !avatar.src && avatar.color }}
+            onClick={() => methods.triggerEvent({ name: 'onClick', event: { index: i } })}
             icon={
               avatar.icon && (
                 <Icon
@@ -81,8 +90,9 @@ const AvatarBlock = ({
       className={classNames.element}
       gap={properties.gap}
       shape={properties.shape}
-      size={properties.size}
+      size={getAvatarSize(properties.size)}
       src={properties.src}
+      srcSet={properties.srcSet}
       onClick={() => methods.triggerEvent({ name: 'onClick' })}
       style={{
         backgroundColor: !properties.src && properties.color,

@@ -15,3 +15,4 @@
 */
 
 export { default as GoogleMapsScript } from './blocks/GoogleMapsScript/e2e.js';
+export { default as PlacesAutocomplete } from './blocks/PlacesAutocomplete/e2e.js';

@@ -36,7 +36,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Page and App State
-            previous_page_id: page-and-app-state
+            previous_page_title: Page Paths
+            previous_page_id: page-paths
             next_page_title: Notifications
             next_page_id: notifications

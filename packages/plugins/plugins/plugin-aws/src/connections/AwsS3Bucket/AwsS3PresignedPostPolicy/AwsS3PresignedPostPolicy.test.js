@@ -65,6 +65,7 @@ test('AwsS3PresignedPostPolicy returns a POST descriptor with top-level key and 
           secretAccessKey: 'secretAccessKey',
         },
         region: 'region',
+        requestStreamBufferSize: 65536,
       },
     ],
   ]);
@@ -110,6 +111,7 @@ test('AwsS3PresignedPostPolicy options', async () => {
           secretAccessKey: 'secretAccessKey',
         },
         region: 'region',
+        requestStreamBufferSize: 65536,
       },
     ],
   ]);
@@ -156,6 +158,7 @@ test('AwsS3PresignedPostPolicy passes endpoint and forcePathStyle to the S3 clie
           secretAccessKey: 'secretAccessKey',
         },
         region: 'auto',
+        requestStreamBufferSize: 65536,
         endpoint: 'https://account.r2.cloudflarestorage.com',
         forcePathStyle: true,
       },

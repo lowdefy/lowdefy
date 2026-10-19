@@ -22,6 +22,7 @@ import evaluateOperators from '../request/evaluateOperators.js';
 import getConnection from '../connections/getConnection.js';
 import getConnectionConfig from '../connections/getConnectionConfig.js';
 import getRequestResolver from '../request/getRequestResolver.js';
+import resolveTenancy from '../request/resolveTenancy.js';
 import validateSchemas from '../request/validateSchemas.js';
 
 async function handleRequest(context, routineContext, { request }) {
@@ -39,6 +40,12 @@ async function handleRequest(context, routineContext, { request }) {
 
   const connection = getConnection(context, { connectionConfig });
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
+  const { tenant, tenantGuard } = resolveTenancy(context, {
+    connection,
+    connectionConfig,
+    requestConfig,
+    writes: requestResolver.meta.checkWrite === true,
+  });
 
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
@@ -65,11 +72,15 @@ async function handleRequest(context, routineContext, { request }) {
     requestProperties,
   });
   const result = await callRequestResolver(context, {
+    agent: routineContext.agent,
     connectionProperties,
     endpointDepth: routineContext.endpointDepth,
     requestConfig,
     requestProperties,
     requestResolver,
+    routineContext,
+    tenant,
+    tenantGuard,
   });
 
   addStepResult(context, routineContext, { result, stepId: request.stepId });

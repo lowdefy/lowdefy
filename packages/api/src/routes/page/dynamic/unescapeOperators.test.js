@@ -16,21 +16,36 @@
 
 import unescapeOperators from './unescapeOperators.js';
 
+const operators = new Set(['_args', '_if', '_state']);
+
 test('unescapeOperators strips one underscore from an operator key', () => {
-  expect(unescapeOperators({ html: { __state: 'a' }, deep: { ___args: 0 } })).toEqual({
+  expect(
+    unescapeOperators({ value: { html: { __state: 'a' }, deep: { ___args: 0 } }, operators })
+  ).toEqual({
     html: { _state: 'a' },
     deep: { __args: 0 },
   });
 });
 
 test('unescapeOperators unescapes operators inside arrays and operator params', () => {
-  expect(unescapeOperators([{ __if: { test: { __state: 'a' }, then: 1, else: 2 } }])).toEqual([
-    { _if: { test: { _state: 'a' }, then: 1, else: 2 } },
-  ]);
+  expect(
+    unescapeOperators({
+      value: [{ __if: { test: { __state: 'a' }, then: 1, else: 2 } }],
+      operators,
+    })
+  ).toEqual([{ _if: { test: { _state: 'a' }, then: 1, else: 2 } }]);
 });
 
 test('unescapeOperators leaves double-underscore keys of ordinary objects unchanged', () => {
-  expect(unescapeOperators({ record: { __typename: 'Product', name: 'Chair' } })).toEqual({
+  expect(
+    unescapeOperators({ value: { record: { __typename: 'Product', name: 'Chair' } }, operators })
+  ).toEqual({
     record: { __typename: 'Product', name: 'Chair' },
+  });
+});
+
+test('unescapeOperators leaves a single key that names no client operator unchanged', () => {
+  expect(unescapeOperators({ value: { record: { __typename: 'Product' } }, operators })).toEqual({
+    record: { __typename: 'Product' },
   });
 });

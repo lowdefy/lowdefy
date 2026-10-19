@@ -1,0 +1,42 @@
+# 105: Module endpoint auth — in an app with auth configured and no auth.api
+# rule, an app endpoint (app-status) is public, a module endpoint is protected
+# (help/reply), one the manifest declares public stays public (help/ticket-status)
+# and an app role on a module endpoint applies (help/close-ticket).
+lowdefy: local
+name: Module Endpoints Test
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: endpoints_app_auth_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  emailAndPassword:
+    enabled: true
+  roles:
+    - id: agent
+  api:
+    roles:
+      agent:
+        - help/close-ticket
+
+modules:
+  - id: help
+    source: 'file:modules/support'
+
+api:
+  - id: app-status
+    type: Api
+    routine:
+      - ':return':
+          ok: true
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Home

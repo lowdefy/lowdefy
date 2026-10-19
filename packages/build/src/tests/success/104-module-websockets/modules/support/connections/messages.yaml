@@ -1,0 +1,6 @@
+id: messages
+type: MongoDBCollection
+properties:
+  databaseUri:
+    _secret: SUPPORT_MONGODB_URI
+  collection: support_messages

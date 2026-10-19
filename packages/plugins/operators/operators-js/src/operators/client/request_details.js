@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { getFromObject } from '@lowdefy/operators';
+import { getFromObject, getObjectReadKeys } from '@lowdefy/operators';
 
 function _request_details({ params, requests, arrayIndices, location }) {
   return getFromObject({
@@ -27,5 +27,13 @@ function _request_details({ params, requests, arrayIndices, location }) {
 }
 
 _request_details.dynamic = true;
+// Keyed by request id, the first path segment, which is what a request update reports.
+_request_details.tracking = {
+  kind: 'read',
+  keys: ({ arrayIndices, params }) =>
+    getObjectReadKeys({ arrayIndices, namespace: 'request', params }).map(
+      (key) => key.split('.')[0]
+    ),
+};
 
 export default _request_details;

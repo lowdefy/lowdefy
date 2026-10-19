@@ -15,14 +15,19 @@
 */
 
 import React from 'react';
-import { serializer } from '@lowdefy/helpers';
+import { ConfigProvider } from 'antd';
+import { getAppContext } from '@lowdefy/engine';
+import { pageInstanceKey, serializer } from '@lowdefy/helpers';
 
 import Block from './block/Block.js';
 import Context from './Context.js';
 import DisplayMessage from './DisplayMessage.js';
 import Head from './Head.js';
+import IconProvider from './IconProvider.js';
 import ProgressBarController from './ProgressBarController.js';
 
+import createAntdIconConfig from './createAntdIconConfig.js';
+import getMessageIcon from './getMessageIcon.js';
 import initLowdefyContext from './initLowdefyContext.js';
 
 const Client = ({
@@ -30,7 +35,10 @@ const Client = ({
   Components,
   config: rawConfig,
   jsMap,
+  loadAllIcons,
   lowdefy,
+  matchedPath,
+  pathParams,
   resetContext = { reset: false, setReset: () => undefined },
   router,
   stage,
@@ -45,30 +53,42 @@ const Client = ({
     () => serializer.deserialize(rawConfig),
     [rawConfig.pageConfig, rawConfig.rootConfig]
   );
-  // Dynamic pages rebuild their engine context per fetch — remount the page
-  // tree with the rebuilt context instead of reconciling mounted blocks
-  // against it, which React can silently drop. Static pages keep their
-  // context and tree across navigations, so their key stays stable.
+  // Each page instance (one per set of path values) has its own engine
+  // context, so a new instance remounts the page tree instead of reconciling
+  // the previous instance's blocks against it. Dynamic pages also rebuild their
+  // context per fetch, which React can silently drop when reconciling, so their
+  // key changes with every fetch. Static page instances keep their context and
+  // tree across navigations, so their key stays stable.
+  const instanceKey = pageInstanceKey({
+    pageId: config.pageConfig.pageId,
+    path: config.pageConfig.path,
+    pathParams,
+  });
   const buildRef = React.useRef({ config: null, build: 0 });
   if (buildRef.current.config !== config) {
     buildRef.current = { config, build: buildRef.current.build + 1 };
   }
   const contextKey =
-    config.pageConfig.dynamic === true
-      ? `${config.pageConfig.id}:${buildRef.current.build}`
-      : config.pageConfig.id;
+    config.pageConfig.dynamic === true ? `${instanceKey}:${buildRef.current.build}` : instanceKey;
   initLowdefyContext({
     auth,
     Components,
     config,
+    loadAllIcons,
     lowdefy,
+    matchedPath,
+    pathParams,
     router,
     stage,
     types,
     window,
   });
+  const appContext = getAppContext({ events: config.rootConfig.events, jsMap, lowdefy });
+  const Icon = lowdefy._internal.components.Icon;
+  const antdIconConfig = React.useMemo(() => createAntdIconConfig({ Icon }), [Icon]);
   return (
-    <>
+    // theme.icons is read at render: createIcon runs before the theme is set.
+    <IconProvider icons={lowdefy.theme.icons}>
       <ProgressBarController
         id="lowdefy-progress-bar"
         key={`${config.pageConfig.id}-progress-bar`}
@@ -82,39 +102,43 @@ const Client = ({
         components={lowdefy._internal.components}
         methods={{
           registerMethod: (_, method) => {
-            lowdefy._internal.displayMessage = method;
+            lowdefy._internal.displayMessage = (args) =>
+              method({
+                ...args,
+                icon: args.icon ?? getMessageIcon({ status: args.status ?? 'success' }),
+              });
           },
         }}
       />
-      <Context
-        key={contextKey}
-        config={config.pageConfig}
-        jsMap={jsMap}
-        lowdefy={lowdefy}
-        resetContext={resetContext}
-      >
-        {(context) => {
-          if (!context._internal.onInitDone) return '';
-          return (
-            <>
-              <Head
-                Component={Components.Head}
-                properties={
-                  context._internal.RootSlots.map[config.pageConfig.blockId].eval.properties
-                }
-              />
+      {/* Nested inside the root provider, so antd merges it with the app's theme and locale. */}
+      <ConfigProvider {...antdIconConfig}>
+        <Context
+          key={contextKey}
+          appContext={appContext}
+          config={config.pageConfig}
+          jsMap={jsMap}
+          lowdefy={lowdefy}
+          pathParams={pathParams}
+          resetContext={resetContext}
+        >
+          {(context) => {
+            if (!context._internal.onInitDone) return '';
+            return (
               <Block
                 block={context._internal.RootSlots.map[config.pageConfig.blockId]}
                 Blocks={context._internal.RootSlots}
                 context={context}
                 lowdefy={lowdefy}
                 parentLoading={false}
+                renderHead={({ properties }) => (
+                  <Head Component={Components.Head} properties={properties} />
+                )}
               />
-            </>
-          );
-        }}
-      </Context>
-    </>
+            );
+          }}
+        </Context>
+      </ConfigProvider>
+    </IconProvider>
   );
 };
 

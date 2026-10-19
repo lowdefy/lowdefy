@@ -35,6 +35,9 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
     "./*": "./dist/*",
     "./blocks": "./dist/blocks.js",
@@ -71,7 +74,6 @@
     "@tiptap/react": "3.31.3",
     "@tiptap/starter-kit": "3.31.3",
     "@tiptap/suggestion": "3.31.3",
-    "react-icons": "5.6.0",
     "tippy.js": "6.3.7",
     "turndown": "7.2.0"
   },

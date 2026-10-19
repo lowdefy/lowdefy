@@ -1,0 +1,7 @@
+# One block _ref'd into shared_alpha and shared_beta, so the dev server lists
+# its mutants once, kept on shared_alpha, with shared_beta as a copy
+# (packages/cli/test/journeyFixture/harden.test.mjs).
+id: shared_notice
+type: Paragraph
+properties:
+  content: Shared notice

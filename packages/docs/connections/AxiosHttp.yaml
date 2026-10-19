@@ -157,7 +157,7 @@ _ref:
                     properties:
                       url:
                         _nunjucks:
-                          template: /orders/{{ order_id }}
+                          template: /orders/{% raw %}{{ order_id }}{% endraw %}
                           on:
                             order_id:
                               _payload: order_id

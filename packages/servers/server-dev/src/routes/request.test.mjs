@@ -20,6 +20,7 @@ import { jest } from '@jest/globals';
 const mockCallRequest = jest.fn();
 jest.unstable_mockModule('@lowdefy/api', () => ({
   callRequest: mockCallRequest,
+  parseRequestBody: ({ text }) => JSON.parse(text),
   redactErrorResponse: jest.fn((context, error) => ({ error: error.message })),
 }));
 
@@ -115,10 +116,13 @@ test('requestHandler replays a dev mock without building or calling the request'
   expect(mockCallRequest).not.toHaveBeenCalled();
 });
 
-test('requestHandler rejects non-POST methods', async () => {
-  const app = createApp();
-  app.onError((err, c) => c.json({ error: err.message }, 500));
-  const res = await app.request('/api/request/dashboard/get_rows');
-  expect(res.status).toEqual(500);
+// A GET to the request route is client-caused, so it must answer 405 rather
+// than throwing into the error handler and being logged as a fault with a 500.
+test('requestHandler returns 405 without building or calling the request for a non-POST method', async () => {
+  const res = await createApp().request('/api/request/dashboard/get_rows');
+
+  expect(res.status).toEqual(405);
+  expect(await res.json()).toEqual({ error: 'Method not allowed.' });
   expect(mockBuildPageIfNeeded).not.toHaveBeenCalled();
+  expect(mockCallRequest).not.toHaveBeenCalled();
 });

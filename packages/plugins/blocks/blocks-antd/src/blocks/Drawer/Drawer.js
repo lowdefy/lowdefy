@@ -14,12 +14,17 @@
   limitations under the License.
 */
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Drawer } from 'antd';
-import { get } from '@lowdefy/helpers';
+import { get, journeyTargetSelectors, type } from '@lowdefy/helpers';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import getMask from '../getMask.js';
 import withTheme from '../withTheme.js';
+
+// Compact tightens the header too, so the title stays aligned with the body content.
+const headerPadding = { compact: '12px 16px' };
+const bodyPadding = { compact: '12px 16px', none: 0 };
 
 const handleClose = async ({ methods, rename, setOpen }) => {
   const response = await methods.triggerEvent({
@@ -48,7 +53,7 @@ const handleToggle = ({ openState, methods, rename, setOpen }) => {
 const handleAfterOpenChange = ({ drawerOpen, methods, rename }) => {
   methods.triggerEvent({
     name: get(rename, 'events.afterOpenChange', { default: 'afterOpenChange' }),
-    event: { drawerOpen },
+    event: { drawerOpen, open: drawerOpen },
   });
   if (!drawerOpen) {
     methods.triggerEvent({
@@ -65,6 +70,24 @@ const setOpenState = ({ open, methods, rename, setOpen }) => {
   }
 };
 
+// antd resolves the named sizes for `size`, but not for `defaultSize`.
+const namedDrawerSizes = {
+  default: 378,
+  large: 736,
+};
+
+// antd v6 replaced the separate `width`/`height` Drawer props with a single `size` prop
+// whose meaning depends on `placement`: width for left/right, height for top/bottom.
+const getDrawerSize = ({ placement, size, width, height }) => {
+  if (!type.isNone(size)) {
+    return size;
+  }
+  if (placement === 'top' || placement === 'bottom') {
+    return height;
+  }
+  return width;
+};
+
 const DrawerBlock = ({
   blockId,
   classNames = {},
@@ -76,6 +99,7 @@ const DrawerBlock = ({
   styles = {},
 }) => {
   const [openState, setOpen] = useState(false);
+  const resizedSize = useRef();
   useEffect(() => {
     methods.registerMethod(get(rename, 'methods.toggleOpen', { default: 'toggleOpen' }), () =>
       handleToggle({ openState, methods, rename, setOpen })
@@ -85,21 +109,56 @@ const DrawerBlock = ({
     );
   });
 
+  const drawerSize = getDrawerSize({
+    placement: properties.placement,
+    size: properties.size,
+    width: properties.width,
+    height: properties.height,
+  });
+  // A controlled `size` would pin a resizable drawer, so it becomes the starting size instead.
+  const sizeProps = properties.resizable
+    ? {
+        defaultSize: namedDrawerSizes[drawerSize] ?? drawerSize,
+        maxSize: properties.maxSize,
+        resizable: {
+          onResizeStart: () => {
+            resizedSize.current = undefined;
+          },
+          onResize: (size) => {
+            resizedSize.current = size;
+          },
+          // antd calls onResizeEnd on every mouseup of the handle, so a click without a
+          // drag would report no size. Only a drag that moved the edge is a resize.
+          onResizeEnd: () => {
+            if (type.isNone(resizedSize.current)) {
+              return;
+            }
+            methods.triggerEvent({
+              name: get(rename, 'events.onResizeEnd', { default: 'onResizeEnd' }),
+              event: { size: resizedSize.current },
+            });
+          },
+        },
+      }
+    : { size: drawerSize };
+
   return (
     <Drawer
       id={blockId}
       closable={properties.closable}
+      destroyOnHidden={properties.destroyOnHidden}
       extra={content.extra && content.extra()}
+      focusable={properties.focusable}
       footer={content.footer && content.footer()}
+      forceRender={properties.forceRender}
       getContainer={properties.getContainer}
-      mask={properties.mask}
-      maskClosable={properties.maskClosable}
-      title={properties.title}
+      loading={properties.loading}
+      mask={getMask({ mask: properties.mask, maskClosable: properties.maskClosable })}
+      title={renderHtml({ html: properties.title, methods })}
       open={openState}
-      width={properties.width}
-      height={properties.height}
+      {...sizeProps}
       zIndex={properties.zIndex}
-      placement={properties.placement}
+      placement={properties.placement ?? undefined}
       keyboard={properties.keyboard}
       onClose={
         onClose ||
@@ -112,22 +171,26 @@ const DrawerBlock = ({
       }
       afterOpenChange={(drawerOpen) => handleAfterOpenChange({ drawerOpen, methods, rename })}
       className={classNames.element}
+      rootClassName={journeyTargetSelectors.portalClass(blockId)}
       classNames={{
         header: classNames.header,
+        title: classNames.title,
         body: classNames.body,
         footer: classNames.footer,
         mask: classNames.mask,
         wrapper: classNames.wrapper,
-        content: classNames.content,
+        // antd v6 renamed the Drawer content area from `content` to `section`.
+        section: classNames.content,
       }}
       style={styles.element}
       styles={{
-        header: styles.header,
-        body: styles.body,
+        header: { padding: headerPadding[properties.padding], ...styles.header },
+        title: styles.title,
+        body: { padding: bodyPadding[properties.padding], ...styles.body },
         footer: styles.footer,
         mask: styles.mask,
         wrapper: styles.wrapper,
-        content: styles.content,
+        section: styles.content,
       }}
     >
       {content.content && content.content()}

@@ -72,6 +72,13 @@ function validateBlock(block, { pageId }, parentConfigKey) {
       { configKey }
     );
   }
+  // Page path is extracted before block building in the same way.
+  if (!type.isNone(block.path)) {
+    throw new ConfigError(
+      `Path is only allowed on the page, not on block "${block.id}" on page "${pageId}".`,
+      { configKey }
+    );
+  }
 }
 
 export default validateBlock;

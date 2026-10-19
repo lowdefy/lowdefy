@@ -65,6 +65,12 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
     title: Borderless
     variant: borderless
     placeholder: Borderless variant
+- id: variant_underlined
+  type: TextInput
+  properties:
+    title: Underlined
+    variant: underlined
+    placeholder: Underlined variant
 ```
 
 ```yaml
@@ -79,28 +85,28 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
   properties:
     title: Email
     type: email
-    prefixIcon: AiOutlineMail
+    prefixIcon: mail
     placeholder: user@example.com
 - id: type_password
   type: TextInput
   properties:
     title: Password
     type: password
-    prefixIcon: AiOutlineLock
+    prefixIcon: lock
     placeholder: Enter password
 - id: type_tel
   type: TextInput
   properties:
     title: Telephone
     type: tel
-    prefixIcon: AiOutlinePhone
+    prefixIcon: phone
     placeholder: +1 (555) 123-4567
 - id: type_url
   type: TextInput
   properties:
     title: URL
     type: url
-    prefixIcon: AiOutlineGlobal
+    prefixIcon: globe
     placeholder: https://example.com
 ```
 
@@ -128,13 +134,13 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
   type: TextInput
   properties:
     title: Prefix Icon
-    prefixIcon: AiOutlineUser
+    prefixIcon: user
     placeholder: Enter username
 - id: adorn_suffix_icon
   type: TextInput
   properties:
     title: Suffix Icon
-    suffixIcon: AiOutlineInfoCircle
+    suffixIcon: info
     placeholder: Enter value
 ```
 
@@ -144,21 +150,21 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
   properties:
     title: Custom Color Icon
     prefixIcon:
-      name: AiOutlineUser
+      name: user
       color: "#1677ff"
     placeholder: Blue user icon
 - id: icon_both_custom
   type: TextInput
   properties:
     title: Both Icons
-    prefixIcon: AiOutlineLink
-    suffixIcon: AiOutlineArrowRight
+    prefixIcon: link
+    suffixIcon: arrow-right
     placeholder: Enter link
 - id: icon_mixed
   type: TextInput
   properties:
     title: Icon Prefix + Text Suffix
-    prefixIcon: AiOutlineGlobal
+    prefixIcon: globe
     suffix: .com
     placeholder: domain
 ```
@@ -180,7 +186,7 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
   properties:
     title: Allow Clear + Prefix Icon
     allowClear: true
-    prefixIcon: AiOutlineUser
+    prefixIcon: user
   events:
     onMount:
       - id: set_default
@@ -308,7 +314,7 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
   properties:
     title: Disabled (With Prefix)
     disabled: true
-    prefixIcon: AiOutlineUser
+    prefixIcon: user
   events:
     onMount:
       - id: set_default
@@ -349,7 +355,7 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
     title: Fully Customized
     placeholder: Orange theme via style
     prefixIcon:
-      name: AiOutlineStar
+      name: star
       color: "#fa8c16"
 ```
 
@@ -366,7 +372,7 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
   properties:
     title: Green Theme
     placeholder: Custom green colors
-    prefixIcon: AiOutlineCheck
+    prefixIcon: check
     theme:
       colorPrimary: "#52c41a"
       colorBorder: "#b7eb8f"
@@ -379,7 +385,7 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
   properties:
     title: Purple Theme
     placeholder: Custom purple colors
-    prefixIcon: AiOutlineStar
+    prefixIcon: star
     theme:
       colorPrimary: "#722ed1"
       colorBorder: "#d3adf7"
@@ -405,7 +411,7 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
   required: true
   properties:
     title: Full Name
-    prefixIcon: AiOutlineUser
+    prefixIcon: user
     placeholder: John Doe
     label:
       colon: false
@@ -415,7 +421,7 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
   properties:
     title: Email Address
     type: email
-    prefixIcon: AiOutlineMail
+    prefixIcon: mail
     placeholder: john@example.com
     label:
       colon: false
@@ -426,7 +432,7 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
   properties:
     title: Password
     type: password
-    prefixIcon: AiOutlineLock
+    prefixIcon: lock
     placeholder: At least 8 characters
     showCount: true
     maxLength: 64
@@ -478,7 +484,7 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
         title: Create Account
         color: primary
         variant: solid
-        icon: AiOutlineArrowRight
+        icon: arrow-right
       events:
         onClick:
           - id: submit_validate
@@ -499,7 +505,7 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 - id: search_bar
   type: TextInput
   properties:
-    prefixIcon: AiOutlineSearch
+    prefixIcon: search
     allowClear: true
     placeholder: Search products, categories, or brands...
     size: large
@@ -552,37 +558,68 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `allowClear` | boolean | `false` | Allow the user to clear their input. |
-| `type` | string | `"text"` | The type of input, (see MDN). Enum: `text`, `number`, `password`, `tel`, `email`, `url`. |
+| `type` | string | `"text"` | The type of input, (see [MDN](https://developer.mozilla.org/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types)). Enum: `text`, `number`, `password`, `tel`, `email`, `url`. |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
 | `bordered` | boolean | `true` | Whether or not the text input has a border style. |
 | `disabled` | boolean | `false` | Disable the block if true. |
 | `maxLength` | integer | - | The max number of input characters. |
 | `placeholder` | string | - | Placeholder text inside the block before user types input. |
-| `prefix` | string | - | Prefix text for the block, priority over $prefix_con. |
-| `prefixIcon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon to prefix the text input. |
+| `prefix` | string | - | Prefix text for the block, priority over prefixIcon. |
+| `prefixIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to prefix the text input. |
+| `prefixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `prefixIcon.color` | string | - | Icon color. |
+| `prefixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `prefixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `prefixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `prefixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `prefixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `prefixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `prefixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `label` | object | - | Label properties. |
+| `label.xs` | object | - | Label width on extra small screens (below 576px) when the label is not inline. |
+| `label.xs.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.sm` | object | - | Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set. |
+| `label.sm.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.md` | object | - | Label width on medium screens (768px and up) when the label is not inline. Overrides `span`. |
+| `label.md.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.lg` | object | - | Label width on large screens (992px and up) when the label is not inline. |
+| `label.lg.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xl` | object | - | Label width on extra large screens (1200px and up) when the label is not inline. |
+| `label.xl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xxl` | object | - | Label width on extra extra large screens (1600px and up) when the label is not inline. |
+| `label.xxl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |
 | `label.extra` | string | - | Extra text to display beneath the content - supports html. |
 | `label.title` | string | - | Label title - supports html. |
 | `label.tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
-| `label.tooltip.icon` | string | `"AiOutlineQuestionCircle"` | Name of the icon to show beside the label. |
+| `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
-| `label.span` | number | - | Label inline span. |
+| `label.span` | number | - | Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns. |
 | `label.disabled` | boolean | `false` | Hide input label. |
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
+| `label.wrap` | boolean | `false` | Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap. |
 | `replaceInput` | object | - | Regex used to sanitize input. |
 | `replaceInput.pattern` | string | - | The regular expression pattern to use to sanitize input. |
 | `replaceInput.flags` | string | - | The regex flags to use. The default value is 'gm'. |
 | `replaceInput.replacement` | string | - | The string used to replace the input that matches the pattern. The default value is ''. |
 | `size` | string | `"middle"` | Size of the block. Enum: `small`, `middle`, `large`. |
-| `showCount` | boolean | `false` | Show text character count |
-| `suffix` | string | - | Suffix text for the block, priority over suffixIcon. |
-| `suffixIcon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon to suffix the text input. |
+| `showCount` | boolean | `false` | Show text character count. |
+| `suffix` | string | - | Suffix text for the block, shown before suffixIcon. |
+| `suffixIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to suffix the text input. |
+| `suffixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `suffixIcon.color` | string | - | Icon color. |
+| `suffixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `suffixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `suffixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `suffixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `suffixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `suffixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `suffixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
-| `variant` | string | - | Input visual variant. When set, takes precedence over bordered. Enum: `outlined`, `filled`, `borderless`. |
+| `variant` | string | - | Input visual variant. The deprecated bordered: false takes precedence and renders the input as 'borderless'. Enum: `outlined`, `filled`, `borderless`, `underlined`. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design input tokens](https://ant.design/components/input#design-token). |
 | `theme.activeBorderColor` | string | - | Border color when the input is focused. |
 | `theme.activeShadow` | string | - | Box shadow when the input is focused. |
@@ -609,6 +646,9 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 | `theme.hoverBorderColor` | string | - | Border color when the input is hovered. |
 | `theme.hoverBg` | string | - | Background color when the input is hovered. |
 | `theme.activeBg` | string | - | Background color when the input is focused. |
+| `theme.inputFontSize` | number | `14` | Font size of the input text. |
+| `theme.inputFontSizeLG` | number | `16` | Font size of the input text for large inputs. |
+| `theme.inputFontSizeSM` | number | `14` | Font size of the input text for small inputs. |
 | `theme.lineWidth` | number | `1` | Border width. |
 | `theme.paddingBlock` | number | `4` | Vertical padding. |
 | `theme.paddingBlockLG` | number | `7` | Vertical padding for large inputs. |
@@ -622,6 +662,7 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 | --- | --- | --- |
 | `onBlur` | \- | Trigger action event occurs when text input loses focus. |
 | `onChange` | `{ value }` | Trigger action when text input is changed. |
+| `onClear` | \- | Trigger action when the clear button is clicked. |
 | `onFocus` | \- | Trigger action when text input gets focus. |
 | `onPressEnter` | \- | Trigger action when enter is pressed while text input is focused. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |

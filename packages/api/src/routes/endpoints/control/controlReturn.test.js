@@ -440,3 +440,18 @@ test('deep nested return', async () => {
     [{ event: 'debug_control_return', response: { message: 'returned by first if' } }],
   ]);
 });
+
+test('return with :content_type carries the content type with the string', async () => {
+  const routine = { ':return': 'token', ':content_type': 'text/plain' };
+  const { res } = await runTest({ routine });
+  expect(res).toEqual({ status: 'return', response: 'token', contentType: 'text/plain' });
+});
+
+test('return with :content_type fails when the value is not a string', async () => {
+  const routine = { ':return': { a: 1 }, ':content_type': 'text/plain' };
+  const { res } = await runTest({ routine });
+  expect(res.status).toBe('error');
+  expect(res.error.message).toBe(
+    ':return with :content_type text/plain must evaluate to a string.'
+  );
+});

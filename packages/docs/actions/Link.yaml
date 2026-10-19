@@ -28,16 +28,29 @@ _ref:
         input?: object,
         newTab?:boolean,
         pageId?: string,
+        pathParams?: object,
         replace?: boolean,
         scroll?: boolean,
         url?: string,
-        urlQuery? object
+        urlQuery?: object
       }): void
       ```
     description: |
       The `Link` action is used to link a user to another page. An input can be passed to the next page using either the
       `urlQuery`, which is visible to the user, but persists if the browser is refreshed, or by using the `input` object, which is not
       visible to the user.
+
+      To link to a page with a [`path`](/page-paths), give the values of its placeholders in `pathParams`. A page with
+      `path: tickets/{space}/{ticket_id}`, linked to with `pageId: ticket` and `pathParams: { space: support, ticket_id: '1234' }`,
+      opens at `/tickets/support/1234`. Every placeholder needs a value: a missing, `null` or empty value, or a value of `.`
+      or `..`, fails the link with an error naming the page and the placeholder. For a `Link` action with a
+      literal `pageId`, the build checks that `pathParams` names every placeholder.
+
+      Links set as block properties, such as the [`Anchor`](/Anchor) block's `pageId` and table or grid cell links, can
+      only be built for pages the user may open. On a public page, such a link to a protected page with a `path` fails
+      while the user is logged out. Use a `Link` action, or an HTML link with `data-page-id` (see
+      [HTML attributes](/html-attributes#links)), there instead: the build collects these links, so a logged-out
+      user is sent to sign in and then on to the page.
     params: |
       ###### string
       The pageId of a page in the app to link to.
@@ -49,6 +62,7 @@ _ref:
       - `input: object`: Object to set as the input for the linked page.
       - `newTab: boolean`: Open the link in a new tab.
       - `pageId: string`: The pageId of a page in the app to link to.
+      - `pathParams: object`: Values for the placeholders in the linked page's [`path`](/page-paths), by placeholder name. Values are converted to strings.
       - `replace: boolean`: Replace the current browser history entry instead of pushing a new one, so the browser back button skips this navigation. Defaults to `false`.
       - `scroll: boolean`: Scroll to the top of the page after navigating. Set to `false` to keep the current scroll position, for example when a same-page link only updates the `urlQuery`. Defaults to `true`.
       - `url: string`: Link to an external url.
@@ -112,6 +126,21 @@ _ref:
           urlQuery:
             id:
               _state: id
+      ```
+
+      ###### Link to a page with a path:
+      For a page with `path: tickets/{space}/{ticket_id}`:
+      ```yaml
+      - id: link_path_params
+        type: Link
+        params:
+          pageId: ticket
+          pathParams:
+            space: support
+            ticket_id:
+              _state: ticket_id
+          urlQuery:
+            tab: comments
       ```
 
       ###### Set the input of the page that is linked to:

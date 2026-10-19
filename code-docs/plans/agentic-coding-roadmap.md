@@ -6,7 +6,7 @@ How Lowdefy becomes exceptional to use with AI coding agents (Claude Code, Curso
 
 - Harness/tooling quality swings agent success rates 10–20 points on identical models (Artificial Analysis Coding Agent Index, 2026).
 - Vercel's retro on Next.js agent tooling: the core failure mode was "agents can't see the build or the browser" — the fix that mattered was exposing live errors/state as MCP tools, not chat UIs.
-- Laravel Boost's differentiator: docs scoped to the *installed* package versions. Lowdefy's `/lowdefy-docs` already does this structurally (it serves what's installed in *this* project, local plugins included).
+- Laravel Boost's differentiator: docs scoped to the _installed_ package versions. Lowdefy's `/lowdefy-docs` already does this structurally (it serves what's installed in _this_ project, local plugins included).
 
 ## Shipped
 
@@ -20,11 +20,11 @@ Agent edits YAML → asks "what's broken" → gets structured errors with file l
 - `lowdefy_build_status` MCP tool + `GET /lowdefy-docs/build-status`: current build errors/warnings + recent browser runtime errors (client errors were previously logged to terminal and dropped; now kept in a ring buffer in the Hono process).
 - `lowdefy_get_page_config` + `GET /lowdefy-docs/page-config/:pageId`: fully built page config, or the structured JIT build errors for that page.
 - `lowdefy_find_config` + `GET /lowdefy-docs/find/:id`: "where is X defined" — pages via `pageRegistry.json` `refPath`; blocks/requests/etc. via `keyMap.json` scan + `resolveConfigLocation` (`@lowdefy/errors`). Dev caveat: page content keys exist only after the page is JIT-built — pass `pageId` to trigger it.
-- MCP `instructions` + overview teach the loop: *discover → write → build_status → fix → get_page_config*.
+- MCP `instructions` + overview teach the loop: _discover → write → build_status → fix → get_page_config_.
 
 ## Track 2 — Scaffolding + agent-ready projects
 
-- `lowdefy agent-setup` CLI command: writes `.mcp.json` (→ `/lowdefy-docs/mcp`), `.claude/skills/lowdefy-config/SKILL.md`, and `AGENTS.md` (merge-safe if files exist). One command to make any project agent-ready.
+- `lowdefy agent-setup` CLI command: writes `.mcp.json` (→ `lowdefy mcp`, stdio), `.claude/skills/lowdefy-config/SKILL.md`, and `AGENTS.md` (merge-safe if files exist). One command to make any project agent-ready.
 - `lowdefy_scaffold_page` MCP tool: writes a canonical page yaml into the config dir (dev server owns the project; the watcher rebuild gives instant Track-1 feedback). Scaffolding-via-MCP is an open gap industry-wide (Angular has an open issue for it) — a place to lead.
 - Later: scaffold connections/requests; auto-generate/refresh `AGENTS.md` from the running dev server (Next.js 16.3 pattern) so it never drifts from installed versions.
 
@@ -38,6 +38,13 @@ Agent edits YAML → asks "what's broken" → gets structured errors with file l
 - docs.lowdefy.com serves every docs page as raw markdown at `/md/<section>/<slug>.md`, plus `/llms.txt` (llmstxt.org index) and `/llms-full.txt`. Generated in the docs build (`templates/generateLlmsTxt.js`) from `@lowdefy/docs-content`.
 - Installable skill bundle at repo root (`skills/lowdefy-config/`) — version-matched with the framework (vercel-labs/skills convention).
 - Later: framework-specific agent evals (measure which tools actually lift agent success), following Vercel's lead.
+
+## Track 5 — Agents own the dev server
+
+- `lowdefy mcp` (stdio) + the per-user `lowdefy hub`: one checked-in MCP entry for every worktree; tools listed before any server runs; each call routed to the calling app/worktree's dev server, started on demand with the app's own dev script; agents never run `lowdefy dev`, pick ports or kill processes. See `code-docs/architecture/agent-dev-hub.md`.
+- `.lowdefy/instance.json` replaces the manager lock: one record per running dev server (owner, port, readiness) that every tool reads; explicit ports are strict.
+- `/lowdefy-docs*` and `/api/dev-inspect*` refuse cross-site browser requests.
+- Later: developer login and content-free MCP usage metrics through the hub (design P3).
 
 ## Later / ideas
 

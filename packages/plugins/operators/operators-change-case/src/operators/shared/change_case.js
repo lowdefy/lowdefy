@@ -117,5 +117,6 @@ function change_case({ params, location, methodName }) {
 }
 
 change_case.dynamic = false;
+change_case.tracking = { kind: 'pure' };
 
 export default change_case;

@@ -14,43 +14,63 @@
   limitations under the License.
 */
 
-function agentsMd({ port, devCommand, appPath }) {
-  const appDescription =
-    appPath === ''
-      ? 'This project is a [Lowdefy](https://lowdefy.com) app'
-      : `This project contains a [Lowdefy](https://lowdefy.com) app in \`${appPath}/\``;
+import agentsMdSkills from './agentsMdSkills.js';
+import devServerRules from './devServerRules.js';
+import TESTING_RULES from './testingRules.js';
+
+function agentsMd({ skills }) {
   return `## Lowdefy
 
-${appDescription}: a web app defined in YAML config files
+This project contains a [Lowdefy](https://lowdefy.com) app, or several: a web app defined in YAML config files
 rather than hand-written code. Pages compose **blocks** (UI components), **operators** (logic
 like \`_if\`, \`_get\`, \`_state\`), **actions** (event handlers), and **connections/requests**
 (databases and APIs).
 
-### Running the app
+### The dev server
 
-Start the development server with:
-
-\`\`\`bash
-${devCommand}
-\`\`\`
-
-This serves the app at \`http://localhost:${port}\` and hot-reloads on config changes.
+${devServerRules()}
 
 ### Looking up types, schemas, and docs
 
-While the dev server is running, it serves documentation for every block, operator, action,
-connection, and request type installed in this project (including local plugins) at
-\`http://localhost:${port}/lowdefy-docs\`, and as MCP tools via the \`lowdefy-docs\` MCP server
-(see \`.mcp.json\`).
+The dev server serves documentation for every block, operator, action, connection, and request type
+installed in this project (including local plugins).
 
 **Never guess type names or properties.** Before writing or editing Lowdefy config:
 
-1. List available types: call \`lowdefy_list_types\` (or \`GET /lowdefy-docs/{kind}\`, e.g.
-   \`/lowdefy-docs/blocks\`) — this includes this project's local plugins.
-2. Get the exact schema: call \`lowdefy_get_schema\` (or \`GET /lowdefy-docs/schema/{kind}/{type}\`).
-3. See real usage: call \`lowdefy_get_examples\` (or \`GET /lowdefy-docs/examples/{type}\`).
-4. Read concept docs or search: call \`lowdefy_get_doc\` or \`lowdefy_search_docs\` (or
-   \`GET /lowdefy-docs/content/{slug}\`, \`GET /lowdefy-docs/search?q=...\`).
+1. List available types: call \`lowdefy_list_types\` — this includes this project's local plugins.
+2. Get the exact schema: call \`lowdefy_get_schema\`.
+3. See real usage: call \`lowdefy_get_examples\`.
+4. Read concept docs or search: call \`lowdefy_get_doc\` or \`lowdefy_search_docs\`.
+
+### Icons and interactive HTML
+
+- Icons: use a semantic name (\`icon: edit\`, \`delete\`, \`warning\`). Otherwise use a Lucide name in
+  PascalCase (\`Receipt\`), found with \`lowdefy_search_icons\`. Never invent a name, and never use emoji.
+  Do not write old react-icons names (\`AiOutlineUser\`). Add app-specific semantic names under
+  \`theme.icons.aliases\` in lowdefy.yaml.
+- In any HTML string (Html, ClickableHtml, DangerousHtml, and html properties like Tooltip titles)
+  write \`<i data-icon="edit"></i>\` — never paste inline SVG. Add \`data-tooltip="Text"\` for hover
+  help and \`data-popover="id"\` with a hidden \`data-popover-content="id"\` element for a popover.
+- For clicks inside HTML use ClickableHtml: \`data-event="onEdit"\` fires that block event, with the
+  element's other \`data-*\` attributes as the event object, when the block lists it in
+  \`properties.dataEvents\` (unlisted events do nothing). Escape data in HTML built from requests or
+  users: \`_nunjucks\` escapes \`{{ values }}\`; \`_string.concat\` and \`_js\` do not.
+- Links in HTML: \`<a data-page-id="contacts" data-url-query="_id=42">\` — never a hard-coded
+  \`href="/contacts?..."\` (it reloads the app and ignores basePath). \`data-new-tab\` instead of
+  \`target="_blank"\` (sanitising strips \`target\`).
+- Statuses in HTML: \`<span data-tag="success">Approved</span>\` or \`<span data-status="warning">…</span>\`
+  — never inline-styled pills or hex status colours.
+- Dates, numbers, people and copyable values in HTML: \`<time datetime="{{ iso }}" data-time="relative">\`
+  (or \`date\`, \`datetime\`, \`time\`), \`data-format="currency" data-currency="USD"\` (or \`number\`,
+  \`percent\`, \`compact\`, \`bytes\`) on the raw number, \`data-avatar="{{ name }}"\` (never an avatar image
+  service), and \`data-copy\` for a copy button.
+- \`data-truncate="2"\` clamps block text (full text in a tooltip when cut off), \`data-tone="secondary"\`
+  mutes text (never inline grey hex colours), and in ClickableHtml a destructive event is listed as
+  \`{ name: onDelete, confirm: "Delete this row?" }\` in \`dataEvents\` so every click asks first. See the \`concepts/html-attributes\` doc.
+
+### Testing a change
+
+${TESTING_RULES}
 
 ### Visual feedback
 
@@ -59,7 +79,8 @@ draw on, and comment on the running app; the annotation helper copies an agent-r
 block to their clipboard, which they paste into the agent session. Pasted blocks start with
 "Feedback:" and include the config file and line each annotation refers to — treat them as
 precise UI feedback.
-`;
+
+${agentsMdSkills({ skills })}`;
 }
 
 export default agentsMd;

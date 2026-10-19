@@ -1,6 +1,28 @@
 {
   "versions": [
     {
+      "version": "7.0.0",
+      "from": ">=6.0.0 <7.0.0",
+      "description": "Lucide icons replace react-icons; ClickableHtml lists its data events; nested events no longer bubble",
+      "codemods": [
+        {
+          "id": "react-icons-to-lucide",
+          "description": "Rewrite react-icons and stale Ant Design icon names to semantic or Lucide names using the v7-0-0/react-icons-to-lucide.json table, and report glyph judgement calls, unmapped names and runtime-only icon sources (the @lowdefy/icons-react-icons compatibility set covers stored names and brand icons).",
+          "path": "v7-0-0/01-react-icons-to-lucide.md"
+        },
+        {
+          "id": "clickable-html-data-events",
+          "description": "List the events each ClickableHtml block's HTML fires in its new dataEvents property (from data-event attributes and the block's events), mark data-changing events that use data-confirm as confirm: true, and report HTML built from data that inserts values unescaped.",
+          "path": "v7-0-0/02-clickable-html-data-events.md"
+        },
+        {
+          "id": "nested-event-bubbling",
+          "description": "Add bubble: true only to nested events whose outer event reads a value the inner event sets, copy AgGrid onRowClick state setup into cell control events that relied on it, and report the nested events left with the new innermost-only behaviour.",
+          "path": "v7-0-0/03-nested-event-bubbling.md"
+        }
+      ]
+    },
+    {
       "version": "6.0.0",
       "from": ">=5.0.0 <6.0.0",
       "description": "Vite + Hono server migration (plugin ESM exports, Auth.js imports, provider-neutral file blocks, request timeout, plugin type overrides)",

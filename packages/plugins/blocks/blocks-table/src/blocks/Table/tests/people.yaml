@@ -1,0 +1,39 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Rows shared by the Table e2e tables.
+- id: 1
+  name: Charlie
+  team: Blue
+  age: 35
+  city: Cape Town
+- id: 2
+  name: alice
+  team: Red
+  age: 30
+  city: Berlin
+- id: 3
+  name: Bob
+  team: Blue
+  age: 25
+  city: Austin
+- id: 4
+  name: Dana
+  team: Red
+  age: 41
+  city: Durban
+- id: 5
+  name: Eve
+  team: Blue
+  age: 30

@@ -26,12 +26,13 @@ import { requestFromTab } from './tabChannel.js';
 // (see tabChannel.js) — `{ value, errors }` on success, or an `{ error }`
 // object if no tab is connected, the request timed out, or Inspector.jsx
 // itself failed to evaluate the expression.
-async function evalOperatorInTab({ pageId, expression }) {
+async function evalOperatorInTab({ pageId, pathParams, expression }) {
   if (type.isNone(expression)) {
     throw new Error('evalOperatorInTab requires an "expression".');
   }
   const response = await requestFromTab({
     pageId,
+    pathParams,
     event: 'eval-request',
     payload: { expression },
   });

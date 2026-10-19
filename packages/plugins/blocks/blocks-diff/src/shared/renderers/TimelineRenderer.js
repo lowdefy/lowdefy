@@ -14,15 +14,11 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { Space, Timeline, Typography } from 'antd';
-import {
-  EditOutlined,
-  MinusCircleOutlined,
-  PauseCircleOutlined,
-  PlusCircleOutlined,
-} from '@ant-design/icons';
 
+import changeTypeIcons from '../changeTypeIcons.js';
+import IconContext from '../IconContext.js';
 import ValueCell from '../ValueCell.js';
 import { CHANGE_TYPES } from '../constants.js';
 
@@ -35,13 +31,6 @@ const COLOR_MAP = {
   [CHANGE_TYPES.UNCHANGED]: 'gray',
 };
 
-const ICON_MAP = {
-  [CHANGE_TYPES.CREATE]: <PlusCircleOutlined />,
-  [CHANGE_TYPES.REMOVE]: <MinusCircleOutlined />,
-  [CHANGE_TYPES.CHANGE]: <EditOutlined />,
-  [CHANGE_TYPES.UNCHANGED]: <PauseCircleOutlined />,
-};
-
 function TimelineRenderer({
   model,
   collapseNested = true,
@@ -49,6 +38,7 @@ function TimelineRenderer({
   classNames = {},
   styles = {},
 }) {
+  const Icon = useContext(IconContext);
   const flattened = model.groups.flatMap((group) => group.changes);
   const filtered = flattened.filter(
     (change) => showUnchanged === true || change.type !== CHANGE_TYPES.UNCHANGED
@@ -59,7 +49,7 @@ function TimelineRenderer({
   const items = filtered.map((change, index) => ({
     key: change.pathStr || `change-${index}`,
     color: COLOR_MAP[change.type],
-    dot: ICON_MAP[change.type],
+    dot: <Icon properties={{ name: changeTypeIcons[change.type], title: '' }} />,
     children: (
       <Space direction="vertical" size={2}>
         <Text strong>{change.breadcrumb}</Text>

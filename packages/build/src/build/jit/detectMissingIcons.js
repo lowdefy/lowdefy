@@ -14,27 +14,23 @@
   limitations under the License.
 */
 
-import iconPackages from '../buildImports/iconPackages.js';
+import collectIconNames from '../buildImports/collectIconNames.js';
+import resolveIconName from '../icons/resolveIconName.js';
 
-function detectMissingIcons({ page, iconImports }) {
-  const pageJson = JSON.stringify(page);
-  const newIcons = [];
-
-  for (const [iconPackage, regex] of Object.entries(iconPackages)) {
-    const existing = iconImports.find((entry) => entry.package === iconPackage);
-    const existingSet = new Set(existing?.icons ?? []);
-    const seen = new Set();
-
-    for (const match of pageJson.matchAll(regex)) {
-      const iconName = match[1];
-      if (!existingSet.has(iconName) && !seen.has(iconName)) {
-        seen.add(iconName);
-        newIcons.push({ icon: iconName, package: iconPackage });
-      }
+// Returns the icon names a JIT-built page uses that the dev client bundle
+// lacks and no earlier page delivered. The page is scanned before _js
+// extraction, so names in _js code are found as they are in the full build.
+function detectMissingIcons({ page, bundledIcons, dynamicIconData, icons }) {
+  const missing = [];
+  collectIconNames({ text: JSON.stringify(page) }).forEach((name) => {
+    if (bundledIcons.has(name) || Object.hasOwn(dynamicIconData, name)) {
+      return;
     }
-  }
-
-  return newIcons;
+    if (resolveIconName({ name, ...icons }) !== null) {
+      missing.push(name);
+    }
+  });
+  return missing.sort();
 }
 
 export default detectMissingIcons;

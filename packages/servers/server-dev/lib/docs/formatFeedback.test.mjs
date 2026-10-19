@@ -202,3 +202,51 @@ test('formatFeedback multiple batches are joined and each keeps its own pageId i
   expect(text).toContain('lowdefy_inspect_state({ pageId: "login" })');
   expect(text).toContain('lowdefy_inspect_state({ pageId: "home" })');
 });
+
+test('formatFeedback names the page instance by its pathParams', () => {
+  const text = formatFeedback({
+    items: [
+      {
+        pageId: 'ticket',
+        pathParams: { space: 's', ticket_id: '1' },
+        url: '/tickets/s/1',
+        viewport: { width: 100, height: 100 },
+        annotations: [],
+      },
+    ],
+  });
+  expect(text).toContain(
+    'Feedback: 0 annotation(s) on page "ticket" with pathParams {"space":"s","ticket_id":"1"} (/tickets/s/1)'
+  );
+  expect(text).toContain(
+    'lowdefy_inspect_state({ pageId: "ticket", pathParams: {"space":"s","ticket_id":"1"} })'
+  );
+});
+
+test('formatFeedback leaves empty pathParams out', () => {
+  const text = formatFeedback({
+    items: [
+      {
+        pageId: 'home',
+        pathParams: {},
+        url: '/home',
+        viewport: { width: 100, height: 100 },
+        annotations: [],
+      },
+    ],
+  });
+  expect(text).toContain('Feedback: 0 annotation(s) on page "home" (/home)');
+  expect(text).toContain('lowdefy_inspect_state({ pageId: "home" })');
+});
+
+test('enrichFeedback keeps the batch pathParams', async () => {
+  const enriched = await enrichFeedback({
+    batch: {
+      pageId: 'ticket',
+      pathParams: { space: 's', ticket_id: '1' },
+      urlQuery: '',
+      annotations: [],
+    },
+  });
+  expect(enriched.pathParams).toEqual({ space: 's', ticket_id: '1' });
+});

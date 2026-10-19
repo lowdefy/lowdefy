@@ -27,6 +27,9 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
     "./connections": "./dist/connections.js",
     "./agents": "./dist/agents.js",
@@ -42,7 +45,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@ai-sdk/openai": "3.0.63",
+    "@ai-sdk/openai": "4.0.78",
     "@lowdefy/ai-utils": "6.1.0"
   },
   "devDependencies": {

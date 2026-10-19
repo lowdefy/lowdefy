@@ -16,7 +16,7 @@
 
 export default {
   category: 'display',
-  icons: [],
+  icons: ['arrow-right', 'chevron-right'],
   valueType: null,
   cssKeys: {
     element: 'The DiffSideBySide wrapper element.',

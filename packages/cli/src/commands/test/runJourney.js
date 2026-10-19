@@ -1,0 +1,155 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import axios from 'axios';
+import { type } from '@lowdefy/helpers';
+import { findPlaceholderStep } from '@lowdefy/node-utils';
+
+import recordingJourneyName from './recordingJourneyName.js';
+import validateJourney from './validateJourney.js';
+
+function describeHttpError(error) {
+  if (type.isNone(error.response)) {
+    return `Could not reach the dev server: ${error.message}`;
+  }
+  const body = type.isString(error.response.data)
+    ? error.response.data
+    : JSON.stringify(error.response.data);
+  return `POST /lowdefy-docs/journey responded ${error.response.status}: ${body}`;
+}
+
+// Runs one discovered journey against the dev server's REST journey route and
+// normalises every outcome — schema failure, transport failure, non-2xx, a
+// failed step — into the same result shape the reporter prints. `recordRun`
+// (a trace id) asks the dev server to record this journey into that test
+// run's trace; an older server ignores the field and records nothing. A harden
+// run passes the config `mutant` to apply to this run's browsers.
+async function runJourney({ context, item, url, recordRun, mutant }) {
+  const { filePath, journey } = item;
+  const name = journey?.name ?? filePath;
+  if (!type.isNone(item.error)) {
+    return {
+      name,
+      filePath,
+      passed: false,
+      refused: true,
+      stepCount: 0,
+      durationMs: 0,
+      message: item.error,
+    };
+  }
+  // A persona run is named `<name> [<user>]`; the name limit applies to the
+  // name as authored, which expandPersonas validated, never to the run name.
+  const validation = validateJourney({
+    journey: type.isNone(item.personaOf) ? journey : { ...journey, name: item.personaOf.name },
+  });
+  if (!validation.valid) {
+    return {
+      name,
+      filePath,
+      passed: false,
+      refused: true,
+      stepCount: 0,
+      durationMs: 0,
+      message: `Invalid journey file: ${validation.message}`,
+    };
+  }
+  const stepCount = journey.steps.length;
+  // The dev server refuses a placeholder too; checking here reports it without
+  // the round trip.
+  const { error: placeholderError } = findPlaceholderStep({ steps: journey.steps });
+  if (!type.isUndefined(placeholderError)) {
+    return { name, filePath, passed: false, stepCount, durationMs: 0, message: placeholderError };
+  }
+  const start = Date.now();
+  let response;
+  try {
+    const body = {
+      pageId: journey.pageId,
+      pathParams: journey.pathParams,
+      data: journey.data,
+      steps: journey.steps,
+      user: journey.user,
+      urlQuery: journey.urlQuery,
+      timeout: journey.timeout,
+      mutant,
+    };
+    if (!type.isNone(recordRun)) {
+      body.recording = {
+        run: recordRun,
+        journey: recordingJourneyName({
+          configDirectory: context.directories.config,
+          filePath,
+          journey,
+        }),
+      };
+    }
+    response = await axios.post(`${url}/lowdefy-docs/journey`, body);
+  } catch (error) {
+    return {
+      name,
+      filePath,
+      passed: false,
+      // The route refuses a journey it cannot run (a 400) before any browser
+      // opens; every repeat would be refused the same way.
+      refused: error.response?.status === 400,
+      // The mutant was listed against another build.
+      stale: error.response?.data?.stale === true,
+      stepCount,
+      durationMs: Date.now() - start,
+      message: describeHttpError(error),
+    };
+  }
+  const durationMs = Date.now() - start;
+  const result = response.data ?? {};
+  if (!type.isNone(result.error)) {
+    return { name, filePath, passed: false, stepCount, durationMs, message: result.error };
+  }
+  // The data set the server loaded and its warnings (colliding connections, size advice).
+  const dataSet = { data: result.data, warnings: result.warnings };
+  if (result.passed === true) {
+    const passed = {
+      name,
+      filePath,
+      passed: true,
+      stepCount,
+      durationMs,
+      ...dataSet,
+      exercised: result.exercised,
+      mutant: result.mutant,
+    };
+    // Evidence is read from the file for the PASS line; it is never sent to
+    // the dev server.
+    if (!type.isNone(journey.evidence)) {
+      passed.evidence = journey.evidence;
+    }
+    return passed;
+  }
+  return {
+    name,
+    filePath,
+    passed: false,
+    stepCount,
+    durationMs,
+    ...dataSet,
+    failure: result.failure,
+    message: result.failure?.message,
+    exercised: result.exercised,
+    mutant: result.mutant,
+  };
+}
+
+export default runJourney;

@@ -119,6 +119,65 @@ blocks:
               - _state: aggridlowdefy_row_clicked
           else: ''
 
+  - id: aggridlowdefy_row_controls
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Profile
+          field: name
+          cell:
+            type: link
+            pageId: aggridlowdefy
+        - headerName: Actions
+          field: name
+          cell:
+            type: buttons
+            buttons:
+              - eventName: onEditClick
+                title: Edit
+      rowData:
+        - name: Alice
+        - name: Bob
+    events:
+      onRowClick:
+        - id: set_controls_row_click
+          type: SetState
+          params:
+            aggridlowdefy_controls_row:
+              _event: row.name
+      onEditClick:
+        - id: set_controls_edit_click
+          type: SetState
+          params:
+            aggridlowdefy_controls_edit:
+              _event: row.name
+      onCellLink:
+        - id: set_controls_link_click
+          type: SetState
+          params:
+            aggridlowdefy_controls_link:
+              _event: row.name
+
+  - id: aggridlowdefy_row_controls_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'row='
+          - _if_none:
+              - _state: aggridlowdefy_controls_row
+              - none
+          - ' edit='
+          - _if_none:
+              - _state: aggridlowdefy_controls_edit
+              - none
+          - ' link='
+          - _if_none:
+              - _state: aggridlowdefy_controls_link
+              - none
+
   - id: aggridlowdefy_oncellclick
     type: AgGridLowdefy
     properties:
@@ -444,6 +503,49 @@ blocks:
               - _state: aggridlowdefy_link_event
           else: ''
 
+  - id: aggridlowdefy_cell_path_link
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: ID
+          field: _id
+          cell:
+            type: link
+            pageId: aggrid-path-target
+            pathParams:
+              space: space
+              ticket_id: _id
+        - headerName: Assignee
+          field: name
+          cell:
+            type: avatar
+            nameField: name
+            link:
+              pageId: aggrid-path-target
+              pathParams:
+                space: space
+                ticket_id: _id
+      rowData:
+        - { _id: TSK-001, space: support, name: Alice Johnson }
+    events:
+      onCellLink:
+        - id: capture_path_link
+          type: SetState
+          params:
+            aggridlowdefy_path_link_event:
+              _string.concat:
+                - _event: link.pathParams.space
+                - /
+                - _event: link.pathParams.ticket_id
+
+  - id: aggridlowdefy_path_link_display
+    type: Span
+    properties:
+      content:
+        _if_none:
+          - _state: aggridlowdefy_path_link_event
+          - ''
+
   - id: aggridlowdefy_cell_date
     type: AgGridLowdefy
     properties:
@@ -574,6 +676,18 @@ blocks:
 
   # The buttons cell reaches components.Icon through the components prop the block
   # forwards to the shared core — an icon here proves that forwarding.
+  - id: aggridlowdefy_quick_filter
+    type: AgGridLowdefy
+    properties:
+      quickFilterValue: bob
+      columnDefs:
+        - headerName: Name
+          field: name
+      rowData:
+        - name: Alice
+        - name: Bob
+        - name: Charlie
+
   - id: aggridlowdefy_cell_buttons
     type: AgGridLowdefy
     properties:
@@ -585,7 +699,11 @@ blocks:
             buttons:
               - eventName: onEditClick
                 title: Edit
-                icon: AiOutlineEdit
+                icon: edit
+              - eventName: onOpenClick
+                title: Open
+                icon: arrow-right
+                iconPlacement: end
       rowData:
         - _id: TSK-001
     events:
@@ -665,3 +783,40 @@ blocks:
       rowData:
         - name: Alice
         - name: Bob
+
+  # ============================================
+  # CONFIG PROVIDER componentDisabled reaches the antd cells
+  # ============================================
+
+  - id: aggridlowdefy_component_disabled
+    type: ConfigProvider
+    properties:
+      componentDisabled: true
+    blocks:
+      - id: aggridlowdefy_component_disabled_grid
+        type: AgGridLowdefy
+        properties:
+          columnDefs:
+            - headerName: Name
+              field: name
+              cell:
+                type: textInput
+                eventName: onNameInput
+            - headerName: Active
+              field: active
+              cell:
+                type: switch
+                eventName: onActiveToggle
+            - headerName: Actions
+              field: name
+              cell:
+                type: buttons
+                buttons:
+                  - eventName: onEditClick
+                    title: Edit
+                  - eventName: onOpenClick
+                    title: Open
+                    disabled: false
+          rowData:
+            - name: Alice
+              active: false

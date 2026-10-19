@@ -25,7 +25,8 @@ function validateWebsocketRefs({ websocketActionRefs, websocketIds, context }) {
     if (!websocketIds.has(websocketId)) {
       context.handleWarning(
         new ConfigWarning(
-          `${actionType} action on page "${sourcePageId}" references non-existent websocket "${websocketId}".`,
+          `${actionType} action on page "${sourcePageId}" references non-existent websocket "${websocketId}". ` +
+            `Check the websocketId for typos, or add a websocket with id "${websocketId}" to the app config.`,
           { configKey: action['~k'], prodError: true, checkSlug: 'websocket-refs' }
         )
       );

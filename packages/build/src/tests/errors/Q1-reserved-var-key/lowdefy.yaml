@@ -7,12 +7,9 @@
 # Expected error:
 #   [ConfigError] _var key "constructor" is a reserved name.
 #
-# The error resolves to this file with no line number, because it matches the location
-# fields of the sibling _var ConfigError in resolveVar, which passes filePath only, and
-# readVar never sees the node. A line number IS available at this stage (addLineNumbers
-# stamps `~l` during ref parsing) — using it would mean changing that sibling's convention,
-# which is a separate concern. `~k` config keys are genuinely unavailable here: addKeys
-# runs after buildRefs.
+# The error points to line 23, the "content" key that holds the _var. `~k` config
+# keys are not available here (addKeys runs after buildRefs), so the error locates by
+# the file being walked and the `~l` line addLineNumbers stamped at parse.
 
 lowdefy: local
 

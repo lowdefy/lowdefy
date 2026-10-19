@@ -14,21 +14,35 @@
   limitations under the License.
 */
 
+import { parseRequestBody } from '@lowdefy/api';
+
 import snapshotState from '../../../lib/docs/snapshotState.js';
 
 // Lets an agent (or a developer) snapshot the running app's page state and
 // recorded request/api responses into a checkpoint folder under .lowdefy,
 // for later replay via POST /lowdefy-docs/state/load.
 async function docsSnapshotStateHandler(c) {
-  const { pageId, name, notes, source, overwrite } = await c.req.json();
+  const { pageId, pathParams, name, notes, source, overwrite } = parseRequestBody({
+    text: await c.req.text(),
+  });
   // Derived from the incoming request rather than a config value — this is
   // the origin an agent can actually reach the dev server on (host/port it
   // just connected to), regardless of how the server is bound.
   const origin = new URL(c.req.url).origin;
 
-  const result = await snapshotState({ origin, pageId, name, notes, source, overwrite });
+  const result = await snapshotState({
+    origin,
+    pageId,
+    pathParams,
+    name,
+    notes,
+    source,
+    overwrite,
+  });
   if (result.error) {
-    return c.json({ error: result.error }, 502);
+    // pathParams the page cannot be opened with are the caller's to fix, not a
+    // failed render.
+    return c.json({ error: result.error }, result.invalidInput ? 400 : 502);
   }
   return c.json(result);
 }

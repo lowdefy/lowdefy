@@ -120,6 +120,40 @@
             title: volcano
             color: volcano
 
+- title: Variants
+  blocks:
+    - id: variant_filled
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Filled
+        color: blue
+    - id: variant_outlined
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Outlined
+        color: blue
+        variant: outlined
+    - id: variant_solid
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Solid
+        color: blue
+        variant: solid
+    - id: variant_solid_success
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Paid
+        color: success
+        variant: solid
+
 - title: Custom Hex Colors
   blocks:
     - id: hex_coral
@@ -159,7 +193,7 @@
         flex: 0 0 auto
       properties:
         title: Approved
-        icon: AiOutlineCheck
+        icon: check
         color: success
     - id: icon_warning
       type: Tag
@@ -167,7 +201,7 @@
         flex: 0 0 auto
       properties:
         title: Warning
-        icon: AiOutlineWarning
+        icon: warning
         color: warning
     - id: icon_star
       type: Tag
@@ -175,7 +209,7 @@
         flex: 0 0 auto
       properties:
         title: Featured
-        icon: AiOutlineStar
+        icon: star
         color: gold
     - id: icon_object_color
       type: Tag
@@ -184,7 +218,7 @@
       properties:
         title: Custom Icon
         icon:
-          name: AiOutlineCrown
+          name: Crown
           color: '#faad14'
         color: gold
     - id: icon_object_style
@@ -194,7 +228,7 @@
       properties:
         title: Large Icon
         icon:
-          name: AiOutlineRocket
+          name: Rocket
           style:
             fontSize: 16
         color: purple
@@ -223,7 +257,15 @@
       properties:
         title: Starred
         closable: true
-        icon: AiOutlineStar
+        icon: star
+    - id: closable_custom_icon
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom close icon
+        closable: true
+        closeIcon: close-circle
         color: gold
     - id: closable_with_event
       type: Tag
@@ -240,6 +282,25 @@
             params:
               content: Tag closed!
               status: info
+
+- title: Links and Disabled Tags
+  blocks:
+    - id: link_tag
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open the docs
+        icon: external-link
+        href: https://docs.lowdefy.com
+        target: _blank
+    - id: disabled_tag
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Archived
+        disabled: true
 
 - title: onClick Event
   blocks:
@@ -263,7 +324,7 @@
         flex: 0 0 auto
       properties:
         title: View Details
-        icon: AiOutlineEye
+        icon: view
         color: geekblue
       events:
         onClick:
@@ -294,7 +355,7 @@
         flex: 0 0 auto
       properties:
         title: Toggle Filter
-        icon: AiOutlineFilter
+        icon: filter
         color: blue
       events:
         onClick:
@@ -415,7 +476,7 @@
                 flex: 0 0 auto
               properties:
                 title: In Progress
-                icon: AiOutlineSync
+                icon: RefreshCw
                 color: processing
             - id: issue_priority
               type: Tag
@@ -423,7 +484,7 @@
                 flex: 0 0 auto
               properties:
                 title: High Priority
-                icon: AiOutlineArrowUp
+                icon: arrow-up
                 color: error
               style:
                 .element:
@@ -470,7 +531,7 @@
                 flex: 0 0 auto
               properties:
                 title: Assign
-                icon: AiOutlineUser
+                icon: user
                 color: default
                 variant: outlined
                 size: small
@@ -487,7 +548,7 @@
                 flex: 0 0 auto
               properties:
                 title: Resolve
-                icon: AiOutlineCheck
+                icon: check
                 color: primary
                 variant: solid
                 size: small
@@ -529,7 +590,7 @@
                 flex: 0 0 auto
               properties:
                 title: Electronics
-                icon: AiOutlineThunderbolt
+                icon: Zap
                 color: blue
               events:
                 onClick:
@@ -543,7 +604,7 @@
                 flex: 0 0 auto
               properties:
                 title: In Stock
-                icon: AiOutlineCheck
+                icon: check
                 color: success
             - id: catalog_rating
               type: Tag
@@ -551,7 +612,7 @@
                 flex: 0 0 auto
               properties:
                 title: '4.8 Stars'
-                icon: AiOutlineStar
+                icon: star
                 color: gold
         - id: catalog_description
           type: Markdown
@@ -585,7 +646,7 @@
                 flex: 0 0 auto
               properties:
                 title: Add to Cart
-                icon: AiOutlineShoppingCart
+                icon: ShoppingCart
                 color: primary
                 variant: solid
                 size: small

@@ -16,10 +16,24 @@
 
 import React from 'react';
 import { Conversations } from '@ant-design/x';
-import { Button } from 'antd';
+import { Button, Spin } from 'antd';
 
 function AgentConversations({ blockId, methods, properties }) {
-  const { items, activeKey, menu, creation, groupable, width } = properties;
+  const { items, activeKey, loadingKey, menu, creation, groupable, width } = properties;
+
+  // Conversations has no loading state of its own, so a loading row swaps its icon slot
+  // for a spinner. aria-busy and data-loading reach the <li> through the item's DOM attrs.
+  const conversationItems = (items ?? []).map((item) => {
+    if (item.loading !== true && item.key !== loadingKey) {
+      return item;
+    }
+    return {
+      ...item,
+      icon: <Spin size="small" />,
+      'aria-busy': true,
+      'data-loading': true,
+    };
+  });
 
   function handleNew() {
     methods.triggerEvent({ name: 'onNew', event: {} });
@@ -69,7 +83,7 @@ function AgentConversations({ blockId, methods, properties }) {
         </div>
       )}
       <Conversations
-        items={items ?? []}
+        items={conversationItems}
         activeKey={activeKey}
         onActiveChange={(key) => {
           methods.triggerEvent({

@@ -22,6 +22,8 @@ import schema from './schema.js';
 
 export default {
   schema,
+  // Object storage outside the app's database: a journey on a data set keeps its real target.
+  meta: { dataSet: 'external' },
   requests: {
     AzureBlobDownloadSas,
     AzureBlobGet,

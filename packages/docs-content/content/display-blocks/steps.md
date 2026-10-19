@@ -64,11 +64,11 @@ Navigation steps bar, guiding users through the steps of a task.
     current: 1
     items:
       - title: Login
-        icon: AiOutlineUser
+        icon: user
       - title: Verification
-        icon: AiOutlineSolution
+        icon: FileUser
       - title: Done
-        icon: AiOutlineSmile
+        icon: FaceSlightlySmiling
 - id: icon_custom_color
   type: Steps
   properties:
@@ -76,15 +76,15 @@ Navigation steps bar, guiding users through the steps of a task.
     items:
       - title: Upload
         icon:
-          name: AiOutlineCloudUpload
+          name: CloudUpload
           color: "#1677ff"
       - title: Process
         icon:
-          name: AiOutlineLoading
+          name: loading
           color: "#faad14"
       - title: Complete
         icon:
-          name: AiOutlineCheck
+          name: check
           color: "#52c41a"
 ```
 
@@ -202,13 +202,13 @@ Navigation steps bar, guiding users through the steps of a task.
     items:
       - title: Account
         description: Create your account
-        icon: AiOutlineUser
+        icon: user
       - title: Settings
         description: Configure preferences
-        icon: AiOutlineSetting
+        icon: settings
       - title: Review
         description: Review and submit
-        icon: AiOutlineCheck
+        icon: check
       - title: Done
         description: All finished
   events:
@@ -256,6 +256,23 @@ Navigation steps bar, guiding users through the steps of a task.
       - title: Finished
       - title: In Progress
       - title: Waiting
+```
+
+```yaml
+- id: max_count_steps
+  type: Steps
+  properties:
+    current: 5
+    maxCount: 5
+    items:
+      - title: Draft
+      - title: Review
+      - title: Legal
+      - title: Finance
+      - title: Approval
+      - title: Signed
+      - title: Filed
+      - title: Archived
 ```
 
 ```yaml
@@ -370,11 +387,11 @@ Navigation steps bar, guiding users through the steps of a task.
           _state: wizard_step
         items:
           - title: Account
-            icon: AiOutlineUser
+            icon: user
           - title: Profile
-            icon: AiOutlineIdcard
+            icon: IdCard
           - title: Confirm
-            icon: AiOutlineCheck
+            icon: check
       events:
         onChange:
           - id: wizard_set_step
@@ -499,16 +516,16 @@ Navigation steps bar, guiding users through the steps of a task.
         items:
           - title: Order Placed
             description: March 10, 2026 at 2:30 PM
-            icon: AiOutlineShoppingCart
+            icon: ShoppingCart
           - title: Payment Confirmed
             description: March 10, 2026 at 2:31 PM
-            icon: AiOutlineCreditCard
+            icon: CreditCard
           - title: Shipped
             description: March 12, 2026 - Tracking number available
-            icon: AiOutlineCar
+            icon: Car
           - title: Delivered
             description: Estimated March 15, 2026
-            icon: AiOutlineHome
+            icon: home
 ```
 
 ```yaml
@@ -532,7 +549,7 @@ Navigation steps bar, guiding users through the steps of a task.
   style:
     .element:
       padding: 16px
-      border: 1px solid
+      border: "1px solid #d9d9d9"
       borderRadius: 8
 ```
 
@@ -545,15 +562,25 @@ Navigation steps bar, guiding users through the steps of a task.
 | `type` | string | `"default"` | Type of steps. Enum: `default`, `dot`, `inline`, `navigation`, `panel`. |
 | `orientation` | string | `"horizontal"` | Orientation of the step bar. Enum: `horizontal`, `vertical`. |
 | `titlePlacement` | string | `"horizontal"` | Place title and description horizontal or vertical. Enum: `horizontal`, `vertical`. |
+| `maxCount` | integer | - | Maximum number of steps to show, at least 3. Hidden steps collapse into disabled ellipsis steps around the current step. |
 | `percent` | number | - | Progress circle percentage of current step in process status (only works with type default). |
-| `progressDot` | boolean | `false` | Steps with progress dot style. |
+| `progressDot` | boolean | `false` | Steps with progress dot style. Same as `type: dot`. |
 | `variant` | string | `"filled"` | Style variant of the steps. Enum: `filled`, `outlined`. |
 | `responsive` | boolean | `true` | Change to vertical direction when screen width smaller than 532px. |
 | `items` | array | - | List of step items. |
 | `items.$.title` | string | - | Title of the step - supports html. |
 | `items.$.subTitle` | string | - | Subtitle of the step - supports html. |
 | `items.$.description` | string | - | Description of the step - supports html. |
-| `items.$.icon` | string \| object | - | Name of a React-Icon (See all icons) or properties of an Icon block to use as the step icon. |
+| `items.$.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use as the step icon. |
+| `items.$.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `items.$.icon.color` | string | - | Icon color. |
+| `items.$.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `items.$.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `items.$.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `items.$.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `items.$.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `items.$.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `items.$.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `items.$.status` | string | - | Status of this step, overrides the current step status. Enum: `wait`, `process`, `finish`, `error`. |
 | `items.$.disabled` | boolean | `false` | Disable click on this step. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design steps tokens](https://ant.design/components/steps#design-token). |
@@ -564,13 +591,15 @@ Navigation steps bar, guiding users through the steps of a task.
 | `theme.iconSize` | number | `32` | Size of the step icon. |
 | `theme.iconSizeSM` | number | `24` | Size of the small step icon. |
 | `theme.iconTop` | number | `-0.5` | Top position of the step icon. |
-| `theme.descriptionMaxWidth` | number | `140` | Max width of the step description. |
-| `theme.titleLineHeight` | number | `32` | Line height of the step title. |
+| `theme.descriptionMaxWidth` | number | - | Max width of each step description. Unset by default in antd 6, so descriptions take the width of their step. |
+| `theme.titleLineHeight` | number | `32` | Deprecated in antd 6 and has no effect. |
+| `theme.customIconSize` | number | `32` | Size of the container of a custom step icon. |
+| `theme.customIconFontSize` | number | `24` | Font size of a custom step icon. |
 | `theme.navArrowColor` | string | `"rgba(0, 0, 0, 0.25)"` | Color of the navigation arrow. |
-| `theme.navContentMaxWidth` | string | `"auto"` | Max width of navigation step content. |
-| `theme.finishIconBorderColor` | string | `"#1677ff"` | Border color of finished step icon. |
-| `theme.waitIconBorderColor` | string | `"rgba(0, 0, 0, 0.25)"` | Border color of waiting step icon. |
-| `theme.waitIconColor` | string | `"rgba(0, 0, 0, 0.25)"` | Color of waiting step icon. |
+| `theme.navContentMaxWidth` | string | `"unset"` | Max width of navigation step content. |
+| `theme.finishIconBorderColor` | string | `"#e6f4ff"` | Border color of finished step icon. |
+| `theme.waitIconBorderColor` | string | `"transparent"` | Border color of waiting step icon. |
+| `theme.waitIconColor` | string | `"rgba(0, 0, 0, 0.65)"` | Color of waiting step icon. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |
@@ -581,5 +610,9 @@ Navigation steps bar, guiding users through the steps of a task.
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Steps element. |
 | `/icon` | The icon in the Steps. |
+| `/item` | Each step. |
+| `/itemTitle` | The title of each step. |
+| `/itemSubtitle` | The subtitle of each step. |
+| `/itemContent` | The description of each step. |
 
 No slots defined.

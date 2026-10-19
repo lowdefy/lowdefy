@@ -63,13 +63,13 @@ test.describe('Channel publish', () => {
     await expect(getBlock(page, 'message_count')).toHaveText('received:1');
   });
 
-  test('a published message reaches other subscribed clients', async ({ browser }) => {
-    const contextA = await browser.newContext();
-    const contextB = await browser.newContext();
+  test('a published message reaches other subscribed clients', async ({ browser, baseURL }) => {
+    const contextA = await browser.newContext({ baseURL });
+    const contextB = await browser.newContext({ baseURL });
     const pageA = await contextA.newPage();
     const pageB = await contextB.newPage();
-    await pageA.goto('http://localhost:3009/chat');
-    await pageB.goto('http://localhost:3009/chat');
+    await pageA.goto('/chat');
+    await pageB.goto('/chat');
     await expect(getBlock(pageA, 'message_count')).toHaveText('received:0');
     await expect(getBlock(pageB, 'message_count')).toHaveText('received:0');
 

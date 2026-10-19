@@ -5,7 +5,7 @@
       "errors": ["_var key \"constructor\" is a reserved name."],
       "errorContains": [
         "_var key \"constructor\" is a reserved name.",
-        "{{fixturesDir}}/Q1-reserved-var-key/lowdefy.yaml"
+        "{{fixturesDir}}/Q1-reserved-var-key/lowdefy.yaml:23"
       ]
     },
     {
@@ -13,7 +13,7 @@
       "errors": ["_var key \"constructor\" is a reserved name."],
       "errorContains": [
         "_var key \"constructor\" is a reserved name.",
-        "{{fixturesDir}}/Q1-reserved-var-key/lowdefy.yaml"
+        "{{fixturesDir}}/Q1-reserved-var-key/lowdefy.yaml:23"
       ],
       "expectThrow": true
     }

@@ -14,67 +14,18 @@
   limitations under the License.
 */
 
-import readBuildArtifact from './readBuildArtifact.js';
-
-function addTypes({ plugins, store, kind }) {
-  for (const [typeName, definition] of Object.entries(store ?? {})) {
-    if (!plugins[definition.package]) {
-      plugins[definition.package] = { package: definition.package, version: definition.version, types: {} };
-    }
-    const plugin = plugins[definition.package];
-    if (!plugin.types[kind]) {
-      plugin.types[kind] = [];
-    }
-    plugin.types[kind].push(typeName);
-  }
-}
+import getDocsIndex from './getDocsIndex.js';
+import readPluginPackages from './readPluginPackages.js';
 
 function listPlugins() {
-  const availableTypes = readBuildArtifact({ name: 'plugins/availableTypes.json' }) ?? {};
-  const customTypesMap = readBuildArtifact({ name: 'customTypesMap.json' }) ?? {};
-  const installedPackages = readBuildArtifact({ name: 'installedPluginPackages.json' }) ?? [];
-
-  const plugins = {};
-  addTypes({ plugins, store: availableTypes.actions, kind: 'actions' });
-  addTypes({ plugins, store: availableTypes.agents, kind: 'agents' });
-  addTypes({ plugins, store: availableTypes.blocks, kind: 'blocks' });
-  addTypes({ plugins, store: availableTypes.connections, kind: 'connections' });
-  addTypes({ plugins, store: availableTypes.notifications, kind: 'notifications' });
-  addTypes({ plugins, store: availableTypes.operators?.client, kind: 'operators' });
-  addTypes({ plugins, store: availableTypes.operators?.server, kind: 'operators' });
-  addTypes({ plugins, store: availableTypes.requests, kind: 'requests' });
-  addTypes({ plugins, store: availableTypes.websockets, kind: 'websockets' });
-
-  const customPackages = new Set();
-  const customStores = [
-    customTypesMap.actions,
-    customTypesMap.agents,
-    customTypesMap.blocks,
-    customTypesMap.connections,
-    customTypesMap.operators?.client,
-    customTypesMap.operators?.server,
-    customTypesMap.requests,
-    customTypesMap.websockets,
-  ];
-  for (const store of customStores) {
-    for (const definition of Object.values(store ?? {})) {
-      customPackages.add(definition.package);
+  const slugs = new Set(getDocsIndex().entries.map((entry) => entry.slug));
+  return readPluginPackages().map((plugin) => {
+    const docSlug = `plugins/${plugin.package}`;
+    if (!slugs.has(docSlug)) {
+      return plugin;
     }
-  }
-
-  return Object.values(plugins)
-    .map((plugin) => ({
-      ...plugin,
-      custom: customPackages.has(plugin.package),
-      installed: installedPackages.includes(plugin.package),
-      types: Object.fromEntries(
-        Object.entries(plugin.types).map(([kind, typeNames]) => [
-          kind,
-          [...new Set(typeNames)].sort(),
-        ])
-      ),
-    }))
-    .sort((a, b) => a.package.localeCompare(b.package));
+    return { ...plugin, docSlug };
+  });
 }
 
 export default listPlugins;

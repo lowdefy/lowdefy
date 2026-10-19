@@ -1,0 +1,78 @@
+id: check-email
+type: Box
+properties:
+  style:
+    maxWidth: 480
+    margin: 60px auto
+blocks:
+  - id: check_email_result
+    type: Result
+    properties:
+      status: info
+      title: Check your email
+      subTitle: We sent you a link - follow it to continue. Magic links sign you in directly; verification links confirm your address so you can log in.
+  # SendVerificationEmail is a public catalog action - an unverified user
+  # holds no session, so the resend takes the email as a parameter.
+  - id: resend_help
+    type: Html
+    properties:
+      html: |
+        <p>Verification link expired or lost? Resend it:</p>
+  - id: resend_email
+    type: TextInput
+    properties:
+      title: Email
+  - id: resend_button
+    type: Button
+    properties:
+      title: Resend verification email
+      type: default
+      block: true
+    events:
+      onClick:
+        try:
+          - id: resend_verification
+            type: SendVerificationEmail
+            params:
+              email:
+                _state: resend_email
+          - id: show_resend_response
+            type: SetState
+            params:
+              resend_message: Verification email sent - check the inbox again.
+              resend_error: null
+        catch:
+          - id: show_resend_error
+            type: SetState
+            params:
+              resend_error:
+                _actions: resend_verification.error.message
+              resend_message: null
+  - id: resend_message_html
+    type: Html
+    visible:
+      _ne:
+        - _state: resend_message
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p style="color:green">{{ message }}</p>
+          on:
+            message:
+              _state: resend_message
+  - id: resend_error_html
+    type: Html
+    visible:
+      _ne:
+        - _state: resend_error
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p style="color:red">{{ error }}</p>
+          on:
+            error:
+              _state: resend_error

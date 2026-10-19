@@ -27,5 +27,7 @@ function _theme({ arrayIndices, location, theme, params }) {
 }
 
 _theme.dynamic = true;
+// Theme changes reach the engine through the full render-time pass, which evaluates every block.
+_theme.tracking = { kind: 'read', keys: () => ['theme'] };
 
 export default _theme;

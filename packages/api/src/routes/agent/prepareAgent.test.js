@@ -15,7 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { UserError } from '@lowdefy/errors';
+import { ConfigError, UserError } from '@lowdefy/errors';
 
 import prepareAgent from './prepareAgent.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
@@ -51,11 +51,24 @@ const endpointConfig = {
   routine: { ':return': { ok: true } },
 };
 
+const typedEndpointConfig = {
+  endpointId: 'typed-endpoint',
+  id: 'endpoint:typed-endpoint',
+  type: 'Api',
+  auth: { public: true },
+  payloadSchema: {
+    type: 'object',
+    properties: { status: { enum: ['open', 'closed'] } },
+  },
+  routine: { ':return': { ok: true } },
+};
+
 function createContext({ mode } = {}) {
   const readConfigFile = jest.fn((path) => {
     if (path === 'agents/my-agent.json') return agentConfig;
     if (path === 'connections/my-anthropic.json') return connectionConfig;
     if (path === 'api/my-endpoint.json') return endpointConfig;
+    if (path === 'api/typed-endpoint.json') return typedEndpointConfig;
     return null;
   });
   const context = testContext({
@@ -65,7 +78,7 @@ function createContext({ mode } = {}) {
       Anthropic: { create: jest.fn().mockReturnValue({ provider: 'mock-provider' }), requests: {} },
     },
     mode,
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.agents = { ClaudeAgent: { resolver: jest.fn(), schema: {} } };
   context.evaluateOperators = createEvaluateOperators(context);
@@ -122,6 +135,46 @@ test('prepareAgent callEndpoint enforces the endpoint depth cap', async () => {
   await expect(resolverContext.callEndpoint('my-endpoint', { payload: {} })).rejects.toThrow(
     'Endpoint call depth exceeded maximum of 10.'
   );
+});
+
+test('prepareAgent callEndpoint refuses a tool payload that violates the payloadSchema as a UserError the model can correct', async () => {
+  const context = createContext();
+  const { resolverContext } = await prepareAgent(context, {
+    agentId: 'my-agent',
+    agentContext,
+    endpointDepth: 0,
+  });
+  await expect(
+    resolverContext.callEndpoint('typed-endpoint', {
+      payload: { status: 'pending' },
+      outsideCaller: true,
+    })
+  ).rejects.toThrow(UserError);
+  await expect(
+    resolverContext.callEndpoint('typed-endpoint', {
+      payload: { status: 'pending' },
+      outsideCaller: true,
+    })
+  ).rejects.toThrow(
+    'Payload for endpoint "typed-endpoint" does not match its payloadSchema at /status: must be equal to one of the allowed values (open, closed).'
+  );
+  const result = await resolverContext.callEndpoint('typed-endpoint', {
+    payload: { status: 'open' },
+    outsideCaller: true,
+  });
+  expect(result.success).toBe(true);
+});
+
+test('prepareAgent callEndpoint refuses a hook payload that violates the payloadSchema as a ConfigError', async () => {
+  const context = createContext();
+  const { resolverContext } = await prepareAgent(context, {
+    agentId: 'my-agent',
+    agentContext,
+    endpointDepth: 0,
+  });
+  await expect(
+    resolverContext.callEndpoint('typed-endpoint', { payload: { status: 'pending' } })
+  ).rejects.toThrow(ConfigError);
 });
 
 // The agent stream's error text reaches the end user and AgentChat config, which see the

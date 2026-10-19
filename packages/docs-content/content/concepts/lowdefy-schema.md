@@ -15,6 +15,7 @@ The root schema for a Lowdefy app is:
 - `config: object`: An object with app configuration like the home page pageId.
 - `auth: object` An object with authentication and authorization configuration.
 - `global: object`: A data object that can be accessed anywhere in the app using the [`_global`](/_global) operator.
+- `events: object`: App events, `onInit` and `onInitAsync`, that run once each time the app loads in the browser. See [App events](/events-and-actions#app-events).
 - `connections: object[]`: An array of [`connection`](/connections-and-requests) objects.
 - `plugins: object[]`: An array of `plugin` objects to customize and add block types.
 - `modules: object[]`: An array of module entries. Each module references a reusable configuration package distributed via GitHub or local file paths. See [Modules](/modules) for details.
@@ -42,17 +43,93 @@ Find the more detailed block schema [here](/blocks).
 The config object has the following properties:
 
 - `environments: object`: The deployment environments of the app, keyed by name (for example `prod`, `staging`, `local`). Each build is for one of them, named by the `LOWDEFY_ENVIRONMENT` environment variable, and the current environment supplies the defaults for everything environment-specific. See [Deployment environments](/deployment-environments). Each environment has:
-  - `url: string`: The deployment origin, for example `https://staging.example.com`. Default for the auth base URL (`AUTH_URL`), notification links and logos (`RenderNotification` `serverUrl`), and where crons are forwarded to.
+  - `url: string`: The deployment origin, for example `https://staging.example.com`. Default for the auth canonical URL (`BETTER_AUTH_URL`) and the MCP resource URIs, notification links and logos (`RenderNotification` `serverUrl`), and where crons are forwarded to.
   - `cron.secret: string`: The **name** of the Lowdefy secret holding this environment's `CRON_SECRET` — a plain string, not a `_secret` operator (environment settings are resolved at build time, where `_secret` is not evaluated). The value is read at runtime from `LOWDEFY_SECRET_<name>` on the deployment that forwards. An environment with a `cron.secret` has its schedules forwarded to it from the environment Vercel fires crons on.
   - `cron.enabled: boolean`: Set `false` to register no cron jobs for this environment. Defaults to `true`.
   - `email.filter: object`: The delivery filter (`replaceAddress`, `allowlist`, `regex`) applied to every `SMTPMailSend` and `SendGridMailSend` request in this environment, unless the connection sets its own `filter` (`filter: false` on a connection turns filtering off).
   - `email.enabled: boolean`: Set `false` to send no email from `SMTPMailSend` and `SendGridMailSend` requests in this environment (auth emails still send). Defaults to `true`.
   - `sentry.enabled: boolean`: Set `false` to turn Sentry off, server and client, in this environment. Defaults to `true`.
   - `guards: object`: Pin secrets and environment variables to a pattern kept in config. `guards.secrets` maps a Lowdefy secret name (`LOWDEFY_SECRET_<name>`) and `guards.env` an environment variable name to a regular expression; in this environment the build fails unless each value matches (a missing value fails too), so changing a guarded value also takes a config change. See [Guards](/deployment-environments).
+  - `posthog.enabled: boolean`: Set `false` to turn PostHog off in this environment: `PostHogInit` behaves as `enabled: false` (no key needed) and every PostHog action is a no-op. Defaults to `true`.
 - `environment: string`: The name of the environment this build is for, used when the `LOWDEFY_ENVIRONMENT` environment variable is not set; the variable always wins. When `environments` is declared it must be one of its names. Server log lines carry it as `environment`, `_app: environment` reads it, and Sentry reports under it unless `logger.sentry.environment` is set.
 - `basePath: string`: Set the base path to serve the Lowdefy application from. This will route all pages under `https://example.com/<base-path>/<page-id>` instead of the default `https://example.com/<page-id>`. The basePath value must start with "/".
-- `homePageId: string`: The id of the page that will load when a visitor navigates to the home route, in other words, when the visitor navigates to `yourdomain.com` or `yourdomain.com/`.
+- `homePageId: string`: The id of the page that will load when a visitor navigates to the home route, in other words, when the visitor navigates to `yourdomain.com` or `yourdomain.com/`. The home page cannot have placeholders in its [`path`](/page-paths).
+- `dependencyTracking: boolean`: Defaults to `true`. The browser re-evaluates only the blocks whose inputs changed (the state paths, requests and globals their operators read) instead of every block on the page after each change. Set to `false` to evaluate every block on every update, as earlier versions did.
 - `requestTimeout: number`: Maximum time in milliseconds a request may run before the server returns a timeout. This protects against requests that hang on an upstream call (database, SMTP, an external API) running all the way to the host's function limit — important on serverless platforms that bill by execution duration. Defaults to `30000` (30 seconds). Set to `0` to disable. Agent streaming routes are exempt, since they are long-lived by design.
+- `security: object`: Opt-in browser security settings. See [Security](#security) below.
+  - `contentSecurityPolicy: boolean | object`: Send a Content-Security-Policy header with app pages. Set `true` for the default policy, or an object with:
+    - `reportOnly: boolean`: Send the policy as `Content-Security-Policy-Report-Only`, so the browser reports what it would block without blocking it. Defaults to `false`.
+    - `directives: object`: Sources to add to the default policy, keyed by directive name, for example `script-src: ['https://www.googletagmanager.com']`.
+- `trustedProxies: string[]`: IP addresses and CIDR ranges (for example `10.0.0.0/8`) of the reverse proxies and load balancers in front of a self-hosted server. The server takes each request's client address from its connection, and reads `X-Forwarded-For` only when that connection comes from a trusted proxy, skipping trusted hops from the right. Auth rate limits, sessions and request logs use this address. Defaults to none, so a client cannot choose its own address. Not used on Vercel, where the platform supplies the client address. See [Behind a reverse proxy](/docker#behind-a-reverse-proxy).
+
+## Security
+
+### Content Security Policy
+
+A [Content-Security-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP) tells the browser which scripts, styles, images and connections a page may use. It is off by default. Turn it on with `config.security.contentSecurityPolicy`:
+
+```yaml
+config:
+  security:
+    contentSecurityPolicy: true
+```
+
+The server then sends this policy with every page:
+
+| Directive | Sources |
+| --------- | ------- |
+| `default-src` | `'self'` |
+| `script-src` | `'self'` and a nonce |
+| `style-src` | `'self' 'unsafe-inline'` |
+| `img-src` | `'self' data: blob:` |
+| `font-src` | `'self' data:` |
+| `connect-src` | `'self' https://api.lowdefy.net`, and the page's own websocket origin when the app has websockets |
+| `object-src` | `'none'` |
+| `base-uri` | `'self'` |
+| `frame-ancestors` | `'self'` |
+
+Each page render draws a new random nonce. Lowdefy's own inline scripts, and every `<script>` and `<style>` element in [`app.html.appendHead` and `app.html.appendBody`](/custom-html), carry it, so they keep running. Inline scripts added to the page any other way, and inline event handler attributes such as `onclick` in appended HTML, are blocked. Styles allow `'unsafe-inline'`, because some antd components add style elements and style attributes that cannot carry a nonce (the scroll lock of a modal or drawer, text area auto size, watermarks). `connect-src` lists `https://api.lowdefy.net`, where the browser sends Lowdefy usage data.
+
+#### Report only first
+
+Turning the policy on can block something an app relies on, such as an analytics script or images from another host. Send it report-only first: the browser logs each violation to the console, and blocks nothing.
+
+```yaml
+config:
+  security:
+    contentSecurityPolicy:
+      reportOnly: true
+```
+
+Open the app's pages, look for `Content Security Policy` messages in the browser console, add the sources they name, and remove `reportOnly` once the console is clean.
+
+#### Adding sources
+
+`directives` adds sources to the default policy. Each key is a directive name and each value is a list of sources; sources are added to the defaults, never replace them, and a directive the defaults do not set is added. A source is written as the browser expects it, so keywords keep their single quotes.
+
+```yaml
+config:
+  security:
+    contentSecurityPolicy:
+      directives:
+        script-src:
+          - https://www.googletagmanager.com
+        connect-src:
+          - https://www.google-analytics.com
+        img-src:
+          - https://images.example.com
+        frame-src:
+          - https://www.youtube.com
+```
+
+Some features need an extra source:
+
+- Templates rendered in the browser with nunjucks (the `_nunjucks` operator, and `html` templates in selector options and table cells) compile to JavaScript, and need `"'unsafe-eval'"` in `script-src`. Blocks that can render these templates load nunjucks with the page, which logs an `eval` violation even when no template is used.
+- Images, fonts, frames and API calls on other hosts need those hosts in `img-src`, `font-src`, `frame-src` and `connect-src`.
+
+Adding `'unsafe-inline'` to `script-src` leaves the nonce off that directive, since browsers ignore `'unsafe-inline'` when a nonce is present.
+
+The policy applies to `lowdefy dev` too, so problems show while developing.
 
 ## Auth
 
@@ -76,6 +153,8 @@ See more about how user authentication and authorization [here](/users-introduct
 ## Global
 
 In a Lowdefy app, you can define global variables in the __global__ object, which can be accessed using the [`_global`](/_global) operator, and modified using the [`SetGlobal`](/SetGlobal) action. This is a good place to store data or configuration that is used over various pages throughout the app, for example, user preferences that can be modified using `SetGlobal` on one page and easily referenced on all others.
+
+The app [`events`](/events-and-actions#app-events) `onInit` and `onInitAsync` run once each time the app loads, before the first page's own events, and are a good place to set global values, for example user settings fetched with a [`CallAPI`](/CallAPI) action.
 
 ## Connections
 
@@ -114,6 +193,8 @@ See the [APIs documentation](/lowdefy-api) for more information on how to use an
 Pages in a Lowdefy app are actually just blocks, the building blocks of a Lowdefy app, with a few extra restrictions and features.
 
 Each page should have an `id` that is unique among all pages in the app. Each page is served with the `pageId` as the url route. That is, if a page is created with id `page1`, it will be served at `domain.com/page1`. Module pages use the path `/{entryId}/{pageId}` — for example, a page `users-list` in a module entry `team-users` is served at `domain.com/team-users/users-list`.
+
+A page can set `path` to be served at an address other than its id, with placeholders for values such as a record id: a page with `path: tickets/{space}/{ticket_id}` is served at `domain.com/tickets/support/1234`, and reads `support` and `1234` with the [`_path_params`](/_path_params) operator. A path that starts with a placeholder must be quoted, like `path: '{space}/tickets/{ticket_id}'`. The page's `id` stays its identity in auth config, menus and links. See [Page paths](/page-paths).
 
 If `properties.title` is set on a page block, the title will be set as the page title (This is the title displayed on the tabs in your browser).
 
@@ -294,6 +375,12 @@ The `~ignoreBuildChecks` property suppresses build-time validation errors and wa
 
 ### Available Check Slugs
 
+Every build error or warning from a check that the build prints shows its slug after the error name, so the slug to silence is on screen:
+
+```
+[ConfigWarning · state-refs] _state references "dynamicState" but no block with id "dynamicState" exists
+```
+
 | Slug | What it suppresses |
 |------|-------------------|
 | `state-refs` | Undefined `_state` reference warnings |
@@ -302,8 +389,54 @@ The `~ignoreBuildChecks` property suppresses build-time validation errors and wa
 | `link-refs` | Invalid Link action page reference warnings |
 | `request-refs` | Invalid Request action reference warnings |
 | `connection-refs` | Nonexistent connection ID references |
+| `callapi-refs` | Invalid CallAPI action endpoint reference warnings |
+| `callapi-internal-refs` | CallAPI actions targeting InternalApi endpoints |
+| `dynamic-endpoint-refs` | Invalid Dynamic block endpoint reference warnings |
+| `websocket-refs` | Invalid websocket action reference warnings |
+| `callmethod-refs` | CallMethod actions targeting blocks not defined on the page |
+| `icons` | Unresolvable icon name warnings |
 | `types` | All type validation (blocks, operators, actions, requests, connections) |
 | `schema` | JSON schema validation errors |
+| `secrets` | Environment variable names that are not set in the build environment |
+| `plugin-checks` | Every plugin build check rule, and the plugin schema check |
+| `plugin-schema` | Block properties, action params and operator params that break their plugin schema |
+
+### Plugin Schema Checks
+
+The build also checks each block's `properties`, each action's `params` and each operator's params against the schema the plugin ships for that type, after `_ref` and `_build` operators resolve. Config that breaks a schema gives a warning with the type, the field and its file and line:
+
+```
+[ConfigWarning · plugin-schema] Block "Button" property "colr" is not allowed.
+[ConfigWarning · plugin-schema] Operator "_if" required param "test" is missing.
+```
+
+A value an operator gives at runtime is not checked, since the build cannot know it: `columns: { _state: columns }` passes where the schema wants an array. Keys still are, so a missing `test` or a misspelt key reports even when its neighbours are operators. Connections and requests are checked by the server on every call, not by the build.
+
+Schema findings are warnings, unless the plugin makes them errors. List `plugin-schema` in `~ignoreBuildChecks` to silence them on a node and its descendants; `plugin-checks` and `--skip-plugin-checks` cover them too.
+
+### Plugin Check Rules
+
+Plugins can ship build check rules for their operators, blocks, actions, requests and connections. A plugin rule's id is its slug: list it in `~ignoreBuildChecks` to silence that one rule, or list `plugin-checks` to silence every plugin rule. `true` silences plugin rules too.
+
+A plugin's rules run once the plugin is installed. When a build uses a plugin that is not installed yet, `lowdefy build` and `lowdefy dev` install it and build again, so its rules run on a fresh checkout too. To skip every plugin rule for one run, pass `--skip-plugin-checks` to `lowdefy build`, `lowdefy dev` or `lowdefy journeys scope`.
+
+```yaml
+# Silence one plugin rule on this block and its descendants
+~ignoreBuildChecks:
+  - if-test
+
+# Silence every plugin rule on this block and its descendants
+~ignoreBuildChecks:
+  - plugin-checks
+```
+
+Check slugs are kebab-case: lowercase letters and digits joined by single dashes.
+
+The `@lowdefy/operators-js` plugin ships these rules:
+
+| Slug | Level | What it checks |
+|------|-------|----------------|
+| `if-test` | error | An `_if` needs its condition under `test`. `_if: { _eq: [1, 1], then: a, else: b }` fails the build; write `_if: { test: { _eq: [1, 1] }, then: a, else: b }`. Params that are one operator, such as `_if: { _state: ifParams }`, pass. |
 
 ### Example: Dynamic State
 
@@ -322,7 +455,7 @@ blocks:
 
 Without `~ignoreBuildChecks`, the build would warn:
 ```
-[Config Warning] _state references "dynamicState" but no block with id "dynamicState" exists
+[ConfigWarning · state-refs] _state references "dynamicState" but no block with id "dynamicState" exists
 ```
 
 ### Example: Page-Level Suppression

@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 import { buildPageUrl } from './getBrowser.js';
 import inspectState from './inspectState.js';
+import readPagePath from './readPagePath.js';
 import { writeCheckpoint } from './checkpointStore.js';
 
 // Snapshots the running app (page state + recorded request/api responses)
@@ -25,8 +26,10 @@ import { writeCheckpoint } from './checkpointStore.js';
 // on-disk layout. Reuses inspectState.js's tab-first/headless-fallback
 // snapshot rather than driving a browser directly, so a snapshot always
 // reflects whatever a developer is actually looking at when one is
-// available.
-async function snapshotState({ origin, pageId, name, notes, source, overwrite }) {
+// available. With only a `pageId`, a tab's snapshot is of the instance it
+// names (see findPageInstance in tabChannel.js), and the checkpoint keeps that
+// instance's pathParams.
+async function snapshotState({ origin, pageId, pathParams, name, notes, source, overwrite }) {
   if (type.isNone(pageId) || !type.isString(pageId)) {
     return {
       error: `snapshotState requires a "pageId" string. Received ${JSON.stringify(pageId)}.`,
@@ -36,12 +39,17 @@ async function snapshotState({ origin, pageId, name, notes, source, overwrite })
     return { error: `snapshotState requires a "name" string. Received ${JSON.stringify(name)}.` };
   }
 
-  const snapshot = await inspectState({ origin, pageId, source });
+  const snapshot = await inspectState({ origin, pageId, pathParams, source });
   if (snapshot?.error) {
-    return { error: snapshot.error };
+    return { error: snapshot.error, invalidInput: snapshot.invalidInput };
   }
 
-  const url = `${buildPageUrl({ origin, pageId })}${snapshot.urlQuery ?? ''}`;
+  const url = `${buildPageUrl({
+    origin,
+    pageId,
+    path: readPagePath({ pageId }),
+    pathParams: snapshot.pathParams,
+  })}${snapshot.urlQuery ?? ''}`;
 
   try {
     const { dir, parts } = writeCheckpoint({

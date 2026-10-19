@@ -17,6 +17,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { LowdefyInternalError } from '@lowdefy/errors';
+
+import collectChunkClosure from './collectChunkClosure.js';
+import collectPageTypesAssets from './collectPageTypesAssets.js';
+
 // The Vite manifest is read once at startup — deploys start a new server
 // process after `vite build` completes, so assets never change at runtime.
 // In-place deploys must build before restarting (documented).
@@ -30,14 +35,28 @@ function getAssets() {
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
   const entry = manifest['client/main.jsx'];
   if (!entry) {
-    throw new Error(
+    throw new LowdefyInternalError(
       'Vite manifest has no "client/main.jsx" entry. Run the client build before starting the server.'
     );
   }
+  const entryJs = new Set();
+  const entryCss = new Set();
+  collectChunkClosure({ manifest, key: 'client/main.jsx', js: entryJs, css: entryCss });
+  const entryFiles = new Set([...entryJs, ...entryCss]);
+  // Every icon the app bundles: preloaded only for a page whose Dynamic
+  // content loads them all before its first render.
+  const iconsJs = new Set();
+  const iconsCss = new Set();
+  collectChunkClosure({ manifest, key: 'build/plugins/icons.js', js: iconsJs, css: iconsCss });
   assets = {
     js: entry.file,
     css: entry.css ?? [],
+    icons: {
+      js: [...iconsJs].filter((file) => !entryFiles.has(file)),
+      css: [...iconsCss].filter((file) => !entryFiles.has(file)),
+    },
     imports: (entry.imports ?? []).map((key) => manifest[key]?.file).filter(Boolean),
+    pageTypes: collectPageTypesAssets({ manifest, entryFiles }),
   };
   return assets;
 }

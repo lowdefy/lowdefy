@@ -1,6 +1,6 @@
 # S3UploadPhoto
 
-__Deprecated__ — use the provider-neutral &lt;a href=&quot;/UploadPhoto&quot;&gt;UploadPhoto&lt;/a&gt; block with `uploadPolicyRequestId` instead. S3UploadPhoto remains as an alias so existing apps keep working. Picture-card style image upload for AWS S3. Displays a camera icon with upload text in a card format. Only accepts image files. Requires an `AwsS3PresignedPostPolicy` request to define the S3 upload policy.
+__Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</a> block with `uploadPolicyRequestId` instead. S3UploadPhoto remains as an alias so existing apps keep working. Picture-card style image upload for AWS S3. Displays a camera icon with upload text in a card format. Only accepts image files. Requires an `AwsS3PresignedPostPolicy` request to define the S3 upload policy.
 
 > The S3UploadPhoto requires an AwsS3Bucket connection and AwsS3PresignedPostPolicy request to upload files. The examples on this page demonstrate UI configuration only — uploads will not function without a configured S3 connection.
 
@@ -160,20 +160,20 @@ __Deprecated__ — use the provider-neutral &lt;a href=&quot;/UploadPhoto&quot;&
       properties:
         title: Full Name
         placeholder: Enter your name
-        prefixIcon: AiOutlineUser
+        prefixIcon: user
     - id: profile_email
       type: TextInput
       properties:
         title: Email
         placeholder: you@example.com
-        prefixIcon: AiOutlineMail
+        prefixIcon: mail
     - id: profile_save
       type: Button
       properties:
         title: Save Profile
         color: primary
         variant: solid
-        icon: AiOutlineSave
+        icon: save
       events:
         onClick:
           - id: validate_profile
@@ -237,7 +237,7 @@ __Deprecated__ — use the provider-neutral &lt;a href=&quot;/UploadPhoto&quot;&
         title: List Product
         color: primary
         variant: solid
-        icon: AiOutlineCheck
+        icon: check
         block: true
       events:
         onClick:

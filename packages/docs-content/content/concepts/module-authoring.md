@@ -69,7 +69,7 @@ The build prevents `../` from escaping the package root — the git repo root fo
 
 ## How Modules Stay Scoped and Composable
 
-Three mechanisms keep modules working at scale. **Auto-scoping** prefixes every page, connection, API endpoint, notification, and menu item ID with the entry's `id`, so module authors write plain IDs and installing the same module twice under different entry IDs produces no collisions. **`_module.var`** lets any file in the module read the entry's vars at any depth, without the app threading values through nested `_ref`s. **Typed exports** declared in `exports:` mark which pages, components, endpoints, connections, and menus are public, so internal files stay internal and renaming one does not break consumers.
+Three mechanisms keep modules working at scale. **Auto-scoping** prefixes every page, connection, API endpoint, notification, websocket, and menu item ID with the entry's `id`, so module authors write plain IDs and installing the same module twice under different entry IDs produces no collisions. **`_module.var`** lets any file in the module read the entry's vars at any depth, without the app threading values through nested `_ref`s. **Typed exports** declared in `exports:` mark which pages, components, endpoints, connections, and menus are public, so internal files stay internal and renaming one does not break consumers.
 
 ## Writing module.lowdefy.yaml
 
@@ -109,6 +109,9 @@ api:
 notifications:
   - _ref: notifications/invite-user.yaml
 
+websockets:
+  - _ref: websockets/user-changes.yaml
+
 components:
   - id: user-avatar
     component:
@@ -143,7 +146,7 @@ The `vars` section declares what configuration the module accepts. Each variable
 - `description` — Documentation for the variable's purpose.
 - `properties` — For `object` vars, declares nested keys with their own type, default, required, and description. Consumer values are merged at the property level — only overridden keys change.
 
-Defaults are expressions. They can be literals, or operator trees — `_ref`, `_module.var`, `_build.*`, or any combination. The build resolves a default lazily, only when `_module.var` reads the var and the consumer did not provide a value. Vars with `properties` merge at the property level: the consumer overrides only the keys they provide, and the rest resolve their own defaults independently.
+Defaults are expressions. They can be literals, or operator trees — `_ref`, `_module.var`, `_build.*`, or any combination. The build resolves a default lazily, only when `_module.var` reads the var and the consumer did not provide a value. Vars with `properties` merge at the property level: the consumer overrides only the keys they provide, and the rest resolve their own defaults independently. A property with no consumer value and no default is left out of the object, not set to `null`.
 
 Unused vars are never read, so their defaults never resolve and their declared `type` is never checked.
 
@@ -236,7 +239,7 @@ show_filter:
 
 ## Using ID Operators
 
-Module authors use [`_module.pageId`](/_module), [`_module.connectionId`](/_module), [`_module.endpointId`](/_module), and [`_module.notificationId`](/_module) to reference sibling resources. These resolve to the fully scoped ID at build time:
+Module authors use [`_module.pageId`](/_module), [`_module.connectionId`](/_module), [`_module.endpointId`](/_module), [`_module.notificationId`](/_module), and [`_module.websocketId`](/_module) to reference sibling resources. These resolve to the fully scoped ID at build time:
 
 ```yaml
 # Link to a sibling page
@@ -266,6 +269,74 @@ label:
     - _module.id: true
     - " - User Admin"
 ```
+
+## Endpoint Access
+
+In an app with auth configured, an API endpoint a module ships needs a signed-in caller unless the module or the app makes it public. The module lists the endpoints anyone may call, such as a sign-up or status check, under `auth.api.public` in its manifest:
+
+```yaml
+# module.lowdefy.yaml
+auth:
+  api:
+    public:
+      - ticket-status
+```
+
+The app makes a module endpoint public with `auth.api.public: true`, or by naming it in an `auth.api.public` list. Otherwise it stays protected, also with no `auth.api` rule or under a `protected` list that does not name it, where an app endpoint would be public. This holds for `InternalApi` endpoints and for calls made from a routine too: a public app endpoint, or a webhook without a `verify` gate, that calls a module endpoint with `CallApi` is refused when the caller is signed out. A role in `auth.api.roles` restricts a module endpoint whether it is public or not. A webhook endpoint must still be listed in the app's `auth.api.public`. In an app without auth, module endpoints follow the app's rules like any other.
+
+## Agent Access
+
+Agents a module ships in `agents:` are served from the API surface, so the app's `auth.api` rules match their scoped ids, as they do for endpoints. In an app with auth configured, a module agent needs a signed-in caller unless the module or the app makes it public. A signed-out caller who runs an agent spends model calls and runs its tools, so a module lists the agents anyone may use under `auth.agents.public` in its manifest:
+
+```yaml
+# module.lowdefy.yaml
+auth:
+  agents:
+    public:
+      - concierge
+```
+
+The app makes a module agent public with `auth.api.public: true`, or by naming it in an `auth.api.public` list. Otherwise it stays protected, also with no `auth.api` rule or under a `protected` list that does not name it, where an app agent would be public. A role in `auth.api.roles` restricts a module agent whether it is public or not. In an app without auth, module agents follow the app's rules like any other.
+
+A public agent does not open its tools: each tool endpoint keeps its own access, so a module endpoint the agent calls as a tool is refused when the caller is signed out unless the endpoint is public too. List the tools a public agent needs under `auth.api.public` as well, and a sub-agent it hands work to under `auth.agents.public`.
+
+## Shipping Websockets
+
+A module declares the websockets its pages subscribe to in `websockets:`, so an app that installs the module needs no websocket config of its own. Each item takes the same fields as an app's top-level [`websockets`](/websockets-introduction) (`id`, `type`, `connectionId`, `properties`, `tenant`). Write `connectionId` with `_module.connectionId`, so a connection the app remaps resolves to the app's connection:
+
+```yaml
+# websockets/user-changes.yaml
+id: user-changes
+type: MongoDBChangeStream
+connectionId:
+  _module.connectionId: users-db
+properties:
+  pipeline:
+    - $match:
+        operationType: update
+```
+
+Module pages subscribe with `_module.websocketId`:
+
+```yaml
+subscriptions:
+  - websocketId:
+      _module.websocketId: user-changes
+```
+
+The id is scoped like every other module id: in an entry with `id: user-admin` it is `user-admin/user-changes`. The app's `auth.websockets` rules match the scoped id, so `user-admin/**` under `auth.websockets.roles` restricts every websocket the entry ships. A `_secret` in a websocket's properties must be declared in the manifest's `secrets`, as for connections.
+
+In an app with auth configured, a module websocket needs a signed-in caller unless the module or the app makes it public. The module lists the websockets anyone may subscribe to under `auth.websockets.public` in its manifest:
+
+```yaml
+# module.lowdefy.yaml
+auth:
+  websockets:
+    public:
+      - status-feed
+```
+
+The app makes a module websocket public with `auth.websockets.public: true`, or by naming it in an `auth.websockets.public` list. Otherwise it stays protected, also with no `auth.websockets` rule or under a `protected` list that does not name it, where an app websocket would be public. A role in `auth.websockets.roles` restricts a module websocket whether it is public or not. In an app without auth, module websockets follow the app's rules like any other.
 
 ## Exposing Components
 
@@ -416,14 +487,14 @@ links:
       _module.pageId: users-list
     properties:
       title: Users
-      icon: AiOutlineUser
+      icon: user
   - id: invite
     type: MenuLink
     pageId:
       _module.pageId: user-invite
     properties:
       title: Invite User
-      icon: AiOutlineUserAdd
+      icon: UserPlus
 ```
 
 The app wraps these in a MenuGroup:

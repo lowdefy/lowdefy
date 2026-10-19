@@ -14,8 +14,8 @@
 
 id: affix
 type: Box
-properties:
-  style:
+style:
+  .element:
     height: 2000px
     paddingTop: 200px
 
@@ -53,6 +53,58 @@ blocks:
               content: Offset Top 50px
 
   # ============================================
+  # SCROLL TARGET
+  # ============================================
+
+  - id: affix_scroll_box
+    type: Box
+    style:
+      .element:
+        height: 200px
+        overflowY: auto
+        border: '1px solid #d9d9d9'
+    blocks:
+      - id: affix_scroll_spacer_top
+        type: Box
+        style:
+          .element:
+            height: 80px
+      - id: affix_target
+        type: Affix
+        properties:
+          offsetTop: 0
+          target: affix_scroll_box
+        events:
+          onChange:
+            - id: set_affix_target_state
+              type: SetState
+              params:
+                affix_target_affixed:
+                  _event: affixed
+        slots:
+          content:
+            blocks:
+              - id: affix_target_content
+                type: Span
+                properties:
+                  content: Sticky in panel
+      - id: affix_scroll_spacer_bottom
+        type: Box
+        style:
+          .element:
+            height: 800px
+
+  - id: affix_target_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'affixed:'
+          - _if_none:
+              - _state: affix_target_affixed
+              - false
+
+  # ============================================
   # CUSTOM STYLE
   # ============================================
 
@@ -60,7 +112,8 @@ blocks:
     type: Affix
     properties:
       offsetTop: 100
-      style:
+    style:
+      .element:
         zIndex: 100
     slots:
       content:

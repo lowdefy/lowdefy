@@ -19,20 +19,21 @@ import { Avatar, Badge, Dropdown } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 import { buildMenuItems, flattenLinks } from './buildMenuItems.js';
+import getDropdownMenuIcons from './getDropdownMenuIcons.js';
 
 function getDarkMode() {
   return window.__lowdefy_isDark ?? false;
 }
 
 function getDarkModePreference() {
-  return window.localStorage?.getItem('lowdefy_darkMode') ?? 'system';
+  return window.__lowdefy_darkModePreference ?? 'system';
 }
 
 function getDarkModeIcon() {
   const pref = getDarkModePreference();
-  if (pref === 'dark') return 'AiOutlineMoon';
-  if (pref === 'light') return 'AiOutlineSun';
-  return 'AiOutlineLaptop';
+  if (pref === 'dark') return 'theme-dark';
+  if (pref === 'light') return 'theme-light';
+  return 'theme-system';
 }
 
 function getDarkModeLabel() {
@@ -146,7 +147,7 @@ function renderNotifications({
       <Icon
         blockId={`${blockId}_notifications_icon`}
         events={events}
-        properties={notif.icon ?? { name: 'AiOutlineBell' }}
+        properties={notif.icon ?? { name: 'bell' }}
         styles={{ element: { fontSize: 16, color: iconsColor, ...styles.notificationsIcon } }}
       />
     </Badge>
@@ -232,7 +233,7 @@ function renderProfile({
           <Icon
             blockId={`${blockId}_profile_avatar_icon`}
             events={events}
-            properties={avatarProps.icon ?? { name: 'AiOutlineUser' }}
+            properties={avatarProps.icon ?? { name: 'user' }}
           />
         )
       }
@@ -273,6 +274,7 @@ function renderProfile({
     <Dropdown
       style={{ cursor: 'pointer' }}
       menu={{
+        ...getDropdownMenuIcons({ blockId: `${blockId}_profile_menu`, Icon }),
         items,
         onClick: ({ key, keyPath }) => {
           const link = linkMap[key];
@@ -286,8 +288,9 @@ function renderProfile({
       trigger={[prof.trigger ?? (expanded ? 'click' : 'hover')]}
       placement={prof.placement ?? (expanded ? 'topRight' : 'bottomRight')}
       arrow={prof.arrow}
-      popupClassName={classNames.profileMenu}
-      popupStyle={styles.profileMenu}
+      // rc-dropdown overwrites popupClassName and popupStyle, so the popup takes semantic root props.
+      classNames={{ root: classNames.profileMenu }}
+      styles={{ root: styles.profileMenu }}
       onOpenChange={(open) =>
         methods.triggerEvent({
           name: 'onProfileMenuOpen',
@@ -366,7 +369,7 @@ function renderLocaleSelector({
     <Icon
       blockId={`${blockId}_locale_selector_icon`}
       events={events}
-      properties={{ name: 'AiOutlineGlobal' }}
+      properties={{ name: 'globe' }}
       styles={{ element: { fontSize: 16, color: iconsColor } }}
     />
   );
@@ -391,6 +394,7 @@ function renderLocaleSelector({
   return (
     <Dropdown
       menu={{
+        ...getDropdownMenuIcons({ blockId: `${blockId}_locale_menu`, Icon }),
         items,
         selectedKeys: active ? [active] : [],
         onClick: ({ key }) => {
@@ -399,8 +403,8 @@ function renderLocaleSelector({
       }}
       trigger={[expanded ? 'click' : 'hover']}
       placement={expanded ? 'topRight' : 'bottomRight'}
-      popupClassName={classNames.localeSelectorMenu}
-      popupStyle={styles.localeSelectorMenu}
+      classNames={{ root: classNames.localeSelectorMenu }}
+      styles={{ root: styles.localeSelectorMenu }}
     >
       {/* Antd Dropdown attaches its trigger handlers to the immediate child
           DOM element; wrapping in a div ensures click/hover listeners land. */}
@@ -423,8 +427,7 @@ function renderHeaderActions({
   const hasNotifications = !type.isNone(properties.notifications);
   const hasProfile = !type.isNone(properties.profile);
   const hasDarkMode = properties.darkModeToggle;
-  const hasLocaleSelector =
-    properties.localeSelector && getSupportedLocales().length > 0;
+  const hasLocaleSelector = properties.localeSelector && getSupportedLocales().length > 0;
 
   if (!hasNotifications && !hasProfile && !hasDarkMode && !hasLocaleSelector) return null;
 
@@ -479,9 +482,4 @@ function registerLocaleMethod(methods) {
   });
 }
 
-export {
-  getDarkMode,
-  renderHeaderActions,
-  registerDarkModeMethod,
-  registerLocaleMethod,
-};
+export { getDarkMode, renderHeaderActions, registerDarkModeMethod, registerLocaleMethod };

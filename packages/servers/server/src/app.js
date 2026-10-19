@@ -17,13 +17,13 @@
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { compress } from 'hono/compress';
-import { timeout } from 'hono/timeout';
-import { initAuthConfig } from '@hono/auth-js';
 import { serveStatic } from '@hono/node-server/serve-static';
+import { runInCredentialScope } from '@lowdefy/node-utils';
 
 import agentHandler from './routes/agent.js';
 import apiContext from './middleware/apiContext.js';
 import apiPageHandler from './routes/apiPage.js';
+import appMeta from '../lib/build/appMeta.js';
 import authJson from '../lib/build/auth.js';
 import authMiddleware from './routes/auth.js';
 import clientErrorHandler from './routes/clientError.js';
@@ -33,13 +33,23 @@ import cronForwardHandler from './routes/cronForward.js';
 import cronHandler from './routes/cron.js';
 import detachedHandler from './routes/detached.js';
 import endpointsHandler from './routes/endpoints.js';
-import getAuthConfig from '../lib/server/auth/getAuthConfig.js';
+import getAuth from '../lib/server/auth/getAuth.js';
+import getStrategies from '../lib/server/auth/getStrategies.js';
 import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
+import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
+import mountPageRoutes from './routes/mountPageRoutes.js';
+import noStore from './middleware/noStore.js';
+import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
+import refuseOtherBuild from './middleware/refuseOtherBuild.js';
+import requestTimeout from './middleware/requestTimeout.js';
 import sentryMiddleware from './middleware/sentry.js';
+import stampBuildId from './middleware/stampBuildId.js';
+import stampCaller from './middleware/stampCaller.js';
 import usageHandler from './routes/usage.js';
+import userHandler from './routes/user.js';
 import websocketHandler from './routes/websocket.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
@@ -53,7 +63,10 @@ const requestTimeoutMs = lowdefyConfig.requestTimeout ?? 30000;
 // `serveStaticAssets` is true for the Node server (it serves `dist/client` itself). On a
 // platform that serves the built client + public files from a CDN (e.g. Vercel), pass false so
 // the request handler skips the Node-only static middleware and only owns the dynamic routes.
-function createApp({ serveStaticAssets = true } = {}) {
+// `clientAddressHeader` names the header a platform's edge sets to the client address on every
+// request (Vercel's x-real-ip). Without it the Node server resolves the address from the
+// connection and config.trustedProxies.
+function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   const app = basePath ? new Hono().basePath(basePath) : new Hono();
   const logger = createLogger({ server: 'lowdefy' });
 
@@ -61,12 +74,17 @@ function createApp({ serveStaticAssets = true } = {}) {
   // before all middleware so probes skip auth, session, request logging, and Sentry.
   app.get('/api/lowdefy-health', (c) => c.json({ status: 'ok' }));
 
+  // Each request runs in its own credential scope: what it marks with _credential is scrubbed
+  // from every log line written while it is handled.
+  app.use('*', (c, next) => runInCredentialScope(next));
+
   app.use('*', sentryMiddleware());
 
   // Bound request duration so a hung upstream returns an error instead of running to the platform's
   // function limit (cost protection on serverless). Agent streaming is long-lived by design, so it
   // is exempt. Configured via `config.requestTimeout` in lowdefy.yaml (0 disables).
   if (requestTimeoutMs > 0) {
+    const timeoutMiddleware = requestTimeout({ timeoutMs: requestTimeoutMs });
     app.use('*', async (c, next) => {
       if (
         c.req.path.includes('/api/agent/') ||
@@ -75,7 +93,7 @@ function createApp({ serveStaticAssets = true } = {}) {
       ) {
         return next();
       }
-      return timeout(requestTimeoutMs)(c, next);
+      return timeoutMiddleware(c, next);
     });
   }
 
@@ -93,18 +111,46 @@ function createApp({ serveStaticAssets = true } = {}) {
   });
 
   if (authJson.configured === true) {
-    app.use(
-      '*',
-      initAuthConfig(() => getAuthConfig({ logger }))
-    );
+    // Construct the BetterAuth instance and strategy verifiers at startup so
+    // config errors fail boot instead of the first request, and so the
+    // process-memoized singletons capture the base logger rather than the
+    // first request's rid-scoped child.
+    getAuth({ logger });
+    getStrategies({ logger });
   }
 
-  app.use('/api/*', apiContext());
-  app.use('/api/auth/*', authMiddleware());
-  app.all('/api/request/*', requestHandler);
+  mountOauthDiscovery({
+    app,
+    auth: authJson.configured === true ? getAuth({ logger }) : null,
+  });
+  app.all('/.well-known/*', wellKnownFallbackHandler);
+
+  app.use('/api/*', apiContext({ clientAddressHeader }));
+  // Responses that carry the caller's data are never stored by a browser or proxy cache.
+  // Static assets keep their own caching below; the page routes use the same middleware.
+  const noStoreMiddleware = noStore();
+  ['/api/page/*', '/api/user', '/api/request/*', '/api/endpoints/*'].forEach((route) =>
+    app.use(route, noStoreMiddleware)
+  );
+  // A tab left open across a deploy (or restored from the browser cache) runs
+  // the old bundle against this build: see refuseOtherBuild and stampBuildId.
+  app.use('/api/auth/*', stampBuildId({ buildId: appMeta.buildId }));
+  app.use('/api/user', stampBuildId({ buildId: appMeta.buildId }));
+  app.use('/api/auth/*', authMiddleware({ logger }));
+  // The caller each page, request and endpoint response was answered as: the
+  // client reloads when it differs from the caller it renders (stampCaller).
+  app.use('/api/request/*', stampCaller());
+  app.use('/api/endpoints/*', stampCaller());
+  app.use('/api/page/*', stampCaller());
+  app.all('/api/request/*', refuseOtherBuild({ buildId: appMeta.buildId }), requestHandler);
   // Endpoint payloads may carry base64 file content (emitFileContent + CallAPI);
   // cap bodies at 10 MiB to match the agent route.
-  app.all('/api/endpoints/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), endpointsHandler);
+  app.all(
+    '/api/endpoints/*',
+    refuseOtherBuild({ buildId: appMeta.buildId }),
+    bodyLimit({ maxSize: 10 * 1024 * 1024 }),
+    endpointsHandler
+  );
   app.get('/api/cron/*', cronHandler);
   app.get('/api/cron-forward/*', cronForwardHandler);
   app.post('/api/detached/*', detachedHandler);
@@ -114,10 +160,21 @@ function createApp({ serveStaticAssets = true } = {}) {
   app.all('/api/mcp', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);
   app.get('/api/websocket', websocketHandler);
   app.get('/api/page/*', apiPageHandler);
+  app.get('/api/user', userHandler);
 
   // Vite build output (includes public/ via Vite's publicDir copy). Falls
   // through to the page routes when no file matches.
   if (serveStaticAssets) {
+    // Vite content-hashes everything under assets/, so a file never changes at
+    // its URL. Pages load many small chunks; without this each is re-fetched
+    // whenever the browser's heuristic freshness runs out (serveStatic sets
+    // Last-Modified but never answers 304).
+    app.use('/assets/*', async (c, next) => {
+      await next();
+      if (c.res.status === 200) {
+        c.header('Cache-Control', 'public, max-age=31536000, immutable');
+      }
+    });
     app.use(
       '/*',
       serveStatic({
@@ -127,10 +184,10 @@ function createApp({ serveStaticAssets = true } = {}) {
     );
   }
 
-  app.use('/*', apiContext());
-  app.get('/', (c) => renderPage(c, { pageId: '' }));
-  app.get('/404', (c) => renderPage(c, { pageId: '404', status: 404 }));
-  app.get('/:rest{.+}', (c) => renderPage(c, { pageId: c.req.param('rest') }));
+  app.use('/*', apiContext({ clientAddressHeader }));
+  // Registered after the static middleware, which answers a file without calling next().
+  app.use('/*', noStoreMiddleware);
+  mountPageRoutes({ app, basePath, renderPage });
 
   app.onError(createErrorHandler({ basePath, logger }));
 

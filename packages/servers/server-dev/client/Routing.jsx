@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
 
 import Head from '@lowdefy/client/adapters/Head.js';
 import createLinkComponent from '@lowdefy/client/adapters/Link.js';
@@ -23,10 +23,12 @@ import BuildingPage from '../lib/client/BuildingPage.jsx';
 import RestartingPage from '../lib/client/RestartingPage.jsx';
 import FeedbackMount from './feedback/FeedbackMount.jsx';
 import Inspector from './Inspector.jsx';
+import JourneyObserver from './JourneyObserver.jsx';
 import OpenInEditorListener from './openInEditor/OpenInEditorListener.jsx';
+import Recorder from './Recorder.jsx';
 import Reload from './Reload.jsx';
 import Page from './Page.jsx';
-import setPageId from '../lib/client/setPageId.js';
+import getPagePath from '../lib/client/getPagePath.js';
 import { bumpNavVersion, getReloadVersion } from '../lib/client/utils/useMutateCache.js';
 import useRootConfig from '../lib/client/utils/useRootConfig.js';
 
@@ -39,12 +41,18 @@ import staticJsMap from '../build/plugins/operators/clientJsMap.js';
 
 // Replaces lib/client/App.js — page resolution driven by the custom router
 // instead of next/router, everything else preserved.
-function Routing({ auth, lowdefy, router }) {
+function Routing({ auth, lowdefy, recording, router }) {
   const { data: rootConfig } = useRootConfig(router.basePath);
   const [location, setLocation] = useState(() => router.getLocation());
 
   useEffect(() => {
     return router.subscribe((location) => {
+      // The URL already names the next page, but window.lowdefy.pageId and
+      // its context stay the previous page's until Page renders the next
+      // one. Marked here, synchronously inside the navigation (a Link in
+      // onInit included), so a headless caller waiting on isPageReady does
+      // not settle on the page being left. Page.jsx clears it.
+      lowdefy._devNavigating = true;
       // Dynamic pages re-resolve per navigation — bump before setLocation so
       // the page config SWR key changes with the navigation. The router
       // notifies with a fresh location object per event, so same-URL
@@ -52,40 +60,55 @@ function Routing({ auth, lowdefy, router }) {
       bumpNavVersion();
       setLocation(location);
     });
-  }, [router]);
+  }, [lowdefy, router]);
 
   const [Link] = useState(() => createLinkComponent({ router }));
+
+  // The page instance on screen, { pageId, pathParams, instanceKey }, as the fetched page names
+  // it. null until the first page renders; it names the previous page while the next one fetches.
+  const [shownPage, setShownPage] = useState(null);
+  const onPageShown = useCallback((page) => {
+    setShownPage((current) => (current?.instanceKey === page.instanceKey ? current : page));
+  }, []);
 
   if (rootConfig?.theme) {
     lowdefy.theme = rootConfig.theme;
   }
 
-  const { redirect, pageId } = setPageId(location, rootConfig);
+  // The page is fetched by path; the server says which page it is.
+  const { redirect, path } = getPagePath(location, rootConfig);
   useEffect(() => {
     if (redirect) {
-      router.replace({ pathname: `/${pageId}` });
+      router.replace({ pathname: `/${path}` });
     }
-  }, [redirect, pageId, router]);
+  }, [redirect, path, router]);
   if (redirect) {
     return '';
   }
-
   return (
     <>
-      <FeedbackMount basePath={router.basePath} lowdefy={lowdefy} pageId={pageId} />
-      <OpenInEditorListener basePath={router.basePath} pageId={pageId} />
+      <FeedbackMount basePath={router.basePath} lowdefy={lowdefy} page={shownPage} />
+      <OpenInEditorListener basePath={router.basePath} pageId={shownPage?.pageId} />
       <Reload basePath={router.basePath} lowdefy={lowdefy}>
         {(resetContext) => (
           <>
             {/* Inside Reload so it can share Reload's event stream (DevStreamContext). */}
-            <Inspector basePath={router.basePath} lowdefy={lowdefy} pageId={pageId} />
+            <Inspector basePath={router.basePath} lowdefy={lowdefy} page={shownPage} />
+            <JourneyObserver lowdefy={lowdefy} />
+            <Recorder
+              basePath={router.basePath}
+              lowdefy={lowdefy}
+              page={shownPage}
+              path={path}
+              recording={recording}
+            />
             {/* Rendered here, not in Page — Page sits below the Suspense boundary
                 and cannot render anything while its config fetch is suspended, so
                 a restarting server would present as "Building page..." forever. */}
             {resetContext.restarting ? (
               <RestartingPage />
             ) : (
-              <Suspense key={`${pageId}_${getReloadVersion()}`} fallback={<BuildingPage />}>
+              <Suspense key={`${path}_${getReloadVersion()}`} fallback={<BuildingPage />}>
                 <Page
                   auth={auth}
                   Components={{ Head, Link }}
@@ -94,7 +117,8 @@ function Routing({ auth, lowdefy, router }) {
                   }}
                   jsMap={staticJsMap}
                   lowdefy={lowdefy}
-                  pageId={pageId}
+                  onPageShown={onPageShown}
+                  path={path}
                   resetContext={resetContext}
                   router={router}
                   types={{

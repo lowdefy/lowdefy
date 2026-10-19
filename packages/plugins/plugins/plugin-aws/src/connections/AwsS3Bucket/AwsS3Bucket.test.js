@@ -21,10 +21,16 @@ import AwsS3Bucket from './AwsS3Bucket.js';
 const schema = AwsS3Bucket.schema;
 
 test('All requests are present', () => {
+  expect(AwsS3Bucket.requests.AwsS3DeleteObject).toBeDefined();
   expect(AwsS3Bucket.requests.AwsS3GetObject).toBeDefined();
+  expect(AwsS3Bucket.requests.AwsS3HeadObject).toBeDefined();
   expect(AwsS3Bucket.requests.AwsS3PresignedGetObject).toBeDefined();
   expect(AwsS3Bucket.requests.AwsS3PresignedPostPolicy).toBeDefined();
   expect(AwsS3Bucket.requests.AwsS3PutObject).toBeDefined();
+});
+
+test('AwsS3Bucket declares it reaches an outside service under a journey data set', () => {
+  expect(AwsS3Bucket.meta).toEqual({ dataSet: 'external' });
 });
 
 test('valid connection schema', () => {

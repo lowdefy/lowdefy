@@ -16,7 +16,8 @@
 
 export default {
   category: 'input',
-  icons: [],
+  actions: ['Request'],
+  icons: ['bold', 'italic', 'strikethrough', 'highlight'],
   valueType: 'object',
   initValue: {
     html: null,
@@ -78,6 +79,7 @@ export default {
       },
       image: {
         type: 'object',
+        urlKind: false,
         description: 'Image extension settings.',
         additionalProperties: false,
         properties: {

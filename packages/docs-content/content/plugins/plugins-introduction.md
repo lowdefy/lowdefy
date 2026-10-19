@@ -2,7 +2,7 @@
 
 Lowdefy plugins provides an interface to extend the platform functionality with custom javascript code. Plugins are installed into the Lowdefy app during the Lowdefy build process, and as a result are included as part of the Vite client build output. This enables plugin developers to use any npm packages when building Lowdefy plugins.
 
-Lowdefy plugins can be used to create custom blocks, connections, requests, action, operators and auth providers, adapters, callbacks and events. These plugins are written as standard [npm modules](https://docs.npmjs.com/about-packages-and-modules#about-modules), so community plugins can be published to npm, and the workspace and git protocols can be used for project specific or private plugins. Since plugins are npm packages most Javascript features and third-party npm packages can be used in plugins.
+Lowdefy plugins can be used to create custom blocks, connections, requests, action, operators and auth providers, adapters, callbacks and events. [Icon-set plugins](/plugins-icon-sets) add icons as data. These plugins are written as standard [npm modules](https://docs.npmjs.com/about-packages-and-modules#about-modules), so community plugins can be published to npm, and the workspace and git protocols can be used for project specific or private plugins. Since plugins are npm packages most Javascript features and third-party npm packages can be used in plugins.
 
 ## Using a plugin
 
@@ -26,4 +26,30 @@ plugins:
   - name: other-plugin
     version: 1.0.0
     typePrefix: Other
+```
+
+## Plugin meta
+
+Every plugin type can describe itself to the build and to AI coding agents through a `meta` object. For blocks it is the `meta.js` next to the block (`category`, `valueType`, `initValue`, `cssKeys`, `events`, `properties`, ...), for requests it is the `meta` property on the request function (`checkRead`, `checkWrite`), and for operators a package may export a `./metas` module with one object per operator, mirroring `./schemas`.
+
+All three accept `meta.hazards`: a list of behaviours of the type that its schema cannot express, which the dev server's docs and MCP endpoint return to agents alongside the schema (see [AI agent docs](/ai-agent-docs)). Each hazard is:
+
+```yaml
+hazards:
+  - id: html-style-stripped # kebab-case, unique within the type
+    message: Content is sanitised with DOMPurify, so <style>, <script> and inline event handlers are removed. Use DangerousHtml for a trusted <style> block.
+    see: display-blocks/html # a docs slug, or null
+```
+
+The `message` is one or two plain sentences saying what happens and what to do instead. Only add a hazard for a behaviour that is verified in the plugin's code — an agent will rely on it.
+
+A block marks each property that holds a URL with `urlKind` in its `properties` schema: `url` for a link the engine opens (a colon-less value is read as `https://`), `href` for a link the browser opens, `src` for a resource the block loads, and `srcSet` for a list of sources. A [dynamic blocks policy](/dynamic-page-content#dynamic-blocks-policies) checks marked properties against its pages and origins whatever they are called. Every other property is judged by its name (`url`, `href`, `src`, `image`, ...), so a property whose name looks like a URL key but holds something else, such as a field name, is marked `urlKind: false`.
+
+```js
+properties: {
+  type: 'object',
+  properties: {
+    indexUrl: { type: 'string', urlKind: 'src', description: 'URL of the search index.' },
+  },
+},
 ```

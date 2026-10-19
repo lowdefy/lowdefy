@@ -7,7 +7,7 @@
       ],
       "errorContains": [
         "Protected and public pages are mutually exclusive. When protected pages are listed, all unlisted pages are public by default and vice versa.",
-        "lowdefy.yaml:13"
+        "lowdefy.yaml:23"
       ]
     }
   ]

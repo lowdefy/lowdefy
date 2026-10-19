@@ -21,7 +21,7 @@ events:
       type: SetState
       params:
         tiptap_mention_with_value:
-          html: '<p>Hi <span class="tiptap-mention">@Alice</span>.</p>'
+          html: '<p>Hi <span data-type="mention" class="tiptap-mention" data-id="user_1" data-label="Alice">@Alice</span>.</p>'
         tiptap_mention_disabled:
           html: '<p>Disabled mention editor.</p>'
         # Saved html round-trip: a mention node comes back with a STRING id

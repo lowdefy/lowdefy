@@ -17,7 +17,6 @@
 import React from 'react';
 import { Bubble, FileCard } from '@ant-design/x';
 import { Avatar } from 'antd';
-import { RobotOutlined, UserOutlined } from '@ant-design/icons';
 
 import { getFileCardType, getFileCardIcon, getFileName } from './fileCardUtils.js';
 import { hasVisibleContent } from './messageParts.js';
@@ -55,6 +54,7 @@ function ThinkingBubbleContent({ bubbleId, config }) {
 
 const MessageList = React.forwardRef(function MessageList(
   {
+    Icon,
     messages,
     isStreaming,
     config,
@@ -165,7 +165,10 @@ const MessageList = React.forwardRef(function MessageList(
           shape: config?.roles?.user?.shape ?? 'round',
           styles: config?.roles?.user?.styles,
           classNames: config?.roles?.user?.classNames,
-          avatar: roleAvatar(config?.roles?.user, <UserOutlined />),
+          avatar: roleAvatar(
+            config?.roles?.user,
+            <Icon blockId="agent_chat_user_avatar" properties={{ name: 'user', title: '' }} />
+          ),
           header: roleHeader(config?.roles?.user, 'agent.message.userHeader', translate),
           editable:
             config?.editableMessages !== false
@@ -221,7 +224,10 @@ const MessageList = React.forwardRef(function MessageList(
           style: { maxWidth: '100%' },
           styles: config?.roles?.assistant?.styles,
           classNames: config?.roles?.assistant?.classNames,
-          avatar: roleAvatar(config?.roles?.assistant, <RobotOutlined />),
+          avatar: roleAvatar(
+            config?.roles?.assistant,
+            <Icon blockId="agent_chat_assistant_avatar" properties={{ name: 'bot', title: '' }} />
+          ),
           header: roleHeader(config?.roles?.assistant, 'agent.message.assistantHeader', translate),
           typing: config?.roles?.assistant?.typing
             ? config.roles.assistant.typing
@@ -230,6 +236,7 @@ const MessageList = React.forwardRef(function MessageList(
             const parts = partsMap.get(info.key);
             return (
               <MessageBubble
+                Icon={Icon}
                 content={content}
                 isStreaming={isStreaming}
                 parts={parts}

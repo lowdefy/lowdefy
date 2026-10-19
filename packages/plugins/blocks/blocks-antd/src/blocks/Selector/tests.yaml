@@ -60,20 +60,20 @@
     options:
       - Option 1
       - Option 2
-- id: 'properties.clearIcon: ChromeFilled'
+- id: 'properties.clearIcon: Globe'
   type: Selector
   properties:
     allowClear: true
-    clearIcon: ChromeFilled
+    clearIcon: Globe
     options:
       - Option 1
       - Option 2
-- id: 'properties.clearIcon-object: ChromeFilled'
+- id: 'properties.clearIcon-object: Globe'
   type: Selector
   properties:
     allowClear: true
     clearIcon:
-      name: ChromeFilled
+      name: Globe
       color: red
     options:
       - Option 1
@@ -116,10 +116,10 @@
   type: Selector
   properties:
     size: default
-- id: 'properties.suffixIcon: AiOutlineDoubleLeft'
+- id: 'properties.suffixIcon: chevrons-left'
   type: Selector
   properties:
-    suffixIcon: AiOutlineDoubleLeft
+    suffixIcon: chevrons-left
 - id: 'properties.label span: 12'
   type: Selector
   properties:
@@ -194,3 +194,52 @@
         value: 2
       - label: Option 3
         value: 3
+- id: 'properties.variant: underlined'
+  type: Selector
+  properties:
+    variant: underlined
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.placement: topLeft'
+  type: Selector
+  properties:
+    placement: topLeft
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.listHeight: 128'
+  type: Selector
+  properties:
+    listHeight: 128
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.popupMatchSelectWidth: false'
+  type: Selector
+  properties:
+    popupMatchSelectWidth: false
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.virtual: false'
+  type: Selector
+  properties:
+    virtual: false
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.prefix: Fruit'
+  type: Selector
+  properties:
+    prefix: 'Fruit:'
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.prefixIcon: search'
+  type: Selector
+  properties:
+    prefixIcon: search
+    options:
+      - Option 1
+      - Option 2

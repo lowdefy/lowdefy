@@ -227,6 +227,36 @@
           - label: Africa
             value: af
 
+- title: Max Count and Responsive Tags
+  blocks:
+    - id: max_count_selector
+      type: MultipleSelector
+      properties:
+        title: Pick Up to 2 Toppings
+        maxCount: 2
+        options:
+          - Cheese
+          - Mushrooms
+          - Olives
+          - Peppers
+          - Onions
+    - id: responsive_tags_selector
+      type: MultipleSelector
+      properties:
+        title: Responsive Tag Count
+        maxTagCount: responsive
+        options:
+          - label: Engineering
+            value: engineering
+          - label: Design
+            value: design
+          - label: Marketing
+            value: marketing
+          - label: Operations
+            value: operations
+          - label: Customer Success
+            value: success
+
 - title: Custom Placeholder & Not Found
   blocks:
     - id: custom_placeholder
@@ -299,7 +329,7 @@
       type: MultipleSelector
       properties:
         title: Custom Suffix Icon
-        suffixIcon: AiOutlineSearch
+        suffixIcon: search
         options:
           - label: Tokyo
             value: tokyo
@@ -314,7 +344,7 @@
       properties:
         title: Colored Suffix Icon
         suffixIcon:
-          name: AiOutlineGlobal
+          name: globe
           color: '#1677ff'
         options:
           - label: Tokyo
@@ -327,7 +357,7 @@
       type: MultipleSelector
       properties:
         title: Custom Clear Icon
-        clearIcon: AiOutlineDelete
+        clearIcon: delete
         options:
           - label: File A
             value: a
@@ -339,7 +369,7 @@
       type: MultipleSelector
       properties:
         title: Custom Selected Icon
-        selectedIcon: AiOutlineStar
+        selectedIcon: star
         options:
           - label: Gold Plan
             value: gold
@@ -513,22 +543,22 @@
           - label: Approved
             value: approved
             tag:
-              icon: AiOutlineCheck
+              icon: check
               color: success
           - label: Pending
             value: pending
             tag:
-              icon: AiOutlineClockCircle
+              icon: clock
               color: processing
           - label: Rejected
             value: rejected
             tag:
-              icon: AiOutlineClose
+              icon: close
               color: error
           - label: Draft
             value: draft
             tag:
-              icon: AiOutlineEdit
+              icon: edit
               color: default
     - id: tags_icons_colors_titles
       type: MultipleSelector
@@ -540,19 +570,19 @@
             value: high
             tag:
               title: High
-              icon: AiOutlineArrowUp
+              icon: arrow-up
               color: red
           - label: Medium Priority
             value: medium
             tag:
               title: Med
-              icon: AiOutlineMinus
+              icon: minus
               color: orange
           - label: Low Priority
             value: low
             tag:
               title: Low
-              icon: AiOutlineArrowDown
+              icon: arrow-down
               color: green
 
 - title: Disabled State
@@ -838,7 +868,7 @@
       type: MultipleSelector
       style:
         .element:
-          border: 2px solid '#1677ff'
+          border: '2px solid #1677ff'
           borderRadius: 8
       properties:
         title: Custom Border Style
@@ -855,6 +885,7 @@
       type: MultipleSelector
       style:
         .element:
+          backgroundColor: var(--ant-color-primary-bg)
       properties:
         title: Custom Background
         label:
@@ -880,7 +911,7 @@
           - label: Three
             value: 3
       class:
-        element: rounded-lg shadow-sm
+        .element: rounded-lg shadow-sm
     - id: class_tailwind_label
       type: MultipleSelector
       properties:
@@ -891,7 +922,7 @@
           - label: Beta
             value: beta
       class:
-        label: text-blue-600 font-semibold
+        .label: text-blue-600 font-semibold
 
 - title: Theme Token Overrides
   blocks:
@@ -986,8 +1017,8 @@
         renderTags: true
         maxTagCount: 3
         size: large
-        suffixIcon: AiOutlineTeam
-        selectedIcon: AiOutlineCheckCircle
+        suffixIcon: users
+        selectedIcon: check-circle
         label:
           extra: Select up to 5 team roles for the project.
         options:
@@ -995,37 +1026,37 @@
             value: pm
             tag:
               title: PM
-              icon: AiOutlineCrown
+              icon: Crown
               color: gold
           - label: Tech Lead
             value: lead
             tag:
               title: Lead
-              icon: AiOutlineStar
+              icon: star
               color: blue
           - label: Developer
             value: dev
             tag:
               title: Dev
-              icon: AiOutlineCode
+              icon: CodeXml
               color: green
           - label: Designer
             value: design
             tag:
               title: UX
-              icon: AiOutlineBgColors
+              icon: PaintBucket
               color: magenta
           - label: QA Engineer
             value: qa
             tag:
               title: QA
-              icon: AiOutlineBug
+              icon: Bug
               color: volcano
           - label: DevOps
             value: devops
             tag:
               title: Ops
-              icon: AiOutlineCloudServer
+              icon: Server
               color: cyan
     - id: combined_themed
       type: MultipleSelector
@@ -1069,7 +1100,7 @@
           properties:
             title: Project Name
             placeholder: Enter project name
-            prefixIcon: AiOutlineProject
+            prefixIcon: SquareKanban
         - id: applied2_team_members
           type: MultipleSelector
           properties:
@@ -1110,12 +1141,12 @@
             title: Project Deadline
             placeholder: Select deadline
             format: DD MMM YYYY
-            suffixIcon: AiOutlineCalendar
+            suffixIcon: calendar
         - id: applied2_team_assign_btn
           type: Button
           properties:
             title: Assign Team
-            icon: AiOutlineTeam
+            icon: users
             type: primary
             size: large
             block: true
@@ -1186,7 +1217,7 @@
           type: Button
           properties:
             title: Apply Filters
-            icon: AiOutlineFilter
+            icon: filter
             type: primary
             block: true
           events:

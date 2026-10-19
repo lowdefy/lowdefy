@@ -39,7 +39,7 @@ _ref:
             ```text
             # syntax=docker/dockerfile:1
 
-            FROM node:22-slim AS builder
+            FROM node:24-slim AS builder
 
             WORKDIR /lowdefy
 
@@ -65,7 +65,7 @@ _ref:
               && npx lowdefy@"$LOWDEFY_VERSION" build \
               && npx lowdefy@"$LOWDEFY_VERSION" docker-output
 
-            FROM node:22-slim AS runner
+            FROM node:24-slim AS runner
 
             ENV NODE_ENV=production
             ENV PORT=3000
@@ -117,7 +117,7 @@ _ref:
             - **Fast rebuilds**: the pnpm store is kept in a BuildKit cache mount, so changing app config only re-downloads dependencies that actually changed.
             - **Small runtime image**: `docker-output` traces the server's real import graph and copies only what the server loads at runtime — a fraction of the installed `node_modules`, since the client-side block packages are already compiled into `dist/client` and never imported by the server.
             - **Non-root**: the server runs as the `node` user built into the official Node.js images.
-            - For stronger supply-chain guarantees, pin the base images by digest (`node:22-slim@sha256:...`) and let a bot like Renovate or Dependabot keep the digest updated.
+            - For stronger supply-chain guarantees, pin the base images by digest (`node:24-slim@sha256:...`) and let a bot like Renovate or Dependabot keep the digest updated.
 
             ### Health checks
 
@@ -148,7 +148,7 @@ _ref:
             | `LOWDEFY_SECRET_*`  | App secrets, accessed with the [`_secret`](/_secret) operator.           |
             | `AUTH_SECRET`       | Required when using [Lowdefy Auth](/users-introduction).                 |
             | `LOWDEFY_ENVIRONMENT` | Read at build time: the environment this image is built for, one of `config.environments`. |
-            | `AUTH_URL`          | The deployed app URL, required for OAuth providers. Defaults to the `url` of the current environment in `config.environments`. |
+            | `BETTER_AUTH_URL`   | The app's canonical origin for auth links and the MCP resource URIs. Defaults to the `url` of the current environment in `config.environments`. The server refuses to start without one of the two when `auth.email` is configured. Set it when a proxy terminates TLS in front of the container: without it, auth trusts only the origin the request reached the server on (`http://…`), and refuses sign-in from the `https://` page. |
             | `CRON_SECRET`       | Bearer token protecting `/api/cron/*` and `/api/detached/*` endpoints.   |
             | `LOWDEFY_LOG_LEVEL` | Server log level: `debug`, `info` (default), `warn`, `error`.            |
             | `SENTRY_DSN`        | Enables Sentry error reporting when set.                                 |
@@ -171,6 +171,21 @@ _ref:
             RUN --mount=type=secret,id=sentry,env=SENTRY_AUTH_TOKEN \
               npx lowdefy@"$LOWDEFY_VERSION" build
             ```
+
+            ### Behind a reverse proxy
+
+            The server takes each request's client address from its connection. Auth rate limits count attempts per client address (for example 3 sign-in attempts per 10 seconds), sessions record it, and the request log writes it as `client_address`. `X-Forwarded-For` is not read by default, because any client can send it.
+
+            Behind a reverse proxy, load balancer or ingress, every connection comes from the proxy, so every client would share its address and its rate limits. List the proxy addresses, or CIDR ranges, in `config.trustedProxies`:
+
+            ```yaml
+            config:
+              trustedProxies:
+                - 10.0.0.0/8
+                - 172.16.0.0/12
+            ```
+
+            When a request's connection comes from a trusted proxy, the server reads `X-Forwarded-For` from the right, skips every trusted hop, and takes the first address that is not trusted. Entries further left were written by the client and are ignored. Do not list `0.0.0.0/0` or `::/0`: they trust every address, so any client could choose its own, and the build warns about them. The proxy must append to `X-Forwarded-For` (nginx: `proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;`). The server logs a warning the first time a request carries `X-Forwarded-For` while `trustedProxies` is not set.
 
             ### Logging
 
@@ -212,7 +227,7 @@ _ref:
             docker compose up --build
             ```
 
-            If you set a container memory limit, Node.js 22+ sizes its heap from the container's cgroup limit automatically. To control it explicitly, set `NODE_OPTIONS=--max-old-space-size=<MiB>` a comfortable margin below the container limit.
+            If you set a container memory limit, Node.js 24+ sizes its heap from the container's cgroup limit automatically. To control it explicitly, set `NODE_OPTIONS=--max-old-space-size=<MiB>` a comfortable margin below the container limit.
 
             ### Config files or plugins outside the config directory
 
@@ -223,7 +238,7 @@ _ref:
             ```text
             # syntax=docker/dockerfile:1
 
-            FROM node:22-slim AS builder
+            FROM node:24-slim AS builder
 
             WORKDIR /lowdefy
 
@@ -241,7 +256,7 @@ _ref:
               && npx lowdefy@"$LOWDEFY_VERSION" build --config-directory ./app \
               && npx lowdefy@"$LOWDEFY_VERSION" docker-output --config-directory ./app
 
-            FROM node:22-slim AS runner
+            FROM node:24-slim AS runner
 
             ENV NODE_ENV=production
             ENV PORT=3000

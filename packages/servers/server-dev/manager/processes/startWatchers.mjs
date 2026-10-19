@@ -16,16 +16,18 @@
 
 import envWatcher from '../watchers/envWatcher.mjs';
 import lowdefyBuildWatcher from '../watchers/lowdefyBuildWatcher.mjs';
-import moduleBuildWatcher from '../watchers/moduleBuildWatcher.mjs';
-import serverArtifactWatcher from '../watchers/serverArtifactWatcher.mjs';
+import pluginSourceWatcher from '../watchers/pluginSourceWatcher.mjs';
+import restartRequestWatcher from '../watchers/restartRequestWatcher.mjs';
+import serverPackageWatcher from '../watchers/serverPackageWatcher.mjs';
 
 function startWatchers(context) {
   return async () => {
     await Promise.all([
       envWatcher(context),
       lowdefyBuildWatcher(context),
-      moduleBuildWatcher(context),
-      serverArtifactWatcher(context),
+      pluginSourceWatcher(context),
+      restartRequestWatcher(context),
+      serverPackageWatcher(context),
     ]);
   };
 }

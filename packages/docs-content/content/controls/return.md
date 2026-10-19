@@ -1,18 +1,21 @@
 # :return
 
 ```
-({:return: any}): void
+({:return: any, :content_type: string}): void
 ```
 
 The `:return` control immediately ends the execution of an API endpoint routine and returns a successful response with the specified data.
 Any routine steps after a `:return` are not executed. The control accepts any value type (objects, arrays, strings, numbers, null) and marks the API call as successful.
 When used within conditional controls like [`:if`](/:if) or [`:switch`](/:switch), it provides a way to exit early with a success status and return data to the client.
 
+In a [webhook endpoint](/api#answering-with-plain-text), `:content_type: text/plain` sends the returned string as a plain-text body instead of JSON, for a handshake that wants a text reply. The value must be a string. `text/plain` is the only accepted type, and `:content_type` on any other endpoint is a build error.
+
 The `:return` control also works in client [event action lists](/events-and-actions) — it ends the whole event successfully, the event's `catch` actions do not run, and any actions after it are recorded as skipped. Inside a `catch` action list, `:return` ends the remaining catch actions the same way, but the event keeps its error result — `success` stays `false`.
 
 #### Keys
 
 - `:return: any`: __Required__ - The value that will be returned in the response object of the API call result.
+- `:content_type: string`: In a webhook endpoint, `text/plain` answers with the returned string as a plain-text body.
 
 #### Examples
 
@@ -28,6 +31,19 @@ The `:return` control also works in client [event action lists](/events-and-acti
         _payload: company_id
 - :return:
     _step: get_company
+```
+
+###### Answer a webhook handshake with plain text
+
+```yaml
+- :if:
+    _ne:
+      - _payload: query.validationToken
+      - null
+  :then:
+    :return:
+      _payload: query.validationToken
+    :content_type: text/plain
 ```
 
 ###### Switch with multiple returns

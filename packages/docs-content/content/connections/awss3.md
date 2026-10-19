@@ -69,7 +69,9 @@ The same connection and requests work against any S3-compatible service — set 
 ## Requests
 
 Request types:
+  - AwsS3DeleteObject
   - AwsS3GetObject
+  - AwsS3HeadObject
   - AwsS3PresignedGetObject
   - AwsS3PresignedPostPolicy
   - AwsS3PutObject
@@ -196,6 +198,59 @@ api:
             _step: put_copy.key
 ```
 
+### AwsS3HeadObject
+
+The `AwsS3HeadObject` request checks on the server whether an object exists in the bucket and
+returns its metadata without reading its content. Use it in an [API endpoint](/lowdefy-api) routine
+to confirm a file uploaded from the browser with an `AwsS3PresignedPostPolicy` actually arrived, and
+to take its size and content type from S3 rather than from the caller. The connection must allow
+reads (`read` is `true` by default).
+
+#### Properties
+- `key: string`: __Required__ - Key under which the object is stored.
+- `versionId: string`: VersionId used to reference a specific version of the object.
+
+Returns `{ exists: true, bucket, key, size, contentType, etag, lastModified, versionId }` for an
+object that exists (`size` in bytes, `lastModified` a date, `contentType` and `versionId` only when
+S3 returns them), and `{ exists: false, bucket, key }` when S3 answers not found. Any other S3 error
+throws. S3 answers not found only when the credentials may list the bucket (`s3:ListBucket`);
+without that permission a missing object is a 403 error, which throws.
+
+#### Examples
+
+###### Record an upload only once it is in the bucket:
+```yaml
+api:
+  - id: record_upload
+    type: Api
+    routine:
+      - id: head_object
+        type: AwsS3HeadObject
+        connectionId: my_bucket
+        properties:
+          key:
+            _payload: key
+      - :if:
+          _not:
+            _step: head_object.exists
+        :then:
+          - :reject: The upload did not arrive.
+      - id: insert_file
+        type: MongoDBInsertOne
+        connectionId: files
+        properties:
+          doc:
+            key:
+              _step: head_object.key
+            size:
+              _step: head_object.size
+            contentType:
+              _step: head_object.contentType
+      - ':return':
+          size:
+            _step: head_object.size
+```
+
 ### AwsS3PutObject
 
 The `AwsS3PutObject` request writes an object to the bucket from the server. It accepts base64 encoded
@@ -203,11 +258,30 @@ content, which makes it the storage half of the server-side file handling patter
 `emitFileContent: true` sends the file as a base64 payload to an [API endpoint](/lowdefy-api) with the
 `CallAPI` action, and a routine step stores it. The connection must set `write: true`.
 
+In place of `content`, it takes a `url` and streams what that https link answers into the bucket, so a
+routine can copy a file it is handed as a presigned link without the bytes passing through the routine.
+The copy is capped at `maxBytes`, can be limited to `contentTypes`, and must finish within `timeout`.
+
 #### Properties
 - `key: string`: __Required__ - Key under which the object will be stored.
-- `content: string`: __Required__ - Object content as a base64 encoded string.
-- `contentType: string`: MIME type of the object (sets the Content-Type of the stored object).
+- `content: string`: Object content as a base64 encoded string. Give either `content` or `url`.
+- `url: string`: An `https:` link to a public address whose answer is streamed into the bucket. Give either `content` or `url`.
+- `maxBytes: integer`: __Required with `url`__ - The most bytes the link may answer with. A `Content-Length` over it is refused before the body is read, and a body that passes it is cut off and refused, so nothing larger is stored.
+- `contentTypes: string[]`: With `url`, the content types the link may answer with, such as `image/png`, `image/*` or `application/pdf`. Any other answer is refused.
+- `timeout: integer`: Default: `20000` - With `url`, the milliseconds the whole fetch and upload may take.
+- `contentType: string`: MIME type of the object (sets the Content-Type of the stored object). With `url`, the stored object takes the link's `Content-Type` unless this is given.
 - `acl: enum`: Access control lists used to grant read and write access (same values as AwsS3PresignedPostPolicy).
+
+Returns `{ bucket, key, size, contentType }`, with `size` in bytes and `contentType` the stored content type, or `null` when there is none.
+
+A refused copy from a `url` stores nothing and throws an error whose `code` names the reason, so a `:catch` can answer each its own way (`_error: code`):
+
+- `url_not_https`: the link, or a link it redirects to, is not `https:`. Refused before that link is requested.
+- `url_not_public`: the link, or a link it redirects to, leads to an address that is not public: loopback, private, link-local (such as a cloud metadata address), unique-local, carrier-grade NAT, unspecified or multicast. The address is checked as the connection is opened, so nothing is sent to it.
+- `too_large`: the answer is larger than `maxBytes`.
+- `content_type`: the answer's `Content-Type` is not one of `contentTypes`.
+- `fetch_failed`: the link answered with a status that is not 2xx (the error's `statusCode` holds it), could not be reached, or sent a body that does not match its `Content-Length`.
+- `timeout`: the fetch and upload took longer than `timeout`.
 
 #### Examples
 
@@ -232,6 +306,108 @@ api:
       - ':return':
           key:
             _step: put_object.key
+```
+
+###### Copy a screenshot handed over as a presigned link:
+```yaml
+api:
+  - id: copy_screenshot
+    type: InternalApi
+    routine:
+      - :try:
+          - id: copy
+            type: AwsS3PutObject
+            connectionId: my_bucket
+            properties:
+              key:
+                _string.concat:
+                  - 'screenshots/'
+                  - _payload: ticket_id
+              url:
+                _payload: screenshot_url
+              maxBytes: 10000000
+              contentTypes:
+                - image/*
+        :catch:
+          - :if:
+              _eq:
+                - _error: code
+                - too_large
+            :then:
+              :reject: The screenshot is larger than 10 MB.
+          - :throw:
+              _error: true
+      - ':return':
+          size:
+            _step: copy.size
+```
+
+### AwsS3DeleteObject
+
+The `AwsS3DeleteObject` request deletes one object, or up to 1000 objects in one call, from the
+connection's bucket. Use it in an [API endpoint](/lowdefy-api) routine to remove objects the routine
+stored and no longer wants, such as the files it copied before a later step refused the call. It
+deletes only from the bucket the connection names; the request takes no bucket. The connection must
+set `write: true`.
+
+#### Properties
+- `key: string`: Key of the object to delete. Give either `key` or `keys`.
+- `keys: string[]`: Keys of the objects to delete, 1 to 1000. Give either `key` or `keys`.
+
+Returns `{ bucket, deleted, errors }`: `deleted` lists the keys deleted, and `errors` lists each key
+S3 could not delete as `{ key, code, message }`, such as `AccessDenied`. A key with no object
+counts as deleted, as S3 reports it. A failure of the call itself, such as wrong credentials or a
+missing bucket, throws. With one `key`, a key S3 cannot delete throws too, so `errors` is always
+empty.
+
+#### Examples
+
+###### Remove both copies when either copy is refused:
+```yaml
+api:
+  - id: attach_files
+    type: Api
+    routine:
+      - :try:
+          - id: copy_screenshot
+            type: AwsS3PutObject
+            connectionId: my_bucket
+            properties:
+              key:
+                _string.concat:
+                  - 'tickets/'
+                  - _payload: ticket_id
+                  - '/screenshot'
+              url:
+                _payload: screenshot_url
+              maxBytes: 10000000
+          - id: copy_log
+            type: AwsS3PutObject
+            connectionId: my_bucket
+            properties:
+              key:
+                _string.concat:
+                  - 'tickets/'
+                  - _payload: ticket_id
+                  - '/log'
+              url:
+                _payload: log_url
+              maxBytes: 10000000
+        :catch:
+          - id: remove_copies
+            type: AwsS3DeleteObject
+            connectionId: my_bucket
+            properties:
+              keys:
+                - _string.concat:
+                    - 'tickets/'
+                    - _payload: ticket_id
+                    - '/screenshot'
+                - _string.concat:
+                    - 'tickets/'
+                    - _payload: ticket_id
+                    - '/log'
+          - :reject: The files could not be stored.
 ```
 
 ## Creating a bucket

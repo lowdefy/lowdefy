@@ -32,6 +32,9 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
     "./connections": "./dist/connections.js",
     "./types": "./dist/types.js",
@@ -49,6 +52,7 @@
   },
   "dependencies": {
     "@google-cloud/storage": "7.21.0",
+    "@lowdefy/errors": "6.1.0",
     "@lowdefy/helpers": "6.1.0"
   },
   "devDependencies": {

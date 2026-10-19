@@ -29,6 +29,7 @@ export default {
     label: 'The RadioSelector label.',
     extra: 'The RadioSelector extra content.',
     feedback: 'The RadioSelector validation feedback.',
+    options: 'Each RadioSelector option.',
   },
   events: {
     onChange: {

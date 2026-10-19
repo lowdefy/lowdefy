@@ -11,7 +11,7 @@ areas:
         type: Button
         properties:
           title: Sign in with Google
-          icon: AiOutlineGoogle
+          icon: LogIn
           block: true
         events:
           onClick:

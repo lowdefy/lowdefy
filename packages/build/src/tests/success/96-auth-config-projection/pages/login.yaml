@@ -1,0 +1,15 @@
+id: login
+type: Box
+properties:
+  emailLoginEnabled:
+    _build.authConfig: emailAndPassword.enabled
+  magicLinkEnabled:
+    _build.authConfig: magicLink.enabled
+  twoFactorEnabled:
+    _build.authConfig: twoFactor.enabled
+  passkeyEnabled:
+    _build.authConfig: passkey.enabled
+  providers:
+    _build.authConfig: providers
+  organizationSignup:
+    _build.authConfig: organizations.signup

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'display',
   icons: [],
@@ -24,7 +26,12 @@ export default {
     max: 'The Avatar max overflow style.',
   },
   events: {
-    onClick: 'Triggered when avatar item is clicked.',
+    onClick: {
+      description: 'Triggered when the avatar, or an avatar in a group, is clicked.',
+      event: {
+        index: 'In group mode, the index of the clicked avatar in group.avatars.',
+      },
+    },
   },
   properties: {
     type: 'object',
@@ -51,12 +58,9 @@ export default {
         description: 'Letter type unit distance between left and right sides.',
       },
       icon: {
-        type: ['string', 'object'],
+        ...icon,
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to use an icon in avatar.",
-        docs: {
-          displayType: 'icon',
-        },
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use an icon in avatar.',
       },
       shape: {
         type: 'string',
@@ -65,17 +69,24 @@ export default {
         description: 'Shape of the avatar.',
       },
       size: {
-        type: ['string', 'object'],
+        type: ['string', 'number', 'object'],
         default: 'default',
-        enum: ['default', 'small', 'large'],
-        description: 'Size of the avatar; default, small, large or responsive.',
+        description:
+          'Size of the avatar: default, small, large, a pixel number, or a responsive object of breakpoint sizes.',
         docs: {
           displayType: 'string',
         },
       },
       src: {
         type: 'string',
+        urlKind: 'src',
         description: 'The address of the image for an image avatar.',
+      },
+      srcSet: {
+        type: 'string',
+        urlKind: 'srcSet',
+        description:
+          'A list of image sources for different screen resolutions, as in the img srcset attribute.',
       },
       group: {
         type: 'object',
@@ -97,7 +108,7 @@ export default {
           },
           maxPopoverTrigger: {
             type: 'string',
-            enum: ['hover', 'click'],
+            enum: ['hover', 'focus', 'click'],
             default: 'hover',
             description: 'Trigger mode for the overflow popover.',
           },
@@ -108,8 +119,8 @@ export default {
           },
           size: {
             type: ['string', 'number'],
-            enum: ['default', 'small', 'large'],
-            description: 'Default size for all avatars in the group.',
+            description:
+              'Default size for all avatars in the group: default, small, large or a pixel number.',
           },
           avatars: {
             type: 'array',
@@ -137,11 +148,8 @@ export default {
                   description: 'Letter type unit distance between left and right sides.',
                 },
                 icon: {
-                  type: ['string', 'object'],
+                  ...icon,
                   description: 'Icon name or properties.',
-                  docs: {
-                    displayType: 'icon',
-                  },
                 },
                 shape: {
                   type: 'string',
@@ -150,15 +158,21 @@ export default {
                 },
                 size: {
                   type: ['string', 'number'],
-                  enum: ['default', 'small', 'large'],
-                  description: 'Override size for this avatar.',
+                  description:
+                    'Override size for this avatar: default, small, large or a pixel number.',
                   docs: {
                     displayType: 'string',
                   },
                 },
                 src: {
                   type: 'string',
+                  urlKind: 'src',
                   description: 'Image URL.',
+                },
+                srcSet: {
+                  type: 'string',
+                  urlKind: 'srcSet',
+                  description: 'Image sources for different screen resolutions.',
                 },
               },
             },

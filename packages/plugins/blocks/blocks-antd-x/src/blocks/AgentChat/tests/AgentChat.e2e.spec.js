@@ -110,21 +110,22 @@ test.describe('AgentChat feedback', () => {
   test('keeps a rating selected after it is given', async ({ page }) => {
     const feedback = getBlock(page, 'chat_wired').locator('[class*="feedback"]').first();
     await expect(feedback).toBeVisible();
-    const before = await feedback.innerHTML();
+    const like = feedback.locator('[class*="feedback-item-like"]').first();
+    const dislike = feedback.locator('[class*="feedback-item-dislike"]');
 
-    await feedback.locator('[class*="like"]').first().click();
+    await like.click();
 
     // Controlled: the chosen thumb stays and the opposite one is hidden. Uncontrolled, the
-    // markup returned to its unrated state on the next render.
-    await expect
-      .poll(async () => (await feedback.innerHTML()) !== before, { timeout: 5000 })
-      .toBe(true);
-    const after = await feedback.innerHTML();
+    // markup returned to its unrated state on the next render. The assertions check the
+    // rating classes, not the whole markup, since the thumbs' hover tooltip changes it too.
+    await expect(like).toHaveClass(/feedback-item-like-active/);
+    await expect(dislike).toHaveCount(0);
 
     // Survives a re-render driven by unrelated state.
     await inAppLink(page, 'chat_wired').click();
     await expect(page.locator('#readout_count')).toHaveText('1');
-    expect(await feedback.innerHTML()).toBe(after);
+    await expect(like).toHaveClass(/feedback-item-like-active/);
+    await expect(dislike).toHaveCount(0);
   });
 
   // Being controlled makes the clear gesture reachable for the first time, and it reports a
@@ -273,5 +274,35 @@ test.describe('AgentChat loading', () => {
     await expect(chat.locator('.agent-chat-loading')).toBeHidden();
     await expect(chat.getByText('Loaded answer.')).toBeVisible();
     await expect(chat.locator('textarea')).toBeEnabled();
+  });
+});
+
+test.describe('AgentChat shared state', () => {
+  async function sendAndReadBody(page, blockId) {
+    await page.route('**/api/agent/**', (route) => route.abort());
+    const requestPromise = page.waitForRequest(
+      (request) => request.url().includes('/api/agent/') && request.method() === 'POST'
+    );
+    const input = getBlock(page, blockId).locator('textarea');
+    await input.fill('hello');
+    await input.press('Enter');
+    const request = await requestPromise;
+    return request.postDataJSON();
+  }
+
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'agent-chat');
+  });
+
+  test('sharedStateReadOnly sends the shared state marked read-only', async ({ page }) => {
+    const body = await sendAndReadBody(page, 'chat_shared_read_only');
+    expect(body.sharedState).toEqual({ space: 'PEL' });
+    expect(body.sharedStateReadOnly).toBe(true);
+  });
+
+  test('shared state is writable by default', async ({ page }) => {
+    const body = await sendAndReadBody(page, 'chat_shared_writable');
+    expect(body.sharedState).toEqual({ space: 'PEL' });
+    expect(body.sharedStateReadOnly).toBeUndefined();
   });
 });

@@ -19,6 +19,7 @@ import operatorScope from './operatorScope.js';
 test('operatorScope returns the operator fields of the routine context', () => {
   const error = new Error('Caught error.');
   const routineContext = {
+    agent: { id: 'support_agent', conversationId: 'conv_1' },
     arrayIndices: [1],
     endpointDepth: 2,
     error,
@@ -29,6 +30,7 @@ test('operatorScope returns the operator fields of the routine context', () => {
   };
   const scope = operatorScope(routineContext);
   expect(scope).toEqual({
+    agent: { id: 'support_agent', conversationId: 'conv_1' },
     error,
     items: { item: 1 },
     payload: { payload: true },
@@ -41,4 +43,9 @@ test('operatorScope returns the operator fields of the routine context', () => {
 test('operatorScope returns error null when the routine context has no error', () => {
   const scope = operatorScope({ items: {}, payload: {}, state: {}, steps: {} });
   expect(scope.error).toBeNull();
+});
+
+test('operatorScope returns agent null when no agent called the endpoint', () => {
+  const scope = operatorScope({ items: {}, payload: {}, state: {}, steps: {} });
+  expect(scope.agent).toBeNull();
 });

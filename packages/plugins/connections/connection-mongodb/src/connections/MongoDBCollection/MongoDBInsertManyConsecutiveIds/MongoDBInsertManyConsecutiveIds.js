@@ -16,10 +16,18 @@
 
 import getCollection from '../getCollection.js';
 import getConsecutiveIdIndex from '../getConsecutiveIdIndex.js';
+import mapMongoError from '../mapMongoError.js';
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
+import verifyStoredTenant, { idsOfMap } from '../tenant/verifyStoredTenant.js';
+import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
+import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
+import { assertUnscopedDoc } from '../tenant/guardUnscopedWrite.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 async function MongoDBInsertManyConsecutiveIds({
+  endpointId,
   blockId,
   connection,
   connectionId,
@@ -27,9 +35,19 @@ async function MongoDBInsertManyConsecutiveIds({
   payload,
   request,
   requestId,
+  tenant,
+  tenantGuard,
 }) {
+  assertTenantWritable({ tenantGuard, requestType: 'MongoDBInsertManyConsecutiveIds' });
   const deserializedRequest = deserialize(request);
-  const { docs, options, prefix, length } = deserializedRequest;
+  const { options, prefix, length } = deserializedRequest;
+  let { docs } = deserializedRequest;
+  if (tenant) {
+    docs = docs.map((doc) => stampTenantOnDoc({ doc, tenant }));
+  }
+  if (tenantGuard) {
+    docs.forEach((doc) => assertUnscopedDoc({ doc, field: tenantGuard.field }));
+  }
   const { client, collection, logCollection } = await getCollection({ connection });
 
   // The id read and insert run in a transaction so concurrent requests cannot
@@ -50,33 +68,45 @@ async function MongoDBInsertManyConsecutiveIds({
       response = await collection.insertMany(docs, { ...options, session });
       if (logCollection) {
         await logCollection.insertOne(
-          {
-            args: { docs, options },
-            blockId,
-            connectionId,
-            pageId,
-            payload,
-            requestId,
-            response,
-            timestamp: new Date(),
-            type: 'MongoDBInsertManyConsecutiveIds',
-            meta: connection.changeLog?.meta,
-          },
+          stampTenantOnLogRecord({
+            record: {
+              args: { docs, options },
+              blockId,
+              connectionId,
+              pageId,
+              payload,
+              requestId,
+              response,
+              timestamp: new Date(),
+              type: 'MongoDBInsertManyConsecutiveIds',
+              meta: connection.changeLog?.meta,
+            },
+            tenant,
+          }),
           { session }
         );
       }
     }, transactionOptions);
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBInsertManyConsecutiveIds' });
   } finally {
     await session.endSession();
   }
+  await verifyStoredTenant({
+    collection,
+    connectionId,
+    endpointId,
+    ids: idsOfMap(response.insertedIds),
+    requestId,
+    requestType: 'MongoDBInsertManyConsecutiveIds',
+    tenant,
+    tenantGuard,
+  });
   const { acknowledged, insertedIds } = serialize(response);
   return { acknowledged, insertedIds };
 }
 
 MongoDBInsertManyConsecutiveIds.schema = schema;
-MongoDBInsertManyConsecutiveIds.meta = {
-  checkRead: false,
-  checkWrite: true,
-};
+MongoDBInsertManyConsecutiveIds.meta = requestMetas.MongoDBInsertManyConsecutiveIds;
 
 export default MongoDBInsertManyConsecutiveIds;

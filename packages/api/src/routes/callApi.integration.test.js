@@ -81,7 +81,7 @@ function buildReadConfigFile({ endpointConfigs = {}, requestConfig, connectionCo
   });
 }
 
-function createContext({ endpointConfigs = {}, session, logger } = {}) {
+function createContext({ endpointConfigs = {}, user, logger } = {}) {
   return testContext({
     connections,
     operators,
@@ -93,7 +93,7 @@ function createContext({ endpointConfigs = {}, session, logger } = {}) {
       error: jest.fn(),
     },
     readConfigFile: buildReadConfigFile({ endpointConfigs }),
-    session: session ?? { user: { id: 'user_1' } },
+    user: user ?? { id: 'user_1' },
   });
 }
 
@@ -277,7 +277,7 @@ test('9.5 depth cap: 11 deep chain throws ConfigError', async () => {
   ).rejects.toThrow('Endpoint call depth exceeded maximum of 10');
 });
 
-test('9.6 single handleError invocation for a deep failing chain', async () => {
+test('9.6 a deep chain ending in :throw is never reported through handleError', async () => {
   const endpointConfigs = {
     inner1: {
       endpointId: 'inner1',
@@ -327,7 +327,9 @@ test('9.6 single handleError invocation for a deep failing chain', async () => {
     pageId: 'pageId',
     requestId: 'outerReq',
   }).catch(() => {});
-  expect(handleErrorMock).toHaveBeenCalledTimes(1);
+  // `:throw` raises a UserError - the author's own expected outcome, carried
+  // up the chain unchanged and never logged as a fault at any level.
+  expect(handleErrorMock).not.toHaveBeenCalled();
 });
 
 test('9.7 InternalApi endpoint is reachable via callApi', async () => {
@@ -477,7 +479,7 @@ test('9.3c raw error from target propagates as RequestError', async () => {
         },
       },
     }),
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   outerResolver.mockImplementation(async ({ callApi }) =>
     callApi({ endpointId: 'inner', payload: {} })

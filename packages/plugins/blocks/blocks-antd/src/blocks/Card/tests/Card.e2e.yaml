@@ -207,3 +207,77 @@ blocks:
               - true
           then: Card clicked!
           else: ''
+
+  # ============================================
+  # VARIANT, LOADING, ACTIONS AND SEMANTIC KEYS
+  # ============================================
+
+  - id: card_default_size
+    type: Card
+    properties:
+      title: Default Size Card
+      size: default
+
+  - id: card_variant_borderless
+    type: Card
+    properties:
+      title: Borderless Variant
+      variant: borderless
+
+  - id: card_loading
+    type: Card
+    properties:
+      title: Loading Card
+      loading: true
+    slots:
+      content:
+        blocks:
+          - id: card_loading_content
+            type: Span
+            properties:
+              content: Hidden while loading
+
+  - id: card_actions
+    type: Card
+    properties:
+      title: Card With Actions
+    slots:
+      content:
+        blocks:
+          - id: card_actions_content
+            type: Span
+            properties:
+              content: Card body
+      actions:
+        blocks:
+          - id: card_actions_button
+            type: Button
+            properties:
+              title: Save
+              type: link
+
+  - id: card_css_keys
+    type: Card
+    class:
+      .title: card-title-class
+      .actions: card-actions-class
+    style:
+      .title:
+        color: 'rgb(255, 0, 0)'
+      .extra:
+        color: 'rgb(0, 0, 255)'
+    properties:
+      title: Styled Card
+    slots:
+      extra:
+        blocks:
+          - id: card_css_keys_extra
+            type: Span
+            properties:
+              content: Extra
+      actions:
+        blocks:
+          - id: card_css_keys_action
+            type: Span
+            properties:
+              content: Action

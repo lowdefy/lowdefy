@@ -177,6 +177,103 @@
               properties:
                 content: Our mission is to democratize application development through low-code and open-source technologies.
 
+- title: Ghost and Sizes
+  blocks:
+    - id: ghost_collapse
+      type: Collapse
+      properties:
+        ghost: true
+        panels:
+          - key: ghost_shipping
+            title: Shipping (ghost)
+          - key: ghost_returns
+            title: Returns
+      slots:
+        ghost_shipping:
+          blocks:
+            - id: ghost_shipping_text
+              type: Paragraph
+              properties:
+                content: Orders ship within two business days.
+        ghost_returns:
+          blocks:
+            - id: ghost_returns_text
+              type: Paragraph
+              properties:
+                content: Unused items can be returned within 30 days.
+    - id: small_collapse
+      type: Collapse
+      properties:
+        size: small
+        panels:
+          - key: small_panel
+            title: Small size
+      slots:
+        small_panel:
+          blocks:
+            - id: small_panel_text
+              type: Paragraph
+              properties:
+                content: Compact header and content padding.
+    - id: large_collapse
+      type: Collapse
+      properties:
+        size: large
+        panels:
+          - key: large_panel
+            title: Large size
+      slots:
+        large_panel:
+          blocks:
+            - id: large_panel_text
+              type: Paragraph
+              properties:
+                content: Roomy header and content padding.
+
+- title: Padding
+  blocks:
+    - id: padding_none_collapse
+      type: Collapse
+      properties:
+        padding: none
+        panels:
+          - key: padding_none_invoices
+            title: Invoices (padding none)
+          - key: padding_none_notes
+            title: Notes
+      slots:
+        padding_none_invoices:
+          blocks:
+            - id: padding_none_invoices_rows
+              type: Html
+              properties:
+                html: |
+                  <div style="display: flex; justify-content: space-between; padding: 8px 16px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1042</span><span style="color: var(--ant-color-text-secondary);">$1,280.00</span></div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 16px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1041</span><span style="color: var(--ant-color-text-secondary);">$640.00</span></div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 16px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1040</span><span style="color: var(--ant-color-text-secondary);">$2,115.50</span></div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 16px;"><span>INV-1039</span><span style="color: var(--ant-color-text-secondary);">$96.00</span></div>
+        padding_none_notes:
+          blocks:
+            - id: padding_none_notes_text
+              type: Paragraph
+              class: px-4 py-2
+              properties:
+                content: With padding none, panel content sets its own spacing.
+    - id: padding_compact_collapse
+      type: Collapse
+      properties:
+        padding: compact
+        panels:
+          - key: padding_compact_panel
+            title: Compact padding
+      slots:
+        padding_compact_panel:
+          blocks:
+            - id: padding_compact_panel_text
+              type: Paragraph
+              properties:
+                content: Tighter panel content, still aligned with the header.
+
 - title: Expand Icon Placement
   blocks:
     - id: icon_start_label
@@ -237,7 +334,7 @@
     - id: custom_icon_collapse
       type: Collapse
       properties:
-        expandIcon: AiOutlinePlusCircle
+        expandIcon: add-circle
         panels:
           - key: ci_features
             title: Key Features
@@ -268,7 +365,7 @@
       type: Collapse
       properties:
         expandIcon:
-          name: AiOutlineArrowRight
+          name: arrow-right
           color: '#1677ff'
         panels:
           - key: cio_one
@@ -725,7 +822,7 @@
                     flex: 0 0 auto
                   properties:
                     title: View Logs
-                    icon: AiOutlineFileText
+                    icon: document
                     color: primary
                     variant: outlined
                     size: small
@@ -735,7 +832,7 @@
                     flex: 0 0 auto
                   properties:
                     title: Metrics
-                    icon: AiOutlineBarChart
+                    icon: chart
                     color: primary
                     variant: outlined
                     size: small

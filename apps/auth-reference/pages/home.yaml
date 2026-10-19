@@ -1,0 +1,92 @@
+id: home
+type: Box
+properties:
+  style:
+    maxWidth: 640
+    margin: 60px auto
+blocks:
+  - id: home_title
+    type: Title
+    properties:
+      content: Auth reference app
+      level: 2
+  - id: home_text
+    type: Html
+    properties:
+      html: |
+        <p>This page is <b>public</b> - it renders for everyone.</p>
+        <ul>
+          <li><a href="/dashboard">Dashboard</a> - protected; logged-out visits redirect to the login page.</li>
+          <li><a href="/sessions">Sessions</a> - protected; list and revoke your sessions.</li>
+          <li><a href="/security">Security</a> - protected; the phase-9 self-service account surface (password, 2FA, passkeys, profile).</li>
+          <li><a href="/admin">Admin</a> - role-gated (user-admin); wrong roles get an opaque /404.</li>
+          <li><a href="/users">Users</a> - role-gated (user-admin); user administration on the phase-6 admin steps.</li>
+          <li><a href="/members">Members</a> - role-gated (user-admin); member administration on the phase-6 admin steps.</li>
+          <li><a href="/login-methods">Login methods</a> - public; rendered from _build.authConfig at build time.</li>
+          <li><a href="/account-kit/account-help">Account help</a> - public module page contributed by the account-kit manifest.</li>
+        </ul>
+  - id: signed_in_alert
+    type: Alert
+    visible:
+      _ne:
+        - _if_none:
+            - _user: id
+            - null
+        - null
+    properties:
+      type: success
+      message:
+        _string.concat:
+          - 'Signed in as '
+          - _user: email
+  # The two authorities side by side. roles is member.appRoles - what the
+  # gates above read. org_roles is member.role - who administers org-a. Either
+  # can be held without the other.
+  - id: two_authorities_html
+    type: Html
+    visible:
+      _ne:
+        - _if_none:
+            - _user: id
+            - null
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p><b>roles</b> (app roles, member.appRoles): {{ user.roles | dump }}<br/>
+            <b>org_roles</b> (the org tier, member.role): {{ user.org_roles | dump }}</p>
+          on:
+            user:
+              _user: true
+  - id: login_button
+    type: Button
+    visible:
+      _eq:
+        - _if_none:
+            - _user: id
+            - null
+        - null
+    properties:
+      title: Log in
+    events:
+      onClick:
+        - id: to_login
+          type: Link
+          params:
+            pageId: login
+  - id: logout_button
+    type: Button
+    visible:
+      _ne:
+        - _if_none:
+            - _user: id
+            - null
+        - null
+    properties:
+      title: Log out
+      type: default
+    events:
+      onClick:
+        - id: logout
+          type: Logout

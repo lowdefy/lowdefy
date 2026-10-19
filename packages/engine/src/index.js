@@ -19,8 +19,13 @@ import Slots from './Slots.js';
 import createLink from './createLink.js';
 import decodeServerError, { getDevError } from './decodeServerError.js';
 import Events from './Events.js';
+import getAppContext from './getAppContext.js';
 import getContext from './getContext.js';
 import getHomePathname from './getHomePathname.js';
+import getTrace from './trace/getTrace.js';
+import lookupPath from './lookupPath.js';
+import rememberPath from './rememberPath.js';
+import rememberTarget from './rememberTarget.js';
 import Requests from './Requests.js';
 import resolveTarget from './resolveTarget.js';
 import State from './State.js';
@@ -32,8 +37,13 @@ export {
   createLink,
   decodeServerError,
   Events,
+  getAppContext,
   getDevError,
   getHomePathname,
+  getTrace,
+  lookupPath,
+  rememberPath,
+  rememberTarget,
   Requests,
   resolveTarget,
   State,

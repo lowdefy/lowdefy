@@ -32,11 +32,17 @@ const lowdefyErrorFields = [
   'location',
   'service',
   'hint',
+  'retryAfter',
   'methodName',
   'metaData',
   'blockId',
   'pageId',
   'isReject',
+  'collection',
+  'connectionId',
+  'organizationId',
+  'field',
+  'endpointId',
 ];
 
 function projectErrorForLog(err) {

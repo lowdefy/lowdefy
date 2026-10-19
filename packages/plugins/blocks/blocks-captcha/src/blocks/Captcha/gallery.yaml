@@ -1,0 +1,40 @@
+# Copyright 2020-2026 Lowdefy, Inc
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# The galleries use Cloudflare Turnstile's documented always-pass test site
+# key so the widget renders without an account. A real app normally feeds
+# provider and siteKey from the auth config projection instead:
+#   properties:
+#     provider:
+#       _build.authConfig: captcha.provider
+#     siteKey:
+#       _build.authConfig: captcha.siteKey
+
+- title: Basic
+  blocks:
+    - id: captcha_basic
+      type: Captcha
+      properties:
+        provider: cloudflare-turnstile
+        siteKey: 1x00000000000000000000AA
+
+- title: Compact light theme
+  blocks:
+    - id: captcha_compact
+      type: Captcha
+      properties:
+        provider: cloudflare-turnstile
+        siteKey: 1x00000000000000000000AA
+        theme: light
+        size: compact

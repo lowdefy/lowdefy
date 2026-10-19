@@ -29,6 +29,7 @@ export default {
     label: 'The CheckboxSelector label.',
     extra: 'The CheckboxSelector extra content.',
     feedback: 'The CheckboxSelector validation feedback.',
+    options: 'Each CheckboxSelector option.',
   },
   events: {
     onChange: {

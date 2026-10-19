@@ -341,4 +341,26 @@ describe('validateLinkReferences', () => {
 
     expect(context.warnFn).not.toHaveBeenCalled();
   });
+
+  test('warns without a production error for an HTML data-page-id with a suggestion', () => {
+    const context = createContext('prod');
+    context.handleWarning = jest.fn();
+
+    validateLinkReferences({
+      linkActionRefs: [
+        { pageId: 'contatcs', configKey: 'key-1', html: true, location: 'page "home"' },
+        { pageId: 'home', configKey: 'key-2', html: true, location: 'page "home"' },
+      ],
+      pageIds: ['home', 'contacts'],
+      context,
+    });
+
+    expect(context.handleWarning).toHaveBeenCalledTimes(1);
+    const warning = context.handleWarning.mock.calls[0][0];
+    expect(warning.message).toBe(
+      'data-page-id="contatcs" in page "home" links to a page that does not exist. Did you mean "contacts"?'
+    );
+    expect(warning.configKey).toBe('key-1');
+    expect(warning.prodError).toBeFalsy();
+  });
 });

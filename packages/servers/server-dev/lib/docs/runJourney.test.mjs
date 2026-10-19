@@ -1,0 +1,2383 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
+import { jest } from '@jest/globals';
+import { buildPagePath, isTraceId } from '@lowdefy/helpers';
+import { acquireMachineSlot } from '@lowdefy/node-utils';
+
+// getBrowser.js is mocked so no Chromium is needed; the fake page below stands
+// in for Playwright's Page. Its `evaluate` runs the callback in this process
+// against a `window` global, so the real @lowdefy/e2e-utils helpers (getState,
+// getBlock, getShortcutModifier) and isPageReady are exercised, not mocked.
+const mockOpenPage = jest.fn();
+const mockGetBrowser = jest.fn();
+jest.unstable_mockModule('./getBrowser.js', () => ({
+  getBrowser: mockGetBrowser,
+  openPage: mockOpenPage,
+  buildPageUrl: ({ origin, pageId, path, pathParams }) =>
+    `${origin}/${buildPagePath({ pageId, path, pathParams })}`,
+}));
+// The route table the skeleton build writes; a page it does not hold has no pattern.
+const mockReadPagePath = jest.fn(() => undefined);
+jest.unstable_mockModule('./readPagePath.js', () => ({ default: mockReadPagePath }));
+
+const mockOpenJourneyEmail = jest.fn();
+jest.unstable_mockModule('./openJourneyEmail.js', () => ({ default: mockOpenJourneyEmail }));
+
+const mockReadJourneyEmailMatch = jest.fn();
+jest.unstable_mockModule('./readJourneyEmailMatch.js', () => ({
+  default: mockReadJourneyEmailMatch,
+}));
+
+// The fake pages have no build to check step references against; the checks
+// have tests of their own (checkStepReferences.test.mjs and the fixture suite).
+jest.unstable_mockModule('./checkStepReferences.js', () => ({ default: async () => {} }));
+
+// No client error report is ever in flight here; the real wait's grace would
+// only slow every test down.
+jest.unstable_mockModule('./observe/waitForClientErrorReports.js', () => ({
+  default: async () => {},
+}));
+
+const { default: runJourney } = await import('./runJourney.js');
+const { recordRunError } = await import('./runErrorBuffers.js');
+
+// Node ships a read-only navigator; the page's platform decides Mod, so it is
+// replaced with a Mac one for the Mod+k test.
+Object.defineProperty(globalThis, 'navigator', {
+  value: { platform: 'MacIntel' },
+  configurable: true,
+});
+
+function createLowdefyWindow({
+  pageId = 'form',
+  state = {},
+  requests = {},
+  historyIndex = 0,
+} = {}) {
+  return {
+    navigation: { currentEntry: { index: historyIndex } },
+    location: { pathname: `/${pageId}` },
+    lowdefy: {
+      pageId,
+      pageInstances: { [pageId]: [`page:${pageId}`] },
+      // The e2e-utils helpers read the context of the instance on screen through the path memory.
+      pathMemory: new Map([[pageId, { pageId, pathParams: {}, instanceKey: `page:${pageId}` }]]),
+      contexts: {
+        [`page:${pageId}`]: {
+          state,
+          requests,
+          websockets: {},
+          _internal: { onInitDone: true, onInitAsyncDone: true, RootSlots: { map: {} } },
+        },
+      },
+    },
+  };
+}
+
+function createLocator({ selector, page }) {
+  const locator = {
+    selector,
+    click: jest.fn(async () => {
+      if (page.missingBlocks.some((id) => selector === `#bl-${id}`)) {
+        throw new Error(
+          `locator.click: Timeout 5000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('${selector}')\u001b[22m`
+        );
+      }
+      page.clicks.push(selector);
+    }),
+    fill: jest.fn(async (value) => {
+      page.fills.push({ selector, value });
+    }),
+    locator: jest.fn((child) => createLocator({ selector: `${selector} ${child}`, page })),
+    getByText: jest.fn((text) => createLocator({ selector: `${selector} >> text=${text}`, page })),
+    first: jest.fn(() => locator),
+    // A union reads as this locator: the fake page shows a block and its
+    // control together.
+    or: jest.fn((other) => {
+      page.unions.push({ selector, other: other?.selector });
+      return locator;
+    }),
+    last: jest.fn(() => locator),
+    nth: jest.fn(() => locator),
+    filter: jest.fn(() => locator),
+    count: jest.fn(async () => 0),
+    isChecked: jest.fn(async () => false),
+    selectOption: jest.fn(),
+    waitFor: jest.fn(async () => {
+      page.waits.push(selector);
+      if (page.hiddenBlocks.some((id) => selector === `#bl-${id}`)) {
+        throw new Error(`locator.waitFor: Timeout 5000ms exceeded.`);
+      }
+    }),
+    evaluateAll: jest.fn(async (fn, arg) => {
+      page.evaluatedAll.push(selector);
+      return fn(page.elementsFor(selector), arg);
+    }),
+    allInnerTexts: jest.fn(async () => [page.texts[selector] ?? '']),
+    page: jest.fn(() => page),
+  };
+  return locator;
+}
+
+function createPage({ window = createLowdefyWindow(), url = 'http://localhost:3227/form' } = {}) {
+  globalThis.window = window;
+  const page = {
+    clicks: [],
+    fills: [],
+    unions: [],
+    presses: [],
+    missingBlocks: [],
+    hiddenBlocks: [],
+    waits: [],
+    evaluatedAll: [],
+    elementsFor: () => [],
+    texts: {},
+    screenshotCount: 0,
+    // Playwright evaluates a string as an expression, as the e2e-utils state helpers pass one.
+    evaluate: jest.fn(async (fn, arg) =>
+      typeof fn === 'string' ? new Function(`return ${fn}`)() : fn(arg)
+    ),
+    waitForFunction: jest.fn(async (fn, arg) => {
+      if (!fn(arg)) {
+        throw new Error('waitForFunction: Timeout exceeded.');
+      }
+    }),
+    waitForTimeout: jest.fn(async () => {}),
+    waitForURL: jest.fn(async (predicate) => {
+      if (!predicate(new URL(url))) {
+        throw new Error('page.waitForURL: Timeout exceeded.');
+      }
+    }),
+    url: jest.fn(() => url),
+    isClosed: jest.fn(() => false),
+    documentTitle: '',
+    title: jest.fn(async () => page.documentTitle),
+    goBack: jest.fn(async () => null),
+    goto: jest.fn(async () => null),
+    keyboard: { press: jest.fn(async (key) => page.presses.push(key)) },
+    screenshot: jest.fn(async () => {
+      page.screenshotCount += 1;
+      return Buffer.from(`png-${page.screenshotCount}`);
+    }),
+  };
+  page.locator = jest.fn((selector) => createLocator({ selector, page }));
+  page.getByText = jest.fn((text) => createLocator({ selector: `text=${text}`, page }));
+  return page;
+}
+
+// Each read of the clock moves it on a second, so a polled step's wait runs
+// out after a few reads instead of in real time.
+function advanceClockOnEveryRead() {
+  let clock = 0;
+  return jest.spyOn(Date, 'now').mockImplementation(() => {
+    clock += 1000;
+    return clock;
+  });
+}
+
+function openWith(page, { ready = true } = {}) {
+  const context = { close: jest.fn(async () => {}) };
+  mockOpenPage.mockResolvedValue({ context, page, ready, url: page.url(), leftOrigin: [] });
+  return context;
+}
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockGetBrowser.mockResolvedValue({});
+  mockReadPagePath.mockImplementation(() => undefined);
+});
+
+const origin = 'http://localhost:3227';
+
+test('runJourney returns an error when origin is missing', async () => {
+  const result = await runJourney({ pageId: 'form', steps: [] });
+  expect(result.error).toMatch(/requires an "origin" string/);
+  expect(mockGetBrowser).not.toHaveBeenCalled();
+});
+
+test('runJourney returns an error when pageId is not a string', async () => {
+  const result = await runJourney({ origin, pageId: 7, steps: [] });
+  expect(result.error).toMatch(/requires a "pageId" string. Received 7/);
+});
+
+test('runJourney returns an error when steps is not an array', async () => {
+  const result = await runJourney({ origin, pageId: 'form', steps: { click: 'a' } });
+  expect(result.error).toMatch(/requires "steps" to be an array/);
+  expect(mockGetBrowser).not.toHaveBeenCalled();
+});
+
+test('runJourney returns an error naming an unknown step key before opening a browser', async () => {
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ click: 'ok' }, { tap: 'ok' }],
+  });
+  expect(result.error).toEqual(
+    'Step 1: Unknown journey step "tap". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
+  );
+  expect(mockGetBrowser).not.toHaveBeenCalled();
+  expect(mockOpenPage).not.toHaveBeenCalled();
+});
+
+test('runJourney refuses a placeholder value (from: shape) before opening a browser', async () => {
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ click: 'new' }, { fill: { blockId: 'title', value: null, from: 'shape' } }],
+  });
+  expect(result).toEqual({
+    error:
+      'Step 1: fill on "title" has a placeholder value (from: shape). Fill it from the data set or the journey\'s user, then remove from.',
+    refused: true,
+  });
+  expect(mockGetBrowser).not.toHaveBeenCalled();
+  expect(mockOpenPage).not.toHaveBeenCalled();
+});
+
+test('runJourney returns an actionable error when no browser is available', async () => {
+  mockGetBrowser.mockRejectedValue(new Error("Executable doesn't exist"));
+  const result = await runJourney({ origin, pageId: 'form', steps: [] });
+  expect(result.error).toMatch(/No Chromium available/);
+});
+
+test('runJourney passes user, urlQuery and viewport through to openPage', async () => {
+  const page = createPage();
+  openWith(page);
+  await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [],
+    user: { roles: ['admin'] },
+    urlQuery: { id: '1' },
+    width: 800,
+    height: 600,
+  });
+  expect(mockOpenPage).toHaveBeenCalledWith({
+    browser: {},
+    origin,
+    pageId: 'form',
+    user: { roles: ['admin'] },
+    urlQuery: { id: '1' },
+    width: 800,
+    height: 600,
+    clientAddress: expect.stringMatching(/^203\.0\.113\.\d+$/),
+    recording: {
+      source: 'journey',
+      run: { id: expect.any(String), by: null, journey: null, actor: 'main' },
+      record: false,
+    },
+    onContext: expect.any(Function),
+    timeout: 15000,
+  });
+});
+
+test('runJourney gives an unrecorded run an identity of its own that records nothing', async () => {
+  const page = createPage();
+  page.evaluate.mockClear();
+  openWith(page);
+  const result = await runJourney({ origin, pageId: 'form', steps: [], by: 'test' });
+  expect(result.passed).toBe(true);
+  const { recording } = mockOpenPage.mock.calls[0][0];
+  expect(recording).toEqual({
+    source: 'journey',
+    run: { id: expect.any(String), by: 'test', journey: null, actor: 'main' },
+    record: false,
+  });
+  expect(isTraceId(recording.run.id)).toBe(true);
+  // No recorder flush: the run records nothing.
+  expect(page.evaluate.mock.calls.map(([fn]) => String(fn))).not.toContainEqual(
+    expect.stringContaining('__lowdefyRecorder')
+  );
+});
+
+test('runJourney keeps the identity of a run its caller records', async () => {
+  const page = createPage();
+  openWith(page);
+  const recording = {
+    source: 'journey',
+    run: { id: '20261003T151200Z-p0d4rm', by: 'test', journey: 'tests/journeys/a.yaml#A' },
+  };
+  await runJourney({ origin, pageId: 'form', steps: [], recording, by: 'test' });
+  expect(mockOpenPage.mock.calls[0][0].recording).toEqual({
+    ...recording,
+    run: { ...recording.run, actor: 'main' },
+  });
+  expect(page.evaluate.mock.calls.map(([fn]) => String(fn))).toContainEqual(
+    expect.stringContaining('__lowdefyRecorder')
+  );
+});
+
+test('runJourney claims the errors its run causes while it runs and releases its buffer after', async () => {
+  const page = createPage();
+  const context = { close: jest.fn(async () => {}) };
+  let recording;
+  let claimedDuringRun;
+  mockOpenPage.mockImplementationOnce(async (options) => {
+    recording = options.recording;
+    claimedDuringRun = recordRunError({
+      timestamp: new Date().toISOString(),
+      message: 'during',
+      recording: { source: 'journey', run: recording.run.id, journey: recording.run.journey },
+    });
+    return { context, page, ready: true, url: page.url(), leftOrigin: [] };
+  });
+  await runJourney({ origin, pageId: 'form', steps: [] });
+  expect(claimedDuringRun).toBe(true);
+  expect(
+    recordRunError({
+      timestamp: new Date().toISOString(),
+      message: 'late',
+      recording: { source: 'journey', run: recording.run.id, journey: recording.run.journey },
+    })
+  ).toBe(false);
+});
+
+test('runJourney fills, clicks and asserts state, returning passed with the final state', async () => {
+  const window = createLowdefyWindow({ state: { name: '', saved: false } });
+  const page = createPage({ window });
+  const context = openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    if (selector === '#bl-submit') {
+      locator.click.mockImplementation(async () => {
+        window.lowdefy.contexts['page:form'].state.saved = true;
+        page.clicks.push(selector);
+      });
+    }
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { fill: { blockId: 'name', value: 'Ada', from: 'recorded' } },
+      { click: 'submit' },
+      { expect: { state: { path: 'saved', equals: true, from: 'recorded' } } },
+    ],
+  });
+
+  expect(result.error).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(result.failure).toBeUndefined();
+  expect(page.fills).toEqual([{ selector: '#bl-name input, textarea', value: 'Ada' }]);
+  expect(page.clicks).toEqual(['#bl-submit']);
+  expect(result.steps.map((step) => step.status)).toEqual(['ok', 'ok', 'ok']);
+  expect(result.steps[1]).toMatchObject({ index: 1, step: { click: 'submit' } });
+  expect(typeof result.steps[0].durationMs).toBe('number');
+  expect(result.state).toEqual({ name: '', saved: true });
+  expect(result.screenshots).toEqual([]);
+  expect(context.close).toHaveBeenCalledTimes(1);
+});
+
+test('runJourney clicks the interactive control inside a block when there is one', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.locator.mockImplementation((child) => {
+      const inner = createLocator({ selector: `${selector} ${child}`, page });
+      if (selector === '#bl-submit' && child.startsWith('button')) {
+        inner.count.mockResolvedValue(1);
+      }
+      return inner;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ click: 'submit' }, { click: 'card' }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([
+    `#bl-submit button, [role="button"], a[href], label:has(input[type="radio"]), label:has(input[type="checkbox"]), input:not([type="hidden"]):not(label input[type="radio"]):not(label input[type="checkbox"]), textarea, select, [role="switch"], [role="checkbox"], [role="radio"], [role="tab"], [role="menuitem"]`,
+    '#bl-card',
+  ]);
+});
+
+const CONTROLS = `button, [role="button"], a[href], label:has(input[type="radio"]), label:has(input[type="checkbox"]), input:not([type="hidden"]):not(label input[type="radio"]):not(label input[type="checkbox"]), textarea, select, [role="switch"], [role="checkbox"], [role="radio"], [role="tab"], [role="menuitem"]`;
+
+// Records every filter and nth applied to any locator, however deeply chained,
+// so a test can assert on the text and visibility filters a target resolves to.
+function trackFilters(page) {
+  const filters = [];
+  function instrument(locator) {
+    locator.filter.mockImplementation((filter) => {
+      filters.push({ selector: locator.selector, filter });
+      return locator;
+    });
+    locator.nth.mockImplementation((index) => {
+      page.nths.push({ selector: locator.selector, index });
+      return locator;
+    });
+    locator.locator.mockImplementation((child) =>
+      instrument(createLocator({ selector: `${locator.selector} ${child}`, page }))
+    );
+    return locator;
+  }
+  page.locator.mockImplementation((selector) => instrument(createLocator({ selector, page })));
+  return filters;
+}
+
+test('runJourney clicks an option of a segmented control by its label, not its hidden input', async () => {
+  const page = createPage();
+  page.nths = [];
+  openWith(page);
+  const filters = trackFilters(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { blockId: 'period', text: 'Month' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  // The labels of radio and checkbox options are controls; an input inside
+  // such a label is not, since it can have no size (antd Segmented).
+  expect(CONTROLS).toContain('label:has(input[type="radio"])');
+  expect(CONTROLS).toContain(':not(label input[type="radio"])');
+  expect(page.clicks).toEqual([`#bl-period ${CONTROLS}`]);
+  expect(filters[0].filter.hasText.test('Month')).toBe(true);
+});
+
+test('runJourney clicks a cell button by row and exact text inside a grid block', async () => {
+  const page = createPage();
+  page.nths = [];
+  openWith(page);
+  const filters = trackFilters(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { blockId: 'grid', row: 1, text: 'Edit' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([`#bl-grid .ag-row[row-index="1"] ${CONTROLS}`]);
+  // An action target with text and no nth is located twice, before and after
+  // waiting for a first match, and acted on once it is the only one.
+  expect(filters).toHaveLength(4);
+  expect(filters[0].filter.hasText.test('Edit')).toBe(true);
+  expect(filters[0].filter.hasText.test(' Edit ')).toBe(true);
+  expect(filters[0].filter.hasText.test('Edit row')).toBe(false);
+  expect(filters[1].filter).toEqual({ visible: true });
+  expect(filters.slice(2)).toEqual(filters.slice(0, 2));
+  expect(page.nths).toEqual([]);
+});
+
+test('runJourney clicks the control inside a grid cell addressed by row and column', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.locator.mockImplementation((child) => {
+      const inner = createLocator({ selector: `${selector} ${child}`, page });
+      inner.locator.mockImplementation((grandchild) => {
+        const cell = createLocator({ selector: `${inner.selector} ${grandchild}`, page });
+        cell.locator.mockImplementation((control) => {
+          const found = createLocator({ selector: `${cell.selector} ${control}`, page });
+          found.count.mockResolvedValue(1);
+          return found;
+        });
+        return cell;
+      });
+      return inner;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { blockId: 'grid', row: 0, column: 'actions' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([
+    `#bl-grid .ag-row[row-index="0"] .ag-cell[col-id="actions"] ${CONTROLS}`,
+  ]);
+});
+
+test('runJourney clicks the nth control in a grid cell when several have no text', async () => {
+  const page = createPage();
+  page.nths = [];
+  openWith(page);
+  trackFilters(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { blockId: 'grid', row: 0, column: 'actions', nth: 1 } }],
+  });
+
+  expect(result.passed).toBe(true);
+  const selector = `#bl-grid .ag-row[row-index="0"] .ag-cell[col-id="actions"] ${CONTROLS}`;
+  expect(page.clicks).toEqual([selector]);
+  expect(page.nths).toEqual([{ selector, index: 1 }]);
+});
+
+test('runJourney clicks a page-wide control by text when the target has no blockId', async () => {
+  const page = createPage();
+  page.nths = [];
+  openWith(page);
+  const filters = trackFilters(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { text: 'OK' } }, { click: { text: 'Delete', nth: 1 } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([CONTROLS, CONTROLS]);
+  // No menu or dialog is open (every count is 0), so only the page-wide
+  // search filters apply: twice for each text, before and after waiting for a
+  // match.
+  const pageWide = filters.filter((f) => f.selector === CONTROLS);
+  expect(pageWide.map((f) => f.filter)).toEqual([
+    { hasText: expect.any(RegExp) },
+    { visible: true },
+    { hasText: expect.any(RegExp) },
+    { visible: true },
+    { hasText: expect.any(RegExp) },
+    { visible: true },
+    { hasText: expect.any(RegExp) },
+    { visible: true },
+  ]);
+  expect(pageWide[0].filter.hasText.test('OK')).toBe(true);
+  expect(pageWide[0].filter.hasText.test('OKAY')).toBe(false);
+  expect(pageWide[4].filter.hasText.test('Delete')).toBe(true);
+  expect(page.nths).toEqual([{ selector: CONTROLS, index: 1 }]);
+});
+
+test('runJourney fails an action whose text target matches several controls', async () => {
+  const page = createPage();
+  page.nths = [];
+  openWith(page);
+  trackFilters(page);
+  const instrumented = page.locator.getMockImplementation();
+  page.locator.mockImplementation((selector) => {
+    const locator = instrumented(selector);
+    if (selector === CONTROLS) {
+      locator.count.mockResolvedValue(3);
+    }
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { text: 'Delete' } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(page.clicks).toEqual([]);
+  expect(result.failure).toEqual({
+    index: 0,
+    step: { click: { text: 'Delete' } },
+    expected: 'exactly one control with text "Delete" in the page',
+    actual: '3 controls',
+    message:
+      'Matched 3 controls with text "Delete" in the page; add nth: 0..2, or a blockId/row to narrow it.',
+  });
+});
+
+test('runJourney fails an action whose containing target matches several elements in a block', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.locator.mockImplementation((child) => {
+      const found = createLocator({ selector: `${selector} ${child}`, page });
+      found.count.mockResolvedValue(2);
+      return found;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ fill: { blockId: 'members', containing: 'ada', value: 'x' } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(page.fills).toEqual([]);
+  expect(result.failure.message).toBe(
+    'Matched 2 elements containing "ada" in block "members"; add nth: 0..1, or a blockId/row to narrow it.'
+  );
+});
+
+test('runJourney accepts any of several matches in an expectation', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.count.mockResolvedValue(3);
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ expect: { visible: { text: 'Delete' } } }],
+  });
+
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+});
+
+test('runJourney finds a page-wide text target in the open dialog before the page', async () => {
+  const page = createPage();
+  openWith(page);
+  // A dialog is open and it holds one control with the text; the grid behind
+  // it holds three, but only the dialog's is counted, so the click is not
+  // ambiguous.
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    if (selector === CONTROLS) {
+      locator.count.mockResolvedValue(3);
+    }
+    if (selector === '[role="dialog"]') {
+      locator.count.mockResolvedValue(1);
+      locator.last.mockImplementation(() => locator);
+      locator.locator.mockImplementation((child) => {
+        const inner = createLocator({ selector: `${selector} ${child}`, page });
+        inner.count.mockResolvedValue(1);
+        return inner;
+      });
+    }
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { text: 'Delete' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([`[role="dialog"] ${CONTROLS}`]);
+});
+
+test('runJourney prefers an open menu over an open dialog for a page-wide text target', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    if (selector === '[role="menu"]' || selector === '[role="dialog"]') {
+      locator.count.mockResolvedValue(1);
+      locator.last.mockImplementation(() => locator);
+      locator.locator.mockImplementation((child) => {
+        const inner = createLocator({ selector: `${selector} ${child}`, page });
+        inner.count.mockResolvedValue(1);
+        return inner;
+      });
+    }
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { text: 'Archive' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([`[role="menu"] ${CONTROLS}`]);
+});
+
+test('runJourney falls through to the page when the open dialog has no control with the text', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    if (selector === '[role="dialog"]') {
+      locator.count.mockResolvedValue(1);
+      locator.last.mockImplementation(() => locator);
+    }
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { text: 'Refresh' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([CONTROLS]);
+});
+
+test('runJourney escapes quotes in a column id', async () => {
+  const page = createPage();
+  openWith(page);
+
+  await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { blockId: 'grid', row: 0, column: 'a"b' } }],
+  });
+
+  expect(page.clicks).toEqual(['#bl-grid .ag-row[row-index="0"] .ag-cell[col-id="a\\"b"]']);
+});
+
+test('runJourney describes a failed target by block, row, column and text', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    const fail = async () => {
+      throw new Error('locator.click: Timeout 5000ms exceeded.');
+    };
+    locator.click.mockImplementation(fail);
+    locator.locator.mockImplementation((child) => {
+      const inner = createLocator({ selector: `${selector} ${child}`, page });
+      inner.click.mockImplementation(fail);
+      inner.locator.mockImplementation((grandchild) => {
+        const deep = createLocator({ selector: `${inner.selector} ${grandchild}`, page });
+        deep.click.mockImplementation(fail);
+        deep.locator.mockImplementation(() => deep);
+        return deep;
+      });
+      return inner;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { blockId: 'grid', row: 2, column: 'actions', text: 'Edit', nth: 1 } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure.expected).toEqual(
+    'block "grid" row 2 column "actions" control "Edit" nth 1 to be actionable'
+  );
+  expect(result.failure.message).toMatch(
+    /^Block "grid" row 2 column "actions" control "Edit" nth 1 was not actionable: locator.click/
+  );
+});
+
+test('runJourney reports a page-wide control that never appears', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.click.mockImplementation(async () => {
+      throw new Error('locator.click: Timeout 5000ms exceeded.');
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { text: 'Confirm' } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure.expected).toEqual('control "Confirm" to be actionable');
+  expect(result.failure.message).toMatch(/^Control "Confirm" was not actionable/);
+});
+
+test('runJourney fills and selects inside a grid cell addressed by row and column', async () => {
+  const page = createPage();
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [
+      { fill: { blockId: 'grid', row: 1, column: 'name', value: 'Ada' } },
+      { select: { blockId: 'grid', row: 1, column: 'status', value: 'Open' } },
+    ],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.fills).toEqual([
+    {
+      selector: '#bl-grid .ag-row[row-index="1"] .ag-cell[col-id="name"] input, textarea',
+      value: 'Ada',
+    },
+  ]);
+  expect(page.clicks).toEqual([
+    '#bl-grid .ag-row[row-index="1"] .ag-cell[col-id="status"]',
+    '.ant-select-item-option, [role="option"]',
+  ]);
+});
+
+test('runJourney checks visibility and text of a grid row and cell', async () => {
+  const page = createPage();
+  page.texts['#bl-grid .ag-row[row-index="0"] .ag-cell[col-id="title"]'] = 'Access reviews';
+  page.texts['#bl-grid .ag-row[row-index="0"]'] = 'Access reviews open Edit';
+  openWith(page);
+  const spy = advanceClockOnEveryRead();
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [
+      { expect: { visible: { blockId: 'grid', row: 0 } } },
+      { expect: { text: { blockId: 'grid', row: 0, column: 'title', contains: 'Access' } } },
+      { expect: { text: { blockId: 'grid', row: 0, contains: 'open' } } },
+      { expect: { text: { blockId: 'grid', row: 0, column: 'title', contains: 'Closed' } } },
+    ],
+  });
+
+  spy.mockRestore();
+
+  expect(result.steps.map((step) => step.status)).toEqual(['ok', 'ok', 'ok', 'failed']);
+  expect(result.failure.expected).toEqual(
+    'block "grid" row 0 column "title" text to contain "Closed"'
+  );
+  expect(result.failure.actual).toEqual('Access reviews');
+});
+
+test('runJourney joins the text of every element a row target matches', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.locator.mockImplementation((child) => {
+      const inner = createLocator({ selector: `${selector} ${child}`, page });
+      // ag-grid renders the row once per column container.
+      inner.allInnerTexts.mockResolvedValue(['Access reviews', 'Edit Delete']);
+      return inner;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ expect: { text: { blockId: 'grid', row: 0, contains: 'Delete' } } }],
+  });
+
+  expect(result.passed).toBe(true);
+});
+
+test('runJourney reports a missing expect.state value as actual null', async () => {
+  const page = createPage({ window: createLowdefyWindow({ state: {} }) });
+  openWith(page);
+  const spy = advanceClockOnEveryRead();
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ expect: { state: { path: 'saved', equals: true } } }],
+  });
+  spy.mockRestore();
+  expect(result.failure.actual).toBeNull();
+  expect(Object.keys(result.failure)).toContain('actual');
+});
+
+test('runJourney matches a missing state path with equals null, as its failure report shows it', async () => {
+  const page = createPage({ window: createLowdefyWindow({ state: { rows: [{ id: 1 }] } }) });
+  openWith(page);
+  const spy = advanceClockOnEveryRead();
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { expect: { state: { path: 'rows.1', equals: null } } },
+      { expect: { state: { path: 'rows.0', equals: null } } },
+    ],
+  });
+  spy.mockRestore();
+  expect(result.failure).toMatchObject({ index: 1, expected: null, actual: { id: 1 } });
+});
+
+test('runJourney waits for expect.state until the value the click led to lands', async () => {
+  const window = createLowdefyWindow({ state: { invitations: [{ email: 'ada@example.test' }] } });
+  const page = createPage({ window });
+  page.waitForTimeout = jest.fn(async () => {
+    window.lowdefy.contexts['page:form'].state.invitations = [];
+  });
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ expect: { state: { path: 'invitations', equals: [] } } }],
+  });
+
+  expect(result.failure).toBeUndefined();
+  expect(page.waitForTimeout).toHaveBeenCalledTimes(1);
+});
+
+test('runJourney settles a page for at most 5 seconds after an interaction, whatever the step timeout', async () => {
+  const page = createPage();
+  openWith(page);
+
+  await runJourney({ origin, pageId: 'form', stepTimeout: 30000, steps: [{ click: 'send' }] });
+
+  expect(page.waitForFunction.mock.calls.at(-1)[2]).toEqual({ timeout: 5000 });
+});
+
+test('runJourney fails expect.calls with no pageId when no Lowdefy page is showing', async () => {
+  const page = createPage({ window: { navigation: { currentEntry: { index: 0 } } } });
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ expect: { calls: { request: 'save', count: 0 } } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    index: 0,
+    expected: 'a Lowdefy page to count request "save" on',
+    actual: null,
+  });
+});
+
+test('runJourney fill looks in the block and in its portal for the input', async () => {
+  const page = createPage();
+  openWith(page);
+  await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ fill: { blockId: 'header_search', value: 'PAIA' } }],
+  });
+  expect(page.fills).toEqual([{ selector: '#bl-header_search input, textarea', value: 'PAIA' }]);
+  expect(page.unions).toContainEqual({
+    selector: '#bl-header_search',
+    other: '.ldf-portal-header_search',
+  });
+});
+
+test('runJourney fill of a grid cell does not look in a portal', async () => {
+  const page = createPage();
+  openWith(page);
+  await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ fill: { blockId: 'grid', row: 1, column: 'name', value: 'Ada' } }],
+  });
+  expect(page.unions.filter((union) => union.other?.startsWith('.ldf-portal'))).toEqual([]);
+});
+
+test('runJourney fills a numeric value as a string', async () => {
+  const page = createPage();
+  openWith(page);
+  await runJourney({ origin, pageId: 'form', steps: [{ fill: { blockId: 'age', value: 42 } }] });
+  expect(page.fills).toEqual([{ selector: '#bl-age input, textarea', value: '42' }]);
+});
+
+test('runJourney reports a failing expect.state with expected and actual and skips the rest', async () => {
+  const page = createPage({ window: createLowdefyWindow({ state: { count: 1 } }) });
+  openWith(page);
+  const spy = advanceClockOnEveryRead();
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { expect: { state: { path: 'count', equals: 2 } } },
+      { click: 'next' },
+      { screenshot: 'after' },
+    ],
+  });
+
+  spy.mockRestore();
+  expect(result.passed).toBe(false);
+  expect(result.failure).toEqual({
+    index: 0,
+    step: { expect: { state: { path: 'count', equals: 2 } } },
+    expected: 2,
+    actual: 1,
+    message: 'Expected state "count" to equal 2 but found 1.',
+  });
+  expect(result.steps.map((step) => step.status)).toEqual(['failed', 'skipped', 'skipped']);
+  expect(page.clicks).toEqual([]);
+  expect(result.screenshots).toEqual([]);
+  expect(result.state).toEqual({ count: 1 });
+});
+
+test('runJourney compares expect.state structurally, ignoring key order', async () => {
+  const page = createPage({
+    window: createLowdefyWindow({ state: { row: { b: [1, { c: 2 }], a: 'x' } } }),
+  });
+  openWith(page);
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ expect: { state: { path: 'row', equals: { a: 'x', b: [1, { c: 2 }] } } } }],
+  });
+  expect(result.passed).toBe(true);
+});
+
+test('runJourney reports a click on a missing block as a failure instead of throwing', async () => {
+  const page = createPage();
+  page.missingBlocks = ['nope'];
+  const context = openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ click: 'nope' }, { expect: { visible: 'modal' } }],
+  });
+
+  expect(result.error).toBeUndefined();
+  expect(result.passed).toBe(false);
+  expect(result.failure.index).toBe(0);
+  expect(result.failure.step).toEqual({ click: 'nope' });
+  expect(result.failure.expected).toEqual('block "nope" to be actionable');
+  expect(result.failure.actual).toEqual(
+    "locator.click: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator('#bl-nope')"
+  );
+  expect(result.failure.message).toMatch(/Block "nope" was not actionable/);
+  expect(result.steps.map((step) => step.status)).toEqual(['failed', 'skipped']);
+  expect(context.close).toHaveBeenCalledTimes(1);
+});
+
+test('runJourney escapes block ids in the #bl- selector', async () => {
+  const page = createPage();
+  openWith(page);
+  await runJourney({ origin, pageId: 'form', steps: [{ click: 'rows.0.edit' }] });
+  expect(page.clicks).toEqual(['#bl-rows\\.0\\.edit']);
+});
+
+test('runJourney collects screenshots in step order with default and given names', async () => {
+  const page = createPage();
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ screenshot: 'start' }, { click: 'open' }, { screenshot: true }, { screenshot: null }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(result.screenshots).toEqual([
+    { name: 'start', data: Buffer.from('png-1').toString('base64'), mimeType: 'image/png' },
+    { name: 'step-2', data: Buffer.from('png-2').toString('base64'), mimeType: 'image/png' },
+    { name: 'step-3', data: Buffer.from('png-3').toString('base64'), mimeType: 'image/png' },
+  ]);
+});
+
+test('runJourney keeps screenshots taken before a failing step', async () => {
+  const page = createPage();
+  page.hiddenBlocks = ['modal'];
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ screenshot: 'before' }, { expect: { visible: 'modal' } }, { screenshot: 'after' }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure.expected).toEqual('block "modal" to be visible');
+  expect(result.screenshots.map((shot) => shot.name)).toEqual(['before']);
+});
+
+test('runJourney resolves Mod in a press chord through getShortcutModifier', async () => {
+  const page = createPage();
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ press: 'Mod+k' }, { press: 'Enter' }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.presses).toEqual(['Meta+k', 'Enter']);
+});
+
+test('runJourney selects a native option by label when the block contains a select', async () => {
+  const page = createPage();
+  openWith(page);
+  let native;
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.locator.mockImplementation((child) => {
+      const inner = createLocator({ selector: `${selector} ${child}`, page });
+      if (child === 'select') {
+        inner.count.mockResolvedValue(1);
+        native = inner;
+      }
+      return inner;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ select: { blockId: 'country', value: 'Chile' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(native.selectOption).toHaveBeenCalledWith({ label: 'Chile' }, { timeout: 5000 });
+  expect(page.clicks).toEqual([]);
+});
+
+test('runJourney selects a dropdown option by exact visible text', async () => {
+  const page = createPage();
+  openWith(page);
+  const filters = [];
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.filter.mockImplementation((filter) => {
+      filters.push(filter);
+      return locator;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ select: { blockId: 'country', value: 'Chile' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual(['#bl-country', '.ant-select-item-option, [role="option"]']);
+  expect(filters[0].hasText.test('Chile')).toBe(true);
+  expect(filters[0].hasText.test('Chile (CL)')).toBe(false);
+  expect(filters[1]).toEqual({ visible: true });
+});
+
+const POPUPS = [
+  '.ant-select-dropdown:not(.ant-select-dropdown-hidden)',
+  '.ant-picker-dropdown:not(.ant-picker-dropdown-hidden)',
+  '.ant-cascader-dropdown:not(.ant-select-dropdown-hidden)',
+  '.ant-color-picker-inner',
+  '.ant-dropdown:not(.ant-dropdown-hidden)',
+  '.ant-mentions-dropdown:not(.ant-mentions-dropdown-hidden)',
+];
+
+const SHOWING_BEFORE = 'data-lowdefy-journey-showing-before';
+
+// A stand-in for a popup element: enough DOM for the open step's marking.
+function createPopup({ visible }) {
+  const attributes = new Set();
+  return {
+    attributes,
+    checkVisibility: () => visible,
+    setAttribute: (name) => attributes.add(name),
+    removeAttribute: (name) => attributes.delete(name),
+  };
+}
+
+test('runJourney opens a select by clicking its antd 6 content box', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.locator.mockImplementation((child) => {
+      const inner = createLocator({ selector: `${selector} ${child}`, page });
+      if (selector === '#bl-status' && child.startsWith('.ant-select-content')) {
+        inner.count.mockResolvedValue(1);
+      }
+      return inner;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ open: 'status' }] });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([
+    '#bl-status .ant-select-content, .ant-picker, .ant-color-picker-trigger, .ant-dropdown-trigger, .ant-mentions',
+  ]);
+});
+
+test('runJourney open waits for a popup its own click opened, not one already showing', async () => {
+  const page = createPage();
+  openWith(page);
+  const fading = createPopup({ visible: true });
+  const closed = createPopup({ visible: false });
+  page.elementsFor = (selector) => {
+    if (selector === POPUPS.join(', ')) {
+      return [fading, closed];
+    }
+    if (selector === `[${SHOWING_BEFORE}]`) {
+      return [fading, closed].filter((popup) => popup.attributes.has(SHOWING_BEFORE));
+    }
+    return [];
+  };
+  const markedWhenClicked = [];
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.click.mockImplementation(async () => {
+      markedWhenClicked.push(fading.attributes.has(SHOWING_BEFORE));
+      page.clicks.push(selector);
+    });
+    return locator;
+  });
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ open: 'notes' }] });
+
+  expect(result.passed).toBe(true);
+  expect(markedWhenClicked).toEqual([true]);
+  expect(closed.attributes.has(SHOWING_BEFORE)).toBe(false);
+  expect(page.waits).toContain(
+    POPUPS.map((selector) => `${selector}:not([${SHOWING_BEFORE}])`).join(', ')
+  );
+  // Unmarked once the step is done, so a later open of that input finds it.
+  expect(fading.attributes.has(SHOWING_BEFORE)).toBe(false);
+});
+
+test('runJourney fails an open step whose click opens no popup and still unmarks the popups', async () => {
+  const page = createPage();
+  openWith(page);
+  const showing = createPopup({ visible: true });
+  page.elementsFor = () => [showing];
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    if (selector.includes(`:not([${SHOWING_BEFORE}])`)) {
+      locator.waitFor.mockRejectedValue(new Error('locator.waitFor: Timeout 5000ms exceeded.'));
+    }
+    return locator;
+  });
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ open: 'notes' }] });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure.message).toEqual('Opening block "notes" showed no dropdown or popup.');
+  expect(showing.attributes.has(SHOWING_BEFORE)).toBe(false);
+});
+
+test('runJourney selects a radio, button or segmented option in the block by its exact label', async () => {
+  const page = createPage();
+  openWith(page);
+  const filters = [];
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.locator.mockImplementation((child) => {
+      const inner = createLocator({ selector: `${selector} ${child}`, page });
+      if (child === 'label:has(input[type="radio"])') {
+        inner.count.mockResolvedValue(3);
+        inner.filter.mockImplementation((filter) => {
+          filters.push(filter);
+          return inner;
+        });
+      }
+      return inner;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'reports',
+    steps: [{ select: { blockId: 'period', value: 'Month' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual(['#bl-period label:has(input[type="radio"])']);
+  expect(filters[0].hasText.test('Month')).toBe(true);
+  expect(filters[0].hasText.test('Months')).toBe(false);
+  expect(filters[1]).toEqual({ visible: true });
+});
+
+test('runJourney reports a radio option that is not in the block by its text', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.locator.mockImplementation((child) => {
+      const inner = createLocator({ selector: `${selector} ${child}`, page });
+      if (child === 'label:has(input[type="radio"])') {
+        inner.count.mockResolvedValue(3);
+        inner.click.mockRejectedValue(new Error('locator.click: Timeout 5000ms exceeded.'));
+      }
+      return inner;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'reports',
+    steps: [{ select: { blockId: 'period', value: 'Decade' } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    index: 0,
+    expected: 'option "Decade" in block "period"',
+    actual: 'locator.click: Timeout 5000ms exceeded.',
+    message: 'No option with text "Decade" in block "period".',
+  });
+});
+
+function withCheckboxOptions({ page, checked = false, waitError } = {}) {
+  const filters = [];
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.locator.mockImplementation((child) => {
+      const inner = createLocator({ selector: `${selector} ${child}`, page });
+      if (child === 'label:has(input[type="checkbox"])') {
+        inner.count.mockResolvedValue(3);
+        inner.filter.mockImplementation((filter) => {
+          filters.push(filter);
+          return inner;
+        });
+        if (waitError) {
+          inner.waitFor.mockRejectedValue(waitError);
+        }
+        inner.locator.mockImplementation((input) => {
+          const box = createLocator({ selector: `${inner.selector} ${input}`, page });
+          box.isChecked.mockResolvedValue(checked);
+          return box;
+        });
+      }
+      return inner;
+    });
+    return locator;
+  });
+  return filters;
+}
+
+test('runJourney ticks a checkbox option in the block by its exact label', async () => {
+  const page = createPage();
+  openWith(page);
+  const filters = withCheckboxOptions({ page });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'reports',
+    steps: [{ select: { blockId: 'regions', value: 'North' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual(['#bl-regions label:has(input[type="checkbox"])']);
+  expect(filters[0].hasText.test('North')).toBe(true);
+  expect(filters[0].hasText.test('North East')).toBe(false);
+  expect(filters[1]).toEqual({ visible: true });
+});
+
+test('runJourney leaves a checkbox option that is already ticked', async () => {
+  const page = createPage();
+  openWith(page);
+  withCheckboxOptions({ page, checked: true });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'reports',
+    steps: [{ select: { blockId: 'regions', value: 'North' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([]);
+});
+
+test('runJourney reports a checkbox option that is not in the block by its text', async () => {
+  const page = createPage();
+  openWith(page);
+  withCheckboxOptions({
+    page,
+    waitError: new Error('locator.waitFor: Timeout 5000ms exceeded.'),
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'reports',
+    steps: [{ select: { blockId: 'regions', value: 'West' } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    index: 0,
+    expected: 'option "West" in block "regions"',
+    actual: 'locator.waitFor: Timeout 5000ms exceeded.',
+    message: 'No option with text "West" in block "regions".',
+  });
+  expect(page.clicks).toEqual([]);
+});
+
+test('runJourney reports a dropdown option that never appears by its text', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    if (selector.startsWith('.ant-select-item-option')) {
+      locator.click.mockRejectedValue(new Error('locator.click: Timeout 5000ms exceeded.'));
+    }
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ select: { blockId: 'country', value: 'Chi' } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure.expected).toEqual('option "Chi" in the dropdown of block "country"');
+  expect(result.failure.actual).toEqual('locator.click: Timeout 5000ms exceeded.');
+  expect(result.failure.message).toEqual(
+    'No option with text "Chi" appeared in the dropdown of block "country".'
+  );
+});
+
+test('runJourney fails expect.text with the actual text when it does not contain the string', async () => {
+  const page = createPage();
+  page.texts['#bl-title'] = 'Hello world';
+  openWith(page);
+  const spy = advanceClockOnEveryRead();
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { expect: { text: { blockId: 'title', contains: 'Hello' } } },
+      { expect: { text: { blockId: 'title', contains: 'Goodbye' } } },
+    ],
+  });
+
+  spy.mockRestore();
+
+  expect(result.steps.map((step) => step.status)).toEqual(['ok', 'failed']);
+  expect(result.failure.expected).toEqual('block "title" text to contain "Goodbye"');
+  expect(result.failure.actual).toEqual('Hello world');
+});
+
+test('runJourney waits for expect.text until the block renders the text', async () => {
+  const page = createPage();
+  page.texts['#bl-members'] = '';
+  let reads = 0;
+  page.waitForTimeout = jest.fn(async () => {
+    reads += 1;
+    if (reads === 2) {
+      page.texts['#bl-members'] = 'ada@example.test Owner';
+    }
+  });
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'members',
+    steps: [{ expect: { text: { blockId: 'members', contains: 'Owner' } } }],
+  });
+
+  expect(result.failure).toBeUndefined();
+  expect(page.waitForTimeout).toHaveBeenCalledTimes(2);
+});
+
+test('runJourney retries expect.text when the page navigates during a read', async () => {
+  const page = createPage();
+  page.texts['#bl-notice'] = "You're signed out";
+  const locator = page.locator('#bl-notice');
+  locator.allInnerTexts
+    .mockRejectedValueOnce(
+      new Error(
+        'locator.allInnerTexts: Execution context was destroyed, most likely because of a navigation'
+      )
+    )
+    .mockResolvedValue(["You're signed out"]);
+  page.locator = jest.fn(() => locator);
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'logout',
+    steps: [{ expect: { text: { blockId: 'notice', contains: 'signed out' } } }],
+  });
+
+  expect(result.failure).toBeUndefined();
+});
+
+test('runJourney checks expect.url against the page url', async () => {
+  const page = createPage({ url: 'http://localhost:3227/detail?id=1' });
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { expect: { url: { contains: '/detail' } } },
+      { expect: { url: { contains: 'list' } } },
+    ],
+  });
+
+  expect(result.steps.map((step) => step.status)).toEqual(['ok', 'failed']);
+  expect(result.failure.actual).toEqual('http://localhost:3227/detail?id=1');
+});
+
+test('runJourney goes back one page and settles it', async () => {
+  const window = createLowdefyWindow({ pageId: 'detail', historyIndex: 1 });
+  const page = createPage({ window });
+  openWith(page);
+  page.goBack.mockImplementation(async () => {
+    window.lowdefy.pageId = 'form';
+    window.lowdefy.contexts['page:form'] = window.lowdefy.contexts['page:detail'];
+    return null;
+  });
+
+  const result = await runJourney({ origin, pageId: 'detail', steps: [{ back: true }] });
+
+  expect(result.passed).toBe(true);
+  expect(page.goBack).toHaveBeenCalledWith({ timeout: 5000 });
+  expect(page.waitForFunction).toHaveBeenLastCalledWith(expect.any(Function), undefined, {
+    timeout: 5000,
+  });
+});
+
+test('runJourney fails back on the first page instead of leaving the app', async () => {
+  const page = createPage({ window: createLowdefyWindow({ historyIndex: 0 }) });
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ back: null }, { expect: { url: { contains: '/form' } } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(page.goBack).not.toHaveBeenCalled();
+  expect(result.failure).toMatchObject({
+    index: 0,
+    expected: 'the browser to go back one page',
+    actual: 'no earlier page than http://localhost:3227/form',
+  });
+  expect(result.failure.message).toMatch(/There is no earlier page in this journey to go back to/);
+  expect(result.steps.map((step) => step.status)).toEqual(['failed', 'skipped']);
+});
+
+test('runJourney checks expect.title by equals and contains', async () => {
+  const page = createPage();
+  page.documentTitle = 'Tasks | Acme';
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { expect: { title: { equals: 'Tasks | Acme' } } },
+      { expect: { title: { contains: 'Tasks' } } },
+    ],
+  });
+
+  expect(result.passed).toBe(true);
+});
+
+test('runJourney fails expect.title with the last title seen', async () => {
+  const page = createPage();
+  page.documentTitle = 'Lowdefy';
+  openWith(page);
+  // Each read of the clock moves it on a second, so the 5s wait runs out.
+  let clock = 0;
+  const spy = jest.spyOn(Date, 'now').mockImplementation(() => {
+    clock += 1000;
+    return clock;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ expect: { title: { equals: 'Tasks' } } }],
+  });
+  spy.mockRestore();
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    expected: 'title to equal "Tasks"',
+    actual: 'Lowdefy',
+    message: 'Timed out after 5000ms waiting for title to equal "Tasks".',
+  });
+});
+
+test('runJourney returns only the state paths asked for, null where undefined', async () => {
+  const page = createPage({
+    window: createLowdefyWindow({ state: { form: { name: 'Ada' }, rows: [1, 2], big: 'x' } }),
+  });
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [],
+    state: ['form.name', 'rows', 'missing'],
+  });
+
+  expect(result.state).toEqual({ 'form.name': 'Ada', rows: [1, 2], missing: null });
+});
+
+test('runJourney leaves the state out when state is false', async () => {
+  const page = createPage({ window: createLowdefyWindow({ state: { a: 1 } }) });
+  openWith(page);
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [], state: false });
+
+  expect(result.passed).toBe(true);
+  expect('state' in result).toBe(false);
+  expect('stateOmitted' in result).toBe(false);
+});
+
+test('runJourney summarises a large final state by default and returns it whole with state true', async () => {
+  const state = { rows: 'x'.repeat(20000), period: 'Month' };
+  const page = createPage({ window: createLowdefyWindow({ state }) });
+  openWith(page);
+
+  const summarised = await runJourney({ origin, pageId: 'form', steps: [] });
+  expect(summarised.state).toBeUndefined();
+  expect(summarised.stateOmitted).toMatchObject({
+    characters: JSON.stringify(state).length,
+    keys: { rows: 20002, period: 7 },
+  });
+  expect(summarised.stateOmitted.note).toMatch(/Pass state: \["path", \.\.\.\]/);
+
+  const whole = await runJourney({ origin, pageId: 'form', steps: [], state: true });
+  expect(whole.state).toEqual(state);
+});
+
+test('runJourney returns an error for a malformed state option before opening a browser', async () => {
+  const result = await runJourney({ origin, pageId: 'form', steps: [], state: 'all' });
+  expect(result.error).toMatch(/The "state" option must be true, false or an array of state paths/);
+  expect(mockGetBrowser).not.toHaveBeenCalled();
+});
+
+test('runJourney waits for a request to finish loading and for a state path to be defined', async () => {
+  const window = createLowdefyWindow({
+    state: {},
+    requests: { get_rows: [{ loading: true }] },
+  });
+  const page = createPage({ window });
+  // The page calls get_rows as it opens, inside the first step's window.
+  openActorsWithNetwork([
+    { page, opening: [{ url: `${origin}/api/request/form/get_rows`, method: 'POST' }] },
+  ]);
+  page.waitForTimeout.mockImplementation(async () => {
+    window.lowdefy.contexts['page:form'].requests.get_rows[0] = { loading: false, response: [] };
+    window.lowdefy.contexts['page:form'].state.rows = [];
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ wait: { request: 'get_rows' } }, { wait: { state: 'rows' } }, { wait: { ms: 10 } }],
+    readConfigFile: async (name) => (name === 'plugins/requestSchemas.json' ? {} : null),
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.waitForTimeout).toHaveBeenCalledWith(10);
+});
+
+test('runJourney fails a wait that never settles with the last value seen', async () => {
+  const page = createPage({
+    window: createLowdefyWindow({ requests: { get_rows: [{ loading: true }] } }),
+  });
+  openActorsWithNetwork([
+    { page, opening: [{ url: `${origin}/api/request/form/get_rows`, method: 'POST' }] },
+  ]);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ wait: { request: 'get_rows' } }],
+    stepTimeout: 20,
+    readConfigFile: async (name) => (name === 'plugins/requestSchemas.json' ? {} : null),
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure.expected).toEqual(
+    'request "get_rows" to have been called since the last interaction and finished loading'
+  );
+  expect(result.failure.actual).toEqual({
+    calledSinceLastInteraction: true,
+    state: { loading: true },
+  });
+  expect(result.failure.message).toMatch(/Timed out after 20ms/);
+});
+
+test('runJourney settles the page after an interaction before the next step', async () => {
+  const page = createPage();
+  openWith(page);
+
+  await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ click: 'open' }, { expect: { visible: 'modal' } }],
+  });
+
+  // openPage owns the readiness wait; the runner waits for lazy blocks before
+  // the click picks a control, and settles once after the click.
+  expect(page.waitForFunction).toHaveBeenCalledTimes(2);
+  expect(page.waitForFunction.mock.calls[1][1]).toBeUndefined();
+});
+
+test('runJourney waits for lazy blocks to load before it picks the control a click lands on', async () => {
+  const window = createLowdefyWindow();
+  window.__lowdefyLazyLoads = 1;
+  const page = createPage({ window });
+  openWith(page);
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ click: 'table' }] });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    index: 0,
+    message: 'A block was still loading after 5000 ms.',
+    expected:
+      'every lazy block on the page to have loaded and every loading skeleton to have cleared',
+  });
+  expect(page.clicks).toEqual([]);
+
+  window.__lowdefyLazyLoads = 0;
+  const loaded = await runJourney({ origin, pageId: 'form', steps: [{ click: 'table' }] });
+  expect(loaded.passed).toBe(true);
+  expect(page.clicks).toEqual(['#bl-table']);
+});
+
+test('runJourney waits for a table holding its loading skeleton before it picks the control a click lands on', async () => {
+  const window = createLowdefyWindow();
+  window.__lowdefyLazyLoads = 0;
+  window.__lowdefySkeletonHolds = 1;
+  const page = createPage({ window });
+  openWith(page);
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ click: 'table' }] });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    index: 0,
+    message: 'A block was still loading after 5000 ms.',
+    expected:
+      'every lazy block on the page to have loaded and every loading skeleton to have cleared',
+  });
+  expect(page.clicks).toEqual([]);
+
+  window.__lowdefySkeletonHolds = 0;
+  const cleared = await runJourney({ origin, pageId: 'form', steps: [{ click: 'table' }] });
+  expect(cleared.passed).toBe(true);
+  expect(page.clicks).toEqual(['#bl-table']);
+});
+
+test('runJourney opens pages with the journey timeout when it is longer than 15000 ms', async () => {
+  const page = createPage();
+  openWith(page);
+
+  await runJourney({ origin, pageId: 'form', steps: [{ goto: 'form' }], stepTimeout: 30000 });
+  await runJourney({ origin, pageId: 'form', steps: [], stepTimeout: 20 });
+
+  expect(mockOpenPage.mock.calls.map(([args]) => args.timeout)).toEqual([30000, 15000]);
+  expect(page.goto).toHaveBeenCalledWith('http://localhost:3227/form', {
+    waitUntil: 'load',
+    timeout: 30000,
+  });
+});
+
+test('runJourney returns an error for a timeout outside 1 to 60000 ms before opening a browser', async () => {
+  const result = await runJourney({ origin, pageId: 'form', steps: [], stepTimeout: 0 });
+
+  expect(result.error).toMatch(/"timeout" must be a whole number of milliseconds from 1 to 60000/);
+  expect(mockGetBrowser).not.toHaveBeenCalled();
+});
+
+test('runJourney reports an unsettled page open with ready: false and a note', async () => {
+  const page = createPage();
+  openWith(page, { ready: false });
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [] });
+
+  expect(result.passed).toBe(true);
+  expect(result.ready).toBe(false);
+  expect(result.note).toMatch(/15000ms/);
+});
+
+test('runJourney returns an error and closes the context when the page fails to open', async () => {
+  mockOpenPage.mockRejectedValue(new Error('net::ERR_CONNECTION_REFUSED'));
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ click: 'x' }] });
+
+  expect(result.error).toEqual(
+    'Failed to run journey at "http://localhost:3227/form": net::ERR_CONNECTION_REFUSED'
+  );
+});
+
+test('runJourney opens each actor the first time an as step names it and returns to earlier actors', async () => {
+  const mainPage = createPage();
+  const inviteePage = createPage();
+  const mainContext = { close: jest.fn(async () => {}) };
+  const inviteeContext = { close: jest.fn(async () => {}) };
+  mockOpenPage
+    .mockResolvedValueOnce({ context: mainContext, page: mainPage, ready: true, leftOrigin: [] })
+    .mockResolvedValueOnce({
+      context: inviteeContext,
+      page: inviteePage,
+      ready: true,
+      leftOrigin: [],
+    });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'signup',
+    user: 'none',
+    steps: [
+      { click: 'invite' },
+      { as: 'invitee' },
+      { click: 'accept' },
+      { as: 'main' },
+      { click: 'members' },
+      { as: 'invitee' },
+      { click: 'dashboard' },
+    ],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(mainPage.clicks).toEqual(['#bl-invite', '#bl-members']);
+  expect(inviteePage.clicks).toEqual(['#bl-accept', '#bl-dashboard']);
+  expect(mockOpenPage).toHaveBeenCalledTimes(2);
+  const [mainOpen, inviteeOpen] = mockOpenPage.mock.calls.map(([args]) => args);
+  expect(inviteeOpen).toEqual({
+    ...mainOpen,
+    clientAddress: inviteeOpen.clientAddress,
+    onContext: inviteeOpen.onContext,
+    recording: { ...mainOpen.recording, run: { ...mainOpen.recording.run, actor: 'invitee' } },
+  });
+  expect(inviteeOpen).toMatchObject({ pageId: 'signup', user: 'none' });
+  // Two people, two clients: rate limits count each actor's attempts apart.
+  expect(inviteeOpen.clientAddress).not.toEqual(mainOpen.clientAddress);
+  expect(mainContext.close).toHaveBeenCalledTimes(1);
+  expect(inviteeContext.close).toHaveBeenCalledTimes(1);
+});
+
+test('runJourney with four actors takes one machine browser slot for the whole journey', async () => {
+  const sharedHome = process.env.LOWDEFY_HOME;
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-journey-slot-'));
+  process.env.LOWDEFY_HOME = home;
+  const slots = path.join(home, 'slots', 'browser');
+  // Two of the three slots are held elsewhere on the machine: one is left.
+  const others = [await acquireMachineSlot({ name: 'browser', limit: 3 })];
+  others.push(await acquireMachineSlot({ name: 'browser', limit: 3 }));
+  const heldDuringJourney = [];
+  const pages = [createPage(), createPage(), createPage(), createPage()];
+  pages.forEach((page) => {
+    mockOpenPage.mockImplementationOnce(async () => {
+      heldDuringJourney.push(fs.readdirSync(slots).length);
+      return { context: { close: jest.fn(async () => {}) }, page, ready: true, leftOrigin: [] };
+    });
+  });
+  try {
+    const result = await runJourney({
+      origin,
+      pageId: 'signup',
+      user: 'none',
+      steps: [{ as: 'a' }, { as: 'b' }, { as: 'c' }, { as: 'main' }],
+    });
+
+    expect(result.passed).toBe(true);
+    expect(mockOpenPage).toHaveBeenCalledTimes(4);
+    expect(heldDuringJourney).toEqual([3, 3, 3, 3]);
+    expect(fs.readdirSync(slots)).toHaveLength(2);
+  } finally {
+    others.forEach((slot) => slot.release());
+    process.env.LOWDEFY_HOME = sharedHome;
+    fs.rmSync(home, { recursive: true, force: true });
+  }
+});
+
+test('runJourney fails an as step whose actor cannot open and still closes every actor', async () => {
+  const mainContext = { close: jest.fn(async () => {}) };
+  mockOpenPage
+    .mockResolvedValueOnce({
+      context: mainContext,
+      page: createPage(),
+      ready: true,
+      leftOrigin: [],
+    })
+    .mockRejectedValueOnce(new Error('net::ERR_CONNECTION_REFUSED'));
+
+  const result = await runJourney({
+    origin,
+    pageId: 'login',
+    steps: [{ as: 'member' }, { click: 'logout' }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    index: 0,
+    step: { as: 'member' },
+    actual: 'net::ERR_CONNECTION_REFUSED',
+  });
+  expect(result.steps.map((step) => step.status)).toEqual(['failed', 'skipped']);
+  expect(mainContext.close).toHaveBeenCalledTimes(1);
+});
+
+test('runJourney goto loads the page and settles on the page the app shows', async () => {
+  const window = createLowdefyWindow({ pageId: 'login' });
+  const page = createPage({ window });
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'login',
+    steps: [{ goto: 'dashboard' }, { goto: { pageId: 'invoice', urlQuery: { id: 'i1' } } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.goto.mock.calls).toEqual([
+    ['http://localhost:3227/dashboard', { waitUntil: 'load', timeout: 15000 }],
+    ['http://localhost:3227/invoice', { waitUntil: 'load', timeout: 15000 }],
+  ]);
+  // No argument: isPageReady settles the page the app shows, which after a
+  // redirect is the sign-in page rather than the one asked for.
+  expect(page.waitForFunction.mock.calls.map((call) => call[1])).toEqual([undefined, undefined]);
+});
+
+const ROUTES = { ticket: 'tickets/{space}/{ticket_id}' };
+
+test('runJourney opens a patterned page at the path its pathParams build', async () => {
+  mockReadPagePath.mockImplementation(({ pageId }) => ROUTES[pageId]);
+  const page = createPage();
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'ticket',
+    pathParams: { space: 's', ticket_id: '1' },
+    steps: [],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(mockOpenPage).toHaveBeenCalledWith(
+    expect.objectContaining({
+      pageId: 'ticket',
+      path: 'tickets/{space}/{ticket_id}',
+      pathParams: { space: 's', ticket_id: '1' },
+    })
+  );
+});
+
+test('runJourney refuses a patterned page missing a path value before any browser opens', async () => {
+  mockReadPagePath.mockImplementation(({ pageId }) => ROUTES[pageId]);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'ticket',
+    pathParams: { space: 's' },
+    steps: [],
+  });
+
+  expect(result).toEqual({
+    error: 'Link to page "ticket" is missing a value for path placeholder "ticket_id".',
+    refused: true,
+  });
+  expect(mockGetBrowser).not.toHaveBeenCalled();
+});
+
+test('runJourney refuses pathParams that are not an object of strings', async () => {
+  const result = await runJourney({
+    origin,
+    pageId: 'ticket',
+    pathParams: { ticket_id: 1 },
+    steps: [],
+  });
+  expect(result.error).toBe(
+    'runJourney requires "pathParams" to be an object of strings, one per path placeholder. Received {"ticket_id":1}.'
+  );
+});
+
+test('runJourney goto builds a patterned page path from pathParams, and fails the step without one', async () => {
+  mockReadPagePath.mockImplementation(({ pageId }) => ROUTES[pageId]);
+  const page = createPage();
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { goto: { pageId: 'ticket', pathParams: { space: 's', ticket_id: '1' } } },
+      { goto: { pageId: 'ticket', pathParams: { space: 's' } } },
+    ],
+  });
+
+  expect(page.goto.mock.calls.map(([url]) => url)).toEqual(['http://localhost:3227/tickets/s/1']);
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    message:
+      'Could not open page "ticket": Link to page "ticket" is missing a value for path placeholder "ticket_id".',
+  });
+});
+
+test('runJourney reports a goto that fails to load', async () => {
+  const page = createPage();
+  openWith(page);
+  page.goto.mockRejectedValue(new Error('page.goto: net::ERR_ABORTED'));
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ goto: 'report' }] });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    expected: 'page "report" to load',
+    actual: 'page.goto: net::ERR_ABORTED',
+    message: 'Could not open page "report": page.goto: net::ERR_ABORTED',
+  });
+});
+
+test.each([
+  ['an email step', { email: { to: 'ada@example.test' } }],
+  [
+    'a fill from an email',
+    { fill: { blockId: 'otp', fromEmail: { to: 'ada@example.test', match: '\\d{6}' } } },
+  ],
+])(
+  'runJourney refuses %s before opening a browser when no mail sink listens, even with the port set',
+  async (_, step) => {
+    // A port added to .env after start: the child sees it, but no sink started.
+    process.env.LOWDEFY_DEV_SMTP_PORT = '2525';
+    try {
+      const result = await runJourney({
+        origin,
+        pageId: 'signup',
+        user: 'none',
+        steps: [step],
+      });
+
+      expect(result.error).toMatch(
+        /captures no mail. Start \(or restart\) it with LOWDEFY_DEV_SMTP_PORT/
+      );
+      expect(mockGetBrowser).not.toHaveBeenCalled();
+    } finally {
+      delete process.env.LOWDEFY_DEV_SMTP_PORT;
+    }
+  }
+);
+
+test('runJourney fills the text read from an email into the block, staying on the page', async () => {
+  process.env.LOWDEFY_SERVER_DEV_MAIL_SINK = 'true';
+  process.env.LOWDEFY_DIRECTORY_CONFIG = '/apps/tenant';
+  const page = createPage();
+  openWith(page);
+  mockReadJourneyEmailMatch.mockResolvedValue('482913');
+  const fromEmail = { to: 'ada@example.test', subject: 'Your sign-in link', match: '\\d{6}' };
+  try {
+    const result = await runJourney({
+      origin,
+      pageId: 'login',
+      user: 'none',
+      steps: [{ fill: { blockId: 'otp', fromEmail } }],
+    });
+
+    expect(result.failure).toBeUndefined();
+    expect(mockReadJourneyEmailMatch).toHaveBeenCalledWith({
+      page,
+      params: fromEmail,
+      since: expect.any(Number),
+      configDirectory: '/apps/tenant',
+      timeout: 5000,
+    });
+    expect(page.fills).toEqual([{ selector: '#bl-otp input, textarea', value: '482913' }]);
+    expect(page.goto).not.toHaveBeenCalled();
+  } finally {
+    delete process.env.LOWDEFY_SERVER_DEV_MAIL_SINK;
+    delete process.env.LOWDEFY_DIRECTORY_CONFIG;
+  }
+});
+
+test('runJourney hands an email step the current tab, the journey start and the config directory', async () => {
+  process.env.LOWDEFY_SERVER_DEV_MAIL_SINK = 'true';
+  process.env.LOWDEFY_DIRECTORY_CONFIG = '/apps/tenant';
+  const page = createPage();
+  openWith(page);
+  const before = Date.now();
+  try {
+    const result = await runJourney({
+      origin,
+      pageId: 'signup',
+      user: 'none',
+      steps: [{ email: { to: 'ada@example.test', subject: 'Verify' } }],
+    });
+
+    expect(result.failure).toBeUndefined();
+    expect(mockOpenJourneyEmail).toHaveBeenCalledWith({
+      page,
+      params: { to: 'ada@example.test', subject: 'Verify' },
+      since: expect.any(Number),
+      configDirectory: '/apps/tenant',
+      timeout: 5000,
+    });
+    expect(mockOpenJourneyEmail.mock.calls[0][0].since).toBeGreaterThanOrEqual(before);
+  } finally {
+    delete process.env.LOWDEFY_SERVER_DEV_MAIL_SINK;
+    delete process.env.LOWDEFY_DIRECTORY_CONFIG;
+  }
+});
+
+test.each([
+  [
+    'inside a block',
+    { blockId: 'members_list', containing: 'ada@example.test' },
+    '#bl-members_list lowdefy-shown-text="ada@example.test"',
+  ],
+  ['on the whole page', { containing: 'Invitation sent' }, 'lowdefy-shown-text="Invitation sent"'],
+])(
+  'runJourney clicks the element showing the text %s, not the first control in it',
+  async (_, target, selector) => {
+    const page = createPage();
+    openWith(page);
+
+    const result = await runJourney({ origin, pageId: 'members', steps: [{ click: target }] });
+
+    expect(result.passed).toBe(true);
+    expect(page.clicks).toEqual([selector]);
+  }
+);
+
+function createFakeRequest({ url, method = 'GET' }) {
+  return { url: () => url, method: () => method };
+}
+
+// openPage hands the journey its browser context through onContext before the
+// first navigation; the fake context keeps the request listener so the test
+// can play the requests a real context would emit.
+function openActorsWithNetwork(actors) {
+  const listeners = [];
+  actors.forEach(({ page, opening }) => {
+    mockOpenPage.mockImplementationOnce(async ({ onContext }) => {
+      // The network counter and the app error watch both listen for requests.
+      const requestCallbacks = [];
+      const listener = (request) => requestCallbacks.forEach((callback) => callback(request));
+      const context = {
+        close: jest.fn(async () => {}),
+        exposeBinding: jest.fn(async () => {}),
+        on: jest.fn((event, callback) => {
+          if (event === 'request') requestCallbacks.push(callback);
+        }),
+      };
+      await onContext(context);
+      listeners.push(listener);
+      opening.forEach((request) => listener(createFakeRequest(request)));
+      return { context, page, ready: true, url: page.url(), leftOrigin: [] };
+    });
+  });
+  return listeners;
+}
+
+test('runJourney reports the exercised network path merged across actors, with nested endpoints and writes', async () => {
+  const mainPage = createPage();
+  const memberPage = createPage();
+  const listeners = openActorsWithNetwork([
+    {
+      page: mainPage,
+      opening: [{ url: `${origin}/api/root` }, { url: `${origin}/api/page/tickets` }],
+    },
+    {
+      page: memberPage,
+      opening: [
+        { url: `${origin}/api/page/tickets/s/2` },
+        { url: `${origin}/api/page/tickets/s/5` },
+        { url: `${origin}/api/request/tickets/assign`, method: 'POST' },
+        // Another origin, and a route the counter does not track.
+        { url: 'http://elsewhere.test/api/page/other' },
+        { url: `${origin}/api/reload` },
+      ],
+    },
+  ]);
+  const artifacts = {
+    'routes.json': [
+      { pageId: 'tickets', path: 'tickets' },
+      { pageId: 'ticket', path: 'tickets/{space}/{ticket_id}' },
+    ],
+    'plugins/requestSchemas.json': {
+      MongoDBFind: { meta: { checkWrite: false } },
+      MongoDBInsertOne: { meta: { checkWrite: true } },
+    },
+    'pages/tickets/requests/get_tickets.json': { type: 'MongoDBFind' },
+    'pages/tickets/requests/assign.json': { type: 'MongoDBInsertOne' },
+    'api/notify.json': {
+      routine: [
+        {
+          id: 'endpoint:notify:log',
+          stepId: 'log',
+          type: 'CallApi',
+          properties: { endpointId: 'log' },
+        },
+      ],
+    },
+    'api/log.json': {
+      routine: [{ id: 'endpoint:log:insert', stepId: 'insert', type: 'MongoDBInsertOne' }],
+    },
+  };
+  mainPage.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page: mainPage });
+    locator.click = jest.fn(async () => {
+      listeners[0](
+        createFakeRequest({ url: `${origin}/api/request/tickets/assign`, method: 'POST' })
+      );
+      listeners[0](createFakeRequest({ url: `${origin}/api/endpoints/notify`, method: 'POST' }));
+    });
+    return locator;
+  });
+  const result = await runJourney({
+    origin,
+    pageId: 'tickets',
+    steps: [{ click: 'assign' }, { as: 'member' }],
+    readConfigFile: async (name) => artifacts[name] ?? null,
+  });
+  expect(result.passed).toBe(true);
+  expect(result.exercised).toEqual({
+    pages: ['ticket', 'tickets'],
+    appEvents: true,
+    requests: [{ pageId: 'tickets', requestId: 'assign', calls: 2, write: true }],
+    endpoints: [
+      { endpointId: 'notify', calls: 1, write: true },
+      { endpointId: 'log', via: 'notify', calls: null, write: true },
+    ],
+    unfollowed: 0,
+    events: [],
+    rendered: {},
+  });
+});
+
+test('runJourney reports the events and blocks its pages observed, deduplicated with list indices as $', async () => {
+  const page = createPage();
+  let observe;
+  mockOpenPage.mockImplementationOnce(async ({ onContext }) => {
+    const context = {
+      close: jest.fn(async () => {}),
+      exposeBinding: jest.fn(async (name, callback) => {
+        expect(name).toBe('__lowdefyJourneyObserve');
+        observe = callback;
+      }),
+      on: jest.fn(),
+    };
+    await onContext(context);
+    return { context, page, ready: true, url: page.url(), leftOrigin: [] };
+  });
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.click = jest.fn(async () => {
+      const event = {
+        kind: 'event',
+        scope: 'page',
+        pageId: 'form',
+        blockId: 'rows.1.label',
+        eventName: 'onChange',
+        actionIds: ['set_label'],
+      };
+      observe({}, event);
+      observe({}, { ...event, blockId: 'rows.0.label' });
+      observe({}, { kind: 'rendered', pageId: 'form', blockIds: ['rows.0.label', 'save'] });
+      // Page JavaScript can send anything: malformed messages are dropped.
+      observe({}, { kind: 'event', scope: 'page', pageId: 'form' });
+      observe({}, 'nonsense');
+    });
+    return locator;
+  });
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ click: 'save' }],
+    readConfigFile: async (name) => (name === 'plugins/requestSchemas.json' ? {} : null),
+  });
+  expect(result.passed).toBe(true);
+  expect(result.exercised.events).toEqual([
+    {
+      scope: 'page',
+      pageId: 'form',
+      blockId: 'rows.$.label',
+      eventName: 'onChange',
+      actionIds: ['set_label'],
+    },
+  ]);
+  expect(result.exercised.rendered).toEqual({ form: ['rows.$.label', 'save'] });
+});
+
+test('runJourney waits on a request only for a call started since the last interaction', async () => {
+  const window = createLowdefyWindow({ requests: { get_rows: [{ loading: false }] } });
+  const page = createPage({ window });
+  // The page called get_rows as it opened; the click calls nothing.
+  openActorsWithNetwork([
+    { page, opening: [{ url: `${origin}/api/request/form/get_rows`, method: 'POST' }] },
+  ]);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { wait: { request: 'get_rows' } },
+      { click: 'noop' },
+      { wait: { request: 'get_rows' } },
+    ],
+    stepTimeout: 20,
+    readConfigFile: async (name) => (name === 'plugins/requestSchemas.json' ? {} : null),
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure.index).toBe(2);
+  expect(result.failure.actual).toEqual({
+    calledSinceLastInteraction: false,
+    state: { loading: false },
+  });
+});
+
+test('runJourney passes a wait on a request the interaction before it called', async () => {
+  const window = createLowdefyWindow({ requests: { save: [{ loading: false }] } });
+  const page = createPage({ window });
+  const listeners = openActorsWithNetwork([{ page, opening: [] }]);
+  const instrumented = page.locator.getMockImplementation();
+  page.locator.mockImplementation((selector) => {
+    const locator = instrumented(selector);
+    const click = locator.click;
+    locator.click = jest.fn(async (...args) => {
+      await click(...args);
+      listeners[0]({ url: () => `${origin}/api/request/form/save`, method: () => 'POST' });
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ click: 'save' }, { wait: { request: 'save' } }],
+    stepTimeout: 20,
+    readConfigFile: async (name) => (name === 'plugins/requestSchemas.json' ? {} : null),
+  });
+
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+});
+
+test('runJourney reports the text it read when the last poll of expect.text fails', async () => {
+  const page = createPage();
+  const locator = page.locator('#bl-label');
+  locator.allInnerTexts.mockResolvedValue(['1 LAPSED']);
+  let attached = 0;
+  locator.waitFor.mockImplementation(async () => {
+    attached += 1;
+    if (attached > 1) throw new Error('locator.waitFor: Timeout 1ms exceeded.');
+  });
+  page.locator = jest.fn(() => locator);
+  openWith(page);
+  const spy = advanceClockOnEveryRead();
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ expect: { text: { blockId: 'label', contains: 'lapsed' } } }],
+  });
+
+  spy.mockRestore();
+
+  expect(result.failure.actual).toEqual('1 LAPSED');
+  expect(result.failure.message).toContain('matches ignoring case');
+});

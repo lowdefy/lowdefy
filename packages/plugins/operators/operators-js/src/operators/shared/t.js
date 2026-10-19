@@ -35,5 +35,7 @@ function _t({ params, i18n }) {
 }
 
 _t.dynamic = true;
+// i18n changes reach the engine through the full render-time pass, which evaluates every block.
+_t.tracking = { kind: 'read', keys: () => ['i18n'] };
 
 export default _t;

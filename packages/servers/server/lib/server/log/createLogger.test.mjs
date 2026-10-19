@@ -16,6 +16,7 @@
 
 import { jest } from '@jest/globals';
 import { createNodeLogger } from '@lowdefy/logger/node';
+import { markCredential, runInCredentialScope } from '@lowdefy/node-utils';
 
 const secret = 'planted/secret+value=1';
 const shortSecret = 'short77';
@@ -99,4 +100,18 @@ test('prod logger leaves a secret shorter than 8 characters alone', () => {
   const { msg, detail } = JSON.parse(lines[0]);
   expect(msg).toBe(`value ${shortSecret}`);
   expect(detail).toBe(shortSecret);
+});
+
+test('prod logger redacts a value the request marked as a credential', () => {
+  runInCredentialScope(() => {
+    markCredential('runtime-made-app-key-0001');
+    createLogger({ rid: 'req-1' }).debug(
+      { event: 'debug_control_return', response: { key: 'runtime-made-app-key-0001' } },
+      'Returned'
+    );
+  });
+  createLogger({ rid: 'req-2' }).debug({ response: { key: 'runtime-made-app-key-0001' } });
+  expect(lines).toHaveLength(2);
+  expect(JSON.parse(lines[0]).response.key).toBe('[REDACTED]');
+  expect(JSON.parse(lines[1]).response.key).toBe('runtime-made-app-key-0001');
 });

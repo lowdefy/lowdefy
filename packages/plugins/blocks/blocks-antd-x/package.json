@@ -29,6 +29,9 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
     "./blocks": "./dist/blocks.js",
     "./types": "./dist/types.js"
@@ -45,14 +48,13 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@ai-sdk/react": "3.0.178",
-    "@ant-design/icons": "6.1.0",
-    "@ant-design/x": "2.7.0",
-    "@ant-design/x-markdown": "2.7.0",
+    "@ai-sdk/react": "4.0.119",
+    "@ant-design/x": "2.9.0",
+    "@ant-design/x-markdown": "2.9.0",
     "@lowdefy/block-utils": "6.1.0",
     "@lowdefy/blocks-files": "6.1.0",
     "@lowdefy/helpers": "6.1.0",
-    "ai": "6.0.176"
+    "ai": "7.0.116"
   },
   "devDependencies": {
     "@lowdefy/block-dev-e2e": "6.1.0",
@@ -64,7 +66,7 @@
     "react-dom": "18.2.0"
   },
   "peerDependencies": {
-    "antd": "6.3.1",
+    "antd": "6.6.5",
     "react": "18.2.0"
   },
   "publishConfig": {

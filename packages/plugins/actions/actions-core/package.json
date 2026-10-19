@@ -35,6 +35,9 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
     "./actions": "./dist/actions.js",
     "./schemas": "./dist/schemas.js",
@@ -55,6 +58,7 @@
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
+    "@lowdefy/ajv": "6.1.0",
     "@lowdefy/node-utils": "6.1.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",

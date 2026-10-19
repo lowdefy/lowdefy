@@ -27,14 +27,17 @@ In the Vercel project:
     - Eg: if `lowdefy.yaml` is at the top level of the repository, set the root directory to `deploy`; if it is in `apps/app_name`, set it to `apps/app_name/deploy`.
 - **Install Command:** `bash vercel.install.sh`. Leave the **Build Command** to `vercel.json` (do not override it in the dashboard). There is no **Output Directory** setting — the build emits `.vercel/output`, which Vercel detects automatically.
 - Enable **"Include files outside the root directory in the Build Step"** — the Lowdefy config usually lives in the parent of `deploy/`.
+- **Node.js Version:** `24.x` or newer. The install and build steps run the Lowdefy CLI, which requires Node.js 24; the function itself runs on the `nodejs24.x` runtime set in the generated Build Output.
 
 ###### Public files
 
-Files in your app's `public/` directory (favicon, icons, images, `manifest.webmanifest`, etc.) are copied into `dist/client` by Vite during the build, placed in `.vercel/output/static`, and served by the Vercel CDN — no extra configuration needed.
+Files in your app's `public/` directory (favicon, icons, images, `manifest.webmanifest`, etc.) are copied into `dist/client` by Vite during the build, placed in `.vercel/output/static`, and served by the Vercel CDN — no extra configuration needed. With `config.basePath` set, they are placed and served under the base path, as are the generated cron paths below.
 
 ###### Secrets and environment variables
 
-Secrets can be set in the Environment Variables settings section by creating environment variables prefixed with `LOWDEFY_SECRET_`. Use `AUTH_SECRET` (and `AUTH_URL` for OAuth, which defaults to the current environment's `url` — see [Deployment environments](#deployment-environments)) for authentication. Different secrets can be set for production and preview deployments.
+Secrets can be set in the Environment Variables settings section by creating environment variables prefixed with `LOWDEFY_SECRET_`. Pin the auth canonical URL with the current environment's `url` (see [Deployment environments](/deployment-environments)) or `BETTER_AUTH_URL`; with `auth.email` configured the app refuses to start without it. Different secrets can be set for production and preview deployments.
+
+On Vercel the client address used by auth rate limits, sessions and request logs comes from the platform (`x-real-ip`), which Vercel sets on every request. `config.trustedProxies` is not used.
 
 ###### Function settings
 
@@ -82,11 +85,15 @@ Each schedule becomes a cron job pointing at `/api/cron/<endpointId>`. When it f
 
 ###### Deployment environments
 
-Declare the app's environments once under `config.environments` and name the current one with the `LOWDEFY_ENVIRONMENT` Environment Variable — see [Deployment environments](/deployment-environments) for every setting (URL, crons, email, Sentry, feature switches, guards). On Vercel, add `LOWDEFY_ENVIRONMENT` to each Vercel environment (for example `prod` on Production and `staging` on the staging branch's Preview environment). Vercel Environment Variables are available at build time, which is when Lowdefy reads it and checks guards.
+Declare the app's environments once under `config.environments` and name the current one with the `LOWDEFY_ENVIRONMENT` Environment Variable — see [Deployment environments](/deployment-environments) for every setting (URL, crons, email, Sentry, PostHog, feature switches, guards). On Vercel, add `LOWDEFY_ENVIRONMENT` to each Vercel environment (for example `prod` on Production and `staging` on the staging branch's Preview environment). Vercel Environment Variables are available at build time, which is when Lowdefy reads it and checks guards.
+
+###### Sentry
+
+With `SENTRY_DSN` set, the function reports server errors to Sentry but does not trace requests, unless `logger.sentry.serverTracing` is `true`: tracing adds to every cold start, and the function stays billed after each response while a sampled transaction uploads. A request that captures no error ends as soon as its response is sent. See [Logger](/logger).
 
 ###### Crons for staging and other environments
 
-Vercel fires cron jobs only on the **production** deployment — a staging or preview deployment never runs its schedules on its own. Give an environment a `cron.secret` and the environment Vercel fires crons on registers that environment's schedules too; when one fires, production forwards it to that environment's own `/api/cron/<endpointId>` at its `url` and answers Vercel immediately (the ping is fire-and-forget, kept alive via the request context and bounded by `maxDuration`; its outcome is logged as `forward_scheduled_endpoint_done` / `_failed`).
+Vercel fires cron jobs only on the **production** deployment — a staging or preview deployment never runs its schedules on its own. Give an environment a `cron.secret` and the environment Vercel fires crons on registers that environment's schedules too; when one fires, production forwards it to that environment's own `/api/cron/<endpointId>` at its `url` (under `config.basePath` when one is set) and answers Vercel immediately (the ping is fire-and-forget, kept alive via the request context and bounded by `maxDuration`; its outcome is logged as `forward_scheduled_endpoint_done` / `_failed`).
 
 - **Forwarded environments:** an environment with a `cron.secret` is forwarded to, so it must have a `url`. `cron.secret` is the **name** of the Lowdefy secret holding that environment's own `CRON_SECRET` — a plain string such as `STAGING_CRON_SECRET`, not `{ _secret: ... }`: environment settings are resolved at build time, and the forward route reads the value at runtime from `LOWDEFY_SECRET_<name>`. Set `cron.enabled: false` on an environment to register no crons for it.
 - **Secrets on production:** for each forwarded environment add an Environment Variable `LOWDEFY_SECRET_<secret name>` (for example `LOWDEFY_SECRET_STAGING_CRON_SECRET`) to the production deployment, with that environment's `CRON_SECRET` as value. The forward route `/api/cron-forward/*` itself is secured by production's own `CRON_SECRET` like every cron route, and fails closed when the environment's secret is missing.
@@ -107,9 +114,13 @@ See [Async Endpoints](/lowdefy-api) and [Detached Endpoint Calls](/lowdefy-api) 
 
 Vercel Fluid bills by execution duration, so a request that hangs (a stuck database, SMTP or external API call) is a real cost risk. Two guardrails apply:
 
-- **`config.requestTimeout`** (in `lowdefy.yaml`, default `30000` ms) — the server returns a timeout instead of letting a request run on. Set to `0` to disable. Agent streaming routes are exempt.
+- **`config.requestTimeout`** (in `lowdefy.yaml`, default `30000` ms) — the server returns a timeout instead of letting a request run on, and cancels the AI model calls the request was waiting on. Set to `0` to disable. Agent streaming routes are exempt.
 - **`config.vercel.maxDuration`** (default `60`) — a hard platform cap; Vercel stops the function at this many seconds. See Function settings above.
 
-> The function runs on Vercel's Node.js runtime. Streaming agent responses (`/api/agent/*`) are exempt from `config.requestTimeout` and are bounded only by `maxDuration` — for heavy streaming or agent workloads, a long-lived Node host (Docker, Fly.io, Railway, Render) may suit better.
+Keep `config.requestTimeout` below `maxDuration`: when it is not, Vercel stops the function before the request timeout answers, so the upstream calls the request left running are not cancelled and the request ends without a logged timeout. The build warns when `config.requestTimeout` is not shorter than `maxDuration` (or than the 60-second default, when it runs on Vercel).
+
+On Vercel, only the request timeout cancels an AI model call a request is waiting on. A client that disconnects does not: the call runs until it finishes, reaches its own `timeout`, or hits the request timeout. On the Node server a disconnect cancels it too.
+
+> The function runs on Vercel's Node.js runtime. Streaming agent responses (`/api/agent/*`) are exempt from `config.requestTimeout` and are bounded only by `maxDuration` — for heavy streaming or agent workloads, a long-lived Node host (Docker, Fly.io, Railway, Render) may suit better. An agent run keeps running to the end when its client disconnects, so its work completes; a `GET` stream (such as an MCP client's notification stream) stops when its client goes, instead of holding the function until `maxDuration`.
 
 All other Vercel configuration like domain names, preview deploy branches, serverless regions and redirects can be configured as desired.

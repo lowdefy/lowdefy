@@ -76,3 +76,25 @@
           - { value: fe, label: Frontend, parent: eng }
           - { value: be, label: Backend, parent: eng }
           - { value: ops, label: Operations }
+
+- title: Block Nodes and Fixed Height
+  blocks:
+    - id: tree_block_node
+      type: TreeInput
+      properties:
+        blockNode: true
+        height: 160
+        defaultExpandAll: true
+        primaryKey: id
+        parentKey: parentId
+        valueKey: id
+        html: '{{ item.label }}'
+        data:
+          - { id: 1, label: Documents }
+          - { id: 2, label: Invoices, parentId: 1 }
+          - { id: 3, label: Receipts, parentId: 1 }
+          - { id: 4, label: Contracts, parentId: 1 }
+          - { id: 5, label: Photos }
+          - { id: 6, label: Holidays, parentId: 5 }
+          - { id: 7, label: Events, parentId: 5 }
+          - { id: 8, label: Music }

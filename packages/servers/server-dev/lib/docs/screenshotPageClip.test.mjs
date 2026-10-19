@@ -37,6 +37,10 @@ const mockOpenPage = jest.fn(async () => ({
 }));
 const mockGetBrowser = jest.fn(async () => ({}));
 
+// The route table is a build artifact these tests have none of: every page is served at its id.
+jest.unstable_mockModule('./resolvePageInstance.js', () => ({
+  default: ({ pageId }) => ({ path: pageId, instanceKey: `page:${pageId}` }),
+}));
 jest.unstable_mockModule('./getBrowser.js', () => ({
   getBrowser: mockGetBrowser,
   openPage: mockOpenPage,

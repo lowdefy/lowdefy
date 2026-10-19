@@ -65,3 +65,38 @@
             template: 'Selected: {{ perms }}'
             on:
               _state: true
+
+- title: Check Strictly and Max Count
+  blocks:
+    - id: check_strictly_tree_multiple
+      type: TreeMultipleSelector
+      properties:
+        title: Folders (parents check on their own)
+        checkable: true
+        checkStrictly: true
+        treeDefaultExpandAll: true
+        primaryKey: id
+        parentKey: parentId
+        valueKey: id
+        html: '{{ item.label }}'
+        data:
+          - { id: 1, label: Projects }
+          - { id: 2, label: Website, parentId: 1 }
+          - { id: 3, label: Mobile App, parentId: 1 }
+          - { id: 4, label: Archive }
+    - id: max_count_tree_multiple
+      type: TreeMultipleSelector
+      properties:
+        title: Pick Up to 2 Teams
+        maxCount: 2
+        maxTagCount: responsive
+        treeDefaultExpandAll: true
+        primaryKey: id
+        parentKey: parentId
+        valueKey: id
+        html: '{{ item.label }}'
+        data:
+          - { id: 1, label: Engineering }
+          - { id: 2, label: Frontend, parentId: 1 }
+          - { id: 3, label: Backend, parentId: 1 }
+          - { id: 4, label: Sales }

@@ -157,6 +157,294 @@ test('connectionId is not a string', () => {
     'Step connectionId is not a string at endpoint "test_no_connectionId".'
   );
 });
+test('request step tenant none is accepted', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_step_tenant_none',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBUpdateOne',
+            connectionId: 'connection',
+            tenant: 'none',
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].routine[0].tenant).toBe('none');
+});
+
+function tenantNoneContext() {
+  const context = testContext({ logger });
+  context.tenantConnectionIds.add('walled');
+  context.typesMap = {
+    requestMetas: {
+      MongoDBAggregation: { checkRead: true, checkWrite: false },
+      MongoDBUpdateOne: { checkRead: false, checkWrite: true },
+    },
+  };
+  return context;
+}
+
+function tenantNoneApi(step) {
+  return { api: [{ id: 'sweep', type: 'Api', routine: [step] }] };
+}
+
+test('a write step with tenant none on a walled connection throws at build', () => {
+  const components = tenantNoneApi({
+    id: 'mark_sent',
+    type: 'MongoDBUpdateOne',
+    connectionId: 'walled',
+    tenant: 'none',
+  });
+  expect(() => buildApi({ components, context: tenantNoneContext() })).toThrow(
+    'Step "mark_sent" at endpoint "sweep" is a MongoDBUpdateOne request on tenant connection "walled" with tenant: none, but tenant: none may only read. To write rows of one organization from a system run, call an endpoint with a CallApi step that names the "organization"'
+  );
+});
+
+test('a write step with tenant none inside a :for control on a walled connection throws at build', () => {
+  const components = tenantNoneApi({
+    ':for': 'organization',
+    ':in': { _payload: 'organizations' },
+    ':do': [{ id: 'mark_sent', type: 'MongoDBUpdateOne', connectionId: 'walled', tenant: 'none' }],
+  });
+  expect(() => buildApi({ components, context: tenantNoneContext() })).toThrow(
+    'Step "mark_sent" at endpoint "sweep" is a MongoDBUpdateOne request on tenant connection "walled" with tenant: none'
+  );
+});
+
+test('a read step with tenant none on a walled connection builds', () => {
+  const components = tenantNoneApi({
+    id: 'organizations',
+    type: 'MongoDBAggregation',
+    connectionId: 'walled',
+    tenant: 'none',
+  });
+  const res = buildApi({ components, context: tenantNoneContext() });
+  expect(res.api[0].routine[0].tenant).toBe('none');
+});
+
+test('a literal $out stage in a tenant none step on a walled connection throws at build', () => {
+  const components = tenantNoneApi({
+    id: 'copy',
+    type: 'MongoDBAggregation',
+    connectionId: 'walled',
+    tenant: 'none',
+    properties: { pipeline: [{ $match: {} }, { $out: 'archive' }] },
+  });
+  expect(() => buildApi({ components, context: tenantNoneContext() })).toThrow(
+    'Step "copy" at endpoint "sweep" writes into collection "archive" with "$out" on tenant connection "walled" with tenant: none, but tenant: none may only read. To write rows of one organization from a system run, call an endpoint with a CallApi step that names the "organization"'
+  );
+});
+
+test('a literal $merge into stage in a tenant none step on a walled connection throws at build', () => {
+  const components = tenantNoneApi({
+    id: 'copy',
+    type: 'MongoDBAggregation',
+    connectionId: 'walled',
+    tenant: 'none',
+    properties: { pipeline: [{ $merge: { into: 'archive' } }] },
+  });
+  expect(() => buildApi({ components, context: tenantNoneContext() })).toThrow(
+    'Step "copy" at endpoint "sweep" writes into collection "archive" with "$merge" on tenant connection "walled" with tenant: none'
+  );
+});
+
+test('a literal $out stage in a tenant none step on an unscoped connection builds', () => {
+  const components = tenantNoneApi({
+    id: 'copy',
+    type: 'MongoDBAggregation',
+    connectionId: 'shared',
+    tenant: 'none',
+    properties: { pipeline: [{ $out: 'archive' }] },
+  });
+  const res = buildApi({ components, context: tenantNoneContext() });
+  expect(res.api[0].routine[0].tenant).toBe('none');
+});
+
+function webhookApi(verify) {
+  return { api: [{ id: 'hook', type: 'Api', routine: [], webhook: { verify } }] };
+}
+
+test('a write webhook verifier with tenant none on a walled connection throws at build', () => {
+  const components = webhookApi({
+    type: 'MongoDBUpdateOne',
+    connectionId: 'walled',
+    tenant: 'none',
+  });
+  expect(() => buildApi({ components, context: tenantNoneContext() })).toThrow(
+    'Webhook verifier at endpoint "hook" is a MongoDBUpdateOne request on tenant connection "walled" with tenant: none, but tenant: none may only read.'
+  );
+});
+
+test('a read webhook verifier with tenant none on a walled connection builds', () => {
+  const components = webhookApi({
+    type: 'MongoDBAggregation',
+    connectionId: 'walled',
+    tenant: 'none',
+  });
+  const res = buildApi({ components, context: tenantNoneContext() });
+  expect(res.api[0].webhook.verify.tenant).toBe('none');
+});
+
+test('request step tenant authored is accepted', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_step_tenant_authored',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBAggregation',
+            connectionId: 'connection',
+            tenant: 'authored',
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].routine[0].tenant).toBe('authored');
+});
+
+test('request step tenant true throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_step_tenant_true',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBUpdateOne',
+            connectionId: 'connection',
+            tenant: true,
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step "step_id" at endpoint "test_step_tenant_true" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.'
+  );
+});
+
+test('request step tenant with another string throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_step_tenant_string',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBUpdateOne',
+            connectionId: 'connection',
+            tenant: 'off',
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step "step_id" at endpoint "test_step_tenant_string" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.'
+  );
+});
+
+test('a literal $search step pipeline on a walled connection without tenant authored throws at build', () => {
+  const context = testContext({ logger });
+  context.tenantConnectionIds.add('walled');
+  const components = {
+    api: [
+      {
+        id: 'test_step_search_unauthored',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBAggregation',
+            connectionId: 'walled',
+            properties: { pipeline: [{ $search: { text: { query: 'q', path: 'name' } } }] },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step "step_id" at endpoint "test_step_search_unauthored" contains "$search" on tenant connection "walled", which the tenant wall does not scope mechanically.'
+  );
+});
+
+test('a literal $merge from a shared connection into a walled collection in a nested routine throws at build', () => {
+  const context = testContext({ logger });
+  const tenantTarget = { database: ['databaseUri'], collection: 'collection' };
+  context.walledTargets.set(JSON.stringify(['MongoDBCollection', ['uri'], 'totals']), {
+    connectionId: 'totals',
+    field: 'organization_id',
+  });
+  context.sharedTargets.set('orders_all', {
+    connection: { type: 'MongoDBCollection', properties: { databaseUri: 'uri' } },
+    tenantTarget,
+  });
+  const components = {
+    api: [
+      {
+        id: 'nightly',
+        type: 'Api',
+        routine: [
+          {
+            ':if': true,
+            ':then': [
+              {
+                id: 'rollup',
+                type: 'MongoDBAggregation',
+                connectionId: 'orders_all',
+                properties: { pipeline: [{ $merge: { into: 'totals' } }] },
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step "rollup" at endpoint "nightly" writes into collection "totals" with "$merge" on tenant: shared connection "orders_all"'
+  );
+});
+
+test('a literal $graphLookup step on a walled connection with tenant authored passes the build check', () => {
+  const context = testContext({ logger });
+  context.tenantConnectionIds.add('walled');
+  const components = {
+    api: [
+      {
+        id: 'test_step_graphlookup_authored',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBAggregation',
+            connectionId: 'walled',
+            tenant: 'authored',
+            properties: { pipeline: [{ $graphLookup: { from: 'walled' } }] },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].routine[0].tenant).toBe('authored');
+});
+
 test('valid routine step config nested array', () => {
   const context = testContext({ logger });
   const components = {
@@ -324,6 +612,92 @@ test('CallApi step with connectionId throws', () => {
   expect(() => buildApi({ components, context })).toThrow(
     'Endpoint step "call_other" at endpoint "test_callapi_with_connection" should not have a connectionId.'
   );
+});
+
+function buildCallApiStep(properties) {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'sync',
+        type: 'Api',
+        routine: [{ id: 'call_other', type: 'CallApi', properties }],
+      },
+    ],
+  };
+  return () => buildApi({ components, context });
+}
+
+test('CallApi step with a literal organization and caller builds', () => {
+  expect(
+    buildCallApiStep({
+      endpointId: 'process',
+      organization: 'org-1',
+      caller: { id: 'github', name: 'GitHub' },
+    })
+  ).not.toThrow();
+});
+
+test('CallApi step with organization and caller from operators builds', () => {
+  expect(
+    buildCallApiStep({
+      endpointId: 'process',
+      organization: { _step: 'installation.organization_id' },
+      caller: { id: { _payload: 'id' }, name: 'GitHub' },
+    })
+  ).not.toThrow();
+  expect(
+    buildCallApiStep({
+      endpointId: 'process',
+      organization: { _payload: 'org' },
+      caller: { _payload: 'caller' },
+    })
+  ).not.toThrow();
+});
+
+test('CallApi step with a caller and no organization throws', () => {
+  expect(
+    buildCallApiStep({ endpointId: 'process', caller: { id: 'github', name: 'GitHub' } })
+  ).toThrow(
+    'Endpoint step "call_other" at endpoint "sync" properties.caller requires properties.organization.'
+  );
+});
+
+test('CallApi step with an organization that is not a string throws', () => {
+  expect(buildCallApiStep({ endpointId: 'process', organization: '' })).toThrow(
+    'Endpoint step "call_other" at endpoint "sync" properties.organization should be a non-empty organization id string.'
+  );
+  expect(buildCallApiStep({ endpointId: 'process', organization: 42 })).toThrow(
+    'properties.organization should be a non-empty organization id string.'
+  );
+  expect(buildCallApiStep({ endpointId: 'process', organization: { id: 'org-1' } })).toThrow(
+    'properties.organization should be a non-empty organization id string.'
+  );
+});
+
+test('CallApi step with a caller missing id or name, or with other keys, throws', () => {
+  const message =
+    'Endpoint step "call_other" at endpoint "sync" properties.caller should be an object with non-empty string "id" and "name"';
+  expect(
+    buildCallApiStep({ endpointId: 'process', organization: 'org-1', caller: { id: 'github' } })
+  ).toThrow(message);
+  expect(
+    buildCallApiStep({
+      endpointId: 'process',
+      organization: 'org-1',
+      caller: { id: 'github', name: '' },
+    })
+  ).toThrow(message);
+  expect(
+    buildCallApiStep({
+      endpointId: 'process',
+      organization: 'org-1',
+      caller: { id: 'github', name: 'GitHub', roles: ['admin'] },
+    })
+  ).toThrow(message);
+  expect(
+    buildCallApiStep({ endpointId: 'process', organization: 'org-1', caller: 'github' })
+  ).toThrow(message);
 });
 
 test('CallApi step is not counted in typeCounters.requests', () => {
@@ -625,6 +999,61 @@ test('CallAgent step allows operator objects for agentId and prompt', () => {
   expect(() => buildApi({ components, context })).not.toThrow();
 });
 
+test('CallAgent step allows files as an array or an operator', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callagent_files',
+        type: 'Api',
+        routine: [
+          {
+            id: 'run_agent',
+            type: 'CallAgent',
+            properties: {
+              agentId: 'research_agent',
+              prompt: 'Describe the screenshot.',
+              files: [{ url: { _payload: 'url' }, mediaType: 'image/png' }],
+            },
+          },
+          {
+            id: 'run_agent_files_operator',
+            type: 'CallAgent',
+            properties: {
+              agentId: 'research_agent',
+              prompt: 'Describe the screenshots.',
+              files: { _payload: 'files' },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test('CallAgent step with files that is not an array throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callagent_bad_files',
+        type: 'Api',
+        routine: [
+          {
+            id: 'run_agent',
+            type: 'CallAgent',
+            properties: { agentId: 'research_agent', prompt: 'Go.', files: 'shot.png' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'CallAgent step "run_agent" at endpoint "test_callagent_bad_files" properties.files is not an array.'
+  );
+});
+
 test('CallAgent step without properties.agentId throws', () => {
   const context = testContext({ logger });
   const components = {
@@ -717,6 +1146,135 @@ test('CallAgent step is not counted in typeCounters.requests', () => {
   buildApi({ components, context });
   expect(context.typeCounters.requests.getCounts()).toEqual({
     MongoDBInsertOne: 1,
+  });
+});
+
+test('Auth step builds with auth prefix', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'ban_user',
+            type: 'BanUser',
+            properties: { userId: 'user_1' },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res).toEqual({
+    api: [
+      {
+        id: 'endpoint:test_auth_step',
+        endpointId: 'test_auth_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'auth:test_auth_step:ban_user',
+            endpointId: 'test_auth_step',
+            stepId: 'ban_user',
+            type: 'BanUser',
+            properties: { userId: 'user_1' },
+          },
+        ],
+      },
+    ],
+  });
+});
+
+test('Auth step with connectionId throws', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_connection',
+        type: 'Api',
+        routine: [{ id: 'ban_user', type: 'BanUser', connectionId: 'test_connection' }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Auth step "ban_user" at endpoint "test_auth_step_connection" should not have a connectionId.'
+  );
+});
+
+test('Auth step with non-object properties throws', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_properties',
+        type: 'Api',
+        routine: [{ id: 'ban_user', type: 'BanUser', properties: 'not-an-object' }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Auth step "ban_user" at endpoint "test_auth_step_properties" properties is not an object.'
+  );
+});
+
+test('Auth step with non-boolean system throws', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_system',
+        type: 'Api',
+        routine: [{ id: 'ban_user', type: 'BanUser', system: 'yes' }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Auth step "ban_user" at endpoint "test_auth_step_system" system must be a boolean.'
+  );
+});
+
+test('Auth step with boolean system does not throw', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_system_valid',
+        type: 'Api',
+        routine: [{ id: 'ban_user', type: 'BanUser', system: true }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test('Auth step is counted in typeCounters.steps and not typeCounters.requests', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_count',
+        type: 'Api',
+        routine: [
+          { id: 'db_step', type: 'MongoDBInsertOne', connectionId: 'connection' },
+          { id: 'ban_user', type: 'BanUser', properties: { userId: 'user_1' } },
+        ],
+      },
+    ],
+  };
+  buildApi({ components, context });
+  expect(context.typeCounters.requests.getCounts()).toEqual({
+    MongoDBInsertOne: 1,
+  });
+  expect(context.typeCounters.steps.getCounts()).toEqual({
+    BanUser: 1,
   });
 });
 
@@ -927,4 +1485,83 @@ test('RenderNotification step is not counted in typeCounters.requests', () => {
   expect(context.typeCounters.requests.getCounts()).toEqual({
     MongoDBInsertOne: 1,
   });
+});
+
+function dynamicStepApi(step) {
+  return { api: [{ id: 'generate', type: 'Api', routine: [step] }] };
+}
+
+function policyContext() {
+  const context = testContext({ logger });
+  context.dynamicPolicies = { form: { id: 'form' } };
+  return context;
+}
+
+test('ValidateDynamic and DescribeDynamicPolicy steps build with their prefixes', () => {
+  const res = buildApi({
+    components: {
+      api: [
+        {
+          id: 'generate',
+          type: 'Api',
+          routine: [
+            { id: 'vocab', type: 'DescribeDynamicPolicy', properties: { policy: 'form' } },
+            {
+              id: 'check',
+              type: 'ValidateDynamic',
+              properties: { policy: 'form', blocks: { _step: 'model.blocks' } },
+            },
+          ],
+        },
+      ],
+    },
+    context: policyContext(),
+  });
+  expect(res.api[0].routine.map((step) => step.id)).toEqual([
+    'describeDynamic:generate:vocab',
+    'validateDynamic:generate:check',
+  ]);
+});
+
+test('ValidateDynamic step requires a literal policy id', () => {
+  expect(() =>
+    buildApi({
+      components: dynamicStepApi({
+        id: 'check',
+        type: 'ValidateDynamic',
+        properties: { policy: { _payload: 'policy' }, blocks: [] },
+      }),
+      context: policyContext(),
+    })
+  ).toThrow(
+    'ValidateDynamic step "check" at endpoint "generate" requires properties.policy as a literal policy id string.'
+  );
+});
+
+test('ValidateDynamic step throws for an undeclared policy', () => {
+  expect(() =>
+    buildApi({
+      components: dynamicStepApi({
+        id: 'check',
+        type: 'ValidateDynamic',
+        properties: { policy: 'nope', blocks: [] },
+      }),
+      context: policyContext(),
+    })
+  ).toThrow(
+    'ValidateDynamic step "check" at endpoint "generate" references dynamic blocks policy "nope" which does not exist.'
+  );
+});
+
+test('ValidateDynamic step requires properties.blocks', () => {
+  expect(() =>
+    buildApi({
+      components: dynamicStepApi({
+        id: 'check',
+        type: 'ValidateDynamic',
+        properties: { policy: 'form' },
+      }),
+      context: policyContext(),
+    })
+  ).toThrow('ValidateDynamic step "check" at endpoint "generate" requires properties.blocks.');
 });

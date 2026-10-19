@@ -140,20 +140,20 @@ menus:
       - id: welcome
         type: MenuLink
         properties:
-          icon: AiOutlineHome
+          icon: home
           title: Home
         pageId: welcome
       - id: new-ticket
         type: MenuLink
         properties:
-          icon: AiOutlineAlert
+          icon: Siren
           title: New ticket
         pageId: new-ticket
       ################ -------- Copy from here -------- ################
       - id: view-tickets
         type: MenuLink
         properties:
-          icon: AiOutlineDatabase
+          icon: Database
           title: View tickets
         pageId: view-tickets
       ############### -------- Copy to here ---------- ################

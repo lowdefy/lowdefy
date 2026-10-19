@@ -66,11 +66,12 @@ The `AgentChat` block renders a streaming AI chat interface. It connects to a [L
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `agentId` | string | | __Required__ - The `id` of the agent to connect to. |
-| `conversationId` | string | | Active conversation ID. When this changes, any in-flight reply is aborted (so it stops emitting `onDataPart` and tool events into the page) and messages are cleared. If left empty, the block auto-mints a stable id for the session and surfaces it via `onConversationStart`, so every turn posts a consistent id. App-supplied ids are always authoritative. |
-| `messages` | array | | Load messages externally. `undefined` = no sync, `null` = clear, array = load. Re-synced whenever the array's length, last message id or `conversationId` changes. |
-| `loading` | boolean | `false` | The app is still loading this conversation's transcript (for example, reading it from a database after a conversation switch). While `true`, a skeleton replaces the message area, suggestions are hidden and the composer is disabled, so nothing can be sent into a conversation whose messages have not synced yet. Drive it from state alongside `messages`, for the window before the transcript has synced — not while a reply is streaming, since a disabled composer also hides the stop control. |
-| `urlQuery` | object | | Query parameters sent with each request. Available server-side via `_payload`. |
+| `conversationId` | string | | Active conversation ID. When this changes, messages are cleared. If left empty, the block auto-mints a stable id for the session and surfaces it via `onConversationStart`, so every turn posts a consistent id. App-supplied ids are always authoritative. |
+| `messages` | array | | Load messages externally. `undefined` = no sync, `null` = clear, array = load. |
+| `feedbackValues` | object | | Ratings already recorded for messages in this conversation, keyed by message id, each `like` or `dislike`. The block does not persist a rating, so without this a reload or a conversation switch shows every message unrated even where your app stored it. A rating clicked this visit takes precedence, so the thumb still responds immediately and a rating the user has just withdrawn is not re-lit by a stale value. |
+| `urlQuery` | object | | Query parameters sent with each request. Available server-side via `_payload`. The page's path parameters (see [Page paths](/page-paths)) are sent as `pathParams` without being set here. |
 | `sharedState` | object | | Two-way bridge between page state and the agent. See [Shared State](#shared-state). |
+| `sharedStateReadOnly` | boolean | `false` | Send `sharedState` as read-only context: the agent gets no `update-page-state` tool. See [Read-only shared state](#read-only-shared-state). |
 | `height` | string | `'calc(100dvh - 170px)'` | CSS height of the chat container. Only applies when `display` is `'inline'`. |
 | `maxWidth` | number | `800` | Maximum width in pixels. |
 | `display` | string | `'inline'` | `'inline'` renders directly on the page. `'drawer'` renders in a slide-out drawer. |
@@ -195,6 +196,8 @@ Customize message appearance by role:
     - `avatar: string`: Avatar image URL.
     - `variant: string`: `'filled'`, `'outlined'`, `'shadow'`, or `'borderless'`.
     - `shape: string`: `'default'`, `'round'`, or `'corner'`.
+    - `styles: object`: Inline styles per bubble part — `root`, `content`, `body`, `header`, `footer`, `avatar`, `extra`. This is how to recolour a bubble: the `filled` background and the `outlined` border come from the theme's `colorPrimary`, and a page stylesheet cannot override them.
+    - `classNames: object`: Class names per bubble part, same keys as `styles`.
   - `user: object`: Same properties as `assistant`.
 
 ```yaml
@@ -216,6 +219,8 @@ messageDisplay:
   - `placeholder: string`: Default: `'Type a message...'` — Input placeholder. When `config.i18n` is configured, falls back to the localized `agent.sender.placeholder` builtin key. See the [i18n concept page](/i18n) for the full list of localizable agent UI keys (tool approval buttons, message actions, tool-result captions, etc.).
   - `submitType: string`: Default: `'enter'` - Submit key. `'enter'` or `'shiftEnter'`.
   - `allowSpeech: boolean`: Default: `false` - Enable speech input.
+  - `styles: object`: Inline styles per composer part — `root`, `prefix`, `input`, `suffix`, `footer`, `switch`, `content`. This is how to recolour the composer border, which the theme sets and a page stylesheet cannot override.
+  - `classNames: object`: Class names per composer part, same keys as `styles`.
 
 #### File Attachments
 
@@ -238,6 +243,8 @@ sender:
     downloadPolicyRequestId: get_download_url
 ```
 
+A file uploaded to storage becomes a file part of the message, `{ type: 'file', url, mediaType, filename, providerMetadata: { lowdefy: { key } } }`, where `key` is the file's storage key from the upload policy. The key sits under `providerMetadata` because the AI SDK keeps no other extra field on a file part, so it survives the saved conversation, the `onFinish` hook's messages and a reload. It is not sent to the model. Use it to sign a fresh link when a saved conversation is reopened (a signed link expires), and read it in a tool endpoint with [`_agent: files`](/_agent). Before each file, the model gets a line naming it (`Attached file: screenshot.png`), so it can pass the name to a tool; the saved messages do not hold that line.
+
 #### Sender Switches
 
 Toggle switches in the sender footer. The switch state is included in the `onBeforeSend` event and in message metadata.
@@ -253,7 +260,7 @@ sender:
   switches:
     - key: deep_research
       label: Deep Research
-      icon: AiOutlineSearch
+      icon: search
       default: false
     - key: use_knowledge_base
       label: Use Knowledge Base
@@ -315,6 +322,24 @@ When the agent calls `update-page-state`, the block routes the write through a s
 
 With the curated form above, the agent can read `legal_name` and `registration_number`, and calling `update-page-state` with either key writes straight back into the page state — no custom endpoint or `onToolResult` handler required.
 
+#### Read-only shared state
+
+Set `sharedStateReadOnly: true` to give the agent page context it cannot change. The block still sends `sharedState` with each request (available server-side via `_payload`, and in the agent's context block when the agent has [`pageContext: true`](/agent-properties)), but the server does not register the `update-page-state` tool, so the model is never offered a page-state write. Use it when the values are there to inform the agent (the current time, the record the user is looking at) and some of them are also bound to inputs the agent should not overwrite.
+
+###### Send context without the write tool:
+```yaml
+- id: chat
+  type: AgentChat
+  properties:
+    agentId: assistant
+    sharedStateReadOnly: true
+    sharedState:
+      now:
+        _date: now
+      space:
+        _state: space
+```
+
 ## Events
 
 | Event | When | Event data |
@@ -327,7 +352,7 @@ With the curated form above, the agent can read `legal_name` and `registration_n
 | `onToolResult` | A tool returns a result. | `toolName`, `toolCallId`, `output`, `error` |
 | `onError` | A streaming error occurs. | `message` |
 | `onStop` | User stops generation. | `messages` |
-| `onFeedback` | User clicks thumbs up/down. | `messageId`, `messageContent`, `rating` |
+| `onFeedback` | User clicks thumbs up/down. `rating` is `like` or `dislike`, or `default` when the user clicks the selected thumb again to clear the rating — branch on it explicitly rather than treating anything that is not `like` as a dislike. | `messageId`, `messageContent`, `rating` |
 | `onRegenerate` | User clicks regenerate. | `messageId`, `messages` |
 | `onDeleteMessage` | User deletes a message. | `messageId`, `content`, `messages` |
 | `onEditMessage` | User edits and resubmits. | `messageId`, `originalContent`, `newContent`, `messages` |
@@ -335,6 +360,7 @@ With the curated form above, the agent can read `legal_name` and `registration_n
 | `onSwitchChange` | User toggles a sender switch. | `key`, `checked` |
 | `onTitleGenerated` | A `data-chat-title` data part arrives — emitted automatically when the agent's [`generateTitle`](/agent-properties) property is set, or manually from an `onFinish` hook. | `title` |
 | `onDataPart` | Any data part arrives from the server. | `type`, `data`, `id` |
+| `onLinkClick` | User clicks a link in a message. Wiring this event suppresses the default navigation for plain left clicks, so the app can open the target in place; modified clicks (new tab, middle click) always navigate. | `href`, `text` |
 
 ###### Validate messages before sending:
 ```yaml
@@ -364,6 +390,16 @@ events:
       params:
         content: Thanks for your feedback!
         type: success
+```
+
+Saving is only half of it — the block does not persist a rating, so a
+reload or a conversation switch shows the message unrated again. Pass
+what you stored back through `feedbackValues`, keyed by message id:
+
+```yaml
+properties:
+  feedbackValues:
+    _request: saved_feedback_for_conversation
 ```
 
 ###### Adapt behavior based on sender switches:
@@ -433,7 +469,7 @@ Control the chat programmatically using [`CallMethod`](/CallMethod):
   type: Button
   properties:
     title: New Chat
-    icon: AiOutlinePlus
+    icon: add
   events:
     onClick:
       - id: new_id

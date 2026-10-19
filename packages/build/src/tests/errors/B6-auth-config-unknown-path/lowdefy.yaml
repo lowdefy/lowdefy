@@ -1,0 +1,17 @@
+# B6: _build.authConfig Unknown Path
+# ==================================
+# Tests that _build.authConfig fails loudly on a path outside the curated
+# projection catalog, naming the readable paths — a typo must not return a
+# null that silently gates a login method off.
+#
+# Expected error:
+#   [Operator Error] _build.authConfig received an unreadable path "authPages.signIn". ...
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    properties:
+      signInPage:
+        _build.authConfig: authPages.signIn

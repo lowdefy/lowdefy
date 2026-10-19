@@ -18,12 +18,23 @@ import { mapPlainValues, type } from '@lowdefy/helpers';
 
 import scrubSecrets from '../scrubSecrets.js';
 
+function returnUnchanged(value) {
+  return value;
+}
+
 // Class instances are left as they are: Sentry normalizes those before beforeSend
 // runs, so the event hook still reaches their strings. Breadcrumbs reach
 // beforeBreadcrumb un-normalized - a console breadcrumb holds the logged arguments
 // as they are - so the walk must be cycle-safe, which mapPlainValues is.
+// An event also carries its request's credential scrub (the Sentry middleware puts it on the
+// request's isolation scope), which reaches the credentials that request marked when the event
+// is sent after the request's scope has ended, as a transaction is.
 function scrubEvent(value) {
-  return mapPlainValues(value, (item) => (type.isString(item) ? scrubSecrets(item) : item));
+  const scrubRequestCredentials =
+    value?.sdkProcessingMetadata?.scrubRequestCredentials ?? returnUnchanged;
+  return mapPlainValues(value, (item) =>
+    type.isString(item) ? scrubRequestCredentials(scrubSecrets(item)) : item
+  );
 }
 
 export default scrubEvent;

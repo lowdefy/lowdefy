@@ -141,3 +141,59 @@ blocks:
             properties:
               title: Edit
               type: link
+
+  # ============================================
+  # SIZE, FILLED SPAN, ITEM STYLES, SEMANTIC KEYS
+  # ============================================
+
+  - id: descriptions_default_size
+    type: Descriptions
+    properties:
+      bordered: true
+      size: default
+      items:
+        - label: Size
+          value: Default
+
+  - id: descriptions_medium_size
+    type: Descriptions
+    properties:
+      bordered: true
+      size: medium
+      items:
+        - label: Size
+          value: Medium
+
+  - id: descriptions_filled_span
+    type: Descriptions
+    properties:
+      bordered: true
+      column: 3
+      items:
+        - label: First
+          value: One column
+        - label: Filled
+          value: Fills the rest of the row
+          span: filled
+        - label: Next row
+          value: Starts a new row
+
+  - id: descriptions_item_styles
+    type: Descriptions
+    class:
+      .title: descriptions-title-class
+      .header: descriptions-header-class
+    style:
+      .label:
+        color: 'rgb(0, 0, 255)'
+    properties:
+      title: Styled Descriptions
+      items:
+        - label: Plain
+          value: Uses the block label style
+        - label: Custom
+          value: Uses item styles
+          labelStyle:
+            color: 'rgb(255, 0, 0)'
+          contentStyle:
+            fontWeight: 700

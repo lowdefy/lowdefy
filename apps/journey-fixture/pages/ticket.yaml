@@ -1,0 +1,37 @@
+# A patterned page, one instance per ticket id: pathParams.test.mjs reads each
+# instance's state through e2e-utils and journey replay.
+id: ticket
+path: tickets/{ticket_id}
+type: Box
+events:
+  onInit:
+    - id: set_ticket_id
+      type: SetState
+      params:
+        ticket_id:
+          _path_params: ticket_id
+blocks:
+  - id: ticket_title
+    type: Title
+    properties:
+      content:
+        _string.concat:
+          - 'Ticket '
+          - _path_params: ticket_id
+      level: 2
+  - id: note_input
+    type: TextInput
+    properties:
+      title: Note
+  - id: next_ticket_button
+    type: Button
+    properties:
+      title: Next ticket
+    events:
+      onClick:
+        - id: to_next_ticket
+          type: Link
+          params:
+            pageId: ticket
+            pathParams:
+              ticket_id: '2'

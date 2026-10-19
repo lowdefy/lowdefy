@@ -14,7 +14,23 @@
   limitations under the License.
 */
 
+import { inspect } from 'node:util';
+
 import { LowdefyInternalError, loadAndResolveErrorLocation } from '@lowdefy/errors';
+import { scrubCredentials } from '@lowdefy/node-utils';
+
+import errorRecordingStamp from '../recording/errorRecordingStamp.js';
+import serverErrorStore from '../../docs/serverErrorStore.js';
+
+// A UserError is an expected outcome of user interaction (a rejected payload,
+// a :reject) and a LowdefyInternalError never carries a config location, so
+// neither belongs in the agent's feedback channel.
+function shouldStore(error) {
+  if (error instanceof LowdefyInternalError) {
+    return false;
+  }
+  return error.name !== 'UserError';
+}
 
 function createHandleError({ context }) {
   return async function handleError(error) {
@@ -36,6 +52,9 @@ function createHandleError({ context }) {
               error,
               readConfigFile: context.readConfigFile,
               configDirectory: context.configDirectory,
+              // The request context's reader adds the JIT page builds' maps
+              // (readMergedMaps); without one, keyMap.json and refMap.json.
+              readMaps: context.readMaps,
             });
 
       // Attach resolved location to error for display layer
@@ -44,11 +63,28 @@ function createHandleError({ context }) {
         error.config = location.config;
       }
 
+      if (shouldStore(error)) {
+        serverErrorStore.push({
+          timestamp: new Date().toISOString(),
+          name: error.name,
+          // Agents read the store through build-status, after this request's scope has ended.
+          message: scrubCredentials(error.message),
+          source: error.source ?? null,
+          config: error.config ?? null,
+          hint: error.hint ?? null,
+          endpointId: context.endpointId ?? null,
+          requestId: context.requestId ?? null,
+          pageId: context.pageId ?? null,
+          recording: errorRecordingStamp(context.recording),
+        });
+      }
+
       context.logger.error(error);
     } catch (e) {
-      console.error(error);
+      // Written past the logger, so past its streamWrite scrub of marked credentials.
+      console.error(scrubCredentials(inspect(error)));
       console.error('An error occurred while logging the error.');
-      console.error(e);
+      console.error(scrubCredentials(inspect(e)));
     }
   };
 }

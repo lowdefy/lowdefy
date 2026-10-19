@@ -16,7 +16,7 @@
 
 export default {
   category: 'display',
-  icons: ['AiOutlineLoading3Quarters'],
+  icons: ['loading'],
   valueType: null,
   cssKeys: {
     element: 'The anchor element.',
@@ -57,6 +57,14 @@ export default {
           displayType: 'yaml',
         },
       },
+      pathParams: {
+        type: 'object',
+        description:
+          "Values for the placeholders in the path of the page given by pageId, like `{ ticket_id: '1234' }` for `tickets/{ticket_id}`.",
+        docs: {
+          displayType: 'yaml',
+        },
+      },
       disabled: {
         type: 'boolean',
         default: false,
@@ -65,7 +73,7 @@ export default {
       icon: {
         type: ['string', 'object'],
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block for anchor icon.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block for anchor icon.',
         docs: {
           displayType: 'icon',
         },
@@ -76,10 +84,12 @@ export default {
       },
       href: {
         type: 'string',
+        urlKind: 'href',
         description: 'The href to link to when the anchor link is clicked.',
       },
       url: {
         type: 'string',
+        urlKind: 'url',
         description: 'External url to link to when the anchor link is clicked.',
       },
       rel: {

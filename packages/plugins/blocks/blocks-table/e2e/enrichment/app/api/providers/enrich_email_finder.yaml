@@ -1,0 +1,126 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Provider email_finder: a waterfall. It asks source A, then source B, and returns the first
+# hit, so the table sees one email column however many sources stand behind it. The sources
+# answer a miss differently (A with a 404, B with `result: null`); the provider maps both.
+#
+# A transient failure of either source fails the whole attempt (and the queue retries it),
+# rather than falling through to the next source, which would store a lower-priority answer.
+id: enrich_email_finder
+type: InternalApi
+routine:
+  - id: check_inputs
+    type: ValidateSchema
+    properties:
+      throwOnInvalid: false
+      data:
+        _payload: inputs
+      schema:
+        type: object
+        required:
+          - name
+          - domain
+        additionalProperties: false
+        properties:
+          name:
+            type: string
+            minLength: 1
+            maxLength: 200
+          domain:
+            type: string
+            maxLength: 253
+            pattern: ^[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$
+            errorMessage: domain should be a domain name, like example.com.
+  - :if:
+      _not:
+        _step: check_inputs.valid
+    :then:
+      - :return:
+          status: error
+          error:
+            _string.concat:
+              - 'Invalid input: '
+              - _step: check_inputs.errors.0.message
+          retry: false
+
+  # Source A: a 404 is a miss.
+  - :try:
+      - id: source_a
+        type: AxiosHttp
+        connectionId: email_source_a
+        properties:
+          url: /find
+          params:
+            name:
+              _payload: inputs.name
+            domain:
+              _payload: inputs.domain
+      - :if:
+          _ne:
+            - _if_none:
+                - _step: source_a.data.email
+                - null
+            - null
+        :then:
+          - :return:
+              status: ok
+              value:
+                _step: source_a.data.email
+              raw:
+                source: source_a
+                response:
+                  _step: source_a.data
+    :catch:
+      - :if:
+          _ne:
+            - _error: statusCode
+            - 404
+        :then:
+          - :throw:
+              _error: true
+
+  # Source B: `result: null` is a miss.
+  - id: source_b
+    type: AxiosHttp
+    connectionId: email_source_b
+    properties:
+      url: /v2/search
+      params:
+        name:
+          _payload: inputs.name
+        domain:
+          _payload: inputs.domain
+  - :if:
+      _ne:
+        - _if_none:
+            - _step: source_b.data.result.address
+            - null
+        - null
+    :then:
+      - :return:
+          status: ok
+          value:
+            _step: source_b.data.result.address
+          raw:
+            source: source_b
+            response:
+              _step: source_b.data
+
+  - :return:
+      status: empty
+      raw:
+        tried:
+          - source_a
+          - source_b

@@ -25,13 +25,17 @@ import checkMockUserWarning from './processes/checkMockUserWarning.mjs';
 import initialBuild from './processes/initialBuild.mjs';
 import installPlugins from './processes/installPlugins.mjs';
 import lowdefyBuild from './processes/lowdefyBuild.mjs';
+import optimizeDependencies from './processes/optimizeDependencies.mjs';
 import readDotEnv from './processes/readDotEnv.mjs';
 import reloadClients from './processes/reloadClients.mjs';
 import restartServer from './processes/restartServer.mjs';
 import shutdownServer from './processes/shutdownServer.mjs';
 import startWatchers from './processes/startWatchers.mjs';
+import syncServer from './processes/syncServer.mjs';
 
+import createServerArtifactTracker from './utils/createServerArtifactTracker.mjs';
 import getViteBin from './utils/getViteBin.mjs';
+import readManagerVersion from './utils/readManagerVersion.mjs';
 
 const argv = yargs(hideBin(process.argv)).array('watch').array('watchIgnore').argv;
 
@@ -44,6 +48,7 @@ async function getContext() {
     },
     directories: {
       build: path.resolve(process.cwd(), './build'),
+      buildStaging: path.resolve(process.cwd(), './build-staging'),
       config: path.resolve(argv.configDirectory ?? env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd()),
       server: process.cwd(),
     },
@@ -54,8 +59,14 @@ async function getContext() {
       destination: pino.destination({ dest: 1, sync: true }),
     }),
     options: {
+      internalPort: env.LOWDEFY_SERVER_DEV_INTERNAL_PORT
+        ? Number(env.LOWDEFY_SERVER_DEV_INTERNAL_PORT)
+        : undefined,
+      owner: env.LOWDEFY_DEV_OWNER === 'hub' ? 'hub' : 'terminal',
       port: Number(argv.port ?? env.PORT ?? 3000),
       refResolver: argv.refResolver ?? env.LOWDEFY_BUILD_REF_RESOLVER,
+      skipPluginChecks: env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS === 'true',
+      strictPort: env.LOWDEFY_SERVER_DEV_STRICT_PORT === 'true',
       watch:
         argv.watch ?? env.LOWDEFY_SERVER_DEV_WATCH ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH) : [],
       watchIgnore:
@@ -63,11 +74,12 @@ async function getContext() {
           ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH_IGNORE)
           : [],
     },
-    version: env.npm_package_version,
+    version: readManagerVersion(),
 
     // JIT build state
     pageRegistry: null,
     buildContext: null,
+    lastBuildFailed: false,
   };
 
   context.packageManagerCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
@@ -78,18 +90,28 @@ async function getContext() {
   // Wrap lowdefyBuild to capture and store the shallow build result
   const buildFn = lowdefyBuild(context);
   context.lowdefyBuild = async () => {
-    const result = await buildFn();
+    let result;
+    try {
+      result = await buildFn();
+    } catch (error) {
+      context.lastBuildFailed = true;
+      throw error;
+    }
+    context.lastBuildFailed = false;
     if (result) {
       context.pageRegistry = result.pageRegistry;
       context.buildContext = result.context;
     }
   };
 
+  context.optimizeDependencies = optimizeDependencies(context);
   context.readDotEnv = readDotEnv(context);
   context.reloadClients = reloadClients(context);
   context.restartServer = restartServer(context);
+  context.serverArtifacts = createServerArtifactTracker(context);
   context.shutdownServer = shutdownServer(context);
   context.startWatchers = startWatchers(context);
+  context.syncServer = syncServer(context);
 
   return context;
 }

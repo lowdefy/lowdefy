@@ -41,6 +41,9 @@ function createFakeLowdefy({ popupBlocked = false } = {}) {
     basePath: '',
     inputs: {},
     home: { pageId: 'home', configured: false },
+    linkPaths: {},
+    pagePaths: {},
+    pathMemory: new Map(),
     _internal: {
       globals: { window },
       router: {
@@ -118,6 +121,27 @@ test('a blocked popup reports itself instead of throwing', () => {
   expect(lowdefy.calls.focus).toBe(0);
 });
 
+test('a blocked popup on a same-origin new tab reports itself instead of throwing', () => {
+  const lowdefy = createFakeLowdefy({ popupBlocked: true });
+
+  expect(() => setupLink(lowdefy)({ pageId: 'reports', newTab: true })).not.toThrow();
+
+  expect(lowdefy.calls.open).toEqual([['http://localhost/reports', '_blank']]);
+  expect(lowdefy._internal.displayMessage).toHaveBeenCalledWith({
+    content: 'client.popupBlocked',
+    status: 'info',
+    duration: 10,
+  });
+  expect(lowdefy.calls.focus).toBe(0);
+});
+
+test('a link that resolves to no target throws a ConfigError', () => {
+  const lowdefy = createFakeLowdefy();
+  lowdefy.home = { pageId: undefined, configured: false };
+
+  expect(() => setupLink(lowdefy)({})).toThrow('Invalid Link: no target resolved.');
+});
+
 test('scroll is forwarded to the router', () => {
   const lowdefy = createFakeLowdefy();
 
@@ -144,4 +168,67 @@ test('newTab wins over replace and scroll', () => {
   expect(lowdefy.calls.open).toEqual([['http://localhost/reports', '_blank']]);
   expect(lowdefy.calls.push).toEqual([]);
   expect(lowdefy.calls.replace).toEqual([]);
+});
+
+test('a pageId link to a patterned page remembers it before the push and seeds its instance input', () => {
+  const lowdefy = createFakeLowdefy();
+  lowdefy.pagePaths = { ticket: 'tickets/{space}/{ticket_id}' };
+  const memoryAtPush = [];
+  lowdefy._internal.router.push = (args) => {
+    memoryAtPush.push([...lowdefy.pathMemory.keys()]);
+    lowdefy.calls.push.push(args);
+  };
+
+  setupLink(lowdefy)({
+    pageId: 'ticket',
+    pathParams: { space: 'support', ticket_id: 1234 },
+    input: { from: 'list' },
+  });
+
+  expect(lowdefy.calls.push).toEqual([
+    { pathname: '/tickets/support/1234', query: '', scroll: undefined },
+  ]);
+  expect(memoryAtPush).toEqual([['tickets/support/1234']]);
+  expect(lowdefy.pathMemory.size).toBe(1);
+  expect(lowdefy.pathMemory.get('tickets/support/1234')).toEqual({
+    pageId: 'ticket',
+    pathParams: { space: 'support', ticket_id: '1234' },
+    instanceKey: 'page:ticket#tickets/support/1234',
+  });
+  expect(lowdefy.inputs['page:ticket#tickets/support/1234']).toEqual({ from: 'list' });
+});
+
+test('a newTab pageId link writes no path memory', () => {
+  const lowdefy = createFakeLowdefy();
+  lowdefy.pagePaths = { ticket: 'tickets/{space}/{ticket_id}' };
+
+  setupLink(lowdefy)({ pageId: 'ticket', pathParams: { space: 's', ticket_id: 1 }, newTab: true });
+
+  expect(lowdefy.calls.open).toEqual([['http://localhost/tickets/s/1', '_blank']]);
+  expect(lowdefy.pathMemory.size).toBe(0);
+});
+
+test('a url link writes no path memory', () => {
+  const lowdefy = createFakeLowdefy();
+
+  setupLink(lowdefy)({ url: '/tickets/s/1' });
+
+  expect(lowdefy.calls.push).toEqual([{ pathname: '/tickets/s/1', query: '', scroll: undefined }]);
+  expect(lowdefy.pathMemory.size).toBe(0);
+});
+
+test('an href with another scheme throws and does not navigate', () => {
+  const lowdefy = createFakeLowdefy();
+  const link = setupLink(lowdefy);
+
+  expect(() => link({ href: 'javascript:alert(1)' })).toThrow('Invalid Link: no target resolved.');
+  expect(() => link({ href: 'java\tscript:alert(1)', newTab: true })).toThrow(
+    'Invalid Link: no target resolved.'
+  );
+  expect(() => link({ href: 'data:text/html,x', pageId: 'reports' })).toThrow(
+    'Invalid Link: no target resolved.'
+  );
+  expect(lowdefy.calls.assign).toEqual([]);
+  expect(lowdefy.calls.open).toEqual([]);
+  expect(lowdefy.calls.push).toEqual([]);
 });
