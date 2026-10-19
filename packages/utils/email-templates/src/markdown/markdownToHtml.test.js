@@ -49,17 +49,13 @@ test('markdownToHtml does not autolinkify bare urls', () => {
 
 test('markdownToHtml adds inline styles to paragraphs', () => {
   const html = markdownToHtml({ markdown: 'Hello' });
-  expect(html).toContain(
-    '<p style="margin:0 0 16px 0;font-size:14px;line-height:22px;color:#333333;">'
-  );
+  expect(html).toContain('<p style="margin:0 0 16px 0;font-size:14px;line-height:22px;color:#333333;">');
 });
 
 test('markdownToHtml adds inline styles to lists and list items', () => {
   const html = markdownToHtml({ markdown: '- one\n- two' });
   expect(html).toContain('<ul style="margin:0 0 16px 0;padding:0 0 0 24px;">');
-  expect(html).toContain(
-    '<li style="margin:0 0 4px 0;font-size:14px;line-height:22px;color:#333333;">'
-  );
+  expect(html).toContain('<li style="margin:0 0 4px 0;font-size:14px;line-height:22px;color:#333333;">');
 });
 
 test('markdownToHtml adds inline styles to blockquotes', () => {
@@ -71,22 +67,14 @@ test('markdownToHtml adds inline styles to blockquotes', () => {
 
 test('markdownToHtml adds inline styles to headings', () => {
   const html = markdownToHtml({ markdown: '# One\n\n## Two\n\n### Three' });
-  expect(html).toContain(
-    '<h1 style="margin:0 0 16px 0;font-size:22px;line-height:30px;color:#111111;">'
-  );
-  expect(html).toContain(
-    '<h2 style="margin:0 0 16px 0;font-size:18px;line-height:26px;color:#111111;">'
-  );
-  expect(html).toContain(
-    '<h3 style="margin:0 0 12px 0;font-size:16px;line-height:24px;color:#111111;">'
-  );
+  expect(html).toContain('<h1 style="margin:0 0 16px 0;font-size:22px;line-height:30px;color:#111111;">');
+  expect(html).toContain('<h2 style="margin:0 0 16px 0;font-size:18px;line-height:26px;color:#111111;">');
+  expect(html).toContain('<h3 style="margin:0 0 12px 0;font-size:16px;line-height:24px;color:#111111;">');
 });
 
 test('markdownToHtml styles images to fit the email column', () => {
   const html = markdownToHtml({ markdown: '![shot](https://example.com/a.png)' });
-  expect(html).toContain(
-    '<img src="https://example.com/a.png" alt="shot" style="max-width:100%;height:auto;">'
-  );
+  expect(html).toContain('<img src="https://example.com/a.png" alt="shot" style="max-width:100%;height:auto;">');
 });
 
 test('markdownToHtml converts single newlines to line breaks', () => {
