@@ -1,0 +1,703 @@
+# The issue page, pushed from any row with `?key=ACME-142`. The hero names the project (a Tag),
+# the key in Menlo, the state (a Tag) and the priority (a StatusIcon), each of the last two in a
+# Menu that changes it, then the title and who opened it. Below: the body (Markdown, with chips for
+# issue links and @mentions), the activity with a comment thread, and a Composer pinned in the
+# footer. The ⋯ header action opens the Details sheet: property rows (Selector menu and sheet
+# variants, NumberInput and DateSelector rows) and the labels, checked in place. The rows and the
+# hero share their state keys, so a change in one shows in the other. The page fakes a 600ms load
+# to show its hero, card and timeline skeletons.
+id: issue
+type: Screen
+properties:
+  title:
+    _state: key
+  backgroundTint:
+    color:
+      _state:
+        _string.concat:
+          - projects.
+          - _state: issue.project
+          - .color.fg
+    colorDark:
+      _state:
+        _string.concat:
+          - projects.
+          - _state: issue.project
+          - .color.fgDark
+    height: 0.25
+  headerActions:
+    - id: details
+      icon: Ellipsis
+      sfSymbol: ellipsis
+      title: Details
+      event: onDetails
+events:
+  onInit:
+    - id: seed
+      type: SetState
+      params:
+        key:
+          _if_none:
+            - _url_query: key
+            - ACME-142
+        issues:
+          _ref: data/issues.yaml
+        projects:
+          _ref: data/projects.yaml
+        meta:
+          _ref: data/statuses.yaml
+        people:
+          _ref: data/people.yaml
+    - id: pick_issue
+      type: SetState
+      params:
+        issue:
+          _if_none:
+            - _array.find:
+                on:
+                  _state: issues
+                callback:
+                  _function:
+                    __eq:
+                      - __args: 0.key
+                      - __state: key
+            - _state: issues.0
+    - id: pick_details
+      type: SetState
+      params:
+        # ACME-142 has its own body and activity; every other issue shows the default ones.
+        details:
+          _if:
+            test:
+              _eq:
+                - _state: key
+                - ACME-142
+            then:
+              _ref:
+                path: data/details.yaml
+                key: ACME-142
+            else:
+              _ref:
+                path: data/details.yaml
+                key: default
+    - id: fields
+      type: SetState
+      params:
+        status:
+          _state: issue.status
+        priority:
+          _state: issue.priority
+        assignee:
+          _state: issue.assignee
+        estimate:
+          _state: details.estimate
+        due:
+          _date:
+            _state: details.due
+        activity:
+          _state: details.activity
+        reply_to: null
+        labels:
+          - name: Sync
+            color: blue
+            checked: true
+          - name: Offline
+            color: teal
+            checked: true
+          - name: Regression
+            color: red
+            checked: false
+          - name: iOS 26
+            color: orange
+            checked: false
+          - name: Needs design
+            color: pink
+            checked: false
+  onMountAsync:
+    - id: fake_load
+      type: Wait
+      params:
+        ms: 600
+    - id: loaded
+      type: SetState
+      params:
+        loaded: true
+  onDetails:
+    - id: open_details
+      type: CallMethod
+      params:
+        blockId: details_sheet
+        method: open
+slots:
+  content:
+    blocks:
+      # The hero.
+      - id: hero
+        type: Box
+        loading:
+          _not:
+            _state: loaded
+        skeleton:
+          type: Skeleton
+          properties:
+            variant: hero
+        layout:
+          direction: column
+          gap: 12
+        style:
+          .element:
+            paddingHorizontal: 16
+            paddingTop: 8
+        blocks:
+          - id: hero_meta
+            type: Box
+            layout:
+              direction: row
+              align: middle
+              gap: 8
+              wrap: nowrap
+            blocks:
+              - id: project_tag
+                type: Tag
+                layout:
+                  flex: true
+                properties:
+                  title:
+                    _state:
+                      _string.concat:
+                        - projects.
+                        - _state: issue.project
+                        - .label
+                  icon:
+                    _state:
+                      _string.concat:
+                        - projects.
+                        - _state: issue.project
+                        - .icon
+                  color:
+                    _state:
+                      _string.concat:
+                        - projects.
+                        - _state: issue.project
+                        - .tag
+              - id: issue_key
+                type: Paragraph
+                layout:
+                  grow: 1
+                style:
+                  .element:
+                    fontFamily: Menlo
+                properties:
+                  content:
+                    _state: key
+                  type: secondary
+                  textStyle: subheadline
+              - id: status_menu
+                type: Menu
+                layout:
+                  flex: true
+                properties:
+                  menuTitle: Set status
+                  items:
+                    - id: backlog
+                      title: Backlog
+                      symbol: circle.dashed
+                      checked:
+                        _eq:
+                          - _state: status
+                          - backlog
+                    - id: todo
+                      title: Todo
+                      symbol: circle
+                      checked:
+                        _eq:
+                          - _state: status
+                          - todo
+                    - id: in_progress
+                      title: In progress
+                      symbol: circle.lefthalf.filled
+                      checked:
+                        _eq:
+                          - _state: status
+                          - in_progress
+                    - id: in_review
+                      title: In review
+                      symbol: arrow.triangle.pull
+                      checked:
+                        _eq:
+                          - _state: status
+                          - in_review
+                    - id: done
+                      title: Done
+                      symbol: checkmark.circle.fill
+                      checked:
+                        _eq:
+                          - _state: status
+                          - done
+                events:
+                  onSelect:
+                    - id: set_status
+                      type: SetState
+                      params:
+                        status:
+                          _event: id
+                blocks:
+                  - id: status_tag
+                    type: Tag
+                    properties:
+                      dot: true
+                      title:
+                        _state:
+                          _string.concat:
+                            - meta.status.
+                            - _state: status
+                            - .label
+                      color:
+                        _state:
+                          _string.concat:
+                            - meta.status.
+                            - _state: status
+                            - .tag
+              - id: priority_menu
+                type: Menu
+                layout:
+                  flex: true
+                properties:
+                  menuTitle: Set priority
+                  items:
+                    - id: urgent
+                      title: Urgent
+                      symbol: exclamationmark.square.fill
+                      checked:
+                        _eq:
+                          - _state: priority
+                          - urgent
+                    - id: high
+                      title: High
+                      symbol: chart.bar.fill
+                      checked:
+                        _eq:
+                          - _state: priority
+                          - high
+                    - id: medium
+                      title: Medium
+                      symbol: chart.bar
+                      checked:
+                        _eq:
+                          - _state: priority
+                          - medium
+                    - id: low
+                      title: Low
+                      symbol: chart.bar.xaxis
+                      checked:
+                        _eq:
+                          - _state: priority
+                          - low
+                    - id: none
+                      title: No priority
+                      symbol: minus
+                      checked:
+                        _eq:
+                          - _state: priority
+                          - none
+                events:
+                  onSelect:
+                    - id: set_priority
+                      type: SetState
+                      params:
+                        priority:
+                          _event: id
+                blocks:
+                  - id: priority_icon
+                    type: StatusIcon
+                    properties:
+                      name:
+                        _state:
+                          _string.concat:
+                            - meta.priority.
+                            - _state: priority
+                            - .glyph
+                      title:
+                        _state:
+                          _string.concat:
+                            - meta.priority.
+                            - _state: priority
+                            - .label
+          - id: issue_title
+            type: Title
+            properties:
+              content:
+                _state: issue.title
+              level: 1
+              textStyle: title1
+          - id: byline
+            type: Box
+            layout:
+              direction: row
+              align: middle
+              gap: 8
+              wrap: nowrap
+            blocks:
+              - id: opener_avatar
+                type: Avatar
+                layout:
+                  flex: true
+                properties:
+                  name:
+                    _state: details.opener.name
+                  src:
+                    _state: details.opener.picture
+                  size: 22
+              - id: opener_text
+                type: Paragraph
+                layout:
+                  grow: 1
+                properties:
+                  content:
+                    _string.concat:
+                      - Opened by
+                      - ' '
+                      - _state: details.opener.name
+                      - ' · '
+                      - _state: details.opener.when
+                  type: secondary
+                  textStyle: footnote
+
+      # The body.
+      - id: body_card
+        type: Card
+        loading:
+          _not:
+            _state: loaded
+        skeleton:
+          type: Skeleton
+          properties:
+            variant: card
+            lines: 6
+        style:
+          .element:
+            marginHorizontal: 16
+            marginTop: 20
+        blocks:
+          - id: body
+            type: Markdown
+            properties:
+              content:
+                _state: details.body
+              linkChips:
+                - pattern: '^/ACME/issues/(?<key>ACME-\d+)$'
+                  icon: CircleCheck
+                  tone: primary
+                - scheme: mention
+                  tone: info
+                  prefix: '@'
+                  label: text
+            events:
+              onLinkPress:
+                - _ref: actions/open-issue-link.yaml
+
+      # The activity.
+      - id: activity_title
+        type: Title
+        style:
+          .element:
+            paddingHorizontal: 16
+            marginTop: 28
+            marginBottom: 4
+        properties:
+          content: Activity
+          level: 4
+          textStyle: title3
+      - id: activity
+        type: ActivityTimeline
+        loading:
+          _not:
+            _state: loaded
+        skeleton:
+          type: Skeleton
+          properties:
+            variant: timeline
+            count: 4
+        style:
+          .element:
+            paddingHorizontal: 16
+            paddingBottom: 24
+        properties:
+          user:
+            id: ada
+          members:
+            _state: people
+          mentions:
+            _state: people
+          entries:
+            _state: activity
+          linkChips:
+            - pattern: '^/ACME/issues/(?<key>ACME-\d+)$'
+              icon: CircleCheck
+              tone: primary
+        events:
+          onLinkPress:
+            - _ref: actions/open-issue-link.yaml
+          onOpenRecord:
+            - id: open_record
+              type: Link
+              params:
+                pageId: issue
+                urlQuery:
+                  key:
+                    _event: key
+          onReply:
+            - id: set_reply_to
+              type: SetState
+              params:
+                reply_to:
+                  id:
+                    _event: thread_id
+                  name:
+                    _event: name
+            - id: focus_composer
+              type: CallMethod
+              params:
+                blockId: comment
+                method: focus
+          onCopy:
+            - id: copy_comment
+              type: CopyToClipboard
+              params:
+                copy:
+                  _event: text
+
+      # The Details sheet, opened by the ⋯ header action.
+      - id: details_sheet
+        type: Sheet
+        style:
+          .body:
+            paddingHorizontal: 0
+        properties:
+          title: Details
+          detents: both
+        slots:
+          headerRight:
+            blocks:
+              - id: details_done
+                type: Button
+                properties:
+                  title: Done
+                  type: link
+                events:
+                  onClick:
+                    - id: close_details
+                      type: CallMethod
+                      params:
+                        blockId: details_sheet
+                        method: close
+          content:
+            blocks:
+              - id: properties_card
+                type: Card
+                style:
+                  .element:
+                    marginHorizontal: 16
+                    marginBottom: 24
+                properties:
+                  padding: none
+                blocks:
+                  - id: status
+                    type: Selector
+                    properties:
+                      title: Status
+                      variant: menu
+                      menuTitle: Set status
+                      allowClear: false
+                      options:
+                        - label: Backlog
+                          value: backlog
+                          symbol: circle.dashed
+                          icon: CircleDashed
+                          iconColor: grey
+                        - label: Todo
+                          value: todo
+                          symbol: circle
+                          icon: Circle
+                        - label: In progress
+                          value: in_progress
+                          symbol: circle.lefthalf.filled
+                          icon: CircleDot
+                          iconColor: amber
+                        - label: In review
+                          value: in_review
+                          symbol: arrow.triangle.pull
+                          icon: GitPullRequest
+                          iconColor: purple
+                        - label: Done
+                          value: done
+                          symbol: checkmark.circle.fill
+                          icon: CircleCheck
+                          iconColor: green
+                  - id: status_rule
+                    type: Divider
+                    style:
+                      .element:
+                        marginVertical: 0
+                        marginLeft: 16
+                  - id: priority
+                    type: Selector
+                    properties:
+                      title: Priority
+                      variant: menu
+                      menuTitle: Set priority
+                      allowClear: false
+                      options:
+                        - label: Urgent
+                          value: urgent
+                          symbol: exclamationmark.square.fill
+                          icon: TriangleAlert
+                          iconColor: orange
+                        - label: High
+                          value: high
+                          symbol: chart.bar.fill
+                          icon: SignalHigh
+                        - label: Medium
+                          value: medium
+                          symbol: chart.bar
+                          icon: SignalMedium
+                        - label: Low
+                          value: low
+                          symbol: chart.bar.xaxis
+                          icon: SignalLow
+                        - label: No priority
+                          value: none
+                          symbol: minus
+                          icon: Minus
+                  - id: priority_rule
+                    type: Divider
+                    style:
+                      .element:
+                        marginVertical: 0
+                        marginLeft: 16
+                  - id: assignee
+                    type: Selector
+                    properties:
+                      title: Assignee
+                      variant: sheet
+                      menuTitle: Assign to
+                      placeholder: Unassigned
+                      options:
+                        - label: Assign to me
+                          value: ada
+                          pinned: true
+                          description: Ada Lovelace
+                          avatar:
+                            name: Ada Lovelace
+                            src: https://i.pravatar.cc/96?img=47
+                        - label: Grace Hopper
+                          value: grace
+                          description: Engineering lead
+                          avatar:
+                            name: Grace Hopper
+                            src: https://i.pravatar.cc/96?img=32
+                        - label: Alan Turing
+                          value: alan
+                          description: Platform
+                          avatar:
+                            name: Alan Turing
+                            src: https://i.pravatar.cc/96?img=12
+                        - label: Katherine Johnson
+                          value: katherine
+                          description: iOS
+                          avatar:
+                            name: Katherine Johnson
+                            src: https://i.pravatar.cc/96?img=45
+              - id: planning_card
+                type: Card
+                style:
+                  .element:
+                    marginHorizontal: 16
+                    marginBottom: 24
+                properties:
+                  padding: none
+                blocks:
+                  - id: estimate
+                    type: NumberInput
+                    properties:
+                      title: Estimate
+                      variant: row
+                      suffix: pts
+                      min: 0
+                      max: 13
+                      precision: 0
+                  - id: estimate_rule
+                    type: Divider
+                    style:
+                      .element:
+                        marginVertical: 0
+                        marginLeft: 16
+                  - id: due
+                    type: DateSelector
+                    properties:
+                      title: Due
+                      variant: row
+                      placeholder: No due date
+              - id: labels
+                type: List
+                properties:
+                  header:
+                    title: Labels
+                    footer: Labels group issues across projects.
+                blocks:
+                  - id: labels.$.row
+                    type: ListItem
+                    properties:
+                      title:
+                        _state: labels.$.name
+                      chevron: false
+                      leading:
+                        status:
+                          name: dot
+                          color:
+                            _state: labels.$.color
+                      trailing:
+                        check:
+                          _state: labels.$.checked
+                    events:
+                      onClick:
+                        - id: toggle_label
+                          type: SetState
+                          params:
+                            labels.$.checked:
+                              _not:
+                                _state: labels.$.checked
+  footer:
+    blocks:
+      - id: comment
+        type: Composer
+        properties:
+          placeholder: Leave a comment…
+          mentions:
+            _state: people
+          replyTo:
+            _state: reply_to
+        events:
+          onCancelReply:
+            - id: clear_reply_to
+              type: SetState
+              params:
+                reply_to: null
+          onSubmit:
+            - id: post_comment
+              type: SetState
+              params:
+                activity:
+                  _array.concat:
+                    - _state: activity
+                    - - id:
+                          _uuid: true
+                        type: comment
+                        at:
+                          _date: now
+                        by:
+                          id: ada
+                          name: Ada Lovelace
+                        body:
+                          _event: body
+                reply_to: null

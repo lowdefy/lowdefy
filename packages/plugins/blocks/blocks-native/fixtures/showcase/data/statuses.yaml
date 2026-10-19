@@ -1,0 +1,39 @@
+# How the issue page draws each state and priority: the Tag colour and StatusIcon glyph of a
+# state, and the label and glyph of a priority.
+status:
+  backlog:
+    label: Backlog
+    tag: default
+    glyph: backlog
+  todo:
+    label: Todo
+    tag: default
+    glyph: todo
+  in_progress:
+    label: In progress
+    tag: gold
+    glyph: inProgress
+  in_review:
+    label: In review
+    tag: purple
+    glyph: inReview
+  done:
+    label: Done
+    tag: green
+    glyph: done
+priority:
+  urgent:
+    label: Urgent
+    glyph: priorityUrgent
+  high:
+    label: High
+    glyph: priorityHigh
+  medium:
+    label: Medium
+    glyph: priorityMedium
+  low:
+    label: Low
+    glyph: priorityLow
+  none:
+    label: No priority
+    glyph: priorityNone

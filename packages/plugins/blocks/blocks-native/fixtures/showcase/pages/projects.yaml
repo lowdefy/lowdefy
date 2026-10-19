@@ -1,0 +1,225 @@
+# Projects: a large title with a native search bar, and the project switcher pinned under it (a
+# ChipSelector in headerBottom, page dots for its place, and an Open / Mine / All scope). The
+# screen is washed in the picked project's colour (backgroundTint cross-fades on change), and a
+# swipe across the list steps to the next or previous project. The list groups the project's
+# issues by stage, with a coloured dot and a count on each section header.
+id: projects
+type: Screen
+properties:
+  title: Projects
+  largeTitle: true
+  headerSearch:
+    placeholder: Search issues
+  backgroundTint:
+    color:
+      _state:
+        _string.concat:
+          - projects.
+          - _state: project
+          - .color.fg
+    colorDark:
+      _state:
+        _string.concat:
+          - projects.
+          - _state: project
+          - .color.fgDark
+    height: 0.3
+events:
+  onInit:
+    - id: seed
+      type: SetState
+      params:
+        issues:
+          _ref: data/issues.yaml
+        projects:
+          _ref: data/projects.yaml
+        project: ios
+        scope: open
+    - _ref: actions/refresh-board.yaml
+  onSearchChange:
+    - id: set_search
+      type: SetState
+      params:
+        search:
+          _event: value
+    - _ref: actions/refresh-board.yaml
+slots:
+  headerBottom:
+    direction: column
+    gap: 10
+    blocks:
+      - id: project
+        type: ChipSelector
+        properties:
+          title: Project
+          options:
+            - value: web
+              label: Web app
+              icon: Globe
+              badge: 5
+              color:
+                fg: '#0A6BC9'
+                bg: '#E2EDF9'
+                fgDark: '#85B5E4'
+                bgDark: '#1E3B59'
+            - value: ios
+              label: iOS app
+              icon: Smartphone
+              badge: 4
+              color:
+                fg: '#B85A0D'
+                bg: '#F6EBE2'
+                fgDark: '#DCAD86'
+                bgDark: '#4F3724'
+            - value: api
+              label: Platform API
+              icon: Server
+              badge: 4
+              color:
+                fg: '#7250CC'
+                bg: '#EEEAF9'
+                fgDark: '#B9A8E6'
+                bgDark: '#3B345A'
+        events:
+          onChange:
+            - _ref: actions/refresh-board.yaml
+      - id: project_dots
+        type: PageDots
+        style:
+          .element:
+            alignSelf: center
+        properties:
+          count: 3
+          index:
+            _state:
+              _string.concat:
+                - projects.
+                - _state: project
+                - .index
+      - id: scope
+        type: SegmentedControl
+        properties:
+          title: Scope
+          options:
+            - label: Open
+              value: open
+            - label: Mine
+              value: mine
+            - label: All
+              value: all
+        events:
+          onChange:
+            - _ref: actions/refresh-board.yaml
+  content:
+    blocks:
+      - id: board_swipe
+        type: Box
+        properties:
+          swipeFeedback: true
+        events:
+          onSwipeLeft:
+            - id: next_project
+              type: SetState
+              params:
+                project:
+                  _state:
+                    _string.concat:
+                      - projects.
+                      - _state: project
+                      - .next
+            - _ref: actions/refresh-board.yaml
+          onSwipeRight:
+            - id: previous_project
+              type: SetState
+              params:
+                project:
+                  _state:
+                    _string.concat:
+                      - projects.
+                      - _state: project
+                      - .previous
+            - _ref: actions/refresh-board.yaml
+        blocks:
+          - id: board
+            type: List
+            properties:
+              sectionKey: status
+              showCount: true
+              sections:
+                - key: in_progress
+                  title: In progress
+                  status:
+                    name: dot
+                    color: amber
+                - key: in_review
+                  title: In review
+                  status:
+                    name: dot
+                    color: purple
+                - key: todo
+                  title: Todo
+                  status:
+                    name: dot
+                    color: blue
+                - key: backlog
+                  title: Backlog
+                  status:
+                    name: dot
+                    color: grey
+                - key: done
+                  title: Done
+                  status:
+                    name: dot
+                    color: green
+            blocks:
+              - id: board.$.row
+                type: ListItem
+                properties:
+                  title:
+                    _state: board.$.title
+                  subtitle:
+                    _string.concat:
+                      - _state: board.$.key
+                      - ' · '
+                      - _state: board.$.updated
+                  leading:
+                    status:
+                      _state: board.$.glyph
+                  trailing:
+                    status:
+                      _state: board.$.priorityGlyph
+                    avatar:
+                      name:
+                        _state: board.$.assigneeName
+                      src:
+                        _state: board.$.picture
+                events:
+                  onClick:
+                    - id: open_issue
+                      type: Link
+                      params:
+                        pageId: issue
+                        urlQuery:
+                          key:
+                            _state: board.$.key
+          - id: board_empty
+            type: Empty
+            visible:
+              _eq:
+                - _array.length:
+                    _state: board
+                - 0
+            properties:
+              title: Nothing here
+              description: No issues match this scope.
+          - id: swipe_hint
+            type: Paragraph
+            style:
+              .element:
+                textAlign: center
+                marginTop: 4
+                marginBottom: 24
+            properties:
+              content: Swipe across the list to change project
+              type: secondary
+              textStyle: footnote
