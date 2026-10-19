@@ -277,6 +277,7 @@ test("a shell plugin's config plugins, permissions, privacy reasons and data joi
     assert.deepEqual(config.extra.shell.capabilities, [
       'biometrics',
       'sign-in',
+      'speech',
       'camera',
       'printer',
     ]);
