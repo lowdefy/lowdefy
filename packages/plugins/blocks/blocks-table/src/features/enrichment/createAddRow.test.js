@@ -43,8 +43,28 @@ test('addNewRow shows the saving row while onRowAdd runs and removes it when it 
   });
   await expect(createAddRow(api)({ values: { name: 'Ada' } })).resolves.toBeNull();
   expect(seen).toHaveLength(1);
-  expect(seen[0]).toMatchObject({ name: 'Ada', _id: 'new:k1' });
+  expect(seen[0]).toMatchObject({ name: 'Ada', _id: 'k1' });
   expect(api.enrichment.pending).toEqual([]);
+});
+
+test('addNewRow sends onRowAdd the key the saving row shows under, so the app can save it there', async () => {
+  const api = createApi(async () => ({ success: true }));
+  await createAddRow(api)({ values: { name: 'Ada' } });
+  expect(api.methods.triggerEvent).toHaveBeenCalledWith({
+    name: 'onRowAdd',
+    event: { rowKey: 'k1', values: { name: 'Ada' } },
+  });
+});
+
+test('addNewRow sets the generated key at the rowKey path of the saving row', async () => {
+  let seen;
+  const api = createApi(async () => {
+    seen = api.enrichment.pending;
+    return { success: true };
+  });
+  api.properties.rowKey = 'meta.key';
+  await createAddRow(api)({ values: { name: 'Ada' } });
+  expect(seen[0]).toEqual({ name: 'Ada', meta: { key: 'k1' } });
 });
 
 test('addNewRow removes the saving row and returns the message when onRowAdd fails', async () => {

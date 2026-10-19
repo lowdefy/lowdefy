@@ -489,8 +489,10 @@ export default {
     },
     onRowAdd: {
       description:
-        'Trigger when a row is added with "+ New row" (`addRow`). The row shows at the end of the table, marked saving, while the event runs; after it the row comes from `data` (add it there, for example by refetching). When the actions fail, the row goes and the editor shows the error with the values kept.',
+        'Trigger when a row is added with "+ New row" (`addRow`). The row shows at the end of the table, marked saving, under `rowKey` while the event runs; after it the row comes from `data` (add it there, for example by refetching). Save the row under `rowKey` (as its `_id`, or at the field the `rowKey` property names): the saved row then replaces the saving one as soon as `data` has it, even while the event still runs; a row saved under another key shows beside the saving row until the event settles. When the actions fail, the row goes and the editor shows the error with the values kept.',
       event: {
+        rowKey:
+          'The key the row shows under while it saves: a new random UUID, for the app to save the row under.',
         values:
           'The typed values, set at each column `field` path (`{ name, company: { domain } }`), empty fields left out.',
       },

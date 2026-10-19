@@ -14,16 +14,27 @@
   limitations under the License.
 */
 
-let counter = 0;
-
-// A key for a row added in the browser. It only has to be unique within the table's value;
-// crypto.randomUUID is missing on insecure origins (plain http on a LAN address).
+// A random RFC 4122 version 4 UUID for a row added in the browser. The key can outlive the
+// table: "+ New row" sends it to onRowAdd for the app to store as the row's _id, so it has to be
+// unique across every browser and every row ever stored, not only within the table's value.
+// crypto.randomUUID is missing on insecure origins (plain http on a LAN address), where
+// crypto.getRandomValues still is, so the UUID is built from 16 random bytes there.
 function generateRowKey() {
-  if (typeof window.crypto?.randomUUID === 'function') {
+  if (typeof window.crypto.randomUUID === 'function') {
     return window.crypto.randomUUID();
   }
-  counter += 1;
-  return `row_${Date.now().toString(36)}_${counter.toString(36)}`;
+  const bytes = window.crypto.getRandomValues(new Uint8Array(16));
+  // Version 4 in the high nibble of byte 6, the RFC 4122 variant (10xx) in byte 8.
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+  return [
+    hex.slice(0, 8),
+    hex.slice(8, 12),
+    hex.slice(12, 16),
+    hex.slice(16, 20),
+    hex.slice(20),
+  ].join('-');
 }
 
 export default generateRowKey;
