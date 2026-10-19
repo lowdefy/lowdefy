@@ -14,6 +14,12 @@
   limitations under the License.
 */
 
+// The same arrays each time: iOS's BottomSheet re-applies its presentation modifiers when the
+// snapPoints prop changes identity, which cancels a touch on the sheet.
+const MEDIUM = ['50%'];
+const LARGE = ['100%'];
+const MEDIUM_AND_LARGE = ['50%', '100%'];
+
 /**
  * The BottomSheet props that give a Sheet its detents. On iOS, no snap points give the system
  * medium and large detents; a single detent is a fraction of the large height. Android's sheet
@@ -28,12 +34,12 @@
  */
 function getSheetDetents({ detents = 'both', platform }) {
   if (detents === 'medium') {
-    return { snapPoints: ['50%'], resizable: false };
+    return { snapPoints: MEDIUM, resizable: false };
   }
   if (detents === 'large') {
-    return { snapPoints: ['100%'], resizable: false };
+    return { snapPoints: LARGE, resizable: false };
   }
-  return { snapPoints: platform === 'ios' ? undefined : ['50%', '100%'], resizable: true };
+  return { snapPoints: platform === 'ios' ? undefined : MEDIUM_AND_LARGE, resizable: true };
 }
 
 export default getSheetDetents;

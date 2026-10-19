@@ -117,6 +117,27 @@ test('toggling checks options without closing, and onChange fires once on Done',
   expect(screen.getByText('ui, api')).toBeTruthy();
 });
 
+test('a tap straight after a toggle lands: untoggling at once, and Done at once', async () => {
+  const { calls } = await renderPage({
+    pageConfig: formPage({ blocks: [labels({ allowCreate: true })], mirrorKey: 'labels' }),
+  });
+  await openSheet();
+  const { backgroundStyle, snapPoints } = sheet().props;
+  const row = screen.getByTestId('labels_option_0');
+  await press(row);
+  // The sheet keeps its presentation props, so iOS does not re-apply them and cancel the next
+  // touch, and the row is the same element.
+  expect(sheet().props.backgroundStyle).toBe(backgroundStyle);
+  expect(sheet().props.snapPoints).toBe(snapPoints);
+  expect(screen.getByTestId('labels_option_0')).toBe(row);
+  await press(row);
+  expect(row.props.accessibilityState).toEqual({ checked: false, disabled: false });
+  await press(row);
+  await press(screen.getByTestId('labels_done'));
+  expect(sheet().props.index).toBe(-1);
+  expect(changes(calls)).toEqual([['agent-rules']]);
+});
+
 test('the chosen options are listed first when the sheet opens, not while toggling', async () => {
   await renderPage({
     pageConfig: formPage({ blocks: [labels()], mirrorKey: 'labels' }),

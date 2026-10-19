@@ -125,3 +125,15 @@ test('without drag to dismiss, the sheet shows a close button', async () => {
   expect(screen.queryByText('Answer question')).toBeNull();
   expect(calls.map((call) => call.name)).toEqual(['open', 'close']);
 });
+
+test('a sheet drawn again keeps its presentation props, so iOS does not re-apply them', async () => {
+  // The title follows the note, so typing draws the sheet again.
+  await renderPage({ pageConfig: sheetPage({ detents: 'medium', title: { _state: 'note' } }) });
+  await press(await screen.findByText('Answer'));
+  const { backgroundStyle, snapPoints } = screen.getByTestId('expo-ui-bottom-sheet').props;
+  await act(async () => {
+    fireEvent.changeText(screen.getByTestId('note_input'), 'Looks good');
+  });
+  expect(screen.getByTestId('expo-ui-bottom-sheet').props.backgroundStyle).toBe(backgroundStyle);
+  expect(screen.getByTestId('expo-ui-bottom-sheet').props.snapPoints).toBe(snapPoints);
+});

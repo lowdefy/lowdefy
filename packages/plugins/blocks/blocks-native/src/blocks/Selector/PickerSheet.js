@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { FlatList, Keyboard, Platform, Text, View, useWindowDimensions } from 'react-native';
 import { BottomSheet } from '@expo/ui/community/bottom-sheet';
 import { iosColors } from '@lowdefy/client-native';
@@ -102,6 +102,13 @@ function PickerSheet({
     setPresented(true);
   }
 
+  // Kept while the colour is unchanged, and the detents are the same arrays each time: iOS's
+  // BottomSheet re-applies its presentation modifiers when either prop changes identity, which
+  // cancels a touch on the sheet, so a tap soon after a toggle would be lost.
+  const backgroundColor = isDark
+    ? iosColors.elevated.dark.colorSystemBackground
+    : tokens.colorSystemBackground;
+  const backgroundStyle = useMemo(() => ({ backgroundColor }), [backgroundColor]);
   const rowParams = { create, first, full, noValue, options, placeholder, selected };
   const allRows = getPickerSheetRows(rowParams);
   const rows = query === '' ? allRows : getPickerSheetRows({ ...rowParams, query });
@@ -128,11 +135,7 @@ function PickerSheet({
 
   return (
     <BottomSheet
-      backgroundStyle={{
-        backgroundColor: isDark
-          ? iosColors.elevated.dark.colorSystemBackground
-          : tokens.colorSystemBackground,
-      }}
+      backgroundStyle={backgroundStyle}
       enableDynamicSizing={false}
       enablePanDownToClose
       handleComponent={resizable ? undefined : null}

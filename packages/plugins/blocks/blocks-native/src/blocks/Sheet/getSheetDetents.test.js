@@ -41,3 +41,10 @@ test('a single detent is one snap point and does not resize', () => {
     resizable: false,
   });
 });
+
+test('the snap points are the same arrays on each call', () => {
+  const medium = getSheetDetents({ detents: 'medium', platform: 'ios' }).snapPoints;
+  expect(getSheetDetents({ detents: 'medium', platform: 'ios' }).snapPoints).toBe(medium);
+  const both = getSheetDetents({ detents: 'both', platform: 'android' }).snapPoints;
+  expect(getSheetDetents({ detents: 'both', platform: 'android' }).snapPoints).toBe(both);
+});

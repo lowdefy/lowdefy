@@ -55,6 +55,10 @@ function Sheet({ blockId, components, content, methods, properties, styles = {} 
     }),
     [isDark, theme]
   );
+  // Kept while the colour is unchanged: iOS's BottomSheet re-applies its presentation modifiers
+  // when backgroundStyle changes identity, which cancels a touch on the sheet.
+  const backgroundColor = elevatedTheme.tokens.colorGroupedBackground;
+  const backgroundStyle = useMemo(() => ({ backgroundColor }), [backgroundColor]);
   const [index, setIndex] = useState(CLOSED);
   const isOpen = index !== CLOSED;
 
@@ -94,7 +98,7 @@ function Sheet({ blockId, components, content, methods, properties, styles = {} 
 
   return (
     <BottomSheet
-      backgroundStyle={{ backgroundColor: elevatedTheme.tokens.colorGroupedBackground }}
+      backgroundStyle={backgroundStyle}
       enableDynamicSizing={false}
       enablePanDownToClose={dragToDismiss}
       handleComponent={resizable ? undefined : null}
