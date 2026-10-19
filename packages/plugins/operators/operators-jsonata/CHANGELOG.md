@@ -1,5 +1,15 @@
 # @lowdefy/operators-jsonata
 
+## 6.1.0
+
+### Patch Changes
+
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [5657441]
+- Updated dependencies [6d6f8fa]
+  - @lowdefy/operators@6.1.0
+  - @lowdefy/helpers@6.1.0
+
 ## 6.0.0
 
 ### Patch Changes

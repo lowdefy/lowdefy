@@ -1,5 +1,37 @@
 # @lowdefy/blocks-antd-x
 
+## 6.1.0
+
+### Minor Changes
+
+- f92aa11: AgentChat: stop the stream on a conversation switch, re-sync same-shaped transcripts, and add a `loading` property
+
+  - **A `conversationId` change aborts an in-flight reply.** The block cleared its messages on a switch but left the request running: its `onDataPart`, tool-call and `onFinish` events kept firing into the page for a conversation no longer shown, and the server kept generating. The Chat instance being left is now stopped on the switch.
+  - **External messages re-sync when the conversation changes.** The `messages` sync skipped `setMessages` when the array had the same length and last id as before, and that memo did not reset on a switch. Every assistant message an older onFinish hook persisted carries id `''`, so any two same-length transcripts collided and the switch showed an empty chat. The conversation id is now part of the comparison.
+  - **`loading: boolean`.** While true, a skeleton replaces the message area, suggestions are hidden and the composer is disabled — for apps that read a conversation's transcript from their own store on select, so nothing can be sent into a conversation whose history has not synced yet.
+
+- 9592255: feat(blocks-antd-x): AgentChat passes `styles` and `classNames` through to the bubbles and the composer.
+
+  The filled user bubble, the outlined assistant border and the composer border take their colour from the theme's `colorPrimary`, which antd-x applies with a precedence no page stylesheet beats, so an app whose primary is a neutral had to reach them with `!important` on every property. `messageDisplay.roles.user`, `messageDisplay.roles.assistant` and `sender` now accept antd-x's own `styles` and `classNames`, keyed by semantic part.
+
+### Patch Changes
+
+- 5ad2b62: fix(blocks-antd-x): AgentChat drops an unanswered tool call before it can poison the conversation.
+
+  A reply cut off mid-stream, by a closed tab, a dropped connection or a serverless duration limit, leaves its tool call at `input-available` with no result. UIMessage validation rejects the whole history for one such part, so every later send failed before it reached the model, a history persisted in that state failed on every load, and nothing said so. The block now filters those parts, and any message left with nothing but a step marker, wherever messages enter its list: the `messages` property, the `setMessages` method, and immediately before every send or regenerate. Approval states are kept, since a pending approval is still answerable on resume, and so is a call a client-side tool is still answering, or a call in a reply that is still streaming.
+
+- 08cbf21: fix(blocks-antd-x): AgentChat refuses a second send while the first is still in `onBeforeSend`.
+
+  The composer was only locked while `useChat` reported streaming, and a send begins with an await on `onBeforeSend`, the seam apps use for a quota or entitlement request. For as long as that took, every further submit ran the send again: one slow check, N identical messages, N agent requests the moment the checks resolved. The block now holds a pending-send flag from the start of `handleSend` to its end and shows the Sender's loading state for the whole of it. While it is held, a second submit, a welcome prompt, a suggestion (hidden meanwhile), an edit, a regenerate and the `sendMessage` and `regenerate` methods are all refused, so nothing overtakes the message still being checked.
+
+- Updated dependencies [ea69869]
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [1d3a0b8]
+- Updated dependencies [6d6f8fa]
+  - @lowdefy/block-utils@6.1.0
+  - @lowdefy/helpers@6.1.0
+  - @lowdefy/blocks-files@6.1.0
+
 ## 6.0.0
 
 ### Minor Changes
