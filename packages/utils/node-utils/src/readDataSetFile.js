@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import path from 'path';
 import { type } from '@lowdefy/helpers';
 import YAML from 'yaml';
 
 import dataSetNamePattern from './dataSetNamePattern.js';
 import findRefPath from './findRefPath.js';
 import readFile from './readFile.js';
+import relativePosixPath from './relativePosixPath.js';
 import validateDataSetExtends from './validateDataSetExtends.js';
 import validateDataSetFixtures from './validateDataSetFixtures.js';
 import validateDataSetIndexes from './validateDataSetIndexes.js';
@@ -52,7 +52,9 @@ async function readDataSetFile({ configDirectory, name, allFiles }) {
     throw new Error(`Data set "${name}" has both tests/data/${name}.yaml and .yml; keep one.`);
   }
   const { filePath } = files[0];
-  const relativePath = path.relative(configDirectory, filePath);
+  // Forward slashes on every platform, so messages name the file as "tests/data/..." like the rest
+  // of the data set messages do.
+  const relativePath = relativePosixPath({ from: configDirectory, to: filePath });
   function fail(message) {
     throw new Error(`Data set ${relativePath}: ${message}`);
   }

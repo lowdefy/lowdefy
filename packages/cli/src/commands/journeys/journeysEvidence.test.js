@@ -205,11 +205,7 @@ test('journeys evidence without --refresh prints what would change and writes no
     months: [month('2026-09', 1, 1, 1, 1), month('2026-10', 2, 2, 2, 2)],
   });
   expect(logged).toContain(
-    `${path.join(
-      'tests',
-      'journeys',
-      'saves.yaml'
-    )}#member saves a ticket: no evidence -> 3 sessions`
+    'tests/journeys/saves.yaml#member saves a ticket: no evidence -> 3 sessions'
   );
   expect(logged).toContain(
     '1 of 1 journeys would change over 3 final days of 2026-09, 2026-10. Run with --refresh to write them.'
@@ -409,9 +405,7 @@ test('journeys evidence reports a file that does not parse and leaves it alone',
   await journeysEvidence({ context });
   expect(fs.readFileSync(brokenPath, 'utf8')).toBe('name: [unclosed\n');
   expect(
-    logged.some((line) =>
-      line.startsWith(`Skipped ${path.join('tests', 'journeys', 'broken.yaml')}: Invalid YAML`)
-    )
+    logged.some((line) => line.startsWith('Skipped tests/journeys/broken.yaml: Invalid YAML'))
   ).toBe(true);
 });
 
@@ -478,7 +472,7 @@ test('journeys evidence --refresh fills mutation from the report and the schema 
       total: 4,
       journeys: [
         {
-          file: path.join('tests', 'journeys', 'saves.yaml'),
+          file: 'tests/journeys/saves.yaml',
           name: 'member saves a ticket',
           killed: 3,
           total: 4,

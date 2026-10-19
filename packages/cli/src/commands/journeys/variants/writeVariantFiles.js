@@ -18,7 +18,7 @@ import fs from 'fs';
 import path from 'path';
 import YAML from 'yaml';
 import { type } from '@lowdefy/helpers';
-import { findPlaceholderStep } from '@lowdefy/node-utils';
+import { findPlaceholderStep, relativePosixPath } from '@lowdefy/node-utils';
 
 import buildVariantJourney from './buildVariantJourney.js';
 import readVariantOwnership from './readVariantOwnership.js';
@@ -119,7 +119,7 @@ function writeVariantFiles({ directories, filePath, journey, variants, kinds }) 
   );
   const slug = slugJourneyName(journey.name);
   // Forward slashes, so a file generated on Windows matches one generated anywhere else.
-  const source = path.relative(directories.config, filePath).split(path.sep).join('/');
+  const source = relativePosixPath({ from: directories.config, to: filePath });
   fs.mkdirSync(directory, { recursive: true });
   const counts = new Map();
   variants.forEach(({ kind }) => counts.set(kind, (counts.get(kind) ?? 0) + 1));

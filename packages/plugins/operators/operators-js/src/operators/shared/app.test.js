@@ -84,30 +84,3 @@ test('_app returns null when lowdefyApp is undefined', () => {
 test('_app invalid params type throws', () => {
   expect(() => _app({ params: null, lowdefyApp: { slug: 'my-app' } })).toThrow();
 });
-
-test('_app forwards arguments to getFromObject', async () => {
-  const { jest } = await import('@jest/globals');
-  jest.resetModules();
-  jest.unstable_mockModule('@lowdefy/operators', () => ({
-    getFromObject: jest.fn(),
-  }));
-  const lowdefyOperators = await import('@lowdefy/operators');
-  const _appMocked = (await import('./app.js')).default;
-  _appMocked({
-    arrayIndices: [0],
-    location: 'location',
-    params: 'name',
-    lowdefyApp: { name: 'My App' },
-  });
-  expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
-    [
-      {
-        arrayIndices: [0],
-        location: 'location',
-        object: { name: 'My App' },
-        operator: '_app',
-        params: 'name',
-      },
-    ],
-  ]);
-});

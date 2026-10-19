@@ -105,7 +105,7 @@ test('parseDataSet refuses a name with both a .yaml and a .yml file', async () =
 test('parseDataSet refuses an unknown top-level key', async () => {
   writeDataSet('alpha.yaml', 'users: {}\nseed: {}\n');
   await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
-    `Data set ${path.join('tests', 'data', 'alpha.yaml')}: unknown key "seed".`
+    `Data set tests/data/alpha.yaml: unknown key "seed".`
   );
 });
 
@@ -181,7 +181,7 @@ test('parseDataSet keeps listIndexes options such as text index weights', async 
 test('parseDataSet refuses invalid YAML naming the file', async () => {
   writeDataSet('alpha.yaml', 'users: [\n');
   await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
-    `Data set ${path.join('tests', 'data', 'alpha.yaml')}: could not parse YAML.`
+    `Data set tests/data/alpha.yaml: could not parse YAML.`
   );
 });
 
@@ -195,11 +195,7 @@ test('parseDataSet treats an empty file as an empty data set', async () => {
 test('parseDataSet refuses a snapshot block, saying snapshots were removed', async () => {
   writeDataSet('alpha.yaml', 'snapshot:\n  from: staging\n  connections: [tickets]\n');
   await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
-    `Data set ${path.join(
-      'tests',
-      'data',
-      'alpha.yaml'
-    )}: snapshot is no longer supported: data sets hold committed documents only. Move the documents journeys need into fixtures or generate.`
+    `Data set tests/data/alpha.yaml: snapshot is no longer supported: data sets hold committed documents only. Move the documents journeys need into fixtures or generate.`
   );
 });
 
@@ -250,10 +246,6 @@ test('parseDataSet refuses a generate field with an unknown kind, naming the fil
     'generate:\n  seed: 1\n  tickets:\n    count: 1\n    fields:\n      id: { uuid: true }\n'
   );
   await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
-    `Data set ${path.join(
-      'tests',
-      'data',
-      'alpha.yaml'
-    )}: generate.tickets.fields.id has unknown kind "uuid".`
+    `Data set tests/data/alpha.yaml: generate.tickets.fields.id has unknown kind "uuid".`
   );
 });

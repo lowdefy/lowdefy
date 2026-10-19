@@ -171,30 +171,17 @@ test('journeys usage ranks journeys by rate with tiers, months and old flows, th
     'Journey usage over 2026-08 to 2026-10: 363 journey matches across 4 journeys.',
     'Tier shares are shares of journey matches, not sessions: a session counts once for every journey it backs.',
     '',
-    `#1 common  10.0/day  member assigns a ticket  (${path.join(
-      'tests',
-      'journeys',
-      'assign.yaml'
-    )})`,
+    '#1 common  10.0/day  member assigns a ticket  (tests/journeys/assign.yaml)',
     '    330 sessions, 5 failed over the window · all time 330 sessions, 5 failed',
     '    2026-09: 300 (30 persons, 9 orgs) · 2026-10: 30 (11 persons, 5 orgs)',
     '    old flow v1-91be04d7, replaced 2026-10-01: 1.9/day · 63 sessions over the window',
     '    old flow v0-12345678, replaced 2026-01-01: no longer counted: hashed under an older matcher',
-    `#2 edge  1.0/day  member closes a ticket  (${path.join(
-      'tests',
-      'journeys',
-      'review',
-      'close.yaml'
-    )})`,
+    '#2 edge  1.0/day  member closes a ticket  (tests/journeys/review/close.yaml)',
     '    33 sessions, 0 failed over the window · all time 33 sessions, 0 failed',
     '    2026-09: 30 (1 persons, 1 orgs) · 2026-10: 3 (1 persons, 1 orgs)',
-    `unranked  member reopens a ticket  (${path.join('tests', 'journeys', 'review', 'new.yaml')})`,
+    'unranked  member reopens a ticket  (tests/journeys/review/new.yaml)',
     '    no counts for its current flow yet: run "lowdefy journeys evidence --refresh"; it runs in every tier',
-    `deprecated  2.0/day  member prints a ticket  (${path.join(
-      'tests',
-      'journeys',
-      'retired.yaml'
-    )})`,
+    'deprecated  2.0/day  member prints a ticket  (tests/journeys/retired.yaml)',
     '    6 sessions, 0 failed over the window · all time 6 sessions, 0 failed',
     '    2026-10: 6 (1 persons, 1 orgs)',
     '',
@@ -265,7 +252,7 @@ test('journeys usage selects as lowdefy test does, a persona run filter included
   context.options.filter = ['[admin]'];
   const report = await journeysUsage({ context });
   expect(report.rows.map((row) => [row.name, row.file, row.journeyIndex])).toEqual([
-    ['edits a ticket', path.join('tests', 'journeys', 'edit.yaml'), 0],
+    ['edits a ticket', 'tests/journeys/edit.yaml', 0],
   ]);
 });
 

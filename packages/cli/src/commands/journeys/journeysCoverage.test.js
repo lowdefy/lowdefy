@@ -172,7 +172,7 @@ test('journeys coverage writes coverage.json with the measures, profile and jour
   expect(written.production.entryPoints).toEqual([{ page: 'tickets', sessions: 2 }]);
   expect(written.journeys).toEqual([
     {
-      file: path.join('tests', 'journeys', 'saves.yaml'),
+      file: 'tests/journeys/saves.yaml',
       name: 'member saves a ticket',
       pageId: 'tickets',
       sequence: [

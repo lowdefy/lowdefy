@@ -357,7 +357,7 @@ test('writeVariantFiles reports a conflict for a journey whose name slugs alike 
   const lookalike = { ...journey, name: 'Member assigns an open ticket!' };
   const files = writeAll({ forJourney: lookalike, kinds: ['double-submit'] });
   expect(files.map(({ status, owner }) => [status, owner])).toEqual([
-    ['conflict', { source: path.join('tests', 'journeys', 'assign.yaml'), name: journey.name }],
+    ['conflict', { source: 'tests/journeys/assign.yaml', name: journey.name }],
   ]);
   expect(fs.readFileSync(firstPath, 'utf8')).toBe(first);
   // The first journey's own rerun still owns and rewrites its file.

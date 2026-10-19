@@ -32,9 +32,11 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       # `pnpm test` without stopping at the first failing package, so one run lists every
-      # failure before a release.
+      # failure before a release. A filter of only exclusions selects the workspace root too,
+      # so exclude the root (@lowdefy/lowdefy): its own `test` script runs every package
+      # again.
       - run: pnpm test:dependencies
-      - run: pnpm -r --no-bail --filter=!@lowdefy/connection-mongodb test
+      - run: pnpm -r --no-bail --filter=!@lowdefy/connection-mongodb --filter=!@lowdefy/lowdefy test
       # Last: it changes the machine's time zone, and WMI answers slowly for minutes after
       # that, so start time reads in any step after it would time out.
       - name: Time zone change test (Windows)

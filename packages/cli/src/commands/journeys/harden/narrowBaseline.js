@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import path from 'path';
+import { relativePosixPath } from '@lowdefy/node-utils';
 
 import getExercisedPath from '../../test/getExercisedPath.js';
 import hashJourney from '../../test/hashJourney.js';
@@ -64,8 +64,8 @@ function narrowBaseline({ items, pages, directories, configHash }) {
     if (!type.isObject(item.journey) || declaredReach({ journey: item.journey, pages })) {
       return true;
     }
-    const entry =
-      records?.[`${path.relative(directories.config, item.filePath)}#${item.journey.name}`];
+    const file = relativePosixPath({ from: directories.config, to: item.filePath });
+    const entry = records?.[`${file}#${item.journey.name}`];
     if (type.isNone(entry)) {
       reasons.noRecord += 1;
       return true;

@@ -597,11 +597,17 @@ test.each([
   }
 );
 
-// A server on a Lowdefy version that records its start time in a format this
-// hub reads as another process's: it serves, but its record never verifies.
+// A server on a Lowdefy version that records its start time in a way this hub
+// reads as another process's: it serves, but its record never verifies. The
+// start time must be in the form this platform reads - one in another form
+// cannot be compared, so it proves nothing and the record would verify. On
+// Linux that is a zero boot id, as in otherStartTime; elsewhere, epoch
+// milliseconds long past.
+const UNMATCHED_START_TIME =
+  process.platform === 'linux' ? 'linux:00000000-0000-0000-0000-000000000000:0' : 1;
 const UNVERIFIABLE_DEV_SERVER = FAKE_DEV_SERVER.replace(
   "version: '6.0.0',",
-  "version: '7.0.0',\n  processStartTime: 1,"
+  `version: '7.0.0',\n  processStartTime: ${JSON.stringify(UNMATCHED_START_TIME)},`
 );
 
 test('hub status names the version of a running server whose record it cannot verify', async () => {
