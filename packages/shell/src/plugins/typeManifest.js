@@ -305,6 +305,10 @@ const typeManifest = {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
+    MultipleSelector: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
     NumberInput: {
       package: '@lowdefy/blocks-native',
       version: 6,
