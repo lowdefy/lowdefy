@@ -31,13 +31,13 @@ const reply = {
     { type: 'step-start' },
     { type: 'text', text: 'Thinking aloud', providerMetadata: { openai: { phase: 'commentary' } } },
     { type: 'tool-write_task', toolCallId: 'c1' },
-    { type: 'text', text: 'Logged PEL-900.' },
+    { type: 'text', text: 'Logged ACME-900.' },
     { type: 'text', text: 'Anything else?' },
   ],
 };
 
 test('getMessageText reads the answer text, a paragraph per part, without commentary', () => {
-  expect(getMessageText(reply)).toEqual('Logged PEL-900.\n\nAnything else?');
+  expect(getMessageText(reply)).toEqual('Logged ACME-900.\n\nAnything else?');
   expect(getMessageText(undefined)).toEqual('');
 });
 
@@ -62,7 +62,7 @@ test('getFirstExchange gives the opening question and reply once the first reply
     })
   ).toEqual({
     prompt: 'Log a task to fix login',
-    reply: 'Logged PEL-900. Anything else?',
+    reply: 'Logged ACME-900. Anything else?',
     replaces: 'Log a task',
   });
 });
@@ -79,9 +79,7 @@ test('getFirstExchange is null on a later turn and once the person renamed the t
 });
 
 test('mintConversationId starts with the scope', () => {
-  expect(mintConversationId({ scope: 'pelican' })).toMatch(/^pelican_\d+\w+$/);
+  expect(mintConversationId({ scope: 'acme' })).toMatch(/^acme_\d+\w+$/);
   expect(mintConversationId({})).toMatch(/^chat_/);
-  expect(mintConversationId({ scope: 'pelican' })).not.toEqual(
-    mintConversationId({ scope: 'pelican' })
-  );
+  expect(mintConversationId({ scope: 'acme' })).not.toEqual(mintConversationId({ scope: 'acme' }));
 });

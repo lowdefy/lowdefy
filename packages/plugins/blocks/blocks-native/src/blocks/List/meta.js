@@ -91,7 +91,10 @@ export default {
               type: ['string', 'number', 'boolean'],
               description: 'The sectionKey value of the items in this section.',
             },
-            title: { type: 'string', description: 'The section title. A section without one has no header.' },
+            title: {
+              type: 'string',
+              description: 'The section title. A section without one has no header.',
+            },
             count,
             status: {
               ...status,
