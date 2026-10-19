@@ -19,8 +19,8 @@ import { type } from '@lowdefy/helpers';
 import getDataStore from './dataSets/getDataStore.js';
 import openDataSession from './dataSets/openDataSession.js';
 
-// Runs `task` on a data set's own database when the call named one: a fresh
-// database on the dev server's memory store, loaded with the data set and
+// Runs `task` on a data set's own databases when the call named one: fresh
+// databases on the dev server's memory store, loaded with the data set and
 // dropped once the task settles, exactly as a journey's. The task gets
 // `dataCookie` (for a headless browser context, see openPage) and
 // `dataSession` (for a context the dev server builds itself, see

@@ -132,7 +132,7 @@ Rules, checked before any browser opens:
 
 - **Plain YAML.** No `_ref` and no operators: a data set is test input, not app config. Share rows between data sets with `extends`.
 - **Connections.** Every connection id in `fixtures`, `generate` and `indexes` must be a `MongoDBCollection` connection whose `collection` is a literal string, and whose `databaseName` is a literal string or not set. Two connections that name one collection in one database load into it together.
-- **One database per target.** A run gives each database your connections name its own database: connections with the same `databaseUri` secret (or literal) and `databaseName` share one, and connections that differ in either read different ones, as they do outside the run. So an app that reads several databases can seed a collection name in each, such as `users` in its own database and in an auth database. A connection whose `databaseUri` or `databaseName` is computed per request reads the run's first database.
+- **One database per target.** A run gives each database your connections name its own database: connections with the same `databaseUri` secret (or literal) and `databaseName` share one, and connections that differ in either read different ones, as they do outside the run. So an app that reads several databases can seed a collection name in each, such as `users` in its own database and in an auth database. The run compares the secret names, not their values, so two secrets that hold the same URI get separate run databases. A connection whose `databaseUri` or `databaseName` is computed per request reads the run's first database.
 - **Indexes first.** Each collection's indexes are created before any document is loaded, so a fixture or generated document that breaks a unique index fails the load and names the document, the index and the duplicate key. A TTL index is loaded as a plain index, so old fixture dates are never deleted mid-run.
 
 ## Named users and `as`
@@ -165,7 +165,7 @@ steps:
   # ...
 ```
 
-`lowdefy test` and `lowdefy_run_tests` run the journey once as each user, each in a fresh database of its own, and report each run on its own line as `<name> [<user>]`:
+`lowdefy test` and `lowdefy_run_tests` run the journey once as each user, each on fresh databases of its own, and report each run on its own line as `<name> [<user>]`:
 
 ```
 PASS  edits a ticket [admin]  (6 steps, 2310ms)

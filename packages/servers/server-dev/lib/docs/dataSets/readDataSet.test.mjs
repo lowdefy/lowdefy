@@ -86,8 +86,8 @@ test('readDataSet reads module connections, which the build writes under their m
   writeDataSet('alpha', 'fixtures:\n  contacts/contacts: [{ _id: c1 }]\n');
   const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'alpha' });
   expect(dataSet.databaseTargets).toEqual([
-    JSON.stringify(['secret:MONGODB_URI', 'crm']),
     JSON.stringify(['secret:MONGODB_URI', null]),
+    JSON.stringify(['secret:MONGODB_URI', 'crm']),
   ]);
 });
 
@@ -150,12 +150,13 @@ test('readDataSet maps each keyed connection to its database target', async () =
     tickets: JSON.stringify(['secret:MONGODB_URI', null]),
     'legacy-tickets': JSON.stringify(['secret:MONGODB_URI', 'legacy']),
     reporting: JSON.stringify(['secret:REPORTING_URI', null]),
-    computed: null,
+    // Computed per request: the first target's, the database it reads.
+    computed: JSON.stringify(['secret:MONGODB_URI', null]),
   });
   // Every target in the build, sorted, whether or not the data set names it.
   expect(dataSet.databaseTargets).toEqual([
-    JSON.stringify(['secret:MONGODB_URI', 'legacy']),
     JSON.stringify(['secret:MONGODB_URI', null]),
+    JSON.stringify(['secret:MONGODB_URI', 'legacy']),
     JSON.stringify(['secret:REPORTING_URI', null]),
   ]);
   expect(dataSet.warnings).toEqual([]);
@@ -173,6 +174,21 @@ test('readDataSet accepts one _id generated on one collection in two database ta
   );
   const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'alpha' });
   expect(dataSet.collections).toEqual({ users: 'users', 'auth-users': 'users' });
+});
+
+test('readDataSet refuses a generated _id a computed-target connection also holds on the first target', async () => {
+  writeConnection('users', mongo({ collection: 'users' }));
+  writeConnection('computed-users', {
+    type: 'MongoDBCollection',
+    properties: { databaseUri: { _env: 'URI' }, collection: 'users' },
+  });
+  writeDataSet(
+    'alpha',
+    'fixtures:\n  computed-users: [{ _id: users-1 }]\ngenerate:\n  seed: 1\n  users:\n    count: 1\n'
+  );
+  await expect(readDataSet({ configDirectory, buildDirectory, name: 'alpha' })).rejects.toThrow(
+    'connections "users" and "computed-users" both load collection "users".'
+  );
 });
 
 test('readDataSet resolves generated connections and refuses one the app does not have', async () => {

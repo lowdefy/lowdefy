@@ -372,6 +372,39 @@ indexes:
     names.forEach((name) => expect(left).not.toContain(name));
   });
 
+  test('a connection whose target is computed loads into the first target database with it', async () => {
+    artifacts.computed_users = {
+      connectionId: 'computed_users',
+      type: 'MongoDBCollection',
+      properties: { databaseUri: { _env: 'URI' }, collection: 'users' },
+    };
+    fs.writeFileSync(
+      path.join(buildDirectory, 'connections', 'computed_users.json'),
+      JSON.stringify(artifacts.computed_users)
+    );
+    fs.writeFileSync(
+      path.join(configDirectory, 'tests', 'data', 'computed.yaml'),
+      'fixtures:\n  auth_users: [{ _id: auth }]\n  computed_users: [{ _id: computed }]\n'
+    );
+    try {
+      const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'computed' });
+      const { session, close } = await openDataSession({ dataSet });
+      try {
+        // AUTH_MONGODB_URI sorts first, so its database is the session's first.
+        const authDb = await redirectedDb({ session, connectionId: 'auth_users' });
+        const computedDb = await redirectedDb({ session, connectionId: 'computed_users' });
+        expect(authDb.databaseName).toEqual(session.databaseName);
+        expect(computedDb.databaseName).toEqual(session.databaseName);
+        const ids = await authDb.collection('users').distinct('_id');
+        expect(ids.sort()).toEqual(['auth', 'computed']);
+      } finally {
+        await close();
+      }
+    } finally {
+      delete artifacts.computed_users;
+    }
+  });
+
   test('a session database the gate numbers after open survives a concurrent sweep and drops on close()', async () => {
     const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'targets' });
     const first = await openDataSession({ dataSet });

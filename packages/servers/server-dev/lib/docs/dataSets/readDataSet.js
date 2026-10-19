@@ -32,6 +32,12 @@ function getKeyedConnectionIds({ dataSet }) {
   ];
 }
 
+// Sorts a URI's default database (no databaseName) before its named ones.
+function sortKey(key) {
+  const [uri, databaseName] = JSON.parse(key);
+  return [uri, databaseName ?? ''].join('\u0000');
+}
+
 // Every database target the built connections name, sorted, so each run numbers them alike and the
 // first one (the database a computed target reads) is the same on every run.
 function listDatabaseTargets({ artifacts }) {
@@ -40,7 +46,7 @@ function listDatabaseTargets({ artifacts }) {
     const key = describeTargetKey({ properties: artifact.properties });
     if (!type.isNone(key)) keys.add(key);
   });
-  return [...keys].sort();
+  return [...keys].sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
 }
 
 // The data set checks only the dev build can make, on top of parseDataSet's: every connection the
@@ -53,6 +59,7 @@ async function readDataSet({ configDirectory, buildDirectory, name }) {
   const dataSet = await parseDataSet({ configDirectory, name });
   const artifacts = await readConnectionArtifacts({ buildDirectory });
   const keyedIds = getKeyedConnectionIds({ dataSet });
+  const databaseTargets = listDatabaseTargets({ artifacts });
   const collections = {};
   const targets = {};
   keyedIds.forEach((connectionId) => {
@@ -62,9 +69,11 @@ async function readDataSet({ configDirectory, buildDirectory, name }) {
       connectionId,
       artifact,
     }).collection;
-    targets[connectionId] = describeTargetKey({ properties: artifact.properties });
+    // A target computed per request reads the session's first database, the first target's, so it
+    // groups and checks _ids with that target's connections.
+    targets[connectionId] =
+      describeTargetKey({ properties: artifact.properties }) ?? databaseTargets[0] ?? null;
   });
-  const databaseTargets = listDatabaseTargets({ artifacts });
 
   checkSharedCollectionIds({ dataSetName: name, dataSet: { ...dataSet, collections, targets } });
 
