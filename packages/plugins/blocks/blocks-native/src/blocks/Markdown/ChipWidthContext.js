@@ -16,8 +16,9 @@
 
 import { createContext } from 'react';
 
-// The widest a link chip may be: the Markdown's width once it is laid out. A chip is one line,
-// so its title is cut short with an ellipsis rather than pushing past the text.
+// The width of the text a link chip sits in: the Markdown's, a list item's text column's or a
+// quote's (ChipWidthView), once laid out. A chip is one line at most this wide, less when text
+// follows it (getChipMaxWidth), so its title is cut short rather than pushing past the text.
 const ChipWidthContext = createContext(320);
 
 export default ChipWidthContext;

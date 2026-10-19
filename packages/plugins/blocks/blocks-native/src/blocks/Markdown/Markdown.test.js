@@ -15,7 +15,8 @@
 */
 
 import { jest } from '@jest/globals';
-import { Linking } from 'react-native';
+import { Dimensions, Linking } from 'react-native';
+import { act, fireEvent } from '@testing-library/react-native';
 import * as WebBrowser from 'expo-web-browser';
 
 import {
@@ -204,7 +205,7 @@ test('a Markdown draws linkChips links as tinted chips with an icon, key and tit
   });
   const key = await screen.findByText('PEL-12');
   expect(styleOf(key)).toMatchObject({ color: theme.light.colorPrimary, fontWeight: '500' });
-  expect(styleOf(screen.getByText(' Sign in with a passkey')).color).toBe(ios.light.colorLabel);
+  expect(styleOf(screen.getByText('Sign in with a passkey')).color).toBe(ios.light.colorLabel);
   expect(screen.getByTestId('markdown-chip-icon-PEL-12')).toBeTruthy();
   expect(styleOf(screen.getByText('@Ada Lovelace')).color).toBe(theme.light.colorPrimary);
   expect(screen.queryByTestId('markdown-chip-icon-@Ada Lovelace')).toBeNull();
@@ -248,10 +249,68 @@ test('a Markdown draws an app path link as a chip by pattern and presses it thro
   });
   const key = await screen.findByText('ACME-647');
   expect(styleOf(key)).toMatchObject({ color: theme.light.colorPrimary, fontWeight: '500' });
-  expect(screen.getByText(' Fix broken menu URL')).toBeTruthy();
+  expect(screen.getByText('Fix broken menu URL')).toBeTruthy();
   expect(screen.getByTestId('markdown-chip-icon-ACME-647')).toBeTruthy();
   await press(screen.getByLabelText('ACME-647 Fix broken menu URL'));
   expect(calls).toEqual([{ name: 'link', event: { href: '/ACME/tasks/ACME-647' } }]);
+});
+
+const acmeChips = [{ pattern: '^/ACME/tasks/(?<key>ACME-\\d+)$', icon: 'House', tone: 'primary' }];
+
+test('a Markdown chip in a list item keeps its full stop and leaves a quarter of the line to the text after it', async () => {
+  await renderPage({
+    pageConfig: page([
+      {
+        id: 'body',
+        type: 'Markdown',
+        properties: {
+          content:
+            '- [ACME-644 (Run a transcript through meeting filing)](/ACME/tasks/ACME-644). It has 4 checklist steps, none done yet.',
+          linkChips: acmeChips,
+        },
+      },
+    ]),
+  });
+  const trailing = await screen.findByTestId('markdown-chip-trailing');
+  expect(trailing.props.children).toBe('.');
+  expect(styleOf(trailing)).toMatchObject({ color: ios.light.colorLabel, fontSize: 17 });
+  expect(screen.getByText(' It has 4 checklist steps, none done yet.')).toBeTruthy();
+  expect(screen.getByText('Run a transcript through meeting filing').props).toMatchObject({
+    ellipsizeMode: 'tail',
+    numberOfLines: 1,
+  });
+  expect(styleOf(screen.getByText('ACME-644')).flexShrink).toBe(0);
+  const inline = screen.getByTestId('markdown-chip-inline');
+  expect(styleOf(inline).maxWidth).toBe(Math.floor((Dimensions.get('window').width - 32) * 0.75));
+  // The list item's text column measures its own width, narrower than the block's.
+  let column = inline.parent;
+  while (column.props.onLayout === undefined) {
+    column = column.parent;
+  }
+  await act(async () => {
+    fireEvent(column, 'layout', { nativeEvent: { layout: { height: 22, width: 300 } } });
+  });
+  expect(styleOf(screen.getByTestId('markdown-chip-inline')).maxWidth).toBe(225);
+});
+
+test('a Markdown chip that ends its paragraph may take the whole line, its punctuation inside it', async () => {
+  await renderPage({
+    pageConfig: page([
+      {
+        id: 'body',
+        type: 'Markdown',
+        properties: {
+          content:
+            'Filed as [ACME-644 (Run a transcript through meeting filing)](/ACME/tasks/ACME-644).',
+          linkChips: acmeChips,
+        },
+      },
+    ]),
+  });
+  expect((await screen.findByTestId('markdown-chip-trailing')).props.children).toBe('.');
+  expect(styleOf(screen.getByTestId('markdown-chip-inline')).maxWidth).toBe(
+    Dimensions.get('window').width - 32
+  );
 });
 
 test('a Markdown chip takes the dark tone in dark mode', async () => {
@@ -262,7 +321,7 @@ test('a Markdown chip takes the dark tone in dark mode', async () => {
     ]),
   });
   expect(styleOf(await screen.findByText('PEL-12')).color).toBe(theme.dark.colorPrimary);
-  expect(styleOf(screen.getByText(' Sign in with a passkey')).color).toBe(ios.dark.colorLabel);
+  expect(styleOf(screen.getByText('Sign in with a passkey')).color).toBe(ios.dark.colorLabel);
 });
 
 test('a Markdown without linkChips draws a pelican link as a plain link', async () => {
