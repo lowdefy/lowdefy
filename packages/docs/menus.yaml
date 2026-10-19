@@ -218,11 +218,26 @@
           pageId: custom-styling
           properties:
             title: Custom Styling
+        - id: ai-agent-docs
+          type: MenuLink
+          pageId: ai-agent-docs
+          properties:
+            title: Docs for AI Agents
+        - id: dynamic-page-content
+          type: MenuLink
+          pageId: dynamic-page-content
+          properties:
+            title: Dynamic Page Content
         - id: hosting-files
           type: MenuLink
           pageId: hosting-files
           properties:
             title: Hosting Files
+        - id: html-attributes
+          type: MenuLink
+          pageId: html-attributes
+          properties:
+            title: HTML Attributes
         - id: i18n
           type: MenuLink
           pageId: i18n
@@ -263,6 +278,16 @@
           pageId: module-authoring
           properties:
             title: Writing Modules
+        - id: notifications
+          type: MenuLink
+          pageId: notifications
+          properties:
+            title: Notifications
+        - id: page-paths
+          type: MenuLink
+          pageId: page-paths
+          properties:
+            title: Page Paths
         - id: secrets
           type: MenuLink
           pageId: secrets
@@ -273,6 +298,27 @@
           pageId: selectors
           properties:
             title: Driving Selectors
+    - id: websockets
+      type: MenuGroup
+      properties:
+        title: WebSockets
+        icon: Radio
+      links:
+        - id: websockets-introduction
+          type: MenuLink
+          pageId: websockets-introduction
+          properties:
+            title: Introduction
+        - id: websocket-subscriptions
+          type: MenuLink
+          pageId: websocket-subscriptions
+          properties:
+            title: Page Subscriptions
+        - id: websocket-publish
+          type: MenuLink
+          pageId: websocket-publish
+          properties:
+            title: Publish and Actions
     - id: testing
       type: MenuGroup
       properties:
@@ -309,6 +355,21 @@
           pageId: e2e-configuration
           properties:
             title: Configuration
+        - id: config-tests
+          type: MenuLink
+          pageId: config-tests
+          properties:
+            title: Config Tests
+        - id: journey-data-sets
+          type: MenuLink
+          pageId: journey-data-sets
+          properties:
+            title: Journey Data Sets
+        - id: explore-pull-request
+          type: MenuLink
+          pageId: explore-pull-request
+          properties:
+            title: Exploring a Pull Request
     - id: users_group
       type: MenuGroup
       properties:
@@ -330,6 +391,21 @@
           pageId: roles
           properties:
             title: Roles
+        - id: organizations
+          type: MenuLink
+          pageId: organizations
+          properties:
+            title: Organizations & Multi-Tenancy
+        - id: auth-steps
+          type: MenuLink
+          pageId: auth-steps
+          properties:
+            title: Auth Steps
+        - id: mcp-oauth
+          type: MenuLink
+          pageId: mcp-oauth
+          properties:
+            title: MCP Server & OAuth
         - id: user-object
           type: MenuLink
           pageId: user-object
@@ -345,6 +421,11 @@
           pageId: login-and-logout
           properties:
             title: Login and Logout
+        - id: two-factor
+          type: MenuLink
+          pageId: two-factor
+          properties:
+            title: Two-Factor Authentication
         - id: auth-providers
           type: MenuLink
           pageId: auth-providers
@@ -355,6 +436,11 @@
           properties:
             title: Provider Reference
           links:
+            - id: auth-js-providers
+              type: MenuLink
+              pageId: auth-js-providers
+              properties:
+                title: Auth.js Providers
             - id: OpenIDConnectProvider
               type: MenuLink
               pageId: OpenIDConnectProvider
@@ -363,9 +449,9 @@
           properties:
             title: Adapter Reference
           links:
-            - id: MongoDBAdapter
+            - id: MongoDBAuthAdapter
               type: MenuLink
-              pageId: MongoDBAdapter
+              pageId: MongoDBAuthAdapter
         - id: auth_callback_reference
           type: MenuGroup
           properties:
@@ -395,6 +481,11 @@
           pageId: vercel
           properties:
             title: Vercel
+        - id: deployment-environments
+          type: MenuLink
+          pageId: deployment-environments
+          properties:
+            title: Environments
     - id: migration
       type: MenuGroup
       properties:
@@ -406,6 +497,21 @@
           pageId: upgrade-guide
           properties:
             title: Upgrade Guide
+        - id: auth-upgrade
+          type: MenuLink
+          pageId: auth-upgrade
+          properties:
+            title: Auth Upgrade
+        - id: v6-to-v7
+          type: MenuLink
+          pageId: v6-to-v7
+          properties:
+            title: V6 to V7
+        - id: v5-to-v6
+          type: MenuLink
+          pageId: v5-to-v6
+          properties:
+            title: V5 to V6
         - id: v4-to-v5
           type: MenuLink
           pageId: v4-to-v5
@@ -454,6 +560,9 @@
             - id: ButtonSelector
               type: MenuLink
               pageId: ButtonSelector
+            - id: Captcha
+              type: MenuLink
+              pageId: Captcha
             - id: CheckboxSelector
               type: MenuLink
               pageId: CheckboxSelector
@@ -472,6 +581,9 @@
             - id: DateTimeSelector
               type: MenuLink
               pageId: DateTimeSelector
+            - id: IntentInput
+              type: MenuLink
+              pageId: IntentInput
             - id: MonthSelector
               type: MenuLink
               pageId: MonthSelector
@@ -493,6 +605,9 @@
             - id: PhoneNumberInput
               type: MenuLink
               pageId: PhoneNumberInput
+            - id: PlacesAutocomplete
+              type: MenuLink
+              pageId: PlacesAutocomplete
             - id: RadioSelector
               type: MenuLink
               pageId: RadioSelector
@@ -517,6 +632,15 @@
             - id: Switch
               type: MenuLink
               pageId: Switch
+            - id: TableInput
+              type: MenuLink
+              pageId: TableInput
+            - id: TagMultipleSelector
+              type: MenuLink
+              pageId: TagMultipleSelector
+            - id: TagSelector
+              type: MenuLink
+              pageId: TagSelector
             - id: TextArea
               type: MenuLink
               pageId: TextArea
@@ -541,6 +665,15 @@
             - id: TreeSelector
               type: MenuLink
               pageId: TreeSelector
+            - id: Upload
+              type: MenuLink
+              pageId: Upload
+            - id: UploadDragger
+              type: MenuLink
+              pageId: UploadDragger
+            - id: UploadPhoto
+              type: MenuLink
+              pageId: UploadPhoto
             - id: WeekSelector
               type: MenuLink
               pageId: WeekSelector
@@ -568,6 +701,9 @@
             - id: Calendar
               type: MenuLink
               pageId: Calendar
+            - id: ClickableHtml
+              type: MenuLink
+              pageId: ClickableHtml
             - id: DangerousHtml
               type: MenuLink
               pageId: DangerousHtml
@@ -589,12 +725,18 @@
             - id: Divider
               type: MenuLink
               pageId: Divider
+            - id: Download
+              type: MenuLink
+              pageId: Download
             - id: DropdownButton
               type: MenuLink
               pageId: DropdownButton
             - id: EChart
               type: MenuLink
               pageId: EChart
+            - id: EventLog
+              type: MenuLink
+              pageId: EventLog
             - id: FloatButton
               type: MenuLink
               pageId: FloatButton
@@ -625,6 +767,9 @@
             - id: Paragraph
               type: MenuLink
               pageId: Paragraph
+            - id: PollingTimer
+              type: MenuLink
+              pageId: PollingTimer
             - id: Progress
               type: MenuLink
               pageId: Progress
@@ -658,6 +803,12 @@
             - id: Steps
               type: MenuLink
               pageId: Steps
+            - id: Table
+              type: MenuLink
+              pageId: Table
+            - id: TableLight
+              type: MenuLink
+              pageId: TableLight
             - id: Tag
               type: MenuLink
               pageId: Tag
@@ -886,6 +1037,9 @@
             - id: _url_query
               type: MenuLink
               pageId: _url_query
+            - id: _path_params
+              type: MenuLink
+              pageId: _path_params
             - id: _index
               type: MenuLink
               pageId: _index
@@ -901,6 +1055,12 @@
             - id: _args
               type: MenuLink
               pageId: _args
+            - id: _agent
+              type: MenuLink
+              pageId: _agent
+            - id: _error
+              type: MenuLink
+              pageId: _error
         - id: operators-requests
           type: MenuGroup
           properties:
@@ -935,6 +1095,9 @@
             - id: _secret
               type: MenuLink
               pageId: _secret
+            - id: _credential
+              type: MenuLink
+              pageId: _credential
         - id: operators-app
           type: MenuGroup
           properties:
@@ -1031,6 +1194,9 @@
             - id: _intl
               type: MenuLink
               pageId: _intl
+            - id: _cron
+              type: MenuLink
+              pageId: _cron
         - id: operators-programming
           type: MenuGroup
           properties:
@@ -1077,6 +1243,9 @@
             - id: _hash
               type: MenuLink
               pageId: _hash
+            - id: _hmac
+              type: MenuLink
+              pageId: _hmac
     - id: actions-group
       type: MenuGroup
       properties:
@@ -1167,6 +1336,15 @@
             - id: GeolocationCurrentPosition
               type: MenuLink
               pageId: GeolocationCurrentPosition
+            - id: GetLocalStorage
+              type: MenuLink
+              pageId: GetLocalStorage
+            - id: SetLocalStorage
+              type: MenuLink
+              pageId: SetLocalStorage
+            - id: RemoveLocalStorage
+              type: MenuLink
+              pageId: RemoveLocalStorage
         - id: actions-flow
           type: MenuGroup
           properties:
@@ -1192,11 +1370,64 @@
             - id: Logout
               type: MenuLink
               pageId: Logout
+            - id: EmailOtpSend
+              type: MenuLink
+              pageId: EmailOtpSend
+            - id: EmailOtpVerify
+              type: MenuLink
+              pageId: EmailOtpVerify
+            - id: MagicLinkVerify
+              type: MenuLink
+              pageId: MagicLinkVerify
             - id: UpdateSession
               type: MenuLink
               pageId: UpdateSession
               properties:
                 title: UpdateSession
+        - id: actions-analytics
+          type: MenuGroup
+          properties:
+            title: Analytics
+          links:
+            - id: PostHogInit
+              type: MenuLink
+              pageId: PostHogInit
+            - id: PostHogCapture
+              type: MenuLink
+              pageId: PostHogCapture
+            - id: PostHogCapturePageLeave
+              type: MenuLink
+              pageId: PostHogCapturePageLeave
+            - id: PostHogPageview
+              type: MenuLink
+              pageId: PostHogPageview
+            - id: PostHogIdentify
+              type: MenuLink
+              pageId: PostHogIdentify
+            - id: PostHogAlias
+              type: MenuLink
+              pageId: PostHogAlias
+            - id: PostHogGroup
+              type: MenuLink
+              pageId: PostHogGroup
+            - id: PostHogSetPersonProperties
+              type: MenuLink
+              pageId: PostHogSetPersonProperties
+            - id: PostHogReset
+              type: MenuLink
+              pageId: PostHogReset
+            - id: PostHogFeatureFlag
+              type: MenuLink
+              pageId: PostHogFeatureFlag
+            - id: PostHogReloadFeatureFlags
+              type: MenuLink
+              pageId: PostHogReloadFeatureFlags
+            - id: PostHogOptIn
+              type: MenuLink
+              pageId: PostHogOptIn
+            - id: PostHogOptOut
+              type: MenuLink
+              pageId: PostHogOptOut
     - id: connections-group
       type: MenuGroup
       properties:
@@ -1259,6 +1490,11 @@
           properties:
             title: AI
           links:
+            - id: AIGateway
+              type: MenuLink
+              pageId: AIGateway
+              properties:
+                title: AI Gateway
             - id: Anthropic
               type: MenuLink
               pageId: Anthropic
@@ -1292,6 +1528,16 @@
               pageId: GoogleSheet
               properties:
                 title: Google Sheets
+            - id: AzureBlobStorage
+              type: MenuLink
+              pageId: AzureBlobStorage
+              properties:
+                title: Azure Blob Storage
+            - id: GoogleCloudStorage
+              type: MenuLink
+              pageId: GoogleCloudStorage
+              properties:
+                title: Google Cloud Storage
         - id: connections-http
           type: MenuGroup
           properties:
@@ -1307,9 +1553,19 @@
               pageId: SendGridMail
               properties:
                 title: SendGrid Email
+            - id: SMTP
+              type: MenuLink
+              pageId: SMTP
+              properties:
+                title: SMTP Email
             - id: Stripe
               type: MenuLink
               pageId: Stripe
+            - id: Treg
+              type: MenuLink
+              pageId: Treg
+              properties:
+                title: treg
     - id: controls-menu-group
       type: MenuGroup
       properties:
@@ -1349,6 +1605,9 @@
         - id: :try
           type: MenuLink
           pageId: :try
+        - id: :while
+          type: MenuLink
+          pageId: :while
     - id: schema-reference
       type: MenuLink
       pageId: schema-reference
@@ -1412,3 +1671,20 @@
           pageId: plugins-operators
           properties:
             title: Operators
+
+        - id: plugins-icon-sets
+          type: MenuLink
+          pageId: plugins-icon-sets
+          properties:
+            title: Icon Sets
+    - id: plugin-packages
+      type: MenuGroup
+      properties:
+        title: Plugin packages
+        icon: Package
+      links:
+        - id: PostHog
+          type: MenuLink
+          pageId: PostHog
+          properties:
+            title: PostHog

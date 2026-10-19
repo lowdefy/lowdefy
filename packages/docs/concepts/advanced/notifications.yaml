@@ -15,10 +15,9 @@
 _ref:
   path: templates/general.yaml.njk
   vars:
-    pageId: page-paths
-    pageTitle: Page Paths
-    section: Concepts
-    filePath: concepts/page-paths.yaml
+    pageId: notifications
+    pageTitle: Notifications
+    filePath: concepts/advanced/notifications.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -31,4 +30,4 @@ _ref:
                 version:
                   _ref: version.yaml
               template:
-                _ref: concepts/page-paths.md
+                _ref: concepts/advanced/notifications.md

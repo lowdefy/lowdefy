@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: html-attributes
     pageTitle: HTML attributes
-    section: Concepts
-    filePath: concepts/html-attributes.yaml
+    filePath: concepts/advanced/html-attributes.yaml
     content:
       - id: md1
         type: MarkdownWithCode

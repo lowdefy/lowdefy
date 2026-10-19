@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-// Pages that intentionally live in no menu.
-const allowlist = new Set(['404']);
+// Pages that intentionally live in no menu. The redirect stubs keep old deep
+// links working; a menu link to them would only bounce to the page they name.
+const allowlist = new Set(['404', 'MongoDBAdapter', 'next-auth-providers']);
 
 // Every page must appear in exactly one menu: zero menus makes it unreachable
 // from the sidebar, two or more makes its top tab ambiguous. Dangling menu

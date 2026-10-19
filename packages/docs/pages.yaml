@@ -15,7 +15,7 @@
 - _ref: concepts/advanced/modules.yaml
 - _ref: concepts/advanced/module-authoring.yaml
 - _ref: concepts/core/page-and-app-state.yaml
-- _ref: concepts/page-paths.yaml
+- _ref: concepts/advanced/page-paths.yaml
 - _ref: concepts/advanced/selectors.yaml
 - _ref: concepts/core/blocks.yaml
 - _ref: concepts/advanced/layout-overview.yaml
@@ -31,12 +31,12 @@
 - _ref: concepts/advanced/custom-html.yaml
 - _ref: concepts/advanced/custom-styling.yaml
 - _ref: concepts/core/theming.yaml
-- _ref: concepts/html-attributes.yaml
+- _ref: concepts/advanced/html-attributes.yaml
 - _ref: concepts/advanced/cli.yaml
 - _ref: concepts/advanced/api.yaml
-- _ref: concepts/notifications.yaml
-- _ref: concepts/dynamic-page-content.yaml
-- _ref: concepts/ai-agent-docs.yaml
+- _ref: concepts/advanced/notifications.yaml
+- _ref: concepts/advanced/dynamic-page-content.yaml
+- _ref: concepts/advanced/ai-agent-docs.yaml
 
 - _ref: agents/introduction.yaml
 - _ref: agents/agent-properties.yaml

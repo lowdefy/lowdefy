@@ -15,10 +15,9 @@
 _ref:
   path: templates/general.yaml.njk
   vars:
-    pageId: ai-agent-docs
-    pageTitle: Docs for AI Agents
-    section: Concepts
-    filePath: concepts/ai-agent-docs.yaml
+    pageId: dynamic-page-content
+    pageTitle: Dynamic Page Content
+    filePath: concepts/advanced/dynamic-page-content.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -26,4 +25,9 @@ _ref:
           maxWidth: 800
         properties:
           content:
-            _ref: concepts/ai-agent-docs.md
+            _nunjucks:
+              on:
+                version:
+                  _ref: version.yaml
+              template:
+                _ref: concepts/advanced/dynamic-page-content.md
