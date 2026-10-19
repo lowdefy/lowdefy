@@ -51,9 +51,21 @@ Modules can ship notification templates: `module.lowdefy.yaml` accepts a `notifi
 
 Template property strings interpolate against the render data with [Nunjucks](https://mozilla.github.io/nunjucks/) — `{{ task.title }}` just works, including `{% if %}` conditionals. This applies inside `notifications:` properties only.
 
-Interpolated values are **inert** — they can never carry markup or links. A task title of `[click here](https://evil.example)` renders as literal text, not a link. Only the markdown you write in the template formats; the data you interpolate is escaped. This closes the injection risk of putting user data into a branded email.
+Interpolated values are **inert** — they can never carry markup or links unless you mark them with the `markdown` filter (below). A task title of `[click here](https://evil.example)` renders as literal text, not a link. Only the markdown you write in the template formats; the data you interpolate is escaped. This closes the injection risk of putting user data into a branded email.
 
 There is no operator evaluation inside template properties — they are data templates, not operator config. Build-time operators like [`_ref`](/references-and-templates) still work as everywhere else.
+
+#### Markdown the app wrote
+
+When a value is markdown your app wrote on purpose — a release note body, a templated summary — mark it with the `markdown` filter so it renders as headings, lists, links and images:
+
+```yaml
+properties:
+  subject: '{{ title }}'
+  message: "{{ intro }}\n\n{{ body | markdown }}"
+```
+
+`intro` stays escaped; `body` renders as markdown. Use the filter only on markdown your app itself wrote, never on text a user typed: a filtered value can carry links and images into the email. Raw HTML stays escaped even in a filtered value, so a `<script>` tag still prints as text. Images render no wider than the email column. Outside markdown properties the filter changes nothing.
 
 ### Links
 

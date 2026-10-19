@@ -34,7 +34,7 @@ Renders a template element to `{ html, text }` using `@react-email/render` (`ren
 
 **Location:** `src/interpolate/`
 
-Interpolates template property strings against the data item. Every interpolated value is escaped on two axes — HTML (Nunjucks autoescape) and markdown (a renderer escape pass over values) — then markdown is parsed with raw HTML disabled. Only author-written markdown formats; interpolated user data renders verbatim. A value of `[x](https://evil)` becomes literal text, never a link. Each template's `markdownProperties` static names which properties are markdown.
+Interpolates template property strings against the data item. Every interpolated value is escaped on two axes — HTML (Nunjucks autoescape) and markdown (a renderer escape pass over values) — then markdown is parsed with raw HTML disabled. Only author-written markdown formats; interpolated user data renders verbatim. A value of `[x](https://evil)` becomes literal text, never a link. Each template's `markdownProperties` static names which properties are markdown. The `markdown` filter (`{{ body | markdown }}`) opts one value out: in a markdown property it reverses the escape (`unescapeMarkdown`) so markdown the app wrote renders as markdown, and in a plain property it changes nothing. Raw HTML stays disabled either way. Rendered images get `max-width:100%;height:auto;` so they fit the email column.
 
 ### The templates
 

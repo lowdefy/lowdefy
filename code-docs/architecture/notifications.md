@@ -113,7 +113,7 @@ The full framework output for one item — the pipeline reads these off `_step.<
 
 ### Injection-safe interpolation
 
-`interpolateProperties` (`packages/utils/email-templates/src/interpolate/`) escapes every interpolated value on two axes — HTML (Nunjucks autoescape) and markdown (a renderer escape pass over values) — then parses markdown with raw HTML disabled. Only author-written markdown formats; interpolated user data renders verbatim. A value of `[x](https://evil)` shows as literal text, never a link. `markdownProperties` on each template names which properties are markdown.
+`interpolateProperties` (`packages/utils/email-templates/src/interpolate/`) escapes every interpolated value on two axes — HTML (Nunjucks autoescape) and markdown (a renderer escape pass over values) — then parses markdown with raw HTML disabled. Only author-written markdown formats; interpolated user data renders verbatim. A value of `[x](https://evil)` shows as literal text, never a link. `markdownProperties` on each template names which properties are markdown. The `markdown` filter (`{{ body | markdown }}`) opts one value out: in a markdown property it reverses the escape (`unescapeMarkdown`) so markdown the app wrote renders as markdown, and in a plain property it changes nothing. Raw HTML stays disabled either way. Rendered images get `max-width:100%;height:auto;` so they fit the email column.
 
 ## Key Design Decisions
 
