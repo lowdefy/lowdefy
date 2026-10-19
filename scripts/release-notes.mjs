@@ -20,7 +20,7 @@
  * Release Notes Generator for Lowdefy
  *
  * Collects per-package CHANGELOGs, merges them by the primary app version,
- * and generates developer-facing release notes via Claude CLI.
+ * and writes the release notes for the draft GitHub release.
  *
  * Usage:
  *   node scripts/release-notes.mjs                    # generate notes for latest version
@@ -31,7 +31,7 @@
  */
 
 import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'fs';
-import { execSync, spawnSync } from 'child_process';
+import { execSync } from 'child_process';
 import { join, dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -251,47 +251,7 @@ function getVersionDate(version) {
 }
 
 // ---------------------------------------------------------------------------
-// 6. Generate developer-facing notes via Claude CLI
-// ---------------------------------------------------------------------------
-
-function generateNotes(technicalNotes) {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.log('  Skipping AI notes (no ANTHROPIC_API_KEY)');
-    return null;
-  }
-
-  const prompt =
-    'You are writing release notes for Lowdefy, an open-source config-driven web framework built on Next.js. ' +
-    'Convert these technical changelog entries into clear, developer-friendly bullet points. ' +
-    'Group related changes together. Focus on what changed and why it matters to developers using Lowdefy. ' +
-    'Skip internal dependency bumps and version-only changes. ' +
-    'Return only markdown bullet points, no headings or preamble. ' +
-    'If there are no meaningful changes, return "- Minor internal improvements and dependency updates."';
-
-  // No shell, so the prompt needs no quoting. A CLI that exits before reading its input
-  // (not installed, missing native binary) surfaces as EPIPE; its stderr says why.
-  const result = spawnSync('claude', ['-p', '--model', 'claude-haiku-4-5-20251001', prompt], {
-    input: technicalNotes,
-    encoding: 'utf-8',
-    cwd: ROOT,
-    timeout: 180000,
-    maxBuffer: 1024 * 1024,
-  });
-  if (result.error || result.status !== 0) {
-    console.warn(
-      '  Claude CLI failed, skipping AI notes:',
-      result.error?.message ?? `exit code ${result.status}`
-    );
-    if (result.stderr?.trim()) {
-      console.warn(result.stderr.trim());
-    }
-    return null;
-  }
-  return result.stdout.trim();
-}
-
-// ---------------------------------------------------------------------------
-// 7. Parse individual changeset entries from changelog content
+// 6. Parse individual changeset entries from changelog content
 // ---------------------------------------------------------------------------
 
 /**
@@ -356,12 +316,10 @@ function parseChangesetEntries(content) {
 }
 
 // ---------------------------------------------------------------------------
-// 8. Build markdown for a version (deduplicated by changeset hash)
+// 7. Build markdown for a version (deduplicated by changeset hash)
 // ---------------------------------------------------------------------------
 
 function buildVersionMarkdown(entry) {
-  const lines = [];
-
   // Collect all changeset entries across packages, deduplicated by hash
   const changesetMap = new Map(); // hash -> { firstLine, body, section, packages[] }
   // Track entries without hashes (plain text changes)
@@ -393,26 +351,6 @@ function buildVersionMarkdown(entry) {
     }
   }
 
-  // Build deduplicated technical content for Claude
-  const technicalParts = [];
-  for (const [hash, cs] of changesetMap) {
-    const pkgList = cs.packages.join(', ');
-    technicalParts.push(`- ${hash}: ${cs.firstLine}\n  Packages: ${pkgList}\n${cs.body}`);
-  }
-  for (const pe of plainEntries) {
-    technicalParts.push(`- ${pe.packageName}: ${pe.text}`);
-  }
-  const technicalContent = technicalParts.join('\n\n');
-
-  // AI-generated highlights
-  const highlights = generateNotes(technicalContent);
-  if (highlights) {
-    lines.push('## Highlights');
-    lines.push('');
-    lines.push(highlights);
-    lines.push('');
-  }
-
   // Group changesets by section type
   const minorChanges = [];
   const patchChanges = [];
@@ -425,7 +363,7 @@ function buildVersionMarkdown(entry) {
   }
 
   const changes = { minorChanges, patchChanges, plainEntries };
-  const full = [...lines, renderChanges({ ...changes, titlesOnly: false })].join('\n').trimEnd();
+  const full = renderChanges({ ...changes, titlesOnly: false });
   if (full.length <= RELEASE_BODY_LIMIT) {
     return full;
   }
@@ -434,7 +372,6 @@ function buildVersionMarkdown(entry) {
   // changeset instead; the full text stays in each package's CHANGELOG.md.
   console.log(`  Full notes are ${full.length} characters, over the limit; listing titles only`);
   return [
-    ...lines,
     renderChanges({ ...changes, titlesOnly: true }),
     '',
     "_Each change's full description is in the CHANGELOG.md of the packages listed with it._",

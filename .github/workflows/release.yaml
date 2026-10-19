@@ -88,13 +88,7 @@ jobs:
 
       - name: Generate release notes
         if: steps.mode.outputs.publish == 'true'
-        # npm@latest (installed above for OIDC) blocks install scripts by default, and Claude
-        # Code's postinstall fetches the native binary the `claude` command runs.
-        run: |
-          npm install -g --allow-scripts=@anthropic-ai/claude-code @anthropic-ai/claude-code
-          node scripts/release-notes.mjs --output-file=/tmp/release-notes.md
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/release-notes.mjs --output-file=/tmp/release-notes.md
 
       # Idempotent: query origin so a re-run on a fresh checkout still sees an existing tag.
       - name: Tag release commit
