@@ -32,6 +32,9 @@ events:
         drs_disabled_start:
           - _date: '2024-06-01'
           - _date: '2024-06-30'
+        drs_typed:
+          - _date: '2024-06-01'
+          - _date: '2024-06-30'
 
 blocks:
   # ============================================
@@ -378,3 +381,61 @@ blocks:
       disabled:
         - true
         - false
+
+  - id: drs_typed
+    type: DateRangeSelector
+    properties:
+      title: Typed Dates
+      format: YYYY-MM-DD
+    events:
+      onChange:
+        - id: set_typed_event
+          type: SetState
+          params:
+            drs_typed_event:
+              _event: value
+
+  # Shows the range the last onChange carried, so a test can tell the event fired with it.
+  - id: drs_typed_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: drs_typed_event
+              - null
+          then: ''
+          else:
+            _string.concat:
+              - _dayjs.format:
+                  on:
+                    _state: drs_typed_event.0
+                  format: YYYY-MM-DD
+              - ' ~ '
+              - _dayjs.format:
+                  on:
+                    _state: drs_typed_event.1
+                  format: YYYY-MM-DD
+
+  - id: drs_typed_empty
+    type: DateRangeSelector
+    properties:
+      title: Typed Dates Without a Value
+      format: YYYY-MM-DD
+
+  - id: drs_typed_empty_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _and:
+              - _ne:
+                  - _state: drs_typed_empty.0
+                  - null
+              - _ne:
+                  - _state: drs_typed_empty.1
+                  - null
+          then: Range set
+          else: ''

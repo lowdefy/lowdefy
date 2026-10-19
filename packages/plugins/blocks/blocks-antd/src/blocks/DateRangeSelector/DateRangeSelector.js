@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
@@ -57,6 +57,17 @@ const DateRangeSelector = ({
   value,
 }) => {
   const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
+  // The picker commits a range only once both dates are confirmed or the popup closes, so Enter
+  // on a typed date closes the popup when the other date is set: the picker then commits the range
+  // with its own checks, as it does on a click outside.
+  const [open, setOpen] = useState(false);
+  // The dates the picker shows, typed or picked but not yet committed. They reset to the value
+  // whenever it changes.
+  const calendarDates = useRef(null);
+  const valueKey = JSON.stringify(value ?? null);
+  useEffect(() => {
+    calendarDates.current = null;
+  }, [valueKey]);
   return (
     <Label
       blockId={blockId}
@@ -144,8 +155,19 @@ const DateRangeSelector = ({
               onFocus={(event, info) => {
                 methods.triggerEvent({ name: 'onFocus', event: { range: info.range } });
               }}
-              onOpenChange={(open) => {
-                methods.triggerEvent({ name: 'onOpenChange', event: { open } });
+              open={open}
+              onOpenChange={(nextOpen) => {
+                setOpen(nextOpen);
+                methods.triggerEvent({ name: 'onOpenChange', event: { open: nextOpen } });
+              }}
+              onCalendarChange={(dates) => {
+                calendarDates.current = dates;
+              }}
+              onKeyDown={(event) => {
+                if (event.key !== 'Enter' || !open) return;
+                const dates = calendarDates.current ?? rangeValue(value) ?? [];
+                const otherIndex = event.target.id === `${blockId}_input` ? 1 : 0;
+                if (dates[otherIndex]) setOpen(false);
               }}
               onChange={(newVal) => {
                 const val = !newVal

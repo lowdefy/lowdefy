@@ -420,3 +420,62 @@ test.describe('DateRangeSelector open and fixed ends', () => {
     await expect(getEndInput(page, 'drs_disabled_start')).toBeEnabled();
   });
 });
+
+// The range's dates are UTC midnights, so the display formats them in UTC to read the same dates.
+test.describe('DateRangeSelector typed dates', () => {
+  test.use({ timezoneId: 'UTC' });
+
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'daterangeselector');
+  });
+
+  const typeDate = async (input, date) => {
+    await input.click();
+    await input.press('ControlOrMeta+a');
+    await input.press('Backspace');
+    await input.pressSequentially(date);
+  };
+
+  test('Enter on a typed start date applies the range and Escape keeps it', async ({ page }) => {
+    await typeDate(getStartInput(page, 'drs_typed'), '2024-05-01');
+    await page.keyboard.press('Enter');
+
+    await expect(getBlock(page, 'drs_typed_display')).toHaveText('2024-05-01 ~ 2024-06-30');
+
+    await page.keyboard.press('Escape');
+    await expect(getStartInput(page, 'drs_typed')).toHaveValue('2024-05-01');
+    await expect(getEndInput(page, 'drs_typed')).toHaveValue('2024-06-30');
+    await expect(getBlock(page, 'drs_typed_display')).toHaveText('2024-05-01 ~ 2024-06-30');
+  });
+
+  test('Enter on a typed end date applies the range and Escape keeps it', async ({ page }) => {
+    await typeDate(getEndInput(page, 'drs_typed'), '2024-07-15');
+    await page.keyboard.press('Enter');
+
+    await expect(getBlock(page, 'drs_typed_display')).toHaveText('2024-06-01 ~ 2024-07-15');
+
+    await page.keyboard.press('Escape');
+    await expect(getStartInput(page, 'drs_typed')).toHaveValue('2024-06-01');
+    await expect(getEndInput(page, 'drs_typed')).toHaveValue('2024-07-15');
+  });
+
+  test('Enter on the start date of an empty range moves on to the end date', async ({ page }) => {
+    await getStartInput(page, 'drs_typed_empty').click();
+    await page.keyboard.type('2024-06-10');
+    await page.keyboard.press('Enter');
+    await expect(getEndInput(page, 'drs_typed_empty')).toBeFocused();
+    await page.keyboard.type('2024-06-20');
+    await page.keyboard.press('Enter');
+
+    await expect(getStartInput(page, 'drs_typed_empty')).toHaveValue('2024-06-10');
+    await expect(getEndInput(page, 'drs_typed_empty')).toHaveValue('2024-06-20');
+    await expect(getBlock(page, 'drs_typed_empty_display')).toHaveText('Range set');
+  });
+
+  test('picking a range with the mouse applies it', async ({ page }) => {
+    await dateRangeSelector.do.select(page, 'drs_typed', '2024-06-03', '2024-06-12');
+
+    await expect(getBlock(page, 'drs_typed_display')).toHaveText('2024-06-03 ~ 2024-06-12');
+    await dateRangeSelector.expect.closed(page, 'drs_typed');
+  });
+});
