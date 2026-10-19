@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import fs from 'fs';
 import { test, expect } from '@playwright/test';
 import { getBlock } from '@lowdefy/block-dev-e2e';
 
@@ -83,6 +84,58 @@ test.describe('Table features shared with TableLight', () => {
   }) => {
     const summary = getBlock(page, 'tf_summary_view').locator('.lf-table-summary-row');
     await expect(summary.locator('[data-col-key="amount"]')).toContainText('7');
+  });
+
+  test('summaryRow shows the given row in the footer, formatted by the columns', async ({
+    page,
+  }) => {
+    const summary = getBlock(page, 'tf_summary_row').locator('.lf-table-summary-row');
+    await expect(summary).toHaveAttribute('data-summary', 'row');
+    await expect(summary.locator('[data-col-key="name"]')).toHaveText('Total');
+    // The given total, not the column's own `aggregate: sum` label and value.
+    await expect(summary.locator('[data-col-key="invited"]')).toHaveText('100');
+    await expect(summary.locator('.lf-table-summary-label')).toHaveCount(0);
+    // The percent type and the column's rule apply as on a body row; action columns stay empty.
+    const rate = summary.locator('[data-col-key="rate"]');
+    await expect(rate).toHaveText('47%');
+    await expect(rate.locator('.lf-table-cell')).toHaveCSS('color', 'rgb(0, 128, 0)');
+    await expect(summary.locator('[data-col-key="open"]')).toBeEmpty();
+    // The footer is not a data row: no row key, no focusable cells.
+    await expect(summary.locator('[data-lf-cell]')).toHaveCount(0);
+    await expect(bodyRows(page, 'tf_summary_row')).toHaveCount(3);
+  });
+
+  test('summaryRow stays in the footer, unchanged, through sorting and search', async ({
+    page,
+  }) => {
+    const summary = getBlock(page, 'tf_summary_row').locator('.lf-table-summary-row');
+    await header(page, 'tf_summary_row', 'name').click();
+    await header(page, 'tf_summary_row', 'name').click();
+    await expect(bodyRows(page, 'tf_summary_row').first()).toContainText('Johannesburg');
+    await expect(summary.locator('[data-col-key="name"]')).toHaveText('Total');
+    const search = getBlock(page, 'tf_summary_row').locator('[data-lf-toolbar-search] input');
+    await search.fill('durban');
+    await expect(bodyRows(page, 'tf_summary_row')).toHaveCount(1);
+    await expect(getBlock(page, 'tf_summary_row').locator('[data-lf-record-count]')).toHaveText(
+      '1 row'
+    );
+    await expect(summary.locator('[data-col-key="invited"]')).toHaveText('100');
+    await search.fill('total');
+    await expect(bodyRows(page, 'tf_summary_row')).toHaveCount(0);
+  });
+
+  test('exportCsv ends with the summaryRow', async ({ page }) => {
+    const downloadPromise = page.waitForEvent('download');
+    await page.locator('#tf_summary_row_export').click();
+    const download = await downloadPromise;
+    const content = fs.readFileSync(await download.path(), 'utf8').replace(/^\ufeff/, '');
+    expect(content.split('\r\n')).toEqual([
+      'Name,Invited,Rate',
+      'Cape Town,10,90%',
+      'Durban,30,20%',
+      'Johannesburg,60,60%',
+      'Total,100,47%',
+    ]);
   });
 
   test('pagination shows pages of pageSize with a pager', async ({ page }) => {

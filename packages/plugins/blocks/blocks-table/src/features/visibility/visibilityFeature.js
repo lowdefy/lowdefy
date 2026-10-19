@@ -16,16 +16,27 @@
 
 import { columnVisibilityFeature } from '@tanstack/react-table';
 
+import handleColumnGroupToggle from './handleColumnGroupToggle.js';
+import initCollapsedColumnGroups from './initCollapsedColumnGroups.js';
 import initColumnVisibility from './initColumnVisibility.js';
+import visibilityToValue from './visibilityToValue.js';
 import visibilityToViewColumn from './visibilityToViewColumn.js';
 
+// Which columns show. `columnVisibility` is the view's (what the user hid, `view.columns[].hidden`);
+// `collapsedColumnGroups` is the collapsible column groups that are collapsed
+// (`view.collapsedColumnGroups`). TanStack sees both combined (core/getDisplayedVisibility.js,
+// `api.displayedVisibility`), so a column a collapsed group hides is never saved as hidden.
 const visibilityFeature = {
   name: 'visibility',
   tableFeatures: { columnVisibilityFeature },
+  viewKeys: ['collapsedColumnGroups'],
   slices: {
     columnVisibility: { init: initColumnVisibility, cause: 'columns' },
+    collapsedColumnGroups: { init: initCollapsedColumnGroups, cause: 'columns' },
   },
   toViewColumn: visibilityToViewColumn,
+  toValue: visibilityToValue,
+  gridHandlers: { click: handleColumnGroupToggle },
 };
 
 export default visibilityFeature;

@@ -17,6 +17,7 @@
 // The parts of a table view (design D6). Stored and loaded views keep only these.
 const viewKeys = [
   'columns',
+  'collapsedColumnGroups',
   'sort',
   'filter',
   'search',

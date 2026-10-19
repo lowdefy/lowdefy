@@ -43,7 +43,8 @@ const HOLD_ENDING_EVENTS = new Set(['focus', 'keydown', 'pointerdown']);
 
 function hasSummary({ layout, summary }) {
   if (summary === null) return false;
-  return layout.cols.some((col) => !col.special && summary.has(col.key));
+  if (summary.row) return layout.cols.some((col) => !col.special);
+  return layout.cols.some((col) => !col.special && summary.aggregates.has(col.key));
 }
 
 // The window component: one scroll container for header, body and summary footer (native scroll,
@@ -102,6 +103,7 @@ function Grid({
       state.columnPinning,
       state.columnSizing,
       state.columnVisibility,
+      state.collapsedColumnGroups,
       viewport.width,
     ]
   );

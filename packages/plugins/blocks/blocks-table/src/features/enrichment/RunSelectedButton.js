@@ -18,11 +18,11 @@ import React from 'react';
 import { Button, Dropdown } from 'antd';
 import htmlToText from '@lowdefy/blocks-antd/table/htmlToText.js';
 
-// The bulk bar's "Run selected": a menu of the visible enrichment and ai columns (a column the
-// view hides is not offered); choosing one fires onColumnRun for it with the selection (mode
+// The bulk bar's "Run selected": a menu of the displayed enrichment and ai columns (a column the
+// view or a collapsed group hides is not offered); choosing one fires onColumnRun for it with the selection (mode
 // all). Shown when the table has onColumnRun and a visible run column.
 function RunSelectedButton({ api }) {
-  const { columnVisibility } = api.state;
+  const columnVisibility = api.displayedVisibility;
   const runColumns = api.config.enrichment.runColumns.filter(
     (column) => columnVisibility[column.key] !== false
   );
