@@ -4156,7 +4156,7 @@
         "blocks/display/TableGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "0abd558c1fbe787b0e9d994adb783e6f259392059f7f2d79d71ac3364f060f51"
+      "hash": "8bd7c550727893a2c5b7b5786293beb33dd85872cf1f993d0e98da8aa79a8e9b"
     },
     "display-blocks/tablelight": {
       "files": [
@@ -5708,7 +5708,7 @@
         "quickstart.yaml",
         "templates/cli_command.yaml.njk"
       ],
-      "hash": "093094c48847497c0180ca6d5d7da628806be1a9eca9a4ac64f68fbf6312cb62"
+      "hash": "42ade4cf7a9fbae5b9105fd3ffccdf5fc9f9d67c55048a656e85cf62e54ca1bb"
     },
     "concepts/four-primitives": {
       "files": [
