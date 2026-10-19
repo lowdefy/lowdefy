@@ -399,12 +399,14 @@ test.describe('AG Grid theming', () => {
 
   // The tick is the wrapper's ::after, a mask painted with --ag-checkbox-checked-shape-color; the box
   // is the wrapper's own background. Comparing the two is what catches a tick drawn in the box colour,
-  // which is invisible however the box itself is styled.
+  // which is invisible however the box itself is styled. The mask is read as well: without it the
+  // ::after paints a white square over the box, which passes every colour check.
   test.describe('checkboxes', () => {
     const checkboxColors = (locator) =>
       locator.evaluate((el) => ({
         box: getComputedStyle(el).backgroundColor,
         tick: getComputedStyle(el, '::after').backgroundColor,
+        shape: getComputedStyle(el, '::after').maskImage,
         checked: el.classList.contains('ag-checked'),
         disabled: el.classList.contains('ag-disabled'),
       }));
@@ -434,6 +436,7 @@ test.describe('AG Grid theming', () => {
         expect(colors).toMatchObject({ checked: true, disabled: true });
         expect(colors.tick).toBe('rgb(255, 255, 255)');
         expect(colors.tick).not.toBe(colors.box);
+        expect(colors.shape).toMatch(/^url\(/);
       });
 
       test(`${blockId}: an editable ticked cell shows a white tick`, async ({ page }) => {
@@ -443,6 +446,7 @@ test.describe('AG Grid theming', () => {
         expect(colors).toMatchObject({ checked: true, disabled: false });
         expect(colors.tick).toBe('rgb(255, 255, 255)');
         expect(colors.tick).not.toBe(colors.box);
+        expect(colors.shape).toMatch(/^url\(/);
       });
 
       test(`${blockId}: a ticked row-selection checkbox shows a white tick`, async ({ page }) => {
@@ -453,6 +457,7 @@ test.describe('AG Grid theming', () => {
         expect(colors.disabled).toBe(false);
         expect(colors.tick).toBe('rgb(255, 255, 255)');
         expect(colors.tick).not.toBe(colors.box);
+        expect(colors.shape).toMatch(/^url\(/);
       });
     }
 
