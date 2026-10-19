@@ -14,45 +14,21 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
+
+import getMatcherParams from './getMatcherParams.js';
 
 function getBlockMatcher({ params, arrayIndices }) {
-  let testParams = params;
-  if (type.isNone(testParams)) return () => true;
-  if (type.isString(testParams)) {
-    testParams = { blockIds: [testParams] };
-  }
-  if (type.isArray(testParams) || type.isBoolean(testParams)) {
-    testParams = { blockIds: testParams };
-  }
-  if (!type.isObject(testParams)) {
-    throw new Error('Invalid validate params.');
-  }
-  if (type.isString(testParams.blockIds)) {
-    testParams.blockIds = [testParams.blockIds];
-  }
-  // An action in a list row names its row's blocks as "list.$.field", like SetState and CallMethod.
-  if (type.isArray(testParams.blockIds)) {
-    testParams.blockIds = testParams.blockIds.map((blockId) =>
-      applyArrayIndices(arrayIndices, blockId)
-    );
-  }
-  if (type.isString(testParams.regex)) {
-    testParams.regex = [testParams.regex];
-  }
-  if (type.isArray(testParams.regex)) {
-    testParams.regex = testParams.regex.map((regex) => new RegExp(regex));
-  }
+  const matcherParams = getMatcherParams({ params, arrayIndices });
+  if (matcherParams === null) return () => true;
+  const { blockIds, regex } = matcherParams;
   return (id) => {
-    if (
-      testParams.blockIds === true ||
-      (type.isArray(testParams.blockIds) && testParams.blockIds.includes(id))
-    ) {
+    if (blockIds === true || (type.isArray(blockIds) && blockIds.includes(id))) {
       return true;
     }
-    if (type.isArray(testParams.regex)) {
-      for (const regex of testParams.regex) {
-        if (regex.test(id)) {
+    if (type.isArray(regex)) {
+      for (const pattern of regex) {
+        if (pattern.test(id)) {
           return true;
         }
       }

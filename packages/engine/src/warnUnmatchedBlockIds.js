@@ -14,23 +14,19 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
-function getExplicitBlockIds(params) {
-  if (type.isString(params) || type.isArray(params)) return [params].flat();
-  if (type.isObject(params) && (type.isString(params.blockIds) || type.isArray(params.blockIds))) {
-    return [params.blockIds].flat();
-  }
-  return [];
-}
+import getMatcherParams from './getMatcherParams.js';
 
 // A typo in a block id matches nothing, so the action would succeed having done nothing. regex and
-// blockIds: true never warn, and neither does a list-row "$" id: an empty list matches no row.
+// blockIds: true never warn, and neither does a "$" id outside a list row: it names no row.
 function warnUnmatchedBlockIds({ action, arrayIndices, context, params }) {
+  const blockIds = getMatcherParams({ params, arrayIndices })?.blockIds;
+  if (!type.isArray(blockIds)) return;
   const { map } = context._internal.RootSlots;
-  getExplicitBlockIds(params).forEach((blockId) => {
-    if (!type.isString(blockId) || blockId.includes('$')) return;
-    if (map[applyArrayIndices(arrayIndices, blockId)]) return;
+  new Set(blockIds).forEach((blockId) => {
+    if (map[blockId]) return;
+    if (type.isString(blockId) && blockId.includes('$')) return;
     context._internal.lowdefy._internal.logger.warn(
       `${action}: No block with id "${blockId}" on page "${context.pageId}". The action matched nothing for this id.`
     );

@@ -236,3 +236,34 @@ test.each([
   expect(history.success).toBe(true);
   expect(warn).not.toHaveBeenCalled();
 });
+
+test('Validate in a list row with a $ id that matches no block in the row warns', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [{ id: 'init', type: 'SetState', params: { items: [{ name: 'x' }] } }],
+    },
+    blocks: [
+      {
+        id: 'items',
+        type: 'List',
+        blocks: [
+          { id: 'items.$.name', type: 'TextInput' },
+          button({ id: 'items.$.save', actions: validateThenSave('items.$.nmae') }),
+        ],
+      },
+    ],
+  };
+  const context = await testContext({ lowdefy, pageConfig });
+  const history = await click(context, 'items.0.save');
+  expect(history.success).toBe(true);
+  expect(warn).toHaveBeenCalledTimes(1);
+  expect(warn.mock.calls[0][0]).toContain('"items.0.nmae"');
+});
+
+test('Validate with a repeated unmatched id warns once', async () => {
+  const context = await testContext({ lowdefy, pageConfig: contactPage(['nope', 'nope']) });
+  await click(context, 'save_button');
+  expect(warn).toHaveBeenCalledTimes(1);
+});
