@@ -25,6 +25,7 @@ import createFeatureActions from './createFeatureActions.js';
 import createKeyIndex from './createKeyIndex.js';
 import createSliceHandlers from './createSliceHandlers.js';
 import densityHeights from './densityHeights.js';
+import getDisplayedVisibility from './getDisplayedVisibility.js';
 import Grid from './Grid.js';
 import stabilizeData from './stabilizeData.js';
 import useFeatureData from './useFeatureData.js';
@@ -125,6 +126,17 @@ function TableRoot({
       ),
     [config]
   );
+  // TanStack lays out the displayed columns: the view's visibility with the columns of collapsed
+  // column groups hidden. The slice keeps only the view's, which is what the value saves.
+  const displayedVisibility = useMemo(
+    () =>
+      getDisplayedVisibility({
+        columnVisibility: state.columnVisibility,
+        collapsedColumnGroups: state.collapsedColumnGroups,
+        conditionsByKey: config.columnGroups.conditionsByKey,
+      }),
+    [state.columnVisibility, state.collapsedColumnGroups, config]
+  );
   const table = useTable({
     ...tableOptions,
     ...sliceHandlers,
@@ -132,7 +144,10 @@ function TableRoot({
     data,
     features: features.tanstackFeatures,
     getRowId: config.getId,
-    state,
+    state:
+      displayedVisibility === state.columnVisibility
+        ? state
+        : { ...state, columnVisibility: displayedVisibility },
   });
   Object.assign(api, {
     basePath,
@@ -140,6 +155,7 @@ function TableRoot({
     components,
     config,
     content,
+    displayedVisibility,
     events,
     input,
     loadValue,
@@ -169,7 +185,13 @@ function TableRoot({
   api.dataRows = dataRows;
   const fragments = useFeatureFragments({ api, config, data, state, table });
   const { leadingColumns, regions, trailingColumns } = fragments;
-  const summary = useSummary({ api, config, state, table });
+  const summary = useSummary({
+    api,
+    config,
+    state,
+    summaryRow: properties.summaryRow,
+    table,
+  });
 
   // D17: which loading state the table is in, and the skeleton's timing.
   const viewPending = isPending || fragments.pending;

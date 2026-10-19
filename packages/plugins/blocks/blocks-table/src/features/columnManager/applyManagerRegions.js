@@ -16,12 +16,13 @@
 
 import moveKeys from '../ordering/moveKeys.js';
 
-// The column state for a reordered manager list: visible columns take the view-order slots they
-// already held in their new order (hidden columns keep theirs), and the pinned regions follow the
-// boundaries. Hidden pinned columns stay pinned.
-function applyManagerRegions({ state, regions }) {
-  const { columnOrder, columnPinning, columnVisibility } = state;
-  const isHidden = (key) => columnVisibility[key] === false;
+// The column state for a reordered manager list: displayed columns take the view-order slots they
+// already held in their new order (columns not displayed, hidden by the view or by a column
+// group, keep theirs), and the pinned regions follow the boundaries. Pinned columns that are not
+// displayed stay pinned.
+function applyManagerRegions({ state, displayedVisibility, regions }) {
+  const { columnOrder, columnPinning } = state;
+  const isHidden = (key) => displayedVisibility[key] === false;
   return {
     columnOrder: moveKeys({
       order: columnOrder,

@@ -3024,7 +3024,7 @@
       "files": [
         "concepts/core/operators.yaml"
       ],
-      "hash": "9e41c8df245673f3d68fdbb0f42001c373752c23a16e02481b1c4adbc88cc0b8"
+      "hash": "5e1080d13f86947d47912d9d9ddf3d482d0ec16cbf16dd6f56eebf1bb21b9c8f"
     },
     "concepts/secrets": {
       "files": [
@@ -3089,7 +3089,7 @@
         "concepts/advanced/api.yaml",
         "version.yaml"
       ],
-      "hash": "1fda0ee3b03da563daf6f1ec1436dda56aa7b4d6df307d756134174d447fa800"
+      "hash": "b144aabdc3888c74d30e6bf65beb57c28ff1ef01b9b60ba7505846fcda464a07"
     },
     "concepts/notifications": {
       "files": [
@@ -3097,7 +3097,7 @@
         "concepts/advanced/notifications.yaml",
         "version.yaml"
       ],
-      "hash": "31d287bb2b0bdab5e33e55bd088f78ce81b1f337fe16dc587dc0e613b4703ac4"
+      "hash": "3ab4abbec82f9fd4b7d66068fe0bcf36ef5aab814fa92dd93963674529b84fde"
     },
     "concepts/dynamic-page-content": {
       "files": [
@@ -4156,7 +4156,7 @@
         "blocks/display/TableGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "8bd7c550727893a2c5b7b5786293beb33dd85872cf1f993d0e98da8aa79a8e9b"
+      "hash": "a69ac937fead06712c0ad4bd876fc2883a78f4494dc1aeb96a5d19dd54b7a835"
     },
     "display-blocks/tablelight": {
       "files": [
@@ -4933,7 +4933,7 @@
         "actions/ResetValidation.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "669cddcc47c609352eeb1acb1c3f590229b3def23161dfc35e0910bc9bf1a9e3"
+      "hash": "a9ed2ebef5ce24e9dd73168413af89a524a24156674ed00b6b195220202ca129"
     },
     "actions/scrollto": {
       "files": [
@@ -4982,7 +4982,7 @@
         "actions/SetState.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "4eb36ce0f09333ff5d7934c892fa8e45362288d9d4311fe5a584f25f5ff11ade"
+      "hash": "13baffdec90087426c9579a040b0047fc0683864e81cf2c9fdbeea0de38558ce"
     },
     "actions/throw": {
       "files": [
@@ -5003,7 +5003,7 @@
         "actions/Validate.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "90d879f4e4a7caa30ae80c58b375a9631176cc60acb1a21a3c6aad41972f89d0"
+      "hash": "4c5b6aa798a9b9fb0a2205de33d085fbcb8ff603c85448e888043b1e44d9b520"
     },
     "actions/wait": {
       "files": [
@@ -5108,7 +5108,7 @@
         "operators/_date.yaml",
         "templates/operators.yaml.njk"
       ],
-      "hash": "401a0f9ccd10a9e68fedc6af22aa190235d2d9205529a14d8d891a755a7bc7e5"
+      "hash": "be0c1763f3c9dc2512d53e9e57652bf6c4640d3eb54b31c74dfba99c1b80b9c9"
     },
     "operators/_diff": {
       "files": [
@@ -5646,7 +5646,7 @@
         "upgrading/v6-to-v7.md",
         "upgrading/v6-to-v7.yaml"
       ],
-      "hash": "8594daac88b1aeb563f055d4199081774a7afd361664554c5c092fda3cbfb363"
+      "hash": "1e146db338b97ee4381214c93075666c14cdbbefc01de3f578cf8887f615e65e"
     },
     "migration/v3-to-v4": {
       "files": [

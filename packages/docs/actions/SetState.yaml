@@ -26,6 +26,8 @@ _ref:
       The `SetState` action sets values in `state`. It takes an object as parameters, and sets each of those values to the `state` object.
       This is useful if you want to initialize `state`, set a flag after an action has executed (eg. to disable a button), or to set the result
       of a request to state.
+
+      Setting a parent object to `{}` or `null` does not clear an input that is hidden at that moment. A hidden input's value is removed from `state` but kept by the input, so the input writes its old value back when it shows again. To clear a form that has hidden inputs, set each input's own key, for example `contact.name: null`.
     params: |
       ###### object
       Object with key value pairs to set in `state`.

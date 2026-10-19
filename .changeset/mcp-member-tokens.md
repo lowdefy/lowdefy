@@ -13,6 +13,6 @@ A script that runs on its own can now call an app's MCP tools with a long-lived 
 - Tokens are stored hashed in the new `user-mcp-tokens` auth collection, created only in apps that set `auth.oauthProvider`.
 - `RevokeMcpToken` switches off one of the caller's own tokens; `RevokeOrgMcpToken` lets owners and admins switch off any token in their organization. `RemoveMember`, `LeaveOrganization` and `DeleteUser` delete the member's tokens too.
 - A token stops working when its member leaves, is removed or is banned. A refused token gets a `401` whose `error_description` says why.
-- A banned user's OAuth access tokens are now refused on `/api/mcp` as well.
+- A banned user's OAuth access tokens are refused on `/api/mcp` too.
 
 See "Tokens for scripts" on the MCP Server & OAuth docs page.

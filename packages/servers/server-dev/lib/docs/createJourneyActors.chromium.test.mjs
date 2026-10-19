@@ -18,6 +18,8 @@ import http from 'node:http';
 
 import { jest } from '@jest/globals';
 
+import pageReadyScript from '../../test-utils/pageReadyScript.mjs';
+
 // A real Chromium against a small server that answers the dev server's own
 // routes, so the context-level request listener is exercised as a journey
 // runs it: installed before the first navigation, and still counting after a
@@ -33,11 +35,14 @@ function pageHtml(script) {
 
 const recorderPosts = [];
 
+// Each page marks itself ready once its requests finish (pageReadyScript), so
+// openPage returns then instead of waiting out its timeout.
 const pages = {
   '/recorded': pageHtml(`
     window.__lowdefyRecorder = {
       flush: () => fetch('/api/dev-recording', { method: 'POST', body: JSON.stringify({ actor: document.cookie }) }),
     };
+    ${pageReadyScript({ pageId: 'recorded' })}
     document.title = 'recorded-ready';
   `),
   '/first': pageHtml(`
@@ -45,14 +50,24 @@ const pages = {
       .then(() => fetch('/api/page/first'))
       .then(() => fetch('/api/request/first/save', { method: 'POST' }))
       .then(() => fetch('/api/endpoints/notify', { method: 'POST' }))
-      .then(() => { document.title = 'first-done'; });
+      .then(() => {
+        ${pageReadyScript({ pageId: 'first' })}
+        document.title = 'first-done';
+      });
   `),
   '/second': pageHtml(`
     fetch('/api/page/second')
       .then(() => fetch('/api/request/first/save', { method: 'POST' }))
-      .then(() => { document.title = 'second-done'; });
+      .then(() => {
+        ${pageReadyScript({ pageId: 'second' })}
+        document.title = 'second-done';
+      });
   `),
 };
+
+// A cold Chromium on a Windows runner can take seconds over the first
+// navigation; what is pinned here is what the actors count, not page speed.
+const PAGE_TIMEOUT = 15000;
 
 let server;
 let origin;
@@ -98,7 +113,7 @@ chromiumTest(
       basePath: '',
       pageId: 'first',
       user: 'none',
-      timeout: 500,
+      timeout: PAGE_TIMEOUT,
     });
     try {
       const { page } = await actors.switchTo('main');
@@ -132,7 +147,7 @@ chromiumTest(
       basePath: '',
       pageId: 'second',
       user: 'none',
-      timeout: 500,
+      timeout: PAGE_TIMEOUT,
     });
     try {
       const main = await actors.switchTo('main');
@@ -163,7 +178,7 @@ chromiumTest(
       basePath: '',
       pageId: 'recorded',
       user: 'none',
-      timeout: 500,
+      timeout: PAGE_TIMEOUT,
       recording: {
         source: 'journey',
         run: { id: '20261003T151200Z-p0d4rm', by: 'test', journey: 'tests/journeys/a.yaml' },
@@ -196,7 +211,7 @@ chromiumTest(
       basePath: '',
       pageId: 'second',
       user: 'none',
-      timeout: 500,
+      timeout: PAGE_TIMEOUT,
     });
     try {
       const { context } = await actors.switchTo('main');

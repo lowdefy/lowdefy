@@ -15,7 +15,8 @@ Three blocks with the antd look, sharing one column model and one set of cell ty
 
   - sort, column resize and reorder, pinned columns, a header menu with column filters, and a column manager, all on by default;
   - an optional toolbar with search, quick filters, a nested And/Or filter builder, grouping, density and CSV export (cells that start like a spreadsheet formula, `=`, `+`, `-` or `@`, are exported as text, so an opened file never runs them);
-  - saved views, and optional persistence in the browser or the URL;
+  - saved views, and optional persistence in the browser or the URL (browser persistence,
+    `persist.storage: local`, is kept per signed-in user and cleared at sign-out);
   - row selection with a bulk-action bar;
   - grouping with per-group totals, tree rows, expandable detail rows, and a summary footer;
   - keyboard navigation and inline editing;
@@ -33,6 +34,8 @@ Three blocks with the antd look, sharing one column model and one set of cell ty
   - progress, rating, image, html (nunjucks templates), json;
   - buttons, menu.
 
+  An `avatar` column takes `descriptionField`, a row path shown as a second line under the name,
+  such as a person's email; the table then needs `size: default` or `size: comfortable`.
   `options` give enum values a label and colour in one place. `rules` and `rowRules` add conditional formatting with the same condition language as filters, with no `_function` needed. `rowLink` makes rows real links.
 
 - `@lowdefy/block-utils` exports `getHtmlEnhancements`, so blocks can navigate the same way the `Link` action does, and it reuses `Intl.NumberFormat` instances when formatting.

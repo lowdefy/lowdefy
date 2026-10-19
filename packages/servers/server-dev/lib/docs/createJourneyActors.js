@@ -174,12 +174,21 @@ function createJourneyActors({
   // recorder is flushed first, or the journey's last steps would be lost.
   async function flushRecordings({ capMs = 2000 } = {}) {
     await Promise.all(
-      [...actors.values()].map(({ page }) =>
-        Promise.race([
-          page.evaluate(() => window.__lowdefyRecorder?.flush()).catch(() => {}),
-          new Promise((resolve) => setTimeout(resolve, capMs)),
-        ])
-      )
+      [...actors.values()].map(async ({ page }) => {
+        // Cleared once the race settles, so a flush that wins does not leave
+        // the cap's timer holding the process open.
+        let cap;
+        try {
+          await Promise.race([
+            page.evaluate(() => window.__lowdefyRecorder?.flush()).catch(() => {}),
+            new Promise((resolve) => {
+              cap = setTimeout(resolve, capMs);
+            }),
+          ]);
+        } finally {
+          clearTimeout(cap);
+        }
+      })
     );
   }
 
