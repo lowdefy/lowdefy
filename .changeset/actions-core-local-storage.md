@@ -9,4 +9,6 @@ objects, arrays and dates are read back as the types that were stored. `GetLocal
 returns the stored value, or the optional `default` when the key is not set or the browser
 blocks local storage, and returns plain string values that were not written by
 `SetLocalStorage` as they are. Keys starting with `lowdefy_` or `lf-` are reserved for
-Lowdefy's own settings and are rejected.
+Lowdefy's own settings and are rejected. Keys are stored per app (its `slug` and base path), so
+apps served from one origin do not share values. Values stay after sign-out, so they should not
+hold secrets or personal data.

@@ -29,7 +29,7 @@ function handleRowActionKey(event, api) {
   const tableRow = api.table.getCoreRowModel().rowsById[id];
   if (!tableRow) return false;
   const visible = api.config.columns.filter(
-    (column) => api.state.columnVisibility[column.key] !== false
+    (column) => api.displayedVisibility[column.key] !== false
   );
   const action = findRowAction({
     columns: visible,

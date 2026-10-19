@@ -16,12 +16,15 @@
 
 import React from 'react';
 import AGGREGATE_LABELS from '@lowdefy/blocks-antd/table/aggregateLabels.js';
+import CELL_TYPE_FAMILIES from '@lowdefy/blocks-antd/table/cellTypeFamilies.js';
+import renderCell from '@lowdefy/blocks-antd/table/renderCell.js';
 
+import getCellFit from './getCellFit.js';
 import getSummaryLabel from './getSummaryLabel.js';
 
 // The label is the full one when it fits beside the value, else its short form, else none
 // (getSummaryLabel, measured without DOM reads); the full label and value are the title.
-function renderSummary({ api, col, entry }) {
+function renderAggregate({ api, col, entry }) {
   const label = AGGREGATE_LABELS[entry.fn];
   const text = entry.text === '' ? '—' : entry.text;
   const measure = api.textMeasure;
@@ -39,33 +42,60 @@ function renderSummary({ api, col, entry }) {
   );
 }
 
-function renderCells({ api, cols, summary }) {
-  return cols.map((col) => {
-    const entry = col.special ? undefined : summary.get(col.key);
-    return (
-      <div
-        className="lf-table-gridcell"
-        data-align={col.column?.align}
-        data-col-key={col.key}
-        data-pinned={col.region === 'center' ? undefined : col.region}
-        data-pinned-edge={col.pinnedEdge ? '' : undefined}
-        key={col.key}
-        role="gridcell"
-        style={col.style}
-      >
-        {entry ? renderSummary({ api, col, entry }) : null}
-      </div>
-    );
+// A summary row cell renders like a body cell (type, cell options, rules, tooltip). A total row
+// has no row actions, so action columns (buttons, menu) stay empty.
+function renderRowCell({ api, col, row }) {
+  if (CELL_TYPE_FAMILIES[col.column.type] === 'action') return null;
+  return renderCell({
+    column: col.column,
+    row,
+    rowKey: null,
+    methods: api.methods,
+    components: api.components,
+    onEvent: api.onCellEvent,
+    fit: getCellFit({ api, col }),
   });
 }
 
-// The summary footer row (D15: on when a column declares `aggregate`), sticky at the bottom of the
-// scroller so it stays in view and scrolls sideways with the columns. Same markup and labels as
-// TableLight's summary row.
+function renderContent({ api, col, summary }) {
+  if (col.special) return null;
+  if (summary.row) return renderRowCell({ api, col, row: summary.row });
+  const entry = summary.aggregates.get(col.key);
+  return entry ? renderAggregate({ api, col, entry }) : null;
+}
+
+// The cells carry no `data-lf-cell` and the row no `data-row-key`, so row, cell and keyboard
+// handlers never treat the footer as a data row.
+function renderCells({ api, cols, summary }) {
+  return cols.map((col) => (
+    <div
+      className="lf-table-gridcell"
+      data-align={col.column?.align}
+      data-col-key={col.key}
+      data-pinned={col.region === 'center' ? undefined : col.region}
+      data-pinned-edge={col.pinnedEdge ? '' : undefined}
+      key={col.key}
+      role="gridcell"
+      style={col.style}
+    >
+      {renderContent({ api, col, summary })}
+    </div>
+  ));
+}
+
+// The summary footer row, sticky at the bottom of the scroller so it stays in view and scrolls
+// sideways with the columns. It shows the aggregates in effect (D15: on when a column declares
+// `aggregate`), with the same markup and labels as TableLight's summary row, or the app's
+// `summaryRow` (`data-summary="row"`), rendered by the columns like a body row.
 function SummaryRow({ api, ariaRowIndex, centerCols, layout, summary }) {
   return (
     <div className="lf-table-footer" role="rowgroup">
-      <div aria-rowindex={ariaRowIndex} className="lf-table-row lf-table-summary-row" role="row">
+      <div
+        aria-rowindex={ariaRowIndex}
+        className="lf-table-row lf-table-summary-row"
+        data-summary={summary.row ? 'row' : 'aggregates'}
+        role="row"
+      >
         {renderCells({ api, cols: layout.start, summary })}
         <div className="lf-table-center">{renderCells({ api, cols: centerCols, summary })}</div>
         {renderCells({ api, cols: layout.end, summary })}

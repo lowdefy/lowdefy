@@ -26,6 +26,7 @@ test('computeFallbackLayout puts trailing columns last in the end region', () =>
   const layout = computeFallbackLayout({
     columns,
     defaultView: {},
+    groupVisibility: {},
     leadingColumns: [],
     trailingColumns: [{ key: '__lf_enrich', special: 'enrich', width: 44 }],
     value: null,
@@ -33,6 +34,18 @@ test('computeFallbackLayout puts trailing columns last in the end region', () =>
   });
   expect(layout.end.map((col) => col.key)).toEqual(['email', '__lf_enrich']);
   expect(layout.end[1]).toMatchObject({ region: 'end', width: 44 });
+});
+
+test('computeFallbackLayout leaves out the columns a collapsed column group hides', () => {
+  const layout = computeFallbackLayout({
+    columns,
+    defaultView: {},
+    groupVisibility: { email: false },
+    leadingColumns: [],
+    value: null,
+    viewportWidth: 800,
+  });
+  expect(layout.cols.map((col) => col.key)).toEqual(['name']);
 });
 
 test('needsTrailingColumn follows addColumn, or onRowRun with an enrichment or ai column', () => {

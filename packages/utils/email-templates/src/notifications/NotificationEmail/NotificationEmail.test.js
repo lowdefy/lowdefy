@@ -109,6 +109,30 @@ test('NotificationEmail renders interpolated data inert in markdown message', as
   expect(text).toContain('[click](https://evil.example)');
 });
 
+test('NotificationEmail renders values with the markdown filter as markdown', async () => {
+  const properties = interpolateProperties({
+    properties: {
+      subject: 'Release notes',
+      message: '{{ intro }}\n\n{{ body | markdown }}',
+    },
+    data: {
+      intro: '# not a heading',
+      body: '## Heading\n\n- item\n\n![shot](https://example.com/a.png)\n\n<script>alert(1)</script>',
+    },
+    markdownProperties: NotificationEmail.markdownProperties,
+  });
+  const { html } = await renderEmail({ Template: NotificationEmail, properties });
+  expect(html).toContain('# not a heading');
+  expect(html).not.toContain('<h1');
+  expect(html).toMatch(/<h2[^>]*>Heading<\/h2>/);
+  expect(html).toMatch(/<li[^>]*>item<\/li>/);
+  expect(html).toContain(
+    '<img src="https://example.com/a.png" alt="shot" style="max-width:100%;height:auto;">'
+  );
+  expect(html).not.toContain('<script>');
+  expect(html).toContain('&lt;script&gt;alert(1)&lt;/script&gt;');
+});
+
 test('NotificationEmail statics are defined', () => {
   expect(NotificationEmail.schema.required).toEqual(['subject']);
   expect(NotificationEmail.markdownProperties).toEqual(['message']);

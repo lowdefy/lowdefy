@@ -17,8 +17,6 @@ agent hooks keep their names — `onStart`, `onStepStart`, `onToolCallStart`, `o
 
 - Tools marked `confirm: true` ask for approval through the agent's `toolApproval` setting rather than
   a per-tool flag; approvals in `AgentChat` work as before.
-- A system message written in a request's `messages` is passed through (AI SDK 7 rejects one
-  unless it is opted in).
 - `reasoningText` and `providerMetadata` in a `GenerateText` / `GenerateObject` response come from
   the final step, as before.
 - The event payloads of the `onToolCallStart`, `onToolCallFinish`, `onStart`, `onStepStart` and
