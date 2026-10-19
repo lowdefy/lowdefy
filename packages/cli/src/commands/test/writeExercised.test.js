@@ -59,8 +59,8 @@ test('writeExercised merges runs of different journeys and keeps both entries', 
   expect(content.version).toEqual(1);
   expect(content.buildId).toEqual('build-2');
   expect(Object.keys(content.journeys)).toEqual([
-    `${path.join('tests', 'journeys', 'a.yaml')}#first`,
-    `${path.join('tests', 'journeys', 'b.yaml')}#second`,
+    'tests/journeys/a.yaml#first',
+    'tests/journeys/b.yaml#second',
   ]);
 });
 
@@ -78,7 +78,7 @@ test('writeExercised skips a result with no measured path', () => {
 test('readExercised returns the entry while the journey is unchanged, and null once its hash no longer matches', () => {
   const run = result({ name: 'first', file: 'tests/journeys/a.yaml', newestPassed: false });
   writeExercised({ directories, results: [run], buildId: 'build-1' });
-  const file = path.join('tests', 'journeys', 'a.yaml');
+  const file = 'tests/journeys/a.yaml';
   expect(readExercised({ directories, file, journey: run.journey })).toEqual({
     hash: expect.stringMatching(/^[0-9a-f]{40}$/),
     configHash: null,
@@ -104,7 +104,7 @@ test('readExercised returns null when nothing was recorded', () => {
 test('readExercised keeps the entry when only evidence, name or tags change, and drops it when a step changes', () => {
   const run = result({ name: 'first', file: 'tests/journeys/a.yaml' });
   writeExercised({ directories, results: [run], buildId: 'build-1' });
-  const file = path.join('tests', 'journeys', 'a.yaml');
+  const file = 'tests/journeys/a.yaml';
   const described = {
     ...run.journey,
     tags: ['smoke'],

@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import path from 'path';
 import { type } from '@lowdefy/helpers';
 
 import findWorkspacePackages from './findWorkspacePackages.js';
+import relativePosixPath from './relativePosixPath.js';
 
 // Each "workspace:" version becomes a link: to the directory of the package
 // with that name among the workspace's packages, relative to directory.
@@ -37,7 +37,7 @@ function linkDependenciesToWorkspace({ dependencies, directory, packages, worksp
         `Plugin "${name}" has version "${dependencies[name]}", but no package named "${name}" was found in the pnpm workspace at ${workspaceRoot}.`
       );
     }
-    const relativePath = path.relative(directory, packageDirectory).split(path.sep).join('/');
+    const relativePath = relativePosixPath({ from: directory, to: packageDirectory });
     linked[name] = `link:${relativePath}`;
   });
   return linked;

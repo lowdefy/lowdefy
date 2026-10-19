@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import path from 'path';
 import { type } from '@lowdefy/helpers';
+import { relativePosixPath } from '@lowdefy/node-utils';
 
 import discoverJourneys from '../../test/discoverJourneys.js';
 import expandPersonas from '../../test/expandPersonas.js';
@@ -101,7 +101,7 @@ async function readOrMeasure({ context, item: journeyItem, url }) {
   const [item] = expandPersonas({ item: journeyItem });
   const entry = readExercised({
     directories: context.directories,
-    file: path.relative(context.directories.config, item.filePath),
+    file: relativePosixPath({ from: context.directories.config, to: item.filePath }),
     journey: item.journey,
   });
   if (!type.isNone(entry)) {
@@ -140,7 +140,7 @@ function generate({ context, kinds, journey, exercised, inputs }) {
 }
 
 function reportFile({ context, file }) {
-  const relative = path.relative(context.directories.config, file.path);
+  const relative = relativePosixPath({ from: context.directories.config, to: file.path });
   switch (file.status) {
     case 'kept':
       context.logger.warn(
@@ -174,7 +174,7 @@ function reportFile({ context, file }) {
 async function replay({ context, written, url }) {
   const suite = { run: runJourney };
   for (const file of written) {
-    const relative = path.relative(context.directories.config, file.path);
+    const relative = relativePosixPath({ from: context.directories.config, to: file.path });
     if (file.placeholder) {
       context.logger.warn(
         `NOT RUN  ${relative}: write the value its from: shape placeholder needs, then lowdefy test --repeat 3 ${relative}`

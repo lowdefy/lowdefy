@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import path from 'path';
 import { type } from '@lowdefy/helpers';
+import { relativePosixPath } from '@lowdefy/node-utils';
 
 import collapsePersonas from '../test/collapsePersonas.js';
 import validateJourney from '../test/validateJourney.js';
@@ -29,7 +29,7 @@ function committedJourneys({ context, items }) {
   const journeys = [];
   const skipped = [];
   collapsePersonas({ items }).forEach((item) => {
-    const file = path.relative(context.directories.config, item.filePath);
+    const file = relativePosixPath({ from: context.directories.config, to: item.filePath });
     if (!type.isNone(item.error)) {
       skipped.push(`${file}: ${item.error}`);
       return;

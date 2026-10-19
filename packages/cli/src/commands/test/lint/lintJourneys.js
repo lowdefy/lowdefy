@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
-import path from 'path';
 import { type } from '@lowdefy/helpers';
-import { parseDataSet } from '@lowdefy/node-utils';
+import { parseDataSet, relativePosixPath } from '@lowdefy/node-utils';
 
 import lintJourney from './lintJourney.js';
 import measuredJourney from '../measuredJourney.js';
@@ -75,7 +74,7 @@ async function lintJourneys({ context, items }) {
       journey: item.journey,
       exercisedEntry: readExercised({
         directories: context.directories,
-        file: path.relative(context.directories.config, item.filePath),
+        file: relativePosixPath({ from: context.directories.config, to: item.filePath }),
         journey: measuredJourney({ journey: item.journey }),
       }),
     });

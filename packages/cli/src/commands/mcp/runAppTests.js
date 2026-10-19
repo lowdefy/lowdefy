@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import path from 'path';
 import { createTraceId, type } from '@lowdefy/helpers';
+import { relativePosixPath } from '@lowdefy/node-utils';
 
 import getDirectories from '../../utils/getDirectories.js';
 import formatNoTestsMatched from '../test/formatNoTestsMatched.js';
@@ -130,13 +130,13 @@ async function runAppTests({
         const { journey, newestPassed, recorded, ...rest } = result;
         return {
           ...rest,
-          filePath: path.relative(configDirectory, result.filePath),
+          filePath: relativePosixPath({ from: configDirectory, to: result.filePath }),
           report: suite.format({ result, seen }).join('\n'),
         };
       }),
       ...tiered.skipped.map((skipped) => ({
         name: skipped.name,
-        filePath: path.relative(configDirectory, skipped.filePath),
+        filePath: relativePosixPath({ from: configDirectory, to: skipped.filePath }),
         skipped: 'deprecated',
         report: formatSkippedJourney({ skipped }),
       })),

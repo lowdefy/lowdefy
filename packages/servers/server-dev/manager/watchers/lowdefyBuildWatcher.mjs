@@ -16,6 +16,8 @@
 
 import path from 'path';
 import { type } from '@lowdefy/helpers';
+import { relativePosixPath } from '@lowdefy/node-utils';
+
 import createChangeSignal from '../utils/createChangeSignal.mjs';
 import findBuildFilesOutsideWatch from '../utils/findBuildFilesOutsideWatch.mjs';
 import getLowdefyVersion from '../utils/getLowdefyVersion.mjs';
@@ -46,10 +48,11 @@ async function lowdefyBuildWatcher(context) {
 
   const callback = async (filePaths) => {
     const changedFiles = filePaths.flat();
-    // Skeleton source files hold app refs relative to the config directory
-    // and module refs as absolute paths, so each change is checked both ways.
+    // Skeleton source files and the page registry hold app refs as their
+    // forward-slash _ref paths relative to the config directory, and module
+    // refs as native absolute paths, so each change is checked both ways.
     const relativeChangedFiles = changedFiles.map((filePath) =>
-      path.relative(configDirectory, filePath)
+      relativePosixPath({ from: configDirectory, to: filePath })
     );
 
     const lowdefyYamlModified = relativeChangedFiles.some(
