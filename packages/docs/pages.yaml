@@ -399,7 +399,6 @@
 - _ref: schema-reference.yaml
 - _ref: quickstart.yaml
 - _ref: concepts/core/four-primitives.yaml
-- _ref: showcase.yaml
 - _ref: recipes/index.yaml
 - _ref: plugins/index.yaml
 
