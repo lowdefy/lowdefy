@@ -1,5 +1,5 @@
 {
-  "version": "6.0.0",
+  "version": "6.1.0",
   "docs": [
     {
       "slug": "other/introduction",
@@ -4760,7 +4760,7 @@
         "actions/DownloadCsv.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "aaf84c26c4655bd3036b8617db2f57fb82c78ea4fc4f7bb1bcd898cdaed3367e"
+      "hash": "6fd2b0812fa8d3bdd06ed5a72321b475e0fe3180876afab085262c37c21358ad"
     },
     "actions/getlocalstorage": {
       "files": [

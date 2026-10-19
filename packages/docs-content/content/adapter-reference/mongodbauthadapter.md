@@ -18,7 +18,7 @@ If you are upgrading from the old `MongoDBAdapter`: the type is renamed, `databa
 ###### Minimum configuration.
 
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 6.1.0
 auth:
   database:
     id: auth_db
@@ -31,7 +31,7 @@ auth:
 ###### Full configuration.
 
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 6.1.0
 auth:
   database:
     id: auth_db

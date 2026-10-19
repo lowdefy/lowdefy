@@ -35,7 +35,7 @@ Lowdefy has a set of default block types as defined in the Lowdefy docs. Most of
 
 ###### Default block type config example:
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 6.1.0
 pages:
   - id: example_dashboard
     type: PageHeaderMenu
