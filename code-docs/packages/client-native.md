@@ -36,15 +36,20 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 | `screen/useScreenFooter.js`                                      | A block draws its own chrome in the page footer (AgentChat's composer)       |
 | `icon/Icon.js`                                                   | Draws IconData (the web's icon node data) with `react-native-svg`            |
 | `icon/createIcon.js`                                             | `components.Icon`: an icon by name from `types.icons`, drawn with `Icon`     |
+| `theme/resolveColor.js`                                          | A configured colour (palette hue, token name, hex) as the theme draws it     |
 | `icon/getSfSymbol.js`, `sfSymbolNames.js`                        | The SF Symbol of a Lucide or semantic icon name, for iOS tab and bar buttons |
 
 ## Differences from the web renderer
 
 - `visible: false` draws nothing (the web keeps a hidden `div` for its id).
-- A loading block with a `skeleton` draws the skeleton in its place (`LoadingBlock`). When it
-  stops loading, `CategorySwitch` passes `fadeIn` and `BlockLayout` draws its outer view as a
-  `FadeInView`, so the content fades in over 200ms where the skeleton was (at once with Reduce
-  Motion on). Only a block that showed its own skeleton fades; a separate Skeleton block toggled
+- A loading block with a `skeleton` draws the skeleton in its place (`LoadingBlock`). The build
+  leaves a skeleton's `style` and `class` as config wrote them, so `getSkeletonBlock` keys them by
+  slot as `normalizeClassAndStyles` keys a block's (`.element` is the element slot, plain CSS the
+  block slot) and `useBlockStyles` converts every slot (`unconverted`); the skeleton's block gets
+  them as `styles` and its block slot places it. The web passes a skeleton's style to its layout
+  only. When it stops loading, `CategorySwitch` passes `fadeIn` and `BlockLayout` draws its outer
+  view as a `FadeInView`, so the content fades in over 200ms where the skeleton was (at once with
+  Reduce Motion on). Only a block that showed its own skeleton fades; a separate Skeleton block toggled
   by `visible` does not, so pages put `loading` and `skeleton` on the block that loads.
 - There are no class names, `Head`, shortcuts, progress bar or antd providers.
 - Layout is `@lowdefy/layout-native` (see its doc). A gapped area is two views (the slot style
@@ -85,6 +90,7 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
   the shell draws menu icons with it, and `initNativeLowdefy` installs `createIcon({ icons:
 types.icons, iconTheme: theme.icons })` as `components.Icon`, which blocks draw every icon
   through. Its props follow the web's (`properties` is a name or the Icon block's properties);
+  `properties.color` resolves through the theme (`resolveColor`: `amber`, `colorPrimary`, a hex);
   an element style's `color` and `fontSize` stand in for CSS `currentColor` and `1em`. It looks
   names up in `types.icons` at render (with `loading` for a spin and `icon-missing` for an
   unknown name), and draws an empty icon when the data has neither. Each built mobile page

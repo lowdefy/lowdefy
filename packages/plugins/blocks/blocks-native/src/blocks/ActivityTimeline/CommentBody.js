@@ -75,8 +75,8 @@ function getBodyStyles({ colors, isDark, tokens }) {
 
 /**
  * A comment's markdown, drawn with the Markdown block's renderer: mentions as @Name chips,
- * `[[KEY]]` record links in the tint, and links of a `linkChips` scheme as the Markdown block's
- * link chips, pressable when the timeline has onLinkPress. The space under the last paragraph is
+ * `[[KEY]]` record links in the tint, and links that match a `linkChips` entry as the Markdown
+ * block's link chips, pressable when the timeline has onLinkPress. The space under the last paragraph is
  * taken back, so the card's padding holds.
  */
 function CommentBody({

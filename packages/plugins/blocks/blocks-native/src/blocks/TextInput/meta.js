@@ -35,10 +35,12 @@ export default {
   icons: ['search'],
   valueType: 'string',
   cssKeys: {
-    element: 'The TextInput box (the search field with `variant: search`).',
-    label: 'The TextInput label.',
+    element:
+      'The TextInput box (the search field with `variant: search`, the row with `variant: row`).',
+    label: 'The TextInput label (the row title with `variant: row`).',
     extra: 'The TextInput extra content.',
     feedback: 'The TextInput validation feedback.',
+    value: 'The text and its prefix and suffix with `variant: row`.',
   },
   events: {
     onBlur: 'Trigger actions when the text input loses focus.',
@@ -106,8 +108,8 @@ export default {
       },
       variant: {
         ...variant,
-        enum: [...variant.enum, 'search'],
-        description: `${variant.description} \`search\` (mobile only) is the iOS search field: a rounded fill with a magnifying glass, a clear button while it has text, the Search key, and Cancel while it is focused. Its placeholder defaults to "Search".`,
+        enum: [...variant.enum, 'search', 'row'],
+        description: `${variant.description} \`search\` (mobile only) is the iOS search field: a rounded fill with a magnifying glass, a clear button while it has text, the Search key, and Cancel while it is focused. Its placeholder defaults to "Search". \`row\` (mobile only) is an iOS Settings-style row for an insetGrouped List or a Card with \`padding: none\`: the title at the left in Body and the one-line text right-aligned in the secondary label colour (its placeholder defaults to "Not set"), at the height and padding of a Selector menu row. Pressing the row focuses the field; \`allowClear\` shows the clear button while it is focused.`,
       },
     },
   },

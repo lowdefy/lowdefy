@@ -102,7 +102,7 @@ export default {
                 iconColor: {
                   type: 'string',
                   description:
-                    'Mobile menu and sheet variants only. The colour of the glyph in the row and the sheet.',
+                    'Mobile menu and sheet variants only. The colour of the glyph in the row and the sheet: a palette hue (`amber`, `blue`), a theme token (`colorPrimary`, `colorTint`) or a colour value.',
                 },
                 avatar: {
                   type: 'object',

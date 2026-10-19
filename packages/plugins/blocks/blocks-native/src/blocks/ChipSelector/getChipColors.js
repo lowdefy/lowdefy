@@ -15,9 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { withAlpha } from '@lowdefy/client-native';
-
-import resolveColor from '../../shared/resolveColor.js';
+import { resolveColor, withAlpha } from '@lowdefy/client-native';
 
 const WHITE = '#FFFFFF';
 

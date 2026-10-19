@@ -33,7 +33,7 @@ const THIN_SPACE = String.fromCharCode(0x2009);
 // react-native-marked's renderer, drawn as iOS text: headings marked as headers, lists with a
 // marker column and nesting (MarkdownList), task boxes in place of the marker, fenced code in a
 // rounded card, quotes with a tint bar, tables in a rounded box and links in the tint. A link
-// whose scheme is one of `linkChips` is a chip (LinkChip). Every link is pressed through
+// that matches one of `linkChips` (by scheme or pattern) is a chip (LinkChip). Every link is pressed through
 // onLinkPress; chips only when onChipPress is given. Raw html is drawn as its source text, as the
 // web block escapes it, or dropped with skipHtml.
 class MarkdownRenderer extends Renderer {

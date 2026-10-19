@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
+import { resolveColor } from '@lowdefy/client-native';
+
 import getSemanticColors from '../../shared/getSemanticColors.js';
-import resolveColor from '../../shared/resolveColor.js';
 
 /**
  * The colour a status glyph draws in when its config sets none, from the theme of the mode

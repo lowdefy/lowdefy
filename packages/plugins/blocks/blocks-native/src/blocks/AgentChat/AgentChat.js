@@ -76,6 +76,10 @@ function toPrompts(list) {
  * bar and the keyboard (useScreenFooter), unless `sender.sticky` is false. With `threads` set the
  * block keeps its conversations through the app's thread endpoints and lists them in a sheet
  * (useChatThreads).
+ *
+ * A chat can start from a seed (the `seed` property on mount, or the newChat method's args): its
+ * shared state is merged under the page's `sharedState` for that conversation, its welcome laid
+ * over the `welcome` property, and its input put in the composer (getChatSeed).
  */
 function AgentChat({
   blockId,
@@ -96,10 +100,7 @@ function AgentChat({
   const sticky = sender.sticky !== false;
   const { agentId, sharedState, urlQuery } = properties;
 
-  // Read by the transport at send time, so a send carries the page's latest values.
   const sharedStateRef = useRef(null);
-  sharedStateRef.current =
-    type.isObject(sharedState) && Object.keys(sharedState).length > 0 ? sharedState : null;
   const sharedStateReadOnlyRef = useRef(false);
   sharedStateReadOnlyRef.current = properties.sharedStateReadOnly === true;
 
@@ -119,7 +120,16 @@ function AgentChat({
   const threads = useChatThreads({ messagesRef, methods, onThreadLoaded, properties });
   const threadsRef = useRef(threads);
   threadsRef.current = threads;
-  const { conversationId } = threads;
+  const { conversationId, seed } = threads;
+
+  // Read by the transport at send time, so a send carries the page's latest values. The page's
+  // values win over the seed's, so a key the agent writes into the page state reads back.
+  const chatSharedState = {
+    ...(seed?.sharedState ?? {}),
+    ...(type.isObject(sharedState) ? sharedState : {}),
+  };
+  sharedStateRef.current = Object.keys(chatSharedState).length > 0 ? chatSharedState : null;
+  const welcome = seed?.welcome ? { ...properties.welcome, ...seed.welcome } : properties.welcome;
 
   const urlQueryKey = JSON.stringify(urlQuery ?? null);
   const pathParamsKey = JSON.stringify(pathParams ?? null);
@@ -216,6 +226,12 @@ function AgentChat({
   // The composer's controls, set as it renders: New chat drops its dictation session.
   const composerRef = useRef({ cancelDictation: () => {} });
 
+  // A seeded chat opens with its input in the composer, once no resume can replace it.
+  useEffect(() => {
+    if (threads.resuming || type.isNone(seed?.input)) return;
+    setFill({ nonce: Date.now(), text: seed.input });
+  }, [seed, threads.resuming]);
+
   // An unanswered tool call left by a reply cut off this session fails validation for the whole
   // history. A reply still streaming is not cut off, and a client-side tool still running will
   // add its output.
@@ -284,16 +300,20 @@ function AgentChat({
     });
   }, [methods]);
 
-  const handleNewChat = useCallback(() => {
-    composerRef.current.cancelDictation();
-    chatRef.current.stop();
-    setSheetOpen(false);
-    threads.newThread();
-    if (!threads.managed && !type.isNone(properties.conversationId)) {
-      chatRef.current.setMessages([]);
-    }
-    follow();
-  }, [follow, properties.conversationId, threads]);
+  const startNewChat = useCallback(
+    (seedArgs) => {
+      composerRef.current.cancelDictation();
+      chatRef.current.stop();
+      setSheetOpen(false);
+      threads.newThread(seedArgs);
+      if (!threads.managed && !type.isNone(properties.conversationId)) {
+        chatRef.current.setMessages([]);
+      }
+      follow();
+    },
+    [follow, properties.conversationId, threads]
+  );
+  const handleNewChat = useCallback(() => startNewChat(null), [startNewChat]);
 
   const openThreads = useCallback(() => {
     if (!threads.canList) return;
@@ -330,7 +350,7 @@ function AgentChat({
     methods.registerMethod('clearError', () => clearError());
     methods.registerMethod('scrollToBottom', () => follow());
     methods.registerMethod('openThreads', openThreads);
-    methods.registerMethod('newChat', handleNewChat);
+    methods.registerMethod('newChat', (args) => startNewChat(args));
   });
 
   const handleSend = useCallback(
@@ -444,7 +464,7 @@ function AgentChat({
   let prompts = [];
   let onPrompt = (prompt) => deliver({ text: prompt.label });
   if (!isLoading && isEmpty) {
-    prompts = toPrompts(properties.welcome?.prompts);
+    prompts = toPrompts(welcome?.prompts);
   } else if (!isLoading && !isBusy && type.isNone(error)) {
     prompts = toPrompts(agentSuggestions ?? properties.suggestions);
     onPrompt = (suggestion) => {
@@ -499,7 +519,7 @@ function AgentChat({
         colors={colors}
         components={components}
         testID={`${blockId}_welcome`}
-        welcome={properties.welcome}
+        welcome={welcome}
       />
     );
   } else {

@@ -15,6 +15,7 @@
 */
 
 import React from 'react';
+import { resolveColor } from '@lowdefy/client-native';
 import { type } from '@lowdefy/helpers';
 
 import AvatarCircle from '../blocks/Avatar/AvatarCircle.js';
@@ -28,7 +29,8 @@ import SystemIcon from './SystemIcon.js';
  *
  * @param {Object} props
  * @param {Object} [props.avatar] `{ name, src, color }`, drawn as the Avatar block draws it.
- * @param {string} [props.color] The glyph colour; secondary text by default.
+ * @param {string} [props.color] The glyph colour, resolved through the theme (a palette hue such
+ *   as `amber`, a token such as `colorTint`, or a hex); secondary text by default.
  * @param {Object} props.components
  * @param {string} [props.icon] An icon name from the app's icon data.
  * @param {boolean} props.isDark
@@ -44,7 +46,7 @@ function OptionGlyph({ avatar, color, components, icon, isDark, size, symbol, te
   }
   return (
     <SystemIcon
-      color={color ?? tokens.colorTextSecondary}
+      color={type.isString(color) ? resolveColor({ color, tokens }) : tokens.colorTextSecondary}
       components={components}
       fallback={icon}
       size={size}

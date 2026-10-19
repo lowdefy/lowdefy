@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 
 import formatIconTitle from './formatIconTitle.js';
 import IconSvg from './Icon.js';
+import resolveColor from '../theme/resolveColor.js';
 import toPixels from '../style/toPixels.js';
 import useSpin from './useSpin.js';
 import useTheme from '../theme/useTheme.js';
@@ -37,9 +38,11 @@ const EMPTY_ICON = { node: [] };
  * installs it as `lowdefy._internal.components.Icon` (initNativeLowdefy does), and blocks draw
  * every icon through it. It draws with Icon, the IconData renderer the shell's menus use too.
  *
- * The props follow the web's: `properties` is an icon name or the Icon block's properties. An
- * element style's `color` and `fontSize` play the part CSS inheritance plays on the web: the
- * colour `currentColor` draws with and the size `1em` stands for.
+ * The props follow the web's: `properties` is an icon name or the Icon block's properties. Its
+ * `color` is resolved through the theme (resolveColor): a palette hue (`blue`, `amber`), a token
+ * (`colorPrimary`, `colorTint`) or a hex. An element style's `color` and `fontSize` play the part
+ * CSS inheritance plays on the web: the colour `currentColor` draws with and the size `1em`
+ * stands for.
  *
  * @param {Object} params
  * @param {Object} params.icons Icon data by name, as the build loads it: `{ node, attrs, size }`.
@@ -78,7 +81,9 @@ function createIcon({ icons, iconTheme = {} }) {
       tokens.fontSize;
     const named = getIconData(iconProperties.name);
     let data = named;
-    let color = iconProperties.color ?? elementColor ?? tokens.colorLabel;
+    let color = type.isString(iconProperties.color)
+      ? resolveColor({ color: iconProperties.color, tokens })
+      : elementColor ?? tokens.colorLabel;
     if (spin) {
       data = getIconData('loading');
     } else if (named === null) {

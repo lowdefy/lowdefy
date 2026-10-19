@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
+import { resolveColor } from '@lowdefy/client-native';
 import { type } from '@lowdefy/helpers';
-
-import resolveColor from '../../shared/resolveColor.js';
 
 /**
  * The colours an Illustration's `var(--name)` references take in the mode showing: the theme's

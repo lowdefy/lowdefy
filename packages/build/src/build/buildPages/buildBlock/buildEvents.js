@@ -272,7 +272,16 @@ function checkControl(control, ctx) {
 }
 
 function checkActionList(list, ctx) {
-  list.forEach((item) => {
+  const { blockId, eventId, pageId } = ctx;
+  list.forEach((item, index) => {
+    // The engine runs each item of the list as an action and nothing joins nested lists, so a
+    // _ref that returns a list, placed as one item, would never run.
+    if (type.isArray(item)) {
+      throw new ConfigError(
+        `Action list on event "${eventId}" on block "${blockId}" on page "${pageId}" holds a list at item ${index}, which is a list of actions, not an action. Use the _ref as the whole list, or join the lists with _build.array.concat.`,
+        { configKey: item['~k'] ?? list['~k'] }
+      );
+    }
     if (isControl(item)) {
       checkControl(item, ctx);
     } else {

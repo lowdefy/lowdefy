@@ -16,12 +16,12 @@
 
 import React from 'react';
 import { Text, View } from 'react-native';
+import { resolveColor } from '@lowdefy/client-native';
 import { type } from '@lowdefy/helpers';
 
 import getSemanticColors from '../../shared/getSemanticColors.js';
 import getStatusColor from './getStatusColor.js';
 import iosTextStyles from '../../shared/iosTextStyles.js';
-import resolveColor from '../../shared/resolveColor.js';
 import StatusGlyph from './StatusGlyph.js';
 import statusLabels from './statusLabels.js';
 

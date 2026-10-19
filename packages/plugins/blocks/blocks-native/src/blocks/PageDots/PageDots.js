@@ -16,10 +16,9 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Animated, Easing, View } from 'react-native';
-import { useTheme } from '@lowdefy/client-native';
+import { resolveColor, useTheme } from '@lowdefy/client-native';
 
 import meta from './meta.js';
-import resolveColor from '../../shared/resolveColor.js';
 
 // iOS's page control: 7pt dots, 9pt apart, the other pages' dots faint.
 const DOT = 7;

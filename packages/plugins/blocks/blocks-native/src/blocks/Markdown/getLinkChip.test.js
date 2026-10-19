@@ -57,3 +57,92 @@ test('getLinkChip returns null for a link with no chip scheme', () => {
   expect(getLinkChip({ href: '/relative', linkChips, text: 'Relative' })).toBeNull();
   expect(getLinkChip({ href: 'pelican:PEL-1', text: 'PEL-1' })).toBeNull();
 });
+
+const taskChips = [
+  { pattern: '^/ACME/tasks/(?<key>ACME-\\d+)$', icon: 'CircleCheck', tone: 'info' },
+];
+
+test('getLinkChip matches an app path by pattern, its key the named group', () => {
+  expect(
+    getLinkChip({
+      href: '/ACME/tasks/ACME-647',
+      linkChips: taskChips,
+      text: 'ACME-647 (Fix broken menu URL)',
+    })
+  ).toEqual({ chip: taskChips[0], key: 'ACME-647', title: 'Fix broken menu URL' });
+});
+
+test('getLinkChip takes a pattern chip title after a separator or in brackets', () => {
+  const chip = (text) => getLinkChip({ href: '/ACME/tasks/ACME-1', linkChips: taskChips, text });
+  expect(chip('ACME-1 - Fix the menu').title).toEqual('Fix the menu');
+  expect(chip('ACME-1: Fix the menu').title).toEqual('Fix the menu');
+  expect(chip('ACME-1 — Fix the menu').title).toEqual('Fix the menu');
+  expect(chip('ACME-1').title).toBeNull();
+});
+
+test('getLinkChip keeps the key of a pattern chip when the link text is only its title', () => {
+  expect(
+    getLinkChip({ href: '/ACME/tasks/ACME-647', linkChips: taskChips, text: 'Fix broken menu URL' })
+  ).toEqual({ chip: taskChips[0], key: 'ACME-647', title: 'Fix broken menu URL' });
+  expect(getLinkChip({ href: '/ACME/tasks/ACME-647', linkChips: taskChips, text: '' })).toEqual({
+    chip: taskChips[0],
+    key: 'ACME-647',
+    title: null,
+  });
+});
+
+test('getLinkChip takes the first numbered group when a pattern names no key group', () => {
+  const linkChips = [{ pattern: '^/ACME/designs/(ACME-\\d+)$' }];
+  expect(getLinkChip({ href: '/ACME/designs/ACME-9', linkChips, text: 'ACME-9 Payroll' })).toEqual({
+    chip: linkChips[0],
+    key: 'ACME-9',
+    title: 'Payroll',
+  });
+});
+
+test('getLinkChip draws the link text as the key for a pattern with no group', () => {
+  const linkChips = [{ pattern: '^/ACME/people/', prefix: '@' }];
+  expect(getLinkChip({ href: '/ACME/people/u_1', linkChips, text: 'Ada' })).toEqual({
+    chip: linkChips[0],
+    key: '@Ada',
+    title: null,
+  });
+});
+
+test('getLinkChip shows the key alone, or the link text, by the chip label', () => {
+  const href = '/ACME/tasks/ACME-647';
+  const text = 'ACME-647 (Fix broken menu URL)';
+  const keyChips = [{ ...taskChips[0], label: 'key' }];
+  expect(getLinkChip({ href, linkChips: keyChips, text })).toEqual({
+    chip: keyChips[0],
+    key: 'ACME-647',
+    title: null,
+  });
+  const textChips = [{ ...taskChips[0], label: 'text' }];
+  expect(getLinkChip({ href, linkChips: textChips, text })).toEqual({
+    chip: textChips[0],
+    key: 'ACME-647 (Fix broken menu URL)',
+    title: null,
+  });
+  expect(
+    getLinkChip({
+      href: 'pelican:PEL-12',
+      linkChips: [{ scheme: 'pelican', label: 'key' }],
+      text: 'PEL-12 Sign in',
+    }).title
+  ).toBeNull();
+});
+
+test('getLinkChip draws the first chip a link matches, and a path no pattern finds as a plain link', () => {
+  const linkChips = [{ scheme: 'pelican' }, ...taskChips, { pattern: '^/ACME/', tone: 'neutral' }];
+  expect(getLinkChip({ href: '/ACME/tasks/ACME-3', linkChips, text: 'ACME-3' }).chip).toBe(
+    linkChips[1]
+  );
+  expect(getLinkChip({ href: '/ACME/home', linkChips, text: 'Home' }).chip).toBe(linkChips[2]);
+  expect(
+    getLinkChip({ href: '/OTHER/tasks/ACME-3', linkChips: taskChips, text: 'ACME-3' })
+  ).toBeNull();
+  expect(
+    getLinkChip({ href: 'https://example.com/ACME/tasks/ACME-3', linkChips: taskChips, text: 'x' })
+  ).toBeNull();
+});

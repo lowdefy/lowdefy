@@ -48,7 +48,7 @@ const swipeAction = {
 // A mobile-only block: an iOS-style list row. On a phone a table is a List of ListItems.
 export default {
   category: 'container',
-  icons: ['chevron-right'],
+  icons: ['Check', 'chevron-right'],
   valueType: null,
   slots: {
     leading: 'Blocks at the start of the row, in place of the leading property.',
@@ -191,13 +191,19 @@ export default {
         type: 'object',
         additionalProperties: false,
         description:
-          'What ends the row, in this order: badges, text, a status glyph, an icon, then avatars.',
+          'What ends the row, in this order: badges, text, a status glyph, an icon, then avatars, and last the checkmark.',
         properties: {
           avatar: { ...sizedAvatar, description: "A person's avatar, 20pt unless sized." },
           avatars: {
             type: 'array',
             items: avatar,
             description: 'Several people as stacked 20pt avatars, at most three and a count.',
+          },
+          check: {
+            type: 'boolean',
+            default: false,
+            description:
+              "Draw the iOS checkmark (17pt semibold, in the tint colour) at the end of the row, where the chevron goes, as a picked row of a multi-select list shows it. A checked row has no chevron unless `chevron` is true, and a screen reader reads it as selected. Set it from state, such as whether the picked values include the row's value.",
           },
           badges: {
             type: 'array',

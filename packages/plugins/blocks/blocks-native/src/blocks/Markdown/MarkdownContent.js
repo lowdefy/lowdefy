@@ -42,7 +42,8 @@ const webPattern = /^https?:\/\//i;
  * @param {Object} props
  * @param {Object} props.components The host block's components (components.Icon for chip icons).
  * @param {string} props.content
- * @param {Object[]} [props.linkChips] Links drawn as inline chips, by scheme (schemas/linkChips).
+ * @param {Object[]} [props.linkChips] Links drawn as inline chips, by scheme or pattern
+ *   (schemas/linkChips).
  * @param {((href: string) => void)|null} [props.onLinkPress]
  * @param {boolean} [props.skipHtml] Leave raw html out rather than drawing its source.
  * @param {Object} [props.style]

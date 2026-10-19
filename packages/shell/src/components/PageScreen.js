@@ -17,6 +17,7 @@
 import React, {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -29,6 +30,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LowdefyPage } from '@lowdefy/client-native';
 
 import evaluateJsEntries from '../js/evaluateJsEntries.js';
+import getInitialScreenOptions from '../navigation/getInitialScreenOptions.js';
 import getPageView from '../session/getPageView.js';
 import getStackOptions from '../navigation/getStackOptions.js';
 import isPageUnderHeader from '../navigation/isPageUnderHeader.js';
@@ -76,6 +78,31 @@ function useHeaderInset() {
     );
   }, []);
   return { headerInset: underHeader ? headerHeight : 0, updateHeaderInset };
+}
+
+// The bar a page's config gives (getInitialScreenOptions), set before the page is first drawn:
+// the page waits a frame for the bar to take it, so its scroll view is first laid out under the
+// bar it will have. iOS sizes a large title from where the scroll view sits when the large title
+// comes: a scroll view laid out under a standard bar first keeps the title collapsed. Once the
+// first page is drawn, later versions of it are drawn in place, under the bar their Screen
+// reports.
+function useInitialHeader({ pageConfig, setStackOptions }) {
+  const [ready, setReady] = useState(false);
+  const pageConfigRef = useRef(pageConfig);
+  pageConfigRef.current = pageConfig;
+  const hasPage = pageConfig !== undefined;
+  useLayoutEffect(() => {
+    if (ready || !hasPage) return undefined;
+    const options = getInitialScreenOptions({ pageConfig: pageConfigRef.current });
+    if (options === null) {
+      setReady(true);
+      return undefined;
+    }
+    setStackOptions(options);
+    const frame = requestAnimationFrame(() => setReady(true));
+    return () => cancelAnimationFrame(frame);
+  }, [hasPage, ready, setStackOptions]);
+  return ready;
 }
 
 /**
@@ -130,7 +157,7 @@ function PageScreen({ path, query = '' }) {
     session.loadPage({ entry, path }).catch((error) => setLoadError(error));
   }, [pageId, path, session, state.cacheKey, state.generation]);
 
-  const onScreenOptions = useCallback(
+  const setStackOptions = useCallback(
     (options) => {
       navigation.setOptions(
         getStackOptions({
@@ -140,11 +167,18 @@ function PageScreen({ path, query = '' }) {
           searchBarRef,
         })
       );
-      setAutoFocus(options.headerSearch?.autoFocus === true);
       updateHeaderInset(options);
     },
-    [navigation, searchBarRef, setAutoFocus, updateHeaderInset]
+    [navigation, searchBarRef, updateHeaderInset]
   );
+  const onScreenOptions = useCallback(
+    (options) => {
+      setStackOptions(options);
+      setAutoFocus(options.headerSearch?.autoFocus === true);
+    },
+    [setAutoFocus, setStackOptions]
+  );
+  const headerReady = useInitialHeader({ pageConfig: view.page?.pageConfig, setStackOptions });
 
   if (view.view === 'update') {
     return <UpdateScreen shell={shell} />;
@@ -169,6 +203,9 @@ function PageScreen({ path, query = '' }) {
         />
       );
     }
+    return <LoadingScreen />;
+  }
+  if (!headerReady) {
     return <LoadingScreen />;
   }
   locale.apply();

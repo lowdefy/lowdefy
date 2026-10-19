@@ -101,13 +101,13 @@ const nativeBlockTypes = {
       'TriangleAlert',
       'X',
     ],
-    DateSelector: [],
+    DateSelector: ['ChevronsUpDown'],
     Divider: [],
     Empty: ['Inbox'],
     Icon: ['loading'],
     Illustration: [],
     List: [],
-    ListItem: ['chevron-right'],
+    ListItem: ['Check', 'chevron-right'],
     Markdown: [],
     Menu: [],
     NumberInput: [],
@@ -152,6 +152,7 @@ const nativeBlockTypes = {
         'messageDisplay.showSources',
         'messageDisplay.showStepSeparators',
         'messageDisplay.sourcesDisplay',
+        'seed.welcome.prompts.$.icon',
         'sender.allowSpeech',
         'sender.attachments',
         'sender.classNames',
@@ -213,7 +214,7 @@ const nativeBlockTypes = {
     DateSelector: {
       category: 'input',
       valueType: 'date',
-      cssKeys: ['element', 'label', 'extra', 'feedback'],
+      cssKeys: ['element', 'label', 'extra', 'feedback', 'value'],
       nativeIgnored: [
         'label.align',
         'label.lg',
@@ -279,7 +280,7 @@ const nativeBlockTypes = {
     NumberInput: {
       category: 'input',
       valueType: 'number',
-      cssKeys: ['element', 'label', 'extra', 'feedback'],
+      cssKeys: ['element', 'label', 'extra', 'feedback', 'value'],
       nativeIgnored: [
         'changeOnWheel',
         'controls',
@@ -420,7 +421,7 @@ const nativeBlockTypes = {
     TextInput: {
       category: 'input',
       valueType: 'string',
-      cssKeys: ['element', 'label', 'extra', 'feedback'],
+      cssKeys: ['element', 'label', 'extra', 'feedback', 'value'],
       nativeIgnored: [
         'label.align',
         'label.lg',

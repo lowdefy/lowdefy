@@ -52,6 +52,7 @@ function getTrailing({ properties }) {
     avatar: trailing.avatar,
     avatars: trailing.avatars,
     badges: trailing.badges ?? [],
+    check: trailing.check === true,
     icon: trailing.icon,
     status: trailing.status,
     text: trailing.text ?? properties.extra,

@@ -16,39 +16,68 @@
 
 import { type } from '@lowdefy/helpers';
 
+import matchLinkChip from './matchLinkChip.js';
+
+// Brackets and separators an agent writes between a record's key and its title:
+// `ACME-12 (Fix the menu)`, `ACME-12 - Fix the menu`, `ACME-12: Fix the menu`.
+const titleWrapper = /^\((.*)\)$/s;
+const titleSeparator = /^[-–—:·|]\s*/;
+
+function tidyTitle(text) {
+  const title = text.trim().replace(titleSeparator, '').replace(titleWrapper, '$1').trim();
+  return title === '' ? null : title;
+}
+
+function withPrefix({ chip, label }) {
+  const prefix = type.isString(chip.prefix) ? chip.prefix : '';
+  return label.startsWith(prefix) ? label : `${prefix}${label}`;
+}
+
 /**
- * The chip a link draws as, when its address uses one of the block's `linkChips` schemes: the
- * chip's config, its key and its title. The key is the part of the link text the address names
- * (`PEL-12` in `[PEL-12 Sign in](pelican:PEL-12)`), and the title the text after it. Text that
- * does not start with the address's value is all key, after the chip's `prefix` (`@` for a
- * mention) when it does not already start with it.
+ * The chip a link draws as, when it matches one of the block's `linkChips` (matchLinkChip): the
+ * chip's config, its key and its title.
+ *
+ * The key is the value the address names: after the scheme (`PEL-12` in `pelican:PEL-12`), or
+ * the pattern's `key` group, else its first group (`ACME-12` in `/ACME/tasks/ACME-12`). Link
+ * text that starts with the key gives the key as written and the title after it, without the
+ * brackets or separator between them (`ACME-12 (Fix the menu)` has the title `Fix the menu`).
+ * Other link text is the title after a pattern's key, and all key after a scheme, whose value is
+ * often an id (`[@Ada](mention:u_1)`): there the chip's `prefix` (`@` for a mention) goes before
+ * text that does not start with it. A pattern without a group draws the text as a scheme does.
+ *
+ * The chip's `label` picks what shows: `keyAndTitle` (the default), `key` alone, or `text`, the
+ * link text as written (after the prefix).
  *
  * @param {Object} params
  * @param {string} params.href The link's address.
- * @param {Object[]} [params.linkChips] The block's `linkChips`: `[{ scheme, icon, tone, color, prefix }]`.
+ * @param {Object[]} [params.linkChips] The block's `linkChips` (schemas/linkChips).
  * @param {string} params.text The link's text.
  * @returns {{ chip: Object, key: string, title: string|null } | null} Null for a plain link.
  */
 function getLinkChip({ href, linkChips = [], text }) {
-  const address = String(href ?? '');
-  const cut = address.indexOf(':');
-  if (cut < 1) {
+  const match = matchLinkChip({ href, linkChips });
+  if (match === null) {
     return null;
   }
-  const scheme = address.slice(0, cut).toLowerCase();
-  const chip = linkChips.find((config) => String(config.scheme).toLowerCase() === scheme);
-  if (type.isUndefined(chip)) {
-    return null;
-  }
-  const value = address.slice(cut + 1).replace(/^\/\//, '');
+  const { chip, fromPattern, value } = match;
   const label = text.trim();
-  if (value !== '' && label.toLowerCase().startsWith(value.toLowerCase())) {
-    const title = label.slice(value.length).trim();
-    return { chip, key: label.slice(0, value.length), title: title === '' ? null : title };
+  if (chip.label === 'text' || value === null || value === '') {
+    const key = withPrefix({ chip, label });
+    return { chip, key: key === '' ? value ?? '' : key, title: null };
   }
-  const prefix = type.isString(chip.prefix) ? chip.prefix : '';
-  const key = label.startsWith(prefix) ? label : `${prefix}${label}`;
-  return { chip, key: key === '' ? value : key, title: null };
+  let key;
+  let title;
+  if (label.toLowerCase().startsWith(value.toLowerCase())) {
+    key = label.slice(0, value.length);
+    title = tidyTitle(label.slice(value.length));
+  } else if (fromPattern) {
+    key = value;
+    title = tidyTitle(label);
+  } else {
+    const whole = withPrefix({ chip, label });
+    return { chip, key: whole === '' ? value : whole, title: null };
+  }
+  return { chip, key, title: chip.label === 'key' ? null : title };
 }
 
 export default getLinkChip;

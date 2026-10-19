@@ -173,6 +173,7 @@ Critical structural checks (required id/type, correct types) are handled by **fo
 | Connection id/type required   | `buildConnections.js`     | Includes connectionId             |
 | Request id/type required      | `buildRequests.js`        | Includes requestId, pageId        |
 | Action id/type required       | `buildEvents.js`          | Includes eventId, blockId, pageId |
+| Action list item is a list    | `buildEvents.js`          | Includes eventId, blockId, pageId |
 | Endpoint id/type required     | `validateEndpoint.js`     | Includes endpointId               |
 | Menu id required              | `buildMenu.js`            | Includes menuId                   |
 | Menu item id/type required    | `buildMenu.js`            | Includes menuItemId, menuId       |
