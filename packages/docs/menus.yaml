@@ -14,6 +14,7 @@
 
 - id: menu-learn
   properties:
+    docsSection: Learn
     title: Learn
   links:
     - id: welcome
@@ -52,6 +53,7 @@
         - id: tutorial
           type: MenuGroup
           properties:
+            docsSection: Tutorial
             title: Tutorial
             icon: Rocket
           links:
@@ -98,6 +100,7 @@
     - id: core-concepts
       type: MenuGroup
       properties:
+        docsSection: Concepts
         title: Core concepts
         icon: Lightbulb
       links:
@@ -154,6 +157,7 @@
     - id: agents_group
       type: MenuGroup
       properties:
+        docsSection: Agents
         title: AI Agents
         icon: bot
       links:
@@ -200,6 +204,7 @@
     - id: advanced-topics
       type: MenuGroup
       properties:
+        docsSection: Concepts
         title: Advanced topics
         icon: SlidersHorizontal
       links:
@@ -301,6 +306,7 @@
     - id: websockets
       type: MenuGroup
       properties:
+        docsSection: WebSockets
         title: WebSockets
         icon: Radio
       links:
@@ -322,6 +328,7 @@
     - id: testing
       type: MenuGroup
       properties:
+        docsSection: Testing
         title: Testing
         icon: FlaskConical
       links:
@@ -373,6 +380,7 @@
     - id: users_group
       type: MenuGroup
       properties:
+        docsSection: User Authentication
         title: Authentication
         icon: users
       links:
@@ -434,6 +442,7 @@
         - id: auth_provider_reference
           type: MenuGroup
           properties:
+            docsSection: Provider Reference
             title: Provider Reference
           links:
             - id: auth-js-providers
@@ -447,6 +456,7 @@
         - id: auth_adapter_reference
           type: MenuGroup
           properties:
+            docsSection: Adapter Reference
             title: Adapter Reference
           links:
             - id: MongoDBAuthAdapter
@@ -455,6 +465,7 @@
         - id: auth_callback_reference
           type: MenuGroup
           properties:
+            docsSection: Callback Reference
             title: Callback Reference
           links:
             - id: Auth0LogoutCallback
@@ -463,6 +474,7 @@
     - id: deployment
       type: MenuGroup
       properties:
+        docsSection: Deployment
         title: Deployment
         icon: CloudUpload
       links:
@@ -489,6 +501,7 @@
     - id: migration
       type: MenuGroup
       properties:
+        docsSection: Migration
         title: Upgrading
         icon: ArrowLeftRight
       links:
@@ -524,6 +537,7 @@
             title: V3 to V4
 - id: menu-reference
   properties:
+    docsSection: Reference
     title: Reference
   links:
     - id: reference
@@ -546,6 +560,7 @@
         - id: blocks_input
           type: MenuGroup
           properties:
+            docsSection: Input Blocks
             title: Input
             icon: SquarePen
           links:
@@ -680,6 +695,7 @@
         - id: blocks_display
           type: MenuGroup
           properties:
+            docsSection: Display Blocks
             title: Display
             icon: image
           links:
@@ -821,6 +837,7 @@
         - id: blocks_container
           type: MenuGroup
           properties:
+            docsSection: Container Blocks
             title: Container
             icon: Archive
           links:
@@ -935,6 +952,7 @@
         - id: blocks_list
           type: MenuGroup
           properties:
+            docsSection: List Blocks
             title: List
             icon: ListOrdered
           links:
@@ -953,6 +971,7 @@
     - id: operators-group
       type: MenuGroup
       properties:
+        docsSection: Operators
         title: Operators
         icon: SquareFunction
       links:
@@ -960,6 +979,7 @@
           type: MenuLink
           pageId: operators-reference
           properties:
+            docsSection: Reference
             title: Overview
         - id: operators-logic
           type: MenuGroup
@@ -1249,6 +1269,7 @@
     - id: actions-group
       type: MenuGroup
       properties:
+        docsSection: Actions
         title: Actions
         icon: Zap
       links:
@@ -1256,6 +1277,7 @@
           type: MenuLink
           pageId: actions-reference
           properties:
+            docsSection: Reference
             title: Overview
         - id: actions-state
           type: MenuGroup
@@ -1431,6 +1453,7 @@
     - id: connections-group
       type: MenuGroup
       properties:
+        docsSection: Connections
         title: Connections
         icon: Plug
       links:
@@ -1438,6 +1461,7 @@
           type: MenuLink
           pageId: connections-reference
           properties:
+            docsSection: Reference
             title: Overview
         - id: connections-sql
           type: MenuGroup
@@ -1569,6 +1593,7 @@
     - id: controls-menu-group
       type: MenuGroup
       properties:
+        docsSection: Controls
         title: Controls
         icon: Split
       links:
@@ -1622,6 +1647,7 @@
         icon: CodeXml
 - id: menu-recipes
   properties:
+    docsSection: Recipes
     title: Recipes
   links:
     - id: recipes
@@ -1632,6 +1658,7 @@
         icon: FlaskConical
 - id: menu-plugins
   properties:
+    docsSection: Plugins
     title: Plugins
   links:
     - id: plugins
@@ -1643,6 +1670,7 @@
     - id: build-a-plugin
       type: MenuGroup
       properties:
+        docsSection: Plugins
         title: Build a plugin
         icon: Wrench
       links:
@@ -1680,6 +1708,7 @@
     - id: plugin-packages
       type: MenuGroup
       properties:
+        docsSection: Plugins
         title: Plugin packages
         icon: Package
       links:
