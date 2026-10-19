@@ -55,7 +55,6 @@ blocks:
   - id: {{ pageId }}_page
     type: PageSiderMenu
     properties:
-      title: {{ pageTitle }}
       darkModeToggle: true
       menu:
         forceSubMenuRender: true
@@ -119,7 +118,7 @@ blocks:
               {% if fullWidth %}
               flex: 1 1 auto
               {% else %}
-              flex: 0 1 800px
+              flex: 0 1 {{ contentWidth or '800px' }}
               {% endif %}
             style:
               minWidth: 0
