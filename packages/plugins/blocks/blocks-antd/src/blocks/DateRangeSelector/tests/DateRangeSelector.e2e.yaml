@@ -38,6 +38,9 @@ events:
         drs_typed_min:
           - _date: '2024-06-01'
           - _date: '2024-06-30'
+        drs_typed_blur:
+          - _date: '2024-06-01'
+          - _date: '2024-06-30'
 
 blocks:
   # ============================================
@@ -530,3 +533,59 @@ blocks:
           - _if_none:
               - _state: drs_typed_empty_count
               - 0
+
+  # Its onBlur actions render the block again while a typed date is not yet applied.
+  - id: drs_typed_blur
+    type: DateRangeSelector
+    properties:
+      title: Typed Dates With onBlur
+      format: YYYY-MM-DD
+    events:
+      onBlur:
+        - id: count_drs_typed_blur
+          type: SetState
+          params:
+            drs_typed_blur_blurs:
+              _sum:
+                - _if_none:
+                    - _state: drs_typed_blur_blurs
+                    - 0
+                - 1
+      onChange:
+        - id: set_typed_blur_event
+          type: SetState
+          params:
+            drs_typed_blur_event:
+              _event: value
+
+  - id: drs_typed_blur_blurs_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'Blurs: '
+          - _if_none:
+              - _state: drs_typed_blur_blurs
+              - 0
+
+  - id: drs_typed_blur_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: drs_typed_blur_event
+              - null
+          then: ''
+          else:
+            _string.concat:
+              - _dayjs.format:
+                  on:
+                    _state: drs_typed_blur_event.0
+                  format: YYYY-MM-DD
+              - ' ~ '
+              - _dayjs.format:
+                  on:
+                    _state: drs_typed_blur_event.1
+                  format: YYYY-MM-DD
