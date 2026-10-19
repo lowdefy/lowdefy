@@ -466,7 +466,7 @@ chromiumTest(
       (event) => event.operationType === 'insert' && event.id === 'later-1'
     );
     expect(insert).toBeDefined();
-    expect(insert.db).toMatch(/^ld_[0-9a-f]{12}$/);
+    expect(insert.db).toMatch(/^ld_[0-9a-f]{12}_\d+$/);
     const insertIndex = storeEvents.indexOf(insert);
     const dropIndex = storeEvents.findIndex(
       (event) => event.operationType === 'dropDatabase' && event.db === insert.db
@@ -523,7 +523,7 @@ chromiumTest(
       (event) => event.operationType === 'insert' && event.id === 'arch-1'
     );
     expect(insert).toBeDefined();
-    expect(insert.db).toMatch(/^ld_[0-9a-f]{12}$/);
+    expect(insert.db).toMatch(/^ld_[0-9a-f]{12}_\d+$/);
     expect(insert.coll).toEqual('archived');
   }
 );
@@ -568,7 +568,7 @@ chromiumTest(
       (event) => event.operationType === 'insert' && event.id === 'later-auth-before'
     );
     expect(before).toBeDefined();
-    expect(before.db).toMatch(/^ld_[0-9a-f]{12}$/);
+    expect(before.db).toMatch(/^ld_[0-9a-f]{12}_\d+$/);
     expect(storeEvents.some((event) => event.id === 'later-auth-after')).toBe(false);
   }
 );
@@ -636,7 +636,7 @@ chromiumTest(
       (event) => event.operationType === 'insert' && event.id === 'later-logged'
     );
     expect(insert).toBeDefined();
-    expect(insert.db).toMatch(/^ld_[0-9a-f]{12}$/);
+    expect(insert.db).toMatch(/^ld_[0-9a-f]{12}_\d+$/);
     expect(storeEvents.some((event) => event.id === 'log-detached')).toBe(false);
     expect(await standInIds()).toEqual(['real-1']);
   }

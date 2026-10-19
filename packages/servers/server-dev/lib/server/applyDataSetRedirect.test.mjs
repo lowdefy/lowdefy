@@ -124,17 +124,27 @@ function createContext() {
   return { readConfigFile: async (filePath) => artifacts[filePath] ?? null };
 }
 
-const session = {
-  id: 'abc',
-  name: 'staging-sample',
-  state: 'open',
-  databaseUri: 'mongodb://127.0.0.1:5555/?replicaSet=testset',
-  databaseName: 'ld_000000000001',
-};
+// A session as openDataSession opens it for a build whose one target is the MONGODB_URI secret. The
+// gate numbers a target it meets for the first time, so each test takes a fresh one.
+function createSession(overrides = {}) {
+  return {
+    id: 'abc',
+    name: 'staging-sample',
+    state: 'open',
+    databaseUri: 'mongodb://127.0.0.1:5555/?replicaSet=testset',
+    prefix: 'ld_000000000001',
+    databaseName: 'ld_000000000001_0',
+    databases: new Map([[JSON.stringify(['secret:MONGODB_URI', null]), 'ld_000000000001_0']]),
+    databaseCount: 1,
+    ...overrides,
+  };
+}
+
+const session = createSession();
 
 function redirectedContext(options = {}) {
   const context = createContext();
-  applyDataSetRedirect({ context, session: options.session ?? session, connections });
+  applyDataSetRedirect({ context, session: options.session ?? createSession(), connections });
   return context;
 }
 
@@ -164,12 +174,12 @@ test('applyDataSetRedirect points a module connection, written under its module 
   });
 });
 
-test('applyDataSetRedirect points a plugin type that declares redirect at the session database', async () => {
+test('applyDataSetRedirect points a plugin type that declares redirect at the session database of its target', async () => {
   const context = redirectedContext();
   const artifact = await context.readConfigFile('connections/folders.json');
   expect(artifact.properties).toEqual({
     databaseUri: session.databaseUri,
-    databaseName: session.databaseName,
+    databaseName: 'ld_000000000001_1',
   });
 });
 
@@ -249,7 +259,7 @@ test('applyDataSetRedirect never mutates the artifact it read', async () => {
 });
 
 test('applyDataSetRedirect throws on a connection read after the session has closed', async () => {
-  const context = redirectedContext({ session: { ...session, state: 'closed' } });
+  const context = redirectedContext({ session: createSession({ state: 'closed' }) });
   await expect(context.readConfigFile('connections/tickets.json')).rejects.toThrow(
     'Data session abc has ended.'
   );
@@ -257,6 +267,102 @@ test('applyDataSetRedirect throws on a connection read after the session has clo
     'Data session abc has ended.'
   );
   expect(await context.readConfigFile('pages/home.json')).toBe(artifacts['pages/home.json']);
+});
+
+describe('database targets', () => {
+  const targetArtifacts = {
+    'connections/app_users.json': {
+      connectionId: 'app_users',
+      type: 'MongoDBCollection',
+      properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'users' },
+    },
+    'connections/app_users_again.json': {
+      connectionId: 'app_users_again',
+      type: 'MongoDBCollection',
+      properties: { databaseUri: { _secret: 'MONGODB_URI', '~r': 'r_1' }, collection: 'users' },
+    },
+    'connections/auth_users.json': {
+      connectionId: 'auth_users',
+      type: 'MongoDBCollection',
+      properties: { databaseUri: { _secret: 'AUTH_MONGODB_URI' }, collection: 'users' },
+    },
+    'connections/reports_users.json': {
+      connectionId: 'reports_users',
+      type: 'MongoDBCollection',
+      properties: {
+        databaseUri: { _secret: 'MONGODB_URI' },
+        databaseName: 'reports',
+        collection: 'users',
+      },
+    },
+    'connections/computed_users.json': {
+      connectionId: 'computed_users',
+      type: 'MongoDBCollection',
+      properties: {
+        databaseUri: { _if: { test: true, then: { _secret: 'A' }, else: { _secret: 'B' } } },
+        collection: 'users',
+      },
+    },
+  };
+
+  async function readDatabaseName({ session: targetSession, connectionId }) {
+    const context = { readConfigFile: async (filePath) => targetArtifacts[filePath] ?? null };
+    applyDataSetRedirect({ context, session: targetSession, connections });
+    const artifact = await context.readConfigFile(`connections/${connectionId}.json`);
+    return artifact.properties.databaseName;
+  }
+
+  test('connections on one target share its session database', async () => {
+    const targetSession = createSession();
+    expect(await readDatabaseName({ session: targetSession, connectionId: 'app_users' })).toEqual(
+      'ld_000000000001_0'
+    );
+    expect(
+      await readDatabaseName({ session: targetSession, connectionId: 'app_users_again' })
+    ).toEqual('ld_000000000001_0');
+  });
+
+  test('a different databaseUri secret or databaseName reads a session database of its own', async () => {
+    const targetSession = createSession();
+    const names = [];
+    for (const connectionId of ['app_users', 'auth_users', 'reports_users']) {
+      names.push(await readDatabaseName({ session: targetSession, connectionId }));
+    }
+    expect(names).toEqual(['ld_000000000001_0', 'ld_000000000001_1', 'ld_000000000001_2']);
+    // The number holds for the rest of the session.
+    expect(await readDatabaseName({ session: targetSession, connectionId: 'auth_users' })).toEqual(
+      'ld_000000000001_1'
+    );
+  });
+
+  test('a target the session numbered when it opened keeps that database', async () => {
+    const targetSession = createSession({
+      databases: new Map([
+        [JSON.stringify(['secret:AUTH_MONGODB_URI', null]), 'ld_000000000001_0'],
+        [JSON.stringify(['secret:MONGODB_URI', null]), 'ld_000000000001_1'],
+      ]),
+      databaseCount: 2,
+    });
+    expect(await readDatabaseName({ session: targetSession, connectionId: 'auth_users' })).toEqual(
+      'ld_000000000001_0'
+    );
+    expect(await readDatabaseName({ session: targetSession, connectionId: 'app_users' })).toEqual(
+      'ld_000000000001_1'
+    );
+    expect(
+      await readDatabaseName({ session: targetSession, connectionId: 'reports_users' })
+    ).toEqual('ld_000000000001_2');
+  });
+
+  test('a connection whose target is computed per request reads the session first database', async () => {
+    const targetSession = createSession({ databases: new Map(), databaseCount: 1 });
+    expect(
+      await readDatabaseName({ session: targetSession, connectionId: 'computed_users' })
+    ).toEqual('ld_000000000001_0');
+    expect(await readDatabaseName({ session: targetSession, connectionId: 'auth_users' })).toEqual(
+      'ld_000000000001_1'
+    );
+  });
 });
 
 describe('a request through callRequest under a data session', () => {
@@ -309,7 +415,7 @@ describe('a request through callRequest under a data session', () => {
       steps: {},
       user: null,
     };
-    applyDataSetRedirect({ context, session, connections: requestConnections });
+    applyDataSetRedirect({ context, session: createSession(), connections: requestConnections });
     return context;
   }
 
@@ -333,7 +439,7 @@ describe('a request through callRequest under a data session', () => {
     expect(resolver).toHaveBeenCalledTimes(1);
     expect(resolver.mock.calls[0][0].connection).toEqual({
       databaseUri: session.databaseUri,
-      databaseName: session.databaseName,
+      databaseName: 'ld_000000000001_1',
       collection: 'rows',
     });
   });

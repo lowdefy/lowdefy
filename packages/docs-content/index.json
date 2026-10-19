@@ -3353,14 +3353,14 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "d53dcce64aaa51408419e83048a160cb1224077cea3c06a74e230157dd55819b"
+      "hash": "9cd08e3eda9c4b78c12cd0d8af7c15c032166cf303bca6923645abe5670e373e"
     },
     "testing/journey-data-sets": {
       "files": [
         "testing/journey-data-sets.md",
         "testing/journey-data-sets.yaml"
       ],
-      "hash": "8a8c12049a8aedbd5f09e84c25d685c504830478c81a966113eb3dfcad2a2b95"
+      "hash": "b1e56d281ad4ec9d9e67c1d83e62ae2a458f35dda658c79ee53c770b0eb8951a"
     },
     "testing/explore-pull-request": {
       "files": [

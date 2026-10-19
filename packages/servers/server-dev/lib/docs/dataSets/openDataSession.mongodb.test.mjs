@@ -25,6 +25,8 @@ import dataSessionRegistry from './dataSessionRegistry.js';
 import getDataStore from './getDataStore.js';
 import openDataSession from './openDataSession.js';
 import readDataSession from './readDataSession.js';
+import readDataSet from './readDataSet.js';
+import applyDataSetRedirect from '../../server/applyDataSetRedirect.js';
 import { journeyActorToken } from '../../server/auth/journeyActor.js';
 
 jest.setTimeout(120000);
@@ -279,6 +281,121 @@ test('two sessions on one data set are isolated, and close() drops the database'
   expect(names).not.toContain(first.session.databaseName);
   expect(names).not.toContain(second.session.databaseName);
   expect(first.session.state).toEqual('closed');
+});
+
+describe('two databases that name one collection', () => {
+  let configDirectory;
+  let buildDirectory;
+
+  const artifacts = {
+    app_users: {
+      connectionId: 'app_users',
+      type: 'MongoDBCollection',
+      properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'users' },
+    },
+    auth_users: {
+      connectionId: 'auth_users',
+      type: 'MongoDBCollection',
+      properties: { databaseUri: { _secret: 'AUTH_MONGODB_URI' }, collection: 'users' },
+    },
+  };
+
+  beforeEach(() => {
+    configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-data-targets-'));
+    buildDirectory = path.join(configDirectory, '.lowdefy', 'dev', 'build');
+    fs.mkdirSync(path.join(configDirectory, 'tests', 'data'), { recursive: true });
+    fs.mkdirSync(path.join(buildDirectory, 'connections'), { recursive: true });
+    Object.values(artifacts).forEach((artifact) => {
+      fs.writeFileSync(
+        path.join(buildDirectory, 'connections', `${artifact.connectionId}.json`),
+        JSON.stringify(artifact)
+      );
+    });
+    fs.writeFileSync(
+      path.join(configDirectory, 'tests', 'data', 'targets.yaml'),
+      `fixtures:
+  app_users: [{ _id: shared, name: App member }]
+  auth_users: [{ _id: shared, name: Auth user }, { _id: auth-only }]
+indexes:
+  app_users: [{ key: { name: 1 }, name: name_1, unique: true }]
+`
+    );
+  });
+
+  afterEach(() => {
+    fs.rmSync(configDirectory, { recursive: true, force: true });
+  });
+
+  // The database a request on the connection reads under the session, through the gate.
+  async function redirectedDb({ session, connectionId }) {
+    const context = {
+      readConfigFile: async (filePath) =>
+        artifacts[filePath.replace(/^connections\/(.+)\.json$/, '$1')] ?? null,
+    };
+    applyDataSetRedirect({
+      context,
+      session,
+      connections: { MongoDBCollection: { meta: { dataSet: 'redirect' } } },
+    });
+    const { properties } = await context.readConfigFile(`connections/${connectionId}.json`);
+    expect(properties.databaseUri).toEqual(session.databaseUri);
+    return client.db(properties.databaseName);
+  }
+
+  test('each databaseUri secret loads into and reads its own session database, and close() drops both', async () => {
+    const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'targets' });
+    const { session, close } = await openDataSession({ dataSet });
+    let names;
+    try {
+      const appDb = await redirectedDb({ session, connectionId: 'app_users' });
+      const authDb = await redirectedDb({ session, connectionId: 'auth_users' });
+      expect(appDb.databaseName).not.toEqual(authDb.databaseName);
+      names = [appDb.databaseName, authDb.databaseName];
+      names.forEach((name) => expect(name.startsWith(`${session.prefix}_`)).toBe(true));
+      expect(await appDb.collection('users').find().toArray()).toEqual([
+        { _id: 'shared', name: 'App member' },
+      ]);
+      expect(await authDb.collection('users').find().sort({ _id: 1 }).toArray()).toEqual([
+        { _id: 'auth-only' },
+        { _id: 'shared', name: 'Auth user' },
+      ]);
+      // Indexes load per target too.
+      const appIndexes = await appDb.collection('users').indexes();
+      const authIndexes = await authDb.collection('users').indexes();
+      expect(appIndexes.map((index) => index.name)).toContain('name_1');
+      expect(authIndexes.map((index) => index.name)).not.toContain('name_1');
+      expect(await listDatabaseNames()).toEqual(expect.arrayContaining(names));
+    } finally {
+      await close();
+    }
+    const left = await listDatabaseNames();
+    names.forEach((name) => expect(left).not.toContain(name));
+  });
+
+  test('a session database the gate numbers after open survives a concurrent sweep and drops on close()', async () => {
+    const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'targets' });
+    const first = await openDataSession({ dataSet });
+    // A target the build did not name, as a config mutant's would be.
+    artifacts.late = {
+      connectionId: 'late',
+      type: 'MongoDBCollection',
+      properties: { databaseUri: { _secret: 'LATE_URI' }, collection: 'users' },
+    };
+    let lateName;
+    try {
+      const db = await redirectedDb({ session: first.session, connectionId: 'late' });
+      await db.collection('users').insertOne({ _id: 'late' });
+      lateName = db.databaseName;
+    } finally {
+      delete artifacts.late;
+    }
+    expect(lateName).toEqual(`${first.session.prefix}_${dataSet.databaseTargets.length}`);
+    const second = await openDataSession({ dataSet });
+    expect(await listDatabaseNames()).toContain(lateName);
+    await second.close();
+    await first.close();
+    expect(await listDatabaseNames()).not.toContain(lateName);
+  });
 });
 
 test('close() waits for background work added to the session', async () => {

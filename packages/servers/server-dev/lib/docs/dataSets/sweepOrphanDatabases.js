@@ -17,15 +17,18 @@
 import dataSessionRegistry from './dataSessionRegistry.js';
 
 // Drops every session database on the store that no registered session owns: one left behind by a
-// write that was still in flight when its session dropped the database, or by a dev server that
-// stopped mid-run.
+// write that was still in flight when its session dropped its databases, or by a dev server that
+// stopped mid-run. A session owns every database under its prefix (<prefix>_<n>), including one it
+// numbers after this sweep lists them.
 async function sweepOrphanDatabases({ client }) {
-  const owned = new Set([...dataSessionRegistry.values()].map((session) => session.databaseName));
+  const prefixes = [...dataSessionRegistry.values()].map((session) => `${session.prefix}_`);
   const { databases } = await client.db('admin').admin().listDatabases({ nameOnly: true });
   await Promise.all(
     databases
       .map((database) => database.name)
-      .filter((name) => name.startsWith('ld_') && !owned.has(name))
+      .filter(
+        (name) => name.startsWith('ld_') && !prefixes.some((prefix) => name.startsWith(prefix))
+      )
       .map((name) => client.db(name).dropDatabase())
   );
 }

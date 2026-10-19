@@ -62,7 +62,10 @@ const session = {
   name: 'staging-sample',
   state: 'open',
   databaseUri: 'mongodb://127.0.0.1:5555/?replicaSet=testset',
-  databaseName: 'ld_000000000001',
+  prefix: 'ld_000000000001',
+  databaseName: 'ld_000000000001_0',
+  databases: new Map([[JSON.stringify(['secret:MONGODB_URI', null]), 'ld_000000000001_0']]),
+  databaseCount: 1,
 };
 
 function createContext({ sessionState = 'open' } = {}) {

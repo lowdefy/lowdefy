@@ -273,7 +273,7 @@ A one-time code is typed, not clicked. `fill` with `fromEmail: { to, subject, ma
 
 `as: invitee` switches the journey to another person with their own browser and cookies: an owner and the person they invite, or a member whose session stays open while the owner removes them. The journey starts as `main`. The first `as` for a name opens the journey's page in a new browser, as the journey's `user`, or as the data set user of that name on a journey with `data` (see [Journey data sets](/journey-data-sets)); switching back returns to that person's tab as they left it.
 
-**Seeing what a second person sees.** On a journey with `data`, every person reads and writes the run's one database, so act as one user and then check, in the same run, what another user sees. The second user is a user of the data set, so no sign-in is needed:
+**Seeing what a second person sees.** On a journey with `data`, every person reads and writes the run's databases, so act as one user and then check, in the same run, what another user sees. The second user is a user of the data set, so no sign-in is needed:
 
 ```yaml
 name: overriding a decision tells its owner
@@ -288,7 +288,7 @@ steps:
   - expect: { text: { blockId: inbox, contains: Kirsty changed your decision } }
 ```
 
-What `officer` wrote is in the database `owner` reads, and nothing of `officer`'s session (the signed-in user, cached requests, page state) reaches `owner`, who has their own browser. `as: main` returns to `officer`'s tab as it was left. Because the run still has one database, a dropped `CallApi` that sends the notification fails the journey, and a [config mutant](#mutants-lowdefy-journeys-harden) that drops it is killed. What the journey exercised is the union over everyone it acted as: the requests, events and blocks `officer` and `owner` each touched are recorded for the journey, so coverage, lint and `journeys harden` need no per-person bookkeeping. An `as` that names the person already acting is a lint warning ([L7](#lint)).
+What `officer` wrote is in the database `owner` reads, and nothing of `officer`'s session (the signed-in user, cached requests, page state) reaches `owner`, who has their own browser. `as: main` returns to `officer`'s tab as it was left. Because everyone in the run shares its databases, a dropped `CallApi` that sends the notification fails the journey, and a [config mutant](#mutants-lowdefy-journeys-harden) that drops it is killed. What the journey exercised is the union over everyone it acted as: the requests, events and blocks `officer` and `owner` each touched are recorded for the journey, so coverage, lint and `journeys harden` need no per-person bookkeeping. An `as` that names the person already acting is a lint warning ([L7](#lint)).
 
 Each person also sends requests from their own client address, so auth rate limits (a few sign-in attempts per address every few seconds) count each person's attempts apart, as they would for people on different devices, instead of one budget for the whole run.
 
