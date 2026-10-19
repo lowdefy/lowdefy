@@ -46,7 +46,9 @@ function reportStyleError({ block, error, lowdefy, slot }) {
 }
 
 // The block's style per slot for the current theme mode and breakpoint (getBlockStyles).
-function useBlockStyles({ block, lowdefy }) {
+// `unconverted` says the build left every slot as config wrote it (a skeleton's), so each is
+// converted here, as a shared page's are.
+function useBlockStyles({ block, lowdefy, unconverted = false }) {
   const breakpoint = useContext(BreakpointContext);
   const { isDark } = useContext(ThemeContext);
   const { classMap, sharedPage } = useContext(PageStyleContext);
@@ -57,7 +59,7 @@ function useBlockStyles({ block, lowdefy }) {
     isDark,
     onMissingClass: (className) => warnMissingClass({ className, lowdefy }),
     onStyleError: ({ slot, error }) => reportStyleError({ block, error, lowdefy, slot }),
-    sharedPage,
+    sharedPage: sharedPage || unconverted,
   });
 }
 

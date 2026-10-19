@@ -34,10 +34,11 @@ export default {
   icons: [],
   valueType: 'number',
   cssKeys: {
-    element: 'The NumberInput box.',
-    label: 'The NumberInput label.',
+    element: 'The NumberInput box, or the row with `variant: row`.',
+    label: 'The NumberInput label (the row title with `variant: row`).',
     extra: 'The NumberInput extra content.',
     feedback: 'The NumberInput validation feedback.',
+    value: 'The number and its prefix and suffix with `variant: row`.',
   },
   events: {
     onBlur: 'Trigger actions when the number input loses focus.',
@@ -121,7 +122,11 @@ export default {
       suffixIcon: webIcon,
       theme,
       title: inputTitle,
-      variant,
+      variant: {
+        ...variant,
+        enum: [...variant.enum, 'row'],
+        description: `${variant.description} \`row\` (mobile only) is an iOS Settings-style row for an insetGrouped List or a Card with \`padding: none\`: the title at the left in Body and the number at the right in the secondary label colour (its placeholder defaults to "Not set"), at the height and padding of a Selector menu row. Pressing the row focuses the number with the number keyboard. A row has no step buttons.`,
+      },
     },
   },
 };

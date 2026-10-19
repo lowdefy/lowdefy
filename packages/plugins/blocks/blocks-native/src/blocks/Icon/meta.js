@@ -31,7 +31,8 @@ export default {
     properties: {
       color: {
         type: 'string',
-        description: 'Primary icon color.',
+        description:
+          'Primary icon color. On mobile a palette hue (`blue`, `amber`), a theme token (`colorPrimary`, `colorTint`) or a colour value.',
         docs: {
           displayType: 'color',
         },

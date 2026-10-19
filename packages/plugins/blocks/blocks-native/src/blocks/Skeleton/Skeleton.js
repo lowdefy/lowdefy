@@ -30,6 +30,14 @@ import SkeletonRows from './SkeletonRows.js';
 import SkeletonShape from '../../skeleton/SkeletonShape.js';
 import SkeletonTimeline from './SkeletonTimeline.js';
 
+// The hero and timeline stand for content inset 16pt from the screen edges, as insetGroup and card
+// inset themselves. The inset is the element's horizontal padding, so the element style's
+// paddingHorizontal (0 for edge to edge) replaces it.
+const VARIANT_INSETS = {
+  hero: { paddingHorizontal: 16 },
+  timeline: { paddingHorizontal: 16 },
+};
+
 function SkeletonVariant({ blockId, properties, variant }) {
   const avatar = properties.avatar !== false;
   const trailing = properties.trailing === true;
@@ -90,7 +98,7 @@ function Skeleton({ blockId, properties, styles = {} }) {
       accessibilityRole="progressbar"
       accessibilityState={{ busy: true }}
       ref={frame}
-      style={styles.element}
+      style={[VARIANT_INSETS[variant], styles.element]}
       testID={`${blockId}_skeleton`}
     >
       <SkeletonFrameContext.Provider value={frame}>

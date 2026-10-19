@@ -17,6 +17,7 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import { Host, Icon } from '@expo/ui';
+import { font } from '@expo/ui/swift-ui/modifiers';
 import { type } from '@lowdefy/helpers';
 
 /**
@@ -33,12 +34,16 @@ import { type } from '@lowdefy/helpers';
  * @param {number} props.size The glyph size in points.
  * @param {string} [props.symbol] The SF Symbol name.
  * @param {string} [props.testID]
+ * @param {string} [props.weight] The SF Symbol weight (`semibold`, `bold`, ...), as a font weight
+ *   sets it in SwiftUI; the symbol's regular weight without it.
  */
-function SystemIcon({ components, color, fallback, size, symbol, testID }) {
+function SystemIcon({ components, color, fallback, size, symbol, testID, weight }) {
   if (Platform.OS === 'ios' && type.isString(symbol)) {
+    // SwiftUI sizes a symbol by its font once a font modifier is set, so the size goes with it.
+    const modifiers = type.isString(weight) ? [font({ size, weight })] : undefined;
     return (
       <Host matchContents testID={testID}>
-        <Icon color={color} name={symbol} size={size} />
+        <Icon color={color} modifiers={modifiers} name={symbol} size={size} />
       </Host>
     );
   }

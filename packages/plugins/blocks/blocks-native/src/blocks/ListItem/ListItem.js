@@ -16,6 +16,7 @@
 
 import React, { useContext, useLayoutEffect } from 'react';
 import { Platform, Pressable, Text, View } from 'react-native';
+import { resolveColor } from '@lowdefy/client-native';
 import { type } from '@lowdefy/helpers';
 
 import AvatarCircle from '../Avatar/AvatarCircle.js';
@@ -26,10 +27,10 @@ import iosTextStyles from '../../shared/iosTextStyles.js';
 import ListItemContextMenu from './ListItemContextMenu.js';
 import ListRowContext from '../List/ListRowContext.js';
 import meta from './meta.js';
-import resolveColor from '../../shared/resolveColor.js';
 import showContextMenuAlert from './showContextMenuAlert.js';
 import StatusMark from '../StatusIcon/StatusMark.js';
 import SwipeableRow from '../../shared/SwipeableRow.js';
+import SystemIcon from '../../shared/SystemIcon.js';
 import useComponentTokens from '../../useComponentTokens.js';
 
 const FULL_SWIPE = {
@@ -181,9 +182,10 @@ function Trailing({ blockId, colors, components, content, isDark, styles, tokens
 /**
  * An iOS list row: a leading status glyph, avatar or icon (or `leading` slot), a title of one or
  * two lines and a subtitle of meta, trailing meta text, badges, a glyph or avatars (or `trailing`
- * slot), and a chevron when it has onClick. It highlights while pressed, has swipe actions
- * (`onSwipeAction`) and a long-press context menu (`onContextMenu`), and in a List moves the
- * row's separator in to its title.
+ * slot), and a chevron when it has onClick, or the iOS checkmark in the tint colour where the
+ * chevron goes with `trailing.check` (a picked row of a multi-select list, which has no chevron).
+ * It highlights while pressed, has swipe actions (`onSwipeAction`) and a long-press context menu
+ * (`onContextMenu`), and in a List moves the row's separator in to its title.
  *
  * The title is a Headline when the row has a subtitle and Body when it stands alone, as iOS sets
  * a two-line cell and a settings row.
@@ -202,7 +204,8 @@ function ListItem({ blockId, components, content, events, methods, properties, s
 
   const pressable = !type.isNone(events.onClick);
   const disabled = properties.disabled === true;
-  const showChevron = properties.chevron ?? pressable;
+  const checked = parts.trailing.check;
+  const showChevron = properties.chevron ?? (pressable && !checked);
   const title = properties.title ?? '';
   const hasSubtitle = type.isString(parts.subtitle);
   const swipeActions = properties.swipeActions ?? {};
@@ -242,6 +245,7 @@ function ListItem({ blockId, components, content, events, methods, properties, s
       accessibilityActions={accessibilityActions.length > 0 ? accessibilityActions : undefined}
       accessibilityLabel={[title, parts.subtitle].filter((text) => type.isString(text)).join(', ')}
       accessibilityRole={pressable ? 'button' : undefined}
+      accessibilityState={checked ? { selected: true } : undefined}
       disabled={disabled}
       onAccessibilityAction={onAccessibilityAction}
       onLongPress={onLongPress}
@@ -316,6 +320,17 @@ function ListItem({ blockId, components, content, events, methods, properties, s
         tokens={tokens}
         trailing={parts.trailing}
       />
+      {checked ? (
+        <SystemIcon
+          color={tokens.colorTint}
+          components={components}
+          fallback="Check"
+          size={17}
+          symbol="checkmark"
+          testID={`${blockId}_check`}
+          weight="semibold"
+        />
+      ) : null}
       {showChevron ? (
         <components.Icon
           properties={{ name: 'chevron-right', strokeWidth: 2.5, title: '' }}

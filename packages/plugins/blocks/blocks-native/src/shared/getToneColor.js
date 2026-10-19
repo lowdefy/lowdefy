@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
+import { resolveColor } from '@lowdefy/client-native';
 import { type } from '@lowdefy/helpers';
 
 import getSemanticColors from './getSemanticColors.js';
-import resolveColor from './resolveColor.js';
 
 /**
  * The fill of a swipe action button: its own `color`, else its `tone`. `neutral` is the secondary

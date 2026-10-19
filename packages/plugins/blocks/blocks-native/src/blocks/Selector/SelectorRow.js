@@ -15,20 +15,23 @@
 */
 
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 import { type } from '@lowdefy/helpers';
 
 import getOptionLabel from './getOptionLabel.js';
+import getPropertyRowTextStyles from '../../shared/getPropertyRowTextStyles.js';
 import OptionGlyph from '../../shared/OptionGlyph.js';
+import PropertyRow from '../../shared/PropertyRow.js';
 import SystemIcon from '../../shared/SystemIcon.js';
 
 const GLYPH_SIZE = 20;
 
 /**
- * The iOS Settings-style property row of a Selector with `variant: menu` or `variant: sheet`:
- * the title at the left and the chosen option at the right (its icon or avatar, its label and an
- * up-down chevron), or the placeholder while nothing is chosen. The variant wraps it in what
- * opens its options; the menu variant gives the row itself its accessibility props.
+ * The iOS Settings-style property row (PropertyRow) of a Selector with `variant: menu` or
+ * `variant: sheet`: the title at the left and the chosen option at the right (its icon or avatar,
+ * its label and an up-down chevron), or the placeholder while nothing is chosen. The variant
+ * wraps it in what opens its options; the menu variant gives the row itself its accessibility
+ * props.
  *
  * @param {Object} props
  * @param {string} [props.accessibilityLabel]
@@ -58,71 +61,42 @@ function SelectorRow({
   title,
   tokens,
 }) {
+  const text = getPropertyRowTextStyles({ tokens });
   return (
-    <View
+    <PropertyRow
       accessibilityLabel={accessibilityLabel}
       accessibilityRole={accessibilityRole}
       accessibilityValue={accessibilityValue}
-      style={[
-        {
-          alignItems: 'center',
-          flexDirection: 'row',
-          gap: 8,
-          minHeight: 44,
-          paddingHorizontal: 16,
-          paddingVertical: 10,
-        },
-        styles.element,
-      ]}
+      required={required}
+      styles={styles}
+      testID={`${blockId}_row`}
+      title={title}
+      tokens={tokens}
     >
-      <Text numberOfLines={1} style={[{ color: tokens.colorText, fontSize: 17 }, styles.label]}>
-        {required === true ? <Text style={{ color: tokens.colorError }}>* </Text> : null}
-        {title}
-      </Text>
-      <View
-        style={{
-          alignItems: 'center',
-          flex: 1,
-          flexDirection: 'row',
-          gap: 6,
-          justifyContent: 'flex-end',
-        }}
-      >
-        {type.isObject(selected) ? (
-          <OptionGlyph
-            avatar={selected.avatar}
-            color={selected.iconColor}
-            components={components}
-            icon={selected.icon}
-            isDark={isDark}
-            symbol={selected.symbol}
-            size={GLYPH_SIZE}
-            testID={`${blockId}_glyph`}
-            tokens={tokens}
-          />
-        ) : null}
-        <Text
-          numberOfLines={1}
-          style={[
-            {
-              color: selected === null ? tokens.colorTextTertiary : tokens.colorTextSecondary,
-              flexShrink: 1,
-              fontSize: 17,
-            },
-            styles.value,
-          ]}
-        >
-          {selected === null ? placeholder : getOptionLabel({ option: selected })}
-        </Text>
-        <SystemIcon
-          color={tokens.colorTextTertiary}
+      {type.isObject(selected) ? (
+        <OptionGlyph
+          avatar={selected.avatar}
+          color={selected.iconColor}
           components={components}
-          fallback="ChevronsUpDown"
-          size={13}
-          symbol="chevron.up.chevron.down"
+          icon={selected.icon}
+          isDark={isDark}
+          symbol={selected.symbol}
+          size={GLYPH_SIZE}
+          testID={`${blockId}_glyph`}
+          tokens={tokens}
         />
-      </View>
-    </View>
+      ) : null}
+      <Text numberOfLines={1} style={[text.value, { flexShrink: 1 }, styles.value]}>
+        {selected === null ? placeholder : getOptionLabel({ option: selected })}
+      </Text>
+      <SystemIcon
+        color={tokens.colorTextTertiary}
+        components={components}
+        fallback="ChevronsUpDown"
+        size={13}
+        symbol="chevron.up.chevron.down"
+      />
+    </PropertyRow>
   );
 }
 
