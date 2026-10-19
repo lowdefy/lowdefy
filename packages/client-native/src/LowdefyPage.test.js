@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { jest } from '@jest/globals';
-import { Dimensions, Linking, Text } from 'react-native';
+import { Dimensions, Linking, StyleSheet, Text } from 'react-native';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { getBreakpoint } from '@lowdefy/layout-native';
 
@@ -332,7 +332,13 @@ test('a Screen page reports its header options and renders its headerRight slot'
   expect(await screen.findByText('Body')).toBeTruthy();
   expect(screen.queryByText('Add')).toBeNull();
   expect(onScreenOptions).toHaveBeenCalledWith({
+    backgroundTint: false,
+    headerActions: [],
+    headerBottom: false,
+    headerLeft: undefined,
     headerRight: expect.any(Function),
+    headerSearch: undefined,
+    largeTitle: false,
     presentation: 'modal',
     title: 'Jobs',
   });
@@ -368,6 +374,72 @@ test('a loading block shows its skeleton in its place', async () => {
   });
   expect(await screen.findByText('Loading')).toBeTruthy();
   expect(screen.queryByText('Loaded')).toBeNull();
+});
+
+test('a skeleton style is split into slots: its block style places it, its block gets the rest', async () => {
+  await renderPage({
+    pageConfig: {
+      id: 'home',
+      type: 'Box',
+      blocks: [
+        {
+          id: 'slow',
+          type: 'Paragraph',
+          loading: true,
+          properties: { content: 'Loaded' },
+          skeleton: {
+            id: 'sk',
+            type: 'Themed',
+            style: { marginTop: '8px', '.element': { padding: '4px 16px' } },
+          },
+        },
+      ],
+    },
+  });
+  const element = await screen.findByTestId('slow-element');
+  expect(StyleSheet.flatten(element.props.style)).toMatchObject({
+    paddingBottom: 4,
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingTop: 4,
+  });
+  expect(StyleSheet.flatten(screen.getByTestId('s-slow-sk').props.style)).toMatchObject({
+    marginTop: 8,
+  });
+  expect(StyleSheet.flatten(screen.getByTestId('s-slow-sk').props.style).element).toBeUndefined();
+});
+
+test('a block fades its content in when it stops loading, after showing its skeleton', async () => {
+  await renderPage({
+    pageConfig: {
+      id: 'home',
+      type: 'Box',
+      events: { onInit: [{ id: 'init', type: 'SetState', params: { busy: true } }] },
+      blocks: [
+        {
+          id: 'slow',
+          type: 'Paragraph',
+          loading: { _state: 'busy' },
+          properties: { content: 'Loaded' },
+          skeleton: { id: 'sk', type: 'Paragraph', properties: { content: 'Loading' } },
+        },
+        { id: 'steady', type: 'Paragraph', properties: { content: 'Steady' } },
+        {
+          id: 'done',
+          type: 'Button',
+          properties: { title: 'Done' },
+          events: { onClick: [{ id: 'stop', type: 'SetState', params: { busy: false } }] },
+        },
+      ],
+    },
+  });
+  expect(await screen.findByText('Loading')).toBeTruthy();
+  await act(async () => {
+    fireEvent.press(screen.getByText('Done'));
+  });
+  expect(await screen.findByText('Loaded')).toBeTruthy();
+  expect(StyleSheet.flatten(screen.getByTestId('slow').props.style).opacity).toBeDefined();
+  expect(StyleSheet.flatten(screen.getByTestId('steady').props.style)?.opacity).toBeUndefined();
 });
 
 test('an input block gets its value from state', async () => {

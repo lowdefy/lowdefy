@@ -14,18 +14,38 @@
   limitations under the License.
 */
 
-import { page, press, record, renderPage, screen, styleOf, theme } from '../../test/renderPage.js';
+import {
+  ios,
+  page,
+  press,
+  record,
+  renderPage,
+  screen,
+  styleOf,
+  theme,
+} from '../../test/renderPage.js';
 
 test('a Paragraph draws its content in the body text style, with the block id as testID', async () => {
   await renderPage({
     pageConfig: page([{ id: 'body', type: 'Paragraph', properties: { content: 'Hello' } }]),
   });
   expect(styleOf(await screen.findByText('Hello'))).toMatchObject({
-    color: theme.light.colorText,
-    fontSize: theme.light.fontSize,
-    marginBottom: theme.light.fontSize,
+    color: ios.light.colorLabel,
+    fontSize: 17,
+    lineHeight: 22,
   });
+  // No outer margin: the layout's gap spaces blocks on a phone.
+  expect(styleOf(screen.getByText('Hello')).marginBottom).toBeUndefined();
   expect(screen.getByTestId('body')).toBeTruthy();
+});
+
+test('a Paragraph textStyle picks an iOS text style', async () => {
+  await renderPage({
+    pageConfig: page([
+      { id: 'meta', type: 'Paragraph', properties: { content: 'Meta', textStyle: 'footnote' } },
+    ]),
+  });
+  expect(styleOf(await screen.findByText('Meta'))).toMatchObject({ fontSize: 13, lineHeight: 18 });
 });
 
 test('a Paragraph applies strong, code, mark and secondary styles', async () => {
@@ -42,16 +62,16 @@ test('a Paragraph applies strong, code, mark and secondary styles', async () => 
     ]),
   });
   expect(styleOf(await screen.findByText('Strong'))).toMatchObject({
-    color: theme.light.colorTextSecondary,
+    color: ios.light.colorSecondaryLabel,
     fontWeight: '600',
   });
   expect(styleOf(screen.getByText('Code'))).toMatchObject({
-    backgroundColor: theme.light.colorFillTertiary,
-    fontSize: theme.light.fontSize * 0.85,
+    backgroundColor: ios.light.colorTertiarySystemFill,
+    fontSize: 17 * 0.85,
   });
   expect(styleOf(screen.getByText('Code')).fontFamily).toEqual(expect.any(String));
   expect(styleOf(screen.getByText('Marked')).backgroundColor).toBe(theme.light.gold3);
-  expect(styleOf(screen.getByText('Off')).color).toBe(theme.light.colorTextDisabled);
+  expect(styleOf(screen.getByText('Off')).color).toBe(ios.light.colorTertiaryLabel);
 });
 
 test('a Paragraph ellipsis cuts to one row, and an expandable one fires onExpand once', async () => {
@@ -80,7 +100,7 @@ test('a Paragraph takes the dark text colour in dark mode', async () => {
     darkMode: 'dark',
     pageConfig: page([{ id: 'body', type: 'Paragraph', properties: { content: 'Night' } }]),
   });
-  expect(styleOf(await screen.findByText('Night')).color).toBe(theme.dark.colorText);
+  expect(styleOf(await screen.findByText('Night')).color).toBe(ios.dark.colorLabel);
 });
 
 test('a Paragraph evaluated visible false is not drawn', async () => {

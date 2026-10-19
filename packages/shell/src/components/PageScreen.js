@@ -14,13 +14,26 @@
   limitations under the License.
 */
 
-import React, { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
-import { useFocusEffect, useNavigation } from 'expo-router';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
+import { Platform } from 'react-native';
+import { useFocusEffect, useIsFocused, useNavigation, useRoute } from 'expo-router';
+import { useAnimatedHeaderHeight } from 'expo-router/native-stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LowdefyPage } from '@lowdefy/client-native';
 
 import evaluateJsEntries from '../js/evaluateJsEntries.js';
+import getInitialScreenOptions from '../navigation/getInitialScreenOptions.js';
 import getPageView from '../session/getPageView.js';
-import getPresentation from '../navigation/getPresentation.js';
+import getStackOptions from '../navigation/getStackOptions.js';
+import isPageUnderHeader from '../navigation/isPageUnderHeader.js';
 import LoadingScreen from './LoadingScreen.js';
 import MessageScreen from './MessageScreen.js';
 import OtherPageScreen from './OtherPageScreen.js';
@@ -28,20 +41,92 @@ import types from '../plugins/types.js';
 import UpdateScreen from './UpdateScreen.js';
 import { useSessionState, useShell } from '../ShellContext.js';
 
+// A Screen's headerSearch with autoFocus focuses the search bar each time the screen is shown.
+// The bar mounts with the header after the options are set, so the focus waits a frame.
+function useSearchAutoFocus({ focused }) {
+  const searchBarRef = useRef(null);
+  const autoFocusRef = useRef(false);
+  const focusSearch = useCallback(() => {
+    if (!autoFocusRef.current) return;
+    requestAnimationFrame(() => searchBarRef.current?.focus());
+  }, []);
+  useEffect(() => {
+    if (focused) focusSearch();
+  }, [focused, focusSearch]);
+  const setAutoFocus = useCallback(
+    (autoFocus) => {
+      const changed = autoFocus !== autoFocusRef.current;
+      autoFocusRef.current = autoFocus;
+      if (changed && focused) focusSearch();
+    },
+    [focused, focusSearch]
+  );
+  return { searchBarRef, setAutoFocus };
+}
+
+// Where the navigation bar's bottom edge is in the page scroll view's frame, which a Screen's
+// headerBottom pins under: the native stack's header height, an Animated value that follows a
+// large title as it collapses, when the page scrolls under the bar; 0 when it sits below it.
+function useHeaderInset() {
+  const headerHeight = useAnimatedHeaderHeight();
+  const [underHeader, setUnderHeader] = useState(() =>
+    isPageUnderHeader({ options: {}, platform: Platform.OS, platformVersion: Platform.Version })
+  );
+  const updateHeaderInset = useCallback((options) => {
+    setUnderHeader(
+      isPageUnderHeader({ options, platform: Platform.OS, platformVersion: Platform.Version })
+    );
+  }, []);
+  return { headerInset: underHeader ? headerHeight : 0, updateHeaderInset };
+}
+
+// The bar a page's config gives (getInitialScreenOptions), set before the page is first drawn:
+// the page waits a frame for the bar to take it, so its scroll view is first laid out under the
+// bar it will have. iOS sizes a large title from where the scroll view sits when the large title
+// comes: a scroll view laid out under a standard bar first keeps the title collapsed. Once the
+// first page is drawn, later versions of it are drawn in place, under the bar their Screen
+// reports.
+function useInitialHeader({ pageConfig, setStackOptions }) {
+  const [ready, setReady] = useState(false);
+  const pageConfigRef = useRef(pageConfig);
+  pageConfigRef.current = pageConfig;
+  const hasPage = pageConfig !== undefined;
+  useLayoutEffect(() => {
+    if (ready || !hasPage) return undefined;
+    const options = getInitialScreenOptions({ pageConfig: pageConfigRef.current });
+    if (options === null) {
+      setReady(true);
+      return undefined;
+    }
+    setStackOptions(options);
+    const frame = requestAnimationFrame(() => setReady(true));
+    return () => cancelAnimationFrame(frame);
+  }, [hasPage, ready, setStackOptions]);
+  return ready;
+}
+
 /**
  * One screen of the frame: the Lowdefy page at `path`, from the cache, with its header drawn from
- * the Screen page's options.
+ * the Screen page's options. The page keeps its state per route instance (the route's key), so
+ * two screens of one page in a stack each have their own, and reads its location from its own
+ * route, so `_url_query` is the query this screen was opened with.
  *
  * @param {Object} props
  * @param {string} props.path The page path, without the leading "/".
  * @param {string} [props.query] The route's query string, without "?".
  */
 function PageScreen({ path, query = '' }) {
-  const { host, locale, session, shell } = useShell();
+  const { auth, host, locale, session, shell } = useShell();
   const state = useSessionState();
   // A locale chosen with SetLocale renders every screen again, as the web app re-renders.
   useSyncExternalStore(locale.subscribe, locale.getVersion);
   const navigation = useNavigation();
+  const route = useRoute();
+  const focused = useIsFocused();
+  // The bottom safe area of the screen's frame: the tab bar of a tab, and the home indicator.
+  const { bottom: bottomInset } = useSafeAreaInsets();
+  const { searchBarRef, setAutoFocus } = useSearchAutoFocus({ focused });
+  const { headerInset, updateHeaderInset } = useHeaderInset();
   const [loadError, setLoadError] = useState(null);
   const view = getPageView({ path, shell, state });
   const fullPath = `/${path}${query ? `?${query}` : ''}`;
@@ -54,32 +139,46 @@ function PageScreen({ path, query = '' }) {
     [rootJsEntries, pageJsEntries]
   );
 
-  // The engine reads the shown route (_location, _url_query) through the host globals. Screens
-  // rendered at once (one per tab) each set it as they render; the focused one keeps it.
+  // A page reads its own route (routePath); the host's shown route, which links resolve against
+  // and Lowdefy Dev inspects, is the focused screen's.
   useFocusEffect(
     useCallback(() => {
-      session.setCurrentPath(fullPath);
-    }, [fullPath, session])
+      session.setCurrentPath(fullPath, route.key);
+    }, [fullPath, route.key, session])
   );
 
-  // Once per visit: fetch the page when it is not cached, or when it is built per request.
+  // Once per visit, and again when every screen is rebuilt (a new build, or a dev server rebuild):
+  // fetch the page when it is not cached, or when it is built per request. A fetched version that
+  // differs from the one shown replaces it on this screen (LowdefyPage).
   useEffect(() => {
     if (pageId === null) return;
     const entry = session.getState().root.pageIndex.find((item) => item.pageId === pageId);
     setLoadError(null);
     session.loadPage({ entry, path }).catch((error) => setLoadError(error));
-  }, [pageId, path, session, state.cacheKey]);
+  }, [pageId, path, session, state.cacheKey, state.generation]);
 
-  const onScreenOptions = useCallback(
-    ({ headerRight, presentation, title }) => {
-      navigation.setOptions({
-        headerRight,
-        presentation: getPresentation(presentation),
-        title: title ?? '',
-      });
+  const setStackOptions = useCallback(
+    (options) => {
+      navigation.setOptions(
+        getStackOptions({
+          options,
+          platform: Platform.OS,
+          platformVersion: Platform.Version,
+          searchBarRef,
+        })
+      );
+      updateHeaderInset(options);
     },
-    [navigation]
+    [navigation, searchBarRef, updateHeaderInset]
   );
+  const onScreenOptions = useCallback(
+    (options) => {
+      setStackOptions(options);
+      setAutoFocus(options.headerSearch?.autoFocus === true);
+    },
+    [setAutoFocus, setStackOptions]
+  );
+  const headerReady = useInitialHeader({ pageConfig: view.page?.pageConfig, setStackOptions });
 
   if (view.view === 'update') {
     return <UpdateScreen shell={shell} />;
@@ -106,27 +205,37 @@ function PageScreen({ path, query = '' }) {
     }
     return <LoadingScreen />;
   }
-  session.setCurrentPath(fullPath);
+  if (!headerReady) {
+    return <LoadingScreen />;
+  }
   locale.apply();
   // The page's icons join the icon map the Icon renderer reads, which every page of the app shares.
   Object.assign(types.icons, view.page.pageConfig._icons);
+  // The core's auth actions call the shell's bearer client (createCoreAuth).
   const core = {
     apiBase: session.apiBase,
-    auth: { authConfig: {}, user: state.user },
+    auth: { ...auth.coreAuth, user: state.user },
     basePath: '',
     lowdefy: state.lowdefy,
   };
   return (
     <LowdefyPage
-      // A new generation (another caller or build) or a new version of the page rebuilds it.
-      key={`${state.generation}:${view.page.hash ?? view.page.etag ?? ''}`}
+      // A new generation (another caller or build) rebuilds the screen. A new version of the page
+      // is drawn on it in place, keeping its scroll position (LowdefyPage rebuilds the page's
+      // context).
+      key={state.generation}
+      bottomInset={bottomInset}
       core={core}
+      focused={focused}
+      headerInset={headerInset}
       host={host}
+      instanceId={route.key}
       jsMap={jsMap}
       onScreenOptions={onScreenOptions}
       pageConfig={view.page.pageConfig}
       pathParams={view.pathParams}
       rootConfig={state.rootConfig}
+      routePath={fullPath}
       types={types}
     />
   );

@@ -14,47 +14,53 @@
   limitations under the License.
 */
 
-import {
-  findAllOfType,
-  iconPaths,
-  icons,
-  page,
-  renderPage,
-  screen,
-  styleOf,
-  theme,
-} from '../../test/renderPage.js';
+import { iconPaths, icons, ios, page, renderPage, screen, styleOf } from '../../test/renderPage.js';
 
-test('an Empty shows the empty tray and its description, with the block id as testID', async () => {
+test('an Empty shows the inbox icon and "No data", with the block id as testID', async () => {
   await renderPage({ pageConfig: page([{ id: 'none', type: 'Empty' }]) });
   expect(await screen.findByText('No data')).toBeTruthy();
-  const block = screen.getByTestId('none');
-  const [svg] = findAllOfType(block, 'RNSVGSvgView');
-  expect(svg.props.bbHeight).toBe(100);
-  expect(styleOf(screen.getByText('No data')).color).toBe(theme.light.colorTextDescription);
+  const icon = screen.getByTestId('none_icon', { includeHiddenElements: true });
+  expect(iconPaths(icon)).toHaveLength(icons.Inbox.node.length);
+  expect(styleOf(icon)).toMatchObject({ height: 48, width: 48 });
+  expect(styleOf(screen.getByText('No data'))).toMatchObject({
+    color: ios.light.colorSecondaryLabel,
+    fontSize: 17,
+  });
 });
 
-test('an Empty takes a description, the simple image or an icon, and a footer slot', async () => {
+test('an Empty is a content unavailable view: icon, title, description and footer', async () => {
   await renderPage({
     pageConfig: page([
       {
-        id: 'small',
+        id: 'done',
         type: 'Empty',
-        properties: { description: 'No orders yet', image: 'simple' },
+        properties: {
+          icon: 'House',
+          title: "You're all caught up",
+          description: 'Nothing needs you.',
+        },
         slots: {
           footer: { blocks: [{ id: 'create', type: 'Box', properties: { content: 'Create' } }] },
         },
       },
-      { id: 'iconic', type: 'Empty', properties: { description: '', icon: 'Inbox' } },
+      { id: 'titled', type: 'Empty', properties: { title: 'No tasks' } },
+      { id: 'small', type: 'Empty', properties: { description: '', image: 'simple' } },
     ]),
   });
-  expect(await screen.findByText('No orders yet')).toBeTruthy();
+  const title = await screen.findByText("You're all caught up");
+  expect(title.props.accessibilityRole).toBe('header');
+  expect(styleOf(title)).toMatchObject({ color: ios.light.colorLabel, fontSize: 22 });
+  expect(screen.getByText('Nothing needs you.')).toBeTruthy();
   expect(screen.getByText('Create')).toBeTruthy();
-  const [svg] = findAllOfType(screen.getByTestId('small'), 'RNSVGSvgView');
-  expect(svg.props.bbHeight).toBe(40);
-  // react-native-svg draws a polyline as a path too.
-  expect(iconPaths(screen.getByTestId('iconic_icon'))).toHaveLength(icons.Inbox.node.length);
+  expect(iconPaths(screen.getByTestId('done_icon', { includeHiddenElements: true }))).toHaveLength(
+    icons.House.node.length
+  );
+  // A titled Empty has no default description; an empty description shows the icon alone.
+  expect(screen.getByText('No tasks')).toBeTruthy();
   expect(screen.queryByText('No data')).toBeNull();
+  expect(styleOf(screen.getByTestId('small_icon', { includeHiddenElements: true }))).toMatchObject({
+    height: 32,
+  });
 });
 
 test('an Empty takes the dark colours in dark mode, and is not drawn when not visible', async () => {
@@ -65,6 +71,6 @@ test('an Empty takes the dark colours in dark mode, and is not drawn when not vi
       { id: 'hidden', type: 'Empty', visible: false },
     ]),
   });
-  expect(styleOf(await screen.findByText('No data')).color).toBe(theme.dark.colorTextDescription);
+  expect(styleOf(await screen.findByText('No data')).color).toBe(ios.dark.colorSecondaryLabel);
   expect(screen.queryByTestId('hidden')).toBeNull();
 });

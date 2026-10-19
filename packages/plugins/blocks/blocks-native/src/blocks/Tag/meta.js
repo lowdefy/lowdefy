@@ -23,6 +23,7 @@ export default {
   cssKeys: {
     element: 'The Tag element.',
     icon: 'The icon in the Tag.',
+    dot: 'The leading dot of a Tag with `dot`. Mobile only.',
     closeIcon: 'The close icon of a closable Tag.',
   },
   events: {
@@ -47,7 +48,15 @@ export default {
       color: {
         type: 'string',
         description:
-          'Color of the Tag. Preset options are success, processing, error, warning, default, blue, cyan, geekblue, gold, green, lime, magenta, orange, purple, red, volcano, or alternatively any hex color.',
+          'Color of the Tag. Preset options are success, processing, error, warning, default, blue, cyan, geekblue, gold, green, lime, magenta, orange, purple, red, volcano, or alternatively any hex color. On mobile `primary` takes the theme tint, and each tone is drawn from the theme palette of the mode showing.',
+        docs: {
+          displayType: 'color',
+        },
+      },
+      dot: {
+        type: ['boolean', 'string'],
+        description:
+          'Mobile only. Show a leading dot: `true` in the tag colour, or a colour for the dot (a status or preset name, `primary`, `default` or any colour), such as a stage dot on a grey tag.',
         docs: {
           displayType: 'color',
         },
@@ -72,14 +81,20 @@ export default {
       title: {
         type: 'string',
         description:
-          'Content title of tag - supports html. On mobile, tags are removed and the text is shown plain.',
+          'Content title of tag - supports html. On mobile, tags are removed and the text is shown plain, and a Tag without a title shows only its dot or icon.',
+      },
+      size: {
+        type: 'string',
+        enum: ['small', 'default'],
+        default: 'default',
+        description: 'Mobile only. Size of the pill: `small` (20 points tall) or `default` (24).',
       },
       variant: {
         type: 'string',
         enum: ['filled', 'solid', 'outlined'],
         default: 'filled',
         description:
-          'Tag style variant. `filled` shows a tinted background, `outlined` adds a border and `solid` fills the tag with its color.',
+          'Tag style variant. `filled` shows a tinted background, `outlined` adds a border and `solid` fills the tag with its color. On mobile a tag is a pill.',
       },
       icon: {
         ...icon,

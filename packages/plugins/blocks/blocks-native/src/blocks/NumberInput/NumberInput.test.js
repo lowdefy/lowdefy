@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
+import { TextInput } from 'react-native';
 import { act, fireEvent, screen } from '@testing-library/react-native';
 
 import formPage from '../../test/formPage.js';
-import { renderPage } from '../../test/renderPage.js';
+import { ios, renderPage, styleOf } from '../../test/renderPage.js';
 
 test('typing a number sets a number in state', async () => {
   await renderPage({
@@ -86,4 +87,44 @@ test('a required NumberInput shows its message after Validate', async () => {
     fireEvent.press(screen.getByText('Submit'));
   });
   expect(screen.getByTestId('qty_feedback')).toBeTruthy();
+});
+
+test('the row variant is a Settings row: the title at the left, the number right-aligned', async () => {
+  await renderPage({
+    pageConfig: formPage({
+      blocks: [
+        {
+          id: 'qty',
+          type: 'NumberInput',
+          properties: { title: 'Quantity', variant: 'row', suffix: 'kg' },
+        },
+      ],
+      mirrorKey: 'qty',
+    }),
+  });
+  const input = await screen.findByTestId('qty_input');
+  expect(screen.getByText('Quantity')).toBeTruthy();
+  expect(screen.getByText('kg')).toBeTruthy();
+  expect(input.props.placeholder).toBe('Not set');
+  expect(input.props.placeholderTextColor).toBe(ios.light.colorSecondaryLabel);
+  expect(styleOf(input)).toMatchObject({
+    color: ios.light.colorSecondaryLabel,
+    fontSize: 17,
+    textAlign: 'right',
+  });
+  expect(styleOf(screen.getByTestId('qty_row'))).toMatchObject({
+    minHeight: 44,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  });
+  // The title is the row's own; the label draws no title above it.
+  expect(screen.queryByTestId('qty_label')).toBeNull();
+  await act(async () => {
+    fireEvent.press(screen.getByTestId('qty_row'));
+  });
+  expect(TextInput.prototype.focus).toHaveBeenCalledTimes(1);
+  await act(async () => {
+    fireEvent.changeText(screen.getByTestId('qty_input'), '4');
+  });
+  expect(screen.getByText('4')).toBeTruthy();
 });

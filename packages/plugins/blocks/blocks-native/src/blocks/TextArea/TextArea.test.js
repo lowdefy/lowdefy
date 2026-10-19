@@ -61,3 +61,73 @@ test('showCount counts the characters out of maxLength', async () => {
   });
   expect(screen.getByText('5 / 20')).toBeTruthy();
 });
+
+test('a composer TextArea sends its text with onSend and clears when the actions succeed', async () => {
+  await renderPage({
+    pageConfig: formPage({
+      blocks: [
+        {
+          id: 'comment',
+          type: 'TextArea',
+          properties: { variant: 'composer', placeholder: 'Comment' },
+          events: {
+            onSend: [{ id: 'sent', type: 'SetState', params: { sent: { _event: 'value' } } }],
+          },
+        },
+        { id: 'sent_text', type: 'Paragraph', properties: { content: { _state: 'sent' } } },
+      ],
+      mirrorKey: 'comment',
+    }),
+  });
+  const input = await screen.findByTestId('comment_input');
+  expect(input.props.scrollEnabled).toBe(true);
+  expect(screen.getByTestId('comment_send').props.accessibilityState.disabled).toBe(true);
+  await act(async () => {
+    fireEvent.changeText(input, 'Looks good');
+  });
+  expect(screen.getByTestId('comment_send').props.accessibilityState.disabled).toBe(false);
+  await act(async () => {
+    fireEvent.press(screen.getByTestId('comment_send'));
+  });
+  expect(screen.getByText('Looks good')).toBeTruthy();
+  expect(screen.getByTestId('comment_input').props.value).toBe('');
+});
+
+test('a composer TextArea keeps its text when the onSend actions fail', async () => {
+  await renderPage({
+    actions: {
+      Fail: () => {
+        throw new Error('Offline');
+      },
+    },
+    pageConfig: formPage({
+      blocks: [
+        {
+          id: 'comment',
+          type: 'TextArea',
+          properties: { variant: 'composer' },
+          events: { onSend: [{ id: 'fail', type: 'Fail' }] },
+        },
+      ],
+      mirrorKey: 'comment',
+    }),
+  });
+  await act(async () => {
+    fireEvent.changeText(await screen.findByTestId('comment_input'), 'Draft');
+  });
+  await act(async () => {
+    fireEvent.press(screen.getByTestId('comment_send'));
+  });
+  expect(screen.getByTestId('comment_input').props.value).toBe('Draft');
+});
+
+test('a composer TextArea without onSend has no send button', async () => {
+  await renderPage({
+    pageConfig: formPage({
+      blocks: [{ id: 'comment', type: 'TextArea', properties: { variant: 'composer' } }],
+      mirrorKey: 'comment',
+    }),
+  });
+  await screen.findByTestId('comment_input');
+  expect(screen.queryByTestId('comment_send')).toBeNull();
+});

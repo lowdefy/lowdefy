@@ -14,36 +14,27 @@
   limitations under the License.
 */
 
+// iOS control metrics: 44 points is the smallest comfortable touch target, so the default size
+// is 44 tall in the body text size; small is a compact 34 in subheadline, large 50.
+const SIZES = {
+  small: { borderRadius: 8, fontSize: 15, height: 34, paddingHorizontal: 10 },
+  default: { borderRadius: 10, fontSize: 17, height: 44, paddingHorizontal: 12 },
+  large: { borderRadius: 12, fontSize: 17, height: 50, paddingHorizontal: 16 },
+};
+
 /**
- * The height, font size and horizontal padding of an input or button for its `size`. A phone is
- * touched, not clicked, so each size is a step taller than antd's: the default size takes antd's
- * large control height and `small` its default one.
+ * The height, font size, corner radius and horizontal padding of an input or button for its
+ * `size`, at iOS control metrics.
  *
  * @param {Object} params
  * @param {string} [params.size] 'small', 'default' or 'middle' (the same), or 'large'.
- * @param {Object} params.tokens The block's antd tokens.
- * @returns {{ height: number, fontSize: number, paddingHorizontal: number }}
+ * @returns {{ borderRadius: number, fontSize: number, height: number, paddingHorizontal: number }}
  */
-function getControlSize({ size, tokens }) {
-  if (size === 'small') {
-    return {
-      height: tokens.controlHeight,
-      fontSize: tokens.fontSize,
-      paddingHorizontal: tokens.paddingXS,
-    };
+function getControlSize({ size }) {
+  if (size === 'small' || size === 'large') {
+    return SIZES[size];
   }
-  if (size === 'large') {
-    return {
-      height: tokens.controlHeightLG + tokens.paddingXS,
-      fontSize: tokens.fontSizeLG,
-      paddingHorizontal: tokens.paddingSM,
-    };
-  }
-  return {
-    height: tokens.controlHeightLG,
-    fontSize: tokens.fontSizeLG,
-    paddingHorizontal: tokens.paddingSM,
-  };
+  return SIZES.default;
 }
 
 export default getControlSize;

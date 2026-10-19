@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import linkChips from '../../schemas/linkChips.js';
+
 export default {
   category: 'display',
   icons: [],
@@ -24,9 +26,9 @@ export default {
   events: {
     onLinkPress: {
       description:
-        'Trigger action when a link is pressed, instead of opening it. Without this event a link opens in the system browser. Mobile only.',
+        'Trigger action when any link is pressed, link chips included, instead of opening it. Without this event a web (http or https) link opens in the in-app browser, any other link (mailto:, tel:) through the system, and link chips are not pressable. Mobile only.',
       event: {
-        href: 'The href of the pressed link, as written in the markdown.',
+        href: 'The href of the pressed link, as written in the markdown (`acme:ACME-12` or `/ACME/tasks/ACME-12` for a chip).',
       },
     },
   },
@@ -41,6 +43,7 @@ export default {
           displayType: 'text-area',
         },
       },
+      linkChips,
       skipHtml: {
         type: 'boolean',
         default: false,

@@ -37,11 +37,28 @@ const MAX_VALIDATION_ERRORS = 20;
 // handful of entries whatever it held, since the earlier branches alone spent
 // the budget. Counting is left alone, so `errors === 0` still decides validity
 // and only the retained objects are bounded.
+//
+// Past the cap the count runs ahead of the array, so the two places generated
+// code reads the array by the count are rewritten to read it by its length:
+// - A branch that passes resets the errors to the count it began at
+//   (resetErrorsCount: `vErrors.length = _errsN;`). Past the cap that count is
+//   beyond the array, and setting it grew the array with holes, which ajv-errors
+//   then read (`err.keyword` of undefined) and callers received. The reset now
+//   only shrinks the array.
+// - ajv-errors sets the path of the property error it just reported
+//   (`vErrors[errors-1].instancePath = …;`). Past the cap that error was not
+//   kept, so there is nothing to set.
 function capErrors(code) {
-  return code.replace(
-    /errors\+\+;/g,
-    `errors++;if(vErrors!==null&&vErrors.length>${MAX_VALIDATION_ERRORS}){vErrors.length=${MAX_VALIDATION_ERRORS};}`
-  );
+  return code
+    .replace(
+      /errors\+\+;/g,
+      `errors++;if(vErrors!==null&&vErrors.length>${MAX_VALIDATION_ERRORS}){vErrors.length=${MAX_VALIDATION_ERRORS};}`
+    )
+    .replace(/vErrors\.length = (_errs\d+);/g, 'if(vErrors.length>$1){vErrors.length = $1;}')
+    .replace(
+      /vErrors\[errors-1\]\.instancePath = ([^;]+);/g,
+      'if(errors<=vErrors.length){vErrors[errors-1].instancePath = $1;}'
+    );
 }
 
 const ajv = new Ajv({

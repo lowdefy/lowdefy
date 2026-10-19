@@ -21,7 +21,14 @@ import { render, screen } from '@testing-library/react-native';
 import createIcon from './createIcon.js';
 import ThemeContext from '../theme/ThemeContext.js';
 
-const tokens = { colorText: '#111111', fontSize: 14 };
+const tokens = {
+  'gold-6': '#faad14',
+  colorLabel: '#000000',
+  colorPrimary: '#6366f1',
+  colorText: '#111111',
+  colorTint: '#6366f1',
+  fontSize: 14,
+};
 
 const icons = {
   House: { node: [['path', { d: 'M3 10v11h18V10' }]] },
@@ -65,4 +72,20 @@ test('an unknown name draws icon-missing, and nothing when the data has no icon-
   expect(findAll(missing, (node) => node.props?.r === 10)).not.toHaveLength(0);
   const empty = await renderIcon({ iconMap: {}, properties: 'Nope' });
   expect(findAll(empty, (node) => node.props?.d !== undefined)).toHaveLength(0);
+});
+
+test('an icon with no colour draws in the label colour, a colour property over it', async () => {
+  const label = await renderIcon({ properties: 'House' });
+  expect(findAll(label, (node) => node.props?.color === '#000000')).not.toHaveLength(0);
+  const coloured = await renderIcon({ properties: { name: 'House', color: '#ff0000' } });
+  expect(findAll(coloured, (node) => node.props?.color === '#ff0000')).not.toHaveLength(0);
+});
+
+test('an icon colour resolves through the theme: a palette hue, a token or a hex', async () => {
+  const hue = await renderIcon({ properties: { name: 'House', color: 'amber' } });
+  expect(findAll(hue, (node) => node.props?.color === '#faad14')).not.toHaveLength(0);
+  const token = await renderIcon({ properties: { name: 'House', color: 'colorPrimary' } });
+  expect(findAll(token, (node) => node.props?.color === '#6366f1')).not.toHaveLength(0);
+  const tint = await renderIcon({ properties: { name: 'House', color: 'colorTint' } });
+  expect(findAll(tint, (node) => node.props?.color === '#6366f1')).not.toHaveLength(0);
 });

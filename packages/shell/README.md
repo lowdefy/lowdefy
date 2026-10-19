@@ -38,7 +38,10 @@ names more than one app, or has no url for the shell's `environment`; `app.confi
 `field`, `field-nfc`, `field-tracking`, and `dev` and `development` for Lowdefy Dev and development
 builds. Each lists the native modules, config plugins, permissions, JavaScript entry modules,
 required-reason APIs and collected data it carries, and may extend another (`field` is `basic` and
-the camera). `resolveProfile(name)` flattens one, and throws on a name the table lacks. A shell
+the camera). `basic`, and so every profile, carries on-device dictation (`expo-speech-recognition`)
+with its microphone and speech purpose texts; `expo-camera` is given the same microphone text, so
+plugin order cannot change it. `resolveProfile(name)` flattens one, and throws on a name the table
+lacks. A shell
 config without `profile` is `basic`, or `dev` for Lowdefy Dev. `app.config.ts` applies only the
 profile's config plugins, and sets `capabilities` from it when `shell.json` has none.
 
@@ -168,9 +171,48 @@ opens with no sign-in screen).
 
 Expo Router, with one route for every page, `app/(t0,t1,t2,t3,t4)/[...path].js`, in five route
 groups: with `mobile.menus.tabs` each tab is a group with its own native stack, under native tabs.
-A `drawer` frame is one stack with a menu button; a `stack` frame is one stack. A `Screen` page sets
-its header title, `headerRight` and presentation. `Link` actions go through the router; a link to a
-tab's page switches tab, and links to other sites open in the system browser.
+A `drawer` frame is one stack with a menu button; a `stack` frame is one stack. `Link` actions go
+through the router; a link to a tab's page switches tab (with its query), and links to other sites
+open in the system browser.
+
+A `Screen` page reports its header and `src/navigation/getStackOptions.js` maps it to native stack
+options: the title, or an iOS large title (`largeTitle`) that collapses as the page scrolls; the
+presentation; a native search bar (`headerSearch`, focused on each show with `autoFocus`); and
+the `headerLeft`/`headerRight` slots and `headerActions` at their natural size. On iOS each action
+is a native bar button drawing its SF Symbol in the bar's glass, and an icon with no symbol (or
+the slot) a custom item; elsewhere a side is a row of icon buttons. A side with nothing keeps the
+stack's own (a drawer's menu button). Pull-to-refresh (`onRefresh`) and `onFocus` come from the
+page's screen: `PageScreen` passes `useIsFocused()`.
+
+Before a page is first drawn, `PageScreen` sets the bar its config gives
+(`navigation/getInitialScreenOptions.js`: a literal `largeTitle`, `headerSearch`, `title`,
+`presentation` and `backgroundTint`) and waits a frame: iOS keeps a large title collapsed when
+the page's scroll view was first laid out under a standard bar, and the Screen reports its options
+only once it renders inside that scroll view.
+
+A Screen's `headerBottom` slot pins its blocks under the bar. `PageScreen` passes `headerInset`,
+where the bar's bottom edge is in the page's scroll view: the native stack's
+`useAnimatedHeaderHeight()` (from `expo-router/native-stack`), which follows a large title as it
+collapses, when the page scrolls under the bar (`navigation/isPageUnderHeader.js`: iOS 26 and
+later, or a large title or search bar before that), and 0 when the page sits below it (Android).
+A page with a headerBottom hides the bar's own hairline; the strip draws one under itself.
+A Screen with a `backgroundTint` gets a clear bar on iOS (`headerTransparent`; before iOS 26 also
+clear at the scroll edge, with the chrome material once content scrolls under it), so the tint the
+page draws at the screen's top shows behind the bar, and the page counts as under the bar.
+
+Each screen keeps its page state per route instance (`useRoute().key`), so task B pushed on task A
+has its own, and reads `_url_query` from its own route (`routePath`). The focused screen sets the
+session's current path and instance (`setCurrentPath`), which the host's `location` and Lowdefy
+Dev's shown page (`getShownPage`, `shownScreen` in the shell's globals) read.
+
+Tabs (`mobile.menus.tabs`) draw their icons in the native tab bar, the selected tab in the theme's
+`colorPrimary`. On iOS a tab draws an SF Symbol: its `sfSymbol`, or the symbol client-native's
+`getSfSymbol` maps from its icon (`Inbox` to `tray`, `FileText` to `doc.text`, `edit` to `pencil`).
+Elsewhere, and for an icon with no symbol, `TabIconImages` draws the Lucide icon from the item's
+icon data once, out of sight, and reads it back as a PNG for the tab bar to tint. A tab with
+`role: search` is iOS 26's search tab, apart at the right of the bar with a magnifier; on Android
+and older iOS it is a tab with the search icon. Its page is a Screen with
+`headerSearch: { autoFocus: true }`.
 
 ## Plugins, `_js`, locale and theme
 
@@ -192,8 +234,8 @@ tab's page switches tab, and links to other sites open in the system browser.
   `SetDarkMode` choice; the root's `classMap`, with a dev page's own `_classMap`, styles classes.
 - Block icons are drawn from the icon data each page carries (`_icons`), which `PageScreen` adds
   to the icon map client-native's `components.Icon` reads (`types.icons`).
-- Menu icons are drawn from the icon data the root carries, with client-native's `Icon`, in the
-  drawer menu. Native tab bars take images or SF Symbols, so tabs show titles only.
+- Menu icons are drawn from the icon data the root carries: with client-native's `Icon` in the
+  drawer menu, and as SF Symbols or images in the tab bar (see Navigation).
 - Hermes has no `crypto.getRandomValues`, which `_uuid` needs; `expo-crypto` fills it.
 
 ## Lowdefy Dev
@@ -237,7 +279,11 @@ permissions. `--control` first checks that the `dev` variant holds and links the
     to settle. A screenshot is the root view as a base64 PNG (`react-native-view-shot`).
   - `inject` `{ inject: { kind, value, name } }`: fakes the next device result
     (`src/dev/inject`): `scan` `{ data, type }`, `photo` `{ base64, ... }` and `nfc` for the next
-    read; `location` `{ latitude, longitude, ... }`, or a route as a list, read one at a time with
+    read; `transcript` `{ partials?, final }` or `{ error }` for the next dictation session, which
+    plays the partials and the final a moment apart, while a session with nothing injected uses
+    the microphone (blocks-native's `installDictationSource`, which Lowdefy Dev fills with
+    `injected`; `permission` `microphone` answers its prompt);
+    `location` `{ latitude, longitude, ... }`, or a route as a list, read one at a time with
     the last one staying; `permission` with `name` and `'granted' | 'denied'`, standing until
     changed; `network` `'offline' | 'online'`, which fails the app's every fetch as offline (the tab
     client keeps its own) and takes the shell's online state offline (`src/host/networkStatus.js`,

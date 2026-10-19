@@ -1,5 +1,5 @@
 ---
-'@lowdefy/cli': minor
+'lowdefy': minor
 ---
 
 feat(cli): Add the `lowdefy mobile` command group and `lowdefy mobile config`

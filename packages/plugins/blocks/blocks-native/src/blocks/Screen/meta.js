@@ -22,7 +22,28 @@ export default {
   valueType: null,
   slots: {
     content: 'The page content, in a scroll view.',
-    headerRight: 'Blocks drawn at the right of the screen header.',
+    headerBackdrop:
+      "Blocks drawn in the space above the content, behind the large title and the translucent bar, such as art beside the title. Their box's bottom edge sits at the top of the content, so they scroll away with the title; a negative bottom margin lets a block reach down beside the first content blocks. They take no room in the content and never take touches. Align a block with its own style, such as `alignSelf: flex-end` for the right edge.",
+    headerBottom:
+      'Blocks pinned directly under the screen header (under the large title or the search field), such as a ChipSelector or a SegmentedControl, which stay in view as the page scrolls. Once the page scrolls they take the screen background and a hairline under them. They sit at the 16pt screen inset; a ChipSelector runs edge to edge.',
+    headerLeft:
+      'Blocks drawn at the left of the screen header, at their natural size. Prefer `headerActions` for icon buttons.',
+    headerRight:
+      'Blocks drawn at the right of the screen header, at their natural size. Prefer `headerActions` for icon buttons.',
+    footer:
+      'Blocks pinned to the bottom of the screen, outside the scroll view, above the tab bar and the keyboard, on the bar background with a hairline above. For a Composer, or actions that stay in reach.',
+  },
+  events: {
+    onFocus:
+      'Trigger actions each time the screen becomes the one shown: on its first show (after onMount), when its tab is picked again, and when the screen above it is closed.',
+    onRefresh:
+      'Turns on pull-to-refresh. Trigger actions when the page is pulled down; the spinner shows until they finish.',
+    onSearch:
+      'Trigger actions when the search is submitted in the header search bar. `_event: value` is the search text.',
+    onSearchChange:
+      'Trigger actions when the header search text changes, once typing pauses (`headerSearch.debounce`), and with an empty value when the search is cancelled. `_event: value` is the search text.',
+    onHeaderAction:
+      'Trigger actions when a header action without its own `event` is pressed, or an item of its menu is picked. `_event: id` is the action id, or the picked item id.',
   },
   properties: {
     type: 'object',
@@ -32,11 +53,148 @@ export default {
         type: 'string',
         description: 'The screen title, shown in the header.',
       },
+      largeTitle: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Show the title as an iOS large title, which collapses into the header as the page scrolls. Other platforms show the standard title.',
+      },
+      backgroundTint: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['color'],
+        description:
+          "A soft wash of colour at the top of the screen, such as a record's space colour: a vertical gradient from the colour at the top (35% in light mode, 45% in dark mode) easing to clear at `height` of the screen height. It is fixed to the screen, behind the large title, the translucent navigation bar and the content, and continues behind a pinned `headerBottom`. A change of colour cross-fades over 250ms.",
+        properties: {
+          color: {
+            type: 'string',
+            description:
+              'The tint colour: a hex or CSS colour, a theme token such as `colorPrimary`, or a palette hue such as `blue`.',
+          },
+          colorDark: {
+            type: 'string',
+            description: 'The tint colour in dark mode. Defaults to `color`.',
+          },
+          height: {
+            type: 'number',
+            minimum: 0,
+            maximum: 1,
+            default: 0.15,
+            description:
+              'Where the tint has faded to clear, as a fraction of the screen height from the top.',
+          },
+        },
+      },
       presentation: {
         type: 'string',
         enum: ['card', 'modal', 'sheet'],
         default: 'card',
         description: 'How the screen is presented when opened.',
+      },
+      headerSearch: {
+        type: 'object',
+        additionalProperties: false,
+        description:
+          'A native search bar in the header (under a large title on iOS). Its text reaches the `onSearchChange` and `onSearch` events.',
+        properties: {
+          placeholder: {
+            type: 'string',
+            description: 'Text shown in the empty search field.',
+          },
+          autoFocus: {
+            type: 'boolean',
+            default: false,
+            description:
+              'Focus the search field, with the keyboard up, each time the screen is shown. For a search page, such as the page of a `role: search` tab.',
+          },
+          debounce: {
+            type: 'number',
+            default: 300,
+            description: 'Milliseconds the text must stay unchanged before `onSearchChange` fires.',
+          },
+          hideWhenScrolling: {
+            type: 'boolean',
+            default: false,
+            description: 'Hide the search bar as the page scrolls (iOS).',
+          },
+        },
+      },
+      headerActions: {
+        type: 'array',
+        description:
+          'Icon buttons in the header, at their natural size. On iOS each is a native bar button drawing the icon as an SF Symbol (`sfSymbol`, or the symbol for the Lucide or semantic name); an icon with no symbol, and every icon elsewhere, draws as its Lucide icon.',
+        items: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['id', 'icon'],
+          properties: {
+            id: {
+              type: 'string',
+              description: 'The action id, the `_event: id` of the event it triggers.',
+            },
+            icon: {
+              type: 'string',
+              description:
+                'Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`.',
+            },
+            sfSymbol: {
+              type: 'string',
+              description:
+                'The SF Symbol iOS draws, such as `square.and.pencil`. Defaults to the symbol mapped from `icon`.',
+            },
+            title: {
+              type: 'string',
+              description:
+                'The label screen readers read and iOS shows in a long press. Defaults to a title from the icon name.',
+            },
+            placement: {
+              type: 'string',
+              enum: ['left', 'right'],
+              default: 'right',
+              description: 'The side of the header the button is on.',
+            },
+            event: {
+              type: 'string',
+              default: 'onHeaderAction',
+              description:
+                'The Screen event the button triggers, such as `onAdd`; list it under the Screen `events`.',
+            },
+            disabled: {
+              type: 'boolean',
+              default: false,
+              description: 'Draw the button dimmed and ignore presses.',
+            },
+            items: {
+              type: 'array',
+              description:
+                "Make the button open a menu of these items, a native menu on iOS, such as a ⋯ menu of a detail page. Picking an item triggers the button's `event` with the item's id as `_event: id`.",
+              items: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['id', 'title'],
+                properties: {
+                  id: { type: 'string', description: 'The item id, the `_event: id` it triggers.' },
+                  title: { type: 'string', description: 'The item text.' },
+                  symbol: {
+                    type: 'string',
+                    description:
+                      'An SF Symbol name, such as `link` or `trash`, drawn beside the item on iOS.',
+                  },
+                  destructive: {
+                    type: 'boolean',
+                    default: false,
+                    description: 'Draw the item in red, for actions such as Delete.',
+                  },
+                  disabled: {
+                    type: 'boolean',
+                    default: false,
+                    description: 'Show the item, dimmed.',
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     },
   },

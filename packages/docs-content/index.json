@@ -3138,7 +3138,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "d4c7c280343a5a4539c10d507408c1c0337dbacd2c0517e8d5b052a1e47c3cc5"
+      "hash": "320c6f9e9763d262815d1c7e3ea0c12c5a13ce9ec32a48cf4ea193f5dcf326c6"
     },
     "concepts/keyboard-shortcuts": {
       "files": [
@@ -3378,7 +3378,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "d101b1fedf0bc44e65444df83dc2edb531376492fefa4be863f7376af0c2b8f4"
+      "hash": "406fa7c78b50c5e9712fa5e29782ca76d061abe36631cee5c65c52a0fc78f5e5"
     },
     "agents/agents-introduction": {
       "files": [

@@ -792,6 +792,7 @@ test('MCP the device tool adds one tool to the 29 the dev server had', async () 
     'scan',
     'photo',
     'nfc',
+    'transcript',
     'location',
     'permission',
     'network',

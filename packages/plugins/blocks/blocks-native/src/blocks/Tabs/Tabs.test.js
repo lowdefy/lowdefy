@@ -14,7 +14,16 @@
   limitations under the License.
 */
 
-import { page, press, record, renderPage, screen, styleOf, theme } from '../../test/renderPage.js';
+import {
+  ios,
+  page,
+  press,
+  record,
+  renderPage,
+  screen,
+  styleOf,
+  theme,
+} from '../../test/renderPage.js';
 
 const text = (id, content) => ({ id, type: 'Box', properties: { content } });
 
@@ -47,6 +56,7 @@ test('Tabs show a tab per entry and the first tab’s slot', async () => {
   expect(screen.queryByText('History body')).toBeNull();
   expect(screen.getByText('History body', { includeHiddenElements: true })).toBeTruthy();
   expect(styleOf(screen.getByText('Details')).color).toBe(theme.light.colorPrimary);
+  expect(styleOf(screen.getByText('History')).color).toBe(ios.light.colorSecondaryLabel);
   expect(styleOf(screen.getByTestId('tabs_indicator')).backgroundColor).toBe(
     theme.light.colorPrimary
   );
@@ -127,7 +137,7 @@ test('Tabs take the dark colours in dark mode, and are not drawn when not visibl
     pageConfig: page([tabsBlock, { ...tabsBlock, id: 'hidden', visible: false }]),
   });
   await screen.findByText('Details body');
-  expect(styleOf(screen.getByText('History')).color).toBe(theme.dark.colorText);
+  expect(styleOf(screen.getByText('History')).color).toBe(ios.dark.colorSecondaryLabel);
   expect(styleOf(screen.getByText('Details')).color).toBe(theme.dark.colorPrimary);
   expect(screen.queryByTestId('hidden')).toBeNull();
 });

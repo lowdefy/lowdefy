@@ -15,24 +15,26 @@
 */
 
 import React from 'react';
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { type } from '@lowdefy/helpers';
 import { toPixels } from '@lowdefy/client-native';
 
+import getIosTextStyle from '../../typography/getIosTextStyle.js';
 import htmlToText from '../../htmlToText.js';
 import meta from './meta.js';
 import useComponentTokens from '../../useComponentTokens.js';
 
 const sizeMargins = { small: 'marginXS', medium: 'margin', large: 'marginLG' };
 
-// A dashed or dotted border shows only when it runs all round a view on iOS, so those lines are
-// a zero-height view with its border split over top and bottom.
+// A solid line is the iOS separator, a hairline in the separator colour. A dashed or dotted border
+// shows only when it runs all round a view on iOS, so those lines are a zero-height view with its
+// border split over top and bottom.
 function getLineStyle({ tokens, variant }) {
   if (variant === 'solid') {
-    return { backgroundColor: tokens.colorSplit, height: tokens.lineWidth };
+    return { backgroundColor: tokens.colorSeparator, height: StyleSheet.hairlineWidth };
   }
   return {
-    borderColor: tokens.colorSplit,
+    borderColor: tokens.colorSeparator,
     borderStyle: variant,
     borderWidth: tokens.lineWidth / 2,
     height: 0,
@@ -71,7 +73,7 @@ function Divider({ properties, styles = {} }) {
             marginHorizontal: tokens.verticalMarginInline ?? tokens.marginXS,
           },
           lineStyle,
-          { height: tokens.fontSize * 0.9, width: tokens.lineWidth },
+          { height: 13, width: StyleSheet.hairlineWidth },
           styles.element,
         ]}
       />
@@ -83,7 +85,12 @@ function Divider({ properties, styles = {} }) {
     return <View style={[{ marginVertical: margin }, lineStyle, styles.element]} />;
   }
   const plain = properties.plain === true;
-  const fontSize = plain ? tokens.fontSize : tokens.fontSizeLG;
+  const textStyle = getIosTextStyle({
+    color: tokens.colorSecondaryLabel,
+    textStyle: plain ? 'footnote' : 'subheadline',
+    tokens,
+  });
+  const { fontSize } = textStyle;
   const [startFlex, endFlex] = getLineFlex({
     orientationMargin: tokens.orientationMargin ?? 0.05,
     titlePlacement: properties.titlePlacement ?? 'center',
@@ -98,11 +105,10 @@ function Divider({ properties, styles = {} }) {
       <View style={[{ flex: startFlex }, lineStyle]} />
       <Text
         style={[
+          textStyle,
           {
-            color: tokens.colorTextHeading,
-            fontSize,
-            fontWeight: plain ? 'normal' : '500',
-            paddingHorizontal: toPixels({ fontSize, value: tokens.textPaddingInline ?? '1em' }),
+            fontWeight: plain ? '400' : '600',
+            paddingHorizontal: toPixels({ fontSize, value: tokens.textPaddingInline ?? '0.75em' }),
           },
           styles.title,
         ]}

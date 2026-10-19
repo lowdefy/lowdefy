@@ -23,3 +23,11 @@ test('CopyToClipboard copies the text through the shell clipboard', async () => 
   await CopyToClipboard({ globals: { clipboard }, params: { copy: 'JOB-42' } });
   expect(clipboard.setString.mock.calls).toEqual([['JOB-42']]);
 });
+
+test('CopyToClipboard throws when there is no text to copy', async () => {
+  const clipboard = { setString: jest.fn(async () => undefined) };
+  await expect(CopyToClipboard({ globals: { clipboard }, params: {} })).rejects.toThrow(
+    'CopyToClipboard requires "copy" text. Received undefined.'
+  );
+  expect(clipboard.setString).not.toHaveBeenCalled();
+});

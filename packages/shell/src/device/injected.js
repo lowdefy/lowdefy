@@ -29,9 +29,13 @@ let injector = null;
  * - `scan`: the next ScanCode or QRScanner read, `{ data, type }`.
  * - `photo`: the next TakePhoto or PickImage result, `{ base64, mimeType, width, height }`.
  * - `nfc`: the next ReadNfc read.
+ * - `transcript`: what the next dictation session hears, `{ partials?, final }` or `{ error }`.
+ *   Dictation (blocks-native) reads it through the source Lowdefy Dev installs with
+ *   installDictationSource.
  * - `location`: the location GeolocationCurrentPosition and geofences read,
  *   `{ latitude, longitude, accuracy, ... }`.
- * - `permission:<name>`: the answer to the next request for a permission, 'granted' or 'denied'.
+ * - `permission:<name>`: the answer to the next request for a permission, 'granted' or 'denied'
+ *   (`permission:microphone` for dictation).
  *
  * @param {string} name
  */

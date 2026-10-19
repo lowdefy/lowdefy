@@ -14,9 +14,12 @@
   limitations under the License.
 */
 
+import { withAlpha } from '@lowdefy/client-native';
+
 import {
   iconPaths,
   icons,
+  ios,
   page,
   press,
   record,
@@ -28,7 +31,7 @@ import {
 
 const pathsOf = (name) => icons[name].node.filter(([tag]) => tag === 'path').map(([, a]) => a.d);
 
-test('an Alert shows its message in its type colours with the type icon', async () => {
+test('an Alert is a callout tinted in its type colour, with the type icon', async () => {
   await renderPage({
     pageConfig: page([
       { id: 'saved', type: 'Alert', properties: { message: 'Saved', type: 'success' } },
@@ -39,11 +42,11 @@ test('an Alert shows its message in its type colours with the type icon', async 
   const alert = screen.getByTestId('saved').children[0];
   expect(alert.props.accessibilityRole).toBe('alert');
   expect(styleOf(alert)).toMatchObject({
-    backgroundColor: theme.light.colorSuccessBg,
-    borderColor: theme.light.colorSuccessBorder,
-    borderRadius: theme.light.borderRadiusLG,
-    paddingTop: 8,
-    paddingLeft: 12,
+    backgroundColor: withAlpha({ alpha: 0.1, color: theme.light.colorSuccess }),
+    borderRadius: 12,
+    borderWidth: 0,
+    paddingTop: 12,
+    paddingLeft: 14,
   });
   expect(iconPaths(screen.getByTestId('saved_icon', { includeHiddenElements: true }))).toEqual(
     pathsOf('success')
@@ -63,16 +66,22 @@ test('an Alert with a description uses the larger layout, and a banner warns by 
     ]),
   });
   expect(styleOf(await screen.findByText('Heads up'))).toMatchObject({
-    color: theme.light.colorTextHeading,
-    fontSize: theme.light.fontSizeLG,
+    color: ios.light.colorLabel,
+    fontSize: 17,
+    fontWeight: '600',
   });
+  expect(styleOf(screen.getByText('Line one')).color).toBe(ios.light.colorSecondaryLabel);
   expect(screen.getByText('Line one')).toBeTruthy();
   expect(screen.queryByTestId('notice_icon')).toBeNull();
   const notice = screen.getByTestId('notice').children[0];
   const banner = screen.getByTestId('top').children[0];
-  expect(styleOf(notice)).toMatchObject({ paddingTop: 20, paddingLeft: 24 });
+  expect(styleOf(notice)).toMatchObject({
+    backgroundColor: withAlpha({ alpha: 0.1, color: theme.light.colorPrimary }),
+    paddingTop: 14,
+    paddingLeft: 16,
+  });
   expect(styleOf(banner)).toMatchObject({
-    backgroundColor: theme.light.colorWarningBg,
+    backgroundColor: withAlpha({ alpha: 0.1, color: theme.light.colorWarning }),
     borderRadius: 0,
     borderWidth: 0,
   });
@@ -121,7 +130,7 @@ test('an Alert takes the dark colours in dark mode, and is not drawn when not vi
   });
   await screen.findByText('Failed');
   expect(styleOf(screen.getByTestId('err').children[0]).backgroundColor).toBe(
-    theme.dark.colorErrorBg
+    withAlpha({ alpha: 0.2, color: theme.dark.colorError })
   );
   expect(screen.queryByTestId('hidden')).toBeNull();
 });

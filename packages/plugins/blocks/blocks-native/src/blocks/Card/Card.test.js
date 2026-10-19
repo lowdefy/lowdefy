@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { page, press, record, renderPage, screen, styleOf, theme } from '../../test/renderPage.js';
+import { ios, page, press, record, renderPage, screen, styleOf } from '../../test/renderPage.js';
 
 const text = (id, content) => ({ id, type: 'Box', properties: { content } });
 
-test('a Card draws its title, extra, cover, content and actions slots', async () => {
+test('a Card is a grouped cell drawing its title, extra, cover, content and actions', async () => {
   await renderPage({
     pageConfig: page([
       {
@@ -41,14 +41,19 @@ test('a Card draws its title, extra, cover, content and actions slots', async ()
   expect(screen.getByRole('header').props.children).toBe('Order 42');
   const card = screen.getByTestId('order').children[0];
   expect(styleOf(card)).toMatchObject({
-    backgroundColor: theme.light.colorBgContainer,
-    borderColor: theme.light.colorBorderSecondary,
-    borderRadius: theme.light.borderRadiusLG,
-    borderWidth: theme.light.lineWidth,
+    backgroundColor: ios.light.colorCell,
+    borderRadius: 10,
   });
+  expect(styleOf(card).borderWidth).toBeUndefined();
+  expect(styleOf(screen.getByRole('header'))).toMatchObject({
+    color: ios.light.colorLabel,
+    fontSize: 17,
+    fontWeight: '600',
+  });
+  expect(styleOf(screen.getByTestId('body').parent.parent)).toMatchObject({ padding: 16 });
 });
 
-test('a title slot replaces the title, and small, compact and borderless cards follow antd', async () => {
+test('a title slot replaces the title, and compact cards and theme overrides follow antd', async () => {
   await renderPage({
     pageConfig: page([
       {
@@ -60,7 +65,7 @@ test('a title slot replaces the title, and small, compact and borderless cards f
       {
         id: 'compact',
         type: 'Card',
-        properties: { padding: 'compact', bordered: false, theme: { colorBgContainer: '#fafafa' } },
+        properties: { padding: 'compact', bordered: false, theme: { colorCell: '#fafafa' } },
         blocks: [text('inside', 'Inside')],
       },
     ]),
@@ -69,7 +74,6 @@ test('a title slot replaces the title, and small, compact and borderless cards f
   expect(screen.queryByText('Hidden')).toBeNull();
   expect(styleOf(screen.getByTestId('compact').children[0])).toMatchObject({
     backgroundColor: '#fafafa',
-    borderWidth: 0,
   });
   const body = screen.getByTestId('inside').parent.parent;
   expect(styleOf(body)).toMatchObject({ padding: 12 });
@@ -82,7 +86,7 @@ test('a loading Card shows skeleton rows in place of its content', async () => {
     ]),
   });
   await screen.findByTestId('busy');
-  expect(screen.getAllByRole('progressbar')).toHaveLength(4);
+  expect(screen.getAllByRole('progressbar')).toHaveLength(1);
   expect(screen.queryByText('Late')).toBeNull();
 });
 
@@ -110,9 +114,7 @@ test('a Card takes the dark container colour in dark mode, and is not drawn when
     ]),
   });
   await screen.findByText('Night');
-  expect(styleOf(screen.getByTestId('night').children[0]).backgroundColor).toBe(
-    theme.dark.colorBgContainer
-  );
-  expect(styleOf(screen.getByText('Night')).color).toBe(theme.dark.colorTextHeading);
+  expect(styleOf(screen.getByTestId('night').children[0]).backgroundColor).toBe(ios.dark.colorCell);
+  expect(styleOf(screen.getByText('Night')).color).toBe(ios.dark.colorLabel);
   expect(screen.queryByTestId('hidden')).toBeNull();
 });

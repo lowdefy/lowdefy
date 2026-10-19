@@ -32,13 +32,15 @@ import {
 
 export default {
   category: 'input',
-  icons: [],
+  icons: ['search'],
   valueType: 'string',
   cssKeys: {
-    element: 'The TextInput box.',
-    label: 'The TextInput label.',
+    element:
+      'The TextInput box (the search field with `variant: search`, the row with `variant: row`).',
+    label: 'The TextInput label (the row title with `variant: row`).',
     extra: 'The TextInput extra content.',
     feedback: 'The TextInput validation feedback.',
+    value: 'The text and its prefix and suffix with `variant: row`.',
   },
   events: {
     onBlur: 'Trigger actions when the text input loses focus.',
@@ -46,9 +48,11 @@ export default {
       description: 'Trigger actions when the text input is changed.',
       event: { value: 'The current input value.' },
     },
-    onClear: 'Trigger actions when the clear button is pressed.',
+    onClear:
+      'Trigger actions when the clear button is pressed, or Cancel beside a search field clears it.',
     onFocus: 'Trigger actions when the text input gets focus.',
-    onPressEnter: "Trigger actions when the keyboard's return key is pressed.",
+    onPressEnter:
+      "Trigger actions when the keyboard's return key is pressed (the Search key of a search field).",
   },
   properties: {
     type: 'object',
@@ -102,7 +106,11 @@ export default {
         description:
           'The type of input. On mobile it picks the keyboard: email, phone, URL or numeric keys, or a hidden password entry.',
       },
-      variant,
+      variant: {
+        ...variant,
+        enum: [...variant.enum, 'search', 'row'],
+        description: `${variant.description} \`search\` (mobile only) is the iOS search field: a rounded fill with a magnifying glass, a clear button while it has text, the Search key, and Cancel while it is focused. Its placeholder defaults to "Search". \`row\` (mobile only) is an iOS Settings-style row for an insetGrouped List or a Card with \`padding: none\`: the title at the left in Body and the one-line text right-aligned in the secondary label colour (its placeholder defaults to "Not set"), at the height and padding of a Selector menu row. Pressing the row focuses the field; \`allowClear\` shows the clear button while it is focused.`,
+      },
     },
   },
 };

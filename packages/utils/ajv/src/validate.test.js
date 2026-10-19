@@ -436,3 +436,48 @@ test('validate leaves no schema behind for a fresh schema object', () => {
   }
   expect(ajv._cache.size).toBe(before);
 });
+
+test('A branch that passes after the error cap leaves no holes in the errors', () => {
+  // Past the cap the error count runs ahead of the kept errors. A passing anyOf
+  // branch resets the errors to the count it began at, which grew the array
+  // with holes that ajv-errors then read as errors.
+  const schema = {
+    type: 'object',
+    properties: {
+      list: { type: 'array', items: { type: 'string' } },
+      value: { anyOf: [{ type: 'string' }, { type: 'number' }] },
+    },
+    errorMessage: { type: 'Should be an object.' },
+  };
+  const data = { list: Array.from({ length: MAX_VALIDATION_ERRORS + 10 }, (_, i) => i), value: 1 };
+  const result = validate({ schema, data, returnErrors: true });
+  expect(result.valid).toBe(false);
+  expect(result.errors).toHaveLength(MAX_VALIDATION_ERRORS);
+  expect(Array.from(result.errors).every((error) => typeof error === 'object')).toBe(true);
+});
+
+test('A property error message reported after the error cap does not throw', () => {
+  const schema = {
+    type: 'object',
+    properties: {
+      a: { type: 'string' },
+      b: { type: 'array', items: { type: 'string' } },
+    },
+    errorMessage: { properties: { a: 'A should be a string.' } },
+  };
+  const data = { a: 1, b: Array.from({ length: MAX_VALIDATION_ERRORS + 10 }, (_, i) => i) };
+  const result = validate({ schema, data, returnErrors: true });
+  expect(result.valid).toBe(false);
+  expect(result.errors.length).toBeLessThanOrEqual(MAX_VALIDATION_ERRORS);
+  expect(Array.from(result.errors).every((error) => typeof error === 'object')).toBe(true);
+});
+
+test('A property error message below the error cap keeps its path', () => {
+  const schema = {
+    type: 'object',
+    properties: { a: { type: 'string' } },
+    errorMessage: { properties: { a: 'A should be a string.' } },
+  };
+  const result = validate({ schema, data: { a: 1 }, returnErrors: true });
+  expect(result.errors).toMatchObject([{ instancePath: '/a', message: 'A should be a string.' }]);
+});

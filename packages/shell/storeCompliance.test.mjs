@@ -74,14 +74,18 @@ function opaqueBounds(image) {
 
 // The app config `expo config` prints: `introspect` as prebuild sees it, after the config plugins'
 // Info.plist changes; `prebuild` as the config states it.
-function readAppConfig(configPath, type = 'prebuild', env = process.env) {
+function readAppConfig(
+  configPath,
+  type = 'prebuild',
+  { env = process.env, variant = 'release' } = {}
+) {
   const output = execFileSync(
     path.join(shellRoot, 'node_modules', '.bin', 'expo'),
     ['config', '--type', type, '--json'],
     {
       cwd: shellRoot,
       encoding: 'utf8',
-      env: { ...env, LOWDEFY_SHELL_CONFIG: configPath, LOWDEFY_SHELL_VARIANT: 'release' },
+      env: { ...env, LOWDEFY_SHELL_CONFIG: configPath, LOWDEFY_SHELL_VARIANT: variant },
       stdio: ['ignore', 'pipe', 'ignore'],
     }
   );
@@ -190,6 +194,51 @@ test("a store shell's app config declares export compliance, privacy, icon, spla
     assert.equal(fs.statSync(foreground).mtimeMs, written);
   }));
 
+// Every shell links expo-speech-recognition, so every Info.plist carries both purpose texts (App
+// Store Connect refuses the Speech framework without them) and Android asks for RECORD_AUDIO.
+// expo-camera would write its own microphone text if it ran first, so field and dev check it too.
+test('basic, field and dev shells carry the speech purpose texts and RECORD_AUDIO once', () =>
+  withTemporaryDirectory(async (directory) => {
+    const shells = [
+      { profile: 'basic', variant: 'release' },
+      { profile: 'field', variant: 'release' },
+      { profile: 'dev', variant: 'dev' },
+    ];
+    shells.forEach(({ profile, variant }) => {
+      const configPath = path.join(directory, `${profile}.json`);
+      fs.writeFileSync(configPath, JSON.stringify({ ...fieldShell, icon: undefined, profile }));
+      const config = readAppConfig(configPath, 'introspect', { variant });
+      assert.equal(
+        config.ios.infoPlist.NSMicrophoneUsageDescription,
+        '$(PRODUCT_NAME) uses the microphone when you tap the microphone button, to turn what you say into text.',
+        profile
+      );
+      assert.equal(
+        config.ios.infoPlist.NSSpeechRecognitionUsageDescription,
+        '$(PRODUCT_NAME) turns what you say into text on this device. Your voice is not recorded or sent anywhere.',
+        profile
+      );
+      assert.equal(
+        config.android.permissions.filter(
+          (permission) => permission === 'android.permission.RECORD_AUDIO'
+        ).length,
+        1,
+        profile
+      );
+      assert.equal(
+        config.android.blockedPermissions.includes('android.permission.RECORD_AUDIO'),
+        false
+      );
+      assert.deepEqual(config.ios.privacyManifests, getPrivacyManifest(resolveProfile(profile)));
+      assert.deepEqual(categories(config.ios.privacyManifests), [
+        'FileTimestamp',
+        'UserDefaults',
+        'SystemBootTime',
+        'DiskSpace',
+      ]);
+    });
+  }));
+
 test('a shell config without an icon keeps Expo defaults and still declares compliance', () =>
   withTemporaryDirectory(async (directory) => {
     const configPath = path.join(directory, 'shell.json');
@@ -211,7 +260,7 @@ test("a shell plugin's config plugins, permissions, privacy reasons and data joi
   withPrinterPlugin(({ directory, env, require: shellRequire }) => {
     const configPath = path.join(directory, 'shell.json');
     fs.writeFileSync(configPath, JSON.stringify(printerShell));
-    const config = readAppConfig(configPath, 'introspect', env);
+    const config = readAppConfig(configPath, 'introspect', { env });
 
     // The plugin's config plugin ran, with the plugin's options.
     assert.equal(
@@ -228,6 +277,7 @@ test("a shell plugin's config plugins, permissions, privacy reasons and data joi
     assert.deepEqual(config.extra.shell.capabilities, [
       'biometrics',
       'sign-in',
+      'speech',
       'camera',
       'printer',
     ]);

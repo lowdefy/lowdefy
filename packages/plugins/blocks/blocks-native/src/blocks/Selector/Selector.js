@@ -26,6 +26,8 @@ import getOptionLabel from './getOptionLabel.js';
 import getOptionValue from './getOptionValue.js';
 import Label from '../Label/Label.js';
 import meta from './meta.js';
+import SelectorMenu from './SelectorMenu.js';
+import SelectorSheet from './SelectorSheet.js';
 import useBlockTokens from '../../shared/useBlockTokens.js';
 
 // The picker item that stands for no value: shown while nothing is chosen, and kept when the
@@ -34,9 +36,30 @@ const NO_VALUE = -1;
 
 // The picker works on option indices, so an option may hold any value, as on the web.
 // A disabled option is left out of the picker unless it is the one chosen.
-function Selector({ blockId, loading, methods, properties, required, styles, validation, value }) {
+// `variant: menu` draws a property row that opens a native menu instead (SelectorMenu), and
+// `variant: sheet` the same row opening a bottom sheet of the options (SelectorSheet).
+function Selector(props) {
+  if (props.properties.variant === 'menu') {
+    return <SelectorMenu {...props} />;
+  }
+  if (props.properties.variant === 'sheet') {
+    return <SelectorSheet {...props} />;
+  }
+  return <SelectorPicker {...props} />;
+}
+
+function SelectorPicker({
+  blockId,
+  loading,
+  methods,
+  properties,
+  required,
+  styles,
+  validation,
+  value,
+}) {
   const { isDark, tokens } = useBlockTokens({ properties });
-  const { accessibilityLabel, labelProperties } = getLabelProperties({ blockId, properties });
+  const { accessibilityLabel, labelProperties } = getLabelProperties({ properties });
   const disabled = loading === true || properties.disabled === true;
   const { box } = getInputBoxStyle({ disabled, properties, status: validation?.status, tokens });
   const options = properties.options ?? [];
@@ -58,7 +81,7 @@ function Selector({ blockId, loading, methods, properties, required, styles, val
       validation={validation}
     >
       <View accessibilityLabel={accessibilityLabel} style={[box, styles.element]}>
-        <Host colorScheme={isDark ? 'dark' : 'light'} matchContents seedColor={tokens.colorPrimary}>
+        <Host colorScheme={isDark ? 'dark' : 'light'} matchContents seedColor={tokens.colorTint}>
           <Picker
             appearance={properties.appearance ?? 'menu'}
             enabled={!disabled}

@@ -18,27 +18,158 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Renderer } from 'react-native-marked';
 
-// react-native-marked's renderer, with links pressed through the block's onLinkPress and raw
-// html dropped when skipHtml is set. Raw html is otherwise drawn as its source text, as the web
-// block escapes it. The library applies a list's style to each item's marker, so the space
-// below a list is a view around it.
+import ChipWidthView from './ChipWidthView.js';
+import getLinkChip from './getLinkChip.js';
+import getNodeText from './getNodeText.js';
+import layoutLinkChips from './layoutLinkChips.js';
+import LinkChip from './LinkChip.js';
+import MarkdownCode from './MarkdownCode.js';
+import MarkdownList from './MarkdownList.js';
+import MarkdownTable from './MarkdownTable.js';
+import restyleText from './restyleText.js';
+import { TASK_DONE, TASK_OPEN } from './MarkdownTokenizer.js';
+import TaskMark from './TaskMark.js';
+
+const THIN_SPACE = String.fromCharCode(0x2009);
+const QUOTE_PADDING = 12;
+
+// react-native-marked's renderer, drawn as iOS text: headings marked as headers, lists with a
+// marker column and nesting (MarkdownList), task boxes in place of the marker, fenced code in a
+// rounded card, quotes with a tint bar, tables in a rounded box and links in the tint. A link
+// that matches one of `linkChips` (by scheme or pattern) is a chip (LinkChip), laid out with its
+// line as a word of it (layoutLinkChips). Every link is pressed through onLinkPress; chips only
+// when onChipPress is given. Raw html is drawn as its source text, as the web block escapes it,
+// or dropped with skipHtml.
 class MarkdownRenderer extends Renderer {
-  constructor({ listStyle, onLinkPress, skipHtml }) {
+  constructor({ Icon, linkChips = [], onChipPress, onLinkPress, palette, skipHtml }) {
     super();
-    this.listStyle = listStyle;
+    this.Icon = Icon;
+    this.linkChips = linkChips;
+    this.onChipPress = onChipPress;
     this.onLinkPress = onLinkPress;
+    this.palette = palette;
     this.skipHtml = skipHtml;
   }
 
-  list(ordered, li, markerStyle, textStyle, startIndex) {
+  heading(text, styles) {
     return (
-      <View key={this.getKey()} style={this.listStyle}>
-        {super.list(ordered, li, markerStyle, textStyle, startIndex)}
+      <Text
+        accessibilityRole="header"
+        key={this.getKey()}
+        selectable={this.selectable}
+        style={styles}
+      >
+        {layoutLinkChips(text)}
+      </Text>
+    );
+  }
+
+  blockquote(children, styles) {
+    return (
+      <View
+        key={this.getKey()}
+        style={[
+          {
+            backgroundColor: this.palette.quoteBackground,
+            borderBottomRightRadius: 8,
+            borderTopRightRadius: 8,
+            flexDirection: 'row',
+          },
+          styles,
+        ]}
+        testID="markdown-quote"
+      >
+        <View style={{ backgroundColor: this.palette.tint, borderRadius: 1.5, width: 3 }} />
+        <ChipWidthView
+          inset={2 * QUOTE_PADDING}
+          style={{
+            flex: 1,
+            marginBottom: -this.palette.blockSpace,
+            minWidth: 0,
+            paddingBottom: 10,
+            paddingHorizontal: QUOTE_PADDING,
+            paddingTop: 10,
+          }}
+        >
+          {children}
+        </ChipWidthView>
       </View>
     );
   }
 
+  code(text, language, containerStyle, textStyle) {
+    return (
+      <MarkdownCode
+        key={this.getKey()}
+        language={language}
+        palette={this.palette}
+        style={containerStyle}
+        text={text}
+        textStyle={textStyle}
+      />
+    );
+  }
+
+  codespan(text, styles) {
+    // Thin spaces either side keep the fill off the code's first and last letters.
+    return (
+      <Text key={this.getKey()} selectable={this.selectable} style={styles}>
+        {`${THIN_SPACE}${text}${THIN_SPACE}`}
+      </Text>
+    );
+  }
+
+  hr(styles) {
+    return <View key={this.getKey()} style={styles} />;
+  }
+
+  list(ordered, li, listStyle, textStyle, startIndex) {
+    return (
+      <MarkdownList
+        items={li}
+        key={this.getKey()}
+        ordered={ordered}
+        palette={this.palette}
+        start={startIndex}
+        style={listStyle}
+      />
+    );
+  }
+
+  listItem(children) {
+    return <View key={this.getKey()}>{children}</View>;
+  }
+
+  text(text, styles) {
+    if (Array.isArray(text)) {
+      return super.text(layoutLinkChips(text), styles);
+    }
+    if (typeof text !== 'string' || (text[0] !== TASK_OPEN && text[0] !== TASK_DONE)) {
+      return super.text(text, styles);
+    }
+    const mark = <TaskMark checked={text[0] === TASK_DONE} key="task" />;
+    if (text.length === 1) {
+      return <React.Fragment key={this.getKey()}>{mark}</React.Fragment>;
+    }
+    return super.text([mark, text.slice(1)], styles);
+  }
+
   link(children, href, styles, title) {
+    const chip = getLinkChip({ href, linkChips: this.linkChips, text: getNodeText(children) });
+    if (chip !== null) {
+      return (
+        <LinkChip
+          chip={chip.chip}
+          href={href}
+          Icon={this.Icon}
+          key={this.getKey()}
+          linkKey={chip.key}
+          onPress={this.onChipPress}
+          palette={this.palette}
+          title={chip.title}
+        />
+      );
+    }
     return (
       <Text
         accessibilityLabel={title}
@@ -53,6 +184,17 @@ class MarkdownRenderer extends Renderer {
     );
   }
 
+  image(uri, alt, style, title) {
+    return (
+      <View
+        key={this.getKey()}
+        style={{ borderRadius: 10, marginBottom: this.palette.blockSpace, overflow: 'hidden' }}
+      >
+        {super.image(uri, alt, style, title)}
+      </View>
+    );
+  }
+
   linkImage(href, imageUrl, alt, style, title) {
     return (
       <Pressable
@@ -62,6 +204,25 @@ class MarkdownRenderer extends Renderer {
       >
         {this.image(imageUrl, alt, style, title)}
       </Pressable>
+    );
+  }
+
+  // Each cell's parts flow as one line of text, in the subheadline size; header cells semibold.
+  table(header, rows, tableStyle) {
+    const cellText = { fontSize: 15, letterSpacing: -0.24, lineHeight: 20 };
+    const toCell = (nodes, style) => (
+      <Text selectable={this.selectable} style={[this.palette.text, style]}>
+        {layoutLinkChips(restyleText(nodes, style))}
+      </Text>
+    );
+    return (
+      <MarkdownTable
+        header={header.map((cell) => toCell(cell, { ...cellText, fontWeight: '600' }))}
+        key={this.getKey()}
+        palette={this.palette}
+        rows={rows.map((row) => row.map((cell) => toCell(cell, cellText)))}
+        style={tableStyle}
+      />
     );
   }
 

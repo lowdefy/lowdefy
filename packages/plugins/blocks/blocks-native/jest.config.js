@@ -20,8 +20,11 @@
 // node_modules, so babel-jest compiles them too.
 //
 // @expo/ui draws SwiftUI and Jetpack Compose views through native modules Jest does not have,
-// so its pickers, switch and date picker are replaced by small React Native stand-ins
-// (src/test/expoUi.js) that keep their props.
+// so its pickers, switch, icon, date picker, menu, segmented control, bottom sheet and context
+// menu are replaced by small React Native stand-ins (src/test/expoUi*.js) that keep their props,
+// expo-image's Image by one too (src/test/expoImage.js), expo-web-browser's in-app browser by a
+// mock (src/test/expoWebBrowser.js), and expo-speech-recognition's recogniser by a stand-in tests
+// drive (src/test/expoSpeechRecognition.js).
 export default {
   preset: '@react-native/jest-preset',
   clearMocks: true,
@@ -33,13 +36,22 @@ export default {
   errorOnDeprecated: true,
   moduleNameMapper: {
     '^@expo/ui$': '<rootDir>/src/test/expoUi.js',
+    '^@expo/ui/community/bottom-sheet$': '<rootDir>/src/test/expoUiBottomSheet.js',
     '^@expo/ui/community/datetime-picker$': '<rootDir>/src/test/expoUiDateTimePicker.js',
+    '^@expo/ui/community/menu$': '<rootDir>/src/test/expoUiMenu.js',
+    '^@expo/ui/community/segmented-control$': '<rootDir>/src/test/expoUiSegmentedControl.js',
+    '^@expo/ui/swift-ui$': '<rootDir>/src/test/expoUiSwiftUi.js',
+    '^@expo/ui/swift-ui/modifiers$': '<rootDir>/src/test/expoUiSwiftUiModifiers.js',
+    '^expo-image$': '<rootDir>/src/test/expoImage.js',
+    '^expo-speech-recognition$': '<rootDir>/src/test/expoSpeechRecognition.js',
+    '^expo-web-browser$': '<rootDir>/src/test/expoWebBrowser.js',
   },
   setupFiles: ['<rootDir>/src/test/removeWindow.js'],
   // The preset's pattern assumes a flat node_modules; pnpm nests each package under .pnpm.
-  // react-native-marked ships TypeScript source and its parser, marked, ships ES modules.
+  // react-native-marked ships TypeScript source and its parser, marked, ships ES modules, as do
+  // the AI SDK (ai, @ai-sdk/*) and its dependencies.
   transformIgnorePatterns: [
-    'node_modules/(?!(\\.pnpm/[^/]+/node_modules/)?((jest-)?react-native|@react-native(-community)?|react-native-svg|react-native-marked|react-native-reanimated-table|marked|@jsamr|github-slugger|change-case|intl-messageformat|@formatjs)/)',
+    'node_modules/(?!(\\.pnpm/[^/]+/node_modules/)?((jest-)?react-native|@react-native(-community)?|react-native-svg|react-native-marked|react-native-reanimated-table|marked|@jsamr|github-slugger|change-case|intl-messageformat|@formatjs|ai|@ai-sdk|eventsource-parser|throttleit|swr|zod|@standard-schema|@vercel/oidc|@workflow)/)',
   ],
   testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test/'],
 };

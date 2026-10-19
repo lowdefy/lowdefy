@@ -45,6 +45,7 @@ import buildLogger from './build/buildLogger.js';
 import buildMcp from './build/buildMcp.js';
 import buildMenu from './build/buildMenu.js';
 import buildMobile from './build/buildMobile/buildMobile.js';
+import buildMobileAppEvents from './build/buildMobile/buildMobileAppEvents.js';
 import buildMobileAppJs from './build/buildMobile/buildMobileAppJs.js';
 import buildMobileClassMap from './build/buildMobile/buildMobileClassMap.js';
 import buildMobilePageIcons from './build/buildMobile/buildMobilePageIcons.js';
@@ -224,6 +225,7 @@ async function build(options) {
     });
     // After buildPages: Link actions in app events are checked against the page ids.
     tryBuildStep(buildAppEvents, 'buildAppEvents', { components, context });
+    tryBuildStep(buildMobileAppEvents, 'buildMobileAppEvents', { components, context });
     // Every type is counted by now, and buildJs has not yet replaced the
     // counted objects with copies.
     const { pending: pluginChecksPending } = await runPluginChecks({ components, context });

@@ -15,10 +15,11 @@
 */
 
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { type } from '@lowdefy/helpers';
 import { convertStyle } from '@lowdefy/style-native';
 
+import getIosTextStyle from '../../typography/getIosTextStyle.js';
 import htmlToText from '../../htmlToText.js';
 import meta from './meta.js';
 import SkeletonShape from '../../skeleton/SkeletonShape.js';
@@ -26,15 +27,14 @@ import useComponentTokens from '../../useComponentTokens.js';
 
 const LOADING_ROWS = ['38%', '100%', '100%', '61%'];
 
-// antd's card padding tokens default to the global spacing tokens. A `padding` of compact or none
-// overrides them, as on the web.
+// The iOS grouped section's corner radius.
+const CELL_RADIUS = 10;
+
+// iOS insets a cell's content 16 points (12 for a small card). antd's card padding tokens, set in
+// the block's theme, and a `padding` of compact or none override them, as on the web.
 function getPadding({ padding, small, tokens }) {
-  const header = small
-    ? tokens.headerPaddingSM ?? tokens.paddingSM
-    : tokens.headerPadding ?? tokens.paddingLG;
-  const body = small
-    ? tokens.bodyPaddingSM ?? tokens.paddingSM
-    : tokens.bodyPadding ?? tokens.paddingLG;
+  const header = small ? tokens.headerPaddingSM ?? 12 : tokens.headerPadding ?? 16;
+  const body = small ? tokens.bodyPaddingSM ?? 12 : tokens.bodyPadding ?? 16;
   switch (padding) {
     case 'compact':
       return { body: 12, header: 12 };
@@ -45,36 +45,45 @@ function getPadding({ padding, small, tokens }) {
   }
 }
 
-function LoadingRows({ tokens }) {
-  return LOADING_ROWS.map((width, index) => (
-    <SkeletonShape
-      key={index}
-      style={{ height: tokens.fontSize + 2, marginTop: index === 0 ? 0 : tokens.marginSM, width }}
-    />
-  ));
+// The block theme's header font size, over the headline size.
+function getHeaderFontSize({ compact, tokens }) {
+  const fontSize = compact ? tokens.headerFontSizeSM : tokens.headerFontSize;
+  return type.isNumber(fontSize) ? { fontSize } : null;
 }
 
-// antd's Card: an optional header with a title and extra blocks, a cover, the body and an action
-// bar, in a rounded container. With an onClick event the whole card is pressable.
+// The card's loading text, one "Loading" progress bar to a screen reader.
+function LoadingRows() {
+  return (
+    <View
+      accessible
+      accessibilityLabel="Loading"
+      accessibilityRole="progressbar"
+      accessibilityState={{ busy: true }}
+    >
+      {LOADING_ROWS.map((width, index) => (
+        <SkeletonShape key={index} style={{ height: 14, marginTop: index === 0 ? 0 : 10, width }} />
+      ))}
+    </View>
+  );
+}
+
+// antd's Card as an iOS grouped section: a cell on the grouped background with a rounded corner
+// and no border, an optional header with a headline title and extra blocks, a cover, the body and
+// an action bar, divided by hairline separators. With an onClick event the whole card is
+// pressable and highlights while pressed, as a cell does.
 function Card({ content, events, methods, properties, styles = {} }) {
   const { tokens } = useComponentTokens(properties.theme);
   const small = properties.size === 'small';
   const inner = properties.inner === true;
-  const bordered = properties.bordered !== false && properties.variant !== 'borderless';
   const padding = getPadding({ padding: properties.padding, small, tokens });
   const title = htmlToText(properties.title);
   const hasTitle = Boolean(content.title) || (type.isString(title) && title !== '');
   const hasHeader = hasTitle || Boolean(content.extra);
-  const headerFontSize =
-    small || inner
-      ? tokens.headerFontSizeSM ?? tokens.fontSize
-      : tokens.headerFontSize ?? tokens.fontSizeLG;
-  const containerStyle = [
+  const separator = { borderColor: tokens.colorSeparator };
+  const containerStyle = (pressed) => [
     {
-      backgroundColor: tokens.colorBgContainer,
-      borderColor: tokens.colorBorderSecondary,
-      borderRadius: tokens.borderRadiusLG,
-      borderWidth: bordered ? tokens.lineWidth : 0,
+      backgroundColor: pressed ? tokens.colorCellPressed : tokens.colorCell,
+      borderRadius: properties.theme?.borderRadiusLG ?? CELL_RADIUS,
       overflow: 'hidden',
     },
     styles.element,
@@ -84,13 +93,13 @@ function Card({ content, events, methods, properties, styles = {} }) {
       {hasHeader ? (
         <View
           style={[
+            separator,
             {
               alignItems: 'center',
-              backgroundColor: inner ? tokens.colorFillAlter : tokens.headerBg,
-              borderBottomColor: tokens.colorBorderSecondary,
-              borderBottomWidth: tokens.lineWidth,
+              backgroundColor: inner ? tokens.colorCellNested : tokens.headerBg,
+              borderBottomWidth: StyleSheet.hairlineWidth,
               flexDirection: 'row',
-              minHeight: small ? tokens.headerHeightSM ?? 38 : tokens.headerHeight ?? 56,
+              minHeight: small ? tokens.headerHeightSM ?? 38 : tokens.headerHeight ?? 44,
               paddingHorizontal: padding.header,
             },
             styles.header,
@@ -104,11 +113,12 @@ function Card({ content, events, methods, properties, styles = {} }) {
                 accessibilityRole="header"
                 numberOfLines={1}
                 style={[
-                  {
-                    color: tokens.colorTextHeading,
-                    fontSize: headerFontSize,
-                    fontWeight: String(tokens.fontWeightStrong),
-                  },
+                  getIosTextStyle({
+                    textStyle: small || inner ? 'subheadline' : 'headline',
+                    tokens,
+                  }),
+                  small || inner ? { fontWeight: '600' } : null,
+                  getHeaderFontSize({ compact: small || inner, tokens }),
                   styles.title,
                 ]}
               >
@@ -117,7 +127,7 @@ function Card({ content, events, methods, properties, styles = {} }) {
             )}
           </View>
           {content.extra ? (
-            <View style={[{ marginLeft: tokens.marginXS }, styles.extra]}>{content.extra()}</View>
+            <View style={[{ marginLeft: 8 }, styles.extra]}>{content.extra()}</View>
           ) : null}
         </View>
       ) : null}
@@ -130,17 +140,17 @@ function Card({ content, events, methods, properties, styles = {} }) {
           styles.body,
         ]}
       >
-        {properties.loading === true ? <LoadingRows tokens={tokens} /> : content.content?.()}
+        {properties.loading === true ? <LoadingRows /> : content.content?.()}
       </View>
       {content.actions ? (
         <View
           style={[
+            separator,
             {
-              backgroundColor: tokens.actionsBg ?? tokens.colorBgContainer,
-              borderTopColor: tokens.colorBorderSecondary,
-              borderTopWidth: tokens.lineWidth,
+              backgroundColor: tokens.actionsBg,
+              borderTopWidth: StyleSheet.hairlineWidth,
               paddingHorizontal: padding.header,
-              paddingVertical: tokens.paddingSM,
+              paddingVertical: 10,
             },
             styles.actions,
           ]}
@@ -155,13 +165,13 @@ function Card({ content, events, methods, properties, styles = {} }) {
       <Pressable
         accessibilityRole="button"
         onPress={() => methods.triggerEvent({ name: 'onClick' })}
-        style={containerStyle}
+        style={({ pressed }) => containerStyle(pressed)}
       >
         {body}
       </Pressable>
     );
   }
-  return <View style={containerStyle}>{body}</View>;
+  return <View style={containerStyle(false)}>{body}</View>;
 }
 
 Card.meta = meta;

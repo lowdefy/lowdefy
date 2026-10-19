@@ -1,0 +1,122 @@
+# Issues: the viewer's issues across every project, in sections by state, each section header led
+# by its status glyph. Swipe a row right to mark it done (it moves to the Done section), left to
+# snooze it, or long press for its context menu. A row opens its issue.
+id: issues
+type: Screen
+properties:
+  title: My issues
+  largeTitle: true
+  headerActions:
+    - id: new_issue
+      icon: SquarePen
+      sfSymbol: square.and.pencil
+      title: New issue
+events:
+  onInit:
+    - id: seed
+      type: SetState
+      params:
+        mine:
+          _array.filter:
+            on:
+              _ref: data/issues.yaml
+            callback:
+              _function:
+                __eq:
+                  - __args: 0.assignee
+                  - ada
+        project_names:
+          web: Web app
+          ios: iOS app
+          api: Platform API
+  onRefresh:
+    - id: refresh
+      type: Wait
+      params:
+        ms: 900
+blocks:
+  - id: mine
+    type: List
+    properties:
+      sectionKey: status
+      showCount: true
+      sections:
+        - key: in_progress
+          title: In progress
+          status: inProgress
+        - key: in_review
+          title: In review
+          status: inReview
+        - key: todo
+          title: Todo
+          status: todo
+        - key: backlog
+          title: Backlog
+          status: backlog
+        - key: done
+          title: Done
+          status: done
+    blocks:
+      - id: mine.$.row
+        type: ListItem
+        properties:
+          title:
+            _state: mine.$.title
+          subtitle:
+            _string.concat:
+              - _state: mine.$.key
+              - ' · '
+              - _state:
+                  _string.concat:
+                    - project_names.
+                    - _state: mine.$.project
+          leading:
+            status:
+              _state: mine.$.glyph
+          trailing:
+            text:
+              _state: mine.$.updated
+            status:
+              _state: mine.$.priorityGlyph
+          swipeActions:
+            fullSwipe: leading
+            leading:
+              - id: done
+                title: Done
+                icon: CircleCheck
+                tone: success
+            trailing:
+              - id: snooze
+                title: Snooze
+                icon: Clock
+                tone: warning
+          contextMenu:
+            - id: open
+              title: Open
+              icon: arrow.up.right
+            - id: copy_key
+              title: Copy key
+              icon: doc.on.doc
+            - id: unassign
+              title: Unassign me
+              icon: person.crop.circle.badge.minus
+              destructive: true
+        events:
+          onClick:
+            - id: open_issue
+              type: Link
+              params:
+                pageId: issue
+                urlQuery:
+                  key:
+                    _state: mine.$.key
+          onSwipeAction:
+            - id: mark_done
+              type: SetState
+              skip:
+                _ne:
+                  - _event: id
+                  - done
+              params:
+                mine.$.status: done
+                mine.$.glyph: done

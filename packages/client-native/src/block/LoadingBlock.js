@@ -15,17 +15,29 @@
 */
 
 import React from 'react';
+import { type } from '@lowdefy/helpers';
 
 import Area from './Area.js';
 import BlockLayout from './BlockLayout.js';
+import getSkeletonBlock from './getSkeletonBlock.js';
 import loadingBlockMethods from './loadingBlockMethods.js';
+import useBlockStyles from '../style/useBlockStyles.js';
 
 const getSkeletonLayout = (skeleton) => skeleton.layout;
 
 // The skeleton a loading block shows in its place. A skeleton with slots is drawn as a container
 // of skeletons. The build checks skeleton types, so the component is always in the type map.
+// The skeleton's style is split into slots as a block's is (getSkeletonBlock): its block slot
+// styles the view it is placed in, and its block gets the rest (`.element`), so a Skeleton
+// skeleton takes its element padding as a Skeleton block does. A skeleton without a style is
+// placed with the loading block's own block style, as on the web.
 const LoadingBlock = ({ blockId, blockLayout, blockProperties, blockStyle, lowdefy, skeleton }) => {
   const Component = lowdefy._internal.blockComponents[skeleton.type];
+  const styles = useBlockStyles({
+    block: getSkeletonBlock({ blockId, skeleton }),
+    lowdefy,
+    unconverted: true,
+  });
   const content = {};
   Object.keys(skeleton.slots ?? {}).forEach((slotKey) => {
     content[slotKey] = () => (
@@ -52,7 +64,7 @@ const LoadingBlock = ({ blockId, blockLayout, blockProperties, blockStyle, lowde
     <BlockLayout
       blockId={`s-${blockId}-${skeleton.id}`}
       layout={skeleton.layout ?? blockLayout}
-      style={skeleton.style ?? blockStyle}
+      style={type.isNone(skeleton.style) ? blockStyle : styles.block}
     >
       <Component
         basePath={lowdefy.basePath}
@@ -69,6 +81,7 @@ const LoadingBlock = ({ blockId, blockLayout, blockProperties, blockStyle, lowde
         }}
         pageId={lowdefy.pageId}
         properties={skeleton.properties ?? blockProperties}
+        styles={styles}
       />
     </BlockLayout>
   );

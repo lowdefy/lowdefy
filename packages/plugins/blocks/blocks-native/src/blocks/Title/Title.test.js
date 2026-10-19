@@ -14,9 +14,18 @@
   limitations under the License.
 */
 
-import { page, press, record, renderPage, screen, styleOf, theme } from '../../test/renderPage.js';
+import {
+  ios,
+  page,
+  press,
+  record,
+  renderPage,
+  screen,
+  styleOf,
+  theme,
+} from '../../test/renderPage.js';
 
-test('a Title draws its content as a header at its level, with the block id as testID', async () => {
+test('a Title draws its content as a header in the iOS text style of its level', async () => {
   await renderPage({
     pageConfig: page([
       { id: 'heading', type: 'Title', properties: { content: 'Orders', level: 3 } },
@@ -25,12 +34,23 @@ test('a Title draws its content as a header at its level, with the block id as t
   const heading = await screen.findByRole('header');
   expect(heading.props.children[0]).toBe('Orders');
   expect(styleOf(heading)).toMatchObject({
-    color: theme.light.colorTextHeading,
-    fontSize: theme.light.fontSizeHeading3,
-    fontWeight: '600',
-    marginBottom: theme.light.fontSizeHeading3 / 2,
+    color: ios.light.colorLabel,
+    fontSize: 22,
+    fontWeight: '700',
+    lineHeight: 28,
   });
   expect(screen.getByTestId('heading')).toBeTruthy();
+});
+
+test('a Title level 1 is a large title, and textStyle picks another iOS text style', async () => {
+  await renderPage({
+    pageConfig: page([
+      { id: 'large', type: 'Title', properties: { content: 'Inbox' } },
+      { id: 'row', type: 'Title', properties: { content: 'Row', textStyle: 'headline' } },
+    ]),
+  });
+  expect(styleOf(await screen.findByText('Inbox'))).toMatchObject({ fontSize: 34, lineHeight: 41 });
+  expect(styleOf(screen.getByText('Row'))).toMatchObject({ fontSize: 17, fontWeight: '600' });
 });
 
 test('a Title shows html content as plain text and applies type and decoration styles', async () => {
@@ -77,7 +97,6 @@ test('a Title color, theme tokens and element style apply in that order', async 
     color: '#123456',
     fontSize: 50,
     letterSpacing: 1,
-    marginBottom: 4,
   });
 });
 
@@ -111,7 +130,7 @@ test('a Title takes the dark heading colour in dark mode', async () => {
     darkMode: 'dark',
     pageConfig: page([{ id: 'heading', type: 'Title', properties: { content: 'Night' } }]),
   });
-  expect(styleOf(await screen.findByText('Night')).color).toBe(theme.dark.colorTextHeading);
+  expect(styleOf(await screen.findByText('Night')).color).toBe(ios.dark.colorLabel);
 });
 
 test('a Title evaluated visible false is not drawn', async () => {

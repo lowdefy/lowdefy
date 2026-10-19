@@ -18,12 +18,21 @@ import React from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { serializeQuery } from '@lowdefy/client-core';
 
+import getTabHref from '../../src/navigation/getTabHref.js';
 import PageScreen from '../../src/components/PageScreen.js';
+import SwitchToTab from '../../src/components/SwitchToTab.js';
+import { useSessionState } from '../../src/ShellContext.js';
 
 // Every Lowdefy page, by path. The page and its path params come from the page index; the route's
-// other params are the page's query.
+// other params are the page's query. A tab's own page is shown on its tab, not stacked here.
 export default function PathRoute() {
   const { path, ...query } = useLocalSearchParams();
+  const { root } = useSessionState();
   const segments = Array.isArray(path) ? path : [path];
-  return <PageScreen path={segments.join('/')} query={serializeQuery(query)} />;
+  const pagePath = segments.join('/');
+  const tabHref = getTabHref({ path: pagePath, query: serializeQuery(query), root });
+  if (tabHref !== null) {
+    return <SwitchToTab href={tabHref} />;
+  }
+  return <PageScreen path={pagePath} query={serializeQuery(query)} />;
 }

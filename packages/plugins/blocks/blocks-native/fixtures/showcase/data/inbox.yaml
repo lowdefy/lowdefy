@@ -1,0 +1,47 @@
+# The Inbox sections. "Needs you" rows lead with the issue's state and end with the person asking;
+# "Up next" rows end with when they are due and their priority.
+needs_you:
+  - key: ACME-142
+    title: Grace asked for your review on the sync fix
+    glyph: needsInput
+    time: 12m
+    name: Grace Hopper
+    picture: https://i.pravatar.cc/96?img=32
+  - key: ACME-144
+    title: Alan left a question on board columns
+    glyph: inReview
+    time: 1h
+    name: Alan Turing
+    picture: https://i.pravatar.cc/96?img=12
+  - key: ACME-155
+    title: Katherine mentioned you on status webhooks
+    glyph: needsInput
+    time: 3h
+    name: Katherine Johnson
+    picture: https://i.pravatar.cc/96?img=45
+up_next:
+  - key: ACME-139
+    title: Haptic tick when a swipe action commits
+    glyph: inProgress
+    project: iOS app
+    due: Today
+    dueColor: orange
+    priorityGlyph: priorityMedium
+  - key: ACME-153
+    title: Remember the last filter for each project
+    glyph: todo
+    project: Web app
+    due: Thu
+    priorityGlyph: priorityMedium
+  - key: ACME-161
+    title: Release notes for Acme 2.4
+    glyph: todo
+    project: Web app
+    due: Fri
+    priorityGlyph: priorityLow
+  - key: ACME-151
+    title: Large title clips under the Dynamic Island
+    glyph: todo
+    project: iOS app
+    due: 26 Oct
+    priorityGlyph: priorityHigh

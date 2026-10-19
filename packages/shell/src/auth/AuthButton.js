@@ -18,15 +18,22 @@ import React from 'react';
 import { Pressable, Text } from 'react-native';
 
 import styles from './styles.js';
+import useSurfaceTokens from '../components/useSurfaceTokens.js';
 
 function AuthButton({ disabled = false, onPress, testID, title }) {
+  const tokens = useSurfaceTokens();
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
-      style={[styles.button, disabled ? styles.buttonDisabled : null]}
+      style={({ pressed }) => [
+        styles.button,
+        { backgroundColor: tokens.colorTint },
+        pressed ? { opacity: 0.7 } : null,
+        disabled ? styles.buttonDisabled : null,
+      ]}
       testID={testID}
     >
       <Text style={styles.buttonText}>{title}</Text>

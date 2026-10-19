@@ -29,7 +29,8 @@ export default {
     },
     color: {
       type: 'string',
-      description: 'Icon color.',
+      description:
+        'Icon color. On mobile a palette hue (`blue`, `amber`), a theme token (`colorPrimary`, `colorTint`) or a colour value.',
     },
     size: {
       type: ['string', 'number'],

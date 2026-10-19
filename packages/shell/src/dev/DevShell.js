@@ -15,9 +15,10 @@
 */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Linking, View } from 'react-native';
+import { Linking, LogBox, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { Accelerometer } from 'expo-sensors';
+import { installDictationSource } from '@lowdefy/blocks-native/dictation';
 
 import AppProvider from '../components/AppProvider.js';
 import ConfirmSheet from './connect/ConfirmSheet.js';
@@ -32,12 +33,16 @@ import DevMenu from './menu/DevMenu.js';
 import DevTabClient from './tab/DevTabClient.js';
 import Frame from '../components/Frame.js';
 import getShellConfig from '../config/getShellConfig.js';
-import { installInjector } from '../device/injected.js';
+import injected, { installInjector } from '../device/injected.js';
 import isLoopbackHost from './connection/isLoopbackHost.js';
 import networkStatus from '../host/networkStatus.js';
 import parseDevLink from './connection/parseDevLink.js';
 import reloadApp from './tab/reloadApp.js';
 import watchShake from './menu/watchShake.js';
+
+// Lowdefy Dev reports errors in its own log (the dev menu) and to the dev server's build status.
+// React Native's LogBox toasts would cover the tab bar and every screenshot an agent takes.
+LogBox.ignoreAllLogs();
 
 /**
  * Lowdefy Dev: the shell with developer features, in place of ShellRoot. It opens one app, the
@@ -48,9 +53,9 @@ import watchShake from './menu/watchShake.js';
  *   localhost connects at once, which is how `lowdefy dev --ios` and `--android` open it.
  * - Shaking the phone (or a `lowdefy-dev://menu` link) opens the dev menu.
  * - The open app joins the dev server's tab channel (DevTabClient), which records what is done in
- *   it and takes device injections: the next scan, photo or NFC read, a location, a permission
- *   answer, or no network, which fails the app's every fetch and shows the NoConnection banner
- *   (createDeviceInjections).
+ *   it and takes device injections: the next scan, photo or NFC read, what the next dictation
+ *   session hears, a location, a permission answer, or no network, which fails the app's every
+ *   fetch and shows the NoConnection banner (createDeviceInjections).
  *
  * @param {Object} props
  * @param {Object} [props.accelerometer] expo-sensors' Accelerometer.
@@ -113,6 +118,9 @@ function DevShell({
   useEffect(() => logs.install(), [logs]);
 
   useEffect(() => installInjector(injections), [injections]);
+
+  // The native inputs' dictation plays injected transcripts, and uses the microphone otherwise.
+  useEffect(() => installDictationSource(injected), []);
 
   useEffect(() => {
     linking.getInitialURL().then((link) => link && handleLink(link));

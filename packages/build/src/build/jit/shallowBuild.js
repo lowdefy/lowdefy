@@ -44,6 +44,7 @@ import buildIconContext from '../icons/buildIconContext.js';
 import buildMcp from '../buildMcp.js';
 import buildMenu from '../buildMenu.js';
 import buildMobile from '../buildMobile/buildMobile.js';
+import buildMobileAppEvents from '../buildMobile/buildMobileAppEvents.js';
 import buildMobileAppJs from '../buildMobile/buildMobileAppJs.js';
 import buildMobileClassMap from '../buildMobile/buildMobileClassMap.js';
 import buildMobilePageIcons from '../buildMobile/buildMobilePageIcons.js';
@@ -238,6 +239,7 @@ async function shallowBuild(options) {
     });
     // After buildShallowPages: Link actions in app events are checked against the page ids.
     tryBuildStep(buildAppEvents, 'buildAppEvents', { components, context });
+    tryBuildStep(buildMobileAppEvents, 'buildMobileAppEvents', { components, context });
     // App-level config and inline pages; page builds check their own pages.
     const { pending: pluginChecksPending } = await runPluginChecks({
       components,

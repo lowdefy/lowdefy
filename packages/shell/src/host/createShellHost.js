@@ -38,7 +38,7 @@ const clipboard = {
   setString: (text) => Clipboard.setStringAsync(text),
 };
 
-function createShellHost({ fetch, router, session, tokenStore, WebSocket }) {
+function createShellHost({ fetch, router, session, streamFetch, tokenStore, WebSocket }) {
   const storage = createDeviceStore();
   return {
     authTransport: 'bearer',
@@ -47,6 +47,7 @@ function createShellHost({ fetch, router, session, tokenStore, WebSocket }) {
       assign: (url) => Linking.openURL(url),
       clipboard,
       fetch,
+      getInstanceId: session.getCurrentInstanceId,
       getPath: session.getCurrentPath,
       network,
       origin: getOrigin(session.apiBase),
@@ -61,6 +62,8 @@ function createShellHost({ fetch, router, session, tokenStore, WebSocket }) {
     router,
     sessionStorage: createMemoryStore(),
     storage,
+    // The Fetch API whose response body streams, for blocks (client-native's createStreamFetch).
+    streamFetch,
     tokenStore,
     WebSocket,
     websocketUrl: (apiPath) => apiPath.replace(/^http/, 'ws'),

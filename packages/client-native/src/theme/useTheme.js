@@ -20,8 +20,10 @@ import ThemeContext from './ThemeContext.js';
 
 /**
  * The theme a native block styles itself with: `{ isDark, preference, tokens }`, `tokens` being
- * antd's computed tokens for the mode showing (colorPrimary, borderRadius, fontSize, ...). A
- * block lays these under its `styles` slots: block defaults, then theme, then class, then style.
+ * antd's computed tokens for the mode showing (colorPrimary, borderRadius, fontSize, ...) with the
+ * iOS semantic colours (colorGroupedBackground, colorCell, colorSeparator, colorLabel,
+ * colorSecondaryLabel, colorTint, ...; see getSemanticTokens). A block lays these under its
+ * `styles` slots: block defaults, then theme, then class, then style.
  */
 function useTheme() {
   return useContext(ThemeContext);

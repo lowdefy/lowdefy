@@ -16,23 +16,36 @@
 
 import path from 'node:path';
 
-import { type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 import getMobileAuth from './buildMobile/getMobileAuth.js';
 import getMobileHomePageId from './buildMobile/getMobileHomePageId.js';
 import loadIconData from './icons/loadIconData.js';
+
+// The search tab draws the search icon unless it names its own.
+function getItemIcon(item) {
+  if (type.isString(item.icon)) {
+    return item.icon;
+  }
+  return item.role === 'search' ? 'search' : undefined;
+}
 
 function getMenuItems(menus) {
   return [...(menus.tabs ?? []), ...(menus.drawer ?? [])];
 }
 
 function buildMenuItems({ items, iconData }) {
-  return items.map((item) => ({
-    pageId: item.pageId,
-    title: item.title,
-    icon: item.icon,
-    iconData: type.isString(item.icon) ? iconData[item.icon] : undefined,
-  }));
+  return items.map((item) => {
+    const icon = getItemIcon(item);
+    return {
+      pageId: item.pageId,
+      title: item.title,
+      icon,
+      iconData: type.isString(icon) ? iconData[icon] : undefined,
+      sfSymbol: item.sfSymbol,
+      role: item.role,
+    };
+  });
 }
 
 async function buildMenus({ menus, context }) {
@@ -41,7 +54,7 @@ async function buildMenus({ menus, context }) {
   }
   const iconNames = new Set(
     getMenuItems(menus)
-      .map((item) => item.icon)
+      .map(getItemIcon)
       .filter((icon) => type.isString(icon))
   );
   const iconData = await loadIconData({ names: [...iconNames], icons: context.icons });
@@ -113,13 +126,19 @@ async function buildMobileConfig({ components, context }) {
 // class ("dark:bg-gray-900", "sm:flex-row"); in dark mode a shell reads
 // "dark:<class>" before "<class>", which the build adds for classes that use
 // an antd theme colour.
-// mobile/appJs.json: { jsEntries }, the app events' client _js as module text
-// (buildMobileAppJs), or null.
+// mobile/events.json: mobile.events, the app events a shell runs in place of
+// the web app's events ({} when it has none), serialized like events.json so
+// their ~k markers reach the shell's error locations.
+// mobile/appJs.json: { jsEntries }, the client _js of mobile.events as module
+// text (buildMobileAppJs), or null.
 async function writeMobile({ components, context }) {
-  const config = type.isNone(components.mobile)
-    ? {}
-    : await buildMobileConfig({ components, context });
+  const hasMobile = !type.isNone(components.mobile);
+  const config = hasMobile ? await buildMobileConfig({ components, context }) : {};
   await context.writeBuildArtifact('mobile/config.json', JSON.stringify(config));
+  await context.writeBuildArtifact(
+    'mobile/events.json',
+    serializer.serializeToString(components.mobile?.events ?? {})
+  );
   await context.writeBuildArtifact(
     'mobile/pageIndex.json',
     JSON.stringify(context.mobilePageIndex)

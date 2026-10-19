@@ -135,7 +135,8 @@ class WebParser {
           error,
           event,
           eventLog: this.context.eventLog,
-          globals: _internal.globals,
+          // A context shown on a screen of its own reads that screen's globals (getContext).
+          globals: this.context._internal.globals ?? _internal.globals,
           home,
           i18n,
           input: inputs[this.context.instanceKey],

@@ -18,7 +18,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { CallMethod, SetState, Validate, Wait } from '@lowdefy/actions-core/actions';
-import { LowdefyPage } from '@lowdefy/client-native';
+import { iosColors as ios, LowdefyPage } from '@lowdefy/client-native';
 import {
   _event,
   _if,
@@ -56,20 +56,24 @@ function createRecord() {
  *   buildPage builds it; its root is usually a Box.
  * @param {Object} [params.actions] Extra test actions, by type name, over the default ones.
  * @param {'light'|'dark'} [params.darkMode] The theme mode, light unless asked.
+ * @param {boolean} [params.focused] Whether the page's screen is the one shown, true unless asked.
  * @param {Object} [params.rootConfig] Root config keys over the test root config.
- * @returns {Promise<{ calls: Object[], host: Object, lowdefy: Object }>} The Record action's
- *   params in the order they ran, the fake host and the lowdefy object.
+ * @returns {Promise<{ calls: Object[], host: Object, lowdefy: Object, setFocused: Function }>}
+ *   The Record action's params in the order they ran, the fake host, the lowdefy object and
+ *   `setFocused(focused)`, which shows or hides the page's screen.
  */
 async function renderPage({
   actions = {},
   darkMode = 'light',
+  focused = true,
   pageConfig,
   rootConfig: rootOverrides = {},
 }) {
   const { calls, Record } = createRecord();
   const host = createFakeHost({ path: `/${pageConfig.id}` });
   const lowdefy = { buildId: 'build-1' };
-  await render(
+  const builtPage = buildPage(pageConfig);
+  const pageElement = (isFocused) => (
     <LowdefyPage
       core={{
         apiBase: 'https://app.lowdefy.test',
@@ -77,8 +81,9 @@ async function renderPage({
         basePath: '',
         lowdefy,
       }}
+      focused={isFocused}
       host={host}
-      pageConfig={buildPage(pageConfig)}
+      pageConfig={builtPage}
       rootConfig={{
         classMap: {},
         home: { configured: true, pageId: pageConfig.id },
@@ -96,7 +101,14 @@ async function renderPage({
       }}
     />
   );
-  return { calls, host, lowdefy };
+  const { rerender } = await render(pageElement(focused));
+  // Shows or hides the page's screen, as a tab switch or a pushed screen would.
+  const setFocused = async (isFocused) => {
+    await act(async () => {
+      rerender(pageElement(isFocused));
+    });
+  };
+  return { calls, host, lowdefy, setFocused };
 }
 
 // A page of one Box holding the blocks under test.
@@ -136,4 +148,16 @@ async function press(element) {
   });
 }
 
-export { findAllOfType, iconPaths, icons, page, press, record, renderPage, screen, styleOf, theme };
+export {
+  findAllOfType,
+  iconPaths,
+  icons,
+  ios,
+  page,
+  press,
+  record,
+  renderPage,
+  screen,
+  styleOf,
+  theme,
+};

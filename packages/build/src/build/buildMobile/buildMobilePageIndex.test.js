@@ -56,6 +56,7 @@ function createContext() {
     'about',
     createPageCounters({ actions: ['Link'], blocks: ['Box'], operators: ['_unknown_op'] })
   );
+  context.mobileAppTypeCounters = createPageCounters({});
   return context;
 }
 
@@ -100,6 +101,17 @@ test('buildMobilePageIndex gives pages with the same type set the same typesKey'
   buildMobilePageIndex({ components, context });
   expect(context.mobilePageIndex[0].typesKey).toEqual(context.mobilePageIndex[1].typesKey);
   expect(Object.keys(context.mobileTypeSets)).toHaveLength(1);
+});
+
+test('buildMobilePageIndex adds the mobile.events types to every page type set', () => {
+  const context = createContext();
+  context.mobileAppTypeCounters = createPageCounters({ actions: ['Link'] });
+  buildMobilePageIndex({ components, context });
+  context.mobilePageIndex.forEach((entry) => {
+    expect(context.mobileTypeSets[entry.typesKey].actions).toEqual([
+      { type: 'Link', package: '@lowdefy/actions-core', version: 7 },
+    ]);
+  });
 });
 
 test('buildMobilePageIndex warns when mobile pages total over 1 MB of JSON', () => {

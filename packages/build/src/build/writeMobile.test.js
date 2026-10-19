@@ -16,6 +16,10 @@
 
 import { jest } from '@jest/globals';
 
+import { icons as lucideIcons } from 'lucide';
+
+import createIconSemanticMap from './icons/createIconSemanticMap.js';
+import createLucideIconLayer from './icons/createLucideIconLayer.js';
 import writeMobile from './writeMobile.js';
 import testContext from '../test-utils/testContext.js';
 
@@ -55,6 +59,7 @@ test('writeMobile writes empty artifacts for an app without a mobile key', async
   await writeMobile({ components: {}, context });
   expect(getArtifacts()).toEqual({
     'mobile/config.json': {},
+    'mobile/events.json': {},
     'mobile/pageIndex.json': [],
     'mobile/typeSets.json': {},
     'mobile/theme.json': {},
@@ -65,7 +70,7 @@ test('writeMobile writes empty artifacts for an app without a mobile key', async
 
 test('writeMobile defaults to a stack frame and the first mobile page as home', async () => {
   const context = createContext();
-  await writeMobile({ components: { mobile: {} }, context });
+  await writeMobile({ components: { mobile: { events: {} } }, context });
   expect(getArtifacts()).toEqual({
     'mobile/config.json': {
       homePageId: 'today',
@@ -80,6 +85,7 @@ test('writeMobile defaults to a stack frame and the first mobile page as home', 
         sessionExpiresIn: null,
       },
     },
+    'mobile/events.json': {},
     'mobile/pageIndex.json': [{ path: 'today', pageId: 'today', hash: 'h1', typesKey: 't1' }],
     'mobile/typeSets.json': { t1: { actions: [], blocks: [], operators: [] } },
     'mobile/theme.json': {
@@ -92,11 +98,27 @@ test('writeMobile defaults to a stack frame and the first mobile page as home', 
   });
 });
 
+test('writeMobile writes mobile.events for the mobile root', async () => {
+  const context = createContext();
+  const events = {
+    onInit: { try: [{ id: 'ready', type: 'SetGlobal', params: { ready: true } }], catch: [] },
+  };
+  await writeMobile({ components: { mobile: { events } }, context });
+  expect(getArtifacts()['mobile/events.json']).toEqual(events);
+});
+
+test('writeMobile writes empty events for a mobile root without events', async () => {
+  const context = createContext();
+  await writeMobile({ components: { mobile: { homePageId: 'today' } }, context });
+  expect(getArtifacts()['mobile/events.json']).toEqual({});
+});
+
 test('writeMobile takes the home page from the first menu item', async () => {
   const context = createContext();
   await writeMobile({
     components: {
       mobile: {
+        events: {},
         minShellVersion: '7.4.0',
         menus: { drawer: [{ pageId: 'jobs', title: 'Jobs', '~k': 'k1' }] },
       },
@@ -123,6 +145,7 @@ test('writeMobile writes shells with sha256 as a list', async () => {
   await writeMobile({
     components: {
       mobile: {
+        events: {},
         homePageId: 'today',
         shells: [
           {
@@ -158,6 +181,7 @@ test('writeMobile writes the store fields of a shell with the icon as an absolut
   await writeMobile({
     components: {
       mobile: {
+        events: {},
         homePageId: 'today',
         shells: [
           {
@@ -239,6 +263,7 @@ test('writeMobile writes mobile.auth as configured', async () => {
   await writeMobile({
     components: {
       mobile: {
+        events: {},
         auth: {
           emailCode: false,
           unlock: 'biometric',
@@ -257,4 +282,46 @@ test('writeMobile writes mobile.auth as configured', async () => {
     sharedDevice: true,
     sessionExpiresIn: 2592000,
   });
+});
+
+test('writeMobile writes tab icons with their data, sfSymbol and role, the search tab with the search icon', async () => {
+  const context = createContext();
+  const sets = { lucide: [createLucideIconLayer()] };
+  context.icons = {
+    sets,
+    defaultSet: 'lucide',
+    semantic: createIconSemanticMap({ sets, defaultSet: 'lucide' }),
+  };
+  await writeMobile({
+    components: {
+      mobile: {
+        events: {},
+        menus: {
+          tabs: [
+            { pageId: 'today', title: 'Today', icon: 'Inbox' },
+            { pageId: 'jobs', title: 'Jobs', icon: 'edit', sfSymbol: 'square.and.pencil' },
+            { pageId: 'find', title: 'Search', role: 'search' },
+          ],
+        },
+      },
+    },
+    context,
+  });
+  expect(getArtifacts()['mobile/config.json'].menus.tabs).toEqual([
+    { pageId: 'today', title: 'Today', icon: 'Inbox', iconData: { node: lucideIcons.Inbox } },
+    {
+      pageId: 'jobs',
+      title: 'Jobs',
+      icon: 'edit',
+      iconData: { node: lucideIcons.Pencil },
+      sfSymbol: 'square.and.pencil',
+    },
+    {
+      pageId: 'find',
+      title: 'Search',
+      icon: 'search',
+      iconData: { node: lucideIcons.Search },
+      role: 'search',
+    },
+  ]);
 });

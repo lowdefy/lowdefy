@@ -15,23 +15,37 @@
 */
 
 import { jest } from '@jest/globals';
-import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import dayjs from 'dayjs';
 
 import { createRoot } from '../test/fixtures.js';
 import helloJsEntries from '../../fixtures/hello.jsEntries.json';
+import reloadApp from '../dev/tab/reloadApp.js';
 import renderPageScreen from '../test/renderPageScreen.js';
 
 const mockNavigation = { setOptions: jest.fn() };
+// Whether the screen is the focused one; a screen under another is not.
+const mockFocus = { focused: true };
+
+// The native stack's header height, which a Screen's headerBottom pins under on iOS.
+jest.mock('expo-router/native-stack', () => ({ useAnimatedHeaderHeight: () => 0 }));
+jest.mock('react-native-safe-area-context', () => ({
+  useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 34, left: 0 }),
+}));
 
 jest.mock('expo-router', () => ({
+  DarkTheme: { fonts: {} },
+  DefaultTheme: { fonts: {} },
+  ThemeProvider: ({ children }) => children,
   router: { back: jest.fn(), canGoBack: () => false },
   useFocusEffect: (effect) => {
     const { useEffect: useReactEffect } = jest.requireActual('react');
-    useReactEffect(effect, [effect]);
+    useReactEffect(() => (mockFocus.focused ? effect() : undefined), [effect]);
   },
+  useIsFocused: () => mockFocus.focused,
   useNavigation: () => mockNavigation,
+  useRoute: () => ({ key: 'route-1' }),
 }));
 
 const boxTypes = {
@@ -40,6 +54,10 @@ const boxTypes = {
     { type: 'Screen', package: '@lowdefy/blocks-native', version: 7 },
   ],
 };
+
+beforeEach(() => {
+  mockFocus.focused = true;
+});
 
 // A Screen page of Box blocks from the native block set.
 function screenPage(pageId, title, blocks) {
@@ -102,13 +120,40 @@ test('a cached Screen page renders and reports its title to the stack header', a
   const { session } = await renderPath('today');
   expect(await screen.findByText('Hello from today')).toBeTruthy();
   await waitFor(() =>
-    expect(mockNavigation.setOptions).toHaveBeenCalledWith({
-      headerRight: undefined,
-      presentation: 'card',
-      title: 'Today',
-    })
+    expect(mockNavigation.setOptions).toHaveBeenCalledWith(
+      expect.objectContaining({
+        headerLargeTitleEnabled: false,
+        headerSearchBarOptions: undefined,
+        presentation: 'card',
+        title: 'Today',
+      })
+    )
   );
   expect(session.getCurrentPath()).toBe('/today');
+});
+
+test('a Screen with a large title sets it on the bar a frame before the page is first drawn', async () => {
+  // iOS keeps a large title collapsed when the page's scroll view is laid out first under a
+  // standard bar: the page waits a frame for the bar to take the large title.
+  const frames = [];
+  const requestFrame = jest
+    .spyOn(global, 'requestAnimationFrame')
+    .mockImplementation((callback) => frames.push(callback));
+  try {
+    await renderTodayPage({ page: { properties: { title: 'Today', largeTitle: true } } });
+    await waitFor(() =>
+      expect(mockNavigation.setOptions).toHaveBeenCalledWith(
+        expect.objectContaining({ headerLargeTitleEnabled: true, title: 'Today' })
+      )
+    );
+    expect(screen.queryByText('Hello from today')).toBeNull();
+    await act(async () => {
+      frames.forEach((callback) => callback(0));
+    });
+    expect(await screen.findByText('Hello from today')).toBeTruthy();
+  } finally {
+    requestFrame.mockRestore();
+  }
 });
 
 test('a page needing a type the shell lacks shows the update screen', async () => {
@@ -278,6 +323,67 @@ test('CopyToClipboard copies through the shell clipboard', async () => {
   await waitFor(() => expect(clipboard.setString.mock.calls).toEqual([['JOB-42']]));
 });
 
+test('ListOrganizations and SetActiveOrganization call the app server over the bearer client', async () => {
+  const { server, session } = await renderTodayPage({
+    blocks: [
+      {
+        blockId: 'orgs',
+        type: 'Box',
+        properties: { content: { _if_none: [{ _state: 'org' }, 'none'] } },
+      },
+      {
+        blockId: 'list',
+        type: 'Box',
+        properties: { content: 'List' },
+        events: onClick([
+          { id: 'memberships', type: 'ListOrganizations' },
+          {
+            id: 'state',
+            type: 'SetState',
+            params: { org: { _actions: 'memberships.response.1.name' } },
+          },
+        ]),
+      },
+      {
+        blockId: 'switch',
+        type: 'Box',
+        properties: { content: 'Switch' },
+        events: onClick([
+          { id: 'activate', type: 'SetActiveOrganization', params: { organizationId: 'org-2' } },
+          { id: 'resync', type: 'UpdateSession' },
+        ]),
+      },
+    ],
+  });
+  server.state.auth = ({ path }) => {
+    if (path === '/organization/list') {
+      return {
+        body: [
+          { id: 'org-1', name: 'Acme' },
+          { id: 'org-2', name: 'Globex' },
+        ],
+      };
+    }
+    if (path === '/organization/set-active') {
+      server.state.user = { id: 'ana', organization_id: 'org-2', roles: [] };
+      return { body: { id: 'org-2', name: 'Globex' } };
+    }
+    return { body: { session: { id: 's1' }, user: { id: 'ana' } } };
+  };
+  fireEvent.press(await screen.findByText('List'));
+  expect(await screen.findByText('Globex')).toBeTruthy();
+  fireEvent.press(screen.getByText('Switch'));
+  await waitFor(() => expect(session.getState().user?.organization_id).toBe('org-2'));
+  const authPaths = server.fetch.mock.calls
+    .map(([url]) => new URL(url).pathname)
+    .filter((pathname) => pathname.startsWith('/api/auth/'));
+  expect(authPaths).toEqual([
+    '/api/auth/organization/list',
+    '/api/auth/organization/set-active',
+    '/api/auth/get-session',
+  ]);
+});
+
 function findAll(node, predicate, found = []) {
   if (node === null || typeof node === 'string') return found;
   if (predicate(node)) found.push(node);
@@ -293,4 +399,94 @@ test('an Icon block draws the icon data the page carries', async () => {
   });
   const icon = await screen.findByLabelText('House');
   expect(findAll(icon, (node) => node.props?.d === housePath)).not.toHaveLength(0);
+});
+
+test('a screen reads its own route query, not the focused screen route', async () => {
+  // Another screen (pushed on this one) is focused: the shell's shown route is its route.
+  mockFocus.focused = false;
+  await renderPageScreen({
+    beforeRender: ({ session }) => session.setCurrentPath('/today?key=ACME-1', 'route-top'),
+    path: 'today',
+    query: 'space=ACME&key=ACME-645',
+    pages: {
+      today: {
+        pageConfig: screenPage('today', 'Today', [
+          {
+            blockId: 'key',
+            type: 'Box',
+            properties: { content: { '_string.concat': ['key ', { _url_query: 'key' }] } },
+          },
+        ]),
+        etag: '"p1"',
+      },
+    },
+    root: createRoot({
+      pageIndex: [{ path: 'today', pageId: 'today', hash: 'h1', typesKey: 'screen' }],
+      typeSets: { screen: boxTypes },
+    }),
+  });
+  expect(await screen.findByText('key ACME-645')).toBeTruthy();
+});
+
+test('a changed page the shell fetches replaces the version the screen shows', async () => {
+  // A dev root: pages carry no hash, and each visit fetches the page again.
+  const { server, session } = await renderPageScreen({
+    path: 'today',
+    pages: {
+      today: {
+        pageConfig: screenPage('today', 'Today', [
+          { blockId: 'greeting', type: 'Box', properties: { content: 'Version 1' } },
+        ]),
+        etag: '"v1"',
+      },
+    },
+    root: createRoot({
+      pageIndex: [{ path: 'today', pageId: 'today', typesKey: 'screen' }],
+      typeSets: { screen: boxTypes },
+    }),
+  });
+  expect(await screen.findByText('Version 1')).toBeTruthy();
+  server.state.pages.today = {
+    pageConfig: screenPage('today', 'Today', [
+      { blockId: 'greeting', type: 'Box', properties: { content: 'Version 2' } },
+    ]),
+    etag: '"v2"',
+  };
+  // The dev server rebuilt the app: the shell fetches the page on screen and rebuilds its screens.
+  await act(async () => {
+    await reloadApp({ session });
+  });
+  expect(await screen.findByText('Version 2')).toBeTruthy();
+  expect(screen.queryByText('Version 1')).toBeNull();
+});
+
+test('a newer version fetched while a screen shows its cached one is drawn on that screen', async () => {
+  const { server, session } = await renderPageScreen({
+    path: 'today',
+    pages: {
+      today: {
+        pageConfig: screenPage('today', 'Today', [
+          { blockId: 'greeting', type: 'Box', properties: { content: 'Cached' } },
+        ]),
+        etag: '"v1"',
+      },
+    },
+    root: createRoot({
+      pageIndex: [{ path: 'today', pageId: 'today', typesKey: 'screen' }],
+      typeSets: { screen: boxTypes },
+    }),
+  });
+  expect(await screen.findByText('Cached')).toBeTruthy();
+  server.state.pages.today = {
+    pageConfig: screenPage('today', 'Today', [
+      { blockId: 'greeting', type: 'Box', properties: { content: 'Deployed' } },
+    ]),
+    etag: '"v2"',
+  };
+  const entry = session.getState().root.pageIndex[0];
+  await act(async () => {
+    await session.loadPage({ entry, path: 'today' });
+  });
+  expect(await screen.findByText('Deployed')).toBeTruthy();
+  expect(screen.queryByText('Cached')).toBeNull();
 });

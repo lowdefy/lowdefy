@@ -233,7 +233,19 @@ const typeManifest = {
     },
   },
   blocks: {
+    ActivityTimeline: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    AgentChat: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
     Alert: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    Avatar: {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
@@ -246,6 +258,14 @@ const typeManifest = {
       version: 6,
     },
     Card: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    ChipSelector: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    Composer: {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
@@ -265,6 +285,10 @@ const typeManifest = {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
+    Illustration: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
     List: {
       package: '@lowdefy/blocks-native',
       version: 6,
@@ -277,7 +301,19 @@ const typeManifest = {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
+    Menu: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    MultipleSelector: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
     NumberInput: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    PageDots: {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
@@ -289,7 +325,15 @@ const typeManifest = {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
+    SegmentedControl: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
     Selector: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    Sheet: {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
@@ -298,6 +342,10 @@ const typeManifest = {
       version: 6,
     },
     Spinner: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    StatusIcon: {
       package: '@lowdefy/blocks-native',
       version: 6,
     },

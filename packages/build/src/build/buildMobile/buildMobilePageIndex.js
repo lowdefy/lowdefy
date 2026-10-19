@@ -37,7 +37,8 @@ function getMajorVersion(version) {
 
 // The native types one page needs, each with the plugin package that provides
 // it and that package's major version: a shell renders the page only when it
-// carries every type at the same major version.
+// carries every type at the same major version. The types of mobile.events
+// join every page's set, since any page can be the first to load.
 function getMobileTypeSet({ page, context }) {
   const pageCounters = context.pageTypeCounters.get(page.pageId);
   const typeSet = {};
@@ -46,6 +47,7 @@ function getMobileTypeSet({ page, context }) {
     const names = new Set([
       ...mandatoryClientTypesMobile[category],
       ...Object.keys(pageCounters[category].getCounts()),
+      ...Object.keys(context.mobileAppTypeCounters[category].getCounts()),
     ]);
     // Operators counted but not in the native map stay data at runtime, as on
     // the web (buildTypesMobile warns about them).

@@ -22,13 +22,24 @@ import reloadApp from './reloadApp.js';
 import renderPageScreen from '../../test/renderPageScreen.js';
 import { createRoot } from '../../test/fixtures.js';
 
+// The native stack's header height, which a Screen's headerBottom pins under on iOS.
+jest.mock('expo-router/native-stack', () => ({ useAnimatedHeaderHeight: () => 0 }));
+jest.mock('react-native-safe-area-context', () => ({
+  useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 34, left: 0 }),
+}));
+
 jest.mock('expo-router', () => ({
+  DarkTheme: { fonts: {} },
+  DefaultTheme: { fonts: {} },
+  ThemeProvider: ({ children }) => children,
   router: { back: jest.fn(), canGoBack: () => false },
   useFocusEffect: (effect) => {
     const { useEffect: useReactEffect } = jest.requireActual('react');
     useReactEffect(effect, [effect]);
   },
+  useIsFocused: () => true,
   useNavigation: () => ({ setOptions: jest.fn() }),
+  useRoute: () => ({ key: 'route-1' }),
 }));
 
 function todayPage(greeting) {
@@ -78,7 +89,8 @@ test('a reload refetches the root and the page on screen, and rebuilds it with e
   const { server, session } = await renderDevPage();
   const before = session.getState().lowdefy;
   const shown = getShownPage(before);
-  expect(shown).toEqual({ pageId: 'today', pathParams: {}, instanceKey: 'page:today' });
+  // The screen's page context is keyed by its route instance.
+  expect(shown).toEqual({ pageId: 'today', pathParams: {}, instanceKey: 'page:today@route-1' });
   before.contexts[shown.instanceKey]._internal.State.set('typed', 'Quarterly');
   expect(before.contexts[shown.instanceKey].state.typed).toBe('Quarterly');
 
@@ -90,7 +102,11 @@ test('a reload refetches the root and the page on screen, and rebuilds it with e
   });
 
   const paths = server.fetch.mock.calls.map(([url]) => new URL(url).pathname);
-  expect(paths).toEqual(['/api/page/today', '/api/mobile/root', '/api/user']);
+  // The rebuilt screen revalidates its page, as every screen does after a rebuild, so a screen
+  // under the one shown gets its new version too: the version reloadApp fetched is current.
+  expect(paths).toEqual(['/api/page/today', '/api/mobile/root', '/api/user', '/api/page/today']);
+  const revalidation = server.fetch.mock.calls.at(-1)[1];
+  expect(revalidation.headers).toEqual({ 'If-None-Match': '"p2"' });
   expect(await screen.findByText('Hello again')).toBeTruthy();
   expect(session.getCurrentPath()).toBe('/today');
   const after = session.getState().lowdefy;
