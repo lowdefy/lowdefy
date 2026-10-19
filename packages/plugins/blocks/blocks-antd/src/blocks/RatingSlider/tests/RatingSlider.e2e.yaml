@@ -22,6 +22,7 @@ events:
       params:
         ratingslider_with_value: 7
         ratingslider_color_orange: 4
+        ratingslider_color_with_theme: 4
         ratingslider_no_color: 4
         slider_theme_reference: 4
 
@@ -90,6 +91,15 @@ blocks:
       title: Orange Color
       color: '#fa8c16'
       max: 5
+
+  - id: ratingslider_color_with_theme
+    type: RatingSlider
+    properties:
+      title: Color With Theme
+      color: '#fa8c16'
+      max: 5
+      theme:
+        trackBg: '#000000'
 
   - id: ratingslider_no_color
     type: RatingSlider

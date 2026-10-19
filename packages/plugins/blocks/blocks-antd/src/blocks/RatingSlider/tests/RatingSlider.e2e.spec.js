@@ -99,8 +99,12 @@ test.describe('RatingSlider Block', () => {
       'rgb(255, 213, 145)'
     );
 
+    // Hovering the slider off its handle draws the handle ring in colorPrimaryBorderHover.
     await getSlider(page, 'ratingslider_color_orange').hover();
     await expect(track).toHaveCSS('background-color', 'rgb(255, 192, 105)');
+    await expect
+      .poll(() => handle.evaluate((el) => getComputedStyle(el, '::after').boxShadow))
+      .toContain('rgb(255, 192, 105)');
 
     await handle.focus();
     await expect
@@ -109,7 +113,19 @@ test.describe('RatingSlider Block', () => {
     // handleActiveOutlineColor: color at 20% opacity.
     await expect
       .poll(() => handle.evaluate((el) => getComputedStyle(el, '::after').outlineColor))
-      .toMatch(/^color\(srgb 0\.98\d* 0\.549\d* 0\.086\d* \/ 0\.2\)$/);
+      .toBe('rgba(250, 140, 22, 0.2)');
+  });
+
+  test('theme Slider tokens take precedence over color', async ({ page }) => {
+    const track = page.locator(
+      `#bl-${escapeId('ratingslider_color_with_theme')} .ant-slider-track`
+    );
+    const handle = getHandle(page, 'ratingslider_color_with_theme');
+    await expect(track).toHaveCSS('background-color', 'rgb(0, 0, 0)');
+    // Tokens the theme leaves unset still follow color.
+    expect(await handle.evaluate((el) => getComputedStyle(el, '::after').boxShadow)).toContain(
+      'rgb(255, 213, 145)'
+    );
   });
 
   test('uses the theme primary color without color', async ({ page }) => {
