@@ -1,0 +1,54 @@
+name: CI
+
+# Tests run on demand, not on every push. Agents and developers run the tests a change
+# needs before they push and list them in the pull request.
+#
+# - `ci` label on a pull request: the fast path (test-fast.yml), one ubuntu / Node 24 job
+#   testing only the affected packages. It runs when the label is added and again on
+#   every push while the label stays.
+# - `ci-full` label on a pull request: the complete path (test-complete.yml) once, when
+#   the label is added. Remove and add it again to re-run.
+# - Pull requests into main (the release branch): the complete path on every push.
+# - Actions tab, "Run workflow": the fast path on every package, or the complete path
+#   with `full` ticked.
+#
+# Pushes to main run the complete path through release.yaml. See code-docs/testing.md.
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, labeled]
+  workflow_dispatch:
+    inputs:
+      full:
+        description: Run the complete path (ubuntu and windows, Node 24 and 26, MongoDB, journey fixtures, block e2e)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  fast:
+    name: Fast
+    if: >-
+      (github.event_name == 'workflow_dispatch' && !inputs.full) ||
+      (github.event_name == 'pull_request' && github.event.pull_request.base.ref != 'main' &&
+      ((github.event.action == 'labeled' && github.event.label.name == 'ci') ||
+      (github.event.action == 'synchronize' && contains(github.event.pull_request.labels.*.name, 'ci'))))
+    # A new push cancels the stale run. Set on the job, not the workflow, so an event that
+    # runs nothing (another label, an unlabelled push) cancels nothing.
+    concurrency:
+      group: ci-fast-${{ github.event.pull_request.number || github.ref }}
+      cancel-in-progress: true
+    uses: ./.github/workflows/test-fast.yml
+
+  complete:
+    name: Complete
+    if: >-
+      (github.event_name == 'workflow_dispatch' && inputs.full) ||
+      (github.event_name == 'pull_request' &&
+      ((github.event.action == 'labeled' && github.event.label.name == 'ci-full') ||
+      (github.event.pull_request.base.ref == 'main' && github.event.action != 'labeled')))
+    concurrency:
+      group: ci-complete-${{ github.event.pull_request.number || github.ref }}
+      cancel-in-progress: true
+    uses: ./.github/workflows/test-complete.yml

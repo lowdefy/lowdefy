@@ -17,6 +17,16 @@ lowdefy: local
 license: Apache-2.0
 
 theme:
+  icons:
+    # Search result group icons live in public/search-index.json, which the build does not scan.
+    include:
+      - Rocket
+      - Lightbulb
+      - PanelsTopLeft
+      - Plug
+      - Zap
+      - SquareFunction
+      - GitBranch
   antd:
     token:
       borderRadius: 6

@@ -6,7 +6,7 @@ Agent properties configure the model and its behavior. They are set in the `prop
 
 - `model: string`: __Required__ - The model identifier (e.g. `claude-sonnet-4-20250514`, `gpt-4o`, `gemini-2.5-pro`).
 - `instructions: string`: System instructions that guide the agent's behavior. This is the system prompt sent to the model with every request. The string passes through the operator parser at request time, so `_t:` works for locale-aware prompts (see [i18n](/i18n)). Note: tool descriptions stay English — translating them can degrade tool-call accuracy on English-trained models.
-- `pageContext: boolean`: Default: `false` - When `true`, prepend context about the current page, user, conversation, URL query, and shared state to the instructions. URL query and shared state are only included when the [`AgentChat`](/AgentChat) block sends them as `urlQuery` and `sharedState`. Useful when the agent needs to know who it's talking to or what the user has typed into form fields.
+- `pageContext: boolean`: Default: `false` - When `true`, prepend context about the current page, user, conversation, URL query, path parameters and shared state to the instructions. URL query and shared state are only included when the [`AgentChat`](/AgentChat) block sends them as `urlQuery` and `sharedState`. Path parameters, the values of the placeholders in the page's [`path`](/page-paths), are sent by the block on a page with a path, and included when there are any. Useful when the agent needs to know who it's talking to or what the user has typed into form fields.
 - `generateTitle: boolean`: Default: `false` - When `true`, generate a short title from the first user message on the first turn of a conversation. Emits a `data-chat-title` data part that fires the [`AgentChat`](/AgentChat) block's `onTitleGenerated` event. Runs concurrently with the response and is non-fatal — a failed title generation logs a warning and does not break the turn.
 
 ###### Instructions with user context:
@@ -22,7 +22,7 @@ properties:
 
 ## Generation Settings
 
-- `maxOutputTokens: integer`: Maximum tokens the model can generate per step.
+- `maxOutputTokens: integer`: Maximum tokens the model can generate per step. Defaults to the connection's `maxOutputTokens`.
 - `temperature: number`: Sampling temperature between `0` and `2`. Lower values are more deterministic, higher values more creative. Default depends on the provider.
 - `topP: number`: Nucleus sampling probability between `0` and `1`. Alternative to temperature — use one or the other.
 - `topK: integer`: Only sample from the top K token options (not supported by all providers).
@@ -156,12 +156,22 @@ properties:
 ## Timeouts and Retries
 
 - `maxRetries: integer`: Default: `2` - Maximum retries on provider errors. Set to `0` to disable.
-- `timeout: number | object`: Timeout configuration.
+- `timeout: number | object`: Timeout configuration. Defaults to the connection's `timeout`.
   - As a number: total timeout in milliseconds.
   - As an object with granular control:
     - `totalMs: number`: Total timeout across all steps.
     - `stepMs: number`: Timeout per step.
     - `chunkMs: number`: Timeout between stream chunks.
+
+A chat turn keeps running when the client disconnects, so its `onFinish` hooks still save the whole conversation; `timeout` and `maxSteps` are what bound it. A `CallAgent` step is cancelled with the routine that runs it: when its request closes or the server's request timeout (`config.requestTimeout`) answers first.
+
+## File Downloads
+
+A file in a chat or a `CallAgent` step goes to the model as a link when the provider takes that media type as a link (the main providers do for images and PDFs). Any other file is downloaded by the server and sent as content. The server downloads only an `https:` link to a public address, checking the address on every redirect, and a failed download names the file's host, never its link.
+
+- `fileDownload: object`: Limits on a file the server downloads.
+  - `maxBytes: integer`: Default: `20971520` (20 MB) - Largest file the server downloads. A larger file fails the turn.
+  - `timeout: integer`: Default: `30000` - Milliseconds a file download may take.
 
 ## Provider-Specific Properties
 

@@ -165,3 +165,23 @@ test.describe('Switch Block', () => {
     await expect(switchEl).not.toHaveClass(/ant-switch-checked/);
   });
 });
+
+test.describe('Switch antd 6 features', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'switch');
+  });
+
+  test('loading shows a spinner and blocks changes', async ({ page }) => {
+    const sw = getSwitch(page, 'switch_loading');
+    await expect(sw).toHaveClass(/ant-switch-loading/);
+    await expect(sw).toHaveClass(/ant-switch-checked/);
+    await sw.click({ force: true });
+    await expect(sw).toHaveClass(/ant-switch-checked/);
+  });
+
+  test('size default renders the medium switch', async ({ page }) => {
+    const sw = getSwitch(page, 'switch_default_size');
+    await expect(sw).toBeVisible();
+    await expect(sw).not.toHaveClass(/ant-switch-small/);
+  });
+});

@@ -17,6 +17,7 @@
 import * as operatorsClient from './operatorsClient.js';
 
 export default {
+  iconSets: ['brands'],
   operators: {
     client: Object.keys(operatorsClient),
   },

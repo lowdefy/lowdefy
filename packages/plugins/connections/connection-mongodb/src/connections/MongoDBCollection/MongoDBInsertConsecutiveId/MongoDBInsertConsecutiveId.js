@@ -16,10 +16,18 @@
 
 import getCollection from '../getCollection.js';
 import getConsecutiveIdIndex from '../getConsecutiveIdIndex.js';
+import mapMongoError from '../mapMongoError.js';
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
+import verifyStoredTenant from '../tenant/verifyStoredTenant.js';
+import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
+import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
+import { assertUnscopedDoc } from '../tenant/guardUnscopedWrite.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
 async function MongoDBInsertConsecutiveId({
+  endpointId,
   blockId,
   connection,
   connectionId,
@@ -27,9 +35,19 @@ async function MongoDBInsertConsecutiveId({
   payload,
   request,
   requestId,
+  tenant,
+  tenantGuard,
 }) {
+  assertTenantWritable({ tenantGuard, requestType: 'MongoDBInsertConsecutiveId' });
   const deserializedRequest = deserialize(request);
-  const { doc, options, prefix, length } = deserializedRequest;
+  const { options, prefix, length } = deserializedRequest;
+  let { doc } = deserializedRequest;
+  if (tenant) {
+    doc = stampTenantOnDoc({ doc, tenant });
+  }
+  if (tenantGuard) {
+    assertUnscopedDoc({ doc, field: tenantGuard.field });
+  }
   const { client, collection, logCollection } = await getCollection({ connection });
 
   // The id read and insert run in a transaction so concurrent requests cannot
@@ -48,33 +66,45 @@ async function MongoDBInsertConsecutiveId({
       response = await collection.insertOne(doc, { ...options, session });
       if (logCollection) {
         await logCollection.insertOne(
-          {
-            args: { doc, options },
-            blockId,
-            connectionId,
-            pageId,
-            payload,
-            requestId,
-            response,
-            timestamp: new Date(),
-            type: 'MongoDBInsertConsecutiveId',
-            meta: connection.changeLog?.meta,
-          },
+          stampTenantOnLogRecord({
+            record: {
+              args: { doc, options },
+              blockId,
+              connectionId,
+              pageId,
+              payload,
+              requestId,
+              response,
+              timestamp: new Date(),
+              type: 'MongoDBInsertConsecutiveId',
+              meta: connection.changeLog?.meta,
+            },
+            tenant,
+          }),
           { session }
         );
       }
     }, transactionOptions);
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBInsertConsecutiveId' });
   } finally {
     await session.endSession();
   }
+  await verifyStoredTenant({
+    collection,
+    connectionId,
+    endpointId,
+    ids: response.insertedId,
+    requestId,
+    requestType: 'MongoDBInsertConsecutiveId',
+    tenant,
+    tenantGuard,
+  });
   const { acknowledged, insertedId } = serialize(response);
   return { acknowledged, insertedId };
 }
 
 MongoDBInsertConsecutiveId.schema = schema;
-MongoDBInsertConsecutiveId.meta = {
-  checkRead: false,
-  checkWrite: true,
-};
+MongoDBInsertConsecutiveId.meta = requestMetas.MongoDBInsertConsecutiveId;
 
 export default MongoDBInsertConsecutiveId;

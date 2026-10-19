@@ -17,6 +17,7 @@ lowdefy.yaml
 ├── theme:
 │   ├── antd:        → ConfigProvider tokens (runtime)
 │   ├── darkMode:    → 'system' | 'light' | 'dark' (default: 'system')
+│   ├── icons:       → icon set, size, strokeWidth, aliases (build + LucideProvider)
 │   └── tailwind:    → @theme inline vars (build-time)
 │
 ├── blocks:
@@ -26,6 +27,10 @@ lowdefy.yaml
 └── public/
     └── styles.css   → custom CSS (optional)
 ```
+
+## Icons (`theme.icons`)
+
+`theme.icons` holds `set` (default `lucide`), `size` (default `1em`), `strokeWidth` (default `2`), `nonScalingStroke` (default `false`), `aliases` and `include`. The build validates it, uses `set`, `aliases` and `include` to resolve and bundle icon names (see [plugin-system.md](./plugin-system.md#icon-sets)), and writes the defaults into `theme.json`. `Client.js` passes `size`, `strokeWidth` and `nonScalingStroke` to lucide-react's `LucideProvider`, so they reach every icon, and per-icon props override them (see [client.md](../packages/client.md#icons-createiconjs)).
 
 ## CSS Layer Architecture
 
@@ -113,7 +118,7 @@ Key settings:
 Dark mode is managed by the `useDarkMode` hook with a three-tier resolution:
 
 1. **Config lock** — `theme.darkMode` in `lowdefy.yaml` (`'system'` | `'light'` | `'dark'`, defaults to `'system'`). When set to `'light'` or `'dark'`, overrides all user preferences.
-2. **User preference** — stored in `localStorage` (`lowdefy_darkMode`) as `'system'`, `'light'`, or `'dark'`. Set by the `SetDarkMode` action.
+2. **User preference** — stored in `localStorage` under the app key for `lowdefy_darkMode` (`appStorageKey`, `lowdefy:<slug>:<basePath>:lowdefy_darkMode`) as `'system'`, `'light'`, or `'dark'`. Set by the `SetDarkMode` action.
 3. **System preference** — `matchMedia('(prefers-color-scheme: dark)')` with a live `change` event listener that updates in real time when the OS theme changes.
 
 ```javascript
@@ -140,7 +145,7 @@ The server returns an HTML shell with no SSR — React renders entirely client-s
 
 This is solved with two coordinating pieces:
 
-1. **Synchronous inline script in the HTML shell** — Runs before first paint. Reads `configColorMode`, `darkBg` (from `themeConfig.antd.darkToken.colorBgLayout`, default `'#000'`) and `lightBg` (from `themeConfig.antd.lightToken.colorBgLayout`, default `''`) — interpolated server-side via `safeScriptJson` from the `theme.json` build artifact. Mirrors the `useDarkMode` resolution: config → `localStorage('lowdefy_darkMode')` → `prefers-color-scheme: dark`. Applies the resolved bg color to `document.documentElement.style.backgroundColor`. An empty string means no inline style (browser default white).
+1. **Synchronous inline script in the HTML shell** — Runs before first paint. Reads `configColorMode`, `darkBg` (from `themeConfig.antd.darkToken.colorBgLayout`, default `'#000'`) and `lightBg` (from `themeConfig.antd.lightToken.colorBgLayout`, default `''`) — interpolated server-side via `safeScriptJson` from the `theme.json` build artifact. Mirrors the `useDarkMode` resolution: config → `localStorage` (the app key, then the bare `lowdefy_darkMode` key from before keys were kept per app) → `prefers-color-scheme: dark`. Applies the resolved bg color to `document.documentElement.style.backgroundColor`. An empty string means no inline style (browser default white).
 
 2. **`useEffect` in `useDarkMode`** — Once React hydrates, actively manages the `<html>` inline background on every `isDark` change: sets the resolved `colorBgLayout` from `antd.darkToken` / `antd.lightToken` (falling back to `'#000'` in dark and unset in light). This handles dark/light toggling and ensures the background stays correct across client-side navigations.
 
@@ -154,9 +159,9 @@ The production server reads `theme.json` once at startup via `lib/build/theme.js
 
 Both `server` and `server-dev` have `antd` and `@ant-design/cssinjs` as direct dependencies. This is correct — the published packages need them for pnpm strict mode resolution.
 
-**The singleton risk only exists in the local monorepo dev setup** (`scripts/dev.mjs`), where `rewriteDeps.mjs` rewrites `@lowdefy/*` deps to `link:` paths. Without overrides, pnpm would install a separate npm copy of antd for the dev server while linked `@lowdefy/client` uses the monorepo's copy — two instances.
+**The singleton risk only exists in the monorepo's isolated server copies** (`scripts/dev.mjs`, `scripts/build.mjs` and `scripts/prepare-e2e-server.mjs` for block e2e), where `rewriteDeps.mjs` rewrites `@lowdefy/*` deps to `link:` paths. Without overrides, pnpm would install a separate npm copy of antd for the server copy while linked `@lowdefy/client` uses the monorepo's copy — two instances.
 
-**Fix:** `rewriteDeps.mjs` has a `SINGLETON_PACKAGES` list (`antd`, `@ant-design/cssinjs`) that adds `pnpm.overrides` entries pointing to the monorepo's `node_modules/` copies. This forces a single instance across the dev server and all linked packages.
+**Fix:** `rewriteDeps.mjs` has a `SINGLETON_PACKAGES` list (`antd`, `@ant-design/cssinjs`, `@ant-design/x`) that adds `pnpm.overrides` entries linking to the source server's install in the monorepo (`packages/servers/server/node_modules/antd` or the `server-dev` one), which is the instance pnpm gives every linked package. This forces a single instance across the server copy and all linked packages. The monorepo root `node_modules/` does not hoist these packages, so it can't be the source.
 
 **If you add a new package that uses React context across components** (like a UI library), add it to `SINGLETON_PACKAGES` in `scripts/lib/rewriteDeps.mjs`.
 
@@ -817,11 +822,11 @@ ls -la node_modules/.pnpm/@lowdefy+client*/node_modules/antd
 ls -la node_modules/.pnpm/@lowdefy+blocks-antd*/node_modules/antd
 ```
 
-**Dev vs Prod:** The monorepo dev server uses `SINGLETON_PACKAGES` in `scripts/lib/rewriteDeps.mjs` to force `pnpm.overrides` for antd. Production CLI builds do NOT apply this — they rely on exact version pinning (all packages pin `antd@6.3.1`) for natural deduplication.
+**Dev vs Prod:** The monorepo's server copies (`pnpm dev`, `pnpm app:build`, block e2e) use `SINGLETON_PACKAGES` in `scripts/lib/rewriteDeps.mjs` to force `pnpm.overrides` for antd. Production CLI builds do NOT apply this — they rely on exact version pinning (all packages pin `antd@6.6.5`) for natural deduplication.
 
 **Risk:** Custom plugins with different antd version specs can introduce duplicates. The production build has no `pnpm.overrides` safety net.
 
-**Workspace edge case:** If the external repo's `pnpm-workspace.yaml` includes `.lowdefy/*` as a workspace member (e.g., `app/.lowdefy/*`), pnpm resolves the server's dependencies from the workspace root's `.pnpm` store instead of a local one. This is usually fine but can cause version conflicts with other workspace packages.
+**Workspace edge case:** An app inside an external pnpm workspace still installs its server as its own nested workspace: the CLI (`ensurePnpmWorkspaceYaml`) writes a `pnpm-workspace.yaml` into the server directory carrying the parent's overrides, patches and build allowlists, and rewrites `workspace:` plugins to `link:` paths. The server's antd resolution is therefore independent of other workspace packages, but a linked plugin resolves its own dependencies from its package directory in the parent workspace, so a plugin with a different antd spec can still introduce a duplicate.
 
 ### 3. CSS Layer Order
 
@@ -853,8 +858,12 @@ The hook also listens for OS theme changes via `matchMedia('(prefers-color-schem
 
 ### 6. AgGrid-Specific Dark Mode
 
-**File:** `packages/plugins/blocks/blocks-aggrid/src/ag-grid-antd.module.css`
+**File:** `packages/plugins/blocks/blocks-aggrid/src/theme/themeLowdefy.js`
 
-AgGrid dark mode maps `--ag-*` variables to `--ant-*` variables via a CSS module (`.antdTheme` class). It does NOT depend on antd JS — only on CSS variables being present at runtime.
+AgGrid dark mode is driven by **AG Grid's Theming API**, not by CSS. `themeLowdefy.js` builds each block's theme object with `withParams`, where every colour is a `var(--ant-*)` reference (`antdParams`). AG Grid emits those references as `--ag-*` custom properties on the grid root, so when antd regenerates its variables on a dark-mode change the grid follows with no JS.
 
-**Check:** In the built `dist/client/assets/`, search for `antdTheme` in the CSS asset. The CSS module should contain the `--ag-*` to `--ant-*` mappings. If present, the issue is at runtime (variables not generated), not build-time.
+`ag-grid-antd.module.css` (`.antdTheme`) carries **no** `--ag-*` mappings any more — its colour block was deleted in the v33 move, because the Theming API honours `--ag-*` inherited from an ancestor and the module would have silently overridden every theme parameter it duplicated. The module now holds only structural helpers (flex cell layout, `.lf-ellipsis-N`, the paragraph-input fix, the empty-overlay colour, per-legacy-theme avatar sizing). See `code-docs/plugins/blocks/aggrid.md`.
+
+**Check:** In DevTools, inspect the grid root (`.ag-root-wrapper`) and confirm `--ag-background-color` etc. resolve to the current `--ant-*` values. If the `--ag-*` properties are absent, the block is not receiving a `theme` object; if they are present but resolve to nothing, the `--ant-*` variables are not being generated (see items 2 and 5). Grepping the built CSS for `--ag-*` mappings is **not** a valid check — there are none.
+
+Browser chrome inside the grid (scrollbars, native controls) follows `color-scheme`, which `browserColorScheme: 'inherit'` defers to the document. `@lowdefy/client`'s dark-mode effect and each server's pre-hydration inline script set `document.documentElement.style.colorScheme` from the resolved mode. If grid scrollbars render light in a dark app, check that property on `<html>` rather than anything in the grid.

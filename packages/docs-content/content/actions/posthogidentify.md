@@ -1,0 +1,54 @@
+# PostHogIdentify
+
+```
+(params: {
+  id?: string | null,
+  properties?: object,
+  propertiesOnce?: object,
+}): Promise<null>
+```
+
+The `PostHogIdentify` action ties the current browser session to a person in [PostHog](https://posthog.com). Run it once the user is known, usually right after [`PostHogInit`](/PostHogInit) in the shared page `onInit` actions, or after a successful login.
+
+A missing, `null` or empty `id` is a no-op, so on a public page the anonymous session is left alone. That anonymous session is what a later `PostHogIdentify` merges into the person, which is what makes signup funnels work.
+
+The action is safe to run on every page. It reads the identity `posthog-js` already holds:
+
+- __Same person__: when `id` is already the current `distinct_id`, it only updates the person properties, if any are given. `posthog-js` skips a property update identical to the previous one.
+- __Person swap__: PostHog refuses to move an identified `distinct_id` onto a different person, so when the browser is identified as someone else, the action calls `reset()` before identifying the new person.
+- __Anonymous visitor__: identified without a reset, so the anonymous session merges into the person.
+
+Never send personally identifiable information as a person property.
+
+When PostHog is disabled or `posthog-js` could not be loaded, the action does nothing. Invalid params always throw, even when PostHog is disabled.
+
+The action is part of the [`@lowdefy/plugin-posthog`](/PostHog) plugin, which is included by default. See the [PostHog guide](/PostHog) for how the actions fit together.
+
+#### Parameters
+
+###### object
+  - `id: string`: The person's id.
+  - `properties: object`: Person properties to set. `null` and `undefined` values are dropped, so an absent value never overwrites one PostHog already has.
+  - `propertiesOnce: object`: Person properties that are only set the first time, for example a signup date.
+
+#### Examples
+
+###### Identify the logged in user on every page:
+```yaml
+# shared/posthog_init.yaml
+- id: init_posthog
+  type: PostHogInit
+  params:
+    apiKey:
+      _build.env: POSTHOG_API_KEY
+- id: identify_person
+  type: PostHogIdentify
+  params:
+    id:
+      _user: id
+    properties:
+      role:
+        _user: role
+      locale:
+        _locale: active
+```

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('./fetchModules.js', () => ({
@@ -32,6 +34,7 @@ beforeAll(async () => {
 
 import testContext from '../test-utils/testContext.js';
 import expectTerminates from '../test-utils/expectTerminates.js';
+import { resolveModuleManifests } from './registerModules.js';
 
 const mockReadConfigFile = jest.fn();
 
@@ -47,9 +50,12 @@ function createTestContext(overrides = {}) {
   return context;
 }
 
+// Fixture paths are written POSIX-style; the build joins module paths with the
+// platform separator. Resolve both sides like readConfigFile does so the lookup
+// matches on every platform.
 const readConfigFileMockImplementation = (files) => {
   return (filePath) => {
-    const file = files.find((f) => f.path === filePath);
+    const file = files.find((f) => path.resolve(f.path) === path.resolve(filePath));
     if (!file) return null;
     return file.content;
   };
@@ -794,7 +800,8 @@ pages: []
         _ref:
           module: companies
           component: selector`;
-    const mods = order === 'companies-first' ? `${companies}\n${workflows}` : `${workflows}\n${companies}`;
+    const mods =
+      order === 'companies-first' ? `${companies}\n${workflows}` : `${workflows}\n${companies}`;
     return [
       { path: 'lowdefy.yaml', content: `\nlowdefy: 4.0.0\nmodules:\n${mods}\n` },
       {
@@ -833,7 +840,9 @@ pages: []
 
   const mutualEmbedCase = async (order) => {
     const context = createTestContext();
-    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(mutualEmbedFiles(order)));
+    mockReadConfigFile.mockImplementation(
+      readConfigFileMockImplementation(mutualEmbedFiles(order))
+    );
     mockFetchModules.mockResolvedValue(mockPaths(['companies', 'workflows']));
 
     await buildWithTimeout(context);
@@ -1347,7 +1356,9 @@ pages: []
     'acyclic connection remap chain resolves to the fully-remapped id (order=%s)',
     async (order) => {
       const context = createTestContext();
-      mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(connChainFiles(order)));
+      mockReadConfigFile.mockImplementation(
+        readConfigFileMockImplementation(connChainFiles(order))
+      );
       mockFetchModules.mockResolvedValue(mockPaths(['a', 'b', 'third']));
 
       await buildWithTimeout(context);
@@ -1637,6 +1648,7 @@ pages:
     mockFetchModules.mockResolvedValue(mockModulePaths(['a']));
 
     await expectTerminates(buildModuleDefs({ context }), 4000, 'demand-only default hang');
+    await resolveModuleManifests({ context });
 
     expect(context.errors).toHaveLength(0);
     expect(context.modules['a'].manifest.pages[0].properties.value).toBe('supplied-value');
@@ -1648,6 +1660,11 @@ pages:
     mockFetchModules.mockResolvedValue(mockModulePaths(['a']));
 
     await expectTerminates(buildModuleDefs({ context }), 4000, 'demanded broken default hang');
+    await expectTerminates(
+      resolveModuleManifests({ context }),
+      4000,
+      'demanded broken default hang'
+    );
 
     expect(context.errors.length).toBeGreaterThan(0);
     expect(String(context.errors[0].message)).toContain('missing.yaml');
@@ -1711,10 +1728,13 @@ pages:
     'mutual cross-module component refs inside pages resolve (order=%s)',
     async (order) => {
       const context = createTestContext();
-      mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(mutualPageFiles(order)));
+      mockReadConfigFile.mockImplementation(
+        readConfigFileMockImplementation(mutualPageFiles(order))
+      );
       mockFetchModules.mockResolvedValue(mockModulePaths2(['a', 'b']));
 
       await expectTerminates(buildModuleDefs({ context }), 4000, 'cross-entry ordering hang');
+      await resolveModuleManifests({ context });
 
       expect(context.errors).toEqual([]);
       expect(context.modules['a'].manifest.pages[0].blocks[0]).toEqual({

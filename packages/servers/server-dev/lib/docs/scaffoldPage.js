@@ -49,6 +49,8 @@ function scaffoldPage({ pageId, title }) {
 
   const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd();
   const pageRelativePath = path.join('pages', `${pageId}.yaml`);
+  // _ref paths in config use forward slashes on every platform.
+  const pageRefPath = path.posix.join('pages', `${pageId}.yaml`);
   const pageFilePath = path.join(configDirectory, pageRelativePath);
 
   if (fs.existsSync(pageFilePath)) {
@@ -68,7 +70,7 @@ function scaffoldPage({ pageId, title }) {
 
   return {
     created: pageRelativePath,
-    next: `Add \`- _ref: ${pageRelativePath}\` under \`pages:\` in lowdefy.yaml (or the relevant pages file), then check lowdefy_build_status.`,
+    next: `Add \`- _ref: ${pageRefPath}\` under \`pages:\` in lowdefy.yaml (or the relevant pages file), then check lowdefy_build_status.`,
   };
 }
 

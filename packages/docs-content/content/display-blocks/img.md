@@ -463,11 +463,11 @@ Display an image with optional fallback.
 | `alt` | string | - | Alternative text description of the image. |
 | `crossOrigin` | string | - | Indicates if the fetching of the image must be done using a CORS request. Enum: `anonymous`, `use-credentials`. |
 | `decoding` | string | - | An image decoding hint to the browser. Sync for atomic presentation with other content, async,  to reduce delay in presenting other content and auto leave to browser to decide. Enum: `sync`, `async`, `auto`. |
-| `height` | number | - | Height of the image. |
+| `height` | number \| string | - | Height of the image: a number of pixels, or a string such as `100%` or `auto` that the browser reads as the height attribute. |
 | `loading` | string | - | How the browser should load the image. Eager loads the image immediately, lazy, defers loading until the image it reaches a calculated distance from the viewport, as defined by the browser. Enum: `eager`, `lazy`. |
 | `sizes` | string | - | Indicating a set of source sizes of strings separated by commas. |
 | `srcSet` | string | - | Possible image sources for the user agent to use, strings separated by commas. |
-| `width` | number | - | Width of the image. |
+| `width` | number \| string | - | Width of the image: a number of pixels, or a string such as `100%` that the browser reads as the width attribute. |
 
 No events defined.
 

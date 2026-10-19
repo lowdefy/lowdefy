@@ -22,7 +22,14 @@ import TimelineRenderer from '../../shared/renderers/TimelineRenderer.js';
 import buildDiffModel from '../../shared/buildDiffModel.js';
 import withTheme from '../../shared/withTheme.js';
 
-const DiffTimelineBlock = ({ blockId, classNames = {}, properties, methods, styles = {} }) => {
+const DiffTimelineBlock = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  properties,
+  methods,
+  styles = {},
+}) => {
   const {
     before,
     after,
@@ -56,6 +63,7 @@ const DiffTimelineBlock = ({ blockId, classNames = {}, properties, methods, styl
       title={title}
       emptyText={emptyText}
       empty={model.empty}
+      Icon={Icon}
       methods={methods}
     >
       <TimelineRenderer

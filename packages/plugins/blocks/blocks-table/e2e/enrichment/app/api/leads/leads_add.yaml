@@ -1,0 +1,77 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Adds a row: the Table's onRowAdd { rowKey, values }. The row's autoRun columns start at once.
+id: leads_add
+type: Api
+payloadSchema:
+  type: object
+  required:
+    - rowKey
+    - values
+  additionalProperties: false
+  properties:
+    # The key the Table shows the row under while it saves (a random UUID), stored as its _id,
+    # as every row's _id is a UUID: the saved row then replaces the saving one as soon as the
+    # page has it. The key comes from the browser, so it is only ever inserted (never an upsert,
+    # replace or update keyed by it): a key that is taken fails the insert, and a browser can
+    # never write over another row.
+    rowKey:
+      type: string
+      pattern: ^[A-Za-z0-9_-]{1,64}$
+    values:
+      type: object
+routine:
+  - _ref: leads/load_table.yaml
+  - :set_state:
+      rows:
+        - _payload: values
+  - :set_state:
+      converted:
+        _ref: leads/rows_to_docs.yaml
+      autoRun:
+        _ref: leads/auto_run_columns.yaml
+  - :if:
+      _gt:
+        - _array.length:
+            _state: converted.errors
+        - 0
+    :then:
+      - :reject:
+          _array.join:
+            - _state: converted.errors
+            - ' '
+  - id: insert_lead
+    type: MongoDBInsertOne
+    connectionId: leads
+    properties:
+      doc:
+        _object.assign:
+          - _state: converted.docs.0
+          - _id:
+              _payload: rowKey
+          # - org_id:
+          #     _user: organization.id
+          # The insert order the page sorts by (position breaks ties within an import batch).
+          - createdAt:
+              _date: now
+            position: 0
+  - _ref:
+      path: api/leads/start_auto_run.yaml
+      vars:
+        selection:
+          - _step: insert_lead.insertedId
+  - :return:
+      insertedId:
+        _step: insert_lead.insertedId

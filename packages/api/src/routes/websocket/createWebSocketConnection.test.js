@@ -15,11 +15,22 @@
 */
 
 import { jest } from '@jest/globals';
+import { AuthorizationError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 const mockPrepareChannel = jest.fn();
 jest.unstable_mockModule('./prepareChannel.js', () => ({
   default: mockPrepareChannel,
+}));
+
+// Stands in for the session read: each call resolves the caller the test has
+// set as current, the way resolveAuthentication writes it to the object passed.
+let mockCurrentCaller = null;
+const mockResolveAuthentication = jest.fn(async (target) => {
+  target.user = mockCurrentCaller;
+});
+jest.unstable_mockModule('../../context/resolveAuthentication.js', () => ({
+  default: mockResolveAuthentication,
 }));
 
 let createChannelRegistry;
@@ -42,7 +53,7 @@ function setup({ mode = 'prod' } = {}) {
     rid: 'r',
     mode,
     i18n: { active: 'en-US', messages: {} },
-    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn() },
+    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() },
     handleError: jest.fn(),
   };
   const connection = createWebSocketConnection(context, { registry, send });
@@ -96,20 +107,30 @@ test('frame with non-string websocketId sends an error frame carrying the reques
   expect(registry.publish).not.toHaveBeenCalled();
 });
 
-test('subscribe frame calls registry.subscribe and acks with a subscribed frame', async () => {
-  const { connection, context, registry, send } = setup();
+test.each([
+  ['without a requestId', {}, { type: 'subscribed', websocketId: 'ticker' }],
+  [
+    'with a requestId',
+    { requestId: 's1' },
+    { type: 'subscribed', websocketId: 'ticker', requestId: 's1' },
+  ],
+])(
+  'subscribe frame %s calls registry.subscribe and acks with a subscribed frame echoing it',
+  async (_, extra, ack) => {
+    const { connection, context, registry, send } = setup();
 
-  await connection.handleMessage(
-    JSON.stringify({ type: 'subscribe', websocketId: 'ticker', payload: { room: 1 } })
-  );
+    await connection.handleMessage(
+      JSON.stringify({ type: 'subscribe', websocketId: 'ticker', payload: { room: 1 }, ...extra })
+    );
 
-  expect(registry.subscribe).toHaveBeenCalledWith(context, {
-    websocketId: 'ticker',
-    payload: { room: 1 },
-    subscriber: connection.subscriber,
-  });
-  expect(sentFrames(send)).toEqual([{ type: 'subscribed', websocketId: 'ticker' }]);
-});
+    expect(registry.subscribe).toHaveBeenCalledWith(context, {
+      websocketId: 'ticker',
+      payload: { room: 1 },
+      subscriber: connection.subscriber,
+    });
+    expect(sentFrames(send)).toEqual([ack]);
+  }
+);
 
 test('unsubscribe frame calls registry.unsubscribe and acks with an unsubscribed frame', async () => {
   const { connection, registry, send } = setup();
@@ -127,7 +148,12 @@ test('publish frame calls registry.publish and acks with a published frame carry
   const { connection, context, registry, send } = setup();
 
   await connection.handleMessage(
-    JSON.stringify({ type: 'publish', websocketId: 'chat', payload: { text: 'hi' }, requestId: 'req-9' })
+    JSON.stringify({
+      type: 'publish',
+      websocketId: 'chat',
+      payload: { text: 'hi' },
+      requestId: 'req-9',
+    })
   );
 
   expect(registry.publish).toHaveBeenCalledWith(context, {
@@ -164,6 +190,32 @@ test('registry rejection sends an error payload frame with requestId and websock
       },
     },
   ]);
+});
+
+test('an authorization refusal warns and answers the client without reporting an error', async () => {
+  const { connection, context, registry, send } = setup();
+  const error = new AuthorizationError('Websocket "chat" does not exist.');
+  registry.subscribe.mockRejectedValue(error);
+
+  await connection.handleMessage(
+    JSON.stringify({ type: 'subscribe', websocketId: 'chat', requestId: 'req-3' })
+  );
+
+  expect(context.handleError).not.toHaveBeenCalled();
+  expect(context.logger.warn).toHaveBeenCalledWith(
+    { event: 'ws_refused', frameType: 'subscribe' },
+    'Websocket "chat" does not exist.'
+  );
+  const [frame] = sentFrames(send);
+  expect(frame.type).toBe('error');
+  expect(frame.websocketId).toBe('chat');
+  expect(frame.requestId).toBe('req-3');
+  expect(frame.error['~e']).toEqual({
+    name: 'AuthorizationError',
+    message: 'Websocket "chat" does not exist.',
+    requestId: 'r',
+    isLowdefyError: true,
+  });
 });
 
 function setupPublishFailure({ mode }) {
@@ -225,25 +277,6 @@ test('onPublish failure sends the same wire error in dev with the raw message in
   );
 });
 
-test('subscribe refused with an auth refusal sends the refusal message in the error payload', async () => {
-  const { connection, registry, send } = setup();
-  const error = new Error('You do not have permission to access this websocket.');
-  error.name = 'AuthorizationError';
-  registry.subscribe.mockRejectedValue(error);
-
-  await connection.handleMessage(JSON.stringify({ type: 'subscribe', websocketId: 'ticker' }));
-
-  const [frame] = sentFrames(send);
-  expect(frame.type).toBe('error');
-  expect(frame.websocketId).toBe('ticker');
-  expect(frame.error['~e']).toEqual({
-    name: 'AuthorizationError',
-    message: 'You do not have permission to access this websocket.',
-    requestId: 'r',
-    isLowdefyError: true,
-  });
-});
-
 test('unknown frame type is ignored without sending a response', async () => {
   const { connection, context, registry, send } = setup();
 
@@ -267,6 +300,22 @@ test('close unsubscribes the subscriber from all channels', () => {
   expect(registry.unsubscribeAll).toHaveBeenCalledWith({ subscriber: connection.subscriber });
 });
 
+test('close reports a failure of the unsubscribe that runs after frames in progress finish', async () => {
+  const { connection, context, registry } = setup();
+  const error = new Error('Channel cleanup failed.');
+  registry.unsubscribeAll
+    .mockImplementationOnce(() => {})
+    .mockImplementationOnce(() => {
+      throw error;
+    });
+
+  connection.close();
+  await Promise.resolve();
+  await Promise.resolve();
+
+  expect(context.handleError).toHaveBeenCalledWith(error);
+});
+
 test('subscriber is created with the connection rid, the context i18n and an empty subscriptions map', () => {
   const { connection, context } = setup();
 
@@ -275,4 +324,335 @@ test('subscriber is created with the connection rid, the context i18n and an emp
   expect(connection.subscriber.subscriptions.size).toBe(0);
   expect(typeof connection.subscriber.send).toBe('function');
   expect(connection.subscriber.i18n).toBe(context.i18n);
+});
+
+// Lets queued frames run until the held subscribe reaches its channel
+// preparation.
+async function untilPreparing(releases) {
+  for (let tick = 0; tick < 20 && releases.length === 0; tick += 1) {
+    await Promise.resolve();
+  }
+}
+
+function setupHeldSubscribe() {
+  const releases = [];
+  const resolver = jest.fn(() => new Promise(() => {}));
+  mockPrepareChannel.mockImplementation(
+    (context, { websocketId }) =>
+      new Promise((resolve) => {
+        releases.push(() =>
+          resolve({
+            connectionProperties: null,
+            properties: {},
+            websocketConfig: { websocketId, type: 'TestSource', '~k': 'websockets.0' },
+            websocketResolver: resolver,
+          })
+        );
+      })
+  );
+  const send = jest.fn();
+  const context = {
+    rid: 'r',
+    mode: 'prod',
+    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn() },
+    handleError: jest.fn(),
+  };
+  const registry = createChannelRegistry();
+  const connection = createWebSocketConnection(context, { registry, send });
+  return { connection, registry, releases, resolver, send };
+}
+
+test('an unsubscribe sent while its subscribe is being prepared removes the subscription', async () => {
+  const { connection, releases, send } = setupHeldSubscribe();
+
+  const subscribed = connection.handleMessage(
+    JSON.stringify({ type: 'subscribe', websocketId: 'chat', requestId: 's1' })
+  );
+  const unsubscribed = connection.handleMessage(
+    JSON.stringify({ type: 'unsubscribe', websocketId: 'chat' })
+  );
+  await untilPreparing(releases);
+  releases[0]();
+  await Promise.all([subscribed, unsubscribed]);
+
+  expect(connection.subscriber.subscriptions.size).toBe(0);
+  expect(sentFrames(send)).toEqual([
+    { type: 'subscribed', websocketId: 'chat', requestId: 's1' },
+    { type: 'unsubscribed', websocketId: 'chat' },
+  ]);
+});
+
+test('a connection that closes while a subscribe is being prepared leaves no subscription behind', async () => {
+  const { connection, registry, releases } = setupHeldSubscribe();
+  const unsubscribeAll = jest.spyOn(registry, 'unsubscribeAll');
+
+  const subscribed = connection.handleMessage(
+    JSON.stringify({ type: 'subscribe', websocketId: 'chat', requestId: 's1' })
+  );
+  const queuedBeforeClose = connection.handleMessage(
+    JSON.stringify({ type: 'subscribe', websocketId: 'chat', requestId: 's2' })
+  );
+  await untilPreparing(releases);
+  connection.close();
+  const sentAfterClose = connection.handleMessage(
+    JSON.stringify({ type: 'subscribe', websocketId: 'news', requestId: 's3' })
+  );
+  releases[0]();
+  await Promise.all([subscribed, queuedBeforeClose, sentAfterClose]);
+  await Promise.resolve();
+
+  expect(releases).toHaveLength(1);
+  expect(unsubscribeAll).toHaveBeenCalledTimes(2);
+  expect(connection.subscriber.subscriptions.size).toBe(0);
+});
+
+test('a slow publish on one feed does not hold up a subscribe to another feed', async () => {
+  const { connection, registry, send } = setup();
+  registry.publish.mockImplementation(() => new Promise(() => {}));
+
+  connection.handleMessage(
+    JSON.stringify({ type: 'publish', websocketId: 'chat', payload: {}, requestId: 'p1' })
+  );
+  await connection.handleMessage(
+    JSON.stringify({ type: 'subscribe', websocketId: 'ticker', requestId: 's1' })
+  );
+
+  expect(sentFrames(send)).toEqual([
+    { type: 'subscribed', websocketId: 'ticker', requestId: 's1' },
+  ]);
+});
+
+describe('caller re-check', () => {
+  const member = {
+    id: 'user-1',
+    name: 'Ada',
+    organization_id: 'org-1',
+    roles: ['editor', 'admin'],
+  };
+
+  beforeEach(() => {
+    jest.useFakeTimers({ doNotFake: ['performance'] });
+    mockResolveAuthentication.mockClear();
+    mockCurrentCaller = member;
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  async function flush() {
+    for (let tick = 0; tick < 10; tick += 1) {
+      await Promise.resolve();
+    }
+  }
+
+  function setupWithAuth({ user = member } = {}) {
+    const registry = {
+      subscribe: jest.fn(async () => {}),
+      unsubscribe: jest.fn(),
+      unsubscribeAll: jest.fn(),
+      publish: jest.fn(async () => {}),
+    };
+    const send = jest.fn();
+    const closeSocket = jest.fn();
+    const headers = new Headers({ cookie: 'session=1' });
+    const strategies = [];
+    const context = {
+      rid: 'r',
+      mode: 'prod',
+      auth: { api: {} },
+      config: {},
+      user,
+      i18n: { active: 'en-US', messages: {} },
+      logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() },
+      handleError: jest.fn(),
+    };
+    const connection = createWebSocketConnection(context, {
+      closeSocket,
+      headers,
+      registry,
+      send,
+      strategies,
+    });
+    return { closeSocket, connection, context, headers, registry, send, strategies };
+  }
+
+  test('a subscribe resolves the caller from the upgrade headers before the channel is prepared', async () => {
+    const { connection, context, headers, registry, strategies } = setupWithAuth();
+
+    await connection.handleMessage(
+      JSON.stringify({ type: 'subscribe', websocketId: 'ticker', requestId: 's1' })
+    );
+
+    expect(mockResolveAuthentication).toHaveBeenCalledTimes(1);
+    expect(mockResolveAuthentication).toHaveBeenCalledWith(
+      { config: context.config, logger: context.logger, user: member },
+      { auth: context.auth, headers, strategies }
+    );
+    expect(mockResolveAuthentication.mock.invocationCallOrder[0]).toBeLessThan(
+      registry.subscribe.mock.invocationCallOrder[0]
+    );
+  });
+
+  test('a re-check leaves the caller on the connection context as it was at upgrade', async () => {
+    const { connection, context } = setupWithAuth();
+    mockCurrentCaller = { ...member, name: 'Ada L.' };
+
+    await connection.handleMessage(
+      JSON.stringify({ type: 'subscribe', websocketId: 'ticker', requestId: 's1' })
+    );
+
+    expect(context.user).toBe(member);
+  });
+
+  test('a subscribe from a caller that signed out closes the socket with 4401 and is not subscribed', async () => {
+    const { closeSocket, connection, registry, send } = setupWithAuth();
+    mockCurrentCaller = null;
+
+    await connection.handleMessage(
+      JSON.stringify({ type: 'subscribe', websocketId: 'ticker', requestId: 's1' })
+    );
+
+    expect(closeSocket).toHaveBeenCalledWith({ code: 4401, reason: 'caller-changed' });
+    expect(registry.subscribe).not.toHaveBeenCalled();
+    expect(registry.unsubscribeAll).toHaveBeenCalledWith({ subscriber: connection.subscriber });
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  test.each([
+    ['the caller signs out', null],
+    ['the session is revoked', null],
+    ['the membership is removed', null],
+    ['a role is removed', { ...member, roles: ['editor'] }],
+    ['a role is added', { ...member, roles: ['editor', 'admin', 'owner'] }],
+    ['the caller switches organization', { ...member, organization_id: 'org-2' }],
+    ['another user signs in on the same browser', { ...member, id: 'user-2' }],
+  ])('the socket closes with 4401 within 60 seconds when %s', async (_, caller) => {
+    const { closeSocket, connection, registry } = setupWithAuth();
+    mockCurrentCaller = caller;
+
+    jest.advanceTimersByTime(59 * 1000);
+    await flush();
+    expect(closeSocket).not.toHaveBeenCalled();
+
+    jest.advanceTimersByTime(1000);
+    await flush();
+    expect(closeSocket).toHaveBeenCalledTimes(1);
+    expect(closeSocket).toHaveBeenCalledWith({ code: 4401, reason: 'caller-changed' });
+    expect(registry.unsubscribeAll).toHaveBeenCalledWith({ subscriber: connection.subscriber });
+  });
+
+  test('an anonymous socket closes with 4401 when a session appears', async () => {
+    const { closeSocket } = setupWithAuth({ user: null });
+    mockCurrentCaller = member;
+
+    jest.advanceTimersByTime(60 * 1000);
+    await flush();
+
+    expect(closeSocket).toHaveBeenCalledWith({ code: 4401, reason: 'caller-changed' });
+  });
+
+  test.each([
+    ['the caller is unchanged', member],
+    ['the roles come back in another order', { ...member, roles: ['admin', 'editor'] }],
+    ['only the name changed', { ...member, name: 'Ada L.' }],
+  ])('the socket stays open when %s', async (_, caller) => {
+    const { closeSocket, connection, registry, send } = setupWithAuth();
+    mockCurrentCaller = caller;
+
+    jest.advanceTimersByTime(3 * 60 * 1000);
+    await flush();
+    await connection.handleMessage(
+      JSON.stringify({ type: 'subscribe', websocketId: 'ticker', requestId: 's1' })
+    );
+
+    expect(mockResolveAuthentication).toHaveBeenCalledTimes(4);
+    expect(closeSocket).not.toHaveBeenCalled();
+    expect(registry.subscribe).toHaveBeenCalledTimes(1);
+    expect(sentFrames(send)).toEqual([
+      { type: 'subscribed', websocketId: 'ticker', requestId: 's1' },
+    ]);
+  });
+
+  test('an anonymous socket stays open while no session appears', async () => {
+    const { closeSocket } = setupWithAuth({ user: null });
+    mockCurrentCaller = null;
+
+    jest.advanceTimersByTime(60 * 1000);
+    await flush();
+
+    expect(mockResolveAuthentication).toHaveBeenCalledTimes(1);
+    expect(closeSocket).not.toHaveBeenCalled();
+  });
+
+  test('a connection runs one re-check timer however many feeds it subscribes', async () => {
+    const { connection } = setupWithAuth();
+
+    await connection.handleMessage(JSON.stringify({ type: 'subscribe', websocketId: 'a' }));
+    await connection.handleMessage(JSON.stringify({ type: 'subscribe', websocketId: 'b' }));
+    await connection.handleMessage(JSON.stringify({ type: 'subscribe', websocketId: 'c' }));
+
+    expect(jest.getTimerCount()).toBe(1);
+  });
+
+  test('close clears the re-check timer', async () => {
+    const { closeSocket, connection } = setupWithAuth();
+    mockCurrentCaller = null;
+
+    connection.close();
+    expect(jest.getTimerCount()).toBe(0);
+    jest.advanceTimersByTime(60 * 1000);
+    await flush();
+
+    expect(mockResolveAuthentication).not.toHaveBeenCalled();
+    expect(closeSocket).not.toHaveBeenCalled();
+  });
+
+  test('a re-check that fails reports the error and closes the socket with 1011', async () => {
+    const { closeSocket, context } = setupWithAuth();
+    const error = new Error('Session store unreachable.');
+    mockResolveAuthentication.mockRejectedValueOnce(error);
+
+    jest.advanceTimersByTime(60 * 1000);
+    await flush();
+
+    expect(context.handleError).toHaveBeenCalledWith(error);
+    expect(closeSocket).toHaveBeenCalledWith({ code: 1011, reason: 'caller-check-failed' });
+  });
+
+  test('a re-check that finishes after the socket closed does not close it again', async () => {
+    const { closeSocket, connection } = setupWithAuth();
+    let finish;
+    mockResolveAuthentication.mockImplementationOnce(
+      (target) =>
+        new Promise((resolve) => {
+          finish = () => {
+            target.user = null;
+            resolve();
+          };
+        })
+    );
+
+    jest.advanceTimersByTime(60 * 1000);
+    await flush();
+    connection.close();
+    finish();
+    await flush();
+
+    expect(closeSocket).not.toHaveBeenCalled();
+  });
+
+  test('a context without an auth engine keeps the caller it was built with', async () => {
+    const { closeSocket, connection, context } = setupWithAuth();
+    context.auth = null;
+
+    jest.advanceTimersByTime(60 * 1000);
+    await flush();
+    await connection.handleMessage(
+      JSON.stringify({ type: 'subscribe', websocketId: 'ticker', requestId: 's1' })
+    );
+
+    expect(mockResolveAuthentication).not.toHaveBeenCalled();
+    expect(closeSocket).not.toHaveBeenCalled();
+  });
 });

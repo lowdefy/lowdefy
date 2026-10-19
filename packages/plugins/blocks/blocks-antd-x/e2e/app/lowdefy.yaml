@@ -34,3 +34,4 @@ agents:
 pages:
   - _ref: ../../src/blocks/AgentChat/tests/AgentChat.e2e.yaml
   - _ref: ../../src/blocks/AgentChat/tests/AgentChatTarget.e2e.yaml
+  - _ref: ../../src/blocks/AgentConversations/tests/AgentConversations.e2e.yaml

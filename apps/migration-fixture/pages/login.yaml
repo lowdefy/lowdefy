@@ -1,0 +1,47 @@
+# Old-style login page: NextAuth error query param + provider sign-in buttons.
+id: login
+type: Box
+blocks:
+  - id: login_title
+    type: Title
+    properties:
+      content: Sign in
+  - id: auth_error
+    type: Html
+    visible:
+      _not:
+        _eq:
+          - _url_query: error
+          - null
+    properties:
+      html:
+        _string.concat:
+          - '<p>Sign-in failed: '
+          - _url_query: error # NextAuth ?error= convention — prompt 03 flags the rework
+          - '</p>'
+  - id: google_login
+    type: Button
+    properties:
+      title: Sign in with Google
+    events:
+      onClick:
+        - id: login_google
+          type: Login
+          params:
+            providerId: google
+  - id: email_input
+    type: TextInput
+    properties:
+      title: Email
+  - id: email_login
+    type: Button
+    properties:
+      title: Email me a magic link
+    events:
+      onClick:
+        - id: login_email
+          type: Login
+          params:
+            providerId: email
+            email:
+              _state: email_input

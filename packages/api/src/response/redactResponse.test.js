@@ -15,6 +15,7 @@
 */
 
 import { RequestError, UserError } from '@lowdefy/errors';
+import { serializer } from '@lowdefy/helpers';
 
 import redactResponse from './redactResponse.js';
 
@@ -46,4 +47,16 @@ test('redactResponse keeps the message of a UserError in a response value', () =
 
 test('redactResponse passes a response without errors through', () => {
   expect(redactResponse({ mode: 'dev' }, { a: 1, b: ['x'] })).toEqual({ a: 1, b: ['x'] });
+});
+
+test('redactResponse leaves out the build markers a value copied from config carries', () => {
+  // A :return literal evaluated from an endpoint artifact keeps its ~k, ~r and ~l
+  // markers as hidden properties, and an array keeps them too.
+  const response = serializer.deserializeFromString(
+    '{"order":{"id":"o_1","lines":{"~arr":[{"sku":"a","~k":"k4"}],"~k":"k3"},"~k":"k2","~r":"r1","~l":4},"~k":"k1"}'
+  );
+
+  expect(redactResponse({ mode: 'prod' }, response)).toEqual({
+    order: { id: 'o_1', lines: [{ sku: 'a' }] },
+  });
 });

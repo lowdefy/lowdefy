@@ -19,13 +19,19 @@ import path from 'node:path';
 
 const SKIP_DIRS = new Set(['node_modules', 'dist', '.turbo']);
 
-function copyServer({ sourceDir, targetDir }) {
+function copyServer({ sourceDir, targetDir, keep = [] }) {
   // Only skip the top-level build/ directory (generated artifacts).
   // Nested build/ directories like lib/build/ contain static source files.
   const topLevelBuildDir = path.join(sourceDir, 'build');
 
+  // Kept entries (an existing install) survive; everything else is replaced, so
+  // files deleted from the source never linger in the copy.
   if (fs.existsSync(targetDir)) {
-    fs.rmSync(targetDir, { recursive: true });
+    for (const entry of fs.readdirSync(targetDir)) {
+      if (!keep.includes(entry)) {
+        fs.rmSync(path.join(targetDir, entry), { recursive: true });
+      }
+    }
   }
   fs.mkdirSync(targetDir, { recursive: true });
   fs.cpSync(sourceDir, targetDir, {

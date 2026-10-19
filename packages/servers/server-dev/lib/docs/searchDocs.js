@@ -14,54 +14,106 @@
   limitations under the License.
 */
 
-import fs from 'node:fs';
-import path from 'node:path';
 import { type } from '@lowdefy/helpers';
 
-import getDocsManifest from './getDocsManifest.js';
+import docSources from './docSources.js';
+import getDocsIndex from './getDocsIndex.js';
+import readDocEntry from './readDocEntry.js';
+import splitSearchTerms from './splitSearchTerms.js';
 
 const MAX_RESULTS = 20;
 const SNIPPET_RADIUS = 120;
+const TITLE_WEIGHT = 3;
+const TYPE_NAME_WEIGHT = 2;
+const BODY_WEIGHT = 1;
 
-let contentCache = null;
-
-function getContents({ manifest }) {
-  if (contentCache !== null) {
-    return contentCache;
+// Each term counts once, in the best field it appears in.
+function scoreEntry({ entry, content, terms }) {
+  const title = entry.title.toLowerCase();
+  const slug = entry.slug.toLowerCase();
+  const typeName = (entry.typeName ?? '').toLowerCase();
+  const body = content.toLowerCase();
+  let score = 0;
+  let titleMatched = false;
+  let bodyMatch = null;
+  for (const term of terms) {
+    if (title.includes(term) || slug.includes(term)) {
+      score += TITLE_WEIGHT;
+      titleMatched = true;
+      continue;
+    }
+    if (typeName.includes(term)) {
+      score += TYPE_NAME_WEIGHT;
+      continue;
+    }
+    const index = body.indexOf(term);
+    if (index !== -1) {
+      score += BODY_WEIGHT;
+      bodyMatch = bodyMatch ?? { index, term };
+    }
   }
-  contentCache = manifest.docs.map((doc) => ({
-    doc,
-    content: fs.readFileSync(path.join(manifest.contentDir, doc.path), 'utf8'),
-  }));
-  return contentCache;
+  return { score, titleMatched, bodyMatch };
 }
 
-function searchDocs({ query }) {
+function makeSnippet({ content, titleMatched, bodyMatch }) {
+  if (titleMatched || type.isNone(bodyMatch)) {
+    return content.slice(0, SNIPPET_RADIUS * 2);
+  }
+  const start = Math.max(0, bodyMatch.index - SNIPPET_RADIUS);
+  return content.slice(start, bodyMatch.index + bodyMatch.term.length + SNIPPET_RADIUS);
+}
+
+function makeHit({ entry, snippet }) {
+  const hit = { slug: entry.slug, title: entry.title, section: entry.section };
+  if (!type.isNone(entry.kind)) {
+    hit.kind = entry.kind;
+  }
+  if (!type.isNone(entry.typeName)) {
+    hit.typeName = entry.typeName;
+  }
+  hit.source = entry.source;
+  hit.package = entry.package;
+  hit.version = entry.version;
+  hit.path = entry.path ?? entry.filePath;
+  hit.snippet = snippet;
+  return hit;
+}
+
+function searchDocs({ query, source }) {
   if (!type.isString(query) || query.trim() === '') {
     throw new Error('searchDocs requires a "query" string.');
   }
-  const manifest = getDocsManifest();
-  if (type.isNone(manifest)) {
-    return [];
+  if (!type.isNone(source) && !docSources.includes(source)) {
+    throw new Error(
+      `Unknown docs source. Received ${JSON.stringify(source)}. Use one of: ${docSources.join(
+        ', '
+      )}.`
+    );
   }
-  const lowerQuery = query.trim().toLowerCase();
-  const titleMatches = [];
-  const contentMatches = [];
-  for (const { doc, content } of getContents({ manifest })) {
-    if (doc.title.toLowerCase().includes(lowerQuery) || doc.slug.includes(lowerQuery)) {
-      titleMatches.push({ ...doc, snippet: content.slice(0, SNIPPET_RADIUS * 2) });
+  let terms = splitSearchTerms({ query });
+  // A query of only short or common words, such as "to a", is searched whole.
+  if (terms.length === 0) {
+    terms = [query.trim().toLowerCase()];
+  }
+  const { entries } = getDocsIndex();
+  const scored = [];
+  for (const entry of entries) {
+    if (!type.isNone(source) && entry.source !== source) {
       continue;
     }
-    const index = content.toLowerCase().indexOf(lowerQuery);
-    if (index !== -1) {
-      const start = Math.max(0, index - SNIPPET_RADIUS);
-      contentMatches.push({
-        ...doc,
-        snippet: content.slice(start, index + lowerQuery.length + SNIPPET_RADIUS),
-      });
+    const content = readDocEntry({ entry });
+    const { score, titleMatched, bodyMatch } = scoreEntry({ entry, content, terms });
+    if (score === 0) {
+      continue;
     }
+    scored.push({
+      score,
+      hit: makeHit({ entry, snippet: makeSnippet({ content, titleMatched, bodyMatch }) }),
+    });
   }
-  return [...titleMatches, ...contentMatches].slice(0, MAX_RESULTS);
+  // Array sort is stable, so entries with equal scores keep index order.
+  scored.sort((a, b) => b.score - a.score);
+  return scored.slice(0, MAX_RESULTS).map(({ hit }) => hit);
 }
 
 export default searchDocs;

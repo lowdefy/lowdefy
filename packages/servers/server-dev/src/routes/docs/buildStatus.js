@@ -15,9 +15,17 @@
 */
 
 import getBuildStatus from '../../../lib/docs/getBuildStatus.js';
+import getBuildStatusAfterEdits from '../../../lib/docs/getBuildStatusAfterEdits.js';
+import readProxyBuildWait from '../../../lib/docs/readProxyBuildWait.js';
 
-function docsBuildStatusHandler(c) {
-  return c.json(getBuildStatus());
+// ?wait=true answers once the dev server has processed the latest edits and
+// built the pages they touched.
+async function docsBuildStatusHandler(c) {
+  if (c.req.query('wait') === 'true') {
+    const proxyWait = readProxyBuildWait({ getHeader: (name) => c.req.header(name) });
+    return c.json(await getBuildStatusAfterEdits({ proxyWait }));
+  }
+  return c.json(await getBuildStatus());
 }
 
 export default docsBuildStatusHandler;

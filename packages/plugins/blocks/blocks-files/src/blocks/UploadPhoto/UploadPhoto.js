@@ -21,6 +21,7 @@ import { Upload as AntdUpload } from 'antd';
 
 import useFileList from '../utils/useFileList.js';
 import getEmitFileContent from '../utils/getEmitFileContent.js';
+import getShowUploadList from '../utils/getShowUploadList.js';
 import getUploadRequest from '../utils/getUploadRequest.js';
 import withTheme from '../../withTheme.js';
 
@@ -80,14 +81,20 @@ const UploadPhoto = ({
           list: styles.list,
           item: styles.item,
         }}
+        capture={properties.capture}
         customRequest={uploadRequest}
         disabled={properties.disabled}
         fileList={state.fileList}
-        listType="picture-card"
+        listType={properties.listType ?? 'picture-card'}
         maxCount={properties.maxCount}
         multiple={!properties.singleFile}
         onRemove={removeFile}
-        showUploadList={properties.showUploadList}
+        pastable={properties.pastable}
+        showUploadList={getShowUploadList({
+          blockId,
+          Icon,
+          showUploadList: properties.showUploadList,
+        })}
         onChange={() => {
           // emitFileContent triggers onChange itself once the content is read,
           // so the file object in the event payload carries the base64 content.
@@ -102,7 +109,9 @@ const UploadPhoto = ({
             classNames={{ element: cn('lf-upload-photo-icon', classNames.icon) }}
             events={events}
             properties={{
-              name: loading ? 'AiOutlineLoading' : 'AiOutlineCamera',
+              name: loading ? 'loading' : 'camera',
+              spin: loading,
+              title: '',
               size: 24,
             }}
             styles={{ element: styles.icon }}

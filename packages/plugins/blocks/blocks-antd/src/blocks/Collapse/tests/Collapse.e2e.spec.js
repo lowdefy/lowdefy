@@ -108,4 +108,42 @@ test.describe('Collapse Block', () => {
     const display = getBlock(page, 'onchange_display');
     await expect(display).toHaveText('Collapse changed!');
   });
+
+  test('renders a ghost collapse in the large size', async ({ page }) => {
+    const collapse = getCollapse(page, 'collapse_ghost_large');
+    await expect(collapse).toHaveClass(/ant-collapse-ghost/);
+    await expect(collapse).toHaveClass(/ant-collapse-large/);
+  });
+
+  test('collapsible icon toggles only from the expand icon', async ({ page }) => {
+    const collapse = getCollapse(page, 'collapse_icon_only');
+    const panel = getPanel(collapse, 0);
+    await expect(panel).toHaveClass(/ant-collapse-item/);
+    await expect(panel).not.toHaveClass(/ant-collapse-item-active/);
+    await panel.locator('.ant-collapse-title').click();
+    await expect(panel).not.toHaveClass(/ant-collapse-item-active/);
+    await panel.locator('.ant-collapse-expand-icon').click();
+    await expect(panel).toHaveClass(/ant-collapse-item-active/);
+  });
+
+  test('renders panel extra content without the arrow', async ({ page }) => {
+    const panel = getPanel(getCollapse(page, 'collapse_hidden_arrow_extra'), 0);
+    await expect(panel.locator('.ant-collapse-extra')).toContainText('Extra tag');
+    await expect(panel.locator('.ant-collapse-expand-icon')).toHaveCount(0);
+  });
+
+  test('applies class and style to the semantic parts', async ({ page }) => {
+    const panel = getPanel(getCollapse(page, 'collapse_css_keys'), 0);
+    await expect(getPanelHeader(panel)).toHaveClass(/collapse-header-class/);
+    await expect(panel.locator('.ant-collapse-title')).toHaveClass(/collapse-title-class/);
+    const body = panel.locator('.ant-collapse-body');
+    await expect(body).toHaveClass(/collapse-content-class/);
+    await expect(body).toHaveCSS('background-color', 'rgb(255, 250, 230)');
+  });
+
+  test('renders an empty collapse when panels is an empty list', async ({ page }) => {
+    const collapse = getCollapse(page, 'collapse_empty_panels');
+    await expect(collapse).toBeAttached();
+    await expect(collapse.locator('.ant-collapse-item')).toHaveCount(0);
+  });
 });

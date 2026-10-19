@@ -1,0 +1,85 @@
+id: login
+type: Box
+properties:
+  style:
+    maxWidth: 400
+    margin: 60px auto
+blocks:
+  - id: login_title
+    type: Title
+    properties:
+      content: Log in
+      level: 2
+  - id: email
+    type: TextInput
+    properties:
+      title: Email
+  - id: password
+    type: PasswordInput
+    properties:
+      title: Password
+  - id: login_button
+    type: Button
+    properties:
+      title: Log in
+      block: true
+    events:
+      onClick:
+        try:
+          - id: login
+            type: Login
+            params:
+              email:
+                _state: email
+              password:
+                _state: password
+        catch:
+          - id: show_login_error
+            type: SetState
+            params:
+              login_error_message:
+                _actions: login.error.message
+  - id: login_error_html
+    type: Html
+    visible:
+      _ne:
+        - _state: login_error_message
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p style="color:red">{{ message }}</p>
+          on:
+            message:
+              _state: login_error_message
+  - id: magic_link_button
+    type: Button
+    properties:
+      title: Email me a sign-in link
+      type: default
+      block: true
+    events:
+      onClick:
+        - id: magic_link
+          type: Login
+          params:
+            magicLink: true
+            email:
+              _state: email
+        - id: magic_link_sent
+          type: Link
+          params:
+            pageId: check-email
+  - id: signup_link
+    type: Button
+    properties:
+      title: Create an account
+      type: link
+      block: true
+    events:
+      onClick:
+        - id: to_signup
+          type: Link
+          params:
+            pageId: signup

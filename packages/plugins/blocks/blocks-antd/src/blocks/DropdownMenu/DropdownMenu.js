@@ -21,6 +21,7 @@ import { get } from '@lowdefy/helpers';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 import useItemShortcuts from '../useItemShortcuts.js';
+import getDropdownMenuIcons from '../getDropdownMenuIcons.js';
 import { buildMenuItems, flattenLinks } from '../buildMenuItems.js';
 
 function collectLinkShortcuts(links) {
@@ -74,12 +75,13 @@ function DropdownMenuBlock({
   );
   useItemShortcuts({ items: shortcutItems, onMatch: onShortcutMatch });
 
+  // antd's Dropdown renders no element of its own, so the trigger wrapper is the block's element.
   return (
     <Dropdown
-      id={blockId}
-      className={classNames.element}
-      style={styles.element}
+      classNames={{ root: classNames.menu }}
+      styles={{ root: styles.menu }}
       menu={{
+        ...getDropdownMenuIcons({ blockId, Icon }),
         items,
         onClick: ({ key, keyPath }) => {
           const link = linkMap[key];
@@ -95,15 +97,14 @@ function DropdownMenuBlock({
             event: { key, selectedKeys, pageId: link?.pageId, url: link?.url },
           });
         },
+        selectable: properties.selectable,
         selectedKeys: properties.selectedKeys,
       }}
       trigger={[properties.trigger ?? 'hover']}
-      placement={properties.placement}
+      placement={properties.placement ?? undefined}
       arrow={properties.arrow}
       disabled={properties.disabled}
       destroyOnHidden={properties.destroyOnClose}
-      popupClassName={classNames.menu}
-      popupStyle={styles.menu}
       onOpenChange={(open) =>
         methods.triggerEvent({
           name: get(rename, 'events.onOpenChange', { default: 'onOpenChange' }),
@@ -111,7 +112,9 @@ function DropdownMenuBlock({
         })
       }
     >
-      <div>{content.content && content.content()}</div>
+      <div id={blockId} className={classNames.element} style={styles.element}>
+        {content.content && content.content()}
+      </div>
     </Dropdown>
   );
 }

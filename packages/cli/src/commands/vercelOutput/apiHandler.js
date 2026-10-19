@@ -18,9 +18,11 @@
 // .vercel/output/functions/api.func/<relServer>/api/index.js, where <relServer> is the server
 // directory's path relative to the trace base (empty for standalone apps). Kept as a string (not a
 // template file) so it ships verbatim — a real source file would be transpiled by the CLI's swc
-// build, stripping these comments. Its `../src/app.js` import and the chdir to `..` resolve to the
-// server directory inside the function, where the assembly places src/, build/, lib/ and the traced
-// dependency closure.
+// build, stripping these comments. Its `../src/initServer.js` import and the chdir to `..` resolve
+// to the server directory inside the function, where the assembly places src/, build/, lib/ and the
+// traced dependency closure. Its `ws` and `@hono/node-server` imports resolve because the traced
+// src/index.js imports both. It imports no Sentry package: initServer loads the SDK only when
+// SENTRY_DSN is set.
 const apiHandler = `/*
   Vercel Serverless Function entry for a Lowdefy (Hono) app — generated into the Vercel Build Output
   by lowdefy vercel-output.
@@ -29,13 +31,25 @@ const apiHandler = `/*
   other request is routed here (config.json routes) and run through the Lowdefy Hono app (page
   rendering, /api/* requests, endpoints, cron, auth, agents).
 
-  Runs on the Node runtime (the app uses fs to read its build). The request body is buffered eagerly
-  and a Web Request is built from it: Vercel's Node runtime does not drain a lazily-read body stream
-  reliably, so a streaming adapter hangs on every request that has a body (POST).
+  Runs on the Node runtime (the app uses fs to read its build). The default export is a Node HTTP
+  server, which Vercel's Node runtime serves, WebSocket upgrades included. Ordinary requests go
+  through handleRequest: it buffers the request body eagerly and builds a Web Request from it, since
+  Vercel's Node runtime does not drain a lazily-read body stream reliably, so a streaming adapter
+  (@hono/node-server's request listener) hangs on every request that has a body (POST). Upgrade
+  requests (/api/websocket) are handled by @hono/node-server's WebSocket support, which listens for
+  the server's upgrade event and runs the Hono app's upgradeWebSocket route.
+
+  Both build the request URL the app sees (and its context.origin) from Vercel's forwarding
+  headers: the function is reached over plain HTTP behind Vercel's edge, so the socket says http
+  where the client used https.
 */
 
+import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { createAdaptorServer } from '@hono/node-server';
+import { WebSocketServer } from 'ws';
 
 // The app reads its build artifacts relative to process.cwd(). On Vercel the function's cwd is the
 // lambda root (e.g. /var/task), not this directory, so point the cwd at the server directory (the
@@ -43,12 +57,26 @@ import { fileURLToPath } from 'node:url';
 // a static import is hoisted and would read files at the wrong cwd.
 process.chdir(path.join(path.dirname(fileURLToPath(import.meta.url)), '..'));
 
-const { default: createApp } = await import('../src/app.js');
-const app = createApp({ serveStaticAssets: false });
+// The same startup as the Node entry (src/index.js): Sentry, then the environment guards before the
+// app loads. A failed guard throws here, so the function fails every request instead of serving
+// with the wrong variables. As a serverless function, Sentry reports errors only unless the app
+// sets logger.sentry.serverTracing: tracing's start-up cost would land on every cold start.
+const { default: initServer } = await import('../src/initServer.js');
+const { createApp, sentry } = await initServer({ serverless: true });
+// Vercel's edge sets x-real-ip to the client address on every request, replacing any value the
+// client sent, so the app takes the address from it instead of the connection (which is Vercel's
+// own proxy).
+const app = createApp({ serveStaticAssets: false, clientAddressHeader: 'x-real-ip' });
 
 export const config = { runtime: 'nodejs' };
 
-export default async function handler(req, res) {
+function requestUrl(req) {
+  const host = req.headers['x-forwarded-host'] ?? req.headers.host;
+  const protocol = req.headers['x-forwarded-proto'] ?? 'https';
+  return protocol + '://' + host + req.url;
+}
+
+async function handleRequest(req, res) {
   const method = req.method || 'GET';
 
   // Buffer the body eagerly — see the note above.
@@ -59,9 +87,7 @@ export default async function handler(req, res) {
     if (chunks.length > 0) body = Buffer.concat(chunks);
   }
 
-  const host = req.headers['x-forwarded-host'] ?? req.headers.host;
-  const protocol = req.headers['x-forwarded-proto'] ?? 'https';
-  const request = new Request(protocol + '://' + host + req.url, {
+  const request = new Request(requestUrl(req), {
     method,
     headers: req.headers,
     body,
@@ -70,9 +96,20 @@ export default async function handler(req, res) {
   const response = await app.fetch(request);
 
   res.statusCode = response.status;
-  response.headers.forEach((value, key) => res.setHeader(key, value));
+  // Headers yields each Set-Cookie separately (a sign-in sets the session cookie and clears
+  // others), and setHeader would keep only the last one.
+  response.headers.forEach((value, key) => res.appendHeader(key, value));
   if (response.body) {
     const reader = response.body.getReader();
+    // A GET stream (the MCP notification stream, an SSE feed) exists only for its client, and
+    // would otherwise hold the function until maxDuration, so it stops when the client goes. The
+    // body of any other response is the tail of work that must finish (an agent run), so it is
+    // read to the end.
+    if (method === 'GET') {
+      res.once('close', () => {
+        if (!res.writableFinished) reader.cancel().catch(() => {});
+      });
+    }
     for (;;) {
       const { done, value } = await reader.read();
       if (done) break;
@@ -81,6 +118,70 @@ export default async function handler(req, res) {
   }
   res.end();
 }
+
+// The function can be suspended once the response ends, stranding queued Sentry events. Vercel's
+// waitUntil keeps it alive until they are sent without delaying the response. Its Node runtime
+// exposes waitUntil on this global, which is what @vercel/functions reads; Sentry's own
+// vercelWaitUntil only acts on the Edge runtime. The function is billed until the flush settles.
+// The flush waits only on what the SDK has queued: an error the request captured, or its
+// transaction when tracing is on and sampled it. Otherwise it settles at once, since the SDK
+// sends no client reports here (initSentryServer). The request's server span ends, queuing its
+// transaction, when the response closes, so the flush starts after that.
+function responseClosed(res) {
+  if (res.closed) return Promise.resolve();
+  return new Promise((resolve) => res.once('close', resolve));
+}
+
+function flushSentry(res) {
+  if (!sentry) return;
+  const flushed = responseClosed(res).then(() => sentry.flush(2000));
+  // Read in the request's own async context: a close listener runs in the socket's.
+  const vercelContext = globalThis[Symbol.for('@vercel/request-context')]?.get?.();
+  if (vercelContext?.waitUntil) {
+    vercelContext.waitUntil(flushed);
+    return;
+  }
+  return flushed;
+}
+
+// The HTTP server does not handle a request listener's rejected promise, so it would stop the
+// process and every other request the function instance is serving. A client that disconnects
+// while its body is read is the common cause, and is not logged. Sentry is flushed once the
+// request settles either way, so a request that fails still sends the events it captured.
+function requestListener(req, res) {
+  handleRequest(req, res)
+    .catch((error) => {
+      if (!req.destroyed) console.error(error);
+      if (res.headersSent) {
+        res.destroy();
+        return;
+      }
+      res.statusCode = 500;
+      res.end();
+    })
+    .finally(() => flushSentry(res));
+}
+
+// 256 KiB max frame, matching the Node server (src/index.js) and Vercel's documented default for
+// WebSocket functions.
+const wss = new WebSocketServer({ noServer: true, maxPayload: 256 * 1024 });
+
+// @hono/node-server builds an upgrade request's URL from the socket (http on Vercel) and the Host
+// header, so it is rebuilt from the forwarding headers, as for every other request.
+function fetchUpgrade(request, env) {
+  return app.fetch(new Request(requestUrl(env.incoming), request), env);
+}
+
+// createAdaptorServer attaches the WebSocket upgrade handling to the server it creates. The
+// createServer option swaps its lazily-reading request listener for requestListener, so only
+// upgrades go through @hono/node-server, and through fetchUpgrade.
+const server = createAdaptorServer({
+  fetch: fetchUpgrade,
+  websocket: { server: wss },
+  createServer: (serverOptions) => http.createServer(serverOptions, requestListener),
+});
+
+export default server;
 `;
 
 export default apiHandler;

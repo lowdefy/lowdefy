@@ -1,0 +1,133 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Provider find_work_email_treg: a work email through treg's routed treg.people.email.find,
+# which tries provider after provider (a waterfall treg runs, so this endpoint makes one call).
+# It answers like every provider endpoint (see enrich_company_lookup.yaml), with the `cost`
+# treg charged (X-Treg-Cost-Micro, micro-USD), which the worker stores on the cell.
+#
+# The worker passes `idempotencyKey`: runId:columnKey:rowKey:inputHash of the claim, the same
+# on every attempt at the cell within a run. An attempt whose answer was lost after treg
+# charged for it (a timeout) is retried with the same key, and treg replays the stored answer
+# at no charge (cost 0). A new run, or changed inputs, is a new key and a new call.
+id: enrich_find_work_email_treg
+type: InternalApi
+routine:
+  - id: check_inputs
+    type: ValidateSchema
+    properties:
+      throwOnInvalid: false
+      data:
+        _payload: inputs
+      schema:
+        type: object
+        required:
+          - full_name
+          - domain
+        additionalProperties: false
+        properties:
+          full_name:
+            type: string
+            minLength: 1
+            maxLength: 200
+          domain:
+            type: string
+            maxLength: 253
+            pattern: ^[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$
+            errorMessage: domain should be a domain name, like example.com.
+  - :if:
+      _not:
+        _step: check_inputs.valid
+    :then:
+      - :return:
+          status: error
+          error:
+            _string.concat:
+              - 'Invalid input: '
+              - _step: check_inputs.errors.0.message
+          retry: false
+  - :try:
+      - id: find
+        type: TregCall
+        connectionId: treg
+        properties:
+          endpoint: treg.people.email.find
+          body:
+            full_name:
+              _payload: inputs.full_name
+            domain:
+              _string.toLowerCase:
+                _payload: inputs.domain
+          idempotencyKey:
+            _payload: idempotencyKey
+          meta:
+            feature: enrichment
+          # A provider that answers later (a 202 with a task) is polled until it finishes,
+          # within the claim lease. A task still running then fails the attempt with a
+          # ServiceError; the retry's same key finds the same task, at no new charge.
+          await:
+            timeoutMs: 15000
+      # Every provider of the route was tried and none had the person: no result, not a failure.
+      - :if:
+          _eq:
+            - _if_none:
+                - _step: find.output.email
+                - null
+            - null
+        :then:
+          - :return:
+              status: empty
+              raw:
+                outcome:
+                  _step: find.outcome
+                tried:
+                  _step: find.tried
+              cost:
+                _step: find.cost.micro
+      - :return:
+          status: ok
+          value:
+            _step: find.output.email
+          raw:
+            output:
+              _step: find.output
+            servedBy:
+              _step: find.servedBy
+            tried:
+              _step: find.tried
+            replayed:
+              _step: find.replayed
+            response:
+              _step: find.raw
+          cost:
+            _step: find.cost.micro
+    :catch:
+      # A ServiceError passes with time: a 429 rate limit, a 503 (treg saturated, or its own
+      # provider account out of capacity), a timeout. Rethrown, so the worker queues the cell
+      # again after treg's retry_after (`_error: retryAfter`), or the backoff when it sent none.
+      - :if:
+          _eq:
+            - _error: name
+            - ServiceError
+        :then:
+          - :throw:
+              _error: true
+      # Anything else is final: out of balance (402), maxCost exceeded, a refused call. The
+      # message says which ("treg balance too low: needs ~$0.004, has $0.001.") and never
+      # carries the token or a provider's body.
+      - :return:
+          status: error
+          error:
+            _error: message
+          retry: false

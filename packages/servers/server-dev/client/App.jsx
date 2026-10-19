@@ -18,18 +18,29 @@ import React, { Suspense, useCallback, useEffect, useRef, useState } from 'react
 import useSWR from 'swr';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
-import { useDarkMode, useLocale } from '@lowdefy/client';
+import { IconProvider, useDarkMode, useLocale } from '@lowdefy/client';
 import { StyleProvider } from '@ant-design/cssinjs';
 import { App as AntdApp, theme as antdTheme } from 'antd';
 import { XProvider } from '@ant-design/x';
+import { appStorageKey, serializer } from '@lowdefy/helpers';
 
 import antdLocaleLoaders from '../build/i18n/antdLocales.js';
 import antdXLocaleLoaders from '../build/i18n/antdXLocales.js';
 import dayjsLocaleMap from '../build/i18n/dayjsLocales.js';
+import rawTheme from '../build/theme.json';
 import Auth from '../lib/client/auth/Auth.jsx';
 import ErrorBar from '../lib/client/ErrorBar.jsx';
+import getCspNonce from '../lib/client/getCspNonce.js';
 import request from '../lib/client/utils/request.js';
 import Routing from './Routing.jsx';
+
+// rootConfig arrives after the first render; the build-written theme gives
+// the icon provider its settings until then.
+const buildTheme = serializer.deserialize(rawTheme);
+
+// antd and antd X put this nonce on the style tags they add, so the page's
+// Content-Security-Policy applies them. Empty (no nonce) when the policy is off.
+const csp = { nonce: getCspNonce() };
 
 function ThemeTokenResolver({ lowdefyRef, children }) {
   const { token } = antdTheme.useToken();
@@ -40,7 +51,7 @@ function ThemeTokenResolver({ lowdefyRef, children }) {
   return children;
 }
 
-function App({ router }) {
+function App({ config, router }) {
   const lowdefyRef = useRef({});
   const [runtimeErrors, setRuntimeErrors] = useState([]);
   // Subscribe to rootConfig SWR cache — deduplicates with Routing's fetch.
@@ -50,9 +61,12 @@ function App({ router }) {
     lowdefyRef.current.theme = rootConfig.theme;
   }
 
+  // Device preferences, kept per app (the same key the HTML template's dark mode script reads).
+  const storageScope = { basePath: router.basePath, slug: config.slug };
   const { algorithm, token, components } = useDarkMode({
     antd: lowdefyRef.current.theme?.antd,
     configDarkMode: lowdefyRef.current.theme?.darkMode,
+    storageKey: appStorageKey({ ...storageScope, name: 'lowdefy_darkMode' }),
   });
 
   const {
@@ -64,6 +78,7 @@ function App({ router }) {
     antdLocaleLoaders,
     antdXLocaleLoaders,
     dayjsLocaleMap,
+    storageKey: appStorageKey({ ...storageScope, name: 'lowdefy_locale' }),
   });
 
   if (rootConfig?.i18n?.defaultLocale) {
@@ -88,6 +103,7 @@ function App({ router }) {
         message: error.message,
         source: error.source,
         stack: error.stack,
+        prodError: error.prodError === true,
       },
     ]);
   }, []);
@@ -115,6 +131,7 @@ function App({ router }) {
   return (
     <StyleProvider layer>
       <XProvider
+        csp={csp}
         locale={mergedLocale}
         form={
           antdLocale?.Form?.defaultValidateMessages
@@ -130,29 +147,40 @@ function App({ router }) {
           algorithm,
         }}
       >
-        <AntdApp>
-          <ThemeTokenResolver lowdefyRef={lowdefyRef}>
-            <ErrorBoundary fullPage onError={handleError}>
-              <Suspense
-                fallback={
-                  <div
-                    style={{
-                      minHeight: '100vh',
-                      background: 'var(--ant-color-bg-layout)',
+        {/* Message, Notification and ConfirmModal render in the App.useApp()
+            holders here, above the Client's icon provider. */}
+        <IconProvider icons={rootConfig?.theme.icons ?? buildTheme.icons}>
+          <AntdApp>
+            <ThemeTokenResolver lowdefyRef={lowdefyRef}>
+              <ErrorBoundary fullPage onError={handleError}>
+                <Suspense
+                  fallback={
+                    <div
+                      style={{
+                        minHeight: '100vh',
+                        background: 'var(--ant-color-bg-layout)',
+                      }}
+                    />
+                  }
+                >
+                  <Auth user={config?.user}>
+                    {(auth) => {
+                      return (
+                        <Routing
+                          auth={auth}
+                          lowdefy={lowdefyRef.current}
+                          recording={config?.recording}
+                          router={router}
+                        />
+                      );
                     }}
-                  />
-                }
-              >
-                <Auth>
-                  {(auth) => {
-                    return <Routing auth={auth} lowdefy={lowdefyRef.current} router={router} />;
-                  }}
-                </Auth>
-              </Suspense>
-            </ErrorBoundary>
-            <ErrorBar errors={runtimeErrors} />
-          </ThemeTokenResolver>
-        </AntdApp>
+                  </Auth>
+                </Suspense>
+              </ErrorBoundary>
+              <ErrorBar errors={runtimeErrors} />
+            </ThemeTokenResolver>
+          </AntdApp>
+        </IconProvider>
       </XProvider>
     </StyleProvider>
   );

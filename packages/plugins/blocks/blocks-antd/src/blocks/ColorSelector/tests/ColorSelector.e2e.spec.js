@@ -41,10 +41,12 @@ test.describe('ColorSelector Block', () => {
     const trigger = block.locator('.ant-color-picker-trigger');
     await trigger.click();
 
-    // Click inside the saturation area to change the color
-    const panel = page.locator('.ant-color-picker-panel');
-    await expect(panel).toBeVisible();
-    await panel.locator('.ant-color-picker-saturation').click();
+    // Click inside the saturation area to change the color. The picker ignores a press while its
+    // popup is still zooming open (its handle measures unevenly scaled), so wait for the motion to end.
+    const popup = page.locator('.ant-color-picker');
+    await expect(popup).toBeVisible();
+    await expect(popup).not.toHaveClass(/ant-zoom-big-(appear|enter)/);
+    await popup.locator('.ant-color-picker-saturation').click();
 
     const display = getBlock(page, 'cs_change_display');
     await expect(display).toHaveText('Changed!');
@@ -67,5 +69,62 @@ test.describe('ColorSelector Block', () => {
 
     await expect(small.locator('.ant-color-picker-trigger')).toHaveClass(/ant-color-picker-sm/);
     await expect(large.locator('.ant-color-picker-trigger')).toHaveClass(/ant-color-picker-lg/);
+  });
+});
+
+test.describe('ColorSelector antd 6 features', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'color_selector');
+  });
+
+  test('applies ColorPicker design tokens from theme', async ({ page }) => {
+    const trigger = getBlock(page, 'cs_theme').locator('.ant-color-picker-trigger');
+    await expect(trigger).toHaveCSS('height', '48px');
+  });
+
+  test('applies the popup cssKey to the popup', async ({ page }) => {
+    await getBlock(page, 'cs_popup').locator('.ant-color-picker-trigger').click();
+    await expect(page.locator('.cs-custom-popup')).toBeVisible();
+  });
+
+  test('clearing the color sets the value to null', async ({ page }) => {
+    const block = getBlock(page, 'cs_clearable');
+    await expect(getBlock(page, 'cs_clearable_display')).toHaveText('Value: #1677ff');
+    await block.locator('.ant-color-picker-trigger').click();
+    const popup = page.locator('.ant-color-picker-inner:visible');
+    await popup.locator('.ant-color-picker-clear').click();
+    await expect(getBlock(page, 'cs_clearable_display')).toHaveText('Value: null');
+    await expect(block.locator('.ant-color-picker-trigger .ant-color-picker-clear')).toBeVisible();
+  });
+
+  test('gradient mode reads and writes a linear-gradient value', async ({ page }) => {
+    const block = getBlock(page, 'cs_gradient');
+    await expect(
+      block.locator('.ant-color-picker-trigger .ant-color-picker-color-block-inner')
+    ).toHaveAttribute('style', /linear-gradient/);
+    await block.locator('.ant-color-picker-trigger').click();
+    const popup = page.locator('.ant-color-picker-inner:visible');
+    await expect(popup.locator('.ant-color-picker-gradient-slider')).toBeVisible();
+    await popup.locator('.ant-color-picker-saturation').click();
+    await expect(getBlock(page, 'cs_gradient_display')).toHaveText(
+      /^Value: linear-gradient\(90deg, /
+    );
+    // The block value is read back as a gradient, so the picker stays in gradient mode.
+    await expect(popup.locator('.ant-color-picker-gradient-slider')).toBeVisible();
+  });
+
+  test('mode array shows a single and gradient switch', async ({ page }) => {
+    await getBlock(page, 'cs_modes').locator('.ant-color-picker-trigger').click();
+    const popup = page.locator('.ant-color-picker-inner:visible');
+    await expect(popup.locator('.ant-segmented')).toBeVisible();
+  });
+
+  test('selects a preset color', async ({ page }) => {
+    await getBlock(page, 'cs_presets').locator('.ant-color-picker-trigger').click();
+    const popup = page.locator('.ant-color-picker-inner:visible');
+    const presets = popup.locator('.ant-color-picker-presets');
+    await expect(presets).toContainText('Brand');
+    await presets.locator('.ant-color-picker-presets-color').nth(1).click();
+    await expect(getBlock(page, 'cs_presets_display')).toHaveText('Value: #722ed1');
   });
 });

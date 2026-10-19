@@ -26,13 +26,13 @@ const WatermarkBlock = ({ blockId, classNames = {}, content, properties, styles 
     className={classNames.element}
     style={styles.element}
     content={properties.text}
-    font={properties.font}
+    font={properties.font ?? undefined}
     gap={properties.gap ?? undefined}
     image={properties.image}
     inherit={properties.inherit}
     offset={properties.offset ?? undefined}
-    rotate={properties.rotate}
-    zIndex={properties.zIndex}
+    rotate={properties.rotate ?? undefined}
+    zIndex={properties.zIndex ?? undefined}
     width={properties.width}
     height={properties.height}
   >

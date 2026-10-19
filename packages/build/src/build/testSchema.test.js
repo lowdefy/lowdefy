@@ -190,10 +190,7 @@ test('null item in blocks array emits warning', () => {
       {
         id: 'page_1',
         type: 'PageHeaderMenu',
-        blocks: [
-          { id: 'valid', type: 'Box' },
-          null,
-        ],
+        blocks: [{ id: 'valid', type: 'Box' }, null],
       },
     ],
   };
@@ -338,6 +335,257 @@ test('menus schema warning', () => {
   expect(mockLogWarn).toHaveBeenCalledWith('must NOT have additional properties - "pageId"');
 });
 
+test('auth roles catalog of id, label and description objects emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: [
+        { id: 'admin', label: 'Administrator', description: 'Full access to admin surfaces' },
+        { id: 'branch-manager', label: 'Branch Manager' },
+        { id: 'auditor' },
+      ],
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('auth roles as a non-array value emits type warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: 'admin',
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Auth "roles" should be an array.');
+});
+
+test('auth role entry missing id emits required warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: [{ label: 'Administrator' }],
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Auth role entries should have required property "id".');
+});
+
+test('auth role entry with a non-string id emits type warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: [{ id: 42 }],
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Auth "roles[].id" should be a string.');
+});
+
+test('auth role entry with a non-string label emits type warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: [{ id: 'admin', label: 42 }],
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Auth "roles[].label" should be a string.');
+});
+
+test('auth role entry with a non-string description emits type warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: [{ id: 'admin', description: 42 }],
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Auth "roles[].description" should be a string.');
+});
+
+test('auth role entry with an unknown key emits additional properties warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: [{ id: 'admin', color: 'red' }],
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Auth role entry has an unknown property. Allowed: "id", "label", "description".'
+  );
+});
+
+test('connection tenant shared emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    connections: [
+      {
+        id: 'mongo',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('connection tenant true emits warning - the key was removed with the inverted default', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    connections: [
+      {
+        id: 'mongo',
+        type: 'MongoDBCollection',
+        tenant: true,
+      },
+    ],
+  };
+  testSchema({ components, context });
+  // The raw const error surfaces here for the same reason as the invalid
+  // shape below; buildConnections validateTenant carries the teaching error.
+  expect(mockLogWarn).toHaveBeenCalledWith('"tenant" must be equal to constant');
+});
+
+test('connection tenant with a field object emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    connections: [
+      {
+        id: 'mongo',
+        type: 'MongoDBCollection',
+        tenant: { field: 'organization_id' },
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('connection tenant with an invalid shape emits warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    connections: [
+      {
+        id: 'mongo',
+        type: 'MongoDBCollection',
+        tenant: 'organizationId',
+      },
+    ],
+  };
+  testSchema({ components, context });
+  // The oneOf branch error at the same instance path wins testSchema's
+  // same-path dedup, so the raw const error surfaces instead of the custom
+  // oneOf errorMessage. The focused buildConnections validateTenant error
+  // carries the descriptive message.
+  expect(mockLogWarn).toHaveBeenCalledWith('"tenant" must be equal to constant');
+});
+
+test('request tenant none emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'PageHeaderMenu',
+        requests: [
+          {
+            id: 'request_1',
+            type: 'MongoDBAggregation',
+            connectionId: 'mongo',
+            tenant: 'none',
+          },
+        ],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('request tenant with any other value emits warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'PageHeaderMenu',
+        requests: [
+          {
+            id: 'request_1',
+            type: 'MongoDBAggregation',
+            connectionId: 'mongo',
+            tenant: true,
+          },
+        ],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Request "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection; "none" is the explicit request-level opt-out and "authored" declares the request authors its own tenant clause (audited at runtime).'
+  );
+});
+
+test('request tenant authored emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Box',
+        requests: [
+          {
+            id: 'request_1',
+            type: 'MongoDBAggregation',
+            connectionId: 'mongo',
+            tenant: 'authored',
+          },
+        ],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('websocket tenant none emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    websockets: [
+      {
+        id: 'ws1',
+        type: 'MongoDBChangeStream',
+        connectionId: 'mongo',
+        tenant: 'none',
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('websocket tenant with any other value emits warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    websockets: [
+      {
+        id: 'ws1',
+        type: 'MongoDBChangeStream',
+        connectionId: 'mongo',
+        tenant: 'off',
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Websocket "tenant" only accepts "none" — the tenant wall is declared on the connection, and "none" is the explicit opt-out at the point of use. ("authored" is aggregation-only; change streams are always scoped mechanically.)'
+  );
+});
+
 test('valid slug emits no warnings', () => {
   const cases = ['my-app', 'a', 'a-b-c-1', 'app1', 'a1-b2-c3'];
   cases.forEach((slug) => {
@@ -435,4 +683,159 @@ test('missing lowdefy version schema warning', () => {
   expect(mockLogWarn).toHaveBeenCalledWith(
     'Lowdefy configuration should have required property "lowdefy".'
   );
+});
+
+function pageWithBlockClass(blockClass) {
+  return {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Box',
+        blocks: [{ id: 'box_1', type: 'Box', class: blockClass }],
+      },
+    ],
+  };
+}
+
+const ifOperator = {
+  _if: { test: { _state: 'toggle' }, then: 'bg-red-500', else: 'bg-blue-500' },
+};
+
+test('block class as a string, array of strings or slot object emits no warnings', () => {
+  testSchema({ components: pageWithBlockClass('p-4'), context });
+  testSchema({ components: pageWithBlockClass(['p-4', 'm-2']), context });
+  testSchema({
+    components: pageWithBlockClass({ '.element': 'p-4', '.icon': ['m-2', 'text-lg'] }),
+    context,
+  });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('block class as an operator emits no warnings', () => {
+  testSchema({ components: pageWithBlockClass(ifOperator), context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('block class slot value as an operator emits no warnings', () => {
+  testSchema({ components: pageWithBlockClass({ '.element': ifOperator }), context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('block class array item as an operator emits no warnings', () => {
+  testSchema({ components: pageWithBlockClass(['p-4', ifOperator]), context });
+  testSchema({ components: pageWithBlockClass({ '.element': ['p-4', ifOperator] }), context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('page class as an operator emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [{ id: 'page_1', type: 'Box', class: { '.menu': ifOperator } }],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('block class as a number emits type warning', () => {
+  testSchema({ components: pageWithBlockClass(42), context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Block "class" should be a string, array of strings, object, or operator.'
+  );
+});
+
+test('block class slot value as a number emits type warning', () => {
+  testSchema({ components: pageWithBlockClass({ '.element': 42 }), context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Block "class" slot values should be a string, array of strings, or operator.'
+  );
+});
+
+test('block class slot value as a non-operator object emits type warning', () => {
+  testSchema({ components: pageWithBlockClass({ '.element': { notAnOperator: 'p-4' } }), context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Block "class" slot values should be a string, array of strings, or operator.'
+  );
+});
+
+test('menu item class as an operator or with operator slot values emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    menus: [
+      {
+        id: 'default',
+        links: [
+          { id: 'link_1', type: 'MenuLink', pageId: 'page_1', class: ifOperator },
+          {
+            id: 'group_1',
+            type: 'MenuGroup',
+            class: { '.label': ifOperator },
+            links: [{ id: 'divider_1', type: 'MenuDivider', class: ifOperator }],
+          },
+        ],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test.each([
+  [true],
+  [false],
+  [{}],
+  [{ reportOnly: true }],
+  [{ directives: { 'script-src': ['https://cdn.example.com'], 'upgrade-insecure-requests': [] } }],
+])('config.security.contentSecurityPolicy %j emits no warnings', (contentSecurityPolicy) => {
+  const components = {
+    lowdefy: '1.0.0',
+    config: { security: { contentSecurityPolicy } },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test.each([
+  ['security', 'strict', 'App "config.security" should be an object.'],
+  [
+    'contentSecurityPolicy',
+    { contentSecurityPolicy: 'enforce' },
+    'App "config.security.contentSecurityPolicy" should be a boolean or an object.',
+  ],
+  [
+    'reportOnly',
+    { contentSecurityPolicy: { reportOnly: 'yes' } },
+    'App "config.security.contentSecurityPolicy.reportOnly" should be a boolean.',
+  ],
+  [
+    'directives',
+    { contentSecurityPolicy: { directives: ['script-src'] } },
+    'App "config.security.contentSecurityPolicy.directives" should be an object.',
+  ],
+  [
+    'directive value',
+    { contentSecurityPolicy: { directives: { 'script-src': 'https://cdn.example.com' } } },
+    'App "config.security.contentSecurityPolicy.directives" values should be arrays of source strings.',
+  ],
+  [
+    'directive source',
+    { contentSecurityPolicy: { directives: { 'script-src': [1] } } },
+    'App "config.security.contentSecurityPolicy.directives" sources should be strings.',
+  ],
+])('config.security with an invalid %s emits a warning', (_, security, message) => {
+  const components = {
+    lowdefy: '1.0.0',
+    config: { security },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(message);
+});
+
+test('config.security with an unknown key emits a warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    config: { security: { contentSecurityPolicy: true, frameOptions: 'deny' } },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalled();
 });

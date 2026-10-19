@@ -49,7 +49,7 @@ test('Print and log error with full context', async () => {
     cliVersion: 'cliVersion',
     lowdefyVersion: 'lowdefyVersion',
     command: 'command',
-    disableTelemetry: false,
+    options: { disableTelemetry: false },
   };
   await errorHandler({ context, error });
   const logger = createCliLogger.mock.results[0].value;
@@ -96,7 +96,7 @@ test('Print and log error with starting context', async () => {
   expect(axiosArguments.data.command).toBe(undefined);
 });
 
-test('Do not log error if telemetry is disabled', async () => {
+test('errorHandler does not report the error when options.disableTelemetry is set', async () => {
   const { default: errorHandler } = await import('./errorHandler.js');
   const { default: axios } = await import('axios');
   const { default: createCliLogger } = await import('@lowdefy/logger/cli');
@@ -105,12 +105,24 @@ test('Do not log error if telemetry is disabled', async () => {
     cliVersion: 'cliVersion',
     lowdefyVersion: 'lowdefyVersion',
     command: 'command',
-    disableTelemetry: true,
+    options: { disableTelemetry: true },
   };
   await errorHandler({ context, error });
 
   const logger = createCliLogger.mock.results[0].value;
   expect(logger.error.mock.calls).toEqual([[error]]);
+  expect(axios.request.mock.calls).toEqual([]);
+});
+
+test('errorHandler does not report the error when startUp failed before options were resolved', async () => {
+  const { default: errorHandler } = await import('./errorHandler.js');
+  const { default: axios } = await import('axios');
+  const error = new Error('Test error');
+  const context = {
+    cliVersion: 'cliVersion',
+    commandLineOptions: { disableTelemetry: true },
+  };
+  await errorHandler({ context, error });
   expect(axios.request.mock.calls).toEqual([]);
 });
 
@@ -127,7 +139,7 @@ test('Pass if logError fails', async () => {
   const context = {
     lowdefyVersion: 'lowdefyVersion',
     command: 'command',
-    disableTelemetry: false,
+    options: { disableTelemetry: false },
   };
   await errorHandler({ context, error });
   const logger = createCliLogger.mock.results[0].value;

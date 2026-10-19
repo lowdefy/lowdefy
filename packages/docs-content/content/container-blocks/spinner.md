@@ -150,7 +150,7 @@ Loading orders...
             flex: 0 0 auto
           properties:
             title: Refresh
-            icon: AiOutlineReload
+            icon: refresh
             color: primary
             variant: outlined
             size: small
@@ -239,7 +239,7 @@ Loading orders...
             title: Submit
             color: primary
             variant: solid
-            icon: AiOutlineSend
+            icon: send
           events:
             onClick:
               - id: spinner_btn_loading_set_state
@@ -255,7 +255,7 @@ Loading orders...
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `size` | string | - | Size of the icon spinner. Enum: `small`, `medium`, `large`. |
+| `size` | string \| number | - | Size of the icon spinner: small, medium, large, or a pixel number. |
 
 No events defined.
 

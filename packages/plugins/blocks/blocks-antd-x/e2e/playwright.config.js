@@ -22,5 +22,5 @@ const packageDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
 export default createPlaywrightConfig({
   packageDir,
-  port: 3013,
+  port: 3014,
 });

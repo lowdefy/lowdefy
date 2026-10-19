@@ -31,6 +31,9 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
     "./*": "./dist/*",
     "./blocks": "./dist/blocks.js",
@@ -52,7 +55,7 @@
   "dependencies": {
     "@lowdefy/block-utils": "6.1.0",
     "@lowdefy/helpers": "6.1.0",
-    "dompurify": "3.4.13"
+    "dompurify": "3.4.16"
   },
   "peerDependencies": {
     "react": ">=18",

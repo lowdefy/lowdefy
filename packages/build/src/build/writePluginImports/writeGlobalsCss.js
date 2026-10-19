@@ -16,7 +16,6 @@
 
 import fs from 'fs';
 import path from 'path';
-import { ConfigError } from '@lowdefy/errors';
 import { mergeObjects } from '@lowdefy/helpers';
 import { writeFile } from '@lowdefy/node-utils';
 import collectBlockSourceContent from './collectBlockSourceContent.js';
@@ -70,13 +69,10 @@ function buildThemeVars(tailwindConfig) {
   return objectToThemeVars(merged).join('\n');
 }
 
+// The deprecated public/styles.less is rejected by validateDeprecatedStyles,
+// which runs before the build's error checkpoint - a config fault must not be
+// discovered in the write phase.
 async function writeGlobalsCss({ components, context }) {
-  if (fs.existsSync(path.join(context.directories.config, 'public/styles.less'))) {
-    throw new ConfigError(
-      'public/styles.less is deprecated. Migrate to: (1) "theme" key in lowdefy.yaml for token overrides (recommended), (2) public/styles.css for custom CSS.'
-    );
-  }
-
   const tailwindConfig = components.theme?.tailwind;
   const themeVars = buildThemeVars(tailwindConfig);
 
@@ -106,6 +102,9 @@ async function writeGlobalsCss({ components, context }) {
    the only scan inputs Lowdefy needs. */
 @import "tailwindcss" source(none);
 @import "@lowdefy/layout/grid.css";
+/* Styles for data-* attributes in HTML (data-tag, data-status, …), scoped to
+   HTML that Lowdefy's HtmlComponent enhanced. */
+@import "@lowdefy/block-utils/html.css";
 
 /* Imported CSS file — when this changes, PostCSS re-runs and Tailwind re-scans @source.
    This import is the ONLY recompile trigger in dev: the @source .html files below are

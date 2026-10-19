@@ -21,15 +21,24 @@ import { data, html, valueKey, primaryKey } from '../../schemas/dataOptions.js';
 import {
   disabled,
   autoFocus,
-  variant,
   bordered,
   allowClear,
   sizeSmallDefaultLarge,
 } from '../../schemas/inputProperties.js';
+import {
+  listHeight,
+  maxCount,
+  maxTagCount,
+  placement,
+  popupMatchSelectWidth,
+  prefix,
+  prefixIcon,
+  virtual,
+} from '../../schemas/selectProperties.js';
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons, 'AiOutlineCheck', 'AiOutlineCloseCircle', 'AiOutlineDown'],
+  icons: [...LabelMeta.icons, 'chevron-down', 'clear', 'check', 'close', 'loading'],
   valueType: 'array',
   cssKeys: {
     element: 'The MultipleSelector element.',
@@ -40,14 +49,24 @@ export default {
     extra: 'The MultipleSelector extra content.',
     feedback: 'The MultipleSelector validation feedback.',
     options: 'The MultipleSelector options.',
+    popup: 'The MultipleSelector dropdown popup.',
+    prefixIcon: 'The prefix icon in the MultipleSelector.',
+    removeIcon: 'The remove icon on each selected tag in the MultipleSelector.',
     selectedIcon: 'The selected item icon in the MultipleSelector.',
     suffixIcon: 'The suffix icon in the MultipleSelector.',
   },
   events: {
-    onChange: 'Trigger actions when selection is changed.',
+    onChange: {
+      description: 'Trigger actions when selection is changed.',
+      event: { value: 'The selected values.' },
+    },
     onBlur: 'Trigger action event occurs when selector loses focus.',
     onFocus: 'Trigger action when selector gets focus.',
     onClear: 'Trigger action when selector gets cleared.',
+    onOpenChange: {
+      description: 'Trigger actions when the dropdown opens or closes.',
+      event: { open: 'Whether the dropdown is open.' },
+    },
     onSearch: {
       description: 'Trigger actions when input is changed.',
       event: { value: 'The search input value.' },
@@ -76,9 +95,9 @@ export default {
       },
       clearIcon: {
         ...icon,
-        default: 'AiOutlineCloseCircle',
+        default: 'clear',
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.',
       },
       disabled,
       label,
@@ -88,7 +107,7 @@ export default {
       primaryKey,
       options: {
         default: [],
-        oneOf: [
+        anyOf: [
           {
             type: 'array',
             description:
@@ -188,12 +207,9 @@ export default {
                       description: 'Content title of tag - supports html.',
                     },
                     icon: {
-                      type: ['string', 'object'],
+                      ...icon,
                       description:
-                        'Name of an Ant Design Icon or properties of an Icon block to customize alert icon.',
-                      docs: {
-                        displayType: 'icon',
-                      },
+                        'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize alert icon.',
                     },
                   },
                 },
@@ -202,13 +218,12 @@ export default {
           },
         ],
       },
-      maxTagCount: {
-        type: 'number',
-        description: 'Max tag count to show.',
-      },
+      listHeight,
+      maxCount,
+      maxTagCount,
       placeholder: {
         type: 'string',
-        default: 'Select item',
+        default: 'Select items',
         description: 'Placeholder text inside the block before user selects input.',
       },
       loadingPlaceholder: {
@@ -218,26 +233,42 @@ export default {
       },
       notFoundContent: {
         type: 'string',
-        default: 'not Found',
+        default: 'Not found',
         description: 'Placeholder text to show when list of options are empty.',
+      },
+      placement,
+      popupMatchSelectWidth,
+      prefix,
+      prefixIcon,
+      removeIcon: {
+        ...icon,
+        default: 'close',
+        description:
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize the remove icon on each selected tag.',
       },
       selectedIcon: {
         ...icon,
-        default: 'AiOutlineCheck',
+        default: 'check',
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon showing when a selection is made in the drop-down list.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon showing when a selection is made in the drop-down list.',
       },
       showArrow: {
         type: 'boolean',
         default: true,
-        description: 'Show the suffix icon at the drop-down position of the selector.',
+        description:
+          'Show the suffix icon at the drop-down position of the selector. antd shows the arrow by default; `false` hides it by clearing the suffix icon.',
+      },
+      showSearch: {
+        type: 'boolean',
+        default: true,
+        description: 'Make the selector options searchable.',
       },
       size: sizeSmallDefaultLarge,
       suffixIcon: {
         ...icon,
-        default: 'AiOutlineDown',
+        default: 'chevron-down',
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize at the drop-down position of the selector.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize at the drop-down position of the selector.',
       },
       title: {
         type: 'string',
@@ -245,10 +276,11 @@ export default {
       },
       variant: {
         type: 'string',
-        enum: ['solid', 'outlined', 'filled', 'borderless'],
+        enum: ['solid', 'outlined', 'filled', 'borderless', 'underlined'],
         description:
-          'Tag/input variant. `solid` renders filled colored tags; `outlined` renders outlined colored tags. `filled`/`borderless` are the antd input styles.',
+          'Tag/input variant. `solid` renders filled colored tags; `outlined` renders outlined colored tags. `filled`/`borderless`/`underlined` are the antd input styles.',
       },
+      virtual,
       renderTags: {
         type: 'boolean',
         description:

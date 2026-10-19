@@ -84,7 +84,7 @@ function MenuCell(params) {
     <Icon
       blockId="menucell_trigger_icon"
       events={{}}
-      properties={cellConfig.icon ?? 'AiOutlineMore'}
+      properties={cellConfig.icon ?? 'more-vertical'}
     />
   ) : undefined;
 

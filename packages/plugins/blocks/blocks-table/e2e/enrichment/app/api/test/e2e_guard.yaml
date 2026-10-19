@@ -1,0 +1,37 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# ============================================================================================
+# E2E ONLY. DO NOT COPY api/test/ INTO AN APP.
+# The api/test endpoints delete, overwrite and dump every lead and column. They exist so the
+# enrichment e2e suite can seed and inspect its database, and they are no part of the
+# reference. This guard is their first step: an endpoint refuses every call unless the
+# ENRICHMENT_E2E_SECRET secret (LOWDEFY_SECRET_ENRICHMENT_E2E_SECRET, set only by the e2e
+# Playwright config) is set and the payload's e2eSecret equals it.
+# ============================================================================================
+:if:
+  _not:
+    _and:
+      - _type:
+          type: string
+          on:
+            _secret: ENRICHMENT_E2E_SECRET
+      - _ne:
+          - _secret: ENRICHMENT_E2E_SECRET
+          - ''
+      - _eq:
+          - _payload: e2eSecret
+          - _secret: ENRICHMENT_E2E_SECRET
+:then:
+  - :reject: This endpoint is only for the end-to-end tests.

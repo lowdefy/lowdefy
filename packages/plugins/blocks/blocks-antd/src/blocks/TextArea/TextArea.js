@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 import { Input } from 'antd';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import useRunAfterUpdate from '../../useRunAfterUpdate.js';
@@ -55,12 +56,23 @@ const TextAreaBlock = ({
           return (
             <TextAreaComp
               id={`${blockId}_input`}
-              allowClear={properties.allowClear}
+              allowClear={
+                properties.allowClear && {
+                  clearIcon: (
+                    <components.Icon
+                      blockId={`${blockId}_clearIcon`}
+                      properties={{ name: 'clear', title: '' }}
+                    />
+                  ),
+                }
+              }
               autoFocus={properties.autoFocus}
-              variant={properties.bordered === false ? 'borderless' : properties.variant}
+              variant={
+                properties.bordered === false ? 'borderless' : properties.variant ?? undefined
+              }
               className={classNames.element}
               style={styles.element}
-              disabled={properties.disabled || loading}
+              disabled={getDisabled({ loading, properties })}
               maxLength={properties.maxLength}
               placeholder={properties.placeholder}
               showCount={properties.showCount}
@@ -91,6 +103,9 @@ const TextAreaBlock = ({
               }}
               onPressEnter={() => {
                 methods.triggerEvent({ name: 'onPressEnter' });
+              }}
+              onClear={() => {
+                methods.triggerEvent({ name: 'onClear' });
               }}
             />
           );

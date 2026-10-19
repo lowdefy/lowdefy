@@ -15,13 +15,14 @@
 */
 
 import { Hono } from 'hono';
+import { HTTPException } from 'hono/http-exception';
 import { jest } from '@jest/globals';
 
 import createErrorHandler from './errorHandler.js';
 
-// This is the only test coverage of the hono 500 redaction path: the file here is
-// byte-identical to its `server` and `server-e2e` counterparts, and `server` has no
-// test script at all. Keep the three in sync when changing any of them.
+// The handler here is byte-identical to its `server-e2e` counterpart (and to
+// `server`'s apart from the Sentry capture, which `server` tests separately).
+// Keep the three in sync when changing any of them.
 
 // A string that must never reach a client. It is put on `received` at every
 // level of the cause chain, so a single JSON.stringify search over the body
@@ -51,6 +52,27 @@ function createApp({ basePath = '', context, error, logger }) {
 function createAuthenticationError(message) {
   const error = new Error(message);
   error.name = 'AuthenticationError';
+  error.received = SECRET;
+  return error;
+}
+
+function createAuthorizationError(message) {
+  const error = new Error(message);
+  error.name = 'AuthorizationError';
+  error.received = SECRET;
+  return error;
+}
+
+function createTwoFactorEnrolmentRequiredError(message) {
+  const error = new Error(message);
+  error.name = 'TwoFactorEnrolmentRequiredError';
+  error.received = SECRET;
+  return error;
+}
+
+function createUserError(message) {
+  const error = new Error(message);
+  error.name = 'UserError';
   error.received = SECRET;
   return error;
 }
@@ -103,6 +125,154 @@ test('errorHandler returns text Unauthorized at 401 for an AuthenticationError o
   expect(res.status).toEqual(401);
   expect(await res.text()).toEqual('Unauthorized');
   expect(logger.warn).toHaveBeenCalledTimes(1);
+});
+
+test('errorHandler returns 403 with only name and message for an AuthorizationError on an api path', async () => {
+  const logger = createLogger();
+  const context = { handleError: jest.fn() };
+  const res = await createApp({
+    context,
+    error: createAuthorizationError('Forbidden.'),
+    logger,
+  }).request('/api/request/getUsers');
+
+  expect(res.status).toEqual(403);
+  expect(await res.json()).toEqual({ name: 'AuthorizationError', message: 'Forbidden.' });
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.warn.mock.calls[0][0]).toMatch(/Forbidden: GET \/api\/request\/getUsers/);
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(context.handleError).not.toHaveBeenCalled();
+});
+
+test('errorHandler does not send an AuthorizationError through the redactor', async () => {
+  const res = await createApp({
+    error: createAuthorizationError('Forbidden.'),
+    logger: createLogger(),
+  }).request('/api/request/getUsers');
+
+  const body = await res.json();
+  expect(body['~e']).toBeUndefined();
+  expect(JSON.stringify(body)).not.toContain(SECRET);
+});
+
+test('errorHandler returns text Forbidden at 403 for an AuthorizationError on a page path', async () => {
+  const logger = createLogger();
+  const res = await createApp({
+    error: createAuthorizationError('Forbidden.'),
+    logger,
+  }).request('/home');
+
+  expect(res.status).toEqual(403);
+  expect(await res.text()).toEqual('Forbidden');
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.error).not.toHaveBeenCalled();
+});
+
+test('errorHandler returns 403 with only name and message for a TwoFactorEnrolmentRequiredError on an api path', async () => {
+  const logger = createLogger();
+  const context = { handleError: jest.fn() };
+  const res = await createApp({
+    context,
+    error: createTwoFactorEnrolmentRequiredError('Two-factor enrolment required.'),
+    logger,
+  }).request('/api/request/getUsers');
+
+  expect(res.status).toEqual(403);
+  expect(await res.json()).toEqual({
+    name: 'TwoFactorEnrolmentRequiredError',
+    message: 'Two-factor enrolment required.',
+  });
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.warn.mock.calls[0][0]).toMatch(/Two-factor enrolment required/);
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(context.handleError).not.toHaveBeenCalled();
+});
+
+test('errorHandler does not send a TwoFactorEnrolmentRequiredError through the redactor', async () => {
+  const res = await createApp({
+    error: createTwoFactorEnrolmentRequiredError('Two-factor enrolment required.'),
+    logger: createLogger(),
+  }).request('/api/request/getUsers');
+
+  const body = await res.json();
+  expect(body['~e']).toBeUndefined();
+});
+
+test('errorHandler returns text at 403 for a TwoFactorEnrolmentRequiredError on a page path', async () => {
+  const logger = createLogger();
+  const context = { handleError: jest.fn() };
+  const res = await createApp({
+    context,
+    error: createTwoFactorEnrolmentRequiredError('Two-factor enrolment required.'),
+    logger,
+  }).request('/home');
+
+  expect(res.status).toEqual(403);
+  expect(await res.text()).toEqual('Two-factor enrolment required');
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(context.handleError).not.toHaveBeenCalled();
+});
+
+test('errorHandler returns 400 with only name and message for a UserError on an api path', async () => {
+  const logger = createLogger();
+  const context = { handleError: jest.fn() };
+  const res = await createApp({
+    context,
+    error: createUserError('Payload for endpoint "x" does not match its payloadSchema.'),
+    logger,
+  }).request('/api/endpoints/x', { method: 'POST' });
+
+  expect(res.status).toEqual(400);
+  expect(await res.json()).toEqual({
+    name: 'UserError',
+    message: 'Payload for endpoint "x" does not match its payloadSchema.',
+  });
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.warn.mock.calls[0][0]).toMatch(/Bad request: POST \/api\/endpoints\/x/);
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(context.handleError).not.toHaveBeenCalled();
+});
+
+test('errorHandler does not send a UserError through the redactor', async () => {
+  const res = await createApp({
+    error: createUserError('Bad payload.'),
+    logger: createLogger(),
+  }).request('/api/endpoints/x');
+
+  const body = await res.json();
+  expect(body['~e']).toBeUndefined();
+  expect(JSON.stringify(body)).not.toContain(SECRET);
+});
+
+test('errorHandler returns text Bad Request at 400 for a UserError on a page path', async () => {
+  const logger = createLogger();
+  const res = await createApp({
+    error: createUserError('Bad payload.'),
+    logger,
+  }).request('/home');
+
+  expect(res.status).toEqual(400);
+  expect(await res.text()).toEqual('Bad Request');
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.error).not.toHaveBeenCalled();
+});
+
+test('errorHandler sends an HTTPException response as-is with one warning and no error log', async () => {
+  const logger = createLogger();
+  const error = new HTTPException(404, {
+    res: Response.json(
+      { jsonrpc: '2.0', error: { code: -32000, message: 'Unsupported protocol version' } },
+      { status: 404 }
+    ),
+  });
+  const res = await createApp({ error, logger }).request('/api/mcp', { method: 'POST' });
+  expect(res.status).toEqual(404);
+  expect(await res.json()).toEqual({
+    jsonrpc: '2.0',
+    error: { code: -32000, message: 'Unsupported protocol version' },
+  });
+  expect(logger.warn).toHaveBeenCalledWith('404 answered by the route: POST /api/mcp');
+  expect(logger.error).not.toHaveBeenCalled();
 });
 
 test('errorHandler returns 500 with the serialized error envelope on an api path', async () => {

@@ -19,7 +19,6 @@ import { headlessUser } from './headlessUser.js';
 
 test('resolveHeadlessUser returns the default roleless user when no user is given', () => {
   expect(resolveHeadlessUser({})).toEqual({
-    sub: 'lowdefy-headless',
     id: 'lowdefy-headless',
     name: 'Lowdefy Headless',
     roles: [],
@@ -32,7 +31,6 @@ test('resolveHeadlessUser returns the default roleless user when user is null', 
 
 test('resolveHeadlessUser merges roles over the default, keeping the default id and name', () => {
   expect(resolveHeadlessUser({ user: { roles: ['user-admin'] } })).toEqual({
-    sub: 'lowdefy-headless',
     id: 'lowdefy-headless',
     name: 'Lowdefy Headless',
     roles: ['user-admin'],
@@ -45,7 +43,6 @@ test('resolveHeadlessUser keeps caller fields the app reads, like email and prof
       user: { id: 'agent', email: 'agent@example.com', profile: { name: 'Agent' } },
     })
   ).toEqual({
-    sub: 'lowdefy-headless',
     id: 'agent',
     name: 'Lowdefy Headless',
     email: 'agent@example.com',
@@ -58,7 +55,6 @@ test('resolveHeadlessUser does not mutate the default user between calls', () =>
   resolveHeadlessUser({ user: { id: 'first', roles: ['admin'] } });
 
   expect(resolveHeadlessUser({})).toEqual({
-    sub: 'lowdefy-headless',
     id: 'lowdefy-headless',
     name: 'Lowdefy Headless',
     roles: [],

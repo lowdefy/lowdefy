@@ -41,5 +41,6 @@ function _diff({ params, location, methodName }) {
 }
 
 _diff.dynamic = false;
+_diff.tracking = { kind: 'pure' };
 
 export default _diff;

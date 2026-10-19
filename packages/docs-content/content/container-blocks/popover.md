@@ -669,7 +669,7 @@ This popover uses SetState to track that it was opened.
         title: Click to toggle
         color: primary
         variant: solid
-        icon: AiOutlineBell
+        icon: bell
 - id: popover_event_state
   type: Popover
   layout:
@@ -751,7 +751,7 @@ jane.doe@example.com
         title: View Profile
         color: primary
         variant: solid
-        icon: AiOutlineUser
+        icon: user
 - id: popover_rich_actions
   type: Popover
   layout:
@@ -772,7 +772,7 @@ jane.doe@example.com
               type: Button
               properties:
                 title: Edit
-                icon: AiOutlineEdit
+                icon: edit
                 color: primary
                 variant: text
                 block: true
@@ -780,7 +780,7 @@ jane.doe@example.com
               type: Button
               properties:
                 title: Duplicate
-                icon: AiOutlineCopy
+                icon: copy
                 color: default
                 variant: text
                 block: true
@@ -788,7 +788,7 @@ jane.doe@example.com
               type: Button
               properties:
                 title: Delete
-                icon: AiOutlineDelete
+                icon: delete
                 color: danger
                 variant: text
                 block: true
@@ -799,7 +799,7 @@ jane.doe@example.com
         flex: 0 0 auto
       properties:
         title: More
-        icon: AiOutlineEllipsis
+        icon: more
         color: default
         variant: outlined
 ```
@@ -922,7 +922,7 @@ The zIndexPopup theme token sets the popover z-index at the theme level (default
   properties:
     title: Title Border
     theme:
-      titleBorderBottom: 1px solid
+      titleBorderBottom: "1px solid #d9d9d9"
       titleMarginBottom: 12
       innerContentPadding: 8px 0
   slots:
@@ -983,7 +983,7 @@ The content CSS key targets the popover content area. Here it adds a gray backgr
   layout:
     flex: 0 0 auto
   class:
-    element: cursor-pointer
+    .element: cursor-pointer
   properties:
     title: Element CSS Key
     trigger: click
@@ -1009,7 +1009,7 @@ The content CSS key targets the popover content area. Here it adds a gray backgr
   layout:
     flex: 0 0 auto
   class:
-    inner: shadow-xl rounded-xl
+    .inner: shadow-xl rounded-xl
   properties:
     title: Inner CSS Key
   slots:
@@ -1034,7 +1034,7 @@ The content CSS key targets the popover content area. Here it adds a gray backgr
   layout:
     flex: 0 0 auto
   class:
-    title: font-bold text-blue-600 border-b border-border pb-2
+    .title: font-bold text-blue-600 border-b border-border pb-2
   properties:
     title: Title CSS Key
   slots:
@@ -1059,7 +1059,7 @@ The content CSS key targets the popover content area. Here it adds a gray backgr
   layout:
     flex: 0 0 auto
   class:
-    content: bg-bg-layout p-4 rounded-md
+    .content: bg-bg-layout p-4 rounded-md
   properties:
     title: Content CSS Key
   slots:
@@ -1114,10 +1114,9 @@ Product Manager
               layout:
                 flex: 0 0 auto
               properties:
-                icon: AiOutlineUser
+                icon: user
                 size: 48
-                color: "#fff"
-                backgroundColor: "#1677ff"
+                color: "#1677ff"
             - id: popover_usercard_info
               type: Box
               layout:
@@ -1158,7 +1157,7 @@ Product Manager
                 flex: 1 1 0
               properties:
                 title: Message
-                icon: AiOutlineMail
+                icon: mail
                 color: primary
                 variant: solid
                 size: small
@@ -1175,7 +1174,7 @@ Product Manager
                 flex: 1 1 0
               properties:
                 title: View Profile
-                icon: AiOutlineUser
+                icon: user
                 color: default
                 variant: outlined
                 size: small
@@ -1199,8 +1198,7 @@ Product Manager
             flex: 0 0 auto
           properties:
             content: SC
-            color: "#fff"
-            backgroundColor: "#1677ff"
+            color: "#1677ff"
         - id: popover_usercard_trigger_name
           type: Paragraph
           layout:
@@ -1239,7 +1237,7 @@ Product Manager
               type: Button
               properties:
                 title: New Document
-                icon: AiOutlineFileAdd
+                icon: FilePlus
                 color: primary
                 variant: text
                 block: true
@@ -1254,7 +1252,7 @@ Product Manager
               type: Button
               properties:
                 title: Upload File
-                icon: AiOutlineUpload
+                icon: upload
                 color: default
                 variant: text
                 block: true
@@ -1273,7 +1271,7 @@ Product Manager
               type: Button
               properties:
                 title: Import from URL
-                icon: AiOutlineLink
+                icon: link
                 color: default
                 variant: text
                 block: true
@@ -1288,7 +1286,7 @@ Product Manager
               type: Button
               properties:
                 title: Use Template
-                icon: AiOutlineAppstore
+                icon: grid
                 color: default
                 variant: text
                 block: true
@@ -1299,7 +1297,7 @@ Product Manager
         flex: 0 0 auto
       properties:
         title: Create New
-        icon: AiOutlinePlus
+        icon: add
         color: primary
         variant: solid
 ```
@@ -1367,7 +1365,7 @@ You will receive a warning notification when 80% of the budget is used.
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineQuestionCircle
+            name: help
             color: "#8c8c8c"
             size: 18
     - id: popover_help_input
@@ -1382,17 +1380,22 @@ You will receive a warning notification when 80% of the budget is used.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `title` | string | - | Title of the card. |
+| `arrow` | boolean \| object | `true` | Whether to show the arrow. Set `{ pointAtCenter: true }` to point the arrow at the center of the target. |
+| `arrow.pointAtCenter` | boolean | `false` | Whether the arrow is pointed at the center of target. |
+| `destroyOnHidden` | boolean | `false` | Unmount the blocks inside the popover when it closes, so they mount again each time it opens. |
+| `title` | string | - | Title of the card - supports html. |
 | `color` | string | - | Popover background color. |
 | `defaultOpen` | boolean | `false` | Whether the popover is open by default. |
 | `autoAdjustOverflow` | boolean | `true` | Whether to adjust popup placement automatically when popup is off screen |
-| `placement` | string | `"bottom"` | Placement of the popover. Enum: `top`, `topLeft`, `topRight`, `left`, `leftTop`, `leftBottom`, `right`, `rightTop`, `rightBottom`, `bottom`, `bottomLeft`, `bottomRight`. |
-| `trigger` | string | `"hover"` | Trigger mode which executes the popover. Enum: `hover`, `click`, `focus`. |
+| `placement` | string | `"top"` | Placement of the popover. Enum: `top`, `topLeft`, `topRight`, `left`, `leftTop`, `leftBottom`, `right`, `rightTop`, `rightBottom`, `bottom`, `bottomLeft`, `bottomRight`. |
+| `trigger` | string | `"hover"` | Trigger mode which executes the popover. `contextMenu` opens the popover on right click. Enum: `hover`, `click`, `focus`, `contextMenu`. |
 | `zIndex` | number | - | Z-index of the popover. |
-| `overlayInnerStyle` | object | - | Style of overlay inner div. |
-| `mouseEnterDelay` | number | `0.1` | Delay in milliseconds, before tooltip is shown on mouse enter. |
-| `mouseLeaveDelay` | number | `0.1` | Delay in milliseconds, before tooltip is hidden on mouse leave. |
+| `overlayInnerStyle` | object | - | Style of overlay inner div. Prefer `style.inner`. |
+| `mouseEnterDelay` | number | `0.1` | Delay in seconds, before the popover is shown on mouse enter. |
+| `mouseLeaveDelay` | number | `0.1` | Delay in seconds, before the popover is hidden on mouse leave. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design popover tokens](https://ant.design/components/popover#design-token). |
+| `theme.width` | number \| string | - | Width of the popover. |
+| `theme.minWidth` | number \| string | - | Minimum width of the popover. |
 | `theme.titleMinWidth` | number \| string | `177` | Minimum width of the popover when it has a title. |
 | `theme.zIndexPopup` | number | `1030` | Z-index of the popover. |
 | `theme.innerPadding` | number \| string | `12` | Padding inside the popover content area. |
@@ -1405,7 +1408,7 @@ You will receive a warning notification when 80% of the budget is used.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onOpenChange` | \- | Trigger actions when visibility of the tooltip card is changed. |
+| `onOpenChange` | `{ open }` | Trigger actions when visibility of the popover card is changed. |
 
 | Key | Target |
 | --- | --- |

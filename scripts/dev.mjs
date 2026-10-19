@@ -22,6 +22,9 @@
     pnpm dev                                                    # app/ with defaults
     pnpm dev --config-directory /path/to/app --log-level debug  # external app
     pnpm dev --no-open --port 3001                              # custom port, no browser
+    pnpm dev --dev-directory _server/dev-fixture                # a second copy beside _server/dev
+
+  LOWDEFY_DEV_PORT (set by the Lowdefy hub) outranks --port and binds strictly.
 
   How it works:
     1. Builds the monorepo (pnpm build:turbo)
@@ -42,24 +45,38 @@ import scanPackages from './lib/scanPackages.mjs';
 import rewriteDeps from './lib/rewriteDeps.mjs';
 import addPlugins, { readLowdefyYaml } from './lib/addPlugins.mjs';
 import createWorkspace from './lib/createWorkspace.mjs';
+import ownedServerEnv from './lib/ownedServerEnv.mjs';
 
 const SERVER_DEV_DIR = path.join(REPO_ROOT, 'packages/servers/server-dev');
 
 // -- Arg parsing --
 
-const { configDirectory, logLevel, skipBuild, values: args } = parse({
+const {
+  configDirectory,
+  logLevel,
+  skipBuild,
+  values: args,
+} = parse({
   open: { type: 'boolean', default: false },
   port: { type: 'string', default: '3000' },
+  'dev-directory': { type: 'string', default: '_server/dev' },
   watch: { type: 'string', multiple: true, default: [] },
   'watch-ignore': { type: 'string', multiple: true, default: [] },
 });
 
+// The Lowdefy hub allocates each managed server's port and sets it here. As in
+// `lowdefy dev`, it outranks --port (dev scripts often hard-code one) and is
+// bound strictly: a hub server that moved port would answer for another app.
+const hubPort = process.env.LOWDEFY_DEV_PORT;
+const hubAllocated = typeof hubPort === 'string' && hubPort !== '';
 const openBrowser = args['open'];
-const port = args['port'];
+const port = hubAllocated ? hubPort : args['port'];
 const watchPaths = args['watch'];
 const watchIgnorePaths = args['watch-ignore'];
 
-const devDir = path.join(REPO_ROOT, '_server/dev');
+// A test harness serving its own fixture app passes another directory, so it
+// never replaces the copy a developer's `pnpm app:dev` is running from.
+const devDir = path.resolve(REPO_ROOT, args['dev-directory']);
 
 console.log('Lowdefy dev');
 console.log(`  Config directory: ${configDirectory}`);
@@ -105,7 +122,7 @@ logger.info({ spin: 'succeed' }, `Found ${packageMap.size} @lowdefy/* packages.`
 // -- Step 5: Rewrite deps + add pnpm.overrides --
 
 logger.info({ spin: 'start' }, 'Rewriting package.json files with link: paths...');
-rewriteDeps({ targetDir: devDir, packageMap, repoRoot: REPO_ROOT });
+rewriteDeps({ sourceDir: SERVER_DEV_DIR, targetDir: devDir, packageMap });
 logger.info({ spin: 'succeed' }, 'Rewrote package.json files.');
 
 // -- Step 6: Handle custom plugins from lowdefy.yaml --
@@ -115,7 +132,7 @@ addPlugins({ configDirectory, targetDir: devDir, logger });
 // -- Step 7: Create isolated workspace --
 
 logger.info({ spin: 'start' }, 'Creating isolated pnpm workspace...');
-createWorkspace({ targetDir: devDir });
+createWorkspace({ targetDir: devDir, configDirectory });
 logger.info({ spin: 'succeed' }, 'Created isolated pnpm workspace.');
 
 // -- Step 8: Install dependencies --
@@ -130,11 +147,15 @@ logger.info({ spin: 'start' }, 'Starting dev server...');
 
 const env = {
   ...process.env,
+  ...ownedServerEnv(),
   LOWDEFY_DIRECTORY_CONFIG: configDirectory,
   LOWDEFY_LOG_LEVEL: logLevel,
   LOWDEFY_SERVER_DEV_OPEN_BROWSER: openBrowser ? 'true' : 'false',
   PORT: port,
 };
+if (hubAllocated) {
+  env.LOWDEFY_SERVER_DEV_STRICT_PORT = 'true';
+}
 
 // Merge CLI --watch/--watch-ignore with cli.watch/cli.watchIgnore from lowdefy.yaml
 const yamlForCli = readLowdefyYaml(configDirectory);
@@ -166,9 +187,12 @@ if (watchIgnorePaths.length > 0) {
   env.LOWDEFY_SERVER_DEV_WATCH_IGNORE = JSON.stringify(watchIgnorePaths);
 }
 
-const child = spawn('node', ['manager/run.mjs'], {
+// node itself, no wrapper between this script and the manager. This script
+// holds the manager's stdin and never writes to it: the pipe closes when this
+// script dies, however it dies, and the manager exits on that.
+const child = spawn(process.execPath, ['manager/run.mjs'], {
   cwd: devDir,
-  stdio: ['ignore', 'pipe', 'pipe'],
+  stdio: ['pipe', 'pipe', 'pipe'],
   env,
 });
 
@@ -192,7 +216,7 @@ child.on('exit', (code) => {
 });
 
 // Forward signals to child
-for (const signal of ['SIGINT', 'SIGTERM']) {
+for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
   process.on(signal, () => {
     child.kill(signal);
   });

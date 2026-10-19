@@ -61,5 +61,11 @@ function _jsonata({ params, location, methodName }) {
 }
 
 _jsonata.dynamic = true;
+// $now(), $millis() and $random() read the clock or randomness.
+_jsonata.tracking = ({ params }) => {
+  const expression = type.isArray(params) ? params[1] : params?.expr;
+  const volatile = type.isString(expression) && /\$(now|millis|random)\s*\(/.test(expression);
+  return { kind: volatile ? 'volatile' : 'pure' };
+};
 
 export default _jsonata;

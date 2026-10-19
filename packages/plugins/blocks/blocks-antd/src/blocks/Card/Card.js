@@ -16,9 +16,13 @@
 
 import React from 'react';
 import { Card } from 'antd';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { isEventFromDomDescendant, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
+
+// Compact keeps the header inset in line with the body, so titles and content stay aligned.
+const headerPadding = { compact: 12 };
+const bodyPadding = { compact: 12, none: 0 };
 
 const CardBlock = ({
   blockId,
@@ -32,23 +36,36 @@ const CardBlock = ({
   <Card
     id={blockId}
     title={content.title ? content.title() : renderHtml({ html: properties.title, methods })}
-    variant={properties.bordered === false ? 'borderless' : properties.variant}
+    variant={properties.bordered === false ? 'borderless' : properties.variant ?? undefined}
+    actions={content.actions && [content.actions()]}
     cover={content.cover && content.cover()}
     extra={content.extra && content.extra()}
     hoverable={properties.hoverable}
-    size={properties.size}
+    loading={properties.loading}
+    // antd 6 renamed the `default` size to `medium`.
+    size={properties.size === 'default' ? 'medium' : properties.size}
     type={properties.inner ? 'inner' : null}
-    onClick={() => methods.triggerEvent({ name: 'onClick' })}
+    onClick={(event) => {
+      if (isEventFromDomDescendant(event)) methods.triggerEvent({ name: 'onClick' });
+    }}
     className={classNames.element}
     classNames={{
       header: classNames.header,
+      title: classNames.title,
       body: classNames.body,
       cover: classNames.cover,
       actions: classNames.actions,
       extra: classNames.extra,
     }}
     style={{ outline: 'none', cursor: events.onClick && 'pointer', ...styles.element }}
-    styles={{ header: styles.header, body: styles.body }}
+    styles={{
+      header: { paddingInline: headerPadding[properties.padding], ...styles.header },
+      title: styles.title,
+      body: { padding: bodyPadding[properties.padding], ...styles.body },
+      cover: styles.cover,
+      actions: styles.actions,
+      extra: styles.extra,
+    }}
   >
     {content.content && content.content()}
   </Card>

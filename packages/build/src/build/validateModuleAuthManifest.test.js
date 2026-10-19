@@ -1,0 +1,229 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import validateModuleAuthManifest from './validateModuleAuthManifest.js';
+
+test('validateModuleAuthManifest passes when auth is undefined', () => {
+  expect(() => validateModuleAuthManifest({ auth: undefined, entryId: 'crm' })).not.toThrow();
+});
+
+test('validateModuleAuthManifest passes a full valid auth section', () => {
+  const auth = {
+    hooks: [
+      { point: 'user.create.before', endpoint: 'link-contact-on-signup' },
+      { point: 'email.verified', endpoint: 'link-contact-on-signup' },
+    ],
+    pages: {
+      signIn: 'login',
+      signUp: 'signup',
+      error: 'error',
+      forgotPassword: 'forgot-password',
+      resetPassword: 'reset-password',
+      verifyEmail: 'verify-email',
+    },
+    public: ['accept-invitation'],
+  };
+  expect(() => validateModuleAuthManifest({ auth, entryId: 'crm' })).not.toThrow();
+});
+
+test('validateModuleAuthManifest throws when auth is not an object', () => {
+  expect(() => validateModuleAuthManifest({ auth: ['hooks'], entryId: 'crm' })).toThrow(
+    'Module "crm" manifest "auth" must be an object.'
+  );
+});
+
+test('validateModuleAuthManifest throws on an unknown auth key', () => {
+  expect(() =>
+    validateModuleAuthManifest({ auth: { authPages: { signIn: 'login' } }, entryId: 'crm' })
+  ).toThrow(
+    'Module "crm" manifest "auth" has unknown key "authPages". Allowed keys are: agents, api, hooks, pages, public, websockets.'
+  );
+});
+
+test('validateModuleAuthManifest throws when hooks is not an array', () => {
+  expect(() =>
+    validateModuleAuthManifest({
+      auth: { hooks: { point: 'user.create.before', endpoint: 'link' } },
+      entryId: 'crm',
+    })
+  ).toThrow('Module "crm" manifest "auth.hooks" must be an array.');
+});
+
+test('validateModuleAuthManifest throws when a hook entry is missing endpoint', () => {
+  expect(() =>
+    validateModuleAuthManifest({
+      auth: { hooks: [{ point: 'user.create.before' }] },
+      entryId: 'crm',
+    })
+  ).toThrow(
+    'Module "crm" manifest "auth.hooks" entries must be objects with string "point" and "endpoint" properties.'
+  );
+});
+
+test('validateModuleAuthManifest throws when a hook entry is missing point', () => {
+  expect(() =>
+    validateModuleAuthManifest({
+      auth: { hooks: [{ endpoint: 'link-contact' }] },
+      entryId: 'crm',
+    })
+  ).toThrow(
+    'Module "crm" manifest "auth.hooks" entries must be objects with string "point" and "endpoint" properties.'
+  );
+});
+
+test('validateModuleAuthManifest throws when a hook entry uses endpointId instead of endpoint', () => {
+  expect(() =>
+    validateModuleAuthManifest({
+      auth: {
+        hooks: [{ point: 'user.create.before', endpoint: 'link', endpointId: 'crm/link' }],
+      },
+      entryId: 'crm',
+    })
+  ).toThrow(
+    'Module "crm" manifest "auth.hooks" entry has unknown key "endpointId". Allowed keys are: point, endpoint.'
+  );
+});
+
+test('validateModuleAuthManifest throws when pages is not an object', () => {
+  expect(() => validateModuleAuthManifest({ auth: { pages: ['login'] }, entryId: 'crm' })).toThrow(
+    'Module "crm" manifest "auth.pages" must be an object.'
+  );
+});
+
+test('validateModuleAuthManifest throws on an unknown authPages role', () => {
+  expect(() =>
+    validateModuleAuthManifest({ auth: { pages: { logIn: 'login' } }, entryId: 'crm' })
+  ).toThrow(
+    'Module "crm" manifest "auth.pages" has unknown role "logIn". Valid roles are: signIn, signUp, error, forgotPassword, resetPassword, verifyEmail, twoFactor, twoFactorEnrol, acceptInvitation, magicLink.'
+  );
+});
+
+test('validateModuleAuthManifest passes a module manifest declaring auth.pages.twoFactor', () => {
+  expect(() =>
+    validateModuleAuthManifest({
+      auth: { pages: { twoFactor: 'two-factor-challenge' } },
+      entryId: 'crm',
+    })
+  ).not.toThrow();
+});
+
+// A module ships the magic-link landing page and declares the role for it, the
+// same way it declares twoFactor; the app need not know the page exists.
+test('validateModuleAuthManifest passes a module manifest declaring auth.pages.magicLink', () => {
+  expect(() =>
+    validateModuleAuthManifest({
+      auth: { pages: { magicLink: 'magic-link' } },
+      entryId: 'crm',
+    })
+  ).not.toThrow();
+});
+
+test('validateModuleAuthManifest passes a module manifest declaring auth.pages.twoFactorEnrol', () => {
+  expect(() =>
+    validateModuleAuthManifest({
+      auth: { pages: { twoFactorEnrol: '/enrol' } },
+      entryId: 'crm',
+    })
+  ).not.toThrow();
+});
+
+test('validateModuleAuthManifest throws when a role value is not a string', () => {
+  expect(() =>
+    validateModuleAuthManifest({ auth: { pages: { signIn: ['login'] } }, entryId: 'crm' })
+  ).toThrow('Module "crm" manifest "auth.pages.signIn" must be a page id string.');
+});
+
+test('validateModuleAuthManifest throws when public is not an array', () => {
+  expect(() =>
+    validateModuleAuthManifest({ auth: { public: 'accept-invitation' }, entryId: 'crm' })
+  ).toThrow('Module "crm" manifest "auth.public" must be an array of page ids.');
+});
+
+test('validateModuleAuthManifest throws when a public entry is not a string', () => {
+  expect(() =>
+    validateModuleAuthManifest({ auth: { public: [{ id: 'accept-invitation' }] }, entryId: 'crm' })
+  ).toThrow('Module "crm" manifest "auth.public" entries must be page id strings.');
+});
+
+describe.each([
+  ['agents', 'agent', 'ClaudeAgent'],
+  ['api', 'endpoint', 'Api'],
+  ['websockets', 'websocket', 'Channel'],
+])('validateModuleAuthManifest auth.%s', (entity, label, itemType) => {
+  test(`passes public ${label}s the module ships`, () => {
+    expect(() =>
+      validateModuleAuthManifest({
+        auth: { [entity]: { public: ['status'] } },
+        entryId: 'crm',
+        [entity]: [{ id: 'status', type: itemType }],
+      })
+    ).not.toThrow();
+  });
+
+  test('throws when it is not an object', () => {
+    expect(() =>
+      validateModuleAuthManifest({ auth: { [entity]: ['status'] }, entryId: 'crm' })
+    ).toThrow(`Module "crm" manifest "auth.${entity}" must be an object.`);
+  });
+
+  test('throws on an unknown key', () => {
+    expect(() =>
+      validateModuleAuthManifest({ auth: { [entity]: { protected: ['status'] } }, entryId: 'crm' })
+    ).toThrow(
+      `Module "crm" manifest "auth.${entity}" has unknown key "protected". Allowed keys are: public.`
+    );
+  });
+
+  test('throws when public is not an array', () => {
+    expect(() =>
+      validateModuleAuthManifest({ auth: { [entity]: { public: 'status' } }, entryId: 'crm' })
+    ).toThrow(`Module "crm" manifest "auth.${entity}.public" must be an array of ${label} ids.`);
+  });
+
+  test('throws when a public entry is not a string', () => {
+    expect(() =>
+      validateModuleAuthManifest({
+        auth: { [entity]: { public: [{ id: 'status' }] } },
+        entryId: 'crm',
+      })
+    ).toThrow(`Module "crm" manifest "auth.${entity}.public" entries must be ${label} id strings.`);
+  });
+
+  test(`throws when a public ${label} is not one the module ships`, () => {
+    expect(() =>
+      validateModuleAuthManifest({
+        auth: { [entity]: { public: ['statuss'] } },
+        entryId: 'crm',
+        [entity]: [{ id: 'status', type: itemType }],
+      })
+    ).toThrow(
+      `Module "crm" manifest "auth.${entity}.public" lists "statuss", but the module ships no ${label} with that id.`
+    );
+  });
+});
+
+test('validateModuleAuthManifest names auth.agents.public for an agent listed under auth.api.public', () => {
+  expect(() =>
+    validateModuleAuthManifest({
+      agents: [{ id: 'concierge', type: 'ClaudeAgent' }],
+      api: [{ id: 'status', type: 'Api' }],
+      auth: { api: { public: ['concierge'] } },
+      entryId: 'crm',
+    })
+  ).toThrow(
+    'Module "crm" manifest "auth.api.public" lists "concierge", but the module ships no endpoint with that id. "concierge" is one of the module\'s agents: list it under "auth.agents.public".'
+  );
+});

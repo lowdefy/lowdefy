@@ -1,3 +1,4 @@
+{% raw %}
 Lowdefy can render branded notification emails from config. You define a notification's content once in a `notifications:` section — as a template with interpolated properties — and render it from an API routine with the `RenderNotification` step. Rendering is all the framework does: **storing a notification, deduplicating, sending the email, and tracking delivery are composed in your API routines**, either by hand or with a notifications module.
 
 This split is deliberate. Rendering an email safely (turning template properties and data into HTML, with a guarantee that user data can never inject links or markup) and composing link URLs are the two things config alone cannot do, so they live in the framework. Everything else — inserting a record, sending, retrying — is ordinary [requests](/connections-and-requests) and [API routines](/lowdefy-api), which you already have. A consequence worth knowing: because storing is just a request and sending is just a request, notifications work with any database and any email provider Lowdefy connects to.
@@ -51,13 +52,38 @@ Modules can ship notification templates: `module.lowdefy.yaml` accepts a `notifi
 
 Template property strings interpolate against the render data with [Nunjucks](https://mozilla.github.io/nunjucks/) — `{{ task.title }}` just works, including `{% if %}` conditionals. This applies inside `notifications:` properties only.
 
-Interpolated values are **inert** — they can never carry markup or links. A task title of `[click here](https://evil.example)` renders as literal text, not a link. Only the markdown you write in the template formats; the data you interpolate is escaped. This closes the injection risk of putting user data into a branded email.
+Interpolated values are **inert** — they can never carry markup or links unless you mark them with the `markdown` filter (below). A task title of `[click here](https://evil.example)` renders as literal text, not a link. Only the markdown you write in the template formats; the data you interpolate is escaped. This closes the injection risk of putting user data into a branded email.
 
 There is no operator evaluation inside template properties — they are data templates, not operator config. Build-time operators like [`_ref`](/references-and-templates) still work as everywhere else.
 
+#### Markdown the app wrote
+
+When a value is markdown your app wrote on purpose — a release note body, a templated summary — mark it with the `markdown` filter so it renders as headings, lists, links and images:
+
+```yaml
+properties:
+  subject: '{{ title }}'
+  message: "{{ intro }}\n\n{{ body | markdown }}"
+```
+
+`intro` stays escaped; `body` renders as markdown. Use the filter only on markdown your app itself wrote, never on text a user typed: a filtered value can carry links and images into the email. Raw HTML stays escaped even in a filtered value, so a `<script>` tag still prints as text. Images render no wider than the email column. Outside markdown properties the filter changes nothing.
+
 ### Links
 
-Links live under `data.links` (and inside the arrays a template declares, like `data.actions`), supplied as Lowdefy-native `{ pageId, urlQuery }` objects. The `RenderNotification` step resolves them to full URLs at render time — see [Rendering notifications as a routine step](/lowdefy-api#rendering-notifications-as-a-routine-step). A link that is already an absolute URL string passes through unchanged.
+Links live under `data.links` (and inside the arrays a template declares, like `data.actions`), supplied as Lowdefy-native `{ pageId, urlQuery, pathParams }` objects. The `RenderNotification` step resolves them to full URLs at render time — see [Rendering notifications as a routine step](/lowdefy-api#rendering-notifications-as-a-routine-step). A link that is already an absolute URL string passes through unchanged.
+
+A link to a page with a [`path`](/page-paths) gives the values of its placeholders in `pathParams`, as the `Link` action does:
+
+```yaml
+links:
+  button:
+    pageId: ticket
+    pathParams:
+      space: support
+      ticket_id: T-001
+```
+
+For a page with `path: tickets/{space}/{ticket_id}`, this renders as `https://myapp.com/tickets/support/T-001`. Every placeholder needs a value, or rendering fails with an error naming the page and the placeholder. The step resolves links in a copy of the item, so the item you store keeps the original `{ pageId, urlQuery, pathParams }` link, and the app can open it in the browser with a `Link` action, or from a landing page.
 
 ## Built-in templates
 
@@ -151,3 +177,4 @@ That pipeline is about sixty lines of routine YAML, and you own every choice in 
 ## Previewing emails
 
 The [`lowdefy emails`](/cli#emails) CLI command renders every notification from its `testData` and opens [React Email](https://react.email/)'s preview server, so you can iterate on templates without sending real mail. It warns when a template renders a data key that your `testData` is missing. The preview has no server URL, so a relative `logo` falls back to the `companyName` text header there.
+{% endraw %}

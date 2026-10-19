@@ -87,4 +87,18 @@ test.describe('Search Block', () => {
     const modal = page.locator('.ant-modal').first();
     await expect(modal).toBeVisible();
   });
+
+  // ============================================
+  // THEME
+  // ============================================
+
+  test('applies theme tokens to the trigger button and the modal input', async ({ page }) => {
+    const block = getBlock(page, 'search_theme');
+    await block.scrollIntoViewIfNeeded();
+    const trigger = block.locator('.lf-search-trigger');
+    await expect(trigger).toHaveCSS('border-radius', '2px');
+    await trigger.click();
+    const input = page.locator('.ant-modal:visible .ant-input-affix-wrapper').first();
+    await expect(input).toHaveCSS('border-radius', '2px');
+  });
 });

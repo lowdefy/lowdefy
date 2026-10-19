@@ -155,14 +155,25 @@ test('send passes connection mailSettings to sendgrid', async () => {
   expect(mockSend.mock.calls[0][0].mailSettings).toEqual({ sandboxMode: { enable: true } });
 });
 
-test('send wraps errors with a response in a SendGrid request failed error', async () => {
+test('send appends the SendGrid response body detail to the propagated error', async () => {
   const send = (await import('./send.js')).default;
   const error = new Error('Test error.');
-  error.response = { body: ['Test error 1.'] };
+  error.response = { body: { errors: [{ message: 'Test error 1.' }] } };
   mockSend.mockRejectedValue(error);
   await expect(
     send({ connection: { apiKey: 'X', from: 'from@x.com' }, mail: { to: 'a@b.com' } })
-  ).rejects.toThrow('SendGrid request failed.');
+  ).rejects.toThrow('Test error. Test error 1.');
+});
+
+test('send propagates the SendGrid error itself so the interface layer can classify it', async () => {
+  const send = (await import('./send.js')).default;
+  const error = new Error('Test error.');
+  error.code = 503;
+  error.response = { body: { errors: [{ message: 'Service unavailable.' }] } };
+  mockSend.mockRejectedValue(error);
+  await expect(
+    send({ connection: { apiKey: 'X', from: 'from@x.com' }, mail: { to: 'a@b.com' } })
+  ).rejects.toMatchObject({ code: 503 });
 });
 
 test('send rethrows errors without a response unchanged', async () => {
@@ -171,4 +182,62 @@ test('send rethrows errors without a response unchanged', async () => {
   await expect(
     send({ connection: { apiKey: 'X', from: 'from@x.com' }, mail: { to: 'a@b.com' } })
   ).rejects.toThrow('Test error.');
+});
+
+test('send drops .invalid recipients when the filter is unset', async () => {
+  const send = (await import('./send.js')).default;
+  mockSend.mockResolvedValue([{ headers: { 'x-message-id': 'message-id-1' } }]);
+  const result = await send({
+    connection: { apiKey: 'X', from: 'from@x.com' },
+    mail: { to: ['a@smoke.invalid', 'b@real.com'], subject: 'A' },
+  });
+  expect(mockSend.mock.calls[0][0].to).toEqual(['b@real.com']);
+  expect(result).toEqual({ messageId: 'message-id-1', to: ['b@real.com'] });
+});
+
+test('send drops .invalid recipients when the filter is false', async () => {
+  const send = (await import('./send.js')).default;
+  mockSend.mockResolvedValue([{ headers: { 'x-message-id': 'message-id-1' } }]);
+  const result = await send({
+    connection: { apiKey: 'X', from: 'from@x.com', filter: false },
+    mail: { to: ['a@smoke.invalid', 'b@real.com'], subject: 'A' },
+  });
+  expect(mockSend.mock.calls[0][0].to).toEqual(['b@real.com']);
+  expect(result).toEqual({ messageId: 'message-id-1', to: ['b@real.com'] });
+});
+
+test('send returns filtered without calling sendgrid when replaceAddress is set and every to is on .invalid', async () => {
+  const send = (await import('./send.js')).default;
+  const result = await send({
+    connection: { apiKey: 'X', from: 'from@x.com', filter: { replaceAddress: 'dev@test.com' } },
+    mail: { to: 'x@audit.invalid', subject: 'A' },
+  });
+  expect(result).toEqual({ messageId: null, to: null, filtered: true });
+  expect(mockSend).not.toHaveBeenCalled();
+});
+
+test('send redirects to replaceAddress when a to recipient is not on .invalid', async () => {
+  const send = (await import('./send.js')).default;
+  mockSend.mockResolvedValue([{ headers: { 'x-message-id': 'message-id-1' } }]);
+  const result = await send({
+    connection: { apiKey: 'X', from: 'from@x.com', filter: { replaceAddress: 'dev@test.com' } },
+    mail: { to: ['x@audit.invalid', 'y@real.com'], subject: 'A' },
+  });
+  expect(mockSend.mock.calls[0][0].to).toEqual('dev@test.com');
+  expect(result).toEqual({ messageId: 'message-id-1', to: 'dev@test.com' });
+});
+
+test('send sends a real cc recipient its own copy when every to recipient is on .invalid', async () => {
+  const send = (await import('./send.js')).default;
+  mockSend.mockResolvedValue([{ headers: { 'x-message-id': 'message-id-1' } }]);
+  const result = await send({
+    connection: { apiKey: 'X', from: 'from@x.com' },
+    mail: { to: 'x@audit.invalid', cc: 'manager@real.com', subject: 'A' },
+  });
+  expect(mockSend.mock.calls[0][0]).toMatchObject({
+    to: ['manager@real.com'],
+    cc: undefined,
+    isMultiple: true,
+  });
+  expect(result).toEqual({ messageId: 'message-id-1', to: ['manager@real.com'] });
 });

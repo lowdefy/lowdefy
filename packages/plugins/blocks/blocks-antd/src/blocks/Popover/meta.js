@@ -29,15 +29,41 @@ export default {
     content: 'The Popover content.',
   },
   events: {
-    onOpenChange: 'Trigger actions when visibility of the tooltip card is changed.',
+    onOpenChange: {
+      description: 'Trigger actions when visibility of the popover card is changed.',
+      event: { open: 'True when the popover opened, false when it closed.' },
+    },
   },
   properties: {
     type: 'object',
     additionalProperties: false,
     properties: {
+      arrow: {
+        type: ['boolean', 'object'],
+        default: true,
+        description:
+          'Whether to show the arrow. Set `{ pointAtCenter: true }` to point the arrow at the center of the target.',
+        docs: {
+          displayType: 'yaml',
+        },
+        additionalProperties: false,
+        properties: {
+          pointAtCenter: {
+            type: 'boolean',
+            default: false,
+            description: 'Whether the arrow is pointed at the center of target.',
+          },
+        },
+      },
+      destroyOnHidden: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Unmount the blocks inside the popover when it closes, so they mount again each time it opens.',
+      },
       title: {
         type: 'string',
-        description: 'Title of the card.',
+        description: 'Title of the card - supports html.',
       },
       color: {
         type: 'string',
@@ -73,12 +99,13 @@ export default {
           'bottomLeft',
           'bottomRight',
         ],
-        default: 'bottom',
+        default: 'top',
       },
       trigger: {
         type: 'string',
-        description: 'Trigger mode which executes the popover.',
-        enum: ['hover', 'click', 'focus'],
+        description:
+          'Trigger mode which executes the popover. `contextMenu` opens the popover on right click.',
+        enum: ['hover', 'click', 'focus', 'contextMenu'],
         default: 'hover',
       },
       zIndex: {
@@ -87,19 +114,19 @@ export default {
       },
       overlayInnerStyle: {
         type: 'object',
-        description: 'Style of overlay inner div.',
+        description: 'Style of overlay inner div. Prefer `style.inner`.',
         docs: {
           displayType: 'yaml',
         },
       },
       mouseEnterDelay: {
         type: 'number',
-        description: 'Delay in milliseconds, before tooltip is shown on mouse enter.',
+        description: 'Delay in seconds, before the popover is shown on mouse enter.',
         default: 0.1,
       },
       mouseLeaveDelay: {
         type: 'number',
-        description: 'Delay in milliseconds, before tooltip is hidden on mouse leave.',
+        description: 'Delay in seconds, before the popover is hidden on mouse leave.',
         default: 0.1,
       },
       theme: {
@@ -111,6 +138,14 @@ export default {
           link: 'https://ant.design/components/popover#design-token',
         },
         properties: {
+          width: {
+            type: ['number', 'string'],
+            description: 'Width of the popover.',
+          },
+          minWidth: {
+            type: ['number', 'string'],
+            description: 'Minimum width of the popover.',
+          },
           titleMinWidth: {
             type: ['number', 'string'],
             default: 177,

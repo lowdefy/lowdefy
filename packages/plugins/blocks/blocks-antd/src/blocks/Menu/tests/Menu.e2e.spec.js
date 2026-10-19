@@ -45,6 +45,12 @@ test.describe('Menu Block', () => {
     await expect(menu).toContainText('Contact');
   });
 
+  test('applies the item class and style to menu items', async ({ page }) => {
+    const item = getMenu(page, 'menu_item_css').locator('.ant-menu-item');
+    await expect(item).toHaveClass(/menu-custom-item/);
+    await expect(item).toHaveCSS('color', 'rgb(255, 0, 0)');
+  });
+
   // ============================================
   // MODE TESTS
   // ============================================
@@ -319,5 +325,37 @@ test.describe('Menu Block', () => {
     // Press mod+; to trigger Settings shortcut
     await page.keyboard.press(`${mod}+;`);
     await expect(display).toHaveText('selected:sk_settings');
+  });
+
+  // ============================================
+  // COLLAPSED, SUBMENU TRIGGER, POPUP CLASS, KEY PATH
+  // ============================================
+
+  test('collapses an inline menu with collapsed true', async ({ page }) => {
+    const menu = getMenu(page, 'menu_inline_collapsed');
+    await expect(menu).toHaveClass(/ant-menu-inline-collapsed/);
+  });
+
+  test('opens submenus on click with triggerSubMenuAction click', async ({ page }) => {
+    const menu = getMenu(page, 'menu_click_submenu');
+    const submenuTitle = menu.locator('.ant-menu-submenu-title').first();
+    await submenuTitle.hover();
+    await page.waitForTimeout(400);
+    await expect(page.locator('.menu-click-popup')).toHaveCount(0);
+    await submenuTitle.click();
+    const popup = page.locator('.ant-menu-submenu-popup.menu-click-popup');
+    await expect(popup).toBeVisible();
+    await popup.locator('.ant-menu-item').filter({ hasText: 'Stock' }).click();
+    await expect(getBlock(page, 'menu_click_keypath_display')).toHaveText(
+      'keyPath:click_group_stock,click_group'
+    );
+  });
+
+  test('renders the app icon as the horizontal overflow indicator', async ({ page }) => {
+    const menu = getMenu(page, 'menu_horizontal_overflow');
+    const rest = menu.locator('.ant-menu-overflow-item-rest');
+    await expect(rest).toBeVisible();
+    await expect(rest.locator('svg.lucide')).toBeAttached();
+    await expect(rest.locator('.anticon-ellipsis')).toHaveCount(0);
   });
 });

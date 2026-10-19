@@ -19,8 +19,6 @@ import path from 'path';
 import { serializer, type } from '@lowdefy/helpers';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
-import operators from '@lowdefy/operators-js/operators/build';
-
 import addKeys from '../addKeys.js';
 import buildPage from '../buildPages/buildPage.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
@@ -28,52 +26,68 @@ import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js'
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
+import validateOrgClientActionRefs from '../buildPages/validateOrgClientActionRefs.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
 import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
-import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import collectPageContent from '../collectPageContent.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createContext from '../../createContext.js';
-import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.js';
-import getRefContent from '../buildRefs/getRefContent.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
-import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
-import rebaseModuleRefPaths from '../buildRefs/rebaseModuleRefPaths.js';
-import { resolve, WalkContext, tagRefDeep } from '../buildRefs/walker.js';
-import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
-import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
-import writeMaps from '../writeMaps.js';
+import lowdefySchema from '../../lowdefySchema.js';
+import { tagRefDeep } from '../buildRefs/walker.js';
+import warnUnsetEnvReads from '../buildRefs/warnUnsetEnvReads.js';
+import testSchema from '../testSchema.js';
+import validateIconNames from '../icons/validateIconNames.js';
+import createPageBuildContext from './createPageBuildContext.js';
 import detectMissingIcons from './detectMissingIcons.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
+import getJitIconContext from './getJitIconContext.js';
+import prepareJitContext from './prepareJitContext.js';
+import resolvePageSource from './resolvePageSource.js';
+import runPluginChecks from '../runPluginChecks.js';
 import updateIconImportsJit from './updateIconImportsJit.js';
 import updateServerPackageJsonJit from './updateServerPackageJsonJit.js';
+import scanJitMaps from './scanJitMaps.js';
 import validatePageTypes from './validatePageTypes.js';
+import writeJitMaps from './writeJitMaps.js';
 import writePageJit from './writePageJit.js';
 
-validateOperatorsDynamic({ operators });
-const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
+// A page is a block, so its content is checked against the block definition -
+// the part of the app schema the skeleton build skips, since it strips page
+// content. One object, so the compiled validator is reused across builds.
+const pageSchema = { definitions: lowdefySchema.definitions, $ref: '#/definitions/block' };
 
-async function updateDynamicIcons({ page, context }) {
-  if (!context.iconImports) return;
-  const missingIcons = detectMissingIcons({ page, iconImports: context.iconImports });
-  if (missingIcons.length > 0) {
-    await updateIconImportsJit({
-      newIcons: missingIcons,
-      iconImports: context.iconImports,
-      context,
-    });
+// A page resolved from source is validated like the full build validates
+// pages (literal names at icon positions must resolve); a prebuilt page (the
+// default 404) only needs its icons delivered.
+async function updateDynamicIcons({ page, context, validate }) {
+  if (!context.bundledIcons) return;
+  const icons = await getJitIconContext({ context });
+  if (validate) {
+    validateIconNames({ config: page, icons, context });
+  }
+  const names = detectMissingIcons({
+    page,
+    bundledIcons: context.bundledIcons,
+    dynamicIconData: context.dynamicIconData,
+    icons,
+  });
+  if (names.length > 0) {
+    await updateIconImportsJit({ names, icons, context });
   }
 }
 
 async function buildPageJit({ pageId, pageRegistry, context, directories, logger }) {
-  // Use provided context or create a minimal one for JIT builds
-  const buildContext =
+  // The dev server passes the context it keeps across page builds; without one,
+  // a minimal context is made for this build.
+  const keptContext =
     context ??
     createContext({
       directories,
       logger: logger ?? console,
       stage: 'dev',
     });
+  prepareJitContext(keptContext);
 
   const pageEntry = type.isFunction(pageRegistry.get)
     ? pageRegistry.get(pageId)
@@ -83,13 +97,13 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     return null;
   }
 
-  // Reset errors and warnings for this build. Keep local references so that
-  // concurrent JIT builds (different pages sharing buildContext) cannot corrupt
-  // our lists by reassigning during an await.
-  const buildErrors = [];
-  const buildWarnings = [];
-  buildContext.errors = buildErrors;
-  buildContext.warnings = buildWarnings;
+  // Every step runs on this build's own context, so concurrent builds on the
+  // kept context keep their errors, warnings, type counts and action
+  // references apart.
+  const buildContext = createPageBuildContext(keptContext);
+  const buildErrors = buildContext.errors;
+  const buildWarnings = buildContext.warnings;
+  const mapsMark = scanJitMaps({ context: buildContext });
 
   try {
     // Pages without a source file (e.g., default 404) can only be served from
@@ -102,173 +116,41 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         const content = await fs.promises.readFile(pagePath, 'utf8');
         const page = serializer.deserialize(JSON.parse(content));
 
-        await updateDynamicIcons({ page, context: buildContext });
+        await updateDynamicIcons({ page, context: buildContext, validate: false });
         return page;
       } catch (err) {
         if (err.code !== 'ENOENT') throw err;
       }
     }
 
-    // If this is a module page, set up module context
-    let moduleDependencies = null;
-    let moduleEntry = null;
-    if (pageEntry.moduleEntryId) {
-      moduleEntry = buildContext.modules[pageEntry.moduleEntryId];
-      moduleDependencies = moduleEntry?.moduleDependencies ?? null;
-    }
-
-    // Resolve the page file from scratch using the source file path determined
-    // by createPageRegistry's parent chain walk.
-    if (!pageEntry.refPath && !pageEntry.resolverOriginal) {
-      throw new ConfigError(
-        `Page "${pageId}" has no source file reference. Cannot resolve page content.`
-      );
-    }
-
-    // Resolve unresolved vars (which may contain inner _ref objects) fresh from disk.
-    // For resolver pages, unresolved vars live in resolverOriginal.vars (single source).
-    // For file-backed pages, they're stored separately in unresolvedVars.
-    const unresolvedVars = pageEntry.unresolvedVars ?? pageEntry.resolverOriginal?.vars;
-    let resolvedVars = null;
-    if (unresolvedVars) {
-      const varRefDef = makeRefDefinition({}, null, buildContext.refMap);
-      const varCtx = new WalkContext({
-        buildContext,
-        refId: varRefDef.id,
-        sourceRefId: null,
-        vars: {},
-        moduleDependencies,
-        moduleEntry: moduleEntry ?? null,
-        moduleRoot: moduleEntry?.moduleRoot ?? null,
-        packageRoot: moduleEntry?.packageRoot ?? null,
-        path: '',
-        currentFile: pageEntry.refPath ?? pageEntry.resolverOriginal?.resolver ?? '',
-        refChain: new Set(),
-        operators,
-        env: process.env,
-        lowdefyApp: buildContext.appMeta,
-        dynamicIdentifiers,
-        shouldStop: null,
-      });
-      resolvedVars = await resolve(cloneWithMarkers(unresolvedVars), varCtx);
-    }
-
-    let refDef;
-    if (pageEntry.resolverOriginal) {
-      const resolverDefinition = resolvedVars
-        ? { ...pageEntry.resolverOriginal, vars: resolvedVars }
-        : pageEntry.resolverOriginal;
-      refDef = makeRefDefinition(resolverDefinition, null, buildContext.refMap);
-      buildContext.refMap[refDef.id].path = null;
-    } else {
-      const refDefinition = resolvedVars
-        ? { path: pageEntry.refPath, vars: resolvedVars }
-        : pageEntry.refPath;
-      refDef = makeRefDefinition(refDefinition, null, buildContext.refMap);
-      buildContext.refMap[refDef.id].path = refDef.path;
-    }
-
-    // Module path resolution: resolve relative path/resolver/transformer from the
-    // module root. The full build does this in walker.js step 4 when an _ref node
-    // is encountered, but the JIT path builds the page refDef directly from
-    // resolverOriginal (the un-rebased authored _ref) and calls getRefContent
-    // without going through the walker — so a module resolver like
-    // "resolvers/makeActionPages.js" would otherwise resolve against the app
-    // config dir instead of the module root. (File-based module pages are
-    // unaffected: their paths are stored already-rebased in refMap.)
-    if (moduleEntry?.moduleRoot) {
-      rebaseModuleRefPaths({ refDef, moduleRoot: moduleEntry.moduleRoot });
-      if (type.isString(refDef.path)) {
-        buildContext.refMap[refDef.id].path = refDef.path;
-      }
-    }
-
-    const pageContent = await getRefContent({
-      context: buildContext,
-      refDef,
-      referencedFrom: null,
-    });
-    const pageCtx = new WalkContext({
+    const { page: processed, refDef } = await resolvePageSource({
+      pageId,
+      pageEntry,
       buildContext,
-      refId: refDef.id,
-      sourceRefId: null,
-      vars: refDef.vars ?? {},
-      moduleDependencies,
-      moduleEntry: moduleEntry ?? null,
-      moduleRoot: moduleEntry?.moduleRoot ?? null,
-      packageRoot: moduleEntry?.packageRoot ?? null,
-      path: '',
-      currentFile: refDef.path ?? '',
-      refChain: new Set(),
-      operators,
-      env: process.env,
-      lowdefyApp: buildContext.appMeta,
-      dynamicIdentifiers,
-      shouldStop: null,
     });
-    let processed = await resolve(pageContent, pageCtx);
-    processed = precomputeRuntimeOperators({
-      context: buildContext,
-      input: processed,
-      refDef,
-    });
-
-    // When resolving from a collection file (with vars), the result is an array of pages.
-    // Find the specific page by ID. For module pages, source IDs are unscoped.
-    if (type.isArray(processed)) {
-      const unscopedId = moduleEntry ? pageId.slice(`${moduleEntry.id}/`.length) : pageId;
-      processed = processed.find((p) => type.isObject(p) && p.id === unscopedId);
-      if (!processed) {
-        throw new ConfigError(`Page "${pageId}" not found in resolved page source file.`);
-      }
-    }
-
-    // JIT builds resolve from source YAML — the page ID is unscoped for module pages
-    if (moduleEntry && type.isObject(processed) && processed.id) {
-      processed.id = `${moduleEntry.id}/${processed.id}`;
-    }
+    warnUnsetEnvReads({ context: buildContext });
 
     // Tag all objects with ~r for ref provenance (normally done inside _ref
     // resolution by the walker; JIT resolves the page file directly).
     tagRefDeep(processed, refDef.id);
 
-    // Apply skeleton-computed auth (buildAuth ran during skeleton build)
-    processed.auth = pageEntry.auth;
-
     // Add keys to the resolved page
     addKeys({ components: processed, context: buildContext });
 
-    // Write keyMap/refMap so the error handler reads JIT entries from disk.
-    // JIT addKeys assigns fresh ~k values that aren't in the skeleton keyMap.
-    await writeMaps({ context: buildContext });
+    // Warn on unknown block keys and mistyped block fields, as the full
+    // build's testSchema does. Before auth is attached: it is not page config.
+    testSchema({ components: processed, context: buildContext, schema: pageSchema });
 
-    // Initialize action ref collections for buildPage (normally done by buildPages)
-    if (!buildContext.linkActionRefs) {
-      buildContext.linkActionRefs = [];
-    }
-    if (!buildContext.callApiActionRefs) {
-      buildContext.callApiActionRefs = [];
-    }
-    if (!buildContext.websocketActionRefs) {
-      buildContext.websocketActionRefs = [];
-    }
-    if (!buildContext.dynamicBlockRefs) {
-      buildContext.dynamicBlockRefs = [];
-    }
-    // buildSubscriptions validates against websocketIds — the dev server
-    // restores the set from the websocketIds.json skeleton artifact. Rebuild
-    // it from skeleton-built websockets when the context doesn't carry it
-    // (createContext initializes an empty set, so check size, not presence).
-    if (!buildContext.websocketIds?.size) {
-      buildContext.websocketIds = new Set(
-        (buildContext.components?.websockets ?? []).map((websocket) => websocket.websocketId)
-      );
-    }
+    // Apply skeleton-computed auth and path (buildAuth ran during skeleton
+    // build, and buildModules scoped a module page's path to its entry).
+    processed.auth = pageEntry.auth;
+    processed.path = pageEntry.path;
 
     // Build the page (validation, block processing)
     const checkDuplicatePageId = createCheckDuplicateId({
       message: 'Duplicate pageId "{{ id }}".',
     });
+    // buildPage collects the page's action references on this build's context.
     buildPage({ page: processed, index: 0, context: buildContext, checkDuplicatePageId });
 
     // Validate that all page-level types (blocks, actions, operators) exist
@@ -289,10 +171,18 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       return { installing: true, packages: [...missingPackages.keys()] };
     }
 
+    // After the missing-package return: a page waiting on an install runs its
+    // rules once the server restarts with the package.
+    await runPluginChecks({
+      components: processed,
+      context: buildContext,
+      allSlugPackages: true,
+    });
+
     // Detect icons in the JIT-resolved page that weren't discovered during skeleton build.
     // Placed after detectMissingPluginPackages so we skip this when packages are being
     // installed (the server restarts and icons will be discovered on the next build).
-    await updateDynamicIcons({ page: processed, context: buildContext });
+    await updateDynamicIcons({ page: processed, context: buildContext, validate: true });
 
     // Validate link, state, payload, and server-state references
     const pageIds = Object.keys(pageRegistry);
@@ -309,6 +199,27 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       endpointConfigs,
       context: buildContext,
     });
+    // Fail the build when a per-org client action is wired under the
+    // "pinned" organizations policy. The dev JIT context is rebuilt from disk
+    // and carries no components.auth, so the policy is read from the auth.json
+    // artifact - only when a ref exists, to avoid a disk read on every build.
+    if (buildContext.orgClientActionRefs.length > 0) {
+      let policy = buildContext.components?.auth?.organizations?.policy;
+      if (type.isUndefined(policy) && type.isString(buildContext.directories?.build)) {
+        const authPath = path.join(buildContext.directories.build, 'auth.json');
+        try {
+          const authContent = await fs.promises.readFile(authPath, 'utf8');
+          policy = serializer.deserialize(JSON.parse(authContent))?.organizations?.policy;
+        } catch (err) {
+          if (err.code !== 'ENOENT') throw err;
+        }
+      }
+      validateOrgClientActionRefs({
+        orgClientActionRefs: buildContext.orgClientActionRefs,
+        policy: policy ?? 'pinned',
+        context: buildContext,
+      });
+    }
     validateDynamicBlockRefs({
       dynamicBlockRefs: buildContext.dynamicBlockRefs,
       endpointConfigs,
@@ -367,6 +278,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         message: w.message,
         source: w.source ?? null,
         stack: w.stack ?? null,
+        prodError: w.prodError === true,
       }));
     }
 
@@ -382,6 +294,10 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     const lowdefyErr = new LowdefyInternalError(err.message, { cause: err });
     lowdefyErr.buildErrors = err.buildErrors;
     throw lowdefyErr;
+  } finally {
+    // Also when the build failed: an error thrown after addKeys carries a JIT
+    // key, and the error handler resolves it from disk.
+    await writeJitMaps({ context: buildContext, since: mapsMark });
   }
 }
 

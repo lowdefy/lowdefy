@@ -16,8 +16,18 @@
 
 import ajv from './ajvInstance.js';
 
+// The shared instance keeps every schema object it compiles, keyed by the
+// object and by its $id. Callers compile fresh copies of the same schema (a
+// config file read again after the file cache evicts it, a step property
+// evaluated per call), which would grow that cache for the life of the server
+// and fail the second copy of a schema with an $id as a duplicate. The caller
+// holds the validator; the instance keeps nothing. Boolean schemas are cached
+// by value, so they never grow it.
 function compile({ schema }) {
   const validator = ajv.compile(schema);
+  if (typeof schema === 'object') {
+    ajv.removeSchema(schema);
+  }
   return (data) => {
     const valid = validator(data);
     return { valid, errors: valid ? [] : validator.errors || [] };

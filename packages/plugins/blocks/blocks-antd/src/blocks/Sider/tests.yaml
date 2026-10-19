@@ -18,3 +18,21 @@
   type: Sider
   properties:
     theme: dark
+- id: 'properties.collapsible: true'
+  type: Sider
+  properties:
+    collapsible: true
+    initialCollapsed: false
+- id: properties.theme tokens
+  type: Sider
+  properties:
+    collapsible: true
+    initialCollapsed: false
+    theme:
+      lightTriggerBg: '#f9f0ff'
+      lightTriggerColor: '#722ed1'
+- id: 'properties.breakpoint: lg'
+  type: Sider
+  properties:
+    breakpoint: lg
+    collapsedWidth: 0

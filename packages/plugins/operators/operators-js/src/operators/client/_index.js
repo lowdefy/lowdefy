@@ -27,5 +27,6 @@ function _index({ arrayIndices, location, params }) {
 }
 
 _index.dynamic = true;
+_index.tracking = { kind: 'read', keys: () => ['index'] };
 
 export default _index;

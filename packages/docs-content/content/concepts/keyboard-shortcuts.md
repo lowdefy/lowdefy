@@ -139,7 +139,7 @@ When a shortcut matches, the browser's default action for that key combination i
   type: Button
   properties:
     title: Search
-    icon: AiOutlineSearch
+    icon: search
   events:
     onClick:
       shortcut: mod+K
@@ -157,7 +157,7 @@ When a shortcut matches, the browser's default action for that key combination i
   type: Button
   properties:
     title: Save
-    icon: AiOutlineSave
+    icon: save
   events:
     onClick:
       shortcut: mod+S

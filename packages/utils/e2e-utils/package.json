@@ -31,7 +31,9 @@
     ".": "./dist/index.js",
     "./config": "./dist/config.js",
     "./fixtures": "./dist/fixtures/index.js",
-    "./runtime": "./dist/runtime.js"
+    "./runtime": "./dist/runtime.js",
+    "./startServer": "./dist/startServer.js",
+    "./targets": "./dist/targets/index.js"
   },
   "files": [
     "dist/*"
@@ -45,13 +47,20 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "6.1.0",
+    "@lowdefy/node-utils": "6.1.0",
     "js-yaml": "4.3.2",
     "prompts": "2.4.2"
   },
   "peerDependencies": {
     "@playwright/test": "1.59.1"
   },
+  "peerDependenciesMeta": {
+    "@playwright/test": {
+      "optional": true
+    }
+  },
   "devDependencies": {
+    "@jest/globals": "28.1.3",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
     "copyfiles": "2.4.1",

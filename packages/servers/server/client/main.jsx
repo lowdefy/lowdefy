@@ -23,6 +23,9 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 
 import App from './App.jsx';
+import clearReloadedForTypes from './clearReloadedForTypes.js';
+import loadPageTypes from './loadPageTypes.js';
+import shouldReloadForTypes from './shouldReloadForTypes.js';
 
 import '../build/globals.css';
 
@@ -36,4 +39,22 @@ if (import.meta.hot) {
   import.meta.hot.data.root = root;
 }
 
-root.render(<App config={config} />);
+// The first page renders once its plugin code has loaded. The HTML preloads
+// those chunks, so this await overlaps the main bundle's own download.
+async function render() {
+  try {
+    await loadPageTypes({ pageConfig: config.pageConfig });
+    clearReloadedForTypes({ window });
+  } catch (error) {
+    if (shouldReloadForTypes({ window })) {
+      window.location.reload();
+      return;
+    }
+    // Render anyway: missing blocks surface through the full-page ErrorBoundary.
+    // eslint-disable-next-line no-console
+    console.error(error);
+  }
+  root.render(<App config={config} />);
+}
+
+render();

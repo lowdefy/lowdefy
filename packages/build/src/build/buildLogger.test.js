@@ -72,6 +72,14 @@ test('buildLogger sentry with custom tracesSampleRate', () => {
   });
 });
 
+test('buildLogger keeps serverTracing as configured and sets no default for it', () => {
+  const components = { config: {}, logger: { sentry: { serverTracing: true } } };
+  const result = buildLogger({ components });
+  expect(result.logger.sentry.serverTracing).toBe(true);
+  const defaults = buildLogger({ components: { config: {}, logger: { sentry: {} } } });
+  expect(defaults.logger.sentry).not.toHaveProperty('serverTracing');
+});
+
 test('buildLogger sentry client disabled', () => {
   const components = { config: {}, logger: { sentry: { client: false } } };
   const result = buildLogger({ components });

@@ -17,8 +17,8 @@
 // The routine fields operators can read. A field added to the routine frame goes here, so every
 // routine step and control sees it rather than only the ones that remembered to pass it.
 function operatorScope(routineContext) {
-  const { error, items, payload, state, steps } = routineContext;
-  return { error: error ?? null, items, payload, state, steps };
+  const { agent, error, items, payload, state, steps } = routineContext;
+  return { agent: agent ?? null, error: error ?? null, items, payload, state, steps };
 }
 
 export default operatorScope;

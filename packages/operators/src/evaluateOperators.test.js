@@ -382,9 +382,7 @@ test('lowdefyApp is passed to operators', () => {
 });
 
 test('lowdefyApp is forwarded to nested parser.parse calls', () => {
-  const _passthrough = jest.fn(({ params, parser }) =>
-    parser.parse({ input: params }).output
-  );
+  const _passthrough = jest.fn(({ params, parser }) => parser.parse({ input: params }).output);
   const ops = { ...mockOperators, _passthrough };
   const input = { result: { _passthrough: { nested: { _app: 'slug' } } } };
   const res = evaluateOperators({ input, operators: ops, lowdefyApp: { slug: 'my-app' } });

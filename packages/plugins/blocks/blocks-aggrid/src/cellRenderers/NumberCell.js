@@ -15,48 +15,9 @@
 */
 
 import React from 'react';
+import formatNumber from '@lowdefy/block-utils/format/formatNumber.js';
 import { type } from '@lowdefy/helpers';
 import NullCell from './NullCell.js';
-
-function buildOptions(cellConfig = {}) {
-  const {
-    format = 'number',
-    decimals,
-    minDecimals,
-    maxDecimals,
-    currency = 'USD',
-    currencyDisplay = 'symbol',
-    notation,
-    useGrouping = true,
-  } = cellConfig;
-
-  const opts = { useGrouping };
-
-  if (format === 'currency') {
-    opts.style = 'currency';
-    opts.currency = currency;
-    opts.currencyDisplay = currencyDisplay;
-  } else if (format === 'percent') {
-    opts.style = 'percent';
-  } else if (format === 'compact') {
-    opts.notation = 'compact';
-    opts.compactDisplay = 'short';
-  } else {
-    opts.style = 'decimal';
-  }
-
-  if (notation && !opts.notation) opts.notation = notation;
-
-  if (type.isInt(decimals)) {
-    opts.minimumFractionDigits = decimals;
-    opts.maximumFractionDigits = decimals;
-  } else {
-    if (type.isInt(minDecimals)) opts.minimumFractionDigits = minDecimals;
-    if (type.isInt(maxDecimals)) opts.maximumFractionDigits = maxDecimals;
-  }
-
-  return opts;
-}
 
 function signColor(num, cellConfig) {
   if (!cellConfig?.signColor) return cellConfig?.color;
@@ -71,20 +32,7 @@ function NumberCell(params) {
   const num = Number(value);
   if (Number.isNaN(num)) return <NullCell />;
 
-  const locale = cellConfig?.locale;
-  const opts = buildOptions(cellConfig);
-  const absText = new Intl.NumberFormat(locale, opts).format(Math.abs(num));
-
-  let text;
-  if (num < 0) {
-    text = cellConfig?.negative === 'parentheses' ? `(${absText})` : `-${absText}`;
-  } else {
-    text = absText;
-  }
-
-  const prefix = cellConfig?.prefix ?? '';
-  const suffix = cellConfig?.suffix ?? '';
-  const display = `${prefix}${text}${suffix}`;
+  const display = formatNumber({ value: num, config: cellConfig });
 
   const color = signColor(num, cellConfig);
   const style = color ? { color } : undefined;

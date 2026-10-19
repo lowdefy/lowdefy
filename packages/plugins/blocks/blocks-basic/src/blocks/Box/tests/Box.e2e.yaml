@@ -76,3 +76,65 @@ blocks:
           type: SetState
           params:
             clicked: true
+
+  # Test 7: nested clickable Boxes. The inner Box handles the click, so the outer Box does not
+  # fire unless the inner event sets bubble: true.
+  - id: box_nested_outer
+    type: Box
+    style:
+      padding: 20px
+    events:
+      onClick:
+        - id: set_outer_clicked
+          type: SetState
+          params:
+            outer_clicks:
+              _sum:
+                - _if_none:
+                    - _state: outer_clicks
+                    - 0
+                - 1
+    blocks:
+      - id: box_nested_inner
+        type: Box
+        properties:
+          content: Inner
+        events:
+          onClick:
+            - id: set_inner_clicked
+              type: SetState
+              params:
+                inner_clicked: true
+      - id: box_nested_inner_bubble
+        type: Box
+        properties:
+          content: Inner bubble
+        events:
+          onClick:
+            bubble: true
+            try:
+              - id: set_inner_bubble_clicked
+                type: SetState
+                params:
+                  inner_bubble_clicked: true
+      - id: box_nested_plain
+        type: Box
+        properties:
+          content: Plain child
+  - id: box_nested_display
+    type: Box
+    properties:
+      content:
+        _string.concat:
+          - 'outer='
+          - _if_none:
+              - _state: outer_clicks
+              - 0
+          - ' inner='
+          - _if_none:
+              - _state: inner_clicked
+              - false
+          - ' bubble='
+          - _if_none:
+              - _state: inner_bubble_clicked
+              - false

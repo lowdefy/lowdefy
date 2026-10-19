@@ -17,10 +17,12 @@
 import React, { useCallback, useRef } from 'react';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
-import { useDarkMode, useLocale } from '@lowdefy/client';
+import { IconProvider, useDarkMode, useLocale } from '@lowdefy/client';
 import { StyleProvider } from '@ant-design/cssinjs';
 import { App as AntdApp, theme as antdTheme } from 'antd';
 import { XProvider } from '@ant-design/x';
+
+import { appStorageKey } from '@lowdefy/helpers';
 
 import antdLocaleLoaders from '../build/i18n/antdLocales.js';
 import antdXLocaleLoaders from '../build/i18n/antdXLocales.js';
@@ -39,7 +41,7 @@ function ThemeTokenResolver({ lowdefyRef, children }) {
 }
 
 function App({ config }) {
-  const { rootConfig, session } = config;
+  const { rootConfig, user } = config;
 
   const usageDataRef = useRef({});
   const lowdefyRef = useRef({ eventCallback: createLogUsage({ usageDataRef }) });
@@ -47,9 +49,12 @@ function App({ config }) {
     lowdefyRef.current.theme = rootConfig.theme;
   }
 
+  // Device preferences, kept per app (the same key the HTML template's dark mode script reads).
+  const storageScope = { basePath: config.basePath ?? '', slug: rootConfig.lowdefyApp?.slug };
   const { algorithm, token, components } = useDarkMode({
     antd: lowdefyRef.current.theme?.antd,
     configDarkMode: lowdefyRef.current.theme?.darkMode,
+    storageKey: appStorageKey({ ...storageScope, name: 'lowdefy_darkMode' }),
   });
 
   const {
@@ -61,6 +66,7 @@ function App({ config }) {
     antdLocaleLoaders,
     antdXLocaleLoaders,
     dayjsLocaleMap,
+    storageKey: appStorageKey({ ...storageScope, name: 'lowdefy_locale' }),
   });
 
   if (rootConfig?.i18n?.defaultLocale) {
@@ -108,18 +114,22 @@ function App({ config }) {
           algorithm,
         }}
       >
-        <AntdApp>
-          <ThemeTokenResolver lowdefyRef={lowdefyRef}>
-            <ErrorBoundary fullPage onError={handleError}>
-              <Auth session={session}>
-                {(auth) => {
-                  usageDataRef.current.user = auth.session?.hashed_id;
-                  return <Page auth={auth} config={config} lowdefy={lowdefyRef.current} />;
-                }}
-              </Auth>
-            </ErrorBoundary>
-          </ThemeTokenResolver>
-        </AntdApp>
+        {/* Message, Notification and ConfirmModal render in the App.useApp()
+            holders here, above the Client's icon provider. */}
+        <IconProvider icons={rootConfig.theme.icons}>
+          <AntdApp>
+            <ThemeTokenResolver lowdefyRef={lowdefyRef}>
+              <ErrorBoundary fullPage onError={handleError}>
+                <Auth user={user}>
+                  {(auth) => {
+                    usageDataRef.current.user = auth.user?.id;
+                    return <Page auth={auth} config={config} lowdefy={lowdefyRef.current} />;
+                  }}
+                </Auth>
+              </ErrorBoundary>
+            </ThemeTokenResolver>
+          </AntdApp>
+        </IconProvider>
       </XProvider>
     </StyleProvider>
   );

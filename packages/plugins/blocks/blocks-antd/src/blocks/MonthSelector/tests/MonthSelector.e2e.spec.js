@@ -244,3 +244,70 @@ test.describe('MonthSelector Block presets in a timezone ahead of UTC', () => {
     await monthSelector.expect.value(page, 'ms_presets_this_month', '2026-07');
   });
 });
+
+test.describe('MonthSelector antd 6 features', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'monthselector');
+  });
+
+  const dropdown = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .ant-picker-dropdown`);
+
+  test('renders the underlined variant', async ({ page }) => {
+    await expect(getPicker(page, 'ms_underlined')).toHaveClass(/ant-picker-underlined/);
+  });
+
+  test('renders prefix text', async ({ page }) => {
+    await expect(getPicker(page, 'ms_prefix_text').locator('.ant-picker-prefix')).toHaveText(
+      'From'
+    );
+  });
+
+  test('renders a prefix icon', async ({ page }) => {
+    await expect(
+      getPicker(page, 'ms_prefix_icon').locator('.ant-picker-prefix svg')
+    ).toBeAttached();
+  });
+
+  test('inputReadOnly makes the text input read-only', async ({ page }) => {
+    await expect(getInput(page, 'ms_readonly')).toHaveAttribute('readonly', '');
+  });
+
+  test('placement and the popup cssKey apply to the calendar popup', async ({ page }) => {
+    await getPicker(page, 'ms_placement').click();
+    const popup = dropdown(page, 'ms_placement');
+    await expect(popup).toBeVisible();
+    // The popup flips to the top when there is no room below, but keeps the right alignment.
+    await expect(popup).toHaveClass(/ant-picker-dropdown-placement-(bottom|top)Right/);
+    await expect(popup).toHaveClass(/ms-custom-popup/);
+  });
+
+  test('fires onFocus, onOpenChange and onBlur', async ({ page }) => {
+    await getInput(page, 'ms_events').click();
+    await expect(getBlock(page, 'ms_focus_display')).toHaveText('Focus: true');
+    await expect(getBlock(page, 'ms_open_display')).toHaveText('Open: true');
+
+    await page.keyboard.press('Escape');
+    await expect(getBlock(page, 'ms_open_display')).toHaveText('Open: false');
+
+    await getBlock(page, 'ms_underlined').click();
+    await expect(getBlock(page, 'ms_blur_display')).toHaveText('Blur: true');
+  });
+
+  test('fires onClear when the clear button is clicked', async ({ page }) => {
+    const picker = getPicker(page, 'ms_onclear');
+    await expect(getInput(page, 'ms_onclear')).not.toHaveValue('');
+    await picker.hover();
+    await picker.locator('.ant-picker-clear').click();
+    await expect(getInput(page, 'ms_onclear')).toHaveValue('');
+    await expect(getBlock(page, 'ms_onclear_display')).toHaveText('Clear fired');
+  });
+});
+
+test.describe('MonthSelector showToday', () => {
+  test('has no today button, so showToday has no effect', async ({ page }) => {
+    await navigateToTestPage(page, 'monthselector');
+    await getPicker(page, 'ms_basic').click();
+    await expect(page.locator('#bl-ms_basic .ant-picker-dropdown')).toBeVisible();
+    await expect(page.locator('#bl-ms_basic .ant-picker-now')).toHaveCount(0);
+  });
+});

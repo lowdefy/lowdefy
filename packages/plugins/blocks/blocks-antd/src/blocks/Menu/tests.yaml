@@ -84,12 +84,12 @@
         type: MenuLink
         pageId: page_1
         properties:
-          icon: AiFillRocket
+          icon: Rocket
       - id: Menu Item two
         type: MenuLink
         pageId: page_2
         properties:
-          icon: AiFillVideoCamera
+          icon: Video
 - id: 'properties.title'
   type: Menu
   properties:
@@ -99,13 +99,13 @@
         pageId: page_1
         properties:
           title: Title Menu Item 1
-          icon: AiFillRocket
+          icon: Rocket
       - id: Menu Item two
         type: MenuLink
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
 - id: 'properties.MenuGroup with MenuLInks'
   type: Menu
   properties:
@@ -186,11 +186,52 @@
             pageId: page_1_2
             properties:
               title: Menu Item two
-- id: 'properties.expandIcon: AiOutlineCheck'
+- id: 'properties.triggerSubMenuAction: click'
+  type: Menu
+  properties:
+    mode: vertical
+    triggerSubMenuAction: click
+    links:
+      - id: reports
+        type: MenuGroup
+        properties:
+          title: Reports
+        links:
+          - id: sales
+            type: MenuLink
+            pageId: sales
+            properties:
+              title: Sales
+- id: 'properties.collapsed: true'
+  type: Menu
+  properties:
+    mode: inline
+    collapsed: true
+    links:
+      - id: home
+        type: MenuLink
+        pageId: home
+        properties:
+          title: Home
+          icon: home
+- id: 'properties.tooltip: false'
+  type: Menu
+  properties:
+    mode: inline
+    collapsed: true
+    tooltip: false
+    links:
+      - id: home
+        type: MenuLink
+        pageId: home
+        properties:
+          title: Home
+          icon: home
+- id: 'properties.expandIcon: check'
   type: Menu
   properties:
     expandIcon:
-      name: AiOutlineCheck
+      name: check
       color: '#ff00f0'
     links:
       - id: menu_group_1
@@ -233,7 +274,7 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
           danger: true
 
 # mode vertical
@@ -277,13 +318,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: AiFillVideoCamera
+          icon: Video
 - id: 'mode: vertical, pageId: page_1_2_2'
   type: Menu
   pageId: page_1_2_2
@@ -320,13 +361,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: AiFillVideoCamera
+          icon: Video
 - id: 'mode: vertical, selectedKeys: [page_2, page_3]'
   type: Menu
   properties:
@@ -365,13 +406,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: AiFillVideoCamera
+          icon: Video
 - id: 'mode: vertical, selectedKeys: [page_2, page_3], pageId: page_1_2_2'
   type: Menu
   pageId: page_1_2_2
@@ -411,13 +452,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: AiFillVideoCamera
+          icon: Video
 
 # - id: 'mode: vertical, defaultOpenKeys: menu_group_1'
 #   type: Menu
@@ -456,13 +497,13 @@
 #         pageId: page_2
 #         properties:
 #           title: Title Menu Item 2
-#           icon: AiFillVideoCamera
+#           icon: Video
 #       - id: menu_item_3
 #         type: MenuLink
 #         pageId: page_3
 #         properties:
 #           title: Title Menu Item 3
-#           icon: AiFillVideoCamera
+#           icon: Video
 
 # mode horizontal
 - id: 'mode: horizontal, theme: light'
@@ -505,13 +546,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: AiFillVideoCamera
+          icon: Video
 - id: 'mode: horizontal, pageId: page_1_2_2'
   type: Menu
   pageId: page_1_2_2
@@ -548,13 +589,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: AiFillVideoCamera
+          icon: Video
 - id: 'mode: horizontal, selectedKeys: [page_2, page_3]'
   type: Menu
   properties:
@@ -593,13 +634,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: AiFillVideoCamera
+          icon: Video
 - id: 'mode: horizontal, selectedKeys: [page_2, page_3], pageId: page_1_2_2'
   type: Menu
   pageId: page_1_2_2
@@ -639,13 +680,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: AiFillVideoCamera
+          icon: Video
 
 - id: 'mode: horizontal, defaultOpenKeys: page_1_2_2'
   type: Menu
@@ -684,13 +725,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: AiFillVideoCamera
+          icon: Video
 
 # mode inline
 - id: 'mode: inline, theme: light'
@@ -733,13 +774,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: AiFillVideoCamera
+          icon: Video
 - id: 'mode: inline, pageId: page_1_2_2'
   type: Menu
   pageId: page_1_2_2
@@ -776,13 +817,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: AiFillVideoCamera
+          icon: Video
 - id: 'mode: inline, selectedKeys: [page_2, page_3]'
   type: Menu
   properties:
@@ -821,13 +862,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: AiFillVideoCamera
+          icon: Video
 - id: 'mode: inline, selectedKeys: [page_2, page_3], pageId: page_1_2_2'
   type: Menu
   pageId: page_1_2_2
@@ -867,13 +908,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: AiFillVideoCamera
+          icon: Video
 
 - id: 'mode: inline, defaultOpenKeys: page_1_2_2'
   type: Menu
@@ -912,13 +953,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: AiFillVideoCamera
+          icon: Video
 - id: 'menus: links[0]'
   type: Menu
   menus:
@@ -940,7 +981,7 @@
           pageId: page_2
           properties:
             title: Title Menu Item 2
-            icon: AiFillVideoCamera
+            icon: Video
 - id: 'menus: default'
   type: Menu
   menus:
@@ -962,7 +1003,7 @@
           pageId: page_2
           properties:
             title: Title Menu Item 2
-            icon: AiFillVideoCamera
+            icon: Video
     - id: menu_one
       menuId: default
       links:
@@ -1000,7 +1041,7 @@
           pageId: page_2
           properties:
             title: Title Menu Item 2
-            icon: AiFillVideoCamera
+            icon: Video
     - id: menu_one
       menuId: default
       links:
@@ -1026,7 +1067,7 @@
           pageId: page_2
           properties:
             title: Title Menu Item 2
-            icon: AiFillVideoCamera
+            icon: Video
 
 - id: 'menusTitle pageId'
   type: Menu
@@ -1038,7 +1079,7 @@
           type: MenuLink
           pageId: pageId_page_2
           properties:
-            icon: AiFillVideoCamera
+            icon: Video
 
 - id: 'menusTitle url'
   type: Menu
@@ -1050,4 +1091,4 @@
           type: MenuLink
           url: http://page.com
           properties:
-            icon: AiFillVideoCamera
+            icon: Video

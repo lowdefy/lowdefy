@@ -36,10 +36,10 @@ const getFileFromNavigator = async () => {
 };
 
 const getOnPaste =
-  ({ uploadRequest, properties }) =>
+  ({ disabled, properties, uploadRequest }) =>
   async (event) => {
     event?.preventDefault?.();
-    if (properties.disabled) return;
+    if (disabled) return;
     const file = event ? await getFileFromEvent(event) : await getFileFromNavigator();
     if (!file) return;
     file.uid = `${properties.fileName ?? file.name ?? 'clipboard'}-${Date.now()}`;

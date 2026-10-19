@@ -59,13 +59,32 @@ test('buildModules adds module pages with scoped IDs', () => {
   ]);
 });
 
+test('buildModules scopes a module page path to its entry, as it scopes the page id', () => {
+  const moduleEntry = makeModuleEntry({
+    id: 'support',
+    manifest: {
+      pages: [
+        { id: 'ticket', type: 'Box', path: '{space}/tickets/{ticket_id}' },
+        { id: 'tickets', type: 'Box' },
+      ],
+    },
+  });
+  const context = makeContext([moduleEntry]);
+  const components = { modules: [{ id: 'support' }], pages: [] };
+
+  const result = buildModules({ components, context });
+
+  expect(result.pages).toEqual([
+    { id: 'support/ticket', type: 'Box', path: 'support/{space}/tickets/{ticket_id}' },
+    { id: 'support/tickets', type: 'Box' },
+  ]);
+});
+
 test('buildModules adds module connections with scoped IDs', () => {
   const moduleEntry = makeModuleEntry({
     id: 'team-users',
     manifest: {
-      connections: [
-        { id: 'users-db', type: 'MongoDBCollection', properties: {} },
-      ],
+      connections: [{ id: 'users-db', type: 'MongoDBCollection', properties: {} }],
     },
   });
   const context = makeContext([moduleEntry]);
@@ -199,6 +218,127 @@ test('buildModules throws ConfigError when _secret references undeclared secret 
   );
 });
 
+test('buildModules adds module websockets with scoped IDs', () => {
+  const moduleEntry = makeModuleEntry({
+    id: 'support',
+    manifest: {
+      websockets: [
+        {
+          id: 'thread-messages',
+          type: 'MongoDBChangeStream',
+          connectionId: 'support/messages',
+          properties: { pipeline: [] },
+        },
+      ],
+    },
+  });
+  const context = makeContext([moduleEntry]);
+  const components = {
+    modules: [{ id: 'support' }],
+  };
+
+  const result = buildModules({ components, context });
+
+  expect(result.websockets).toEqual([
+    {
+      id: 'support/thread-messages',
+      type: 'MongoDBChangeStream',
+      connectionId: 'support/messages',
+      properties: { pipeline: [] },
+    },
+  ]);
+});
+
+test('buildModules records the scoped ids of module agents, endpoints and websockets on the context', () => {
+  const moduleEntry = makeModuleEntry({
+    id: 'support',
+    manifest: {
+      agents: [{ id: 'triage', type: 'ClaudeAgent' }],
+      api: [{ id: 'reply', type: 'Api' }],
+      websockets: [{ id: 'thread-messages', type: 'Channel' }],
+    },
+  });
+  const context = makeContext([moduleEntry]);
+  const components = {
+    modules: [{ id: 'support' }],
+    agents: [{ id: 'app-agent', type: 'ClaudeAgent' }],
+    api: [{ id: 'app-endpoint', type: 'Api' }],
+    websockets: [{ id: 'ticker', type: 'Interval' }],
+  };
+
+  buildModules({ components, context });
+
+  expect(context.moduleEntityIds).toEqual({
+    agents: ['support/triage'],
+    api: ['support/reply'],
+    websockets: ['support/thread-messages'],
+  });
+});
+
+test('buildModules appends module websockets to existing app websockets', () => {
+  const moduleEntry = makeModuleEntry({
+    id: 'support',
+    manifest: {
+      websockets: [{ id: 'thread-messages', type: 'MongoDBChangeStream', connectionId: 'msgs' }],
+    },
+  });
+  const context = makeContext([moduleEntry]);
+  const components = {
+    modules: [{ id: 'support' }],
+    websockets: [{ id: 'ticker', type: 'Interval' }],
+  };
+
+  const result = buildModules({ components, context });
+
+  expect(result.websockets.map((w) => w.id)).toEqual(['ticker', 'support/thread-messages']);
+});
+
+test('buildModules processes same module package with different entry IDs — two scoped websockets', () => {
+  const entryA = makeModuleEntry({
+    id: 'support-a',
+    manifest: { websockets: [{ id: 'thread-messages', type: 'Channel' }] },
+  });
+  const entryB = makeModuleEntry({
+    id: 'support-b',
+    manifest: { websockets: [{ id: 'thread-messages', type: 'Channel' }] },
+  });
+  const context = makeContext([entryA, entryB]);
+  const components = {
+    modules: [{ id: 'support-a' }, { id: 'support-b' }],
+  };
+
+  const result = buildModules({ components, context });
+
+  expect(result.websockets.map((w) => w.id)).toEqual([
+    'support-a/thread-messages',
+    'support-b/thread-messages',
+  ]);
+});
+
+test('buildModules throws ConfigError when _secret references undeclared secret in websocket', () => {
+  const moduleEntry = makeModuleEntry({
+    id: 'support',
+    manifest: {
+      secrets: [{ name: 'DECLARED_SECRET' }],
+      websockets: [
+        {
+          id: 'thread-messages',
+          type: 'Channel',
+          properties: { token: { _secret: 'UNDECLARED_SECRET' } },
+        },
+      ],
+    },
+  });
+  const context = makeContext([moduleEntry]);
+  const components = {
+    modules: [{ id: 'support' }],
+  };
+
+  expect(() => buildModules({ components, context })).toThrow(
+    /references secret "UNDECLARED_SECRET"/
+  );
+});
+
 test('buildModules skips remapped connections', () => {
   const moduleEntry = makeModuleEntry({
     id: 'team-users',
@@ -218,9 +358,7 @@ test('buildModules skips remapped connections', () => {
   const result = buildModules({ components, context });
 
   // Only cache-db should be added; users-db is remapped
-  expect(result.connections).toEqual([
-    { id: 'team-users/cache-db', type: 'MongoDBCollection' },
-  ]);
+  expect(result.connections).toEqual([{ id: 'team-users/cache-db', type: 'MongoDBCollection' }]);
 });
 
 test('buildModules preserves pre-resolved _module.pageId strings in pages', () => {
@@ -258,9 +396,7 @@ test('buildModules preserves pre-resolved _module.pageId strings in pages', () =
 
   const result = buildModules({ components, context });
 
-  expect(result.pages[0].blocks[0].events.onClick[0].params.pageId).toBe(
-    'team-users/user-detail'
-  );
+  expect(result.pages[0].blocks[0].events.onClick[0].params.pageId).toBe('team-users/user-detail');
 });
 
 test('buildModules preserves pre-resolved connectionId strings', () => {
@@ -516,11 +652,7 @@ test('buildModules processes modules in order they appear', () => {
 
   const result = buildModules({ components, context });
 
-  expect(result.pages.map((p) => p.id)).toEqual([
-    'home',
-    'alpha/page-a',
-    'beta/page-b',
-  ]);
+  expect(result.pages.map((p) => p.id)).toEqual(['home', 'alpha/page-a', 'beta/page-b']);
 });
 
 // Secret whitelist validation tests
@@ -815,4 +947,153 @@ test('buildModules preserves non-enumerable ~r marker on pages', () => {
 
   expect(result.pages[0].id).toBe('team-users/dashboard');
   expect(result.pages[0]['~r']).toBe('modules/team-users/pages/dashboard.yaml');
+});
+
+describe('tenant remap validation', () => {
+  const connectionMetas = { MongoDBCollection: { tenant: true } };
+
+  function makeWalledRemapSetup({ policy, targetConnection, moduleConnection }) {
+    const moduleEntry = makeModuleEntry({
+      id: 'contacts',
+      connections: { 'contacts-collection': 'my-crm-db' },
+      manifest: {
+        connections: [
+          moduleConnection ?? {
+            id: 'contacts-collection',
+            type: 'MongoDBCollection',
+            properties: {},
+          },
+        ],
+      },
+    });
+    const context = makeContext([moduleEntry]);
+    context.typesMap = { connectionMetas };
+    const components = {
+      modules: [{ id: 'contacts' }],
+      connections: [targetConnection],
+    };
+    if (policy) {
+      components.auth = { organizations: { policy } };
+    }
+    return { components, context };
+  }
+
+  test('throws when a scoped module connection is remapped to a target declaring shared under policy tenant', () => {
+    const { components, context } = makeWalledRemapSetup({
+      policy: 'tenant',
+      targetConnection: {
+        id: 'my-crm-db',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: {},
+      },
+    });
+    expect(() => buildModules({ components, context })).toThrow(
+      'Module "contacts" connection "contacts-collection" is tenant-scoped, but the entry remaps it to connection "my-crm-db", which is not scoped: it declares tenant: shared.'
+    );
+  });
+
+  test('throws when a scoped module connection is remapped to a target whose type lacks the contract', () => {
+    const { components, context } = makeWalledRemapSetup({
+      policy: 'tenant',
+      targetConnection: { id: 'my-crm-db', type: 'CustomJobStore', properties: {} },
+    });
+    expect(() => buildModules({ components, context })).toThrow(
+      'its type "CustomJobStore" does not implement the tenant scoping contract'
+    );
+  });
+
+  test('passes when the remap target declares nothing - both sides are scoped', () => {
+    const { components, context } = makeWalledRemapSetup({
+      policy: 'tenant',
+      targetConnection: { id: 'my-crm-db', type: 'MongoDBCollection', properties: {} },
+    });
+    expect(() => buildModules({ components, context })).not.toThrow();
+  });
+
+  test('passes when the remap target declares a custom tenant field', () => {
+    const { components, context } = makeWalledRemapSetup({
+      policy: 'tenant',
+      targetConnection: {
+        id: 'my-crm-db',
+        type: 'MongoDBCollection',
+        tenant: { field: 'organization_id' },
+        properties: {},
+      },
+    });
+    expect(() => buildModules({ components, context })).not.toThrow();
+  });
+
+  test('passes when the module connection itself declares shared', () => {
+    const { components, context } = makeWalledRemapSetup({
+      policy: 'tenant',
+      moduleConnection: {
+        id: 'contacts-collection',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: {},
+      },
+      targetConnection: {
+        id: 'my-crm-db',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: {},
+      },
+    });
+    expect(() => buildModules({ components, context })).not.toThrow();
+  });
+
+  test('passes under the pinned policy', () => {
+    const { components, context } = makeWalledRemapSetup({
+      policy: 'pinned',
+      targetConnection: {
+        id: 'my-crm-db',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: {},
+      },
+    });
+    expect(() => buildModules({ components, context })).not.toThrow();
+  });
+
+  test('passes when the app declares no organizations policy', () => {
+    const { components, context } = makeWalledRemapSetup({
+      policy: null,
+      targetConnection: {
+        id: 'my-crm-db',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: {},
+      },
+    });
+    expect(() => buildModules({ components, context })).not.toThrow();
+  });
+
+  test('checks remaps targeting another module connection that declares shared', () => {
+    const provider = makeModuleEntry({
+      id: 'provider',
+      manifest: {
+        connections: [
+          { id: 'shared-db', type: 'MongoDBCollection', tenant: 'shared', properties: {} },
+        ],
+      },
+    });
+    const consumer = makeModuleEntry({
+      id: 'consumer',
+      connections: { 'contacts-collection': 'provider/shared-db' },
+      manifest: {
+        connections: [{ id: 'contacts-collection', type: 'MongoDBCollection', properties: {} }],
+      },
+    });
+    const context = makeContext([provider, consumer]);
+    context.typesMap = { connectionMetas };
+    const components = {
+      modules: [{ id: 'provider' }, { id: 'consumer' }],
+      connections: [],
+      auth: { organizations: { policy: 'tenant' } },
+    };
+    expect(() => buildModules({ components, context })).toThrow(
+      'remaps it to connection "provider/shared-db", which is not scoped: it declares tenant: shared'
+    );
+  });
 });

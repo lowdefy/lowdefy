@@ -50,7 +50,7 @@ blocks:
           title: Reset
           block: true # Make the button fill all the space available to it
           type: default # Make the button a plain button
-          icon: AiOutlineClear
+          icon: Eraser
       - id: submit_button
         type: Button
         layout:
@@ -59,7 +59,7 @@ blocks:
           title: Submit
           block: true
           type: primary # Make the button a primary button with color
-          icon: AiOutlineSave
+          icon: save
 ################ -------- Copy to here ---------- ################
 ```
 

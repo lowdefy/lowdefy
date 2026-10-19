@@ -1,0 +1,46 @@
+# The page the walled-client test drives
+# (packages/servers/server-dev/test/journeyFixture/walled.test.mjs):
+# save_walled_button calls save_walled, which writes through the walled-client
+# plugin connection, then reads the row back on fixture_db. Under a data set
+# both reach the session database, and walled_saved_alert shows once the row
+# is read back.
+id: walled
+type: Box
+requests:
+  - id: get_walled_rows
+    type: MongoDBFind
+    connectionId: fixture_db
+    properties:
+      query:
+        kind: walled
+blocks:
+  - id: walled_title
+    type: Title
+    properties:
+      content: Walled client
+      level: 2
+  - id: save_walled_button
+    type: Button
+    properties:
+      title: Save walled row
+    events:
+      onClick:
+        - id: save_walled
+          type: CallAPI
+          params:
+            endpointId: save_walled
+        - id: get_walled_rows
+          type: Request
+          params: get_walled_rows
+  - id: walled_saved_alert
+    type: Alert
+    visible:
+      _gt:
+        - _array.length:
+            - _if_none:
+                - _request: get_walled_rows
+                - []
+        - 0
+    properties:
+      type: success
+      message: Walled row saved

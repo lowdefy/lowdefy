@@ -218,6 +218,36 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
+- id: max_count_selector
+  type: MultipleSelector
+  properties:
+    title: Pick Up to 2 Toppings
+    maxCount: 2
+    options:
+      - Cheese
+      - Mushrooms
+      - Olives
+      - Peppers
+      - Onions
+- id: responsive_tags_selector
+  type: MultipleSelector
+  properties:
+    title: Responsive Tag Count
+    maxTagCount: responsive
+    options:
+      - label: Engineering
+        value: engineering
+      - label: Design
+        value: design
+      - label: Marketing
+        value: marketing
+      - label: Operations
+        value: operations
+      - label: Customer Success
+        value: success
+```
+
+```yaml
 - id: custom_placeholder
   type: MultipleSelector
   properties:
@@ -288,7 +318,7 @@ Multi-select dropdown with tags, search, and custom rendering.
   type: MultipleSelector
   properties:
     title: Custom Suffix Icon
-    suffixIcon: AiOutlineSearch
+    suffixIcon: search
     options:
       - label: Tokyo
         value: tokyo
@@ -303,7 +333,7 @@ Multi-select dropdown with tags, search, and custom rendering.
   properties:
     title: Colored Suffix Icon
     suffixIcon:
-      name: AiOutlineGlobal
+      name: globe
       color: "#1677ff"
     options:
       - label: Tokyo
@@ -316,7 +346,7 @@ Multi-select dropdown with tags, search, and custom rendering.
   type: MultipleSelector
   properties:
     title: Custom Clear Icon
-    clearIcon: AiOutlineDelete
+    clearIcon: delete
     options:
       - label: File A
         value: a
@@ -328,7 +358,7 @@ Multi-select dropdown with tags, search, and custom rendering.
   type: MultipleSelector
   properties:
     title: Custom Selected Icon
-    selectedIcon: AiOutlineStar
+    selectedIcon: star
     options:
       - label: Gold Plan
         value: gold
@@ -502,22 +532,22 @@ Multi-select dropdown with tags, search, and custom rendering.
       - label: Approved
         value: approved
         tag:
-          icon: AiOutlineCheck
+          icon: check
           color: success
       - label: Pending
         value: pending
         tag:
-          icon: AiOutlineClockCircle
+          icon: clock
           color: processing
       - label: Rejected
         value: rejected
         tag:
-          icon: AiOutlineClose
+          icon: close
           color: error
       - label: Draft
         value: draft
         tag:
-          icon: AiOutlineEdit
+          icon: edit
           color: default
 - id: tags_icons_colors_titles
   type: MultipleSelector
@@ -529,19 +559,19 @@ Multi-select dropdown with tags, search, and custom rendering.
         value: high
         tag:
           title: High
-          icon: AiOutlineArrowUp
+          icon: arrow-up
           color: red
       - label: Medium Priority
         value: medium
         tag:
           title: Med
-          icon: AiOutlineMinus
+          icon: minus
           color: orange
       - label: Low Priority
         value: low
         tag:
           title: Low
-          icon: AiOutlineArrowDown
+          icon: arrow-down
           color: green
 ```
 
@@ -827,7 +857,7 @@ Multi-select dropdown with tags, search, and custom rendering.
   type: MultipleSelector
   style:
     .element:
-      border: 2px solid '#1677ff'
+      border: "2px solid #1677ff"
       borderRadius: 8
   properties:
     title: Custom Border Style
@@ -843,7 +873,8 @@ Multi-select dropdown with tags, search, and custom rendering.
 - id: style_background
   type: MultipleSelector
   style:
-    .element: null
+    .element:
+      backgroundColor: var(--ant-color-primary-bg)
   properties:
     title: Custom Background
     label:
@@ -869,7 +900,7 @@ Multi-select dropdown with tags, search, and custom rendering.
       - label: Three
         value: 3
   class:
-    element: rounded-lg shadow-sm
+    .element: rounded-lg shadow-sm
 - id: class_tailwind_label
   type: MultipleSelector
   properties:
@@ -880,7 +911,7 @@ Multi-select dropdown with tags, search, and custom rendering.
       - label: Beta
         value: beta
   class:
-    label: text-blue-600 font-semibold
+    .label: text-blue-600 font-semibold
 ```
 
 ```yaml
@@ -975,8 +1006,8 @@ Multi-select dropdown with tags, search, and custom rendering.
     renderTags: true
     maxTagCount: 3
     size: large
-    suffixIcon: AiOutlineTeam
-    selectedIcon: AiOutlineCheckCircle
+    suffixIcon: users
+    selectedIcon: check-circle
     label:
       extra: Select up to 5 team roles for the project.
     options:
@@ -984,37 +1015,37 @@ Multi-select dropdown with tags, search, and custom rendering.
         value: pm
         tag:
           title: PM
-          icon: AiOutlineCrown
+          icon: Crown
           color: gold
       - label: Tech Lead
         value: lead
         tag:
           title: Lead
-          icon: AiOutlineStar
+          icon: star
           color: blue
       - label: Developer
         value: dev
         tag:
           title: Dev
-          icon: AiOutlineCode
+          icon: CodeXml
           color: green
       - label: Designer
         value: design
         tag:
           title: UX
-          icon: AiOutlineBgColors
+          icon: PaintBucket
           color: magenta
       - label: QA Engineer
         value: qa
         tag:
           title: QA
-          icon: AiOutlineBug
+          icon: Bug
           color: volcano
       - label: DevOps
         value: devops
         tag:
           title: Ops
-          icon: AiOutlineCloudServer
+          icon: Server
           color: cyan
 - id: combined_themed
   type: MultipleSelector
@@ -1058,7 +1089,7 @@ Multi-select dropdown with tags, search, and custom rendering.
       properties:
         title: Project Name
         placeholder: Enter project name
-        prefixIcon: AiOutlineProject
+        prefixIcon: SquareKanban
     - id: applied2_team_members
       type: MultipleSelector
       properties:
@@ -1099,12 +1130,12 @@ Multi-select dropdown with tags, search, and custom rendering.
         title: Project Deadline
         placeholder: Select deadline
         format: DD MMM YYYY
-        suffixIcon: AiOutlineCalendar
+        suffixIcon: calendar
     - id: applied2_team_assign_btn
       type: Button
       properties:
         title: Assign Team
-        icon: AiOutlineTeam
+        icon: users
         type: primary
         size: large
         block: true
@@ -1175,7 +1206,7 @@ Multi-select dropdown with tags, search, and custom rendering.
       type: Button
       properties:
         title: Apply Filters
-        icon: AiOutlineFilter
+        icon: filter
         type: primary
         block: true
       events:
@@ -1245,21 +1276,43 @@ Multi-select dropdown with tags, search, and custom rendering.
 | `autoClearSearchValue` | boolean | `true` | Whether the current search will be cleared on selecting an item. |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
 | `bordered` | boolean | `true` | Whether or not the selector has a border style. Deprecated, use variant instead. |
-| `clearIcon` | string \| object | `"AiOutlineCloseCircle"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input. |
+| `clearIcon` | string \| object | `"clear"` | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input. |
+| `clearIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `clearIcon.color` | string | - | Icon color. |
+| `clearIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `clearIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `clearIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `clearIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `clearIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `clearIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `clearIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `disabled` | boolean | `false` | Disable the block if true. |
 | `label` | object | - | Label properties. |
+| `label.xs` | object | - | Label width on extra small screens (below 576px) when the label is not inline. |
+| `label.xs.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.sm` | object | - | Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set. |
+| `label.sm.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.md` | object | - | Label width on medium screens (768px and up) when the label is not inline. Overrides `span`. |
+| `label.md.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.lg` | object | - | Label width on large screens (992px and up) when the label is not inline. |
+| `label.lg.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xl` | object | - | Label width on extra large screens (1200px and up) when the label is not inline. |
+| `label.xl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xxl` | object | - | Label width on extra extra large screens (1600px and up) when the label is not inline. |
+| `label.xxl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |
 | `label.extra` | string | - | Extra text to display beneath the content - supports html. |
 | `label.title` | string | - | Label title - supports html. |
 | `label.tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
-| `label.tooltip.icon` | string | `"AiOutlineQuestionCircle"` | Name of the icon to show beside the label. |
+| `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
-| `label.span` | number | - | Label inline span. |
+| `label.span` | number | - | Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns. |
 | `label.disabled` | boolean | `false` | Hide input label. |
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
+| `label.wrap` | boolean | `false` | Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap. |
 | `data` | array | - | Alternative to `options`: an array of raw rows. Each row is rendered to a label with the `html` template, and `valueKey` selects which field becomes the value. Use this to drive a selector directly from data without building label/value pairs in your request. |
 | `html` | string | - | Nunjucks template that renders each option label when using `data`. The context exposes `item` (the current row) and `index` (the zero-based row index). Ignored when `options` is used. |
 | `valueKey` | string | - | Field used as the selected value. With `options` it names the value field (defaults to "value"). With `data` it names the field stored when an option is selected; omit it to store the whole row. Supports dotted paths (e.g. "user.id"). |
@@ -1274,17 +1327,71 @@ Multi-select dropdown with tags, search, and custom rendering.
 | `options.$.tag` | object | - |  |
 | `options.$.tag.color` | string | - | Color of the Tag. Preset options are success, processing, error, warning, default, blue, cyan, geekblue, gold, green, lime, magenta, orange, purple, red, volcano, or alternatively any hex color. |
 | `options.$.tag.title` | string | - | Content title of tag - supports html. |
-| `options.$.tag.icon` | string \| object | - | Name of an Ant Design Icon or properties of an Icon block to customize alert icon. |
-| `maxTagCount` | number | - | Max tag count to show. |
-| `placeholder` | string | `"Select item"` | Placeholder text inside the block before user selects input. |
+| `options.$.tag.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize alert icon. |
+| `options.$.tag.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `options.$.tag.icon.color` | string | - | Icon color. |
+| `options.$.tag.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `options.$.tag.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `options.$.tag.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `options.$.tag.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `options.$.tag.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `options.$.tag.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `options.$.tag.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `listHeight` | number | `256` | Height of the dropdown list in pixels. |
+| `maxCount` | number | - | Maximum number of options that can be selected. Once reached, the remaining options are disabled. |
+| `maxTagCount` | number \| string | - | Maximum number of selected tags shown before the rest collapse into a count. Set to 'responsive' to fit as many tags as the input width allows. |
+| `placeholder` | string | `"Select items"` | Placeholder text inside the block before user selects input. |
 | `loadingPlaceholder` | string | `"Loading"` | Placeholder text to show in options while the block is loading. |
-| `notFoundContent` | string | `"not Found"` | Placeholder text to show when list of options are empty. |
-| `selectedIcon` | string \| object | `"AiOutlineCheck"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon showing when a selection is made in the drop-down list. |
-| `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. |
+| `notFoundContent` | string | `"Not found"` | Placeholder text to show when list of options are empty. |
+| `placement` | string | `"bottomLeft"` | Position of the dropdown relative to the selector. Enum: `bottomLeft`, `bottomRight`, `topLeft`, `topRight`. |
+| `popupMatchSelectWidth` | boolean \| number | `true` | Make the dropdown the same width as the selector. Set a number of pixels for a fixed dropdown width, or false to size the dropdown to its options (this also turns off virtual scrolling). |
+| `prefix` | string | - | Text shown inside the selector before the selected value. |
+| `prefixIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to show inside the selector before the selected value. Ignored when `prefix` is set. |
+| `prefixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `prefixIcon.color` | string | - | Icon color. |
+| `prefixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `prefixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `prefixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `prefixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `prefixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `prefixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `prefixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `removeIcon` | string \| object | `"close"` | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize the remove icon on each selected tag. |
+| `removeIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `removeIcon.color` | string | - | Icon color. |
+| `removeIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `removeIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `removeIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `removeIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `removeIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `removeIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `removeIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `selectedIcon` | string \| object | `"check"` | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon showing when a selection is made in the drop-down list. |
+| `selectedIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `selectedIcon.color` | string | - | Icon color. |
+| `selectedIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `selectedIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `selectedIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `selectedIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `selectedIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `selectedIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `selectedIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. antd shows the arrow by default; `false` hides it by clearing the suffix icon. |
+| `showSearch` | boolean | `true` | Make the selector options searchable. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
-| `suffixIcon` | string \| object | `"AiOutlineDown"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize at the drop-down position of the selector. |
+| `suffixIcon` | string \| object | `"chevron-down"` | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize at the drop-down position of the selector. |
+| `suffixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `suffixIcon.color` | string | - | Icon color. |
+| `suffixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `suffixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `suffixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `suffixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `suffixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `suffixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `suffixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `title` | string | - | Multiple selector label title - supports html. |
-| `variant` | string | - | Tag/input variant. `solid` renders filled colored tags; `outlined` renders outlined colored tags. `filled`/`borderless` are the antd input styles. Enum: `solid`, `outlined`, `filled`, `borderless`. |
+| `variant` | string | - | Tag/input variant. `solid` renders filled colored tags; `outlined` renders outlined colored tags. `filled`/`borderless`/`underlined` are the antd input styles. Enum: `solid`, `outlined`, `filled`, `borderless`, `underlined`. |
+| `virtual` | boolean | `true` | Only render the dropdown options in view. Set to false when options have very different heights, or so screen readers can reach every option. |
 | `renderTags` | boolean | - | When true, the selected option labels are rendered as tags in the selector input. This field must be true to render option tag values. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design select tokens](https://ant.design/components/select#design-token). |
 | `theme.clearBg` | string | `"#ffffff"` | Background color of the clear button. |
@@ -1314,10 +1421,11 @@ Multi-select dropdown with tags, search, and custom rendering.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | \- | Trigger actions when selection is changed. |
+| `onChange` | `{ value }` | Trigger actions when selection is changed. |
 | `onBlur` | \- | Trigger action event occurs when selector loses focus. |
 | `onFocus` | \- | Trigger action when selector gets focus. |
 | `onClear` | \- | Trigger action when selector gets cleared. |
+| `onOpenChange` | `{ open }` | Trigger actions when the dropdown opens or closes. |
 | `onSearch` | `{ value }` | Trigger actions when input is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
@@ -1331,6 +1439,9 @@ Multi-select dropdown with tags, search, and custom rendering.
 | `/extra` | The MultipleSelector extra content. |
 | `/feedback` | The MultipleSelector validation feedback. |
 | `/options` | The MultipleSelector options. |
+| `/popup` | The MultipleSelector dropdown popup. |
+| `/prefixIcon` | The prefix icon in the MultipleSelector. |
+| `/removeIcon` | The remove icon on each selected tag in the MultipleSelector. |
 | `/selectedIcon` | The selected item icon in the MultipleSelector. |
 | `/suffixIcon` | The suffix icon in the MultipleSelector. |
 

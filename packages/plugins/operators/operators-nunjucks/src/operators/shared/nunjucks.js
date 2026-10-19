@@ -40,5 +40,22 @@ function _nunjucks({ params, state, payload, runtime }) {
 }
 
 _nunjucks.dynamic = false;
+// A string template renders against the whole of state, so which paths it reads is not known.
+// The date filter compares with the clock for relative methods (fromNow, isBefore with no
+// argument, ...), and a format held in a variable could name one of them. A missing date
+// renders as '' so it is not clock-dependent.
+const clockRelativeDateFilter =
+  /\bdate\s*\(\s*(?!['"])|\bdate\s*\(\s*['"](fromNow|toNow|from|to|isBefore|isAfter|isSame|isSameOrBefore|isSameOrAfter|diff|isToday|isYesterday|isTomorrow)['"]/;
+
+_nunjucks.tracking = ({ params }) => {
+  const template = type.isString(params) ? params : params?.template;
+  if (type.isString(template) && clockRelativeDateFilter.test(template)) {
+    return { kind: 'volatile' };
+  }
+  if (type.isString(params)) {
+    return { kind: 'read', keys: ['state:*'] };
+  }
+  return { kind: 'pure' };
+};
 
 export default _nunjucks;

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import labelBreakpoints from '../../schemas/labelBreakpoints.js';
 import tooltip from '../../schemas/labelTooltip.js';
 
 export default {
@@ -21,13 +22,7 @@ export default {
   events: {
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
-  icons: [
-    'AiFillCloseCircle',
-    'AiFillCheckCircle',
-    'AiOutlineLoading',
-    'AiFillExclamationCircle',
-    'AiOutlineQuestionCircle',
-  ],
+  icons: ['error', 'success', 'loading', 'warning', 'help'],
   valueType: null,
   slots: {
     content: 'The labeled input or content blocks.',
@@ -42,6 +37,7 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
+      ...labelBreakpoints,
       align: {
         type: 'string',
         enum: ['left', 'right'],
@@ -75,12 +71,19 @@ export default {
       tooltip,
       span: {
         type: 'number',
-        description: 'Label inline span.',
+        description:
+          'Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns.',
       },
       inline: {
         type: 'boolean',
         default: false,
         description: 'Render input and label inline.',
+      },
+      wrap: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Wrap long label text onto multiple lines when the label is inline. Labels above their content always wrap.',
       },
       theme: {
         type: 'object',

@@ -21,6 +21,11 @@ import { Steps } from 'antd';
 
 import withTheme from '../withTheme.js';
 
+const statusIcons = {
+  finish: 'check',
+  error: 'close',
+};
+
 function StepsBlock({
   blockId,
   classNames = {},
@@ -43,22 +48,61 @@ function StepsBlock({
     });
   });
 
+  // antd deprecates progressDot in favour of type dot, so the block resolves it the way antd does.
+  let stepsType = properties.type;
+  if ((type.isNone(stepsType) || stepsType === 'default') && properties.progressDot) {
+    stepsType = 'dot';
+  }
+  const isDot = stepsType === 'dot' || stepsType === 'inline';
+  // antd 6 deprecates the `default` size in favour of `medium`.
+  const size = properties.size === 'default' ? 'medium' : properties.size;
+
+  // antd draws the finish tick and error cross itself; swap them for the app's icons.
+  function iconRender(originalNode, { index, item, components: { Icon: StepIcon } }) {
+    const statusIcon = statusIcons[item.status];
+    if (isDot || item.icon || type.isNone(statusIcon)) {
+      return originalNode;
+    }
+    return (
+      <StepIcon>
+        <Icon
+          blockId={`${blockId}_${index}_${item.status}_icon`}
+          className={`ant-steps-item-icon-${item.status}`}
+          properties={{ name: statusIcon, title: '' }}
+        />
+      </StepIcon>
+    );
+  }
+
   return (
     <Steps
       id={blockId}
       className={classNames.element}
+      classNames={{
+        item: classNames.item,
+        itemTitle: classNames.itemTitle,
+        itemSubtitle: classNames.itemSubtitle,
+        itemContent: classNames.itemContent,
+      }}
       style={styles.element}
+      styles={{
+        item: styles.item,
+        itemTitle: styles.itemTitle,
+        itemSubtitle: styles.itemSubtitle,
+        itemContent: styles.itemContent,
+      }}
       current={current}
       initial={properties.initial}
-      status={properties.status}
-      size={properties.size}
-      type={properties.type}
+      status={properties.status ?? undefined}
+      size={size}
+      type={stepsType}
       orientation={properties.orientation}
       titlePlacement={properties.titlePlacement}
-      percent={properties.percent}
-      progressDot={properties.progressDot}
+      percent={properties.percent ?? undefined}
+      maxCount={properties.maxCount}
+      iconRender={iconRender}
       responsive={properties.responsive}
-      variant={properties.variant}
+      variant={properties.variant ?? undefined}
       onChange={
         events.onChange
           ? (value) => {
@@ -71,7 +115,7 @@ function StepsBlock({
         key: index,
         title: item.title ? renderHtml({ html: item.title, methods }) : undefined,
         subTitle: item.subTitle ? renderHtml({ html: item.subTitle, methods }) : undefined,
-        description: item.description ? renderHtml({ html: item.description, methods }) : undefined,
+        content: item.description ? renderHtml({ html: item.description, methods }) : undefined,
         status: item.status,
         disabled: item.disabled,
         icon: item.icon ? (

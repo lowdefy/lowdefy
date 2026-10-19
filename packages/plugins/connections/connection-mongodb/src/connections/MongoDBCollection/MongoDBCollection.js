@@ -18,30 +18,56 @@ import MongoDBAggregation from './MongoDBAggregation/MongoDBAggregation.js';
 import MongoDBBulkWrite from './MongoDBBulkWrite/MongoDBBulkWrite.js';
 import MongoDBDeleteMany from './MongoDBDeleteMany/MongoDBDeleteMany.js';
 import MongoDBDeleteOne from './MongoDBDeleteOne/MongoDBDeleteOne.js';
+import MongoDBEnrichmentClaim from './MongoDBEnrichmentClaim/MongoDBEnrichmentClaim.js';
+import MongoDBEnrichmentComplete from './MongoDBEnrichmentComplete/MongoDBEnrichmentComplete.js';
+import MongoDBEnrichmentEnqueue from './MongoDBEnrichmentEnqueue/MongoDBEnrichmentEnqueue.js';
 import MongoDBFind from './MongoDBFind/MongoDBFind.js';
 import MongoDBFindOne from './MongoDBFindOne/MongoDBFindOne.js';
 import MongoDBInsertConsecutiveId from './MongoDBInsertConsecutiveId/MongoDBInsertConsecutiveId.js';
 import MongoDBInsertMany from './MongoDBInsertMany/MongoDBInsertMany.js';
 import MongoDBInsertManyConsecutiveIds from './MongoDBInsertManyConsecutiveIds/MongoDBInsertManyConsecutiveIds.js';
 import MongoDBInsertOne from './MongoDBInsertOne/MongoDBInsertOne.js';
+import MongoDBTableChanges from './MongoDBTableChanges/MongoDBTableChanges.js';
+import MongoDBTableQuery from './MongoDBTableQuery/MongoDBTableQuery.js';
 import MongoDBUpdateMany from './MongoDBUpdateMany/MongoDBUpdateMany.js';
 import MongoDBUpdateOne from './MongoDBUpdateOne/MongoDBUpdateOne.js';
 import MongoDBVersionedUpdateOne from './MongoDBVersionedUpdateOne/MongoDBVersionedUpdateOne.js';
 import schema from './schema.js';
+import tenantPreflight from './tenant/tenantPreflight.js';
 
 export default {
   schema,
+  // MongoDBCollection implements the tenant scoping contract: the request
+  // layer passes the resolved tenant verdict ({ field, value }) to every
+  // resolver, which stamps writes, merges filters, and injects pipeline
+  // matches. The runtime check in resolveTenant reads this meta; the build
+  // check reads connectionMetas in types.js.
+  meta: {
+    tenant: true,
+    // Under a data set journey the dev server merges the session's databaseUri and databaseName
+    // over the connection's properties: getCollection reads both, and getClient keys clients by URI.
+    dataSet: 'redirect',
+  },
+  // The tenant-preflight capability: the server probes every walled
+  // collection for unstamped rows before serving under policy: tenant
+  // (resolveTenantPreflight in @lowdefy/api).
+  tenantPreflight,
   requests: {
     MongoDBAggregation,
     MongoDBBulkWrite,
     MongoDBDeleteMany,
     MongoDBDeleteOne,
+    MongoDBEnrichmentClaim,
+    MongoDBEnrichmentComplete,
+    MongoDBEnrichmentEnqueue,
     MongoDBFind,
     MongoDBFindOne,
     MongoDBInsertConsecutiveId,
     MongoDBInsertMany,
     MongoDBInsertManyConsecutiveIds,
     MongoDBInsertOne,
+    MongoDBTableChanges,
+    MongoDBTableQuery,
     MongoDBUpdateMany,
     MongoDBUpdateOne,
     MongoDBVersionedUpdateOne,

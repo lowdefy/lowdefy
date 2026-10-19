@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { createGoogle } from '@ai-sdk/google';
 
 // Shared by the connection's create and the request resolvers, which receive
 // evaluated connection properties (not a provider instance) from the request
 // interface layer and must construct the provider themselves.
 function createProvider({ connection }) {
   const { apiKey, baseURL } = connection ?? {};
-  return createGoogleGenerativeAI({ apiKey, baseURL });
+  return createGoogle({ apiKey, baseURL });
 }
 
 export default createProvider;

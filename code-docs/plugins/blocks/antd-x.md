@@ -1,6 +1,6 @@
 ---
 title: '@lowdefy/blocks-antd-x'
-updated: 2026-05-05
+updated: 2026-10-13
 package: '@lowdefy/blocks-antd-x'
 ---
 
@@ -10,7 +10,7 @@ AI-focused blocks built on Ant Design X components.
 
 ## Purpose
 
-Provides `AgentChat` (a production-grade chat UI) and `AgentConversations` (a standalone conversation list sidebar) for Lowdefy's agent system.
+Provides `AgentChat` (a production-grade chat UI) and `AgentConversations` (a standalone conversation list sidebar) for Lowdefy's agent system, and `IntentInput` (a text input that becomes what the user means).
 
 ## Blocks
 
@@ -59,12 +59,25 @@ Standalone conversation list sidebar, decoupled from AgentChat.
 
 - `items` — Conversation list (from state/requests)
 - `activeKey` — Currently selected conversation
+- `loadingKey` / `items[].loading` — Row(s) showing a spinner in the icon slot (antd-x Conversations has no loading state, so the block swaps the item's `icon` and adds `aria-busy`/`data-loading`)
 - `menu` — Context menu actions per conversation
 - `creation` — "New Chat" button config
 - `groupable` — Enable collapsible groups
 - `width` — Panel width
 
 **Events:** `onSelect`, `onNew`, `onMenuClick`
+
+### IntentInput
+
+**Category:** input-container (value `{ text, intent, mode }`, one slot per intent)
+
+A text box that grows to show the slot for the intent the text means. Like `AgentChat`, it holds no AI config: it fires `onClassify` (debounced) and takes the answer back through `answer`, in the shape of a `Decide` choice answer, so any classifier fits (a `Decide` request, a keyword `_js`).
+
+- `answerScores` turns the answer into a score per intent. Options that are not intents drop out (a `none` escape option), and the provider's calibrated `confidence` is the chosen intent's score, with the other intents scaled to keep their ratio to it (mixed scales could rank a rival above the model's choice).
+- `nextIntentState` is the anti-flicker state machine. The shown intent changes only when a challenger leads two answers in a row or reaches `confidence.switch`; the block re-runs a round with unchanged scores after a pause, so a challenger that keeps the lead while the user stops typing also wins. A round runs each time the latest `onClassify` finishes (the `triggerEvent` promise resolves), not when the scores change, so a repeated answer still counts and a superseded one does not; typing restarts the pause timer. It also derives the mode: `idle`, `preview` (slot faded), `choose` (the two leading intents are within 0.15 and neither is committed) or `committed` (slot solid).
+- The last non-null answer is held in a ref, so a request that goes null while loading does not reset the shown slot.
+- A choice the user picks is pinned until the scores commit to a different intent on their own.
+- The height morph is a `ResizeObserver` on the inner content driving a CSS height transition; slots enter with a keyframe. Exit animations are not implemented.
 
 ## Architecture
 
@@ -76,7 +89,7 @@ Standalone conversation list sidebar, decoupled from AgentChat.
 
 When `properties.sharedState` is a non-empty object, two things happen:
 
-1. The transport sends the object on every turn and the server injects it into the agent's `<context>` block and builds an `update-page-state` tool describing its top-level keys.
+1. The transport sends the object on every turn and the server injects it into the agent's `<context>` block and builds an `update-page-state` tool describing its top-level keys. With `properties.sharedStateReadOnly: true` the transport also sends `sharedStateReadOnly: true` and the server builds no tool.
 2. The block registers an internal `__updatePageState` event wired to `SetState` with `params: { _event: true }` at mount:
 
    ```js
@@ -140,3 +153,6 @@ The `useChat` hook from `@ai-sdk/react` manages messages, status, and streaming.
 | `src/blocks/AgentChat/WelcomeScreen.js`               | Welcome screen                |
 | `src/blocks/AgentChat/DrawerWrapper.js`               | Drawer mode wrapper           |
 | `src/blocks/AgentConversations/AgentConversations.js` | Conversation list             |
+| `src/blocks/IntentInput/IntentInput.js`               | Intent input component        |
+| `src/blocks/IntentInput/nextIntentState.js`           | Anti-flicker state machine    |
+| `src/blocks/IntentInput/answerScores.js`              | Decide answer to scores       |

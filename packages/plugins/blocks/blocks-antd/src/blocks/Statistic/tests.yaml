@@ -54,24 +54,54 @@
   properties:
     value: 3.45
     prefix: R
-- id: 'properties.prefixIcon: AiFillAccountBook'
+- id: 'properties.prefixIcon: BookText'
   type: Statistic
   properties:
     value: 3.45
-    prefixIcon: AiFillAccountBook
+    prefixIcon: BookText
 - id: 'properties.suffix: Rand'
   type: Statistic
   properties:
     value: 3.45
     suffix: Rand
-- id: 'properties.suffixIcon: AiFillAccountBook'
+- id: 'properties.suffixIcon: BookText'
   type: Statistic
   properties:
     value: 3.45
-    suffixIcon: AiFillAccountBook
+    suffixIcon: BookText
 - id: 'properties.title with html'
   type: Statistic
   properties:
     title: '<div style="color:blue;">Very Html</div>'
     value: 100
+    suffix: '%'
+- id: 'properties.timer countdown'
+  type: Statistic
+  properties:
+    title: Sale ends in
+    value:
+      _date: '2030-01-01T00:00:00.000Z'
+    timer:
+      type: countdown
+      format: 'D [days] HH:mm:ss'
+- id: 'properties.timer countup'
+  type: Statistic
+  properties:
+    title: Open since
+    value:
+      _date: '2026-01-01T00:00:00.000Z'
+    timer:
+      type: countup
+      format: 'D [days] HH:mm'
+- id: 'class and style semantic keys'
+  type: Statistic
+  style:
+    .content:
+      color: '#3f8600'
+    .suffix:
+      fontSize: 14
+  properties:
+    title: Active users
+    value: 11.28
+    precision: 2
     suffix: '%'

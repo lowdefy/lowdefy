@@ -1,0 +1,11 @@
+# Its routine fails on the database: a CallAPI to it fails
+# (action-error in exploreWalks.test.mjs).
+id: explode
+type: Api
+routine:
+  - id: explode_step
+    type: MongoDBAggregation
+    connectionId: fixture_db
+    properties:
+      pipeline:
+        - $explorerFixtureBogusStage: {}

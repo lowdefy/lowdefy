@@ -1,0 +1,43 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import loadIconData from '../icons/loadIconData.js';
+import generatePageTypesModule from './generatePageTypesModule.js';
+import generatePageTypesRegistry from './generatePageTypesRegistry.js';
+
+async function writePageTypes({ components, context }) {
+  const typesKeys = Object.keys(components.pageTypes).sort();
+  const pageIconNames = new Set(
+    typesKeys.flatMap((typesKey) => components.pageTypes[typesKey].icons)
+  );
+  const iconData = await loadIconData({ names: [...pageIconNames], icons: context.icons });
+  await Promise.all(
+    typesKeys.map((typesKey) =>
+      context.writeBuildArtifact(
+        `plugins/pageTypes/${typesKey}.js`,
+        generatePageTypesModule({ iconData, imports: components.pageTypes[typesKey] })
+      )
+    )
+  );
+  await context.writeBuildArtifact(
+    'plugins/pageTypes.js',
+    generatePageTypesRegistry({ typesKeys })
+  );
+  // Server-only: Dynamic resolution compares fragment types and icons against it.
+  await context.writeBuildArtifact('pageTypeSets.json', JSON.stringify(components.pageTypeSets));
+}
+
+export default writePageTypes;

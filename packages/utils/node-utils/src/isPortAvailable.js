@@ -28,7 +28,9 @@ function checkHost({ port, host }) {
   return new Promise((resolve, reject) => {
     const server = net.createServer();
     server.on('error', (error) => {
-      if (error.code === 'EADDRINUSE') {
+      // EACCES: the port may not be bound by this process. Windows answers it for ports in an
+      // excluded range (reserved by Hyper-V, WSL or Docker), POSIX for privileged ports.
+      if (['EADDRINUSE', 'EACCES'].includes(error.code)) {
         resolve(false);
         return;
       }

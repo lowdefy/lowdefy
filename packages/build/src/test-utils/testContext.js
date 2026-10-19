@@ -15,6 +15,7 @@
 */
 
 import createCounter from '../utils/createCounter.js';
+import createImportAppCode from '../utils/createImportAppCode.js';
 
 function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logger = {} } = {}) {
   const defaultLogger = {
@@ -27,23 +28,26 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
 
   const context = {
     stage: 'test',
+    blockMetas: {},
     directories: {
       config: configDirectory || '',
       server: '',
     },
+    pageTypeCounters: new Map(),
+    pluginCheckSlugRefs: new Map(),
     typeCounters: {
       actions: createCounter(),
       agents: createCounter(),
       auth: {
         adapters: createCounter(),
-        callbacks: createCounter(),
-        events: createCounter(),
         providers: createCounter(),
         strategies: createCounter(),
       },
       blocks: createCounter(),
       connections: createCounter(),
+      notifications: createCounter(),
       requests: createCounter(),
+      steps: createCounter(),
       websockets: createCounter(),
       controls: createCounter(),
       operators: {
@@ -58,8 +62,15 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     jsMap: {},
     agentIds: new Set(),
     connectionIds: new Set(),
+    tenantConnectionIds: new Set(),
+    walledTargets: new Map(),
+    sharedTargets: new Map(),
     websocketIds: new Set(),
+    linkActionRefs: [],
+    routes: [],
   };
+
+  context.importAppCode = createImportAppCode({ directories: context.directories });
 
   context.logger = {
     ...defaultLogger,
@@ -71,15 +82,14 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     if (warning.prodError && context.stage === 'prod') {
       throw new Error(warning.message);
     }
+    if (context.warnings) {
+      context.warnings.push(warning);
+    }
     context.logger.warn(warning.message);
   };
 
   // handleError delegates to logger.error
   context.handleError = context.logger.error;
-
-  // No-op stub for demand-driven module entry resolution used by resolveModuleConnectionId.
-  // In tests, module entries are already in their final state so no resolution is needed.
-  context.ensureEntryConfigResolved = () => Promise.resolve();
 
   return context;
 }

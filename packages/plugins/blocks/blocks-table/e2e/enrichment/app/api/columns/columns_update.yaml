@@ -1,0 +1,96 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Updates a user-defined column: the Table's onColumnUpdate { column, previous } (rename, edit).
+# The key names the column and can not change, since its cells are stored under
+# _enrich.<key>. Declared columns can not be changed here.
+id: columns_update
+type: Api
+payloadSchema:
+  type: object
+  required:
+    - column
+  additionalProperties: false
+  properties:
+    column:
+      type: object
+      required:
+        - key
+      properties:
+        key:
+          type: string
+    # The column before the change, as the Table had it. The stored column is what counts.
+    previous:
+      type: object
+    position:
+      type: number
+routine:
+  - _ref: leads/load_table.yaml
+  - id: existing
+    type: MongoDBFindOne
+    connectionId: table_columns
+    properties:
+      query:
+        tableId: leads
+        key:
+          _payload: column.key
+  - :if:
+      _eq:
+        - _step: existing
+        - null
+    :then:
+      - :reject: Only user-defined columns can be changed.
+  - :set_state:
+      replacing:
+        _payload: column.key
+  - :set_state:
+      check:
+        _ref: leads/check_column.yaml
+  - :if:
+      _gt:
+        - _array.length:
+            _state: check.errors
+        - 0
+    :then:
+      - :reject:
+          _array.join:
+            - _state: check.errors
+            - ' '
+  - id: update_column
+    type: MongoDBUpdateOne
+    connectionId: table_columns
+    properties:
+      filter:
+        tableId: leads
+        key:
+          _payload: column.key
+      update:
+        $set:
+          title:
+            _state: check.doc.title
+          type:
+            _state: check.doc.type
+          kind:
+            _state: check.doc.kind
+          config:
+            _state: check.doc.config
+          position:
+            _if_none:
+              - _payload: position
+              - _step: existing.position
+          updatedAt:
+            _date: now
+  - :return:
+      column:
+        _state: check.doc

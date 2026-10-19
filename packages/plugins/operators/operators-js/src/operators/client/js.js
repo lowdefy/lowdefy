@@ -34,18 +34,29 @@ function js(operatorContext) {
       location: (p) => operators._location({ ...operatorContext, params: p }),
       lowdefyApp: (p) => operators._app({ ...operatorContext, params: p }),
       lowdefyGlobal: (p) => operators._global({ ...operatorContext, params: p }),
+      pathParams: (p) => operators._path_params({ ...operatorContext, params: p }),
       request: (p) => operators._request({ ...operatorContext, params: p }),
       state: (p) => operators._state({ ...operatorContext, params: p }),
       urlQuery: (p) => operators._url_query({ ...operatorContext, params: p }),
       user: (p) => operators._user({ ...operatorContext, params: p }),
     });
   } catch (error) {
-    throw new Error(`_js function execution error. Function: ${jsMap[hash].toString()}`, {
+    throw new Error(`_js function execution error. ${error.name}: ${error.message}`, {
       cause: error,
     });
   }
 }
 
 js.dynamic = true;
+// The accessors call operators through the tracked registry view, so the function's reads record
+// themselves. The build marks a function volatile when its source references a browser or clock
+// global. A returned closure, even nested in an object, reads context only when it is called.
+js.tracking = ({ jsMap, params }) => {
+  const hash = type.isString(params) ? params : params?.fn;
+  return {
+    kind: jsMap?.[hash]?.volatile === true ? 'volatile' : 'pure',
+    resultMayContainFunctions: true,
+  };
+};
 
 export default js;

@@ -1,0 +1,5 @@
+id: close-ticket
+type: Api
+routine:
+  - ':return':
+      ok: true

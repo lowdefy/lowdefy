@@ -22,11 +22,12 @@ function resolvePath(path, data) {
   return get(data, path);
 }
 
-function resolveUrlQuery(urlQuery, data) {
-  if (!type.isObject(urlQuery)) return undefined;
+// Each value of a urlQuery or pathParams map read as a row-data path.
+function resolvePaths(paths, data) {
+  if (!type.isObject(paths)) return undefined;
   const resolved = {};
-  Object.keys(urlQuery).forEach((key) => {
-    resolved[key] = resolvePath(urlQuery[key], data);
+  Object.keys(paths).forEach((key) => {
+    resolved[key] = resolvePath(paths[key], data);
   });
   return resolved;
 }
@@ -39,8 +40,9 @@ function resolveLink(link, data) {
     back: link.back,
     home: link.home,
     newTab: link.newTab,
-    urlQuery: resolveUrlQuery(link.urlQuery, data),
+    pathParams: resolvePaths(link.pathParams, data),
+    urlQuery: resolvePaths(link.urlQuery, data),
   };
 }
 
-export { resolvePath, resolveUrlQuery, resolveLink };
+export { resolvePath, resolveLink };

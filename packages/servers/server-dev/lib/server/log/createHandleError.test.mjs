@@ -15,9 +15,15 @@
 */
 
 import { jest } from '@jest/globals';
-import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
+import { ConfigError, LowdefyInternalError, UserError } from '@lowdefy/errors';
+import { markCredential, runInCredentialScope } from '@lowdefy/node-utils';
 
-import createHandleError from './createHandleError.js';
+jest.unstable_mockModule('../../docs/serverErrorStore.js', () => ({
+  default: { push: jest.fn(), list: jest.fn(() => []) },
+}));
+
+const { default: serverErrorStore } = await import('../../docs/serverErrorStore.js');
+const { default: createHandleError } = await import('./createHandleError.js');
 
 // This sink is the sole writer of `error.handled`. Two callers read the flag and
 // neither can set it for itself: runRoutine's catch guards on `!error.handled` to
@@ -46,6 +52,7 @@ function testContext({ logger, readConfigFile, configDirectory } = {}) {
 
 beforeEach(() => {
   console.error = jest.fn();
+  serverErrorStore.push.mockReset();
 });
 
 test('handleError marks the error handled and resolves its location', async () => {
@@ -123,4 +130,120 @@ test('handleError marks a plain Error handled', async () => {
   await handleError(error);
 
   expect(error.handled).toBe(true);
+});
+
+test('handleError pushes an error with a configKey into the server error store with its source', async () => {
+  const context = testContext();
+  context.endpointId = 'get-customer';
+  context.pageId = '_mcp';
+  const handleError = createHandleError({ context });
+  const error = new ConfigError('Bad config.', { configKey: 'key_1' });
+
+  await handleError(error);
+
+  expect(serverErrorStore.push).toHaveBeenCalledTimes(1);
+  const entry = serverErrorStore.push.mock.calls[0][0];
+  expect(entry).toEqual({
+    timestamp: expect.any(String),
+    name: 'ConfigError',
+    message: 'Bad config.',
+    source: 'pages/home.yaml:5',
+    config: 'root.pages[0:home]',
+    hint: null,
+    endpointId: 'get-customer',
+    requestId: null,
+    pageId: '_mcp',
+    recording: null,
+  });
+  // Pushed before the log so a throwing logger cannot lose the entry.
+  expect(serverErrorStore.push.mock.invocationCallOrder[0]).toBeLessThan(
+    context.logger.error.mock.invocationCallOrder[0]
+  );
+});
+
+test('handleError does not push a UserError into the server error store', async () => {
+  const context = testContext();
+  const handleError = createHandleError({ context });
+  const error = new UserError('Rejected.');
+
+  await handleError(error);
+
+  expect(error.handled).toBe(true);
+  expect(serverErrorStore.push).not.toHaveBeenCalled();
+  expect(context.logger.error).toHaveBeenCalledWith(error);
+});
+
+test('handleError does not push a LowdefyInternalError into the server error store', async () => {
+  const context = testContext();
+  const handleError = createHandleError({ context });
+  const error = new LowdefyInternalError('Unexpected condition.');
+
+  await handleError(error);
+
+  expect(serverErrorStore.push).not.toHaveBeenCalled();
+  expect(context.logger.error).toHaveBeenCalledWith(error);
+});
+
+test('handleError still logs when the server error store throws', async () => {
+  serverErrorStore.push.mockImplementation(() => {
+    throw new Error('Store full.');
+  });
+  const context = testContext();
+  const handleError = createHandleError({ context });
+  const error = new ConfigError('Bad config.', { configKey: 'key_1' });
+
+  await handleError(error);
+
+  expect(error.handled).toBe(true);
+  expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Bad config.'));
+  expect(console.error).toHaveBeenCalledWith('An error occurred while logging the error.');
+});
+
+test('handleError writes its fallback lines with the credentials the request marked redacted', async () => {
+  serverErrorStore.push.mockImplementation(() => {
+    throw new Error('Store refused runtime-made-app-key-0001.');
+  });
+  const handleError = createHandleError({ context: testContext() });
+  await runInCredentialScope(async () => {
+    markCredential('runtime-made-app-key-0001');
+    await handleError(new ConfigError('Upstream refused runtime-made-app-key-0001.'));
+  });
+  const written = console.error.mock.calls.map(([line]) => line);
+  expect(written).toEqual(
+    expect.arrayContaining([
+      expect.stringContaining('Upstream refused [REDACTED].'),
+      expect.stringContaining('Store refused [REDACTED].'),
+    ])
+  );
+  written.forEach((line) => expect(line).not.toContain('runtime-made-app-key-0001'));
+});
+
+test('handleError stamps a stored error with the recording of the context that caused it', async () => {
+  const context = testContext();
+  context.recording = {
+    source: 'journey',
+    run: { id: '20261003T151200Z-p0d4rm', by: 'agent', journey: 'save-ticket', actor: 'main' },
+  };
+  await createHandleError({ context })(new ConfigError('Bad config.', { configKey: 'key_1' }));
+  expect(serverErrorStore.push.mock.calls[0][0].recording).toEqual({
+    source: 'journey',
+    run: '20261003T151200Z-p0d4rm',
+    journey: 'save-ticket',
+  });
+});
+
+test('handleError stamps a developer request error with a null recording', async () => {
+  const context = testContext();
+  context.recording = null;
+  await createHandleError({ context })(new ConfigError('Bad config.', { configKey: 'key_1' }));
+  expect(serverErrorStore.push.mock.calls[0][0].recording).toBeNull();
+});
+
+test('handleError stores a message with the credentials the request marked redacted', async () => {
+  const handleError = createHandleError({ context: testContext() });
+  await runInCredentialScope(async () => {
+    markCredential('runtime-made-app-key-0001');
+    await handleError(new ConfigError('Upstream refused runtime-made-app-key-0001.'));
+  });
+  expect(serverErrorStore.push.mock.calls[0][0].message).toBe('Upstream refused [REDACTED].');
 });

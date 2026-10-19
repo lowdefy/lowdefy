@@ -29,25 +29,56 @@ async function handleAgentCall(context, routineContext, { step }) {
     step,
   });
 
-  // Evaluate operators in step.properties (resolves agentId, prompt)
+  // Evaluate operators in step.properties (resolves agentId, prompt, files)
   const evaluatedProperties = evaluateRoutineOperators(context, routineContext, {
     input: step.properties,
     location: step.stepId,
   });
 
   const { agentId, prompt } = evaluatedProperties;
+  const files = evaluatedProperties.files ?? [];
   if (!type.isString(agentId)) {
     throw new ConfigError(
-      `CallAgent step "${step.stepId}" properties.agentId must evaluate to a string. Received ${JSON.stringify(agentId)}.`,
+      `CallAgent step "${
+        step.stepId
+      }" properties.agentId must evaluate to a string. Received ${JSON.stringify(agentId)}.`,
       { configKey: step['~k'] }
     );
   }
   if (!type.isString(prompt)) {
     throw new ConfigError(
-      `CallAgent step "${step.stepId}" properties.prompt must evaluate to a string. Received ${JSON.stringify(prompt)}.`,
+      `CallAgent step "${
+        step.stepId
+      }" properties.prompt must evaluate to a string. Received ${JSON.stringify(prompt)}.`,
       { configKey: step['~k'] }
     );
   }
+  // A file url is usually a signed link, and these errors reach the server log, so they name
+  // the type received rather than the value.
+  if (!type.isArray(files)) {
+    throw new ConfigError(
+      `CallAgent step "${
+        step.stepId
+      }" properties.files must evaluate to an array. Received a value of type "${typeof files}".`,
+      { configKey: step['~k'] }
+    );
+  }
+  files.forEach((file, index) => {
+    if (
+      !type.isObject(file) ||
+      !type.isString(file.url) ||
+      !URL.canParse(file.url) ||
+      !type.isString(file.mediaType)
+    ) {
+      const received = type.isObject(file)
+        ? `a url of type "${typeof file.url}" and a mediaType of type "${typeof file.mediaType}"`
+        : `a value of type "${typeof file}"`;
+      throw new ConfigError(
+        `CallAgent step "${step.stepId}" properties.files[${index}] must have a url and a mediaType string. Received ${received}.`,
+        { configKey: step['~k'] }
+      );
+    }
+  });
 
   // Headless agent context — no page, no conversation, no sharedState (which
   // also excludes the client-only update-page-state tool). userId is null
@@ -55,6 +86,7 @@ async function handleAgentCall(context, routineContext, { step }) {
   const agentContext = {
     conversationId: null,
     pageId: null,
+    pathParams: {},
     sharedState: undefined,
     urlQuery: {},
     userId: context.user?.sub ?? context.user?.id ?? null,
@@ -66,13 +98,14 @@ async function handleAgentCall(context, routineContext, { step }) {
       agentId,
       agentContext,
       endpointDepth: routineContext.endpointDepth,
+      files: [],
       mode: 'generate',
     }
   );
 
   const { result } = await agentType.resolver({
     connection: connectionInstance,
-    properties: { agent: agentConfig, prompt },
+    properties: { agent: agentConfig, prompt, files },
     context: resolverContext,
   });
 

@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Tag } from 'antd';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { getSafeHref, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import withTheme from '../withTheme.js';
@@ -44,6 +44,16 @@ const TagBlock = ({
       />
     );
   }
+  // antd treats any closeIcon as closable, so it is only passed to closable tags.
+  if (properties.closable) {
+    additionalProps.closeIcon = (
+      <Icon
+        blockId={`${blockId}_closeIcon`}
+        events={events}
+        properties={properties.closeIcon ?? { name: 'close', title: '' }}
+      />
+    );
+  }
   if (onClick || events.onClick) {
     additionalProps.onClick = onClick || (() => methods.triggerEvent({ name: 'onClick' }));
   }
@@ -56,7 +66,13 @@ const TagBlock = ({
       closable={properties.closable}
       color={properties.color}
       className={classNames.element}
+      classNames={{ close: classNames.closeIcon }}
+      disabled={properties.disabled}
+      href={getSafeHref(properties.href)}
       style={styles.element}
+      styles={{ close: styles.closeIcon }}
+      target={properties.target}
+      variant={properties.variant}
       {...additionalProps}
     >
       <>

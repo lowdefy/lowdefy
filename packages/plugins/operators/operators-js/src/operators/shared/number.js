@@ -62,6 +62,7 @@ function _number({ params, location, methodName }) {
 }
 
 _number.dynamic = false;
+_number.tracking = { kind: 'pure' };
 _number.meta = meta;
 
 export default _number;

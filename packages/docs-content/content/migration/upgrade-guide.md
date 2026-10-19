@@ -3,6 +3,7 @@
 This guide explains how the Lowdefy upgrade system works — independent of any specific version.
 
 For version-specific migration details, see:
+- [Version 6 to Version 7](/v6-to-v7)
 - [Version 5 to Version 6](/v5-to-v6)
 - [Version 4 to Version 5](/v4-to-v5)
 - [Version 3 to Version 4](/v3-to-v4)

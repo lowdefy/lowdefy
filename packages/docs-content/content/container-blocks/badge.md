@@ -104,7 +104,7 @@ U
     - id: dot_on_icon_avatar_child
       type: Avatar
       properties:
-        icon: AiOutlineBell
+        icon: bell
         shape: square
 - id: dot_on_button
   type: Badge
@@ -483,7 +483,7 @@ U
   layout:
     flex: 0 0 auto
   properties:
-    icon: AiOutlineBell
+    icon: bell
   blocks:
     - id: icon_bell_child
       type: Avatar
@@ -496,7 +496,7 @@ U
     flex: 0 0 auto
   properties:
     icon:
-      name: AiOutlineClockCircle
+      name: clock
       color: "#1677ff"
   blocks:
     - id: icon_clock_child
@@ -510,7 +510,7 @@ U
     flex: 0 0 auto
   properties:
     icon:
-      name: AiOutlineExclamation
+      name: CircleAlert
       color: "#faad14"
   blocks:
     - id: icon_exclamation_child
@@ -573,6 +573,8 @@ U
 
 U
 
+N
+
 ```yaml
 - id: title_tooltip
   type: Badge
@@ -599,7 +601,20 @@ U
       type: Avatar
       properties:
         shape: square
-        icon: AiOutlineUser
+        icon: user
+- id: title_tooltip_off
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 3
+    title: false
+  blocks:
+    - id: title_tooltip_off_child
+      type: Avatar
+      properties:
+        shape: square
+        content: N
 ```
 
 JD
@@ -640,7 +655,7 @@ JD
     - id: wrap_icon_bell_child
       type: Icon
       properties:
-        name: AiOutlineBell
+        name: bell
         size: 24
 - id: wrap_icon_mail
   type: Badge
@@ -652,8 +667,56 @@ JD
     - id: wrap_icon_mail_child
       type: Icon
       properties:
-        name: AiOutlineMail
+        name: mail
         size: 24
+```
+
+Up to 20 members, shared workspaces and priority support.
+
+Pay yearly and save on every seat.
+
+```yaml
+- id: ribbon_row
+  type: Box
+  layout:
+    gap: 24
+  blocks:
+    - id: ribbon_recommended
+      type: Badge
+      layout:
+        span: 12
+      properties:
+        ribbon:
+          text: Recommended
+      blocks:
+        - id: ribbon_recommended_card
+          type: Card
+          properties:
+            title: Team plan
+          blocks:
+            - id: ribbon_recommended_text
+              type: Paragraph
+              properties:
+                content: Up to 20 members, shared workspaces and priority support.
+    - id: ribbon_sale
+      type: Badge
+      layout:
+        span: 12
+      properties:
+        ribbon:
+          text: 20% off
+          color: volcano
+          placement: start
+      blocks:
+        - id: ribbon_sale_card
+          type: Card
+          properties:
+            title: Annual billing
+          blocks:
+            - id: ribbon_sale_text
+              type: Paragraph
+              properties:
+                content: Pay yearly and save on every seat.
 ```
 
 U
@@ -671,7 +734,7 @@ U
     count: 5
   style:
     .indicator:
-      boxShadow: 0 0 0 2px
+      boxShadow: "0 0 0 2px #1677ff"
   blocks:
     - id: css_indicator_shadow_child
       type: Avatar
@@ -722,7 +785,7 @@ Inbox
 - id: tw_element_margin
   type: Badge
   class:
-    element: mr-8
+    .element: mr-8
   layout:
     flex: 0 0 auto
   properties:
@@ -736,7 +799,7 @@ Inbox
 - id: tw_indicator_animate
   type: Badge
   class:
-    indicator: animate-bounce
+    .indicator: animate-bounce
   layout:
     flex: 0 0 auto
   properties:
@@ -750,7 +813,7 @@ Inbox
 - id: tw_badge_in_box
   type: Badge
   class:
-    element: p-1
+    .element: p-1
   layout:
     flex: 0 0 auto
   properties:
@@ -888,7 +951,7 @@ JD
         flex: 1 1 0
       properties:
         placeholder: Search...
-        prefixIcon: AiOutlineSearch
+        prefixIcon: search
     - id: rw_notif_badge_mail
       type: Badge
       layout:
@@ -900,7 +963,7 @@ JD
         - id: rw_notif_mail_btn
           type: Button
           properties:
-            icon: AiOutlineMail
+            icon: mail
             color: default
             variant: text
             hideTitle: true
@@ -921,7 +984,7 @@ JD
         - id: rw_notif_bell_btn
           type: Button
           properties:
-            icon: AiOutlineBell
+            icon: bell
             color: default
             variant: text
             hideTitle: true
@@ -938,8 +1001,7 @@ JD
         flex: 0 0 auto
       properties:
         content: JD
-        color: "#fff"
-        backgroundColor: "#1677ff"
+        color: "#1677ff"
 ```
 
 #ORD-1042
@@ -1102,7 +1164,7 @@ James Wilson
       class: justify-start w-full
       properties:
         title: Inbox
-        icon: AiOutlineInbox
+        icon: Inbox
         color: primary
         variant: text
       events:
@@ -1126,7 +1188,7 @@ James Wilson
       class: justify-start w-full
       properties:
         title: Alerts
-        icon: AiOutlineAlert
+        icon: Siren
         color: default
         variant: text
       events:
@@ -1149,7 +1211,7 @@ James Wilson
       class: justify-start w-full
       properties:
         title: Tasks
-        icon: AiOutlineCheckSquare
+        icon: SquareCheck
         color: default
         variant: text
       events:
@@ -1170,7 +1232,7 @@ James Wilson
       class: justify-start w-full
       properties:
         title: Settings
-        icon: AiOutlineSetting
+        icon: settings
         color: default
         variant: text
       events:
@@ -1187,13 +1249,26 @@ James Wilson
 | `count` | number \| string | - | Text to show in badge. |
 | `dot` | boolean | `false` | Whether to display a red dot instead of count. |
 | `size` | string | `"default"` | Sets the size of badge if count is set. Enum: `default`, `small`. |
-| `icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to use an icon in badge. |
+| `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use an icon in badge. |
+| `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `icon.color` | string | - | Icon color. |
+| `icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `offset` | array | - | Set offset of the badge dot, array of numbers for x and y offset ([x,y]). |
 | `overflowCount` | number | `99` | Max count to show |
 | `showZero` | boolean | `false` | Whether to show badge when count is zero. |
 | `status` | string | `null` | Set Badge as a status dot. Enum: `success`, `processing`, `default`, `error`, `warning`. |
 | `text` | string | - | If status is set, text sets the display text of the status dot. |
-| `title` | string | - | Text to show when hovering over the badge. |
+| `ribbon` | object | - | Render a ribbon on the corner of the content area instead of a count badge. Count, dot and status properties are ignored when ribbon is set. |
+| `ribbon.text` | string | - | Text inside the ribbon. |
+| `ribbon.color` | string | - | Ribbon color. A preset color name or any css color. |
+| `ribbon.placement` | string | `"end"` | Corner of the content the ribbon is placed on. `start` and `end` follow the text direction. Enum: `start`, `end`. |
+| `title` | string \| boolean | - | Text to show when hovering over the badge. Set to false to remove the native tooltip. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design badge tokens](https://ant.design/components/badge#design-token). |
 | `theme.indicatorHeight` | number | `20` | Height of the badge indicator. |
 | `theme.indicatorHeightSM` | number | `14` | Height of the badge indicator in small size. |
@@ -1201,6 +1276,7 @@ James Wilson
 | `theme.textFontSize` | number | `12` | Font size for badge count text. |
 | `theme.textFontSizeSM` | number | `12` | Font size for badge count text in small size. |
 | `theme.textFontWeight` | string | `"normal"` | Font weight for badge count text. |
+| `theme.paddingInline` | number \| string | `8` | Inline padding of a badge count with several characters. |
 | `theme.textLineHeight` | number | - | Line height for badge count text. |
 | `theme.statusSize` | number | `6` | Size of the status dot. |
 | `theme.indicatorZIndex` | number \| string | `"auto"` | Z-index of the badge indicator. |
@@ -1213,9 +1289,9 @@ No events defined.
 | Key | Target |
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
-| `/element` | The Badge element. |
+| `/element` | The Badge element, or the ribbon wrapper when ribbon is set. |
 | `/icon` | The icon in the Badge. |
-| `/indicator` | The Badge indicator. |
+| `/indicator` | The Badge count or dot indicator, or the ribbon when ribbon is set. |
 
 | Slot | Description |
 | --- | --- |

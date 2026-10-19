@@ -14,43 +14,64 @@
   limitations under the License.
 */
 
-import * as Sentry from '@sentry/node';
-
 import loggerConfig from '../../build/logger.js';
 import scrubEvent from './scrubEvent.js';
+import sentrySdk from './sentrySdk.js';
 
-// Returns true when Sentry was initialized, so the caller can log it through
-// the structured logger — this module runs before the logger exists.
-function initSentryServer() {
-  // No-op if SENTRY_DSN not set
+// Starts Sentry and returns its SDK, or null when Sentry is off. Nothing Sentry is imported when
+// it is off. A server that traces requests runs @sentry/node, which sets up OpenTelemetry and
+// hooks every module the app imports after it. A server that only reports errors runs the SDK's
+// light mode, which has neither: on a serverless function that start-up cost lands on every cold
+// start, so serverless functions report errors only unless logger.sentry.serverTracing is true.
+// This module runs before the logger exists, so the caller logs that Sentry is on.
+async function initSentryServer({ serverless = false } = {}) {
   if (!process.env.SENTRY_DSN) {
-    return false;
+    return null;
   }
 
-  const sentryConfig = loggerConfig.sentry || {};
+  const sentryConfig = loggerConfig.sentry ?? {};
 
-  // No-op if server logging is explicitly disabled
   if (sentryConfig.server === false) {
-    return false;
+    return null;
   }
 
-  Sentry.init({
+  const tracing = sentryConfig.serverTracing ?? !serverless;
+  const options = {
     dsn: process.env.SENTRY_DSN,
     environment: sentryConfig.environment || process.env.NODE_ENV || 'production',
-    tracesSampleRate: sentryConfig.tracesSampleRate ?? 0.1,
+    // A serverless function stays busy until the flush after each request ends, and the SDK
+    // sends a client report (a count of dropped and unsampled events) with every flush that has
+    // one, so each request would wait on an upload. A long-running server sends them on a timer.
+    sendClientReports: !serverless,
     // Every path out to Sentry gets the log's secret scrub: error events with their cause
     // chain, and the spans and breadcrumbs that carry outgoing URLs with their query strings.
     beforeSend: (event) => scrubEvent(event),
     beforeSendTransaction: (event) => scrubEvent(event),
     beforeSendSpan: (span) => scrubEvent(span),
     beforeBreadcrumb: (breadcrumb) => scrubEvent(breadcrumb),
-    // Incoming request bodies are attached to error events by default - an endpoint payload,
-    // a sign-in password - and no value scrub can recognise them. This replaces the default
-    // Http integration by name rather than adding a second one.
-    integrations: [Sentry.httpIntegration({ maxIncomingRequestBodySize: 'none' })],
-  });
+  };
 
-  return true;
+  // Incoming request bodies are attached to error events by default - an endpoint payload,
+  // a sign-in password - and no value scrub can recognise them. Each SDK's Http integration is
+  // passed by name, replacing its default one rather than adding a second.
+  let Sentry;
+  if (tracing) {
+    Sentry = await import('@sentry/node');
+    Sentry.init({
+      ...options,
+      tracesSampleRate: sentryConfig.tracesSampleRate ?? 0.1,
+      integrations: [Sentry.httpIntegration({ maxIncomingRequestBodySize: 'none' })],
+    });
+  } else {
+    Sentry = await import('@sentry/node-core/light');
+    Sentry.init({
+      ...options,
+      integrations: [Sentry.httpIntegration({ maxRequestBodySize: 'none' })],
+    });
+  }
+
+  sentrySdk.current = Sentry;
+  return Sentry;
 }
 
 export default initSentryServer;

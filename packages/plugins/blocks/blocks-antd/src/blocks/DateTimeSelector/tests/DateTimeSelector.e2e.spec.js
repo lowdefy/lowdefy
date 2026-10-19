@@ -232,3 +232,102 @@ test.describe('DateTimeSelector Block presets', () => {
     await dateTimeSelector.expect.value(page, 'dts_presets_utc', '2024-06-15 12:00');
   });
 });
+
+test.describe('DateTimeSelector antd 6 features', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'datetimeselector');
+  });
+
+  const dropdown = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .ant-picker-dropdown`);
+
+  test('renders the underlined variant', async ({ page }) => {
+    await expect(getPicker(page, 'dts_underlined')).toHaveClass(/ant-picker-underlined/);
+  });
+
+  test('renders prefix text', async ({ page }) => {
+    await expect(getPicker(page, 'dts_prefix_text').locator('.ant-picker-prefix')).toHaveText(
+      'From'
+    );
+  });
+
+  test('renders a prefix icon', async ({ page }) => {
+    await expect(
+      getPicker(page, 'dts_prefix_icon').locator('.ant-picker-prefix svg')
+    ).toBeAttached();
+  });
+
+  test('inputReadOnly makes the text input read-only', async ({ page }) => {
+    await expect(getInput(page, 'dts_readonly')).toHaveAttribute('readonly', '');
+  });
+
+  test('placement and the popup cssKey apply to the calendar popup', async ({ page }) => {
+    await getPicker(page, 'dts_placement').click();
+    const popup = dropdown(page, 'dts_placement');
+    await expect(popup).toBeVisible();
+    // The popup flips to the top when there is no room below, but keeps the right alignment.
+    await expect(popup).toHaveClass(/ant-picker-dropdown-placement-(bottom|top)Right/);
+    await expect(popup).toHaveClass(/dts-custom-popup/);
+  });
+
+  test('fires onFocus, onOpenChange and onBlur', async ({ page }) => {
+    await getInput(page, 'dts_events').click();
+    await expect(getBlock(page, 'dts_focus_display')).toHaveText('Focus: true');
+    await expect(getBlock(page, 'dts_open_display')).toHaveText('Open: true');
+
+    await page.keyboard.press('Escape');
+    await expect(getBlock(page, 'dts_open_display')).toHaveText('Open: false');
+
+    await getBlock(page, 'dts_underlined').click();
+    await expect(getBlock(page, 'dts_blur_display')).toHaveText('Blur: true');
+  });
+
+  test('fires onClear when the clear button is clicked', async ({ page }) => {
+    const picker = getPicker(page, 'dts_onclear');
+    await expect(getInput(page, 'dts_onclear')).not.toHaveValue('');
+    await picker.hover();
+    await picker.locator('.ant-picker-clear').click();
+    await expect(getInput(page, 'dts_onclear')).toHaveValue('');
+    await expect(getBlock(page, 'dts_onclear_display')).toHaveText('Clear fired');
+  });
+
+  test('showWeek adds week numbers to the calendar', async ({ page }) => {
+    await getPicker(page, 'dts_show_week').click();
+    const popup = dropdown(page, 'dts_show_week');
+    await expect(popup.locator('.ant-picker-date-panel-show-week').first()).toBeVisible();
+    await expect(popup.locator('.ant-picker-cell-week').first()).toBeVisible();
+  });
+});
+
+test.describe('DateTimeSelector confirm and time options', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'datetimeselector');
+  });
+
+  test('needConfirm false saves the value without the OK button when the picker closes', async ({
+    page,
+  }) => {
+    await getInput(page, 'dts_no_confirm').click();
+    const dropdown = page.locator('#bl-dts_no_confirm .ant-picker-dropdown');
+    await expect(dropdown).toBeVisible();
+    await expect(dropdown.locator('.ant-picker-ok')).toHaveCount(0);
+
+    await dropdown.locator('.ant-picker-cell-in-view').first().click();
+    await expect(getInput(page, 'dts_no_confirm')).not.toHaveValue('');
+    // Without the OK button, the selection is saved when the picker closes.
+    await getBlock(page, 'dts_basic').click();
+    await expect(dropdown).toBeHidden();
+    await expect(getBlock(page, 'dts_no_confirm_display')).toHaveText('Value set');
+  });
+
+  test('showToday false hides the now button when showNow is not set', async ({ page }) => {
+    await getInput(page, 'dts_show_today_false').click();
+    await expect(page.locator('#bl-dts_show_today_false .ant-picker-dropdown')).toBeVisible();
+    await expect(page.locator('#bl-dts_show_today_false .ant-picker-now')).toHaveCount(0);
+  });
+
+  test('a 12 hour timeFormat adds an AM/PM column', async ({ page }) => {
+    await getInput(page, 'dts_twelve_hour').click();
+    const columns = page.locator('#bl-dts_twelve_hour .ant-picker-time-panel-column');
+    await expect(columns).toHaveCount(3);
+  });
+});

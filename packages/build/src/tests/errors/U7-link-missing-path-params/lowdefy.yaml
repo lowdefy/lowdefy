@@ -1,0 +1,41 @@
+# U7: Link Missing Path Params
+# ============================
+# Tests that a static link to a page with placeholders must give every
+# placeholder a value: a Link action and an HTML data-page-id link each fail
+# the build, while a link with an operator value builds.
+#
+# Expected errors:
+#   [Config Error] Link action "go" on page "home" links to page "ticket" without path params "ticket_id" ...
+#   [Config Error] data-page-id="ticket" on page "home" links without path params "space", "ticket_id" ...
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: go_button
+        type: Button
+        events:
+          onClick:
+            - id: go
+              type: Link
+              params:
+                pageId: ticket
+                pathParams:
+                  space: support
+            - id: go_state
+              type: Link
+              params:
+                pageId: ticket
+                pathParams:
+                  space: support
+                  ticket_id:
+                    _state: ticket_id
+      - id: ticket_html
+        type: Html
+        properties:
+          html: <a data-page-id="ticket">Ticket</a>
+  - id: ticket
+    type: Box
+    path: tickets/{space}/{ticket_id}

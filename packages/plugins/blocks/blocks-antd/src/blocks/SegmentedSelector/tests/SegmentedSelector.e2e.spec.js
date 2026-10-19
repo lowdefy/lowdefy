@@ -57,6 +57,28 @@ test.describe('SegmentedSelector Block', () => {
     await expect(display).toHaveText('Option B');
   });
 
+  test('draws no option selected while the value is empty', async ({ page }) => {
+    const segmented = getSegmented(page, 'seg_change');
+    await expect(segmented.locator('.ant-segmented-item')).toHaveCount(2);
+    await expect(segmented.locator('.ant-segmented-item-selected')).toHaveCount(0);
+    await segmented.locator('.ant-segmented-item').filter({ hasText: 'Option A' }).click();
+    await expect(getBlock(page, 'seg_change_display')).toHaveText('Option A');
+  });
+
+  test('draws no option selected when the value matches no option', async ({ page }) => {
+    const segmented = getSegmented(page, 'seg_unmatched');
+    await expect(segmented.locator('.ant-segmented-item')).toHaveCount(2);
+    await expect(segmented.locator('.ant-segmented-item-selected')).toHaveCount(0);
+  });
+
+  test('fires onChange for the first option when the value matches no option', async ({ page }) => {
+    const segmented = getSegmented(page, 'seg_unmatched');
+    const first = segmented.locator('.ant-segmented-item').filter({ hasText: 'All' });
+    await first.click();
+    await expect(getBlock(page, 'seg_unmatched_display')).toHaveText('changed:all');
+    await expect(first).toHaveClass(/ant-segmented-item-selected/);
+  });
+
   // ============================================
   // DISABLED TEST
   // ============================================
@@ -79,5 +101,27 @@ test.describe('SegmentedSelector Block', () => {
     const large = getSegmented(page, 'seg_large');
     await expect(large).toBeVisible();
     await expect(large).toHaveClass(/ant-segmented-lg/);
+  });
+
+  test('shows an option tooltip on hover', async ({ page }) => {
+    const item = getSegmented(page, 'seg_tooltip')
+      .locator('.ant-segmented-item')
+      .filter({ hasText: 'List' });
+    await item.hover();
+    await expect(page.locator('.ant-tooltip').filter({ hasText: 'Show as a list' })).toBeVisible();
+  });
+
+  test('renders an option icon from an Icon properties object', async ({ page }) => {
+    const icon = getSegmented(page, 'seg_tooltip').locator('.ant-segmented-item-icon svg');
+    await expect(icon).toBeVisible();
+  });
+
+  test('class.options and style.options reach every segment', async ({ page }) => {
+    const items = getSegmented(page, 'seg_options_css').locator('.ant-segmented-item');
+    await expect(items).toHaveCount(2);
+    for (const item of await items.all()) {
+      await expect(item).toHaveClass(/seg-option-tailwind/);
+      await expect(item).toHaveCSS('font-style', 'italic');
+    }
   });
 });

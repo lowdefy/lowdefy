@@ -14,25 +14,36 @@
   limitations under the License.
 */
 
+import requestMetas from './connections/MongoDBCollection/requestMetas.js';
+
 export default {
   connections: ['MongoDBCollection'],
-  requests: [
-    'MongoDBAggregation',
-    'MongoDBBulkWrite',
-    'MongoDBDeleteMany',
-    'MongoDBDeleteOne',
-    'MongoDBFind',
-    'MongoDBFindOne',
-    'MongoDBInsertConsecutiveId',
-    'MongoDBInsertMany',
-    'MongoDBInsertManyConsecutiveIds',
-    'MongoDBInsertOne',
-    'MongoDBUpdateMany',
-    'MongoDBUpdateOne',
-    'MongoDBVersionedUpdateOne',
-  ],
+  // MongoDBCollection implements the tenant scoping contract: under
+  // auth.organizations.policy: tenant its connections are scoped by default -
+  // enforced across all its request types and the change stream - and a
+  // connection opts out only with tenant: shared. Declaring tenant: on a
+  // connection whose type lacks this meta is a build error.
+  connectionMetas: {
+    MongoDBCollection: {
+      tenant: true,
+      // The properties naming the physical collection a connection reads and
+      // the one its change log writes into. The build uses them to refuse a
+      // tenant: shared connection whose change log writes into a collection a
+      // scoped connection reads, and to mark a tenant: shared connection whose
+      // own collection a scoped connection reads, so its writes are guarded.
+      tenantTarget: {
+        database: ['databaseUri', 'databaseName'],
+        collection: 'collection',
+        changeLogCollection: 'changeLog.collection',
+      },
+    },
+  },
+  // Whether each request type reads and writes. The build refuses a write
+  // request type under tenant: none on a scoped connection.
+  requestMetas,
+  requests: Object.keys(requestMetas),
   auth: {
-    adapters: ['MongoDBAdapter', 'MultiAppMongoDBAdapter'],
+    adapters: ['MongoDBAuthAdapter'],
   },
   websockets: ['MongoDBChangeStream'],
 };

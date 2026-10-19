@@ -219,7 +219,7 @@
                 title: Submit
                 color: primary
                 variant: solid
-                icon: AiOutlineUpload
+                icon: upload
               events:
                 onClick:
                   - id: submit_validate
@@ -265,7 +265,7 @@
                 title: Upload Photos
                 color: primary
                 variant: solid
-                icon: AiOutlineCloudUpload
+                icon: CloudUpload
               events:
                 onClick:
                   - id: gallery_msg

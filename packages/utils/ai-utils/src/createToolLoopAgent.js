@@ -14,11 +14,13 @@
   limitations under the License.
 */
 
-import { ToolLoopAgent, stepCountIs, hasToolCall } from 'ai';
+import { ToolLoopAgent, isStepCount, hasToolCall } from 'ai';
 
 import buildAgentTools from './buildAgentTools.js';
 import buildPrepareStep from './buildPrepareStep.js';
 import buildUpdatePageStateTool from './buildUpdatePageStateTool.js';
+import createFileDownload from './fileDownload/createFileDownload.js';
+import nameAttachedFiles from './nameAttachedFiles.js';
 
 // Strip non-serializable fields from agent-level hook events before sending as payload.
 // messages excluded here — the stream-level onFinish sends UIMessage[] directly.
@@ -37,15 +39,17 @@ function cleanHookEvent(event) {
 // onFinish is intentionally excluded — it is handled by the callers (at the stream
 // level in handleAgentChat, after generate in handleAgentGenerate) so that hooks
 // are awaited.
+// The YAML names are Lowdefy's public hook API and stay as they are; ai v7
+// dropped the experimental_ prefixes and renamed tool-call/finish callbacks.
 const hookMapping = {
-  onStart: 'experimental_onStart',
-  onStepStart: 'experimental_onStepStart',
-  onToolCallStart: 'experimental_onToolCallStart',
-  onToolCallFinish: 'experimental_onToolCallFinish',
-  onStepFinish: 'onStepFinish',
+  onStart: 'onStart',
+  onStepStart: 'onStepStart',
+  onToolCallStart: 'onToolExecutionStart',
+  onToolCallFinish: 'onToolExecutionEnd',
+  onStepFinish: 'onStepEnd',
 };
 
-function createHookCallbacks({ hooks, callEndpoint, locale }) {
+function createHookCallbacks({ callEndpoint, hooks, locale, logger }) {
   if (!hooks) return {};
 
   const callbacks = {};
@@ -56,7 +60,9 @@ function createHookCallbacks({ hooks, callEndpoint, locale }) {
     callbacks[sdkKey] = (event) => {
       const payload = { ...cleanHookEvent(event), locale };
       for (const endpointId of endpointIds) {
-        callEndpoint(endpointId, { payload }).catch(() => {});
+        callEndpoint(endpointId, { payload }).catch((error) =>
+          logger.warn({ err: error, endpointId }, 'Agent hook endpoint failed.')
+        );
       }
     };
   }
@@ -67,21 +73,24 @@ function createHookCallbacks({ hooks, callEndpoint, locale }) {
 // path: tools, model, hook callbacks, instructions, stop conditions, and the
 // ToolLoopAgent instance.
 async function createToolLoopAgent({ connection, agent, context, autoApprove = false }) {
-  const { tools, mcpClients } = await buildAgentTools({ agent, context, autoApprove });
+  const { tools, mcpClients, toolApproval } = await buildAgentTools({ agent, context, autoApprove });
 
-  const sharedState = context.agentContext?.sharedState;
-  const updatePageStateTool = buildUpdatePageStateTool({ sharedState });
-  if (updatePageStateTool) {
-    tools['update-page-state'] = updatePageStateTool;
+  const { sharedState, sharedStateReadOnly } = context.agentContext ?? {};
+  if (!sharedStateReadOnly) {
+    const updatePageStateTool = buildUpdatePageStateTool({ sharedState });
+    if (updatePageStateTool) {
+      tools['update-page-state'] = updatePageStateTool;
+    }
   }
 
   const model = connection.provider(agent.properties.model);
 
   const locale = context.i18n?.active;
   const hookCallbacks = createHookCallbacks({
-    hooks: agent.hooks,
     callEndpoint: context.callEndpoint,
+    hooks: agent.hooks,
     locale,
+    logger: context.logger,
   });
 
   // Prepend page context to instructions when pageContext is enabled
@@ -95,6 +104,9 @@ async function createToolLoopAgent({ connection, agent, context, autoApprove = f
     if (ctx.urlQuery && Object.keys(ctx.urlQuery).length > 0) {
       contextLines.push(`  urlQuery: ${JSON.stringify(ctx.urlQuery)}`);
     }
+    if (ctx.pathParams && Object.keys(ctx.pathParams).length > 0) {
+      contextLines.push(`  pathParams: ${JSON.stringify(ctx.pathParams)}`);
+    }
     if (ctx.sharedState && Object.keys(ctx.sharedState).length > 0) {
       contextLines.push(`  sharedState: ${JSON.stringify(ctx.sharedState)}`);
     }
@@ -103,7 +115,7 @@ async function createToolLoopAgent({ connection, agent, context, autoApprove = f
   }
 
   // Build stop conditions
-  const stopConditions = [stepCountIs(agent.properties.maxSteps ?? 10)];
+  const stopConditions = [isStepCount(agent.properties.maxSteps ?? 10)];
   const stopOnToolCall = agent.properties.stopOnToolCall;
   if (stopOnToolCall) {
     const toolNames = Array.isArray(stopOnToolCall) ? stopOnToolCall : [stopOnToolCall];
@@ -116,8 +128,9 @@ async function createToolLoopAgent({ connection, agent, context, autoApprove = f
     model,
     instructions,
     tools,
+    toolApproval,
     stopWhen: stopConditions.length === 1 ? stopConditions[0] : stopConditions,
-    maxOutputTokens: agent.properties.maxOutputTokens,
+    maxOutputTokens: agent.properties.maxOutputTokens ?? connection.maxOutputTokens,
     temperature: agent.properties.temperature,
     toolChoice: agent.properties.toolChoice ?? 'auto',
     providerOptions: agent.properties.providerOptions,
@@ -132,18 +145,24 @@ async function createToolLoopAgent({ connection, agent, context, autoApprove = f
     ...(agent.properties.prepareStep
       ? { prepareStep: buildPrepareStep(agent.properties.prepareStep) }
       : {}),
+    prepareCall: (callArgs) => ({ ...callArgs, prompt: nameAttachedFiles(callArgs.prompt) }),
+    experimental_download: createFileDownload({
+      ...agent.properties.fileDownload,
+      signal: context.signal,
+    }),
     ...hookCallbacks,
     ...(agent.properties.repairToolCall
       ? {
-          experimental_repairToolCall: async ({ toolCall }) => {
+          repairToolCall: async ({ toolCall }) => {
             return { ...toolCall };
           },
         }
       : {}),
   });
 
-  const timeoutConfig =
-    agent.properties.timeout != null ? { timeout: agent.properties.timeout } : {};
+  // The agent's own timeout, else the connection's default for every call on it.
+  const timeout = agent.properties.timeout ?? connection.timeout;
+  const timeoutConfig = timeout != null ? { timeout } : {};
 
   return { agentInstance, mcpClients, model, timeoutConfig, locale };
 }

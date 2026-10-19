@@ -14,7 +14,7 @@ The following location properties are available.
 - `homePageId: string`: The home page id.
 - `href: string`: The entire URL string.
 - `origin: string`: The canonical form of the origin of the specific location.
-- `pageId: string`: The current page id.
+- `pageId: string`: The current page id. On a page with a [`path`](/page-paths) this is still the page's `id`; read its placeholder values with [`_path_params`](/_path_params).
 - `pathname: string`: A string containing an initial `/`` followed by the path of the URL, not including the query string or fragment.
 - `port: string`: The port number of the URL
 - `protocol: string`: The protocol scheme of the URL, mostly `http:` or `https:`.

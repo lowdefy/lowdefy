@@ -14,11 +14,13 @@
   limitations under the License.
 */
 
-import { ActionError, ConfigError, UserError } from '@lowdefy/errors';
+import { ActionError, ConfigError } from '@lowdefy/errors';
 import { projectCaughtError, type } from '@lowdefy/helpers';
 import getActionMethods from './actions/getActionMethods.js';
 import { isDecodedServerError } from './decodeServerError.js';
 import { isStopChain } from './stopChain.js';
+import getTrace from './trace/getTrace.js';
+import trackActionMethods from './tracking/trackActionMethods.js';
 
 const CONTROL_KEYS = [':if', ':switch', ':return'];
 
@@ -43,8 +45,9 @@ class Actions {
     const handleError = this.context._internal.lowdefy._internal.handleError;
 
     // User-facing errors log to browser console only, never to terminal. This line
-    // bypasses handleError, so it dedups here.
-    if (error instanceof UserError) {
+    // bypasses handleError, so it dedups here. Matched by name, not instanceof:
+    // plugins bundle their own @lowdefy/errors copy.
+    if (error?.name === 'UserError') {
       const errorKey = `${error.message}:${action?.id || ''}`;
       if (this.loggedActionErrors.has(errorKey)) {
         return;
@@ -449,29 +452,43 @@ class Actions {
     try {
       response = await this.actions[action.type]({
         globals: this.context._internal.lowdefy._internal.globals,
-        methods: getActionMethods({
-          actionId: action.id,
-          actions: responses,
-          arrayIndices,
-          blockId: block.blockId,
+        // Read-only app metadata (name, slug, version, gitSha, environment) — what _app reads.
+        lowdefyApp: this.context._internal.lowdefy.lowdefyApp,
+        methods: trackActionMethods({
           context: this.context,
-          event,
+          methods: getActionMethods({
+            actionId: action.id,
+            actions: responses,
+            arrayIndices,
+            blockId: block.blockId,
+            context: this.context,
+            event,
+          }),
         }),
         params: parsedAction.params,
+        trace: getTrace(this.context._internal.lowdefy).actionView,
       });
       if (progress) {
         progress();
       }
     } catch (err) {
-      const error = err.isLowdefyError
-        ? err
-        : new ActionError(err.message, {
-            cause: err,
-            typeName: action.type,
-            received: parsedAction.params,
-            location: block.blockId,
-            configKey: action['~k'],
-          });
+      let error;
+      if (err.isLowdefyError) {
+        error = err;
+        // Plugins may throw ConfigError or UserError without a location - the interface
+        // layer owns location resolution.
+        if (type.isNone(error.configKey)) {
+          error.configKey = action['~k'];
+        }
+      } else {
+        error = new ActionError(err.message, {
+          cause: err,
+          typeName: action.type,
+          received: parsedAction.params,
+          location: block.blockId,
+          configKey: action['~k'],
+        });
+      }
 
       responses[action.id] = { error, index, type: action.type };
       const { output: parsedMessages, errors: parserErrors } = this.context._internal.parser.parse({
@@ -511,16 +528,31 @@ class Actions {
     return { type: action.type, response, index };
   }
 
+  // Returns a function that closes the message. The message is shown by the app's Message block, a
+  // plugin: a message it fails to show is reported on its own, since thrown from here it would
+  // replace the action's own result, and callActions would lose the { error, action } shape of a
+  // failed action.
   displayMessage({ defaultMessage, duration, hideExplicitly, message, status }) {
-    let close = () => undefined;
-    if ((hideExplicitly && message !== false) || (!hideExplicitly && !type.isNone(message))) {
-      close = this.context._internal.lowdefy._internal.displayMessage({
+    const noClose = () => undefined;
+    const shown =
+      (hideExplicitly && message !== false) || (!hideExplicitly && !type.isNone(message));
+    if (!shown) {
+      return noClose;
+    }
+    const { displayMessage, handleError, logger } = this.context._internal.lowdefy._internal;
+    try {
+      const close = displayMessage({
         content: type.isString(message) ? message : defaultMessage,
         duration,
         status,
       });
+      return type.isFunction(close) ? close : noClose;
+    } catch (error) {
+      // handleError is async in the client; its own failure must not surface as an unhandled
+      // rejection either.
+      Promise.resolve(handleError?.(error)).catch((reportError) => logger?.error(reportError));
+      return noClose;
     }
-    return close;
   }
 }
 

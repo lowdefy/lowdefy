@@ -12,14 +12,14 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
     items:
       - title: Edit
         eventName: onEdit
-        icon: AiOutlineEdit
+        icon: edit
       - title: Duplicate
         eventName: onDuplicate
-        icon: AiOutlineCopy
+        icon: copy
       - type: divider
       - title: Delete
         eventName: onDelete
-        icon: AiOutlineDelete
+        icon: delete
         danger: true
   events:
     onEdit:
@@ -50,17 +50,17 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
     flex: 0 0 auto
   properties:
     title: Save
-    icon: AiOutlineSave
+    icon: save
     color: primary
     variant: solid
     split: true
     items:
       - title: Save as Draft
         eventName: onSaveDraft
-        icon: AiOutlineFile
+        icon: file
       - title: Save & Publish
         eventName: onPublish
-        icon: AiOutlineSend
+        icon: send
   events:
     onClick:
       - id: db_split_save_msg
@@ -183,19 +183,19 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
     flex: 0 0 auto
   properties:
     title: Export
-    icon: AiOutlineDownload
+    icon: download
     color: primary
     variant: outlined
     items:
       - title: Export as CSV
         eventName: onCSV
-        icon: AiOutlineFile
+        icon: file
       - title: Export as PDF
         eventName: onPDF
-        icon: AiOutlineFilePdf
+        icon: FileText
       - title: Export as Excel
         eventName: onExcel
-        icon: AiOutlineFileExcel
+        icon: FileSpreadsheet
   events:
     onCSV:
       - id: db_icon_csv_msg
@@ -218,6 +218,38 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
 ```
 
 ```yaml
+- id: db_icon_end
+  type: DropdownButton
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Options
+    icon: chevron-down
+    iconPlacement: end
+    items:
+      - title: Rename
+        eventName: onRename
+        icon: edit
+      - title: Archive
+        eventName: onArchive
+- id: db_split_icon_end
+  type: DropdownButton
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Send
+    icon: send
+    iconPlacement: end
+    split: true
+    color: primary
+    variant: solid
+    items:
+      - title: Schedule send
+        eventName: onSchedule
+        icon: clock
+```
+
+```yaml
 - id: db_disabled_items
   type: DropdownButton
   layout:
@@ -227,15 +259,15 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
     items:
       - title: View Details
         eventName: onView
-        icon: AiOutlineEye
+        icon: view
       - title: Edit (no permission)
         eventName: onEdit
-        icon: AiOutlineEdit
+        icon: edit
         disabled: true
       - type: divider
       - title: Archive
         eventName: onArchive
-        icon: AiOutlineDelete
+        icon: delete
         danger: true
   events:
     onView:
@@ -260,18 +292,18 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
     flex: 0 0 auto
   properties:
     title: Edit
-    icon: AiOutlineEdit
+    icon: edit
     items:
       - title: Undo
         eventName: onUndo
-        icon: AiOutlineUndo
+        icon: Undo
       - title: Redo
         eventName: onRedo
-        icon: AiOutlineRedo
+        icon: Redo
       - type: divider
       - title: Delete
         eventName: onDelete
-        icon: AiOutlineDelete
+        icon: delete
         danger: true
   events:
     onUndo:
@@ -502,7 +534,7 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
     flex: 0 0 auto
   properties:
     title: My Account
-    icon: AiOutlineUser
+    icon: user
     color: "#531dab"
     variant: solid
     theme:
@@ -516,14 +548,14 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
     items:
       - title: Profile Settings
         eventName: onProfile
-        icon: AiOutlineSetting
+        icon: settings
       - title: Billing & Plans
         eventName: onBilling
-        icon: AiOutlineCreditCard
+        icon: CreditCard
       - type: divider
       - title: Sign Out
         eventName: onSignOut
-        icon: AiOutlineLogout
+        icon: logout
         danger: true
   events:
     onProfile:
@@ -554,7 +586,7 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
     flex: 0 0 auto
   properties:
     title: Delete Account
-    icon: AiOutlineWarning
+    icon: warning
     color: danger
     variant: solid
     split: true
@@ -567,11 +599,11 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
     items:
       - title: Delete All Data
         eventName: onDeleteData
-        icon: AiOutlineDelete
+        icon: delete
         danger: true
       - title: Export Data First
         eventName: onExportFirst
-        icon: AiOutlineDownload
+        icon: download
   events:
     onClick:
       - id: db_dz_click_msg
@@ -598,7 +630,17 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `title` | string | - | Button label text. |
-| `icon` | string \| object | - | Name of a React-Icon or properties of an Icon block to use icon in button. |
+| `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use icon in button. |
+| `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `icon.color` | string | - | Icon color. |
+| `icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `iconPlacement` | string | `"start"` | Place the button icon before (start) or after (end) the title. Enum: `start`, `end`. |
 | `type` | string | `"default"` | Deprecated - use color and variant instead. The button type. Enum: `primary`, `default`, `dashed`, `text`, `link`. |
 | `color` | string | - | Button color. Preset values: default, primary, danger, blue, purple, cyan, green, magenta, pink, red, orange, yellow, volcano, geekblue, lime, gold. Also accepts custom hex color strings. |
 | `variant` | string | - | Button visual variant. When set, takes precedence over type. Enum: `solid`, `outlined`, `dashed`, `filled`, `text`, `link`. |
@@ -608,18 +650,27 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
 | `ghost` | boolean | `false` | Make the button's background transparent. |
 | `disabled` | boolean | `false` | Disable the entire dropdown. |
 | `trigger` | string | `"click"` | How the dropdown opens. Enum: `click`, `hover`. |
-| `placement` | string | `"bottomRight"` | Dropdown position. Enum: `bottomLeft`, `bottom`, `bottomRight`, `topLeft`, `top`, `topRight`. |
+| `placement` | string | `"bottomRight"` | Dropdown position. Enum: `bottomLeft`, `bottom`, `bottomRight`, `topLeft`, `top`, `topRight`, `left`, `leftTop`, `leftBottom`, `right`, `rightTop`, `rightBottom`. |
 | `arrow` | boolean \| object | `false` | Show arrow pointing to trigger. |
 | `arrow.pointAtCenter` | boolean | - |  |
 | `split` | boolean | `false` | Split button mode. Left button fires onClick, right arrow opens dropdown. |
-| `items` | array | - | Menu items. Each with an eventName that triggers a named event. Keyboard shortcuts can be configured via the standard `events..shortcut` schema (preferred) or via the item-level `shortcut` property — both render a badge next to the item label. The event-level shortcut takes precedence when both are set. |
+| `items` | array | - | Menu items. Each with an eventName that triggers a named event. Keyboard shortcuts can be configured via the standard `events.<eventName>.shortcut` schema (preferred) or via the item-level `shortcut` property — both render a badge next to the item label. The event-level shortcut takes precedence when both are set. |
 | `items.$.title` | string | - | Display text. |
 | `items.$.eventName` | string | - | Event name to trigger when clicked. |
 | `items.$.icon` | string \| object | - | Icon name or config. |
+| `items.$.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `items.$.icon.color` | string | - | Icon color. |
+| `items.$.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `items.$.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `items.$.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `items.$.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `items.$.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `items.$.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `items.$.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `items.$.danger` | boolean | - | Red danger styling. |
 | `items.$.disabled` | boolean | - | Disable this item. |
 | `items.$.type` | string | - | Set to divider for a separator. Enum: `divider`. |
-| `items.$.shortcut` | string | - | Keyboard shortcut. Binds the key and renders the badge. Prefer configuring this via `events..shortcut` to follow the standard Lowdefy event schema — the event-level shortcut takes precedence when both are set. |
+| `items.$.shortcut` | string | - | Keyboard shortcut. Binds the key and renders the badge. Prefer configuring this via `events.<eventName>.shortcut` to follow the standard Lowdefy event schema — the event-level shortcut takes precedence when both are set. |
 | `theme` | object | - | Antd design token overrides. Top-level keys apply to the Dropdown menu. Use the nested "button" key for Button-specific tokens. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design dropdown tokens](https://ant.design/components/dropdown#design-token). |
 | `theme.zIndexPopup` | number | `1050` | Z-index of the dropdown popup. |
 | `theme.controlItemBgHover` | string | - | Background color on menu item hover. |
@@ -650,12 +701,12 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
 | Key | Target |
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
-| `/element` | The outer container. |
+| `/element` | The outer element: the button group in split mode, otherwise the button. |
 | `/button` | The trigger button. |
 | `/icon` | The icon in the button. |
 | `/menu` | The floating menu container. |
 | `/item` | Individual menu items. |
 | `/itemIcon` | Icon within menu items. |
-| `/arrow` | Dropdown arrow indicator. |
+| `/arrow` | Has no effect: antd does not expose the dropdown arrow as a separately styled part. |
 
 No slots defined.

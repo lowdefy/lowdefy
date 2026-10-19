@@ -19,5 +19,6 @@ function _not({ params }) {
 }
 
 _not.dynamic = false;
+_not.tracking = { kind: 'pure' };
 
 export default _not;

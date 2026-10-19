@@ -14,14 +14,19 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 import authJson from '../../build/auth.js';
 
-// Resolves the raw mock user object — LOWDEFY_DEV_USER env var first (the
-// `lowdefy dev --mock-user` flag sets it), then auth.dev.mockUser from the
-// build config. Returns just the user object; getDevSession.js turns it into
-// a session through the same pipeline a real sign-in uses.
+// dev.mockUser is a pre-resolved caller that substitutes for the whole
+// resolveAuthentication step - no auth engine, no session lookup, no
+// membership wall. Its roles are authoritative. LOWDEFY_DEV_USER takes
+// priority over auth.dev.mockUser from lowdefy.yaml.
+//
+// A dev mock user needs no auth stack behind it: auth.dev is a dev-only
+// concern, so an app whose only auth key is auth.dev runs signed out in
+// production and has this caller in the dev server.
 function getMockUser() {
   const mockUserJson = process.env.LOWDEFY_DEV_USER;
   let mockUser;
@@ -30,25 +35,24 @@ function getMockUser() {
     try {
       mockUser = JSON.parse(mockUserJson);
     } catch (error) {
-      throw new Error('Invalid JSON in LOWDEFY_DEV_USER environment variable.', { cause: error });
+      throw new ConfigError('Invalid JSON in LOWDEFY_DEV_USER environment variable.', {
+        cause: error,
+      });
     }
   } else {
     mockUser = authJson.dev?.mockUser;
   }
 
   if (!mockUser) {
-    return undefined;
-  }
-
-  if (authJson.configured !== true) {
-    throw new Error(
-      'Mock user configured but auth is not configured in lowdefy.yaml. ' +
-        'Add auth configuration to use mock user feature.'
-    );
+    return null;
   }
 
   // Deserialize to restore arrays from ~arr markers and remove other build markers
-  return serializer.deserialize(mockUser);
+  mockUser = serializer.deserialize(mockUser);
+
+  // The roles/attributes floor is applied at injection by
+  // normalizeInjectedCaller (createLowdefyContext.js) - return the raw user.
+  return mockUser;
 }
 
 export default getMockUser;

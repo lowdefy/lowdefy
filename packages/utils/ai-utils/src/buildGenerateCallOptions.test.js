@@ -38,14 +38,28 @@ test('buildGenerateCallOptions maps a prompt-only request', () => {
 
 test('buildGenerateCallOptions maps a messages-only request', () => {
   const messages = [{ role: 'user', content: 'Hello' }];
-  expect(buildGenerateCallOptions({ request: { messages } })).toEqual({ messages });
+  expect(buildGenerateCallOptions({ request: { messages } })).toEqual({
+    messages,
+    experimental_download: expect.any(Function),
+  });
+});
+
+test('buildGenerateCallOptions bounds the file downloads of a messages request', () => {
+  const options = buildGenerateCallOptions({
+    request: { messages: [{ role: 'user', content: 'Hello' }] },
+  });
+  expect(typeof options.experimental_download).toBe('function');
+});
+
+test('buildGenerateCallOptions sets no download function for a prompt request', () => {
+  const options = buildGenerateCallOptions({ request: { prompt: 'Hello' } });
+  expect(options).not.toHaveProperty('experimental_download');
 });
 
 test('buildGenerateCallOptions copies all defined call settings and omits undefined ones', () => {
   const request = {
     prompt: 'Hello',
     system: 'You are helpful.',
-    maxOutputTokens: 100,
     temperature: 0.5,
     topP: 0.9,
     topK: 40,
@@ -56,8 +70,34 @@ test('buildGenerateCallOptions copies all defined call settings and omits undefi
     maxRetries: 3,
     providerOptions: { anthropic: { thinking: { type: 'enabled' } } },
   };
-  expect(buildGenerateCallOptions({ request })).toEqual(request);
+  // `system` is the request's public name; ai v7 takes it as `instructions`.
+  const { system, ...rest } = request;
+  expect(buildGenerateCallOptions({ request })).toEqual({ ...rest, instructions: system });
 });
+
+const systemMessages = [
+  { role: 'system', content: 'Answer in French.' },
+  { role: 'user', content: 'Hello' },
+];
+
+test('buildGenerateCallOptions passes system messages when the request allows them', () => {
+  expect(
+    buildGenerateCallOptions({ request: { messages: systemMessages, allowSystemInMessages: true } })
+  ).toEqual({
+    messages: systemMessages,
+    allowSystemInMessages: true,
+    experimental_download: expect.any(Function),
+  });
+});
+
+test.each([undefined, false])(
+  'buildGenerateCallOptions rejects a system message when allowSystemInMessages is %s',
+  (allowSystemInMessages) => {
+    expect(() =>
+      buildGenerateCallOptions({ request: { messages: systemMessages, allowSystemInMessages } })
+    ).toThrow('"messages" includes a system message.');
+  }
+);
 
 test('buildGenerateCallOptions ignores unrelated request properties', () => {
   expect(

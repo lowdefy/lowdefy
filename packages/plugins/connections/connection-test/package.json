@@ -9,6 +9,9 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
     "./connections": "./src/connections.js",
     "./types": "./src/types.js"

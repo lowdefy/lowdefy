@@ -36,12 +36,13 @@ export default {
       componentDisabled: {
         type: 'boolean',
         default: false,
-        description: 'Set disabled state for all child components.',
+        description:
+          'Disable every input and button inside the ConfigProvider. A block that sets its own `disabled` property keeps that value, so `disabled: false` re-enables it.',
       },
       componentSize: {
         type: 'string',
-        enum: ['small', 'middle', 'large'],
-        description: 'Set size for all child components.',
+        enum: ['small', 'medium', 'middle', 'large'],
+        description: 'Set size for all child components. `middle` is the older name for `medium`.',
       },
       components: {
         type: 'object',
@@ -65,12 +66,45 @@ export default {
           displayType: 'yaml',
         },
       },
+      popupMatchSelectWidth: {
+        type: ['boolean', 'number'],
+        description:
+          'Whether dropdowns of select-like components match the width of their input. A number sets a minimum dropdown width in pixels. `false` also turns off virtual scrolling.',
+      },
+      popupOverflow: {
+        type: 'string',
+        enum: ['viewport', 'scroll'],
+        default: 'viewport',
+        description:
+          'Keep dropdowns of select-like components inside the viewport, or let them follow the page scroll.',
+      },
       token: {
         type: 'object',
         description:
           'Theme token configuration. Customize design tokens like colorPrimary, fontSize, etc.',
         docs: {
           displayType: 'yaml',
+        },
+      },
+      virtual: {
+        type: 'boolean',
+        default: true,
+        description:
+          'Set to false to turn off virtual scrolling in selectors, trees and tables, so every option renders.',
+      },
+      wave: {
+        type: 'object',
+        description: 'Click wave effect of buttons and other clickable components.',
+        docs: {
+          displayType: 'yaml',
+        },
+        additionalProperties: false,
+        properties: {
+          disabled: {
+            type: 'boolean',
+            default: false,
+            description: 'Turn off the click wave effect.',
+          },
         },
       },
       variant: {
@@ -81,7 +115,7 @@ export default {
       theme: {
         type: 'object',
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'Antd design token overrides for this block and its descendants. Merged with token, which takes precedence. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
         },

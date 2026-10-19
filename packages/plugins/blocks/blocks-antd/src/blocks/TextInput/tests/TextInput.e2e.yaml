@@ -23,6 +23,7 @@ events:
         textinput_with_value: Initial Value
         textinput_allowclear: Clear me
         textinput_maxlength: abc
+        textinput_onclear: Clear me too
 
 blocks:
   # ============================================
@@ -108,13 +109,13 @@ blocks:
     type: TextInput
     properties:
       title: With Prefix Icon
-      prefixIcon: AiOutlineUser
+      prefixIcon: user
 
   - id: textinput_suffixicon
     type: TextInput
     properties:
       title: With Suffix Icon
-      suffixIcon: AiOutlineSearch
+      suffixIcon: search
 
   - id: textinput_label_inline
     type: TextInput
@@ -285,3 +286,49 @@ blocks:
               - 'Typed: '
               - _state: textinput_typing
           else: ''
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: textinput_underlined
+    type: TextInput
+    properties:
+      title: Underlined
+      variant: underlined
+
+  - id: textinput_onclear
+    type: TextInput
+    properties:
+      title: OnClear Test
+      allowClear: true
+    events:
+      onClear:
+        - id: set_onclear
+          type: SetState
+          params:
+            textinput_onclear_fired: true
+
+  - id: onclear_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: textinput_onclear_fired
+              - true
+          then: Clear fired
+          else: ''
+
+  # ============================================
+  # NULL PROPERTIES
+  # ============================================
+
+  # _state on a missing key gives null, which must fall back to antd's outlined variant.
+  - id: textinput_null_variant
+    type: TextInput
+    properties:
+      title: Null Variant
+      variant:
+        _state: textinput_null_missing

@@ -94,9 +94,7 @@ test('menu id is not a string', () => {
       },
     ],
   };
-  expect(() => buildMenu({ components, context })).toThrow(
-    'Menu id is not a string.'
-  );
+  expect(() => buildMenu({ components, context })).toThrow('Menu id is not a string.');
 });
 
 test('throw on Duplicate menu ids', () => {
@@ -891,5 +889,65 @@ test('buildMenu default menu filter 404 page', () => {
         auth: { public: true },
       },
     ],
+  });
+});
+
+describe('menu links to pages with placeholders', () => {
+  const routes = [
+    {
+      pageId: 'ticket',
+      path: 'tickets/{space}/{ticket_id}',
+      segments: [{ fixed: 'tickets' }, { name: 'space' }, { name: 'ticket_id' }],
+    },
+    { pageId: 'home', path: 'home', segments: [{ fixed: 'home' }] },
+  ];
+  const pages = [
+    { pageId: 'home', auth: { public: true } },
+    { pageId: 'ticket', auth: { public: true } },
+  ];
+
+  function run(components) {
+    const menuContext = testContext({ logger });
+    menuContext.errors = [];
+    menuContext.routes = routes;
+    buildMenu({ components, context: menuContext });
+    return menuContext.errors.map((error) => error.message);
+  }
+
+  test('buildMenu refuses a menu link to a page with placeholders without static pathParams', () => {
+    const errors = run({
+      pages,
+      menus: [{ id: 'main', links: [{ id: 'ticket', type: 'MenuLink', pageId: 'ticket' }] }],
+    });
+    expect(errors).toEqual([
+      'Menu link "ticket" on menu "main" links to page "ticket" without path params "space", "ticket_id". Page "ticket" has path "tickets/{space}/{ticket_id}", so the menu link\'s pathParams must give every placeholder a value.',
+    ]);
+  });
+
+  test('buildMenu keeps the pathParams of a menu link that gives every placeholder a value', () => {
+    const components = {
+      pages,
+      menus: [
+        {
+          id: 'main',
+          links: [
+            {
+              id: 'ticket',
+              type: 'MenuLink',
+              pageId: 'ticket',
+              pathParams: { space: 'support', ticket_id: '1' },
+            },
+          ],
+        },
+      ],
+    };
+    expect(run(components)).toEqual([]);
+    expect(components.menus[0].links[0].pathParams).toEqual({ space: 'support', ticket_id: '1' });
+  });
+
+  test('buildMenu leaves pages with placeholders out of the default menu', () => {
+    const components = { pages };
+    expect(run(components)).toEqual([]);
+    expect(components.menus[0].links.map((link) => link.pageId)).toEqual(['home']);
   });
 });

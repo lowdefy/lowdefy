@@ -27,6 +27,12 @@ export default {
       params: {
         description: 'Params to pass to the operator.',
       },
+      operators: {
+        type: 'array',
+        items: { type: 'string' },
+        description:
+          'The operators the call may evaluate. Required when name is read at runtime; any other name is refused.',
+      },
     },
     additionalProperties: false,
   },

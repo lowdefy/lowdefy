@@ -46,6 +46,7 @@ _ref:
           - `null`
           - `undefined`
           - `none` (`null` or `undefined`)
+          - `empty` (`null`, `undefined`, `''`, or `[]` - note that `0`, `false` and `{}` are not empty)
           - `primitive` (`undefined`, `null`, `string`, `number`, `boolean`, or `date`)
         - `on: any`: The value to test. One of `on` or `key` must be specified unless the operator is used in an input block.
         - `key: string`: The key of a value in `state` to test. One of `on` or `key` must be specified unless the operator is used in an input block.
@@ -75,13 +76,23 @@ _ref:
       id: input
       type: TextInput
       validate:
-        - message: This field id required.
+        - message: This field is required.
           status: error
           pass:
             _not:
-              _type: none
+              _type: empty
       ```
-      Returns: `true` if the input is none.
+      Returns: `true` if the input has a value. This is the test the `required` block field applies.
+
+      ###### Check if a value is empty:
+      ```yaml
+      _type:
+        type: empty
+        on:
+          _state: selected_tags
+      ```
+      Returns: `true` if `selected_tags` is `null`, `undefined`, `''` or `[]`, and `false` for any
+      other value, including `0`, `false` and `{}`.
 
       ###### Test if an id in the `urlQuery` is undefined or null:
       ```yaml

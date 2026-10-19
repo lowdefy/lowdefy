@@ -18,7 +18,17 @@ import icon from '../../schemas/icon.js';
 
 export default {
   category: 'container',
-  icons: ['AiOutlineBell', 'AiOutlineLaptop', 'AiOutlineMoon', 'AiOutlineSun', 'AiOutlineUser'],
+  actions: ['SetDarkMode'],
+  icons: [
+    'bell',
+    'user',
+    'theme-light',
+    'theme-dark',
+    'theme-system',
+    'globe',
+    'chevron-right',
+    'more',
+  ],
   valueType: null,
   slots: {
     content: 'Child blocks in the header.',
@@ -86,6 +96,7 @@ export default {
               },
               url: {
                 type: 'string',
+                urlKind: 'url',
                 description: 'External URL to link to.',
               },
               newTab: {
@@ -123,7 +134,7 @@ export default {
           },
           icon: {
             ...icon,
-            description: 'Icon for the notification button. Defaults to AiOutlineBell.',
+            description: 'Icon for the notification button. Defaults to `bell`.',
           },
           size: {
             type: 'string',
@@ -146,6 +157,7 @@ export default {
             properties: {
               src: {
                 type: 'string',
+                urlKind: 'src',
                 description: 'Image URL for the avatar. Typically bound to _user: image.',
               },
               content: {
@@ -156,7 +168,7 @@ export default {
               icon: {
                 ...icon,
                 description:
-                  'Icon to display in avatar when no src or content is set. Defaults to AiOutlineUser.',
+                  'Icon to display in avatar when no src or content is set. Defaults to `user`.',
               },
               color: {
                 type: 'string',
@@ -168,8 +180,7 @@ export default {
               size: {
                 type: ['string', 'number'],
                 default: 'small',
-                enum: ['default', 'small', 'large'],
-                description: 'Size of the avatar.',
+                description: 'Size of the avatar: default, small, large or a pixel number.',
                 docs: {
                   displayType: 'string',
                 },
@@ -206,6 +217,7 @@ export default {
                 },
                 url: {
                   type: 'string',
+                  urlKind: 'url',
                   description: 'External URL to link to.',
                 },
                 newTab: {
@@ -276,7 +288,7 @@ export default {
       theme: {
         type: 'object',
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'Not applied: antd scopes Layout design tokens to the Layout element, so set tokens such as headerHeight or footerBg on the parent Layout block theme.',
         docs: {
           displayType: 'yaml',
         },

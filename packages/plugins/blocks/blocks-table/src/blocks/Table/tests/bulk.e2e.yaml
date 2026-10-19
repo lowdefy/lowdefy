@@ -1,0 +1,271 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: bulk
+type: Box
+
+blocks:
+  # ============================================
+  # BULK ACTION BAR
+  # ============================================
+
+  - id: bk
+    type: Table
+    properties:
+      rowSelection:
+        type: checkbox
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+    slots:
+      bulkActions:
+        blocks:
+          - id: bk_assign
+            type: Button
+            properties:
+              title: Assign
+            events:
+              onClick:
+                - id: read_selection
+                  type: SetState
+                  params:
+                    bk_assigned:
+                      _state: bk.selected
+          - id: bk_done
+            type: Button
+            properties:
+              title: Done
+            events:
+              onClick:
+                - id: clear_bk_selection
+                  type: CallMethod
+                  params:
+                    blockId: bk
+                    method: clearSelection
+    events:
+      onSelectionChange:
+        - id: set_bk_rows
+          type: SetState
+          params:
+            bk_rows:
+              _array.length:
+                _event: rows
+
+  - id: bk_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'selected='
+          - _json.stringify:
+              - _state: bk.selected
+              - space: 0
+          - ' assigned='
+          - _json.stringify:
+              - _if_none:
+                  - _state: bk_assigned
+                  - null
+              - space: 0
+          - ' rows='
+          - _if_none:
+              - _state: bk_rows
+              - none
+
+  # ============================================
+  # SELECT ALL MATCHING WITH A FILTER, THEN NEW DATA
+  # ============================================
+
+  - id: bk_filtered
+    type: Table
+    properties:
+      rowSelection:
+        type: checkbox
+      defaultView:
+        filter:
+          key: team
+          op: eq
+          value: Blue
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _if_none:
+          - _state: bk_filtered_data
+          - _ref: ../../src/blocks/Table/tests/people.yaml
+
+  - id: bk_filtered_add
+    type: Button
+    properties:
+      title: Add rows
+    events:
+      onClick:
+        - id: add_filtered_rows
+          type: SetState
+          params:
+            bk_filtered_data:
+              _array.concat:
+                - _ref: ../../src/blocks/Table/tests/people.yaml
+                - - id: 6
+                    name: Finn
+                    team: Blue
+                    age: 22
+                    city: Oslo
+                  - id: 7
+                    name: Gail
+                    team: Red
+                    age: 28
+                    city: Lima
+
+  - id: bk_filtered_clear_filters
+    type: Button
+    properties:
+      title: Clear filters
+    events:
+      onClick:
+        - id: clear_filtered_filters
+          type: CallMethod
+          params:
+            blockId: bk_filtered
+            method: clearFilters
+
+  - id: bk_filtered_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'selected='
+          - _json.stringify:
+              - _state: bk_filtered.selected
+              - space: 0
+
+  # ============================================
+  # QUEUE: SINGLE-KEY ACTIONS AND keyboard.next
+  # ============================================
+
+  - id: queue
+    type: Table
+    properties:
+      keyboard:
+        next: true
+      columns:
+        - key: name
+          title: Name
+        - key: team
+        - key: actions
+          type: buttons
+          cell:
+            buttons:
+              - eventName: onArchive
+                title: Archive
+                key: a
+              - eventName: onFlag
+                title: Flag
+                key: f
+                hiddenField: flagged
+        - key: more
+          type: menu
+          cell:
+            items:
+              - eventName: onSnooze
+                title: Snooze
+                key: s
+      data:
+        - id: 1
+          name: Charlie
+          team: Blue
+        - id: 2
+          name: alice
+          team: Red
+          flagged: true
+        - id: 3
+          name: Bob
+          team: Blue
+    events:
+      onArchive:
+        - id: log_archive
+          type: SetState
+          params:
+            queue_last:
+              _string.concat:
+                - 'archive:'
+                - _event: rowKey
+                - ':'
+                - _event: button.title
+                - ':'
+                - _event: buttonIndex
+      onFlag:
+        - id: log_flag
+          type: SetState
+          params:
+            queue_last:
+              _string.concat:
+                - 'flag:'
+                - _event: rowKey
+      onSnooze:
+        - id: log_snooze
+          type: SetState
+          params:
+            queue_last:
+              _string.concat:
+                - 'snooze:'
+                - _event: rowKey
+                - ':'
+                - _event: item.title
+                - ':'
+                - _event: itemIndex
+
+  - id: queue_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'last='
+          - _if_none:
+              - _state: queue_last
+              - none
+
+  - id: queue_stay
+    type: Table
+    properties:
+      columns:
+        - key: name
+        - key: actions
+          type: buttons
+          cell:
+            buttons:
+              - eventName: onArchive
+                title: Archive
+                key: a
+      data:
+        - id: 1
+          name: Charlie
+        - id: 2
+          name: alice
+    events:
+      onArchive:
+        - id: log_archive
+          type: SetState
+          params:
+            queue_stay_last:
+              _event: rowKey
+
+  - id: queue_stay_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'last='
+          - _if_none:
+              - _state: queue_stay_last
+              - none

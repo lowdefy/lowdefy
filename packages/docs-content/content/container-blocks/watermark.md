@@ -92,6 +92,24 @@ Watermark overlay with text, image, and font customization.
 ```
 
 ```yaml
+- id: per_line_font
+  type: Watermark
+  properties:
+    text:
+      - text: CONFIDENTIAL
+        font:
+          fontSize: 22
+          fontWeight: bold
+          color: rgba(255, 0, 0, 0.12)
+      - Prepared for the finance team
+  blocks:
+    - id: per_line_font_child
+      type: Box
+      style:
+        height: 200px
+```
+
+```yaml
 - id: align_left
   type: Watermark
   properties:
@@ -278,7 +296,7 @@ Drag and drop files here or click to browse
 - id: css_gradient_bg
   type: Watermark
   class:
-    element: bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg p-4
+    .element: bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg p-4
   properties:
     text: Preview
     font:
@@ -295,7 +313,7 @@ Drag and drop files here or click to browse
 - id: css_dark_surface
   type: Watermark
   class:
-    element: bg-bg-layout rounded-lg p-4
+    .element: bg-bg-layout rounded-lg p-4
   properties:
     text: Dark Theme
     font:
@@ -320,7 +338,7 @@ Drag and drop files here or click to browse
 - id: css_bordered_area
   type: Watermark
   class:
-    element: border-2 border-dashed border-border rounded-xl p-6
+    .element: border-2 border-dashed border-border rounded-xl p-6
   properties:
     text: Upload Area
     font:
@@ -495,7 +513,7 @@ Mobile app for real-time inventory tracking across multiple warehouses. Integrat
 | `inherit` | boolean | `true` | Inherit watermark config from parent Watermark block. |
 | `offset` | array | - | Offset of the watermark from the top-left as [x, y]. |
 | `rotate` | number | `-22` | Rotation angle of watermark in degrees. |
-| `text` | string \| array | - | Watermark text content. Maps to antd "content" prop. |
+| `text` | string \| array | - | Watermark text content. An array renders one line per item. A line can be a string, or `{ text, font }` to give that line its own font style. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design watermark tokens](https://ant.design/components/watermark#design-token). |
 | `theme.colorFill` | string | - | Default watermark text color when font.color is not set. Maps to the global colorFill token. |
 | `theme.fontSizeLG` | number | `16` | Default watermark font size when font.fontSize is not set. Maps to the global fontSizeLG token. |

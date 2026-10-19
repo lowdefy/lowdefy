@@ -98,6 +98,55 @@ Small size card with compact padding (12px) and shorter header (38px). Ideal for
             color: default
 ```
 
+padding: compact tightens the body to 12px and lines the header up with it, while keeping the default header height. Use it for dense dashboards and forms.
+
+```yaml
+- id: padding_compact_card
+  type: Card
+  layout:
+    flex: 1 1 0
+  properties:
+    title: Compact
+    padding: compact
+  blocks:
+    - id: padding_compact_p
+      type: Paragraph
+      properties:
+        content: "padding: compact tightens the body to 12px and lines the header up
+          with it, while keeping the default header height. Use it for dense
+          dashboards and forms."
+- id: padding_none_card
+  type: Card
+  layout:
+    flex: 1 1 0
+  properties:
+    title: Recent invoices
+    padding: none
+  blocks:
+    - id: padding_none_card_rows
+      type: Html
+      properties:
+        html: >
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px; border-bottom: 1px solid
+          var(--ant-color-border-secondary);"><span>INV-1042</span><span
+          style="color: var(--ant-color-text-secondary);">$1,280.00</span></div>
+
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px; border-bottom: 1px solid
+          var(--ant-color-border-secondary);"><span>INV-1041</span><span
+          style="color: var(--ant-color-text-secondary);">$640.00</span></div>
+
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px; border-bottom: 1px solid
+          var(--ant-color-border-secondary);"><span>INV-1040</span><span
+          style="color: var(--ant-color-text-secondary);">$2,115.50</span></div>
+
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px;"><span>INV-1039</span><span style="color:
+          var(--ant-color-text-secondary);">$96.00</span></div>
+```
+
 The default card has a visible border. This clearly separates the card from its surroundings.
 
 A borderless card blends into its container. Best used on colored backgrounds where the card's white fill provides enough contrast.
@@ -114,8 +163,8 @@ A borderless card blends into its container. Best used on colored backgrounds wh
       layout:
         flex: 1 1 0
       properties:
-        title: Bordered (default)
-        bordered: true
+        title: Outlined (default)
+        variant: outlined
       blocks:
         - id: bordered_content
           type: Paragraph
@@ -128,7 +177,7 @@ A borderless card blends into its container. Best used on colored backgrounds wh
         flex: 1 1 0
       properties:
         title: Borderless
-        bordered: false
+        variant: borderless
       blocks:
         - id: borderless_content
           type: Paragraph
@@ -193,7 +242,7 @@ The extra slot renders content in the top-right corner of the card header, next 
                 flex: 0 0 auto
               properties:
                 title: Edit
-                icon: AiOutlineEdit
+                icon: edit
                 color: primary
                 variant: outlined
                 size: small
@@ -202,7 +251,7 @@ The extra slot renders content in the top-right corner of the card header, next 
               layout:
                 flex: 0 0 auto
               properties:
-                icon: AiOutlineEllipsis
+                icon: more
                 color: default
                 variant: text
                 size: small
@@ -241,7 +290,7 @@ Notifications
               layout:
                 flex: 0 0 auto
               properties:
-                icon: AiOutlineUser
+                icon: user
                 color: "#1677ff"
             - id: title_slot_text
               type: Title
@@ -371,6 +420,56 @@ A cover card without a header title. The title is placed inside the body instead
             color: gold
 ```
 
+Revenue grew 12% over the previous quarter.
+
+```yaml
+- id: actions_card
+  type: Card
+  properties:
+    title: Quarterly report
+  slots:
+    content:
+      blocks:
+        - id: actions_card_text
+          type: Paragraph
+          properties:
+            content: Revenue grew 12% over the previous quarter.
+    actions:
+      blocks:
+        - id: actions_card_buttons
+          type: Flex
+          properties:
+            justify: space-around
+          blocks:
+            - id: actions_card_view
+              type: Button
+              properties:
+                title: View
+                type: link
+                icon: view
+            - id: actions_card_share
+              type: Button
+              properties:
+                title: Share
+                type: link
+                icon: share
+```
+
+Shown once loading is false.
+
+```yaml
+- id: loading_card
+  type: Card
+  properties:
+    title: Customer details
+    loading: true
+  blocks:
+    - id: loading_card_text
+      type: Paragraph
+      properties:
+        content: Shown once loading is false.
+```
+
 Inner cards have a gray background and are designed for nesting inside a parent card. They provide visual grouping without extra border weight.
 
 Multiple inner cards can stack within a parent to organize related sections. Each has its own title and content area.
@@ -450,7 +549,7 @@ Hover over any card in this section to see the elevation shadow effect. Commonly
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineDashboard
+            name: Gauge
             color: "#1677ff"
             size: 20
   blocks:
@@ -479,7 +578,7 @@ Hover over any card in this section to see the elevation shadow effect. Commonly
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineDollarCircle
+            name: CircleDollarSign
             color: "#52c41a"
             size: 20
   blocks:
@@ -509,7 +608,7 @@ Hover over any card in this section to see the elevation shadow effect. Commonly
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineCheckCircle
+            name: check-circle
             color: "#faad14"
             size: 20
   blocks:
@@ -561,10 +660,9 @@ Advanced analytics
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineUser
+            icon: user
             size: 64
-            color: "#fff"
-            backgroundColor: "#1677ff"
+            color: "#1677ff"
         - id: rich_profile_info
           type: Box
           layout:
@@ -732,7 +830,7 @@ Shared workspaces, comments, mentions, and real-time co-editing for seamless tea
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineBarChart
+            name: chart
             color: "#1677ff"
   blocks:
     - id: grid_card_1_p
@@ -771,7 +869,7 @@ Shared workspaces, comments, mentions, and real-time co-editing for seamless tea
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineLock
+            name: lock
             color: "#52c41a"
   blocks:
     - id: grid_card_2_p
@@ -810,7 +908,7 @@ Shared workspaces, comments, mentions, and real-time co-editing for seamless tea
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineApi
+            name: Plug
             color: "#722ed1"
   blocks:
     - id: grid_card_3_p
@@ -849,7 +947,7 @@ Shared workspaces, comments, mentions, and real-time co-editing for seamless tea
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineTeam
+            name: users
             color: "#fa8c16"
   blocks:
     - id: grid_card_4_p
@@ -946,8 +1044,10 @@ Inline styles on the header and body can override the default padding for a more
     title: Colored Header
   style:
     .header:
-      borderBottom: 1px solid
-    .body: null
+      backgroundColor: var(--ant-color-primary-bg)
+      borderBottom: 1px solid var(--ant-color-primary-border)
+    .body:
+      backgroundColor: var(--ant-color-fill-quaternary)
   blocks:
     - id: style_header_bg_p
       type: Paragraph
@@ -965,7 +1065,7 @@ Inline styles on the header and body can override the default padding for a more
     .header:
       backgroundColor: "#1f1f1f"
       color: "#ffffff"
-      borderBottom: 1px solid
+      borderBottom: "1px solid #333"
     .body:
       backgroundColor: "#2a2a2a"
   blocks:
@@ -1007,9 +1107,9 @@ The extra CSS key lets you style the container around the extra slot content. He
   layout:
     flex: 1 1 0
   class:
-    element: shadow-lg rounded-xl
-    header: bg-bg-layout
-    body: bg-bg-container
+    .element: shadow-lg rounded-xl
+    .header: bg-bg-layout
+    .body: bg-bg-container
   properties:
     title: Element + Header + Body
   blocks:
@@ -1024,7 +1124,7 @@ The extra CSS key lets you style the container around the extra slot content. He
   layout:
     flex: 1 1 0
   class:
-    element: hover:ring-2 hover:ring-blue-400 transition-all duration-200 rounded-lg
+    .element: hover:ring-2 hover:ring-blue-400 transition-all duration-200 rounded-lg
   properties:
     title: Hover Ring Effect
     hoverable: true
@@ -1039,7 +1139,7 @@ The extra CSS key lets you style the container around the extra slot content. He
   layout:
     flex: 1 1 0
   class:
-    extra: bg-bg-layout px-3 py-1 rounded-full
+    .extra: bg-bg-layout px-3 py-1 rounded-full
   properties:
     title: Styled Extra Area
   slots:
@@ -1152,11 +1252,14 @@ A warm-toned card using theme tokens to customize the background, header, text, 
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `bordered` | boolean | `true` | Toggles rendering of the border around the card. |
+| `bordered` | boolean | `true` | Toggles rendering of the border around the card. `bordered: false` is the same as `variant: borderless`. |
 | `hoverable` | boolean | `false` | Lift up when hovering card. |
+| `loading` | boolean | `false` | Show a loading skeleton in place of the card content. |
 | `inner` | boolean | `false` | Change the card style to inner. |
+| `padding` | string | `"default"` | Space inside the card body. `compact` tightens the body to 12px and aligns the header with it. `none` removes the body padding so content such as a table, list or image runs edge to edge; the header keeps its padding. Enum: `default`, `compact`, `none`. |
 | `size` | string | `"default"` | Size of the card. Enum: `default`, `small`. |
 | `title` | string | - | Title to show in the title area - supports html. Overwritten by blocks in the title content area. |
+| `variant` | string | `"outlined"` | Card style variant. Enum: `outlined`, `borderless`. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design card tokens](https://ant.design/components/card#design-token). |
 | `theme.headerBg` | string | `"transparent"` | Background color of the card header. |
 | `theme.headerFontSize` | number | `16` | Font size of the card header title. |
@@ -1167,8 +1270,8 @@ A warm-toned card using theme tokens to customize the background, header, text, 
 | `theme.actionsLiMargin` | string | `"12px 0"` | Margin of each action item in the card actions area. |
 | `theme.tabsMarginBottom` | number | `-17` | Bottom margin adjustment for tabs in the card. |
 | `theme.extraColor` | string | `"rgba(0,0,0,0.88)"` | Text color for the extra content area in the header. |
-| `theme.bodyPadding` | number | `24` | Padding of the card body. |
-| `theme.bodyPaddingSM` | number | `12` | Padding of the card body for small cards. |
+| `theme.bodyPadding` | number \| string | `24` | Padding of the card body: a number of pixels, or a CSS padding string such as `28px 32px`. |
+| `theme.bodyPaddingSM` | number \| string | `12` | Padding of the card body for small cards. |
 | `theme.headerPadding` | number | `24` | Horizontal padding of the card header. |
 | `theme.headerPaddingSM` | number | `12` | Horizontal padding of the card header for small cards. |
 | `theme.borderRadiusLG` | number | `8` | Border radius of the card. |
@@ -1187,6 +1290,7 @@ A warm-toned card using theme tokens to customize the background, header, text, 
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Card element. |
 | `/header` | The Card header. |
+| `/title` | The Card title. |
 | `/body` | The Card body. |
 | `/cover` | The Card cover. |
 | `/actions` | The Card actions. |
@@ -1194,6 +1298,7 @@ A warm-toned card using theme tokens to customize the background, header, text, 
 
 | Slot | Description |
 | --- | --- |
+| `actions` | Action bar at the bottom of the card. |
 | `content` | Main Card body. |
 | `cover` | Image or content above the body. |
 | `extra` | Extra content in the top-right header. |

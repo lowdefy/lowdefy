@@ -254,6 +254,76 @@ Progress indicator in line, circle, and dashboard styles.
 ```
 
 ```yaml
+- id: gradient_line
+  type: Progress
+  properties:
+    percent: 80
+    strokeColor:
+      from: "#108ee9"
+      to: "#87d068"
+- id: gradient_circle
+  type: Progress
+  properties:
+    type: circle
+    percent: 90
+    strokeColor:
+      0%: "#108ee9"
+      100%: "#87d068"
+```
+
+```yaml
+- id: percent_inner_start
+  type: Progress
+  properties:
+    percent: 45
+    size:
+      - -1
+      - 20
+    percentPosition:
+      align: start
+      type: inner
+- id: percent_inner_center
+  type: Progress
+  properties:
+    percent: 65
+    size:
+      - -1
+      - 20
+    percentPosition:
+      align: center
+      type: inner
+- id: percent_outer_center
+  type: Progress
+  properties:
+    percent: 30
+    percentPosition:
+      align: center
+      type: outer
+```
+
+```yaml
+- id: size_small_line
+  type: Progress
+  properties:
+    percent: 50
+    size: small
+- id: size_circle_small
+  type: Progress
+  properties:
+    type: circle
+    percent: 50
+    size: small
+- id: circle_steps
+  type: Progress
+  properties:
+    type: dashboard
+    percent: 60
+    steps:
+      count: 8
+      gap: 4
+```
+
+```yaml
 - id: width_small
   type: Progress
   layout:
@@ -435,7 +505,7 @@ Progress indicator in line, circle, and dashboard styles.
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineFile
+            name: file
             size: 20
             color: "#1677ff"
         - id: upload_file_1_info
@@ -464,7 +534,7 @@ Progress indicator in line, circle, and dashboard styles.
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineFile
+            name: file
             size: 20
             color: "#1677ff"
         - id: upload_file_2_info
@@ -495,7 +565,7 @@ Progress indicator in line, circle, and dashboard styles.
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineFile
+            name: file
             size: 20
             color: "#ff4d4f"
         - id: upload_file_3_info
@@ -526,7 +596,7 @@ Progress indicator in line, circle, and dashboard styles.
             title: Retry Failed
             color: danger
             variant: outlined
-            icon: AiOutlineReload
+            icon: refresh
             size: small
           events:
             onClick:
@@ -543,7 +613,7 @@ Progress indicator in line, circle, and dashboard styles.
             title: Upload More
             color: primary
             variant: solid
-            icon: AiOutlineUpload
+            icon: upload
             size: small
           events:
             onClick:
@@ -613,7 +683,7 @@ Invite team members
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineCheckCircle
+            name: check-circle
             size: 18
             color: "#52c41a"
         - id: onboarding_step_1_label
@@ -641,7 +711,7 @@ Invite team members
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineCheckCircle
+            name: check-circle
             size: 18
             color: "#52c41a"
         - id: onboarding_step_2_label
@@ -669,7 +739,7 @@ Invite team members
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineCheckCircle
+            name: check-circle
             size: 18
             color: "#52c41a"
         - id: onboarding_step_3_label
@@ -697,7 +767,7 @@ Invite team members
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineClockCircle
+            name: clock
             size: 18
             color: "#1677ff"
         - id: onboarding_step_4_label
@@ -725,7 +795,7 @@ Invite team members
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineClockCircle
+            name: clock
             size: 18
             color: "#d9d9d9"
         - id: onboarding_step_5_label
@@ -771,7 +841,7 @@ Invite team members
             title: Continue Setup
             color: primary
             variant: solid
-            icon: AiOutlineArrowRight
+            icon: arrow-right
           events:
             onClick:
               - id: continue_msg
@@ -787,17 +857,23 @@ Invite team members
 | `showInfo` | boolean | `true` | Whether to display the progress value and the status icon. |
 | `percent` | number | `0` | Set the completion percentage. |
 | `status` | string | `"normal"` | Set the status of the Progress. Enum: `success`, `exception`, `normal`, `active`. |
-| `strokeLinecap` | string | `"round"` | Set the style of the progress linecap. Enum: `round`, `square`. |
-| `strokeColor` | string \| object | - | Color of progress bar. |
+| `strokeLinecap` | string | `"round"` | Set the style of the progress linecap. Enum: `round`, `butt`, `square`. |
+| `strokeColor` | string \| array \| object | - | Color of progress bar. An object like `{ from: "#108ee9", to: "#87d068" }` or `{ "0%": "#108ee9", "100%": "#87d068" }` renders a gradient, and an array colors each step when steps is set. |
 | `success` | object | - | Segmented success percent configuration. |
 | `success.percent` | number | `0` | Segmented success percent. |
 | `success.strokeColor` | string | - | Color of the success segment. |
 | `trailColor` | string | - | Color of unfilled part. |
-| `strokeWidth` | number | - | Set the width of the progress bar. |
-| `width` | number | `132` | Set the canvas width of the circular progress. |
+| `strokeWidth` | number | - | Thickness of the progress bar. In pixels for line progress, and as a percentage of the canvas width for circle and dashboard progress. |
+| `width` | number | `120` | Set the canvas width of the circular progress. Same as a number size. |
+| `size` | number \| string \| array \| object | - | Size of the progress. 'small' or 'medium', a number (the circle diameter, or both the width and the height of a line or of each step), or `[width, height]` or `{ width, height }` for line progress. |
+| `percentPosition` | object | - | Position of the progress value on line progress. |
+| `percentPosition.align` | string | `"end"` | Horizontal position of the value. Enum: `start`, `center`, `end`. |
+| `percentPosition.type` | string | `"outer"` | Show the value inside or outside the bar. Enum: `inner`, `outer`. |
 | `gapDegree` | number | `75` | The gap degree of half circle. |
-| `gapPosition` | string | `"top"` | The gap position. Enum: `top`, `bottom`, `left`, `right`. |
-| `steps` | number | - | Number of steps for a segmented progress bar (line type only). |
+| `gapPosition` | string | `"bottom"` | The gap position of circle and dashboard progress. Enum: `top`, `bottom`, `left`, `right`. |
+| `steps` | number \| object | - | Number of steps for a segmented progress bar. For circle and dashboard progress, an object `{ count, gap }` also sets the gap between steps. |
+| `steps.count` | number | - | Number of steps. |
+| `steps.gap` | number | `2` | Gap between steps of circle and dashboard progress. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design progress tokens](https://ant.design/components/progress#design-token). |
 | `theme.defaultColor` | string | `"#1677ff"` | Default color of the progress bar. |
 | `theme.remainingColor` | string | `"rgba(0,0,0,0.06)"` | Color of the unfilled portion of the progress bar. |
@@ -814,5 +890,8 @@ No events defined.
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Progress element. |
+| `/rail` | The unfilled part of the progress bar. |
+| `/track` | The filled part of the progress bar. |
+| `/indicator` | The progress value text or status icon. |
 
 No slots defined.

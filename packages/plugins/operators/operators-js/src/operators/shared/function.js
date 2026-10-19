@@ -33,5 +33,7 @@ function _function({ operatorPrefix, params, parser }) {
 }
 
 _function.dynamic = true;
+// What the body reads is only known when it is called, often at render time.
+_function.tracking = { kind: 'untracked' };
 
 export default _function;

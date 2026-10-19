@@ -26,11 +26,13 @@ import DevStreamContext from './DevStreamContext.js';
 // stream per tab exhausted the browser's HTTP/1.1 connection pool once a few
 // tabs of the same app were open, and every later fetch queued forever.
 //
-// pageId tracking: routes/reload.js registers every connection as an
+// Page tracking: routes/reload.js registers every connection as an
 // inspectable tab (lib/docs/tabChannel.js) and announces the tab id on the
-// stream. This component then posts { tabId, pageId } to
-// /api/dev-inspect/page whenever the developer navigates, so the registry's
-// view of "what page is this tab on" stays current without reconnecting.
+// stream. This component then posts { tabId, pageId, pathParams, instanceKey }
+// to /api/dev-inspect/page whenever the page instance on screen changes, so the
+// registry's view of "what instance is this tab on" stays current without
+// reconnecting. A request names the instance to read (the dev server picks
+// it); without one it reads the instance on screen.
 //
 // Never let a bad payload or a plugin's operator error crash the app this is
 // piggybacking on — every handler is wrapped, and the component itself
@@ -55,23 +57,62 @@ function postResult({ basePath, requestId, result }) {
   postJson({ basePath, path: '', body: { requestId, result } });
 }
 
-function postTabPage({ basePath, tabId, pageId }) {
-  postJson({ basePath, path: '/page', body: { tabId, pageId } });
+function postTabPage({ basePath, tabId, page }) {
+  postJson({
+    basePath,
+    path: '/page',
+    body: {
+      tabId,
+      pageId: page.pageId,
+      pathParams: page.pathParams,
+      instanceKey: page.instanceKey,
+    },
+  });
 }
 
-function buildSnapshot({ lowdefy, pageId }) {
-  const context = lowdefy?.contexts?.[`page:${pageId}`];
+// `page "ticket"`, or `page "ticket" (tickets/s/1)` for an instance of a page with placeholders,
+// whose instance key ends in the path its values build.
+function describePage({ pageId, instanceKey }) {
+  const hashIndex = instanceKey.indexOf('#');
+  if (hashIndex === -1) {
+    return `page "${pageId}"`;
+  }
+  return `page "${pageId}" (${instanceKey.slice(hashIndex + 1)})`;
+}
+
+function requestedPage({ data, shownPage }) {
+  if (type.isString(data.instanceKey)) {
+    return { pageId: data.pageId, pathParams: data.pathParams, instanceKey: data.instanceKey };
+  }
+  return shownPage;
+}
+
+function findContext({ lowdefy, page }) {
+  if (type.isNone(page)) {
+    return { error: 'No page has rendered in this tab yet.' };
+  }
+  const context = lowdefy?.contexts?.[page.instanceKey];
   if (type.isNone(context)) {
-    return { error: `No live context for page "${pageId}".` };
+    return { error: `No live context for ${describePage(page)}.` };
+  }
+  return { context };
+}
+
+function buildSnapshot({ lowdefy, page }) {
+  const { context, error } = findContext({ lowdefy, page });
+  if (error) {
+    return { error };
   }
   return serializer.serializeToString({
-    pageId,
+    pageId: page.pageId,
+    pathParams: context.pathParams,
+    instanceKey: page.instanceKey,
     state: context.state,
     requests: context.requests,
     eventLog: (context.eventLog ?? []).slice(-50),
     global: lowdefy.lowdefyGlobal,
     user: lowdefy.user,
-    input: lowdefy.inputs?.[`page:${pageId}`],
+    input: lowdefy.inputs?.[page.instanceKey],
     urlQuery: window.location.search,
   });
 }
@@ -88,7 +129,7 @@ function buildSnapshot({ lowdefy, pageId }) {
 // has finished mounting. Never lets a bad checkpoint or a missing context
 // break the app — every step is try/catch, and failures just leave the app
 // running unmodified.
-async function bootstrapFromCheckpoint({ basePath, pageId, checkpointName, isCancelled }) {
+async function bootstrapFromCheckpoint({ basePath, instanceKey, checkpointName, isCancelled }) {
   try {
     const response = await fetch(
       `${basePath}/api/dev-inspect/checkpoint/${encodeURIComponent(checkpointName)}`
@@ -106,7 +147,7 @@ async function bootstrapFromCheckpoint({ basePath, pageId, checkpointName, isCan
     const deadline = Date.now() + 5000;
     let context;
     while (!isCancelled() && Date.now() < deadline) {
-      context = window.lowdefy?.contexts?.[`page:${pageId}`];
+      context = window.lowdefy?.contexts?.[instanceKey];
       if (context) {
         break;
       }
@@ -127,10 +168,10 @@ async function bootstrapFromCheckpoint({ basePath, pageId, checkpointName, isCan
   }
 }
 
-function evalExpression({ lowdefy, pageId, expression }) {
-  const context = lowdefy?.contexts?.[`page:${pageId}`];
-  if (type.isNone(context)) {
-    return { error: `No live context for page "${pageId}".` };
+function evalExpression({ lowdefy, page, expression }) {
+  const { context, error } = findContext({ lowdefy, page });
+  if (error) {
+    return { error };
   }
   // Callers may pass the operator expression as a JSON-serializable object,
   // or (since it travels as a JSON string end-to-end from an MCP tool
@@ -143,10 +184,10 @@ function evalExpression({ lowdefy, pageId, expression }) {
   };
 }
 
-const Inspector = ({ basePath, lowdefy, pageId }) => {
+const Inspector = ({ basePath, lowdefy, page }) => {
   const { source, tabId } = useContext(DevStreamContext);
-  const pageIdRef = useRef(pageId);
-  pageIdRef.current = pageId;
+  const pageRef = useRef(page);
+  pageRef.current = page;
 
   useEffect(() => {
     if (type.isNone(source)) {
@@ -158,8 +199,10 @@ const Inspector = ({ basePath, lowdefy, pageId }) => {
       try {
         const data = JSON.parse(message.data);
         requestId = data.requestId;
-        const targetPageId = data.pageId ?? pageIdRef.current;
-        const result = buildSnapshot({ lowdefy, pageId: targetPageId });
+        const result = buildSnapshot({
+          lowdefy,
+          page: requestedPage({ data, shownPage: pageRef.current }),
+        });
         postResult({ basePath, requestId, result });
       } catch (error) {
         postResult({ basePath, requestId, result: { error: error.message } });
@@ -171,10 +214,9 @@ const Inspector = ({ basePath, lowdefy, pageId }) => {
       try {
         const data = JSON.parse(message.data);
         requestId = data.requestId;
-        const targetPageId = data.pageId ?? pageIdRef.current;
         const result = evalExpression({
           lowdefy,
-          pageId: targetPageId,
+          page: requestedPage({ data, shownPage: pageRef.current }),
           expression: data.expression,
         });
         postResult({ basePath, requestId, result });
@@ -192,14 +234,15 @@ const Inspector = ({ basePath, lowdefy, pageId }) => {
   }, [basePath, lowdefy, source]);
 
   useEffect(() => {
-    if (type.isNone(tabId) || type.isNone(pageId)) {
+    if (type.isNone(tabId) || type.isNone(page)) {
       return;
     }
-    postTabPage({ basePath, tabId, pageId });
-  }, [basePath, tabId, pageId]);
+    postTabPage({ basePath, tabId, page });
+  }, [basePath, tabId, page]);
 
+  const instanceKey = page?.instanceKey;
   useEffect(() => {
-    if (type.isNone(pageId)) {
+    if (type.isNone(instanceKey)) {
       return undefined;
     }
     const checkpointName = new URLSearchParams(window.location.search).get('_checkpoint');
@@ -210,7 +253,7 @@ const Inspector = ({ basePath, lowdefy, pageId }) => {
     let cancelled = false;
     bootstrapFromCheckpoint({
       basePath,
-      pageId,
+      instanceKey,
       checkpointName,
       isCancelled: () => cancelled,
     });
@@ -218,7 +261,7 @@ const Inspector = ({ basePath, lowdefy, pageId }) => {
     return () => {
       cancelled = true;
     };
-  }, [basePath, pageId]);
+  }, [basePath, instanceKey]);
 
   return null;
 };

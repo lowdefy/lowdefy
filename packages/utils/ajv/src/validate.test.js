@@ -15,7 +15,7 @@
 */
 
 import validate from './validate.js';
-import { MAX_VALIDATION_ERRORS } from './ajvInstance.js';
+import ajv, { MAX_VALIDATION_ERRORS } from './ajvInstance.js';
 
 test('Object matches schema', () => {
   const schema = {
@@ -421,4 +421,18 @@ test('A oneOf that no branch satisfies still fails, with errors capped', () => {
   const result = validate({ schema, data, returnErrors: true });
   expect(result.valid).toBe(false);
   expect(result.errors.length).toBeLessThanOrEqual(MAX_VALIDATION_ERRORS);
+});
+
+test('validate accepts fresh copies of a schema with an $id on every call', () => {
+  const schema = () => ({ $id: 'https://example.com/step.json', type: 'string' });
+  expect(validate({ schema: schema(), data: 'a' })).toEqual({ valid: true });
+  expect(validate({ schema: schema(), data: 'b' })).toEqual({ valid: true });
+});
+
+test('validate leaves no schema behind for a fresh schema object', () => {
+  const before = ajv._cache.size;
+  for (let i = 0; i < 3; i++) {
+    validate({ schema: { type: 'number' }, data: i });
+  }
+  expect(ajv._cache.size).toBe(before);
 });

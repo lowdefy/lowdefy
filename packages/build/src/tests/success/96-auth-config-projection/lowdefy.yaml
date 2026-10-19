@@ -1,0 +1,27 @@
+# 96: Auth Config Projection
+# Tests the _build.authConfig build operator: the scoped auth: pre-pass
+# resolves the auth block (including the providers ref) and computes the
+# projection, which pages read during the main buildRefs walk.
+lowdefy: local
+name: Auth Config Projection App
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: auth_config_projection_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  emailAndPassword:
+    enabled: true
+  twoFactor:
+    enabled: true
+  authPages:
+    twoFactor: /two-factor-challenge
+  providers:
+    _ref: config/providers.yaml
+  organizations:
+    signup: open
+
+pages:
+  - _ref: pages/login.yaml

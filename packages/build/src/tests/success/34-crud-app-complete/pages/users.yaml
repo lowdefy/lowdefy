@@ -38,7 +38,7 @@ blocks:
         type: Button
         properties:
           title: Add User
-          icon: AiOutlinePlus
+          icon: add
         events:
           onClick:
             - id: goToCreate

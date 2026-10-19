@@ -14,24 +14,28 @@
   limitations under the License.
 */
 
-import { nunjucksFunction } from '@lowdefy/nunjucks';
+import generateIconEntries from '../icons/generateIconEntries.js';
+import loadIconData from '../icons/loadIconData.js';
 
-const template = `{%- for package in packages -%}
-{% if package.icons.length %}import { {% for icon in package.icons -%}{% if not loop.last -%} {{ icon }}, {% else -%} {{ icon }} } from '{{ package.package }}';
-{% endif -%}{% endfor %}{% endif %}{% endfor -%}
-export default {
-  {%- for package in packages -%}
-  {%- for icon in package.icons %}
-  {{ icon }},{% endfor %}
-{%- endfor %}
-};`;
+// plugins/icons.js is data: { name: IconData }, every icon the app bundles.
+// Dev imports it; the production client loads it on demand, when a name that
+// is not in the page's own set reaches an icon at runtime.
+function generateIconsModule({ iconData }) {
+  const { constants, entries } = generateIconEntries({ iconData });
+  return [...constants, 'export default {', ...entries.map((entry) => `  ${entry}`), '};', ''].join(
+    '\n'
+  );
+}
 
 async function writeIconImports({ components, context }) {
-  const templateFn = nunjucksFunction(template);
-  await context.writeBuildArtifact(
-    'plugins/icons.js',
-    templateFn({ packages: components.imports.icons })
-  );
+  const iconData = await loadIconData({ names: components.imports.icons, icons: context.icons });
+  await context.writeBuildArtifact('plugins/icons.js', generateIconsModule({ iconData }));
+  // Server-only: the names plugins/icons.js carries. Dynamic content checks its
+  // icons against them, and dev JIT delivers the names the dev bundle lacks.
+  await context.writeBuildArtifact('iconImports.json', JSON.stringify(components.imports.icons));
+  // The full semantic map (built-in, the default set's, and theme.icons.aliases),
+  // used or not: the dev docs server's icon search lists it.
+  await context.writeBuildArtifact('iconAliases.json', JSON.stringify(context.icons.semantic));
 }
 
 export default writeIconImports;

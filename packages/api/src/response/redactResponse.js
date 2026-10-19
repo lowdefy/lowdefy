@@ -27,8 +27,17 @@ import createWireProjection from './createWireProjection.js';
 // Same wire projection as the error field, because it reaches the same audience.
 // No devError, in any mode: an Error in a response value is data the routine
 // returned, not a failure of this request.
+//
+// A response built from config (a :return literal, a :set_state value read back)
+// keeps the config's ~k, ~r and ~l markers as hidden properties. They are
+// dropped here: the response is data, and a caller that is not the Lowdefy
+// client (the third party calling a webhook endpoint, a dev tool, any HTTP
+// client) reads the wire as it is.
 function redactResponse(context, response) {
-  return serializer.serialize(response, { projectError: createWireProjection(context) });
+  return serializer.serialize(response, {
+    projectError: createWireProjection(context),
+    skipMarkers: true,
+  });
 }
 
 export default redactResponse;

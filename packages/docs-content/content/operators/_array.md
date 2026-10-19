@@ -6,6 +6,21 @@ The `_array` operator can be used to run javascript [`Array`](https://developer.
 
 # Operator methods:
 
+## _array.at
+
+```
+(arguments: {
+  on: any[],
+  index: number
+}): any
+(arguments: [
+  on: any[],
+  index: number
+]): any
+```
+
+The `_array.at` method returns [the item at an index](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at). A negative index counts back from the end of the array, so `-1` returns the last item.
+
 ## _array.concat
 
 ```
@@ -112,6 +127,36 @@ The `_array.find` method returns the value of the [first element in the provided
 
 The `_array.findIndex` method returns [the index of the first element in the array that satisfies the provided testing function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex). Otherwise, it returns -1, indicating that no element passed the test.
 
+## _array.findLast
+
+```
+(arguments: {
+  on: any[],
+  callback: function,
+}): any
+(arguments: [
+  on: any[],
+  callback: function,
+]): any
+```
+
+The `_array.findLast` method returns [the last element in the array that satisfies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findLast) the provided testing function.
+
+## _array.findLastIndex
+
+```
+(arguments: {
+  on: any[],
+  callback: function,
+}): number
+(arguments: [
+  on: any[],
+  callback: function,
+]): number
+```
+
+The `_array.findLastIndex` method returns [the index of the last element in the array that satisfies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findLastIndex) the provided testing function, or `-1` if no element passes.
+
 ## _array.flat
 
 ```
@@ -120,6 +165,36 @@ The `_array.findIndex` method returns [the index of the first element in the arr
 ```
 
 The `_array.flat` method returns a array with all [sub-array elements concatenated into it recursively](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat) up to the specified `depth`.
+
+## _array.flatMap
+
+```
+(arguments: {
+  on: any[],
+  callback: function,
+}): any[]
+(arguments: [
+  on: any[],
+  callback: function,
+]): any[]
+```
+
+The `_array.flatMap` method [maps each element with the callback and flattens the result](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap) by one level.
+
+## _array.from
+
+```
+(arguments: {
+  on: any[] | string | { length: number },
+  callback?: function,
+}): any[]
+(arguments: [
+  on: any[] | string | { length: number },
+  callback?: function,
+]): any[]
+```
+
+The `_array.from` method [creates a new array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from) from an array, a string, or an object with a `length`. Use `on: { length: n }` to create an array with `n` items, and the optional `callback` (called with the item and its index) to set each item, for example `{ _function: { __args: 1 } }` creates `[0, 1, ..., n - 1]`. Combine it with `_array.fill` to create an array of `n` copies of a value.
 
 ## _array.includes
 
@@ -179,6 +254,29 @@ The `_array.length` method returns the [number of elements](https://developer.mo
 ```
 
 The `_array.map` method returns an array populated with the results of [calling a provided function on every element](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) in the provided array.
+
+## _array.pop
+
+```
+(array: any[]): any[]
+```
+
+The `_array.pop` method returns the array [with its last item removed](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/pop). Unlike the JavaScript method, it returns the changed array, not the removed item; use `_array.at` with index `-1` to get the last item.
+
+## _array.push
+
+```
+(arguments: {
+  on: any[],
+  items: any[]
+}): any[]
+(arguments: [
+  on: any[],
+  ...items: any[]
+]): any[]
+```
+
+The `_array.push` method returns the array [with the items added to the end](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push). Unlike the JavaScript method, it returns the changed array, not its new length.
 
 ## _array.reduce
 
@@ -271,6 +369,14 @@ The `_array.reduceRight` method [applies a function against an accumulator and e
 
 The `_array.reverse` method [reverses](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse) an array.
 
+## _array.shift
+
+```
+(array: any[]): any[]
+```
+
+The `_array.shift` method returns the array [with its first item removed](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/shift). Unlike the JavaScript method, it returns the changed array, not the removed item; use `_array.at` with index `0` to get the first item.
+
 ## _array.slice
 
 ```
@@ -328,4 +434,19 @@ The `_array.sort` method [sorts](https://developer.mozilla.org/en-US/docs/Web/Ja
 }): number
 ```
 
-The `_array.slice` method [changes the contents of an array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice) by removing or replacing existing elements and/or adding new elements.
+The `_array.splice` method [changes the contents of an array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice) by removing or replacing existing elements and/or adding new elements.
+
+## _array.unshift
+
+```
+(arguments: {
+  on: any[],
+  items: any[]
+}): any[]
+(arguments: [
+  on: any[],
+  ...items: any[]
+]): any[]
+```
+
+The `_array.unshift` method returns the array [with the items added to the start](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/unshift). Unlike the JavaScript method, it returns the changed array, not its new length.

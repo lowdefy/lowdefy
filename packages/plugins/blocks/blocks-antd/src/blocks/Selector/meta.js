@@ -22,15 +22,22 @@ import {
   disabled,
   inputTitle,
   autoFocus,
-  variant,
   bordered,
   allowClear,
   sizeSmallDefaultLarge,
 } from '../../schemas/inputProperties.js';
+import {
+  listHeight,
+  placement,
+  popupMatchSelectWidth,
+  prefix,
+  prefixIcon,
+  virtual,
+} from '../../schemas/selectProperties.js';
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons, 'AiOutlineCloseCircle', 'AiOutlineDown'],
+  icons: [...LabelMeta.icons, 'chevron-down', 'clear', 'loading'],
   valueType: 'any',
   cssKeys: {
     element: 'The Selector element.',
@@ -40,6 +47,8 @@ export default {
     extra: 'The Selector extra content.',
     feedback: 'The Selector validation feedback.',
     options: 'The Selector options.',
+    popup: 'The Selector dropdown popup.',
+    prefixIcon: 'The prefix icon in the Selector.',
     suffixIcon: 'The suffix icon in the Selector.',
   },
   events: {
@@ -50,6 +59,10 @@ export default {
     },
     onFocus: 'Trigger action when selector gets focus.',
     onClear: 'Trigger action when selector is cleared.',
+    onOpenChange: {
+      description: 'Trigger actions when the dropdown opens or closes.',
+      event: { open: 'Whether the dropdown is open.' },
+    },
     onSearch: {
       description: 'Trigger actions when input is changed.',
       event: { value: 'The search input value.' },
@@ -73,9 +86,9 @@ export default {
       },
       clearIcon: {
         ...icon,
-        default: 'AiOutlineCloseCircle',
+        default: 'clear',
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.',
       },
       label,
       disabled,
@@ -83,9 +96,10 @@ export default {
       html,
       valueKey,
       primaryKey,
+      listHeight,
       options: {
         default: [],
-        oneOf: [
+        anyOf: [
           {
             type: 'array',
             description:
@@ -179,6 +193,10 @@ export default {
         default: 'Select item',
         description: 'Placeholder text inside the block before user selects input.',
       },
+      placement,
+      popupMatchSelectWidth,
+      prefix,
+      prefixIcon,
       loadingPlaceholder: {
         type: 'string',
         default: 'Loading',
@@ -186,13 +204,14 @@ export default {
       },
       notFoundContent: {
         type: 'string',
-        default: 'not Found',
+        default: 'Not found',
         description: 'Placeholder text to show when list of options are empty.',
       },
       showArrow: {
         type: 'boolean',
         default: true,
-        description: 'Show the suffix icon at the drop-down position of the selector.',
+        description:
+          'Show the suffix icon at the drop-down position of the selector. antd shows the arrow by default; `false` hides it by clearing the suffix icon.',
       },
       showSearch: {
         type: 'boolean',
@@ -202,17 +221,18 @@ export default {
       size: sizeSmallDefaultLarge,
       suffixIcon: {
         ...icon,
-        default: 'AiOutlineDown',
+        default: 'chevron-down',
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon at the drop-down position of the selector.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon at the drop-down position of the selector.',
       },
       title: inputTitle,
       variant: {
         type: 'string',
-        enum: ['solid', 'outlined', 'filled', 'borderless'],
+        enum: ['solid', 'outlined', 'filled', 'borderless', 'underlined'],
         description:
-          'Input variant. `solid` fills the whole input with the selected option color; `outlined` colors its border/text. `filled`/`borderless` are the antd input styles.',
+          'Input variant. `solid` fills the whole input with the selected option color; `outlined` colors its border/text. `filled`/`borderless`/`underlined` are the antd input styles.',
       },
+      virtual,
       theme: {
         type: 'object',
         description:

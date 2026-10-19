@@ -72,3 +72,23 @@ test('createEvaluateOperators throws when `_app: slug` is evaluated without appM
     })
   ).toThrow('`slug` is required on the app but is not set. Declare `slug` in `lowdefy.yaml`.');
 });
+
+test('createEvaluateOperators forwards context.organization to the operator parser', () => {
+  const organization = {
+    policy: 'pinned',
+    pinned: { id: 'org_1', slug: 'default', name: 'Default' },
+  };
+  const context = testContext({
+    operators: { _test: ({ organization }) => organization },
+  });
+  // testContext has no organization field of its own - set it directly to
+  // exercise the ServerParser pass-through.
+  context.organization = organization;
+  const evaluateOperators = createEvaluateOperators(context);
+  const output = evaluateOperators({
+    input: { org: { _test: null } },
+    location: 'test',
+    payload: {},
+  });
+  expect(output).toEqual({ org: organization });
+});

@@ -15,6 +15,8 @@
 */
 
 import ActionError from './ActionError.js';
+import AuthenticationError from './AuthenticationError.js';
+import AuthorizationError from './AuthorizationError.js';
 import BlockError from './BlockError.js';
 import BuildError from './BuildError.js';
 import ConfigError from './ConfigError.js';
@@ -24,12 +26,16 @@ import OperatorError from './OperatorError.js';
 import PluginError from './PluginError.js';
 import RequestError from './RequestError.js';
 import ServiceError from './ServiceError.js';
+import TenantIntegrityError from './TenantIntegrityError.js';
+import TwoFactorEnrolmentRequiredError from './TwoFactorEnrolmentRequiredError.js';
 import UserError from './UserError.js';
 
 // Name to class, for rebuilding an error whose class identity is gone but whose
 // name survived - a serializer round trip, or a caught error being reshaped.
 const lowdefyErrorTypes = {
   ActionError,
+  AuthenticationError,
+  AuthorizationError,
   BlockError,
   BuildError,
   ConfigError,
@@ -39,6 +45,8 @@ const lowdefyErrorTypes = {
   PluginError,
   RequestError,
   ServiceError,
+  TenantIntegrityError,
+  TwoFactorEnrolmentRequiredError,
   UserError,
 };
 

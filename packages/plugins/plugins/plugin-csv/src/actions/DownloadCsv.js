@@ -15,14 +15,15 @@
 */
 
 async function DownloadCsv({ params }) {
-  const { filename, data, fields: flds } = params;
-  if (!Array.isArray(data) || typeof data[0] !== 'object') {
+  const { filename, fields: flds } = params;
+  // Missing data (e.g. a request that returned nothing) is treated as no rows. With no rows the
+  // file still downloads: a header row when fields are given, otherwise an empty file. Every row
+  // is checked, not just the first, so a malformed row raises this error instead of failing below.
+  const data = params.data ?? [];
+  if (!Array.isArray(data) || data.some((row) => row === null || typeof row !== 'object')) {
     throw new Error('csvMake data takes an array of objects');
   }
-  let fields = flds;
-  if (!fields) {
-    fields = Object.keys(data[0]);
-  }
+  const fields = flds ?? Object.keys(data[0] ?? {});
   const arrays = [fields];
   data.forEach((obj) => arrays.push(fields.map((field) => obj[field])));
   const csv = arrays

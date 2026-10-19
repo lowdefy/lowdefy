@@ -1,0 +1,7 @@
+# The data set the data-set rails test runs on
+# (packages/servers/server-dev/test/journeyFixture/rails.test.mjs).
+fixtures:
+  fixture_db:
+    - { _id: rail-item, kind: item, page: rails, name: Rail item }
+users:
+  member: { id: u_rail_member, roles: [member] }

@@ -51,9 +51,13 @@ const endpoint = {
   routine: [],
 };
 
-function makeContext({ secrets = { STAGING_CRON_SECRET: 'staging-secret' }, waitUntil } = {}) {
+function makeContext({
+  basePath,
+  secrets = { STAGING_CRON_SECRET: 'staging-secret' },
+  waitUntil,
+} = {}) {
   const readConfigFile = jest.fn((path) => (path === 'api/jobs/purge.json' ? endpoint : null));
-  const context = testContext({ logger, readConfigFile, config, secrets });
+  const context = testContext({ logger, readConfigFile, config: { ...config, basePath }, secrets });
   context.waitUntil = waitUntil;
   return context;
 }
@@ -99,6 +103,19 @@ test('acknowledges immediately and pings the environment cron route with its sec
   expect(logger.info).toHaveBeenCalledWith(
     expect.objectContaining({ event: 'forward_scheduled_endpoint_done', status: 200 })
   );
+});
+
+test.each([
+  { basePath: undefined, url: 'https://staging.example.com/api/cron/jobs/purge' },
+  { basePath: '/app', url: 'https://staging.example.com/app/api/cron/jobs/purge' },
+])('pings the environment cron route under basePath $basePath', async ({ basePath, url }) => {
+  const context = makeContext({ basePath, waitUntil: () => {} });
+  await forwardScheduledEndpoint(context, {
+    environment: 'staging',
+    endpointId: 'jobs/purge',
+    cron: '0 * * * *',
+  });
+  expect(fetchMock.mock.calls[0][0]).toBe(url);
 });
 
 test('logs a non-2xx answer from the environment as a failure without failing the trigger', async () => {

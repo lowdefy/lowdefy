@@ -48,5 +48,7 @@ function _websocket({ arrayIndices, params, websockets }) {
 }
 
 _websocket.dynamic = true;
+// No change key is reported for websocket channels yet.
+_websocket.tracking = { kind: 'untracked' };
 
 export default _websocket;

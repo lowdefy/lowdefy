@@ -17,9 +17,9 @@
 const assignRowId = (params) => {
   if (params.data.id !== undefined) return params.data.id;
   if (params.data._id !== undefined) return params.data._id;
+  // Without an id field a refetched row is a new object with a new id, so it loses its selection.
+  // The rowId property is how an app keeps selection across data changes.
   if (!params.data.__rid) {
-    const rowDataCopy = { ...params.data };
-    delete rowDataCopy.__rid;
     Object.defineProperty(params.data, '__rid', {
       value: Math.random(),
       enumerable: false,

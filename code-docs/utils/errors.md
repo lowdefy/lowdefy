@@ -48,7 +48,7 @@ Error
 │   └── isLowdefyError: true
 ├── PluginError            # Plugin failures (operators, actions, blocks, requests)
 │   └── isLowdefyError: true
-├── ServiceError           # External service failures (network, timeout, 5xx)
+├── ServiceError           # External service failures (network, timeout, 5xx, 429)
 │   └── isLowdefyError: true
 └── UserError              # Expected user interaction (client-only)
     └── isLowdefyError: true
@@ -112,6 +112,7 @@ throw new ConfigError('Operator evaluation failed.', {
 | `isLowdefyError` | boolean | `true`                                             |
 | `configKey`      | string  | `~k` value for location resolution                 |
 | `checkSlug`      | string  | For `~ignoreBuildChecks` matching                  |
+| `checkGroup`     | string  | Group slug, e.g. `plugin-checks` for plugin rules  |
 | `received`       | any     | Debug value (extracted from cause)                 |
 | `filePath`       | string  | For pre-addKeys errors (YAML parse, operator eval) |
 | `lineNumber`     | number  | For pre-addKeys errors                             |
@@ -202,7 +203,7 @@ throw new PluginError('_if requires a boolean condition.', {
 
 #### ServiceError
 
-External service failures (network issues, timeouts, 5xx responses). Follows TC39 `(message, options)` constructor pattern.
+External service failures (network issues, timeouts, 5xx responses, rate limits). Follows TC39 `(message, options)` constructor pattern.
 
 ```javascript
 throw new ServiceError('Connection to MongoDB failed.', {
@@ -214,24 +215,31 @@ throw new ServiceError('Connection to MongoDB failed.', {
 
 **Properties:**
 
-| Property         | Type    | Description                        |
-| ---------------- | ------- | ---------------------------------- |
-| `name`           | string  | `'ServiceError'`                   |
-| `isLowdefyError` | boolean | `true`                             |
-| `service`        | string  | Service name (connection ID)       |
-| `_message`       | string  | Raw unformatted message            |
-| `code`           | string  | Error code (ECONNREFUSED, etc.)    |
-| `statusCode`     | number  | HTTP status code                   |
-| `configKey`      | string  | `~k` value for location resolution |
+| Property         | Type    | Description                                                                                                                     |
+| ---------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `name`           | string  | `'ServiceError'`                                                                                                                |
+| `isLowdefyError` | boolean | `true`                                                                                                                          |
+| `service`        | string  | Service name (connection ID)                                                                                                    |
+| `_message`       | string  | Raw unformatted message                                                                                                         |
+| `code`           | string  | Error code (ECONNREFUSED, etc.)                                                                                                 |
+| `statusCode`     | number  | HTTP status code                                                                                                                |
+| `retryAfter`     | string  | Retry-After a throttling service sent (seconds or an HTTP date), else `null`. Read from the cause chain; kept in the server log |
+| `configKey`      | string  | `~k` value for location resolution                                                                                              |
 
 **Message enhancement:** Constructor enhances messages based on error codes:
 
 - `ECONNREFUSED` → `"Connection refused. The service may be down. {message}"`
 - `ENOTFOUND` → `"DNS lookup failed. {message}"`
 - `ETIMEDOUT` → `"Connection timed out. {message}"`
+- HTTP 429 → `"Rate limited by the service (429 Too Many Requests). Retry after {retryAfter}. {message}"`
 - HTTP 5xx → `"Server returned error {statusCode}. {message}"`
 
-**Static helper:** `ServiceError.isServiceError(error)` checks error codes and HTTP 5xx.
+**Static helpers:**
+
+- `ServiceError.isServiceError(error)` is the one classification every connection goes through (callRequestResolver, websocket resolvers, auth email, JWKS fetches). True for: network error codes (`ECONNREFUSED`, `ETIMEDOUT`, ...); a `TimeoutError` (a call cancelled by `AbortSignal.timeout`, the AI SDK's `timeout`, or the server's request timeout); HTTP 5xx and **429** read from `statusCode`, `status`, `response.status`, `$metadata.httpStatusCode` (AWS SDK v3) or a numeric `code` (SendGrid, @google-cloud); an AWS SDK throttling exception (`$retryable.throttling`, some answer 400); and service-sounding messages (`network`, `timeout`, `too many requests`, ...). It follows a retrying client's `lastError` (the AI SDK's `RetryError`) and the `cause` chain. A caller-cancelled `AbortError` is not a service error.
+- `ServiceError.readRetryAfter(error)` reads a Retry-After header from `responseHeaders` (AI SDK), `response.headers` (axios, SendGrid), `headers` (Stripe) or `$response.headers` (AWS), plain object or fetch `Headers`, along `lastError` and `cause`.
+
+429 is a service error by design: throttling is an external condition that passes with time, not a config fault, so it is not a `RequestError`.
 
 **Stack trace:** Suppressed in CLI display — service/code context is more useful.
 
@@ -269,7 +277,10 @@ function errorToDisplayString(error) {
   if (error?.message === undefined) return String(error);
 
   const name = error.name || 'Error';
-  let msg = `[${name}] ${error.message}`;
+  const segments = [name];
+  if (error.prodError === true) segments.push('fails in prod');
+  if (error.checkSlug) segments.push(error.checkSlug);
+  let msg = `[${segments.join(' · ')}] ${error.message}`;
 
   if (error.received !== undefined) {
     try {
@@ -281,6 +292,8 @@ function errorToDisplayString(error) {
   return msg;
 }
 ```
+
+The name segment carries `fails in prod` for a prod-gated warning and the `checkSlug` when there is one: `[ConfigWarning · fails in prod · state-refs] message`. The slug is what `~ignoreBuildChecks` takes to silence the check.
 
 Works on ANY error — Lowdefy errors, plain JS errors, deserialized error-like objects from pino JSON.
 
@@ -356,12 +369,14 @@ if (shouldSuppressBuildCheck(error, context.keyMap)) {
 }
 ```
 
-**Signature:** `shouldSuppressBuildCheck(error, keyMap)` — takes the error object (reads `configKey` and `checkSlug`) and the keyMap.
+**Signature:** `shouldSuppressBuildCheck(error, keyMap)` — takes the error object (reads `configKey`, `checkSlug` and `checkGroup`) and the keyMap.
 
 **Walk logic:** Starting from `error.configKey`, walks up `~k_parent` entries (max 100 depth). At each entry, checks `~ignoreBuildChecks`:
 
 - `true` → suppress all checks
-- `['state-refs', 'types', ...]` → suppress if `error.checkSlug` is in the array
+- `['state-refs', 'types', ...]` → suppress if `error.checkSlug` or `error.checkGroup` is in the array
+
+Plugin rule errors carry the rule id as `checkSlug` and `PLUGIN_CHECKS_SLUG` (`plugin-checks`) as `checkGroup`, so a node can silence one rule or all of them. `VALID_CHECK_SLUGS` lists only the built-in slugs and is never mutated; `addKeys` accepts any kebab-case slug and records the ones that are not built-in on `context.pluginCheckSlugRefs` for the plugin rules runner.
 
 ## Serialization
 

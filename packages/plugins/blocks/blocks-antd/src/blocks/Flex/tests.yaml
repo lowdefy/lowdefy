@@ -70,10 +70,10 @@
   type: Flex
   properties:
     gap: small
-- id: 'properties.gap: middle'
+- id: 'properties.gap: medium'
   type: Flex
   properties:
-    gap: middle
+    gap: medium
 - id: 'properties.gap: large'
   type: Flex
   properties:
@@ -90,3 +90,21 @@
   type: Flex
   properties:
     component: section
+- id: 'properties.orientation: vertical'
+  type: Flex
+  properties:
+    orientation: vertical
+- id: 'properties.justify: end'
+  type: Flex
+  properties:
+    justify: end
+- id: 'properties.align: start'
+  type: Flex
+  properties:
+    align: start
+- id: 'properties.theme: padding: 32'
+  type: Flex
+  properties:
+    gap: medium
+    theme:
+      padding: 32

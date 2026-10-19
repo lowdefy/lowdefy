@@ -1,0 +1,44 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/actions.yaml.njk
+  vars:
+    pageId: PostHogOptOut
+    pageTitle: PostHogOptOut
+    filePath: actions/PostHogOptOut.yaml
+    types: |
+      ```
+      (void): Promise<null>
+      ```
+    description: |
+      The `PostHogOptOut` action stops capturing for this person. The choice is remembered in the persistence store configured on [`PostHogInit`](/PostHogInit). See [`PostHogOptIn`](/PostHogOptIn) for consent flows.
+
+      When PostHog is disabled or `posthog-js` could not be loaded, the action does nothing.
+
+      The action is part of the [`@lowdefy/plugin-posthog`](/PostHog) plugin, which is included by default. See the [PostHog guide](/PostHog) for how the actions fit together.
+    params: |
+      The `PostHogOptOut` action does not take any parameters.
+    examples: |
+      ###### Reject analytics from a consent banner:
+      ```yaml
+      - id: reject_analytics
+        type: Button
+        properties:
+          title: Reject
+        events:
+          onClick:
+            - id: opt_out
+              type: PostHogOptOut
+      ```

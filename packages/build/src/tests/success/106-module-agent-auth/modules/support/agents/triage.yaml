@@ -1,0 +1,7 @@
+id: triage
+type: ClaudeAgent
+connectionId:
+  _module.connectionId: ai
+properties:
+  model: claude-haiku-4-5
+  instructions: You sort incoming support tickets.

@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'display',
-  icons: [],
+  icons: ['chevron-down', 'more'],
   valueType: null,
   cssKeys: {
     element: 'The Menu element.',
@@ -24,15 +26,22 @@ export default {
     icon: 'Deprecated alias for `itemIcon`.',
     itemIcon: 'The icon shown in each menu item.',
     item: 'The Menu item wrapper (li).',
+    popup: 'The floating popup of a submenu in vertical and horizontal modes.',
   },
   events: {
     onSelect: {
       description: 'Trigger action when menu item is selected.',
-      event: { key: 'The selected menu item key.' },
+      event: {
+        key: 'The selected menu item key.',
+        keyPath: 'The keys from the selected item up to its top-level group.',
+      },
     },
     onClick: {
       description: 'Trigger action when menu item is clicked.',
-      event: { key: 'The clicked menu item key.' },
+      event: {
+        key: 'The clicked menu item key.',
+        keyPath: 'The keys from the clicked item up to its top-level group.',
+      },
     },
     onToggleMenuGroup: {
       description: 'Trigger action when mobile menu group is opened.',
@@ -44,11 +53,8 @@ export default {
     additionalProperties: false,
     properties: {
       expandIcon: {
-        type: ['string', 'object'],
+        ...icon,
         description: 'Menu expand icon.',
-        docs: {
-          displayType: 'icon',
-        },
       },
       menuId: {
         type: 'string',
@@ -99,10 +105,53 @@ export default {
         type: 'number',
         description: 'Delay time to show submenu when mouse enters (in seconds).',
       },
-      theme: {
-        type: 'object',
+      triggerSubMenuAction: {
+        type: 'string',
+        enum: ['hover', 'click'],
+        default: 'hover',
+        description: 'Open and close submenus on hover or on click.',
+      },
+      tooltip: {
+        type: ['boolean', 'object'],
+        default: true,
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'Tooltip of menu items in a collapsed inline menu. Set false to hide it, or an object to configure it.',
+        docs: {
+          displayType: 'yaml',
+        },
+        properties: {
+          placement: {
+            type: 'string',
+            enum: [
+              'top',
+              'left',
+              'right',
+              'bottom',
+              'topLeft',
+              'topRight',
+              'bottomLeft',
+              'bottomRight',
+              'leftTop',
+              'leftBottom',
+              'rightTop',
+              'rightBottom',
+            ],
+            default: 'right',
+            description: 'Position of the tooltip relative to the menu item.',
+          },
+          color: {
+            type: 'string',
+            description: 'Background color of the tooltip.',
+            docs: {
+              displayType: 'color',
+            },
+          },
+        },
+      },
+      theme: {
+        type: ['string', 'object'],
+        description:
+          'The Menu color theme, light or dark, or antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
           link: 'https://ant.design/components/menu#design-token',
@@ -380,12 +429,9 @@ export default {
                   description: 'Menu item title.',
                 },
                 icon: {
-                  type: ['string', 'object'],
+                  ...icon,
                   description:
-                    "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon on menu item.",
-                  docs: {
-                    displayType: 'icon',
-                  },
+                    'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on menu item.',
                 },
                 danger: {
                   type: 'boolean',
@@ -462,9 +508,8 @@ export default {
                         description: 'Menu item title.',
                       },
                       icon: {
-                        type: ['string', 'object'],
+                        ...icon,
                         description: 'Icon name or Icon block properties.',
-                        docs: { displayType: 'icon' },
                       },
                       danger: {
                         type: 'boolean',
@@ -536,9 +581,8 @@ export default {
                               description: 'Menu item title.',
                             },
                             icon: {
-                              type: ['string', 'object'],
+                              ...icon,
                               description: 'Icon name or Icon block properties.',
-                              docs: { displayType: 'icon' },
                             },
                             danger: {
                               type: 'boolean',

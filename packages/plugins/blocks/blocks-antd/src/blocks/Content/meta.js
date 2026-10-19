@@ -31,7 +31,7 @@ export default {
       theme: {
         type: 'object',
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'Not applied: antd scopes Layout design tokens to the Layout element, so set tokens such as headerHeight or footerBg on the parent Layout block theme.',
         docs: {
           displayType: 'yaml',
         },

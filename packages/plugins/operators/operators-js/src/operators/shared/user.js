@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { getFromObject } from '@lowdefy/operators';
+import { getFromObject, getObjectReadKeys } from '@lowdefy/operators';
 
 const roleMethods = ['hasRole', 'hasSomeRoles', 'hasAllRoles'];
 
@@ -79,5 +79,14 @@ function _user({ arrayIndices, location, methodName, params, user }) {
 }
 
 _user.dynamic = true;
+_user.tracking = ({ arrayIndices, methodName, params }) => {
+  if (roleMethods.includes(methodName)) {
+    return { kind: 'read', keys: ['user:roles'] };
+  }
+  return {
+    kind: 'read',
+    keys: getObjectReadKeys({ arrayIndices, namespace: 'user', params }),
+  };
+};
 
 export default _user;

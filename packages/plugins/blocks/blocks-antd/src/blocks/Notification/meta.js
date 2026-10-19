@@ -14,12 +14,18 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'display',
-  icons: [],
+  icons: ['success', 'info', 'warning', 'error', 'close', 'loading'],
   valueType: null,
   cssKeys: {
     element: 'The Notification element.',
+    title: 'The Notification title.',
+    description: 'The Notification description.',
+    actions: 'The area holding the Notification button.',
+    progress: 'The auto-close progress bar, shown with showProgress.',
     closeIcon: 'The close icon in the Notification.',
     icon: 'The icon in the Notification.',
   },
@@ -35,12 +41,17 @@ export default {
         type: 'number',
         default: 24,
         description:
-          'Distance from the bottom of the viewport, when placement is bottomRight or bottomLeft (unit: pixels).',
+          'Has no effect: notifications open in the app-wide notification holder, which keeps them 24px from the bottom of the viewport. To move every bottom notification, set the `--notification-bottom` CSS variable on `.ant-notification` in `public/styles.css`, for example `.ant-notification { --notification-bottom: 80px; }`.',
+      },
+      closable: {
+        type: 'boolean',
+        default: true,
+        description: 'Whether to show the close button.',
       },
       button: {
         type: 'object',
         description:
-          'Button object to customized the close button. Triggers onClose event when clicked.',
+          'Button object to customize the close button. Closes the notification and triggers the onClose event when clicked.',
         docs: {
           displayType: 'button',
         },
@@ -56,46 +67,58 @@ export default {
           'Time in seconds before Notification is closed. When set to 0 or null, it will never be closed automatically.',
       },
       icon: {
-        type: ['string', 'object'],
+        ...icon,
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize notification icon.",
-        docs: {
-          displayType: 'icon',
-        },
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize notification icon.',
       },
       closeIcon: {
-        type: ['string', 'object'],
+        ...icon,
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize close icon.",
-        docs: {
-          displayType: 'icon',
-        },
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize close icon.',
       },
       title: {
         type: 'string',
         description: 'The title of notification box - supports html.',
       },
+      pauseOnHover: {
+        type: 'boolean',
+        default: true,
+        description: 'Pause the auto-close timer while the mouse is over the notification.',
+      },
       placement: {
         type: 'string',
-        enum: ['topLeft', 'topRight', 'bottomLeft', 'bottomRight'],
+        enum: ['top', 'topLeft', 'topRight', 'bottom', 'bottomLeft', 'bottomRight'],
         default: 'topRight',
         description: 'Position of Notification.',
+      },
+      role: {
+        type: 'string',
+        enum: ['alert', 'status'],
+        default: 'alert',
+        description:
+          'How screen readers announce the notification. `alert` interrupts the reader immediately, `status` waits until it is idle.',
+      },
+      showProgress: {
+        type: 'boolean',
+        default: false,
+        description: 'Show a progress bar counting down to when the notification closes.',
       },
       top: {
         type: 'number',
         default: 24,
         description:
-          'Distance from the top of the viewport, when placement is topRight or topLeft (unit: pixels).',
+          'Has no effect: notifications open in the app-wide notification holder, which keeps them 24px from the top of the viewport. To move every top notification, set the `--notification-top` CSS variable on `.ant-notification` in `public/styles.css`, for example `.ant-notification { --notification-top: 80px; }`.',
       },
       status: {
         type: 'string',
         enum: ['success', 'error', 'info', 'warning'],
+        default: 'success',
         description: 'Notification status type.',
       },
       theme: {
         type: 'object',
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'Has no effect: notifications render in the app-wide notification holder, outside the block. Set these Notification design tokens for the whole app in `lowdefy.yaml` under `theme.antd.components.Notification`.',
         docs: {
           displayType: 'yaml',
           link: 'https://ant.design/components/notification#design-token',

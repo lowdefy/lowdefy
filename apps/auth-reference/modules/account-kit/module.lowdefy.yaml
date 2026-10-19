@@ -1,0 +1,44 @@
+name: Account Kit
+description: |
+  Phase-9 module gate demo: a module that ships auth artifacts and declares
+  their wiring in this manifest, so the build contributes the corresponding
+  app auth entries with scoped ids (and logs each contribution). The app
+  writes none of the wiring - and its own config wins on collision.
+
+secrets:
+  - name: AUTH_DATABASE_URI
+    description: MongoDB connection string for the module audit collection.
+
+connections:
+  - _ref: connections/module-audit-db.yaml
+
+pages:
+  - _ref: pages/login.yaml
+  - _ref: pages/error.yaml
+  - _ref: pages/account-help.yaml
+
+api:
+  - _ref: api/account-audit.yaml
+
+auth:
+  # One endpoint, two binding points (Decision 7) - the build resolves the
+  # unscoped endpoint id to account-kit/account-audit and appends the
+  # bindings to the module tier, which runs BEFORE the app's own entries on
+  # the same points (audit-login at session.create.after, on-email-verified
+  # at email.verified).
+  hooks:
+    - point: session.create.after
+      endpoint: account-audit
+    - point: email.verified
+      endpoint: account-audit
+  # authPages role claims - app wins per key. The app sets authPages.signIn,
+  # so the login claim is ceded (the module login page stays an ordinary
+  # protected module page); the app does NOT set error, so the module page
+  # serves it at /account-kit/error - public automatically, because a page
+  # holding an authPages role is never behind the wall.
+  pages:
+    signIn: login
+    error: error
+  # Further public pages beyond the role pages.
+  public:
+    - account-help

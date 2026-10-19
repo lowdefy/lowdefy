@@ -14,15 +14,21 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { buildPagePath, type } from '@lowdefy/helpers';
 
-function resolveLink(link) {
+// paths is { [pageId]: path }, the page patterns from the build's routes.
+function resolveLink({ link, paths }) {
   if (type.isString(link) && /^https?:\/\//.test(link)) {
     return link;
   }
   if (type.isObject(link)) {
     const query = type.isNone(link.urlQuery) ? '' : `?${new URLSearchParams(link.urlQuery)}`;
-    return `/${link.pageId}${query}`;
+    const pagePath = buildPagePath({
+      pageId: link.pageId,
+      path: paths[link.pageId],
+      pathParams: link.pathParams,
+    });
+    return `/${pagePath}${query}`;
   }
   return link;
 }

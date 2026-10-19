@@ -7,7 +7,9 @@ export default {
   coverageReporters: [['lcov', { projectRoot: '../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
   testEnvironment: 'node',
-  testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test'],
+  // *.mongodb.test.js suites need a MongoDB server - pnpm test:mongodb runs
+  // them (jest.mongodb.config.js).
+  testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test', '\\.mongodb\\.test\\.js$'],
   transform: {
     '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../.swcrc.test' }],
   },

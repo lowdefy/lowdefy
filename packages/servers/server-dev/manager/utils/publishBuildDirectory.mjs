@@ -1,0 +1,121 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import fs from 'fs/promises';
+import path from 'path';
+
+import filesHaveSameBytes from './filesHaveSameBytes.mjs';
+
+async function listFiles(directory) {
+  const entries = await fs.readdir(directory, { recursive: true, withFileTypes: true });
+  return entries
+    .filter((entry) => entry.isFile())
+    .map((entry) => path.relative(directory, path.join(entry.parentPath, entry.name)));
+}
+
+// The dev server reads build artifacts from disk on every request. Emptying
+// the build directory and writing the new build into it leaves a window where
+// artifacts are missing, so the build is written to a staging directory and
+// moved over the live one file by file. A rename replaces a file in one step,
+// so a reader always finds each artifact, from the old build or the new one.
+// A staged file whose bytes equal the live one is left in staging, so the
+// live file keeps its mtime and Vite, which watches the build directory, does
+// not re-process every client artifact after each config build. Live files
+// the new build did not write are removed next. The page registry
+// is moved last: the JIT page builder rebuilds its cached build context, and
+// drops its built pages, when the registry changes, so the registry must
+// arrive after every other new file and after the old build's pages are gone.
+// It is moved even when its bytes are unchanged: the JIT page builder learns
+// of a config build only from its identity (inode and mtime), which a rename
+// always changes.
+// The live directory itself is never replaced, so file watchers on it keep
+// working.
+const pageRegistryFile = 'pageRegistry.json';
+
+// idCounter.json is moved first. A JIT page build writes keyMap.json and refMap.json
+// only while the live idCounter.json still names the config build it started from
+// (skipStaleMapWrites), so the new idCounter.json must be live before the new maps
+// arrive, or a page build of the old config could write its maps over them.
+// It is moved even when its bytes are unchanged, so the order holds for every
+// build.
+const idCounterFile = 'idCounter.json';
+
+// Files the manager and the dev tools write into the build directory to
+// signal each other. The build does not write them, so they are never in the
+// staged build, and removing them as stale would drop the signal: a restart
+// request (.restart), a page invalidation or client reload queued behind the
+// build, or the build status the dev tools read.
+const controlFiles = new Set(['.restart', 'buildStatus.json', 'invalidatePages', 'reload']);
+
+// On Windows a rename over a file another process has open (the dev server
+// reading it, a virus scanner, the search indexer) fails for a moment with
+// EPERM, EBUSY or EACCES, so each rename is retried for a few seconds before
+// the publish fails.
+const LOCKED_CODES = new Set(['EACCES', 'EBUSY', 'EPERM']);
+const RENAME_DELAYS_MS = [25, 50, 100, 200, 400, 500, 500, 500, 500, 500];
+const RM_OPTIONS = { force: true, recursive: true, maxRetries: 5 };
+
+async function renameWithRetry({ from, to }) {
+  for (let attempt = 0; ; attempt += 1) {
+    try {
+      await fs.rename(from, to);
+      return;
+    } catch (error) {
+      if (!LOCKED_CODES.has(error.code) || attempt === RENAME_DELAYS_MS.length) {
+        throw error;
+      }
+      await new Promise((resolve) => setTimeout(resolve, RENAME_DELAYS_MS[attempt]));
+    }
+  }
+}
+
+async function moveFile({ buildDirectory, stagingDirectory, file }) {
+  const target = path.join(buildDirectory, file);
+  await fs.mkdir(path.dirname(target), { recursive: true });
+  await renameWithRetry({ from: path.join(stagingDirectory, file), to: target });
+}
+
+async function publishBuildDirectory({ buildDirectory, stagingDirectory }) {
+  await fs.mkdir(buildDirectory, { recursive: true });
+  const stagedFiles = await listFiles(stagingDirectory);
+  const liveFiles = await listFiles(buildDirectory);
+
+  const firstFiles = stagedFiles.filter((file) => file === idCounterFile);
+  const otherFiles = stagedFiles.filter(
+    (file) => file !== idCounterFile && file !== pageRegistryFile
+  );
+  for (const file of firstFiles) {
+    await moveFile({ buildDirectory, stagingDirectory, file });
+  }
+  for (const file of otherFiles) {
+    const unchanged = await filesHaveSameBytes({
+      a: path.join(stagingDirectory, file),
+      b: path.join(buildDirectory, file),
+    });
+    if (!unchanged) {
+      await moveFile({ buildDirectory, stagingDirectory, file });
+    }
+  }
+
+  const staged = new Set(stagedFiles);
+  const staleFiles = liveFiles.filter((file) => !staged.has(file) && !controlFiles.has(file));
+  await Promise.all(staleFiles.map((file) => fs.rm(path.join(buildDirectory, file), RM_OPTIONS)));
+
+  await moveFile({ buildDirectory, stagingDirectory, file: pageRegistryFile });
+  await fs.rm(stagingDirectory, RM_OPTIONS);
+}
+
+export default publishBuildDirectory;

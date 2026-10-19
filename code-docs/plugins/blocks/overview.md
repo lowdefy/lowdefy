@@ -28,6 +28,7 @@ Blocks are:
 | [@lowdefy/blocks-antd](./antd.md)               | Primary UI kit (Ant Design) | 61          |
 | [@lowdefy/blocks-basic](./basic.md)             | HTML primitives             | 8           |
 | [@lowdefy/blocks-aggrid](./aggrid.md)           | AG Grid data tables         | 1           |
+| [@lowdefy/blocks-table](./table.md)             | Table and TableInput        | 2           |
 | [@lowdefy/blocks-diff](./diff.md)               | Diff visualizations         | 4           |
 | [@lowdefy/blocks-echarts](./echarts.md)         | ECharts visualizations      | 1           |
 | [@lowdefy/blocks-markdown](./markdown.md)       | Markdown rendering          | 2           |
@@ -54,7 +55,7 @@ Each block has a `meta.js` file that is the single source of truth for all metad
 // src/blocks/Anchor/meta.js
 export default {
   category: 'display',
-  icons: ['AiOutlineLoading3Quarters'],
+  icons: ['loading'],
   valueType: null,
   cssKeys: {
     element: 'The anchor element.',
@@ -77,7 +78,7 @@ export default {
 | Field        | Type         | Description                                                             |
 | ------------ | ------------ | ----------------------------------------------------------------------- |
 | `category`   | string       | Block category (`container`, `input`, `display`, `list`, `context`)     |
-| `icons`      | string[]     | React-Icon names used by the block                                      |
+| `icons`      | string[]     | Icon names the block renders (semantic names)                           |
 | `valueType`  | string\|null | Value type for input blocks (e.g., `'string'`, `'number'`)              |
 | `cssKeys`    | object       | Map of CSS key names to descriptions (e.g., `{ element: '...' }`)       |
 | `events`     | object       | Map of event names to descriptions (e.g., `{ onClick: '...' }`)         |
@@ -135,7 +136,7 @@ blocks:
     properties:
       title: Submit
       type: primary
-      icon: AiOutlineSend
+      icon: send
     events:
       onClick:
         - id: submitForm

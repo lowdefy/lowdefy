@@ -307,6 +307,81 @@ test('buildAuthStrategies throws when a jwt strategy has an empty algorithms arr
   );
 });
 
+test('buildAuthStrategies throws when a jwt claimMapping field is "system", the stand-in caller marker', () => {
+  const components = {
+    auth: {
+      strategies: [
+        {
+          '~k': 'strategy-key',
+          id: 'service-jwt',
+          type: 'jwt',
+          properties: {
+            secret: { _secret: 'JWT_SIGNING_SECRET' },
+            algorithms: ['HS256'],
+            claimMapping: { id: 'sub', system: 'is_service_account' },
+          },
+        },
+      ],
+    },
+  };
+  let error;
+  try {
+    buildAuthStrategies({ components });
+  } catch (e) {
+    error = e;
+  }
+  expect(error.message).toBe(
+    'Auth strategy "service-jwt" claimMapping field "system" sets _user.system, which is reserved. Only the stand-in caller a CallApi "caller" names carries _user.system.'
+  );
+  expect(error.configKey).toBe('strategy-key');
+});
+
+test.each(['System', 'SYSTEM', '_system'])(
+  'buildAuthStrategies throws when a jwt claimMapping field "%s" snake_cases to "system"',
+  (field) => {
+    const components = {
+      auth: {
+        strategies: [
+          {
+            id: 'service-jwt',
+            type: 'jwt',
+            properties: {
+              secret: { _secret: 'JWT_SIGNING_SECRET' },
+              algorithms: ['HS256'],
+              claimMapping: { [field]: 'is_service_account' },
+            },
+          },
+        ],
+      },
+    };
+    expect(() => buildAuthStrategies({ components })).toThrow(
+      `Auth strategy "service-jwt" claimMapping field "${field}" sets _user.system, which is reserved.`
+    );
+  }
+);
+
+test('buildAuthStrategies builds a jwt claimMapping field of "attributes.system"', () => {
+  const components = {
+    auth: {
+      strategies: [
+        {
+          id: 'service-jwt',
+          type: 'jwt',
+          properties: {
+            secret: { _secret: 'JWT_SIGNING_SECRET' },
+            algorithms: ['HS256'],
+            claimMapping: { 'attributes.system': 'is_service_account' },
+          },
+        },
+      ],
+    },
+  };
+  const res = buildAuthStrategies({ components });
+  expect(res.auth.strategies[0].properties.claimMapping).toEqual({
+    'attributes.system': 'is_service_account',
+  });
+});
+
 test('buildAuthStrategies throws when a jwt claimMapping field is "__proto__"', () => {
   // JSON.parse, not an object literal, so "__proto__" is an own property key
   // rather than the object-literal proto setter.

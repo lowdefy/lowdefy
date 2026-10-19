@@ -17,8 +17,9 @@
 import { serializer } from '@lowdefy/helpers';
 
 import decodeServerError from './decodeServerError.js';
+import reportAppChange from './tracking/reportAppChange.js';
 
-async function callAPIHandler(context, { blockId, params }) {
+async function callAPIHandler(context, { actionId, blockId, params }) {
   if (!context._internal.lowdefy.apiResponses[params.endpointId]) {
     context._internal.lowdefy.apiResponses[params.endpointId] = [];
   }
@@ -27,8 +28,11 @@ async function callAPIHandler(context, { blockId, params }) {
   const previousResponse =
     context._internal.lowdefy.apiResponses[params.endpointId][0]?.response ?? null;
 
+  // actionId ties the call to the event that made it, as a request's call does,
+  // so the dev recorder can say which endpoints an interaction called.
   const api = {
     ...params,
+    actionId,
     blockId,
     loading: true,
     success: null,
@@ -41,6 +45,7 @@ async function callAPIHandler(context, { blockId, params }) {
     api.response = previousResponse;
   }
   context._internal.lowdefy.apiResponses[api.endpointId].unshift(api);
+  reportAppChange({ context, key: `api:${api.endpointId}` });
 
   let apiResponse;
 
@@ -61,6 +66,7 @@ async function callAPIHandler(context, { blockId, params }) {
     api.success = false;
     api.endTimestamp = new Date();
     api.responseTime = api.endTimestamp - api.startTimestamp;
+    reportAppChange({ context, key: `api:${api.endpointId}` });
     context._internal.update();
     throw error;
   }
@@ -78,6 +84,7 @@ async function callAPIHandler(context, { blockId, params }) {
   api.endTimestamp = new Date();
   api.responseTime = api.endTimestamp - api.startTimestamp;
 
+  reportAppChange({ context, key: `api:${api.endpointId}` });
   context._internal.update();
 
   if (!success) {

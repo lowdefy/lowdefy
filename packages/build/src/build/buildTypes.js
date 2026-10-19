@@ -16,9 +16,9 @@
 
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
-import basicTypes from '@lowdefy/blocks-basic/types';
-import loaderTypes from '@lowdefy/blocks-loaders/types';
 import findSimilarString from '../utils/findSimilarString.js';
+import jsAccessorOperators from './jsAccessorOperators.js';
+import mandatoryClientTypes from './mandatoryClientTypes.js';
 
 function buildTypeClass(
   context,
@@ -53,25 +53,26 @@ function buildTypeClass(
 function buildTypes({ components, context }) {
   const { typeCounters } = context;
 
-  // Add Mandatory Types
-  // Add operators used by form validation
-  typeCounters.operators.client.increment('_not');
-  typeCounters.operators.client.increment('_type');
-  // Add loaders and basic
-  basicTypes.blocks.forEach((block) => typeCounters.blocks.increment(block));
-  loaderTypes.blocks.forEach((block) => typeCounters.blocks.increment(block));
-  // Used for DisplayMessage in @lowdefy/client
-  typeCounters.blocks.increment('Message');
-  // Used by blocks-antd Header/PageHeaderMenu/PageSiderMenu darkModeToggle
-  typeCounters.actions.increment('SetDarkMode');
+  mandatoryClientTypes.actions.forEach((action) => typeCounters.actions.increment(action));
+  mandatoryClientTypes.blocks.forEach((block) => typeCounters.blocks.increment(block));
+  mandatoryClientTypes.operators.forEach((operator) =>
+    typeCounters.operators.client.increment(operator)
+  );
+  // Server operators are bundled app-wide, so the server _js accessors are
+  // counted once here; the client ones are counted per page
+  // (countImpliedClientTypes).
+  if (typeCounters.operators.server.getCount('_js') > 0) {
+    const configKey = typeCounters.operators.server.getLocation('_js');
+    jsAccessorOperators.server.forEach((operator) =>
+      typeCounters.operators.server.increment(operator, configKey)
+    );
+  }
 
   components.types = {
     actions: {},
     agents: {},
     auth: {
       adapters: {},
-      callbacks: {},
-      events: {},
       providers: {},
       strategies: {},
     },
@@ -79,6 +80,7 @@ function buildTypes({ components, context }) {
     connections: {},
     notifications: {},
     requests: {},
+    steps: {},
     websockets: {},
     api: {},
     operators: {
@@ -106,20 +108,6 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.auth.adapters,
     store: components.types.auth.adapters,
     typeClass: 'Auth adapter',
-  });
-
-  buildTypeClass(context, {
-    counter: typeCounters.auth.callbacks,
-    definitions: context.typesMap.auth.callbacks,
-    store: components.types.auth.callbacks,
-    typeClass: 'Auth callback',
-  });
-
-  buildTypeClass(context, {
-    counter: typeCounters.auth.events,
-    definitions: context.typesMap.auth.events,
-    store: components.types.auth.events,
-    typeClass: 'Auth event',
   });
 
   buildTypeClass(context, {
@@ -162,6 +150,13 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.requests,
     store: components.types.requests,
     typeClass: 'Request',
+  });
+
+  buildTypeClass(context, {
+    counter: typeCounters.steps,
+    definitions: context.typesMap.steps,
+    store: components.types.steps,
+    typeClass: 'Step',
   });
 
   buildTypeClass(context, {

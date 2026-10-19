@@ -31,12 +31,4 @@ function createUrl({ basePath = '', pathname, query }) {
   return `${basePath}${pathname}${serializedQuery ? `?${serializedQuery}` : ''}`;
 }
 
-function parsePageId(url, basePath = '') {
-  const pathname = new URL(url, 'http://localhost').pathname;
-  const stripped =
-    basePath && pathname.startsWith(basePath) ? pathname.slice(basePath.length) : pathname;
-  const pageId = stripped.replace(/^\//, '').replace(/\/$/, '');
-  return pageId === '' ? null : pageId;
-}
-
-export { createUrl, parsePageId, serializeQuery };
+export { createUrl, serializeQuery };

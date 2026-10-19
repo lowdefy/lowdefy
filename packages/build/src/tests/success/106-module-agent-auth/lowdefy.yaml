@@ -1,0 +1,50 @@
+# 106: Module agent auth — in an app with auth configured and no auth.api
+# rule, an app agent (app-helper) is public, a module agent is protected
+# (help/triage), one the manifest declares public stays public
+# (help/concierge) and an app role on a module agent applies (help/escalate).
+lowdefy: local
+name: Module Agent Auth Test
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: agents_app_auth_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  emailAndPassword:
+    enabled: true
+  roles:
+    - id: agent
+  api:
+    roles:
+      agent:
+        - help/escalate
+
+connections:
+  - id: claude
+    type: Anthropic
+    properties:
+      apiKey:
+        _secret: ANTHROPIC_API_KEY
+
+agents:
+  - id: app-helper
+    type: ClaudeAgent
+    connectionId: claude
+    properties:
+      model: claude-haiku-4-5
+      instructions: You help with the app.
+
+modules:
+  - id: help
+    source: 'file:modules/support'
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Home

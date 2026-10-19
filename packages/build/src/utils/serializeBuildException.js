@@ -26,6 +26,8 @@ function serializeBuildException(exception) {
     config: exception.config ?? null,
     configKey: exception.configKey ?? null,
     checkSlug: exception.checkSlug ?? null,
+    checkGroup: exception.checkGroup ?? null,
+    prodError: exception.prodError === true,
   };
 }
 

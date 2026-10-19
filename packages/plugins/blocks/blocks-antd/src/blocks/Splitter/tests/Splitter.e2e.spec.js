@@ -83,4 +83,73 @@ test.describe('Splitter Block', () => {
     const display = getBlock(page, 'sp_resize_display');
     await expect(display).toHaveText('Resize fired');
   });
+
+  // ============================================
+  // ANTD 6 FEATURES
+  // ============================================
+
+  test('orientation vertical renders a vertical splitter', async ({ page }) => {
+    const splitter = getBlock(page, 'sp_orientation').locator('.ant-splitter');
+    await expect(splitter).toHaveClass(/ant-splitter-vertical/);
+  });
+
+  test('panel cssKey styles each panel', async ({ page }) => {
+    const panels = getBlock(page, 'sp_features').locator('.ant-splitter-panel');
+    await expect(panels.first()).toHaveCSS('background-color', 'rgb(240, 248, 255)');
+  });
+
+  test('draggerIcon renders an icon in the drag handle', async ({ page }) => {
+    const block = getBlock(page, 'sp_features');
+    await expect(block.locator('.ant-splitter-bar-dragger-icon svg')).toBeAttached();
+  });
+
+  test('dragger cssKey styles the drag handle', async ({ page }) => {
+    const dragger = getBlock(page, 'sp_features').locator('.ant-splitter-bar-dragger');
+    await expect(dragger).toHaveCSS('background-color', 'rgb(255, 228, 225)');
+  });
+
+  test('collapsible icon and destroyOnHidden apply when a panel collapses', async ({ page }) => {
+    const block = getBlock(page, 'sp_features');
+    const collapseStart = block.locator('.ant-splitter-bar-collapse-start');
+    await expect(collapseStart.locator('svg#sp_features_collapseIcon_start')).toBeAttached();
+    await expect(collapseStart.locator('.lf-splitter-default-collapse-icon')).toHaveCount(0);
+    await expect(block).toContainText('First panel');
+    await collapseStart.click();
+    await expect(page.locator('#bl-sp_features_first')).not.toBeAttached();
+  });
+
+  test('default collapse arrows come from the app icon set with the antd button look', async ({
+    page,
+  }) => {
+    const block = getBlock(page, 'sp_default_icons');
+    const collapseBar = block.locator('.ant-splitter-bar-collapse-bar-end');
+    await expect(collapseBar).toBeVisible();
+    await expect(
+      collapseBar.locator('svg.lucide.lf-splitter-default-collapse-icon')
+    ).toBeAttached();
+    // antd's own RightOutlined arrow is not drawn.
+    await expect(collapseBar.locator('.anticon-right')).toHaveCount(0);
+    // chevron-right
+    await expect(collapseBar.locator('path')).toHaveAttribute('d', 'm9 18 6-6-6-6');
+    await expect(collapseBar).not.toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  });
+
+  test('a vertical Splitter defaults to up and down collapse arrows', async ({ page }) => {
+    const block = getBlock(page, 'sp_vertical_default_icons');
+    // chevron-up and chevron-down
+    await expect(block.locator('.ant-splitter-bar-collapse-start path')).toHaveAttribute(
+      'd',
+      'm18 15-6-6-6 6'
+    );
+    await expect(block.locator('.ant-splitter-bar-collapse-end path')).toHaveAttribute(
+      'd',
+      'm6 9 6 6 6-6'
+    );
+  });
+
+  test('onDraggerDoubleClick fires with the handle index', async ({ page }) => {
+    const dragger = getBlock(page, 'sp_features').locator('.ant-splitter-bar-dragger');
+    await dragger.dblclick();
+    await expect(getBlock(page, 'sp_double_click_display')).toHaveText('Double click on 0');
+  });
 });

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 import { jest } from '@jest/globals';
 
 const mockReadConfigFile = jest.fn();
@@ -77,7 +79,7 @@ test('getConfigFile error shows resolved absolute path', async () => {
   const refDef = { path: 'missing.yaml' };
 
   await expect(getConfigFile({ context, refDef, referencedFrom: 'lowdefy.yaml' })).rejects.toThrow(
-    'Resolved to: /test/config/missing.yaml'
+    `Resolved to: ${path.resolve('/test/config/missing.yaml')}`
   );
 });
 
@@ -136,7 +138,8 @@ test('getConfigFile includes all error details in message and location fields', 
     expect(error.filePath).toBe('pages/test.yaml');
     expect(error.lineNumber).toBe(42);
     expect(error.message).toContain('Referenced file does not exist: "../missing.yaml"');
-    expect(error.message).toContain('Resolved to: /test/missing.yaml'); // path.resolve normalizes ../
+    // path.resolve normalizes ../
+    expect(error.message).toContain(`Resolved to: ${path.resolve('/test/missing.yaml')}`);
     expect(error.message).toContain('Did you mean "missing.yaml"?');
   }
 });

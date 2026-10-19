@@ -1,0 +1,462 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+@layer components {
+  /* Every colour is an antd css variable, so the log follows the app theme in light and dark.
+     Severity colours are selected off the data-level attribute set on each row. */
+
+  .element {
+    width: 100%;
+    border: 1px solid var(--ant-color-border-secondary);
+    border-radius: var(--ant-border-radius-lg, 10px);
+    background: var(--ant-color-bg-container);
+    overflow: hidden;
+    font-size: 12.5px;
+  }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--ant-color-border-secondary);
+    background: var(--ant-color-bg-container);
+    position: sticky;
+    top: 0;
+    z-index: 3;
+  }
+
+  .search {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid var(--ant-color-border);
+    border-radius: 7px;
+    background: var(--ant-color-fill-quaternary);
+    transition:
+      border-color 0.15s ease,
+      background 0.15s ease;
+  }
+
+  .search:focus-within {
+    border-color: var(--ant-color-primary);
+    background: var(--ant-color-bg-container);
+    box-shadow: 0 0 0 2px var(--ant-color-primary-bg);
+  }
+
+  .searchIcon {
+    color: var(--ant-color-text-quaternary);
+    flex: 0 0 auto;
+  }
+
+  .searchInput {
+    flex: 1 1 auto;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--ant-color-text);
+    font-size: 12.5px;
+    font-family: inherit;
+  }
+
+  .searchInput::placeholder {
+    color: var(--ant-color-text-quaternary);
+  }
+
+  .searchClear {
+    flex: 0 0 auto;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--ant-color-text-tertiary);
+    font-size: 16px;
+    line-height: 1;
+    padding: 0 2px;
+  }
+
+  .searchClear:hover {
+    color: var(--ant-color-text);
+  }
+
+  .filters {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 0 0 auto;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 26px;
+    padding: 0 10px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    color: var(--ant-color-text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    transition:
+      background 0.12s ease,
+      color 0.12s ease;
+  }
+
+  .pill:hover {
+    background: var(--ant-color-fill-tertiary);
+    color: var(--ant-color-text);
+  }
+
+  .pillActive {
+    background: var(--ant-color-fill-secondary);
+    color: var(--ant-color-text);
+  }
+
+  .pillActive[data-level='error'] {
+    color: var(--ant-color-error);
+  }
+
+  .pillActive[data-level='warning'] {
+    color: var(--ant-color-warning);
+  }
+
+  .pillActive[data-level='success'] {
+    color: var(--ant-color-success);
+  }
+
+  .pillCount {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 16px;
+    padding: 0 5px;
+    border-radius: 8px;
+    background: var(--ant-color-fill-tertiary);
+    color: var(--ant-color-text-secondary);
+    font-size: 10.5px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pillActive .pillCount {
+    background: var(--ant-color-fill);
+    color: var(--ant-color-text);
+  }
+
+  .pillActive[data-level='error'] .pillCount {
+    background: var(--ant-color-error-bg);
+    color: var(--ant-color-error);
+  }
+
+  .pillActive[data-level='warning'] .pillCount {
+    background: var(--ant-color-warning-bg);
+    color: var(--ant-color-warning);
+  }
+
+  .pillActive[data-level='success'] .pillCount {
+    background: var(--ant-color-success-bg);
+    color: var(--ant-color-success);
+  }
+
+  .list {
+    width: 100%;
+  }
+
+  .row {
+    border-bottom: 1px solid var(--ant-color-border-secondary);
+  }
+
+  .row:last-child {
+    border-bottom: none;
+  }
+
+  .rowHead {
+    display: grid;
+    grid-template-columns: 4px 22px minmax(74px, auto) minmax(120px, 190px) 1fr;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+    min-height: 34px;
+    color: var(--ant-color-text);
+    transition: background 0.1s ease;
+  }
+
+  .rowHead:hover {
+    background: var(--ant-color-fill-quaternary);
+  }
+
+  .rowHead:focus-visible {
+    outline: 2px solid var(--ant-color-primary);
+    outline-offset: -2px;
+  }
+
+  .rowOpen > .rowHead {
+    background: var(--ant-color-fill-tertiary);
+  }
+
+  .rail {
+    align-self: stretch;
+    width: 3px;
+    margin-right: 1px;
+    border-radius: 0 2px 2px 0;
+    opacity: 0.85;
+    background: var(--ant-color-info, var(--ant-color-primary));
+  }
+
+  .row[data-level='error'] .rail,
+  .row[data-level='error'] .dot {
+    background: var(--ant-color-error);
+  }
+
+  .row[data-level='error'] .rail {
+    opacity: 1;
+  }
+
+  .row[data-level='warning'] .rail,
+  .row[data-level='warning'] .dot {
+    background: var(--ant-color-warning);
+  }
+
+  .row[data-level='success'] .rail,
+  .row[data-level='success'] .dot {
+    background: var(--ant-color-success);
+  }
+
+  .chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ant-color-text-quaternary);
+    transition: transform 0.15s ease;
+  }
+
+  .chevron[data-open='true'] {
+    transform: rotate(90deg);
+    color: var(--ant-color-text-secondary);
+  }
+
+  .time {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+    padding-right: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .timeClock {
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono',
+      monospace;
+    font-size: 12px;
+    color: var(--ant-color-text);
+  }
+
+  .timeRelative {
+    font-size: 10.5px;
+    color: var(--ant-color-text-quaternary);
+  }
+
+  .type {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding-right: 14px;
+    min-width: 0;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex: 0 0 auto;
+    background: var(--ant-color-info, var(--ant-color-primary));
+  }
+
+  .typeLabel {
+    font-size: 11.5px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .message {
+    min-width: 0;
+    padding-right: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--ant-color-text-secondary);
+  }
+
+  .rowOpen .message {
+    white-space: normal;
+    color: var(--ant-color-text);
+  }
+
+  .detail {
+    padding: 4px 14px 14px 30px;
+    background: var(--ant-color-fill-quaternary);
+    border-top: 1px dashed var(--ant-color-border-secondary);
+  }
+
+  .detailMeta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+  }
+
+  .avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 9.5px;
+    font-weight: 700;
+    overflow: hidden;
+    flex: 0 0 auto;
+  }
+
+  .avatarImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .actor {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ant-color-text);
+  }
+
+  .detailTime {
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono',
+      monospace;
+    font-size: 11px;
+    color: var(--ant-color-text-quaternary);
+  }
+
+  .detailBody {
+    font-size: 12.5px;
+    color: var(--ant-color-text);
+    margin: 2px 0 8px;
+  }
+
+  .context {
+    border: 1px solid var(--ant-color-border-secondary);
+    border-radius: 8px;
+    background: var(--ant-color-bg-container);
+    overflow: hidden;
+  }
+
+  .contextHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--ant-color-border-secondary);
+    background: var(--ant-color-fill-quaternary);
+  }
+
+  .contextLabel {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ant-color-text-tertiary);
+  }
+
+  .copyButton {
+    border: 1px solid var(--ant-color-border);
+    border-radius: 5px;
+    background: var(--ant-color-bg-container);
+    cursor: pointer;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ant-color-text-secondary);
+    transition: all 0.12s ease;
+  }
+
+  .copyButton:hover {
+    border-color: var(--ant-color-primary);
+    color: var(--ant-color-primary);
+  }
+
+  .keyValues {
+    margin: 0;
+    padding: 4px 0;
+  }
+
+  .keyValueRow {
+    display: grid;
+    grid-template-columns: minmax(120px, 240px) 1fr;
+    gap: 12px;
+    padding: 3px 12px;
+  }
+
+  .keyValueRow:hover {
+    background: var(--ant-color-fill-quaternary);
+  }
+
+  .key {
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono',
+      monospace;
+    font-size: 11.5px;
+    color: var(--ant-color-text-tertiary);
+    overflow-wrap: anywhere;
+  }
+
+  .value {
+    margin: 0;
+    font-size: 12px;
+    color: var(--ant-color-text);
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+  }
+
+  .valueMono {
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono',
+      monospace;
+    font-size: 11.5px;
+  }
+
+  .valueError {
+    color: var(--ant-color-error);
+    font-weight: 600;
+  }
+
+  .empty {
+    padding: 28px 16px;
+    text-align: center;
+    color: var(--ant-color-text-quaternary);
+    font-size: 12.5px;
+  }
+}

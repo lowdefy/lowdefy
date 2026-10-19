@@ -44,8 +44,8 @@ test('writeJs', async () => {
       'plugins/operators/clientJsMap.js',
       `
 export default {
-  'A': ({ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user }) => { return 12; },
-  'B': ({ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user }) => { return 1; },
+  'A': ({ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, pathParams, request, state, urlQuery, user }) => { return 12; },
+  'B': ({ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, pathParams, request, state, urlQuery, user }) => { return 1; },
   };`,
     ],
     [
@@ -83,7 +83,7 @@ test('writeJs multiline', async () => {
       'plugins/operators/clientJsMap.js',
       `
 export default {
-  'A': ({ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user }) => { const parts = input.split('-').filter(part => part);
+  'A': ({ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, pathParams, request, state, urlQuery, user }) => { const parts = input.split('-').filter(part => part);
       return parts.reduce((acc, current, index) => {
         const prefix = index === 0 ? '-' : acc[index - 1] + '-';
         acc.push(prefix + current);
@@ -123,6 +123,34 @@ export default {
       'plugins/operators/serverJsMap.js',
       `
 export default {
+  };`,
+    ],
+  ]);
+});
+
+test('writeJs marks volatile client functions and leaves server functions unmarked', async () => {
+  context.jsMap = {
+    client: {
+      A: 'return Date.now();',
+    },
+    server: {
+      C: 'return Date.now();',
+    },
+  };
+  await writeJs({ context });
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
+    [
+      'plugins/operators/clientJsMap.js',
+      `
+export default {
+  'A': Object.assign(({ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, pathParams, request, state, urlQuery, user }) => { return Date.now(); }, { volatile: true }),
+  };`,
+    ],
+    [
+      'plugins/operators/serverJsMap.js',
+      `
+export default {
+  'C': ({ args, item, lowdefyApp, payload, secret, state, step, user }) => { return Date.now(); },
   };`,
     ],
   ]);

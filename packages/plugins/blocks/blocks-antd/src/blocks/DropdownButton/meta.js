@@ -14,19 +14,24 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'display',
-  icons: [],
+  icons: ['chevron-down', 'chevron-right', 'more', 'loading'],
   valueType: null,
   cssKeys: {
-    element: 'The outer container.',
+    element: 'The outer element: the button group in split mode, otherwise the button.',
     button: 'The trigger button.',
     icon: 'The icon in the button.',
     menu: 'The floating menu container.',
     item: 'Individual menu items.',
     itemIcon: 'Icon within menu items.',
-    arrow: 'Dropdown arrow indicator.',
+    arrow: 'Has no effect: antd does not expose the dropdown arrow as a separately styled part.',
   },
+  // Each menu item declares its own eventName, so the event names a
+  // DropdownButton fires are authored in its properties.
+  dynamicEvents: true,
   events: {
     onClick:
       'Trigger action when the button is clicked (split mode). Renders a shortcut badge when a shortcut is configured on the event.',
@@ -41,11 +46,15 @@ export default {
         description: 'Button label text.',
       },
       icon: {
-        type: ['string', 'object'],
-        description: 'Name of a React-Icon or properties of an Icon block to use icon in button.',
-        docs: {
-          displayType: 'icon',
-        },
+        ...icon,
+        description:
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use icon in button.',
+      },
+      iconPlacement: {
+        type: 'string',
+        enum: ['start', 'end'],
+        default: 'start',
+        description: 'Place the button icon before (start) or after (end) the title.',
       },
       type: {
         type: 'string',
@@ -101,7 +110,20 @@ export default {
       },
       placement: {
         type: 'string',
-        enum: ['bottomLeft', 'bottom', 'bottomRight', 'topLeft', 'top', 'topRight'],
+        enum: [
+          'bottomLeft',
+          'bottom',
+          'bottomRight',
+          'topLeft',
+          'top',
+          'topRight',
+          'left',
+          'leftTop',
+          'leftBottom',
+          'right',
+          'rightTop',
+          'rightBottom',
+        ],
         default: 'bottomRight',
         description: 'Dropdown position.',
       },
@@ -137,11 +159,8 @@ export default {
               description: 'Event name to trigger when clicked.',
             },
             icon: {
-              type: ['string', 'object'],
+              ...icon,
               description: 'Icon name or config.',
-              docs: {
-                displayType: 'icon',
-              },
             },
             danger: {
               type: 'boolean',

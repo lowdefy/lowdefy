@@ -1,0 +1,34 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { type } from '@lowdefy/helpers';
+
+// Lowdefy keeps its own keys in the app's storage namespace under these prefixes, e.g.
+// lowdefy_darkMode, lf-sider-open and the per-user keys under lowdefy_user:.
+const RESERVED_PREFIXES = ['lowdefy_', 'lf-'];
+
+function validateStorageKey({ actionType, key }) {
+  if (!type.isString(key) || key === '') {
+    throw new Error(`${actionType} "key" should be a non-empty string.`);
+  }
+  if (RESERVED_PREFIXES.some((prefix) => key.startsWith(prefix))) {
+    throw new Error(
+      `${actionType} "key" "${key}" is reserved. Keys starting with "lowdefy_" or "lf-" are used internally by Lowdefy.`
+    );
+  }
+}
+
+export default validateStorageKey;

@@ -1,0 +1,58 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: list_selector
+type: Box
+
+blocks:
+  - id: ls_basic
+    type: ListSelector
+    properties:
+      valueKey: id
+      data:
+        - { id: 1, name: Starter }
+        - { id: 2, name: Pro }
+      html: '<strong>{{ item.name }}</strong>'
+    events:
+      onChange:
+        - id: set_ls_value
+          type: SetState
+          params:
+            ls_basic_event:
+              _event: value
+
+  - id: ls_basic_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'Selected: '
+          - _json.stringify:
+              - _state: ls_basic_event
+
+  - id: ls_size_default
+    type: ListSelector
+    properties:
+      size: default
+      data:
+        - Alpha
+      html: '{{ item }}'
+
+  - id: ls_size_small
+    type: ListSelector
+    properties:
+      size: small
+      data:
+        - Alpha
+      html: '{{ item }}'

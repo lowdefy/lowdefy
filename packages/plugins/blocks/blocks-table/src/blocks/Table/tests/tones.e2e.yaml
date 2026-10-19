@@ -1,0 +1,140 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Tag tones (tones.e2e.spec.js): every preset colour, antd status name and a few custom colours as
+# Table, TableLight and HTML data-tag chips, for the contrast checks in light and dark mode.
+id: tones
+type: Box
+
+blocks:
+  - id: tones_table
+    type: Table
+    properties:
+      rowKey: id
+      maxHeight: 2000
+      columns:
+        - key: name
+        - key: tone
+          type: tag
+          options:
+            - { value: 'red', label: 'red', color: 'red' }
+            - { value: 'volcano', label: 'volcano', color: 'volcano' }
+            - { value: 'orange', label: 'orange', color: 'orange' }
+            - { value: 'gold', label: 'gold', color: 'gold' }
+            - { value: 'yellow', label: 'yellow', color: 'yellow' }
+            - { value: 'lime', label: 'lime', color: 'lime' }
+            - { value: 'green', label: 'green', color: 'green' }
+            - { value: 'cyan', label: 'cyan', color: 'cyan' }
+            - { value: 'blue', label: 'blue', color: 'blue' }
+            - { value: 'geekblue', label: 'geekblue', color: 'geekblue' }
+            - { value: 'purple', label: 'purple', color: 'purple' }
+            - { value: 'magenta', label: 'magenta', color: 'magenta' }
+            - { value: 'pink', label: 'pink', color: 'pink' }
+            - { value: 'success', label: 'success', color: 'success' }
+            - { value: 'processing', label: 'processing', color: 'processing' }
+            - { value: 'info', label: 'info', color: 'info' }
+            - { value: 'warning', label: 'warning', color: 'warning' }
+            - { value: 'error', label: 'error', color: 'error' }
+            - { value: 'default', label: 'default', color: 'default' }
+            - { value: '#fadb14', label: '#fadb14', color: '#fadb14' }
+            - { value: '#13c2c2', label: '#13c2c2', color: '#13c2c2' }
+            - { value: '#722ed1', label: '#722ed1', color: '#722ed1' }
+            - { value: '#8c8c8c', label: '#8c8c8c', color: '#8c8c8c' }
+      data:
+        - { id: 1, name: 'red', tone: 'red' }
+        - { id: 2, name: 'volcano', tone: 'volcano' }
+        - { id: 3, name: 'orange', tone: 'orange' }
+        - { id: 4, name: 'gold', tone: 'gold' }
+        - { id: 5, name: 'yellow', tone: 'yellow' }
+        - { id: 6, name: 'lime', tone: 'lime' }
+        - { id: 7, name: 'green', tone: 'green' }
+        - { id: 8, name: 'cyan', tone: 'cyan' }
+        - { id: 9, name: 'blue', tone: 'blue' }
+        - { id: 10, name: 'geekblue', tone: 'geekblue' }
+        - { id: 11, name: 'purple', tone: 'purple' }
+        - { id: 12, name: 'magenta', tone: 'magenta' }
+        - { id: 13, name: 'pink', tone: 'pink' }
+        - { id: 14, name: 'success', tone: 'success' }
+        - { id: 15, name: 'processing', tone: 'processing' }
+        - { id: 16, name: 'info', tone: 'info' }
+        - { id: 17, name: 'warning', tone: 'warning' }
+        - { id: 18, name: 'error', tone: 'error' }
+        - { id: 19, name: 'default', tone: 'default' }
+        - { id: 20, name: '#fadb14', tone: '#fadb14' }
+        - { id: 21, name: '#13c2c2', tone: '#13c2c2' }
+        - { id: 22, name: '#722ed1', tone: '#722ed1' }
+        - { id: 23, name: '#8c8c8c', tone: '#8c8c8c' }
+
+  - id: tones_light
+    type: TableLight
+    properties:
+      rowKey: id
+      columns:
+        - key: name
+        - key: tone
+          type: tag
+          options:
+            - { value: 'red', label: 'red', color: 'red' }
+            - { value: 'volcano', label: 'volcano', color: 'volcano' }
+            - { value: 'orange', label: 'orange', color: 'orange' }
+            - { value: 'gold', label: 'gold', color: 'gold' }
+            - { value: 'yellow', label: 'yellow', color: 'yellow' }
+            - { value: 'lime', label: 'lime', color: 'lime' }
+            - { value: 'green', label: 'green', color: 'green' }
+            - { value: 'cyan', label: 'cyan', color: 'cyan' }
+            - { value: 'blue', label: 'blue', color: 'blue' }
+            - { value: 'geekblue', label: 'geekblue', color: 'geekblue' }
+            - { value: 'purple', label: 'purple', color: 'purple' }
+            - { value: 'magenta', label: 'magenta', color: 'magenta' }
+            - { value: 'pink', label: 'pink', color: 'pink' }
+            - { value: 'success', label: 'success', color: 'success' }
+            - { value: 'processing', label: 'processing', color: 'processing' }
+            - { value: 'info', label: 'info', color: 'info' }
+            - { value: 'warning', label: 'warning', color: 'warning' }
+            - { value: 'error', label: 'error', color: 'error' }
+            - { value: 'default', label: 'default', color: 'default' }
+            - { value: '#fadb14', label: '#fadb14', color: '#fadb14' }
+            - { value: '#13c2c2', label: '#13c2c2', color: '#13c2c2' }
+            - { value: '#722ed1', label: '#722ed1', color: '#722ed1' }
+            - { value: '#8c8c8c', label: '#8c8c8c', color: '#8c8c8c' }
+      data:
+        - { id: 1, name: 'red', tone: 'red' }
+        - { id: 2, name: 'volcano', tone: 'volcano' }
+        - { id: 3, name: 'orange', tone: 'orange' }
+        - { id: 4, name: 'gold', tone: 'gold' }
+        - { id: 5, name: 'yellow', tone: 'yellow' }
+        - { id: 6, name: 'lime', tone: 'lime' }
+        - { id: 7, name: 'green', tone: 'green' }
+        - { id: 8, name: 'cyan', tone: 'cyan' }
+        - { id: 9, name: 'blue', tone: 'blue' }
+        - { id: 10, name: 'geekblue', tone: 'geekblue' }
+        - { id: 11, name: 'purple', tone: 'purple' }
+        - { id: 12, name: 'magenta', tone: 'magenta' }
+        - { id: 13, name: 'pink', tone: 'pink' }
+        - { id: 14, name: 'success', tone: 'success' }
+        - { id: 15, name: 'processing', tone: 'processing' }
+        - { id: 16, name: 'info', tone: 'info' }
+        - { id: 17, name: 'warning', tone: 'warning' }
+        - { id: 18, name: 'error', tone: 'error' }
+        - { id: 19, name: 'default', tone: 'default' }
+        - { id: 20, name: '#fadb14', tone: '#fadb14' }
+        - { id: 21, name: '#13c2c2', tone: '#13c2c2' }
+        - { id: 22, name: '#722ed1', tone: '#722ed1' }
+        - { id: 23, name: '#8c8c8c', tone: '#8c8c8c' }
+
+  - id: tones_html
+    type: Html
+    properties:
+      html: >-
+        <span data-tag="red">red</span> <span data-tag="volcano">volcano</span> <span data-tag="orange">orange</span> <span data-tag="gold">gold</span> <span data-tag="yellow">yellow</span> <span data-tag="lime">lime</span> <span data-tag="green">green</span> <span data-tag="cyan">cyan</span> <span data-tag="blue">blue</span> <span data-tag="geekblue">geekblue</span> <span data-tag="purple">purple</span> <span data-tag="magenta">magenta</span> <span data-tag="pink">pink</span> <span data-tag="success">success</span> <span data-tag="processing">processing</span> <span data-tag="info">info</span> <span data-tag="warning">warning</span> <span data-tag="error">error</span> <span data-tag="default">default</span> <span data-tag="#fadb14">#fadb14</span> <span data-tag="#13c2c2">#13c2c2</span> <span data-tag="#722ed1">#722ed1</span> <span data-tag="#8c8c8c">#8c8c8c</span>

@@ -2,7 +2,7 @@
 
 Panel that slides in from the edge of the screen.
 
-This is a basic drawer with a title and default settings. It opens from the right side with a width of 256px.
+This is a basic drawer with a title and default settings. It opens from the right side with the default width of 378px.
 
 Click the X button or the mask area to close it.
 
@@ -33,7 +33,7 @@ Click the X button or the mask area to close it.
       type: Paragraph
       properties:
         content: This is a basic drawer with a title and default settings. It opens from
-          the right side with a width of 256px.
+          the right side with the default width of 378px.
     - id: drawer_basic_p2
       type: Paragraph
       properties:
@@ -259,6 +259,52 @@ Using a percentage width makes the drawer responsive. This drawer takes up 60% o
           up 60% of the viewport width.
 ```
 
+```yaml
+- id: drawer_padding_btn
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Open Drawer with padding none
+  events:
+    onClick:
+      - id: drawer_padding_open
+        type: CallMethod
+        params:
+          blockId: drawer_padding
+          method: setOpen
+          args:
+            - open: true
+- id: drawer_padding
+  type: Drawer
+  properties:
+    title: Recent invoices
+    padding: none
+  blocks:
+    - id: drawer_padding_rows
+      type: Html
+      properties:
+        html: >
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px; border-bottom: 1px solid
+          var(--ant-color-border-secondary);"><span>INV-1042</span><span
+          style="color: var(--ant-color-text-secondary);">$1,280.00</span></div>
+
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px; border-bottom: 1px solid
+          var(--ant-color-border-secondary);"><span>INV-1041</span><span
+          style="color: var(--ant-color-text-secondary);">$640.00</span></div>
+
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px; border-bottom: 1px solid
+          var(--ant-color-border-secondary);"><span>INV-1040</span><span
+          style="color: var(--ant-color-text-secondary);">$2,115.50</span></div>
+
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px;"><span>INV-1039</span><span style="color:
+          var(--ant-color-text-secondary);">$96.00</span></div>
+```
+
 The close button is visible in the top right corner. This is the default behavior.
 
 The close (x) button is hidden. Users can still close by clicking the mask or pressing Escape.
@@ -430,6 +476,52 @@ The mask is visible but clicking it does not close the drawer. Users must use th
       properties:
         content: The mask is visible but clicking it does not close the drawer. Users
           must use the close button or Escape key.
+```
+
+Drag the left edge to resize the drawer. The onResizeEnd event receives the new size, so it can be saved as a user preference.
+
+```yaml
+- id: drawer_resizable_trigger
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Open Resizable Drawer
+    color: primary
+    variant: outlined
+  events:
+    onClick:
+      - id: drawer_resizable_open
+        type: CallMethod
+        params:
+          blockId: drawer_resizable
+          method: setOpen
+          args:
+            - open: true
+- id: drawer_resizable
+  type: Drawer
+  properties:
+    title: Resizable Drawer
+    size: 480
+    resizable: true
+    maxSize: 900
+    closable:
+      placement: end
+    mask:
+      blur: true
+  events:
+    onResizeEnd:
+      - id: drawer_resizable_save_size
+        type: SetState
+        params:
+          drawer_size:
+            _event: size
+  blocks:
+    - id: drawer_resizable_p1
+      type: Paragraph
+      properties:
+        content: Drag the left edge to resize the drawer. The onResizeEnd event receives
+          the new size, so it can be saved as a user preference.
 ```
 
 Pressing the Escape key closes this drawer. This is the default behavior.
@@ -682,7 +774,7 @@ This drawer uses the toggleOpen method. Each click of the button alternates betw
     title: Toggle Drawer
     color: primary
     variant: solid
-    icon: AiOutlineMenu
+    icon: menu
   events:
     onClick:
       - id: drawer_toggle_call
@@ -790,8 +882,10 @@ This drawer uses style.header and style.body to apply custom background colors t
     title: Styled Drawer
   style:
     .header:
-      borderBottom: 1px solid
-    .body: null
+      backgroundColor: var(--ant-color-primary-bg)
+      borderBottom: 1px solid var(--ant-color-primary-border)
+    .body:
+      backgroundColor: var(--ant-color-fill-quaternary)
   blocks:
     - id: drawer_inline_style_content
       type: Paragraph
@@ -829,8 +923,8 @@ The mask CSS key applies a backdrop blur effect, and the content CSS key adds ro
   properties:
     title: Tailwind CSS Keys
   class:
-    header: bg-bg-layout
-    body: bg-bg-layout
+    .header: bg-bg-layout
+    .body: bg-bg-layout
   blocks:
     - id: drawer_css_keys_content
       type: Paragraph
@@ -860,8 +954,8 @@ The mask CSS key applies a backdrop blur effect, and the content CSS key adds ro
   properties:
     title: Accent Header
   class:
-    header: bg-gradient-to-r from-primary/100 to-indigo-600 text-white
-    body: bg-bg-layout
+    .header: bg-gradient-to-r from-primary/100 to-indigo-600 text-white
+    .body: bg-bg-layout
   blocks:
     - id: drawer_css_accent_content
       type: Paragraph
@@ -890,8 +984,8 @@ The mask CSS key applies a backdrop blur effect, and the content CSS key adds ro
   properties:
     title: Custom Mask Style
   class:
-    mask: backdrop-blur-sm
-    content: rounded-l-xl
+    .mask: backdrop-blur-sm
+    .content: rounded-l-xl
   blocks:
     - id: drawer_css_mask_content
       type: Paragraph
@@ -1014,7 +1108,7 @@ Overrides footerPaddingBlock, footerPaddingInline, and zIndexPopup design tokens
     title: Edit Record
     color: primary
     variant: solid
-    icon: AiOutlineEdit
+    icon: edit
   events:
     onClick:
       - id: drawer_edit_form_open
@@ -1124,7 +1218,7 @@ Overrides footerPaddingBlock, footerPaddingInline, and zIndexPopup design tokens
     title: Filters
     color: default
     variant: outlined
-    icon: AiOutlineFilter
+    icon: filter
   events:
     onClick:
       - id: drawer_filter_panel_open
@@ -1200,7 +1294,7 @@ Overrides footerPaddingBlock, footerPaddingInline, and zIndexPopup design tokens
             value: 3
           - label: 4+
             value: 4
-          - label: 5
+          - label: "5"
             value: 5
     - id: drawer_filter_panel_in_stock
       type: Switch
@@ -1241,7 +1335,7 @@ Jane Cooper
     title: View Profile
     color: primary
     variant: solid
-    icon: AiOutlineUser
+    icon: user
   events:
     onClick:
       - id: drawer_profile_open
@@ -1268,10 +1362,9 @@ Jane Cooper
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineUser
+            icon: user
             size: 64
-            color: "#fff"
-            backgroundColor: "#1677ff"
+            color: "#1677ff"
         - id: drawer_profile_info
           type: Box
           layout:
@@ -1322,7 +1415,7 @@ Jane Cooper
             title: Edit Profile
             color: primary
             variant: outlined
-            icon: AiOutlineEdit
+            icon: edit
         - id: drawer_profile_message_btn
           type: Button
           layout:
@@ -1331,20 +1424,36 @@ Jane Cooper
             title: Send Message
             color: primary
             variant: solid
-            icon: AiOutlineMail
+            icon: mail
 ```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `closable` | boolean | `true` | Whether a close (x) button is visible on top right of the Drawer dialog or not. |
-| `mask` | boolean | `true` | Whether to show mask or not. |
-| `maskClosable` | boolean | `true` | Clicking on the mask (area outside the Drawer) to close the Drawer or not. |
-| `title` | string | - | The title of the Drawer. |
-| `width` | string \| number | `"256px"` | Width of the Drawer dialog. |
-| `height` | string \| number | `"256px"` | When placement is top or bottom, height of the Drawer dialog. |
+| `closable` | boolean \| object | `true` | Whether a close (x) button is visible in the Drawer header or not. Set an object to disable the button or to move it to the end of the header. |
+| `closable.disabled` | boolean | `false` | Show the close button, but disabled. |
+| `closable.placement` | string | `"start"` | Place the close button at the start or the end of the header. Enum: `start`, `end`. |
+| `destroyOnHidden` | boolean | `false` | Unmount the blocks inside the Drawer when it closes, so they mount again (and their onMount events run) each time it opens. Their state is kept. |
+| `focusable` | object | - | Focus management of the dialog. |
+| `focusable.trap` | boolean | `true` | Keep keyboard focus inside the dialog while it is open. |
+| `focusable.focusTriggerAfterClose` | boolean | `true` | Return focus to the element that opened the dialog after it closes. |
+| `forceRender` | boolean | `false` | Render the blocks inside the Drawer before it is first opened, so their methods can be called and their onMount events run while it is still closed. |
+| `getContainer` | string \| boolean | - | Where the Drawer is mounted. By default it is mounted on the page body. Set to `false` to render it in place, inside the nearest positioned parent (give that parent `position: relative`), or to a CSS selector to mount it in the first matching element. |
+| `loading` | boolean | `false` | Show a loading skeleton in place of the Drawer body. |
+| `mask` | boolean \| object | `true` | Whether to show the mask. Set an object to configure the mask with `enabled`, `blur` and `closable`. |
+| `mask.enabled` | boolean | `true` | Whether to show the mask. |
+| `mask.blur` | boolean | `false` | Blur the page behind the mask. |
+| `mask.closable` | boolean | - | Whether clicking the mask closes the dialog. Takes precedence over `maskClosable`. |
+| `maskClosable` | boolean | `true` | Clicking on the mask (area outside the Drawer) to close the Drawer or not. `mask.closable` takes precedence. |
+| `maxSize` | number | - | Maximum size in pixels a resizable Drawer can be dragged to. |
+| `padding` | string | `"default"` | Space inside the drawer. `compact` tightens the header and body. `none` removes the body padding so content such as a table or list runs edge to edge; the header and footer keep their padding. Enum: `default`, `compact`, `none`. |
+| `resizable` | boolean | `false` | Let the user resize the Drawer by dragging its edge. The configured size is the starting size. |
+| `size` | string \| number | - | Size of the Drawer: width for left and right placements, height for top and bottom. `default` (378px), `large` (736px), a number of pixels or a CSS length. Takes precedence over width and height. |
+| `title` | string | - | The title of the Drawer - supports html. |
+| `width` | string \| number | `378` | Width of the Drawer dialog. |
+| `height` | string \| number | `378` | When placement is top or bottom, height of the Drawer dialog. |
 | `zIndex` | integer | `1000` | The z-index of the Drawer. |
 | `placement` | string | `"right"` | The placement of the Drawer. Enum: `top`, `right`, `bottom`, `left`. |
-| `keyboard` | boolean | `true` | Whether support press esc to close. |
+| `keyboard` | boolean | `true` | Whether pressing Esc closes the Drawer. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design drawer tokens](https://ant.design/components/drawer#design-token). |
 | `theme.footerPaddingBlock` | number | `8` | Vertical padding of the footer. |
 | `theme.footerPaddingInline` | number | `16` | Horizontal padding of the footer. |
@@ -1359,13 +1468,15 @@ Jane Cooper
 | `onClose` | \- | Trigger actions when drawer is closed. |
 | `onOpen` | \- | Trigger actions when drawer is opened. |
 | `afterClose` | \- | Trigger actions after drawer is closed. |
-| `afterOpenChange` | \- | Trigger actions after drawer is opened. |
+| `afterOpenChange` | `{ open, drawerOpen }` | Trigger actions after the open or close animation of the drawer has finished. |
+| `onResizeEnd` | `{ size }` | Trigger actions when the user finishes resizing a resizable drawer. Not triggered when the resize handle is clicked without dragging. |
 
 | Key | Target |
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Drawer element. |
 | `/header` | The Drawer header. |
+| `/title` | The Drawer title. |
 | `/body` | The Drawer body. |
 | `/footer` | The Drawer footer. |
 | `/mask` | The Drawer mask. |

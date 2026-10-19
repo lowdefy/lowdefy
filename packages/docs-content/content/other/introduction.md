@@ -14,7 +14,7 @@ pnpx lowdefy@5 init && pnpx lowdefy@5 dev
 
 This will create a file called `lowdefy.yaml` in the current working directory that contains the configuration for a Lowdefy app (as well as a `.gitignore`) and launch a local development server at http://localhost:3000. Make changes in the `lowdefy.yaml` file to see them reflect in the app.
 
-> You need Node v22 or newer and pnpm installed to run Lowdefy. For more details see [the tutorial](/tutorial-start).
+> You need Node v24 or newer and pnpm installed to run Lowdefy. For more details see [the tutorial](/tutorial-start).
 
 ## Why create web apps using a YAML schema?
 

@@ -33,6 +33,13 @@ function buildJsShallow({ components, context }) {
     });
   }
 
+  // App events run in the browser; like pages built here, their JS joins the client jsMap.
+  components.events = jsMapParser({
+    input: components.events,
+    jsMap: context.jsMap,
+    env: 'client',
+  });
+
   // Ensure both client and server jsMap keys exist.
   // Page JS extraction is deferred to JIT build.
   if (!context.jsMap.client) {

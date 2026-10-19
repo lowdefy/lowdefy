@@ -36,10 +36,22 @@ beforeEach(() => {
 test('getRootConfig', async () => {
   const getRootConfig = (await import('./getRootConfig.js')).default;
   mockReadConfigFile.mockImplementation((path) => {
+    if (path === 'events.json') {
+      return {
+        onInit: { try: [{ id: 'set', type: 'SetGlobal', params: { ready: true } }], catch: [] },
+      };
+    }
     if (path === 'global.json') {
       return {
         global: true,
       };
+    }
+    if (path === 'routes.json') {
+      return [
+        { pageId: 'page', path: 'page', auth: { public: true } },
+        { pageId: 'users', path: 'admin/users', auth: { public: true } },
+        { pageId: 'ticket', path: '{space}/tickets/{ticket_id}', auth: { public: false } },
+      ];
     }
     if (path === 'theme.json') {
       return {
@@ -65,14 +77,21 @@ test('getRootConfig', async () => {
   mockGetMenu.mockImplementation(() => menus);
   const res = await getRootConfig(context);
   expect(res).toEqual({
+    events: {
+      onInit: { try: [{ id: 'set', type: 'SetGlobal', params: { ready: true } }], catch: [] },
+    },
     home: {
       configured: false,
       pageId: 'page',
+      pathParams: {},
     },
     i18n: {},
     lowdefyApp: { slug: 'my-app', name: 'My App' },
     lowdefyGlobal: {
       global: true,
+    },
+    pagePaths: {
+      users: 'admin/users',
     },
     theme: {
       antd: { token: { colorPrimary: '#00b96b' } },

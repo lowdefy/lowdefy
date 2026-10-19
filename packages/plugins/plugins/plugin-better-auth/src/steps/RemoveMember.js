@@ -1,0 +1,55 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { type } from '@lowdefy/helpers';
+
+import callPluginEndpoint from './support/callPluginEndpoint.js';
+import hasMcpTokenModel from './support/hasMcpTokenModel.js';
+
+// organizationId is part of the authored property surface but the step never
+// resolves it: the floor resolves the target organization (defaulting to the
+// pinned one), authorizes the caller there, and passes the result in.
+async function RemoveMember({ acting, auth, organizationId, properties }) {
+  const { memberIdOrEmail } = properties;
+  if (type.isNone(memberIdOrEmail)) {
+    throw new Error('RemoveMember requires a "memberIdOrEmail" property.');
+  }
+  const result = await callPluginEndpoint({
+    acting,
+    auth,
+    body: { memberIdOrEmail, organizationId },
+    endpointKey: 'removeMember',
+    pluginId: 'organization',
+  });
+  // The MCP route already refuses a token whose member row is gone - this
+  // second write only keeps token lists tidy.
+  if (hasMcpTokenModel({ auth })) {
+    const { adapter } = await auth.$context;
+    await adapter.deleteMany({
+      model: 'mcpToken',
+      where: [{ field: 'memberId', value: result.member.id }],
+    });
+  }
+  return result;
+}
+
+// Deleting a member row needs member:delete authority in the organization the
+// row belongs to.
+RemoveMember.meta = {
+  authority: { scope: 'org', permissions: { member: ['delete'] } },
+};
+
+export default RemoveMember;

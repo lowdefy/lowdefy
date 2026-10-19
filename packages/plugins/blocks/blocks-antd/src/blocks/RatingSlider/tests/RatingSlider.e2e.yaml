@@ -72,8 +72,8 @@ blocks:
     type: RatingSlider
     properties:
       title: Custom Icons
-      minIcon: AiOutlineDislike
-      maxIcon: AiOutlineLike
+      minIcon: ThumbsDown
+      maxIcon: ThumbsUp
 
   - id: ratingslider_with_color
     type: RatingSlider

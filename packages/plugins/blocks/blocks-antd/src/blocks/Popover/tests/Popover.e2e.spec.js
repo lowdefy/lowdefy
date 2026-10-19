@@ -115,4 +115,49 @@ test.describe('Popover Block', () => {
     const display = getBlock(page, 'onopenchange_display');
     await expect(display).toHaveText('Open changed!');
   });
+
+  test('arrow false hides the arrow', async ({ page }) => {
+    await getBlock(page, 'popover_no_arrow_trigger').hover();
+    const popover = page.locator('.ant-popover').filter({ hasText: 'No arrow popover' });
+    await expect(popover).toBeVisible();
+    await expect(popover.locator('.ant-popover-arrow')).toHaveCount(0);
+  });
+
+  test('title renders html and cssKeys reach the popover parts', async ({ page }) => {
+    await getBlock(page, 'popover_styled_trigger').hover();
+    const popover = page.locator('.ant-popover').filter({ hasText: 'Styled content' });
+    await expect(popover).toBeVisible();
+    await expect(popover.locator('.ant-popover-title b')).toHaveText('Styled');
+    await expect(popover.locator('.ant-popover-title')).toHaveClass(/popover-styled-title/);
+    const container = popover.locator('.ant-popover-container');
+    await expect(container).toHaveCSS('background-color', 'rgb(0, 128, 0)');
+    // overlayInnerStyle still reaches the container.
+    await expect(container).toHaveCSS('padding-top', '30px');
+    await expect(popover.locator('.ant-popover-content')).toHaveCSS('color', 'rgb(255, 0, 0)');
+  });
+
+  test('destroyOnHidden removes the popover after it hides', async ({ page }) => {
+    await getBlock(page, 'popover_destroy_trigger').hover();
+    const popover = page.locator('.ant-popover').filter({ hasText: 'Destroyed content' });
+    await expect(popover).toBeVisible();
+    await page.mouse.move(0, 0);
+    await expect(popover).toHaveCount(0);
+  });
+
+  test('onOpenChange passes the open state', async ({ page }) => {
+    await getBlock(page, 'popover_open_payload_trigger').click();
+    await expect(getBlock(page, 'popover_open_payload_display')).toHaveText('opened');
+  });
+
+  test('open, overlayClassName and overlayStyle still reach antd', async ({ page }) => {
+    const popover = page.locator('.ant-popover').filter({ hasText: 'Legacy content' });
+    await expect(popover).toHaveCount(0);
+    const toggle = getBlock(page, 'popover_legacy_toggle').locator('.ant-btn');
+    await toggle.click();
+    await expect(popover).toBeVisible();
+    await expect(popover).toHaveClass(/popover-legacy-overlay/);
+    await expect(popover).toHaveCSS('width', '300px');
+    await toggle.click();
+    await expect(popover).toBeHidden();
+  });
 });

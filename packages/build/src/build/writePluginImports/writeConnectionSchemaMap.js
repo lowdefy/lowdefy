@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
-import importPluginModule from './importPluginModule.js';
+import collectConnectionSchemas from './collectConnectionSchemas.js';
 
 // Connection and request schemas live as statics on the connection classes
 // (Connection.schema, Connection.requests[Request].schema), not behind a
 // package /schemas export. Collect them here, in the build process, so the
 // dev server can serve schemas for every installed connection package without
 // importing heavy connection dependencies (database drivers etc.) at runtime.
+// The packages are imported in a worker thread (collectConnectionSchemas.js),
+// so the drivers do not stay loaded in the build's process either.
 // Dev-only — context.installedPackages is set by the dev shallow build
 // (addInstalledTypes); production builds skip it.
 async function writeConnectionSchemaMap({ context }) {
@@ -61,22 +63,17 @@ async function writeConnectionSchemaMap({ context }) {
     ...Object.keys(requestsByPackage),
   ]);
 
-  for (const packageName of packageNames) {
-    const packageConnections = await importPluginModule({
-      context,
-      specifier: `${packageName}/connections`,
-    });
+  const collected = await collectConnectionSchemas({
+    context,
+    packageNames: [...packageNames],
+  });
 
-    const requestFnsByOriginalName = {};
-    for (const connection of Object.values(packageConnections ?? {})) {
-      for (const [requestName, requestFn] of Object.entries(connection?.requests ?? {})) {
-        requestFnsByOriginalName[requestName] = requestFn;
-      }
-    }
+  for (const packageName of packageNames) {
+    const packageSchemas = collected[packageName];
 
     for (const connection of connectionsByPackage[packageName] ?? []) {
       const originalTypeName = connection.originalTypeName ?? connection.typeName;
-      const implementation = packageConnections?.[originalTypeName];
+      const implementation = packageSchemas?.connections[originalTypeName];
       const typePrefix = connection.typeName.slice(
         0,
         connection.typeName.length - originalTypeName.length
@@ -86,21 +83,20 @@ async function writeConnectionSchemaMap({ context }) {
       } else if (implementation?.schema) {
         connectionSchemas[connection.typeName] = {
           schema: implementation.schema,
-          requests: Object.keys(implementation.requests ?? {}).map(
-            (requestName) => `${typePrefix}${requestName}`
-          ),
+          requests: implementation.requests.map((requestName) => `${typePrefix}${requestName}`),
         };
       }
     }
 
     for (const request of requestsByPackage[packageName] ?? []) {
-      const requestFn = requestFnsByOriginalName[request.originalTypeName ?? request.typeName];
+      const collectedRequest =
+        packageSchemas?.requests[request.originalTypeName ?? request.typeName];
       if (typesMapRequestSchemas[request.typeName]) {
         requestSchemas[request.typeName] = typesMapRequestSchemas[request.typeName];
-      } else if (requestFn?.schema) {
+      } else if (collectedRequest?.schema) {
         requestSchemas[request.typeName] = {
-          schema: requestFn.schema,
-          meta: requestFn.meta ?? {},
+          schema: collectedRequest.schema,
+          meta: collectedRequest.meta ?? {},
         };
       }
     }

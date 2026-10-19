@@ -1,0 +1,54 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# E2E only: fictional leads. The mock services answer each domain differently (see
+# e2e/enrichment/mocks/mockServices.mjs): found, not found (404), failing (500), a bad request
+# (400) or rate limited once (429). The last lead has no domain. Fixed UUID _ids, like the ones
+# the app's endpoints give rows, so a test run always has the same keys; test_reset stamps their
+# insert order.
+- _id: a0000000-0000-4000-8000-000000000001
+  name: Ada Brightwell
+  title: Head of Operations
+  domain: brightpath.test
+- _id: a0000000-0000-4000-8000-000000000002
+  name: Ben Quill
+  title: CTO
+  domain: quillsoft.test
+- _id: a0000000-0000-4000-8000-000000000003
+  name: Cara Tidewell
+  title: Buyer
+  domain: tidewater.test
+- _id: a0000000-0000-4000-8000-000000000004
+  name: Dan Fernsby
+  title: Founder
+  domain: ferncrest.test
+- _id: a0000000-0000-4000-8000-000000000005
+  name: Eve Honeywell
+  title: Owner
+  domain: busybee.test
+- _id: a0000000-0000-4000-8000-000000000006
+  name: Finn Marsh
+  title: Analyst
+  domain: nowhere.test
+- _id: a0000000-0000-4000-8000-000000000007
+  name: Gina Brooks
+  title: Engineer
+  domain: broken.test
+- _id: a0000000-0000-4000-8000-000000000008
+  name: Hal Stone
+  title: Manager
+  domain: badrequest.test
+- _id: a0000000-0000-4000-8000-000000000009
+  name: Ivy Lane
+  title: Consultant

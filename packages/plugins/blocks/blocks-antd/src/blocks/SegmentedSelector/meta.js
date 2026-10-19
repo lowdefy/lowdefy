@@ -15,9 +15,10 @@
 */
 
 import LabelMeta from '../Label/meta.js';
+import icon from '../../schemas/icon.js';
 import label from '../../schemas/label.js';
 import { data, html, valueKey, primaryKey } from '../../schemas/dataOptions.js';
-import { disabled, inputTitle, sizeSmallDefaultLarge } from '../../schemas/inputProperties.js';
+import { disabled, inputTitle, sizeSmallMiddleLarge } from '../../schemas/inputProperties.js';
 
 export default {
   category: 'input',
@@ -26,6 +27,7 @@ export default {
   cssKeys: {
     element: 'The SegmentedSelector element.',
     icon: 'The icon in the SegmentedSelector.',
+    options: 'Each SegmentedSelector option.',
     label: 'The SegmentedSelector label.',
     extra: 'The SegmentedSelector extra content.',
     feedback: 'The SegmentedSelector validation feedback.',
@@ -53,7 +55,7 @@ export default {
       primaryKey,
       options: {
         default: [],
-        oneOf: [
+        anyOf: [
           {
             type: 'array',
             description:
@@ -118,12 +120,13 @@ export default {
                   description: 'Disable the option if true.',
                 },
                 icon: {
-                  type: 'string',
+                  ...icon,
                   description:
-                    'Name of a React-Icon (See <a href="https://react-icons.github.io/react-icons/">all icons</a>) to display in the segment option.',
-                  docs: {
-                    displayType: 'icon',
-                  },
+                    'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to display in the segment option.',
+                },
+                tooltip: {
+                  type: 'string',
+                  description: 'Tooltip shown when hovering the segment option.',
                 },
               },
             },
@@ -136,7 +139,7 @@ export default {
         default: 'default',
         description: 'Shape of the segmented control.',
       },
-      size: sizeSmallDefaultLarge,
+      size: sizeSmallMiddleLarge,
       vertical: {
         type: 'boolean',
         default: false,

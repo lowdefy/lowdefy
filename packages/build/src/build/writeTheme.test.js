@@ -37,7 +37,10 @@ test('writeTheme writes theme.json', async () => {
   };
   await writeTheme({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    ['theme.json', '{"antd":{"token":{"colorPrimary":"#00b96b"}},"darkMode":"system"}'],
+    [
+      'theme.json',
+      '{"antd":{"token":{"colorPrimary":"#00b96b"}},"darkMode":"system","icons":{"set":"lucide","size":"1em","strokeWidth":2,"nonScalingStroke":false}}',
+    ],
   ]);
 });
 
@@ -46,13 +49,23 @@ test('writeTheme writes empty object when theme is empty', async () => {
     theme: {},
   };
   await writeTheme({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([['theme.json', '{"darkMode":"system"}']]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
+    [
+      'theme.json',
+      '{"darkMode":"system","icons":{"set":"lucide","size":"1em","strokeWidth":2,"nonScalingStroke":false}}',
+    ],
+  ]);
 });
 
 test('writeTheme defaults to empty object when theme is undefined', async () => {
   const components = {};
   await writeTheme({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([['theme.json', '{"darkMode":"system"}']]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
+    [
+      'theme.json',
+      '{"darkMode":"system","icons":{"set":"lucide","size":"1em","strokeWidth":2,"nonScalingStroke":false}}',
+    ],
+  ]);
 });
 
 test('writeTheme throws when theme is not an object', async () => {
@@ -76,7 +89,21 @@ test('writeTheme preserves per-mode lightToken and darkToken', async () => {
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       'theme.json',
-      '{"antd":{"token":{"colorPrimary":"#6366f1"},"lightToken":{"colorBgLayout":"#fafafa"},"darkToken":{"colorBgLayout":"#0f1117","colorBgContainer":"#18181b"}},"darkMode":"system"}',
+      '{"antd":{"token":{"colorPrimary":"#6366f1"},"lightToken":{"colorBgLayout":"#fafafa"},"darkToken":{"colorBgLayout":"#0f1117","colorBgContainer":"#18181b"}},"darkMode":"system","icons":{"set":"lucide","size":"1em","strokeWidth":2,"nonScalingStroke":false}}',
     ],
   ]);
+});
+
+test('writeTheme writes icon defaults and keeps icon settings the app set', async () => {
+  const components = {
+    theme: { icons: { strokeWidth: 1.5, aliases: { invoice: 'Receipt' } } },
+  };
+  await writeTheme({ components, context });
+  expect(JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]).icons).toEqual({
+    set: 'lucide',
+    size: '1em',
+    strokeWidth: 1.5,
+    nonScalingStroke: false,
+    aliases: { invoice: 'Receipt' },
+  });
 });

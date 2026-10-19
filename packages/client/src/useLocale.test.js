@@ -25,6 +25,8 @@ jest.unstable_mockModule('dayjs', () => ({
 }));
 
 const { default: useLocale } = await import('./useLocale.js');
+const { default: antdEnUSModule } = await import('antd/locale/en_US.js');
+const antdEnUS = antdEnUSModule.default ?? antdEnUSModule;
 
 const i18n = {
   defaultLocale: 'en-US',
@@ -41,10 +43,13 @@ const antdLocaleLoaders = {
 
 const dayjsLocaleMap = { 'en-US': 'en', 'de-DE': 'de' };
 
+const storageKey = 'lowdefy:app::lowdefy_locale';
+
 beforeEach(() => {
   window.localStorage.clear();
   delete window.__lowdefy_setLocale;
   delete window.__lowdefy_locale;
+  delete window.__lowdefy_antd_locale;
   dayjsLocale.mockReset();
   antdLocaleLoaders['en-US'].mockClear();
   antdLocaleLoaders['de-DE'].mockClear();
@@ -59,7 +64,9 @@ test('returns the default locale when no preference and no browser match', () =>
     value: ['fr-FR'],
     configurable: true,
   });
-  const { result } = renderHook(() => useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap }));
+  const { result } = renderHook(() =>
+    useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap, storageKey })
+  );
   expect(result.current.active).toBe('en-US');
 });
 
@@ -68,76 +75,124 @@ test('matches the browser language by primary tag when exact code is unavailable
     value: ['de'],
     configurable: true,
   });
-  const { result } = renderHook(() => useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap }));
+  const { result } = renderHook(() =>
+    useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap, storageKey })
+  );
   expect(result.current.active).toBe('de-DE');
 });
 
 test('user preference in localStorage takes precedence over browser', () => {
-  window.localStorage.setItem('lowdefy_locale', 'de-DE');
+  window.localStorage.setItem(storageKey, 'de-DE');
   Object.defineProperty(window.navigator, 'languages', {
     value: ['en-US'],
     configurable: true,
   });
-  const { result } = renderHook(() => useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap }));
+  const { result } = renderHook(() =>
+    useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap, storageKey })
+  );
   expect(result.current.active).toBe('de-DE');
+});
+
+test('moves a preference stored before keys were kept per app to the app key', () => {
+  window.localStorage.setItem('lowdefy_locale', 'de-DE');
+  const { result } = renderHook(() =>
+    useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap, storageKey })
+  );
+  expect(result.current.active).toBe('de-DE');
+  expect(window.localStorage.getItem(storageKey)).toBe('de-DE');
+  expect(window.localStorage.getItem('lowdefy_locale')).toBeNull();
+});
+
+test('reads the preference of this app only', () => {
+  window.localStorage.setItem('lowdefy:other::lowdefy_locale', 'de-DE');
+  const { result } = renderHook(() =>
+    useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap, storageKey })
+  );
+  expect(result.current.active).toBe('en-US');
 });
 
 test('exposes setPreference via window.__lowdefy_setLocale', () => {
   const { result, rerender } = renderHook(() =>
-    useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap })
+    useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap, storageKey })
   );
   act(() => {
     window.__lowdefy_setLocale('de-DE');
   });
   rerender();
   expect(result.current.active).toBe('de-DE');
-  expect(window.localStorage.getItem('lowdefy_locale')).toBe('de-DE');
+  expect(window.localStorage.getItem(storageKey)).toBe('de-DE');
 });
 
 test('passing "auto" clears the user preference', () => {
-  window.localStorage.setItem('lowdefy_locale', 'de-DE');
+  window.localStorage.setItem(storageKey, 'de-DE');
   const { result, rerender } = renderHook(() =>
-    useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap })
+    useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap, storageKey })
   );
   expect(result.current.active).toBe('de-DE');
   act(() => {
     window.__lowdefy_setLocale('auto');
   });
   rerender();
-  expect(window.localStorage.getItem('lowdefy_locale')).toBeNull();
+  expect(window.localStorage.getItem(storageKey)).toBeNull();
 });
 
 test('loads the antd locale module for the active locale', async () => {
-  const { result } = renderHook(() => useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap }));
+  const { result } = renderHook(() =>
+    useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap, storageKey })
+  );
   await waitFor(() => expect(result.current.antdLocale).toEqual({ name: 'en_US-locale' }));
   expect(antdLocaleLoaders['en-US']).toHaveBeenCalled();
 });
 
 test('calls dayjs.locale for the active locale', async () => {
-  renderHook(() => useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap }));
+  renderHook(() => useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap, storageKey }));
   await waitFor(() => expect(dayjsLocale).toHaveBeenCalledWith('en'));
 });
 
 test('writes window.__lowdefy_locale with the active code', () => {
-  renderHook(() => useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap }));
+  renderHook(() => useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap, storageKey }));
   expect(window.__lowdefy_locale).toBe('en-US');
 });
 
 test('writes window.__lowdefy_supported_locales with the configured list', () => {
-  renderHook(() => useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap }));
+  renderHook(() => useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap, storageKey }));
   expect(window.__lowdefy_supported_locales).toEqual(i18n.locales);
 });
 
 test('writes empty supported_locales when no i18n config', () => {
   renderHook(() =>
-    useLocale({ i18n: undefined, antdLocaleLoaders: {}, dayjsLocaleMap: {} })
+    useLocale({ i18n: undefined, antdLocaleLoaders: {}, dayjsLocaleMap: {}, storageKey })
   );
   expect(window.__lowdefy_supported_locales).toEqual([]);
 });
 
 test('returns undefined active when i18n config is empty', () => {
   const { result } = renderHook(() =>
-    useLocale({ i18n: undefined, antdLocaleLoaders: {}, dayjsLocaleMap: {} })
+    useLocale({ i18n: undefined, antdLocaleLoaders: {}, dayjsLocaleMap: {}, storageKey })
   );
   expect(result.current.active).toBeUndefined();
+});
+
+test('writes window.__lowdefy_antd_locale as antd en_US before a locale loads and the loaded locale after', async () => {
+  let resolveLocale;
+  const loaders = {
+    'en-US': () =>
+      new Promise((resolve) => {
+        resolveLocale = resolve;
+      }),
+  };
+  renderHook(() => useLocale({ i18n, antdLocaleLoaders: loaders, dayjsLocaleMap, storageKey }));
+  expect(window.__lowdefy_antd_locale).toBe(antdEnUS);
+  expect(window.__lowdefy_antd_locale.Modal.okText).toBe('OK');
+  await act(async () => {
+    resolveLocale({ default: { name: 'en_US-loaded' } });
+  });
+  await waitFor(() => expect(window.__lowdefy_antd_locale).toEqual({ name: 'en_US-loaded' }));
+});
+
+test('writes window.__lowdefy_antd_locale as antd en_US when no i18n config', () => {
+  renderHook(() =>
+    useLocale({ i18n: undefined, antdLocaleLoaders: {}, dayjsLocaleMap: {}, storageKey })
+  );
+  expect(window.__lowdefy_antd_locale).toBe(antdEnUS);
 });

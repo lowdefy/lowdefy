@@ -15,12 +15,15 @@
 */
 
 import { serializer } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
+import { getMarkedCredentials } from '@lowdefy/node-utils';
 
 import addStepResult from './addStepResult.js';
-import invokeEndpoint from './invokeEndpoint.js';
-import scheduleBackground from './scheduleBackground.js';
+import createBoundSystemContext from '../../context/createBoundSystemContext.js';
 import evaluateRoutineOperators from './evaluateRoutineOperators.js';
+import invokeEndpoint from './invokeEndpoint.js';
+import resolveCallBinding from './resolveCallBinding.js';
+import scheduleBackground from './scheduleBackground.js';
 
 async function handleEndpointCall(context, routineContext, { step }) {
   const { logger } = context;
@@ -36,6 +39,17 @@ async function handleEndpointCall(context, routineContext, { step }) {
     location: step.stepId,
   });
 
+  // organization (and caller) bind the target to one organization as a system
+  // run: the tenant wall filters and stamps with it, and `_user` is the named
+  // stand-in caller, or null.
+  const binding = resolveCallBinding(context, {
+    caller: evaluatedProperties.caller,
+    configKey: step['~k'],
+    organization: evaluatedProperties.organization,
+    stepId: step.stepId,
+  });
+  const callContext = binding === null ? context : createBoundSystemContext(context, binding);
+
   // detached: true — fire-and-forget the call back through the deployment's
   // /api/detached route, so the target runs in its OWN function invocation
   // with a fresh duration budget (chainable bounded work without a queue).
@@ -50,18 +64,42 @@ async function handleEndpointCall(context, routineContext, { step }) {
       );
     }
     if (!context.origin) {
-      throw new ConfigError('Detached endpoint calls require the request origin on context.');
+      throw new LowdefyInternalError(
+        'Detached endpoint calls require the request origin on context.'
+      );
     }
     const targetEndpointId = evaluatedProperties.endpointId;
     scheduleBackground(context, { event: 'detached_dispatch', endpointId: targetEndpointId }, () =>
       fetch(`${context.origin}/api/detached/${targetEndpointId}`, {
         method: 'POST',
         headers: {
+          // The dev server's journey cookies (data set, mutant) ride the hop
+          // so the target runs in the same journey run; the production server
+          // sets none. Spread first so content-type and authorization win.
+          ...(context.loopbackHeaders ?? {}),
           'content-type': 'application/json',
           authorization: `Bearer ${process.env.CRON_SECRET}`,
         },
+        // Carry the already-resolved dispatcher identity across the hop
+        // (Decision 4): a detached call is a fresh invocation, not a fresh
+        // principal. The receiver rehydrates context.user / context.system from
+        // this snapshot and authorizes nested calls against it through the
+        // normal path - so a user-dispatched detached run reaches nothing the
+        // user could not reach synchronously, and a cron/hook/verified-webhook
+        // run blanket-passes like its dispatcher. Built server-side from the
+        // resolved context, never from user input; the CRON_SECRET proves
+        // origin, which is what lets the receiver trust the assertion.
         body: JSON.stringify({
           payload: serializer.serialize(evaluatedProperties.payload ?? {}),
+          principal: {
+            user: serializer.serialize(callContext.user ?? null),
+            system: callContext.system === true,
+            organizationId: callContext.boundOrganizationId ?? null,
+            agent: routineContext.agent ?? null,
+          },
+          // The values this request marked with _credential, so the target's logs scrub them
+          // too: the target runs as a new request with a scope of its own.
+          credentials: getMarkedCredentials(),
         }),
       })
     );
@@ -78,10 +116,12 @@ async function handleEndpointCall(context, routineContext, { step }) {
     return { status: 'continue' };
   }
 
-  const result = await invokeEndpoint(context, {
+  const result = await invokeEndpoint(callContext, {
+    agent: routineContext.agent,
     endpointId: evaluatedProperties.endpointId,
     payload: evaluatedProperties.payload,
     endpointDepth: routineContext.endpointDepth,
+    caught: routineContext.caught === true,
   });
 
   // Store the return value in the caller's steps

@@ -22,7 +22,7 @@ blocks:
   - id: icon_custom
     type: Icon
     properties:
-      name: AiOutlineHome
+      name: home
 
   - id: icon_clickable
     type: Icon
@@ -33,8 +33,8 @@ blocks:
             _eq:
               - _state: icon_clicked
               - true
-          then: AiOutlineCheck
-          else: AiOutlineClose
+          then: check
+          else: close
     events:
       onClick:
         - id: set_clicked

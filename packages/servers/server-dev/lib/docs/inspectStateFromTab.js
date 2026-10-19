@@ -26,8 +26,8 @@ import { requestFromTab } from './tabChannel.js';
 // (see tabChannel.js) — a serialized snapshot string on success, or an
 // `{ error }` object if no tab is connected, the request timed out, or
 // Inspector.jsx itself failed to build the snapshot.
-async function inspectStateFromTab({ pageId } = {}) {
-  const response = await requestFromTab({ pageId, event: 'inspect-request' });
+async function inspectStateFromTab({ pageId, pathParams } = {}) {
+  const response = await requestFromTab({ pageId, pathParams, event: 'inspect-request' });
   if (response?.error) {
     return { error: response.error };
   }

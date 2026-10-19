@@ -341,6 +341,39 @@ Free standard shipping (3-5 business days). Express shipping available for $9.99
               for $9.99 (1-2 business days).
 ```
 
+Billed every month. Cancel any time.
+
+Billed once a year with two months free.
+
+```yaml
+- id: centered_tabs
+  type: Tabs
+  properties:
+    centered: true
+    tabBarGutter: 40
+    indicator:
+      size: 24
+      align: center
+    tabs:
+      - key: centered_monthly
+        title: Monthly
+      - key: centered_yearly
+        title: Yearly
+  slots:
+    centered_monthly:
+      blocks:
+        - id: centered_monthly_content
+          type: Paragraph
+          properties:
+            content: Billed every month. Cancel any time.
+    centered_yearly:
+      blocks:
+        - id: centered_yearly_content
+          type: Paragraph
+          properties:
+            content: Billed once a year with two months free.
+```
+
 **Small:**
 
 Compact tabs for dense interfaces where screen space is at a premium. Ideal for side panels and secondary navigation.
@@ -621,16 +654,16 @@ Monthly target progress at 85%. On track for completion by end of quarter.
     tabs:
       - key: icon_home
         title: Home
-        icon: AiOutlineHome
+        icon: home
       - key: icon_users
         title: Users
-        icon: AiOutlineTeam
+        icon: users
       - key: icon_settings
         title: Settings
-        icon: AiOutlineSetting
+        icon: settings
       - key: icon_chart
         title: Analytics
-        icon: AiOutlineBarChart
+        icon: chart
   slots:
     icon_home:
       blocks:
@@ -684,17 +717,17 @@ Monthly target progress at 85%. On track for completion by end of quarter.
       - key: ci_success
         title: Passed
         icon:
-          name: AiOutlineCheckCircle
+          name: check-circle
           color: "#52c41a"
       - key: ci_warning
         title: Warnings
         icon:
-          name: AiOutlineWarning
+          name: warning
           color: "#faad14"
       - key: ci_error
         title: Failed
         icon:
-          name: AiOutlineCloseCircle
+          name: close-circle
           color: "#ff4d4f"
   slots:
     ci_success:
@@ -852,7 +885,7 @@ Your video library. Supports MP4, WebM, and MOV formats. Maximum file size is 50
             flex: 0 0 auto
           properties:
             title: Upload
-            icon: AiOutlineUpload
+            icon: upload
             color: primary
             variant: solid
             size: small
@@ -899,13 +932,13 @@ Yesterday - Alex created 3 new issues in the backlog tracker.
     tabs:
       - key: rich_dashboard
         title: Dashboard
-        icon: AiOutlineDashboard
+        icon: Gauge
       - key: rich_team
         title: Team
-        icon: AiOutlineTeam
+        icon: users
       - key: rich_activity
         title: Activity
-        icon: AiOutlineHistory
+        icon: history
   slots:
     rich_dashboard:
       blocks:
@@ -1664,7 +1697,13 @@ Press Cmd+3 (Mac) or Ctrl+3 (Windows) to jump to this tab.
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `animated` | boolean | `true` | Whether to change tabs with animation. Only works while tabPlacement is top or bottom. |
+| `centered` | boolean | `false` | Center the tabs in the tab bar. |
 | `defaultActiveKey` | string | - | Initial active TabPane's key, if activeKey is not set. |
+| `destroyOnHidden` | boolean | `false` | Unmount the content of inactive tabs. Blocks in a hidden tab keep their state values. |
+| `indicator` | object | - | Size and alignment of the active tab indicator (ink bar). |
+| `indicator.size` | number | - | Length of the indicator in pixels. Defaults to the width of the tab. |
+| `indicator.align` | string | `"center"` | Alignment of the indicator along the tab when size is set. Enum: `start`, `center`, `end`. |
+| `tabBarGutter` | number | - | Gap between tabs in pixels. |
 | `size` | string | `"default"` | Size of the tabs. Enum: `default`, `small`, `large`. |
 | `tabPlacement` | string | `"top"` | Position of the tabs. Enum: `top`, `end`, `bottom`, `start`. |
 | `tabType` | string | `"line"` | Type of tabs. Enum: `line`, `card`. |
@@ -1673,13 +1712,24 @@ Press Cmd+3 (Mac) or Ctrl+3 (Windows) to jump to this tab.
 | `tabs.$.key` | string | - | Area key of the tab. |
 | `tabs.$.eventName` | string | - | Block-level event name to trigger when this tab becomes active, in addition to onChange. Declare an event with this name under `events:`. The event receives `{ key }` of the now-active tab. |
 | `tabs.$.disabled` | boolean | `false` | Disable the tab if true. |
-| `tabs.$.icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon to show in tab title. |
+| `tabs.$.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to show in tab title. |
+| `tabs.$.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `tabs.$.icon.color` | string | - | Icon color. |
+| `tabs.$.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `tabs.$.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `tabs.$.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `tabs.$.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `tabs.$.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `tabs.$.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `tabs.$.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `tabs.$.shortcut` | string | - | Keyboard shortcut to switch to this tab. Use "mod" for Cmd/Ctrl. |
 | `extraAreaKey` | string | - | Area key for the extra area blocks. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design tabs tokens](https://ant.design/components/tabs#design-token). |
 | `theme.cardBg` | string | `"rgba(0, 0, 0, 0.02)"` | Background color of card-type tab. |
 | `theme.cardGutter` | number | `2` | Gap between card-type tabs. |
 | `theme.cardHeight` | number | `40` | Height of card-type tab. |
+| `theme.cardHeightSM` | number | `32` | Height of small card-type tab. |
+| `theme.cardHeightLG` | number | `48` | Height of large card-type tab. |
 | `theme.cardPadding` | string | `"8px 16px"` | Padding of card-type tab. |
 | `theme.cardPaddingLG` | string | `"11px 16px"` | Padding of large card-type tab. |
 | `theme.cardPaddingSM` | string | `"4px 8px"` | Padding of small card-type tab. |
@@ -1714,5 +1764,7 @@ Press Cmd+3 (Mac) or Ctrl+3 (Windows) to jump to this tab.
 | `/tabBar` | The Tabs tab bar. |
 | `/tabPane` | The Tabs tab pane. |
 | `/inkBar` | The Tabs ink bar. |
+| `/item` | Each tab in the tab bar. |
+| `/popup` | The dropdown that lists tabs that overflow the tab bar. |
 
 Slot keys are user-defined in your config and resolved at build time — not generated at runtime. The block typically pairs slots with an array property (`tabs`, `panels`, `slides`) listed in the Properties table; see the examples above for the expected shape.

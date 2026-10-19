@@ -14,26 +14,25 @@
   limitations under the License.
 */
 
-import { ToolLoopAgent, tool, jsonSchema, stepCountIs } from 'ai';
+import { ToolLoopAgent, tool, jsonSchema, isStepCount } from 'ai';
 import { createMCPClient } from '@ai-sdk/mcp';
 import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
-import { ConfigError } from '@lowdefy/errors';
-import { getKey, isReserved, serializer, setKey, translate } from '@lowdefy/helpers';
+import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
+import {
+  cleanBuildArtifact,
+  getKey,
+  isReserved,
+  serializer,
+  setKey,
+  translate,
+} from '@lowdefy/helpers';
 
 import listFiles from './fileSystem/listFiles.js';
 import readFile from './fileSystem/readFile.js';
 import searchFiles from './fileSystem/searchFiles.js';
 import statFile from './fileSystem/statFile.js';
+import buildToolInputSchema from './buildToolInputSchema.js';
 import RESERVED_PLATFORM_TOOL_NAMES from './reservedToolNames.js';
-
-// Build artifacts carry serializer markers (~k, ~r, ~l) and wrap location-marked
-// arrays as { '~arr': [...], '~k': '...' }. serializer.deserialize un-wraps
-// ~arr back to a plain array and demotes markers to non-enumerable properties;
-// the subsequent JSON round-trip drops those non-enumerable markers, leaving a
-// clean structure for the AI SDK.
-function cleanBuildArtifact(obj) {
-  return JSON.parse(JSON.stringify(serializer.deserialize(obj)));
-}
 
 function assertNotPlatformToolName(name, kind, i18n) {
   if (RESERVED_PLATFORM_TOOL_NAMES.includes(name)) {
@@ -47,12 +46,16 @@ function assertNotPlatformToolName(name, kind, i18n) {
   }
 }
 
-// autoApprove skips needsApproval on confirm tools — used by headless
-// run-to-completion agents, where no client exists to resolve an approval.
+// Confirm tools need a person's approval before they run. Since ai v7 approval
+// is a call-level setting rather than a tool property, so the builder returns
+// it beside the tools: `toolApproval` maps each confirm tool's name to
+// 'user-approval', for the ToolLoopAgent that owns the tools. autoApprove
+// leaves it empty — used by headless run-to-completion agents, where no client
+// exists to resolve an approval.
 async function buildAgentTools({ agent, context, depth = 0, autoApprove = false }) {
   const MAX_DEPTH = 5;
   if (depth > MAX_DEPTH) {
-    throw new Error(
+    throw new ConfigError(
       translate({
         key: 'agent.runtime.subAgentDepthExceeded',
         values: { max: MAX_DEPTH },
@@ -62,7 +65,9 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
   }
 
   const tools = {};
+  const toolApproval = {};
   const mcpClients = [];
+  const requireApproval = (name) => setKey(toolApproval, name, 'user-approval');
 
   // Build endpoint tools. The model-facing tool name is toolConfig.name
   // (assigned by buildAgents — endpoint id with '/' → '__' unless overridden);
@@ -73,35 +78,49 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
     assertNotPlatformToolName(toolName, 'Endpoint tool', context.i18n);
     // A second, disjoint list: RESERVED_PLATFORM_TOOL_NAMES are the tools Lowdefy itself registers,
     // isReserved are the prototype-pollution keys setKey refuses. A name can pass one gate and fail
-    // the other, so both checks are needed. The build rejects reserved key names, so this only fires
-    // for a stale or hand-edited build artifact. Skip the tool rather than fail the whole agent, as
-    // the MCP name cases below do.
+    // the other, so both checks are needed. The build rejects reserved key names, so this can only
+    // fire for a stale or hand-edited build artifact - an invariant violation, not a config fault.
     if (isReserved(toolName)) {
-      console.warn(`Endpoint tool "${toolName}" uses a reserved key name — skipped.`);
-      continue;
+      throw new LowdefyInternalError(`Endpoint tool "${toolName}" uses a reserved key name.`);
     }
     const endpointConfig = await context.getEndpointConfig({ endpointId });
+    const { inputSchema, description } = buildToolInputSchema({
+      schema: cleanBuildArtifact(endpointConfig.payloadSchema),
+      description: endpointConfig.description,
+    });
 
     setKey(
       tools,
       toolName,
       tool({
-        description: endpointConfig.description,
-        inputSchema: jsonSchema(cleanBuildArtifact(endpointConfig.payloadSchema)),
-        ...(confirm && !autoApprove ? { needsApproval: true } : {}),
+        description,
+        inputSchema: jsonSchema(inputSchema),
         execute: async (input, { abortSignal } = {}) => {
-          const result = await context.callEndpoint(endpointId, { payload: input, abortSignal });
+          // The model built the input, so a payload the endpoint's schema refuses
+          // is the model's mistake to correct, not a config fault.
+          const result = await context.callEndpoint(endpointId, {
+            payload: input,
+            abortSignal,
+            outsideCaller: true,
+          });
           if (!result.success) {
             const err = serializer.deserialize(result.error);
+            // A Lowdefy error already carries its class, cause and location -
+            // rewrapping it as a plain Error would lose all three.
+            if (err?.isLowdefyError) {
+              throw err;
+            }
             throw new Error(
               err?.message ??
-                translate({ key: 'agent.runtime.toolExecutionFailed', i18n: context.i18n })
+                translate({ key: 'agent.runtime.toolExecutionFailed', i18n: context.i18n }),
+              { cause: err }
             );
           }
           return cleanBuildArtifact(result.response);
         },
       })
     );
+    if (confirm && !autoApprove) requireApproval(toolName);
   }
 
   // Build MCP clients and merge their tools
@@ -128,7 +147,7 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
     } catch (err) {
       const label =
         evaluatedSource.transport === 'stdio' ? evaluatedSource.command : evaluatedSource.url;
-      console.warn(`MCP server "${label}" unreachable: ${err.message}`);
+      context.logger.warn({ err }, `MCP server "${label}" unreachable.`);
     }
   }
 
@@ -141,7 +160,7 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
       const mcpTools = await client.tools();
       for (const [name, mcpTool] of Object.entries(mcpTools)) {
         if (RESERVED_PLATFORM_TOOL_NAMES.includes(name)) {
-          console.warn(
+          context.logger.warn(
             `MCP tool "${name}" from ${source.url ?? source.command} ` +
               `uses a reserved platform tool name — skipped.`
           );
@@ -150,25 +169,25 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
         // Same policy as the reserved-platform-name and collision cases above:
         // MCP tool names are not under app control, so warn and skip.
         if (isReserved(name)) {
-          console.warn(
+          context.logger.warn(
             `MCP tool "${name}" from ${source.url ?? source.command} ` +
               `uses a reserved key name — skipped.`
           );
           continue;
         }
         if (getKey(tools, name)) {
-          console.warn(
+          context.logger.warn(
             `MCP tool "${name}" from ${source.url ?? source.command} ` +
               `conflicts with endpoint tool — skipped.`
           );
           continue;
         }
-        const needsApproval = source.confirm && !autoApprove;
-        setKey(tools, name, needsApproval ? { ...mcpTool, needsApproval: true } : mcpTool);
+        setKey(tools, name, mcpTool);
+        if (source.confirm && !autoApprove) requireApproval(name);
       }
     } catch (err) {
       const label = source.transport === 'stdio' ? source.command : source.url;
-      console.warn(`MCP server "${label}" tool listing failed: ${err.message}`);
+      context.logger.warn({ err }, `MCP server "${label}" tool listing failed.`);
     }
   }
 
@@ -177,18 +196,22 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
   for (const subAgentRef of agent.agents ?? []) {
     const subAgentToolName = subAgentRef.name ?? subAgentRef.agentId;
     assertNotPlatformToolName(subAgentToolName, 'Sub-agent', context.i18n);
-    // Same policy as the endpoint tool name above: unreachable from valid config, so skip rather
-    // than fail the whole agent.
+    // Same as the endpoint tool name above: unreachable from a valid build artifact.
     if (isReserved(subAgentToolName)) {
-      console.warn(`Sub-agent tool "${subAgentToolName}" uses a reserved key name — skipped.`);
-      continue;
+      throw new LowdefyInternalError(
+        `Sub-agent tool "${subAgentToolName}" uses a reserved key name.`
+      );
     }
     const subAgentConfig = await context.getAgentConfig({ agentId: subAgentRef.agentId });
     const subConnection = await context.getConnectionForAgent({ agentConfig: subAgentConfig });
     subAgentConfig.mcp = await context.resolveMcpSources({ agentConfig: subAgentConfig });
 
     // Recursively build sub-agent's tools
-    const { tools: subTools, mcpClients: subMcpClients } = await buildAgentTools({
+    const {
+      tools: subTools,
+      mcpClients: subMcpClients,
+      toolApproval: subToolApproval,
+    } = await buildAgentTools({
       agent: subAgentConfig,
       context,
       depth: depth + 1,
@@ -201,7 +224,8 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
       model: subModel,
       instructions: subAgentConfig.properties.instructions,
       tools: subTools,
-      stopWhen: stepCountIs(subAgentConfig.properties.maxSteps ?? 10),
+      toolApproval: subToolApproval,
+      stopWhen: isStepCount(subAgentConfig.properties.maxSteps ?? 10),
       maxOutputTokens: subAgentConfig.properties.maxOutputTokens,
       temperature: subAgentConfig.properties.temperature,
       toolChoice: subAgentConfig.properties.toolChoice ?? 'auto',
@@ -310,7 +334,7 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
     });
   }
 
-  return { tools, mcpClients };
+  return { tools, mcpClients, toolApproval };
 }
 
 export default buildAgentTools;

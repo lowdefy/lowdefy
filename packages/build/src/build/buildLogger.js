@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+// serverTracing has no default here: it depends on where the server runs (on for the Node server,
+// off on Vercel), which initSentryServer knows and the build does not.
 const sentryDefaults = {
   client: true,
   server: true,

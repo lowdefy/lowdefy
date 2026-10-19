@@ -1,0 +1,15 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "description": "With no roles configured the build used to accept the endpoint and write it a protected auth artifact carrying Object.prototype.constructor as its roles. The buildEntityAuth gate now rejects the id, and validateId in buildApi reports it at the same source line with the same message, so logCollectedErrors collapses the pair and it is reported once.",
+      "errorCount": 1,
+      "errors": ["is a reserved name"],
+      "errorContains": [
+        "Endpoint id \"constructor\" is a reserved name and cannot be used as an id.",
+        "lowdefy.yaml:28"
+      ],
+      "noErrors": ["LowdefyInternalError"]
+    }
+  ]
+}

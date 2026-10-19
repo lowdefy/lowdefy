@@ -242,14 +242,23 @@ test('area.gutter normalizes to area.gap with warning', () => {
   );
 });
 
-test('align without selfAlign is old self-alignment behavior', () => {
+test('align without selfAlign is content alignment', () => {
   const layout = { align: 'top' };
   const area = {};
   const areaKey = 'content';
   const result = layoutParamsToArea({ areaKey, area, layout });
-  expect(result.align).toBeUndefined();
+  expect(result.align).toBe('top');
+  expect(warnSpy).not.toHaveBeenCalled();
+});
+
+test('contentAlign is deprecated in favour of align', () => {
+  const layout = { contentAlign: 'middle' };
+  const area = {};
+  const areaKey = 'content';
+  const result = layoutParamsToArea({ areaKey, area, layout });
+  expect(result.align).toBe('middle');
   expect(warnSpy).toHaveBeenCalledWith(
-    '[Lowdefy] layout.align for self-alignment is deprecated. Use layout.selfAlign instead.'
+    '[Lowdefy] layout.contentAlign is deprecated. Use layout.align instead.'
   );
 });
 

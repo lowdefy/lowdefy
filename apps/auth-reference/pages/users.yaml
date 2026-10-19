@@ -1,0 +1,523 @@
+# Phase-6 user administration on the admin steps, driven through role-gated
+# admin-* Api endpoints (auth.api.roles). The user-admin app role decides who
+# reaches this page and those endpoints; it decides nothing about the writes.
+# Each step declares the authority it requires and the engine checks it
+# against the caller's member row in the target organization (org-a here), so
+# every button below refuses for a caller who holds the role but no authority
+# there. The user-row steps additionally require the TARGET user to be a
+# member of that organization - a deployment-wide user row is only this
+# organization's business for the people in it.
+id: users
+type: Box
+properties:
+  style:
+    maxWidth: 720
+    margin: 60px auto
+events:
+  onInit:
+    - id: load_users
+      type: CallAPI
+      params:
+        endpointId: admin-list-users
+blocks:
+  - id: users_title
+    type: Title
+    properties:
+      content: Users (user-admin)
+      level: 2
+  - id: users_list
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <ul>
+            {% for user in users %}
+              <li><b>{{ user.email }}</b> - {{ user.name }} (user id:
+              <code>{{ user.id }}</code>){% if user.banned %},
+              <b>banned</b>{% if user.banReason %}: {{ user.banReason }}{% endif %}{% endif %}</li>
+            {% endfor %}
+            </ul>
+          on:
+            users:
+              _api: admin-list-users.response.users
+  - id: refresh_users_button
+    type: Button
+    properties:
+      title: Refresh users (ListUsers)
+      type: default
+      block: true
+    events:
+      onClick:
+        - id: reload_users
+          type: CallAPI
+          params:
+            endpointId: admin-list-users
+  - id: target_user_title
+    type: Title
+    properties:
+      content: Act on a user
+      level: 4
+  - id: target_user_id
+    type: TextInput
+    properties:
+      title: User id (from the list above)
+  - id: ban_reason
+    type: TextInput
+    properties:
+      title: Ban reason (optional)
+  - id: ban_expires_in
+    type: NumberInput
+    properties:
+      title: Ban expires in seconds (optional - empty means permanent)
+  - id: ban_button
+    type: Button
+    properties:
+      title: Ban user (BanUser)
+      type: danger
+      block: true
+    events:
+      onClick:
+        try:
+          - id: ban_user
+            type: CallAPI
+            params:
+              endpointId: admin-ban-user
+              payload:
+                userId:
+                  _state: target_user_id
+                banReason:
+                  _state: ban_reason
+                banExpiresIn:
+                  _state: ban_expires_in
+          - id: show_ban_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-ban-user.response
+              last_error: null
+          - id: reload_after_ban
+            type: CallAPI
+            params:
+              endpointId: admin-list-users
+        catch:
+          - id: show_ban_error
+            type: SetState
+            params:
+              last_error:
+                _actions: ban_user.error.message
+  - id: unban_button
+    type: Button
+    properties:
+      title: Unban user (UnbanUser)
+      type: default
+      block: true
+    events:
+      onClick:
+        try:
+          - id: unban_user
+            type: CallAPI
+            params:
+              endpointId: admin-unban-user
+              payload:
+                userId:
+                  _state: target_user_id
+          - id: show_unban_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-unban-user.response
+              last_error: null
+          - id: reload_after_unban
+            type: CallAPI
+            params:
+              endpointId: admin-list-users
+        catch:
+          - id: show_unban_error
+            type: SetState
+            params:
+              last_error:
+                _actions: unban_user.error.message
+  - id: revoke_sessions_button
+    type: Button
+    properties:
+      title: Revoke sessions (RevokeUserSessions)
+      type: default
+      block: true
+    events:
+      onClick:
+        try:
+          - id: revoke_user_sessions
+            type: CallAPI
+            params:
+              endpointId: admin-revoke-user-sessions
+              payload:
+                userId:
+                  _state: target_user_id
+          - id: show_revoke_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-revoke-user-sessions.response
+              last_error: null
+        catch:
+          - id: show_revoke_error
+            type: SetState
+            params:
+              last_error:
+                _actions: revoke_user_sessions.error.message
+  # Two-factor lifecycle recovery. Each write is behind a ConfirmModal whose
+  # content enumerates the reach - these are destructive, cross-organization
+  # actions and the operator should see how far they go before confirming.
+  - id: two_factor_recovery_title
+    type: Title
+    properties:
+      content: Two-factor recovery
+      level: 4
+  - id: target_passkey_id
+    type: TextInput
+    properties:
+      title: Passkey id (only for "Revoke one passkey"; from db user-passkeys)
+  - id: reset_two_factor_button
+    type: Button
+    properties:
+      title: Reset two-factor (ResetUserTwoFactor + RevokeUserSessions)
+      type: danger
+      block: true
+    events:
+      onClick:
+        - id: open_reset_two_factor_confirm
+          type: CallMethod
+          params:
+            blockId: reset_two_factor_confirm
+            method: open
+  - id: reset_two_factor_confirm
+    type: ConfirmModal
+    properties:
+      title: Reset this user's two-factor?
+      status: warning
+      okText: Reset and revoke sessions
+      content:
+        _nunjucks:
+          template: |
+            This clears the second factor for user <b>{{ userId }}</b> in
+            <b>every organization</b> they belong to (there is one enrolment per
+            user, not one per organization), deletes their trust-device records,
+            and <b>revokes all their sessions</b>. They will be sent to enrol a
+            new factor on their next sign-in. This cannot be undone.
+          on:
+            userId:
+              _state: target_user_id
+    events:
+      onOk:
+        try:
+          - id: reset_two_factor
+            type: CallAPI
+            params:
+              endpointId: admin-reset-user-two-factor
+              payload:
+                userId:
+                  _state: target_user_id
+          - id: show_reset_two_factor_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-reset-user-two-factor.response
+              last_error: null
+        catch:
+          - id: show_reset_two_factor_error
+            type: SetState
+            params:
+              last_error:
+                _actions: reset_two_factor.error.message
+  - id: revoke_all_passkeys_button
+    type: Button
+    properties:
+      title: Revoke all passkeys (RevokeUserPasskeys, no passkeyId)
+      type: danger
+      block: true
+    events:
+      onClick:
+        - id: open_revoke_all_passkeys_confirm
+          type: CallMethod
+          params:
+            blockId: revoke_all_passkeys_confirm
+            method: open
+  - id: revoke_all_passkeys_confirm
+    type: ConfirmModal
+    properties:
+      title: Revoke ALL of this user's passkeys?
+      status: warning
+      okText: Revoke all passkeys
+      content:
+        _nunjucks:
+          template: |
+            This deletes <b>every</b> registered passkey for user
+            <b>{{ userId }}</b> across the deployment. If a passkey was their
+            only second factor, they will be sent to enrol a new one on their
+            next request. Sessions are <b>not</b> revoked by this action - use
+            "Revoke sessions" above if the incident calls for it.
+          on:
+            userId:
+              _state: target_user_id
+    events:
+      onOk:
+        try:
+          - id: revoke_all_passkeys
+            type: CallAPI
+            params:
+              endpointId: admin-revoke-user-passkeys
+              payload:
+                userId:
+                  _state: target_user_id
+          - id: show_revoke_all_passkeys_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-revoke-user-passkeys.response
+              last_error: null
+        catch:
+          - id: show_revoke_all_passkeys_error
+            type: SetState
+            params:
+              last_error:
+                _actions: revoke_all_passkeys.error.message
+  - id: revoke_one_passkey_button
+    type: Button
+    properties:
+      title: Revoke one passkey (RevokeUserPasskeys with passkeyId)
+      type: default
+      block: true
+    events:
+      onClick:
+        - id: open_revoke_one_passkey_confirm
+          type: CallMethod
+          params:
+            blockId: revoke_one_passkey_confirm
+            method: open
+  - id: revoke_one_passkey_confirm
+    type: ConfirmModal
+    properties:
+      title: Revoke one passkey?
+      status: warning
+      okText: Revoke this passkey
+      content:
+        _nunjucks:
+          template: |
+            This deletes only passkey <b>{{ passkeyId }}</b> for user
+            <b>{{ userId }}</b> - their other passkeys are untouched. Use this
+            for a single lost security key beside a working one. Sessions are
+            <b>not</b> revoked.
+          on:
+            userId:
+              _state: target_user_id
+            passkeyId:
+              _state: target_passkey_id
+    events:
+      onOk:
+        try:
+          - id: revoke_one_passkey
+            type: CallAPI
+            params:
+              endpointId: admin-revoke-user-passkeys
+              payload:
+                userId:
+                  _state: target_user_id
+                passkeyId:
+                  _state: target_passkey_id
+          - id: show_revoke_one_passkey_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-revoke-user-passkeys.response
+              last_error: null
+        catch:
+          - id: show_revoke_one_passkey_error
+            type: SetState
+            params:
+              last_error:
+                _actions: revoke_one_passkey.error.message
+  - id: delete_user_button
+    type: Button
+    properties:
+      title: Delete user (DeleteUser - cascades members and pending invitations)
+      type: danger
+      block: true
+    events:
+      onClick:
+        try:
+          - id: delete_user
+            type: CallAPI
+            params:
+              endpointId: admin-delete-user
+              payload:
+                userId:
+                  _state: target_user_id
+          - id: show_delete_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-delete-user.response
+              last_error: null
+          - id: reload_after_delete
+            type: CallAPI
+            params:
+              endpointId: admin-list-users
+        catch:
+          - id: show_delete_error
+            type: SetState
+            params:
+              last_error:
+                _actions: delete_user.error.message
+  - id: user_attributes_title
+    type: Title
+    properties:
+      content: Update user attributes (UpdateUserAttributes)
+      level: 4
+  - id: user_attributes_json
+    type: TextInput
+    properties:
+      title: Attributes as JSON, e.g. {"region":"emea"} (uses the user id above)
+  - id: update_user_attributes_button
+    type: Button
+    properties:
+      title: Update user attributes
+      block: true
+    events:
+      onClick:
+        try:
+          - id: update_user_attributes
+            type: CallAPI
+            params:
+              endpointId: admin-update-user-attributes
+              payload:
+                userId:
+                  _state: target_user_id
+                attributes:
+                  _json.parse:
+                    _state: user_attributes_json
+          - id: show_user_attributes_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-update-user-attributes.response
+              last_error: null
+        catch:
+          - id: show_user_attributes_error
+            type: SetState
+            params:
+              last_error:
+                _actions: update_user_attributes.error.message
+  # Phase-9 admin profile edit: UpdateUserProfile targeting ANOTHER user
+  # requires user:update authority in org-a (only self-targeting is exempt -
+  # the security page's display-name save). The profile update is a shallow
+  # merge per top-level key; a key set to null is removed.
+  - id: user_profile_title
+    type: Title
+    properties:
+      content: Update a user's profile (UpdateUserProfile)
+      level: 4
+  - id: user_profile_json
+    type: TextInput
+    properties:
+      title: Profile as JSON, e.g. {"displayName":"Sam","theme":null} (uses the user id above; null removes a key)
+  - id: update_user_profile_button
+    type: Button
+    properties:
+      title: Update user profile
+      block: true
+    events:
+      onClick:
+        try:
+          - id: update_user_profile
+            type: CallAPI
+            params:
+              endpointId: admin-update-user-profile
+              payload:
+                userId:
+                  _state: target_user_id
+                profile:
+                  _json.parse:
+                    _state: user_profile_json
+          - id: show_user_profile_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-update-user-profile.response
+              last_error: null
+        catch:
+          - id: show_user_profile_error
+            type: SetState
+            params:
+              last_error:
+                _actions: update_user_profile.error.message
+  - id: create_org_title
+    type: Title
+    properties:
+      content: Create an organization (CreateOrganization)
+      level: 4
+  - id: org_name
+    type: TextInput
+    properties:
+      title: Organization name
+  - id: org_slug
+    type: TextInput
+    properties:
+      title: Organization slug
+  - id: create_org_button
+    type: Button
+    properties:
+      title: Create organization (you become the owner)
+      block: true
+    events:
+      onClick:
+        try:
+          - id: create_organization
+            type: CallAPI
+            params:
+              endpointId: admin-create-organization
+              payload:
+                name:
+                  _state: org_name
+                slug:
+                  _state: org_slug
+          - id: show_create_org_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-create-organization.response
+              last_error: null
+        catch:
+          - id: show_create_org_error
+            type: SetState
+            params:
+              last_error:
+                _actions: create_organization.error.message
+  - id: last_response_html
+    type: Html
+    visible:
+      _ne:
+        - _state: last_response
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <pre>{{ response | dump(2) }}</pre>
+          on:
+            response:
+              _state: last_response
+  - id: last_error_html
+    type: Html
+    visible:
+      _ne:
+        - _state: last_error
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p style="color:red">{{ error }}</p>
+          on:
+            error:
+              _state: last_error

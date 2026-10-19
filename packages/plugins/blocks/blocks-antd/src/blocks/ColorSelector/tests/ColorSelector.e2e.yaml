@@ -15,6 +15,14 @@
 id: color_selector
 type: Box
 
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        cs_clearable: '#1677ff'
+        cs_gradient: linear-gradient(90deg, rgb(22,119,255) 0%, rgb(114,46,209) 100%)
+
 blocks:
   # ============================================
   # BASIC RENDERING
@@ -75,3 +83,90 @@ blocks:
     type: ColorSelector
     properties:
       size: large
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: cs_theme
+    type: ColorSelector
+    properties:
+      theme:
+        controlHeight: 48
+
+  - id: cs_popup
+    type: ColorSelector
+    class:
+      .popup: cs-custom-popup
+
+  - id: cs_clearable
+    type: ColorSelector
+    properties:
+      allowClear: true
+      showText: true
+
+  - id: cs_clearable_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: cs_clearable
+              - null
+          then: 'Value: null'
+          else:
+            _string.concat:
+              - 'Value: '
+              - _state: cs_clearable
+
+  - id: cs_gradient
+    type: ColorSelector
+    properties:
+      mode: gradient
+
+  - id: cs_gradient_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: cs_gradient
+              - null
+          then: 'Value: null'
+          else:
+            _string.concat:
+              - 'Value: '
+              - _state: cs_gradient
+
+  - id: cs_modes
+    type: ColorSelector
+    properties:
+      mode:
+        - single
+        - gradient
+
+  - id: cs_presets
+    type: ColorSelector
+    properties:
+      presets:
+        - label: Brand
+          colors:
+            - '#1677ff'
+            - '#722ed1'
+
+  - id: cs_presets_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: cs_presets
+              - null
+          then: 'Value: null'
+          else:
+            _string.concat:
+              - 'Value: '
+              - _state: cs_presets

@@ -17,6 +17,17 @@ import { get } from '@lowdefy/helpers';
 
 import getMenus from './menus/getMenus.js';
 
+// The first link of the menu the user may see, at up to three levels deep.
+function findHomeLink(menu) {
+  for (const path of ['links.0', 'links.0.links.0', 'links.0.links.0.links.0']) {
+    const link = get(menu, path, { default: null });
+    if (get(link, 'pageId', { default: null })) {
+      return link;
+    }
+  }
+  return null;
+}
+
 async function getHomeAndMenus(context) {
   const menus = await getMenus(context);
 
@@ -26,6 +37,7 @@ async function getHomeAndMenus(context) {
       home: {
         configured: true,
         pageId: homePageId,
+        pathParams: {},
       },
       menus,
     };
@@ -36,18 +48,12 @@ async function getHomeAndMenus(context) {
     // eslint-disable-next-line prefer-destructuring
     defaultMenu = menus[0];
   }
-  let pageId = null;
-  pageId = get(defaultMenu, 'links.0.pageId', { default: null });
-  if (!pageId) {
-    pageId = get(defaultMenu, 'links.0.links.0.pageId', { default: null });
-  }
-  if (!pageId) {
-    pageId = get(defaultMenu, 'links.0.links.0.links.0.pageId', { default: null });
-  }
+  const homeLink = findHomeLink(defaultMenu);
   return {
     home: {
       configured: false,
-      pageId,
+      pageId: homeLink?.pageId ?? null,
+      pathParams: homeLink?.pathParams ?? {},
     },
     menus,
   };

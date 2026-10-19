@@ -14,31 +14,53 @@
   limitations under the License.
 */
 
+import collectChatFiles from './collectChatFiles.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import prepareAgent from './prepareAgent.js';
 
 async function callAgent(
   context,
-  { agentId, pageId, messages, conversationId, urlQuery, sharedState }
+  {
+    agentId,
+    pageId,
+    messages,
+    conversationId,
+    pathParams,
+    urlQuery,
+    sharedState,
+    sharedStateReadOnly,
+  }
 ) {
   const { logger } = context;
 
   context.pageId = pageId;
   context.evaluateOperators = createEvaluateOperators(context);
+  // A chat run is not cancelled when the client disconnects: it runs to its end so the
+  // onFinish hooks still persist the whole conversation, bounded by the agent's timeout
+  // and maxSteps. Its tool endpoints' requests are not cancelled either.
+  context.signal = undefined;
 
   logger.debug({ event: 'debug_agent', agentId, pageId });
 
   const agentContext = {
     conversationId: conversationId ?? undefined,
     pageId,
+    pathParams: pathParams ?? {},
     sharedState: sharedState ?? {},
+    sharedStateReadOnly: sharedStateReadOnly ?? false,
     urlQuery: urlQuery ?? {},
     userId: context.user?.sub ?? context.user?.id ?? null,
   };
 
   const { agentConfig, connectionInstance, agentType, resolverContext } = await prepareAgent(
     context,
-    { agentId, agentContext, endpointDepth: 0, mode: 'chat' }
+    {
+      agentId,
+      agentContext,
+      endpointDepth: 0,
+      files: collectChatFiles({ messages }),
+      mode: 'chat',
+    }
   );
 
   // Call the agent resolver

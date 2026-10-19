@@ -29,7 +29,7 @@
         placeholder: Search docs...
         shortcut: mod+k
         label: Search
-        icon: AiOutlineSearch
+        icon: search
         showShortcut: true
         maxResults: 15
         highlightMatches: true
@@ -127,6 +127,6 @@
     title: Star on Github
     color: default
     variant: text
-    icon: AiFillGithub
+    icon: brands:Github
     size: small
     href: https://github.com/lowdefy/lowdefy

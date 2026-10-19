@@ -16,21 +16,31 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Carousel } from 'antd';
+import { type } from '@lowdefy/helpers';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
-const getSlides = ({ content, properties }) => {
-  let slides = properties.slides;
+const getSlides = ({ content, slides }) => {
   if (!slides) {
-    slides = Object.keys(content)
+    return Object.keys(content)
       .sort()
       .map((key) => ({ key }));
   }
   return slides;
 };
 
+// antd 6 renamed dotPosition to dotPlacement, with left/right as start/end.
+const dotPlacements = { left: 'start', right: 'end', top: 'top', bottom: 'bottom' };
+
 const CarouselBlock = ({ blockId, classNames = {}, content, properties, methods, styles = {} }) => {
-  const slides = getSlides({ content, properties });
+  // slides is Lowdefy config, not a react-slick setting, so it is not passed to antd.
+  const { dotPosition, slides: slidesConfig, ...carouselProperties } = properties;
+  // react-slick spreads its defaults under the settings it gets, so a null setting (an operator on
+  // a missing key) replaces the default, and a null slidesToScroll hangs the page.
+  const settings = Object.fromEntries(
+    Object.entries(carouselProperties).filter(([, value]) => !type.isNone(value))
+  );
+  const slides = getSlides({ content, slides: slidesConfig });
 
   const carousel = useRef();
 
@@ -53,7 +63,8 @@ const CarouselBlock = ({ blockId, classNames = {}, content, properties, methods,
 
   return (
     <Carousel
-      {...properties}
+      {...settings}
+      dotPlacement={settings.dotPlacement ?? dotPlacements[dotPosition]}
       id={blockId}
       afterChange={(current) => {
         methods.triggerEvent({
@@ -68,7 +79,8 @@ const CarouselBlock = ({ blockId, classNames = {}, content, properties, methods,
         });
       }}
       onInit={() => methods.triggerEvent({ name: 'onInit' })}
-      onSwipe={() => methods.triggerEvent({ name: 'onSwipe' })}
+      // react-slick drops an onSwipe prop, so the swipe is read from its swipeEvent callback.
+      swipeEvent={(direction) => methods.triggerEvent({ name: 'onSwipe', event: { direction } })}
       className={classNames.element}
       style={styles.element}
       ref={carousel}

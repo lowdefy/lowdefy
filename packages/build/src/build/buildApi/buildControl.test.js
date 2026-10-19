@@ -175,3 +175,149 @@ test('count controls', () => {
     ':set_state': 1,
   });
 });
+
+test('parallel_for accepts :concurrency', () => {
+  const components = {
+    api: [
+      {
+        id: 'api_concurrency',
+        type: 'Api',
+        routine: [
+          {
+            ':parallel_for': 'item',
+            ':in': [1, 2, 3],
+            ':concurrency': 2,
+            ':do': { id: 'step_a', type: 'MongoDBInsertOne', connectionId: 'connection' },
+          },
+          {
+            ':parallel_for': 'item',
+            ':in': [1, 2, 3],
+            ':concurrency': { _payload: 'concurrency' },
+            ':do': { id: 'step_b', type: 'MongoDBInsertOne', connectionId: 'connection' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test.each([0, -2, 2.5, 'many', true])('parallel_for throws for :concurrency %p', (concurrency) => {
+  const components = {
+    api: [
+      {
+        id: 'api_bad_concurrency',
+        type: 'Api',
+        routine: {
+          ':parallel_for': 'item',
+          ':in': [1, 2, 3],
+          ':concurrency': concurrency,
+          ':do': { id: 'step_a', type: 'MongoDBInsertOne', connectionId: 'connection' },
+        },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    ':concurrency in :parallel_for must be a positive integer at endpoint api_bad_concurrency.'
+  );
+});
+
+test(':reject :status and :body build in a webhook endpoint and an InternalApi endpoint', () => {
+  const components = {
+    api: [
+      {
+        id: 'hook',
+        type: 'Api',
+        webhook: true,
+        routine: { ':reject': 'Not found', ':status': 404, ':body': { error: 'not_found' } },
+      },
+      {
+        id: 'worker',
+        type: 'InternalApi',
+        routine: { ':reject': 'Too large', ':status': { _if: { test: true, then: 413 } } },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test(':reject :status on an endpoint no webhook answers for is a build error', () => {
+  const components = {
+    api: [
+      {
+        id: 'plain',
+        type: 'Api',
+        routine: [{ ':reject': 'Not found', ':status': 404, ':body': {} }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    ':reject in endpoint plain sets :status and :body, which only a webhook endpoint, or an InternalApi endpoint a webhook calls, answers with.'
+  );
+});
+
+test(':reject :status outside 400 to 499 is a build error', () => {
+  const components = {
+    api: [{ id: 'hook', type: 'Api', webhook: true, routine: { ':reject': 'x', ':status': 500 } }],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    ':status in :reject must be an integer from 400 to 499 at endpoint hook.'
+  );
+});
+
+test(':return :content_type text/plain builds in a webhook endpoint', () => {
+  const components = {
+    api: [
+      {
+        id: 'hook',
+        type: 'Api',
+        webhook: true,
+        routine: {
+          ':if': { _ne: [{ _payload: 'query.validationToken' }, null] },
+          ':then': {
+            ':return': { _payload: 'query.validationToken' },
+            ':content_type': 'text/plain',
+          },
+        },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test.each(['Api', 'InternalApi'])(
+  ':return :content_type in a %s endpoint that is not a webhook is a build error',
+  (endpointType) => {
+    const components = {
+      api: [
+        {
+          id: 'plain',
+          type: endpointType,
+          routine: [{ ':return': 'ok', ':content_type': 'text/plain' }],
+        },
+      ],
+    };
+    expect(() => buildApi({ components, context })).toThrow(
+      ':return in endpoint plain sets :content_type, which only a webhook endpoint answers with.'
+    );
+  }
+);
+
+test.each(['text/html', 'application/json', { _string: 'text/plain' }])(
+  ':return :content_type %p is a build error',
+  (contentType) => {
+    const components = {
+      api: [
+        {
+          id: 'hook',
+          type: 'Api',
+          webhook: true,
+          routine: { ':return': 'ok', ':content_type': contentType },
+        },
+      ],
+    };
+    expect(() => buildApi({ components, context })).toThrow(
+      ':content_type in :return must be "text/plain" at endpoint hook.'
+    );
+  }
+);

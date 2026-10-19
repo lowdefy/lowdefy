@@ -166,7 +166,7 @@ test('insertMany connection error', async () => {
   );
 });
 
-test('insertMany mongodb error', async () => {
+test('insertMany mongodb error is mapped without quoting the driver message', async () => {
   const request = { docs: [{ _id: 'insertMany9-1' }, { _id: 'insertMany9-2' }] };
   const connection = {
     databaseUri,
@@ -175,9 +175,10 @@ test('insertMany mongodb error', async () => {
     write: true,
   };
   await MongoDBInsertMany({ request, connection });
-  await expect(MongoDBInsertMany({ request, connection })).rejects.toThrow(
-    'E11000 duplicate key error'
-  );
+  const error = await MongoDBInsertMany({ request, connection }).catch((caught) => caught);
+  expect(error.name).toBe('ServiceError');
+  expect(error.message).toBe(`MongoDB: Duplicate key on collection "${collection}".`);
+  expect(error.cause.message).toContain('E11000 duplicate key error');
 });
 
 test('checkRead should be false', async () => {

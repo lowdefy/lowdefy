@@ -93,8 +93,9 @@ _ref:
             | `conversationId` | string | | Active conversation ID. When this changes, messages are cleared. If left empty, the block auto-mints a stable id for the session and surfaces it via `onConversationStart`, so every turn posts a consistent id. App-supplied ids are always authoritative. |
             | `messages` | array | | Load messages externally. `undefined` = no sync, `null` = clear, array = load. |
             | `feedbackValues` | object | | Ratings already recorded for messages in this conversation, keyed by message id, each `like` or `dislike`. The block does not persist a rating, so without this a reload or a conversation switch shows every message unrated even where your app stored it. A rating clicked this visit takes precedence, so the thumb still responds immediately and a rating the user has just withdrawn is not re-lit by a stale value. |
-            | `urlQuery` | object | | Query parameters sent with each request. Available server-side via `_payload`. |
+            | `urlQuery` | object | | Query parameters sent with each request. Available server-side via `_payload`. The page's path parameters (see [Page paths](/page-paths)) are sent as `pathParams` without being set here. |
             | `sharedState` | object | | Two-way bridge between page state and the agent. See [Shared State](#shared-state). |
+            | `sharedStateReadOnly` | boolean | `false` | Send `sharedState` as read-only context: the agent gets no `update-page-state` tool. See [Read-only shared state](#read-only-shared-state). |
             | `height` | string | `'calc(100dvh - 170px)'` | CSS height of the chat container. Only applies when `display` is `'inline'`. |
             | `maxWidth` | number | `800` | Maximum width in pixels. |
             | `display` | string | `'inline'` | `'inline'` renders directly on the page. `'drawer'` renders in a slide-out drawer. |
@@ -266,6 +267,8 @@ _ref:
                 downloadPolicyRequestId: get_download_url
             ```
 
+            A file uploaded to storage becomes a file part of the message, `{ type: 'file', url, mediaType, filename, providerMetadata: { lowdefy: { key } } }`, where `key` is the file's storage key from the upload policy. The key sits under `providerMetadata` because the AI SDK keeps no other extra field on a file part, so it survives the saved conversation, the `onFinish` hook's messages and a reload. It is not sent to the model. Use it to sign a fresh link when a saved conversation is reopened (a signed link expires), and read it in a tool endpoint with [`_agent: files`](/_agent). Before each file, the model gets a line naming it (`Attached file: screenshot.png`), so it can pass the name to a tool; the saved messages do not hold that line.
+
             #### Sender Switches
 
             Toggle switches in the sender footer. The switch state is included in the `onBeforeSend` event and in message metadata.
@@ -281,7 +284,7 @@ _ref:
               switches:
                 - key: deep_research
                   label: Deep Research
-                  icon: AiOutlineSearch
+                  icon: search
                   default: false
                 - key: use_knowledge_base
                   label: Use Knowledge Base
@@ -342,6 +345,24 @@ _ref:
             ```
 
             With the curated form above, the agent can read `legal_name` and `registration_number`, and calling `update-page-state` with either key writes straight back into the page state — no custom endpoint or `onToolResult` handler required.
+
+            #### Read-only shared state
+
+            Set `sharedStateReadOnly: true` to give the agent page context it cannot change. The block still sends `sharedState` with each request (available server-side via `_payload`, and in the agent's context block when the agent has [`pageContext: true`](/agent-properties)), but the server does not register the `update-page-state` tool, so the model is never offered a page-state write. Use it when the values are there to inform the agent (the current time, the record the user is looking at) and some of them are also bound to inputs the agent should not overwrite.
+
+            ###### Send context without the write tool:
+            ```yaml
+            - id: chat
+              type: AgentChat
+              properties:
+                agentId: assistant
+                sharedStateReadOnly: true
+                sharedState:
+                  now:
+                    _date: now
+                  space:
+                    _state: space
+            ```
 
             ## Events
 
@@ -472,7 +493,7 @@ _ref:
               type: Button
               properties:
                 title: New Chat
-                icon: AiOutlinePlus
+                icon: add
               events:
                 onClick:
                   - id: new_id

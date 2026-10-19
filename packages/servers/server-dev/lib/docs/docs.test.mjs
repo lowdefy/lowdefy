@@ -48,6 +48,14 @@ jest.unstable_mockModule('../server/createLowdefyContext.js', () => ({
 const mockBuildPageIfNeeded = jest.fn(async () => true);
 jest.unstable_mockModule('../server/jitPageBuilder.js', () => ({
   default: mockBuildPageIfNeeded,
+  reviewBuiltPage: async () => 'current',
+  syncBuildSignals: () => ({
+    registry: JSON.parse(
+      fs.readFileSync(path.join(fixtureDir, 'build', 'pageRegistry.json'), 'utf8')
+    ),
+    eventCounter: 0,
+    generation: 1,
+  }),
 }));
 
 const { default: listTypes } = await import('./listTypes.js');
@@ -61,6 +69,7 @@ const { default: searchDocs } = await import('./searchDocs.js');
 const { default: normalizeTypeKind } = await import('./normalizeTypeKind.js');
 const { default: clientErrorStore } = await import('./clientErrorStore.js');
 const { default: getBuildStatus } = await import('./getBuildStatus.js');
+const { default: serverErrorStore } = await import('./serverErrorStore.js');
 const { default: getPageConfig } = await import('./getPageConfig.js');
 const { default: readPageArtifact } = await import('./readPageArtifact.js');
 const { default: findConfig } = await import('./findConfig.js');
@@ -113,6 +122,24 @@ test('getSchema returns block schema with meta', () => {
   expect(result.meta.category).toEqual('display');
 });
 
+test('getSchema returns hazards for a block: type-attached first, then framework-level', () => {
+  const result = getSchema({ kind: 'blocks', type: 'TestBlock' });
+  expect(result.hazards.map((hazard) => hazard.id)).toEqual([
+    'test-block-hazard',
+    'visible-false-prunes-state',
+  ]);
+  // The plugin's own entry wins a duplicate id.
+  expect(result.hazards[1].message).toEqual('Plugin wording for visible: false.');
+});
+
+test('getSchema returns hazards for a request, including a meta.hazards entry', () => {
+  const result = getSchema({ kind: 'requests', type: 'WriteRequest' });
+  expect(result.hazards.map((hazard) => hazard.id)).toEqual([
+    'write-request-hazard',
+    'state-in-request-properties',
+  ]);
+});
+
 test('getSchema returns connection schema with request list', () => {
   const result = getSchema({ kind: 'connections', type: 'AxiosHttp' });
   expect(result.schema).toBeDefined();
@@ -131,6 +158,29 @@ test('getSchema returns null for unknown type', () => {
 
 test('getSchema throws for kinds without schemas', () => {
   expect(() => getSchema({ kind: 'websockets', type: 'X' })).toThrow('No schemas available');
+  expect(() => getSchema({ kind: 'tool', type: 'run_journey' })).toThrow(
+    'or journey-step for the journey step grammar'
+  );
+});
+
+test('getSchema throws when a type kind is given no type', () => {
+  expect(() => getSchema({ kind: 'blocks' })).toThrow(
+    'Getting a blocks schema requires a "type", the exact type name. Received undefined.'
+  );
+});
+
+test('getSchema returns the journey step grammar for kind journey-step', () => {
+  const result = getSchema({ kind: 'journey-step' });
+  expect(result.kind).toEqual('journey-step');
+  expect(result.schema.title).toEqual('Journey step');
+  expect(result.schema.oneOf.map((step) => step.required[0])).toContain('wait');
+});
+
+test('getSchema returns one journey step schema when type names the step', () => {
+  const result = getSchema({ kind: 'journey-step', type: 'wait' });
+  expect(result).toMatchObject({ kind: 'journey-step', type: 'wait' });
+  expect(result.schema.properties.wait.examples).toContainEqual({ wait: { ms: 500 } });
+  expect(getSchema({ kind: 'journey-step', type: 'hover' })).toBeNull();
 });
 
 test('getExamples reads example yaml from plugin dist by convention', () => {
@@ -152,6 +202,13 @@ test('getPluginDoc returns null for packages without docs', () => {
   expect(getPluginDoc({ packageName: 'no-such-package' })).toBeNull();
 });
 
+test('getPluginDoc reads only the app plugins, never a path out of node_modules', () => {
+  fs.writeFileSync(path.join(fixtureDir, 'README.md'), '# Server readme\n');
+  expect(getPluginDoc({ packageName: '..' })).toBeNull();
+  expect(getPluginDoc({ packageName: 'test-plugin/../..' })).toBeNull();
+  fs.rmSync(path.join(fixtureDir, 'README.md'));
+});
+
 test('getCoreDoc returns markdown by slug from docs-content', () => {
   const doc = getCoreDoc({ slug: 'operators/_get' });
   expect(doc.title).toEqual('_get');
@@ -161,6 +218,24 @@ test('getCoreDoc returns markdown by slug from docs-content', () => {
 test('getCoreDoc resolves a doc by kind and type name', () => {
   const doc = getCoreDoc({ kind: 'operator', type: '_get' });
   expect(doc.slug).toEqual('operators/_get');
+});
+
+test('getCoreDoc returns hazards for the requested type when resolved by kind and type', () => {
+  const doc = getCoreDoc({ kind: 'operator', type: '_get' });
+  expect(doc.hazards.map((hazard) => hazard.id)).toEqual(['get-fixture-hazard']);
+});
+
+test('getCoreDoc does not attach hazards when resolved by slug', () => {
+  const doc = getCoreDoc({ slug: 'operators/_get' });
+  expect(doc.hazards).toBeUndefined();
+});
+
+test('getCoreDoc resolves a request doc on its connection page but keeps request hazards', () => {
+  // findDoc remaps request → connection to find the page; hazards must come
+  // from the request kind the caller asked about.
+  const doc = getCoreDoc({ kind: 'request', type: 'MongoDBFind' });
+  expect(doc.slug).toEqual('connections/mongodb');
+  expect(doc.hazards.map((hazard) => hazard.id)).toEqual(['state-in-request-properties']);
 });
 
 test('getCoreDoc returns null for unknown slug', () => {
@@ -182,6 +257,7 @@ test('getOverview includes counts and route guidance', () => {
   expect(overview).toContain('2 block types');
   expect(overview).toContain('/lowdefy-docs/schema/{kind}/{type}');
   expect(overview).toContain('lowdefy_list_types');
+  expect(overview).not.toContain('config.basePath');
 });
 
 test('normalizeTypeKind maps singular and plural, rejects unknown', () => {
@@ -200,15 +276,26 @@ test('clientErrorStore caps at 50 entries, evicting the oldest first', () => {
   expect(entries[49].index).toEqual(59);
 });
 
-test('getBuildStatus returns the build artifact plus reported client errors', () => {
-  const result = getBuildStatus();
+test('getBuildStatus returns the build artifact plus reported client and server errors', async () => {
+  serverErrorStore.push({ name: 'RequestError', message: 'Bad filter.', source: 'pages/a.yaml:3' });
+  const result = await getBuildStatus();
   expect(result.build.status).toEqual('ok');
   expect(result.clientErrors.length).toEqual(50);
+  expect(result.serverErrors).toEqual([
+    {
+      name: 'RequestError',
+      message: 'Bad filter.',
+      source: 'pages/a.yaml:3',
+      buildId: '2026-01-01T00:00:00.000Z',
+    },
+  ]);
+  expect(result.earlierErrors).toBeUndefined();
+  expect(result.pages.unbuilt).toEqual(expect.any(Number));
 });
 
-test('getBuildStatus reports unknown status when buildStatus.json is missing', () => {
+test('getBuildStatus reports unknown status when buildStatus.json is missing', async () => {
   fs.rmSync(path.join(fixtureDir, 'build', 'buildStatus.json'));
-  const result = getBuildStatus();
+  const result = await getBuildStatus();
   expect(result.build.status).toEqual('unknown');
   expect(result.build.message).toContain('No build status yet');
 });
@@ -235,7 +322,37 @@ test('findConfig resolves a known pageId to its source file', async () => {
   // A page's root block renders with blockId === pageId — open-in-editor and
   // feedback enrichment read matches[0].location.source from this result.
   expect(result.matches.length).toEqual(1);
-  expect(result.matches[0].location.source).toContain('pages/home.yaml');
+  expect(result.matches[0].location.source).toContain(path.join('pages', 'home.yaml'));
+});
+
+test('findConfig returns hazards per match for the matched node type', async () => {
+  const result = await findConfig({ id: 'my_button', pageId: 'home' });
+  expect(result.matches[0].hazards.map((hazard) => hazard.id)).toEqual([
+    'visible-false-prunes-state',
+  ]);
+});
+
+test('findConfig fires tenant-wall-lookup on a request over a walled connection only', async () => {
+  const walled = await findConfig({ id: 'req-tenant', pageId: 'other' });
+  expect(walled.matches.length).toEqual(1);
+  expect(walled.matches[0].hazards.map((hazard) => hazard.id)).toEqual([
+    'write-request-hazard',
+    'state-in-request-properties',
+    'tenant-wall-lookup',
+  ]);
+
+  const shared = await findConfig({ id: 'req-shared', pageId: 'other' });
+  expect(shared.matches.length).toEqual(1);
+  expect(shared.matches[0].hazards.map((hazard) => hazard.id)).toEqual([
+    'write-request-hazard',
+    'state-in-request-properties',
+  ]);
+});
+
+test('findConfig resolves a request connection across pages when no pageId is given', async () => {
+  const result = await findConfig({ id: 'req-tenant' });
+  expect(result.matches.length).toEqual(1);
+  expect(result.matches[0].hazards.map((hazard) => hazard.id)).toContain('tenant-wall-lookup');
 });
 
 test('findConfig scans keyMap for a matching id when no pageId is given', async () => {
@@ -243,7 +360,7 @@ test('findConfig scans keyMap for a matching id when no pageId is given', async 
   const result = await findConfig({ id: 'my_button' });
   expect(result.matches.length).toEqual(2);
   expect(result.matches[0].keyPath).toEqual('root.blocks[2:my_button:Button]');
-  expect(result.matches[0].location.source).toContain('pages/home.yaml:5');
+  expect(result.matches[0].location.source).toContain(`${path.join('pages', 'home.yaml')}:5`);
   expect(result.matches[1].keyPath).toEqual('root.blocks[0:my_button:Button]');
   expect(result.note).toContain('Pass ?pageId=');
 });
@@ -255,14 +372,14 @@ test('findConfig with pageId only returns matches on that page', async () => {
   const result = await findConfig({ id: 'my_button', pageId: 'other' });
   expect(result.matches.length).toEqual(1);
   expect(result.matches[0].keyPath).toEqual('root.blocks[0:my_button:Button]');
-  expect(result.matches[0].location.source).toContain('pages/other.yaml:4');
+  expect(result.matches[0].location.source).toContain(`${path.join('pages', 'other.yaml')}:4`);
 });
 
 test('findConfig with pageId resolves the same id to each page respectively', async () => {
   const result = await findConfig({ id: 'my_button', pageId: 'home' });
   expect(result.matches.length).toEqual(1);
   expect(result.matches[0].keyPath).toEqual('root.blocks[2:my_button:Button]');
-  expect(result.matches[0].location.source).toContain('pages/home.yaml:5');
+  expect(result.matches[0].location.source).toContain(`${path.join('pages', 'home.yaml')}:5`);
 });
 
 test('findConfig scopes skeleton-built pages via the page key segment', async () => {
@@ -271,7 +388,7 @@ test('findConfig scopes skeleton-built pages via the page key segment', async ()
   const result = await findConfig({ id: 'legal_button', pageId: 'legal' });
   expect(result.matches.length).toEqual(1);
   expect(result.matches[0].keyPath).toEqual('root.pages[2:legal].blocks[0:legal_button:Button]');
-  expect(result.matches[0].location.source).toContain('pages/legal.yaml:3');
+  expect(result.matches[0].location.source).toContain(`${path.join('pages', 'legal.yaml')}:3`);
 });
 
 test('findConfig with a skeleton-built pageId does not leak other pages ids', async () => {
@@ -293,7 +410,7 @@ test('findConfig resolves a runtime list item id to its $ placeholder config id'
   const result = await findConfig({ id: 'my_list.0.item_title' });
   expect(result.matches.length).toEqual(1);
   expect(result.matches[0].keyPath).toContain('[0:my_list.$.item_title:Title]');
-  expect(result.matches[0].location.source).toContain('pages/home.yaml:9');
+  expect(result.matches[0].location.source).toContain(`${path.join('pages', 'home.yaml')}:9`);
 });
 
 test('findConfig resolves a runtime list item id within a pageId scope', async () => {
@@ -400,17 +517,56 @@ test('runRequest returns a structured error instead of throwing when callRequest
   expect(result.error).toEqual({ name: 'Error', message: 'boom' });
 });
 
-test('runRequest truncates responses larger than the size cap', async () => {
+test('runRequest writes a response larger than the inline limit to a file', async () => {
+  const rows = Array.from({ length: 500 }, (_, index) => ({ _id: index, title: 'x'.repeat(100) }));
   mockCallRequest.mockResolvedValueOnce({
     id: 'req-read',
     success: true,
     type: 'ReadOnlyRequest',
-    response: 'x'.repeat(200_000),
+    response: rows,
   });
   const result = await runRequest({ pageId: 'home', requestId: 'req-read', honoContext: {} });
-  expect(result.truncated).toBe(true);
-  expect(result.note).toContain('truncated');
-  expect(result.response.length).toEqual(100_000);
+  expect(result.response).toBeUndefined();
+  expect(result.responseItems).toEqual(500);
+  expect(path.dirname(result.responseFile)).toEqual(
+    path.join(fs.realpathSync(fixtureDir), '.lowdefy', 'responses')
+  );
+  expect(path.basename(result.responseFile).startsWith('home.req-read-')).toBe(true);
+  expect(JSON.parse(fs.readFileSync(result.responseFile, 'utf8'))).toEqual(rows);
+});
+
+test('runRequest builds the page before it reads the request', async () => {
+  mockBuildPageIfNeeded.mockClear();
+  mockCallRequest.mockClear();
+  await runRequest({ pageId: 'home', requestId: 'req-read', honoContext: {} });
+  expect(mockBuildPageIfNeeded).toHaveBeenCalledWith(expect.objectContaining({ pageId: 'home' }));
+  expect(mockBuildPageIfNeeded.mock.invocationCallOrder[0]).toBeLessThan(
+    mockCallRequest.mock.invocationCallOrder[0]
+  );
+});
+
+test('runRequest refuses with the build errors when the page fails to build', async () => {
+  const error = new Error('Page "home" build failed with 1 error(s).');
+  error.buildErrors = [
+    {
+      name: 'ConfigError',
+      message: 'Block type "Buton" was used but is not defined.',
+      source: 'pages/home.yaml:4',
+    },
+  ];
+  mockBuildPageIfNeeded.mockRejectedValueOnce(error);
+  mockCallRequest.mockClear();
+  const result = await runRequest({ pageId: 'home', requestId: 'req-read', honoContext: {} });
+  expect(result.refused).toBe(true);
+  expect(result.reason).toContain('fails to build');
+  expect(result.buildErrors).toEqual([
+    {
+      type: 'ConfigError',
+      message: 'Block type "Buton" was used but is not defined.',
+      source: 'pages/home.yaml:4',
+    },
+  ]);
+  expect(mockCallRequest).not.toHaveBeenCalled();
 });
 
 test('getAppMap includes built page detail and a note for unbuilt pages', () => {

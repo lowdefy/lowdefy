@@ -1,5 +1,104 @@
 # Logger
 
+Lowdefy provides built-in error logging and monitoring capabilities. When properly configured, errors from both client and server are captured and sent to external logging services.
+
+## Sentry Integration
+
+[Sentry](https://sentry.io) is a popular error tracking and performance monitoring platform. Lowdefy has built-in Sentry integration that captures errors with rich context including page IDs, block IDs, and config file locations.
+
+### Quick Start
+
+To enable Sentry, set the `SENTRY_DSN` environment variable:
+
+```
+SENTRY_DSN=https://your-dsn@sentry.io/project
+```
+
+With this environment variable set, Sentry will capture errors from both client and server with sensible defaults.
+
+### Client-Side Configuration
+
+For client-side error capture, you also need to expose the DSN to the browser:
+
+```
+```
+
+### Configuration Options
+
+You can customize Sentry behavior using the `logger` configuration in your `lowdefy.yaml`:
+
+```yaml
+lowdefy: 6.1.0
+
+logger:
+  sentry:
+    # Enable/disable client-side logging (default: true)
+    client: true
+    # Enable/disable server-side logging (default: true)
+    server: true
+    # Trace server requests (default: true on the Node server, false on Vercel)
+    serverTracing: true
+    # Sample rate for performance traces (default: 0.1)
+    tracesSampleRate: 0.1
+    # Sample rate for session replay (default: 0)
+    replaysSessionSampleRate: 0
+    # Sample rate for replay on errors (default: 0.1)
+    replaysOnErrorSampleRate: 0.1
+    # Enable user feedback widget (default: false)
+    feedback: false
+    # Override environment detection (default: auto from NODE_ENV)
+    environment: production
+    # User fields to include in error reports (default: ['id', '_id'])
+    userFields:
+      - id
+      - _id
+```
+
+### Default Configuration
+
+If you only set `SENTRY_DSN` without any `logger.sentry` configuration, these defaults are used:
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `client` | `true` | Client-side error capture enabled |
+| `server` | `true` | Server-side error capture enabled |
+| `serverTracing` | `true` on the Node server, `false` on Vercel | Server requests traced as transactions |
+| `tracesSampleRate` | `0.1` | 10% of transactions traced |
+| `replaysSessionSampleRate` | `0` | Session replay disabled by default |
+| `replaysOnErrorSampleRate` | `0.1` | 10% of error sessions replayed |
+| `feedback` | `false` | User feedback widget disabled |
+| `userFields` | `['id', '_id']` | Only user ID fields logged |
+
+### Server Tracing on Vercel
+
+On Vercel, the server reports errors only by default. Tracing sets up OpenTelemetry when a function instance starts, which adds to every cold start, and the function stays billed after each response while a sampled transaction uploads. Without tracing, a request that captures no error ends as soon as its response is sent, and one that captures an error waits only for that error to reach Sentry.
+
+To trace server requests on Vercel anyway, set `serverTracing: true`:
+
+```yaml
+logger:
+  sentry:
+    serverTracing: true
+    tracesSampleRate: 0.1
+```
+
+`tracesSampleRate` still sets the browser's trace sampling either way. Set `serverTracing: false` to report errors only from the Node server too.
+
+### User Context
+
+For authenticated users, Sentry automatically captures user context based on the `userFields` configuration. By default, only `id` and `_id` fields from the user session are included to avoid logging PII (personally identifiable information).
+
+To include additional fields:
+
+```yaml
+logger:
+  sentry:
+    userFields:
+      - id
+      - _id
+      - organization_id
+```
+
 ### Source Maps
 
 To enable readable stack traces in Sentry, set the `SENTRY_AUTH_TOKEN` environment variable during build:

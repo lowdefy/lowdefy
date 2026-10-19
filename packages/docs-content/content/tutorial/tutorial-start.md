@@ -4,7 +4,7 @@ In this tutorial, we will be creating a simple ticketing app that allows users t
 
 ### Requirements
 
-The Lowdefy CLI (Command Line Interface) is needed to run the development server. To run the Lowdefy CLI you need to install Node.js at version 22 or greater. If you don't have it installed, download Node.js from https://nodejs.org/en/download/, and follow the installation steps for your computer. All of the default settings given by the installer are fine for what we need. You will also need a text editor to modify the Lowdefy configuration files.
+The Lowdefy CLI (Command Line Interface) is needed to run the development server. To run the Lowdefy CLI you need to install Node.js at version 24 or greater. If you don't have it installed, download Node.js from https://nodejs.org/en/download/, and follow the installation steps for your computer. All of the default settings given by the installer are fine for what we need. You will also need a text editor to modify the Lowdefy configuration files.
 
 Lowdefy also requires [`pnpm`](https://pnpm.io/) to be installed. We recommend making activating [Corepack](https://nodejs.org/api/corepack.html), even though it is an experimental feature, as this is the simplest way to install `pnpm`. Alternative methods to install `pnpm` can also be found [here](https://pnpm.io/installation). To activate Corepack, run the following in your computer's command line interface (Windows CMD, Terminal on MacOS).
 
@@ -57,6 +57,71 @@ Your browser should open on http://localhost:3000, and you should see the follow
 Made by a Lowdefy 🤖
 
 > __Error: Could not find "lowdefy.yaml"__: Make sure your current working directory contains the _lowdefy.yaml_ file. You can verify this by running the `dir` (Windows) or `ls` (MacOS) command.
+
+#### 1.5. Open the configuration file
+
+Open the `lowdefy.yaml` file using a text editor like [VS Code](https://code.visualstudio.com/download). The content of the file should look like this:
+
+```yaml
+lowdefy: 6.1.0
+name: Lowdefy starter
+
+pages:
+  - id: welcome
+    type: PageHeaderMenu
+    properties:
+      title: Welcome
+    slots:
+      content:
+        justify: center
+        blocks:
+          - id: content_card
+            type: Card
+            style:
+              maxWidth: 800
+            blocks:
+              - id: content
+                type: Result
+                properties:
+                  title: Welcome to your Lowdefy app
+                  subTitle: We are excited to see what you are going to build
+                  icon:
+                    name: heart
+                    color: '#f00'
+                slots:
+                  extra:
+                    blocks:
+                      - id: docs_button
+                        type: Button
+                        properties:
+                          size: large
+                          title: Let's build something
+                        events:
+                          onClick:
+                            - id: link_to_docs
+                              type: Link
+                              params:
+                                url: https://docs.lowdefy.com
+                                newWindow: true
+      footer:
+        blocks:
+          - id: footer
+            type: Paragraph
+            properties:
+              type: secondary
+              content: |
+                Made by a Lowdefy 🤖
+```
+
+This configuration completely describes the app you are running.
+
+#### 1.6. Make some changes
+
+Let's modify the button to link to the Lowdefy Discord community instead of to the Lowdefy docs.
+
+First, change `Let's build something` to `Join Lowdefy on Discord`, then save the file. Your page should automatically refresh and you should see the changed text of the button.
+
+Next, update the link url to the Lowdefy Discord link, replace `https://docs.lowdefy.com` with [`https://discord.gg/QQY9eJ7A2D`](https://discord.gg/QQY9eJ7A2D), then save the file. If you now click the button it should open a new window linking to the Lowdefy Discord Channel - Join our community to ask questions or learn more regarding Lowdefy ❤️
 
 ### What happened
 

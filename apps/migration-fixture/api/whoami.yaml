@@ -1,0 +1,11 @@
+# Server-side `_user` reads inside an endpoint routine (classes A and B).
+id: whoami
+type: Api
+routine:
+  - :return:
+      subject:
+        _user: sub # A → _user.id (different value)
+      tier:
+        _user: global_attributes.tier # B → _user.attributes.tier
+      email:
+        _user: email # kept — not reported

@@ -175,24 +175,24 @@
       type: RatingSlider
       properties:
         title: Custom Icons (Dislike / Like)
-        minIcon: AiOutlineDislike
-        maxIcon: AiOutlineLike
+        minIcon: ThumbsDown
+        maxIcon: ThumbsUp
         min: 0
         max: 10
     - id: icons_star
       type: RatingSlider
       properties:
         title: Star Icons
-        minIcon: AiOutlineStar
-        maxIcon: AiFillStar
+        minIcon: star
+        maxIcon: star
         min: 1
         max: 5
     - id: icons_heart
       type: RatingSlider
       properties:
         title: Heart Icons
-        minIcon: AiOutlineHeart
-        maxIcon: AiFillHeart
+        minIcon: heart
+        maxIcon: heart
         min: 0
         max: 10
     - id: icons_object_config
@@ -200,10 +200,10 @@
       properties:
         title: Icon Object Config (colored)
         minIcon:
-          name: AiOutlineArrowDown
+          name: arrow-down
           color: '#ff4d4f'
         maxIcon:
-          name: AiOutlineArrowUp
+          name: arrow-up
           color: '#52c41a'
         min: 0
         max: 10
@@ -363,8 +363,8 @@
         max: 5
         step: 1
         color: '#52c41a'
-        minIcon: AiOutlineFrown
-        maxIcon: AiOutlineSmile
+        minIcon: FaceSlightlyFrowning
+        maxIcon: FaceSlightlySmiling
         tooltipVisible: always
         showMarks: true
         showDots: true
@@ -378,8 +378,8 @@
         max: 10
         step: 1
         color: '#1677ff'
-        minIcon: AiOutlineDislike
-        maxIcon: AiOutlineLike
+        minIcon: ThumbsDown
+        maxIcon: ThumbsUp
         tooltipVisible: onClick
         showMarks: true
         showDots: true
@@ -410,10 +410,10 @@
         step: 1
         color: '#ff4d4f'
         minIcon:
-          name: AiOutlineSmile
+          name: FaceSlightlySmiling
           color: '#52c41a'
         maxIcon:
-          name: AiOutlineWarning
+          name: warning
           color: '#ff4d4f'
         disableNotApplicable: true
         showMarks: true
@@ -531,8 +531,8 @@
             max: 5
             step: 1
             color: '#fa8c16'
-            minIcon: AiOutlineStar
-            maxIcon: AiFillStar
+            minIcon: star
+            maxIcon: star
             showMarks: true
             showDots: true
             disableNotApplicable: true
@@ -556,7 +556,7 @@
           type: Button
           properties:
             title: Submit Review
-            icon: AiOutlineSend
+            icon: send
             type: primary
             block: true
           events:
@@ -584,8 +584,8 @@
             min: 1
             max: 10
             color: '#1677ff'
-            minIcon: AiOutlineFrown
-            maxIcon: AiOutlineSmile
+            minIcon: FaceSlightlyFrowning
+            maxIcon: FaceSlightlySmiling
             showMarks: true
             label:
               extra: How would you rate the service you received?
@@ -596,8 +596,8 @@
             min: 1
             max: 10
             color: '#52c41a'
-            minIcon: AiOutlineDislike
-            maxIcon: AiOutlineLike
+            minIcon: ThumbsDown
+            maxIcon: ThumbsUp
             showMarks: true
             label:
               extra: How would you rate the quality of our products?
@@ -615,7 +615,7 @@
           type: Button
           properties:
             title: Submit Survey
-            icon: AiOutlineCheck
+            icon: check
             type: primary
             block: true
           events:

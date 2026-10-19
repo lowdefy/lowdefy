@@ -56,7 +56,7 @@ test.describe('Result Block', () => {
     const block = getResult(page, 'result_success');
     const result = block.locator('.ant-result');
     await expect(result).toHaveClass(/ant-result-success/);
-    const icon = block.locator('.ant-result-icon .anticon-check-circle');
+    const icon = block.locator('.ant-result-icon .anticon svg');
     await expect(icon).toBeVisible();
   });
 
@@ -64,7 +64,7 @@ test.describe('Result Block', () => {
     const block = getResult(page, 'result_error');
     const result = block.locator('.ant-result');
     await expect(result).toHaveClass(/ant-result-error/);
-    const icon = block.locator('.ant-result-icon .anticon-close-circle');
+    const icon = block.locator('.ant-result-icon .anticon svg');
     await expect(icon).toBeVisible();
   });
 
@@ -139,5 +139,17 @@ test.describe('Result Block', () => {
     await expect(extra).toBeVisible();
     const button = getBlock(page, 'result_extra_button');
     await expect(button).toBeVisible();
+  });
+
+  // ============================================
+  // SEMANTIC KEYS
+  // ============================================
+
+  test('applies class and style to the title and subtitle', async ({ page }) => {
+    const block = getResult(page, 'result_css_keys');
+    const title = block.locator('.ant-result-title');
+    await expect(title).toHaveClass(/result-title-class/);
+    await expect(title).toHaveCSS('color', 'rgb(255, 0, 0)');
+    await expect(block.locator('.ant-result-subtitle')).toHaveClass(/result-subtitle-class/);
   });
 });
