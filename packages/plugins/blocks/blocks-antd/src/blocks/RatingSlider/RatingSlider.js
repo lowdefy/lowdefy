@@ -16,7 +16,7 @@
 
 import React, { useState } from 'react';
 import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
-import { ConfigProvider, Slider } from 'antd';
+import { ConfigProvider, Slider, theme } from 'antd';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import getDisabled from '../../getDisabled.js';
@@ -60,6 +60,7 @@ const RatingSlider = ({
   value,
 }) => {
   const [check, unCheck] = useState(false);
+  const { theme: antdTheme, token } = theme.useToken();
   let propertiesIconMin = serializer.copy(properties.minIcon);
   if (type.isString(propertiesIconMin)) {
     propertiesIconMin = { name: propertiesIconMin };
@@ -83,9 +84,21 @@ const RatingSlider = ({
 
   const sliderTheme = {};
   if (properties.color) {
-    sliderTheme.colorPrimary = properties.color;
-    // Derive the track, handle and dot tokens (colorPrimaryBorder*) from this colorPrimary.
-    sliderTheme.algorithm = true;
+    // The Slider draws its track, handle and dots from the colorPrimaryBorder* tokens, which a
+    // component-level colorPrimary does not recompute. Derive them with the app theme's algorithm
+    // and set the Slider tokens directly; `algorithm: true` would also re-derive, and so drop, the
+    // app's own map token overrides.
+    const { colorPrimary, colorPrimaryBorder, colorPrimaryBorderHover } =
+      antdTheme.getDerivativeToken({ ...token, colorPrimary: properties.color });
+    Object.assign(sliderTheme, {
+      colorPrimary,
+      trackBg: colorPrimaryBorder,
+      trackHoverBg: colorPrimaryBorderHover,
+      handleColor: colorPrimaryBorder,
+      handleActiveColor: colorPrimary,
+      handleActiveOutlineColor: `color-mix(in srgb, ${colorPrimary} 20%, transparent)`,
+      dotActiveBorderColor: colorPrimaryBorder,
+    });
   }
   if (validationColor) {
     sliderTheme.railBg = validationColor;

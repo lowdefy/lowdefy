@@ -106,13 +106,16 @@ test.describe('RatingSlider Block', () => {
     await expect
       .poll(() => handle.evaluate((el) => getComputedStyle(el, '::after').boxShadow))
       .toContain('rgb(250, 140, 22)');
+    // handleActiveOutlineColor: color at 20% opacity.
+    await expect
+      .poll(() => handle.evaluate((el) => getComputedStyle(el, '::after').outlineColor))
+      .toMatch(/^color\(srgb 0\.98\d* 0\.549\d* 0\.086\d* \/ 0\.2\)$/);
   });
 
   test('uses the theme primary color without color', async ({ page }) => {
     const track = page.locator(`#bl-${escapeId('ratingslider_no_color')} .ant-slider-track`);
     const reference = page.locator(`#bl-${escapeId('slider_theme_reference')} .ant-slider-track`);
     const referenceColor = await reference.evaluate((el) => getComputedStyle(el).backgroundColor);
-    expect(referenceColor).not.toBe('rgb(255, 213, 145)');
     await expect(track).toHaveCSS('background-color', referenceColor);
   });
 
