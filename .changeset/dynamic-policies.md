@@ -13,4 +13,3 @@ feat: dynamic blocks policies. Declare `policies.dynamicBlocks` in `lowdefy.yaml
 - New built-in routine step `ValidateDynamic` runs the same check and returns `{ valid, errors, blocks }`, with a content path, rule and message per error, for a generator to correct and retry. In a Dynamic block's endpoint, `_step: <stepId>.blocks` of a passing step with the block's policy is returned as config; all other data stays literal.
 - New built-in routine step `DescribeDynamicPolicy` returns what a policy allows, with the schemas of its blocks, actions and operators, to build a model's prompt from.
 - The build validates policies (installed types, exact origins, no `Dynamic` or `_operator`), checks their pages, endpoints and requests on every page that hosts them, and warns when a policy without HTML lists operators that build strings.
-- Fix: a `LeaveOrganization` or `SetActiveOrganization` action in Dynamic content failed with a `TypeError` instead of resolving.

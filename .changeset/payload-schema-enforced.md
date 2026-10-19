@@ -6,6 +6,7 @@
 '@lowdefy/server': minor
 '@lowdefy/server-dev': minor
 '@lowdefy/server-e2e': minor
+'@lowdefy/docs-content': patch
 ---
 
 feat(api)!: A declared `payloadSchema` is now enforced on every caller.
@@ -15,16 +16,20 @@ before the routine runs. Until now the schema was only advertised to MCP clients
 nothing checked a payload against it. This is a major bump for `@lowdefy/api` and `@lowdefy/build`
 because apps whose callers relied on the schema not being checked will see those calls fail.
 
-Every payload is validated on every call path, and a non-conforming one is refused:
+Every payload is validated on every call path, and a non-conforming one is refused. Who built
+the payload decides how the refusal is reported:
 
-- REST (`POST /api/endpoints/<endpointId>`, the `CallAPI` action) answers `400` with
-  `{ name: 'UserError', message }`, and `CallAPI` fails with that message.
-- MCP `tools/call` answers `isError: true` carrying the message, so the model can retry.
-- Agent tool calls and nested `CallApi` steps surface the message as a tool or step error.
-- A detached `CallApi` target fails its run with the message in the logs.
-- Scheduled runs fail when the authored `schedule.payload` breaks the endpoint's own contract.
+- **An outside caller's payload** is the caller's mistake, a `UserError` logged at warn level and
+  never captured to Sentry. REST (`POST /api/endpoints/<endpointId>` without naming a page)
+  answers `400` with `{ name: 'UserError', message }`; MCP `tools/call` answers `isError: true`
+  carrying the message, and agent tool calls get it as a tool error, so the model can retry.
+- **A payload the app's own config built** (a page's `CallAPI`, a nested or detached `CallApi`
+  step, a Dynamic block's endpoint, an auth or agent hook, a scheduled run's `schedule.payload`)
+  breaks the endpoint's own contract, so the refusal is a `ConfigError`, logged as a server error
+  with its config location. A page's `CallAPI` fails with `_error.name: ConfigError` (outside
+  development with the generic server error message), a nested `CallApi` reaches the routine's
+  `:catch` as a `ConfigError`, and a detached target or scheduled run fails its run.
 
-The refusal is a `UserError`: logged at warn level, never at error level, never captured to Sentry.
 The message names the endpoint, the failing location and what would be accepted, e.g.
 
 - `Payload for endpoint "create_order" does not match its payloadSchema at /quantity: must be number.`

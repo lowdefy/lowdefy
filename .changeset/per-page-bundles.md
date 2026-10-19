@@ -50,6 +50,7 @@
 '@lowdefy/plugin-gcp': patch
 '@lowdefy/plugin-posthog': patch
 '@lowdefy/websockets-core': patch
+'@lowdefy/block-utils': patch
 ---
 
 Production pages load only the plugin code they use.
@@ -59,6 +60,7 @@ The production client used to ship every block, action, operator and icon the ap
 - The HTML preloads the page's chunks alongside the main bundle, so the first page does not wait an extra round trip.
 - Content-hashed assets are served with `Cache-Control: public, max-age=31536000, immutable`, on the Node server and in `lowdefy vercel-output`.
 - Lowdefy's plugin packages declare `"sideEffects": ["**/*.css"]`, so a page that uses one block no longer loads the whole package.
+- The build adds the types a page runs without naming them: the operators the `_js` accessors call, and the actions and operators a block runs for events it registers itself (such as `Request` in `Upload` or `SetLocale` in `PageHeaderMenu`), which blocks list in `meta.actions` and `meta.operators`. Plugin blocks that register their own events should list them the same way.
 - A Dynamic block whose content uses a type its `properties.types` did not declare still works: the page loads the full type set and the server logs a warning naming the type to declare.
 
 No config changes. The dev server is unchanged.
