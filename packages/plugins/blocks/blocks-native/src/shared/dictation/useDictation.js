@@ -48,8 +48,9 @@ function settle(session) {
  * @param {Object} params
  * @param {boolean} [params.disabled] While true, `available` is false and `start` does nothing.
  * @param {string[]} [params.hints] Words to expect, such as the names that can be mentioned.
- * @param {(text: string) => void} params.onFinal Called once for each final result: once at stop
- *   on iOS, and for each segment as it is heard on Android.
+ * @param {(text: string) => void} params.onFinal Called once for each final result, without
+ *   surrounding spaces: for each segment as it is heard on Android and on iOS 18 and later, and
+ *   once at stop on earlier iOS.
  * @returns {{
  *   available: boolean,
  *   status: 'idle'|'listening'|'stopping',
@@ -206,7 +207,9 @@ function useDictation({ disabled = false, hints, onFinal }) {
         const session = ownSession();
         if (session === null) return;
         resetSilence(session);
-        const text = event.results[0]?.transcript ?? '';
+        // iOS 18 and later end a segment at each pause, as Android does, and start every later
+        // transcript with a space. The host spaces the words itself (insertAtSelection).
+        const text = (event.results[0]?.transcript ?? '').trim();
         if (!event.isFinal) {
           if (session.cancelled) return;
           session.partial = text;

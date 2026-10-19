@@ -195,6 +195,16 @@ test('useDictation passes each Android final segment once', async () => {
   expect(onFinal).toHaveBeenCalledTimes(2);
 });
 
+test('useDictation passes iOS 18 segments without the space iOS puts before later ones', async () => {
+  const { result, onFinal } = await renderDictation();
+  await startListening(result);
+  await emit('result', finalResult('Check the gate.'));
+  await emit('result', partialResult(' Then the'));
+  expect(result.current.partial).toBe('Then the');
+  await emit('result', finalResult(' Then the fence.'));
+  expect(onFinal.mock.calls).toEqual([['Check the gate.'], ['Then the fence.']]);
+});
+
 test('useDictation commits words still partial when the session ends without a final result', async () => {
   const { result, onFinal } = await renderDictation();
   await startListening(result);
