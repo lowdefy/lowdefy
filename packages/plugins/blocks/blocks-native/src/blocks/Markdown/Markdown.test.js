@@ -230,6 +230,30 @@ test('a Markdown chip fires onLinkPress with its href', async () => {
   ]);
 });
 
+test('a Markdown draws an app path link as a chip by pattern and presses it through onLinkPress', async () => {
+  const { calls } = await renderPage({
+    pageConfig: page([
+      {
+        id: 'body',
+        type: 'Markdown',
+        properties: {
+          content: 'Fixed in [ACME-647 (Fix broken menu URL)](/ACME/tasks/ACME-647).',
+          linkChips: [
+            { pattern: '^/ACME/tasks/(?<key>ACME-\\d+)$', icon: 'House', tone: 'primary' },
+          ],
+        },
+        events: { onLinkPress: record('link') },
+      },
+    ]),
+  });
+  const key = await screen.findByText('ACME-647');
+  expect(styleOf(key)).toMatchObject({ color: theme.light.colorPrimary, fontWeight: '500' });
+  expect(screen.getByText(' Fix broken menu URL')).toBeTruthy();
+  expect(screen.getByTestId('markdown-chip-icon-ACME-647')).toBeTruthy();
+  await press(screen.getByLabelText('ACME-647 Fix broken menu URL'));
+  expect(calls).toEqual([{ name: 'link', event: { href: '/ACME/tasks/ACME-647' } }]);
+});
+
 test('a Markdown chip takes the dark tone in dark mode', async () => {
   await renderPage({
     darkMode: 'dark',

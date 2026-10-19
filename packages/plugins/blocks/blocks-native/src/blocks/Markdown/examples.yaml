@@ -87,3 +87,27 @@
         content: |
           [@Sam Tolmay](mention:u_sam) the `m_body` block reads `m_view.body`, so the summary
           needs its own state key. Done in a follow-up.
+
+- title: Agent reply with app path links drawn as chips
+  blocks:
+    - id: reply
+      type: Markdown
+      properties:
+        linkChips:
+          - pattern: '^/ACME/tasks/(?<key>ACME-\d+)$'
+            icon: CircleCheck
+            tone: primary
+          - pattern: '^/ACME/designs/(?<key>ACME-\d+)$'
+            icon: FileText
+            tone: info
+            label: key
+        content: |
+          I logged [ACME-647 (Fix broken menu URL)](/ACME/tasks/ACME-647) under the
+          [ACME-640 Navigation](/ACME/designs/ACME-640) design.
+      events:
+        onLinkPress:
+          - id: open_record
+            type: Link
+            params:
+              url:
+                _event: href
