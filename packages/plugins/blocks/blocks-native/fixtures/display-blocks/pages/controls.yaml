@@ -1,5 +1,6 @@
 # The native controls on a mobile-only page: a SegmentedControl, Selector property rows with
-# variant menu and variant sheet, a Menu, and a Sheet holding a form that a button opens.
+# variant menu and variant sheet, a MultipleSelector sheet row, a Menu, and a Sheet holding a form
+# that a button opens.
 id: controls
 type: Box
 blocks:
@@ -110,6 +111,20 @@ blocks:
               disabled: true
               avatar:
                 name: Former member
+      - id: labels
+        type: MultipleSelector
+        properties:
+          title: Labels
+          variant: sheet
+          menuTitle: Labels
+          allowCreate: true
+          createPattern: '^[a-z0-9]+(-[a-z0-9]+)*$'
+          createPatternMessage: Use lowercase letters, digits and hyphens.
+          options:
+            - agent-rules
+            - api
+            - docs
+            - ui
   - id: more
     type: Menu
     properties:

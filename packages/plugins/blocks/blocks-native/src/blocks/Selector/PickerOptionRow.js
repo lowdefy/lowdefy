@@ -26,17 +26,23 @@ const GAP = 12;
 const PADDING = 16;
 
 /**
- * One row of a Selector picker sheet, 52pt high: the leading avatar (the option's picture or
- * initials, or the dashed circle of the no-value row) or the option's glyph, the label in body
- * text with the option's description under it in footnote, and a checkmark in the tint colour
- * on the chosen row. The separator under it is inset to the label, or spans the sheet under the
- * pinned group. To a screen reader it is a button, selected when chosen.
+ * One row of a picker sheet, 52pt high: the leading avatar (the option's picture or initials, or
+ * the dashed circle of the no-value row) or the option's glyph, the label in body text with the
+ * option's description under it in footnote, and a checkmark in the tint colour on a chosen
+ * row. The separator under it is inset to the label, or spans the sheet under the pinned group.
+ * To a screen reader it is a button, selected when chosen, or in a multiple picker a checkbox,
+ * checked when chosen.
+ *
+ * The row that adds the search text draws its label in the tint colour; while the text is
+ * refused, its label is in the tertiary label colour with the refusal under it in the error
+ * colour, not dimmed, so the message reads.
  *
  * @param {Object} props
  * @param {string} props.blockId
  * @param {Object} props.colors getSemanticColors' colours.
  * @param {Object} props.components
  * @param {boolean} props.isDark
+ * @param {boolean} [props.multiple] The row is one of several that can be checked.
  * @param {(row: Object) => void} props.onPick
  * @param {Object} props.row A getPickerSheetRows row.
  * @param {boolean} props.showLeading The list has leading glyphs, so every row keeps their space.
@@ -47,17 +53,28 @@ function PickerOptionRow({
   colors,
   components,
   isDark,
+  multiple = false,
   onPick,
   row,
   showLeading,
   tokens,
 }) {
   const labelInset = showLeading ? PADDING + AVATAR_SIZE + GAP : PADDING;
+  let labelColor = colors.label;
+  if (row.invalid) {
+    labelColor = colors.tertiaryLabel;
+  } else if (row.create) {
+    labelColor = tokens.colorTint;
+  }
   return (
     <Pressable
       accessibilityLabel={row.description === null ? row.label : `${row.label}, ${row.description}`}
-      accessibilityRole="button"
-      accessibilityState={{ disabled: row.disabled, selected: row.selected }}
+      accessibilityRole={multiple && !row.create ? 'checkbox' : 'button'}
+      accessibilityState={
+        multiple && !row.create
+          ? { checked: row.selected, disabled: row.disabled }
+          : { disabled: row.disabled, selected: row.selected }
+      }
       disabled={row.disabled}
       onPress={() => onPick(row)}
       style={({ pressed }) => ({
@@ -66,7 +83,7 @@ function PickerOptionRow({
         flexDirection: 'row',
         gap: GAP,
         height: ROW_HEIGHT,
-        opacity: row.disabled ? 0.4 : 1,
+        opacity: row.disabled && !row.invalid ? 0.4 : 1,
         paddingHorizontal: PADDING,
       })}
       testID={`${blockId}_option_${row.key}`}
@@ -91,13 +108,16 @@ function PickerOptionRow({
         </View>
       ) : null}
       <View style={{ flex: 1, justifyContent: 'center' }}>
-        <Text numberOfLines={1} style={[iosTextStyles.body, { color: colors.label }]}>
+        <Text numberOfLines={1} style={[iosTextStyles.body, { color: labelColor }]}>
           {row.label}
         </Text>
         {row.description === null ? null : (
           <Text
             numberOfLines={1}
-            style={[iosTextStyles.footnote, { color: colors.secondaryLabel }]}
+            style={[
+              iosTextStyles.footnote,
+              { color: row.invalid ? tokens.colorError : colors.secondaryLabel },
+            ]}
           >
             {row.description}
           </Text>

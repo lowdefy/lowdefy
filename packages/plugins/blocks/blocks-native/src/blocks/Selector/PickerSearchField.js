@@ -33,6 +33,8 @@ import SystemIcon from '../../shared/SystemIcon.js';
  * @param {Object} props.components
  * @param {(text: string) => void} props.onChangeText
  * @param {() => void} props.onFocus
+ * @param {() => void} [props.onSubmitEditing] Called when the keyboard's search key is pressed.
+ * @param {string} [props.placeholder]
  * @param {Object} props.tokens
  * @param {string} props.value
  */
@@ -43,6 +45,8 @@ function PickerSearchField({
   components,
   onChangeText,
   onFocus,
+  onSubmitEditing,
+  placeholder = 'Search',
   tokens,
   value,
 }) {
@@ -76,7 +80,8 @@ function PickerSearchField({
         enterKeyHint="search"
         onChangeText={onChangeText}
         onFocus={onFocus}
-        placeholder="Search"
+        onSubmitEditing={onSubmitEditing}
+        placeholder={placeholder}
         placeholderTextColor={colors.secondaryLabel}
         returnKeyType="search"
         selectionColor={tokens.colorTint}

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getPickerSheetRows, { NO_VALUE_KEY } from './getPickerSheetRows.js';
+import getPickerSheetRows, { CREATE_KEY, NO_VALUE_KEY } from './getPickerSheetRows.js';
 
 const options = [
   { label: 'Grace Hopper', value: 'grace', description: 'grace@example.com' },
@@ -29,10 +29,9 @@ function summary(rows) {
 
 test('getPickerSheetRows puts the no-value row and pinned options first, then the rest', () => {
   const rows = getPickerSheetRows({
-    allowClear: true,
+    noValue: true,
     options,
     placeholder: 'Unassigned',
-    selectedIndex: null,
   });
   expect(summary(rows)).toEqual([
     [NO_VALUE_KEY, 'Unassigned', 'inset'],
@@ -46,12 +45,12 @@ test('getPickerSheetRows puts the no-value row and pinned options first, then th
   expect(rows[4].disabled).toBe(true);
 });
 
-test('getPickerSheetRows leaves out the no-value row when a chosen value cannot be cleared', () => {
+test('getPickerSheetRows leaves out the no-value row when asked', () => {
   const rows = getPickerSheetRows({
-    allowClear: false,
+    noValue: false,
     options,
     placeholder: 'Unassigned',
-    selectedIndex: 2,
+    selected: [2],
   });
   expect(summary(rows)).toEqual([
     ['1', 'Assign to me', 'group'],
@@ -62,12 +61,11 @@ test('getPickerSheetRows leaves out the no-value row when a chosen value cannot 
   expect(rows.filter((row) => row.selected).map((row) => row.key)).toEqual(['2']);
 });
 
-test('getPickerSheetRows keeps the no-value row while nothing is chosen, even without allowClear', () => {
+test('getPickerSheetRows chooses the no-value row while nothing is chosen', () => {
   const rows = getPickerSheetRows({
-    allowClear: false,
+    noValue: true,
     options: ['Red', 'Green'],
     placeholder: 'Select item',
-    selectedIndex: null,
   });
   expect(summary(rows)).toEqual([
     [NO_VALUE_KEY, 'Select item', 'group'],
@@ -79,21 +77,19 @@ test('getPickerSheetRows keeps the no-value row while nothing is chosen, even wi
 
 test('getPickerSheetRows filters by label, ignoring case and accents', () => {
   const rows = getPickerSheetRows({
-    allowClear: true,
+    noValue: true,
     options,
     placeholder: 'Unassigned',
     query: ' JOSE ',
-    selectedIndex: null,
   });
   expect(summary(rows)).toEqual([['2', 'José Núñez', 'none']]);
   expect(
     summary(
       getPickerSheetRows({
-        allowClear: true,
+        noValue: true,
         options,
         placeholder: 'Unassigned',
         query: 'un',
-        selectedIndex: null,
       })
     )
   ).toEqual([
@@ -105,11 +101,10 @@ test('getPickerSheetRows filters by label, ignoring case and accents', () => {
 
 test('getPickerSheetRows draws no group hairline when only one group is left', () => {
   const rows = getPickerSheetRows({
-    allowClear: true,
+    noValue: true,
     options,
     placeholder: 'Unassigned',
     query: 'assign',
-    selectedIndex: null,
   });
   expect(summary(rows)).toEqual([
     [NO_VALUE_KEY, 'Unassigned', 'inset'],
@@ -117,11 +112,77 @@ test('getPickerSheetRows draws no group hairline when only one group is left', (
   ]);
   expect(
     getPickerSheetRows({
-      allowClear: true,
+      noValue: true,
       options,
       placeholder: 'Unassigned',
       query: 'nobody',
-      selectedIndex: null,
     })
   ).toEqual([]);
+});
+
+test('getPickerSheetRows lists the options in first ahead of the others in their group', () => {
+  const rows = getPickerSheetRows({
+    first: [3, 2],
+    options,
+    selected: [2],
+  });
+  expect(summary(rows)).toEqual([
+    ['1', 'Assign to me', 'group'],
+    ['2', 'José Núñez', 'inset'],
+    ['3', 'Old account', 'inset'],
+    ['0', 'Grace Hopper', 'none'],
+  ]);
+  expect(rows.map((row) => row.selected)).toEqual([false, true, false, false]);
+});
+
+test('getPickerSheetRows disables the unchosen options when the selection is full', () => {
+  const rows = getPickerSheetRows({ full: true, options: ['ui', 'api', 'docs'], selected: [1] });
+  expect(rows.map((row) => [row.key, row.disabled])).toEqual([
+    ['0', true],
+    ['1', false],
+    ['2', true],
+  ]);
+});
+
+test('getPickerSheetRows leads with an add row while the search text is no option', () => {
+  const create = { pattern: '^[a-z0-9-]+$', message: 'Use lowercase letters, digits and hyphens.' };
+  const labels = ['agent-rules', 'ui'];
+  const rows = getPickerSheetRows({ create, options: labels, query: ' u ' });
+  expect(summary(rows)).toEqual([
+    [CREATE_KEY, 'Add “u”', 'group'],
+    ['0', 'agent-rules', 'inset'],
+    ['1', 'ui', 'none'],
+  ]);
+  expect(rows[0]).toMatchObject({
+    create: true,
+    description: null,
+    disabled: false,
+    index: null,
+    invalid: false,
+    value: 'u',
+  });
+  // Text that is an option's label (ignoring case) adds nothing.
+  expect(
+    getPickerSheetRows({ create, options: labels, query: 'UI' }).map((row) => row.key)
+  ).toEqual(['1']);
+  // Text the pattern refuses gives a row that cannot be picked, with the message.
+  expect(getPickerSheetRows({ create, options: labels, query: 'New UI' })[0]).toMatchObject({
+    description: 'Use lowercase letters, digits and hyphens.',
+    disabled: true,
+    invalid: true,
+    label: 'Add “New UI”',
+  });
+  // No add row without create, without text, or once the selection is full.
+  expect(getPickerSheetRows({ options: labels, query: 'docs' })).toEqual([]);
+  expect(getPickerSheetRows({ create, options: labels, query: '  ' })).toHaveLength(2);
+  expect(
+    getPickerSheetRows({ create, full: true, options: labels, query: 'docs' })[0]
+  ).toMatchObject({ disabled: true, invalid: false });
+});
+
+test('getPickerSheetRows adds any text without a create pattern', () => {
+  const rows = getPickerSheetRows({ create: {}, options: [], query: 'Needs Design' });
+  expect(rows).toEqual([
+    expect.objectContaining({ disabled: false, separator: 'none', value: 'Needs Design' }),
+  ]);
 });
