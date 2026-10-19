@@ -416,7 +416,9 @@ test.describe('AG Grid theming', () => {
 
     const selectionCheckbox = (page, blockId) =>
       getBlock(page, blockId)
-        .locator('.ag-center-cols-container .ag-row[row-index="0"] .ag-checkbox-input-wrapper')
+        .locator(
+          '.ag-row[row-index="0"] .ag-cell[col-id="ag-Grid-SelectionColumn"] .ag-checkbox-input-wrapper'
+        )
         .first();
 
     test.beforeEach(async ({ page }) => {
@@ -448,6 +450,7 @@ test.describe('AG Grid theming', () => {
         await checkbox.locator('input').click();
         await expect(checkbox).toHaveClass(/ag-checked/);
         const colors = await checkboxColors(checkbox);
+        expect(colors.disabled).toBe(false);
         expect(colors.tick).toBe('rgb(255, 255, 255)');
         expect(colors.tick).not.toBe(colors.box);
       });
@@ -458,8 +461,11 @@ test.describe('AG Grid theming', () => {
     test('the tick stays white in dark mode', async ({ page }) => {
       const checkbox = cellCheckbox(page, 'theming_checkbox_lowdefy', 'active');
       await expect(checkbox).toBeVisible();
+      const lightRow = await rowBackground(page, 'theming_checkbox_lowdefy');
       await clickButton(page, 'theming_dark_on');
       await expect.poll(() => isDark(page)).toBe(true);
+      // The light-mode tick is white too, so wait for the grid itself to turn dark first.
+      await expect.poll(() => rowBackground(page, 'theming_checkbox_lowdefy')).not.toBe(lightRow);
       await expect
         .poll(async () => (await checkboxColors(checkbox)).tick)
         .toBe('rgb(255, 255, 255)');
