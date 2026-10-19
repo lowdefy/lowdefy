@@ -132,6 +132,30 @@ test('a cached Screen page renders and reports its title to the stack header', a
   expect(session.getCurrentPath()).toBe('/today');
 });
 
+test('a Screen with a large title sets it on the bar a frame before the page is first drawn', async () => {
+  // iOS keeps a large title collapsed when the page's scroll view is laid out first under a
+  // standard bar: the page waits a frame for the bar to take the large title.
+  const frames = [];
+  const requestFrame = jest
+    .spyOn(global, 'requestAnimationFrame')
+    .mockImplementation((callback) => frames.push(callback));
+  try {
+    await renderTodayPage({ page: { properties: { title: 'Today', largeTitle: true } } });
+    await waitFor(() =>
+      expect(mockNavigation.setOptions).toHaveBeenCalledWith(
+        expect.objectContaining({ headerLargeTitleEnabled: true, title: 'Today' })
+      )
+    );
+    expect(screen.queryByText('Hello from today')).toBeNull();
+    await act(async () => {
+      frames.forEach((callback) => callback(0));
+    });
+    expect(await screen.findByText('Hello from today')).toBeTruthy();
+  } finally {
+    requestFrame.mockRestore();
+  }
+});
+
 test('a page needing a type the shell lacks shows the update screen', async () => {
   await renderPath('map');
   expect(await screen.findByText('Update the app to open this page')).toBeTruthy();
