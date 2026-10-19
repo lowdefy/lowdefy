@@ -24,11 +24,14 @@ import useSkeletonTiming from '@lowdefy/blocks-antd/table/useSkeletonTiming.js';
 import computeFallbackLayout from '../../core/computeFallbackLayout.js';
 import densityHeights from '../../core/densityHeights.js';
 import EmptyState from '../../core/EmptyState.js';
+import getColumnGroupRules from '../../core/getColumnGroupRules.js';
+import getDisplayedVisibility from '../../core/getDisplayedVisibility.js';
 import getHeaderLevels from '../../core/getHeaderLevels.js';
 import getRowControlsWidth from '../../features/editing/getRowControlsWidth.js';
 import getSortHeaderProps from '../../features/sorting/getSortHeaderProps.js';
 import getTableSkeletonCount from '../../core/getTableSkeletonCount.js';
 import HeaderRow from '../../core/HeaderRow.js';
+import initCollapsedColumnGroups from '../../features/visibility/initCollapsedColumnGroups.js';
 import needsToolbar from '../../features/toolbar/needsToolbar.js';
 import needsTrailingColumn from '../../features/enrichment/needsTrailingColumn.js';
 import selectColumnWidth from '../../features/selection/selectColumnWidth.js';
@@ -145,9 +148,23 @@ function TableFallback({
     // The template compiler loads alongside the table's code, not after it.
     if (needsTemplates({ columns: normalized.columns, expandable })) loadTemplateCompiler();
   }, [normalized, expandable]);
+  const columnGroups = useMemo(
+    () => getColumnGroupRules({ headerGroups: normalized.headerGroups }),
+    [normalized]
+  );
+  const collapsedColumnGroups = initCollapsedColumnGroups({
+    value,
+    defaultView,
+    config: { columnGroups },
+  });
   const layout = computeFallbackLayout({
     columns: normalized.columns,
     defaultView,
+    groupVisibility: getDisplayedVisibility({
+      columnVisibility: {},
+      collapsedColumnGroups,
+      conditionsByKey: columnGroups.conditionsByKey,
+    }),
     leadingColumns: getLeadingColumns({ input, properties }),
     trailingColumns: getTrailingColumns({ events, properties }),
     value,
@@ -243,7 +260,7 @@ function TableFallback({
             className="lf-table-header"
             layout={layout}
             levels={levels}
-            state={{ sorting: getSorting({ defaultView, value }) }}
+            state={{ collapsedColumnGroups, sorting: getSorting({ defaultView, value }) }}
             sticky={properties.stickyHeader !== false}
           />
           {body}

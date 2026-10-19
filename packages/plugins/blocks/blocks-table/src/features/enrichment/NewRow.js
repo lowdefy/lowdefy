@@ -39,8 +39,8 @@ function NewRow({ api }) {
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(0);
   const { columns } = api.config;
-  const { columnVisibility } = api.state;
-  // The visible input columns: a column the view hides is not asked for.
+  const columnVisibility = api.displayedVisibility;
+  // The displayed input columns: a column the view or a collapsed group hides is not asked for.
   const inputColumns = useMemo(
     () =>
       getInputColumns(columns)

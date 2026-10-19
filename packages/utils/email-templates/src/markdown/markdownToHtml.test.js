@@ -72,6 +72,11 @@ test('markdownToHtml adds inline styles to headings', () => {
   expect(html).toContain('<h3 style="margin:0 0 12px 0;font-size:16px;line-height:24px;color:#111111;">');
 });
 
+test('markdownToHtml styles images to fit the email column', () => {
+  const html = markdownToHtml({ markdown: '![shot](https://example.com/a.png)' });
+  expect(html).toContain('<img src="https://example.com/a.png" alt="shot" style="max-width:100%;height:auto;">');
+});
+
 test('markdownToHtml converts single newlines to line breaks', () => {
   const html = markdownToHtml({ markdown: 'line one\nline two' });
   expect(html).toContain('<br');

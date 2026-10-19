@@ -2,6 +2,7 @@
 '@lowdefy/server': minor
 '@lowdefy/server-e2e': minor
 '@lowdefy/server-dev': minor
+'@lowdefy/e2e-utils': minor
 ---
 
 feat: Page routes match request paths to pages
@@ -11,3 +12,4 @@ feat: Page routes match request paths to pages
 - The first-load payload and the `/api/page/*` response carry `pageId`, `pathParams` and `matchedPath` (the matched path without `basePath` or one trailing `/`) next to `pageConfig`.
 - The sign-in and two-factor enrolment `callbackUrl` is the requested path plus query on every route; the `/api/page/*` sign-in redirect used to drop the query.
 - The dev server matches the path against the route table, JIT-builds the matched page, and returns `{ pageId, pathParams, matchedPath, pageConfig }`.
+- In `@lowdefy/e2e-utils`, `goto` and `waitForPage` take `{ pageId, path, pathParams, urlQuery }` and build the URL under the app's `basePath`; a string target is used as written. The ready check and the state, request, validation and `setUrlQuery` helpers read the page instance on screen, so a patterned page's instances are told apart.

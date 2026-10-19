@@ -3062,7 +3062,7 @@
         "templates/navigation_buttons.yaml",
         "version.yaml"
       ],
-      "hash": "bc77d12483a33c7a8802259f985adf965db7a24d96e5f7295702c4f86d758a18"
+      "hash": "553ea1b2ecaa5b588755b29594d961a109ea1d9ba8138cea40046fbf485a87cb"
     },
     "concepts/notifications": {
       "files": [
@@ -3071,7 +3071,7 @@
         "templates/navigation_buttons.yaml",
         "version.yaml"
       ],
-      "hash": "79e8b0499e319e53f7be558facc2696409478792ce63ae0ef1da8002ae9886b3"
+      "hash": "300843efedf32dd550744d64daa54836bdd7826461928f6611e236a5d73aba58"
     },
     "concepts/dynamic-page-content": {
       "files": [
@@ -4172,7 +4172,7 @@
         "blocks/display/TableGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "0cf23b56d6bbae0bfccdbea424bf5cd585151f09b0a55be73990bc3f052b83fd"
+      "hash": "2aa2b3f2083cd9d5fcec812f83bffa9000cf0304ed8fe16f39bc24e446bcc8f9"
     },
     "display-blocks/tablelight": {
       "files": [
@@ -5665,7 +5665,7 @@
         "migration/v6-to-v7.yaml",
         "templates/navigation_buttons.yaml"
       ],
-      "hash": "e8cf88abf4e7cc57d6df9e2a5e34d5d1ec3df2fe06b5056d52a43b6575966e05"
+      "hash": "ca289ecd955c8728c3f25103b648785f419e7d756137ef635a36e2212b386de0"
     },
     "migration/v3-to-v4": {
       "files": [

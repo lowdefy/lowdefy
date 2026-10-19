@@ -43,6 +43,7 @@ const TABLE_ONLY_KEYS = {
     addRow: 'adding rows',
     addRowText: 'adding rows',
     importCsv: 'CSV import',
+    summaryRow: 'a summary row from data',
     inputFieldPrefix: 'adding columns',
   },
   columns: {
@@ -67,6 +68,9 @@ const TABLE_ONLY_KEYS = {
     path: 'extract columns',
     status: 'cell run states',
     userDefined: 'user-defined columns',
+    collapsible: 'collapsible column groups',
+    collapsed: 'collapsible column groups',
+    showWhen: 'collapsible column groups',
   },
   defaultColumn: {
     width: 'default column widths',

@@ -62,6 +62,13 @@ function markdownToHtml({ markdown, theme }) {
     return self.renderToken(tokens, idx, options);
   };
 
+  const defaultImage = md.renderer.rules.image;
+  md.renderer.rules.image = function image(tokens, idx, options, env, self) {
+    // Images never grow past the email column.
+    tokens[idx].attrSet('style', 'max-width:100%;height:auto;');
+    return defaultImage(tokens, idx, options, env, self);
+  };
+
   return md.render(markdown);
 }
 

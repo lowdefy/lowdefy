@@ -34,7 +34,11 @@ const BOUNDARY_LABELS = {
 };
 
 function commitSequence({ api, sequence }) {
-  const next = applyManagerRegions({ state: api.state, regions: sequenceToRegions(sequence) });
+  const next = applyManagerRegions({
+    state: api.state,
+    displayedVisibility: api.displayedVisibility,
+    regions: sequenceToRegions(sequence),
+  });
   api.updateSlice('columnOrder', () => next.columnOrder);
   api.updateSlice('columnPinning', () => next.columnPinning);
 }
@@ -55,7 +59,10 @@ function ColumnManager({ api }) {
   const listRef = useRef(null);
 
   const columnsByKey = new Map(api.config.columns.map((column) => [column.key, column]));
-  const entries = getManagerEntries({ state: api.state });
+  const entries = getManagerEntries({
+    state: api.state,
+    displayedVisibility: api.displayedVisibility,
+  });
   const sequence = buildManagerSequence(entries);
   const visibleCount = entries.start.length + entries.center.length + entries.end.length;
   const term = search.trim().toLowerCase();
@@ -201,6 +208,7 @@ function ColumnManager({ api }) {
   }
 
   const hidden = entries.hidden.filter((key) => !searching || matches(key));
+  const unavailable = entries.unavailable.filter((key) => !searching || matches(key));
 
   return (
     <div
@@ -238,6 +246,23 @@ function ColumnManager({ api }) {
           >
             <span className="lf-table-manager-handle-spacer" />
             <Checkbox checked={false} onChange={() => setVisible({ api, key, visible: true })}>
+              {getPlainTitle(columnsByKey.get(key))}
+            </Checkbox>
+          </div>
+        ))}
+        {unavailable.length ? (
+          <div className="lf-table-manager-heading">Hidden by a column group</div>
+        ) : null}
+        {unavailable.map((key) => (
+          <div
+            className="lf-table-manager-item"
+            data-col-key={key}
+            data-lf-manager-item=""
+            data-unavailable=""
+            key={`unavailable:${key}`}
+          >
+            <span className="lf-table-manager-handle-spacer" />
+            <Checkbox checked={false} disabled>
               {getPlainTitle(columnsByKey.get(key))}
             </Checkbox>
           </div>
